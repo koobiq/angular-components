@@ -1,25 +1,31 @@
-import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
+﻿import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    contentChild,
     contentChildren,
-    ContentChildren,
     effect,
     ElementRef,
     forwardRef,
     inject,
     InjectionToken,
     Input,
-    QueryList,
+    input,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { KBQ_LOCALE_SERVICE, ruRULocaleData } from '@koobiq/components/core';
+import {
+    DOWN_ARROW,
+    isHorizontalMovement,
+    isVerticalMovement,
+    KBQ_LOCALE_SERVICE,
+    ruRULocaleData,
+    TAB,
+    UP_ARROW
+} from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
@@ -47,12 +53,11 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'KbqVerticalNavbar',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-vertical-navbar',
-        '[class.kbq-vertical-navbar_open-over]': 'openOver',
+        '[class.kbq-vertical-navbar_open-over]': 'openOver()',
         '[attr.tabindex]': 'tabIndex',
         '[attr.cdkMonitorSubtreeFocus]': 'true',
 
@@ -61,7 +66,8 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
 
         '(keydown)': 'onKeyDown($event)'
     },
-    hostDirectives: [CdkMonitorFocus]
+    hostDirectives: [CdkMonitorFocus],
+    exportAs: 'KbqVerticalNavbar'
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
     /** @docs-private */
@@ -76,14 +82,19 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         { descendants: true }
     );
 
-    @ContentChildren(forwardRef(() => KbqNavbarItem), { descendants: true }) items: QueryList<KbqNavbarItem>;
+    readonly items = contentChildren(
+        forwardRef(() => KbqNavbarItem),
+        { descendants: true }
+    );
 
-    @ContentChild(forwardRef(() => KbqNavbarBento)) bento: KbqNavbarBento;
+    readonly bento = contentChild(forwardRef(() => KbqNavbarBento));
 
     readonly animationDone: Subject<void> = new Subject();
 
-    @Input() openOver: boolean = false;
+    readonly openOver = input<boolean>(false);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get expanded() {
         return this._expanded;
@@ -154,7 +165,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     private updateExpandedStateForItems = () => this.rectangleElements().forEach(this.updateItemExpandedState);
 
-    private updateTooltipForItems = () => this.items.forEach((item) => item.updateTooltip());
+    private updateTooltipForItems = () => this.items().forEach((item) => item.updateTooltip());
 
     private setItemsVerticalStateAndUpdateExpandedState = (rectangleElements: Readonly<KbqNavbarRectangleElement[]>) =>
         rectangleElements.forEach(this.setItemVerticalStateAndUpdateExpandedState);
@@ -170,7 +181,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     private updateItemExpandedState = (item: KbqNavbarRectangleElement): void => {
         item.collapsed = !this.expanded;
-        setTimeout(() => item.button?.updateClassModifierForIcons());
+        setTimeout(() => item.button()?.updateClassModifierForIcons());
     };
 
     private updateLocaleParams = () => {

@@ -46,8 +46,8 @@ export class CustomModalComponent {
     template: `
         <button kbq-button (click)="openModal()">Open Modal</button>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ComponentLevelService]
+    providers: [ComponentLevelService],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalComponentWithInjectorExample {
     private readonly modalService = inject(KbqModalService);

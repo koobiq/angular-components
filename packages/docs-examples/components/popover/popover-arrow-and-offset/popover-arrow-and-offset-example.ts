@@ -3,7 +3,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { PopUpSizes } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
@@ -19,7 +18,6 @@ import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
         KbqDlModule,
         KbqToggleModule,
         KbqButtonToggleModule,
-        KbqFormFieldModule,
         KbqInputModule
     ],
     template: `
@@ -84,16 +82,16 @@ export class PopoverArrowAndOffsetExample implements AfterViewInit {
 
     ngAfterViewInit() {
         Promise.resolve().then(() => {
-            this.toggleGroup.buttonToggles.get(3)!.checked = true;
+            this.toggleGroup.buttonToggles().at(3)!.checked = true;
         });
     }
 
     onArrowChange({ checked }: KbqToggleChange) {
         if (!this.offsetChanged) {
             if (checked) {
-                this.toggleGroup.buttonToggles.get(3)!.checked = true;
+                this.toggleGroup.buttonToggles().at(3)!.checked = true;
             } else {
-                this.toggleGroup.buttonToggles.get(2)!.checked = true;
+                this.toggleGroup.buttonToggles().at(2)!.checked = true;
             }
         }
 

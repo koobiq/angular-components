@@ -1,7 +1,6 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, viewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
@@ -13,7 +12,6 @@ import {
     PopUpSizes,
     ThemePalette
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -55,7 +53,6 @@ export class DevDocsExamples {}
         FormsModule,
         CdkScrollableModule,
         KbqFormsModule,
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqPopoverModule,
         KbqButtonModule,
@@ -66,16 +63,15 @@ export class DevDocsExamples {}
         KbqRadioModule,
         KbqLinkModule,
         DevDocsExamples,
-        NgClass,
         DevThemeToggle
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
-    @ViewChildren(KbqPopoverTrigger) popovers: QueryList<KbqPopoverTrigger>;
+    readonly popovers = viewChildren(KbqPopoverTrigger);
 
     themePalette = ThemePalette;
     popUpPlacements = PopUpPlacements;
@@ -128,11 +124,11 @@ export class DevApp {
     }
 
     openPopover() {
-        this.popovers.forEach((popover) => popover.show());
+        this.popovers().forEach((popover) => popover.show());
     }
 
     closePopover() {
-        this.popovers.forEach((popover) => popover.hide());
+        this.popovers().forEach((popover) => popover.hide());
     }
 
     changeStep(direction: number) {

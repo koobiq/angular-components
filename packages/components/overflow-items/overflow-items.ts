@@ -79,8 +79,8 @@ export class ElementVisibilityManager {
  */
 @Directive({
     selector: '[kbqOverflowItemsResult]',
-    exportAs: 'kbqOverflowItemsResult',
-    host: { class: 'kbq-overflow-items-result' }
+    host: { class: 'kbq-overflow-items-result' },
+    exportAs: 'kbqOverflowItemsResult'
 })
 export class KbqOverflowItemsResult extends ElementVisibilityManager {}
 
@@ -89,11 +89,11 @@ export class KbqOverflowItemsResult extends ElementVisibilityManager {}
  */
 @Directive({
     selector: '[kbqOverflowItem]',
-    exportAs: 'kbqOverflowItem',
     host: {
         class: 'kbq-overflow-item',
         '[class.kbq-overflow-item_always-visible]': 'alwaysVisible()'
-    }
+    },
+    exportAs: 'kbqOverflowItem'
 })
 export class KbqOverflowItem extends ElementVisibilityManager {
     /**
@@ -126,8 +126,8 @@ export class KbqOverflowItem extends ElementVisibilityManager {
  */
 @Directive({
     selector: '[kbqOverflowItems]',
-    exportAs: 'kbqOverflowItems',
-    host: { class: 'kbq-overflow-items' }
+    host: { class: 'kbq-overflow-items' },
+    exportAs: 'kbqOverflowItems'
 })
 export class KbqOverflowItems {
     private readonly element = kbqInjectNativeElement();

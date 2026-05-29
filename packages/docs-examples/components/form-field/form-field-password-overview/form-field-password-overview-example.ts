@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider, PasswordValidators } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field password overview */
 @Component({
     selector: 'form-field-password-overview-example',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <input placeholder="Password" kbqInputPassword [formControl]="formControl" />

@@ -1,5 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterContentInit, ChangeDetectorRef, Component, ContentChild, inject, Input } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, contentChild, inject, Input, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { kbqInjectNativeElement, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -7,7 +7,6 @@ import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } fro
 
 @Component({
     selector: 'kbq-navbar-brand, [kbq-navbar-brand]',
-    exportAs: 'kbqNavbarBrand',
     template: `
         <ng-content />
     `,
@@ -16,9 +15,10 @@ import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } fro
     ],
     host: {
         class: 'kbq-navbar-brand',
-        '[class.kbq-navbar-brand_long-title]': 'longTitle',
+        '[class.kbq-navbar-brand_long-title]': 'longTitle()',
         '[class.kbq-navbar-brand_link]': 'isLink'
-    }
+    },
+    exportAs: 'kbqNavbarBrand'
 })
 export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentInit {
     /** @docs-private */
@@ -31,12 +31,14 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     protected readonly navbarFocusableItem = inject(KbqNavbarFocusableItem);
 
     /** @docs-private */
-    @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
+    readonly title = contentChild(KbqNavbarTitle);
 
     /** alternative display of the brand name in two lines */
-    @Input() longTitle: boolean = false;
+    readonly longTitle = input<boolean>(false);
 
     /** text that will be displayed in the tooltip. By default, the text is taken from kbq-navbar-title. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get collapsedText(): string {
         return this._collapsedText;
@@ -56,19 +58,19 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
 
     /** @docs-private */
     get croppedText(): string {
-        const croppedTitleText = this.title?.isOverflown ? this.titleText : '';
+        const croppedTitleText = this.title()?.isOverflown ? this.titleText : '';
 
         return `${croppedTitleText}`;
     }
 
     /** @docs-private */
     get hasCroppedText(): boolean {
-        return !!this.title?.isOverflown;
+        return !!this.title()?.isOverflown;
     }
 
     /** @docs-private */
     get titleText(): string | null {
-        return this.collapsedText || this.title?.text || null;
+        return this.collapsedText || this.title()?.text || null;
     }
 
     /** @docs-private */

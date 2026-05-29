@@ -14,7 +14,7 @@
             </span>
         } @else {
             <span>
-                @if (!!customTrigger) {
+                @if (!!customTrigger()) {
                     <ng-content select="kbq-timezone-select-trigger" />
                 } @else {
                     <div class="kbq-select__match-container">
@@ -39,7 +39,7 @@
 <ng-template
     cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
-    [cdkConnectedOverlayBackdropClass]="backdropClass"
+    [cdkConnectedOverlayBackdropClass]="backdropClass()"
     [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
     [cdkConnectedOverlayMinWidth]="overlayMinWidth"
     [cdkConnectedOverlayOffsetY]="offsetY"
@@ -54,14 +54,14 @@
 >
     <div
         #panel
-        class="kbq-select__panel kbq-timezone-select__panel {{ getPanelTheme() }}"
+        class="kbq-timezone-select__panel"
         cdkMonitorSubtreeFocus
-        [ngClass]="panelClass"
+        [class]="getPanelClasses()"
         [style.font-size.px]="triggerFontSize"
         [style.transformOrigin]="transformOrigin"
         (keydown)="handleKeydown($event)"
     >
-        @if (search && shouldShowSearch()) {
+        @if (search() && shouldShowSearch()) {
             <div class="kbq-select__search-container">
                 <ng-content select="[kbqSelectSearch]" />
             </div>

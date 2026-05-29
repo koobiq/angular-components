@@ -7,6 +7,7 @@
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -16,7 +17,6 @@ import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
-import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/button';
 import * as i15 from '@koobiq/components/form-field';
 import * as i2 from '@angular/cdk/overlay';
@@ -26,12 +26,11 @@ import * as i5 from '@koobiq/components/select';
 import * as i6 from '@koobiq/components/icon';
 import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
-import { KbqButton } from '@koobiq/components/button';
 import { KbqDateFormats } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqLocaleService } from '@koobiq/components/core';
-import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -78,16 +77,16 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     constructor(intl: KbqDatepickerIntl, adapter: DateAdapter<D>, changeDetectorRef: ChangeDetectorRef);
     get activeDate(): D;
     set activeDate(value: D | null);
-    dateClass: (date: D) => KbqCalendarCellCssClasses;
-    dateFilter: (date: D) => boolean;
+    readonly dateClass: _angular_core.InputSignal<(date: D) => KbqCalendarCellCssClasses>;
+    readonly dateFilter: _angular_core.InputSignal<(date: D) => boolean>;
     datepickerInput: any;
     dateSelected(date: D): void;
     get maxDate(): D | null;
     set maxDate(value: D | null);
     get minDate(): D | null;
     set minDate(value: D | null);
-    readonly monthSelected: EventEmitter<D>;
-    monthView: KbqMonthView<D>;
+    readonly monthSelected: _angular_core.OutputEmitterRef<D>;
+    readonly monthView: _angular_core.Signal<KbqMonthView<any>>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -97,25 +96,25 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     registerInput(input: any): void;
     get selected(): D | null;
     set selected(value: D | null);
-    readonly selectedChange: EventEmitter<D>;
+    readonly selectedChange: _angular_core.OutputEmitterRef<D>;
     get startAt(): D | null;
     set startAt(value: D | null);
     stateChanges: Subject<void>;
     updateTodaysDate(): void;
     // (undocumented)
     userSelected(): void;
-    readonly userSelection: EventEmitter<void>;
-    readonly yearSelected: EventEmitter<D>;
+    readonly userSelection: _angular_core.OutputEmitterRef<void>;
+    readonly yearSelected: _angular_core.OutputEmitterRef<D>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCalendar<any>, "kbq-calendar", ["kbqCalendar"], { "startAt": { "alias": "startAt"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "userSelection": "userSelection"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCalendar<any>, "kbq-calendar", ["kbqCalendar"], { "startAt": { "alias": "startAt"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; "isSignal": true; }; "dateClass": { "alias": "dateClass"; "required": false; "isSignal": true; }; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "userSelection": "userSelection"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCalendar<any>, [null, { optional: true; }, null]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCalendar<any>, [null, { optional: true; }, null]>;
 }
 
 // @public
 export class KbqCalendarBody implements OnChanges {
-    activeCell: number;
-    cellAspectRatio: number;
+    readonly activeCell: _angular_core.InputSignal<number>;
+    readonly cellAspectRatio: _angular_core.InputSignal<number>;
     // (undocumented)
     cellClicked(cell: KbqCalendarCell): void;
     cellPadding: string;
@@ -123,18 +122,18 @@ export class KbqCalendarBody implements OnChanges {
     firstRowOffset: number;
     // (undocumented)
     isActiveCell(rowIndex: number, colIndex: number): boolean;
-    labelMinRequiredCells: number;
+    readonly labelMinRequiredCells: _angular_core.InputSignal<number>;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
-    numCols: number;
-    rows: KbqCalendarCell[][];
-    selectedValue: number;
-    readonly selectedValueChange: EventEmitter<number>;
-    todayValue: number;
+    readonly numCols: _angular_core.InputSignal<number>;
+    readonly rows: _angular_core.InputSignal<KbqCalendarCell[][]>;
+    readonly selectedValue: _angular_core.InputSignal<number>;
+    readonly selectedValueChange: _angular_core.OutputEmitterRef<number>;
+    readonly todayValue: _angular_core.InputSignal<number>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCalendarBody, "[kbq-calendar-body]", ["kbqCalendarBody"], { "rows": { "alias": "rows"; "required": false; }; "todayValue": { "alias": "todayValue"; "required": false; }; "selectedValue": { "alias": "selectedValue"; "required": false; }; "labelMinRequiredCells": { "alias": "labelMinRequiredCells"; "required": false; }; "numCols": { "alias": "numCols"; "required": false; }; "activeCell": { "alias": "activeCell"; "required": false; }; "cellAspectRatio": { "alias": "cellAspectRatio"; "required": false; }; }, { "selectedValueChange": "selectedValueChange"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCalendarBody, "[kbq-calendar-body]", ["kbqCalendarBody"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "todayValue": { "alias": "todayValue"; "required": false; "isSignal": true; }; "selectedValue": { "alias": "selectedValue"; "required": false; "isSignal": true; }; "labelMinRequiredCells": { "alias": "labelMinRequiredCells"; "required": false; "isSignal": true; }; "numCols": { "alias": "numCols"; "required": false; "isSignal": true; }; "activeCell": { "alias": "activeCell"; "required": false; "isSignal": true; }; "cellAspectRatio": { "alias": "cellAspectRatio"; "required": false; "isSignal": true; }; }, { "selectedValueChange": "selectedValueChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCalendarBody, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCalendarBody, never>;
 }
 
 // @public
@@ -161,7 +160,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     // (undocumented)
     get activeDate(): D;
     set activeDate(value: D);
-    readonly activeDateChange: EventEmitter<D>;
+    readonly activeDateChange: _angular_core.OutputEmitterRef<D>;
     // (undocumented)
     get currentDisabled(): boolean;
     // (undocumented)
@@ -173,7 +172,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     // (undocumented)
     monthNames: MonthName[];
     // (undocumented)
-    readonly monthSelected: EventEmitter<D>;
+    readonly monthSelected: _angular_core.OutputEmitterRef<D>;
     // (undocumented)
     get nextDisabled(): boolean;
     // (undocumented)
@@ -193,21 +192,21 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     // (undocumented)
     years: number[];
     // (undocumented)
-    readonly yearSelected: EventEmitter<D>;
+    readonly yearSelected: _angular_core.OutputEmitterRef<D>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCalendarHeader<any>, "kbq-calendar-header", ["kbqCalendarHeader"], { "activeDate": { "alias": "activeDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; }, { "activeDateChange": "activeDateChange"; "monthSelected": "monthSelected"; "yearSelected": "yearSelected"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCalendarHeader<any>, "kbq-calendar-header", ["kbqCalendarHeader"], { "activeDate": { "alias": "activeDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; }, { "activeDateChange": "activeDateChange"; "monthSelected": "monthSelected"; "yearSelected": "yearSelected"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCalendarHeader<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCalendarHeader<any>, never>;
 }
 
 // @public
 export class KbqDatepicker<D> implements OnDestroy {
     constructor(overlay: Overlay, ngZone: NgZone, viewContainerRef: ViewContainerRef, scrollStrategy: any, dateAdapter: DateAdapter<D>, dir: Directionality);
     // (undocumented)
-    backdropClass: string;
+    readonly backdropClass: _angular_core.InputSignal<string>;
     close(restoreFocus?: boolean): void;
-    readonly closedStream: EventEmitter<void>;
-    dateClass: (date: D) => KbqCalendarCellCssClasses;
+    readonly closedStream: _angular_core.OutputEmitterRef<void>;
+    readonly dateClass: _angular_core.InputSignal<(date: D) => KbqCalendarCellCssClasses>;
     // (undocumented)
     get dateFilter(): (date: D | null) => boolean;
     datepickerInput: KbqDatepickerInput<D>;
@@ -220,16 +219,16 @@ export class KbqDatepicker<D> implements OnDestroy {
     get hasBackdrop(): boolean;
     set hasBackdrop(value: boolean);
     id: string;
-    maxDate: D | null;
-    minDate: D | null;
-    readonly monthSelected: EventEmitter<D>;
+    readonly maxDate: _angular_core.InputSignal<D | null>;
+    readonly minDate: _angular_core.InputSignal<D | null>;
+    readonly monthSelected: _angular_core.OutputEmitterRef<D>;
     // (undocumented)
     ngOnDestroy(): void;
     open(): void;
     get opened(): boolean;
     set opened(value: boolean);
-    readonly openedStream: EventEmitter<void>;
-    panelClass: string | string[];
+    readonly openedStream: _angular_core.OutputEmitterRef<void>;
+    readonly panelClass: _angular_core.InputSignal<string | string[]>;
     popupRef: OverlayRef | null;
     registerInput(input: KbqDatepickerInput<D>): void;
     select(date: D): void;
@@ -246,11 +245,11 @@ export class KbqDatepicker<D> implements OnDestroy {
     toggle(): void;
     // (undocumented)
     get value(): D | null;
-    readonly yearSelected: EventEmitter<D>;
+    readonly yearSelected: _angular_core.OutputEmitterRef<D>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepicker<any>, "kbq-datepicker", ["kbqDatepicker"], { "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "startAt": { "alias": "startAt"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "opened": { "alias": "opened"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "openedStream": "opened"; "closedStream": "closed"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDatepicker<any>, "kbq-datepicker", ["kbqDatepicker"], { "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "startAt": { "alias": "startAt"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "opened": { "alias": "opened"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "dateClass": { "alias": "dateClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; }, { "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "openedStream": "opened"; "closedStream": "closed"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepicker<any>, [null, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepicker<any>, [null, null, null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public
@@ -264,7 +263,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     constructor(changeDetectorRef: ChangeDetectorRef);
     readonly animationDone: Subject<void>;
     animationState: 'enter' | 'void';
-    calendar: KbqCalendar<D>;
+    readonly calendar: _angular_core.Signal<KbqCalendar<any>>;
     datepicker: KbqDatepicker<D>;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -273,9 +272,9 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     // (undocumented)
     startExitAnimation(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerContent<any>, "kbq-datepicker__content", ["kbqDatepickerContent"], {}, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDatepickerContent<any>, "kbq-datepicker__content", ["kbqDatepickerContent"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerContent<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerContent<any>, never>;
 }
 
 // @public
@@ -289,10 +288,10 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     protected configuration: any;
     // (undocumented)
     controlType: string;
-    readonly dateChange: EventEmitter<KbqDatepickerInputEvent<D>>;
+    readonly dateChange: _angular_core.OutputEmitterRef<KbqDatepickerInputEvent<D>>;
     // (undocumented)
     dateFilter: (date: D | null) => boolean;
-    readonly dateInput: EventEmitter<KbqDatepickerInputEvent<D>>;
+    readonly dateInput: _angular_core.OutputEmitterRef<KbqDatepickerInputEvent<D>>;
     // (undocumented)
     get dateInputFormat(): string;
     // (undocumented)
@@ -322,15 +321,15 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     get id(): string;
     set id(value: string);
     // (undocumented)
-    readonly incorrectInput: EventEmitter<void>;
+    readonly incorrectInput: _angular_core.OutputEmitterRef<void>;
     // (undocumented)
     get isReadOnly(): boolean;
     set kbqCalendar(value: KbqCalendar<D>);
     set kbqDatepicker(value: KbqDatepicker<D>);
     set kbqDatepickerFilter(value: (date: D | null) => boolean);
     // (undocumented)
-    set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger);
-    protected readonly localeService: KbqLocaleService | null;
+    set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
+    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     get max(): D | null;
     set max(value: D | null);
     get min(): D | null;
@@ -385,9 +384,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     writeValue(value: D): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerInput<any>, [null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerInput<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public
@@ -414,65 +413,32 @@ export class KbqDatepickerIntl {
     switchToMonthViewLabel: string;
     switchToMultiYearViewLabel: string;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerIntl, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerIntl, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqDatepickerIntl>;
+    static ɵprov: _angular_core.ɵɵInjectableDeclaration<KbqDatepickerIntl>;
 }
 
 // @public (undocumented)
 export class KbqDatepickerModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqDatepickerModule>;
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i14" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDatepickerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof i7.KbqDatepickerToggleIconComponent, typeof i8.NgClass, typeof i8.TitleCasePipe, typeof i9.KbqCalendar, typeof i10.KbqCalendarBody, typeof i11.KbqDatepicker, typeof i11.KbqDatepickerContent, typeof i12.KbqDatepickerInput, typeof i7.KbqDatepickerToggle, typeof i7.KbqDatepickerToggleIcon, typeof i13.KbqMonthView, typeof i14.KbqCalendarHeader], [typeof i9.KbqCalendar, typeof i10.KbqCalendarBody, typeof i11.KbqDatepicker, typeof i11.KbqDatepickerContent, typeof i12.KbqDatepickerInput, typeof i7.KbqDatepickerToggle, typeof i7.KbqDatepickerToggleIcon, typeof i7.KbqDatepickerToggleIconComponent, typeof i13.KbqMonthView, typeof i14.KbqCalendarHeader, typeof i15.KbqFormFieldModule]>;
-}
-
-// @public @deprecated (undocumented)
-export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
-    constructor(intl: KbqDatepickerIntl, changeDetectorRef: ChangeDetectorRef);
-    button: KbqButton;
-    customIcon: KbqDatepickerToggleIcon;
-    datepicker: KbqDatepicker<D>;
-    get disabled(): boolean;
-    set disabled(value: boolean);
-    // (undocumented)
-    intl: KbqDatepickerIntl;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    open(event: Event): void;
-    tabIndex: number | null;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerToggle<any>, "kbq-datepicker-toggle", ["kbqDatepickerToggle"], { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, ["customIcon"], ["[kbqDatepickerToggleIcon]"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggle<any>, never>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof KbqDatepickerToggleIconComponent, typeof i8.TitleCasePipe, typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqMonthView, typeof KbqCalendarHeader], [typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqDatepickerToggleIconComponent, typeof KbqMonthView, typeof KbqCalendarHeader, typeof i15.KbqFormFieldModule]>;
 }
 
 // @public
 export class KbqDatepickerToggleIcon {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerToggleIcon, "[kbqDatepickerToggleIcon]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDatepickerToggleIcon, "[kbqDatepickerToggleIcon]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggleIcon, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerToggleIcon, never>;
 }
 
 // @public (undocumented)
 export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy {
-    datepicker: KbqDatepicker<D>;
+    readonly datepicker: _angular_core.InputSignal<KbqDatepicker<D>>;
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
@@ -483,9 +449,9 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     ngOnDestroy(): void;
     open($event: MouseEvent): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerToggleIconComponent<any>, "kbq-datepicker-toggle-icon", never, { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; }; }, {}, never, ["[kbqDatepickerToggleIcon]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDatepickerToggleIconComponent<any>, "kbq-datepicker-toggle-icon", never, { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; "isSignal": true; }; }, {}, never, ["[kbqDatepickerToggleIcon]"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggleIconComponent<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerToggleIconComponent<any>, never>;
 }
 
 // @public
@@ -493,34 +459,34 @@ export class KbqMonthView<D> implements AfterContentInit {
     constructor(changeDetectorRef: ChangeDetectorRef, adapter: DateAdapter<D>);
     get activeDate(): D;
     set activeDate(value: D);
-    readonly activeDateChange: EventEmitter<D>;
+    readonly activeDateChange: _angular_core.OutputEmitterRef<D>;
     // (undocumented)
     adapter: DateAdapter<D>;
-    dateClass: (date: D) => KbqCalendarCellCssClasses;
-    dateFilter: (date: D) => boolean;
+    readonly dateClass: _angular_core.InputSignal<(date: D) => KbqCalendarCellCssClasses>;
+    readonly dateFilter: _angular_core.InputSignal<(date: D) => boolean>;
     dateSelected(date: number): void;
     firstWeekOffset: number;
     init(): void;
-    kbqCalendarBody: KbqCalendarBody;
-    maxDate: D | null;
-    minDate: D | null;
+    readonly kbqCalendarBody: _angular_core.Signal<KbqCalendarBody>;
+    readonly maxDate: _angular_core.InputSignal<D | null>;
+    readonly minDate: _angular_core.InputSignal<D | null>;
     // (undocumented)
     ngAfterContentInit(): void;
     get selected(): D | null;
     set selected(value: D | null);
-    readonly selectedChange: EventEmitter<D | null>;
+    readonly selectedChange: _angular_core.OutputEmitterRef<D | null>;
     selectedDate: number | null;
     todayDate: number | null;
-    readonly userSelection: EventEmitter<void>;
+    readonly userSelection: _angular_core.OutputEmitterRef<void>;
     weekdays: {
         long: string;
         narrow: string;
     }[];
     weeks: KbqCalendarCell[][];
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMonthView<any>, "kbq-month-view", ["kbqMonthView"], { "activeDate": { "alias": "activeDate"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "dateFilter": { "alias": "dateFilter"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; }, { "selectedChange": "selectedChange"; "userSelection": "userSelection"; "activeDateChange": "activeDateChange"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqMonthView<any>, "kbq-month-view", ["kbqMonthView"], { "activeDate": { "alias": "activeDate"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; "isSignal": true; }; "maxDate": { "alias": "maxDate"; "required": false; "isSignal": true; }; "dateFilter": { "alias": "dateFilter"; "required": false; "isSignal": true; }; "dateClass": { "alias": "dateClass"; "required": false; "isSignal": true; }; }, { "selectedChange": "selectedChange"; "userSelection": "userSelection"; "activeDateChange": "activeDateChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqMonthView<any>, [null, { optional: true; }]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqMonthView<any>, [null, { optional: true; }]>;
 }
 
 // @public (undocumented)

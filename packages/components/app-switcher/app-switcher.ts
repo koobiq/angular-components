@@ -20,11 +20,12 @@ import {
     Output,
     TemplateRef,
     Type,
-    ViewChild,
     ViewEncapsulation,
     booleanAttribute,
     inject,
-    numberAttribute
+    numberAttribute,
+    output,
+    viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,7 +46,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
@@ -139,7 +139,6 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
     imports: [
         FormsModule,
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         KbqDividerModule,
@@ -153,13 +152,13 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
     ],
     templateUrl: './app-switcher.html',
     styleUrls: ['./app-switcher.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-app-switcher'
     },
-    animations: [kbqAppSwitcherAnimations.state]
+    animations: [kbqAppSwitcherAnimations.state],
+    preserveWhitespaces: false
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
@@ -185,6 +184,9 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     prefix = 'kbq-app-switcher';
 
     /** @docs-private */
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input() trigger: KbqAppSwitcherTrigger;
 
     /** @docs-private */
@@ -196,9 +198,9 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     protected activeApp: KbqAppSwitcherApp;
 
     /** @docs-private */
-    @ViewChild(KbqInput) input: KbqInput;
+    readonly input = viewChild(KbqInput);
     /** @docs-private */
-    @ViewChild('otherSites') otherSites: KbqDropdownTrigger;
+    readonly otherSites = viewChild.required<KbqDropdownTrigger>('otherSites');
 
     constructor() {
         super();
@@ -211,8 +213,10 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.input) {
-            this.input.focus();
+        const input = this.input();
+
+        if (input) {
+            input.focus();
         }
 
         this.visibleChange.subscribe((state) => {
@@ -284,13 +288,13 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
 
 @Directive({
     selector: '[kbqAppSwitcher]',
-    exportAs: 'kbqAppSwitcher',
     host: {
         '[class.kbq-app-switcher_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    exportAs: 'kbqAppSwitcher'
 })
 export class KbqAppSwitcherTrigger
     extends KbqPopUpTrigger<KbqAppSwitcherComponent>
@@ -340,18 +344,29 @@ export class KbqAppSwitcherTrigger
     }
 
     /** Selected application */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() selectedApp: KbqAppSwitcherApp;
 
     /** Placement of popUp */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input('kbqAppSwitcherPlacement') placement: KbqPopUpPlacementValues = PopUpPlacements.BottomLeft;
 
     /** Class that will be used in the background */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     /** Offset of popUp */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetYWithArrow;
 
     /** Array of sites */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get sites(): KbqAppSwitcherSite[] {
         return this._parsedSites;
@@ -380,20 +395,6 @@ export class KbqAppSwitcherTrigger
 
     private _parsedSites: KbqAppSwitcherSite[];
 
-    /**
-     * @deprecated Will be removed in next major release, use `sites` with one element instead.
-     */
-    @Input()
-    get apps(): KbqAppSwitcherApp[] {
-        return this._parsedApps;
-    }
-
-    set apps(apps: KbqAppSwitcherApp[]) {
-        this.originalApps = apps;
-
-        this._parsedApps = this.makeGroupsForApps(this.originalApps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
-    }
-
     private makeGroupsForApps(apps: KbqAppSwitcherApp[], minAppsForGrouping: number): KbqAppSwitcherApp[] {
         const groups: Record<string, KbqAppSwitcherApp> = {};
         const untyped: KbqAppSwitcherApp[] = [];
@@ -420,6 +421,8 @@ export class KbqAppSwitcherTrigger
 
     /** Function to group the apps by type. The first argument is an app object with type.
      * The second is a groups object and third is an array for untyped apps */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get groupBy() {
         return this._groupBy;
@@ -438,6 +441,8 @@ export class KbqAppSwitcherTrigger
     private _groupBy = defaultGroupBy;
 
     /** Selected site */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get selectedSite(): KbqAppSwitcherSite {
         return this._parsedSelectedSite;
@@ -455,6 +460,8 @@ export class KbqAppSwitcherTrigger
     private _parsedSelectedSite: KbqAppSwitcherSite;
 
     /** Whether the trigger is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -480,17 +487,15 @@ export class KbqAppSwitcherTrigger
     @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
 
     /** @docs-private */
-    @Output() readonly selectedSiteChange = new EventEmitter<KbqAppSwitcherSite>();
+    readonly selectedSiteChange = output<KbqAppSwitcherSite>();
     /** @docs-private */
-    @Output() readonly selectedAppChange = new EventEmitter<KbqAppSwitcherApp>();
+    readonly selectedAppChange = output<KbqAppSwitcherApp>();
 
     /** @docs-private */
     trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
 
     /** @docs-private */
     originalSites: KbqAppSwitcherSite[];
-    /** @docs-private */
-    originalApps: KbqAppSwitcherApp[];
 
     /** @docs-private */
     protected originSelector = '.kbq-app-switcher';

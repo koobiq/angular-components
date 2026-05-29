@@ -10,18 +10,18 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
+    contentChildren,
     ElementRef,
-    EventEmitter,
     forwardRef,
     HostAttributeToken,
     inject,
     Input,
+    input,
     OnDestroy,
-    Output,
-    QueryList,
+    output,
     ViewEncapsulation
 } from '@angular/core';
+import { outputToObservable } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { merge, Subject, Subscription } from 'rxjs';
 import { KbqAccordionItem } from './accordion-item';
@@ -48,16 +48,16 @@ interface KbqAccordionState {
     selector: 'kbq-accordion, [kbq-accordion]',
     template: '<ng-content />',
     styleUrls: ['accordion.component.scss', 'accordion-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'kbq-accordion',
-        '[attr.data-orientation]': 'orientation',
-        '(keydown)': 'keydownHandler($event)'
-    },
     providers: [
         { provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-accordion',
+        '[attr.data-orientation]': 'orientation()',
+        '(keydown)': 'keydownHandler($event)'
+    }
 })
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
     private readonly isBrowser = inject(Platform).isBrowser;
@@ -78,23 +78,27 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     readonly openCloseAllActions = new Subject<boolean>();
 
     /**  @docs-private */
-    @ContentChildren(forwardRef(() => KbqAccordionItem), { descendants: true })
-    items: QueryList<KbqAccordionItem>;
+    readonly items = contentChildren(
+        forwardRef(() => KbqAccordionItem),
+        { descendants: true }
+    );
 
     /** Specifies whether the accordion saves its states. Default is false */
     useStateSaving: boolean = inject(new HostAttributeToken('useStateSaving'), { optional: true }) !== null;
 
-    @Input() variant: KbqAccordionVariant | string = KbqAccordionVariant.fill;
+    readonly variant = input<KbqAccordionVariant | string>(KbqAccordionVariant.fill);
 
     /** Whether the Accordion is disabled. */
-    @Input({ transform: booleanAttribute }) disabled: boolean;
+    readonly disabled = input<boolean, unknown>(undefined!, { transform: booleanAttribute });
 
     /** The orientation of the accordion. */
-    @Input() orientation: KbqAccordionOrientation = 'vertical';
+    readonly orientation = input<KbqAccordionOrientation>('vertical');
 
     /**
      * The value of the item to expand when initially rendered and type is "single". Use when you do not need to control the state of the items.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get defaultValue(): string[] | string {
         return this.isMultiple ? this._defaultValue : this._defaultValue[0];
@@ -107,11 +111,13 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     }
 
     /** Determines whether one or multiple items can be opened at the same time. */
-    @Input() type: KbqAccordionType = 'single';
+    readonly type = input<KbqAccordionType>('single');
 
-    @Input() collapsible = true;
+    readonly collapsible = input(true);
 
     /** The controlled value of the item to expand */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): string[] | string {
         if (this._value === undefined) {
@@ -129,14 +135,14 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         }
     }
 
-    @Output() readonly onValueChange: EventEmitter<void> = new EventEmitter<void>();
+    readonly onValueChange = output<void>();
 
     get id(): string {
         return this._id;
     }
 
     get isMultiple(): boolean {
-        return this.type === 'multiple';
+        return this.type() === 'multiple';
     }
 
     get hasSavedState(): boolean {
@@ -171,17 +177,17 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
             this.selectionDispatcher.notify(this._defaultValue as string, this.id);
         }
 
-        this.keyManager = new FocusKeyManager(this.items).withHomeAndEnd();
+        this.keyManager = new FocusKeyManager(this.items()).withHomeAndEnd();
 
-        if (this.orientation === 'horizontal') {
+        if (this.orientation() === 'horizontal') {
             this.keyManager.withHorizontalOrientation(this.dir?.value || 'ltr');
         } else {
             this.keyManager.withVerticalOrientation();
         }
 
-        this.onValueChangeSubscription = merge(...this.items.map((item) => item.expandedChange)).subscribe(() =>
-            this.onValueChange.emit()
-        );
+        this.onValueChangeSubscription = merge(
+            ...this.items().map((item) => outputToObservable(item.expandedChange))
+        ).subscribe(() => this.onValueChange.emit());
     }
 
     ngAfterViewInit(): void {
@@ -216,7 +222,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
             this.keyManager.setPreviousItemActive();
             event.preventDefault();
         } else if (event.keyCode === TAB) {
-            if (this.keyManager.activeItemIndex === this.items.length - 1) return;
+            if (this.keyManager.activeItemIndex === this.items().length - 1) return;
 
             this.keyManager.setNextItemActive();
             event.preventDefault();

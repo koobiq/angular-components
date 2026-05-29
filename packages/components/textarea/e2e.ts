@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 @Component({
     selector: 'e2e-textarea-states',
-    imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqTextareaModule, FormsModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <kbq-label>Label | empty</kbq-label>
@@ -99,7 +96,7 @@ export class E2eTextareaStates {
 
 @Component({
     selector: 'e2e-textarea-grow-behavior',
-    imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule],
+    imports: [KbqTextareaModule, FormsModule],
     template: `
         <kbq-form-field>
             <textarea kbqTextarea data-testid="grow_textarea" [(ngModel)]="value"></textarea>
@@ -136,7 +133,7 @@ const longTextareaContent =
 
 @Component({
     selector: 'e2e-textarea-scroll-on-focus',
-    imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule],
+    imports: [KbqTextareaModule, FormsModule],
     template: `
         <div data-testid="scroll_spacer_top" style="height: 200vh;">spacer above</div>
 

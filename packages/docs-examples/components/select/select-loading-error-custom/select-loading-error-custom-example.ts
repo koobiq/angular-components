@@ -57,10 +57,10 @@ const delayBeforeShowError = 3000;
             width: 320px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-column layout-align-center-center'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class SelectLoadingErrorCustomExample {
     error = signal(false);

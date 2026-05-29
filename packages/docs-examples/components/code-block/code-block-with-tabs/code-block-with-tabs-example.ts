@@ -17,6 +17,21 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqToggleModule,
         FormsModule
     ],
+    template: `
+        <kbq-toggle class="layout-margin-right-m layout-margin-bottom-m" [(ngModel)]="hideTabs">Hide tabs</kbq-toggle>
+        <kbq-toggle class="layout-margin-right-m" [(ngModel)]="filled">Filled</kbq-toggle>
+        <kbq-toggle [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
+
+        <kbq-code-block
+            canToggleSoftWrap
+            [activeFileIndex]="1"
+            [canDownload]="true"
+            [files]="files"
+            [hideTabs]="hideTabs()"
+            [filled]="filled()"
+            [lineNumbers]="lineNumbers()"
+        />
+    `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
             core: () => import('highlight.js/lib/core'),
@@ -27,21 +42,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             }
         })
     ],
-    template: `
-        <kbq-toggle class="layout-margin-right-m layout-margin-bottom-m" [(ngModel)]="hideTabs">Hide tabs</kbq-toggle>
-        <kbq-toggle class="layout-margin-right-m" [(ngModel)]="filled">Filled</kbq-toggle>
-        <kbq-toggle [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
-
-        <kbq-code-block
-            activeFileIndex="1"
-            canToggleSoftWrap
-            canDownload
-            [files]="files"
-            [hideTabs]="hideTabs()"
-            [filled]="filled()"
-            [lineNumbers]="lineNumbers()"
-        />
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithTabsExample {

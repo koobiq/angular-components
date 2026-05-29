@@ -5,7 +5,8 @@ import {
     ElementRef,
     forwardRef,
     Input,
-    ViewChild,
+    input,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqHighlightPipe, KbqOption } from '@koobiq/components/core';
@@ -24,25 +25,27 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
     ],
     templateUrl: 'timezone-option.component.html',
     styleUrls: ['../core/option/option.scss', 'timezone-option.component.scss', 'timezone-option-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTimezoneOption',
-    host: {
-        class: 'kbq-timezone-option'
-    },
     providers: [
         {
             provide: KbqOption,
             useExisting: forwardRef(() => KbqTimezoneOption)
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-timezone-option'
+    },
+    exportAs: 'kbqTimezoneOption'
 })
 export class KbqTimezoneOption extends KbqOption {
-    @ViewChild('tooltipContentWrapper', { static: false }) tooltipContentWrapper: ElementRef<HTMLElement>;
-    @ViewChild('tooltipContent', { static: false }) tooltipContent: ElementRef<HTMLElement>;
+    readonly tooltipContentWrapper = viewChild.required<ElementRef<HTMLElement>>('tooltipContentWrapper');
+    readonly tooltipContent = viewChild.required<ElementRef<HTMLElement>>('tooltipContent');
 
-    @Input() highlightText: string;
+    readonly highlightText = input<string>(undefined!);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get timezone(): KbqTimezoneZone {
         return this._timezone;

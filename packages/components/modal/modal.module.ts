@@ -1,6 +1,6 @@
 import { A11yModule, ConfigurableFocusTrapFactory, FocusTrapFactory } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -19,8 +19,6 @@ import { KbqModalService } from './modal.service';
         KbqIconModule,
         KbqTitleModule,
         NgTemplateOutlet,
-        NgStyle,
-        NgClass,
         KbqModalComponent,
         KbqModalTitle,
         KbqModalBody,
@@ -28,17 +26,17 @@ import { KbqModalService } from './modal.service';
         CssUnitPipe,
         KbqModalMainAction
     ],
+    providers: [
+        KbqModalControlService,
+        KbqModalService,
+        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
+    ],
     exports: [
         KbqModalComponent,
         KbqModalTitle,
         KbqModalBody,
         KbqModalFooter,
         KbqModalMainAction
-    ],
-    providers: [
-        KbqModalControlService,
-        KbqModalService,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }
     ]
 })
 export class KbqModalModule {}

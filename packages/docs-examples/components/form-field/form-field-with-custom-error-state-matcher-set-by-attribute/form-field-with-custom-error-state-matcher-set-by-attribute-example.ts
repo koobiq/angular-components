@@ -9,8 +9,7 @@ import {
     Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ErrorStateMatcher, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -26,8 +25,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 /** @title Form field with CustomErrorStateMatcher which set by `errorStateMatcher` attribute */
 @Component({
     selector: 'form-field-with-custom-error-state-matcher-set-by-attribute-example',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule, KbqButtonModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule, ReactiveFormsModule, KbqButtonModule],
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>

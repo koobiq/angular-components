@@ -1,12 +1,9 @@
-import { NgClass } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+﻿import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { ENTER, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -20,13 +17,11 @@ import { KbqPipeTitleDirective } from './pipe-title';
     selector: 'kbq-pipe-text',
     imports: [
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqPopoverModule,
         KbqInputModule,
         KbqDividerModule,
         FormsModule,
         KbqTextareaModule,
-        NgClass,
         KbqPipeButton,
         ReactiveFormsModule,
         KbqTitleModule,
@@ -36,20 +31,20 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ],
     templateUrl: 'pipe-text.html',
     styleUrls: ['base-pipe.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
     readonly placements = PopUpPlacements;
 
     /** @docs-private */
-    @ViewChild(KbqPopoverTrigger) popover: KbqPopoverTrigger;
+    readonly popover = viewChild.required(KbqPopoverTrigger);
 
     /** Whether the current pipe is disabled. */
     get disabled(): boolean {
@@ -66,13 +61,15 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
     ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.popover.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible) => {
-            this.stateChanges.next();
+        this.popover()
+            .visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((visible) => {
+                this.stateChanges.next();
 
-            if (!visible) {
-                this.filterBar?.onClosePipe.next(this.data);
-            }
-        });
+                if (!visible) {
+                    this.filterBar?.onClosePipe.emit(this.data);
+                }
+            });
     }
 
     onApply() {
@@ -80,7 +77,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
         this.stateChanges.next();
 
         this.control.markAsPristine();
-        this.popover.hide();
+        this.popover().hide();
 
         this.filterBar?.onChangePipe.next(this.data);
     }
@@ -101,6 +98,6 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
 
     /** opens popover */
     override open() {
-        this.popover.show();
+        this.popover().show();
     }
 }

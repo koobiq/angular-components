@@ -4,7 +4,7 @@
     [disabled]="data.disabled"
     [kbqPipeTitle]="pipeTooltip"
     [multiple]="true"
-    [ngClass]="{ 'kbq-active': select.panelOpen }"
+    [class]="{ 'kbq-active': select.panelOpen }"
     [ngModel]="selected"
     [panelClass]="'kbq-pipe-multi-tree-select__panel'"
     [selectAllHandler]="selectAllHandler"
@@ -14,7 +14,7 @@
     (selectionChange)="onSelect($event)"
 >
     <!-- eslint-disable-next-line @angular-eslint/template/prefer-control-flow -->
-    <kbq-form-field *ngIf="data.search" kbqFormFieldWithoutBorders kbqSelectSearch>
+    <kbq-form-field *ngIf="data.search" noBorders kbqSelectSearch>
         <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
         <input
             placeholder="{{ localeData.search.placeholder }}"
@@ -36,7 +36,7 @@
         kbq-select-matcher
         [disabled]="data.disabled"
         [kbqPipeState]="data"
-        [ngClass]="{ 'kbq-active': select.panelOpen }"
+        [class]="{ 'kbq-active': select.panelOpen }"
     >
         <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
 

@@ -21,8 +21,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <kbq-file-upload class="layout-margin-bottom-s" formControlName="fileControl" [accept]="accept">
                 @if (!formGroup.get('fileControl')?.errors) {
                     <i kbq-icon="kbq-file-o_16"></i>
-                }
-                @if (formGroup.get('fileControl')?.errors) {
+                } @else {
                     <i kbq-icon="kbq-triangle-exclamation_16"></i>
                 }
 

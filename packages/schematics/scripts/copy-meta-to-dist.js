@@ -38,6 +38,7 @@ const init = async () => {
     await copyFileWrapper(resolvePath('../dist/ng-add/index.js'), join(ngAddPath, 'index.js'));
     await copyFileWrapper(resolvePath('../src/ng-add/schema.json'), join(ngAddPath, 'schema.json'));
     await copyFileWrapper(resolvePath('../src/collection.json'), join(schematicsPath, 'collection.json'));
+    await copyFileWrapper(resolvePath('../src/migrations.json'), join(schematicsPath, 'migrations.json'));
 
     for (const migration of getMigrations()) {
         const migrationPath = join(schematicsPath, 'migrations', migration);

@@ -65,6 +65,7 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         KbqRoundDecimalPipe,
         KbqTableNumberPipe
     ],
+    providers: [{ provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
     exports: [
         KbqDecimalPipe,
         KbqRoundDecimalPipe,
@@ -96,8 +97,7 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         RangeShortDateTimeFormatterImpurePipe,
         RangeMiddleDateTimeFormatterImpurePipe,
         KbqDataSizePipe
-    ],
-    providers: [{ provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }]
+    ]
 })
 export class KbqFormattersModule {}
 

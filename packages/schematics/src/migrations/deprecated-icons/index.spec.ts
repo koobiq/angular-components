@@ -10,10 +10,25 @@ const collectionPath = path.join(__dirname, '../../collection.json');
 const SCHEMATIC_NAME = 'deprecated-icons';
 const DEPRECATED_SCOPE = 'pt-icons';
 
+/**
+ * `@schematics/angular:application` changed file names across major versions
+ * (`app.component.{ts,html}` ↔ `app.{ts,html}`). `createTestApp` pins to v17.
+ */
+const projectPaths = (project: workspaces.ProjectDefinition, tree: Tree | UnitTestTree) => {
+    const root = `/${project.root}/src/app`;
+
+    return {
+        html: tree.exists(`${root}/app.html`) ? `${root}/app.html` : `${root}/app.component.html`,
+        ts: tree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts`
+    };
+};
+
 const getProjectContent = (tree: UnitTestTree | Tree, project: workspaces.ProjectDefinition) => {
+    const p = projectPaths(project, tree);
+
     return [
-        tree.read(`/${project.root}/src/app/app.component.html`)?.toString() || '',
-        tree.read(`/${project.root}/src/app/app.component.ts`)?.toString() || '',
+        tree.read(p.html)?.toString() || '',
+        tree.read(p.ts)?.toString() || '',
         tree.read(`/${project.root}/src/styles.scss`)?.toString() || ''
     ].filter(Boolean);
 };
@@ -50,13 +65,12 @@ class TestApp {
 
             projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
             projects.forEach((project) => {
-                const templatePath = `/${project.root}/src/app/app.component.html`;
-                const tsPath = `/${project.root}/src/app/app.component.ts`;
+                const p = projectPaths(project, appTree);
                 const stylesPath = `/${project.root}/src/styles.scss`;
 
-                appTree.overwrite(templatePath, elementsWithDeprecatedSelectors.join('\n'));
+                appTree.overwrite(p.html, elementsWithDeprecatedSelectors.join('\n'));
                 appTree.overwrite(stylesPath, cssClassesWithDeprecatedSelectors);
-                appTree.overwrite(tsPath, componentClass);
+                appTree.overwrite(p.ts, componentClass);
             });
         });
 
@@ -119,13 +133,12 @@ class TestApp {
             project: workspaces.ProjectDefinition;
             tree: Tree;
         }) => {
-            const templatePath = `/${project.root}/src/app/app.component.html`;
-            const tsPath = `/${project.root}/src/app/app.component.ts`;
+            const p = projectPaths(project, tree);
             const stylesPath = `/${project.root}/src/styles.scss`;
 
-            tree.overwrite(templatePath, html || '');
+            tree.overwrite(p.html, html || '');
             tree.overwrite(stylesPath, styles || '');
-            tree.overwrite(tsPath, ts || '');
+            tree.overwrite(p.ts, ts || '');
         };
 
         it('should replace "class="pt-icons"" with ""', async () => {

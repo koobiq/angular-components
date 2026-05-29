@@ -12,6 +12,16 @@ import {
 @Component({
     selector: 'code-block-with-tabs-and-shadow-example',
     imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block
+            [lineNumbers
+            canToggleSoftWrap
+            [activeFileIndex]="2"
+            [softWrap]="true"
+            [files]="files"
+            [style.height.px]="350"
+        />
+    `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
             core: () => import('highlight.js/lib/core'),
@@ -22,16 +32,6 @@ import {
             }
         })
     ],
-    template: `
-        <kbq-code-block
-            activeFileIndex="2"
-            lineNumbers
-            canToggleSoftWrap
-            softWrap
-            [files]="files"
-            [style.height.px]="350"
-        />
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithTabsAndShadowExample implements AfterViewInit {

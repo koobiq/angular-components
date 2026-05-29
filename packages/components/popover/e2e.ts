@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqPopoverComponent, KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 
@@ -39,92 +39,99 @@ import { KbqPopoverComponent, KbqPopoverModule, KbqPopoverTrigger } from '@koobi
     }
 })
 export class E2ePopoverStates implements AfterViewInit {
-    @ViewChild(KbqPopoverTrigger) trigger: KbqPopoverTrigger;
-    @ViewChild('customHeader') customHeader: TemplateRef<any>;
-    @ViewChild('customContent') customContent: TemplateRef<any>;
-    @ViewChild('customFooter') customFooter: TemplateRef<any>;
+    readonly trigger = viewChild.required(KbqPopoverTrigger);
+    readonly customHeader = viewChild.required<TemplateRef<any>>('customHeader');
+    readonly customContent = viewChild.required<TemplateRef<any>>('customContent');
+    readonly customFooter = viewChild.required<TemplateRef<any>>('customFooter');
 
-    @ViewChild('popoverSmall') popoverSmall: KbqPopoverComponent;
-    @ViewChild('popoverMedium') popoverMedium: KbqPopoverComponent;
-    @ViewChild('popoverLarge') popoverLarge: KbqPopoverComponent;
-    @ViewChild('popoverNoArrow') popoverNoArrow: KbqPopoverComponent;
-    @ViewChild('popoverWithCloseButton') popoverWithCloseButton: KbqPopoverComponent;
-    @ViewChild('popoverFooterTemplate') popoverFooterTemplate: KbqPopoverComponent;
+    readonly popoverSmall = viewChild.required<KbqPopoverComponent>('popoverSmall');
+    readonly popoverMedium = viewChild.required<KbqPopoverComponent>('popoverMedium');
+    readonly popoverLarge = viewChild.required<KbqPopoverComponent>('popoverLarge');
+    readonly popoverNoArrow = viewChild.required<KbqPopoverComponent>('popoverNoArrow');
+    readonly popoverWithCloseButton = viewChild.required<KbqPopoverComponent>('popoverWithCloseButton');
+    readonly popoverFooterTemplate = viewChild.required<KbqPopoverComponent>('popoverFooterTemplate');
 
     ngAfterViewInit(): void {
+        const popoverSmall = this.popoverSmall();
+        const popoverMedium = this.popoverMedium();
+        const popoverLarge = this.popoverLarge();
+        const popoverNoArrow = this.popoverNoArrow();
+        const popoverWithCloseButton = this.popoverWithCloseButton();
+        const popoverFooterTemplate = this.popoverFooterTemplate();
+
         const content =
             'content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content';
 
-        this.popoverSmall.trigger = this.trigger;
-        this.popoverSmall.content = 'small small small small small small small small small small small small small';
-        this.popoverSmall.classMap = {
+        popoverSmall.trigger = this.trigger();
+        popoverSmall.content = 'small small small small small small small small small small small small small';
+        popoverSmall.classMap = {
             'kbq-popover_small': true,
             'kbq-popover_placement-bottom': true
         };
-        this.popoverSmall.defaultPaddings = true;
-        this.popoverSmall.arrow = true;
-        this.popoverSmall.show(0);
+        popoverSmall.defaultPaddings = true;
+        popoverSmall.arrow = true;
+        popoverSmall.show(0);
 
-        this.popoverMedium.trigger = this.trigger;
-        this.popoverMedium.header = 'medium header medium header medium header medium header medium header';
-        this.popoverMedium.content = content;
-        this.popoverMedium.footer = 'medium footer medium footer medium footer medium footer medium footer';
-        this.popoverMedium.classMap = {
+        popoverMedium.trigger = this.trigger();
+        popoverMedium.header = 'medium header medium header medium header medium header medium header';
+        popoverMedium.content = content;
+        popoverMedium.footer = 'medium footer medium footer medium footer medium footer medium footer';
+        popoverMedium.classMap = {
             'kbq-popover_medium': true,
             'kbq-popover_placement-bottom': true
         };
-        this.popoverMedium.defaultPaddings = true;
-        this.popoverMedium.arrow = true;
-        this.popoverMedium.show(0);
+        popoverMedium.defaultPaddings = true;
+        popoverMedium.arrow = true;
+        popoverMedium.show(0);
 
-        this.popoverLarge.trigger = this.trigger;
-        this.popoverLarge.header = 'large header large header large header large header large header large header';
-        this.popoverLarge.content = content;
-        this.popoverLarge.footer = 'large footer large footer large footer large footer large footer large footer';
-        this.popoverLarge.classMap = {
+        popoverLarge.trigger = this.trigger();
+        popoverLarge.header = 'large header large header large header large header large header large header';
+        popoverLarge.content = content;
+        popoverLarge.footer = 'large footer large footer large footer large footer large footer large footer';
+        popoverLarge.classMap = {
             'kbq-popover_large': true,
             'kbq-popover_placement-bottom': true
         };
-        this.popoverLarge.defaultPaddings = true;
-        this.popoverLarge.arrow = true;
-        this.popoverLarge.show(0);
+        popoverLarge.defaultPaddings = true;
+        popoverLarge.arrow = true;
+        popoverLarge.show(0);
 
-        this.popoverNoArrow.trigger = this.trigger;
-        this.popoverNoArrow.header = 'header header header header header header';
-        this.popoverNoArrow.content = 'content content content content content ';
-        this.popoverNoArrow.footer = 'footer footer footer footer footer footer';
-        this.popoverNoArrow.classMap = {
+        popoverNoArrow.trigger = this.trigger();
+        popoverNoArrow.header = 'header header header header header header';
+        popoverNoArrow.content = 'content content content content content ';
+        popoverNoArrow.footer = 'footer footer footer footer footer footer';
+        popoverNoArrow.classMap = {
             'kbq-popover_medium': true,
             'kbq-popover_placement-bottom': true
         };
-        this.popoverNoArrow.defaultPaddings = true;
-        this.popoverNoArrow.arrow = false;
-        this.popoverNoArrow.show(0);
+        popoverNoArrow.defaultPaddings = true;
+        popoverNoArrow.arrow = false;
+        popoverNoArrow.show(0);
 
-        this.popoverWithCloseButton.trigger = this.trigger;
-        this.popoverWithCloseButton.header = 'header header header header header header';
-        this.popoverWithCloseButton.content = 'content content content content content ';
-        this.popoverWithCloseButton.footer = 'footer footer footer footer footer footer';
-        this.popoverWithCloseButton.classMap = {
+        popoverWithCloseButton.trigger = this.trigger();
+        popoverWithCloseButton.header = 'header header header header header header';
+        popoverWithCloseButton.content = 'content content content content content ';
+        popoverWithCloseButton.footer = 'footer footer footer footer footer footer';
+        popoverWithCloseButton.classMap = {
             'kbq-popover_medium': true,
             'kbq-popover_placement-bottom': true
         };
-        this.popoverWithCloseButton.defaultPaddings = true;
-        this.popoverWithCloseButton.arrow = false;
-        this.popoverWithCloseButton.hasCloseButton = true;
-        this.popoverWithCloseButton.show(0);
+        popoverWithCloseButton.defaultPaddings = true;
+        popoverWithCloseButton.arrow = false;
+        popoverWithCloseButton.hasCloseButton = true;
+        popoverWithCloseButton.show(0);
 
-        this.popoverFooterTemplate.trigger = this.trigger;
-        this.popoverFooterTemplate.header = this.customHeader;
-        this.popoverFooterTemplate.content = this.customContent;
-        this.popoverFooterTemplate.footer = this.customFooter;
-        this.popoverFooterTemplate.classMap = {
+        popoverFooterTemplate.trigger = this.trigger();
+        popoverFooterTemplate.header = this.customHeader();
+        popoverFooterTemplate.content = this.customContent();
+        popoverFooterTemplate.footer = this.customFooter();
+        popoverFooterTemplate.classMap = {
             'kbq-popover_medium': true,
             'kbq-popover_placement-bottom': true
         };
-        this.popoverFooterTemplate.defaultPaddings = true;
-        this.popoverFooterTemplate.arrow = false;
-        this.popoverFooterTemplate.hasCloseButton = true;
-        this.popoverFooterTemplate.show(0);
+        popoverFooterTemplate.defaultPaddings = true;
+        popoverFooterTemplate.arrow = false;
+        popoverFooterTemplate.hasCloseButton = true;
+        popoverFooterTemplate.show(0);
     }
 }

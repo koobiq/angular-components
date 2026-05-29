@@ -5,8 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import * as i0 from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -17,9 +16,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfiguration>;
@@ -29,26 +26,22 @@ export class KbqBreadcrumbButton implements OnInit {
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbButton, "[kbq-button][kbqBreadcrumb]", never, {}, {}, never, never, true, [{ directive: typeof i1.RdxRovingFocusItemDirective; inputs: { "focusable": "focusable"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqBreadcrumbButton, "[kbq-button][kbqBreadcrumb]", never, {}, {}, never, never, true, [{ directive: typeof RdxRovingFocusItemDirective; inputs: { "focusable": "focusable"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbButton, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbButton, never>;
 }
 
 // @public
 export class KbqBreadcrumbItem {
-    current: boolean;
-    customTemplateRef: TemplateRef<any>;
-    disabled: boolean;
-    // (undocumented)
-    static ngAcceptInputType_current: unknown;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
+    readonly current: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly customTemplateRef: _angular_core.Signal<TemplateRef<any> | undefined>;
+    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly routerLink: RouterLink | null;
-    text: string;
+    readonly text: _angular_core.InputSignal<string>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "current": { "alias": "current"; "required": false; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "current": { "alias": "current"; "required": false; "isSignal": true; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbItem, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbItem, never>;
 }
 
 // @public (undocumented)
@@ -56,8 +49,8 @@ export class KbqBreadcrumbs implements AfterContentInit {
     constructor();
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
-    disabled: boolean;
-    firstItemNegativeMargin: boolean;
+    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly firstItemNegativeMargin: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly items: QueryList<KbqBreadcrumbItem>;
     protected get itemsExcludingEdges(): KbqBreadcrumbItem[];
@@ -65,25 +58,21 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
-    max: number | null;
+    readonly max: _angular_core.InputSignal<number | null>;
     protected get maxWidth(): number | null;
     protected readonly minVisibleItems = 2;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_firstItemNegativeMargin: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
     // (undocumented)
     protected readonly separator?: TemplateRef<any>;
-    size: KbqDefaultSizes;
-    wrapMode: KbqBreadcrumbsWrapMode;
+    readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
+    readonly wrapMode: _angular_core.InputSignal<KbqBreadcrumbsWrapMode>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof i2.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
 
 // @public (undocumented)
@@ -100,13 +89,11 @@ export const kbqBreadcrumbsConfigurationProvider: (configuration: Partial<KbqBre
 // @public (undocumented)
 export class KbqBreadcrumbsModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbsModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbsModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqBreadcrumbsModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqBreadcrumbsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBreadcrumbsModule, never, [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton], [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqBreadcrumbsModule, never, [typeof KbqBreadcrumbs, typeof KbqBreadcrumbItem, typeof KbqBreadcrumbView, typeof KbqBreadcrumbsSeparator, typeof KbqBreadcrumbButton], [typeof KbqBreadcrumbs, typeof KbqBreadcrumbItem, typeof KbqBreadcrumbView, typeof KbqBreadcrumbsSeparator, typeof KbqBreadcrumbButton]>;
 }
 
 // @public (undocumented)
@@ -114,9 +101,9 @@ export class KbqBreadcrumbsSeparator {
     // (undocumented)
     readonly templateRef: TemplateRef<any>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbsSeparator, "ng-template[kbqBreadcrumbsSeparator]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqBreadcrumbsSeparator, "ng-template[kbqBreadcrumbsSeparator]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbsSeparator, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbsSeparator, never>;
 }
 
 // @public (undocumented)
@@ -127,35 +114,31 @@ export class KbqBreadcrumbView {
     // (undocumented)
     readonly templateRef: TemplateRef<any>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbView, "[kbqBreadcrumbView]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqBreadcrumbView, "[kbqBreadcrumbView]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbView, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbView, never>;
 }
 
 // @public (undocumented)
 export class RdxRovingFocusGroupDirective {
-    readonly currentTabStopId: WritableSignal<string | null>;
+    readonly currentTabStopId: _angular_core.WritableSignal<string | null>;
     // (undocumented)
-    readonly currentTabStopIdChange: EventEmitter<string | null>;
+    readonly currentTabStopIdChange: _angular_core.OutputEmitterRef<string | null>;
     get dataOrientation(): Orientation;
     // Warning: (ae-forgotten-export) The symbol "Direction" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    dir: Direction;
+    readonly dir: _angular_core.InputSignal<Direction>;
     // (undocumented)
-    readonly entryFocus: EventEmitter<Event>;
-    readonly focusableItems: WritableSignal<HTMLElement[]>;
+    readonly entryFocus: _angular_core.OutputEmitterRef<Event>;
+    readonly focusableItems: _angular_core.WritableSignal<HTMLElement[]>;
     getFocusableItemsCount(): number;
     handleBlur(): void;
     handleFocus(event: FocusEvent): void;
     handleMouseDown(): void;
     handleMouseUp(): void;
     // (undocumented)
-    loop: boolean;
-    // (undocumented)
-    static ngAcceptInputType_loop: unknown;
-    // (undocumented)
-    static ngAcceptInputType_preventScrollOnEntryFocus: unknown;
+    readonly loop: _angular_core.InputSignalWithTransform<boolean, unknown>;
     onFocusableItemAdd(): void;
     onFocusableItemRemove(): void;
     onItemFocus(tabStopId: string): void;
@@ -165,33 +148,27 @@ export class RdxRovingFocusGroupDirective {
     // (undocumented)
     orientation: Orientation | undefined;
     // (undocumented)
-    preventScrollOnEntryFocus: boolean;
+    readonly preventScrollOnEntryFocus: _angular_core.InputSignalWithTransform<boolean, unknown>;
     registerItem(item: HTMLElement): void;
     get tabIndex(): 0 | -1;
     unregisterItem(item: HTMLElement): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<RdxRovingFocusGroupDirective, "[rdxRovingFocusGroup]", never, { "orientation": { "alias": "orientation"; "required": false; }; "dir": { "alias": "dir"; "required": false; }; "loop": { "alias": "loop"; "required": false; }; "preventScrollOnEntryFocus": { "alias": "preventScrollOnEntryFocus"; "required": false; }; }, { "entryFocus": "entryFocus"; "currentTabStopIdChange": "currentTabStopIdChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<RdxRovingFocusGroupDirective, "[rdxRovingFocusGroup]", never, { "orientation": { "alias": "orientation"; "required": false; }; "dir": { "alias": "dir"; "required": false; "isSignal": true; }; "loop": { "alias": "loop"; "required": false; "isSignal": true; }; "preventScrollOnEntryFocus": { "alias": "preventScrollOnEntryFocus"; "required": false; "isSignal": true; }; }, { "entryFocus": "entryFocus"; "currentTabStopIdChange": "currentTabStopIdChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<RdxRovingFocusGroupDirective, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<RdxRovingFocusGroupDirective, never>;
 }
 
 // @public (undocumented)
 export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
     // (undocumented)
-    active: boolean;
+    readonly active: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    allowShiftKey: boolean;
+    readonly allowShiftKey: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    focusable: boolean;
+    readonly focusable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     handleKeydown(event: KeyboardEvent): void;
     handleMouseDown(event: MouseEvent): void;
-    readonly isCurrentTabStop: Signal<boolean>;
-    // (undocumented)
-    static ngAcceptInputType_active: unknown;
-    // (undocumented)
-    static ngAcceptInputType_allowShiftKey: unknown;
-    // (undocumented)
-    static ngAcceptInputType_focusable: unknown;
+    readonly isCurrentTabStop: _angular_core.Signal<boolean>;
     ngOnDestroy(): void;
     ngOnInit(): void;
     onFocus(): void;
@@ -199,17 +176,12 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
     protected readonly parent: RdxRovingFocusGroupDirective;
     get tabIndex(): 0 | -1;
     // (undocumented)
-    tabStopId: string;
+    readonly tabStopId: _angular_core.InputSignal<string>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<RdxRovingFocusItemDirective, "[rdxRovingFocusItem]", never, { "focusable": { "alias": "focusable"; "required": false; }; "active": { "alias": "active"; "required": false; }; "tabStopId": { "alias": "tabStopId"; "required": false; }; "allowShiftKey": { "alias": "allowShiftKey"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<RdxRovingFocusItemDirective, "[rdxRovingFocusItem]", never, { "focusable": { "alias": "focusable"; "required": false; "isSignal": true; }; "active": { "alias": "active"; "required": false; "isSignal": true; }; "tabStopId": { "alias": "tabStopId"; "required": false; "isSignal": true; }; "allowShiftKey": { "alias": "allowShiftKey"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<RdxRovingFocusItemDirective, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<RdxRovingFocusItemDirective, never>;
 }
-
-// Warnings were encountered during analysis:
-//
-// dist/components/breadcrumbs/breadcrumbs.d.ts:27:134 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-// dist/components/breadcrumbs/breadcrumbs.d.ts:124:450 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

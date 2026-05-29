@@ -6,18 +6,16 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    ContentChildren,
+    contentChildren,
     DoCheck,
     effect,
     ElementRef,
-    EventEmitter,
     inject,
     input,
     Input,
-    Output,
+    output,
     PLATFORM_ID,
-    QueryList,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -45,8 +43,7 @@ import {
     KbqFileUploadAllowedType,
     KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
-    KbqFileUploadCaptionContext,
-    KbqFileValidatorFn
+    KbqFileUploadCaptionContext
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
@@ -71,8 +68,9 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
     ],
     templateUrl: './single-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './single-file-upload.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [KbqFullScreenDropzoneService],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-single-file-upload',
         '[class.kbq-single-file-upload_selected]': '!!file'
@@ -83,8 +81,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
             inputs: ['id', 'disabled', 'multiple']
         },
         { directive: KbqFileList, outputs: ['listChange: fileChange'] }
-    ],
-    providers: [KbqFullScreenDropzoneService]
+    ]
 })
 export class KbqSingleFileUploadComponent
     extends KbqFileUploadBase
@@ -93,22 +90,19 @@ export class KbqSingleFileUploadComponent
     /**
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
-    @Input() progressMode: ProgressSpinnerMode = 'determinate';
+    readonly progressMode = input<ProgressSpinnerMode>('determinate');
     /** Array of file type specifiers */
-    @Input() accept?: string[];
-    /**
-     * @deprecated use `FormControl.errors`
-     */
-    @Input() errors: string[] = [];
-    @Input() inputId: string = `kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`;
-    /**
-     * @deprecated use FormControl for validation
-     */
-    @Input() customValidation?: KbqFileValidatorFn[];
+    readonly accept = input<string[]>();
+    readonly inputId = input<string>(`kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get file(): KbqFileItem | null {
         const files = this.fileList.list();
@@ -126,7 +120,7 @@ export class KbqSingleFileUploadComponent
      * Controls whether to display the file size information.
      * @default true
      */
-    @Input({ transform: booleanAttribute }) showFileSize: boolean = true;
+    readonly showFileSize = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /**
      * Determines which kind of items the upload component can accept.
@@ -144,14 +138,13 @@ export class KbqSingleFileUploadComponent
 
     /** Emits an event containing updated file.
      * public output will be renamed to fileChange in next major release (#DS-3700) */
-    @Output('fileQueueChange') readonly fileChange: EventEmitter<KbqFileItem | null> =
-        new EventEmitter<KbqFileItem | null>();
+    readonly fileChange = output<KbqFileItem | null>({ alias: 'fileQueueChange' });
 
     /** @docs-private */
-    @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;
+    protected readonly fileLoader = viewChild.required(KbqFileLoader);
 
     /** @docs-private */
-    @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
+    private readonly hint = contentChildren(KbqHint);
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
@@ -165,17 +158,17 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     get input(): ElementRef<HTMLInputElement> | undefined {
-        return this.fileLoader?.input();
+        return this.fileLoader()?.input();
     }
 
     /** @docs-private */
     get acceptedFiles(): string {
-        return this.accept?.join(',') || '*/*';
+        return this.accept()?.join(',') || '*/*';
     }
 
     /** @docs-private */
     get hasHint(): boolean {
-        return this.hint.length > 0;
+        return this.hint().length > 0;
     }
 
     /**
@@ -277,7 +270,7 @@ export class KbqSingleFileUploadComponent
     }
 
     ngAfterViewInit() {
-        // FormControl specific errors update
+        // FormControl specific errors update — set hasError on current KbqFileItem when control is invalid
         this.ngControl?.statusChanges
             ?.pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe((status: FormControlStatus) => {
@@ -287,7 +280,6 @@ export class KbqSingleFileUploadComponent
                     file.hasError = status === 'INVALID';
                 }
 
-                this.errors = Object.values(this.ngControl?.errors || {});
                 this.cdr.markForCheck();
             });
 
@@ -362,7 +354,6 @@ export class KbqSingleFileUploadComponent
         event?.stopPropagation();
         this.file = null;
         this.fileChange.emit(this.file);
-        this.errors = [];
         // mark as touched after file drop even if file wasn't correct
         this.onTouched();
 
@@ -382,23 +373,8 @@ export class KbqSingleFileUploadComponent
     private mapToFileItem(file: File): KbqFileItem {
         return {
             file,
-            hasError: this.validateFile(file),
             progress: new BehaviorSubject<number>(0),
             loading: new BehaviorSubject<boolean>(false)
         };
-    }
-
-    private validateFile(file: File): boolean | undefined {
-        if (!this.customValidation?.length) return;
-
-        this.errors = this.customValidation
-            .reduce((errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
-                errors.push(validatorFn(file));
-
-                return errors;
-            }, [])
-            .filter(Boolean) as string[];
-
-        return !!this.errors.length;
     }
 }

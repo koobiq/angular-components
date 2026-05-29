@@ -98,6 +98,11 @@
                             "apps/docs/src/main.scss"
                         ],
                         "scripts": [],
+                        "allowedCommonJsDependencies": [
+                            "@messageformat/core",
+                            "luxon",
+                            "path-normalize"
+                        ],
                         "namedChunks": true,
                         "browser": "apps/docs/src/main.ts",
                         "server": "apps/docs/src/main.server.ts",
@@ -141,37 +146,7 @@
                     "options": {
                         "roots": ["apps/docs"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
-                    }
-                }
-            }
-        },
-        "cdk": {
-            "projectType": "library",
-            "root": "packages/cdk",
-            "sourceRoot": "packages/cdk",
-            "architect": {
-                "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
-                    "options": {
-                        "tsConfig": "packages/cdk/tsconfig.lib.json",
-                        "project": "packages/cdk/ng-package.json"
-                    }
-                },
-                "build": {
-                    "builder": "@koobiq/builders:packager",
-                    "options": {
-                        "buildTarget": "packagr",
-                        "versionPlaceholder": "{{VERSION}}",
-                        "ngVersionPlaceholder": "{{NG_VERSION}}"
-                    }
-                },
-                "test": {
-                    "builder": "@angular-builders/jest:run",
-                    "options": {
-                        "roots": ["packages/cdk"],
-                        "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }
@@ -201,7 +176,7 @@
                     "options": {
                         "roots": ["packages/components"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }
@@ -231,7 +206,8 @@
                     "options": {
                         "roots": ["packages/components-experimental"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json",
+                        "passWithNoTests": true
                     }
                 }
             }
@@ -261,7 +237,7 @@
                     "options": {
                         "roots": ["packages/angular-moment-adapter"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }
@@ -291,7 +267,7 @@
                     "options": {
                         "roots": ["packages/angular-luxon-adapter"],
                         "configPath": "../../jest.config.js",
-                        "tsConfig": "../../tsconfig.spec.json"
+                        "tsConfig": "tsconfig.spec.json"
                     }
                 }
             }
@@ -1106,34 +1082,6 @@
                 }
             }
         },
-        "dev-experimental-form-field": {
-            "projectType": "application",
-            "root": "packages/components-dev/experimental-form-field",
-            "sourceRoot": "packages/components-dev/experimental-form-field",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:application",
-                    "options": {
-                        "outputPath": "dist/components-dev/experimental-form-field",
-                        "tsConfig": "packages/components-dev/experimental-form-field/tsconfig.app.json",
-                        "index": "packages/components-dev/index.html",
-                        "styles": ["packages/components-dev/main.scss"],
-                        "browser": "packages/components-dev/experimental-form-field/main.ts",
-                        "polyfills": ["zone.js"],
-                        "extractLicenses": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "buildTarget": "dev-experimental-form-field:build"
-                    }
-                }
-            }
-        },
         "dev-forms": {
             "projectType": "application",
             "root": "packages/components-dev/forms",
@@ -1656,36 +1604,6 @@
                 }
             }
         },
-        "dev-navbar-ic": {
-            "projectType": "application",
-            "root": "packages/components-dev/navbar-ic",
-            "sourceRoot": "packages/components-dev/navbar-ic",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:application",
-                    "options": {
-                        "outputPath": {
-                            "base": "dist/components-dev/navbar-ic"
-                        },
-                        "tsConfig": "packages/components-dev/navbar-ic/tsconfig.app.json",
-                        "index": "packages/components-dev/index.html",
-                        "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
-                        "extractLicenses": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
-                        "browser": "packages/components-dev/navbar-ic/main.ts"
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "buildTarget": "dev-navbar-ic:build"
-                    }
-                }
-            }
-        },
         "dev-number-formatter": {
             "projectType": "application",
             "root": "packages/components-dev/number-formatter",
@@ -1922,36 +1840,6 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
                         "buildTarget": "dev-resizer:build"
-                    }
-                }
-            }
-        },
-        "dev-risk-level": {
-            "projectType": "application",
-            "root": "packages/components-dev/risk-level",
-            "sourceRoot": "packages/components-dev/risk-level",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:application",
-                    "options": {
-                        "outputPath": {
-                            "base": "dist/components-dev/risk-level"
-                        },
-                        "tsConfig": "packages/components-dev/risk-level/tsconfig.app.json",
-                        "index": "packages/components-dev/index.html",
-                        "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
-                        "extractLicenses": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
-                        "browser": "packages/components-dev/risk-level/main.ts"
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "buildTarget": "dev-risk-level:build"
                     }
                 }
             }

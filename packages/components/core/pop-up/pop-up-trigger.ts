@@ -1,4 +1,4 @@
-import { Directionality } from '@angular/cdk/bidi';
+﻿import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     CdkScrollable,
@@ -27,10 +27,10 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { distinctUntilChanged, filter, delay as rxDelay } from 'rxjs/operators';
+import { ENTER, ESCAPE, SPACE } from '../keycodes';
 import {
     EXTENDED_OVERLAY_POSITIONS,
     POSITION_MAP,

@@ -1,14 +1,19 @@
-import { ENTER, SPACE } from '@angular/cdk/keycodes';
+﻿import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, DebugElement, Directive, model, Provider, signal, TemplateRef, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ESCAPE, TAB } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-import { kbqDisableLegacyValidationDirectiveProvider, KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
+import {
+    createKeyboardEvent,
+    dispatchEvent,
+    dispatchKeyboardEvent,
+    ESCAPE,
+    KbqOptionModule,
+    PopUpPlacements,
+    TAB
+} from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -565,7 +570,6 @@ export class BaseTestComponent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqInlineEditModule
     ],
@@ -629,7 +633,6 @@ export class TestComponent extends BaseTestComponent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInlineEditModule,
         KbqTextareaModule,
         KbqDropdownModule,
@@ -695,7 +698,6 @@ export class TestWithMenu extends BaseTestComponent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInlineEditModule,
         KbqTextareaModule
     ],
@@ -755,7 +757,6 @@ export class TestWithTextareaControl extends BaseTestComponent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInlineEditModule,
         KbqTextareaModule,
         ReactiveFormsModule
@@ -787,10 +788,7 @@ export class TestWithTextareaControl extends BaseTestComponent {
                 <textarea kbqTextarea [placeholder]="placeholder" [formControl]="control"></textarea>
             </kbq-form-field>
         </kbq-inline-edit>
-    `,
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    `
 })
 export class TestWithValidatedControl extends BaseTestComponent {
     control = new FormControl('', Validators.required);
@@ -817,7 +815,7 @@ export class TestWithValidatedControl extends BaseTestComponent {
 
 @Component({
     selector: 'name',
-    imports: [FormsModule, KbqFormFieldModule, KbqInputModule, KbqInlineEditModule],
+    imports: [FormsModule, KbqInputModule, KbqInlineEditModule],
     template: `
         <kbq-inline-edit [interactiveSelectors]="interactiveSelectors()" (modeChange)="onModeChange($event)">
             <div kbqInlineEditViewMode>
@@ -841,7 +839,6 @@ export class TestWithClickableContent {
     selector: 'name',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqInlineEditModule,
         KbqOptionModule,
         KbqSelectModule
@@ -913,7 +910,6 @@ export class TestWithSelect extends BaseTestComponent {
     selector: 'name',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqInlineEditModule
     ],
@@ -940,8 +936,7 @@ export class TestWithSelect extends BaseTestComponent {
                 </kbq-form-field>
             </form>
         </kbq-inline-edit>
-    `,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    `
 })
 export class TestWithMultipleFormFields extends BaseTestComponent {
     readonly placeholder = 'Placeholder';

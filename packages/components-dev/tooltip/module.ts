@@ -1,12 +1,10 @@
 import { A11yModule } from '@angular/cdk/a11y';
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors, KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -74,19 +72,17 @@ export class DevDocsExamples {}
         KbqToolTipModule,
         KbqButtonModule,
         KbqInputModule,
-        KbqFormFieldModule,
         KbqCheckboxModule,
         KbqSelectModule,
         KbqIconModule,
         KbqToggleModule,
-        NgClass,
         DevThemeToggle,
         DevDocsExamples
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     placement = PopUpPlacements.Top;

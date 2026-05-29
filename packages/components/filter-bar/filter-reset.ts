@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilter } from './filter-bar.types';
@@ -21,7 +21,7 @@ export class KbqFilterReset {
     private readonly filterBar = inject(KbqFilterBar);
 
     /** Event that is generated whenever the user reset a filter. */
-    @Output() readonly onResetFilter = new EventEmitter<KbqFilter | null>();
+    readonly onResetFilter = output<KbqFilter | null>();
 
     /** localized data
      * @docs-private */

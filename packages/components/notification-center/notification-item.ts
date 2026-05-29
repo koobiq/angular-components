@@ -1,4 +1,4 @@
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -18,15 +18,14 @@ let id = 0;
     imports: [
         NgTemplateOutlet,
         KbqIconModule,
-        NgClass,
         KbqTitleModule,
         KbqButtonModule,
         KbqTooltipTrigger
     ],
     templateUrl: './notification-item.html',
     styleUrls: ['./notification-item.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-notification-item',
         '[class]': 'style'
@@ -54,6 +53,8 @@ export class KbqNotificationItemComponent {
         };
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get data(): KbqNotificationItem {
         return this._data;

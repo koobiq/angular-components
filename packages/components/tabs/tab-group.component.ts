@@ -11,17 +11,17 @@ import {
     ContentChildren,
     Directive,
     ElementRef,
-    EventEmitter,
     forwardRef,
     Inject,
     InjectionToken,
     Input,
+    input,
     numberAttribute,
     OnDestroy,
     Optional,
-    Output,
+    output,
     QueryList,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KBQ_PARENT_ANIMATION_COMPONENT } from '@koobiq/components/core';
@@ -92,39 +92,41 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
     imports: [KbqTabHeader, CdkMonitorFocus, KbqTabLabelWrapper, KbqTooltipTrigger, CdkPortalOutlet, KbqTabBody],
     templateUrl: './tab-group.html',
     styleUrls: ['./tab-group.scss', './tabs-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTabGroup',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-group',
-        '[class.kbq-tab-group_filled]': '!transparent',
-        '[class.kbq-tab-group_transparent]': 'transparent',
-        '[class.kbq-tab-group_on-background]': '!onSurface',
-        '[class.kbq-tab-group_on-surface]': 'onSurface',
-        '[class.kbq-tab-group_dynamic-height]': 'dynamicHeight',
+        '[class.kbq-tab-group_filled]': '!transparent()',
+        '[class.kbq-tab-group_transparent]': 'transparent()',
+        '[class.kbq-tab-group_on-background]': '!onSurface()',
+        '[class.kbq-tab-group_on-surface]': 'onSurface()',
+        '[class.kbq-tab-group_dynamic-height]': 'dynamicHeight()',
         '[class.kbq-tab-group_inverted-header]': 'headerPosition === "below"',
         '(window:resize)': 'resizeStream.next($event)'
     },
-    providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }]
+    exportAs: 'kbqTabGroup'
 })
 export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     readonly resizeStream = new Subject<Event>();
 
     @ContentChildren(KbqTab) tabs: QueryList<KbqTab>;
 
-    @ViewChild('tabBodyWrapper', { static: false }) tabBodyWrapper: ElementRef;
+    readonly tabBodyWrapper = viewChild.required<ElementRef>('tabBodyWrapper');
 
-    @ViewChild('tabHeader', { static: false }) tabHeader: KbqTabHeader;
+    readonly tabHeader = viewChild.required<KbqTabHeader>('tabHeader');
 
-    @Input({ transform: booleanAttribute }) transparent: boolean = false;
-    @Input({ transform: booleanAttribute }) onSurface: boolean = false;
-    @Input({ transform: booleanAttribute }) underlined: boolean = false;
-    @Input({ transform: booleanAttribute }) vertical: boolean = false;
+    readonly transparent = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly onSurface = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly underlined = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly vertical = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Whether the tab group should grow to the size of the active tab. */
-    @Input({ transform: booleanAttribute }) dynamicHeight: boolean = false;
+    readonly dynamicHeight = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** The index of the active tab. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get selectedIndex(): number {
         return this._selectedIndex;
@@ -136,6 +138,8 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     private _selectedIndex: number;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get activeTab(): KbqTab | null {
         switch (typeof this.attributeToSelectBy) {
@@ -143,7 +147,11 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
                 return this.tabs.get(this.clampTabIndex(this.attributeToSelectBy)) || null;
             case 'string':
                 return (
-                    this.tabs.toArray().find(({ tabId }) => tabId === this.attributeToSelectBy) ||
+                    this.tabs.toArray().find(({ tabId: tabIdInput }) => {
+                        const tabId = tabIdInput();
+
+                        return tabId === this.attributeToSelectBy;
+                    }) ||
                     this.tabs.get(0) ||
                     null
                 );
@@ -159,11 +167,17 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     /** Position of the tab header. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() headerPosition: KbqTabHeaderPosition = 'above';
 
     /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() animationDuration: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -178,21 +192,19 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     private _disabled: boolean = false;
 
     /** Output to enable support for two-way binding on `[(selectedIndex)]` */
-    @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
+    readonly selectedIndexChange = output<number>();
 
     /** Event emitted when the tab selection has changed. */
-    @Output() readonly activeTabChange: EventEmitter<string | number | KbqTab> = new EventEmitter<
-        string | number | KbqTab
-    >();
+    readonly activeTabChange = output<string | number | KbqTab>();
 
     /** Event emitted when focus has changed within a tab group. */
-    @Output() readonly focusChange: EventEmitter<KbqTabChangeEvent> = new EventEmitter<KbqTabChangeEvent>();
+    readonly focusChange = output<KbqTabChangeEvent>();
 
     /** Event emitted when the body animation has completed */
-    @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();
+    readonly animationDone = output<void>();
 
     /** Event emitted when the tab selection has changed. */
-    @Output() readonly selectedTabChange: EventEmitter<KbqTabChangeEvent> = new EventEmitter<KbqTabChangeEvent>(true);
+    readonly selectedTabChange = output<KbqTabChangeEvent>();
 
     private attributeToSelectBy: KbqTabSelectBy | null = null;
 
@@ -335,25 +347,26 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
      * height property is true.
      */
     setTabBodyWrapperHeight(tabHeight: number): void {
-        if (!this.dynamicHeight || !this.tabBodyWrapperHeight) {
+        if (!this.dynamicHeight() || !this.tabBodyWrapperHeight) {
             return;
         }
 
-        const wrapper: HTMLElement = this.tabBodyWrapper.nativeElement;
+        const wrapper: HTMLElement = this.tabBodyWrapper().nativeElement;
 
         wrapper.style.height = `${this.tabBodyWrapperHeight}px`;
 
         // This conditional forces the browser to paint the height so that
         // the animation to the new height can have an origin.
-        if (this.tabBodyWrapper.nativeElement.offsetHeight) {
+        if (this.tabBodyWrapper().nativeElement.offsetHeight) {
             wrapper.style.height = `${tabHeight}px`;
         }
     }
 
     /** Removes the height of the tab body wrapper. */
     removeTabBodyWrapperHeight(): void {
-        this.tabBodyWrapperHeight = this.tabBodyWrapper.nativeElement.clientHeight;
-        this.tabBodyWrapper.nativeElement.style.height = '';
+        this.tabBodyWrapperHeight = this.tabBodyWrapper().nativeElement.clientHeight;
+        this.tabBodyWrapper().nativeElement.style.height = '';
+        // TODO: The 'emit' function requires a mandatory void argument
         this.animationDone.emit();
     }
 
@@ -378,7 +391,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     onSelectFocusedIndex($event: number): void {
         if (typeof this.attributeToSelectBy === 'string') {
-            this.activeTab = this.tabs.get($event)?.tabId || null;
+            this.activeTab = this.tabs.get($event)?.tabId() || null;
 
             return;
         }
@@ -387,7 +400,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     private checkOverflow = () => {
-        this.tabHeader.items.forEach((headerTab) => headerTab.checkOverflow());
+        this.tabHeader().items.forEach((headerTab) => headerTab.checkOverflow());
     };
 
     private createChangeEvent(index: number): KbqTabChangeEvent {
@@ -419,7 +432,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     private subscribeToResize() {
-        if (!this.vertical) {
+        if (!this.vertical()) {
             return;
         }
 

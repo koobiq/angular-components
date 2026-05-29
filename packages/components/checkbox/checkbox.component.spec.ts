@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -946,10 +946,10 @@ class CheckboxWithTabIndex {
     `
 })
 class CheckboxUsingViewChild {
-    @ViewChild(KbqCheckbox, { static: false }) checkbox;
+    readonly checkbox = viewChild.required(KbqCheckbox);
 
     set isDisabled(value: boolean) {
-        this.checkbox.disabled = value;
+        this.checkbox().disabled = value;
     }
 }
 

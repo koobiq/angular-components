@@ -276,8 +276,8 @@ export class ExampleActionsPanel {
             overflow: hidden;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [KbqActionsPanel]
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelOverviewExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });

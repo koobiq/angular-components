@@ -27,7 +27,7 @@
 
     <div class="kbq-code-block__actionbar">
         <div class="kbq-code-block__actionbar__button-stack">
-            @if (canToggleSoftWrap) {
+            @if (canToggleSoftWrap()) {
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__soft-wrap-button"
@@ -59,7 +59,7 @@
                 </button>
             }
 
-            @if (canCopy) {
+            @if (canCopy()) {
                 <div #copyButtonTooltip="kbqTooltip" [kbqTooltip]="localeConfiguration.copyTooltip">
                     <button
                         kbq-button

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
@@ -24,14 +24,14 @@ describe(KbqSidebarModule.name, () => {
             fixture.detectChanges();
 
             testComponent = fixture.debugElement.componentInstance;
-            sidebarComponent = fixture.debugElement.componentInstance.sidebar;
+            sidebarComponent = fixture.debugElement.componentInstance.sidebar();
         });
 
         it('should render with default parameters', () => {
             expect(sidebarComponent.opened).toBeTruthy();
-            expect(sidebarComponent.position).toBe(SidebarPositions.Left);
-            expect(sidebarComponent.openedContent).toBeDefined();
-            expect(sidebarComponent.closedContent).toBeDefined();
+            expect(sidebarComponent.position()).toBe(SidebarPositions.Left);
+            expect(sidebarComponent.openedContent()).toBeDefined();
+            expect(sidebarComponent.closedContent()).toBeDefined();
         });
 
         it('should change state by property', () => {
@@ -63,12 +63,12 @@ describe(KbqSidebarModule.name, () => {
         });
 
         it('should change position', () => {
-            expect(sidebarComponent.position).toBe(SidebarPositions.Left);
+            expect(sidebarComponent.position()).toBe(SidebarPositions.Left);
 
             testComponent.position = SidebarPositions.Right;
             fixture.detectChanges();
 
-            expect(sidebarComponent.position).toBe(SidebarPositions.Right);
+            expect(sidebarComponent.position()).toBe(SidebarPositions.Right);
         });
 
         xit('should fire change event', () => {
@@ -134,7 +134,7 @@ class TestSidebar {
 
     state: boolean = true;
 
-    @ViewChild(KbqSidebar, { static: false }) readonly sidebar: KbqSidebar;
+    readonly sidebar = viewChild.required(KbqSidebar);
 
     readonly onStateChanged = jest.fn();
 }

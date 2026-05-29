@@ -28,7 +28,6 @@ import {
 
 @Component({
     selector: 'kbq-clamped-text',
-    exportAs: 'kbqClampedText',
     imports: [
         KbqIcon,
         KbqButtonModule,
@@ -63,15 +62,16 @@ import {
         }
     `,
     styleUrls: ['./clamped-text.scss'],
+    providers: [
+        { provide: KbqClampedRoot, useExisting: KbqClampedText }
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-clamped-text',
         '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'
     },
-    providers: [
-        { provide: KbqClampedRoot, useExisting: KbqClampedText }
-    ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqClampedText'
 })
 export class KbqClampedText implements KbqClamped, AfterViewInit {
     /**
@@ -166,14 +166,6 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
         if (this.collapsedState()) {
             setTimeout(() => this.elementRef.nativeElement.scrollIntoView({ block: 'center', inline: 'center' }));
         }
-    }
-
-    /**
-     * @docs-private
-     * @deprecated Will be removed in next major release
-     */
-    toggleIsCollapsed(event: Event): void {
-        this.toggle(event);
     }
 
     private updateToggleVisibilityState(): void {

@@ -7,8 +7,6 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { MaskitoDirective } from '@maskito/angular';
@@ -20,11 +18,9 @@ import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/
  */
 @Component({
     selector: 'input-with-mask-example',
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     imports: [
         ReactiveFormsModule,
         MaskitoDirective,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule
     ],

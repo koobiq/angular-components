@@ -58,12 +58,12 @@ export type KbqInlineEditMode = 'view' | 'edit';
 /** @docs-private */
 @Directive({
     selector: '[kbqFocusRegionItem]',
-    exportAs: 'kbqFocusRegionItem',
     host: {
         '(focusin)': 'isFocused = true',
         '(keydown.tab)': 'onTabOut($event)',
         '(keydown.shift.tab)': 'onTabOut($event)'
-    }
+    },
+    exportAs: 'kbqFocusRegionItem'
 })
 export class KbqFocusRegionItem {
     readonly tabOut = output<KeyboardEvent>();
@@ -82,10 +82,10 @@ export class KbqFocusRegionItem {
 /** Directive for easy using styles of inline edit placeholder publicly. */
 @Directive({
     selector: '[kbqInlineEditPlaceholder]',
-    exportAs: 'kbqInlineEditPlaceholder',
     host: {
         class: 'kbq-inline-edit__placeholder'
-    }
+    },
+    exportAs: 'kbqInlineEditPlaceholder'
 })
 export class KbqInlineEditPlaceholder {}
 
@@ -96,7 +96,6 @@ export class KbqInlineEditPlaceholder {}
  */
 @Directive({
     selector: '[kbqInlineEditMenu]',
-    exportAs: 'kbqInlineEditMenu',
     host: {
         role: 'button',
         class: 'kbq-inline-edit__menu',
@@ -104,7 +103,8 @@ export class KbqInlineEditPlaceholder {}
         '(click)': '$event.stopPropagation()',
         '(keydown.enter)': '$event.stopPropagation()',
         '(keydown.space)': '$event.stopPropagation()'
-    }
+    },
+    exportAs: 'kbqInlineEditMenu'
 })
 export class KbqInlineEditMenu {
     /** @docs-private */
@@ -128,9 +128,8 @@ export class KbqInlineEditMenu {
     ],
     templateUrl: './inline-edit.html',
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqInlineEdit',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: baseClass,
         // @TODO: resolve tab queue with content-first (DS-4810)
@@ -146,7 +145,8 @@ export class KbqInlineEditMenu {
     hostDirectives: [
         CdkMonitorFocus
     ],
-    animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION]
+    animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
+    exportAs: 'kbqInlineEdit'
 })
 export class KbqInlineEdit {
     private readonly overlay = inject(Overlay);
@@ -216,11 +216,11 @@ export class KbqInlineEdit {
     /** @docs-private */
     protected overlayOrigin: HTMLElement = this.elementRef.nativeElement;
     /** @docs-private */
-    protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
+    protected readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
     /** @docs-private */
     protected readonly viewContainer = viewChild.required<ElementRef<HTMLElement>>('viewContainer');
     /** @docs-private */
-    protected readonly overlayDir = viewChild(CdkConnectedOverlay);
+    protected readonly overlayDir = viewChild.required(CdkConnectedOverlay);
     /** @docs-private */
     protected readonly regionItems = viewChildren(KbqFocusRegionItem);
 
@@ -280,13 +280,15 @@ export class KbqInlineEdit {
 
         const formFieldRefList = this.formFieldRefList();
 
-        merge(formFieldRefList.map((ref) => ref.control.stateChanges))
+        merge(formFieldRefList.map((ref) => ref.control().stateChanges))
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
                 if (!this.isInvalid()) {
                     const tooltipTrigger = this.tooltipTrigger();
 
-                    tooltipTrigger?.isOpen && tooltipTrigger?.hide();
+                    if (tooltipTrigger?.isOpen) {
+                        tooltipTrigger.hide();
+                    }
                 }
             });
 
@@ -311,7 +313,10 @@ export class KbqInlineEdit {
     protected save($event?: Event): void {
         if (this.isInvalid()) {
             $event?.stopPropagation();
-            this.showTooltipOnError() && this.tooltipTrigger()?.show();
+
+            if (this.showTooltipOnError()) {
+                this.tooltipTrigger()?.show();
+            }
         } else {
             this.toggleMode();
             this.saved.emit();
@@ -465,11 +470,13 @@ export class KbqInlineEdit {
     }
 
     private coerceControl(formFieldRef: KbqFormField) {
-        if (formFieldRef.control.ngControl instanceof NgControl) {
-            return formFieldRef.control.ngControl.control;
+        const control = formFieldRef.control();
+
+        if (control.ngControl instanceof NgControl) {
+            return control.ngControl.control;
         }
 
-        return formFieldRef.control;
+        return control;
     }
 
     private setOverlayWidth(): void {
@@ -498,7 +505,7 @@ export class KbqInlineEdit {
     }
 
     private openPanel(formFieldRef: KbqFormField) {
-        const control = formFieldRef.control;
+        const control = formFieldRef.control();
 
         control?.open?.();
     }
@@ -508,6 +515,6 @@ export class KbqInlineEdit {
     }
 
     private markAllAsTouched(): void {
-        this.formFieldRefList().forEach((formField) => formField.control.ngControl?.control?.markAsTouched());
+        this.formFieldRefList().forEach((formField) => formField.control().ngControl?.control?.markAsTouched());
     }
 }

@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqFormsModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -14,7 +13,6 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
     selector: 'autocomplete-overview-example',
     imports: [
-        KbqFormFieldModule,
         KbqAutocompleteModule,
         KbqInputModule,
         ReactiveFormsModule,

@@ -37,8 +37,8 @@ import { KbqToastService } from '@koobiq/components/toast';
             overflow: hidden;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [KbqActionsPanel]
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelCloseExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });

@@ -1,4 +1,4 @@
-import { OverlayContainer } from '@angular/cdk/overlay';
+﻿import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
     Inject,
@@ -6,15 +6,14 @@ import {
     Injector,
     NgModule,
     TemplateRef,
-    ViewChild,
-    inject as injectCore
+    inject as injectCore,
+    viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ESCAPE } from '@koobiq/cdk/keycodes';
-import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { ESCAPE, dispatchKeyboardEvent } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import {
     KBQ_SIDEPANEL_DATA,
@@ -65,7 +64,7 @@ describe('KbqSidepanelService', () => {
 
         const data = { value: 'World!' };
 
-        const sidepanelRef = sidepanelService.open(templateRefFixture.componentInstance.templateRef, { data });
+        const sidepanelRef = sidepanelService.open(templateRefFixture.componentInstance.templateRef(), { data });
 
         expect(overlayContainerElement.textContent).toContain('Hello World!');
         expect(templateRefFixture.componentInstance.sidepanelRef).toBe(sidepanelRef);
@@ -192,7 +191,6 @@ describe('KbqSidepanelService', () => {
         expect(sidepanelRef.config.position).toBe(KbqSidepanelPosition.Right);
         expect(sidepanelRef.config.hasBackdrop).toBe(true);
         expect(sidepanelRef.config.disableClose).toBe(false);
-        expect(sidepanelRef.config.requiredBackdrop).toBe(false);
     });
 
     it('should be able to pass in data', () => {
@@ -265,7 +263,7 @@ describe('KbqSidepanelService', () => {
 
     it('should be able to add more than one dark backdrop with multiple sidepanels', fakeAsync(() => {
         sidepanelService.open(SimpleSidepanelExample);
-        sidepanelService.open(SimpleSidepanelExample, { requiredBackdrop: true });
+        sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
 
         tick(1000);
@@ -387,7 +385,7 @@ describe('KbqSidepanelService', () => {
 
         expect(document.activeElement).not.toBe(buttonElement);
 
-        fixtureComponent.componentInstance.trigger.open();
+        fixtureComponent.componentInstance.trigger().open();
         fixtureComponent.detectChanges();
         flush();
 
@@ -459,7 +457,7 @@ class SidepanelWithFormComponent {
     providers: [KbqSidepanelService]
 })
 class SidepanelFromDropdownComponent {
-    @ViewChild('trigger') trigger: KbqDropdownTrigger;
+    readonly trigger = viewChild.required<KbqDropdownTrigger>('trigger');
 
     constructor(public ss: KbqSidepanelService) {}
 
@@ -498,7 +496,7 @@ class ComponentWithTemplateForSidepanel {
     localValue: string;
     sidepanelRef: KbqSidepanelRef;
 
-    @ViewChild(TemplateRef, { static: true }) templateRef: TemplateRef<any>;
+    readonly templateRef = viewChild.required(TemplateRef);
 
     setSidepanelRef(sidepanelRef: KbqSidepanelRef): string {
         this.sidepanelRef = sidepanelRef;

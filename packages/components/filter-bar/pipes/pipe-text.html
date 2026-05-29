@@ -11,7 +11,7 @@
     [kbqPopoverOffset]="4"
     [defaultPaddings]="false"
     [kbqPopoverPlacement]="placements.BottomLeft"
-    [ngClass]="{ 'kbq-active': popover?.isOpen }"
+    [class]="{ 'kbq-active': popover()?.isOpen }"
 >
     <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
     <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">

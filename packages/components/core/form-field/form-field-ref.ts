@@ -1,23 +1,17 @@
 import { InjectionToken, ModelSignal } from '@angular/core';
 
 /**
- * @deprecated Will be removed in next major release, use `KbqFormField` instead.
+ * Internal contract for `KbqFormField` used by code that cannot import the form-field
+ * class directly because of a circular dependency (e.g. `core/select/common.ts`).
+ *
+ * @docs-private
  */
 export interface KbqFormFieldRef {
     control: any;
     canCleanerClearByEsc: boolean;
     /** Use when KbqFormField is in an overlay container. */
     inOverlay: ModelSignal<boolean>;
-    /**
-     * @TODO should be removed, is private method (#DS-2915)
-     * @deprecated use `formField.control?.errorState` instead
-     */
-    shouldForward(str: string): boolean;
     focus(): void;
-    /**
-     * @deprecated Use `focus` instead.
-     */
-    focusViaKeyboard(): void;
 }
 
 /**

@@ -11,7 +11,6 @@ import { DateAdapter } from '@koobiq/components/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
@@ -19,7 +18,7 @@ import * as i3 from '@angular/forms';
 import * as i5 from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
-import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -78,13 +77,13 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     get id(): string;
     set id(value: string);
     // (undocumented)
-    readonly incorrectInput: EventEmitter<void>;
+    readonly incorrectInput: i0.OutputEmitterRef<void>;
     // (undocumented)
     get isFullFormat(): boolean;
     // (undocumented)
     get isShortFormat(): boolean;
     // (undocumented)
-    set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger);
+    set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
     // (undocumented)
     get max(): D | null;
     set max(value: D | null);
@@ -150,10 +149,8 @@ export class KbqTimepickerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepickerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimepickerModule>;
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof i4.KbqTimepicker], [typeof i4.KbqTimepicker, typeof i5.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimepickerModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.FormsModule, typeof KbqTimepicker], [typeof KbqTimepicker, typeof i5.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)

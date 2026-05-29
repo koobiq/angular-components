@@ -73,8 +73,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             }
         }
     `,
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class BreadcrumbsTruncateCenterItemsExample {
     breadcrumbs = ['branch', 'Users', 'Report dated 28.08.2018'];

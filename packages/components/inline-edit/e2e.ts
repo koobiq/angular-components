@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqInlineEdit } from './inline-edit';
@@ -15,7 +14,6 @@ import { KbqInlineEditModule } from './module';
     imports: [
         KbqInlineEditModule,
         FormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         NgTemplateOutlet,
         KbqButtonModule
@@ -107,7 +105,6 @@ export class E2eInlineEditStates {
     selector: 'e2e-inline-edit-truncation',
     imports: [
         KbqInlineEditModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
         KbqDropdownModule,
@@ -178,7 +175,6 @@ export class E2eInlineEditTruncation {}
     imports: [
         FormsModule,
         KbqInlineEditModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
         KbqDropdownModule,

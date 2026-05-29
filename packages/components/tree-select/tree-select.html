@@ -4,11 +4,11 @@
     cdkOverlayOrigin
     class="kbq-select__trigger"
     [class.kbq-select__trigger_empty]="empty"
-    [class.kbq-select__trigger_multiline]="multiline"
+    [class.kbq-select__trigger_multiline]="multiline()"
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
-    @if (!!customMatcher) {
+    @if (!!customMatcher()) {
         <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
     } @else {
         <div class="kbq-select__matcher">
@@ -17,16 +17,16 @@
                     {{ placeholder || '\u00A0' }}
                 </span>
             } @else {
-                @if (!!customTrigger) {
+                @if (!!customTrigger()) {
                     <ng-content select="kbq-select-trigger, [kbq-select-trigger]" />
                 } @else {
                     <div class="kbq-select__match-container">
                         @if (multiSelection) {
                             <div
-                                [class.kbq-select__match-list]="!multiline"
-                                [class.kbq-select__multiline-match-list]="multiline"
+                                [class.kbq-select__match-list]="!multiline()"
+                                [class.kbq-select__multiline-match-list]="multiline()"
                             >
-                                @if (!customTagTemplateRef) {
+                                @if (!customTagTemplateRef()) {
                                     @for (option of triggerValues; track option) {
                                         <kbq-tag
                                             [color]="colorForState"
@@ -43,11 +43,10 @@
                                             }
                                         </kbq-tag>
                                     }
-                                }
-                                @if (customTagTemplateRef) {
+                                } @else {
                                     @for (option of triggerValues; track option) {
                                         <ng-container
-                                            [ngTemplateOutlet]="customTagTemplateRef"
+                                            [ngTemplateOutlet]="customTagTemplateRef()"
                                             [ngTemplateOutletContext]="{ $implicit: option, select: this }"
                                         />
                                     }
@@ -58,7 +57,7 @@
                                 {{ triggerValue }}
                             </span>
                         }
-                        @if (!multiline) {
+                        @if (!multiline()) {
                             <div
                                 class="kbq-select__match-hidden-text"
                                 [style.display]="hiddenItems > 0 ? 'block' : 'none'"
@@ -91,7 +90,7 @@
 <ng-template
     cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
-    [cdkConnectedOverlayBackdropClass]="backdropClass"
+    [cdkConnectedOverlayBackdropClass]="backdropClass()"
     [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
     [cdkConnectedOverlayMinWidth]="overlayMinWidth"
     [cdkConnectedOverlayOffsetY]="offsetY"
@@ -106,14 +105,13 @@
 >
     <div
         #panel
-        class="kbq-tree-select__panel {{ getPanelTheme() }}"
         cdkMonitorSubtreeFocus
-        [ngClass]="panelClass"
+        [class]="getPanelClasses()"
         [style.font-size.px]="triggerFontSize"
         [style.transformOrigin]="transformOrigin"
         (keydown)="panelKeydownHandler($event)"
     >
-        @if (search && shouldShowSearch()) {
+        @if (search() && shouldShowSearch()) {
             <div class="kbq-select__search-container">
                 <ng-content select="[kbqSelectSearch]" />
             </div>

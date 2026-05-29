@@ -12,12 +12,12 @@ import { KbqIconButton } from '@koobiq/components/icon';
         <ng-content />
     `,
     styleUrls: ['cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCleaner',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-cleaner'
-    }
+    },
+    exportAs: 'kbqCleaner'
 })
 export class KbqCleaner extends KbqIconButton {
     constructor() {

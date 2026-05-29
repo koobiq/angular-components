@@ -27,7 +27,6 @@ import * as i4 from '@koobiq/components/icon';
 import * as i5 from '@koobiq/components/tooltip';
 import * as i6 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
-import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -77,16 +76,14 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    empty: boolean;
-    explicitContent: TemplateRef<any>;
-    implicitContent: TemplateRef<any>;
+    readonly empty: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly explicitContent: i0.Signal<TemplateRef<any> | undefined>;
+    readonly implicitContent: i0.Signal<TemplateRef<any>>;
     isActive: boolean;
     // (undocumented)
     get isOverflown(): boolean;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_empty: unknown;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
@@ -101,18 +98,18 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     protected setTemplateLabelInput(value: KbqTabLabel): void;
     readonly stateChanges: Subject<void>;
     // (undocumented)
-    tabId: string;
+    readonly tabId: i0.InputSignal<string>;
     // (undocumented)
     get templateLabel(): KbqTabLabel;
     set templateLabel(value: KbqTabLabel);
-    textLabel: string;
+    readonly textLabel: i0.InputSignal<string>;
     // (undocumented)
-    tooltipPlacement: KbqPopUpPlacementValues;
+    readonly tooltipPlacement: i0.InputSignal<"left" | "right" | "top" | "topLeft" | "topRight" | "rightTop" | "rightBottom" | "leftTop" | "leftBottom" | "bottom" | "bottomLeft" | "bottomRight">;
     // (undocumented)
     get tooltipTitle(): string;
     set tooltipTitle(value: string);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTab, "kbq-tab", ["kbqTab"], { "tooltipTitle": { "alias": "tooltipTitle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "empty": { "alias": "empty"; "required": false; }; "tabId": { "alias": "tabId"; "required": false; }; }, {}, ["templateLabel", "explicitContent"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTab, "kbq-tab", ["kbqTab"], { "tooltipTitle": { "alias": "tooltipTitle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "textLabel": { "alias": "label"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "tabId": { "alias": "tabId"; "required": false; "isSignal": true; }; }, {}, ["explicitContent", "templateLabel"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTab, never>;
 }
@@ -121,26 +118,26 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 export class KbqTabBody implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, dir: Directionality, changeDetectorRef: ChangeDetectorRef);
     readonly afterLeavingCenter: EventEmitter<boolean>;
-    animationDuration: string;
+    readonly animationDuration: i0.InputSignal<string>;
     readonly beforeCentering: EventEmitter<boolean>;
     bodyPosition: KbqTabBodyPositionState;
-    content: TemplatePortal;
+    readonly content: i0.InputSignal<TemplatePortal<any>>;
     getLayoutDirection(): Direction;
     isCenterPosition(position: KbqTabBodyPositionState | string): boolean;
     // (undocumented)
     ngOnDestroy(): void;
     ngOnInit(): void;
-    readonly onCentered: EventEmitter<void>;
-    readonly onCentering: EventEmitter<number>;
+    readonly onCentered: i0.OutputEmitterRef<void>;
+    readonly onCentering: i0.OutputEmitterRef<number>;
     // (undocumented)
     onTranslateTabComplete(e: AnimationEvent_2): void;
     // (undocumented)
     onTranslateTabStarted(e: AnimationEvent_2): void;
     origin: number;
-    portalHost: CdkPortalOutlet;
+    readonly portalHost: i0.Signal<CdkPortalOutlet>;
     set position(position: number);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabBody, "kbq-tab-body", never, { "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; }; "origin": { "alias": "origin"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "onCentering": "onCentering"; "beforeCentering": "beforeCentering"; "afterLeavingCenter": "afterLeavingCenter"; "onCentered": "onCentered"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabBody, "kbq-tab-body", never, { "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; "isSignal": true; }; "origin": { "alias": "origin"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; "isSignal": true; }; }, { "onCentering": "onCentering"; "beforeCentering": "beforeCentering"; "afterLeavingCenter": "afterLeavingCenter"; "onCentered": "onCentered"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabBody, [null, { optional: true; }, null]>;
 }
@@ -185,14 +182,14 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     // (undocumented)
     get activeTab(): KbqTab | null;
     set activeTab(value: KbqTabSelectBy | null);
-    readonly activeTabChange: EventEmitter<string | number | KbqTab>;
-    readonly animationDone: EventEmitter<void>;
+    readonly activeTabChange: i0.OutputEmitterRef<string | number | KbqTab>;
+    readonly animationDone: i0.OutputEmitterRef<void>;
     animationDuration: string;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
-    dynamicHeight: boolean;
-    readonly focusChange: EventEmitter<KbqTabChangeEvent>;
+    readonly dynamicHeight: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly focusChange: i0.OutputEmitterRef<KbqTabChangeEvent>;
     // (undocumented)
     focusChanged(index: number): void;
     getTabContentId(i: number): string;
@@ -203,17 +200,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_dynamicHeight: unknown;
-    // (undocumented)
-    static ngAcceptInputType_onSurface: unknown;
-    // (undocumented)
     static ngAcceptInputType_selectedIndex: unknown;
-    // (undocumented)
-    static ngAcceptInputType_transparent: unknown;
-    // (undocumented)
-    static ngAcceptInputType_underlined: unknown;
-    // (undocumented)
-    static ngAcceptInputType_vertical: unknown;
     ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -224,29 +211,29 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     // (undocumented)
     onSelectFocusedIndex($event: number): void;
     // (undocumented)
-    onSurface: boolean;
+    readonly onSurface: i0.InputSignalWithTransform<boolean, unknown>;
     removeTabBodyWrapperHeight(): void;
     // (undocumented)
     readonly resizeStream: Subject<Event>;
     get selectedIndex(): number;
     set selectedIndex(value: number);
-    readonly selectedIndexChange: EventEmitter<number>;
-    readonly selectedTabChange: EventEmitter<KbqTabChangeEvent>;
+    readonly selectedIndexChange: i0.OutputEmitterRef<number>;
+    readonly selectedTabChange: i0.OutputEmitterRef<KbqTabChangeEvent>;
     setTabBodyWrapperHeight(tabHeight: number): void;
     // (undocumented)
-    tabBodyWrapper: ElementRef;
+    readonly tabBodyWrapper: i0.Signal<ElementRef<any>>;
     // (undocumented)
-    tabHeader: KbqTabHeader;
+    readonly tabHeader: i0.Signal<KbqTabHeader>;
     // (undocumented)
     tabs: QueryList<KbqTab>;
     // (undocumented)
-    transparent: boolean;
+    readonly transparent: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    underlined: boolean;
+    readonly underlined: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    vertical: boolean;
+    readonly vertical: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "transparent": { "alias": "transparent"; "required": false; }; "onSurface": { "alias": "onSurface"; "required": false; }; "underlined": { "alias": "underlined"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "onSurface": { "alias": "onSurface"; "required": false; "isSignal": true; }; "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; "isSignal": true; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, [null, { optional: true; }]>;
 }
@@ -266,16 +253,14 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     // (undocumented)
     readonly nextPaginator: ElementRef<HTMLElement>;
     // (undocumented)
-    static ngAcceptInputType_underlined: unknown;
-    // (undocumented)
     readonly previousPaginator: ElementRef<HTMLElement>;
     // (undocumented)
     readonly tabList: ElementRef;
     // (undocumented)
     readonly tabListContainer: ElementRef;
-    underlined: boolean;
+    readonly underlined: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabHeader, "kbq-tab-header", never, { "underlined": { "alias": "underlined"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["items"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabHeader, "kbq-tab-header", never, { "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["items"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabHeader, never>;
 }
@@ -374,15 +359,9 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     // (undocumented)
     readonly nextPaginator: ElementRef<HTMLElement>;
     // (undocumented)
-    static ngAcceptInputType_onSurface: unknown;
-    // (undocumented)
-    static ngAcceptInputType_transparent: unknown;
-    // (undocumented)
-    static ngAcceptInputType_underlined: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    onSurface: boolean;
+    readonly onSurface: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly previousPaginator: ElementRef<HTMLElement>;
     // (undocumented)
@@ -391,12 +370,12 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     readonly tabList: ElementRef;
     // (undocumented)
     readonly tabListContainer: ElementRef;
-    tabNavPanel?: KbqTabNavPanel;
-    transparent: boolean;
-    underlined: boolean;
+    readonly tabNavPanel: i0.InputSignal<KbqTabNavPanel | undefined>;
+    readonly transparent: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly underlined: i0.InputSignalWithTransform<boolean, unknown>;
     updateActiveLink(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabNavBar, "[kbqTabNavBar], [kbq-tab-nav-bar]", ["kbqTabNavBar"], { "transparent": { "alias": "transparent"; "required": false; }; "onSurface": { "alias": "onSurface"; "required": false; }; "underlined": { "alias": "underlined"; "required": false; }; "tabNavPanel": { "alias": "tabNavPanel"; "required": false; }; }, {}, ["items"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabNavBar, "[kbqTabNavBar], [kbq-tab-nav-bar]", ["kbqTabNavBar"], { "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "onSurface": { "alias": "onSurface"; "required": false; "isSignal": true; }; "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; "tabNavPanel": { "alias": "tabNavPanel"; "required": false; "isSignal": true; }; }, {}, ["items"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabNavBar, never>;
 }
@@ -404,9 +383,9 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
 // @public
 export class KbqTabNavPanel {
     activeTabId?: string;
-    id: string;
+    readonly id: i0.InputSignal<string>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabNavPanel, "[kbqTabNavPanel]", ["kbqTabNavPanel"], { "id": { "alias": "id"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabNavPanel, "[kbqTabNavPanel]", ["kbqTabNavPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabNavPanel, never>;
 }
@@ -430,17 +409,8 @@ export class KbqTabsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabsModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTabsModule>;
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i14" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, never, [typeof i1.PortalModule, typeof i2.A11yModule, typeof i3.CdkScrollableModule, typeof i4.KbqIconModule, typeof i5.KbqToolTipModule, typeof i6.CdkObserveContent, typeof i7.KbqTabNavBar, typeof i7.KbqTabLink, typeof i7.KbqTabNavPanel, typeof i8.KbqTabGroup, typeof i9.KbqTabLabel, typeof i10.KbqTab, typeof i11.KbqTabLabelWrapper, typeof i12.KbqTabBody, typeof i12.KbqTabBodyPortal, typeof i13.KbqTabHeader, typeof i14.KbqTabContent, typeof i8.KbqAlignTabsCenterCssStyler, typeof i8.KbqAlignTabsEndCssStyler, typeof i8.KbqStretchTabsCssStyler, typeof i8.KbqVerticalTabsCssStyler], [typeof i8.KbqTabGroup, typeof i9.KbqTabLabel, typeof i10.KbqTab, typeof i11.KbqTabLabelWrapper, typeof i12.KbqTabBody, typeof i12.KbqTabBodyPortal, typeof i13.KbqTabHeader, typeof i14.KbqTabContent, typeof i8.KbqAlignTabsCenterCssStyler, typeof i8.KbqAlignTabsEndCssStyler, typeof i8.KbqStretchTabsCssStyler, typeof i8.KbqVerticalTabsCssStyler, typeof i7.KbqTabNavBar, typeof i7.KbqTabLink, typeof i7.KbqTabNavPanel]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, never, [typeof i1.PortalModule, typeof i2.A11yModule, typeof i3.CdkScrollableModule, typeof i4.KbqIconModule, typeof i5.KbqToolTipModule, typeof i6.CdkObserveContent, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel, typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler], [typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel]>;
 }
 
 // @public (undocumented)

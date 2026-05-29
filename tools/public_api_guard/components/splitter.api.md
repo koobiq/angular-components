@@ -8,7 +8,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/icon';
 import { NgZone } from '@angular/core';
@@ -100,7 +99,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     // (undocumented)
     setSize(size: number): void;
     // (undocumented)
-    readonly sizeChange: EventEmitter<number>;
+    readonly sizeChange: i0.OutputEmitterRef<number>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSplitterAreaDirective, "[kbq-splitter-area]", never, {}, { "sizeChange": "sizeChange"; }, never, never, true, never>;
     // (undocumented)
@@ -129,11 +128,11 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
-    ghost: KbqGutterGhostDirective;
+    readonly ghost: i0.Signal<KbqGutterGhostDirective>;
     // (undocumented)
-    readonly gutterPositionChange: EventEmitter<void>;
+    readonly gutterPositionChange: i0.OutputEmitterRef<void>;
     // (undocumented)
-    gutters: QueryList<KbqGutterDirective>;
+    readonly gutters: i0.Signal<readonly KbqGutterDirective[]>;
     // (undocumented)
     get gutterSize(): number;
     set gutterSize(gutterSize: number);
@@ -171,10 +170,8 @@ export class KbqSplitterModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitterModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSplitterModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof i1.KbqIconModule, typeof i2.KbqGutterDirective, typeof i2.KbqGutterGhostDirective, typeof i2.KbqSplitterAreaDirective, typeof i2.KbqSplitterComponent], [typeof i2.KbqGutterDirective, typeof i2.KbqSplitterAreaDirective, typeof i2.KbqSplitterComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitterModule, never, [typeof i1.KbqIconModule, typeof KbqGutterDirective, typeof KbqGutterGhostDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent], [typeof KbqGutterDirective, typeof KbqSplitterAreaDirective, typeof KbqSplitterComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)

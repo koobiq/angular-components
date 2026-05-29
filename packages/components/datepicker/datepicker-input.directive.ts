@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     Directive,
@@ -12,7 +12,7 @@ import {
     Input,
     OnDestroy,
     Optional,
-    Output,
+    output,
     Renderer2
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -31,37 +31,34 @@ import {
 } from '@angular/forms';
 import {
     BACKSPACE,
+    DateAdapter,
     DELETE,
     DOWN_ARROW,
     END,
+    ErrorStateMatcher,
     ESCAPE,
     hasModifierKey,
     HOME,
     isHorizontalMovement,
     isLetterKey,
     isVerticalMovement,
+    KBQ_DATE_FORMATS,
+    KBQ_LOCALE_SERVICE,
+    KbqDateFormats,
+    KbqErrorStateTracker,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
+    ruRULocaleData,
     SPACE,
     TAB,
-    UP_ARROW
-} from '@koobiq/cdk/keycodes';
-import {
-    DateAdapter,
-    ErrorStateMatcher,
-    KBQ_DATE_FORMATS,
-    KBQ_LOCALE_SERVICE,
-    KBQ_VALIDATION,
-    KbqDateFormats,
-    KbqErrorStateTracker,
-    ruRULocaleData,
+    UP_ARROW,
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
-import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { KbqCalendar } from './calendar.component';
 import { createMissingDateImplError } from './datepicker-errors';
@@ -227,7 +224,6 @@ interface DateTimeObject {
 /** Directive used to connect an input to a KbqDatepicker. */
 @Directive({
     selector: 'input[kbqDatepicker], input[kbqCalendar]',
-    exportAs: 'kbqDatepickerInput',
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
         KBQ_DATEPICKER_VALIDATORS,
@@ -246,7 +242,8 @@ interface DateTimeObject {
         '(focus)': 'focusChanged(true)',
         '(blur)': 'onBlur()',
         '(keydown)': 'onKeyDown($event)'
-    }
+    },
+    exportAs: 'kbqDatepickerInput'
 })
 export class KbqDatepickerInput<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
@@ -255,8 +252,6 @@ export class KbqDatepickerInput<D>
     protected readonly formField = inject(KbqFormField, { optional: true, host: true });
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
 
     /** @docs-private */
     protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true });
@@ -281,6 +276,8 @@ export class KbqDatepickerInput<D>
     disabledChange = new EventEmitter<boolean>();
 
     /** Object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get errorStateMatcher() {
         return this.errorStateTracker.errorStateMatcher;
@@ -290,6 +287,8 @@ export class KbqDatepickerInput<D>
         this.errorStateTracker.errorStateMatcher = value;
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this._placeholder || this.configuration.placeholder;
@@ -301,6 +300,8 @@ export class KbqDatepickerInput<D>
 
     private _placeholder: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -313,6 +314,8 @@ export class KbqDatepickerInput<D>
     private _required: boolean;
 
     /** The datepicker that this input is associated with. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set kbqDatepicker(value: KbqDatepicker<D>) {
         if (!value) {
@@ -334,6 +337,8 @@ export class KbqDatepickerInput<D>
     }
 
     /** The calendar that this input is associated with. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set kbqCalendar(value: KbqCalendar<D>) {
         if (!value) {
@@ -345,6 +350,8 @@ export class KbqDatepickerInput<D>
     }
 
     /** Function that can be used to filter out dates within the datepicker. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set kbqDatepickerFilter(value: (date: D | null) => boolean) {
         this.dateFilter = value;
@@ -352,6 +359,8 @@ export class KbqDatepickerInput<D>
     }
 
     /** The value of the input. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): D | null {
         return this._value;
@@ -377,6 +386,8 @@ export class KbqDatepickerInput<D>
     private _value: D | null;
 
     /** The minimum valid date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get min(): D | null {
         return this._min;
@@ -390,6 +401,8 @@ export class KbqDatepickerInput<D>
     private _min: D | null;
 
     /** The maximum valid date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get max(): D | null {
         return this._max;
@@ -403,6 +416,8 @@ export class KbqDatepickerInput<D>
     private _max: D | null;
 
     /** Whether the datepicker-input is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -428,6 +443,8 @@ export class KbqDatepickerInput<D>
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get id(): string {
         return this._id;
@@ -439,8 +456,10 @@ export class KbqDatepickerInput<D>
 
     private _id: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
-    set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger) {
+    set kbqValidationTooltip(tooltip: KbqTooltipTrigger) {
         if (!tooltip) {
             return;
         }
@@ -461,13 +480,13 @@ export class KbqDatepickerInput<D>
         });
     }
 
-    @Output() readonly incorrectInput = new EventEmitter<void>();
+    readonly incorrectInput = output<void>();
 
     /** Emits when a `change` event is fired on this `<input>`. */
-    @Output() readonly dateChange = new EventEmitter<KbqDatepickerInputEvent<D>>();
+    readonly dateChange = output<KbqDatepickerInputEvent<D>>();
 
     /** Emits when an `input` event is fired on this `<input>`. */
-    @Output() readonly dateInput = new EventEmitter<KbqDatepickerInputEvent<D>>();
+    readonly dateInput = output<KbqDatepickerInputEvent<D>>();
 
     get empty(): boolean {
         return !this.viewValue && !this.isBadInput();
@@ -652,6 +671,7 @@ export class KbqDatepickerInput<D>
         if (this.isLetterKey(event)) {
             event.preventDefault();
 
+            // TODO: The 'emit' function requires a mandatory void argument
             this.incorrectInput.emit();
         } else if (this.isKeyForOpen(event)) {
             event.preventDefault();
@@ -686,6 +706,7 @@ export class KbqDatepickerInput<D>
 
                 setTimeout(this.onInput);
             } else {
+                // TODO: The 'emit' function requires a mandatory void argument
                 this.incorrectInput.emit();
             }
         } else {
@@ -794,11 +815,6 @@ export class KbqDatepickerInput<D>
         this.focusChanged(false);
 
         this.onInput();
-
-        if (this.useLegacyValidation && this.control) {
-            this.control.updateValueAndValidity({ emitEvent: false });
-            (this.control.statusChanges as EventEmitter<string>).emit(this.control.status);
-        }
     }
 
     onPaste($event) {
@@ -813,6 +829,7 @@ export class KbqDatepickerInput<D>
         rawValue.replace(/[^A-Za-z0-9]+/g, this.separator);
 
         if (/[a-z]/gi.test(rawValue)) {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.incorrectInput.emit();
         }
 
@@ -1080,48 +1097,60 @@ export class KbqDatepickerInput<D>
     }
 
     private getMaxDate(date: D): number {
-        if (this.datepicker?.maxDate && this.isMaxYear(date) && this.isMaxMonth(date)) {
-            return this.adapter.getDate(this.datepicker.maxDate);
+        const maxDate = this.datepicker?.maxDate();
+
+        if (maxDate && this.isMaxYear(date) && this.isMaxMonth(date)) {
+            return this.adapter.getDate(maxDate);
         }
 
         return this.adapter.getNumDaysInMonth(date);
     }
 
     private getMinDate(date: D): number {
-        if (this.datepicker?.minDate && this.isMinYear(date) && this.isMinMonth(date)) {
-            return this.adapter.getDate(this.datepicker.minDate);
+        const minDate = this.datepicker?.minDate();
+
+        if (minDate && this.isMinYear(date) && this.isMinMonth(date)) {
+            return this.adapter.getDate(minDate);
         }
 
         return 1;
     }
 
     private getMaxMonth(date: D): number {
-        if (this.datepicker?.maxDate && this.isMaxYear(date)) {
-            return this.adapter.getMonth(this.datepicker.maxDate);
+        const maxDate = this.datepicker?.maxDate();
+
+        if (maxDate && this.isMaxYear(date)) {
+            return this.adapter.getMonth(maxDate);
         }
 
         return 11;
     }
 
     private getMinMonth(date: D): number {
-        if (this.datepicker?.minDate && this.isMinYear(date)) {
-            return this.adapter.getMonth(this.datepicker.minDate);
+        const minDate = this.datepicker?.minDate();
+
+        if (minDate && this.isMinYear(date)) {
+            return this.adapter.getMonth(minDate);
         }
 
         return 0;
     }
 
     private getMaxYear(): number {
-        if (this.datepicker?.maxDate) {
-            return this.adapter.getYear(this.datepicker.maxDate);
+        const maxDate = this.datepicker?.maxDate();
+
+        if (maxDate) {
+            return this.adapter.getYear(maxDate);
         }
 
         return MAX_YEAR;
     }
 
     private getMinYear(): number {
-        if (this.datepicker?.minDate) {
-            return this.adapter.getYear(this.datepicker.minDate);
+        const minDate = this.datepicker?.minDate();
+
+        if (minDate) {
+            return this.adapter.getYear(minDate);
         }
 
         return 1;

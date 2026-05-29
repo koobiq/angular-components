@@ -17,12 +17,12 @@ import { debounceTime } from 'rxjs/operators';
 
 @Directive({
     selector: '[kbq-title]',
-    exportAs: 'kbqTitle',
     host: {
         '(mouseenter)': 'handleElementEnter()',
         '(mouseleave)': 'hideTooltip()',
         '(window:resize)': 'resizeStream.next($event)'
-    }
+    },
+    exportAs: 'kbqTitle'
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();

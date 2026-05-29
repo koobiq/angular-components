@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type, ViewChild } from '@angular/core';
+import { Component, DebugElement, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -530,7 +530,7 @@ describe('KbqToggle', () => {
             fixture.detectChanges();
             await fixture.whenRenderingDone();
             await fixture.whenStable();
-            expect(innerInput.attributes['aria-checked']).toBe(fixture.componentInstance.toggle.checked.toString());
+            expect(innerInput.attributes['aria-checked']).toBe(fixture.componentInstance.toggle().checked.toString());
         });
     });
 
@@ -596,7 +596,7 @@ class LoadingToggle {
     value: boolean = false;
     loading: boolean = false;
 
-    @ViewChild(KbqToggleComponent) toggle: KbqToggleComponent;
+    readonly toggle = viewChild.required(KbqToggleComponent);
 
     onToggleClick: (event?: Event) => void = () => {};
     onToggleChange: (event?: any) => void = () => {};
@@ -633,7 +633,7 @@ class SingleToggle {
     toggleColor: string = 'primary';
     indeterminate = false;
 
-    @ViewChild(KbqToggleComponent) toggle: KbqToggleComponent;
+    readonly toggle = viewChild.required(KbqToggleComponent);
 
     onToggleClick: (event?: Event) => void = () => {};
     onToggleChange: (event?: any) => void = () => {};
@@ -681,10 +681,10 @@ class ToggleWithTabIndex {
     `
 })
 class ToggleUsingViewChild {
-    @ViewChild(KbqToggleComponent, { static: false }) toggle;
+    readonly toggle = viewChild.required(KbqToggleComponent);
 
     set isDisabled(value: boolean) {
-        this.toggle.disabled = value;
+        this.toggle().disabled = value;
     }
 }
 

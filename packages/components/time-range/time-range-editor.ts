@@ -26,7 +26,7 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher, KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFieldset, KbqFieldsetItem, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFieldset, KbqFieldsetItem } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepicker, KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
@@ -65,17 +65,11 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
         KbqFieldset,
         KbqFieldsetItem,
         KbqDatepickerModule,
-        KbqFormFieldModule,
         KbqTimepickerModule,
         KbqRadioModule,
         KbqIcon
     ],
     templateUrl: './time-range-editor.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'kbq-time-range__editor'
-    },
     providers: [
         {
             multi: true,
@@ -87,7 +81,12 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
             provide: NG_VALIDATORS,
             useExisting: KbqTimeRangeEditor
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-time-range__editor'
+    }
 })
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     private readonly timeRangeService = inject(KbqTimeRangeService);

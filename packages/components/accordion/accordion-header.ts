@@ -3,9 +3,9 @@ import { KbqAccordionHeaderDirective } from './accordion-header.directive';
 
 @Directive({
     selector: 'kbq-accordion-header, [kbq-accordion-header]',
-    hostDirectives: [KbqAccordionHeaderDirective],
     host: {
         class: 'kbq-accordion-header'
-    }
+    },
+    hostDirectives: [KbqAccordionHeaderDirective]
 })
 export class KbqAccordionHeader {}

@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     KbqFormsModule,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -17,7 +16,6 @@ import { KbqInputModule } from '@koobiq/components/input';
     selector: 'validation-message-for-specific-field-example',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
         KbqFormsModule
@@ -61,14 +59,13 @@ import { KbqInputModule } from '@koobiq/components/input';
             padding: 1px;
         }
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ValidationMessageForSpecificFieldExample {
     protected readonly form = new FormGroup({

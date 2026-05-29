@@ -3,11 +3,14 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     inject,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
@@ -19,9 +22,12 @@ import {
     KbqFilterBarModule,
     KbqPipe,
     KbqPipeTemplate,
-    KbqPipeTypes
+    KbqPipeTypes,
+    KbqSaveFilterEvent,
+    KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 import { DateTime } from 'luxon';
 import { FilterBarExamplesModule } from '../../docs-examples/components/filter-bar';
 import { DevLocaleSelector } from '../locale-selector';
@@ -102,23 +108,34 @@ export class DevDocsExamples {}
     imports: [
         KbqIconModule,
         KbqFilterBarModule,
+        KbqSearchExpandableModule,
         KbqDividerModule,
         KbqButtonModule,
         KbqLuxonDateModule,
         DevDocsExamples,
         DevLocaleSelector,
-        JsonPipe
+        JsonPipe,
+        ReactiveFormsModule
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
+    private readonly destroyRef = inject(DestroyRef);
 
-    @ViewChild('filterBar') filterBar: KbqFilterBar;
-    @ViewChild('optionTemplate') optionTemplate: TemplateRef<any>;
+    readonly filterBar = viewChild.required<KbqFilterBar>('filterBar');
+    readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
+
+    readonly searchControl = new FormControl('');
+
+    constructor() {
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((value) => this.onSearch(value ?? ''));
+    }
 
     filters: KbqFilter[] = [
         {
@@ -759,7 +776,7 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 9', id: '9', type: 'success' },
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: false,
@@ -781,7 +798,7 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 9', id: '9', type: 'success' },
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: true,
@@ -816,7 +833,7 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 4', id: '4', type: 'error' },
                     { name: 'Option 5', id: '5', type: 'warning' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: false,
@@ -833,7 +850,7 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 4', id: '4', type: 'error' },
                     { name: 'Option 5', id: '5', type: 'warning' }
                 ],
-                valueTemplate: this.optionTemplate,
+                valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
                 removable: true,
@@ -939,23 +956,21 @@ export class DevApp implements AfterViewInit {
         this.activeFilter = filter;
     }
 
-    onSaveAsNewFilter({ filter, filterBar }) {
-        this.filters.push(filter);
-
-        filterBar.filters.filterSavedSuccessfully();
-        // filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true, text: 'custom error text' });
-    }
-
-    onSaveFilter({ filter, filterBar }) {
+    onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent) {
         console.log('filter to save: ', filter);
 
-        this.filters.splice(
-            this.filters.findIndex(({ name }) => name === filter?.name),
-            1,
-            filter
-        );
+        if (status === KbqSaveFilterStatuses.NewFilter) {
+            this.filters.push(filter);
+        } else {
+            this.filters.splice(
+                this.filters.findIndex(({ name }) => name === filter?.name),
+                1,
+                filter
+            );
+        }
 
-        filterBar.filters.filterSavedSuccessfully();
+        filterBar.filters()?.filterSavedSuccessfully();
+        // filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true, text: 'custom error text' });
     }
 
     onChangeFilter({ filter, filterBar }) {
@@ -967,7 +982,7 @@ export class DevApp implements AfterViewInit {
             filter
         );
 
-        filterBar.filters.filterSavedSuccessfully();
+        filterBar.filters()?.filterSavedSuccessfully();
     }
 
     onResetFilter(filter: KbqFilter | null) {

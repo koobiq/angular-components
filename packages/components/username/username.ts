@@ -30,40 +30,40 @@ export type KbqUserInfo = {
 /** Styles the primary part of the username (e.g. full name). */
 @Directive({
     selector: '[kbqUsernamePrimary]',
-    exportAs: 'kbqUsernamePrimary',
     host: {
         class: `${baseClass}__primary`
-    }
+    },
+    exportAs: 'kbqUsernamePrimary'
 })
 export class KbqUsernamePrimary {}
 
 /** Styles the secondary part. */
 @Directive({
     selector: '[kbqUsernameSecondary]',
-    exportAs: 'kbqUsernameSecondary',
     host: {
         class: `${baseClass}__secondary`
-    }
+    },
+    exportAs: 'kbqUsernameSecondary'
 })
 export class KbqUsernameSecondary {}
 
 /** Styles a secondary hint. */
 @Directive({
     selector: '[kbqUsernameSecondaryHint]',
-    exportAs: 'kbqUsernameSecondaryHint',
     host: {
         class: `${baseClass}__secondary-hint`
-    }
+    },
+    exportAs: 'kbqUsernameSecondaryHint'
 })
 export class KbqUsernameSecondaryHint {}
 
 /** Custom content for `KbqUsername`, overrides default view. */
 @Directive({
     selector: 'kbq-username-custom-view, [kbq-username-custom-view]',
-    exportAs: 'kbqUsernameCustomView',
     host: {
         class: `${baseClass}__custom-view`
-    }
+    },
+    exportAs: 'kbqUsernameCustomView'
 })
 export class KbqUsernameCustomView {}
 
@@ -75,7 +75,6 @@ export class KbqUsernameCustomView {}
  */
 @Component({
     selector: 'kbq-username',
-    exportAs: 'kbqUsername',
     imports: [
         KbqTitleModule,
         KbqUsernamePipe,
@@ -85,12 +84,13 @@ export class KbqUsernameCustomView {}
     ],
     templateUrl: './username.html',
     styleUrls: ['./username.scss', './username-tokens.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: baseClass,
         '[class]': 'class()'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqUsername'
 })
 export class KbqUsername {
     /** User profile data used for display. */

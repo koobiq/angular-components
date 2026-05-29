@@ -47,8 +47,8 @@ export class KbqFieldsetItem {}
         </div>
     `,
     styleUrls: ['./fieldset.scss', './fieldset-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-fieldset',
         role: 'group',

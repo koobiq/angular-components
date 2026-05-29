@@ -1,23 +1,23 @@
-import { DOCUMENT } from '@angular/common';
+﻿import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     afterNextRender,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    contentChild,
     Directive,
     ElementRef,
-    EventEmitter,
     inject,
     Input,
+    input,
     NgZone,
     OnDestroy,
-    Output,
+    output,
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
-import { isControl, isInput, isLeftBracket, isRightBracket } from '@koobiq/cdk/keycodes';
+import { isControl, isInput, isLeftBracket, isRightBracket } from '@koobiq/components/core';
 import { kbqSidebarAnimations, KbqSidebarAnimationState } from './sidebar-animations';
 
 export enum SidebarPositions {
@@ -35,33 +35,34 @@ interface KbqSidebarParams {
 
 @Directive({
     selector: '[kbq-sidebar-opened]',
-    exportAs: 'kbqSidebarOpened',
     host: {
         class: 'kbq-sidebar-opened'
-    }
+    },
+    exportAs: 'kbqSidebarOpened'
 })
 export class KbqSidebarOpened {
-    @Input() minWidth: string;
-    @Input() width: string;
-    @Input() maxWidth: string;
+    readonly minWidth = input<string>(undefined!);
+    readonly width = input<string>(undefined!);
+    readonly maxWidth = input<string>(undefined!);
 }
 
 @Directive({
     selector: '[kbq-sidebar-closed]',
-    exportAs: 'kbqSidebarClosed',
     host: {
         class: 'kbq-sidebar-closed'
-    }
+    },
+    exportAs: 'kbqSidebarClosed'
 })
 export class KbqSidebarClosed {
-    @Input() width: string;
+    readonly width = input<string>(undefined!);
 }
 
 @Component({
     selector: 'kbq-sidebar',
-    exportAs: 'kbqSidebar',
     templateUrl: 'sidebar.component.html',
     styleUrls: ['./sidebar.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-sidebar',
         '[@state]': `{
@@ -72,8 +73,7 @@ export class KbqSidebarClosed {
         '(@state.done)': 'onAnimationDone()'
     },
     animations: [kbqSidebarAnimations.sidebarState],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqSidebar'
 })
 export class KbqSidebar implements OnDestroy, AfterContentInit {
     /**
@@ -83,6 +83,8 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     private readonly renderer = inject(Renderer2);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get opened(): boolean {
         return this._opened;
@@ -98,7 +100,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
 
     private _opened: boolean = true;
 
-    @Input() position: SidebarPositions;
+    readonly position = input<SidebarPositions>(undefined!);
 
     /**
      * @docs-private
@@ -111,17 +113,17 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
         closedStateWidth: '32px'
     };
 
-    @Output() readonly stateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly stateChanged = output<boolean>();
 
     /**
      * @docs-private
      */
-    @ContentChild(KbqSidebarOpened, { static: false }) openedContent: KbqSidebarOpened;
+    readonly openedContent = contentChild(KbqSidebarOpened);
 
     /**
      * @docs-private
      */
-    @ContentChild(KbqSidebarClosed, { static: false }) closedContent: KbqSidebarClosed;
+    readonly closedContent = contentChild(KbqSidebarClosed);
 
     /**
      * @docs-private
@@ -145,12 +147,15 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     }
 
     ngAfterContentInit(): void {
-        this.params = {
-            openedStateWidth: this.openedContent.width || 'inherit',
-            openedStateMinWidth: this.openedContent.minWidth || 'inherit',
-            openedStateMaxWidth: this.openedContent.maxWidth || 'inherit',
+        const openedContent = this.openedContent();
+        const closedContent = this.closedContent();
 
-            closedStateWidth: this.closedContent.width || '32px'
+        this.params = {
+            openedStateWidth: openedContent?.width() || 'inherit',
+            openedStateMinWidth: openedContent?.minWidth() || 'inherit',
+            openedStateMaxWidth: openedContent?.maxWidth() || 'inherit',
+
+            closedStateWidth: closedContent?.width() || '32px'
         };
     }
 
@@ -199,9 +204,11 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     private handleKeydown(event: KeyboardEvent): void {
         if (isControl(event) || isInput(event)) return;
 
+        const position = this.position();
+
         if (
-            (this.position === SidebarPositions.Left && isLeftBracket(event)) ||
-            (this.position === SidebarPositions.Right && isRightBracket(event))
+            (position === SidebarPositions.Left && isLeftBracket(event)) ||
+            (position === SidebarPositions.Right && isRightBracket(event))
         ) {
             this.toggle();
         }

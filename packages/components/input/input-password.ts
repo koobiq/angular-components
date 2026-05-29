@@ -1,19 +1,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    Directive,
-    DoCheck,
-    ElementRef,
-    EventEmitter,
-    inject,
-    Inject,
-    Input,
-    OnChanges,
-    OnDestroy,
-    Optional,
-    Self
-} from '@angular/core';
+import { Directive, DoCheck, ElementRef, Inject, Input, OnChanges, OnDestroy, Optional, Self } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, KBQ_VALIDATION } from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
@@ -22,7 +10,12 @@ let nextUniqueId = 0;
 
 @Directive({
     selector: `input[kbqInputPassword]`,
-    exportAs: 'kbqInputPassword',
+    providers: [
+        {
+            provide: KbqFormFieldControl,
+            useExisting: KbqInputPassword
+        }
+    ],
     host: {
         class: 'kbq-input kbq-input-password',
         // Native input properties that are overwritten by Angular inputs need to be synced with
@@ -36,22 +29,18 @@ let nextUniqueId = 0;
         '(focus)': 'focusChanged(true)',
         '(input)': 'onInput()'
     },
-    providers: [
-        {
-            provide: KbqFormFieldControl,
-            useExisting: KbqInputPassword
-        }
-    ]
+    exportAs: 'kbqInputPassword'
 })
 export class KbqInputPassword
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
 {
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
-
     /** Whether the component is in an error state. */
     errorState: boolean = false;
 
     /** An object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /**
@@ -80,6 +69,9 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() placeholder: string;
 
     protected uid = `kbq-input-${nextUniqueId++}`;
@@ -89,6 +81,8 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
@@ -115,6 +109,8 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get id(): string {
         return this._id;
@@ -130,6 +126,8 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -147,6 +145,8 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): string {
         return this._inputValueAccessor.value;
@@ -239,13 +239,6 @@ export class KbqInputPassword
 
     onBlur(): void {
         this.focusChanged(false);
-
-        if (this.useLegacyValidation && this.ngControl?.control) {
-            const control = this.ngControl.control;
-
-            control.updateValueAndValidity({ emitEvent: false });
-            (control.statusChanges as EventEmitter<string>).emit(control.status);
-        }
     }
 
     /** Callback for the cases where the focused state of the input changes. */

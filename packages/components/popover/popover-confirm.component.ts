@@ -1,16 +1,14 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    EventEmitter,
     Inject,
     InjectionToken,
     Input,
     Optional,
-    Output,
-    ViewEncapsulation
+    ViewEncapsulation,
+    output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -24,16 +22,15 @@ export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('');
 @Component({
     selector: 'kbq-popover-confirm-component',
     imports: [
-        NgClass,
         CdkTrapFocus,
         KbqButtonModule
     ],
     templateUrl: './popover-confirm.component.html',
     styleUrls: ['./popover.scss', './popover-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
-    animations: [kbqPopoverAnimations.popoverState]
+    encapsulation: ViewEncapsulation.None,
+    animations: [kbqPopoverAnimations.popoverState],
+    preserveWhitespaces: false
 })
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     onConfirm = new Subject<void>();
@@ -44,16 +41,18 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
 
 @Directive({
     selector: '[kbqPopoverConfirm]',
-    exportAs: 'kbqPopoverConfirm',
     host: {
         '[class.kbq-popover_open]': 'isOpen',
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    exportAs: 'kbqPopoverConfirm'
 })
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
-    @Output() readonly confirm: EventEmitter<void> = new EventEmitter<void>();
+    readonly confirm = output<void>();
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverConfirmText')
     get confirmText(): string {
         return this._confirmText;
@@ -67,6 +66,8 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
     private _confirmText: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPopoverConfirmButtonText')
     get confirmButtonText(): string {
         return this._confirmButtonText;
@@ -103,6 +104,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
     setupButtonEvents() {
         this.instance.onConfirm.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.confirm.emit();
             this.hide();
         });

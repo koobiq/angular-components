@@ -20,9 +20,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             </button>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-m'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class TooltipHideWithTimeoutExample {}

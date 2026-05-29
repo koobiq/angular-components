@@ -1,7 +1,7 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
-import { ESCAPE } from '@koobiq/cdk/keycodes';
+import { ESCAPE } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { KbqModalControlService } from './modal-control.service';

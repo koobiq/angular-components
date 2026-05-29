@@ -148,7 +148,9 @@ export class ClampedListOverviewExample {
         if (isExpanded) {
             const links = this.clampedListItems();
 
-            links.length && links[0].focus();
+            if (links.length) {
+                links[0].focus();
+            }
         }
     }
 }

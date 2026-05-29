@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component, viewChildren } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqListItem, KbqListModule } from './index';
@@ -82,7 +82,7 @@ class BaseTestList {
 class TestListWithOneAnchorItem extends BaseTestList {
     // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
     // it doesn't get populated.
-    @ViewChildren(KbqListItem) listItems: QueryList<KbqListItem>;
+    readonly listItems = viewChildren(KbqListItem);
 }
 
 @Component({

@@ -1,14 +1,4 @@
-import {
-    booleanAttribute,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    inject,
-    Input,
-    NgZone,
-    Output,
-    signal
-} from '@angular/core';
+import { booleanAttribute, Directive, ElementRef, inject, Input, input, NgZone, output, signal } from '@angular/core';
 import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, Orientation } from './utils';
 
 @Directive({
@@ -16,7 +6,7 @@ import { Direction, ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, Orientation } from '
     host: {
         '[attr.data-orientation]': 'dataOrientation',
         '[attr.tabindex]': 'tabIndex',
-        '[attr.dir]': 'dir',
+        '[attr.dir]': 'dir()',
         '(focus)': 'handleFocus($event)',
         '(blur)': 'handleBlur()',
         '(mouseup)': 'handleMouseUp()',
@@ -28,13 +18,15 @@ export class RdxRovingFocusGroupDirective {
     private readonly ngZone = inject(NgZone);
     private readonly elementRef = inject(ElementRef);
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() orientation: Orientation | undefined;
-    @Input() dir: Direction = 'ltr';
-    @Input({ transform: booleanAttribute }) loop: boolean = true;
-    @Input({ transform: booleanAttribute }) preventScrollOnEntryFocus: boolean = false;
+    readonly dir = input<Direction>('ltr');
+    readonly loop = input<boolean, unknown>(true, { transform: booleanAttribute });
+    readonly preventScrollOnEntryFocus = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @Output() readonly entryFocus = new EventEmitter<Event>();
-    @Output() readonly currentTabStopIdChange = new EventEmitter<string | null>();
+    readonly entryFocus = output<Event>();
+    readonly currentTabStopIdChange = output<string | null>();
 
     /** @docs-private */
     readonly currentTabStopId = signal<string | null>(null);
@@ -98,7 +90,7 @@ export class RdxRovingFocusGroupDirective {
                 const currentItem = items.find((item) => item.id === this.currentTabStopId());
                 const candidateItems = [activeItem, currentItem, ...items].filter(Boolean) as HTMLElement[];
 
-                focusFirst(candidateItems, this.preventScrollOnEntryFocus);
+                focusFirst(candidateItems, this.preventScrollOnEntryFocus());
             }
         }
 

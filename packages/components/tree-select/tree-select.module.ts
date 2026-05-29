@@ -1,6 +1,6 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
     KBQ_SELECT_SCROLL_STRATEGY_PROVIDER,
@@ -29,11 +29,11 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
-        NgClass,
         NgTemplateOutlet,
         A11yModule,
         KbqTreeSelect
     ],
+    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER],
     exports: [
         KbqTreeSelect,
         KbqSelectSearch,
@@ -42,7 +42,6 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
         KbqFormFieldModule
-    ],
-    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER]
+    ]
 })
 export class KbqTreeSelectModule {}

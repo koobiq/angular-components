@@ -1,20 +1,19 @@
-import { AsyncPipe } from '@angular/common';
+﻿import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { ENTER } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_TAGS_DEFAULT_OPTIONS,
-    KbqTag,
     KbqTagInput,
     KbqTagInputEvent,
     KbqTagList,
     KbqTagsDefaultOptions,
     KbqTagsModule
 } from '@koobiq/components/tags';
-import { merge, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
@@ -33,14 +32,14 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
         AsyncPipe
     ],
     templateUrl: 'tags-autocomplete-onpaste-off-example.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     // turn off tag add on paste with InjectionToken
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
             useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
     @ViewChild('tagList', { static: false }) tagList: KbqTagList;
@@ -66,17 +65,7 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.filteredTags = merge(
-            this.tagList.tagChanges.asObservable().pipe(
-                map((selectedTags: KbqTag[]) => {
-                    const values = selectedTags.map((tag: any) => tag.value);
-
-                    return this.suggestions.filter((tag) => !values.includes(tag));
-                })
-            ),
-
-            this.control.valueChanges.pipe(map((e: string | null) => this.onControlValueChanges(e)))
-        );
+        this.filteredTags = this.control.valueChanges.pipe(map((e: string | null) => this.onControlValueChanges(e)));
     }
 
     addOnBlurFunc(event: FocusEvent) {
@@ -115,7 +104,7 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
     onSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        this.selectedTags.push(autocompleteValueCoercion(option.value));
+        this.selectedTags.push(autocompleteValueCoercion(option.value()));
         this.tagInput.nativeElement.value = '';
         this.control.setValue(null);
     }

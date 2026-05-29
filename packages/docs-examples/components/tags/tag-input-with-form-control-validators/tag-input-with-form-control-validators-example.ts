@@ -7,8 +7,6 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -27,7 +25,6 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
 @Component({
     selector: 'tag-input-with-form-control-validators-example',
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqTagsModule,
         KbqIconModule,
@@ -63,8 +60,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
             </kbq-error>
         </kbq-form-field>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagInputWithFormControlValidatorsExample {
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });

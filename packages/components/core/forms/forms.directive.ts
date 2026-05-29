@@ -1,11 +1,11 @@
-import { AfterContentInit, ContentChildren, Directive, ElementRef, QueryList } from '@angular/core';
+import { AfterContentInit, Directive, ElementRef, contentChildren } from '@angular/core';
 
 @Directive({
     selector: '.kbq-form__row, .kbq-form__fieldset, .kbq-form__legend',
-    exportAs: 'kbqFormElement',
     host: {
         '[class.kbq-form-row_margin]': 'margin'
-    }
+    },
+    exportAs: 'kbqFormElement'
 })
 export class KbqFormElement implements AfterContentInit {
     margin = false;
@@ -15,7 +15,7 @@ export class KbqFormElement implements AfterContentInit {
     hasLegend = false;
     isHorizontal = false;
 
-    @ContentChildren(KbqFormElement) elements: QueryList<KbqFormElement>;
+    readonly elements = contentChildren(KbqFormElement);
 
     constructor(private readonly element: ElementRef<HTMLElement>) {}
 
@@ -35,24 +35,24 @@ export class KbqFormElement implements AfterContentInit {
 
 @Directive({
     selector: '.kbq-form-vertical, .kbq-form-horizontal',
-    exportAs: 'kbqForm',
     host: {
         class: 'kbq-form'
-    }
+    },
+    exportAs: 'kbqForm'
 })
 export class KbqForm implements AfterContentInit {
-    @ContentChildren(KbqFormElement) elements: QueryList<KbqFormElement>;
+    readonly elements = contentChildren(KbqFormElement);
 
     ngAfterContentInit(): void {
-        this.handleElements(this.elements);
+        this.handleElements(this.elements());
     }
 
-    handleElements(elements: QueryList<KbqFormElement>): void {
+    handleElements(elements: readonly KbqFormElement[]): void {
         elements.forEach((element, index) => {
-            const nextElement: KbqFormElement | undefined = elements.get(index + 1);
+            const nextElement: KbqFormElement | undefined = elements[index + 1];
 
             if (element.isFieldSet && !element.isHorizontal) {
-                this.handleElements(element.elements);
+                this.handleElements(element.elements());
             }
 
             element.margin = !!(nextElement && !nextElement.hasLegend);

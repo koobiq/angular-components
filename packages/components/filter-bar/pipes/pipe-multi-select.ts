@@ -1,12 +1,11 @@
-import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     OnInit,
-    QueryList,
-    ViewChild,
-    ViewChildren,
+    viewChild,
+    viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -15,7 +14,6 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
@@ -35,14 +33,12 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqButtonModule,
         KbqDividerModule,
         KbqSelectModule,
-        NgClass,
         KbqPipeState,
         KbqBadgeModule,
         KbqPipeButton,
         KbqTitleModule,
         KbqPipeTitleDirective,
         NgTemplateOutlet,
-        KbqFormFieldModule,
         KbqIconModule,
         KbqInputModule,
         ReactiveFormsModule,
@@ -51,14 +47,14 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ],
     templateUrl: 'pipe-multi-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-multiselect.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
     /** control for search options */
@@ -67,10 +63,10 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     filteredOptions: Observable<any[]>;
 
     /** @docs-private */
-    @ViewChild(KbqSelect) select: KbqSelect;
+    readonly select = viewChild.required(KbqSelect);
 
     /** @docs-private */
-    @ViewChildren(KbqOption) options: QueryList<KbqOption>;
+    readonly options = viewChildren(KbqOption);
 
     /** selected value */
     get selected() {
@@ -92,11 +88,15 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** state for checkbox 'select all'. */
     get checkboxState(): KbqPseudoCheckboxState {
-        if (!this.options) return 'unchecked';
+        if (!this.options()) return 'unchecked';
 
-        if (this.select.selectionModel.selected.length === this.values.length) {
+        const select = this.select();
+
+        if (!select?.selectionModel) return 'unchecked';
+
+        if (select.selectionModel.selected.length === this.values.length) {
             return 'checked';
-        } else if (!this.select.selectionModel.selected.length) {
+        } else if (!select.selectionModel.selected.length) {
             return 'unchecked';
         }
 
@@ -110,15 +110,19 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** true if all options selected */
     get allOptionsSelected(): boolean {
-        return this.select?.triggerValues.length === this.values?.length;
+        const select = this.select();
+
+        if (!select?.selectionModel) return false;
+
+        return select.triggerValues.length === this.values?.length;
     }
 
     get selectedAllEqualsSelectedNothing(): boolean {
-        return this.data.selectedAllEqualsSelectedNothing ?? this.filterBar!.selectedAllEqualsSelectedNothing;
+        return this.data.selectedAllEqualsSelectedNothing ?? this.filterBar!.selectedAllEqualsSelectedNothing();
     }
 
     private get visibleOptions(): KbqOption[] {
-        return this.options?.filter((option) => option.selectable);
+        return this.options()?.filter((option) => option.selectable());
     }
 
     private selectionAllInProgress = false;
@@ -137,9 +141,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.select.closedStream
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
+        this.select()
+            .closedStream.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
     /** @docs-private */
@@ -170,7 +174,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** @docs-private */
     toggleSelectionAllByEnterKey() {
-        if (this.data.selectAll && this.select.keyManager.activeItemIndex === 0) {
+        if (this.data.selectAll && this.select().keyManager.activeItemIndex === 0) {
             this.toggleSelectionAll();
         }
     }
@@ -190,7 +194,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.data.value = [];
         } else {
-            this.data.value = [...this.select.value];
+            this.data.value = [...this.select().value];
         }
 
         if (emitEvent) {
@@ -219,7 +223,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** opens select */
     override open() {
-        this.select.open();
+        this.select().open();
     }
 
     private updateInternalSelected() {

@@ -141,10 +141,10 @@ function buildFileTree(value: any, level: number): FileNode[] {
             padding: 8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeStates implements AfterViewInit {
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -294,10 +294,10 @@ const DATA_OBJECT_FOR_TREE_TWO_LINE_NODE_EXAMPLE = {
             padding: 8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeTwoLineNode'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeTwoLineNode implements AfterViewInit {
     treeControl: FlatTreeControl<FileFlatNode>;

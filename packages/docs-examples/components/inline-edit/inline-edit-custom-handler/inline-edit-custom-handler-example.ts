@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -16,7 +14,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqBadgeModule,
         KbqIconModule,
@@ -46,10 +43,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </div>
         </kbq-inline-edit>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditCustomHandlerExample {
     protected readonly control = new FormControl<KbqFileItem | null>(null);

@@ -17,14 +17,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqToggleModule,
         FormsModule
     ],
-    providers: [
-        kbqCodeBlockHighlightJsConfigProvider({
-            core: () => import('highlight.js/lib/core'),
-            languages: {
-                xml: () => import('highlight.js/lib/languages/xml')
-            }
-        })
-    ],
     template: `
         <kbq-toggle class="layout-margin-bottom-m layout-margin-right-m" [(ngModel)]="viewAll">Show all</kbq-toggle>
         <kbq-toggle [(ngModel)]="filled">Filled</kbq-toggle>
@@ -38,6 +30,14 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             [(viewAll)]="viewAll"
         />
     `,
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                xml: () => import('highlight.js/lib/languages/xml')
+            }
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithMaxHeightExample {

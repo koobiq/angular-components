@@ -1,4 +1,4 @@
-import { Component, DebugElement, Inject, Optional, Provider, Type, ViewChild } from '@angular/core';
+﻿import { Component, DebugElement, Inject, Optional, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     FormsModule,
@@ -8,12 +8,20 @@ import {
     UntypedFormGroup
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { COMMA, DASH, DOWN_ARROW, FF_MINUS, NUMPAD_MINUS, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, dispatchEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import {
+    COMMA,
+    DASH,
+    DOWN_ARROW,
+    FF_MINUS,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
+    NUMPAD_MINUS,
+    UP_ARROW,
+    createKeyboardEvent,
+    dispatchEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
     ruRUFormattersData
 } from '@koobiq/components/core';
 import {
@@ -51,7 +59,6 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         FormsModule,
         KbqInputModule
     ],
@@ -72,7 +79,6 @@ class KbqNumberInputTestComponent {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         FormsModule,
         KbqInputModule
     ],
@@ -95,7 +101,6 @@ class TestNumberInputConditional {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         ReactiveFormsModule,
         KbqInputModule
     ],
@@ -112,7 +117,6 @@ class KbqNumberInputWithFormControl {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         ReactiveFormsModule,
         KbqInputModule
     ],
@@ -137,7 +141,6 @@ class KbqNumberInputWithFormControlName {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -154,7 +157,6 @@ class KbqNumberInputMaxMinStep {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -175,7 +177,6 @@ class KbqNumberInputMaxMinStepInput {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -192,7 +193,6 @@ class KbqNumberInputWithCleaner {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -219,14 +219,13 @@ class KbqNumberInputWithMask {
     bigStep: number = 5;
     withMask = true;
 
-    @ViewChild(KbqNumberInput) inputNumberDirective: KbqNumberInput;
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 
     constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
 }
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -242,7 +241,7 @@ class KbqNumberInputWithInteger {
     step: number = 1;
     bigStep: number = 5;
 
-    @ViewChild(KbqNumberInput) inputNumberDirective: KbqNumberInput;
+    readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 
     constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
 }
@@ -267,20 +266,30 @@ describe('KbqNumberInput', () => {
         expect(icons.length).toBe(2);
     }));
 
-    it('should throw error with stepper', fakeAsync(() => {
+    it('should throw error with stepper', () => {
+        // KbqFormField.ngAfterContentInit() throws when it detects a kbq-cleaner inside
+        // a number input. Override ComponentFixtureAutoDetect so CD doesn't run inside
+        // TestBed.createComponent — that way the throw originates from our explicit
+        // fixture.detectChanges() call, where expect-to-throw can capture it.
         jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        const fixture = createComponent(KbqNumberInputWithCleaner);
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            imports: [
+                ReactiveFormsModule,
+                FormsModule,
+                KbqInputModule,
+                KbqLocaleServiceModule,
+                KbqFormFieldModule,
+                KbqNumberInputWithCleaner
+            ],
+            providers: [{ provide: ComponentFixtureAutoDetect, useValue: false }]
+        }).compileComponents();
 
-        expect(() => {
-            try {
-                fixture.detectChanges();
-                flush();
-            } catch {
-                flush();
-            }
-        }).toThrow(getKbqFormFieldYouCanNotUseCleanerInNumberInputError());
-    }));
+        const fixture = TestBed.createComponent(KbqNumberInputWithCleaner);
+
+        expect(() => fixture.detectChanges()).toThrow(getKbqFormFieldYouCanNotUseCleanerInNumberInputError());
+    });
 
     it('should throw an exception with kbq-cleaner', fakeAsync(() => {
         const fixture = createComponent(KbqNumberInputTestComponent);
@@ -1418,7 +1427,7 @@ describe('KbqNumberInput', () => {
                     }
                 });
                 fixture.detectChanges();
-                fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+                fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
                 fixture.detectChanges();
                 flush();
 
@@ -1440,7 +1449,7 @@ describe('KbqNumberInput', () => {
             });
             fixture.detectChanges();
 
-            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
             flush();
 
@@ -1454,7 +1463,7 @@ describe('KbqNumberInput', () => {
             });
             fixture.detectChanges();
 
-            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
             flush();
 
@@ -1478,7 +1487,7 @@ describe('KbqNumberInput', () => {
             });
             fixture.detectChanges();
 
-            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
             flush();
 
@@ -1517,7 +1526,7 @@ describe('KbqNumberInput', () => {
             });
             fixture.detectChanges();
 
-            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
             flush();
 

@@ -1,10 +1,9 @@
-import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
@@ -23,14 +22,12 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqButtonModule,
         KbqDividerModule,
         KbqSelectModule,
-        NgClass,
         KbqPipeState,
         KbqPipeButton,
         KbqTitleModule,
         KbqPipeTitleDirective,
         KbqPipeMinWidth,
         NgTemplateOutlet,
-        KbqFormFieldModule,
         KbqIcon,
         KbqInputModule,
         ReactiveFormsModule,
@@ -38,14 +35,14 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ],
     templateUrl: 'pipe-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-select.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {
     /** control for search options */
@@ -54,7 +51,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     filteredOptions: Observable<any[]>;
 
     /** @docs-private */
-    @ViewChild(KbqSelect) select: KbqSelect;
+    readonly select = viewChild.required(KbqSelect);
 
     /** selected value */
     get selected() {
@@ -77,9 +74,9 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.select.closedStream
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
+        this.select()
+            .closedStream.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
     onSelect(item: KbqSelectValue) {
@@ -93,7 +90,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
 
     /** opens select */
     override open() {
-        this.select.open();
+        this.select().open();
     }
 
     private getFilteredOptions(value: string): KbqSelectValue[] {

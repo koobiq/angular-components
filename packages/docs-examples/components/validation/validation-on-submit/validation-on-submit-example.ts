@@ -14,12 +14,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     KbqFormsModule,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -32,7 +31,6 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqAlertModule,
         KbqIconModule,
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
         KbqFormsModule
@@ -127,14 +125,13 @@ import { KbqInputModule } from '@koobiq/components/input';
             outline: none;
         }
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-column'
-    },
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-column'
+    }
 })
 export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');

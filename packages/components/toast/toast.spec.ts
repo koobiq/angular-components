@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, NgZone, TemplateRef, ViewChild } from '@angular/core';
+import { Component, NgZone, TemplateRef, viewChild } from '@angular/core';
 import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
@@ -217,7 +217,7 @@ class KbqToastButtonWrapperComponent {
     `
 })
 class KbqToastTemplateWrapperComponent {
-    @ViewChild('tpl', { static: true }) template!: TemplateRef<unknown>;
+    readonly template = viewChild.required<TemplateRef<unknown>>('tpl');
 }
 
 describe('ToastService regression: multiple containers / cleanup', () => {
@@ -252,7 +252,7 @@ describe('ToastService regression: multiple containers / cleanup', () => {
 
         fixture.detectChanges();
 
-        const { id } = service.showTemplate(MOCK_TOAST_DATA, fixture.componentInstance.template, 0);
+        const { id } = service.showTemplate(MOCK_TOAST_DATA, fixture.componentInstance.template(), 0);
 
         expect(service.templates.length).toBe(1);
 
@@ -267,7 +267,7 @@ describe('ToastService regression: multiple containers / cleanup', () => {
 
         const toast = service.show(MOCK_TOAST_DATA, 0);
 
-        service.showTemplate(MOCK_TOAST_DATA, fixture.componentInstance.template, 0);
+        service.showTemplate(MOCK_TOAST_DATA, fixture.componentInstance.template(), 0);
 
         service.hide(toast.id);
 

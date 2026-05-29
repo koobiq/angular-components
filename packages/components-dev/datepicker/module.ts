@@ -1,9 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewEncapsulation, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDatepicker, KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioModule } from '@koobiq/components/radio';
@@ -42,7 +41,6 @@ export class DevDocsExamples {}
     imports: [
         FormsModule,
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqToolTipModule,
         KbqDatepickerModule,
         KbqTimepickerModule,
@@ -56,8 +54,8 @@ export class DevDocsExamples {}
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp implements AfterViewInit {
     date = this.adapter.today();
@@ -66,7 +64,7 @@ export class DevApp implements AfterViewInit {
     maxDate;
     startAt;
 
-    @ViewChild(KbqDatepicker) datepicker: KbqDatepicker<any>;
+    readonly datepicker = viewChild.required(KbqDatepicker);
 
     constructor(private adapter: DateAdapter<DateTime>) {
         this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2021, 8, 11, 12, 0, 0, 0));
@@ -84,7 +82,7 @@ export class DevApp implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.datepicker.selectedChanged.subscribe(() => {
+        this.datepicker().selectedChanged.subscribe(() => {
             console.log('this.datepicker.selectedChanged');
         });
     }

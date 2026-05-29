@@ -208,9 +208,11 @@ export class TreeMultipleChecklistExample {
         this.checklistSelection.toggle(node);
         const descendants = this.treeControl.getDescendants(node);
 
-        this.checklistSelection.isSelected(node)
-            ? this.checklistSelection.select(...descendants)
-            : this.checklistSelection.deselect(...descendants);
+        if (this.checklistSelection.isSelected(node)) {
+            this.checklistSelection.select(...descendants);
+        } else {
+            this.checklistSelection.deselect(...descendants);
+        }
 
         // Force update for the parent
         descendants.every((child) => this.checklistSelection.isSelected(child));

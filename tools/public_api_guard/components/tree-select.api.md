@@ -6,6 +6,7 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
@@ -18,7 +19,6 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
-import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import * as i2 from '@koobiq/components/tree';
 import * as i3 from '@koobiq/components/icon';
@@ -67,7 +67,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
     // (undocumented)
-    backdropClass: string;
+    readonly backdropClass: _angular_core.InputSignal<string>;
     // (undocumented)
     calculateHiddenItems: () => void;
     // (undocumented)
@@ -75,7 +75,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    cleaner: KbqCleaner;
+    readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
     // (undocumented)
     clearValue($event: any): void;
     close(): void;
@@ -83,10 +83,10 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     get colorForState(): KbqComponentColors;
     controlType: string;
     // (undocumented)
-    customMatcher: KbqSelectMatcher;
+    readonly customMatcher: _angular_core.Signal<KbqSelectMatcher | undefined>;
     // (undocumented)
-    customTagTemplateRef: TemplateRef<any>;
-    customTrigger: KbqSelectTrigger;
+    readonly customTagTemplateRef: _angular_core.Signal<TemplateRef<any> | undefined>;
+    readonly customTrigger: _angular_core.Signal<KbqSelectTrigger | undefined>;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
     // (undocumented)
@@ -104,6 +104,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     focus(): void;
     get focused(): boolean;
     set focused(value: boolean);
+    protected getPanelClasses(): string;
     getPanelTheme(): string;
     // (undocumented)
     handleClick(): void;
@@ -127,7 +128,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     isEmptySearchResult: boolean;
     // (undocumented)
     isRtl(): boolean;
-    multiline: boolean;
+    readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get multiple(): boolean;
     set multiple(value: boolean);
@@ -135,11 +136,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_multiline: unknown;
-    // (undocumented)
     static ngAcceptInputType_multiple: unknown;
-    // (undocumented)
-    static ngAcceptInputType_panelMinWidth: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -174,17 +171,17 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
     protected overlayWidth: string | number;
     // (undocumented)
-    panel: ElementRef;
-    panelClass: string | string[] | Set<string> | {
+    readonly panel: _angular_core.Signal<ElementRef<any>>;
+    readonly panelClass: _angular_core.InputSignal<string | string[] | Set<string> | {
         [key: string]: any;
-    };
+    }>;
     panelDoneAnimatingStream: Subject<string>;
     // (undocumented)
     panelKeydownHandler(event: KeyboardEvent): any;
-    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'>;
+    readonly panelMinWidth: _angular_core.InputSignalWithTransform<number | null, unknown>;
     // (undocumented)
     get panelOpen(): boolean;
-    panelWidth: KbqTreeSelectPanelWidth;
+    readonly panelWidth: _angular_core.InputSignal<KbqTreeSelectPanelWidth>;
     // (undocumented)
     parentForm: NgForm;
     // (undocumented)
@@ -200,7 +197,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     set required(value: boolean);
     scrollStrategy: any;
     // (undocumented)
-    search: KbqSelectSearch;
+    readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
     set searchMinOptionsThreshold(value: 'auto' | number | undefined);
     // (undocumented)
     get searchMinOptionsThreshold(): number | undefined;
@@ -210,11 +207,11 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     get selected(): any;
     // (undocumented)
     get selectedValues(): any;
-    readonly selectionChange: EventEmitter<KbqTreeSelectChange>;
+    readonly selectionChange: _angular_core.OutputEmitterRef<KbqTreeSelectChange>;
     selectionModel: SelectionModel<any>;
     setDisabledState(isDisabled: boolean): void;
     protected shouldShowSearch(): boolean;
-    sortComparator: (a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number;
+    readonly sortComparator: _angular_core.InputSignal<(a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number>;
     readonly stateChanges: Subject<void>;
     // (undocumented)
     get tabIndex(): number | null;
@@ -225,8 +222,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     toggle(): void;
     transformOrigin: string;
     // (undocumented)
-    tree: KbqTreeSelection;
-    trigger: ElementRef;
+    readonly tree: _angular_core.Signal<KbqTreeSelection | undefined>;
+    readonly trigger: _angular_core.Signal<ElementRef<any>>;
     triggerFontSize: number;
     // (undocumented)
     triggerKeydownHandler(event: KeyboardEvent): void;
@@ -240,12 +237,12 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly userInteractionChanges: Observable<void>;
     // (undocumented)
     get value(): any;
-    readonly valueChange: EventEmitter<any>;
+    readonly valueChange: _angular_core.OutputEmitterRef<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, { optional: true; }]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, { optional: true; }]>;
 }
 
 // @public
@@ -264,13 +261,11 @@ export class KbqTreeSelectChange {
 // @public (undocumented)
 export class KbqTreeSelectModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelectModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelectModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTreeSelectModule>;
-    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTreeSelectModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqTreeModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqPseudoCheckboxModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof i8.KbqTreeSelect], [typeof i8.KbqTreeSelect, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult, typeof i9.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTreeSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqTreeModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqPseudoCheckboxModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqTreeSelect], [typeof KbqTreeSelect, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult, typeof i9.KbqFormFieldModule]>;
 }
 
 // @public

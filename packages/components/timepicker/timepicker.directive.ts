@@ -1,17 +1,16 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     Directive,
     DoCheck,
     ElementRef,
-    EventEmitter,
     forwardRef,
     inject,
     Inject,
     Input,
     OnDestroy,
     Optional,
-    Output,
+    output,
     Renderer2
 } from '@angular/core';
 import {
@@ -29,34 +28,31 @@ import {
 } from '@angular/forms';
 import {
     BACKSPACE,
+    DateAdapter,
     DELETE,
     DOWN_ARROW,
     END,
+    ErrorStateMatcher,
     hasModifierKey,
     HOME,
     isHorizontalMovement,
     isLetterKey,
     isVerticalMovement,
+    KBQ_LOCALE_SERVICE,
+    KbqErrorStateTracker,
+    KbqLocaleService,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW
-} from '@koobiq/cdk/keycodes';
-import {
-    DateAdapter,
-    ErrorStateMatcher,
-    KBQ_LOCALE_SERVICE,
-    KBQ_VALIDATION,
-    KbqErrorStateTracker,
-    KbqLocaleService,
+    UP_ARROW,
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import type { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
+import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { noop, Subject, Subscription } from 'rxjs';
 
 import {
@@ -95,7 +91,11 @@ const fullFormatSize: number = 8;
 
 @Directive({
     selector: 'input[kbqTimepicker]',
-    exportAs: 'kbqTimepicker',
+    providers: [
+        KBQ_TIMEPICKER_VALIDATORS,
+        KBQ_TIMEPICKER_VALUE_ACCESSOR,
+        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }
+    ],
     host: {
         class: 'kbq-input kbq-timepicker',
         // Native input properties that are overwritten by Angular inputs need to be synced with
@@ -111,11 +111,7 @@ const fullFormatSize: number = 8;
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)'
     },
-    providers: [
-        KBQ_TIMEPICKER_VALIDATORS,
-        KBQ_TIMEPICKER_VALUE_ACCESSOR,
-        { provide: KbqFormFieldControl, useExisting: KbqTimepicker }
-    ]
+    exportAs: 'kbqTimepicker'
 })
 export class KbqTimepicker<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
@@ -139,6 +135,8 @@ export class KbqTimepicker<D>
     controlType: string = 'timepicker';
 
     /** Object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get errorStateMatcher() {
         return this.errorStateTracker.errorStateMatcher;
@@ -152,6 +150,8 @@ export class KbqTimepicker<D>
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this._placeholder;
@@ -165,6 +165,8 @@ export class KbqTimepicker<D>
 
     private _placeholder = TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT];
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -184,6 +186,8 @@ export class KbqTimepicker<D>
 
     private _disabled: boolean;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get id(): string {
         return this._id;
@@ -199,6 +203,8 @@ export class KbqTimepicker<D>
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -210,6 +216,8 @@ export class KbqTimepicker<D>
 
     private _required: boolean;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get format(): TimeFormats {
         return this._format;
@@ -234,6 +242,8 @@ export class KbqTimepicker<D>
 
     private _format: TimeFormats = DEFAULT_TIME_FORMAT;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get min(): D | null {
         return this._min;
@@ -246,6 +256,8 @@ export class KbqTimepicker<D>
 
     private _min: D | null = null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get max(): D | null {
         return this._max;
@@ -258,6 +270,8 @@ export class KbqTimepicker<D>
 
     private _max: D | null = null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): D | null {
         return this._value;
@@ -275,8 +289,10 @@ export class KbqTimepicker<D>
 
     private _value: D | null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
-    set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger) {
+    set kbqValidationTooltip(tooltip: KbqTooltipTrigger) {
         if (!tooltip) {
             return;
         }
@@ -297,7 +313,7 @@ export class KbqTimepicker<D>
         });
     }
 
-    @Output() readonly incorrectInput = new EventEmitter<void>();
+    readonly incorrectInput = output<void>();
 
     get hasSelection(): boolean {
         return this.selectionStart !== this.selectionEnd;
@@ -359,8 +375,6 @@ export class KbqTimepicker<D>
     set errorState(value: boolean) {
         this.errorStateTracker.errorState = value;
     }
-
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
 
     private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
 
@@ -486,8 +500,6 @@ export class KbqTimepicker<D>
         if (!newTimeObj) {
             if (!this.viewValue) {
                 this.onChange(null);
-            } else if (this.useLegacyValidation) {
-                this.control?.updateValueAndValidity();
             }
 
             return;
@@ -522,6 +534,7 @@ export class KbqTimepicker<D>
         if (isLetterKey(event) && !event.ctrlKey && !event.metaKey) {
             event.preventDefault();
 
+            // TODO: The 'emit' function requires a mandatory void argument
             this.incorrectInput.emit();
         } else if (
             (hasModifierKey(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) ||
@@ -553,6 +566,7 @@ export class KbqTimepicker<D>
 
                 setTimeout(this.onInput);
             } else {
+                // TODO: The 'emit' function requires a mandatory void argument
                 this.incorrectInput.emit();
             }
         } else {

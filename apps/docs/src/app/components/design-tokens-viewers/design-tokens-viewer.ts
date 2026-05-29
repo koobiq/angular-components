@@ -37,9 +37,9 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         </div>
     `,
     styleUrls: ['../component-viewer/component-viewer.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [KbqSidepanelService],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-viewer kbq-scrollbar',
         '[attr.data-docsearch-category]': 'structureItem.id'

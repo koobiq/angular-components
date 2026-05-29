@@ -325,7 +325,7 @@ describe('KbqPipeDateComponent', () => {
             const updatePosition = jest.fn();
             const focus = jest.fn();
 
-            internal.popover = { updatePosition };
+            internal.popover = () => ({ updatePosition });
             internal.returnButton = () => ({ focus });
             internal.showStartCalendar = true;
             internal.showEndCalendar = true;
@@ -357,7 +357,7 @@ describe('KbqPipeDateComponent', () => {
             const updatePosition = jest.fn();
             const focus = jest.fn();
 
-            internal.popover = { updatePosition };
+            internal.popover = () => ({ updatePosition });
             internal.listSelection = () => ({ focus });
             internal.isListMode = false;
 
@@ -381,7 +381,7 @@ describe('KbqPipeDateComponent', () => {
             const component = getPipeComponent();
             const show = jest.fn();
 
-            asInternal(component).popover = { show };
+            asInternal(component).popover = () => ({ show });
             component.open();
 
             expect(show).toHaveBeenCalled();
@@ -399,7 +399,7 @@ describe('KbqPipeDateComponent', () => {
             const spy = jest.fn();
             const hide = jest.fn();
 
-            asInternal(component).popover = { hide };
+            asInternal(component).popover = () => ({ hide });
             filterBar.onChangePipe.subscribe(spy);
 
             component.onSelect({ name: 'test', start: '', end: '' });
@@ -424,7 +424,7 @@ describe('KbqPipeDateComponent', () => {
             const start = adapter.today().minus({ days: 5 });
             const end = adapter.today();
 
-            internal.popover = { hide };
+            internal.popover = () => ({ hide });
             internal.formGroup = new FormGroup({
                 start: new FormControl(start),
                 end: new FormControl(end)
@@ -512,7 +512,7 @@ describe('KbqPipeDateComponent', () => {
             const internal = asInternal(component);
             const updatePosition = jest.fn();
 
-            internal.popover = { updatePosition };
+            internal.popover = () => ({ updatePosition });
 
             component.onFocusStartInput();
 
@@ -569,7 +569,7 @@ describe('KbqPipeDateComponent', () => {
             const spy = jest.fn();
 
             filterBar.onClosePipe.subscribe(spy);
-            component.popover.visibleChange.emit(false);
+            component.popover().visibleChange.emit(false);
 
             expect(spy).toHaveBeenCalledWith(component.data);
         });

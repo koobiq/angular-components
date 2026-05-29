@@ -1,7 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
-import { NgClass, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -12,11 +12,7 @@ import { KbqCalendarHeader } from './calendar-header.component';
 import { KbqCalendar } from './calendar.component';
 import { KbqDatepickerInput } from './datepicker-input.directive';
 import { KbqDatepickerIntl } from './datepicker-intl';
-import {
-    KbqDatepickerToggle,
-    KbqDatepickerToggleIcon,
-    KbqDatepickerToggleIconComponent
-} from './datepicker-toggle.component';
+import { KbqDatepickerToggleIcon, KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
 import {
     KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
     KbqDatepicker,
@@ -33,17 +29,19 @@ import { KbqMonthView } from './month-view.component';
         KbqSelectModule,
         KbqIconModule,
         KbqDatepickerToggleIconComponent,
-        NgClass,
         TitleCasePipe,
         KbqCalendar,
         KbqCalendarBody,
         KbqDatepicker,
         KbqDatepickerContent,
         KbqDatepickerInput,
-        KbqDatepickerToggle,
         KbqDatepickerToggleIcon,
         KbqMonthView,
         KbqCalendarHeader
+    ],
+    providers: [
+        KbqDatepickerIntl,
+        KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
     ],
     exports: [
         KbqCalendar,
@@ -51,16 +49,11 @@ import { KbqMonthView } from './month-view.component';
         KbqDatepicker,
         KbqDatepickerContent,
         KbqDatepickerInput,
-        KbqDatepickerToggle,
         KbqDatepickerToggleIcon,
         KbqDatepickerToggleIconComponent,
         KbqMonthView,
         KbqCalendarHeader,
         KbqFormFieldModule
-    ],
-    providers: [
-        KbqDatepickerIntl,
-        KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
     ]
 })
 export class KbqDatepickerModule {}

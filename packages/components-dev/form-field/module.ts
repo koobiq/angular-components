@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { COMMA, ENTER, KbqHighlightModule, KbqPseudoCheckboxModule, SPACE, TAB } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule } from '@koobiq/components/modal';
@@ -162,7 +160,6 @@ const DATA_OBJECT = {
         FormsModule,
         KbqSelectModule,
         KbqInputModule,
-        KbqFormFieldModule,
         KbqIconModule,
         KbqTagsModule,
         KbqToolTipModule,
@@ -179,8 +176,8 @@ const DATA_OBJECT = {
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     readonly invalidControl = new FormControl(null, [Validators.required]);

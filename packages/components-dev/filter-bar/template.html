@@ -19,7 +19,6 @@
             (onRemoveFilter)="onDeleteFilter($event)"
             (onResetFilterChanges)="onResetFilterChanges($event)"
             (onSave)="onSaveFilter($event)"
-            (onSaveAsNew)="onSaveAsNewFilter($event)"
             (onSelectFilter)="onSelectFilter($event)"
         />
 
@@ -33,7 +32,7 @@
             <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />
         }
 
-        <kbq-filter-search (onSearch)="onSearch($event)" />
+        <kbq-search-expandable [formControl]="searchControl" />
 
         <!--        <kbq-filter-refresher />-->
     </kbq-filter-bar>

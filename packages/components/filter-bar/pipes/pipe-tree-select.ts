@@ -1,11 +1,10 @@
-import { NgClass, NgIf } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
@@ -29,13 +28,11 @@ import { KbqPipeTitleDirective } from './pipe-title';
     imports: [
         KbqButtonModule,
         KbqDividerModule,
-        NgClass,
         KbqPipeState,
         KbqPipeButton,
         KbqTitleModule,
         KbqPipeTitleDirective,
         KbqPipeMinWidth,
-        KbqFormFieldModule,
         KbqIconModule,
         KbqInputModule,
         ReactiveFormsModule,
@@ -47,14 +44,14 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ],
     templateUrl: 'pipe-tree-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-tree-select.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit, AfterViewInit {
     /** control for search options */
@@ -70,7 +67,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     template: any;
 
     /** @docs-private */
-    @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
+    readonly select = viewChild.required(KbqTreeSelect);
 
     /** selected value */
     get selected() {
@@ -106,9 +103,9 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.select.closedStream
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
+        this.select()
+            .closedStream.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
     hasChild(_: number, nodeData) {
@@ -118,8 +115,8 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     onSelect(item: KbqTreeOption) {
         this.data.value = item.value;
         this.filterBar?.onChangePipe.emit(this.data);
-        this.select.close();
-        setTimeout(() => this.select.focus());
+        this.select().close();
+        setTimeout(() => this.select().focus());
         this.stateChanges.next();
     }
 
@@ -137,7 +134,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
 
     /** opens select */
     override open() {
-        setTimeout(() => this.select.open());
+        setTimeout(() => this.select().open());
     }
 
     onOpen() {

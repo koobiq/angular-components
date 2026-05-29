@@ -4,7 +4,7 @@
     [compareWith]="compareByValue"
     [disabled]="data.disabled"
     [kbqPipeTitle]="pipeTooltip"
-    [ngClass]="{ 'kbq-active': select.panelOpen }"
+    [class]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-multiselect__panel'"
     [selectAllHandler]="selectAllHandler"
     [tabIndex]="-1"
@@ -17,7 +17,7 @@
         kbq-select-matcher
         [disabled]="data.disabled"
         [kbqPipeState]="data"
-        [ngClass]="{ 'kbq-active': select.panelOpen }"
+        [class]="{ 'kbq-active': select.panelOpen }"
     >
         <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
         @if (select.triggerValues.length === 1) {
@@ -34,7 +34,7 @@
         }
     </button>
     @if (data.search) {
-        <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+        <kbq-form-field noBorders kbqSelectSearch>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
             <input
                 placeholder="{{ localeData.search.placeholder }}"

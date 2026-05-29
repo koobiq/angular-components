@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqTopBarModule } from './module';
 import { KbqTopBar } from './top-bar';
@@ -44,6 +44,6 @@ describe(KbqTopBar.name, () => {
     template: '<kbq-top-bar [withShadow]="withShadow" />'
 })
 class TestApp {
-    @ViewChild(KbqTopBar) topBar: KbqTopBar;
+    readonly topBar = viewChild.required(KbqTopBar);
     withShadow = false;
 }

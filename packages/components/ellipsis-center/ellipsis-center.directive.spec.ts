@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type, ViewChild } from '@angular/core';
+import { Component, DebugElement, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -27,7 +27,7 @@ const getEllipsisDirectiveDebugElement = (debugElement: DebugElement): DebugElem
     `
 })
 class SimpleTestComponent {
-    @ViewChild(KbqEllipsisCenterDirective) ellipsisCenterDirective: KbqEllipsisCenterDirective;
+    readonly ellipsisCenterDirective = viewChild.required(KbqEllipsisCenterDirective);
 
     text = 'This is a long sample string used to test ellipsis center logic.';
     charWidth = 7;
@@ -52,7 +52,7 @@ describe(KbqEllipsisCenterDirective.name, () => {
         componentInstance.text = 'Updated string for testing.';
         fixture.detectChanges();
 
-        expect(componentInstance.ellipsisCenterDirective['content']).toBe('Updated string for testing.');
+        expect(componentInstance.ellipsisCenterDirective()['content']).toBe('Updated string for testing.');
     });
 
     it('should properly split content on refresh', fakeAsync(() => {
@@ -66,7 +66,7 @@ describe(KbqEllipsisCenterDirective.name, () => {
         const nativeElement: HTMLElement = directiveDebugElement.nativeElement;
 
         jest.spyOn(nativeElement, 'clientWidth', 'get').mockImplementation(() => 150);
-        componentInstance.ellipsisCenterDirective.refresh();
+        componentInstance.ellipsisCenterDirective().refresh();
         tick(); // wait for setTimeout
 
         const startEl: HTMLElement = nativeElement.querySelector('.kbq-ellipsis-center_data-text-start')!;

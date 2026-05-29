@@ -23,8 +23,8 @@ import { DocsLocaleState } from 'src/app/services/locale';
         }
     `,
     styleUrls: ['./copy-button.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-copy-button'
     }

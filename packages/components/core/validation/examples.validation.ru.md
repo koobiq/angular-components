@@ -2,7 +2,7 @@
 
 Валидаторы Angular определяют, **что** является недопустимым значением, но не управляют тем, **когда** сообщать об ошибке пользователю. Без дополнительного механизма ошибки появлялись бы сразу при загрузке страницы, ещё до того, как пользователь начал ввод данных.
 
-В Koobiq эта задача решается двумя способами: `ErrorStateMatcher` — это текущий рекомендуемый подход, а `KbqValidateDirective` — устаревшая альтернатива, от использования которой следует отказаться.
+В Koobiq эта задача решается через `ErrorStateMatcher`.
 
 ### ErrorStateMatcher
 
@@ -19,8 +19,6 @@
 ```ts
 @Component({
     providers: [
-        // Отключаем устаревшую директиву
-        kbqDisableLegacyValidationDirectiveProvider(),
         // Устанавливаем кастомный матчер для всего компонента
         kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
     ]
@@ -31,16 +29,6 @@
 
 ```html
 <kbq-file-upload [errorStateMatcher]="myMatcher" ... />
-```
-
-### KbqValidateDirective (устарел)
-
-Директива управляла отображением ошибок через изменение методов `NgForm` и `FormGroupDirective`. Такой подход создаёт неявные зависимости между компонентами дерева форм и хрупок при обновлениях Angular. `ErrorStateMatcher` решает ту же задачу без побочных эффектов.
-
-Директива **устарела и будет удалена в следующем мажорном релизе**. Всегда явно отключайте её:
-
-```ts
-providers: [kbqDisableLegacyValidationDirectiveProvider()];
 ```
 
 ## Отображение ошибок

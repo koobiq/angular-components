@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, ViewEncapsulation, input } from '@angular/core';
 import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 
 export type ProgressBarMode = 'determinate' | 'indeterminate';
@@ -28,22 +28,22 @@ export class KbqProgressBarCaption {}
     selector: 'kbq-progress-bar',
     templateUrl: './progress-bar.component.html',
     styleUrls: ['./progress-bar.scss', './progress-bar-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
-        '[attr.id]': 'id',
+        '[attr.id]': 'id()',
         class: 'kbq-progress-bar',
-        '[class.kbq-progress-bar_determinate]': 'mode === "determinate"',
-        '[class.kbq-progress-bar_indeterminate]': 'mode === "indeterminate"'
+        '[class.kbq-progress-bar_determinate]': 'mode() === "determinate"',
+        '[class.kbq-progress-bar_indeterminate]': 'mode() === "indeterminate"'
     }
 })
 export class KbqProgressBar extends KbqColorDirective {
-    @Input() id: string = `kbq-progress-bar-${idIterator++}`;
-    @Input() value: number = 0;
-    @Input() mode: ProgressBarMode = 'determinate';
+    readonly id = input<string>(`kbq-progress-bar-${idIterator++}`);
+    readonly value = input<number>(0);
+    readonly mode = input<ProgressBarMode>('determinate');
 
     get percentage(): number {
-        return Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, this.value));
+        return Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, this.value()));
     }
 
     constructor() {

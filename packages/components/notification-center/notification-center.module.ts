@@ -13,15 +13,15 @@ import { KbqNotificationCenterService } from './notification-center.service';
         KbqNotificationCenterComponent,
         KbqNotificationCenterTrigger
     ],
-    exports: [
-        KbqNotificationCenterComponent,
-        KbqNotificationCenterTrigger
-    ],
     providers: [
         KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER,
         { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
         { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy },
         { provide: KbqNotificationCenterService, deps: [DateAdapter, DateFormatter] }
+    ],
+    exports: [
+        KbqNotificationCenterComponent,
+        KbqNotificationCenterTrigger
     ]
 })
 export class KbqNotificationCenterModule {}

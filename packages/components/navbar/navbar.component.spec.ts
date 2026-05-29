@@ -1,9 +1,9 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
-import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { dispatchKeyboardEvent, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/components/core';
 import { KbqIconModule } from './../icon/icon.module';
 import {
     KbqNavbar,
@@ -22,7 +22,16 @@ const FONT_RENDER_TIMEOUT_MS = 10;
 describe('KbqNavbar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqNavbarModule, KbqIconModule, TestApp, TestItemApp, TestTitleApp, TestVerticalApp, TestBrandApp]
+            imports: [
+                NoopAnimationsModule,
+                KbqNavbarModule,
+                KbqIconModule,
+                TestApp,
+                TestItemApp,
+                TestTitleApp,
+                TestVerticalApp,
+                TestBrandApp
+            ]
         }).compileComponents();
     });
 
@@ -36,7 +45,7 @@ describe('KbqNavbar', () => {
         const collapsableItems = fixture.debugElement
             .queryAll(By.directive(KbqNavbarItem))
             .map((item) => item.componentInstance as KbqNavbarItem)
-            .filter((item) => item.title && item.collapsable);
+            .filter((item) => item.title() && item.collapsable);
 
         collapsableItems.forEach((item) => (item.collapsed = true));
 

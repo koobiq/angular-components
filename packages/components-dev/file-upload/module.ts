@@ -3,10 +3,9 @@ import {
     ChangeDetectorRef,
     Component,
     Directive,
-    EventEmitter,
     inject,
-    Input,
-    Output,
+    input,
+    output,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -32,8 +31,7 @@ import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
     KbqFileItem,
-    KbqFileUploadModule,
-    KbqFileValidatorFn
+    KbqFileUploadModule
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -43,6 +41,8 @@ import { interval, takeWhile, timer } from 'rxjs';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../../components/file-upload/e2e';
 import { FileUploadExamplesModule } from '../../docs-examples/components/file-upload';
 import { DevLocaleSelector } from '../locale-selector';
+
+type FileValidatorFn = (file: File) => string | null;
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
@@ -173,9 +173,9 @@ export class DevDocsExamples {}
     template: `
         <kbq-multiple-file-upload
             size="compact"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             [inputId]="'test-compact'"
-            [files]="files"
+            [files]="files()"
             (fileQueueChanged)="addedFiles($event)"
         >
             <ng-template #kbqFileIcon>
@@ -184,7 +184,6 @@ export class DevDocsExamples {}
             <kbq-hint>{{ hintMessage }}</kbq-hint>
         </kbq-multiple-file-upload>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -193,12 +192,13 @@ export class DevDocsExamples {}
                 captionText: KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION.captionTextForCompactSize
             }
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevMultipleFileUploadCompact {
-    @Input() disabled: boolean;
-    @Input() files: KbqFileItem[] = [];
-    @Output() readonly addedFile: EventEmitter<any> = new EventEmitter<any>();
+    readonly disabled = input<boolean>(undefined!);
+    readonly files = input<KbqFileItem[]>([]);
+    readonly addedFile = output<any>();
 
     hintMessage = hintMessage;
 
@@ -218,7 +218,6 @@ export class DevMultipleFileUploadCompact {
         KbqLocaleServiceModule,
         KbqFileUploadModule,
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         KbqCheckboxModule,
@@ -230,12 +229,12 @@ export class DevMultipleFileUploadCompact {
     ],
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     disabled = false;
-    validation: KbqFileValidatorFn[] = [maxFileExceededFiveMbs];
+    validation: FileValidatorFn[] = [maxFileExceededFiveMbs];
     hintMessage = hintMessage;
 
     file: KbqFileItem | null;

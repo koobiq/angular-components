@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -25,14 +24,13 @@ export class DevDocsExamples {}
         KbqTabsModule,
         KbqPopoverModule,
         KbqButtonModule,
-        NgClass,
         DevDocsExamples,
         DevThemeToggle
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     readonly tabs = new Array(50).fill(0).map((_, index) => `Tab ${index}`);

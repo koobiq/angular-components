@@ -17,8 +17,8 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         </div>
     `,
     styleUrls: ['tabs-with-scroll-vertical-example.css'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class TabsWithScrollVerticalExample {
     readonly tabs = [

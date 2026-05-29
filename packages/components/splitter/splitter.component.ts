@@ -8,20 +8,19 @@ import {
     ContentChildren,
     Directive,
     ElementRef,
-    EventEmitter,
     Inject,
     Input,
     NgZone,
     OnDestroy,
     OnInit,
-    Output,
     QueryList,
     Renderer2,
-    ViewChild,
-    ViewChildren,
     ViewEncapsulation,
     forwardRef,
-    inject
+    inject,
+    output,
+    viewChild,
+    viewChildren
 } from '@angular/core';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { Subscription } from 'rxjs';
@@ -70,6 +69,8 @@ export enum Direction {
     }
 })
 export class KbqGutterDirective implements OnInit {
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get direction(): Direction {
         return this._direction;
@@ -81,6 +82,8 @@ export class KbqGutterDirective implements OnInit {
 
     private _direction: Direction = Direction.Vertical;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get order(): number {
         return this._order;
@@ -92,6 +95,8 @@ export class KbqGutterDirective implements OnInit {
 
     private _order: number = 0;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get size(): number {
         return this._size;
@@ -148,8 +153,12 @@ export class KbqGutterDirective implements OnInit {
     }
 })
 export class KbqGutterGhostDirective {
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() visible: boolean;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get x(): number {
         return this._x;
@@ -162,6 +171,8 @@ export class KbqGutterGhostDirective {
 
     private _x: number = 0;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get y(): number {
         return this._y;
@@ -174,6 +185,8 @@ export class KbqGutterGhostDirective {
 
     private _y: number = 0;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get direction(): Direction {
         return this._direction;
@@ -186,6 +199,8 @@ export class KbqGutterGhostDirective {
 
     private _direction: Direction = Direction.Vertical;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get size(): number {
         return this._size;
@@ -222,21 +237,21 @@ export class KbqGutterGhostDirective {
     imports: [KbqGutterDirective, KbqGutterGhostDirective],
     templateUrl: './splitter.component.html',
     styleUrls: ['splitter.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqSplitter',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-splitter'
     },
+    exportAs: 'kbqSplitter',
     preserveWhitespaces: false
 })
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
-    @Output() readonly gutterPositionChange: EventEmitter<void> = new EventEmitter<void>();
+    readonly gutterPositionChange = output<void>();
 
     areas: IArea[] = [];
 
-    @ViewChildren(KbqGutterDirective) gutters: QueryList<KbqGutterDirective>;
-    @ViewChild(KbqGutterGhostDirective) ghost: KbqGutterGhostDirective;
+    readonly gutters = viewChildren(KbqGutterDirective);
+    readonly ghost = viewChild.required(KbqGutterGhostDirective);
 
     @ContentChildren(forwardRef(() => KbqSplitterAreaDirective)) areaRefs: QueryList<KbqSplitterAreaDirective>;
 
@@ -250,6 +265,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private areasChangeSubscription: Subscription = Subscription.EMPTY;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hideGutters(): boolean {
         return this._hideGutters;
@@ -261,6 +278,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private _hideGutters: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get direction(): Direction {
         return this._direction;
@@ -272,6 +291,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private _direction: Direction;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -283,6 +304,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get useGhost(): boolean {
         return this._useGhost;
@@ -294,6 +317,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private _useGhost: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get gutterSize(): number {
         return this._gutterSize;
@@ -367,17 +392,18 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         if (this.useGhost) {
             const gutterOrder = leftAreaIndex * 2 + 1;
 
-            currentGutter = this.gutters.find((gutter: KbqGutterDirective) => gutter.order === gutterOrder);
+            currentGutter = this.gutters().find((gutter: KbqGutterDirective) => gutter.order === gutterOrder);
 
             if (currentGutter) {
                 const gutterPosition = currentGutter.getPosition();
+                const ghost = this.ghost();
 
-                this.ghost.direction = currentGutter.direction;
-                this.ghost.size = currentGutter.size;
-                this.ghost.x = gutterPosition.x;
-                this.ghost.y = gutterPosition.y;
+                ghost.direction = currentGutter.direction;
+                ghost.size = currentGutter.size;
+                ghost.x = gutterPosition.x;
+                ghost.y = gutterPosition.y;
 
-                this.ghost.visible = true;
+                ghost.visible = true;
                 this.setStyle(
                     StyleProperty.Cursor,
                     currentGutter.direction === Direction.Vertical ? 'row-resize' : 'col-resize'
@@ -445,7 +471,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     };
 
     private updateGutter(): void {
-        this.gutters.forEach((gutter) => {
+        this.gutters().forEach((gutter) => {
             if (gutter.dragged) {
                 gutter.dragged = false;
 
@@ -485,7 +511,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
             const maxPos = rightPos[key] + (rightArea.area.getSize() || 0) - rightMin - currentGutter.size;
             const newPos = gutterPosition[key] - offset;
 
-            this.ghost[key] = newPos < minPos ? minPos : Math.min(newPos, maxPos);
+            this.ghost()[key] = newPos < minPos ? minPos : Math.min(newPos, maxPos);
         } else {
             this.resizeAreas(leftArea, rightArea, offset);
         }
@@ -523,13 +549,12 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         if (this.useGhost && currentGutter) {
             const gutterPosition = currentGutter.getPosition();
+            const ghost = this.ghost();
             const offset =
-                this.ghost.direction === Direction.Vertical
-                    ? gutterPosition.y - this.ghost.y
-                    : gutterPosition.x - this.ghost.x;
+                ghost.direction === Direction.Vertical ? gutterPosition.y - ghost.y : gutterPosition.x - ghost.x;
 
             this.resizeAreas(leftArea, rightArea, offset);
-            this.ghost.visible = false;
+            this.ghost().visible = false;
             this.setStyle(StyleProperty.Cursor, 'unset');
         }
 
@@ -537,6 +562,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         this.updateGutter();
 
+        // TODO: The 'emit' function requires a mandatory void argument
         this.gutterPositionChange.emit();
 
         this.changeDetectorRef.markForCheck();
@@ -555,7 +581,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     }
 })
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
-    @Output() readonly sizeChange: EventEmitter<number> = new EventEmitter<number>();
+    readonly sizeChange = output<number>();
 
     private readonly window = inject(KBQ_WINDOW);
 

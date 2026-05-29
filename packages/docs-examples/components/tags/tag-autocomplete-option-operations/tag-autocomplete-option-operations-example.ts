@@ -2,12 +2,10 @@ import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
-import { Observable, merge } from 'rxjs';
+import { KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
@@ -20,7 +18,6 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag $
     selector: 'tag-autocomplete-option-operations-example',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqTagsModule,
         ReactiveFormsModule,
         KbqAutocompleteModule,
@@ -76,8 +73,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag $
             margin: var(--kbq-size-5xl);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     protected readonly allTags = getAutocompleteOptions();
@@ -105,16 +101,9 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.filteredTags = merge(
-            this.tagList.tagChanges.asObservable().pipe(
-                map((selectedTags: KbqTag[]) => {
-                    const values = selectedTags.map((tag: any) => tag.value);
-
-                    return this.allTags.filter((tag) => !values.includes(tag));
-                })
-            ),
-            this.control.valueChanges.pipe(map((e) => this.onControlValueChanges(e)))
-        ).pipe(startWith(this.allTags.filter((tag) => !this.selectedTags.includes(tag))));
+        this.filteredTags = this.control.valueChanges
+            .pipe(map((e) => this.onControlValueChanges(e)))
+            .pipe(startWith(this.allTags.filter((tag) => !this.selectedTags.includes(tag))));
     }
 
     onCreate({ input, value }: KbqTagInputEvent): void {
@@ -140,7 +129,7 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     onSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        this.selectedTags.push(autocompleteValueCoercion(option.value));
+        this.selectedTags.push(autocompleteValueCoercion(option.value()));
         this.control.setValue(null);
         this.tagInput.nativeElement.value = '';
     }

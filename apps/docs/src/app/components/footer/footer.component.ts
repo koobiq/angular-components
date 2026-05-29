@@ -22,8 +22,8 @@ import { DocsVersionPickerDirective } from '../version-picker/version-picker.dir
     ],
     templateUrl: './footer.component.html',
     styleUrl: './footer.component.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-footer'
     }

@@ -6,7 +6,7 @@ import {
 } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { EmptyFocusTrapStrategy } from '@koobiq/components/core';
@@ -25,14 +25,7 @@ import {
         A11yModule,
         KbqIconModule,
         CdkObserveContent,
-        NgClass,
         NgTemplateOutlet,
-        KbqPopoverComponent,
-        KbqPopoverTrigger,
-        KbqPopoverConfirmComponent,
-        KbqPopoverConfirmTrigger
-    ],
-    exports: [
         KbqPopoverComponent,
         KbqPopoverTrigger,
         KbqPopoverConfirmComponent,
@@ -42,6 +35,12 @@ import {
         KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
         { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
         { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy }
+    ],
+    exports: [
+        KbqPopoverComponent,
+        KbqPopoverTrigger,
+        KbqPopoverConfirmComponent,
+        KbqPopoverConfirmTrigger
     ]
 })
 export class KbqPopoverModule {}

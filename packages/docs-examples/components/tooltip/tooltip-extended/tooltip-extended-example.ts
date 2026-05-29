@@ -125,10 +125,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             }
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-column layout-align-center-start layout-gap-l'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class TooltipExtendedExample {
     protected readonly extendedTooltipPreferredColor = KbqComponentColors.ContrastFade;

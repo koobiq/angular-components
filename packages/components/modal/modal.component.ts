@@ -1,7 +1,7 @@
-import { CdkTrapFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { CdkTrapFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
-import { DOCUMENT, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -18,19 +18,18 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    QueryList,
+    output,
     Renderer2,
     SimpleChanges,
     TemplateRef,
     Type,
-    ViewChild,
-    ViewChildren,
+    viewChild,
+    viewChildren,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { ENTER, ESCAPE } from '@koobiq/cdk/keycodes';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { ENTER, ESCAPE, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -53,8 +52,6 @@ type AnimationState = 'enter' | 'leave' | null;
     selector: 'kbq-modal',
     imports: [
         CdkTrapFocus,
-        NgStyle,
-        NgClass,
         KbqButtonModule,
         KbqIconModule,
         CssUnitPipe,
@@ -62,8 +59,8 @@ type AnimationState = 'enter' | 'leave' | null;
     ],
     templateUrl: './modal.component.html',
     styleUrls: ['./modal.scss', 'modal-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-modal',
         '(keydown)': 'onKeyDown($event)'
@@ -77,19 +74,32 @@ export class KbqModalComponent<T = any, R = any>
 
     componentColors = KbqComponentColors;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqModalType: ModalType = 'default';
 
     // The instance of component opened into the dialog.
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqComponent: Type<T>;
     // If not specified, will use <ng-content>
-    // eslint-disable-next-line @typescript-eslint/ban-types
+
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqContent: string | TemplateRef<{}> | Type<T>;
-    // available when kbqContent is a component
-    @Input() kbqComponentParams: any;
     // Default Modal ONLY
-    // eslint-disable-next-line @typescript-eslint/ban-types
+
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqFooter: string | TemplateRef<{}> | IModalButtonOptions<T>[];
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqVisible() {
         return this._kbqVisible;
@@ -100,17 +110,41 @@ export class KbqModalComponent<T = any, R = any>
 
     private _kbqVisible = false;
 
-    @Output() readonly kbqVisibleChange = new EventEmitter<boolean>();
+    readonly kbqVisibleChange = output<boolean>();
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqWidth: number | string;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqSize: ModalSize = ModalSize.Medium;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqWrapClassName: string;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqClassName: string;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqStyle: object;
-    // eslint-disable-next-line @typescript-eslint/ban-types
+
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqTitle: string | TemplateRef<{}>;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqCloseByESC: boolean = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqClosable() {
         return this._kbqClosable;
@@ -120,6 +154,8 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqClosable = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqMask() {
         return this._kbqMask;
@@ -129,6 +165,8 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqMask = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqMaskClosable() {
         return this._kbqMaskClosable;
@@ -138,7 +176,13 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqMaskClosable = false;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqMaskStyle: object;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqBodyStyle: object;
 
     // Trigger when modal open(visible) after animations
@@ -149,11 +193,22 @@ export class KbqModalComponent<T = any, R = any>
     @Output() readonly kbqBeforeClose = new EventEmitter<R | undefined>();
 
     // --- Predefined OK & Cancel buttons
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input() kbqOkText: string;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqOkType = KbqComponentColors.Contrast;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqRestoreFocus = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqOkLoading() {
         return this._kbqOkLoading;
@@ -163,9 +218,17 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqOkLoading = false;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() @Output() readonly kbqOnOk: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input() kbqCancelText: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqCancelLoading() {
         return this._kbqCancelLoading;
@@ -175,14 +238,17 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqCancelLoading = false;
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() @Output() readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
 
-    @ViewChild('modalContainer', { static: true }) modalContainer: ElementRef;
-    @ViewChild('bodyContainer', { read: ViewContainerRef, static: false }) bodyContainer: ViewContainerRef;
+    readonly modalContainer = viewChild.required<ElementRef>('modalContainer');
+    readonly bodyContainer = viewChild.required('bodyContainer', { read: ViewContainerRef });
     // Only aim to focus the ok button that needs to be auto focused
-    @ViewChildren('autoFocusedButton', { read: ElementRef }) autoFocusedButtons: QueryList<ElementRef>;
+    readonly autoFocusedButtons = viewChildren('autoFocusedButton', { read: ElementRef });
 
-    @ViewChild('modalBody') modalBody: ElementRef;
+    readonly modalBody = viewChild<ElementRef>('modalBody');
 
     isTopOverflow: boolean = false;
     isBottomOverflow: boolean = false;
@@ -243,6 +309,9 @@ export class KbqModalComponent<T = any, R = any>
         super();
     }
 
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() kbqGetContainer: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) = () => this.overlay.create();
 
     // [NOTE] NOT available when using by service!
@@ -289,7 +358,7 @@ export class KbqModalComponent<T = any, R = any>
     ngAfterViewInit() {
         // If using Component, it is the time to attach View while bodyContainer is ready
         if (this.contentComponentRef) {
-            this.bodyContainer.insert(this.contentComponentRef.hostView);
+            this.bodyContainer().insert(this.contentComponentRef.hostView);
         }
 
         this.getElement().getElementsByTagName('button')[0]?.focus();
@@ -306,7 +375,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     checkOverflow(): void {
-        const nativeElement: HTMLElement = this.modalBody?.nativeElement;
+        const nativeElement: HTMLElement = this.modalBody()?.nativeElement;
 
         if (!nativeElement) {
             return;
@@ -324,9 +393,9 @@ export class KbqModalComponent<T = any, R = any>
         this.previouslyFocusedElementOrigin = this.focusMonitor['_lastFocusOrigin'];
 
         this.focusMonitor
-            .monitor(this.modalContainer, true)
+            .monitor(this.modalContainer(), true)
             .pipe(take(1))
-            .subscribe(() => this.focusMonitor.stopMonitoring(this.modalContainer));
+            .subscribe(() => this.focusMonitor.stopMonitoring(this.modalContainer()));
 
         this.changeVisibleFromInside(true);
     }
@@ -425,7 +494,7 @@ export class KbqModalComponent<T = any, R = any>
         this.handleCloseResult(type, (doClose) => doClose !== false);
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean) {
         const trigger = { ok: this.kbqOnOk, cancel: this.kbqOnCancel }[triggerType];
         const loadingKey = { ok: 'kbqOkLoading', cancel: 'kbqCancelLoading' }[triggerType];
@@ -435,7 +504,7 @@ export class KbqModalComponent<T = any, R = any>
         } else if (typeof trigger === 'function') {
             const result = trigger(this.getContentComponent());
             // Users can return "false" to prevent closing by default
-            // eslint-disable-next-line @typescript-eslint/ban-types
+            // eslint-disable-next-line @typescript-eslint/no-empty-object-type
             const caseClose = (doClose: boolean | void | {}) => canClose(doClose) && this.close(doClose as R);
 
             if (isPromise(result)) {
@@ -454,32 +523,32 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     isNonEmptyString(value: {}): boolean {
         return typeof value === 'string' && value !== '';
     }
 
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     isTemplateRef(value: {}): boolean {
         return value instanceof TemplateRef;
     }
 
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     isComponent(value: {}): boolean {
         return value instanceof Type;
     }
 
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     isModalButtons(value: {}): boolean {
         return Array.isArray(value) && value.length > 0;
     }
 
     // Lookup a button's property, if the prop is a function, call & then return the result, otherwise, return itself.
     // AoT
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {} {
         const value = options[prop];
         const args: any[] = [];
@@ -491,6 +560,19 @@ export class KbqModalComponent<T = any, R = any>
         return typeof value === 'function' ? value.apply(options, args) : value;
     }
 
+    /** Returns the full set of classes for the modal container: base, custom class name, size and animation classes. */
+    protected getContainerClasses(): string {
+        const classes = ['kbq-modal-container', this.kbqClassName, `kbq-modal_${this.kbqSize}`];
+
+        if (this.modalAnimationClassMap) {
+            const animationClasses = this.modalAnimationClassMap as { [key: string]: boolean };
+
+            classes.push(...Object.keys(animationClasses).filter((key) => animationClasses[key]));
+        }
+
+        return classes.filter(Boolean).join(' ');
+    }
+
     // On kbqFooter's modal button click
     // AoT
     onButtonClick(button: IModalButtonOptions<T>) {
@@ -499,7 +581,7 @@ export class KbqModalComponent<T = any, R = any>
 
         if (isPromise(result)) {
             button.loading = true;
-            // eslint-disable-next-line @typescript-eslint/ban-types
+            // eslint-disable-next-line @typescript-eslint/no-empty-object-type
             (result as Promise<{}>).then(() => (button.loading = false)).catch(() => (button.loading = false));
         }
     }
@@ -624,12 +706,6 @@ export class KbqModalComponent<T = any, R = any>
 
         this.contentComponentRef = factory.create(childInjector);
 
-        if (this.kbqComponentParams) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            Object.assign(this.contentComponentRef.instance, this.kbqComponentParams);
-        }
-
         // Do the first change detection immediately
         // (or we do detection at ngAfterViewInit, multi-changes error will be thrown)
         this.contentComponentRef.changeDetectorRef.detectChanges();
@@ -637,7 +713,7 @@ export class KbqModalComponent<T = any, R = any>
 
     // Update transform-origin to the last click position on document
     private updateTransformOrigin() {
-        const modalElement = this.modalContainer.nativeElement as HTMLElement;
+        const modalElement = this.modalContainer().nativeElement as HTMLElement;
         const lastPosition = ModalUtil.getLastClickPosition();
 
         if (lastPosition) {

@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterViewChecked,
     booleanAttribute,
@@ -10,6 +10,7 @@ import {
     Inject,
     InjectionToken,
     Input,
+    input,
     OnDestroy,
     Optional,
     Output,
@@ -17,9 +18,9 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
-import { ENTER, hasModifierKey, SPACE } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
+import { ActiveDescendantKeyManager } from '../a11y';
+import { ENTER, hasModifierKey, SPACE } from '../keycodes';
 import { KbqPseudoCheckboxModule } from '../selection';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
 import { KbqOptgroup } from './optgroup';
@@ -138,9 +139,14 @@ export class KbqVirtualOption extends KbqOptionBase {
     templateUrl: 'option.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['option.scss', 'option-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: KBQ_TITLE_TEXT_REF,
+            useExisting: KbqOption
+        }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqOption',
+    encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'getTabIndex()',
         class: 'kbq-option',
@@ -154,24 +160,23 @@ export class KbqVirtualOption extends KbqOptionBase {
         '(mouseenter)': 'onMouseenter()',
         '(keydown)': 'handleKeydown($event)'
     },
-    providers: [
-        {
-            provide: KBQ_TITLE_TEXT_REF,
-            useExisting: KbqOption
-        }
-    ]
+    exportAs: 'kbqOption'
 })
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
     /** The form value of the option. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() value: any;
 
-    @Input({ transform: booleanAttribute }) selectable: boolean = true;
+    readonly selectable = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     // todo this flag will need to be rethought in the future (added for filter panel)
-    @Input({ transform: booleanAttribute }) userSelect: boolean = false;
+    readonly userSelect = input<boolean, unknown>(false, { transform: booleanAttribute });
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get showCheckbox() {
         return this._showCheckbox === undefined ? this.multiple : this._showCheckbox;
@@ -193,6 +198,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      * The displayed value of the option. It is necessary to show the selected option in the
      * select's trigger.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get viewValue(): string {
         return this._viewValue || (this.getHostElement().textContent || '').trim();
@@ -221,6 +228,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     private _selected = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled() {
         return (this.group && this.group.disabled) || this._disabled;
@@ -376,9 +385,9 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      * determine if the select's view -> model callback should be invoked.`
      */
     selectViaInteraction(): void {
-        if (this.userSelect) return;
+        if (this.userSelect()) return;
 
-        if (!this.disabled && this.selectable) {
+        if (!this.disabled && this.selectable()) {
             this._selected = this.multiple ? !this._selected : true;
 
             this.changeDetectorRef.markForCheck();

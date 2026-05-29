@@ -2,7 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Point } from '@angular/cdk/drag-drop';
 import { Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -13,9 +13,11 @@ import {
     Inject,
     InjectionToken,
     Input,
+    OnChanges,
     OnDestroy,
     Output,
     Renderer2,
+    SimpleChanges,
     TemplateRef,
     Type,
     ViewChild,
@@ -62,15 +64,14 @@ export const MIN_TIME_FOR_DELAY = 2000;
 @Component({
     selector: 'kbq-tooltip-component',
     imports: [
-        NgClass,
         NgTemplateOutlet
     ],
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [kbqTooltipAnimations.tooltipState],
-    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER]
+    encapsulation: ViewEncapsulation.None,
+    animations: [kbqTooltipAnimations.tooltipState]
 })
 export class KbqTooltipComponent extends KbqPopUp {
     prefix = 'kbq-tooltip';
@@ -125,15 +126,18 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 @Directive({
     selector: '[kbqTooltip]',
-    exportAs: 'kbqTooltip',
     host: {
         '[class.kbq-tooltip_open]': 'isOpen',
 
         '(keydown)': 'keydownHandler($event)',
         '(touchend)': 'touchendHandler()'
-    }
+    },
+    exportAs: 'kbqTooltip'
 })
-export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnDestroy {
+export class KbqTooltipTrigger
+    extends KbqPopUpTrigger<KbqTooltipComponent>
+    implements AfterViewInit, OnChanges, OnDestroy
+{
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
     protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
     protected focusMonitor: FocusMonitor = inject(FocusMonitor);
@@ -162,8 +166,13 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
      * Setting hideWithTimeout to true will delay tooltip hiding and will not hide when the mouse moves from trigger
      * to tooltip.
      */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input({ transform: booleanAttribute }) hideWithTimeout: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqVisible')
     get tooltipVisible(): boolean {
         return this.visible;
@@ -173,6 +182,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         super.updateVisible(value);
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPlacement')
     get tooltipPlacement(): KbqPopUpPlacementValues {
         return this.placement;
@@ -182,12 +193,17 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
      * Positions the tooltip relative to the mouse cursor. Only available for top and bottom kbqPlacement.
      * Does not work with kbqPlacementPriority.
      */
+    // TODO: Skipped for migration because:
+    //  Class of this input is manually instantiated. This is discouraged and prevents
+    //  migration.
     @Input({ alias: 'kbqRelativeToPointer', transform: booleanAttribute }) relativeToPointer: boolean = false;
 
     set tooltipPlacement(value: KbqPopUpPlacementValues) {
         super.updatePlacement(value);
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPlacementPriority')
     get tooltipPlacementPriority() {
         return this.placementPriority;
@@ -197,6 +213,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         super.updatePlacementPriority(value);
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltip')
     get content(): string | TemplateRef<any> {
         return this._content;
@@ -208,6 +226,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         this.updateData();
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipDisabled')
     get disabled(): boolean {
         return this._disabled;
@@ -221,9 +241,16 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
     }
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input('kbqEnterDelay') enterDelay = 400;
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input('kbqLeaveDelay') leaveDelay = 0;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTrigger')
     get trigger(): string {
         return this._trigger;
@@ -241,6 +268,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 
     protected _trigger = `${PopUpTriggers.Hover}, ${PopUpTriggers.Focus}`;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipClass')
     get customClass(): string {
         return this._customClass || '';
@@ -256,6 +285,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipContext')
     get context() {
         return this._context;
@@ -268,6 +299,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 
     private _context: any = null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipColor')
     get color(): string {
         return `kbq-${this._color}`;
@@ -279,7 +312,11 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 
     private _color: KbqComponentColors | string = KbqComponentColors.Contrast;
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ alias: 'kbqTooltipArrow', transform: booleanAttribute }) arrow: boolean = false;
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ alias: 'kbqTooltipOffset', transform: numberAttribute }) offset: number | null = null;
 
     @Output('kbqPlacementChange') readonly placementChange = new EventEmitter();
@@ -296,7 +333,45 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         panelClass: ['kbq-tooltip-panel']
     };
 
-    protected modifier: TooltipModifier = TooltipModifier.Default;
+    /**
+     * Visual variant of the tooltip. Accepts `'default'` | `'warning'` | `'extended'`.
+     * Replaces the removed `KbqWarningTooltipTrigger` and `KbqExtendedTooltipTrigger`
+     * subclasses — to render a warning tooltip use `kbqTooltipModifier="warning"`,
+     * and `kbqTooltipModifier="extended"` for the extended variant (combine with `kbqTooltipHeader`).
+     */
+    // TODO: Skipped for migration because:
+    //  Class of this input is manually instantiated. This is discouraged and prevents
+    //  migration.
+    @Input('kbqTooltipModifier') modifier: TooltipModifier | `${TooltipModifier}` = TooltipModifier.Default;
+
+    /**
+     * Header text or template, rendered above the tooltip content. Only meaningful with
+     * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`.
+     */
+    // TODO: Skipped for migration because:
+    //  Class of this input is manually instantiated. This is discouraged and prevents
+    //  migration.
+    @Input('kbqTooltipHeader') header: string | TemplateRef<any>;
+
+    /**
+     * The old `KbqWarningTooltipTrigger` / `KbqExtendedTooltipTrigger` subclasses had
+     * setters on their content/header inputs that pushed updates into the open tooltip.
+     * Now that `modifier` and `header` are plain `@Input` fields on this base class,
+     * we need to mirror that reactivity manually — without it, changing the inputs
+     * while a tooltip is open silently leaves the overlay showing stale data until
+     * the next show/hide cycle.
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!this.instance) return;
+
+        if (changes.modifier && !changes.modifier.firstChange) {
+            this.updateClassMap();
+        }
+
+        if (changes.header && !changes.header.firstChange) {
+            this.updateData();
+        }
+    }
 
     constructor() {
         super();
@@ -377,6 +452,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
 
         this.instance.content = this.content;
+        this.instance.header = this.header;
         this.instance.context = this.context && { $implicit: this.context };
         this.instance.arrow = this.arrow;
         this.instance.offset = this.offset;
@@ -431,85 +507,5 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
 
         this.strategy.setOrigin(point);
-    }
-}
-
-/**
- * @docs-private
- * @deprecated Will be removed in next major release
- */
-@Directive({
-    selector: '[kbqWarningTooltip]',
-    exportAs: 'kbqWarningTooltip',
-    host: {
-        '[class.kbq-tooltip_open]': 'isOpen',
-
-        '(keydown)': 'keydownHandler($event)',
-        '(touchend)': 'touchendHandler()'
-    }
-})
-export class KbqWarningTooltipTrigger extends KbqTooltipTrigger {
-    @Input('kbqWarningTooltip')
-    get content(): string | TemplateRef<any> {
-        return this._content;
-    }
-
-    set content(content: string | TemplateRef<any>) {
-        this._content = content;
-
-        this.updateData();
-    }
-
-    protected modifier: TooltipModifier = TooltipModifier.Warning;
-}
-
-/**
- * @docs-private
- * @deprecated Will be removed in next major release
- */
-@Directive({
-    selector: '[kbqExtendedTooltip]',
-    exportAs: 'kbqExtendedTooltip',
-    host: {
-        '[class.kbq-tooltip_open]': 'isOpen',
-
-        '(keydown)': 'keydownHandler($event)',
-        '(touchend)': 'touchendHandler()'
-    }
-})
-export class KbqExtendedTooltipTrigger extends KbqTooltipTrigger {
-    @Input('kbqExtendedTooltip')
-    get content(): string | TemplateRef<any> {
-        return this._content;
-    }
-
-    set content(content: string | TemplateRef<any>) {
-        this._content = content;
-
-        this.updateData();
-    }
-
-    @Input('kbqTooltipHeader')
-    get header(): string | TemplateRef<any> {
-        return this._header;
-    }
-
-    set header(header: string | TemplateRef<any>) {
-        this._header = header;
-
-        this.updateData();
-    }
-
-    private _header: string | TemplateRef<any>;
-
-    protected modifier: TooltipModifier = TooltipModifier.Extended;
-
-    updateData() {
-        if (!this.instance) {
-            return;
-        }
-
-        super.updateData();
-        this.instance.header = this.header;
     }
 }

@@ -33,17 +33,16 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
             <ng-template #kbqFileIcon let-file>
                 @if (!file.hasError) {
                     <i kbq-icon="kbq-file-text-o_16"></i>
-                }
-                @if (file.hasError) {
+                } @else {
                     <i kbq-icon="kbq-triangle-exclamation_16"></i>
                 }
             </ng-template>
         </kbq-multiple-file-upload>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqErrorStateMatcherProvider(CustomErrorStateMatcher)
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleErrorExample {
     protected readonly fileUpload = new FormControl<KbqFileItem | null>(null, Validators.required);

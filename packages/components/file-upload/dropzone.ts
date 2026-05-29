@@ -229,8 +229,8 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
  */
 @Directive({
     selector: '[kbqLocalDropzone]',
-    exportAs: 'kbqLocalDropzone',
-    host: { class: 'kbq-local-dropzone__trigger' }
+    host: { class: 'kbq-local-dropzone__trigger' },
+    exportAs: 'kbqLocalDropzone'
 })
 export class KbqLocalDropzone extends KbqDrop {
     /** File upload component to connect dropped files to */
@@ -395,11 +395,11 @@ export class KbqLocalDropzone extends KbqDrop {
         }
     `,
     styleUrls: ['./dropzone.scss', '../empty-state/empty-state.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-multiple-file-upload__empty-state'
-    },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class KbqFileUploadEmptyState extends KbqEmptyState {
     /** Title text to display below the upload icon */
@@ -429,13 +429,13 @@ export class KbqFileUploadEmptyState extends KbqEmptyState {
         />
     `,
     styleUrls: ['./dropzone.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dropzone-content',
         '[attr.tabindex]': '0'
     },
-    hostDirectives: [CdkTrapFocus],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    hostDirectives: [CdkTrapFocus]
 })
 export class KbqDropzoneContent {
     /** @docs-private */

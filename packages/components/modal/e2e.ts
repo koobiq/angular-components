@@ -15,10 +15,10 @@ import { KbqModalService } from '@koobiq/components/modal';
             height: 350px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eModalStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eModalStates {
     private readonly modal = inject(KbqModalService);

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqUserInfo, KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@koobiq/components/username';
@@ -15,7 +14,6 @@ import { KbqUserInfo, KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@ko
         FormsModule,
         KbqUsername,
         KbqTextareaModule,
-        KbqFormFieldModule,
         KbqCheckboxModule,
         KbqRadioModule
     ],

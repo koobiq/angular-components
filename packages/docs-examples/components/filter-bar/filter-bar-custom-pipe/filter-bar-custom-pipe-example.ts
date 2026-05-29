@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +18,6 @@ import {
     KbqPipeTitleDirective,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -29,13 +27,11 @@ import { KbqTitleModule } from '@koobiq/components/title';
     selector: 'color-pipe',
     imports: [
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqPopoverModule,
         KbqInputModule,
         KbqDividerModule,
         FormsModule,
         KbqTextareaModule,
-        NgClass,
         ReactiveFormsModule,
         KbqTitleModule,
         KbqPipeState,
@@ -55,7 +51,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             [kbqPopoverContent]="content"
             [kbqPopoverOffset]="4"
             [kbqPopoverPlacement]="placements.BottomLeft"
-            [ngClass]="{ 'kbq-active': popover?.isOpen }"
+            [class]="{ 'kbq-active': popover?.isOpen }"
         >
             <span #kbqTitleText class="kbq-pipe__name" kbqPipeMinWidth>{{ data.name }}</span>
             <span #kbqTitleText class="kbq-pipe__value" kbqPipeMinWidth [class.kbq-pipe__value_empty]="!data.value">
@@ -83,14 +79,14 @@ import { KbqTitleModule } from '@koobiq/components/title';
         </ng-template>
     `,
     styleUrls: ['../../../../components/filter-bar/pipes/base-pipe.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KbqBasePipe,
             useExisting: this
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class ColorPipeComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
     readonly placements = PopUpPlacements;
@@ -121,7 +117,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
         this.popover.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible) => {
             if (!visible) {
                 this.data.value = this.control.value;
-                this.filterBar?.onChangePipe.next(this.data);
+                this.filterBar?.onChangePipe.emit(this.data);
             }
 
             this.stateChanges.next();
@@ -155,13 +151,13 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
             }
         </kbq-filter-bar>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_FILTER_BAR_PIPES,
             useValue: new Map([...defaultFilterBarPipes, ['colorPipe', ColorPipeComponent]])
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarCustomPipeExample {
     filters: KbqFilter[] = [];

@@ -1,9 +1,4 @@
 {
-    "cdk": [
-        "a11y",
-        "keycodes",
-        "testing"
-    ],
     "components": [
         "accordion",
         "actions-panel",
@@ -36,7 +31,6 @@
         "loader-overlay",
         "modal",
         "navbar",
-        "navbar-ic",
         "notification-center",
         "overflow-items",
         "popover",
@@ -70,7 +64,5 @@
         "markdown",
         "badge"
     ],
-    "components-experimental": [
-        "form-field"
-    ]
+    "components-experimental": []
 }

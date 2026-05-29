@@ -1,7 +1,6 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME, LEFT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
@@ -11,33 +10,25 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    contentChild,
     ContentChildren,
     DestroyRef,
     DoCheck,
     ElementRef,
-    EventEmitter,
     forwardRef,
     inject,
     Input,
+    input,
     OnDestroy,
     Optional,
-    Output,
+    output,
     QueryList,
     Self,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { isSelectAll } from '@koobiq/cdk/keycodes';
-import {
-    CanUpdateErrorState,
-    ErrorStateMatcher,
-    isNull,
-    KBQ_VALIDATION,
-    KbqOrientation
-} from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher, FocusKeyManager, isNull, isSelectAll } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
@@ -68,7 +59,6 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
 
 @Component({
     selector: 'kbq-tag-list',
-    exportAs: 'kbqTagList',
     template: `
         <div class="kbq-tags-list__list-container">
             <ng-content />
@@ -81,12 +71,15 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         }
     `,
     styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
-        '[class.kbq-tag-list_selectable]': 'selectable',
-        '[class.kbq-tag-list_editable]': 'editable',
+        '[class.kbq-tag-list_selectable]': 'selectable()',
+        '[class.kbq-tag-list_editable]': 'editable()',
         '[class.kbq-tag-list_removable]': 'removable',
         '[class.kbq-tag-list_draggable]': 'draggable',
         '[attr.tabindex]': 'tabIndex',
@@ -95,10 +88,8 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         '(blur)': 'blur()',
         '(keydown)': 'keydown($event)'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
-    hostDirectives: [CdkDropList]
+    hostDirectives: [CdkDropList],
+    exportAs: 'kbqTagList'
 })
 export class KbqTagList
     implements
@@ -110,7 +101,6 @@ export class KbqTagList
         CanUpdateErrorState,
         AfterViewInit
 {
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
     private readonly dropList = inject(CdkDropList, { host: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly focusMonitor = inject(FocusMonitor);
@@ -135,7 +125,7 @@ export class KbqTagList
      * @docs-private
      */
     get tagSelectionChanges(): Observable<KbqTagSelectionChange> {
-        return merge(...this.tags.map((tag) => tag.selectionChange));
+        return merge(...this.tags.map((tag) => outputToObservable(tag.selectionChange)));
     }
 
     /**
@@ -162,7 +152,7 @@ export class KbqTagList
      * @docs-private
      */
     get tagRemoveChanges(): Observable<KbqTagEvent> {
-        return merge(...this.tags.map((tag) => tag.destroyed));
+        return merge(...this.tags.map((tag) => outputToObservable(tag.destroyed)));
     }
 
     /**
@@ -171,7 +161,7 @@ export class KbqTagList
      * @docs-private
      */
     protected get tagBeforeRemoveChanges(): Observable<KbqTagEvent> {
-        return merge(...this.tags.map((tag) => tag.removed));
+        return merge(...this.tags.map((tag) => outputToObservable(tag.removed)));
     }
 
     /**
@@ -180,7 +170,7 @@ export class KbqTagList
      * @docs-private
      */
     get tagEditChanges(): Observable<KbqTagEditChange> {
-        return merge(...this.tags.map((tag) => tag.editChange));
+        return merge(...this.tags.map((tag) => outputToObservable(tag.editChange)));
     }
 
     /**
@@ -194,29 +184,15 @@ export class KbqTagList
 
     /** @docs-private */
     get canShowCleaner(): boolean {
-        return this.cleaner && this.tags.length > 0;
+        return !!this.cleaner() && this.tags.length > 0;
     }
-
-    /**
-     * @deprecated Unused. Will be removed in next major release.
-     *
-     * @docs-private
-     */
-    @Input({ transform: booleanAttribute }) multiple: boolean = false;
-
-    /**
-     * A function to compare the option values with the selected values. The first argument
-     * is a value from an option. The second is a value from the selection. A boolean
-     * should be returned.
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    @Input() compareWith = (o1: any, o2: any) => o1 === o2;
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         return this._value;
@@ -240,6 +216,8 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -257,6 +235,8 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get placeholder(): string {
         return this.tagInput ? this.tagInput.placeholder : this._placeholder;
@@ -294,6 +274,8 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.ngControl ? !!this.ngControl.disabled : this._disabled;
@@ -306,6 +288,8 @@ export class KbqTagList
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get draggable(): boolean {
         return this._draggable && !this.disabled;
@@ -321,25 +305,20 @@ export class KbqTagList
     /**
      * Emits when the user drops tag inside tag list container.
      */
-    @Output() readonly dropped = new EventEmitter<KbqTagListDroppedEvent>();
+    readonly dropped = output<KbqTagListDroppedEvent>();
 
     /**
      * Whether or not this tag list is selectable. When a tag list is not selectable,
      * the selected states for all the tags inside the tag list are always ignored.
      */
-    @Input({ transform: booleanAttribute }) selectable = true;
+    readonly selectable = input(true, { transform: booleanAttribute });
 
     /** Whether the tags in the list are editable. */
-    @Input({ transform: booleanAttribute }) editable = false;
-
-    /**
-     * Whether to emit change events when tags are added/removed.
-     *
-     * @deprecated No longer needed. Will be removed in the next major release.
-     */
-    @Input({ transform: booleanAttribute }) emitOnTagChanges = true;
+    readonly editable = input(false, { transform: booleanAttribute });
 
     /** Whether the tags in the list are removable. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get removable(): boolean {
         return this._removable;
@@ -357,6 +336,8 @@ export class KbqTagList
      *
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabIndex(): number | null {
         return this.disabled || this.tagInput ? null : this._tabIndex;
@@ -374,7 +355,7 @@ export class KbqTagList
      * to facilitate the two-way binding for the `value` input.
      * @docs-private
      */
-    @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
+    readonly valueChange = output<any>();
 
     /** @docs-private */
     uid: string = `kbq-tag-list-${nextUniqueId++}`;
@@ -390,35 +371,17 @@ export class KbqTagList
     /** @docs-private */
     keyManager: FocusKeyManager<KbqTag>;
 
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    selectionModel: SelectionModel<KbqTag>;
-
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    tagChanges = new EventEmitter<any>();
-
     /** An object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
-    /**
-     * Orientation of the tag list.
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    @Input() orientation: KbqOrientation = 'horizontal';
-
     /** Event emitted when the selected tag list value has been changed by the user. */
-    @Output() readonly change: EventEmitter<KbqTagListChange> = new EventEmitter<KbqTagListChange>();
+    readonly change = output<KbqTagListChange>();
 
     /** @docs-private */
-    @ContentChild('kbqTagListCleaner', { static: true }) cleaner: KbqCleaner;
+    readonly cleaner = contentChild<KbqCleaner>('kbqTagListCleaner');
 
     /**
      * The tag components contained within this tag list.
@@ -659,7 +622,7 @@ export class KbqTagList
 
         if (this.disabled || isNull(target)) return;
 
-        const shouldSelectAll = this.selectable && isSelectAll(event);
+        const shouldSelectAll = this.selectable() && isSelectAll(event);
 
         if (this.isInputEmpty(target)) {
             if (
@@ -699,13 +662,6 @@ export class KbqTagList
         }
     }
 
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    setSelectionByValue(_value: any, _isUserInput: boolean = true): void {}
-
     /** When blurred, mark the field as touched when focus moved outside the tag list. */
     blur() {
         if (!this.hasFocusedTag()) {
@@ -721,13 +677,11 @@ export class KbqTagList
                 setTimeout(() => {
                     if (!this.focused) {
                         this.markAsTouched();
-                        this.revalidate();
                     }
                 });
             } else {
                 // If there's no tag input, then mark the field as touched.
                 this.markAsTouched();
-                this.revalidate();
             }
         }
     }
@@ -887,16 +841,6 @@ export class KbqTagList
 
     private syncTagsRemovableState(): void {
         this.tags?.forEach((tag) => (tag.removable = this.removable));
-    }
-
-    /** Revalidate control. */
-    private revalidate() {
-        if (this.useLegacyValidation && this.ngControl?.control) {
-            const control = this.ngControl.control;
-
-            control.updateValueAndValidity({ emitEvent: false });
-            (control.statusChanges as EventEmitter<string>).emit(control.status);
-        }
     }
 
     private setupDropListInitialProperties(): void {

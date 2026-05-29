@@ -1,8 +1,7 @@
 import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -15,8 +14,7 @@ const getTags = () => Array.from({ length: 3 }, (_, i) => ({ value: `Editable ta
  */
 @Component({
     selector: 'tag-input-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, FormsModule, KbqInputModule, KbqTitleModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule, KbqTitleModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" editable>

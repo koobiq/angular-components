@@ -4,7 +4,7 @@ import {
     AfterViewInit,
     Component,
     inject,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
@@ -25,13 +25,13 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
     `,
     styleUrls: ['accordion-trigger.component.scss', 'accordion-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
-    hostDirectives: [KbqAccordionTriggerDirective],
     host: {
         class: 'kbq-accordion-trigger',
         '[class.kbq-accordion-trigger_fill]': 'isFill',
         '[class.kbq-accordion-trigger_hug]': 'isHug',
         '[class.kbq-accordion-trigger_hug-space-between]': 'isHugSpaceBetween'
-    }
+    },
+    hostDirectives: [KbqAccordionTriggerDirective]
 })
 export class KbqAccordionTrigger implements AfterViewInit {
     /** @docs-private */
@@ -40,21 +40,21 @@ export class KbqAccordionTrigger implements AfterViewInit {
     protected readonly accordion: KbqAccordion = inject(KbqAccordion);
 
     /** @docs-private */
-    @ViewChild(KbqIcon) icon: KbqIcon;
+    readonly icon = viewChild.required(KbqIcon);
 
     private savedTransition: string;
     private readonly afterRenderRef?: AfterRenderRef;
 
     get isFill(): boolean {
-        return this.accordion.variant === KbqAccordionVariant.fill;
+        return this.accordion.variant() === KbqAccordionVariant.fill;
     }
 
     get isHug(): boolean {
-        return this.accordion.variant === KbqAccordionVariant.hug;
+        return this.accordion.variant() === KbqAccordionVariant.hug;
     }
 
     get isHugSpaceBetween(): boolean {
-        return this.accordion.variant === KbqAccordionVariant.hugSpaceBetween;
+        return this.accordion.variant() === KbqAccordionVariant.hugSpaceBetween;
     }
 
     constructor() {
@@ -70,12 +70,12 @@ export class KbqAccordionTrigger implements AfterViewInit {
     }
 
     disableAnimation() {
-        this.savedTransition = this.icon.elementRef.nativeElement.style.transition;
+        this.savedTransition = this.icon().elementRef.nativeElement.style.transition;
 
-        this.icon.getHostElement().style.transition = 'none';
+        this.icon().getHostElement().style.transition = 'none';
     }
 
     enableAnimation() {
-        this.icon.getHostElement().style.transition = this.savedTransition;
+        this.icon().getHostElement().style.transition = this.savedTransition;
     }
 }

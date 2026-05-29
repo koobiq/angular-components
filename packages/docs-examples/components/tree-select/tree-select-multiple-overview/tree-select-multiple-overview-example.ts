@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
@@ -103,7 +102,6 @@ export const DATA_OBJECT = {
 @Component({
     selector: 'tree-select-multiple-overview-example',
     imports: [
-        KbqFormFieldModule,
         KbqTreeSelectModule,
         FormsModule,
         KbqTreeModule,

@@ -20,6 +20,8 @@ export class KbqPipeState<T> implements OnInit {
     private readonly filterBar = inject(KbqFilterBar);
 
     /** calculates and updates styles of button from pipe state */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ alias: 'kbqPipeState' })
     get state(): T | null {
         return this._state;

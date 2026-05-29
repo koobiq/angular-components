@@ -4,8 +4,8 @@ import {
     Component,
     ElementRef,
     TemplateRef,
-    ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    viewChild
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
@@ -58,16 +58,16 @@ import { ToastExamplesModule } from '../../docs-examples/components/toast';
         <br />
         <toast-types-overview-example />
     `,
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-toast-component',
     template: '<div>DevToastComponent</div>',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'dev-toast-component'
     }
@@ -102,8 +102,8 @@ export class DevToastComponent extends KbqToastComponent {
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     themePalette = ThemePalette;
@@ -113,7 +113,7 @@ export class DevApp {
     modalState: boolean = false;
 
     array = new Array(40);
-    @ViewChild('sipanelTemplate', { static: false }) template: TemplateRef<any>;
+    readonly template = viewChild.required<TemplateRef<any>>('sipanelTemplate');
 
     constructor(
         private toastService: KbqToastService,
@@ -123,7 +123,7 @@ export class DevApp {
     ) {}
 
     openTemplateSidepanel() {
-        this.sidepanelService.open(this.template, {
+        this.sidepanelService.open(this.template(), {
             position: this.position,
             hasBackdrop: this.modalState
         });

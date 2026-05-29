@@ -6,16 +6,15 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export const baseURLRegex: RegExp;
@@ -24,14 +23,14 @@ export const baseURLRegex: RegExp;
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLAnchorElement>, focusMonitor: FocusMonitor);
     // (undocumented)
-    big: boolean;
+    readonly big: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    compact: boolean;
+    readonly compact: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
     set disabled(value: boolean);
-    readonly disabledSignal: WritableSignal<boolean>;
+    readonly disabledSignal: _angular_core.WritableSignal<boolean>;
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -39,28 +38,16 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // (undocumented)
     get hasIcon(): boolean;
     // (undocumented)
-    icon: KbqIcon;
+    readonly icon: _angular_core.Signal<KbqIcon | undefined>;
     // (undocumented)
     icons: QueryList<ElementRef>;
-    multiline: boolean;
+    readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
-    static ngAcceptInputType_big: unknown;
-    // (undocumented)
-    static ngAcceptInputType_compact: unknown;
-    // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_multiline: unknown;
-    // (undocumented)
-    static ngAcceptInputType_noUnderline: unknown;
-    // (undocumented)
-    static ngAcceptInputType_pseudo: unknown;
-    // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
-    // (undocumented)
-    static ngAcceptInputType_useVisited: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -68,7 +55,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    noUnderline: boolean;
+    readonly noUnderline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     set print(value: any);
     // (undocumented)
@@ -76,30 +63,28 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // (undocumented)
     printUrl: string;
     // (undocumented)
-    pseudo: boolean;
+    readonly pseudo: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly renderer: Renderer2;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
-    useVisited: boolean;
+    readonly useVisited: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "multiline": { "alias": "multiline"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon", "icons"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; "isSignal": true; }; "noUnderline": { "alias": "noUnderline"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "useVisited": { "alias": "useVisited"; "required": false; "isSignal": true; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon", "icons"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLink, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLink, never>;
 }
 
 // @public (undocumented)
 export class KbqLinkModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLinkModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLinkModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqLinkModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqLinkModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLinkModule, never, [typeof i1.A11yModule, typeof i2.KbqLink], [typeof i2.KbqLink]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqLinkModule, never, [typeof i1.A11yModule, typeof KbqLink], [typeof KbqLink]>;
 }
 
 // (No @packageDocumentation comment for this package)

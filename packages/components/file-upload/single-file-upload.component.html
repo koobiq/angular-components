@@ -20,14 +20,13 @@
                     @if ({ loading: file.loading | async, progress: file.progress | async }; as asyncData) {
                         @if (!asyncData.loading) {
                             <ng-content select="[kbq-icon]" />
-                        }
-                        @if (asyncData.loading) {
-                            <kbq-progress-spinner [mode]="progressMode" [value]="asyncData.progress || 0" />
+                        } @else {
+                            <kbq-progress-spinner [mode]="progressMode()" [value]="asyncData.progress || 0" />
                         }
                     }
                     <div class="kbq-file-item__text" [kbqEllipsisCenter]="file.file.name" [minVisibleLength]="10"></div>
                 </div>
-                @if (showFileSize) {
+                @if (showFileSize()) {
                     <div class="kbq-file-item__size">
                         {{ file.file.size | kbqDataSize }}
                     </div>
@@ -70,7 +69,7 @@
             [onlyDirectory]="null"
             [accept]="acceptedFiles"
             [disabled]="disabled"
-            [for]="fileUploadContext.id() || inputId"
+            [for]="fileUploadContext.id() || inputId()"
             [tabIndex]="-1"
             [multiple]="true"
             (fileChange)="onFileSelectedViaClick($event)"

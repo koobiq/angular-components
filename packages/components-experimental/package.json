@@ -25,7 +25,6 @@
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/forms": "{{NG_VERSION}}",
-        "@koobiq/cdk": "{{VERSION}}",
         "@koobiq/components": "{{VERSION}}"
     },
     "dependencies": {

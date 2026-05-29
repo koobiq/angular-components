@@ -24,7 +24,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     set disabled(value: boolean);
     // (undocumented)
     protected _disabled: boolean;
-    protected dropdownTrigger: KbqDropdownTrigger;
+    protected readonly dropdownTrigger: i0.Signal<KbqDropdownTrigger | undefined>;
     // (undocumented)
     get firstDisabled(): boolean;
     get kbqStyle(): string;
@@ -33,11 +33,11 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    panelAutoWidth: boolean;
+    readonly panelAutoWidth: i0.InputSignal<boolean>;
     // (undocumented)
     get secondDisabled(): boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button, [kbq-split-button]", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["dropdownTrigger", "buttons"], ["[kbq-button]", "[kbq-button]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button, [kbq-split-button]", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; "isSignal": true; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["dropdownTrigger", "buttons"], ["[kbq-button]", "[kbq-button]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitButton, never>;
 }
@@ -48,10 +48,8 @@ export class KbqSplitButtonModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitButtonModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSplitButtonModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitButtonModule, never, [typeof i1.KbqSplitButton], [typeof i1.KbqSplitButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitButtonModule, never, [typeof KbqSplitButton], [typeof KbqSplitButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

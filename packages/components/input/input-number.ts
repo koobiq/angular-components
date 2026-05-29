@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     Attribute,
     booleanAttribute,
@@ -8,6 +8,7 @@ import {
     forwardRef,
     Inject,
     Input,
+    input,
     OnDestroy,
     Optional,
     Renderer2
@@ -16,6 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     BACKSPACE,
+    checkAndNormalizeLocalizedNumber,
     DASH,
     DELETE,
     DOWN_ARROW,
@@ -23,30 +25,27 @@ import {
     ENTER,
     ESCAPE,
     FF_MINUS,
+    formatNumberWithLocale,
     HOME,
     isCopy,
     isFunctionKey,
     isNumberKey,
     isNumpadKey,
     isSelectAll,
+    KBQ_DEFAULT_PRECISION_SEPARATOR,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqNumberInputLocaleConfig,
     LEFT_ARROW,
+    normalizeNumber,
     NUMPAD_MINUS,
     RIGHT_ARROW,
+    ruRUFormattersData,
     TAB,
     UP_ARROW,
     V,
     X,
     Z
-} from '@koobiq/cdk/keycodes';
-import {
-    checkAndNormalizeLocalizedNumber,
-    formatNumberWithLocale,
-    KBQ_DEFAULT_PRECISION_SEPARATOR,
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
-    KbqNumberInputLocaleConfig,
-    normalizeNumber,
-    ruRUFormattersData
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
@@ -92,7 +91,6 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
 
 @Directive({
     selector: `input[kbqNumberInput]`,
-    exportAs: 'kbqNumericalInput',
     providers: [KBQ_NUMBER_INPUT_VALUE_ACCESSOR],
     host: {
         '(blur)': 'focusChanged(false)',
@@ -100,7 +98,8 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)',
         '(input)': 'onInput($event)'
-    }
+    },
+    exportAs: 'kbqNumericalInput'
 })
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
     /** Emits when the value changes (either due to user input or programmatic change). */
@@ -126,30 +125,37 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     /**
      * Allows input and pasting of integers only.
      */
-    @Input({ transform: booleanAttribute })
-    integer: boolean = false;
+    readonly integer = input<boolean, unknown>(false, { transform: booleanAttribute });
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input()
     bigStep: number;
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input()
     step: number;
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input()
     min: number;
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input()
     max: number;
 
-    @Input({ transform: booleanAttribute })
-    withThousandSeparator: boolean = true;
+    readonly withThousandSeparator = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /**
      * Include thousand separator from custom index. For example, it will be useful in tables.
      */
-    @Input()
-    startFormattingFrom?: number;
+    readonly startFormattingFrom = input<number>();
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): number | null {
         return this._value;
@@ -169,6 +175,8 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private _value: number | null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -307,7 +315,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         // should parse normalized fractionSeparator
         const viewValueToBeChecked = normalizeNumber(this.viewValue, this.config);
 
-        const shouldSkipForIntegerMode = this.integer && this.isPeriod(event);
+        const shouldSkipForIntegerMode = this.integer() && this.isPeriod(event);
         const isMinusAllowed = minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0);
         const isSignAndFractionSepAlreadyExists =
             this.isPeriod(event) &&
@@ -366,7 +374,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                 /*this.viewValue is raw and should be reformatted to localized number */
                 formattedValue = this.formatViewValue();
 
-                if (this.withThousandSeparator) {
+                if (this.withThousandSeparator()) {
                     const offsetWhenSeparatorAdded = 2;
 
                     Promise.resolve().then(() => {
@@ -404,7 +412,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
         if (this.valueFromPaste === null || isNaN(this.valueFromPaste)) {
             event.preventDefault();
-        } else if (this.integer && isFloat(this.valueFromPaste.toString())) {
+        } else if (this.integer() && isFloat(this.valueFromPaste.toString())) {
             event.preventDefault();
 
             const parsedValue = Number.parseInt(this.valueFromPaste.toString());
@@ -518,11 +526,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private createLocalizedNumberFromParts(intPart: number, fractionPart?: string): string {
         const formatOptions = {
-            useGrouping: this.withThousandSeparator,
+            useGrouping: this.withThousandSeparator(),
             maximumFractionDigits: 20
         };
 
-        if (this.withThousandSeparator && this.config.startFormattingFrom) {
+        if (this.withThousandSeparator() && this.config.startFormattingFrom) {
             formatOptions.useGrouping = intPart >= Math.pow(10, this.config.startFormattingFrom);
         }
 

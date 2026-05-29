@@ -1,4 +1,4 @@
-import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
+﻿import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ENTER, hasModifierKey, SPACE } from '@angular/cdk/keycodes';
@@ -22,8 +22,7 @@ import {
     QueryList
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { DOWN_ARROW, END, HOME, KBQ_WINDOW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/components/core';
 import { fromEvent, merge, of as observableOf, Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -68,6 +67,8 @@ export type KbqPaginatedTabHeaderItem = FocusableOption & { elementRef: ElementR
 @Directive()
 export abstract class KbqPaginatedTabHeader implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
     /** The index of the active tab. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get selectedIndex(): number {
         return this._selectedIndex;
@@ -140,9 +141,13 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * Whether pagination should be disabled. This can be used to avoid unnecessary
      * layout recalculations if it's known that pagination won't be required.
      */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: booleanAttribute }) disablePagination: boolean = false;
 
     /** Whether the tabs should be displayed vertically. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     set vertical(value: boolean) {
         this._vertical = value;
@@ -225,9 +230,11 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         // Defer the first call in order to allow for slower browsers to lay out the elements.
         // This helps in cases where the user lands directly on a page with paginated tabs.
-        typeof this.window.requestAnimationFrame !== 'undefined'
-            ? this.window.requestAnimationFrame(realign)
-            : realign();
+        if (typeof this.window.requestAnimationFrame !== 'undefined') {
+            this.window.requestAnimationFrame(realign);
+        } else {
+            realign();
+        }
 
         // On dir change or window resize, realign the ink bar and update the orientation of
         // the key manager if the direction has changed.

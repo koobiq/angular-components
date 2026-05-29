@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
     ChangeDetectionStrategy,
@@ -7,18 +7,31 @@ import {
     DebugElement,
     inject,
     Provider,
-    QueryList,
     Type,
     viewChild,
-    ViewChildren
+    viewChildren
 } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { A, C, DOWN_ARROW, END, ENTER, HOME, PAGE_DOWN, PAGE_UP, SPACE, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, createMouseEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
+import {
+    A,
+    C,
+    createKeyboardEvent,
+    createMouseEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    FocusKeyManager,
+    HOME,
+    PAGE_DOWN,
+    PAGE_UP,
+    SPACE,
+    UP_ARROW
+} from '@koobiq/components/core';
 import {
     KbqListCopyEvent,
     KbqListModule,
@@ -902,7 +915,7 @@ describe('KbqListSelection with forms', () => {
             tick();
             fixture.detectChanges();
             expect(testComponent.compareWith).toHaveBeenCalled();
-            expect(testComponent.optionInstances.toArray()[1].selected).toBe(true);
+            expect(testComponent.optionInstances()[1].selected).toBe(true);
         }));
     });
 
@@ -1099,7 +1112,7 @@ describe('KbqListSelection onCopy event', () => {
     `
 })
 class SelectionListWithCustomComparator {
-    @ViewChildren(KbqListOption) optionInstances: QueryList<KbqListOption>;
+    readonly optionInstances = viewChildren(KbqListOption);
 
     options = [
         { id: 1, label: 'One' },

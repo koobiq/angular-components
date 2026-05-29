@@ -5,18 +5,19 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
     selector: 'kbq-divider',
     template: '',
     styleUrls: ['divider.scss', 'divider-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-divider',
         '[class.kbq-divider_vertical]': 'vertical',
         '[class.kbq-divider_horizontal]': '!vertical',
-        '[class.kbq-divider_inset]': 'inset',
         '[class.kbq-divider_paddings]': 'paddings'
     }
 })
 export class KbqDivider {
     // Whether the divider is vertically aligned.
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get vertical(): boolean {
         return this._vertical;
@@ -28,21 +29,8 @@ export class KbqDivider {
 
     private _vertical: boolean = false;
 
-    /**
-     *  Whether the divider is an inset divider.
-     *  @deprecated Will be removed in the next major release
-     */
-    @Input()
-    get inset(): boolean {
-        return this._inset;
-    }
-
-    set inset(value: boolean) {
-        this._inset = coerceBooleanProperty(value);
-    }
-
-    private _inset: boolean = false;
-
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get paddings(): boolean {
         return this._paddings;

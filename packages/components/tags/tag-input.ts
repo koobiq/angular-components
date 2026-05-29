@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     booleanAttribute,
     Directive,
@@ -6,15 +6,15 @@ import {
     EventEmitter,
     Inject,
     Input,
+    input,
     OnChanges,
     Optional,
-    Output,
+    output,
     Self
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { COMMA, ENTER, hasModifierKey, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
-import { KbqFieldSizingContent } from '@koobiq/components/core';
+import { COMMA, ENTER, hasModifierKey, KbqFieldSizingContent, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagList } from './tag-list.component';
@@ -50,7 +50,6 @@ let nextUniqueId = 0;
  */
 @Directive({
     selector: 'input[kbqTagInputFor]',
-    exportAs: 'kbqTagInput, kbqTagInputFor',
     host: {
         class: 'kbq-tag-input',
         '[id]': 'id',
@@ -62,7 +61,8 @@ let nextUniqueId = 0;
         '(input)': 'onInput()',
         '(paste)': 'onPaste($event)'
     },
-    hostDirectives: [KbqFieldSizingContent]
+    hostDirectives: [KbqFieldSizingContent],
+    exportAs: 'kbqTagInput, kbqTagInputFor'
 })
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Whether the control is focused. */
@@ -73,6 +73,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      *
      * Defaults to `[ENTER]`.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTagInputSeparatorKeyCodes')
     set separatorKeyCodes(value: number[]) {
         this._separatorKeyCodes = value || [];
@@ -92,19 +94,26 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     private _separators = this.defaultOptions.separators || KBQ_TAG_INPUT_DEFAULT_SEPARATORS;
 
     /** Emitted when a tag is to be added. */
-    @Output('kbqTagInputTokenEnd') readonly tagEnd: EventEmitter<KbqTagInputEvent> =
-        new EventEmitter<KbqTagInputEvent>();
+    readonly tagEnd = output<KbqTagInputEvent>({ alias: 'kbqTagInputTokenEnd' });
 
     /** A value indicating whether allow/prevent tags duplication  */
-    @Input() distinct: boolean = false;
+    readonly distinct = input<boolean>(false);
 
     /** The input's placeholder text. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() placeholder: string = '';
 
     /** Unique id for the input. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() id: string = `kbq-tag-list-input-${nextUniqueId++}`;
 
     /** Register input for tag list */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTagInputFor')
     set tagList(value: KbqTagList) {
         if (value) {
@@ -118,6 +127,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /**
      * Whether or not the tagEnd event will be emitted when the input is blurred.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTagInputAddOnBlur')
     get addOnBlur(): boolean {
         return this._addOnBlur;
@@ -133,10 +144,14 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      * Whether the tagEnd event will be emitted when the text pasted.
      * @default true
      */
-    @Input({ alias: 'kbqTagInputAddOnPaste', transform: booleanAttribute }) addOnPaste =
-        this.defaultOptions.addOnPaste ?? true;
+    readonly addOnPaste = input(this.defaultOptions.addOnPaste ?? true, {
+        alias: 'kbqTagInputAddOnPaste',
+        transform: booleanAttribute
+    });
 
     /** Whether the input is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled || (this._tagList && this._tagList.disabled);
@@ -152,13 +167,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     get empty(): boolean {
         return !this.inputElement.value;
     }
-
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    countOfSymbolsForUpdateWidth: number = 3;
 
     /** The native input element to which this directive is attached. */
     private inputElement: HTMLInputElement;
@@ -210,7 +218,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             this._tagList.blur();
         }
 
-        if (this.addOnBlur && (this.autocompleteTrigger?.onInputBlur(event) || true)) {
+        if (this.addOnBlur && (this.autocompleteTrigger?.onInputBlur()(event) || true)) {
             this.emitTagEnd();
         }
 
@@ -228,7 +236,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Checks to see if the (tagEnd) event needs to be emitted. */
     emitTagEnd() {
         if (!this.hasControl() || (this.hasControl() && !this.ngControl.invalid)) {
-            if (this.distinct && this.hasDuplicates) return;
+            if (this.distinct() && this.hasDuplicates) return;
 
             this._tagList?.notifyPendingTagChange();
             this.tagEnd.emit({ input: this.inputElement, value: this.trimValue(this.inputElement.value) });
@@ -253,7 +261,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
         const data = $event.clipboardData.getData('text');
 
-        if ((data && data.length === 0) || !this.addOnPaste) {
+        if ((data && data.length === 0) || !this.addOnPaste()) {
             return;
         }
 
@@ -270,7 +278,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             items.push(data);
         }
 
-        if (this.distinct) {
+        if (this.distinct()) {
             const tagValues: string[] = this._tagList.tags.map(({ value }) => value);
 
             items = items.filter((item) => !tagValues.includes(item));
@@ -285,13 +293,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         $event.preventDefault();
         $event.stopPropagation();
     }
-
-    /**
-     * @docs-private
-     *
-     * @deprecated Unused. Will be removed in next major release.
-     */
-    updateInputWidth(): void {}
 
     /** @docs-private */
     onFocus(): void {

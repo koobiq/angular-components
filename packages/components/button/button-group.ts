@@ -28,6 +28,8 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
      * Style applied to the group and propagated to every nested button.
      * individual button's style preserved but updated when group input changed.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqStyle(): string {
         return this._kbqStyle && `kbq-button-group-root_${this._kbqStyle}`;
@@ -45,6 +47,8 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
      * Color applied to the group and propagated to every nested button.
      * individual button's color preserved but updated when group input changed.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get color(): KbqComponentColors | ThemePalette | string {
         return this._color;
@@ -59,6 +63,8 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
     }
 
     /** Whether the root is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -110,8 +116,8 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
         <ng-content />
     `,
     styleUrls: ['./button-group.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         role: 'group',
         class: 'kbq-button-group',

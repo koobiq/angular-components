@@ -43,8 +43,8 @@ import { PopUpPlacements } from '@koobiq/components/core';
             }
         }
     `,
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class BreadcrumbsTruncateTailItemsExample {
     breadcrumbs = [

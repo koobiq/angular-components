@@ -12,9 +12,9 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
         <kbq-progress-spinner class="layout-margin-right-s" size="big" color="contrast" mode="indeterminate" />
         <kbq-progress-spinner size="big" color="contrast-fade" mode="indeterminate" />
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ProgressSpinnerIndeterminateExample {}

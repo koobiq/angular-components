@@ -36,10 +36,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             </a>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class TooltipDisabledForComponentExample {
     disableState: boolean = false;

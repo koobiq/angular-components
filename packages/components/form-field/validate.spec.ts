@@ -7,7 +7,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 
 @Component({
     selector: 'test-app',
-    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInputModule],
+    imports: [ReactiveFormsModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <input kbqInput type="text" [formControl]="testControl" />

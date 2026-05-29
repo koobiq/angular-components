@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 @Component({
     selector: 'dev-locale-selector',
-    imports: [KbqFormFieldModule, KbqSelectModule, FormsModule],
+    imports: [KbqSelectModule, FormsModule],
     template: `
         @if (localeService) {
             <kbq-form-field>

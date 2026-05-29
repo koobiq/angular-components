@@ -1,11 +1,10 @@
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 // import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
@@ -114,7 +113,6 @@ export class DevDocsExamples {}
         KbqSelectModule,
         KbqHighlightModule,
         KbqInputModule,
-        KbqFormFieldModule,
         KbqIconModule,
         ReactiveFormsModule,
         KbqTagsModule,
@@ -123,13 +121,13 @@ export class DevDocsExamples {}
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         kbqSelectOptionsProvider({
             // panelWidth: 200
         })
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp implements OnInit {
     singleSelected = '';
@@ -165,7 +163,7 @@ export class DevApp implements OnInit {
 
     selected = ['Almetyevsk', 'Yaroslavl'];
 
-    @ViewChild(CdkVirtualScrollViewport) cdkVirtualScrollViewport: CdkVirtualScrollViewport;
+    readonly cdkVirtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
 
     ngOnInit(): void {
         this.filteredOptions = merge(
@@ -185,8 +183,8 @@ export class DevApp implements OnInit {
         console.log('openedChange: ', opened);
 
         if (!opened) {
-            this.cdkVirtualScrollViewport.setRenderedContentOffset(0);
-            this.cdkVirtualScrollViewport.setRenderedRange(this.initialRange);
+            this.cdkVirtualScrollViewport().setRenderedContentOffset(0);
+            this.cdkVirtualScrollViewport().setRenderedRange(this.initialRange);
         }
     }
 

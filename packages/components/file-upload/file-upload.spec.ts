@@ -1,6 +1,6 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, ViewChild, signal, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -13,20 +13,21 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DELETE, TAB } from '@koobiq/cdk/keycodes';
 import {
+    DELETE,
+    KbqBaseFileUploadLocaleConfig,
+    TAB,
     createFakeEvent,
     createMouseEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent
-} from '@koobiq/cdk/testing';
-import { KbqBaseFileUploadLocaleConfig } from '@koobiq/components/core';
+} from '@koobiq/components/core';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
-import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
+import { KbqFileItem } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqFileDropDirective } from './primitives/file-drop';
@@ -161,15 +162,6 @@ function fileContentLinesValidator(maxLines: number): AsyncValidatorFn {
     };
 }
 
-const maxFileExceeded = (file: File): string | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
-
-    return (file?.size ?? 0) > maxSize ? `Exceeded with (${maxSize / mega} Mb)` : null;
-};
-
 describe(KbqMultipleFileUploadComponent.name, () => {
     let component: BasicMultipleFileUpload;
     let fixture: ComponentFixture<BasicMultipleFileUpload>;
@@ -195,7 +187,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
     describe('with focus and keyboard', () => {
         it('should toggle label focus state on input focused/blurred', fakeAsync(() => {
-            const fileInput: HTMLInputElement = component.fileUpload.input!.nativeElement;
+            const fileInput: HTMLInputElement = component.fileUpload().input!.nativeElement;
 
             // Simulate focus via keyboard.
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
@@ -216,7 +208,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         }));
 
         it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
-            const fileInput: HTMLInputElement = component.fileUpload.input!.nativeElement;
+            const fileInput: HTMLInputElement = component.fileUpload().input!.nativeElement;
 
             component.disabled = true;
             fixture.detectChanges();
@@ -236,11 +228,13 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            const fileUpload = component.fileUpload();
+
+            dispatchEvent(fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             const filesChangeSpy = jest.fn();
-            const subscription = component.fileUpload.filesChange.subscribe(filesChangeSpy);
+            const subscription = fileUpload.filesChange.subscribe(filesChangeSpy);
 
             fixture.debugElement
                 .query(By.css(`.${fileItemRowCssClass}`))
@@ -259,7 +253,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
     describe('with file queue change', () => {
         const emitRemoveEvent = () => {
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             fixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement.click();
@@ -272,7 +266,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.onChange).toHaveBeenCalledTimes(1);
@@ -284,7 +278,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.disabled = true;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
 
             expect(component.onChange).toHaveBeenCalledTimes(0);
         });
@@ -309,7 +303,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             flush();
 
-            expect(document.activeElement).toBe(component.fileUpload.input!.nativeElement);
+            expect(document.activeElement).toBe(component.fileUpload().input!.nativeElement);
         }));
 
         it('should NOT throw error on detectChanges in handler', () => {
@@ -318,38 +312,19 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 component.cdr.detectChanges();
             });
 
-            jest.spyOn(component.fileUpload, 'deleteFile');
+            const fileUpload = component.fileUpload();
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            jest.spyOn(fileUpload, 'deleteFile');
+
+            dispatchEvent(fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             const event = createMouseEvent('click');
 
             expect(() => {
-                component.fileUpload.deleteFile(0, event);
+                component.fileUpload().deleteFile(0, event);
                 fixture.detectChanges();
             }).not.toThrow();
-        });
-    });
-
-    describe('with custom validation', () => {
-        it('should mark added file with error', (done) => {
-            expect(component.files).toBeUndefined();
-            // max file === 5e6
-            component.validation = [maxFileExceeded];
-            fixture.detectChanges();
-
-            const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
-
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(fakeFile));
-            fixture.detectChanges();
-
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.files).toHaveLength(1);
-                expect(component.files[0].hasError).toBeTruthy();
-                done();
-            });
         });
     });
 
@@ -364,21 +339,21 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         });
 
         it('should toggle the disabled state', () => {
-            expect(component.fileUpload.disabled).toBe(false);
+            expect(component.fileUpload().disabled).toBe(false);
 
             component.control.disable();
             fixture.detectChanges();
 
-            expect(component.fileUpload.disabled).toBe(true);
+            expect(component.fileUpload().disabled).toBe(true);
 
             component.control.enable();
             fixture.detectChanges();
 
-            expect(component.fileUpload.disabled).toBe(false);
+            expect(component.fileUpload().disabled).toBe(false);
         });
 
         it('should update file value with setValue', () => {
-            expect(component.fileUpload.files.length).toBeFalsy();
+            expect(component.fileUpload().files.length).toBeFalsy();
 
             const fakeFile: Partial<File> = createMockFile(FILE_NAME);
             const dt = new DataTransfer();
@@ -387,14 +362,14 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             component.control.setValue(dt.files);
 
-            expect(component.fileUpload.files.length).toBe(1);
+            expect(component.fileUpload().files.length).toBe(1);
             expect(component.files.length).toBe(1);
         });
 
         it('should update form control touched on file added via click', () => {
             expect(component.control.touched).toBeFalsy();
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.control.touched).toBeTruthy();
@@ -408,7 +383,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.localeConfig.set(updatedConfig);
             fixture.detectChanges();
 
-            expect(component.fileUpload.resolvedLocaleConfig()).toMatchSnapshot();
+            expect(component.fileUpload().resolvedLocaleConfig()).toMatchSnapshot();
         });
     });
 
@@ -424,7 +399,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             });
 
             it('should have PENDING status immediately after files are added', fakeAsync(() => {
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(asyncComponent.control.status).toBe('PENDING');
@@ -433,7 +408,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             }));
 
             it('should have VALID status after async validator resolves', fakeAsync(() => {
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 tick(ASYNC_VALIDATOR_TIMER_DUE);
@@ -445,7 +420,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 const statuses: FormControlStatus[] = [];
                 const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
 
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(statuses).toEqual(['PENDING']);
@@ -469,7 +444,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             });
 
             it('should have INVALID status after async validator resolves with errors', fakeAsync(() => {
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 tick(ASYNC_VALIDATOR_TIMER_DUE);
@@ -482,7 +457,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 const statuses: FormControlStatus[] = [];
                 const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
 
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(statuses).toEqual(['PENDING']);
@@ -521,7 +496,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
         it('should NOT add files via drag-n-drop if disabled', (done) => {
             component.disabled = true;
-            component.fileUpload.setDisabledState(true);
+            component.fileUpload().setDisabledState(true);
             fixture.detectChanges();
 
             dispatchDropEventWithEntry(fixture);
@@ -655,7 +630,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
     describe('with focus and keyboard', () => {
         it('should toggle label focus state on input focused/blurred', fakeAsync(() => {
-            const fileInput: HTMLInputElement = component.fileUpload.input!.nativeElement;
+            const fileInput: HTMLInputElement = component.fileUpload().input!.nativeElement;
 
             // Simulate focus via keyboard.
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
@@ -676,7 +651,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
         }));
 
         it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
-            const fileInput: HTMLInputElement = component.fileUpload.input!.nativeElement;
+            const fileInput: HTMLInputElement = component.fileUpload().input!.nativeElement;
 
             component.disabled = true;
             fixture.detectChanges();
@@ -695,11 +670,13 @@ describe(KbqSingleFileUploadComponent.name, () => {
         it('should remove file via button keydown.delete', () => {
             component.disabled = false;
             fixture.detectChanges();
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            const fileUpload = component.fileUpload();
+
+            dispatchEvent(fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             const fileChangeSpy = jest.fn();
-            const subscription = component.fileUpload.fileChange.subscribe(fileChangeSpy);
+            const subscription = fileUpload.fileChange.subscribe(fileChangeSpy);
 
             component.elementRef.nativeElement
                 .querySelector(`.${fileItemActionCssClass}`)
@@ -716,7 +693,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
     describe('with file queue change', () => {
         const emitRemoveEvent = () => {
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             component.elementRef.nativeElement.querySelector(`.${fileItemActionCssClass}`).click();
@@ -727,7 +704,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.onChange).toHaveBeenCalledTimes(1);
@@ -740,7 +717,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.disabled = true;
             fixture.detectChanges();
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
 
             expect(component.onChange).toHaveBeenCalledTimes(0);
             expect(component.file).toBeUndefined();
@@ -766,7 +743,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             flush();
 
-            expect(document.activeElement).toBe(component.fileUpload.input!.nativeElement);
+            expect(document.activeElement).toBe(component.fileUpload().input!.nativeElement);
         }));
     });
 
@@ -777,7 +754,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             const fakeFile = new File(['test'], 'very very very very very very very very very long file name.txt');
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(fakeFile));
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(fakeFile));
             fixture.detectChanges();
             flush();
 
@@ -794,26 +771,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
         }));
     });
 
-    describe('with custom validation', () => {
-        it('should mark added file with error', (done) => {
-            expect(component.file).toBeUndefined();
-            // max file === 5e6
-            component.validation = [maxFileExceeded];
-            fixture.detectChanges();
-
-            const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
-
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(fakeFile));
-            fixture.detectChanges();
-
-            setTimeout(() => {
-                expect(component.file?.file.name).toBe(FILE_NAME);
-                expect(component.file?.hasError).toBeTruthy();
-                done();
-            });
-        });
-    });
-
     describe('with ControlValueAccessor', () => {
         let fixture: ComponentFixture<ControlValueAccessorSingleFileUpload>;
         let component: ControlValueAccessorSingleFileUpload;
@@ -825,34 +782,34 @@ describe(KbqSingleFileUploadComponent.name, () => {
         });
 
         it('should toggle the disabled state', () => {
-            expect(component.fileUpload.disabled).toBe(false);
+            expect(component.fileUpload().disabled).toBe(false);
 
             component.control.disable();
             fixture.detectChanges();
 
-            expect(component.fileUpload.disabled).toBe(true);
+            expect(component.fileUpload().disabled).toBe(true);
 
             component.control.enable();
             fixture.detectChanges();
 
-            expect(component.fileUpload.disabled).toBe(false);
+            expect(component.fileUpload().disabled).toBe(false);
         });
 
         it('should update file value with setValue', () => {
-            expect(component.fileUpload.file).toBeFalsy();
+            expect(component.fileUpload().file).toBeFalsy();
 
             const fakeFile = createMockFile(FILE_NAME);
 
             component.control.setValue(fakeFile);
 
-            expect(component.fileUpload.file).toBeTruthy();
+            expect(component.fileUpload().file).toBeTruthy();
             expect(component.file).toBeTruthy();
         });
 
         it('should update form control touched on file added via click', () => {
             expect(component.control.touched).toBeFalsy();
 
-            dispatchEvent(component.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.control.touched).toBeTruthy();
@@ -866,7 +823,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.localeConfig.set(updatedConfig);
             fixture.detectChanges();
 
-            expect(component.fileUpload.resolvedLocaleConfig()).toMatchSnapshot();
+            expect(component.fileUpload().resolvedLocaleConfig()).toMatchSnapshot();
         });
     });
 
@@ -882,7 +839,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             });
 
             it('should have PENDING status immediately after file is selected', fakeAsync(() => {
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(asyncComponent.control.status).toBe('PENDING');
@@ -891,7 +848,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             }));
 
             it('should have VALID status after async validator resolves', fakeAsync(() => {
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 tick(ASYNC_VALIDATOR_TIMER_DUE);
@@ -903,7 +860,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 const statuses: FormControlStatus[] = [];
                 const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
 
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(statuses).toEqual(['PENDING']);
@@ -927,7 +884,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             });
 
             it('should have INVALID status after async validator resolves with errors', fakeAsync(() => {
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 tick(ASYNC_VALIDATOR_TIMER_DUE);
@@ -940,7 +897,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 const statuses: FormControlStatus[] = [];
                 const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
 
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(statuses).toEqual(['PENDING']);
@@ -994,7 +951,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
                 setupFileReaderMock(content);
 
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(asyncComponent.control.status).toBe('PENDING');
@@ -1011,7 +968,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
                 setupFileReaderMock(content);
 
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(asyncComponent.control.status).toBe('PENDING');
@@ -1027,7 +984,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             it('should have INVALID status with fileReadError when FileReader fails', fakeAsync(() => {
                 setupFileReaderMock('', true);
 
-                dispatchEvent(asyncComponent.fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+                dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 tick(0);
@@ -1058,7 +1015,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
         it('should NOT add file via drag-n-drop if disabled', (done) => {
             component.disabled = true;
-            component.fileUpload.setDisabledState(true);
+            component.fileUpload().setDisabledState(true);
             fixture.detectChanges();
 
             dispatchDropEventWithEntry(fixture);
@@ -1566,7 +1523,6 @@ describe('KbqLocalDropzone', () => {
             <kbq-single-file-upload
                 #fileUpload
                 [accept]="accept"
-                [customValidation]="validation"
                 [disabled]="disabled"
                 [fullScreenDropZone]="fullScreenDropZone()"
                 [localeConfig]="localeConfig()"
@@ -1576,11 +1532,10 @@ describe('KbqLocalDropzone', () => {
     `
 })
 class BasicSingleFileUpload {
-    @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
+    readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     disabled: boolean;
     file: KbqFileItem | null;
     accept: string[] = [];
-    validation: KbqFileValidatorFn[] = [];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
@@ -1601,17 +1556,15 @@ class BasicSingleFileUpload {
                 #fileUpload
                 [formControl]="control"
                 [accept]="accept"
-                [customValidation]="validation"
                 (fileQueueChange)="onChange($event)"
             />
         </div>
     `
 })
 class ControlValueAccessorSingleFileUpload {
-    @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
+    readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     file: KbqFileItem | null;
     accept: string[] = [];
-    validation: KbqFileValidatorFn[] = [];
     control = new FormControl();
 
     constructor(public elementRef: ElementRef) {}
@@ -1629,7 +1582,6 @@ class ControlValueAccessorSingleFileUpload {
             <kbq-multiple-file-upload
                 #fileUpload
                 [disabled]="disabled"
-                [customValidation]="validation"
                 [fullScreenDropZone]="fullScreenDropZone()"
                 [localeConfig]="localeConfig()"
                 (fileQueueChanged)="onChange($event)"
@@ -1638,10 +1590,9 @@ class ControlValueAccessorSingleFileUpload {
     `
 })
 class BasicMultipleFileUpload {
-    @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
+    readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     disabled: boolean;
     files: KbqFileItem[];
-    validation: KbqFileValidatorFn[] = [];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
@@ -1665,17 +1616,15 @@ class BasicMultipleFileUpload {
                 #fileUpload
                 [formControl]="control"
                 [accept]="accept"
-                [customValidation]="validation"
                 (fileQueueChanged)="onChange($event)"
             />
         </div>
     `
 })
 class ControlValueAccessorMultipleFileUpload {
-    @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
+    readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     files: KbqFileItem[];
     accept: string[] = [];
-    validation: KbqFileValidatorFn[] = [];
     control = new FormControl();
 
     constructor(public elementRef: ElementRef) {}
@@ -1693,7 +1642,7 @@ class ControlValueAccessorMultipleFileUpload {
     `
 })
 class SingleFileUploadWithAsyncValidator {
-    @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
+    readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [getAsyncValidator()]
     });
@@ -1709,7 +1658,7 @@ class SingleFileUploadWithAsyncValidator {
     `
 })
 class SingleFileUploadWithInvalidAsyncValidator {
-    @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
+    readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [getAsyncValidator(false)]
     });
@@ -1725,7 +1674,7 @@ class SingleFileUploadWithInvalidAsyncValidator {
     `
 })
 class SingleFileUploadWithFileReaderValidator {
-    @ViewChild('fileUpload') fileUpload: KbqSingleFileUploadComponent;
+    readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [fileContentLinesValidator(MAX_FILE_LINES_FOR_TEST)]
     });
@@ -1741,7 +1690,7 @@ class SingleFileUploadWithFileReaderValidator {
     `
 })
 class MultipleFileUploadWithAsyncValidator {
-    @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
+    readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem[] | null>(null, {
         asyncValidators: [getAsyncValidator()]
     });
@@ -1757,7 +1706,7 @@ class MultipleFileUploadWithAsyncValidator {
     `
 })
 class MultipleFileUploadWithInvalidAsyncValidator {
-    @ViewChild('fileUpload') fileUpload: KbqMultipleFileUploadComponent;
+    readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem[] | null>(null, {
         asyncValidators: [getAsyncValidator(false)]
     });

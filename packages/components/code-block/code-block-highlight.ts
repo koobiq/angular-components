@@ -5,6 +5,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    input,
     isDevMode,
     numberAttribute,
     Provider,
@@ -80,10 +81,10 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
  */
 @Directive({
     selector: 'code[kbqCodeBlockHighlight]',
-    exportAs: 'kbqCodeBlockHighlight',
     host: {
         class: 'hljs'
-    }
+    },
+    exportAs: 'kbqCodeBlockHighlight'
 })
 export class KbqCodeBlockHighlight {
     private readonly nativeElement = kbqInjectNativeElement();
@@ -104,6 +105,8 @@ export class KbqCodeBlockHighlight {
     readonly pending = this._pending.asReadonly();
 
     /** The code file. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ required: true })
     set file(file: KbqCodeBlockFile) {
         if (!this.window) return;
@@ -116,10 +119,10 @@ export class KbqCodeBlockHighlight {
     }
 
     /** The starting line number. */
-    @Input({ transform: numberAttribute }) startFrom: number = 1;
+    readonly startFrom = input<number, unknown>(1, { transform: numberAttribute });
 
     /** Whether to display line numbers for single line code block. */
-    @Input({ transform: booleanAttribute }) singleLine: boolean = false;
+    readonly singleLine = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     private async load({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<void> {
         this._pending.set(true);
@@ -172,8 +175,8 @@ export class KbqCodeBlockHighlight {
 
         const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, highlightedHTML);
         const highlightedHTMLWithLineNumbers = this.window['hljs'].lineNumbersValue(safeHTML, {
-            startFrom: this.startFrom,
-            singleLine: this.singleLine
+            startFrom: this.startFrom(),
+            singleLine: this.singleLine()
         });
 
         this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);

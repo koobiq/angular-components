@@ -17,14 +17,6 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
         KbqSidepanelModule,
         KbqButtonModule
     ],
-    providers: [
-        kbqCodeBlockHighlightJsConfigProvider({
-            core: () => import('highlight.js/lib/core'),
-            languages: {
-                xml: () => import('highlight.js/lib/languages/xml')
-            }
-        })
-    ],
     template: `
         <button kbq-button (click)="sidepanel.open(template)">Open sidepanel</button>
         <ng-template #template>
@@ -38,6 +30,14 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
             />
         </ng-template>
     `,
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            core: () => import('highlight.js/lib/core'),
+            languages: {
+                xml: () => import('highlight.js/lib/languages/xml')
+            }
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithNoBorderExample {

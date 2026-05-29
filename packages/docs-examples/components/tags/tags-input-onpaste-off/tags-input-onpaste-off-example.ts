@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
+import { COMMA, ENTER } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -23,14 +23,14 @@ import {
         KbqFormFieldModule
     ],
     templateUrl: 'tags-input-onpaste-off-example.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     // turn off tag add on paste with InjectionToken
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
             useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagsInputOnpasteOffExample {
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });

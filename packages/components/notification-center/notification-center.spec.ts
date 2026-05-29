@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, Provider, Type, ViewChild } from '@angular/core';
+import { Component, DebugElement, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -59,7 +59,7 @@ describe('KbqNotificationCenter', () => {
 
             expect(center).toBe(null);
 
-            componentInstance.trigger.show();
+            componentInstance.trigger().show();
             fixture.detectChanges();
 
             center = debugElement.query(By.css('.kbq-notification-center'));
@@ -80,5 +80,5 @@ describe('KbqNotificationCenter', () => {
     `
 })
 export class KbqNotificationCenterSimple {
-    @ViewChild(KbqNotificationCenterTrigger) trigger: KbqNotificationCenterTrigger;
+    readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
 }

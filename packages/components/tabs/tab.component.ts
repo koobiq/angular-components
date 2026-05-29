@@ -4,13 +4,15 @@ import {
     ChangeDetectionStrategy,
     Component,
     ContentChild,
+    contentChild,
     Input,
+    input,
     OnChanges,
     OnDestroy,
     OnInit,
     SimpleChanges,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
@@ -31,14 +33,14 @@ import { KBQ_TAB_LABEL, KbqTabLabel } from './tab-label.directive';
     // TemplateRef and use it in a Portal to render the tab content in the appropriate place in the
     // tab-group.
     template: '<ng-template><ng-content /></ng-template>',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTab',
     providers: [
         ...[KBQ_SELECT_SCROLL_STRATEGY, KBQ_DROPDOWN_SCROLL_STRATEGY].map((token) =>
             KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER(token, (overlay) => () => overlay.scrollStrategies.close())
         )
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    exportAs: 'kbqTab'
 })
 export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /** @docs-private */
@@ -60,11 +62,13 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /**
      * Template provided in the tab content that will be used if present, used to enable lazy-loading
      */
-    @ContentChild(KbqTabContent, { read: TemplateRef, static: true }) explicitContent: TemplateRef<any>;
+    readonly explicitContent = contentChild(KbqTabContent, { read: TemplateRef });
 
     /** Template inside the KbqTab view that contains an `<ng-content>`. */
-    @ViewChild(TemplateRef, { static: true }) implicitContent: TemplateRef<any>;
+    readonly implicitContent = viewChild.required(TemplateRef);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tooltipTitle(): string {
         return this.overflowTooltipTitle + this._tooltipTitle;
@@ -76,6 +80,8 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
     private _tooltipTitle = '';
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -89,14 +95,14 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
     private _disabled: boolean = false;
 
-    @Input() tooltipPlacement: KbqPopUpPlacementValues = PopUpPlacements.Right;
+    readonly tooltipPlacement = input<KbqPopUpPlacementValues>(PopUpPlacements.Right);
 
     /** Plain text label for the tab, used when there is no template label. */
-    @Input('label') textLabel = '';
+    readonly textLabel = input('', { alias: 'label' });
 
-    @Input({ transform: booleanAttribute }) empty: boolean = false;
+    readonly empty = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @Input() tabId: string;
+    readonly tabId = input<string>(undefined!);
 
     /** Emits whenever the internal state of the tab changes. */
     readonly stateChanges = new Subject<void>();
@@ -148,7 +154,10 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.contentPortal = new TemplatePortal(this.explicitContent || this.implicitContent, this.viewContainerRef);
+        this.contentPortal = new TemplatePortal(
+            this.explicitContent() || this.implicitContent(),
+            this.viewContainerRef
+        );
     }
 
     ngOnDestroy(): void {

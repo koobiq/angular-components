@@ -17,8 +17,7 @@
 <ng-template #toastPermanentContentTemplate>
     @if (progress) {
         <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [mode]="'indeterminate'" />
-    }
-    @if (!progress) {
+    } @else {
         <div>
             <span>Импорт файлов завершен</span>
             <i kbq-icon="kbq-circle-check_16" class="kbq-success"></i>

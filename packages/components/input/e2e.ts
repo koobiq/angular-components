@@ -1,10 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
-import {
-    ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
-    KbqNormalizeWhitespace
-} from '@koobiq/components/core';
+import { ErrorStateMatcher, KbqNormalizeWhitespace } from '@koobiq/components/core';
 import { PasswordRules } from '@koobiq/components/form-field';
 import { KbqInputModule } from './input.module';
 
@@ -172,10 +168,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     host: {
         class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
         'data-testid': 'e2eInputStateAndStyle'
-    },
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    }
 })
 export class E2eInputStateAndStyle {
     inputValue = signal('Input Value');

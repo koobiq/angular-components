@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqOptionModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -25,7 +24,6 @@ const timezones=[{offset:"02:00:00",associatedZones:[],id:"Europe/Kaliningrad",c
 @Component({
     selector: 'timezone-search-overview-example',
     imports: [
-        KbqFormFieldModule,
         KbqTimezoneModule,
         KbqIconModule,
         KbqSelectModule,
@@ -37,7 +35,7 @@ const timezones=[{offset:"02:00:00",associatedZones:[],id:"Europe/Kaliningrad",c
     template: `
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input
                         autocomplete="off"

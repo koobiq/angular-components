@@ -5,6 +5,7 @@ import {
     Component,
     Directive,
     Input,
+    input,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -13,8 +14,10 @@ import { KbqTreeBase, KbqTreeNode } from './tree-base';
 /** @docs-private */
 @Directive()
 export class KbqTreeNodeToggleBaseDirective<T> {
-    @Input() node: T;
+    readonly node = input<T>(undefined!);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTreeNodeToggleRecursive')
     get recursive(): boolean {
         return this._recursive;
@@ -26,6 +29,8 @@ export class KbqTreeNodeToggleBaseDirective<T> {
 
     private _recursive = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -40,7 +45,7 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     private _disabled: boolean = false;
 
     get iconState(): boolean {
-        return this.tree.treeControl.isExpanded(this.node);
+        return this.tree.treeControl.isExpanded(this.node());
     }
 
     constructor(
@@ -55,9 +60,11 @@ export class KbqTreeNodeToggleBaseDirective<T> {
             return;
         }
 
-        this.recursive
-            ? this.tree.treeControl.toggleDescendants(this.treeNode.data)
-            : this.tree.treeControl.toggle(this.treeNode.data);
+        if (this.recursive) {
+            this.tree.treeControl.toggleDescendants(this.treeNode.data);
+        } else {
+            this.tree.treeControl.toggle(this.treeNode.data);
+        }
 
         event.stopPropagation();
     }
@@ -74,24 +81,24 @@ export class KbqTreeNodeToggleBaseDirective<T> {
         </ng-content>
     `,
     styleUrls: ['./toggle.scss', './tree-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTreeNodeToggle',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-node-toggle',
         '[class.kbq-expanded]': 'iconState',
         '[attr.disabled]': 'disabled || null',
         '(click)': 'toggle($event)'
-    }
+    },
+    exportAs: 'kbqTreeNodeToggle'
 })
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {}
 
 @Directive({
     selector: '[kbq-tree-node-toggle], [kbqTreeNodeToggle]',
-    exportAs: 'kbqTreeNodeToggle',
     host: {
         '[attr.disabled]': 'disabled || null',
         '(click)': 'toggle($event)'
-    }
+    },
+    exportAs: 'kbqTreeNodeToggle'
 })
 export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirective<T> {}

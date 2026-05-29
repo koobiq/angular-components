@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -8,7 +7,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  */
 @Component({
     selector: 'select-preselected-values-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder" multiple [showPreselectedValues]="true" [formControl]="control">

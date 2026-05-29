@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -37,7 +36,6 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
         FormsModule,
         KbqUsernameModule,
         KbqTextareaModule,
-        KbqFormFieldModule,
         KbqLinkModule,
         KbqRadioModule,
         KbqTitleModule

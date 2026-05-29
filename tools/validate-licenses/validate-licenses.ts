@@ -24,6 +24,7 @@ const licensesWhitelist: License[] = [
     'CC-BY-4.0',
 
     'GPL-3.0',
+    'LGPL-3.0-only',
     'Python-2.0',
 
     // Have a full copyright grant. Validated by opensource team.

@@ -1,4 +1,4 @@
-import { Component, Provider, Type, viewChild } from '@angular/core';
+﻿import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -11,15 +11,13 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { Observable, map, timer } from 'rxjs';
 import {
     ErrorStateMatcher,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider
 } from '../core';
 import { KbqTextarea, KbqTextareaModule } from './index';
@@ -63,7 +61,6 @@ const getAsyncValidator =
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqTextareaModule,
         FormsModule
     ],
@@ -79,7 +76,6 @@ class KbqTextareaInvalid {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqTextareaModule,
         FormsModule
     ],
@@ -99,7 +95,6 @@ class KbqFormFieldWithNgModelInForm {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqTextareaModule,
         FormsModule
     ],
@@ -117,7 +112,6 @@ class KbqTextareaForBehaviors {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqTextareaModule,
         FormsModule
     ],
@@ -132,37 +126,7 @@ class KbqTextareaGrowOff {
 }
 
 @Component({
-    imports: [
-        KbqFormFieldModule,
-        KbqTextareaModule
-    ],
-    template: `
-        <kbq-form-field kbqFormFieldWithoutBorders>
-            <textarea kbqTextarea></textarea>
-        </kbq-form-field>
-    `
-})
-class KbqFormFieldWithoutBorders {}
-
-@Component({
-    imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
-    template: `
-        <kbq-form-field>
-            <textarea kbqTextarea [formControl]="control"></textarea>
-        </kbq-form-field>
-    `
-})
-class LegacyTextareaControlWithAsyncValidators {
-    readonly textarea = viewChild.required(KbqTextarea);
-    readonly control = new FormControl<string>('', {
-        nonNullable: true,
-        asyncValidators: [getAsyncValidator()]
-    });
-}
-
-@Component({
-    imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <textarea kbqTextarea [formControl]="control"></textarea>
@@ -178,18 +142,17 @@ class TextareaControlWithAsyncValidators {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(customErrorStateMatcher)
-    ],
+    imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
                 <textarea kbqTextarea formControlName="textarea"></textarea>
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ]
 })
 class TextareaWithDIErrorStateMatcher {
     readonly textarea = viewChild.required(KbqTextarea);
@@ -197,8 +160,7 @@ class TextareaWithDIErrorStateMatcher {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqTextareaModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -298,19 +260,6 @@ describe('KbqTextarea', () => {
                 flush();
                 expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
             }));
-        });
-
-        it('should be without borders', () => {
-            const fixture = createComponent(KbqFormFieldWithoutBorders, [
-                KbqIconModule
-            ]);
-
-            fixture.detectChanges();
-
-            const kbqFormFieldDebug = fixture.debugElement.query(By.directive(KbqFormField));
-            const formFieldElement = kbqFormFieldDebug.nativeElement;
-
-            expect(formFieldElement.classList.contains('kbq-form-field_without-borders')).toBe(true);
         });
     });
 
@@ -483,32 +432,6 @@ describe('KbqTextarea', () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
-            const fixture = createComponent(LegacyTextareaControlWithAsyncValidators);
-            const { control, textarea } = fixture.componentInstance;
-            const statuses: FormControlStatus[] = [];
-
-            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
-
-            control.setValue('ab');
-
-            expect(control.status).toBe('PENDING');
-            expect(statuses).toEqual(['PENDING']);
-
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID']);
-
-            textarea().onBlur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
-
-            subscription.unsubscribe();
-        }));
-
         it('should emit VALID via statusChanges on blur', fakeAsync(() => {
             const fixture = createComponent(TextareaControlWithAsyncValidators);
             const { control, textarea } = fixture.componentInstance;

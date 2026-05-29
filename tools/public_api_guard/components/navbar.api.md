@@ -8,28 +8,27 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
+import { FocusKeyManager } from '@koobiq/components/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
+import * as i2$1 from '@angular/cdk/platform';
 import * as i2 from '@koobiq/components/tooltip';
-import * as i2_2 from '@angular/cdk/platform';
 import * as i3 from '@koobiq/components/icon';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
+import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
@@ -93,7 +92,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     // (undocumented)
-    navbarItems: QueryList<KbqNavbarItem>;
+    readonly navbarItems: i0.Signal<readonly any[]>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -103,7 +102,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    readonly rectangleElements: Signal<readonly any[]>;
+    readonly rectangleElements: i0.Signal<readonly any[]>;
     // (undocumented)
     readonly resizeStream: Subject<Event>;
     // (undocumented)
@@ -136,16 +135,16 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     get hasCroppedText(): boolean;
     // (undocumented)
     get isLink(): boolean;
-    longTitle: boolean;
+    readonly longTitle: i0.InputSignal<boolean>;
     protected readonly nativeElement: HTMLElement;
     protected readonly navbarFocusableItem: KbqNavbarFocusableItem;
     // (undocumented)
     ngAfterContentInit(): void;
     protected readonly rectangleElement: KbqNavbarRectangleElement;
-    title: KbqNavbarTitle;
+    readonly title: i0.Signal<KbqNavbarTitle | undefined>;
     get titleText(): string | null;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "longTitle": { "alias": "longTitle"; "required": false; }; "collapsedText": { "alias": "collapsedText"; "required": false; }; }, {}, ["title"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "longTitle": { "alias": "longTitle"; "required": false; "isSignal": true; }; "collapsedText": { "alias": "collapsedText"; "required": false; }; }, {}, ["title"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarBrand, never>;
 }
@@ -175,20 +174,20 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     // (undocumented)
     blur(): void;
     // (undocumented)
-    button: KbqButton;
+    readonly button: i0.Signal<KbqButton | undefined>;
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
     focus(origin?: FocusOrigin): void;
     // (undocumented)
-    formField: KbqFormField;
+    readonly formField: i0.Signal<KbqFormField | undefined>;
     // (undocumented)
     getLabel(): string;
     // (undocumented)
     get hasFocus(): boolean;
     set hasFocus(value: boolean);
     // (undocumented)
-    get nestedElement(): KbqButton | KbqFormField;
+    get nestedElement(): KbqButton | KbqFormField | undefined;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -208,7 +207,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     // (undocumented)
     get tabIndex(): number;
     // (undocumented)
-    title: KbqNavbarTitle;
+    readonly title: i0.Signal<KbqNavbarTitle | undefined>;
     // (undocumented)
     get tooltip(): KbqTooltipTrigger;
     // (undocumented)
@@ -246,7 +245,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     // (undocumented)
     get hasDropDownTrigger(): boolean;
     // (undocumented)
-    icon: KbqIcon;
+    readonly icon: i0.Signal<KbqIcon | undefined>;
     // (undocumented)
     get isCollapsed(): boolean;
     // (undocumented)
@@ -262,7 +261,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     // (undocumented)
     get showVerticalDropDownAngle(): boolean;
     // (undocumented)
-    title: KbqNavbarTitle;
+    readonly title: i0.Signal<KbqNavbarTitle | undefined>;
     // (undocumented)
     get titleText(): string | null;
     // (undocumented)
@@ -294,20 +293,14 @@ export class KbqNavbarModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqNavbarModule>;
-    // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1.A11yModule, typeof i2_2.PlatformModule, typeof i3.KbqIconModule, typeof i2.KbqToolTipModule, typeof i5.KbqNavbar, typeof i5.KbqNavbarContainer, typeof i6.KbqNavbarTitle, typeof i6.KbqNavbarItem, typeof i7.KbqNavbarBrand, typeof i6.KbqNavbarLogo, typeof i8.KbqNavbarToggle, typeof i9.KbqVerticalNavbar, typeof i6.KbqNavbarDivider, typeof i6.KbqNavbarFocusableItem, typeof i6.KbqNavbarRectangleElement, typeof i6.KbqNavbarBento], [typeof i5.KbqNavbar, typeof i5.KbqNavbarContainer, typeof i6.KbqNavbarTitle, typeof i6.KbqNavbarItem, typeof i7.KbqNavbarBrand, typeof i6.KbqNavbarLogo, typeof i8.KbqNavbarToggle, typeof i9.KbqVerticalNavbar, typeof i6.KbqNavbarDivider, typeof i6.KbqNavbarFocusableItem, typeof i6.KbqNavbarRectangleElement, typeof i6.KbqNavbarBento]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1.A11yModule, typeof i2$1.PlatformModule, typeof i3.KbqIconModule, typeof i2.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento]>;
 }
 
 // @public (undocumented)
 export class KbqNavbarRectangleElement {
     // (undocumented)
-    button: KbqButtonCssStyler;
+    readonly button: i0.Signal<KbqButtonCssStyler | undefined>;
     // (undocumented)
     get collapsed(): boolean;
     set collapsed(value: boolean);
@@ -379,7 +372,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     readonly animationDone: Subject<void>;
     // (undocumented)
-    bento: KbqNavbarBento;
+    readonly bento: i0.Signal<any>;
     // (undocumented)
     configuration: any;
     // (undocumented)
@@ -390,20 +383,20 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     readonly externalConfiguration: unknown;
     // (undocumented)
-    items: QueryList<KbqNavbarItem>;
-    protected readonly localeService: KbqLocaleService | null;
+    readonly items: i0.Signal<readonly any[]>;
+    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    openOver: boolean;
+    readonly openOver: i0.InputSignal<boolean>;
     // (undocumented)
-    rectangleElements: Signal<readonly any[]>;
+    rectangleElements: i0.Signal<readonly any[]>;
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["rectangleElements", "bento", "items"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["rectangleElements", "items", "bento"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalNavbar, never>;
 }

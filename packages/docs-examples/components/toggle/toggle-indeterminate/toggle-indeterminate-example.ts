@@ -7,13 +7,13 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 @Component({
     selector: 'toggle-indeterminate-example',
     imports: [KbqToggleModule],
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     template: `
         <kbq-toggle [checked]="checked()" [indeterminate]="indeterminate()" />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ToggleIndeterminateExample {
     protected readonly checked = signal(false);

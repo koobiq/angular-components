@@ -1,7 +1,5 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -9,7 +7,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  */
 @Component({
     selector: 'select-validation-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Valid</div>
@@ -44,8 +42,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             width: 50%;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectValidationExample {
     readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);

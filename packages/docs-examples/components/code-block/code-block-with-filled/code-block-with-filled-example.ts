@@ -17,6 +17,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqToggleModule,
         FormsModule
     ],
+    template: `
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="filled">Filled</kbq-toggle>
+        <kbq-code-block [files]="files" [filled]="filled" />
+    `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
             core: () => import('highlight.js/lib/core'),
@@ -25,10 +29,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             }
         })
     ],
-    template: `
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="filled">Filled</kbq-toggle>
-        <kbq-code-block [files]="files" [filled]="filled" />
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithFilledExample {

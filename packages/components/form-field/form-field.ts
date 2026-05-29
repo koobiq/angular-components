@@ -1,6 +1,5 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { NgClass } from '@angular/common';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -11,6 +10,7 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
+    contentChild,
     ContentChildren,
     DestroyRef,
     Directive,
@@ -24,13 +24,12 @@ import {
     Provider,
     QueryList,
     Self,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
-import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
-import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
+import { ESCAPE, F8, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { delay, startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
@@ -88,7 +87,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 /** Container for form controls that applies styling and behavior. */
 @Component({
     selector: 'kbq-form-field',
-    imports: [NgClass],
+    imports: [],
     templateUrl: 'form-field.html',
     styleUrls: [
         'form-field.scss',
@@ -102,9 +101,9 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '../textarea/textarea.scss',
         '../tags/tag-input-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqFormField',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-form-field',
 
@@ -126,7 +125,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '(mouseenter)': 'onHoverChanged(true)',
         '(mouseleave)': 'onHoverChanged(false)'
     },
-    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
+    exportAs: 'kbqFormField'
 })
 export class KbqFormField
     extends KbqColorDirective
@@ -161,11 +160,11 @@ export class KbqFormField
      *
      * @docs-private
      */
-    @ContentChild(KbqFormFieldControl) control: KbqFormFieldControl<unknown>;
+    readonly control = contentChild.required(KbqFormFieldControl);
     /**
      * @docs-private
      */
-    @ContentChild(KbqStepper) readonly stepper: KbqStepper;
+    readonly stepper = contentChild(KbqStepper);
     /**
      * @docs-private
      *
@@ -195,7 +194,7 @@ export class KbqFormField
     /**
      * @docs-private
      */
-    @ViewChild('connectionContainer', { static: true }) connectionContainerRef: ElementRef;
+    readonly connectionContainerRef = viewChild.required<ElementRef>('connectionContainer');
 
     @ContentChildren(KbqReactivePasswordHint) private readonly reactivePasswordHint: QueryList<KbqReactivePasswordHint>;
     @ContentChildren(KbqError) private readonly error: QueryList<KbqError>;
@@ -213,7 +212,7 @@ export class KbqFormField
 
     /** Whether the form field is invalid. */
     get invalid(): boolean {
-        return !!this.control?.errorState;
+        return !!this.control()?.errorState;
     }
 
     /**
@@ -267,7 +266,7 @@ export class KbqFormField
      * @docs-private
      */
     get hasFocus(): boolean {
-        return this.control?.focused;
+        return this.control()?.focused;
     }
 
     /**
@@ -312,7 +311,7 @@ export class KbqFormField
      * @docs-private
      */
     get hasStepper(): boolean {
-        return !!this.stepper;
+        return !!this.stepper();
     }
 
     /**
@@ -328,39 +327,35 @@ export class KbqFormField
      * @docs-private
      */
     get canShowCleaner(): boolean {
-        return this.hasCleaner && this.control?.ngControl ? this.control.ngControl.value && !this.disabled : false;
+        const control = this.control();
+
+        return this.hasCleaner && control?.ngControl ? control.ngControl.value && !this.disabled : false;
     }
 
     /** Whether the form field is disabled. */
     get disabled(): boolean {
-        return this.control?.disabled;
+        return this.control()?.disabled;
     }
-
-    /**
-     * @deprecated stepper should be always visible when provided, so this parameter is redundant,
-     * use `hasStepper` instead
-     *
-     * @docs-private
-     */
-    canShowStepper = true;
 
     ngAfterContentInit(): void {
         this.validateControlChild();
 
-        if ((this.control as any).numberInput && this.hasCleaner) {
+        if ((this.control() as any).numberInput && this.hasCleaner) {
             this.cleaner = null;
             throw getKbqFormFieldYouCanNotUseCleanerInNumberInputError();
         }
 
         // Subscribe to changes in the child control state in order to update the form field UI.
-        this.control.stateChanges.pipe(startWith(), delay(0)).subscribe((state: any) => {
-            if (this.passwordHints.length && !state?.focused && hasPasswordStrengthError(this.passwordHints)) {
-                this.control.ngControl?.control?.setErrors({ passwordStrength: true });
-            }
-        });
+        this.control()
+            .stateChanges.pipe(startWith(), delay(0))
+            .subscribe((state: any) => {
+                if (this.passwordHints.length && !state?.focused && hasPasswordStrengthError(this.passwordHints)) {
+                    this.control().ngControl?.control?.setErrors({ passwordStrength: true });
+                }
+            });
 
         if (this.hasStepper) {
-            this.stepper.connectTo((this.control as any).numberInput);
+            this.stepper()!.connectTo((this.control() as any).numberInput);
         }
 
         this.initializeControl();
@@ -386,16 +381,7 @@ export class KbqFormField
 
     /** Focuses the control. */
     focus(options?: FocusOptions): void {
-        this.control.focus(options);
-    }
-
-    /**
-     * @deprecated Use `focus` instead.
-     *
-     * @docs-private
-     */
-    focusViaKeyboard(options?: FocusOptions): void {
-        this.control.focus(options);
+        this.control().focus(options);
     }
 
     /**
@@ -404,8 +390,10 @@ export class KbqFormField
     clearValue(event: Event): void {
         event.stopPropagation();
 
-        this.control?.ngControl?.reset();
-        this.control?.focus();
+        const control = this.control();
+
+        control?.ngControl?.reset();
+        control?.focus();
     }
 
     /**
@@ -414,8 +402,10 @@ export class KbqFormField
      * @docs-private
      */
     onContainerClick(event: MouseEvent): void {
-        if (this.control?.onContainerClick) {
-            this.control.onContainerClick(event);
+        const control = this.control();
+
+        if (control?.onContainerClick) {
+            control.onContainerClick(event);
         }
     }
 
@@ -425,12 +415,14 @@ export class KbqFormField
      * @docs-private
      */
     onKeyDown(event: KeyboardEvent): void {
-        if (this.control.controlType === 'input-password' && event.altKey && event.keyCode === F8) {
-            (this.control as unknown as { toggleType(): void }).toggleType();
+        const control = this.control();
+
+        if (control.controlType === 'input-password' && event.altKey && event.keyCode === F8) {
+            (control as unknown as { toggleType(): void }).toggleType();
         }
 
-        if (this.canCleanerClearByEsc && event.keyCode === ESCAPE && this.control.focused && this.hasCleaner) {
-            this.control?.ngControl?.reset();
+        if (this.canCleanerClearByEsc && event.keyCode === ESCAPE && control.focused && this.hasCleaner) {
+            control?.ngControl?.reset();
 
             event.preventDefault();
         }
@@ -450,7 +442,7 @@ export class KbqFormField
      * Gets an ElementRef for the element that a overlay attached to the form-field should be positioned relative to.
      */
     getConnectedOverlayOrigin(): ElementRef {
-        return this.connectionContainerRef || this.elementRef;
+        return this.connectionContainerRef() || this.elementRef;
     }
 
     /**
@@ -459,7 +451,7 @@ export class KbqFormField
      * @docs-private
      */
     shouldForward(prop: keyof NgControl): boolean {
-        const ngControl = this.control?.ngControl;
+        const ngControl = this.control()?.ngControl;
 
         return ngControl && ngControl[prop];
     }
@@ -491,18 +483,28 @@ export class KbqFormField
      * @docs-private
      */
     protected validateControlChild() {
-        if (!this.control) {
+        let control: KbqFormFieldControl<unknown> | undefined;
+
+        try {
+            control = this.control();
+        } catch {
+            throw getKbqFormFieldMissingControlError();
+        }
+
+        if (!control) {
             throw getKbqFormFieldMissingControlError();
         }
     }
 
     /** Initializes the form field control. */
     private initializeControl(): void {
-        if (this.control.controlType) {
-            this.elementRef.nativeElement.classList.add(`kbq-form-field-type-${this.control.controlType}`);
+        const control = this.control();
+
+        if (control.controlType) {
+            this.elementRef.nativeElement.classList.add(`kbq-form-field-type-${control.controlType}`);
         }
 
-        merge(this.control.stateChanges, this.control.ngControl?.valueChanges || EMPTY)
+        merge(control.stateChanges, control.ngControl?.valueChanges || EMPTY)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.changeDetectorRef.markForCheck());
     }
@@ -526,23 +528,11 @@ export class KbqFormField
 
 /**
  * @docs-private
- *
- * @deprecated Will be removed in next major release, use `noBorders` input instead.
- */
-@Directive({
-    selector: 'kbq-form-field[kbqFormFieldWithoutBorders]',
-    exportAs: 'kbqFormFieldWithoutBorders',
-    host: { class: 'kbq-form-field_without-borders' }
-})
-export class KbqFormFieldWithoutBorders {}
-
-/**
- * @docs-private
  */
 @Directive({
     selector: '[kbqInput], [kbqTextarea]',
-    exportAs: 'KbqTrim',
-    host: { class: 'kbq-trim' }
+    host: { class: 'kbq-trim' },
+    exportAs: 'KbqTrim'
 })
 export class KbqTrim {
     private original: (fn: any) => void;

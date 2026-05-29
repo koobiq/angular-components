@@ -789,7 +789,7 @@ describe(KbqCodeBlock.name, () => {
             await fixture.whenStable();
 
             const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
-            const scrollSpy = jest.spyOn(codeBlock.scrollableCodeContent, 'scrollTo').mockImplementation(() => {});
+            const scrollSpy = jest.spyOn(codeBlock.scrollableCodeContent(), 'scrollTo').mockImplementation(() => {});
 
             codeBlock.scrollTo({ top: 50 });
 
@@ -809,7 +809,7 @@ describe(KbqCodeBlock.name, () => {
             ]);
 
             const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
-            const scrollSpy = jest.spyOn(codeBlock.scrollableCodeContent, 'scrollTo').mockImplementation(() => {});
+            const scrollSpy = jest.spyOn(codeBlock.scrollableCodeContent(), 'scrollTo').mockImplementation(() => {});
 
             codeBlock.scrollTo({ top: 100 });
             expect(scrollSpy).not.toHaveBeenCalled();

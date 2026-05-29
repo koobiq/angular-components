@@ -1061,7 +1061,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-with-soft-wrap": {
     "packagePath": "components/code-block/code-block-with-soft-wrap",
-    "title": "Code-block with softWrap attribute",
+    "title": "Code-block with [softWrap]=\"true\" attribute",
     "componentName": "CodeBlockWithSoftWrapExample",
     "files": [
       "code-block-with-soft-wrap-example.ts"
@@ -1448,6 +1448,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-with-filter-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-x-position": {
+    "packagePath": "components/dropdown/dropdown-x-position",
+    "title": "Dropdown xPosition",
+    "componentName": "DropdownXPositionExample",
+    "files": [
+      "dropdown-x-position-example.ts"
+    ],
+    "selector": "dropdown-x-position-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-x-position-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dynamic-translation-overview": {
     "packagePath": "components/dynamic-translation/dynamic-translation-overview",
     "title": "Dynamic translation overview example",
@@ -1603,114 +1615,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "empty-state-title-example.ts",
     "importPath": "components/empty-state"
-  },
-  "experimental-form-field-password-overview": {
-    "packagePath": "components/experimental-form-field/experimental-form-field-password-overview",
-    "title": "Form field password overview",
-    "componentName": "ExperimentalFormFieldPasswordOverviewExample",
-    "files": [
-      "experimental-form-field-password-overview-example.ts"
-    ],
-    "selector": "experimental-form-field-password-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "experimental-form-field-password-overview-example.ts",
-    "importPath": "components/experimental-form-field"
-  },
-  "experimental-form-field-with-cleaner": {
-    "packagePath": "components/experimental-form-field/experimental-form-field-with-cleaner",
-    "title": "Form field with kbq-cleaner",
-    "componentName": "ExperimentalFormFieldWithCleanerExample",
-    "files": [
-      "experimental-form-field-with-cleaner-example.ts"
-    ],
-    "selector": "experimental-form-field-with-cleaner-example",
-    "additionalComponents": [],
-    "primaryFile": "experimental-form-field-with-cleaner-example.ts",
-    "importPath": "components/experimental-form-field"
-  },
-  "experimental-form-field-with-custom-error-state-matcher-set-by-attribute": {
-    "packagePath": "components/experimental-form-field/experimental-form-field-with-custom-error-state-matcher-set-by-attribute",
-    "title": "Form field with CustomErrorStateMatcher which set by `errorStateMatcher` attribute",
-    "componentName": "ExperimentalFormFieldWithCustomErrorStateMatcherSetByAttributeExample",
-    "files": [
-      "experimental-form-field-with-custom-error-state-matcher-set-by-attribute-example.ts"
-    ],
-    "selector": "experimental-form-field-with-custom-error-state-matcher-set-by-attribute-example",
-    "additionalComponents": [],
-    "primaryFile": "experimental-form-field-with-custom-error-state-matcher-set-by-attribute-example.ts",
-    "importPath": "components/experimental-form-field"
-  },
-  "experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider": {
-    "packagePath": "components/experimental-form-field/experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider",
-    "title": "Form field with CustomErrorStateMatcher which set by DI provider",
-    "componentName": "ExperimentalFormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample",
-    "files": [
-      "experimental-form-field-with-error-state-matcher-set-by-di-example.ts"
-    ],
-    "selector": "experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example",
-    "additionalComponents": [],
-    "primaryFile": "experimental-form-field-with-error-state-matcher-set-by-di-example.ts",
-    "importPath": "components/experimental-form-field"
-  },
-  "experimental-form-field-with-error": {
-    "packagePath": "components/experimental-form-field/experimental-form-field-with-error",
-    "title": "Form field with kbq-error",
-    "componentName": "ExperimentalFormFieldWithErrorExample",
-    "files": [
-      "experimental-form-field-with-error-example.ts"
-    ],
-    "selector": "experimental-form-field-with-error-example",
-    "additionalComponents": [],
-    "primaryFile": "experimental-form-field-with-error-example.ts",
-    "importPath": "components/experimental-form-field"
-  },
-  "experimental-form-field-with-hint": {
-    "packagePath": "components/experimental-form-field/experimental-form-field-with-hint",
-    "title": "Form field with kbq-hint",
-    "componentName": "ExperimentalFormFieldWithHintExample",
-    "files": [
-      "experimental-form-field-with-hint-example.ts"
-    ],
-    "selector": "experimental-form-field-with-hint-example",
-    "additionalComponents": [],
-    "primaryFile": "experimental-form-field-with-hint-example.ts",
-    "importPath": "components/experimental-form-field"
-  },
-  "experimental-form-field-with-label": {
-    "packagePath": "components/experimental-form-field/experimental-form-field-with-label",
-    "title": "Form field with kbq-label",
-    "componentName": "ExperimentalFormFieldWithLabelExample",
-    "files": [
-      "experimental-form-field-with-label-example.ts"
-    ],
-    "selector": "experimental-form-field-with-label-example",
-    "additionalComponents": [],
-    "primaryFile": "experimental-form-field-with-label-example.ts",
-    "importPath": "components/experimental-form-field"
-  },
-  "experimental-form-field-with-prefix-and-suffix": {
-    "packagePath": "components/experimental-form-field/experimental-form-field-with-prefix-and-suffix",
-    "title": "Form field with kbqPrefix and kbqSuffix",
-    "componentName": "ExperimentalFormFieldWithPrefixAndSuffixExample",
-    "files": [
-      "experimental-form-field-with-prefix-and-suffix-example.ts"
-    ],
-    "selector": "experimental-form-field-with-prefix-and-suffix-example",
-    "additionalComponents": [],
-    "primaryFile": "experimental-form-field-with-prefix-and-suffix-example.ts",
-    "importPath": "components/experimental-form-field"
-  },
-  "experimental-form-field-without-borders": {
-    "packagePath": "components/experimental-form-field/experimental-form-field-without-borders",
-    "title": "Form field without borders",
-    "componentName": "ExperimentalFormFieldWithoutBordersExample",
-    "files": [
-      "experimental-form-field-without-borders-example.ts"
-    ],
-    "selector": "experimental-form-field-without-borders-example",
-    "additionalComponents": [],
-    "primaryFile": "experimental-form-field-without-borders-example.ts",
-    "importPath": "components/experimental-form-field"
   },
   "file-upload-allowed": {
     "packagePath": "components/file-upload/file-upload-allowed",
@@ -3453,32 +3357,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "modal-template-example.ts",
     "importPath": "components/modal"
   },
-  "navbar-ic-long-app-name": {
-    "packagePath": "components/navbar-ic/navbar-ic-long-app-name",
-    "title": "Navbar-ic",
-    "componentName": "NavbarIcLongAppNameExample",
-    "files": [
-      "navbar-ic-long-app-name-overview-example.ts",
-      "navbar-ic-long-app-name-example.html"
-    ],
-    "selector": "navbar-ic-long-app-name-example",
-    "additionalComponents": [],
-    "primaryFile": "navbar-ic-long-app-name-overview-example.ts",
-    "importPath": "components/navbar-ic"
-  },
-  "navbar-ic-overview": {
-    "packagePath": "components/navbar-ic/navbar-ic-overview",
-    "title": "Navbar-ic",
-    "componentName": "NavbarIcOverviewExample",
-    "files": [
-      "navbar-ic-overview-example.ts",
-      "navbar-ic-overview-example.html"
-    ],
-    "selector": "navbar-ic-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "navbar-ic-overview-example.ts",
-    "importPath": "components/navbar-ic"
-  },
   "navbar-overview": {
     "packagePath": "components/navbar/navbar-overview",
     "title": "Navbar",
@@ -5135,6 +5013,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-removable-example.ts",
     "importPath": "components/tags"
   },
+  "tag-selectable": {
+    "packagePath": "components/tags/tag-selectable",
+    "title": "Tag selectable",
+    "componentName": "TagSelectableExample",
+    "files": [
+      "tag-selectable-example.ts"
+    ],
+    "selector": "tag-selectable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-selectable-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-with-icon": {
     "packagePath": "components/tags/tag-with-icon",
     "title": "Tag with icon",
@@ -6629,6 +6519,8 @@ return import('@koobiq/docs-examples/components/dropdown');
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-with-filter':
 return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-x-position':
+return import('@koobiq/docs-examples/components/dropdown');
   case 'dynamic-translation-overview':
 return import('@koobiq/docs-examples/components/dynamic-translation');
   case 'dynamic-translation-with-dynamic-component-creation':
@@ -6655,24 +6547,6 @@ return import('@koobiq/docs-examples/components/empty-state');
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-title':
 return import('@koobiq/docs-examples/components/empty-state');
-  case 'experimental-form-field-password-overview':
-return import('@koobiq/docs-examples/components/experimental-form-field');
-  case 'experimental-form-field-with-cleaner':
-return import('@koobiq/docs-examples/components/experimental-form-field');
-  case 'experimental-form-field-with-custom-error-state-matcher-set-by-attribute':
-return import('@koobiq/docs-examples/components/experimental-form-field');
-  case 'experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider':
-return import('@koobiq/docs-examples/components/experimental-form-field');
-  case 'experimental-form-field-with-error':
-return import('@koobiq/docs-examples/components/experimental-form-field');
-  case 'experimental-form-field-with-hint':
-return import('@koobiq/docs-examples/components/experimental-form-field');
-  case 'experimental-form-field-with-label':
-return import('@koobiq/docs-examples/components/experimental-form-field');
-  case 'experimental-form-field-with-prefix-and-suffix':
-return import('@koobiq/docs-examples/components/experimental-form-field');
-  case 'experimental-form-field-without-borders':
-return import('@koobiq/docs-examples/components/experimental-form-field');
   case 'file-upload-allowed':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-custom-text-via-input':
@@ -6957,10 +6831,6 @@ return import('@koobiq/docs-examples/components/modal');
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-template':
 return import('@koobiq/docs-examples/components/modal');
-  case 'navbar-ic-long-app-name':
-return import('@koobiq/docs-examples/components/navbar-ic');
-  case 'navbar-ic-overview':
-return import('@koobiq/docs-examples/components/navbar-ic');
   case 'navbar-overview':
 return import('@koobiq/docs-examples/components/navbar');
   case 'navbar-vertical-open-over':
@@ -7230,6 +7100,8 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-overview':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-removable':
+return import('@koobiq/docs-examples/components/tags');
+  case 'tag-selectable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-with-icon':
 return import('@koobiq/docs-examples/components/tags');

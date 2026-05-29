@@ -18,7 +18,6 @@ jobs:
       # Build styles which are required for unit tests
       - run: yarn run styles:build-all
       - run: |
-          yarn run unit:cdk
           yarn run unit:components
           yarn run unit:angular-moment-adapter
           yarn run unit:angular-luxon-adapter

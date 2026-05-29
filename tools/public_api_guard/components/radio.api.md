@@ -9,7 +9,6 @@ import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
@@ -25,17 +24,17 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 // @public (undocumented)
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
     constructor(radioGroup: KbqRadioGroup, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, radioDispatcher: UniqueSelectionDispatcher);
-    readonly change: EventEmitter<KbqRadioChange>;
+    readonly change: i0.OutputEmitterRef<KbqRadioChange>;
     get checked(): boolean;
     set checked(value: boolean);
     get disabled(): boolean;
     set disabled(value: boolean);
     focus(): void;
     id: string;
-    inputElement: ElementRef;
+    readonly inputElement: i0.Signal<ElementRef<any>>;
     get inputId(): string;
     // (undocumented)
-    isFocused: boolean;
+    readonly isFocused: i0.InputSignal<boolean>;
     get labelPosition(): 'before' | 'after';
     set labelPosition(value: "before" | "after");
     markForCheck(): void;
@@ -67,7 +66,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioButton, [{ optional: true; }, null, null, null]>;
 }
@@ -85,8 +84,8 @@ export class KbqRadioChange {
 export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     constructor(changeDetector: ChangeDetectorRef);
     // (undocumented)
-    big: boolean;
-    readonly change: EventEmitter<KbqRadioChange>;
+    readonly big: i0.InputSignal<boolean>;
+    readonly change: i0.OutputEmitterRef<KbqRadioChange>;
     // (undocumented)
     checkSelectedRadioButton(): void;
     controlValueAccessorChangeFn: (value: any) => void;
@@ -118,7 +117,7 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     set value(newValue: any);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqRadioGroup, "kbq-radio-group", ["kbqRadioGroup"], { "big": { "alias": "big"; "required": false; }; "name": { "alias": "name"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; }, { "change": "change"; }, ["radios"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqRadioGroup, "kbq-radio-group", ["kbqRadioGroup"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; }, { "change": "change"; }, ["radios"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioGroup, never>;
 }
@@ -129,10 +128,8 @@ export class KbqRadioModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqRadioModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqRadioModule, never, [typeof i1.A11yModule, typeof i2.KbqRadioGroup, typeof i2.KbqRadioButton], [typeof i2.KbqRadioGroup, typeof i2.KbqRadioButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqRadioModule, never, [typeof i1.A11yModule, typeof KbqRadioGroup, typeof KbqRadioButton], [typeof KbqRadioGroup, typeof KbqRadioButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

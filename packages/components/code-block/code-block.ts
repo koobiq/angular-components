@@ -14,22 +14,22 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
-    EventEmitter,
     inject,
     InjectionToken,
     Injector,
     Input,
+    input,
     numberAttribute,
-    Output,
+    output,
     Provider,
     Renderer2,
     SecurityContext,
     signal,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
@@ -93,22 +93,22 @@ export class KbqCodeBlockTabLinkContent {}
     ],
     templateUrl: './code-block.html',
     styleUrls: ['./code-block.scss', './code-block-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCodeBlock',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-code-block',
-        '[class.kbq-code-block_filled]': 'filled',
-        '[class.kbq-code-block_outline]': '!filled',
-        '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers',
+        '[class.kbq-code-block_filled]': 'filled()',
+        '[class.kbq-code-block_outline]': '!filled()',
+        '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers()',
         '[class.kbq-code-block_hide-tabs]': 'hideTabs',
-        '[class.kbq-code-block_no-border]': 'noBorder || filled',
+        '[class.kbq-code-block_no-border]': 'noBorder() || filled()',
         '[class.kbq-code-block_soft-wrap]': 'softWrap',
         '[class.kbq-code-block_view-all]': 'viewAll'
-    }
+    },
+    exportAs: 'kbqCodeBlock'
 })
 export class KbqCodeBlock implements AfterViewInit {
-    @ViewChild('copyButtonTooltip') private readonly copyButtonTooltip?: KbqTooltipTrigger;
+    private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
     /**
      * Reference to the scrollable code content.
      *
@@ -116,11 +116,13 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
-    @ViewChild(CdkScrollable) readonly scrollableCodeContent: CdkScrollable;
+    readonly scrollableCodeContent = viewChild.required(CdkScrollable);
 
-    @ViewChild(KbqCodeBlockHighlight) private readonly highlight!: KbqCodeBlockHighlight;
+    /** @docs-private */
+    private readonly highlight = viewChild.required(KbqCodeBlockHighlight);
 
-    @ViewChild('codeBlockPre') private readonly preElementRef!: ElementRef<HTMLElement>;
+    /** @docs-private */
+    private readonly preElementRef = viewChild.required<ElementRef<HTMLElement>>('codeBlockPre');
 
     /** @docs-private */
     protected readonly contentExceedsMaxHeight = signal(false);
@@ -130,44 +132,48 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
 
     /** Whether to display line numbers. */
-    @Input({ transform: booleanAttribute }) lineNumbers = false;
+    readonly lineNumbers = input(false, { transform: booleanAttribute });
 
     /** Whether the code block should be filled. */
-    @Input({ transform: booleanAttribute }) filled: boolean = false;
+    readonly filled = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Added soft wrap toggle button.  */
-    @Input({ transform: booleanAttribute }) canToggleSoftWrap: boolean = false;
+    readonly canToggleSoftWrap = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Whether sequences of whitespace should be preserved. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: booleanAttribute }) softWrap: boolean = false;
 
     /**
      * Output to support two-way binding on `[(softWrap)]` property.
      */
-    @Output() readonly softWrapChange = new EventEmitter<boolean>();
+    readonly softWrapChange = output<boolean>();
 
     /**
      * Allows to view all the code, otherwise it will be hidden.
      * Works only with `maxHeight` property.
      */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: booleanAttribute }) viewAll: boolean = false;
 
     /**
      * Output to support two-way binding on `[(viewAll)]` property.
      */
-    @Output() readonly viewAllChange = new EventEmitter<boolean>();
+    readonly viewAllChange = output<boolean>();
 
     /**
      * Maximum height of the code block content, other parts will be hidden.
      * Can be toggled by `viewAll` property.
      */
-    @Input({ transform: numberAttribute }) maxHeight: number;
+    readonly maxHeight = input<number, unknown>(undefined!, { transform: numberAttribute });
 
     /**
      * @docs-private
      */
     protected get calculatedMaxHeight(): number | null {
-        return this.maxHeight > 0 && !this.viewAll ? this.maxHeight : null;
+        return this.maxHeight() > 0 && !this.viewAll ? this.maxHeight() : null;
     }
 
     /**
@@ -175,20 +181,26 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     set canLoad(value: boolean) {
         this.canDownload = value;
     }
 
     /** Added download code button. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: booleanAttribute }) canDownload: boolean = false;
 
     /** Added copy code button. */
-    @Input({ transform: booleanAttribute }) canCopy: boolean = true;
+    readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /**
      * @deprecated Will be removed in next major release, use `files` instead.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set codeFiles(files: KbqCodeBlockFile[]) {
         this.files = files;
@@ -199,6 +211,8 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * Files to display.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get files(): KbqCodeBlockFile[] {
         return this._files;
@@ -219,21 +233,25 @@ export class KbqCodeBlock implements AfterViewInit {
     private _files: KbqCodeBlockFile[] = [];
 
     /** Defines which file (index) is active. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: numberAttribute }) activeFileIndex = 0;
 
     /**
      * Output to support two-way binding on `[(activeFileIndex)]` property.
      */
-    @Output() readonly activeFileIndexChange = new EventEmitter<number>();
+    readonly activeFileIndexChange = output<number>();
 
     /** Whether to hide border. */
-    @Input({ transform: booleanAttribute }) noBorder: boolean = false;
+    readonly noBorder = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /**
      * Whether to hide header tabs.
      * Always `true` if there is only one file without filename.
      * Makes actionbar floating if tabs are hidden.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get hideTabs(): boolean {
         return this._hideTabs;
@@ -250,7 +268,7 @@ export class KbqCodeBlock implements AfterViewInit {
     /**
      * Output to support two-way binding on `[(hideTabs)]` property.
      */
-    @Output() readonly hideTabsChange = new EventEmitter<boolean>();
+    readonly hideTabsChange = output<boolean>();
 
     /**
      * Component locale configuration.
@@ -279,7 +297,7 @@ export class KbqCodeBlock implements AfterViewInit {
      * has a scroll, and the calculated maximum height is not set.
      */
     private get canCodeContentBeFocused(): boolean {
-        const element = this.scrollableCodeContent?.getElementRef().nativeElement;
+        const element = this.scrollableCodeContent()?.getElementRef().nativeElement;
 
         return element && this.hasScroll(element) && !this.calculatedMaxHeight;
     }
@@ -323,11 +341,13 @@ export class KbqCodeBlock implements AfterViewInit {
         // Setup initial actionbar display state
         this.setupActionbarDisplay();
 
-        this.copyButtonTooltip?.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isVisible) => {
-            if (isVisible) {
-                this.copyButtonTooltip!.content = this.localeConfiguration.copyTooltip;
-            }
-        });
+        this.copyButtonTooltip()
+            ?.visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((isVisible) => {
+                if (isVisible) {
+                    this.copyButtonTooltip()!.content = this.localeConfiguration.copyTooltip;
+                }
+            });
 
         // Should call `markForCheck` to ensure the `codeContentTabIndex` is updated after the view is initialized,
         // for correct focus behavior.
@@ -355,10 +375,12 @@ export class KbqCodeBlock implements AfterViewInit {
 
     /** Scrolls the code content to the specified position. */
     scrollTo(options: ExtendedScrollToOptions): void {
-        const scroll = () => this.scrollableCodeContent.scrollTo(options);
+        const scroll = () => this.scrollableCodeContent().scrollTo(options);
 
-        if (this.highlight?.pending()) {
-            toObservable(this.highlight.pending, { injector: this.injector })
+        const highlight = this.highlight();
+
+        if (highlight?.pending()) {
+            toObservable(highlight.pending, { injector: this.injector })
                 .pipe(
                     filter((pending) => !pending),
                     take(1)
@@ -402,8 +424,7 @@ export class KbqCodeBlock implements AfterViewInit {
      * Reacts to `hideTabs` changes dynamically.
      */
     private trackHoverState(): void {
-        this.hideTabsChange
-            .asObservable()
+        outputToObservable(this.hideTabsChange)
             .pipe(
                 startWith(this._hideTabs),
                 switchMap((hideTabs) => {
@@ -422,16 +443,18 @@ export class KbqCodeBlock implements AfterViewInit {
     }
 
     private setupContentOverflowDetection(): void {
-        if (!this.maxHeight) return;
+        if (!this.maxHeight()) return;
 
         const checkOverflow = () => {
-            this.contentExceedsMaxHeight.set(this.preElementRef.nativeElement.offsetHeight > this.maxHeight);
+            this.contentExceedsMaxHeight.set(this.preElementRef().nativeElement.offsetHeight > this.maxHeight());
         };
 
         checkOverflow();
 
-        if (this.highlight?.pending()) {
-            toObservable(this.highlight.pending, { injector: this.injector })
+        const highlight = this.highlight();
+
+        if (highlight?.pending()) {
+            toObservable(highlight.pending, { injector: this.injector })
                 .pipe(
                     filter((pending) => !pending),
                     take(1)
@@ -440,7 +463,7 @@ export class KbqCodeBlock implements AfterViewInit {
         }
 
         this.sharedResizeObserver
-            .observe(this.preElementRef.nativeElement)
+            .observe(this.preElementRef().nativeElement)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(checkOverflow);
     }
@@ -449,11 +472,11 @@ export class KbqCodeBlock implements AfterViewInit {
      * Handles the scroll event on the scrollable code content element and updates the header shadow accordingly.
      */
     private handleScroll(): void {
-        this.scrollableCodeContent
+        this.scrollableCodeContent()
             .elementScrolled()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.setupHeaderShadow(this.scrollableCodeContent.measureScrollOffset('top') > 0);
+                this.setupHeaderShadow(this.scrollableCodeContent().measureScrollOffset('top') > 0);
             });
     }
 
@@ -524,7 +547,7 @@ export class KbqCodeBlock implements AfterViewInit {
         this.toggleViewAll();
 
         if (this.canCodeContentBeFocused) {
-            this.focusMonitor.focusVia(this.scrollableCodeContent.getElementRef().nativeElement, 'keyboard');
+            this.focusMonitor.focusVia(this.scrollableCodeContent().getElementRef().nativeElement, 'keyboard');
         }
     }
 
@@ -545,8 +568,10 @@ export class KbqCodeBlock implements AfterViewInit {
     protected copyCode(): void {
         const file = this.files[this.activeFileIndex];
 
-        if (this.clipboard.copy(file.content) && this.copyButtonTooltip) {
-            this.copyButtonTooltip.content = this.localeConfiguration.copiedTooltip;
+        const copyButtonTooltip = this.copyButtonTooltip();
+
+        if (this.clipboard.copy(file.content) && copyButtonTooltip) {
+            copyButtonTooltip.content = this.localeConfiguration.copiedTooltip;
         }
     }
 

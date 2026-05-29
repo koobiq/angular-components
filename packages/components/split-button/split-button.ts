@@ -3,9 +3,10 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
+    contentChild,
     ContentChildren,
     Input,
+    input,
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
@@ -22,8 +23,8 @@ import { delay } from 'rxjs/operators';
         <ng-content select="[kbq-button]" />
     `,
     styleUrls: ['./split-button.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-split-button',
         '[class]': 'kbqStyle',
@@ -38,12 +39,14 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     /** @docs-private */
     @ContentChildren(KbqButton) protected buttons: QueryList<KbqButton>;
     /** @docs-private */
-    @ContentChild(KbqDropdownTrigger) protected dropdownTrigger: KbqDropdownTrigger;
+    protected readonly dropdownTrigger = contentChild(KbqDropdownTrigger);
 
     /** Sets the width of the dropdown to the width of the trigger. Default is false */
-    @Input() panelAutoWidth: boolean = false;
+    readonly panelAutoWidth = input<boolean>(false);
 
     /** component style, will be set for nested buttons */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqStyle(): string {
         return `kbq-button_${this._kbqStyle}`;
@@ -58,6 +61,8 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     private _kbqStyle: string | KbqButtonStyles = KbqButtonStyles.Filled;
 
     /** component color, will be set for nested buttons */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get color(): KbqComponentColors | ThemePalette | string {
         return this._color;
@@ -72,6 +77,8 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     }
 
     /** Whether the checkbox is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -145,16 +152,22 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     }
 
     private updateDropdownParams = () => {
-        if (!this.dropdownTrigger) return;
+        const dropdownTrigger = this.dropdownTrigger();
 
-        this.dropdownTrigger.dropdown.xPosition = 'before';
+        if (!dropdownTrigger) return;
 
-        if (this.panelAutoWidth) {
+        dropdownTrigger.dropdown.xPosition = 'before';
+
+        if (this.panelAutoWidth()) {
             // we need to use a timeout of about 50ms to wait for the styles to apply
             setTimeout(() => {
                 const { width } = this.nativeElement.getClientRects()[0];
 
-                this.dropdownTrigger.dropdown.triggerWidth = `${Math.round(width)}px`;
+                const dropdownTrigger = this.dropdownTrigger();
+
+                if (dropdownTrigger) {
+                    dropdownTrigger.dropdown.triggerWidth = `${Math.round(width)}px`;
+                }
             }, 50);
         }
     };

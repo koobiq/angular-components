@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 
@@ -10,7 +9,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  */
 @Component({
     selector: 'popover-placement-center-example',
-    imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule],
+    imports: [KbqInputModule, KbqButtonModule, KbqPopoverModule],
     templateUrl: 'popover-placement-center-example.html',
     styles: `
         .popover-placement-center-example {

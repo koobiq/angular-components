@@ -5,17 +5,17 @@ import { KbqHint } from './hint';
 /** Error text to be shown below the form field control. */
 @Component({
     selector: 'kbq-error',
-    exportAs: 'kbqError',
     templateUrl: './hint.html',
     styleUrls: [
         './hint.scss',
         './hint-tokens.scss'
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-error'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqError'
 })
 export class KbqError extends KbqHint {
     constructor() {

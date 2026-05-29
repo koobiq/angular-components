@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -11,7 +10,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     selector: 'select-footer-example',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqButtonModule,
         KbqIconModule,

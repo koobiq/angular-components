@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
@@ -177,17 +176,16 @@ export class E2eTagEditable {
             padding: var(--kbq-size-xs);
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTagListStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTagListStates {}
 
 @Component({
     selector: 'e2e-tag-input-states',
-    imports: [KbqTagsModule, KbqIconModule, KbqFormFieldModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqTagsModule, KbqIconModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">
@@ -271,17 +269,16 @@ export class E2eTagListStates {}
             padding: var(--kbq-size-xs);
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTagInputStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTagInputStates {}
 
 @Component({
     selector: 'e2e-tag-autocomplete-states',
-    imports: [FormsModule, KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [FormsModule, KbqTagsModule, KbqAutocompleteModule, KbqIconModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList">
@@ -350,9 +347,9 @@ export class E2eTagInputStates {}
             height: 300px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTagAutocompleteStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTagAutocompleteStates {}

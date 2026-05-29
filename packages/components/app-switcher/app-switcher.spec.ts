@@ -7,7 +7,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
-    KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING,
     KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH,
     KbqAppSwitcherApp,
     KbqAppSwitcherComponent,
@@ -192,8 +191,8 @@ describe('KbqAppSwitcher', () => {
 
             it('computes _parsedApps for a single site', () => {
                 trigger.sites = [SITE_A];
-                expect(trigger.apps).toBeDefined();
-                expect(Array.isArray(trigger.apps)).toBe(true);
+                expect(trigger.currentApps).toBeDefined();
+                expect(Array.isArray(trigger.currentApps)).toBe(true);
             });
 
             it('creates _parsedSites for multiple sites', () => {
@@ -207,16 +206,6 @@ describe('KbqAppSwitcher', () => {
                 trigger.sites.forEach((site) => {
                     expect(Array.isArray(site.apps)).toBe(true);
                 });
-            });
-        });
-
-        describe('apps setter (deprecated)', () => {
-            it('sets originalApps and processes _parsedApps', () => {
-                const apps = [APP_1, APP_2, APP_UNTYPED];
-
-                trigger.apps = apps;
-                expect(trigger.originalApps).toEqual(apps);
-                expect(Array.isArray(trigger.apps)).toBe(true);
             });
         });
 
@@ -275,64 +264,6 @@ describe('KbqAppSwitcher', () => {
                 trigger.disabled = false;
                 expect(trigger.disabled).toBe(false);
                 expect(hideSpy).not.toHaveBeenCalled();
-            });
-        });
-
-        describe('makeGroupsForApps — grouping logic', () => {
-            it('keeps apps without type ungrouped', () => {
-                trigger.apps = [APP_UNTYPED];
-                const result = trigger.apps;
-
-                // No aliases on untyped apps
-                expect(result.every((app) => !app.aliases)).toBe(true);
-            });
-
-            it(`forms a group with aliases when more than ${KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING} apps share a type`, () => {
-                const typedApps: KbqAppSwitcherApp[] = Array.from({ length: 4 }, (_, i) => ({
-                    id: 100 + i,
-                    name: `Typed ${i}`,
-                    type: 'SameType',
-                    link: `/t/${i}`
-                }));
-
-                trigger.apps = typedApps;
-                const grouped = trigger.apps.find((a) => a.aliases);
-
-                expect(grouped).toBeDefined();
-                expect(grouped!.aliases!.length).toBe(4);
-            });
-
-            it(`flattens groups with ${KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING} or fewer same-type apps`, () => {
-                // 3 apps of same type (≤ KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING=3)
-                const typedApps: KbqAppSwitcherApp[] = [APP_1, APP_2, APP_3];
-
-                trigger.apps = typedApps;
-                // Should be flattened — no aliases
-                const hasGroup = trigger.apps.some((a) => a.aliases && a.aliases.length > 0);
-
-                expect(hasGroup).toBe(false);
-            });
-
-            it('takes the icon from the first app in the group', () => {
-                const appWithIcon: KbqAppSwitcherApp = {
-                    id: 200,
-                    name: 'Icon App',
-                    type: 'IconType',
-                    icon: '<svg>icon</svg>',
-                    link: '/icon'
-                };
-                const otherApps: KbqAppSwitcherApp[] = Array.from({ length: 3 }, (_, i) => ({
-                    id: 201 + i,
-                    name: `Other ${i}`,
-                    type: 'IconType',
-                    link: `/other/${i}`
-                }));
-
-                trigger.apps = [appWithIcon, ...otherApps];
-                const group = trigger.apps.find((a) => a.aliases);
-
-                expect(group).toBeDefined();
-                expect(group!.icon).toBe(appWithIcon.icon);
             });
         });
     });

@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field with kbq-label */
 @Component({
     selector: 'form-field-overview-example',
-    imports: [KbqFormFieldModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>

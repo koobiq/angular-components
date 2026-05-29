@@ -38,10 +38,10 @@ import { KbqTableModule } from '@koobiq/components/table';
             </tbody>
         </table>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KbqDecimalPipe, useClass: KbqTableNumberPipe }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilesizeFormatterTableNumberExample {
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });

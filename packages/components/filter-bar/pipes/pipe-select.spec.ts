@@ -105,7 +105,7 @@ describe('KbqPipeSelectComponent', () => {
     const openSelect = (index: number = 0) => {
         const pipe = getPipeComponent(index);
 
-        pipe.select.open();
+        pipe.select().open();
         fixture.detectChanges();
     };
 
@@ -352,7 +352,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const openSpy = jest.spyOn(component.select, 'open');
+            const openSpy = jest.spyOn(component.select(), 'open');
 
             component.open();
 
@@ -511,7 +511,7 @@ describe('KbqPipeSelectComponent', () => {
             filterBar.onClosePipe.subscribe(spy);
 
             // Simulate select close by emitting false on openedChange (triggers closedStream)
-            getPipeComponent().select.openedChange.emit(false);
+            getPipeComponent().select().openedChange.emit(false);
 
             expect(spy).toHaveBeenCalledWith(expect.objectContaining({ name: 'test' }));
         });

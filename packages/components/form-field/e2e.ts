@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 
 @Component({
     selector: 'e2e-form-field-group',
-    imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqIconModule],
+    imports: [KbqInputModule, KbqButtonModule, KbqIconModule],
     template: `
         <div data-testid="e2eHorizontalTarget" style="max-width: 300px">
             <div class="kbq-group">
@@ -50,8 +49,8 @@ import { KbqInputModule } from '@koobiq/components/input';
         </div>
     `,
     styleUrls: ['../core/styles/common/_groups.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         'data-testid': 'e2eFormFieldGroup'
     }
@@ -60,7 +59,7 @@ export class E2eFormFieldGroup {}
 
 @Component({
     selector: 'e2e-form-fieldset',
-    imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqIconModule],
+    imports: [KbqInputModule, KbqButtonModule, KbqIconModule],
     template: `
         <div data-testid="e2eScreenshotTarget">
             <kbq-fieldset>

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -14,7 +13,6 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 @Component({
     selector: 'autocomplete-with-footer-example',
     imports: [
-        KbqFormFieldModule,
         KbqAutocompleteModule,
         KbqInputModule,
         ReactiveFormsModule,

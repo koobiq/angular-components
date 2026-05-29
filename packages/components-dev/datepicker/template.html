@@ -13,7 +13,12 @@
 
 <div class="dev-container">
     <label>Default datepicker toggle</label>
-    <kbq-form-field #tooltip="kbqWarningTooltip" [kbqWarningTooltip]="'Только цифры'" (click)="myDatepicker1.toggle()">
+    <kbq-form-field
+        #tooltip="kbqTooltip"
+        kbqTooltipModifier="warning"
+        [kbqTooltip]="'Только цифры'"
+        (click)="myDatepicker1.toggle()"
+    >
         <input
             [kbqDatepicker]="myDatepicker1"
             [kbqValidationTooltip]="tooltip"

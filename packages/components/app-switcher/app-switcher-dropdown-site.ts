@@ -28,18 +28,21 @@ import { KbqAppSwitcherSite } from './app-switcher';
         }
     `,
     styleUrls: ['app-switcher-dropdown-site.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownSite },
+        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownSite }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqAppSwitcherDropdownSite',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-app-switcher-dropdown-site',
         '[class.kbq-dropdown-item]': 'false'
     },
-    providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqAppSwitcherDropdownSite },
-        { provide: KbqDropdownItem, useExisting: KbqAppSwitcherDropdownSite }
-    ]
+    exportAs: 'kbqAppSwitcherDropdownSite'
 })
 export class KbqAppSwitcherDropdownSite extends KbqDropdownItem {
+    // TODO: Skipped for migration because:
+    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
+    //  and migrating would break narrowing currently.
     @Input('kbq-app-switcher-dropdown-site') site: KbqAppSwitcherSite;
 }

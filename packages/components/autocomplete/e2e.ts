@@ -2,12 +2,11 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 @Component({
     selector: 'e2e-autocomplete-states',
-    imports: [KbqFormFieldModule, KbqInputModule, KbqAutocompleteModule],
+    imports: [KbqInputModule, KbqAutocompleteModule],
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>
@@ -46,7 +45,7 @@ export class E2eAutocompleteStates {
 
 @Component({
     selector: 'e2e-autocomplete-fallback-position',
-    imports: [KbqFormFieldModule, KbqInputModule, KbqAutocompleteModule],
+    imports: [KbqInputModule, KbqAutocompleteModule],
     template: `
         <div class="bottom-anchored">
             <kbq-form-field>
@@ -90,7 +89,7 @@ export class E2eAutocompleteFallbackPosition {
 
 @Component({
     selector: 'e2e-autocomplete-expand-on-results',
-    imports: [FormsModule, KbqFormFieldModule, KbqInputModule, KbqAutocompleteModule],
+    imports: [FormsModule, KbqInputModule, KbqAutocompleteModule],
     template: `
         <kbq-form-field>
             <input
@@ -135,7 +134,7 @@ export class E2eAutocompleteExpandOnResults {
 
 @Component({
     selector: 'e2e-autocomplete-scroll-close',
-    imports: [KbqFormFieldModule, KbqInputModule, KbqAutocompleteModule],
+    imports: [KbqInputModule, KbqAutocompleteModule],
     template: `
         <kbq-form-field>
             <input
@@ -164,7 +163,6 @@ export class E2eAutocompleteExpandOnResults {
             height: 4000px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
@@ -172,6 +170,7 @@ export class E2eAutocompleteExpandOnResults {
             deps: [Overlay]
         }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eAutocompleteScrollClose'
     }

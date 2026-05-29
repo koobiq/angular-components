@@ -2,14 +2,14 @@ import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import {
     booleanAttribute,
     ChangeDetectorRef,
-    ContentChild,
+    contentChild,
     Directive,
     EventEmitter,
     forwardRef,
     inject,
     Input,
     OnDestroy,
-    Output
+    output
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KbqAccordionContentDirective } from './accordion-content.directive';
@@ -18,9 +18,6 @@ import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 import { KbqAccordion, KbqAccordionOrientation } from './accordion.component';
 
 let uniqueIdCounter: number = 0;
-
-/** @deprecated Use KbqAccordionItemState instead. */
-export type RdxAccordionItemState = 'open' | 'closed';
 
 export type KbqAccordionItemState = 'open' | 'closed';
 
@@ -42,13 +39,12 @@ export class KbqAccordionItem implements OnDestroy {
     protected readonly expansionDispatcher = inject(UniqueSelectionDispatcher);
 
     /** @docs-private */
-    @ContentChild(KbqAccordionTriggerDirective, { descendants: true }) trigger: KbqAccordionTriggerDirective;
+    readonly trigger = contentChild(KbqAccordionTriggerDirective);
     /** @docs-private */
-    @ContentChild(KbqAccordionTrigger, { descendants: true }) triggerComponent: KbqAccordionTrigger;
+    readonly triggerComponent = contentChild(KbqAccordionTrigger);
 
     /** @docs-private */
-    @ContentChild(forwardRef(() => KbqAccordionContentDirective), { descendants: true })
-    content: KbqAccordionContentDirective;
+    readonly content = contentChild(forwardRef(() => KbqAccordionContentDirective));
 
     /** The unique AccordionItem id. */
     get id(): string {
@@ -62,10 +58,12 @@ export class KbqAccordionItem implements OnDestroy {
     }
 
     get orientation(): KbqAccordionOrientation {
-        return this.accordion.orientation;
+        return this.accordion.orientation();
     }
 
     /** Whether the AccordionItem is expanded. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get expanded(): boolean {
         return this._expanded;
@@ -78,6 +76,7 @@ export class KbqAccordionItem implements OnDestroy {
             this.expandedChange.emit(expanded);
 
             if (expanded) {
+                // TODO: The 'emit' function requires a mandatory void argument
                 this.opened.emit();
                 /**
                  * In the unique selection dispatcher, the id parameter is the id of the KbqAccordionItem,
@@ -87,10 +86,11 @@ export class KbqAccordionItem implements OnDestroy {
 
                 this.expansionDispatcher.notify(this.value, accordionId);
             } else {
+                // TODO: The 'emit' function requires a mandatory void argument
                 this.closed.emit();
             }
 
-            this.content.toggle();
+            this.content().toggle();
 
             this.accordion.saveItemState(this);
 
@@ -102,6 +102,8 @@ export class KbqAccordionItem implements OnDestroy {
 
     private _expanded = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set value(value: string) {
         this._value = value;
@@ -114,9 +116,11 @@ export class KbqAccordionItem implements OnDestroy {
     private _value?: string;
 
     /** Whether the AccordionItem is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this.accordion.disabled ?? this._disabled;
+        return this.accordion.disabled() ?? this._disabled;
     }
 
     set disabled(value: boolean) {
@@ -126,9 +130,9 @@ export class KbqAccordionItem implements OnDestroy {
     private _disabled = false;
 
     /** Event emitted every time the AccordionItem is closed. */
-    @Output() readonly closed: EventEmitter<void> = new EventEmitter<void>();
+    readonly closed = output<void>();
     /** Event emitted every time the AccordionItem is opened. */
-    @Output() readonly opened: EventEmitter<void> = new EventEmitter<void>();
+    readonly opened = output<void>();
 
     /**
      * Event emitted when the AccordionItem is destroyed.
@@ -141,7 +145,7 @@ export class KbqAccordionItem implements OnDestroy {
      * Primarily used to facilitate two-way binding.
      * @docs-private
      */
-    @Output() readonly expandedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly expandedChange = output<boolean>();
 
     /** Unregister function for expansionDispatcher. */
     private removeUniqueSelectionListener: () => void;
@@ -170,8 +174,6 @@ export class KbqAccordionItem implements OnDestroy {
 
     /** Emits an event for the accordion item being destroyed. */
     ngOnDestroy() {
-        this.opened.complete();
-        this.closed.complete();
         this.destroyed.emit();
         this.destroyed.complete();
         this.removeUniqueSelectionListener();
@@ -179,7 +181,7 @@ export class KbqAccordionItem implements OnDestroy {
     }
 
     focus(): void {
-        this.trigger.focus();
+        this.trigger()?.focus();
     }
 
     /** Toggles the expanded state of the accordion item. */
@@ -211,13 +213,13 @@ export class KbqAccordionItem implements OnDestroy {
     }
 
     disableAnimation() {
-        this.content.disableAnimation();
-        this.triggerComponent.disableAnimation();
+        this.content()?.disableAnimation();
+        this.triggerComponent()?.disableAnimation();
     }
 
     enableAnimation() {
-        this.content.enableAnimation();
-        this.triggerComponent.enableAnimation();
+        this.content()?.enableAnimation();
+        this.triggerComponent()?.enableAnimation();
     }
 
     private subscribeToOpenCloseAllActions(): Subscription {

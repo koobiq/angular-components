@@ -6,7 +6,7 @@
             stroke-linecap="round"
             class="kbq-progress-spinner__circle"
             [attr.r]="svgCircleRadius"
-            [ngStyle]="{ 'stroke-dashoffset': mode === 'determinate' ? dashOffsetPercent : null }"
+            [style]="{ 'stroke-dashoffset': mode() === 'determinate' ? dashOffsetPercent : null }"
         />
     </svg>
 </div>

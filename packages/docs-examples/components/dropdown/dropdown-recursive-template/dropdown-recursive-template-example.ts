@@ -3,10 +3,10 @@ import {
     Component,
     Directive,
     Injector,
-    Input,
     OnInit,
     TemplateRef,
-    ViewContainerRef
+    ViewContainerRef,
+    input
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_DROPDOWN_PANEL, KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -21,13 +21,13 @@ type DropdownItem = {
     selector: '[exampleDropdownOutlet]'
 })
 export class ExampleDropdownPortal implements OnInit {
-    @Input('exampleDropdownOutletContext') context = {};
-    @Input('exampleDropdownOutlet') template: TemplateRef<any>;
+    readonly context = input({}, { alias: 'exampleDropdownOutletContext' });
+    readonly template = input<TemplateRef<any>>(undefined!, { alias: 'exampleDropdownOutlet' });
 
     constructor(private viewContainerRef: ViewContainerRef) {}
 
     ngOnInit() {
-        this.viewContainerRef.createEmbeddedView(this.template, this.context, {
+        this.viewContainerRef.createEmbeddedView(this.template(), this.context(), {
             injector: Injector.create({
                 parent: this.viewContainerRef.injector,
                 // Provides a custom dependency:

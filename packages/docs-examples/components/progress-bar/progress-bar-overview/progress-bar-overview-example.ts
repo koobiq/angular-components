@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 
@@ -11,7 +10,6 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
     selector: 'progress-bar-overview-example',
     imports: [
         KbqProgressBarModule,
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],

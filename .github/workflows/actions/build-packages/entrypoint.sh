@@ -8,10 +8,6 @@ fi
 # Fail fast on errors, unset variables, and failures in piped commands
 set -Eeuo pipefail
 
-echo "::group:: Build CDK ..."
-    yarn run build:cdk
-echo '::endgroup::'
-
 echo "::group:: Build Components ..."
     yarn run build:components
 echo '::endgroup::'

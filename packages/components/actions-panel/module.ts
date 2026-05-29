@@ -8,7 +8,7 @@ const COMPONENTS = [
 
 @NgModule({
     imports: COMPONENTS,
-    exports: COMPONENTS,
-    providers: [KbqActionsPanel]
+    providers: [KbqActionsPanel],
+    exports: COMPONENTS
 })
 export class KbqActionsPanelModule {}

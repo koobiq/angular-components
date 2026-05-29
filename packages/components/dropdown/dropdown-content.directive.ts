@@ -1,15 +1,6 @@
 import { DomPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
-import {
-    ApplicationRef,
-    ComponentFactoryResolver,
-    Directive,
-    inject,
-    Injector,
-    OnDestroy,
-    TemplateRef,
-    ViewContainerRef
-} from '@angular/core';
+import { ApplicationRef, Directive, inject, Injector, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject } from 'rxjs';
 
 /**
@@ -28,7 +19,6 @@ export class KbqDropdownContent implements OnDestroy {
 
     constructor(
         private template: TemplateRef<any>,
-        private componentFactoryResolver: ComponentFactoryResolver,
         private appRef: ApplicationRef,
         private injector: Injector,
         private viewContainerRef: ViewContainerRef
@@ -46,12 +36,7 @@ export class KbqDropdownContent implements OnDestroy {
         this.detach();
 
         if (!this.outlet) {
-            this.outlet = new DomPortalOutlet(
-                this.document.createElement('div'),
-                this.componentFactoryResolver,
-                this.appRef,
-                this.injector
-            );
+            this.outlet = new DomPortalOutlet(this.document.createElement('div'), this.appRef, this.injector);
         }
 
         const element: HTMLElement = this.template.elementRef.nativeElement;

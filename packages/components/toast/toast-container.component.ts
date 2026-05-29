@@ -10,11 +10,11 @@ import {
     Injector,
     NgZone,
     TemplateRef,
-    ViewChild,
     ViewContainerRef,
     ViewEncapsulation,
     ViewRef,
-    forwardRef
+    forwardRef,
+    viewChild
 } from '@angular/core';
 import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
@@ -23,14 +23,14 @@ import { KbqToastData } from './toast.type';
     selector: 'kbq-toast-container',
     template: '<ng-container #container />',
     styleUrls: ['./toast-container.component.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-toast-container'
     }
 })
 export class KbqToastContainerComponent extends CdkScrollable {
-    @ViewChild('container', { static: true, read: ViewContainerRef }) viewContainer: ViewContainerRef;
+    readonly viewContainer = viewChild.required('container', { read: ViewContainerRef });
 
     constructor(
         private injector: Injector,
@@ -52,23 +52,23 @@ export class KbqToastContainerComponent extends CdkScrollable {
 
         this.changeDetectorRef.markForCheck();
 
-        return this.viewContainer.createComponent(componentType, { injector, index });
+        return this.viewContainer().createComponent(componentType, { injector, index });
     }
 
     createTemplate<C>(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<C> {
         const index = onTop ? 0 : undefined;
 
-        return this.viewContainer.createEmbeddedView(template, { $implicit: data }, index);
+        return this.viewContainer().createEmbeddedView(template, { $implicit: data }, index);
     }
 
     remove(viewRef: ViewRef) {
-        const index = this.viewContainer.indexOf(viewRef);
+        const index = this.viewContainer().indexOf(viewRef);
 
         if (index < 0) {
             return;
         }
 
-        this.viewContainer.remove(index);
+        this.viewContainer().remove(index);
     }
 
     getInjector(data: KbqToastData): Injector {

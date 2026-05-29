@@ -1,9 +1,8 @@
-import { AnimationEvent } from '@angular/animations';
+﻿import { AnimationEvent } from '@angular/animations';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DOWN_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
-import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -22,10 +21,11 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    contentChild,
+    input
 } from '@angular/core';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { ESCAPE, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
+import { ESCAPE, FocusKeyManager, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
 import { startWith, switchMap, take } from 'rxjs/operators';
@@ -49,29 +49,29 @@ export class KbqDropdownStaticContent {}
 
 @Component({
     selector: 'kbq-dropdown',
-    imports: [
-        NgClass
-    ],
+    imports: [],
     templateUrl: 'dropdown.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['dropdown.scss', 'dropdown-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqDropdown',
+    encapsulation: ViewEncapsulation.None,
     animations: [
         kbqDropdownAnimations.transformDropdown,
         kbqDropdownAnimations.fadeInItems
     ],
-    providers: [
-        { provide: KBQ_DROPDOWN_PANEL, useExisting: KbqDropdown }
-    ]
+    exportAs: 'kbqDropdown'
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
-    @ContentChild(KbqFormField) private search?: KbqFormField;
+    private readonly search = contentChild(KbqFormField);
 
-    @Input() navigationWithWrap: boolean = false;
+    readonly navigationWithWrap = input<boolean>(false);
 
     /** Position of the dropdown in the X axis. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get xPosition(): KbqDropdownPositionX {
         return this._xPosition;
@@ -87,6 +87,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Position of the dropdown in the Y axis. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get yPosition(): KbqDropdownPositionY {
         return this._yPosition;
@@ -102,6 +104,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Whether the dropdown should overlap its trigger vertically. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get overlapTriggerY(): boolean {
         return this._overlapTriggerY;
@@ -112,6 +116,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Whether the dropdown should overlap its trigger horizontally. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get overlapTriggerX(): boolean {
         return this._overlapTriggerX;
@@ -122,6 +128,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /** Whether the dropdown has a backdrop. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -137,21 +145,27 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * to style the containing dropdown from outside the component.
      * @param classes list of class names
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('class')
     set panelClass(classes: string) {
         const previousPanelClass = this.previousPanelClass;
+        const classList = { ...this.classList };
 
         if (previousPanelClass && previousPanelClass.length) {
-            previousPanelClass.split(' ').forEach((className: string) => (this.classList[className] = false));
+            previousPanelClass.split(' ').forEach((className: string) => (classList[className] = false));
         }
 
         this.previousPanelClass = classes;
 
         if (classes?.length) {
-            classes.split(' ').forEach((className: string) => (this.classList[className] = true));
+            classes.split(' ').forEach((className: string) => (classList[className] = true));
 
             this.elementRef.nativeElement.className = '';
         }
+
+        // Reassign a new object reference so the native `[class]` binding picks up the change.
+        this.classList = classList;
     }
 
     private _xPosition: KbqDropdownPositionX = this.defaultOptions.xPosition;
@@ -161,7 +175,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     private _hasBackdrop: boolean = this.defaultOptions.hasBackdrop;
 
     triggerWidth: string;
-    /** Config object to be passed into the dropdown's ngClass */
+    /** Config object to be passed into the dropdown panel's `[class]` binding */
     classList: { [key: string]: boolean } = {};
 
     /** Current state of the panel animation. */
@@ -180,6 +194,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     direction: Direction;
 
     /** Class to be added to the backdrop element. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() backdropClass: string = this.defaultOptions.backdropClass;
 
     /** @docs-private */
@@ -224,7 +241,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
         this.keyManager = new FocusKeyManager<KbqDropdownItem>(this.directDescendantItems).withTypeAhead();
 
-        if (this.navigationWithWrap) {
+        if (this.navigationWithWrap()) {
             this.keyManager.withWrap();
         }
 
@@ -240,7 +257,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
             )
             .subscribe((focusedItem) => this.keyManager.updateActiveItem(focusedItem as KbqDropdownItem));
 
-        this.search?.inOverlay.set(true);
+        this.search()?.inOverlay.set(true);
     }
 
     ngOnDestroy() {
@@ -326,13 +343,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * @docs-private
      */
     setPositionClasses(posX: KbqDropdownPositionX = this.xPosition, posY: KbqDropdownPositionY = this.yPosition) {
-        const classes = this.classList;
-
-        classes['kbq-dropdown-before'] = posX === 'before';
-        classes['kbq-dropdown-after'] = posX === 'after';
-        classes['kbq-dropdown-center'] = posX === 'center';
-        classes['kbq-dropdown-above'] = posY === 'above';
-        classes['kbq-dropdown-below'] = posY === 'below';
+        // Reassign a new object reference so the native `[class]` binding picks up the change.
+        this.classList = {
+            ...this.classList,
+            'kbq-dropdown-before': posX === 'before',
+            'kbq-dropdown-after': posX === 'after',
+            'kbq-dropdown-center': posX === 'center',
+            'kbq-dropdown-above': posY === 'above',
+            'kbq-dropdown-below': posY === 'below'
+        };
     }
 
     /** Starts the enter animation. */

@@ -1,15 +1,14 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { NgClass } from '@angular/common';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    contentChildren,
     DestroyRef,
     Directive,
     ElementRef,
-    EventEmitter,
     Host,
     inject,
     Inject,
@@ -17,15 +16,19 @@ import {
     Input,
     numberAttribute,
     Optional,
-    Output,
+    output,
     QueryList,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
-import { KBQ_OPTION_PARENT_COMPONENT, KbqOptgroup, KbqOption } from '@koobiq/components/core';
+import {
+    ActiveDescendantKeyManager,
+    KBQ_OPTION_PARENT_COMPONENT,
+    KbqOptgroup,
+    KbqOption
+} from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { delay, filter } from 'rxjs/operators';
 
@@ -70,23 +73,21 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
 
 @Component({
     selector: 'kbq-autocomplete',
-    imports: [
-        NgClass
-    ],
+    imports: [],
     templateUrl: 'autocomplete.html',
     styleUrls: ['autocomplete.scss', 'autocomplete-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqAutocomplete',
-    host: {
-        class: 'kbq-autocomplete'
-    },
     providers: [
         {
             provide: KBQ_OPTION_PARENT_COMPONENT,
             useExisting: KbqAutocomplete
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-autocomplete'
+    },
+    exportAs: 'kbqAutocomplete'
 })
 export class KbqAutocomplete implements AfterContentInit {
     private readonly destroyRef = inject(DestroyRef);
@@ -99,43 +100,50 @@ export class KbqAutocomplete implements AfterContentInit {
     /** Whether the autocomplete panel should be visible, depending on option length. */
     showPanel: boolean = false;
 
-    @ViewChild(TemplateRef, { static: true }) template: TemplateRef<any>;
+    readonly template = viewChild.required(TemplateRef);
 
-    @ViewChild('panel', { static: false }) panel: ElementRef;
+    readonly panel = viewChild.required<ElementRef>('panel');
 
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
 
-    @ContentChildren(KbqOptgroup) optionGroups: QueryList<KbqOptgroup>;
+    readonly optionGroups = contentChildren(KbqOptgroup);
 
     /** Function that maps an option's control value to its display value in the trigger. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() displayWith: ((value: any) => string) | null = null;
 
     /**
      * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
      * match the width of its host.
      */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() panelWidth: string | number;
 
     /**
      * Minimum width of the panel in pixels.
      * When panelWidth is not set, the panel will be at least as wide as its host and no less than panelMinWidth.
      */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: numberAttribute }) panelMinWidth: number = 200;
 
     /** Event that is emitted whenever an option from the list is selected. */
-    @Output() readonly optionSelected: EventEmitter<KbqAutocompleteSelectedEvent> =
-        new EventEmitter<KbqAutocompleteSelectedEvent>();
+    readonly optionSelected = output<KbqAutocompleteSelectedEvent>();
 
     /** Event that is emitted when the autocomplete panel is opened. */
-    @Output() readonly opened: EventEmitter<void> = new EventEmitter<void>();
+    readonly opened = output<void>();
 
     /** Event that is emitted when the autocomplete panel is closed. */
-    @Output() readonly closed: EventEmitter<void> = new EventEmitter<void>();
+    readonly closed = output<void>();
 
     /**
      * Takes classes set on the host kbq-autocomplete element and applies them to the panel
      * inside the overlay container to allow for easy styling.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('class')
     get classList() {
         return this._classList;
@@ -143,7 +151,11 @@ export class KbqAutocomplete implements AfterContentInit {
 
     set classList(value: string) {
         if (value && value.length) {
-            value.split(' ').forEach((className) => (this._classList[className.trim()] = true));
+            const classList = { ...this._classList };
+
+            value.split(' ').forEach((className) => (classList[className.trim()] = true));
+            // Reassign a new object reference so the native `[class]` binding picks up the change.
+            this._classList = classList;
 
             this.elementRef.nativeElement.className = '';
         }
@@ -155,6 +167,8 @@ export class KbqAutocomplete implements AfterContentInit {
      * Whether the first option should be highlighted when the autocomplete panel is opened.
      * Can be configured globally through the `KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS` token.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get autoActiveFirstOption(): boolean {
         return this._autoActiveFirstOption;
@@ -176,6 +190,8 @@ export class KbqAutocomplete implements AfterContentInit {
 
     private _isOpen: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get openOnFocus(): boolean {
         return this._openOnFocus;
@@ -200,8 +216,9 @@ export class KbqAutocomplete implements AfterContentInit {
         this.keyManager = new ActiveDescendantKeyManager<KbqOption>(this.options);
         this.setVisibility();
 
-        this.parentFormField?.control.ngControl?.valueChanges
-            ?.pipe(
+        this.parentFormField
+            ?.control()
+            .ngControl?.valueChanges?.pipe(
                 delay(0),
                 filter((value) => value === null || value === undefined || value === ''),
                 takeUntilDestroyed(this.destroyRef)
@@ -212,19 +229,26 @@ export class KbqAutocomplete implements AfterContentInit {
     }
 
     setScrollTop(scrollTop: number): void {
-        if (this.panel) {
-            this.panel.nativeElement.scrollTop = scrollTop;
+        const panel = this.panel();
+
+        if (panel) {
+            panel.nativeElement.scrollTop = scrollTop;
         }
     }
 
     getScrollTop(): number {
-        return this.panel ? this.panel.nativeElement.scrollTop : 0;
+        const panel = this.panel();
+
+        return panel ? panel.nativeElement.scrollTop : 0;
     }
 
     setVisibility() {
         this.showPanel = !!this.options.length;
-        this._classList['kbq-autocomplete_visible'] = this.showPanel;
-        this._classList['kbq-autocomplete_hidden'] = !this.showPanel;
+        this._classList = {
+            ...this._classList,
+            'kbq-autocomplete_visible': this.showPanel,
+            'kbq-autocomplete_hidden': !this.showPanel
+        };
 
         this.updateFocusClass();
 
@@ -244,6 +268,9 @@ export class KbqAutocomplete implements AfterContentInit {
     }
 
     private updateFocusClass() {
-        this._classList['cdk-keyboard-focused'] = this.parentFormField?.focusOrigin === 'keyboard';
+        this._classList = {
+            ...this._classList,
+            'cdk-keyboard-focused': this.parentFormField?.focusOrigin === 'keyboard'
+        };
     }
 }

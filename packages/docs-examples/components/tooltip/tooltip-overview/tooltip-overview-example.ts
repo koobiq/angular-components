@@ -18,9 +18,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <i kbq-icon="kbq-plus_16"></i>
         </button>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-row layout-align-center-center'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class TooltipOverviewExample {}

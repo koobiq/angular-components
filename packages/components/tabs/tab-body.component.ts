@@ -16,10 +16,12 @@ import {
     OnInit,
     Optional,
     Output,
-    ViewChild,
     ViewContainerRef,
     ViewEncapsulation,
-    forwardRef
+    forwardRef,
+    input,
+    output,
+    viewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -54,15 +56,17 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     imports: [CdkScrollable, forwardRef(() => KbqTabBodyPortal)],
     templateUrl: './tab-body.html',
     styleUrl: './tab-body.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [kbqTabsAnimations.translateTab],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-body'
-    }
+    },
+    animations: [kbqTabsAnimations.translateTab]
 })
 export class KbqTabBody implements OnInit, OnDestroy {
     /** The shifted index position of the tab body, where zero represents the active center tab. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set position(position: number) {
         this.positionIndex = position;
@@ -73,7 +77,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     bodyPosition: KbqTabBodyPositionState;
 
     /** Event emitted when the tab begins to animate towards the center as the active tab. */
-    @Output() readonly onCentering: EventEmitter<number> = new EventEmitter<number>();
+    readonly onCentering = output<number>();
 
     /** Event emitted before the centering of the tab begins. */
     @Output() readonly beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -82,21 +86,23 @@ export class KbqTabBody implements OnInit, OnDestroy {
     @Output() readonly afterLeavingCenter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Event emitted when the tab completes its animation towards the center. */
-    @Output() readonly onCentered: EventEmitter<void> = new EventEmitter<void>(true);
+    readonly onCentered = output<void>();
 
     /** The portal host inside of this container into which the tab body content will be loaded. */
-    @ViewChild(CdkPortalOutlet, { static: false }) portalHost: CdkPortalOutlet;
+    readonly portalHost = viewChild.required(CdkPortalOutlet);
 
     /** The tab body content to display. */
-    @Input() content: TemplatePortal;
+    readonly content = input<TemplatePortal>(undefined!);
 
     /** Position that will be used when the tab is immediately becoming visible after creation. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() origin: number;
 
     // Note that the default value will always be overwritten by `KbqTabBody`, but we need one
     // anyway to prevent the animations module from throwing an error if the body is used on its own.
     /** Duration for the tab's animation. */
-    @Input() animationDuration: string = '0ms';
+    readonly animationDuration = input<string>('0ms');
 
     /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
     private positionIndex: number;
@@ -144,6 +150,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     onTranslateTabComplete(e: AnimationEvent): void {
         // If the transition to the center is complete, emit an event.
         if (this.isCenterPosition(e.toState) && this.isCenterPosition(this.bodyPosition)) {
+            // TODO: The 'emit' function requires a mandatory void argument
             this.onCentered.emit();
         }
 
@@ -217,7 +224,7 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
             .pipe(startWith(this.host.isCenterPosition(this.host.bodyPosition)))
             .subscribe((isCentering: boolean) => {
                 if (isCentering && !this.hasAttached()) {
-                    this.attach(this.host.content);
+                    this.attach(this.host.content());
                 }
             });
 

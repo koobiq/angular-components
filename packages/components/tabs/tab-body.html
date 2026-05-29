@@ -4,7 +4,7 @@
     class="kbq-tab-body__content kbq-scrollbar kbq-hide-nested-popup"
     [@translateTab]="{
         value: bodyPosition,
-        params: { animationDuration: animationDuration }
+        params: { animationDuration: animationDuration() }
     }"
     (@translateTab.done)="onTranslateTabComplete($event)"
     (@translateTab.start)="onTranslateTabStarted($event)"

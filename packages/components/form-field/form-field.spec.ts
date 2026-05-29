@@ -12,7 +12,6 @@ import {
 import { By } from '@angular/platform-browser';
 import {
     ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
     PasswordValidators,
     ShowOnFormSubmitErrorStateMatcher,
     ShowRequiredOnSubmitErrorStateMatcher
@@ -100,8 +99,7 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
 
 @Component({
     selector: 'input-form-field-with-hint-and-error',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
@@ -116,8 +114,7 @@ export class InputFormFieldWithHintAndError {
 
 @Component({
     selector: 'input-form-field-with-prefix-and-suffix',
-    imports: [KbqFormFieldModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule],
     template: `
         <kbq-form-field>
             <input kbqInput />
@@ -130,8 +127,7 @@ export class InputFormFieldWithPrefixAndSuffix {}
 
 @Component({
     selector: 'input-form-field-with-cleaner',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
@@ -146,7 +142,6 @@ export class InputFormFieldWithCleaner {
 @Component({
     selector: 'input-form-field-without-form-field-control',
     imports: [KbqFormFieldModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <input [formControl]="control" />
@@ -159,8 +154,7 @@ export class InputFormFieldWithoutFormFieldControl {
 
 @Component({
     selector: 'input-form-field-with-label',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [ReactiveFormsModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>
@@ -180,8 +174,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
     selector: 'input-form-field-with-custom-error-state-matcher',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
@@ -201,8 +194,7 @@ export class InputFormFieldWithCustomErrorStateMatcher {
 
 @Component({
     selector: 'input-form-field-with-border-customization',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [ReactiveFormsModule, KbqInputModule],
     template: `
         <kbq-form-field [noBorders]="noBorders">
             <input kbqInput />
@@ -215,8 +207,7 @@ export class InputFormFieldWithBorderCustomization {
 
 @Component({
     selector: 'password-form-field',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [ReactiveFormsModule, KbqInputModule],
     template: `
         <kbq-form-field>
             <input kbqInputPassword [formControl]="formControl" />
@@ -239,20 +230,8 @@ export class PasswordFormField {
 }
 
 @Component({
-    selector: 'input-form-field-with-legacy-validation-directive',
-    imports: [KbqFormFieldModule, KbqInputModule],
-    template: `
-        <kbq-form-field>
-            <input kbqInput />
-        </kbq-form-field>
-    `
-})
-export class InputFormFieldWithLegacyValidationDirective {}
-
-@Component({
     selector: 'input-form-field-in-overlay',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [ReactiveFormsModule, KbqInputModule],
     template: `
         <kbq-form-field [inOverlay]="inOverlay">
             <input kbqInput />
@@ -265,8 +244,7 @@ export class InputFormFieldInOverlay {
 
 @Component({
     selector: 'input-form-field-horizontal',
-    imports: [KbqFormFieldModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule],
     template: `
         <kbq-form-field [horizontal]="horizontal">
             <kbq-label>Label</kbq-label>
@@ -280,8 +258,7 @@ export class InputFormFieldHorizontal {
 
 @Component({
     selector: 'input-form-field-with-class-customization',
-    imports: [KbqFormFieldModule, KbqInputModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule],
     template: `
         <kbq-form-field [labelClass]="labelClass" [contentClass]="contentClass">
             <kbq-label>Label</kbq-label>
@@ -296,8 +273,7 @@ export class InputFormFieldWithClassCustomization {
 
 @Component({
     selector: 'input-form-field-with-invalid-or-submit-matcher',
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="formGroup" (ngSubmit)="submitted = true">
             <kbq-form-field>
@@ -626,22 +602,6 @@ describe(KbqFormField.name, () => {
         input.dispatchEvent(new Event('input'));
 
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
-    });
-
-    it('should apply legacy KbqValidateDirective by default', () => {
-        const { debugElement } = createComponent(InputFormFieldWithLegacyValidationDirective);
-
-        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_has-validate-directive']).toBeTruthy();
-        expect(getInputDebugElement(debugElement).classes['kbq-control_has-validate-directive']).toBeTruthy();
-    });
-
-    it('should disable legacy KbqValidateDirective by kbqDisableLegacyValidationDirective() provider', () => {
-        const { debugElement } = createComponent(InputFormFieldWithLegacyValidationDirective, [
-            kbqDisableLegacyValidationDirectiveProvider()
-        ]);
-
-        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_has-validate-directive']).toBeFalsy();
-        expect(getInputDebugElement(debugElement).classes['kbq-control_has-validate-directive']).toBeFalsy();
     });
 
     it('should add .kbq-form-field_in-overlay for KbqFormField', () => {

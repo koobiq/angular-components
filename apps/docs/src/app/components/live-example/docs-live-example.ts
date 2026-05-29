@@ -5,7 +5,6 @@ import {
     afterNextRender,
     ApplicationRef,
     Component,
-    ComponentFactoryResolver,
     ElementRef,
     EventEmitter,
     inject,
@@ -96,7 +95,6 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
     private readonly platformId = inject(PLATFORM_ID);
     private readonly appRef = inject(ApplicationRef);
-    private readonly componentFactoryResolver = inject(ComponentFactoryResolver);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
     private readonly viewContainerRef = inject(ViewContainerRef);
@@ -147,7 +145,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
                     this.initCodeSnippets();
 
                     // Emit after dynamically created components have stabilised.
-                    this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.next());
+                    this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.emit());
                 },
                 { injector: this.injector }
             );
@@ -163,13 +161,13 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
         this.documentContent.set(this.domSanitizer.bypassSecurityTrustHtml(errorHtml));
 
-        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRenderFailed.next());
+        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRenderFailed.emit());
     }
 
     /** Instantiate a ExampleViewer for each example. */
     private loadComponents(componentName: string, componentClass: any) {
         this.nativeElement.querySelectorAll(`[${componentName}]`).forEach((element: Element) => {
-            const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
+            const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
             const examplePortal: ComponentPortal<any> = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
 
@@ -188,7 +186,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
             element.innerHTML = '';
 
-            const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
+            const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
 
             this.codeTemplate.attach(portalHost, {
                 $implicit: outerHTML,
@@ -210,7 +208,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
             element.innerHTML = '';
 
-            const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
+            const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
 
             this.codeSnippetTemplate.attach(portalHost, { $implicit: innerHTML, textContent });
             this.portalHosts.push(portalHost);

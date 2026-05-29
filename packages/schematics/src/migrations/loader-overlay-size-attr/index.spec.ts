@@ -1,6 +1,6 @@
 import { workspaces } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
-import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { createTestApp } from '../../utils/testing';
@@ -9,10 +9,16 @@ import { Schema } from './schema';
 const collectionPath = path.join(__dirname, '../../collection.json');
 const SCHEMATIC_NAME = 'loader-overlay-size-attr';
 
-const getProjectContentPaths = (project: workspaces.ProjectDefinition) => {
+/**
+ * `@schematics/angular:application` changed file names across major versions
+ * (`app.component.{ts,html}` ↔ `app.{ts,html}`); pick whichever generator produced.
+ */
+const getProjectContentPaths = (project: workspaces.ProjectDefinition, tree: Tree | UnitTestTree) => {
+    const root = `/${project.root}/src/app`;
+
     return {
-        templatePath: `/${project.root}/src/app/app.component.html`,
-        tsPath: `/${project.root}/src/app/app.component.ts`,
+        templatePath: tree.exists(`${root}/app.html`) ? `${root}/app.html` : `${root}/app.component.html`,
+        tsPath: tree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts`,
         stylesPath: `/${project.root}/src/styles.scss`
     };
 };
@@ -38,7 +44,7 @@ describe(SCHEMATIC_NAME, () => {
 
     it('should run migration for external html', async () => {
         const [firstProjectKey] = projects.keys();
-        const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!);
+        const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
 
         const template =
             '<div>' +
@@ -60,7 +66,7 @@ describe(SCHEMATIC_NAME, () => {
     it('should throw message if replaced attr value is not static', async () => {
         const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
         const [firstProjectKey] = projects.keys();
-        const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!);
+        const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
 
         // Set up the template with a non-static attribute value
         const nonStaticTemplate = '<div><kbq-loader-overlay [compact]="VARIABLE"></kbq-loader-overlay></div>';

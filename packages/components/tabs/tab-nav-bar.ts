@@ -13,6 +13,7 @@ import {
     forwardRef,
     inject,
     Input,
+    input,
     numberAttribute,
     OnDestroy,
     QueryList,
@@ -44,19 +45,19 @@ let nextUniqueId = 0;
         // KbqTabLink is a directive and can't have self styles, so we need to include its styles here.
         './tab-link.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTabNavBar',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-nav-bar',
-        '[class.kbq-tab-nav-bar_filled]': '!transparent',
-        '[class.kbq-tab-nav-bar_transparent]': 'transparent',
-        '[class.kbq-tab-nav-bar_on-background]': '!onSurface',
-        '[class.kbq-tab-nav-bar_on-surface]': 'onSurface',
-        '[class.kbq-tab-header_underlined]': 'underlined',
+        '[class.kbq-tab-nav-bar_filled]': '!transparent()',
+        '[class.kbq-tab-nav-bar_transparent]': 'transparent()',
+        '[class.kbq-tab-nav-bar_on-background]': '!onSurface()',
+        '[class.kbq-tab-nav-bar_on-surface]': 'onSurface()',
+        '[class.kbq-tab-header_underlined]': 'underlined()',
         '[class.kbq-tab-header__pagination-controls_enabled]': 'showPaginationControls',
         '[attr.role]': 'role'
-    }
+    },
+    exportAs: 'kbqTabNavBar'
 })
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
     @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;
@@ -66,19 +67,19 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     @ContentChildren(forwardRef(() => KbqTabLink), { descendants: true }) readonly items: QueryList<KbqTabLink>;
 
     /** Whether the nav bar background should be transparent. */
-    @Input({ transform: booleanAttribute }) transparent: boolean = false;
-    @Input({ transform: booleanAttribute }) onSurface: boolean = false;
+    readonly transparent = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly onSurface = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Whether the nav bar should be underlined. */
-    @Input({ transform: booleanAttribute }) underlined: boolean = false;
+    readonly underlined = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /**
      * Associated tab panel controlled by the nav bar.
      */
-    @Input() tabNavPanel?: KbqTabNavPanel;
+    readonly tabNavPanel = input<KbqTabNavPanel>();
 
     get role(): string | null {
-        return this.tabNavPanel ? 'tablist' : this.elementRef.nativeElement.getAttribute('role');
+        return this.tabNavPanel() ? 'tablist' : this.elementRef.nativeElement.getAttribute('role');
     }
 
     protected get activeTabOffsetWidth(): number | undefined {
@@ -114,8 +115,10 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
                 this.selectedIndex = i;
                 this.changeDetectorRef.markForCheck();
 
-                if (this.tabNavPanel) {
-                    this.tabNavPanel.activeTabId = items[i].id;
+                const tabNavPanel = this.tabNavPanel();
+
+                if (tabNavPanel) {
+                    tabNavPanel.activeTabId = items[i].id;
                 }
 
                 return;
@@ -132,7 +135,6 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
  */
 @Directive({
     selector: '[kbqTabLink], [kbq-tab-link]',
-    exportAs: 'kbqTabLink',
     host: {
         class: 'kbq-tab-link',
         '[class.kbq-selected]': 'active',
@@ -152,13 +154,18 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
 
         '(focus)': 'handleFocus()',
         '(keydown)': 'handleKeydown($event)'
-    }
+    },
+    exportAs: 'kbqTabLink'
 })
 export class KbqTabLink implements OnDestroy, AfterViewInit {
     /** Unique id for the link. */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input() id = `kbq-tab-link-${nextUniqueId++}`;
 
     /** Whether the link is active. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get active(): boolean {
         return this._active;
@@ -179,16 +186,20 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
     }
 
     get underlined(): boolean {
-        return this.tabNavBar.underlined;
+        return this.tabNavBar.underlined();
     }
 
     /** Whether the tab link is disabled. */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input({ transform: booleanAttribute }) disabled: boolean = false;
 
     /** Link tab index. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
-        if (this.tabNavBar.tabNavPanel) {
+        if (this.tabNavBar.tabNavPanel()) {
             return this.active && !this.disabled ? this._tabIndex : -1;
         } else {
             return this.disabled ? -1 : this._tabIndex;
@@ -203,7 +214,7 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
 
     /** Link aria-selected attribute value. */
     protected get ariaSelected(): string | null {
-        if (this.tabNavBar.tabNavPanel) {
+        if (this.tabNavBar.tabNavPanel()) {
             return this.active ? 'true' : 'false';
         } else {
             return this.elementRef.nativeElement.getAttribute('aria-selected');
@@ -212,19 +223,19 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
 
     /** Link role attribute value. */
     protected get role(): string | null {
-        return this.tabNavBar.tabNavPanel ? 'tab' : this.elementRef.nativeElement.getAttribute('role');
+        return this.tabNavBar.tabNavPanel() ? 'tab' : this.elementRef.nativeElement.getAttribute('role');
     }
 
     /** Link aria-controls attribute value. */
     protected get ariaControls(): string | null {
-        return this.tabNavBar.tabNavPanel
-            ? this.tabNavBar.tabNavPanel?.id
-            : this.elementRef.nativeElement.getAttribute('aria-controls');
+        const tabNavPanel = this.tabNavBar.tabNavPanel();
+
+        return tabNavPanel ? tabNavPanel?.id() : this.elementRef.nativeElement.getAttribute('aria-controls');
     }
 
     /** Link aria-current attribute value. */
     protected get ariaCurrent(): string | null {
-        return this.active && !this.tabNavBar.tabNavPanel ? 'page' : null;
+        return this.active && !this.tabNavBar.tabNavPanel() ? 'page' : null;
     }
 
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -279,7 +290,7 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
         if (event.keyCode === SPACE || event.keyCode === ENTER) {
             if (this.disabled) {
                 event.preventDefault();
-            } else if (this.tabNavBar.tabNavPanel) {
+            } else if (this.tabNavBar.tabNavPanel()) {
                 // Only prevent the default action on space since it can scroll the page.
                 // Don't prevent enter since it can break link navigation.
                 if (event.keyCode === SPACE) {
@@ -297,19 +308,19 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
  */
 @Directive({
     selector: '[kbqTabNavPanel]',
-    exportAs: 'kbqTabNavPanel',
     host: {
         class: 'kbq-tab-nav-panel',
 
-        '[attr.id]': 'id',
+        '[attr.id]': 'id()',
         '[attr.aria-labelledby]': 'activeTabId',
 
         role: 'tabpanel'
-    }
+    },
+    exportAs: 'kbqTabNavPanel'
 })
 export class KbqTabNavPanel {
     /** Unique id for the tab panel. */
-    @Input() id = `kbq-tab-nav-panel-${nextUniqueId++}`;
+    readonly id = input(`kbq-tab-nav-panel-${nextUniqueId++}`);
 
     /** Id of the active tab in the nav bar. */
     activeTabId?: string;

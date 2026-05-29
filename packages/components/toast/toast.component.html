@@ -7,7 +7,7 @@
                         kbq-icon="kbq-circle-info_16"
                         class="kbq-toast__icon"
                         [color]="$any(data.style)"
-                        [ngClass]="data.iconClass"
+                        [class]="data.iconClass"
                     ></i>
                 }
                 @case ('success') {
@@ -15,7 +15,7 @@
                         kbq-icon="kbq-circle-check_16"
                         class="kbq-toast__icon"
                         [color]="$any(data.style)"
-                        [ngClass]="data.iconClass"
+                        [class]="data.iconClass"
                     ></i>
                 }
                 @case ('warning') {
@@ -23,7 +23,7 @@
                         kbq-icon="kbq-triangle-exclamation_16"
                         class="kbq-toast__icon"
                         [color]="$any(data.style)"
-                        [ngClass]="data.iconClass"
+                        [class]="data.iconClass"
                     ></i>
                 }
                 @case ('error') {
@@ -31,7 +31,7 @@
                         kbq-icon="kbq-triangle-exclamation_16"
                         class="kbq-toast__icon"
                         [color]="$any(data.style)"
-                        [ngClass]="data.iconClass"
+                        [class]="data.iconClass"
                     ></i>
                 }
             }
@@ -52,8 +52,7 @@
         >
             @if (isTemplateRef(data.title)) {
                 <ng-container [ngTemplateOutlet]="$any(data.title)" [ngTemplateOutletContext]="{ $implicit }" />
-            }
-            @if (!isTemplateRef(data.title)) {
+            } @else {
                 <p>{{ data.title }}</p>
             }
         </div>
@@ -70,7 +69,7 @@
                 <ng-container [ngTemplateOutlet]="$any(data.caption)" [ngTemplateOutletContext]="{ $implicit }" />
             }
             <!-- prettier-ignore -->
-            @if (!isTemplateRef(data.caption)) {{{ data.caption }}}
+            @else {{{ data.caption }}}
         </div>
     }
 
@@ -80,7 +79,7 @@
                 <ng-container [ngTemplateOutlet]="$any(data.content)" [ngTemplateOutletContext]="{ $implicit }" />
             }
             <!-- prettier-ignore -->
-            @if (!isTemplateRef(data.content)) {{{ data.content }}}
+            @else {{{ data.content }}}
         </div>
     }
 
@@ -88,8 +87,7 @@
         <div class="kbq-toast__actions">
             @if (isTemplateRef(data.actions)) {
                 <ng-container [ngTemplateOutlet]="$any(data.actions)" [ngTemplateOutletContext]="{ $implicit }" />
-            }
-            @if (!isTemplateRef(data.actions)) {
+            } @else {
                 {{ data.actions }}
             }
         </div>

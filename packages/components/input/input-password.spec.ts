@@ -1,8 +1,8 @@
-import { Component, Provider, Type, ViewChild } from '@angular/core';
+﻿import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqFormFieldModule, KbqPasswordHint, KbqPasswordToggle, PasswordRules } from '@koobiq/components/form-field';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqInputModule, KbqInputPassword } from './index';
@@ -31,7 +31,6 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -69,7 +68,6 @@ class KbqPasswordInputDefault {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -93,7 +91,6 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -109,7 +106,7 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
     `
 })
 class KbqPasswordInputCustomPasswordRule {
-    @ViewChild(KbqPasswordHint) passwordHint: KbqPasswordHint;
+    readonly passwordHint = viewChild.required(KbqPasswordHint);
 
     disabled = false;
 
@@ -129,8 +126,7 @@ class KbqPasswordInputCustomPasswordRule {
 @Component({
     imports: [
         ReactiveFormsModule,
-        KbqInputModule,
-        KbqFormFieldModule
+        KbqInputModule
     ],
     template: `
         <form [formGroup]="form">
@@ -210,20 +206,29 @@ describe('KbqPasswordInput', () => {
         expect(kbqPasswordHints.length).toBe(5);
     });
 
-    it('should throw Error if custom password rule selected and verification method not provided', fakeAsync(() => {
+    it('should throw Error if custom password rule selected and verification method not provided', () => {
+        // Same Angular-20 pattern as input-number's stepper test: turn off
+        // ComponentFixtureAutoDetect so the lifecycle throw originates from our
+        // explicit detectChanges() call inside the expect-to-throw wrapper.
         jest.spyOn(console, 'error').mockImplementation(() => {});
 
-        const fixture = createComponent(KbqPasswordInputCustomPasswordRulesUndefined);
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            imports: [
+                FormsModule,
+                ReactiveFormsModule,
+                KbqFormFieldModule,
+                KbqInputModule,
+                KbqToolTipModule,
+                KbqPasswordInputCustomPasswordRulesUndefined
+            ],
+            providers: [{ provide: ComponentFixtureAutoDetect, useValue: false }]
+        }).compileComponents();
 
-        expect(() => {
-            try {
-                fixture.detectChanges();
-                flush();
-            } catch {
-                flush();
-            }
-        }).toThrow('You should set [regex] or [checkRule] for PasswordRules.Custom');
-    }));
+        const fixture = TestBed.createComponent(KbqPasswordInputCustomPasswordRulesUndefined);
+
+        expect(() => fixture.detectChanges()).toThrow('You should set [regex] or [checkRule] for PasswordRules.Custom');
+    });
 
     it('should provide custom password rule via callback', fakeAsync(() => {
         const valueToTest = 'TestValue';
@@ -237,9 +242,9 @@ describe('KbqPasswordInput', () => {
         fixture.componentInstance.value = valueToTest;
         dispatchFakeEvent(input, 'input');
 
-        expect(fixture.componentInstance.passwordHint.customCheckRule).toBeTruthy();
-        expect(fixture.componentInstance.passwordHint.hasError).toEqual(
-            fixture.componentInstance.passwordHint.customCheckRule(valueToTest)
+        expect(fixture.componentInstance.passwordHint().customCheckRule()).toBeTruthy();
+        expect(fixture.componentInstance.passwordHint().hasError).toEqual(
+            fixture.componentInstance.passwordHint().customCheckRule()(valueToTest)
         );
     }));
 

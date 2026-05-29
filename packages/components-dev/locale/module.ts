@@ -9,7 +9,6 @@ import {
     ThemePalette
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -23,14 +22,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqButtonModule,
         FormsModule,
         KbqDropdownModule,
-        KbqFormFieldModule,
         KbqOptionModule,
         KbqSelectModule
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     themePalette = ThemePalette;

@@ -1,4 +1,4 @@
-import { JsonPipe } from '@angular/common';
+import { JsonPipe, LowerCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
     FormsModule,
@@ -10,7 +10,6 @@ import {
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
@@ -36,19 +35,19 @@ export class DevExamples {}
         KbqTimepickerModule,
         KbqDatepickerModule,
         KbqToolTipModule,
-        KbqFormFieldModule,
         KbqLuxonDateModule,
         ReactiveFormsModule,
         KbqRadioModule,
         JsonPipe,
+        LowerCasePipe,
         DevLocaleSelector,
         KbqIcon,
         DevExamples
     ],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     timeFormats = TimeFormats;

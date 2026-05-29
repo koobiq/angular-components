@@ -27,10 +27,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
         <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class TooltipStyleExample {
     KbqComponentColors = KbqComponentColors;

@@ -1,10 +1,8 @@
-import { Component, LOCALE_ID } from '@angular/core';
+﻿import { Component, LOCALE_ID } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
-import { ENTER } from '@koobiq/cdk/keycodes';
-import { dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, ENTER, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { KbqCalendar } from './calendar.component';
 import { KbqDatepickerIntl } from './datepicker-intl';
@@ -217,7 +215,7 @@ describe('KbqCalendar', () => {
 
         it('should re-render the month view when the minDate changes', () => {
             fixture.detectChanges();
-            const initSpyFn = jest.spyOn(calendarInstance.monthView, 'init');
+            const initSpyFn = jest.spyOn(calendarInstance.monthView(), 'init');
 
             testComponent.minDate = adapter.createDate(2017, 10, 1);
             fixture.detectChanges();
@@ -227,7 +225,7 @@ describe('KbqCalendar', () => {
 
         it('should re-render the month view when the maxDate changes', () => {
             fixture.detectChanges();
-            const initSpyFn = jest.spyOn(calendarInstance.monthView, 'init');
+            const initSpyFn = jest.spyOn(calendarInstance.monthView(), 'init');
 
             testComponent.maxDate = adapter.createDate(2017, 11, 1);
             fixture.detectChanges();
@@ -378,9 +376,7 @@ class CalendarWithDateFilter {
 
     constructor(public adapter: DateAdapter<DateTime>) {}
 
-    dateFilter(date: DateTime) {
-        return !(this.adapter.getDate(date) % 2) && this.adapter.getMonth(date) !== 10;
-    }
+    dateFilter = (date: DateTime): boolean => !(this.adapter.getDate(date) % 2) && this.adapter.getMonth(date) !== 10;
 }
 
 @Component({

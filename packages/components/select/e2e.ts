@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -39,10 +39,10 @@ import { KbqSelectModule } from './select.module';
             padding: 8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eSelectStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eSelectStates {}
 
@@ -81,10 +81,10 @@ export class E2eSelectStates {}
             padding: 8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eMultiselectStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eMultiSelectStates {}
 
@@ -124,10 +124,10 @@ export class E2eMultiSelectStates {}
             padding: 8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eMultilineSelectStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eMultilineSelectStates {}
 
@@ -142,7 +142,7 @@ export class E2eMultilineSelectStates {}
     template: `
         <kbq-form-field style="width: 200px">
             <kbq-select data-testid="e2eSelect" [value]="'selected'">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [ngModel]="''" />
                     <kbq-cleaner />
@@ -174,10 +174,10 @@ export class E2eMultilineSelectStates {}
             padding: 8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eSelectWithSearchAndFooter'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eSelectWithSearchAndFooter {}
 
@@ -221,10 +221,10 @@ const POSITIONING_FOODS = [
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eSelectPositioning'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eSelectPositioning {
     readonly foods = POSITIONING_FOODS;
@@ -257,10 +257,10 @@ export class E2eSelectPositioning {
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eMultiSelectPositioning'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eMultiSelectPositioning {
     readonly foods = POSITIONING_FOODS;
@@ -293,10 +293,10 @@ export class E2eMultiSelectPositioning {
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eSelectWithGroupsPositioning'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eSelectWithGroupsPositioning {
     readonly control = new UntypedFormControl();
@@ -359,11 +359,11 @@ export class E2eSelectWithGroupsPositioning {
             padding: 16px;
         }
     `,
+    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eSelectRtlPositioning'
-    },
-    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eSelectRtlPositioning {
     readonly foods = POSITIONING_FOODS;
@@ -396,11 +396,11 @@ export class E2eSelectRtlPositioning {
             padding: 16px;
         }
     `,
+    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eMultiSelectRtlPositioning'
-    },
-    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eMultiSelectRtlPositioning {
     readonly foods = POSITIONING_FOODS;
@@ -434,11 +434,11 @@ export class E2eMultiSelectRtlPositioning {
             padding: 16px;
         }
     `,
+    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eSelectWithGroupsRtlPositioning'
-    },
-    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eSelectWithGroupsRtlPositioning {
     readonly control = new UntypedFormControl();
@@ -491,10 +491,10 @@ export class E2eSelectWithGroupsRtlPositioning {
             width: 200px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eMultiSelectNarrow'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eMultiSelectNarrow {
     readonly foods = POSITIONING_FOODS;
@@ -531,10 +531,10 @@ export class E2eMultiSelectNarrow {
             width: 200px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eVirtualScrollMultiSelectNarrow'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eVirtualScrollMultiSelectNarrow {
     readonly itemSize = 32;
@@ -552,8 +552,8 @@ export class E2eVirtualScrollMultiSelectNarrow {
         'Biysk'
     ];
 
-    @ViewChild(KbqSelect, { static: true }) select!: KbqSelect;
-    @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+    readonly select = viewChild.required(KbqSelect);
+    readonly viewport = viewChild.required(CdkVirtualScrollViewport);
 }
 
 @Component({
@@ -588,10 +588,10 @@ export class E2eVirtualScrollMultiSelectNarrow {
             width: 240px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eSelectLongOptionText'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eSelectLongOptionText {
     private counter = 0;

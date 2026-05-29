@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
@@ -29,7 +29,7 @@ describe('KbqLoaderOverlay', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.overlay.transparent).toBeTruthy();
+        expect(fixture.componentInstance.overlay().transparent()).toBeTruthy();
     });
 
     it('should render params', () => {
@@ -97,7 +97,7 @@ describe('KbqLoaderOverlay', () => {
     `
 })
 class OverlayWithParams {
-    @ViewChild(KbqLoaderOverlay) overlay: KbqLoaderOverlay;
+    readonly overlay = viewChild.required(KbqLoaderOverlay);
 }
 
 @Component({

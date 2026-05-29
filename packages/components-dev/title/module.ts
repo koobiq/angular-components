@@ -6,7 +6,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -66,7 +65,6 @@ export class DevDocsExamples {}
     imports: [
         KbqTitleModule,
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqOptionModule,
         KbqSelectModule,
         KbqDropdownModule,
@@ -80,8 +78,8 @@ export class DevDocsExamples {}
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp implements OnInit {
     defaultValue = 'Just a text';

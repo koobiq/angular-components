@@ -53,12 +53,12 @@ const customDefaultTypes = customTypes.map(({ type }) => type);
 
         <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" [nonNullable]="false" />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
         { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, useValue: customTypes },
         { provide: KBQ_DEFAULT_TIME_RANGE_TYPES, useValue: customDefaultTypes }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }

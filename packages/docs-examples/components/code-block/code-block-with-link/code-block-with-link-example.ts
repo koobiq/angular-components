@@ -11,6 +11,9 @@ import {
 @Component({
     selector: 'code-block-with-link-example',
     imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block lineNumbers canCopy="false" [files]="files" />
+    `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
             core: () => import('highlight.js/lib/core'),
@@ -19,9 +22,6 @@ import {
             }
         })
     ],
-    template: `
-        <kbq-code-block lineNumbers canCopy="false" [files]="files" />
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithLinkExample {

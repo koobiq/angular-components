@@ -25,10 +25,6 @@
         "forceConsistentCasingInFileNames": true,
         "useDefineForClassFields": false,
         "paths": {
-            "@koobiq/cdk/a11y": ["packages/cdk/a11y/index.ts"],
-            "@koobiq/cdk/datetime": ["packages/cdk/datetime/index.ts"],
-            "@koobiq/cdk/keycodes": ["packages/cdk/keycodes/index.ts"],
-            "@koobiq/cdk/testing": ["packages/cdk/testing/index.ts"],
             "@koobiq/components/accordion": ["packages/components/accordion/index.ts"],
             "@koobiq/components/actions-panel": ["packages/components/actions-panel/index.ts"],
             "@koobiq/components/alert": ["packages/components/alert/index.ts"],
@@ -61,7 +57,6 @@
             "@koobiq/components/markdown": ["packages/components/markdown/index.ts"],
             "@koobiq/components/modal": ["packages/components/modal/index.ts"],
             "@koobiq/components/navbar": ["packages/components/navbar/index.ts"],
-            "@koobiq/components/navbar-ic": ["packages/components/navbar-ic/index.ts"],
             "@koobiq/components/notification-center": ["packages/components/notification-center/index.ts"],
             "@koobiq/components/overflow-items": ["packages/components/overflow-items/index.ts"],
             "@koobiq/components/popover": ["packages/components/popover/index.ts"],
@@ -69,7 +64,6 @@
             "@koobiq/components/progress-spinner": ["packages/components/progress-spinner/index.ts"],
             "@koobiq/components/radio": ["packages/components/radio/index.ts"],
             "@koobiq/components/resizer": ["packages/components/resizer/index.ts"],
-            "@koobiq/components/risk-level": ["packages/components/risk-level/index.ts"],
             "@koobiq/components/search-expandable": ["packages/components/search-expandable/index.ts"],
             "@koobiq/components/select": ["packages/components/select/index.ts"],
             "@koobiq/components/sidebar": ["packages/components/sidebar/index.ts"],
@@ -99,8 +93,7 @@
             "@koobiq/angular-moment-adapter": ["packages/angular-moment-adapter/index.ts"],
             "@koobiq/angular-luxon-adapter/adapter": ["packages/angular-luxon-adapter/adapter/index.ts"],
             "@koobiq/angular-moment-adapter/adapter": ["packages/angular-moment-adapter/adapter/index.ts"],
-            "@koobiq/cli": ["packages/cli/index.ts"],
-            "@koobiq/components-experimental/form-field": ["packages/components-experimental/form-field/index.ts"]
+            "@koobiq/cli": ["packages/cli/index.ts"]
         }
     },
     "exclude": [

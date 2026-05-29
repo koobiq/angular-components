@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -20,6 +20,7 @@ import {
     OnDestroy,
     Optional,
     Output,
+    output,
     QueryList,
     ViewChild,
     ViewContainerRef,
@@ -27,25 +28,27 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import {
     DOWN_ARROW,
     END,
     ENTER,
+    FocusKeyManager,
+    getKbqSelectNonArrayValueError,
     hasModifierKey,
     HOME,
     isCopy,
     isSelectAll,
     isVerticalMovement,
+    KBQ_FORM_FIELD_REF,
     LEFT_ARROW,
+    MultipleMode,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
     SPACE,
     TAB,
     UP_ARROW
-} from '@koobiq/cdk/keycodes';
-import { getKbqSelectNonArrayValueError, KBQ_FORM_FIELD_REF, MultipleMode } from '@koobiq/components/core';
+} from '@koobiq/components/core';
 import { merge, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay } from 'rxjs/operators';
@@ -110,9 +113,13 @@ interface SelectionModelOption {
     ],
     template: '<ng-container kbqTreeNodeOutlet />',
     styleUrls: ['./tree-selection.scss', 'tree-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        KBQ_SELECTION_TREE_VALUE_ACCESSOR,
+        { provide: KBQ_TREE_OPTION_PARENT_COMPONENT, useExisting: KbqTreeSelection },
+        { provide: KbqTreeBase, useExisting: KbqTreeSelection }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTreeSelection',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-selection',
         '[attr.tabindex]': 'tabIndex',
@@ -122,11 +129,7 @@ interface SelectionModelOption {
         '(keydown)': 'onKeyDown($event)',
         '(window:resize)': 'updateScrollSize()'
     },
-    providers: [
-        KBQ_SELECTION_TREE_VALUE_ACCESSOR,
-        { provide: KBQ_TREE_OPTION_PARENT_COMPONENT, useExisting: KbqTreeSelection },
-        { provide: KbqTreeBase, useExisting: KbqTreeSelection }
-    ]
+    exportAs: 'kbqTreeSelection'
 })
 export class KbqTreeSelection
     extends KbqTreeBase<any>
@@ -156,13 +159,15 @@ export class KbqTreeSelection
 
     @ContentChildren(KbqTreeOption) unorderedOptions: QueryList<KbqTreeOption>;
 
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input() declare treeControl: FlatTreeControl<any>;
 
-    @Output() readonly navigationChange = new EventEmitter<KbqTreeNavigationChange<KbqTreeOption>>();
+    readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption>>();
 
     @Output() readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>();
 
-    @Output() readonly onSelectAll = new EventEmitter<KbqTreeSelectAllEvent<KbqTreeOption>>();
+    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption>>();
 
     @Output() readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
 
@@ -170,6 +175,8 @@ export class KbqTreeSelection
 
     private lastSyncedDataNodes: readonly any[] | null = null;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get autoSelect(): boolean {
         return this._autoSelect;
@@ -193,6 +200,8 @@ export class KbqTreeSelection
         return !!this.multipleMode;
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get noUnselectLast(): boolean {
         return this._noUnselectLast;
@@ -204,6 +213,8 @@ export class KbqTreeSelection
 
     private _noUnselectLast: boolean = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -221,6 +232,8 @@ export class KbqTreeSelection
 
     private _disabled: boolean = false;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabIndex(): any {
         return this.disabled ? -1 : this._tabIndex;
@@ -501,7 +514,7 @@ export class KbqTreeSelection
     toggleFocusedOption(): void {
         const focusedOption = this.keyManager.activeItem;
 
-        if (!focusedOption?.selectable) return;
+        if (!focusedOption?.selectable()) return;
 
         if (focusedOption && (!focusedOption.selected || this.canDeselectLast(focusedOption))) {
             this.selectionModel.toggle(focusedOption.data);
@@ -591,7 +604,7 @@ export class KbqTreeSelection
     /** `View -> model callback called when select has been touched` */
     onTouched = () => {};
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     registerOnTouched(fn: () => {}): void {
         this.onTouched = fn;
     }

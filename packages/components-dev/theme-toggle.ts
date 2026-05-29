@@ -6,16 +6,16 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 
 @Component({
     selector: 'dev-theme-toggle',
-    exportAs: 'devThemeToggle',
     imports: [KbqToggleModule, FormsModule],
     template: `
         <kbq-toggle [(ngModel)]="isDarkTheme">isDarkTheme</kbq-toggle>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-align-center-center',
         'data-testid': 'e2eThemeToggle'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'devThemeToggle'
 })
 export class DevThemeToggle {
     private readonly theme = inject(ThemeService);

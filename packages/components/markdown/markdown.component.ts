@@ -13,7 +13,7 @@ import {
     Optional,
     Provider,
     signal,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -38,19 +38,21 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
         <div #outputWrapper class="kbq-markdown__output" [innerHtml]="resultHtml()"></div>
     `,
     styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-markdown'
     }
 })
 export class KbqMarkdown implements OnDestroy {
-    @ViewChild('contentWrapper', { static: true }) private readonly contentWrapper: ElementRef<HTMLPreElement>;
-    @ViewChild('outputWrapper', { static: true }) private readonly outputWrapper: ElementRef<HTMLDivElement>;
+    private readonly contentWrapper = viewChild.required<ElementRef<HTMLPreElement>>('contentWrapper');
+    private readonly outputWrapper = viewChild.required<ElementRef<HTMLDivElement>>('outputWrapper');
 
     protected resultHtml = signal<SafeHtml | null>(null);
 
     /** `Markdown` text. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get markdownText(): string | null {
         return this._markdownText;
@@ -74,8 +76,10 @@ export class KbqMarkdown implements OnDestroy {
         @Optional() @Inject(KBQ_MARKDOWN_MARKED_OPTIONS) private readonly markedOptions?: MarkedOptions | undefined
     ) {
         afterNextRender(() => {
-            if (!this.markdownText && this.contentWrapper?.nativeElement.textContent) {
-                this.resultHtml.set(this.getResultHTML(this.contentWrapper?.nativeElement.textContent));
+            const contentWrapper = this.contentWrapper();
+
+            if (!this.markdownText && contentWrapper?.nativeElement.textContent) {
+                this.resultHtml.set(this.getResultHTML(contentWrapper?.nativeElement.textContent));
             }
         });
 
@@ -98,10 +102,12 @@ export class KbqMarkdown implements OnDestroy {
 
     private startMonitoringLinks(): void {
         this.stopMonitoringLinks();
-        this.outputWrapper.nativeElement.querySelectorAll<HTMLAnchorElement>('.kbq-markdown__a').forEach((link) => {
-            this.links.push(link);
-            this.focusMonitor.monitor(link, true);
-        });
+        this.outputWrapper()
+            .nativeElement.querySelectorAll<HTMLAnchorElement>('.kbq-markdown__a')
+            .forEach((link) => {
+                this.links.push(link);
+                this.focusMonitor.monitor(link, true);
+            });
     }
 
     private stopMonitoringLinks(): void {

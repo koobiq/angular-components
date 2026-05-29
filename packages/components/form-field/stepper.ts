@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output, OutputEmitterRef, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -60,22 +60,22 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
         ></i>
     `,
     styleUrls: ['stepper.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqStepper',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-stepper'
-    }
+    },
+    exportAs: 'kbqStepper'
 })
 export class KbqStepper {
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
     private readonly document = inject<Document>(DOCUMENT);
 
     /** Emitted when the stepper is incremented. */
-    @Output() readonly stepUp: EventEmitter<void> = new EventEmitter<void>();
+    readonly stepUp = output<void>();
 
     /** Emitted when the stepper is decremented. */
-    @Output() readonly stepDown: EventEmitter<void> = new EventEmitter<void>();
+    readonly stepDown = output<void>();
 
     /** @docs-private */
     protected readonly mouseUp = new Subject<void>();
@@ -102,8 +102,8 @@ export class KbqStepper {
      * @docs-private
      */
     protected get control(): KbqNumberInput {
-        const control = this.formField?.control;
-        const input = control.numberInput;
+        const control = this.formField?.control();
+        const input = (control as any)?.numberInput;
 
         if (!isNumberInput(input)) {
             throw getKbqStepperToggleMissingControlError();
@@ -137,7 +137,7 @@ export class KbqStepper {
         this.handleStep($event, this.stepDown);
     }
 
-    private handleStep($event: MouseEvent, emitter: EventEmitter<void>): void {
+    private handleStep($event: MouseEvent, emitter: OutputEmitterRef<void>): void {
         if (this.control.disabled) return;
 
         emitter.emit();

@@ -1,8 +1,7 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { DateAdapter } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
@@ -10,8 +9,7 @@ import { DateTime } from 'luxon';
 /** @title Timepicker field validation */
 @Component({
     selector: 'timepicker-field-validation-example',
-    imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqIconModule, LuxonDateModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqTimepickerModule, ReactiveFormsModule, KbqIconModule, LuxonDateModule],
     template: `
         <kbq-form-field>
             <i kbq-icon="kbq-clock_16" kbqPrefix></i>

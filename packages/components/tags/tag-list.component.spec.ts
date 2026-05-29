@@ -1,4 +1,4 @@
-import { animate, style, transition, trigger } from '@angular/animations';
+﻿import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { A } from '@angular/cdk/keycodes';
@@ -31,20 +31,27 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { BACKSPACE, DELETE, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import {
+    BACKSPACE,
     createKeyboardEvent,
+    DELETE,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
+    END,
+    ENTER,
+    FocusKeyManager,
+    HOME,
+    LEFT_ARROW,
     MockNgZone,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
     typeInElement
-} from '@koobiq/cdk/testing';
+} from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { map, Observable, Subject, timer } from 'rxjs';
 import {
     ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher
@@ -152,7 +159,7 @@ export class TestTagList {
 
 @Component({
     selector: 'test-form-field-tag-list',
-    imports: [KbqTagsModule, KbqFormFieldModule, CdkMonitorFocus, KbqInputModule],
+    imports: [KbqTagsModule, CdkMonitorFocus, KbqInputModule],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList="kbqTagList" [editable]="editable()">
@@ -194,28 +201,6 @@ export class TestFormFieldTagList {
         </kbq-form-field>
     `
 })
-class LegacyTagListControlWithAsyncValidators {
-    readonly tagList = viewChild.required(KbqTagList);
-    readonly control = new FormControl('', {
-        nonNullable: true,
-        asyncValidators: [getAsyncValidator()]
-    });
-}
-
-@Component({
-    imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-    template: `
-        <kbq-form-field>
-            <kbq-tag-list #tagList="kbqTagList" [formControl]="control">
-                <kbq-tag value="1">1</kbq-tag>
-                <kbq-tag value="2">2</kbq-tag>
-
-                <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
-            </kbq-tag-list>
-        </kbq-form-field>
-    `
-})
 class TagListControlWithAsyncValidators {
     readonly tagList = viewChild.required(KbqTagList);
     readonly control = new FormControl('', {
@@ -226,10 +211,6 @@ class TagListControlWithAsyncValidators {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(customErrorStateMatcher)
-    ],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -241,7 +222,10 @@ class TagListControlWithAsyncValidators {
                 </kbq-tag-list>
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ]
 })
 class TagListWithDIErrorStateMatcher {
     readonly tagList = viewChild.required(KbqTagList);
@@ -250,7 +234,6 @@ class TagListWithDIErrorStateMatcher {
 
 @Component({
     imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -1108,7 +1091,7 @@ describe(KbqTagList.name, () => {
         }));
 
         it('should display an error message when the parent form is submitted', fakeAsync(() => {
-            expect(errorTestComponent.form.submitted).toBe(false);
+            expect(errorTestComponent.form().submitted).toBe(false);
             expect(errorTestComponent.formControl.invalid).toBe(true);
             expect(containerEl.querySelectorAll('kbq-error').length).toBe(0);
 
@@ -1116,7 +1099,7 @@ describe(KbqTagList.name, () => {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                expect(errorTestComponent.form.submitted).toBe(true);
+                expect(errorTestComponent.form().submitted).toBe(true);
                 expect(containerEl.classList).toContain('kbq-form-field-invalid');
                 expect(containerEl.querySelectorAll('kbq-error').length).toBe(1);
                 expect(tagListEl.getAttribute('aria-invalid')).toBe('true');
@@ -1821,32 +1804,6 @@ describe(KbqTagList.name, () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
-            const fixture = createStandaloneComponent(LegacyTagListControlWithAsyncValidators);
-            const { control, tagList } = fixture.componentInstance;
-            const statuses: FormControlStatus[] = [];
-
-            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
-
-            control.setValue('1');
-
-            expect(control.status).toBe('PENDING');
-            expect(statuses).toEqual(['PENDING']);
-
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID']);
-
-            tagList().blur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
-
-            subscription.unsubscribe();
-        }));
-
         it('should emit VALID via statusChanges on blur', fakeAsync(() => {
             const fixture = createStandaloneComponent(TagListControlWithAsyncValidators);
             const { control, tagList } = fixture.componentInstance;
@@ -1968,8 +1925,8 @@ class BasicTagList {
     tabIndexOverride: number;
     selectable: boolean = true;
 
-    @ViewChild(KbqFormField, { static: false }) formField: KbqFormField;
-    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
+    @ViewChild(KbqFormField) formField: KbqFormField;
+    @ViewChild(KbqTagList) tagList: KbqTagList;
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 }
 
@@ -1982,13 +1939,7 @@ class BasicTagList {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tag-list
-                #tagList1
-                placeholder="Food"
-                [formControl]="control"
-                [required]="isRequired"
-                [emitOnTagChanges]="emitOnTagChanges"
-            >
+            <kbq-tag-list #tagList1 placeholder="Food" [formControl]="control" [required]="isRequired">
                 @for (food of foods; track food) {
                     <kbq-tag [value]="food.value" (removed)="remove(food)">
                         {{ food.viewValue }}
@@ -2006,7 +1957,6 @@ class BasicTagList {
     `
 })
 class InputTagList {
-    emitOnTagChanges = true;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
@@ -2023,7 +1973,7 @@ class InputTagList {
     addOnBlur: boolean = true;
     isRequired: boolean;
 
-    @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
+    @ViewChild(KbqTagList) tagList: KbqTagList;
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
     add(event: KbqTagInputEvent): void {
@@ -2109,7 +2059,7 @@ class TagListWithFormErrorMessages {
 
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
-    @ViewChild('form', { static: false }) form: NgForm;
+    readonly form = viewChild.required<NgForm>('form');
 }
 
 @Component({

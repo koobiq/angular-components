@@ -33,6 +33,15 @@ export class DevScrollbarWithOptions {
 @Component({
     selector: 'dev-scrollbar-with-custom-config',
     imports: [KbqScrollbarModule],
+    template: `
+        <h4>ScrollbarWithCustomConfig:</h4>
+        <div kbq-scrollbar style="width: 200px; height: 200px;">
+            @for (item of items; track item) {
+                <div>{{ item }}</div>
+                <hr />
+            }
+        </div>
+    `,
     providers: [
         {
             provide: KBQ_SCROLLBAR_CONFIG,
@@ -43,15 +52,6 @@ export class DevScrollbarWithOptions {
             } satisfies KbqScrollbarOptions
         }
     ],
-    template: `
-        <h4>ScrollbarWithCustomConfig:</h4>
-        <div kbq-scrollbar style="width: 200px; height: 200px;">
-            @for (item of items; track item) {
-                <div>{{ item }}</div>
-                <hr />
-            }
-        </div>
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevScrollbarWithCustomConfig {
@@ -74,7 +74,7 @@ export class DevScrollbarWithCustomConfig {
         </kbq-scrollbar>
         <button
             kbq-button
-            [disabled]="!(scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0)"
+            [disabled]="!(scrollbarRef?.contentElement()?.nativeElement?.scrollTop || 0 > 0)"
             (click)="scrollbarRef.scrollTo({ top: 0, behavior: 'smooth' })"
         >
             Scroll To Top
@@ -102,8 +102,8 @@ export class DevScrollbarScrollToTop {
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     options: KbqScrollbarOptions;

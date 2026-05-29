@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, signal, viewChildren } from '@angul
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     KbqFormsModule,
     ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { timer } from 'rxjs';
 
@@ -19,7 +18,6 @@ import { timer } from 'rxjs';
     imports: [
         ReactiveFormsModule,
         KbqFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule
     ],
@@ -60,14 +58,13 @@ import { timer } from 'rxjs';
             width: 320px;
         }
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-column'
-    },
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(ShowRequiredOnSubmitErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-column'
+    }
 })
 export class ValidationOnSubmitCustomMatcherExample {
     protected readonly inProgress = signal(false);

@@ -1,10 +1,9 @@
-import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, DebugElement, ViewChild } from '@angular/core';
+﻿import { Clipboard } from '@angular/cdk/clipboard';
+import { Component, DebugElement, ViewChild, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { A, C } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { A, C, createKeyboardEvent, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -109,7 +108,7 @@ describe('KbqTreeSelection', () => {
 
                 const treeOptions = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
 
-                const manager = component.tree.keyManager;
+                const manager = component.tree().keyManager;
 
                 manager.setActiveItem(2);
                 expect(manager.activeItemIndex).toBe(2);
@@ -118,37 +117,39 @@ describe('KbqTreeSelection', () => {
 
                 Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
 
-                component.tree.onKeyDown(copyKeyEvent);
+                component.tree().onKeyDown(copyKeyEvent);
                 fixture.detectChanges();
 
                 expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
             }));
 
-            // todo fix me after update angular
-            xit('should not blur on focused option when copying', fakeAsync(() => {
-                testScheduler.run(() => {
-                    const treeOptions = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
+            // TODO(DS-5079): real regression under Angular 20 — copyActiveOption's
+            // `preventBlur = true / false` envelope no longer suppresses the blur that
+            // arrives via FocusMonitor microtask after the copy. Needs a fix in
+            // KbqTreeOption.blur()/focus() coordination, not a test-only adjustment.
+            // Clipboard write itself works (verified inline); only the focus retention
+            // assertion fails.
+            it.skip('should not blur on focused option when copying', fakeAsync(() => {
+                const treeOptions = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
 
-                    expect(treeOptions[2].componentInstance.hasFocus).toBeFalsy();
+                expect(treeOptions[2].componentInstance.hasFocus).toBeFalsy();
 
-                    testScheduler.flush();
+                dispatchFakeEvent(treeOptions[2].nativeElement, 'focusin');
+                tick(10);
+                fixture.detectChanges();
 
-                    dispatchFakeEvent(treeOptions[2].nativeElement, 'focusin');
-                    testScheduler.flush();
-                    tick(10);
-                    fixture.detectChanges();
+                expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
 
-                    expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
+                component.tree().keyManager.setActiveItem(2);
 
-                    const copyKeyEvent = createKeyboardEvent('keydown', C);
+                const copyKeyEvent = createKeyboardEvent('keydown', C);
 
-                    Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
-                    component.tree.onKeyDown(copyKeyEvent);
-                    fixture.detectChanges();
+                Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
+                component.tree().onKeyDown(copyKeyEvent);
+                fixture.detectChanges();
 
-                    expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
-                    expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
-                });
+                expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
+                expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
             }));
         });
 
@@ -943,7 +944,7 @@ class SimpleKbqTreeApp {
 
     treeData: FileNode[];
 
-    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
@@ -1155,7 +1156,7 @@ class KbqTreeAppWithToggle {
 
     treeData: FileNode[];
 
-    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);
@@ -1225,7 +1226,7 @@ class WhenNodeKbqTreeApp {
 
     treeData: FileNode[];
 
-    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getValue);
@@ -1289,7 +1290,7 @@ class FiltrationKbqTreeApp {
 
     treeData: FileNode[];
 
-    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(

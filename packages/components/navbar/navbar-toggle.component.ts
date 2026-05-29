@@ -1,4 +1,4 @@
-import { CdkMonitorFocus } from '@angular/cdk/a11y';
+﻿import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -10,8 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ENTER, NUMPAD_DIVIDE, SLASH, SPACE } from '@koobiq/cdk/keycodes';
-import { KBQ_WINDOW, PopUpPlacements } from '@koobiq/components/core';
+import { ENTER, KBQ_WINDOW, NUMPAD_DIVIDE, PopUpPlacements, SLASH, SPACE } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
@@ -33,8 +32,8 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
         </span>
     `,
     styleUrls: ['./navbar-toggle.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-toggle kbq-vertical',
         '[class.kbq-collapsed]': '!navbar.expanded',

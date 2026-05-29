@@ -3,13 +3,13 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
-    ContentChildren,
+    contentChild,
+    contentChildren,
     Directive,
     ElementRef,
     forwardRef,
     Input,
-    QueryList,
+    input,
     Renderer2,
     SkipSelf,
     ViewEncapsulation
@@ -50,7 +50,7 @@ export const badgeRightIconClassName = 'kbq-badge-icon_right';
     selector: 'kbq-badge'
 })
 export class KbqBadgeCssStyler implements AfterContentInit {
-    @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
+    readonly icons = contentChildren(forwardRef(() => KbqIcon));
 
     nativeElement: HTMLElement;
 
@@ -75,18 +75,19 @@ export class KbqBadgeCssStyler implements AfterContentInit {
         const twoIcons = 2;
         const filteredNodesWithoutComments = getNodesWithoutComments(this.nativeElement.childNodes as NodeList);
 
+        const icons = this.icons();
         const currentIsIconButtonValue =
-            !!this.icons.length &&
-            this.icons.length === filteredNodesWithoutComments.length &&
-            this.icons.length <= twoIcons;
+            !!icons.length && icons.length === filteredNodesWithoutComments.length && icons.length <= twoIcons;
 
         if (currentIsIconButtonValue !== this.isIconButton) {
             this.isIconButton = currentIsIconButtonValue;
             this.cdr.detectChanges();
         }
 
-        if (this.icons.length && filteredNodesWithoutComments.length > 1) {
-            this.icons
+        const iconsValue = this.icons();
+
+        if (iconsValue.length && filteredNodesWithoutComments.length > 1) {
+            iconsValue
                 .map((item) => item.getHostElement())
                 .forEach((iconHostElement) => {
                     this.renderer.removeClass(iconHostElement, leftIconClassName);
@@ -112,22 +113,24 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     selector: 'kbq-badge',
     template: '<ng-content />',
     styleUrls: ['badge.component.scss', 'badge-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-badge',
-        '[class.kbq-badge_compact]': 'compact',
-        '[class.kbq-badge-filled]': '!outline',
-        '[class.kbq-badge-outline]': 'outline',
+        '[class.kbq-badge_compact]': 'compact()',
+        '[class.kbq-badge-filled]': '!outline()',
+        '[class.kbq-badge-outline]': 'outline()',
         '[class]': 'badgeColor'
     }
 })
 export class KbqBadge {
-    @ContentChild(KbqIconItem) iconItem: KbqIconItem;
+    readonly iconItem = contentChild(KbqIconItem);
 
-    @Input() compact: boolean = false;
-    @Input() outline: boolean = false;
+    readonly compact = input<boolean>(false);
+    readonly outline = input<boolean>(false);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get badgeColor(): string {
         return `kbq-badge_${this._badgeColor}`;

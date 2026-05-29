@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
     booleanAttribute,
@@ -13,7 +13,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
+import { ENTER, SPACE, TAB } from '../keycodes';
 import { kbqInjectNativeElement } from '../utils';
 
 export interface KbqOptionActionParent {
@@ -35,13 +35,14 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
 
 @Component({
     selector: 'kbq-option-action',
-    exportAs: 'kbqOptionAction',
     template: `
         <ng-content select="[kbq-icon]">
             <i class="kbq kbq-icon kbq-contrast-fade kbq-ellipsis-vertical_16"></i>
         </ng-content>
     `,
     styleUrls: ['./action.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-option-action',
         '[class.kbq-expanded]': 'false',
@@ -51,14 +52,15 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
         '(click)': 'onClick($event)',
         '(keydown)': 'onKeyDown($event)'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqOptionAction'
 })
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly option = inject(KBQ_OPTION_ACTION_PARENT);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;

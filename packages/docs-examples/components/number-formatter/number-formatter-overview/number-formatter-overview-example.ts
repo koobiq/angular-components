@@ -6,7 +6,6 @@ import {
     KbqLocaleService,
     KbqNormalizeWhitespace
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -18,7 +17,6 @@ import { distinctUntilChanged } from 'rxjs/operators';
     selector: 'number-formatter-overview-example',
     imports: [
         FormsModule,
-        KbqFormFieldModule,
         KbqFormattersModule,
         KbqInputModule,
         KbqNormalizeWhitespace

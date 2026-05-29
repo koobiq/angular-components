@@ -12,9 +12,9 @@ import { KbqButton } from '@koobiq/components/button';
 // @public (undocumented)
 export class KbqTable {
     // (undocumented)
-    border: boolean;
+    readonly border: i0.InputSignal<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTable, never>;
 }
@@ -22,7 +22,7 @@ export class KbqTable {
 // @public (undocumented)
 export class KbqTableCellContent {
     // (undocumented)
-    button: KbqButton;
+    readonly button: i0.Signal<KbqButton | undefined>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTableCellContent, "kbq-table td", never, {}, {}, ["button"], never, true, never>;
     // (undocumented)
@@ -35,10 +35,8 @@ export class KbqTableModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTableModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqTable, typeof i3.KbqTableCellContent], [typeof i3.KbqTable, typeof i3.KbqTableCellContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqTable, typeof KbqTableCellContent], [typeof KbqTable, typeof KbqTableCellContent]>;
 }
 
 // (No @packageDocumentation comment for this package)

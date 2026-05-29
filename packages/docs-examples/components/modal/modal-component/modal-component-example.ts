@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqDivider } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { KbqTitleDirective } from '@koobiq/components/title';
+
+interface CustomModalData {
+    title: string;
+    subtitle: string;
+}
 
 @Component({
     selector: 'custom-modal',
@@ -19,10 +24,10 @@ import { KbqTitleDirective } from '@koobiq/components/title';
         KbqTitleDirective
     ],
     template: `
-        <kbq-modal-title>{{ title }}</kbq-modal-title>
+        <kbq-modal-title>{{ data.title }}</kbq-modal-title>
 
         <kbq-modal-body>
-            <div class="layout-margin-bottom-l">{{ subtitle }}</div>
+            <div class="layout-margin-bottom-l">{{ data.subtitle }}</div>
             <button kbq-button [kbqDropdownTriggerFor]="appDropdown">
                 dropdown
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -92,8 +97,7 @@ import { KbqTitleDirective } from '@koobiq/components/title';
 export class CustomModalComponent {
     private readonly modalRef = inject(KbqModalRef);
 
-    @Input() title: string;
-    @Input() subtitle: string;
+    readonly data = inject<CustomModalData>(KBQ_MODAL_DATA);
 
     destroyModal(action: 'save' | 'close') {
         this.modalRef.destroy(action);
@@ -117,13 +121,13 @@ export class ModalComponentExample {
     modalRef: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
 
     openModal(): void {
-        this.modalRef = this.modalService.open({
+        this.modalRef = this.modalService.open<CustomModalComponent, 'save' | 'close'>({
             kbqComponent: CustomModalComponent,
-            kbqComponentParams: {
+            data: {
                 title: 'DoS attack',
                 subtitle:
                     'In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks to make a machine or network resource unavailable to its intended users by temporarily or indefinitely disrupting services of a host connected to a network.'
-            }
+            } satisfies CustomModalData
         });
 
         this.modalRef.afterOpen.subscribe(() => {

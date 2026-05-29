@@ -1,4 +1,4 @@
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+﻿import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import {
     AfterContentChecked,
     ChangeDetectorRef,
@@ -18,10 +18,11 @@ import {
     ViewChild,
     ViewContainerRef,
     forwardRef,
-    inject
+    inject,
+    input
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
+import { IFocusableOption } from '@koobiq/components/core';
 import { BehaviorSubject, Observable, Subject, Subscription, of as observableOf } from 'rxjs';
 import { TreeControl } from './control/tree-control';
 import { KbqTreeNodeDef, KbqTreeNodeOutletContext } from './node';
@@ -35,6 +36,10 @@ import {
 
 @Directive()
 export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+    // TODO: Skipped for migration because:
+    //  Subclass KbqTreeSelection overrides this input with a narrower type
+    //  (FlatTreeControl<any>) via `@Input() declare`, which is incompatible
+    //  with InputSignal<TreeControl<T>>. Migrate together as a follow-up.
     @Input() treeControl: TreeControl<T>;
 
     /**
@@ -43,7 +48,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
      * relative to the function to know if a node should be added/removed/moved.
      * Accepts a function that takes two parameters, `index` and `item`.
      */
-    @Input() trackBy: TrackByFunction<T>;
+    readonly trackBy = input<TrackByFunction<T>>(undefined!);
 
     // Outlets within the tree's template where the dataNodes will be inserted.
     @ViewChild(KbqTreeNodeOutlet, { static: true }) nodeOutlet: KbqTreeNodeOutlet;
@@ -76,6 +81,8 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
      * stream of view window (what dataNodes are currently on screen).
      * Data source can be an observable of data array, or a data array to render.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get dataSource(): DataSource<T> | Observable<T[]> | T[] {
         return this._dataSource;
@@ -97,7 +104,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     ) {}
 
     ngOnInit() {
-        this.dataDiffer = this.differs.find([]).create(this.trackBy);
+        this.dataDiffer = this.differs.find([]).create(this.trackBy());
 
         if (!this.treeControl) {
             throw getTreeControlMissingError();
@@ -194,8 +201,10 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
         // If the tree is flat tree, then use the `getLevel` function in flat tree control
         // Otherwise, use the level of parent node.
-        if (this.treeControl.getLevel) {
-            context.level = this.treeControl.getLevel(nodeData);
+        const treeControl = this.treeControl;
+
+        if (treeControl.getLevel) {
+            context.level = treeControl.getLevel(nodeData);
         } else if (typeof parentData !== 'undefined' && this.levels.has(parentData)) {
             context.level = this.levels.get(parentData)! + 1;
         } else {
@@ -296,7 +305,9 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     }
 
     get level(): number {
-        return this.tree.treeControl.getLevel ? this.tree.treeControl.getLevel(this._data) : 0;
+        const treeControl = this.tree.treeControl;
+
+        return treeControl.getLevel ? treeControl.getLevel(this._data) : 0;
     }
 
     constructor(

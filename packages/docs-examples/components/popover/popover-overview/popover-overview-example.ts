@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 
@@ -9,7 +8,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  */
 @Component({
     selector: 'popover-overview-example',
-    imports: [KbqPopoverModule, KbqButtonModule, KbqFormFieldModule, KbqInputModule],
+    imports: [KbqPopoverModule, KbqButtonModule, KbqInputModule],
     template: `
         <ng-template #customContent>
             <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
@@ -41,9 +40,9 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
             width: 400px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-row layout-align-center'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class PopoverOverviewExample {}

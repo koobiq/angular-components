@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
 import { KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
@@ -67,106 +67,114 @@ export class E2eTooltipArrowOffset {}
     }
 })
 export class E2eTooltipStates implements AfterViewInit {
-    @ViewChild(KbqTooltipTrigger) trigger: KbqTooltipTrigger;
-    @ViewChild('customHeader') customHeader: TemplateRef<any>;
-    @ViewChild('customContent') customContent: TemplateRef<any>;
+    readonly trigger = viewChild.required(KbqTooltipTrigger);
+    readonly customHeader = viewChild.required<TemplateRef<any>>('customHeader');
+    readonly customContent = viewChild.required<TemplateRef<any>>('customContent');
 
-    @ViewChild('tooltipContrast') tooltipContrast: KbqTooltipComponent;
-    @ViewChild('tooltipContrastFade') tooltipContrastFade: KbqTooltipComponent;
-    @ViewChild('tooltipError') tooltipError: KbqTooltipComponent;
-    @ViewChild('tooltipWarning') tooltipWarning: KbqTooltipComponent;
-    @ViewChild('tooltipTheme') tooltipTheme: KbqTooltipComponent;
+    readonly tooltipContrast = viewChild.required<KbqTooltipComponent>('tooltipContrast');
+    readonly tooltipContrastFade = viewChild.required<KbqTooltipComponent>('tooltipContrastFade');
+    readonly tooltipError = viewChild.required<KbqTooltipComponent>('tooltipError');
+    readonly tooltipWarning = viewChild.required<KbqTooltipComponent>('tooltipWarning');
+    readonly tooltipTheme = viewChild.required<KbqTooltipComponent>('tooltipTheme');
 
-    @ViewChild('tooltipNoArrow') tooltipNoArrow: KbqTooltipComponent;
-    @ViewChild('tooltipTemplates') tooltipTemplates: KbqTooltipComponent;
+    readonly tooltipNoArrow = viewChild.required<KbqTooltipComponent>('tooltipNoArrow');
+    readonly tooltipTemplates = viewChild.required<KbqTooltipComponent>('tooltipTemplates');
 
     ngAfterViewInit(): void {
         const header = 'header header header header header header header header header header header';
         const content = 'content content content content content content content content content content content';
 
-        this.tooltipContrast.trigger = this.trigger;
-        this.tooltipContrast.header = header;
-        this.tooltipContrast.content = content;
+        const tooltipContrast = this.tooltipContrast();
+        const tooltipContrastFade = this.tooltipContrastFade();
+        const tooltipError = this.tooltipError();
+        const tooltipWarning = this.tooltipWarning();
+        const tooltipTheme = this.tooltipTheme();
+        const tooltipNoArrow = this.tooltipNoArrow();
+        const tooltipTemplates = this.tooltipTemplates();
 
-        this.tooltipContrast.classMap = {
+        tooltipContrast.trigger = this.trigger();
+        tooltipContrast.header = header;
+        tooltipContrast.content = content;
+
+        tooltipContrast.classMap = {
             'kbq-tooltip_placement-bottom': true,
             'kbq-contrast': true
         };
-        this.tooltipContrast.arrow = true;
-        this.tooltipContrast.offset = null;
-        this.tooltipContrast.show(0);
+        tooltipContrast.arrow = true;
+        tooltipContrast.offset = null;
+        tooltipContrast.show(0);
 
-        this.tooltipContrastFade.trigger = this.trigger;
-        this.tooltipContrastFade.header = header;
-        this.tooltipContrastFade.content = content;
+        tooltipContrastFade.trigger = this.trigger();
+        tooltipContrastFade.header = header;
+        tooltipContrastFade.content = content;
 
-        this.tooltipContrastFade.classMap = {
+        tooltipContrastFade.classMap = {
             'kbq-tooltip_placement-bottom': true,
             'kbq-contrast-fade': true
         };
-        this.tooltipContrastFade.arrow = true;
-        this.tooltipContrastFade.offset = null;
-        this.tooltipContrastFade.show(0);
+        tooltipContrastFade.arrow = true;
+        tooltipContrastFade.offset = null;
+        tooltipContrastFade.show(0);
 
-        this.tooltipError.trigger = this.trigger;
-        this.tooltipError.header = header;
-        this.tooltipError.content = content;
+        tooltipError.trigger = this.trigger();
+        tooltipError.header = header;
+        tooltipError.content = content;
 
-        this.tooltipError.classMap = {
+        tooltipError.classMap = {
             'kbq-tooltip_placement-bottom': true,
             'kbq-error': true
         };
-        this.tooltipError.arrow = true;
-        this.tooltipError.offset = null;
+        tooltipError.arrow = true;
+        tooltipError.offset = null;
 
-        this.tooltipError.show(0);
+        tooltipError.show(0);
 
-        this.tooltipWarning.trigger = this.trigger;
-        this.tooltipWarning.header = header;
-        this.tooltipWarning.content = content;
+        tooltipWarning.trigger = this.trigger();
+        tooltipWarning.header = header;
+        tooltipWarning.content = content;
 
-        this.tooltipWarning.classMap = {
+        tooltipWarning.classMap = {
             'kbq-tooltip_placement-bottom': true,
             'kbq-warning': true
         };
-        this.tooltipWarning.arrow = true;
-        this.tooltipWarning.offset = null;
-        this.tooltipWarning.show(0);
+        tooltipWarning.arrow = true;
+        tooltipWarning.offset = null;
+        tooltipWarning.show(0);
 
-        this.tooltipTheme.trigger = this.trigger;
-        this.tooltipTheme.header = header;
-        this.tooltipTheme.content = content;
+        tooltipTheme.trigger = this.trigger();
+        tooltipTheme.header = header;
+        tooltipTheme.content = content;
 
-        this.tooltipTheme.classMap = {
+        tooltipTheme.classMap = {
             'kbq-tooltip_placement-bottom': true,
             'kbq-theme': true
         };
-        this.tooltipTheme.arrow = true;
-        this.tooltipTheme.offset = null;
-        this.tooltipTheme.show(0);
+        tooltipTheme.arrow = true;
+        tooltipTheme.offset = null;
+        tooltipTheme.show(0);
 
-        this.tooltipNoArrow.trigger = this.trigger;
-        this.tooltipNoArrow.header = header;
-        this.tooltipNoArrow.content = content;
+        tooltipNoArrow.trigger = this.trigger();
+        tooltipNoArrow.header = header;
+        tooltipNoArrow.content = content;
 
-        this.tooltipNoArrow.classMap = {
+        tooltipNoArrow.classMap = {
             'kbq-tooltip_placement-bottom': true,
             'kbq-contrast-fade': true
         };
-        this.tooltipNoArrow.arrow = false;
-        this.tooltipNoArrow.offset = null;
-        this.tooltipNoArrow.show(0);
+        tooltipNoArrow.arrow = false;
+        tooltipNoArrow.offset = null;
+        tooltipNoArrow.show(0);
 
-        this.tooltipTemplates.trigger = this.trigger;
-        this.tooltipTemplates.header = this.customHeader;
-        this.tooltipTemplates.content = this.customContent;
+        tooltipTemplates.trigger = this.trigger();
+        tooltipTemplates.header = this.customHeader();
+        tooltipTemplates.content = this.customContent();
 
-        this.tooltipTemplates.classMap = {
+        tooltipTemplates.classMap = {
             'kbq-tooltip_placement-bottom': true,
             'kbq-contrast-fade': true
         };
-        this.tooltipTemplates.arrow = false;
-        this.tooltipTemplates.offset = null;
-        this.tooltipTemplates.show(0);
+        tooltipTemplates.arrow = false;
+        tooltipTemplates.offset = null;
+        tooltipTemplates.show(0);
     }
 }

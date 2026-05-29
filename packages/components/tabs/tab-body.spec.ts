@@ -1,6 +1,6 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
-import { AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterContentInit, Component, TemplateRef, ViewContainerRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
@@ -33,7 +33,7 @@ describe('KbqTabBody', () => {
             fixture.componentInstance.position = 0;
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.tabBody.bodyPosition).toBe('center');
+            expect(fixture.componentInstance.tabBody().bodyPosition).toBe('center');
         });
 
         it('should be center position if origin is explicitly set to null', () => {
@@ -46,7 +46,7 @@ describe('KbqTabBody', () => {
             fixture.componentInstance.origin = null;
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.tabBody.bodyPosition).toBe('center');
+            expect(fixture.componentInstance.tabBody().bodyPosition).toBe('center');
         });
 
         describe('in LTR direction', () => {
@@ -59,7 +59,7 @@ describe('KbqTabBody', () => {
                 fixture.componentInstance.origin = 0;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tabBody.bodyPosition).toBe('left-origin-center');
+                expect(fixture.componentInstance.tabBody().bodyPosition).toBe('left-origin-center');
             });
 
             it('should be right-origin-center position with positive nonzero origin', () => {
@@ -67,7 +67,7 @@ describe('KbqTabBody', () => {
                 fixture.componentInstance.origin = 1;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tabBody.bodyPosition).toBe('right-origin-center');
+                expect(fixture.componentInstance.tabBody().bodyPosition).toBe('right-origin-center');
             });
         });
 
@@ -82,7 +82,7 @@ describe('KbqTabBody', () => {
                 fixture.componentInstance.origin = 0;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tabBody.bodyPosition).toBe('right-origin-center');
+                expect(fixture.componentInstance.tabBody().bodyPosition).toBe('right-origin-center');
             });
 
             it('should be left-origin-center position with positive nonzero origin', () => {
@@ -90,7 +90,7 @@ describe('KbqTabBody', () => {
                 fixture.componentInstance.origin = 1;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tabBody.bodyPosition).toBe('left-origin-center');
+                expect(fixture.componentInstance.tabBody().bodyPosition).toBe('left-origin-center');
             });
         });
     });
@@ -108,21 +108,21 @@ describe('KbqTabBody', () => {
             fixture.componentInstance.position = -1;
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.tabBody.bodyPosition).toBe('left');
+            expect(fixture.componentInstance.tabBody().bodyPosition).toBe('left');
         });
 
         it('should be center position with zero position', () => {
             fixture.componentInstance.position = 0;
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.tabBody.bodyPosition).toBe('center');
+            expect(fixture.componentInstance.tabBody().bodyPosition).toBe('center');
         });
 
         it('should be right position with positive position', () => {
             fixture.componentInstance.position = 1;
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.tabBody.bodyPosition).toBe('right');
+            expect(fixture.componentInstance.tabBody().bodyPosition).toBe('right');
         });
     });
 
@@ -139,21 +139,21 @@ describe('KbqTabBody', () => {
             fixture.componentInstance.position = -1;
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.tabBody.bodyPosition).toBe('right');
+            expect(fixture.componentInstance.tabBody().bodyPosition).toBe('right');
         });
 
         it('should be center position with zero position', () => {
             fixture.componentInstance.position = 0;
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.tabBody.bodyPosition).toBe('center');
+            expect(fixture.componentInstance.tabBody().bodyPosition).toBe('center');
         });
 
         it('should be left position with positive position', () => {
             fixture.componentInstance.position = 1;
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.tabBody.bodyPosition).toBe('left');
+            expect(fixture.componentInstance.tabBody().bodyPosition).toBe('left');
         });
     });
 
@@ -163,14 +163,14 @@ describe('KbqTabBody', () => {
         fixture.componentInstance.position = 1;
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.tabBody.bodyPosition).toBe('right');
+        expect(fixture.componentInstance.tabBody().bodyPosition).toBe('right');
 
         dirChange.next('rtl');
         dir = 'rtl';
 
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.tabBody.bodyPosition).toBe('left');
+        expect(fixture.componentInstance.tabBody().bodyPosition).toBe('left');
     });
 });
 
@@ -186,12 +186,12 @@ class SimpleTabBodyApp implements AfterContentInit {
     position: number;
     origin: number | null;
 
-    @ViewChild(KbqTabBody, { static: false }) tabBody: KbqTabBody;
-    @ViewChild(TemplateRef, { static: true }) template: TemplateRef<any>;
+    readonly tabBody = viewChild.required(KbqTabBody);
+    readonly template = viewChild.required(TemplateRef);
 
     constructor(private viewContainerRef: ViewContainerRef) {}
 
     ngAfterContentInit() {
-        this.content = new TemplatePortal(this.template, this.viewContainerRef);
+        this.content = new TemplatePortal(this.template(), this.viewContainerRef);
     }
 }

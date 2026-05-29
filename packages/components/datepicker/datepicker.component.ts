@@ -3,23 +3,23 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { DOCUMENT, NgClass } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ComponentRef,
-    EventEmitter,
     inject,
     Inject,
     InjectionToken,
     Input,
+    input,
     NgZone,
     OnDestroy,
     Optional,
-    Output,
-    ViewChild,
+    output,
+    viewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
@@ -63,14 +63,12 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 @Component({
     selector: 'kbq-datepicker__content',
     imports: [
-        KbqCalendar,
-        NgClass
+        KbqCalendar
     ],
     templateUrl: 'datepicker-content.html',
     styleUrls: ['datepicker-content.scss', 'datepicker-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqDatepickerContent',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-datepicker__content',
         '[@transformPanel]': 'animationState',
@@ -79,7 +77,8 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     animations: [
         kbqDatepickerAnimations.transformPanel,
         kbqDatepickerAnimations.fadeInCalendar
-    ]
+    ],
+    exportAs: 'kbqDatepickerContent'
 })
 export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     /** Emits when an animation has finished. */
@@ -92,7 +91,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     animationState: 'enter' | 'void';
 
     /** Reference to the internal calendar component. */
-    @ViewChild(KbqCalendar) calendar: KbqCalendar<D>;
+    readonly calendar = viewChild.required(KbqCalendar);
 
     private subscriptions = new Subscription();
 
@@ -124,14 +123,16 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 @Component({
     selector: 'kbq-datepicker',
     template: '',
-    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqDatepicker',
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }]
+    encapsulation: ViewEncapsulation.None,
+    exportAs: 'kbqDatepicker'
 })
 export class KbqDatepicker<D> implements OnDestroy {
     protected readonly document = inject<Document>(DOCUMENT);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -144,6 +145,8 @@ export class KbqDatepicker<D> implements OnDestroy {
     private _hasBackdrop: boolean = false;
 
     /** The date to open the calendar to initially. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get startAt(): D | null {
         // If an explicit startAt is set we start there, otherwise we start at whatever the currently
@@ -156,13 +159,15 @@ export class KbqDatepicker<D> implements OnDestroy {
 
         this._startAt =
             deserializedValue !== null
-                ? this.dateAdapter.clampDate(deserializedValue, this.minDate, this.maxDate)
+                ? this.dateAdapter.clampDate(deserializedValue, this.minDate(), this.maxDate())
                 : null;
     }
 
     private _startAt: D | null;
 
     /** Whether the datepicker pop-up should be disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled : this._disabled;
@@ -180,13 +185,19 @@ export class KbqDatepicker<D> implements OnDestroy {
     private _disabled: boolean;
 
     /** Whether the calendar is open. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get opened(): boolean {
         return this._opened;
     }
 
     set opened(value: boolean) {
-        coerceBooleanProperty(value) ? this.open() : this.close();
+        if (coerceBooleanProperty(value)) {
+            this.open();
+        } else {
+            this.close();
+        }
     }
 
     private _opened = false;
@@ -209,36 +220,36 @@ export class KbqDatepicker<D> implements OnDestroy {
     }
 
     /** The minimum selectable date. */
-    @Input() minDate: D | null;
+    readonly minDate = input<D | null>(undefined!);
 
     /** The maximum selectable date. */
-    @Input() maxDate: D | null;
+    readonly maxDate = input<D | null>(undefined!);
 
     /**
      * Emits selected year in multiyear view.
      * This doesn't imply a change on the selected date.
      */
-    @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
+    readonly yearSelected = output<D>();
 
     /**
      * Emits selected month in year view.
      * This doesn't imply a change on the selected date.
      */
-    @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
+    readonly monthSelected = output<D>();
 
-    /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
-    @Input() panelClass: string | string[];
+    /** Classes to be passed to the date picker panel. Supports the same syntax as the `[class]` binding. */
+    readonly panelClass = input<string | string[]>(undefined!);
 
     /** Function that can be used to add custom CSS classes to dates. */
-    @Input() dateClass: (date: D) => KbqCalendarCellCssClasses;
+    readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
 
-    @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
+    readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /** Emits when the datepicker has been opened. */
-    @Output('opened') readonly openedStream: EventEmitter<void> = new EventEmitter<void>();
+    readonly openedStream = output<void>({ alias: 'opened' });
 
     /** Emits when the datepicker has been closed. */
-    @Output('closed') readonly closedStream: EventEmitter<void> = new EventEmitter<void>();
+    readonly closedStream = output<void>({ alias: 'closed' });
 
     readonly stateChanges: Subject<void> = new Subject<void>();
 
@@ -334,8 +345,10 @@ export class KbqDatepicker<D> implements OnDestroy {
             this.selected = value;
 
             if (this.popupComponentRef) {
-                this.popupComponentRef.instance.calendar.monthView?.init();
-                this.popupComponentRef.instance.calendar.activeDate = value as D;
+                const calendar = this.popupComponentRef.instance.calendar();
+
+                calendar.monthView()?.init();
+                calendar.activeDate = value as D;
             }
         });
     }
@@ -357,6 +370,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         this.openAsPopup();
 
         this._opened = true;
+        // TODO: The 'emit' function requires a mandatory void argument
         this.openedStream.emit();
     }
 
@@ -379,6 +393,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         }
 
         this._opened = false;
+        // TODO: The 'emit' function requires a mandatory void argument
         this.closedStream.emit();
         this.focusedElementBeforeOpen = null;
     }
@@ -388,7 +403,11 @@ export class KbqDatepicker<D> implements OnDestroy {
             return;
         }
 
-        this._opened ? this.close() : this.open();
+        if (this._opened) {
+            this.close();
+        } else {
+            this.open();
+        }
     }
 
     /** Destroys the current overlay. */
@@ -429,7 +448,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         const overlayConfig = new OverlayConfig({
             positionStrategy: this.createPopupPositionStrategy(),
             hasBackdrop: this.hasBackdrop,
-            backdropClass: this.backdropClass,
+            backdropClass: this.backdropClass(),
             direction: this.dir,
             scrollStrategy: this.scrollStrategy(),
             panelClass: 'kbq-datepicker__popup'

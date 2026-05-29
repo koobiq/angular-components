@@ -14,10 +14,10 @@ import { KbqIconItem } from '@koobiq/components/icon';
 // @public (undocumented)
 export class KbqEmptyState implements AfterContentInit {
     // (undocumented)
-    alignTop: boolean;
+    readonly alignTop: i0.InputSignal<boolean>;
     protected get emptyStateSizeClass(): string;
     // (undocumented)
-    errorColor: boolean;
+    readonly errorColor: i0.InputSignal<boolean>;
     // (undocumented)
     icon: KbqEmptyStateIcon | null;
     // (undocumented)
@@ -25,7 +25,7 @@ export class KbqEmptyState implements AfterContentInit {
     // (undocumented)
     size: KbqDefaultSizes;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqEmptyState, "kbq-empty-state", never, { "errorColor": { "alias": "errorColor"; "required": false; }; "alignTop": { "alias": "alignTop"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, ["icon"], ["[kbq-empty-state-icon]", "[kbq-empty-state-title]", "[kbq-empty-state-text]", "[kbq-empty-state-actions]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqEmptyState, "kbq-empty-state", never, { "errorColor": { "alias": "errorColor"; "required": false; "isSignal": true; }; "alignTop": { "alias": "alignTop"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; }; }, {}, ["icon"], ["[kbq-empty-state-icon]", "[kbq-empty-state-title]", "[kbq-empty-state-text]", "[kbq-empty-state-actions]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyState, never>;
 }
@@ -55,10 +55,8 @@ export class KbqEmptyStateModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyStateModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqEmptyStateModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEmptyStateModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqEmptyState, typeof i3.KbqEmptyStateIcon, typeof i3.KbqEmptyStateText, typeof i3.KbqEmptyStateTitle, typeof i3.KbqEmptyStateActions], [typeof i3.KbqEmptyState, typeof i3.KbqEmptyStateIcon, typeof i3.KbqEmptyStateText, typeof i3.KbqEmptyStateTitle, typeof i3.KbqEmptyStateActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEmptyStateModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqEmptyState, typeof KbqEmptyStateIcon, typeof KbqEmptyStateText, typeof KbqEmptyStateTitle, typeof KbqEmptyStateActions], [typeof KbqEmptyState, typeof KbqEmptyStateIcon, typeof KbqEmptyStateText, typeof KbqEmptyStateTitle, typeof KbqEmptyStateActions]>;
 }
 
 // @public (undocumented)

@@ -7,7 +7,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
+    contentChildren,
     Directive,
     effect,
     ElementRef,
@@ -16,7 +16,6 @@ import {
     Input,
     numberAttribute,
     OnDestroy,
-    QueryList,
     Renderer2,
     signal,
     SkipSelf,
@@ -52,7 +51,7 @@ export const buttonRightIconClassName = 'kbq-button-icon_right';
     }
 })
 export class KbqButtonCssStyler implements AfterContentInit {
-    @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
+    readonly icons = contentChildren(forwardRef(() => KbqIcon));
 
     nativeElement: HTMLElement;
 
@@ -73,7 +72,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
     updateClassModifierForIcons() {
         this.renderer.removeClass(this.nativeElement, buttonLeftIconClassName);
         this.renderer.removeClass(this.nativeElement, buttonRightIconClassName);
-        this.icons
+        this.icons()
             .map((item) => item.getHostElement())
             .forEach((iconHostElement) => {
                 this.renderer.removeClass(iconHostElement, leftIconClassName);
@@ -85,18 +84,19 @@ export class KbqButtonCssStyler implements AfterContentInit {
             this.nativeElement.querySelector('.kbq-button-wrapper')!.childNodes as NodeList
         );
 
+        const icons = this.icons();
         const currentIsIconButtonValue =
-            !!this.icons.length &&
-            this.icons.length === filteredNodesWithoutComments.length &&
-            this.icons.length <= twoIcons;
+            !!icons.length && icons.length === filteredNodesWithoutComments.length && icons.length <= twoIcons;
 
         if (currentIsIconButtonValue !== this.isIconButton) {
             this.isIconButton = currentIsIconButtonValue;
             this.cdr.detectChanges();
         }
 
-        if (this.icons.length && filteredNodesWithoutComments.length > 1) {
-            this.icons
+        const iconsValue = this.icons();
+
+        if (iconsValue.length && filteredNodesWithoutComments.length > 1) {
+            iconsValue
                 .map((item) => item.getHostElement())
                 .forEach((iconHostElement) => {
                     const iconIndex = filteredNodesWithoutComments.findIndex((node) => node === iconHostElement);
@@ -122,8 +122,11 @@ export class KbqButtonCssStyler implements AfterContentInit {
     ],
     templateUrl: './button.component.html',
     styleUrls: ['./button.scss', './button-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [
+        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.disabled]': 'disabled || null',
         '[class.kbq-disabled]': 'disabled',
@@ -131,10 +134,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
         '[class]': 'kbqStyle',
         '(focus)': 'onFocus($event)',
         '(blur)': 'onBlur()'
-    },
-    providers: [
-        { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
-    ]
+    }
 })
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -143,6 +143,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get kbqStyle(): string {
         return `kbq-button_${this._kbqStyle}`;
@@ -158,6 +160,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -173,6 +177,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     /** @docs-private */
     readonly disabledSignal = signal(false);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;

@@ -19,9 +19,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             margin-bottom: 28px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-align-center-center layout-row layout-gap-s layout-margin-top-xxl'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ToggleLabelLeftExample {}

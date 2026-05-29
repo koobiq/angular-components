@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -19,8 +19,14 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { isHorizontalMovement, isVerticalMovement, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
+import {
+    FocusKeyManager,
+    isHorizontalMovement,
+    isVerticalMovement,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    TAB
+} from '@koobiq/components/core';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import {
@@ -39,6 +45,8 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabIndex(): any {
         return this._tabIndex;
@@ -186,8 +194,8 @@ export class KbqNavbarContainer {}
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar',
         '[attr.tabindex]': 'tabIndex',
@@ -203,7 +211,10 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         { descendants: true }
     );
 
-    @ContentChildren(forwardRef(() => KbqNavbarItem), { descendants: true }) navbarItems: QueryList<KbqNavbarItem>;
+    readonly navbarItems = contentChildren(
+        forwardRef(() => KbqNavbarItem),
+        { descendants: true }
+    );
 
     readonly resizeStream = new Subject<Event>();
 
@@ -223,9 +234,8 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     private get collapsableItems(): KbqNavbarItem[] {
-        return this.navbarItems
-            .toArray()
-            .filter((item) => item.icon && item.title && item.collapsable)
+        return this.navbarItems()
+            .filter((item) => item.icon() && item.title() && item.collapsable)
             .reverse();
     }
 

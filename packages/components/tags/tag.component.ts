@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
@@ -8,27 +8,26 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
-    ContentChildren,
+    contentChild,
+    contentChildren as contentChildren_1,
     DestroyRef,
     Directive,
     ElementRef,
-    EventEmitter,
     forwardRef,
     inject,
     Inject,
     Input,
+    input,
     OnDestroy,
-    Output,
-    QueryList,
+    output,
     signal,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { hasModifierKey } from '@koobiq/cdk/keycodes';
 import {
+    hasModifierKey,
+    IFocusableOption,
     isNull,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
@@ -112,13 +111,13 @@ export class KbqTagTrailingIcon {}
  */
 @Directive({
     selector: '[kbqTagEditSubmit]',
-    exportAs: 'kbqTagEditSubmit',
     host: {
         class: 'kbq-tag-edit-submit',
         '[attr.tabindex]': '-1',
 
         '(click)': 'tag.submitEditing("click")'
-    }
+    },
+    exportAs: 'kbqTagEditSubmit'
 })
 export class KbqTagEditSubmit {
     /** @docs-private */
@@ -130,14 +129,14 @@ export class KbqTagEditSubmit {
  */
 @Directive({
     selector: '[kbqTagEditInput]',
-    exportAs: 'kbqTagEditInput',
     host: {
         class: 'kbq-tag-edit-input',
 
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'
     },
-    hostDirectives: [KbqFieldSizingContent]
+    hostDirectives: [KbqFieldSizingContent],
+    exportAs: 'kbqTagEditInput'
 })
 export class KbqTagEditInput {
     private readonly tag = inject(KbqTag);
@@ -196,18 +195,17 @@ export class KbqTagEditInput {
         </div>
     `,
     styleUrls: ['./tag.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTag',
-    hostDirectives: [CdkDrag],
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tag',
         '[attr.tabindex]': 'tabindex',
         '[attr.disabled]': 'disabled || null',
         '[class.kbq-selected]': 'selected',
-        '[class.kbq-tag-with-avatar]': 'avatar',
-        '[class.kbq-tag-with-icon]': 'contentChildren',
-        '[class.kbq-tag-with-trailing-icon]': 'trailingIcon || removeIcon',
+        '[class.kbq-tag-with-avatar]': 'avatar()',
+        '[class.kbq-tag-with-icon]': 'contentChildren()',
+        '[class.kbq-tag-with-trailing-icon]': 'trailingIcon() || removeIcon()',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-tag_editable]': 'editable',
         '[class.kbq-tag_editing]': 'editing()',
@@ -218,7 +216,8 @@ export class KbqTagEditInput {
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
     },
-    providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }]
+    hostDirectives: [CdkDrag],
+    exportAs: 'kbqTag'
 })
 export class KbqTag
     extends KbqColorDirective
@@ -257,9 +256,11 @@ export class KbqTag
     hasFocus: boolean = false;
 
     /** Whether the tag is editable. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get editable(): boolean {
-        return this._editable ?? !!this.tagList?.editable;
+        return this._editable ?? !!this.tagList?.editable();
     }
 
     set editable(value: boolean) {
@@ -269,15 +270,14 @@ export class KbqTag
     private _editable: boolean | undefined;
 
     /** Whether the tag edits can't be submitted. */
-    @Input({ transform: booleanAttribute }) preventEditSubmit: boolean = false;
+    readonly preventEditSubmit = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @ContentChild(KbqTagEditInput, { read: ElementRef })
-    private readonly editInputElementRef: ElementRef<HTMLInputElement>;
+    private readonly editInputElementRef = contentChild(KbqTagEditInput, { read: ElementRef });
 
     /**
      * Emits event when the tag is edited.
      */
-    @Output() readonly editChange = new EventEmitter<KbqTagEditChange>();
+    readonly editChange = output<KbqTagEditChange>();
 
     /**
      * @docs-private
@@ -289,30 +289,32 @@ export class KbqTag
      */
     @ViewChild('kbqTitleText') readonly textElement: ElementRef<HTMLSpanElement>;
 
-    @ContentChildren(KbqIcon) contentChildren: QueryList<KbqIcon>;
+    readonly contentChildren = contentChildren_1(KbqIcon);
 
     /** The tag avatar */
-    @ContentChild(KbqTagAvatar, { static: false }) avatar: KbqTagAvatar;
+    readonly avatar = contentChild(KbqTagAvatar);
 
     /** The tag's trailing icon. */
-    @ContentChild(KbqTagTrailingIcon, { static: false }) trailingIcon: KbqTagTrailingIcon;
+    readonly trailingIcon = contentChild(KbqTagTrailingIcon);
 
     /** The tag's remove toggler. */
-    @ContentChild(forwardRef(() => KbqTagRemove), { static: false }) removeIcon: KbqTagRemove;
+    readonly removeIcon = contentChild(forwardRef(() => KbqTagRemove));
 
     /** Emitted when the tag is selected or deselected. */
-    @Output() readonly selectionChange: EventEmitter<KbqTagSelectionChange> = new EventEmitter<KbqTagSelectionChange>();
+    readonly selectionChange = output<KbqTagSelectionChange>();
 
     /** Emitted when the tag is destroyed and leaving the DOM. */
-    @Output() readonly destroyed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
+    readonly destroyed = output<KbqTagEvent>();
 
     /**
      * Emitted when a tag is to be removed.
      * Fires on programmatic and UI removal (click or keyboard).
      */
-    @Output() readonly removed: EventEmitter<KbqTagEvent> = new EventEmitter<KbqTagEvent>();
+    readonly removed = output<KbqTagEvent>();
 
     /** Whether the tag is selected. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get selected(): boolean {
         return this._selected;
@@ -325,6 +327,8 @@ export class KbqTag
     private _selected: boolean = false;
 
     /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         return this._value ?? this.elementRef.nativeElement.textContent?.trim();
@@ -339,9 +343,11 @@ export class KbqTag
     /**
      * Whether the tag is selectable.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get selectable(): boolean {
-        return this._selectable || !!this.tagList?.selectable;
+        return this._selectable || !!this.tagList?.selectable();
     }
 
     set selectable(value: boolean) {
@@ -353,6 +359,8 @@ export class KbqTag
     /**
      * Determines whether the tag is removable.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get removable(): boolean {
         return this._removable && (this.tagList?.removable ?? true);
@@ -364,6 +372,8 @@ export class KbqTag
 
     private _removable: boolean = true;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get tabindex() {
         if (this.disabled) return null;
@@ -381,6 +391,8 @@ export class KbqTag
     /**
      * Whether the tag is disabled.
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled || (this.tagList?.disabled ?? false);
@@ -428,7 +440,7 @@ export class KbqTag
 
     /** @docs-private */
     addClassModificatorForIcons() {
-        const icons = this.contentChildren.map((item) => item.elementRef.nativeElement);
+        const icons = this.contentChildren().map((item) => item.elementRef.nativeElement);
 
         if (icons.length === 1) {
             const iconElement = icons[0];
@@ -561,7 +573,11 @@ export class KbqTag
             case DELETE:
             case BACKSPACE: {
                 // If there is a tag list and it has selected tags, remove them, otherwise remove focused tag.
-                this.tagList?.selected.length ? this.tagList.removeSelected() : this.remove();
+                if (this.tagList?.selected.length) {
+                    this.tagList.removeSelected();
+                } else {
+                    this.remove();
+                }
 
                 // Always prevent so page navigation does not occur
                 event.preventDefault();
@@ -603,7 +619,7 @@ export class KbqTag
         this.editChange.emit({ tag: this, type: 'start', reason });
 
         setTimeout(() => {
-            const input = this.editInputElementRef?.nativeElement;
+            const input = this.editInputElementRef()?.nativeElement;
 
             if (!input) throw getTagEditInputMissingError();
 
@@ -624,7 +640,7 @@ export class KbqTag
 
     /** @docs-private */
     submitEditing(reason: string): void {
-        if (!this.editing() || this.preventEditSubmit) return;
+        if (!this.editing() || this.preventEditSubmit()) return;
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'submit', reason });

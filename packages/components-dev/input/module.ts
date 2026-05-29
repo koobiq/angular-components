@@ -4,9 +4,8 @@ import {
     Component,
     Inject,
     model,
-    QueryList,
-    ViewChild,
-    ViewChildren,
+    viewChild,
+    viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,13 +16,7 @@ import {
     KbqLocaleServiceModule,
     KbqNormalizeWhitespace
 } from '@koobiq/components/core';
-import {
-    hasPasswordStrengthError,
-    KbqFormField,
-    KbqFormFieldModule,
-    KbqPasswordHint,
-    PasswordRules
-} from '@koobiq/components/form-field';
+import { hasPasswordStrengthError, KbqFormField, KbqPasswordHint, PasswordRules } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleComponent } from '@koobiq/components/toggle';
@@ -68,7 +61,6 @@ export class DevDocsExamples {}
         FormsModule,
         ReactiveFormsModule,
         KbqLocaleServiceModule,
-        KbqFormFieldModule,
         KbqButtonModule,
         KbqInputModule,
         KbqToolTipModule,
@@ -80,8 +72,8 @@ export class DevDocsExamples {}
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'layout-column layout-align-center-center'
     }
@@ -101,19 +93,22 @@ export class DevApp implements AfterViewInit {
 
     locales: string[];
 
-    @ViewChildren(KbqPasswordHint) passwordHints: QueryList<KbqPasswordHint>;
-    @ViewChild('formField') formField: KbqFormField;
+    readonly passwordHints = viewChildren(KbqPasswordHint);
+    readonly formField = viewChild.required<KbqFormField>('formField');
 
     constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {
         this.locales = Object.keys(this.localeService.locales).filter((key) => key !== 'items');
     }
 
     ngAfterViewInit() {
-        this.formField.control.stateChanges.pipe(startWith()).subscribe((state: any) => {
-            if (!state?.focused && hasPasswordStrengthError(this.passwordHints)) {
-                this.formField.control.ngControl?.control?.setErrors({ passwordStrength: true });
-            }
-        });
+        this.formField()
+            .control()
+            .stateChanges.pipe(startWith())
+            .subscribe((state: any) => {
+                if (!state?.focused && hasPasswordStrengthError(this.passwordHints())) {
+                    this.formField().control().ngControl?.control?.setErrors({ passwordStrength: true });
+                }
+            });
     }
 
     atLeastNCapitalLetters = (n: number): ((value: string) => boolean) => {

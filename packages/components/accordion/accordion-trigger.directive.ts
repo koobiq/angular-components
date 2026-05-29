@@ -37,7 +37,7 @@ export class KbqAccordionTriggerDirective {
 
     /** Fires when trigger clicked */
     onClick(): void {
-        if (!this.accordion.collapsible && this.item.expanded) return;
+        if (!this.accordion.collapsible() && this.item.expanded) return;
 
         this.item.toggle();
 

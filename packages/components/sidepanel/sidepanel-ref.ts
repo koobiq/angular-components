@@ -1,7 +1,6 @@
-import { OverlayRef } from '@angular/cdk/overlay';
+﻿import { OverlayRef } from '@angular/cdk/overlay';
 import { signal } from '@angular/core';
-import { ESCAPE } from '@koobiq/cdk/keycodes';
-import { isHtmlElement } from '@koobiq/components/core';
+import { ESCAPE, isHtmlElement } from '@koobiq/components/core';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, take, tap } from 'rxjs/operators';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';

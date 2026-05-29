@@ -4,6 +4,7 @@ import {
     Directive,
     inject,
     Input,
+    input,
     NgModule,
     numberAttribute,
     OnDestroy,
@@ -25,6 +26,8 @@ const MIN_VISIBLE_LENGTH = 50;
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
     private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input() set kbqEllipsisCenter(value: string) {
         this._kbqEllipsisCenter = value;
         this.refresh();
@@ -32,15 +35,15 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
         this.cdr.detectChanges();
     }
 
-    @Input() minVisibleLength: number = MIN_VISIBLE_LENGTH;
+    readonly minVisibleLength = input<number>(MIN_VISIBLE_LENGTH);
 
-    @Input() charWidth = 7;
+    readonly charWidth = input(7);
 
     /**
      * Debounce time (ms) for resize events before recalculating ellipsis position.
      * @default 50
      */
-    @Input({ transform: numberAttribute }) debounceInterval: number = 50;
+    readonly debounceInterval = input<number, unknown>(50, { transform: numberAttribute });
 
     /** @docs-private */
     readonly resizeStream = new Subject<Event>();
@@ -57,7 +60,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
     ngAfterViewInit(): void {
         this.resizeSubscription = this.resizeStream
-            .pipe(debounceTime(this.debounceInterval))
+            .pipe(debounceTime(this.debounceInterval()))
             .subscribe(() => this.refresh());
     }
 
@@ -103,7 +106,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
                 start = '';
                 end = this._kbqEllipsisCenter;
             } else {
-                const averageCharWidth = this.charWidth;
+                const averageCharWidth = this.charWidth();
                 const lastCharsLength = Math.round(this.elementRef.nativeElement.clientWidth / 2 / averageCharWidth);
                 const sliceIndex: number = Math.round(this._kbqEllipsisCenter.length - lastCharsLength);
 

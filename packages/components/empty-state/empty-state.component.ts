@@ -6,7 +6,8 @@ import {
     Directive,
     Input,
     Optional,
-    ViewEncapsulation
+    ViewEncapsulation,
+    input
 } from '@angular/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconItem } from '@koobiq/components/icon';
@@ -57,21 +58,23 @@ export class KbqEmptyStateActions {}
     selector: 'kbq-empty-state',
     templateUrl: './empty-state.component.html',
     styleUrls: ['./empty-state.scss', 'empty-state-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-empty-state',
         '[class]': 'emptyStateSizeClass',
-        '[class.kbq-empty-state_align-center]': '!alignTop',
-        '[class.kbq-empty-state_align-top]': 'alignTop',
-        '[class.kbq-empty-state_normal-color]': '!errorColor',
-        '[class.kbq-empty-state_error-color]': 'errorColor',
+        '[class.kbq-empty-state_align-center]': '!alignTop()',
+        '[class.kbq-empty-state_align-top]': 'alignTop()',
+        '[class.kbq-empty-state_normal-color]': '!errorColor()',
+        '[class.kbq-empty-state_error-color]': 'errorColor()',
         '[class.kbq-empty-state_has-icon]': '!!icon'
     }
 })
 export class KbqEmptyState implements AfterContentInit {
-    @Input() errorColor: boolean = false;
-    @Input() alignTop: boolean = false;
+    readonly errorColor = input<boolean>(false);
+    readonly alignTop = input<boolean>(false);
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() size: KbqDefaultSizes = 'normal';
 
     @ContentChild(KbqEmptyStateIcon) icon: KbqEmptyStateIcon | null;
@@ -84,7 +87,7 @@ export class KbqEmptyState implements AfterContentInit {
     }
 
     ngAfterContentInit(): void {
-        if (this.errorColor && this.icon) {
+        if (this.errorColor() && this.icon) {
             this.icon.setErrorColor();
         }
     }

@@ -141,7 +141,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
     const openSelect = (index: number = 0) => {
         const pipe = getPipeComponent(index);
 
-        pipe.select.open();
+        pipe.select().open();
         fixture.detectChanges();
     };
 
@@ -335,7 +335,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            expect(component.select.selected.length).toBeGreaterThan(0);
+            expect(component.select().selected.length).toBeGreaterThan(0);
             expect(component.allOptionsSelected).toBe(false);
             expect(component.selectAllCheckboxState).toBe('indeterminate');
         }));
@@ -417,7 +417,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            expect(component.tree.selectionModel.selected.length).toBeGreaterThan(0);
+            expect(component.tree().selectionModel.selected.length).toBeGreaterThan(0);
         }));
 
         it('should deselect all nodes when all selected', fakeAsync(() => {
@@ -442,7 +442,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            expect(component.tree.selectionModel.selected.length).toBe(0);
+            expect(component.tree().selectionModel.selected.length).toBe(0);
         }));
 
         it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', fakeAsync(() => {
@@ -622,9 +622,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             const component = getPipeComponent();
             const selectedCount = component.numberOfSelectedLeaves;
 
-            const selectedWithoutSelectAll = component.select.selected.filter(
-                ({ value }) => value !== kbqTreeSelectAllValue
-            ).length;
+            const selectedWithoutSelectAll = component
+                .select()
+                .selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
 
             expect(selectedCount).toBe(selectedWithoutSelectAll);
         }));

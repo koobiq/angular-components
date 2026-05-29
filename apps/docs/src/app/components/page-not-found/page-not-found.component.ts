@@ -17,8 +17,8 @@ import { DocsLocaleState } from 'src/app/services/locale';
         </a>
     `,
     styleUrls: ['page-not-found.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-page-not-found'
     }

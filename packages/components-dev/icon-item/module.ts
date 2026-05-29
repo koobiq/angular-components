@@ -7,8 +7,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     imports: [KbqIconModule],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     colors = KbqComponentColors;

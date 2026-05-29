@@ -2,7 +2,7 @@
 
 Angular validators define **what** is invalid — they set error keys on the `FormControl` (`required`, `minlength`, etc.). They do not control **when** those errors are shown to the user. Without any additional mechanism, errors would appear immediately when the page loads, before the user has touched anything.
 
-Koobiq solves this with two mechanisms. `ErrorStateMatcher` is the current recommended approach. `KbqValidateDirective` is a deprecated legacy alternative.
+Koobiq solves this with `ErrorStateMatcher`.
 
 ### ErrorStateMatcher
 
@@ -16,10 +16,7 @@ Apply a matcher to all controls inside a component via providers:
 
 ```ts
 @Component({
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
-    ]
+    providers: [kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)]
 })
 ```
 
@@ -27,16 +24,6 @@ Override for a single control using the `[errorStateMatcher]` input (supported b
 
 ```html
 <kbq-file-upload [errorStateMatcher]="myMatcher" ... />
-```
-
-### KbqValidateDirective (deprecated)
-
-The directive controlled error display by patching methods on `NgForm` and `FormGroupDirective`. Method patching creates implicit dependencies between components in the form tree and is fragile against Angular upgrades. `ErrorStateMatcher` solves the same problem without side effects.
-
-The directive is **deprecated and will be removed in the next major release**. Always disable it explicitly:
-
-```ts
-providers: [kbqDisableLegacyValidationDirectiveProvider()];
 ```
 
 ## Displaying errors

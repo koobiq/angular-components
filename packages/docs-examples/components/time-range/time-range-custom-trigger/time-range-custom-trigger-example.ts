@@ -44,10 +44,10 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@ko
 
         <kbq-time-range [titleTemplate]="titleAsFormField" [arrow]="false" [formControl]="control" />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-xl'
     }

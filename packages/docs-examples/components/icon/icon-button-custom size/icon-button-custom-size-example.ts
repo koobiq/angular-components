@@ -41,10 +41,10 @@ import { KbqIconButton } from '@koobiq/components/icon';
             --kbq-icon-button-size-normal-horizontal-padding: var(--kbq-size-xxs);
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-row layout-align-left-center layout-gap-3xl'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class IconButtonCustomSizeExample {
     colors = KbqComponentColors;

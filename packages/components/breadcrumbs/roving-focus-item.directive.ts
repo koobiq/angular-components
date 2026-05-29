@@ -4,7 +4,7 @@ import {
     Directive,
     ElementRef,
     inject,
-    Input,
+    input,
     NgZone,
     OnDestroy,
     OnInit
@@ -17,8 +17,8 @@ import { focusFirst, generateId, getFocusIntent, wrapArray } from './utils';
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.data-orientation]': 'parent.orientation',
-        '[attr.data-active]': 'active',
-        '[attr.data-disabled]': '!focusable ? "" : undefined',
+        '[attr.data-active]': 'active()',
+        '[attr.data-disabled]': '!focusable() ? "" : undefined',
         '(mousedown)': 'handleMouseDown($event)',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()'
@@ -29,12 +29,12 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
     private readonly ngZone = inject(NgZone);
     protected readonly parent = inject(RdxRovingFocusGroupDirective);
 
-    @Input({ transform: booleanAttribute }) focusable: boolean = true;
-    @Input({ transform: booleanAttribute }) active: boolean = true;
-    @Input() tabStopId: string;
-    @Input({ transform: booleanAttribute }) allowShiftKey: boolean = false;
+    readonly focusable = input<boolean, unknown>(true, { transform: booleanAttribute });
+    readonly active = input<boolean, unknown>(true, { transform: booleanAttribute });
+    readonly tabStopId = input<string>(undefined!);
+    readonly allowShiftKey = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    private readonly id = computed(() => this.tabStopId || generateId());
+    private readonly id = computed(() => this.tabStopId() || generateId());
 
     /** @docs-private */
     readonly isCurrentTabStop = computed(() => this.parent.currentTabStopId() === this.id());
@@ -45,7 +45,7 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
      * @docs-private
      */
     ngOnInit() {
-        if (this.focusable) {
+        if (this.focusable()) {
             this.parent.registerItem(this.elementRef.nativeElement);
             this.parent.onFocusableItemAdd();
         }
@@ -57,7 +57,7 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
      * @docs-private
      */
     ngOnDestroy() {
-        if (this.focusable) {
+        if (this.focusable()) {
             this.parent.unregisterItem(this.elementRef.nativeElement);
             this.parent.onFocusableItemRemove();
         }
@@ -74,7 +74,7 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
 
     /** @docs-private */
     handleMouseDown(event: MouseEvent) {
-        if (!this.focusable) {
+        if (!this.focusable()) {
             // We prevent focusing non-focusable items on `mousedown`.
             // Even though the item has tabIndex={-1}, that only means take it out of the tab order.
             event.preventDefault();
@@ -105,10 +105,10 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
 
         if (event.target !== this.elementRef.nativeElement) return;
 
-        const focusIntent = getFocusIntent(event, this.parent.orientation, this.parent.dir);
+        const focusIntent = getFocusIntent(event, this.parent.orientation, this.parent.dir());
 
         if (focusIntent !== undefined) {
-            if (event.metaKey || event.ctrlKey || event.altKey || (this.allowShiftKey ? false : event.shiftKey)) {
+            if (event.metaKey || event.ctrlKey || event.altKey || (this.allowShiftKey() ? false : event.shiftKey)) {
                 return;
             }
 
@@ -122,7 +122,7 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
                 if (focusIntent === 'prev') candidateNodes.reverse();
                 const currentIndex = candidateNodes.indexOf(this.elementRef.nativeElement);
 
-                candidateNodes = this.parent.loop
+                candidateNodes = this.parent.loop()
                     ? wrapArray(candidateNodes, currentIndex + 1)
                     : candidateNodes.slice(currentIndex + 1);
             }

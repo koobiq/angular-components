@@ -15,14 +15,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             9f1c...f9a8
         </span>
     `,
-    host: {
-        class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
-    },
     styles: `
         ::ng-deep .example__wide-tooltip.kbq-tooltip {
             --kbq-tooltip-size-max-width: 454px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
+    }
 })
 export class TooltipWideWidthExample {}

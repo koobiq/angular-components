@@ -21,10 +21,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             Max Width
         </button>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class TooltipWidthExample {
     placement: PopUpPlacements = PopUpPlacements.Top;

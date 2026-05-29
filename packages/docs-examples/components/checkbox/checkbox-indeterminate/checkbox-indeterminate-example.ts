@@ -69,7 +69,11 @@ export class CheckboxIndeterminateExample {
         const length = this.fruits.length;
 
         this.fruits.forEach((fruit) => {
-            fruit.checked ? checked++ : unchecked++;
+            if (fruit.checked) {
+                checked++;
+            } else {
+                unchecked++;
+            }
         });
         this.parentIndeterminate = checked !== length && unchecked !== length;
         this.parentChecked = this.parentIndeterminate || length === checked;

@@ -1,9 +1,14 @@
-import { Component, ElementRef, Provider, Type, ViewChild } from '@angular/core';
+﻿import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { dispatchFakeEvent } from '@koobiq/cdk/testing';
-import { KbqComponentColors, leftIconClassName, rightIconClassName, ThemePalette } from '@koobiq/components/core';
+import {
+    dispatchFakeEvent,
+    KbqComponentColors,
+    leftIconClassName,
+    rightIconClassName,
+    ThemePalette
+} from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -133,9 +138,11 @@ describe('KbqButton', () => {
         fixture.detectChanges();
         const buttonDebugElement = fixture.componentInstance;
 
-        dispatchFakeEvent(buttonDebugElement.trigger.nativeElement, 'click');
+        const trigger = buttonDebugElement.trigger();
+
+        dispatchFakeEvent(trigger.nativeElement, 'click');
         fixture.detectChanges();
-        expect(buttonDebugElement.trigger.nativeElement.classList.contains('kbq-active')).toBeTruthy();
+        expect(trigger.nativeElement.classList.contains('kbq-active')).toBeTruthy();
     });
 
     it('should handle a click on the button', () => {
@@ -340,7 +347,7 @@ describe(KbqButtonGroupRoot.name, () => {
         const fixture = createComponent(BasicButtonGroupRootTestComponent);
         const { componentInstance } = fixture;
 
-        expect(componentInstance.groupRoot.kbqStyle).toBe(`kbq-button-group-root_${KbqButtonStyles.Filled}`);
+        expect(componentInstance.groupRoot().kbqStyle).toBe(`kbq-button-group-root_${KbqButtonStyles.Filled}`);
     });
 
     it('should propagate color to all child buttons', () => {
@@ -364,7 +371,7 @@ describe(KbqButtonGroupRoot.name, () => {
         componentInstance.color = 'custom-brand';
         fixture.detectChanges();
 
-        expect(componentInstance.groupRoot.color).toBe('custom-brand');
+        expect(componentInstance.groupRoot().color).toBe('custom-brand');
     });
 
     it('should propagate disabled state to all child buttons', () => {
@@ -604,7 +611,7 @@ class KbqButtonIconNgIfCaseTestApp {
     `
 })
 class ButtonDropdownTrigger {
-    @ViewChild('triggerEl', { static: false, read: ElementRef }) trigger: ElementRef;
+    readonly trigger = viewChild.required('triggerEl', { read: ElementRef });
     backdropClass: string;
 }
 
@@ -619,7 +626,7 @@ class ButtonDropdownTrigger {
     `
 })
 class BasicButtonGroupRootTestComponent {
-    @ViewChild(KbqButtonGroupRoot) groupRoot: KbqButtonGroupRoot;
+    readonly groupRoot = viewChild.required(KbqButtonGroupRoot);
 
     style: KbqButtonStyles | string = KbqButtonStyles.Filled;
     color: KbqComponentColors | ThemePalette | string = KbqComponentColors.ContrastFade;
@@ -638,7 +645,7 @@ class BasicButtonGroupRootTestComponent {
     `
 })
 class DynamicChildrenTestComponent {
-    @ViewChild(KbqButtonGroupRoot) groupRoot: KbqButtonGroupRoot;
+    readonly groupRoot = viewChild.required(KbqButtonGroupRoot);
 
     style: KbqButtonStyles | string = KbqButtonStyles.Filled;
     color: KbqComponentColors | string = KbqComponentColors.Theme;

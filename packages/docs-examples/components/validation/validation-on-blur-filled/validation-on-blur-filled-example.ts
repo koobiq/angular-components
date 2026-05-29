@@ -21,11 +21,9 @@ import {
 import {
     ErrorStateMatcher,
     KbqComponentColors,
-    kbqDisableLegacyValidationDirectiveProvider,
     kbqErrorStateMatcherProvider,
     PopUpPlacements
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { fromEvent, switchMap } from 'rxjs';
@@ -74,7 +72,6 @@ class ExampleResetTouchedOnFirstInput {
     selector: 'validation-on-blur-filled-example',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqToolTipModule,
         ExampleResetTouchedOnFirstInput
@@ -99,14 +96,13 @@ class ExampleResetTouchedOnFirstInput {
             <kbq-cleaner />
         </kbq-form-field>
     `,
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(CustomErrorStateMatcher)
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ValidationOnBlurFilledExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);

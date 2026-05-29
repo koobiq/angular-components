@@ -11,12 +11,8 @@ import {
     Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import {
-    ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
-    kbqErrorStateMatcherProvider
-} from '@koobiq/components/core';
-import { KbqFormFieldModule, KbqPasswordToggle } from '@koobiq/components/form-field';
+import { ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
+import { KbqPasswordToggle } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 @Injectable()
@@ -36,7 +32,6 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
     selector: 'input-change-password-example',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqPasswordToggle,
         KbqButtonModule
@@ -82,11 +77,10 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
             </div>
         </form>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
         kbqErrorStateMatcherProvider(RequiredErrorStateMatcher)
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputChangePasswordExample {
     protected readonly destroyRef = inject(DestroyRef);

@@ -26,10 +26,10 @@ import { KbqIcon } from '@koobiq/components/icon';
             </div>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-row layout-align-center-center layout-gap-xl'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ButtonGroupVerticalExample {
     protected readonly buttonStyles: { color: KbqComponentColors; appearance: KbqButtonStyles; gap?: boolean }[] = [

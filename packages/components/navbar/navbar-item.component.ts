@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {
@@ -7,7 +7,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     Directive,
     ElementRef,
     Input,
@@ -16,13 +15,20 @@ import {
     Optional,
     ViewEncapsulation,
     booleanAttribute,
+    contentChild,
     inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { DOWN_ARROW, RIGHT_ARROW } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KBQ_WINDOW, PopUpPlacements, PopUpTriggers, kbqInjectNativeElement } from '@koobiq/components/core';
+import {
+    DOWN_ARROW,
+    IFocusableOption,
+    KBQ_WINDOW,
+    PopUpPlacements,
+    PopUpTriggers,
+    RIGHT_ARROW,
+    kbqInjectNativeElement
+} from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -122,14 +128,14 @@ export class KbqNavbarDivider {}
     }
 })
 export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
-    @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
+    readonly title = contentChild(KbqNavbarTitle);
 
-    @ContentChild(KbqButton) button: KbqButton;
+    readonly button = contentChild(KbqButton);
 
-    @ContentChild(KbqFormField) formField: KbqFormField;
+    readonly formField = contentChild(KbqFormField);
 
-    get nestedElement(): KbqButton | KbqFormField {
-        return this.button || this.formField;
+    get nestedElement(): KbqButton | KbqFormField | undefined {
+        return this.button() || this.formField();
     }
 
     get tooltip(): KbqTooltipTrigger {
@@ -153,6 +159,8 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     private _hasFocus: boolean = false;
 
     /** Whether the item is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled() {
         return this._disabled;
@@ -183,8 +191,10 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     }
 
     ngAfterContentInit(): void {
-        if (this.button) {
-            this.button.tabIndex = -1;
+        const button = this.button();
+
+        if (button) {
+            button.tabIndex = -1;
         }
     }
 
@@ -221,7 +231,12 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
         if (this.nestedElement) {
             if (origin === 'keyboard') {
-                this.nestedElement.focusViaKeyboard();
+                // KbqButton tracks focus via FocusMonitor; KbqFormField just delegates to control.focus.
+                if ('focusViaKeyboard' in this.nestedElement) {
+                    this.nestedElement.focusViaKeyboard();
+                } else {
+                    this.nestedElement.focus();
+                }
             }
 
             this.changeDetector.markForCheck();
@@ -249,7 +264,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
                     this.tooltip?.hide();
 
-                    if (this.button?.hasFocus) {
+                    if (this.button()?.hasFocus) {
                         return;
                     }
 
@@ -259,7 +274,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     }
 
     getLabel(): string {
-        return this.title?.text || '';
+        return this.title()?.text || '';
     }
 }
 
@@ -325,7 +340,7 @@ export class KbqNavbarRectangleElement {
 
     private _collapsed: boolean;
 
-    @ContentChild(KbqButtonCssStyler) button: KbqButtonCssStyler;
+    readonly button = contentChild(KbqButtonCssStyler);
 
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
@@ -342,22 +357,24 @@ export class KbqNavbarRectangleElement {
         KbqIcon
     ],
     templateUrl: './navbar-item.component.html',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqNavbarItem',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-item',
         '[class.kbq-navbar-item_collapsed]': 'isCollapsed',
-        '[class.kbq-navbar-item_with-title]': '!!title',
+        '[class.kbq-navbar-item_with-title]': '!!title()',
 
         '(keydown)': 'onKeyDown($event)'
-    }
+    },
+    exportAs: 'kbqNavbarItem'
 })
 export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
-    @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
+    readonly title = contentChild(KbqNavbarTitle);
 
-    @ContentChild(KbqIcon) icon: KbqIcon;
+    readonly icon = contentChild(KbqIcon);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get collapsedText(): string {
         return this._collapsedText;
@@ -371,6 +388,8 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 
     private _collapsedText: string;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTrigger')
     get trigger(): string {
         return this._trigger;
@@ -400,11 +419,13 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     private _collapsed = false;
 
     get croppedText(): string {
-        const croppedTitleText = this.title?.isOverflown ? this.titleText : '';
+        const croppedTitleText = this.title()?.isOverflown ? this.titleText : '';
 
         return `${croppedTitleText}`;
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get collapsable(): boolean {
         return this._collapsable;
@@ -417,7 +438,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     private _collapsable: boolean = true;
 
     get titleText(): string | null {
-        return this._collapsedText || this.title?.text || null;
+        return this._collapsedText || this.title()?.text || null;
     }
 
     get disabled(): boolean {
@@ -445,7 +466,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     }
 
     get hasCroppedText(): boolean {
-        return !!this.title?.isOverflown;
+        return !!this.title()?.isOverflown;
     }
 
     constructor(
@@ -512,7 +533,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     }
 
     getTitleWidth(): number {
-        return this.title.outerElementWidth;
+        return this.title()?.outerElementWidth ?? 0;
     }
 
     onKeyDown($event: KeyboardEvent) {

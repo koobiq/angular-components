@@ -18,13 +18,7 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import {
-    ErrorStateMatcher,
-    KbqComponentColors,
-    kbqDisableLegacyValidationDirectiveProvider,
-    PopUpPlacements
-} from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { ErrorStateMatcher, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -77,7 +71,6 @@ class ExampleResetTouchedOnFirstInput {
     imports: [
         ReactiveFormsModule,
         KbqInlineEditModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         KbqToolTipModule,
@@ -140,10 +133,7 @@ class ExampleResetTouchedOnFirstInput {
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-column'
-    },
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    }
 })
 export class InlineEditValidationExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);

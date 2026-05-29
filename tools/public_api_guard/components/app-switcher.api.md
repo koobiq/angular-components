@@ -6,6 +6,7 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_platform_browser from '@angular/platform-browser';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { EventEmitter } from '@angular/core';
@@ -15,16 +16,15 @@ import { InjectionToken } from '@angular/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqInput } from '@koobiq/components/input';
-import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
-import { Observable } from 'rxjs';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
-import { SafeHtml } from '@angular/platform-browser';
+import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -93,13 +93,13 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
     readonly externalConfiguration: unknown;
     filteredSites: KbqAppSwitcherSite[];
-    input: KbqInput;
+    readonly input: i0.Signal<KbqInput | undefined>;
     isTrapFocus: boolean;
     get localeData(): any;
-    protected readonly localeService: KbqLocaleService | null;
+    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     // (undocumented)
     ngAfterViewInit(): void;
-    otherSites: KbqDropdownTrigger;
+    readonly otherSites: i0.Signal<KbqDropdownTrigger>;
     prefix: string;
     readonly searchControl: FormControl<string | null>;
     selectAppInSite(site: KbqAppSwitcherSite, app: KbqAppSwitcherApp): void;
@@ -117,7 +117,7 @@ export class KbqAppSwitcherDropdownApp extends KbqDropdownItem {
     // (undocumented)
     app: KbqAppSwitcherApp;
     // (undocumented)
-    getIcon(icon: string | null): SafeHtml;
+    getIcon(icon: string | null): _angular_platform_browser.SafeHtml;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherDropdownApp, "[kbq-app-switcher-dropdown-app]", ["kbqAppSwitcherDropdownApp"], { "app": { "alias": "kbq-app-switcher-dropdown-app"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
@@ -143,15 +143,13 @@ export class KbqAppSwitcherListItem extends KbqDropdownItem {
     // (undocumented)
     collapsed: boolean;
     // (undocumented)
-    getIcon(icon: string | null): SafeHtml;
+    getIcon(icon: string | null): _angular_platform_browser.SafeHtml;
     // (undocumented)
     static ngAcceptInputType_collapsed: unknown;
     // (undocumented)
-    static ngAcceptInputType_toggle: unknown;
+    readonly toggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    toggle: boolean;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherListItem, "[kbq-app-switcher-list-item]", ["kbqAppSwitcherApp"], { "app": { "alias": "app"; "required": false; }; "toggle": { "alias": "toggle"; "required": false; }; "collapsed": { "alias": "collapsed"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherListItem, "[kbq-app-switcher-list-item]", ["kbqAppSwitcherApp"], { "app": { "alias": "app"; "required": false; }; "toggle": { "alias": "toggle"; "required": false; "isSignal": true; }; "collapsed": { "alias": "collapsed"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherListItem, never>;
 }
@@ -162,13 +160,8 @@ export class KbqAppSwitcherModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqAppSwitcherModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAppSwitcherModule, never, [typeof i1.KbqAppSwitcherComponent, typeof i1.KbqAppSwitcherTrigger, typeof i2.KbqAppSwitcherListItem, typeof i3.KbqAppSwitcherDropdownApp, typeof i4.KbqAppSwitcherDropdownSite], [typeof i1.KbqAppSwitcherTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAppSwitcherModule, never, [typeof KbqAppSwitcherComponent, typeof KbqAppSwitcherTrigger, typeof KbqAppSwitcherListItem, typeof KbqAppSwitcherDropdownApp, typeof KbqAppSwitcherDropdownSite], [typeof KbqAppSwitcherTrigger]>;
 }
 
 // @public
@@ -190,13 +183,10 @@ export interface KbqAppSwitcherSite {
 
 // @public (undocumented)
 export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherComponent> implements AfterContentInit, OnInit {
-    // @deprecated (undocumented)
-    get apps(): KbqAppSwitcherApp[];
-    set apps(apps: KbqAppSwitcherApp[]);
     get appsCount(): number;
     arrow: boolean;
     backdropClass: string;
-    closingActions(): Observable<void | MouseEvent | CdkScrollable>;
+    closingActions(): rxjs.Observable<void | MouseEvent | CdkScrollable>;
     content: string | TemplateRef<any>;
     get currentApps(): KbqAppSwitcherApp[];
     customClass: string;
@@ -217,7 +207,6 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     // (undocumented)
     ngOnInit(): void;
     offset: number | null;
-    originalApps: KbqAppSwitcherApp[];
     originalSites: KbqAppSwitcherSite[];
     protected originSelector: string;
     protected get overlayConfig(): OverlayConfig;
@@ -226,10 +215,10 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     protected preventClosingByInnerScrollSubscription: Subscription;
     protected scrollStrategy: () => ScrollStrategy;
     selectedApp: KbqAppSwitcherApp;
-    readonly selectedAppChange: EventEmitter<KbqAppSwitcherApp>;
+    readonly selectedAppChange: i0.OutputEmitterRef<KbqAppSwitcherApp>;
     get selectedSite(): KbqAppSwitcherSite;
     set selectedSite(value: KbqAppSwitcherSite);
-    readonly selectedSiteChange: EventEmitter<KbqAppSwitcherSite>;
+    readonly selectedSiteChange: i0.OutputEmitterRef<KbqAppSwitcherSite>;
     get sites(): KbqAppSwitcherSite[];
     set sites(value: KbqAppSwitcherSite[]);
     get sitesMode(): boolean;
@@ -240,7 +229,7 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     readonly visibleChange: EventEmitter<boolean>;
     get withSearch(): boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAppSwitcherTrigger, "[kbqAppSwitcher]", ["kbqAppSwitcher"], { "selectedApp": { "alias": "selectedApp"; "required": false; }; "placement": { "alias": "kbqAppSwitcherPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "sites": { "alias": "sites"; "required": false; }; "apps": { "alias": "apps"; "required": false; }; "groupBy": { "alias": "groupBy"; "required": false; }; "selectedSite": { "alias": "selectedSite"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; "selectedSiteChange": "selectedSiteChange"; "selectedAppChange": "selectedAppChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAppSwitcherTrigger, "[kbqAppSwitcher]", ["kbqAppSwitcher"], { "selectedApp": { "alias": "selectedApp"; "required": false; }; "placement": { "alias": "kbqAppSwitcherPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "sites": { "alias": "sites"; "required": false; }; "groupBy": { "alias": "groupBy"; "required": false; }; "selectedSite": { "alias": "selectedSite"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; "selectedSiteChange": "selectedSiteChange"; "selectedAppChange": "selectedAppChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherTrigger, never>;
 }

@@ -16,7 +16,7 @@
     <ng-content />
 </span>
 
-@if (actionButton) {
+@if (actionButton()) {
     <kbq-action-container>
         <ng-content select="kbq-option-action" />
     </kbq-action-container>

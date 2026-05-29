@@ -17,10 +17,10 @@ import { KbqComponentColors } from '@koobiq/components/core';
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-column layout-align-center-center layout-gap-xl'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ButtonGroupOverviewExample {
     protected readonly data = [

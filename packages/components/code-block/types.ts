@@ -33,6 +33,3 @@ export type KbqCodeBlockFile = {
      */
     link?: string;
 };
-
-/** @deprecated Will be removed in next major release, use `KbqCodeBlockFile` instead. */
-export type KbqCodeFile = KbqCodeBlockFile;

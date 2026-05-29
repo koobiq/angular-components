@@ -1,5 +1,6 @@
 dist
 node_modules
+coverage
 
 # eslint ignores root level "dot" files by default
 !/.*.js

@@ -7,18 +7,17 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
+    contentChildren,
     Directive,
     ElementRef,
-    EventEmitter,
     forwardRef,
     Input,
+    input,
     OnDestroy,
     OnInit,
     Optional,
-    Output,
-    QueryList,
-    ViewChild,
+    output,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -63,6 +62,8 @@ export class KbqButtonToggleChange {
 })
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
     /** Whether the toggle group is vertical. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get vertical(): boolean {
         return this._vertical;
@@ -73,6 +74,8 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     }
 
     /** Value of the toggle group. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): any {
         const selected = this.selectionModel ? this.selectionModel.selected : [];
@@ -97,6 +100,8 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     }
 
     /** Whether multiple button toggles can be selected. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get multiple(): boolean {
         return this._multiple;
@@ -107,9 +112,11 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     }
 
     /** Child button toggle buttons. */
-    @ContentChildren(forwardRef(() => KbqButtonToggle)) buttonToggles: QueryList<KbqButtonToggle>;
+    readonly buttonToggles = contentChildren(forwardRef(() => KbqButtonToggle));
 
     /** Whether multiple button toggle group is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled;
@@ -118,11 +125,13 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
 
-        if (!this.buttonToggles) {
+        const buttonToggles = this.buttonToggles();
+
+        if (!buttonToggles) {
             return;
         }
 
-        this.buttonToggles.forEach((toggle) => toggle.markForCheck());
+        buttonToggles.forEach((toggle) => toggle.markForCheck());
     }
 
     /**
@@ -130,10 +139,10 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
      * Used to facilitate two-way data binding.
      * @docs-private
      */
-    @Output() readonly valueChange = new EventEmitter<any>();
+    readonly valueChange = output<any>();
 
     /** Event emitted when the group's value changes. */
-    @Output() readonly change: EventEmitter<KbqButtonToggleChange> = new EventEmitter<KbqButtonToggleChange>();
+    readonly change = output<KbqButtonToggleChange>();
     private _vertical = false;
     private _multiple = false;
     private _disabled = false;
@@ -163,7 +172,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     }
 
     ngAfterContentInit() {
-        this.selectionModel.select(...this.buttonToggles.filter((toggle) => toggle.checked));
+        this.selectionModel.select(...this.buttonToggles().filter((toggle) => toggle.checked));
         this.disabled = this._disabled;
     }
 
@@ -252,7 +261,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     private setSelectionByValue(value: any | any[]) {
         this.rawValue = value;
 
-        if (!this.buttonToggles) {
+        if (!this.selectionModel) {
             return;
         }
 
@@ -272,12 +281,12 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     /** Clears the selected toggles. */
     private clearSelection() {
         this.selectionModel.clear();
-        this.buttonToggles.forEach((toggle) => (toggle.checked = false));
+        this.buttonToggles().forEach((toggle) => (toggle.checked = false));
     }
 
     /** Selects a value if there's a toggle that corresponds to it. */
     private selectValue(value: any) {
-        const correspondingOption = this.buttonToggles.find((toggle) => {
+        const correspondingOption = this.buttonToggles().find((toggle) => {
             return toggle.value != null && toggle.value === value;
         });
 
@@ -303,7 +312,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
             [kbqStyle]="'transparent'"
             [class.kbq-selected]="checked"
             [disabled]="disabled"
-            [tabIndex]="tabIndex || 0"
+            [tabIndex]="tabIndex() || 0"
             (click)="onToggleClick()"
         >
             <div #kbqTitleText class="kbq-button-toggle-wrapper">
@@ -312,20 +321,22 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
         </button>
     `,
     styleUrls: ['button-toggle.scss', 'button-toggle-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqButtonToggle',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-button-toggle',
         '[class]': '"kbq-button-toggle" + iconType',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-selected]': 'checked'
-    }
+    },
+    exportAs: 'kbqButtonToggle'
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
-    @ContentChildren(KbqIcon, { descendants: true }) icons: QueryList<KbqIcon>;
+    readonly icons = contentChildren(KbqIcon, { descendants: true });
 
     /** Whether the button is checked. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get checked(): boolean {
         return this.buttonToggleGroup ? this.buttonToggleGroup.isSelected(this) : this._checked;
@@ -348,14 +359,18 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     type: ToggleType;
     iconType: string = '';
 
-    @ViewChild(KbqButton, { static: false }) mcButton: KbqButton;
+    readonly mcButton = viewChild.required(KbqButton);
 
     /** KbqButtonToggleGroup reads this to assign its own value. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() value: any;
 
     /** Tabindex for the toggle. */
-    @Input() tabIndex: number | null;
+    readonly tabIndex = input<number | null>(undefined!);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         return this._disabled || (this.buttonToggleGroup && this.buttonToggleGroup.disabled);
@@ -366,7 +381,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     }
 
     /** Event emitted when the group value changes. */
-    @Output() readonly change: EventEmitter<KbqButtonToggleChange> = new EventEmitter<KbqButtonToggleChange>();
+    readonly change = output<KbqButtonToggleChange>();
 
     private isSingleSelector = false;
     private _checked = false;
@@ -389,12 +404,14 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     }
 
     ngAfterContentInit(): void {
-        if (this.icons.length) {
+        const icons = this.icons();
+
+        if (icons.length) {
             const nodesWithoutComments = getNodesWithoutComments(
                 this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper')!.childNodes as NodeList
             ).length;
 
-            this.iconType = nodesWithoutComments === this.icons.length ? '-icon' : '-icon-text';
+            this.iconType = nodesWithoutComments === icons.length ? '-icon' : '-icon-text';
         }
     }
 

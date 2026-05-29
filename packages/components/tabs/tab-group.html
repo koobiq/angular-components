@@ -1,8 +1,8 @@
 <kbq-tab-header
     #tabHeader
     [selectedIndex]="selectedIndex"
-    [underlined]="underlined"
-    [vertical]="vertical"
+    [underlined]="underlined()"
+    [vertical]="vertical()"
     (indexFocused)="focusChanged($event)"
     (selectFocusedIndex)="onSelectFocusedIndex($event)"
 >
@@ -13,15 +13,15 @@
             class="kbq-tab-label"
             [attr.tabindex]="getTabIndex(tab, $index)"
             [class.kbq-selected]="selectedIndex === $index"
-            [class.kbq-tab-label_empty]="tab.empty"
-            [class.kbq-tab-label_horizontal]="!vertical"
-            [class.kbq-tab-label_underlined]="underlined"
-            [class.kbq-tab-label_vertical]="vertical"
+            [class.kbq-tab-label_empty]="tab.empty()"
+            [class.kbq-tab-label_horizontal]="!vertical()"
+            [class.kbq-tab-label_underlined]="underlined()"
+            [class.kbq-tab-label_vertical]="vertical()"
             [disabled]="tab.disabled"
             [id]="getTabLabelId($index)"
-            [kbqPlacement]="tab.tooltipPlacement"
+            [kbqPlacement]="tab.tooltipPlacement()"
             [kbqTooltip]="tab.tooltipTitle"
-            [kbqTooltipDisabled]="!tab.empty && !tab.isOverflown"
+            [kbqTooltipDisabled]="!tab.empty() && !tab.isOverflown"
             [kbqTrigger]="'hover, focus'"
             [tab]="tab"
             (click)="handleClick(tab, tabHeader, $index)"
@@ -32,8 +32,8 @@
                     <ng-template [cdkPortalOutlet]="tab.templateLabel" />
                 }
                 <!-- If there is not a label template, fall back to the text label. -->
-                @if (!tab.templateLabel) {
-                    {{ tab.textLabel }}
+                @else {
+                    {{ tab.textLabel() }}
                 }
             </div>
         </div>

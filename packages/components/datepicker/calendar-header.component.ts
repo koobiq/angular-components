@@ -1,13 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-    ViewEncapsulation
-} from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, Input, ViewEncapsulation, output } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, KbqOptionModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -35,12 +27,12 @@ export type MonthName = {
     ],
     templateUrl: 'calendar-header.html',
     styleUrls: ['calendar-header.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCalendarHeader',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-calendar-header'
-    }
+    },
+    exportAs: 'kbqCalendarHeader'
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
     monthNames: MonthName[];
@@ -49,6 +41,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     years: number[] = [];
     selectedYear: number;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get activeDate(): D {
         return this._activeDate;
@@ -63,6 +57,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
     private _activeDate: D;
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get maxDate(): D | null {
         return this._maxDate;
@@ -80,6 +76,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
     private _maxDate = this.adapter.createDate(defaultMaxYear, 11);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get minDate(): D | null {
         return this._minDate;
@@ -112,9 +110,9 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     }
 
     /** Emits when any date is activated. */
-    @Output() readonly activeDateChange = new EventEmitter<D>();
-    @Output() readonly monthSelected = new EventEmitter<D>();
-    @Output() readonly yearSelected = new EventEmitter<D>();
+    readonly activeDateChange = output<D>();
+    readonly monthSelected = output<D>();
+    readonly yearSelected = output<D>();
 
     constructor(private readonly adapter: DateAdapter<D>) {
         this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {

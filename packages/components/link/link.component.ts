@@ -3,7 +3,7 @@ import {
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
-    ContentChild,
+    contentChild,
     ContentChildren,
     DestroyRef,
     Directive,
@@ -11,6 +11,7 @@ import {
     forwardRef,
     inject,
     Input,
+    input,
     numberAttribute,
     OnDestroy,
     QueryList,
@@ -30,15 +31,14 @@ export const baseURLRegex = /^http(s)?:\/\//;
 
 @Directive({
     selector: '[kbq-link]',
-    exportAs: 'kbqLink',
     host: {
         class: 'kbq-link',
-        '[class.kbq-link_no-underline]': 'noUnderline',
-        '[class.kbq-link_use-visited]': 'useVisited',
-        '[class.kbq-link_big]': 'big',
-        '[class.kbq-link_compact]': 'compact',
-        '[class.kbq-link_pseudo]': 'pseudo',
-        '[class.kbq-link_multiline]': 'multiline',
+        '[class.kbq-link_no-underline]': 'noUnderline()',
+        '[class.kbq-link_use-visited]': 'useVisited()',
+        '[class.kbq-link_big]': 'big()',
+        '[class.kbq-link_compact]': 'compact()',
+        '[class.kbq-link_pseudo]': 'pseudo()',
+        '[class.kbq-link_multiline]': 'multiline()',
         '[class.kbq-link_print]': 'printMode',
         '[class.kbq-text-only]': '!hasIcon',
         '[class.kbq-text-with-icon]': 'hasIcon',
@@ -46,7 +46,8 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[attr.disabled]': 'disabled || null',
         '[attr.tabindex]': 'tabIndex',
         '[attr.print]': 'printUrl'
-    }
+    },
+    exportAs: 'kbqLink'
 })
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     protected readonly renderer = inject(Renderer2);
@@ -57,6 +58,8 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
 
     // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the link is disabled. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -69,6 +72,8 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     /** @docs-private */
     readonly disabledSignal = signal(false);
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
@@ -80,23 +85,25 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
 
     private _tabIndex = 0;
 
-    @Input({ transform: booleanAttribute }) pseudo: boolean = false;
+    readonly pseudo = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @Input({ transform: booleanAttribute }) noUnderline: boolean = false;
+    readonly noUnderline = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @Input({ transform: booleanAttribute }) big: boolean = false;
+    readonly big = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @Input({ transform: booleanAttribute }) compact: boolean = false;
+    readonly compact = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Whether the link has an increased hit area for multiline usage. */
-    @Input({ transform: booleanAttribute }) multiline: boolean = false;
+    readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @Input({ transform: booleanAttribute }) useVisited: boolean = false;
+    readonly useVisited = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     get hasIcon(): boolean {
-        return !!this.icon;
+        return !!this.icon();
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set print(value: any) {
         this.printMode = value !== null;
@@ -115,7 +122,7 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     // @todo 20 In the next major release this line will be deleted.
     private _disabled: boolean;
 
-    @ContentChild(KbqIcon) icon: KbqIcon;
+    readonly icon = contentChild(KbqIcon);
 
     constructor(
         private elementRef: ElementRef<HTMLAnchorElement>,

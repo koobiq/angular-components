@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioModule } from '@koobiq/components/radio';
@@ -16,7 +15,6 @@ import { KbqFormsModule } from './forms-module';
     selector: 'e2e-form-horizontal',
     imports: [
         KbqFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqSelectModule,
         KbqTextareaModule,

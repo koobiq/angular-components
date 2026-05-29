@@ -1,13 +1,12 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
     Directive,
-    ViewEncapsulation
+    ViewEncapsulation,
+    contentChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_OPTION_PARENT_COMPONENT, ruRULocaleData } from '@koobiq/components/core';
@@ -28,8 +27,7 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
         CdkOverlayOrigin,
         CdkConnectedOverlay,
         CdkMonitorFocus,
-        KbqIconModule,
-        NgClass
+        KbqIconModule
     ],
     templateUrl: 'timezone-select.component.html',
     styleUrls: [
@@ -38,16 +36,16 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
         'timezone-select.component.scss',
         'timezone-option-tokens.scss'
     ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTimezoneSelect',
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTimezoneSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    exportAs: 'kbqTimezoneSelect'
 })
 export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
-    @ContentChild(KbqTimezoneSelectTrigger, { static: false }) customTrigger: KbqTimezoneSelectTrigger;
+    readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
     override panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || 'auto';
     override panelMinWidth: number = 640;
@@ -65,8 +63,10 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     private updateLocaleParamsForSearch = () => {
         const placeholder = this.localeService?.getParams('timezone').searchPlaceholder || defaultSearchPlaceholder;
 
-        if (this.search && !this.search.hasPlaceholder()) {
-            this.search.setPlaceholder(placeholder);
+        const search = this.search();
+
+        if (search && !search.hasPlaceholder()) {
+            search.setPlaceholder(placeholder);
         }
     };
 }

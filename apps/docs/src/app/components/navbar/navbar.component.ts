@@ -103,7 +103,7 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
         try {
             // Chrome & Firefox
             this.colorAutomaticTheme.addEventListener('change', this.setAutoTheme);
-        } catch (err) {
+        } catch {
             try {
                 // Safari
                 this.colorAutomaticTheme.addListener(this.setAutoTheme);

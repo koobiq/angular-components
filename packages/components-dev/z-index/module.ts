@@ -7,13 +7,12 @@ import {
     Component,
     ElementRef,
     TemplateRef,
-    ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    viewChild
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -29,8 +28,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 @Component({
     selector: 'dev-toast-component',
     template: '<div>DevToastComponent</div>',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'dev-toast-component'
     }
@@ -58,7 +57,6 @@ export class DevToastComponent extends KbqToastComponent {
         KbqDropdownModule,
         KbqModalModule,
         KbqSidepanelModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqNavbarModule,
         KbqPopoverModule,
@@ -69,8 +67,8 @@ export class DevToastComponent extends KbqToastComponent {
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     themePalette = ThemePalette;
@@ -82,7 +80,7 @@ export class DevApp {
     modalState: boolean = false;
 
     array = new Array(40);
-    @ViewChild('sipanelTemplate', { static: false }) template: TemplateRef<any>;
+    readonly template = viewChild.required<TemplateRef<any>>('sipanelTemplate');
 
     constructor(
         private toastService: KbqToastService,
@@ -97,7 +95,7 @@ export class DevApp {
     }
 
     openTemplateSidepanel() {
-        this.sidepanelService.open(this.template, {
+        this.sidepanelService.open(this.template(), {
             position: this.position,
             hasBackdrop: this.modalState
         });

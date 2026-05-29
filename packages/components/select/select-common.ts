@@ -14,10 +14,10 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
         </ng-content>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqSelectLoading',
     host: {
         class: 'kbq-select-loading'
-    }
+    },
+    exportAs: 'kbqSelectLoading'
 })
 export class KbqSelectLoading {}
 
@@ -60,12 +60,12 @@ export class KbqSelectLoading {}
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqSelectError',
     host: {
         class: 'kbq-select-error',
         '[class.kbq-select-error_default]': '!paging()',
         '[class.kbq-select-error_paging]': 'paging()'
-    }
+    },
+    exportAs: 'kbqSelectError'
 })
 export class KbqSelectError {
     /** Indicates whether styles for pagination controls should be used. */
@@ -77,10 +77,10 @@ export class KbqSelectError {
  */
 @Directive({
     selector: '[kbq-select-error-text]',
-    exportAs: 'kbqSelectErrorText',
     host: {
         class: 'kbq-select-error__text'
-    }
+    },
+    exportAs: 'kbqSelectErrorText'
 })
 export class KbqSelectErrorText {}
 
@@ -107,9 +107,9 @@ export class KbqSelectErrorText {}
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqSelectNoOptions',
     host: {
         class: 'kbq-select-no-options'
-    }
+    },
+    exportAs: 'kbqSelectNoOptions'
 })
 export class KbqSelectNoOptions {}

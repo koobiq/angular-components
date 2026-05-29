@@ -6,7 +6,6 @@ import { Schema } from './schema';
 
 const VERSIONS = {
     ANGULAR_CDK: '^0.0.0',
-    KOOBIQ_CDK: '^0.0.0',
     KOOBIQ_ANGULAR_LUXON_ADAPTER: '^0.0.0',
     KOOBIQ_DATE_FORMATTER: '^0.0.0',
     KOOBIQ_DATE_ADAPTER: '^0.0.0',
@@ -34,7 +33,6 @@ export default function ngAdd(options: Schema): Rule {
 
         // Installing dependencies
         addPackageToPackageJson(tree, '@angular/cdk', VERSIONS.ANGULAR_CDK);
-        addPackageToPackageJson(tree, '@koobiq/cdk', VERSIONS.KOOBIQ_CDK);
         addPackageToPackageJson(tree, '@koobiq/angular-luxon-adapter', VERSIONS.KOOBIQ_ANGULAR_LUXON_ADAPTER);
         addPackageToPackageJson(tree, '@koobiq/date-formatter', VERSIONS.KOOBIQ_DATE_FORMATTER);
         addPackageToPackageJson(tree, '@koobiq/date-adapter', VERSIONS.KOOBIQ_DATE_ADAPTER);

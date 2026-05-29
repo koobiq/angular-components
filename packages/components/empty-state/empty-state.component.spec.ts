@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -18,7 +17,6 @@ describe('KbqEmptyState', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                CommonModule,
                 KbqEmptyStateModule,
                 KbqIconModule,
                 KbqButtonModule,
@@ -49,7 +47,7 @@ describe('KbqEmptyState', () => {
 
 @Component({
     selector: 'empty-state-with-params',
-    imports: [CommonModule, KbqEmptyStateModule, KbqIconModule, KbqButtonModule],
+    imports: [KbqEmptyStateModule, KbqIconModule, KbqButtonModule],
     template: `
         <kbq-empty-state>
             <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon [fade]="true" [big]="true" [color]="'contrast'"></i>

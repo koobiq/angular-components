@@ -18,7 +18,7 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [DevDocsExamples],
     templateUrl: './template.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {}

@@ -6,6 +6,7 @@ import {
     forwardRef,
     Inject,
     Input,
+    input,
     Optional,
     QueryList,
     ViewEncapsulation
@@ -49,10 +50,10 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
         </span>
     `,
     styleUrls: ['hint.scss', 'hint-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
-        '[attr.id]': 'id',
+        '[attr.id]': 'id()',
         class: 'kbq-hint kbq-password-hint',
         '[class.kbq-success]': 'checked',
         '[class.kbq-error]': 'hasError',
@@ -61,17 +62,21 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
     }
 })
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
-    @Input() id: string = `kbq-hint-${nextPasswordHintUniqueId++}`;
+    readonly id = input<string>(`kbq-hint-${nextPasswordHintUniqueId++}`);
 
-    @Input() rule: PasswordRules | any;
+    readonly rule = input<PasswordRules | any>();
 
-    @Input() min: number;
-    @Input() max: number;
+    readonly min = input<number>(undefined!);
+    readonly max = input<number>(undefined!);
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() regex: RegExp | null;
-    @Input('checkRule') customCheckRule: (value: string) => boolean;
+    readonly customCheckRule = input<(value: string) => boolean>(undefined!, { alias: 'checkRule' });
 
-    @Input() viewFormField?: KbqFormField;
+    readonly viewFormField = input<KbqFormField>();
 
+    // TODO: Skipped for migration because:
+    //  This input is inherited from a superclass, but the parent cannot be migrated.
     @Input() fillTextOff: boolean = true;
 
     hasError: boolean = false;
@@ -97,7 +102,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     private checkRule: (value: string) => boolean;
 
     private get control() {
-        return this.formField.control;
+        return this.formField.control();
     }
 
     private lastControlValue: string;
@@ -112,35 +117,38 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     }
 
     ngAfterContentInit(): void {
-        this.formField = this.formField || this.viewFormField;
+        this.formField = this.formField || this.viewFormField();
 
-        if (this.rule === PasswordRules.Custom && this.regex === undefined && this.customCheckRule === undefined) {
+        const rule = this.rule();
+        const customCheckRule = this.customCheckRule();
+
+        if (rule === PasswordRules.Custom && this.regex === undefined && customCheckRule === undefined) {
             throw Error('You should set [regex] or [checkRule] for PasswordRules.Custom');
         }
 
-        if (this.rule === PasswordRules.Length && (this.min || this.max) === null) {
+        if (rule === PasswordRules.Length && (this.min() || this.max()) === null) {
             throw Error('For [rule] "Length" need set [min] and [max]');
         }
 
-        if (this.rule === PasswordRules.Length) {
+        if (rule === PasswordRules.Length) {
             this.checkRule = this.checkLengthRule;
-        } else if ([PasswordRules.UpperLatin, PasswordRules.LowerLatin, PasswordRules.Digit].includes(this.rule)) {
-            this.regex = regExpPasswordValidator[this.rule];
+        } else if ([PasswordRules.UpperLatin, PasswordRules.LowerLatin, PasswordRules.Digit].includes(rule)) {
+            this.regex = regExpPasswordValidator[rule];
             this.checkRule = this.checkRegexRule;
-        } else if (this.rule === PasswordRules.LatinAndSpecialSymbols) {
-            this.regex = regExpPasswordValidator[this.rule];
+        } else if (rule === PasswordRules.LatinAndSpecialSymbols) {
+            this.regex = regExpPasswordValidator[rule];
             this.checkRule = this.checkSpecialSymbolsRegexRule;
-        } else if (this.rule === PasswordRules.Custom) {
-            this.checkRule = this.regex === undefined ? this.customCheckRule : this.checkRegexRule;
+        } else if (rule === PasswordRules.Custom) {
+            this.checkRule = this.regex === undefined ? customCheckRule : this.checkRegexRule;
         } else {
-            throw Error(`Unknown [rule]=${this.rule}`);
+            throw Error(`Unknown [rule]=${rule}`);
         }
 
         // prevent error when formField.control is undefined
         setTimeout(() => {
-            this.formField.control.stateChanges.subscribe(this.checkValue);
+            this.formField.control().stateChanges.subscribe(this.checkValue);
 
-            (this.formField.control as unknown as { checkRule: Subject<any> }).checkRule.subscribe(() => {
+            (this.formField.control() as unknown as { checkRule: Subject<any> }).checkRule.subscribe(() => {
                 this.checked = this.checkRule(this.control.value);
                 this.hasError = !this.checkRule(this.control.value);
             });
@@ -165,7 +173,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     };
 
     private checkLengthRule(value: string): boolean {
-        return value.length >= this.min && value.length <= this.max;
+        return value.length >= this.min() && value.length <= this.max();
     }
 
     private checkRegexRule = (value: string): boolean => {
@@ -177,6 +185,6 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     }
 
     private isValueChanged(): boolean {
-        return this.lastControlValue !== this.formField.control.value;
+        return this.lastControlValue !== this.formField.control().value;
     }
 }

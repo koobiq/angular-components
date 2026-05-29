@@ -11,11 +11,11 @@ import { KbqTreeBase } from './tree-base';
         <ng-container kbqTreeNodeOutlet />
     `,
     styleUrls: ['./tree.scss', 'tree-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqTree',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree'
-    }
+    },
+    exportAs: 'kbqTree'
 })
 export class KbqTree extends KbqTreeBase<any> {}

@@ -1,12 +1,11 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -37,7 +36,6 @@ export class DevDocsExamples {}
         KbqNavbarModule,
         KbqIconModule,
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule,
         KbqDropdownModule,
@@ -52,13 +50,13 @@ export class DevDocsExamples {}
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     popUpPlacements = PopUpPlacements;
 
-    @ViewChild('verticalNavbar', { static: false }) navbar: KbqNavbar;
+    readonly navbar = viewChild.required<KbqNavbar>('verticalNavbar');
 
     readonly minNavbarWidth: number = 940;
 
@@ -83,7 +81,7 @@ export class DevApp {
     constructor(private modalService: KbqModalService) {}
 
     collapsedNavbarWidthChange() {
-        this.navbar.updateExpandedStateForItems();
+        this.navbar().updateExpandedStateForItems();
     }
 
     onItemClick(event: MouseEvent) {

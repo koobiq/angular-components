@@ -5,12 +5,11 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import { KbqCheckboxClickAction } from '@koobiq/components/checkbox';
 import { KbqCheckedState } from '@koobiq/components/core';
@@ -30,13 +29,13 @@ export class KbqToggleChange {
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     constructor(focusMonitor: FocusMonitor, changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
-    ariaLabel: string;
+    readonly ariaLabel: _angular_core.InputSignal<string>;
     // (undocumented)
-    ariaLabelledby: string | null;
+    readonly ariaLabelledby: _angular_core.InputSignal<string | null>;
     // (undocumented)
-    big: boolean;
+    readonly big: _angular_core.InputSignal<boolean>;
     // (undocumented)
-    readonly change: EventEmitter<KbqToggleChange>;
+    readonly change: _angular_core.OutputEmitterRef<KbqToggleChange>;
     // (undocumented)
     get checked(): boolean;
     set checked(value: boolean);
@@ -53,22 +52,20 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     id: string;
     get indeterminate(): boolean;
     set indeterminate(value: boolean);
-    readonly indeterminateChange: EventEmitter<boolean>;
+    readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
-    inputElement: ElementRef<HTMLInputElement>;
+    readonly inputElement: _angular_core.Signal<ElementRef<HTMLInputElement>>;
     // (undocumented)
     get inputId(): string;
     // Warning: (ae-forgotten-export) The symbol "ToggleLabelPositionType" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    labelPosition: ToggleLabelPositionType;
-    loading: boolean;
+    readonly labelPosition: _angular_core.InputSignal<ToggleLabelPositionType>;
+    readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    name: string | null;
+    readonly name: _angular_core.InputSignal<string | null>;
     // (undocumented)
     static ngAcceptInputType_indeterminate: unknown;
-    // (undocumented)
-    static ngAcceptInputType_loading: unknown;
     // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
@@ -91,25 +88,23 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
-    value: string;
+    readonly value: _angular_core.InputSignal<string>;
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "loading": { "alias": "loading"; "required": false; }; "clickAction": { "alias": "clickAction"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "loading": { "alias": "loading"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToggleComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqToggleComponent, never>;
 }
 
 // @public (undocumented)
 export class KbqToggleModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToggleModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqToggleModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqToggleModule>;
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqToggleModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToggleModule, never, [typeof i1.A11yModule, typeof i2.KbqToggleComponent], [typeof i2.KbqToggleComponent]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqToggleModule, never, [typeof i1.A11yModule, typeof KbqToggleComponent], [typeof KbqToggleComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)

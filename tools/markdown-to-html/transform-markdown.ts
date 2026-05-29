@@ -16,13 +16,6 @@ const docsContent = async () => {
             dest: 'dist/docs-content/overviews'
         }),
 
-        docTask('docs-content-cdk', {
-            source: [
-                'packages/cdk/**/!(README|examples*).md'
-            ],
-            dest: 'dist/docs-content/cdk'
-        }),
-
         docTask('docs-content-examples', {
             source: [
                 'packages/components/**/examples.*.md',

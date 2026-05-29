@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 
 @Component({
     selector: 'kbq-action-container',
-    exportAs: 'kbqActionContainer',
     template: `
         <div class="kbq-action-container__gradient"></div>
         <div class="kbq-action-container__box">
@@ -10,10 +9,11 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
         </div>
     `,
     styleUrls: ['./action-container.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-action-container'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    exportAs: 'kbqActionContainer'
 })
 export class KbqActionContainer {}

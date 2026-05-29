@@ -14,7 +14,6 @@ const buildConfig = JsonFile.load('tools/api-extractor/config.json');
 if (params === 'onlyCheck') {
     localBuild = false;
 } else if (params) {
-    buildConfig.cdk = [];
     buildConfig.components = [];
 
     const [folder, component] = params.split('/');
@@ -62,10 +61,6 @@ function logErrors(result: ExtractorResult, component: string) {
     } else if (result.apiReportChanged) {
         process.exit(1);
     }
-}
-
-for (const component of buildConfig.cdk) {
-    logErrors(runExtractor('cdk', component), component);
 }
 
 for (const component of buildConfig.components) {

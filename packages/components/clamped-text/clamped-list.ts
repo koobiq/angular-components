@@ -3,14 +3,14 @@ import { KbqClamped, KbqClampedRoot, kbqInjectKbqClampedLocaleConfiguration } fr
 
 @Directive({
     selector: '[kbqClampedList]',
-    exportAs: 'kbqClampedList',
+    providers: [
+        { provide: KbqClampedRoot, useExisting: KbqClampedList }
+    ],
     host: {
         class: 'kbq-clamped-list',
         '[attr.aria-expanded]': 'isCollapsed() && hasToggle() ? "false" : "true"'
     },
-    providers: [
-        { provide: KbqClampedRoot, useExisting: KbqClampedList }
-    ]
+    exportAs: 'kbqClampedList'
 })
 export class KbqClampedList<T> implements KbqClamped {
     /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
@@ -57,13 +57,13 @@ export class KbqClampedList<T> implements KbqClamped {
  */
 @Directive({
     selector: '[kbqClampedListTrigger]',
-    exportAs: 'kbqClampedListTrigger',
     host: {
         class: 'kbq-clamped-list__trigger kbq-clamped-text__toggle',
         '(click)': 'root?.toggle($event)',
         '(keydown.enter)': 'root?.toggle($event)',
         '(keydown.space)': 'root?.toggle($event)'
-    }
+    },
+    exportAs: 'kbqClampedListTrigger'
 })
 export class KbqClampedListTrigger {
     protected readonly root = inject(KbqClampedRoot, { optional: true });

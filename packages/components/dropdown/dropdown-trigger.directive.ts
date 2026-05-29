@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
     FlexibleConnectedPositionStrategy,
@@ -17,7 +17,6 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    EventEmitter,
     inject,
     Inject,
     InjectionToken,
@@ -25,13 +24,12 @@ import {
     numberAttribute,
     OnDestroy,
     Optional,
-    Output,
+    output,
     Renderer2,
     Self,
     ViewContainerRef
 } from '@angular/core';
-import { DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
-import { defaultOffsetY, KBQ_WINDOW } from '@koobiq/components/core';
+import { defaultOffsetY, DOWN_ARROW, ENTER, KBQ_WINDOW, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/components/core';
 import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
@@ -96,14 +94,14 @@ const positionMap = {
  */
 @Directive({
     selector: `[kbqDropdownTriggerFor]`,
-    exportAs: 'kbqDropdownTrigger',
     host: {
         class: 'kbq-dropdown-trigger',
         '[class.kbq-pressed]': 'opened',
         '(mousedown)': 'handleMousedown($event)',
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'
-    }
+    },
+    exportAs: 'kbqDropdownTrigger'
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private readonly overlayContainer = inject(OverlayContainer);
@@ -115,14 +113,22 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     lastDestroyReason: DropdownCloseReason;
 
     /** Position offset of the dropdown in the X axis. */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: numberAttribute }) offsetX: number;
 
     /** Position offset of the dropdown in the Y axis. */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input({ transform: numberAttribute }) offsetY: number;
 
     /** Data to be passed along to any lazily-rendered content. */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input('kbqDropdownTriggerData') data: any;
 
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() openByArrowDown: boolean = true;
 
     /**
@@ -130,6 +136,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      * sit below sibling overlays (tooltips, modals, etc.). Set to `false` to
      * keep the dropdown overlay at the default overlay container z-index.
      */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: numberAttribute }) demoteOverlay: boolean = true;
 
     /**
@@ -137,9 +145,13 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      * Note that disabling this option can have accessibility implications
      * and it's up to you to manage focus, if you decide to turn it off.
      */
+    // TODO: Skipped for migration because:
+    //  Class of this input is referenced in the signature of another class.
     @Input('kbqDropdownTriggerRestoreFocus') restoreFocus: boolean = true;
 
     /** References the dropdown instance that the trigger is associated with. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqDropdownTriggerFor')
     get dropdown() {
         return this._dropdown;
@@ -168,10 +180,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private _dropdown: KbqDropdownPanel;
 
     /** Event emitted when the associated dropdown is opened. */
-    @Output() readonly dropdownOpened: EventEmitter<void> = new EventEmitter<void>();
+    readonly dropdownOpened = output<void>();
 
     /** Event emitted when the associated dropdown is closed. */
-    @Output() readonly dropdownClosed: EventEmitter<void> = new EventEmitter<void>();
+    readonly dropdownClosed = output<void>();
 
     // Tracking input type is necessary so it's possible to only auto-focus
     // the first item of the list when the dropdown is opened via the keyboard
@@ -439,7 +451,14 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         }
 
         this._opened = isOpen;
-        this._opened ? this.dropdownOpened.emit() : this.dropdownClosed.emit();
+
+        if (this._opened) {
+            // TODO: The 'emit' function requires a mandatory void argument
+            this.dropdownOpened.emit();
+        } else {
+            // TODO: The 'emit' function requires a mandatory void argument
+            this.dropdownClosed.emit();
+        }
 
         if (this.isNested()) {
             this.dropdownItemInstance.highlighted = isOpen;

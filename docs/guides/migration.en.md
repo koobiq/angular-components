@@ -80,3 +80,19 @@ ng g @koobiq/angular-components:css-selectors --fix=false --project <your projec
 ng g @koobiq/angular-components:loader-overlay-size-attr --project <your project>
 ng g @koobiq/angular-components:empty-state-size-attr --project <your project>
 ```
+
+---
+
+### 4. Upgrade to 20.0.0
+
+In v20.0.0 the `@koobiq/cdk` package has been merged into `@koobiq/components/core`. Drop `@koobiq/cdk` from your `package.json` and run the `v20-upgrade` migration — it rewrites every `@koobiq/cdk/{a11y,keycodes,testing}` import to `@koobiq/components/core` together with the other v20 breaking changes:
+
+```bash
+ng update @koobiq/components
+```
+
+Or invoke the schematic manually:
+
+```bash
+ng g @koobiq/components:v20-upgrade --project <your project>
+```

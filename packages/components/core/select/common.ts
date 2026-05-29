@@ -1,17 +1,17 @@
-import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+﻿import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import {
     AfterContentInit,
     booleanAttribute,
     Directive,
     EventEmitter,
     Inject,
-    Input,
+    input,
     OnDestroy,
     Optional
 } from '@angular/core';
-import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
+import { END, ESCAPE, HOME, SPACE } from '../keycodes';
 import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({
@@ -23,15 +23,15 @@ export class KbqSelectTrigger {}
     selector: 'kbq-select-matcher, [kbq-select-matcher]'
 })
 export class KbqSelectMatcher {
-    @Input({ transform: booleanAttribute }) useDefaultHandlers: boolean = true;
+    readonly useDefaultHandlers = input<boolean, unknown>(true, { transform: booleanAttribute });
 }
 
 @Directive({
     selector: '[kbq-select-search-empty-result]',
-    exportAs: 'kbqSelectSearchEmptyResult',
     host: {
         class: 'kbq-select-search-empty-result kbq-select__no-options-message'
-    }
+    },
+    exportAs: 'kbqSelectSearchEmptyResult'
 })
 export class KbqSelectSearchEmptyResult {}
 
@@ -43,10 +43,10 @@ export class KbqSelectFooter {}
 
 @Directive({
     selector: '[kbqSelectSearch]',
-    exportAs: 'kbqSelectSearch',
     host: {
         '(keydown)': 'handleKeydown($event)'
-    }
+    },
+    exportAs: 'kbqSelectSearch'
 })
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     readonly changes: EventEmitter<string> = new EventEmitter<string>();
@@ -54,7 +54,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     isSearchChanged: boolean = false;
 
     get ngControl() {
-        return this.formField.control.ngControl;
+        return this.formField.control().ngControl;
     }
 
     private searchChangesSubscription: Subscription = new Subscription();
@@ -65,7 +65,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     setPlaceholder(value: string): void {
-        this.formField.control.placeholder = value;
+        this.formField.control().placeholder = value;
     }
 
     hasPlaceholder(): boolean {
@@ -73,7 +73,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     focus(): void {
-        this.formField.focusViaKeyboard();
+        this.formField.focus();
     }
 
     reset(): void {
@@ -81,11 +81,11 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     value() {
-        return this.formField.control.value;
+        return this.formField.control().value;
     }
 
     ngAfterContentInit(): void {
-        if (this.formField.control.controlType !== 'input') {
+        if (this.formField.control().controlType !== 'input') {
             throw Error('KbqSelectSearch does not work without kbqInput');
         }
 

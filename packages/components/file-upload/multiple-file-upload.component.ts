@@ -5,20 +5,18 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    ContentChild,
-    ContentChildren,
+    contentChild,
+    contentChildren,
     DoCheck,
     effect,
     ElementRef,
-    EventEmitter,
     inject,
     input,
     Input,
-    Output,
+    output,
     PLATFORM_ID,
-    QueryList,
     TemplateRef,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -45,8 +43,7 @@ import {
     KbqFileItem,
     KbqFileUploadAllowedType,
     KbqFileUploadBase,
-    KbqFileUploadCaptionContext,
-    KbqFileValidatorFn
+    KbqFileUploadCaptionContext
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 
@@ -77,8 +74,9 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
     ],
     templateUrl: './multiple-file-upload.component.html',
     styleUrls: ['./file-upload.scss', './file-upload-tokens.scss', './multiple-file-upload.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    providers: [KbqFullScreenDropzoneService],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-multiple-file-upload'
     },
@@ -88,8 +86,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
             inputs: ['id', 'disabled']
         },
         { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
-    ],
-    providers: [KbqFullScreenDropzoneService]
+    ]
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase
@@ -98,30 +95,27 @@ export class KbqMultipleFileUploadComponent
     /**
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
-    @Input() progressMode: ProgressSpinnerMode = 'determinate';
+    readonly progressMode = input<ProgressSpinnerMode>('determinate');
     /** Array of file type specifiers */
-    @Input() accept?: string[];
-    /**
-     * @deprecated use `FormControl.errors`
-     */
-    @Input() errors: string[] = [];
-    @Input() size: 'compact' | 'default' = 'default';
+    readonly accept = input<string[]>();
+    readonly size = input<'compact' | 'default'>('default');
     /**
      * custom ID for the file input element.
      */
-    @Input() inputId: string = `kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`;
-    /**
-     * @deprecated use FormControl for validation
-     */
-    @Input() customValidation?: KbqFileValidatorFn[];
+    readonly inputId = input<string>(`kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     get files(): KbqFileItem[] {
         return this.fileList.list();
     }
 
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     set files(currentFileList: KbqFileItem[]) {
         this.fileList.list.set(currentFileList);
@@ -144,26 +138,28 @@ export class KbqMultipleFileUploadComponent
 
     /** Emits an event containing updated file list.
      * public output will be renamed to filesChange in next major release (#DS-3700) */
-    @Output('fileQueueChanged') readonly filesChange: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
+    readonly filesChange = output<KbqFileItem[]>({ alias: 'fileQueueChanged' });
     /**
      * Emits an event containing a chunk of files added to the file list.
      * Useful when handling added files, skipping filtering file list.
      */
-    @Output() readonly filesAdded: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
+    readonly filesAdded = output<KbqFileItem[]>();
     /**
      * Emits an event containing a tuple of file and file's index when removed from the file list.
      * Useful when handle removed files, skipping filtering file list.
      */
-    @Output() readonly fileRemoved: EventEmitter<[KbqFileItem, number]> = new EventEmitter<[KbqFileItem, number]>();
+    readonly fileRemoved = output<[
+            KbqFileItem,
+            number
+        ]>();
 
     /** File Icon Template */
-    @ContentChild('kbqFileIcon', { static: false, read: TemplateRef })
-    protected readonly customFileIcon: TemplateRef<HTMLElement>;
+    protected readonly customFileIcon = contentChild('kbqFileIcon', { read: TemplateRef });
 
-    @ViewChild(KbqFileLoader) protected readonly fileLoader: KbqFileLoader | undefined;
+    protected readonly fileLoader = viewChild(KbqFileLoader);
 
     /** @docs-private */
-    @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
+    protected readonly hint = contentChildren(KbqHint);
 
     /** @docs-private */
     hasFocus = false;
@@ -207,7 +203,7 @@ export class KbqMultipleFileUploadComponent
             }
             case KbqFileUploadAllowedType.File:
             default: {
-                const caption = this.size === 'compact' ? config.captionTextForCompactSize : config.captionText;
+                const caption = this.size() === 'compact' ? config.captionTextForCompactSize : config.captionText;
                 const [before] = caption.split('{{ browseLink }}');
 
                 return { captionText: before, browseLink: config.browseLink };
@@ -226,24 +222,17 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     get input(): ElementRef<HTMLInputElement> | undefined {
-        return this.fileLoader?.input();
+        return this.fileLoader()?.input();
     }
 
     /** @docs-private */
     get acceptedFiles(): string {
-        return this.accept?.join(',') || '*/*';
-    }
-
-    /**
-     * @deprecated use `FormControl.errors`
-     */
-    get hasErrors(): boolean {
-        return this.errors && !!this.errors.length;
+        return this.accept()?.join(',') || '*/*';
     }
 
     /** @docs-private */
     get hasHint(): boolean {
-        return this.hint.length > 0;
+        return this.hint().length > 0;
     }
 
     /**
@@ -304,12 +293,6 @@ export class KbqMultipleFileUploadComponent
     }
 
     ngAfterViewInit() {
-        // FormControl specific errors update
-        this.ngControl?.statusChanges?.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.errors = Object.values(this.ngControl?.errors || {});
-            this.cdr.markForCheck();
-        });
-
         this.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
 
@@ -398,31 +381,9 @@ export class KbqMultipleFileUploadComponent
 
         return Array.from(files).map((file: File) => ({
             file,
-            hasError: this.validateFile(file),
             loading: new BehaviorSubject<boolean>(false),
             progress: new BehaviorSubject<number>(0)
         }));
-    }
-
-    private validateFile(file: File): boolean | undefined {
-        if (!this.customValidation?.length) {
-            return;
-        }
-
-        const errorsPerFile = this.customValidation
-            .reduce((errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
-                errors.push(validatorFn(file));
-
-                return errors;
-            }, [])
-            .filter(Boolean) as string[];
-
-        this.errors = [
-            ...this.errors,
-            ...errorsPerFile
-        ];
-
-        return !!errorsPerFile.length;
     }
 
     private onFileAdded(filesToAdd: KbqFileItem[]) {

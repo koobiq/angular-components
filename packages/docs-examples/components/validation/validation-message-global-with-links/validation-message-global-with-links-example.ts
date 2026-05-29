@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { kbqDisableLegacyValidationDirectiveProvider, KbqFormsModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -17,7 +16,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
         ReactiveFormsModule,
         KbqAlertModule,
         KbqIconModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
         KbqFormsModule,
@@ -39,11 +37,10 @@ import { KbqLinkModule } from '@koobiq/components/link';
             opacity: var(--kbq-opacity-disabled);
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-column'
-    },
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class ValidationMessageGlobalWithLinksExample {
     protected readonly inProgress = signal(false);

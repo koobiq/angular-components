@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpSizes } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 
@@ -12,7 +11,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     selector: 'popover-arrowless-example',
     imports: [
         KbqButtonModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqPopoverModule
     ],

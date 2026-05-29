@@ -1,4 +1,4 @@
-import { Component, Provider, Type, viewChild } from '@angular/core';
+﻿import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -11,18 +11,16 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ESCAPE } from '@koobiq/cdk/keycodes';
-import { dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
     ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
+    ESCAPE,
     kbqErrorStateMatcherProvider,
     ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    ThemePalette
+    ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { map, Observable, timer } from 'rxjs';
@@ -47,7 +45,6 @@ const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement 
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -63,7 +60,6 @@ class KbqInputInvalid {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         FormsModule,
         KbqInputModule
     ],
@@ -79,7 +75,6 @@ class KbqInputWithKbqInputMonospace {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -97,7 +92,6 @@ class KbqInputForBehaviors {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule,
         FormsModule
@@ -115,7 +109,6 @@ class KbqFormFieldWithCleaner {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule
     ],
     template: `
@@ -129,7 +122,6 @@ class KbqFormFieldWithHint {}
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule
     ],
@@ -144,7 +136,6 @@ class KbqFormFieldWithPrefix {}
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqIconModule
     ],
@@ -159,20 +150,6 @@ class KbqFormFieldWithSuffix {}
 
 @Component({
     imports: [
-        KbqFormFieldModule,
-        KbqInputModule
-    ],
-    template: `
-        <kbq-form-field kbqFormFieldWithoutBorders>
-            <input kbqInput />
-        </kbq-form-field>
-    `
-})
-class KbqFormFieldWithoutBorders {}
-
-@Component({
-    imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -188,7 +165,6 @@ class KbqFormFieldWithStandaloneNgModel {
 
 @Component({
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         FormsModule
     ],
@@ -206,41 +182,6 @@ class KbqFormFieldWithNgModelInForm {
     value: string = '';
 }
 
-@Component({
-    imports: [
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqButtonModule
-    ],
-    template: `
-        <form [formGroup]="reactiveForm" (ngSubmit)="submitReactive()">
-            <kbq-form-field class="kbq-form__control">
-                <input kbqInput formControlName="firstName" />
-            </kbq-form-field>
-            <kbq-form-field class="kbq-form__control">
-                <input kbqInput formControlName="lastName" />
-            </kbq-form-field>
-            <button kbq-button type="submit" [color]="ThemePalette.Primary" [disabled]="reactiveForm.invalid">
-                Отправить
-            </button>
-        </form>
-    `
-})
-class KbqFormWithRequiredValidation {
-    reactiveForm = new FormGroup({
-        firstName: new FormControl('', [Validators.required]),
-        lastName: new FormControl('', [Validators.required])
-    });
-
-    ThemePalette = ThemePalette;
-    submitResult: string;
-
-    submitReactive = jest.fn().mockImplementation(() => {
-        this.submitResult = this.reactiveForm.invalid ? 'invalid' : 'valid';
-    });
-}
-
 const getInputElement = (fixture: ComponentFixture<unknown>): HTMLInputElement =>
     fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
@@ -256,24 +197,7 @@ const getAsyncValidator =
         timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    template: `
-        <kbq-form-field>
-            <input kbqInput [formControl]="control" />
-        </kbq-form-field>
-    `
-})
-class LegacyInputControlWithAsyncValidators {
-    readonly input = viewChild.required(KbqInput);
-    readonly control = new FormControl<string>('', {
-        nonNullable: true,
-        asyncValidators: [getAsyncValidator()]
-    });
-}
-
-@Component({
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
             <input kbqInput [formControl]="control" />
@@ -289,18 +213,17 @@ class InputControlWithAsyncValidators {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider(),
-        kbqErrorStateMatcherProvider(customErrorStateMatcher)
-    ],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
                 <input kbqInput formControlName="input" />
             </kbq-form-field>
         </form>
-    `
+    `,
+    providers: [
+        kbqErrorStateMatcherProvider(customErrorStateMatcher)
+    ]
 })
 class InputWithDIErrorStateMatcher {
     readonly input = viewChild.required(KbqInput);
@@ -308,8 +231,7 @@ class InputWithDIErrorStateMatcher {
 }
 
 @Component({
-    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
@@ -441,19 +363,6 @@ describe('KbqInput', () => {
                 }));
             });
         });
-
-        it('should mark reactive form invalid synchronously on ngSubmit', fakeAsync(() => {
-            const fixture = createComponent(KbqFormWithRequiredValidation, [ReactiveFormsModule, KbqButtonModule]);
-
-            flush();
-
-            expect(fixture.componentInstance.reactiveForm.valid).toBeTruthy();
-
-            dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
-
-            expect(fixture.componentInstance.submitReactive).toHaveBeenCalled();
-            expect(fixture.componentInstance.submitResult).toEqual('invalid');
-        }));
     });
 
     describe('appearance', () => {
@@ -506,13 +415,6 @@ describe('KbqInput', () => {
 
             expect(formFieldElement.querySelectorAll('.kbq-form-field__suffix').length).toBe(1);
             expect(formFieldElement.querySelectorAll('[kbq-icon]').length).toBe(1);
-        });
-
-        it('should be without borders', () => {
-            const fixture = createComponent(KbqFormFieldWithoutBorders, [KbqIconModule]);
-            const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
-
-            expect(formFieldElement.classList.contains('kbq-form-field_without-borders')).toBe(true);
         });
     });
 
@@ -657,32 +559,6 @@ describe('KbqInput', () => {
     });
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
-            const fixture = createComponent(LegacyInputControlWithAsyncValidators);
-            const { control, input } = fixture.componentInstance;
-            const statuses: FormControlStatus[] = [];
-
-            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
-
-            control.setValue('ab');
-
-            expect(control.status).toBe('PENDING');
-            expect(statuses).toEqual(['PENDING']);
-
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID']);
-
-            input().onBlur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
-
-            subscription.unsubscribe();
-        }));
-
         it('should emit VALID via statusChanges on blur', fakeAsync(() => {
             const fixture = createComponent(InputControlWithAsyncValidators);
             const { control, input } = fixture.componentInstance;

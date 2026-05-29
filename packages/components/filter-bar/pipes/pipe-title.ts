@@ -6,7 +6,7 @@ import {
     Directive,
     ElementRef,
     inject,
-    Input,
+    input,
     OnDestroy,
     QueryList,
     TemplateRef
@@ -19,12 +19,12 @@ import { debounceTime } from 'rxjs/operators';
 // todo DS-3672
 @Directive({
     selector: '[kbqPipeTitle]',
-    exportAs: 'kbqPipeTitle',
     host: {
         '(mouseenter)': 'handleElementEnter()',
         '(mouseleave)': 'hideTooltip()',
         '(window:resize)': 'resizeStream.next($event)'
-    }
+    },
+    exportAs: 'kbqPipeTitle'
 })
 export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private componentInstance = inject<KbqTitleTextRef>(KBQ_TITLE_TEXT_REF, { optional: true, host: true });
@@ -38,7 +38,7 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
         });
     }
 
-    @Input({ alias: 'kbqPipeTitle' }) viewValue: TemplateRef<any>;
+    readonly viewValue = input<TemplateRef<any>>(undefined!, { alias: 'kbqPipeTitle' });
 
     get parent(): HTMLElement {
         return this.parentContainer?.nativeElement || this.parentContainer;
@@ -73,7 +73,7 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
     ngAfterViewInit() {
         this.parentContainer = this.parentContainer || this.componentInstance?.parentTextElement || this.elementRef;
         this.childContainer = this.childContainer || this.componentInstance?.textElement || this.elementRef;
-        this.content = this.viewValue;
+        this.content = this.viewValue();
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.debounceInterval))
@@ -106,7 +106,7 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
             .pipe(throttleTime(this.debounceInterval))
             .subscribe(() => {
                 this.disabled = !this.isOverflown;
-                this.content = this.viewValue;
+                this.content = this.viewValue();
             });
     }
 

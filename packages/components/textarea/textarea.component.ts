@@ -5,12 +5,12 @@ import {
     Directive,
     DoCheck,
     ElementRef,
-    EventEmitter,
     Host,
     inject,
     Inject,
     InjectionToken,
     Input,
+    input,
     NgZone,
     numberAttribute,
     OnChanges,
@@ -25,7 +25,6 @@ import {
     CanUpdateErrorState,
     ErrorStateMatcher,
     KBQ_PARENT_ANIMATION_COMPONENT,
-    KBQ_VALIDATION,
     KBQ_WINDOW
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -38,7 +37,7 @@ let nextUniqueId = 0;
 
 @Directive({
     selector: 'textarea[kbqTextarea]',
-    exportAs: 'kbqTextarea',
+    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }],
     host: {
         class: 'kbq-textarea kbq-scrollbar',
         '[class.kbq-textarea-resizable]': '!canGrow',
@@ -52,18 +51,18 @@ let nextUniqueId = 0;
         '(focus)': 'focusChanged(true)',
         '(paste)': 'stateChanges.next()'
     },
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }]
+    exportAs: 'kbqTextarea'
 })
 export class KbqTextarea
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
-
     /** Whether the component is in an error state. */
     errorState: boolean = false;
 
     /** Parameter enables or disables the ability to automatically increase the height.
      * If set to false, the textarea becomes vertically resizable. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get canGrow(): boolean {
         return !this.maxRowLimitReached && this._canGrow;
@@ -80,9 +79,12 @@ export class KbqTextarea
     private _canGrow: boolean = true;
 
     /** Maximum number of lines to which the textarea will grow. Default unlimited */
-    @Input() maxRows: number;
+    readonly maxRows = input<number>(undefined!);
 
     /** An object used to control when error messages are shown. */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
     /**
@@ -107,6 +109,8 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
@@ -129,6 +133,8 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get id(): string {
         return this._id;
@@ -142,15 +148,22 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  This input overrides a field from a superclass, while the superclass field
+    //  is not migrated.
     @Input() placeholder: string;
 
     /** Distance from the last line to the bottom border */
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input({ transform: numberAttribute }) freeRowsHeight: number;
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get required(): boolean {
         return this._required;
@@ -164,6 +177,8 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get value(): string {
         return this.valueAccessor.value;
@@ -179,7 +194,7 @@ export class KbqTextarea
     /** Flag that will be set to true when the maximum number of lines is reached.
      * Maximum number of rows can be set using the maxRows input. */
     get maxRowLimitReached(): boolean {
-        return this.rowsCount > this.maxRows;
+        return this.rowsCount > this.maxRows();
     }
 
     protected uid = `kbq-textarea-${nextUniqueId++}`;
@@ -277,13 +292,6 @@ export class KbqTextarea
 
     onBlur(): void {
         this.focusChanged(false);
-
-        if (this.useLegacyValidation && this.ngControl?.control) {
-            const control = this.ngControl.control;
-
-            control.updateValueAndValidity({ emitEvent: false });
-            (control.statusChanges as EventEmitter<string>).emit(control.status);
-        }
     }
 
     /** Grow textarea height to avoid vertical scroll  */
@@ -312,7 +320,7 @@ export class KbqTextarea
                 textarea.style.minHeight = `${height}px`;
             } else if (!textarea.style.minHeight && this.lineHeight) {
                 // need for first initialization when value above maxRows
-                textarea.style.minHeight = `${this.maxRows * this.lineHeight}px`;
+                textarea.style.minHeight = `${this.maxRows() * this.lineHeight}px`;
             }
         });
     };

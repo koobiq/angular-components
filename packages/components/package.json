@@ -25,7 +25,6 @@
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/forms": "{{NG_VERSION}}",
-        "@koobiq/cdk": "{{VERSION}}",
         "@koobiq/angular-moment-adapter": "{{VERSION}}",
         "@koobiq/angular-luxon-adapter": "{{VERSION}}",
         "@koobiq/date-formatter": "^3.2.3",
@@ -38,7 +37,8 @@
     "ng-update": {
         "packageGroup": [
             "@koobiq/components"
-        ]
+        ],
+        "migrations": "./schematics/migrations.json"
     },
     "exports": {
         ".": {

@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqHighlightModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
@@ -14,7 +13,6 @@ import { map, startWith } from 'rxjs/operators';
 @Component({
     selector: 'select-search-example',
     imports: [
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqIconModule,
         KbqInputModule,
@@ -25,7 +23,7 @@ import { map, startWith } from 'rxjs/operators';
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />

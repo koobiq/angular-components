@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, Inject, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, TemplateRef, ViewEncapsulation, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import {
@@ -102,7 +101,6 @@ export class DevSidepanelComponent {
         KbqSidepanelModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqFormFieldModule,
         KbqSelectModule,
         KbqToggleModule,
         KbqDropdownModule,
@@ -110,8 +108,8 @@ export class DevSidepanelComponent {
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     themePalette = ThemePalette;
@@ -120,7 +118,7 @@ export class DevApp {
 
     modalState: boolean = false;
 
-    @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
+    readonly template = viewChild.required(TemplateRef);
 
     array = new Array(40);
     constructor(private sidepanelService: KbqSidepanelService) {}
@@ -139,7 +137,7 @@ export class DevApp {
     }
 
     openTemplateSidepanel() {
-        this.sidepanelService.open(this.template, {
+        this.sidepanelService.open(this.template(), {
             position: this.position,
             size: this.size,
             hasBackdrop: this.modalState

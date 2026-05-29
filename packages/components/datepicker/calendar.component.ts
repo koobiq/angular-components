@@ -3,15 +3,15 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     Input,
     OnChanges,
     OnDestroy,
     Optional,
-    Output,
     SimpleChanges,
-    ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    input,
+    output,
+    viewChild
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
@@ -33,15 +33,17 @@ import { KbqMonthView } from './month-view.component';
     ],
     templateUrl: 'calendar.html',
     styleUrls: ['calendar.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'kbqCalendar',
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-calendar'
-    }
+    },
+    exportAs: 'kbqCalendar'
 })
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** A date representing the period (month or year) to start the calendar in. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get startAt(): D | null {
         return this._startAt;
@@ -57,6 +59,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _startAt: D | null;
 
     /** The currently selected date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get selected(): D | null {
         return this._selected;
@@ -69,6 +73,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _selected: D | null;
 
     /** The minimum selectable date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get minDate(): D | null {
         return this._minDate;
@@ -83,6 +89,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _minDate: D | null;
 
     /** The maximum selectable date. */
+    // TODO: Skipped for migration because:
+    //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get maxDate(): D | null {
         return this._maxDate;
@@ -113,31 +121,31 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _activeDate: D;
 
     /** Function used to filter which dates are selectable. */
-    @Input() dateFilter: (date: D) => boolean;
+    readonly dateFilter = input<(date: D) => boolean>(undefined!);
 
     /** Function that can be used to add custom CSS classes to dates. */
-    @Input() dateClass: (date: D) => KbqCalendarCellCssClasses;
+    readonly dateClass = input<(date: D) => KbqCalendarCellCssClasses>(undefined!);
 
     /** Emits when the currently selected date changes. */
-    @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
+    readonly selectedChange = output<D>();
 
     /**
      * Emits the year chosen in multiyear view.
      * This doesn't imply a change on the selected date.
      */
-    @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
+    readonly yearSelected = output<D>();
 
     /**
      * Emits the month chosen in year view.
      * This doesn't imply a change on the selected date.
      */
-    @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
+    readonly monthSelected = output<D>();
 
     /** Emits when any date is selected. */
-    @Output() readonly userSelection: EventEmitter<void> = new EventEmitter<void>();
+    readonly userSelection = output<void>();
 
     /** Reference to the current month view component. */
-    @ViewChild(KbqMonthView, { static: false }) monthView: KbqMonthView<D>;
+    readonly monthView = viewChild.required(KbqMonthView);
 
     /**
      * Emits whenever there is a state change that the header may need to respond to.
@@ -171,11 +179,13 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         const change = changes.minDate || changes.maxDate || changes.dateFilter;
 
         if (change && !change.firstChange) {
-            if (this.monthView) {
+            const monthView = this.monthView();
+
+            if (monthView) {
                 // We need to `detectChanges` manually here, because the `minDate`, `maxDate` etc. are
                 // passed down to the view via data bindings which won't be up-to-date when we call `init`.
                 this.changeDetectorRef.detectChanges();
-                this.monthView.init();
+                monthView.init();
             }
         }
 
@@ -205,7 +215,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.inputSubscription = this.datepickerInput.valueChange.subscribe((value: D | null) => {
             this.selected = value;
 
-            this.monthView?.init();
+            this.monthView()?.init();
             this.activeDate = value as D;
         });
     }
@@ -213,7 +223,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** Updates today's date after an update of the active date */
     updateTodaysDate() {
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
-        this.monthView.ngAfterContentInit();
+        this.monthView().ngAfterContentInit();
     }
 
     /** Handles date selection in the month view. */
@@ -224,6 +234,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }
 
     userSelected(): void {
+        // TODO: The 'emit' function requires a mandatory void argument
         this.userSelection.emit();
     }
 

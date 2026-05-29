@@ -13,6 +13,9 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 @Component({
     selector: 'code-block-with-custom-locale-configuration-example',
     imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block canToggleSoftWrap maxHeight="200" lineNumbers [canDownload]="true" [files]="files" />
+    `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
             core: () => import('highlight.js/lib/core'),
@@ -33,9 +36,6 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
             openExternalSystemTooltip: '*CUSTOM* Open in the external system'
         })
     ],
-    template: `
-        <kbq-code-block canToggleSoftWrap maxHeight="200" lineNumbers canDownload [files]="files" />
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithCustomLocaleConfigurationExample {

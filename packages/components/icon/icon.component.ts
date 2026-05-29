@@ -7,6 +7,7 @@ import {
     ElementRef,
     inject,
     Input,
+    input,
     OnChanges,
     SimpleChanges,
     ViewEncapsulation
@@ -21,8 +22,8 @@ import { KbqIconRegistry } from './icon-registry';
     selector: '[kbq-icon]',
     template: '<ng-content />',
     styleUrls: ['icon.scss', 'icon-tokens.scss'],
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq kbq-icon',
         '[class]': 'svgIcon ? null : iconName',
@@ -37,12 +38,18 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly registry = inject(KbqIconRegistry, { optional: true });
     protected readonly destroyRef = inject(DestroyRef);
 
-    @Input() small = false;
+    readonly small = input(false);
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input() autoColor = false;
 
     hasError: boolean = false;
 
     /** Name of an icon within a @koobiq/icons. Accepts "namespace:name" syntax. */
+    // TODO: Skipped for migration because:
+    //  Subclass KbqIconButton overrides this input with `@Input({ alias: 'kbq-icon-button' })`
+    //  using a plain string, which is incompatible with InputSignal<string>.
+    //  Migrate KbqIconButton.iconName together as a follow-up.
     @Input({ alias: 'kbq-icon' }) iconName: string;
 
     protected name = 'KbqIcon';
@@ -80,7 +87,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     ngAfterContentInit(): void {
         if (this.autoColor) {
-            this.formField?.control?.stateChanges.subscribe(this.updateState);
+            this.formField?.control()?.stateChanges.subscribe(this.updateState);
             this.updateState();
         }
 
@@ -137,7 +144,8 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     };
 
     private parseIconSize(): number {
-        const baseName = this.iconName?.includes(':') ? this.iconName.split(':')[1] : this.iconName;
+        const iconName = this.iconName;
+        const baseName = iconName?.includes(':') ? iconName.split(':')[1] : iconName;
 
         return parseInt(baseName?.split('_').pop() ?? '');
     }

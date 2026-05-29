@@ -169,7 +169,7 @@ class BaseTreeSelectStates {
                 placeholder="this is placeholder"
                 [ngModel]="'rootNode_1_long_text_long_text'"
             >
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [ngModel]="''" />
                     <kbq-cleaner />
@@ -209,10 +209,10 @@ class BaseTreeSelectStates {
             padding: 8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectStates extends BaseTreeSelectStates {}
 
@@ -233,7 +233,7 @@ export class E2eTreeSelectStates extends BaseTreeSelectStates {}
                 [multiple]="true"
                 [ngModel]="['rootNode_1_long_text_long_text', 'material2', 'PhotoBoothLibrary']"
             >
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [ngModel]="''" />
                     <kbq-cleaner />
@@ -269,10 +269,10 @@ export class E2eTreeSelectStates extends BaseTreeSelectStates {}
             padding: 8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eMultiTreeSelectStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eMultiTreeSelectStates extends BaseTreeSelectStates {}
 
@@ -294,7 +294,7 @@ export class E2eMultiTreeSelectStates extends BaseTreeSelectStates {}
                 [multiline]="true"
                 [ngModel]="['rootNode_1_long_text_long_text', 'material2', 'PhotoBoothLibrary']"
             >
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [ngModel]="''" />
                     <kbq-cleaner />
@@ -330,10 +330,10 @@ export class E2eMultiTreeSelectStates extends BaseTreeSelectStates {}
             padding: 8px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eMultilineTreeSelectStates'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eMultilineTreeSelectStates extends BaseTreeSelectStates {}
 
@@ -385,10 +385,10 @@ export class E2eMultilineTreeSelectStates extends BaseTreeSelectStates {}
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectPositioning'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectPositioning extends BaseTreeSelectStates {
     readonly control = new UntypedFormControl();
@@ -428,10 +428,10 @@ export class E2eTreeSelectPositioning extends BaseTreeSelectStates {
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectMultiBehavior'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectMultiBehavior extends BaseTreeSelectStates {
     readonly control = new UntypedFormControl([]);
@@ -464,10 +464,10 @@ export class E2eTreeSelectMultiBehavior extends BaseTreeSelectStates {
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectDataMutation'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectDataMutation extends BaseTreeSelectStates {
     readonly control = new UntypedFormControl('rootNode_1_long_text_long_text');
@@ -509,11 +509,11 @@ export class E2eTreeSelectDataMutation extends BaseTreeSelectStates {
             padding: 16px;
         }
     `,
+    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectRtlPositioning'
-    },
-    providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectRtlPositioning extends BaseTreeSelectStates {
     readonly control = new UntypedFormControl();
@@ -545,10 +545,10 @@ export class E2eTreeSelectRtlPositioning extends BaseTreeSelectStates {
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectFormControlDisabled'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectFormControlDisabled extends BaseTreeSelectStates {
     readonly control = new UntypedFormControl({ value: null, disabled: true });
@@ -590,10 +590,10 @@ export class E2eTreeSelectFormControlDisabled extends BaseTreeSelectStates {
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectPropertyDisabled'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectPropertyDisabled extends BaseTreeSelectStates {
     readonly isDisabled = signal(true);
@@ -627,10 +627,10 @@ export class E2eTreeSelectPropertyDisabled extends BaseTreeSelectStates {
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectInitiallyHidden'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectInitiallyHidden extends BaseTreeSelectStates {
     readonly isVisible = signal(false);
@@ -661,10 +661,10 @@ export class E2eTreeSelectInitiallyHidden extends BaseTreeSelectStates {
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectNoPlaceholder'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectNoPlaceholder extends BaseTreeSelectStates {}
 
@@ -688,9 +688,9 @@ export class E2eTreeSelectNoPlaceholder extends BaseTreeSelectStates {}
             padding: 16px;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTreeSelectPanelWidthAuto'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class E2eTreeSelectPanelWidthAuto extends BaseTreeSelectStates {}

@@ -6,7 +6,6 @@
 
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/platform';
-import * as i2 from '@angular/common';
 import { KbqColorDirective } from '@koobiq/components/core';
 
 // @public (undocumented)
@@ -15,9 +14,9 @@ export class KbqProgressSpinner extends KbqColorDirective {
     // (undocumented)
     get dashOffsetPercent(): string;
     // (undocumented)
-    id: string;
+    readonly id: i0.InputSignal<string>;
     // (undocumented)
-    mode: ProgressSpinnerMode;
+    readonly mode: i0.InputSignal<ProgressSpinnerMode>;
     // (undocumented)
     get percentage(): number;
     // (undocumented)
@@ -26,9 +25,9 @@ export class KbqProgressSpinner extends KbqColorDirective {
     // (undocumented)
     svgCircleRadius: string;
     // (undocumented)
-    value: number;
+    readonly value: i0.InputSignal<number>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressSpinner, "kbq-progress-spinner", never, { "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, ["[kbq-progress-spinner-text]", "[kbq-progress-spinner-caption]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressSpinner, "kbq-progress-spinner", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; }; }, {}, never, ["[kbq-progress-spinner-text]", "[kbq-progress-spinner-caption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinner, never>;
 }
@@ -47,10 +46,8 @@ export class KbqProgressSpinnerModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinnerModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqProgressSpinnerModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, never, [typeof i1.PlatformModule, typeof i2.NgStyle, typeof i3.KbqProgressSpinner, typeof i3.KbqProgressSpinnerText, typeof i3.KbqProgressSpinnerCaption], [typeof i3.KbqProgressSpinner, typeof i3.KbqProgressSpinnerText, typeof i3.KbqProgressSpinnerCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, never, [typeof i1.PlatformModule, typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption], [typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption]>;
 }
 
 // @public (undocumented)

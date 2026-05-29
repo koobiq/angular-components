@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -69,8 +69,8 @@ export class DevModalLongCustomComponent {
     imports: [KbqButtonModule],
     template: `
         <div>
-            <h2>{{ title }}</h2>
-            <h4>{{ subtitle }}</h4>
+            <h2>{{ data?.title }}</h2>
+            <h4>{{ data?.subtitle }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
                 <button kbq-button [color]="componentColors.Contrast" (click)="destroyModal()">
@@ -84,10 +84,7 @@ export class DevModalLongCustomComponent {
 export class DevModalCustomComponent {
     componentColors = KbqComponentColors;
 
-    data = inject(KBQ_MODAL_DATA);
-
-    @Input() title: string;
-    @Input() subtitle: string;
+    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true });
 
     constructor(private modal: KbqModalRef) {
         console.log('data: ', this.data);
@@ -108,8 +105,8 @@ export class DevModalCustomComponent {
         </kbq-modal-title>
 
         <kbq-modal-body>
-            <h2>{{ title }}</h2>
-            <h4>{{ subtitle }}</h4>
+            <h2>{{ title() }}</h2>
+            <h4>{{ subtitle() }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
                 <button kbq-button [color]="componentColors.Contrast" (click)="destroyModal()">
@@ -128,8 +125,8 @@ export class DevModalCustomComponent {
 export class DevModalFullCustomComponent {
     componentColors = KbqComponentColors;
 
-    @Input() title: string;
-    @Input() subtitle: string;
+    readonly title = input<string>(undefined!);
+    readonly subtitle = input<string>(undefined!);
 
     constructor(private modal: KbqModalRef) {}
 
@@ -150,8 +147,8 @@ export class DevModalFullCustomComponent {
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
     componentColors = KbqComponentColors;
@@ -194,7 +191,7 @@ export class DevApp {
         this.showConfirm();
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     createTplModal(tplContent?: TemplateRef<{}>, tplTitle?: TemplateRef<{}>, tplFooter?: TemplateRef<{}>) {
         this.tplModal = this.modalService.create({
             kbqTitle: tplTitle,
@@ -249,10 +246,6 @@ export class DevApp {
         const modal = this.modalService.create({
             kbqTitle: 'Modal Title',
             kbqContent: DevModalCustomComponent,
-            kbqComponentParams: {
-                title: 'title in component',
-                subtitle: 'component sub title，will be changed after 2 sec'
-            },
             kbqFooter: [
                 {
                     label: 'button 1',
@@ -273,7 +266,11 @@ export class DevApp {
                     }
                 }
             ],
-            data: { myData: 'myData' }
+            data: {
+                title: 'title in component',
+                subtitle: 'component sub title，will be changed after 2 sec',
+                myData: 'myData'
+            }
         });
 
         modal.afterOpen.subscribe(() => {

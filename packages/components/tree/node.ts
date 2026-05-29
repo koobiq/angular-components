@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef, input } from '@angular/core';
 
 /** Context provided to the tree node component. */
 export class KbqTreeNodeOutletContext<T> {
@@ -28,7 +28,7 @@ export class KbqTreeNodeOutletContext<T> {
     inputs: ['when: kbqTreeNodeDefWhen']
 })
 export class KbqTreeNodeDef<T> {
-    @Input('kbqTreeNode') data: T;
+    readonly data = input<T>(undefined!, { alias: 'kbqTreeNode' });
 
     /**
      * Function that should return true if this node template should be used for the provided node

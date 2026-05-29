@@ -93,7 +93,6 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
             [optionTemplate]="customOption"
         />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
         { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, deps: [DateAdapter], useFactory: customTypesFactory },
@@ -103,6 +102,7 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
             useFactory: (customTypes: KbqCustomTimeRangeType[]) => customTypes.map(({ type }) => type)
         }
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }

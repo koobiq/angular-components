@@ -31,8 +31,8 @@ type ClampedTextState = {
             </table>
         </div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [kbqClampedTextLocaleConfigurationProvider(enUSLocaleData.clampedText)],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eClampedTextStateAndStyle'
     }
@@ -78,8 +78,8 @@ export class E2eClampedTextStateAndStyle {
             padding: var(--kbq-size-s);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [kbqClampedTextLocaleConfigurationProvider(enUSLocaleData.clampedText)],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eClampedTextStates'
     }

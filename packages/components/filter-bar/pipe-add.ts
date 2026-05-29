@@ -1,14 +1,4 @@
-import { NgClass } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    inject,
-    Input,
-    Output,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqOptionModule } from '@koobiq/components/core';
@@ -28,8 +18,7 @@ import { getId } from './pipes/base-pipe';
         KbqButtonModule,
         KbqIcon,
         KbqOptionModule,
-        KbqSelectModule,
-        NgClass
+        KbqSelectModule
     ],
     template: `
         <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">
@@ -39,7 +28,7 @@ import { getId } from './pipes/base-pipe';
                 kbq-select-matcher
                 [color]="'contrast-fade'"
                 [kbqStyle]="'outline'"
-                [ngClass]="{ 'kbq-active': select.panelOpen }"
+                [class]="{ 'kbq-active': select.panelOpen }"
             >
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
@@ -58,8 +47,8 @@ import { getId } from './pipes/base-pipe';
         </kbq-select>
     `,
     styleUrl: 'pipe-add.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-pipe-add'
     }
@@ -69,21 +58,20 @@ export class KbqPipeAdd {
     protected readonly filterBar = inject(KbqFilterBar);
 
     /** @docs-private */
-    @ViewChild(KbqSelect) select: KbqSelect;
+    readonly select = viewChild.required(KbqSelect);
 
     /** Event that is generated after add pipe. */
-    @Output() readonly onAddPipe = new EventEmitter<KbqPipeTemplate>();
+    readonly onAddPipe = output<KbqPipeTemplate>();
 
     /** template of filter */
-    @Input() filterTemplate: KbqFilter = {
+    readonly filterTemplate = input<KbqFilter>({
         name: '',
         pipes: [],
-
         readonly: false,
         disabled: false,
         changed: false,
         saved: false
-    };
+    });
 
     /** already added pipes. Used to open an already added pipe. */
     addedPipes: (string | number)[] = [];
@@ -103,7 +91,7 @@ export class KbqPipeAdd {
             option.select();
 
             if (!this.filterBar.filter) {
-                this.filterBar.filter = structuredClone(this.filterTemplate);
+                this.filterBar.filter = structuredClone(this.filterTemplate());
             }
 
             this.filterBar.filter.changed = true;
@@ -111,11 +99,11 @@ export class KbqPipeAdd {
                 Object.assign({}, option.value, { values: undefined, valueTemplate: undefined, openOnAdd: true })
             );
 
-            this.onAddPipe.next(option.value);
+            this.onAddPipe.emit(option.value);
             this.filterBar.filterChange.emit(this.filterBar.filter);
         }
 
-        this.select.close();
+        this.select().close();
     }
 
     /**

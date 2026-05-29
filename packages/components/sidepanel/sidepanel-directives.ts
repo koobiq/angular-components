@@ -5,6 +5,7 @@ import {
     ElementRef,
     inject,
     Input,
+    input,
     OnChanges,
     OnInit,
     Optional,
@@ -28,9 +29,11 @@ import { KbqSidepanelService } from './sidepanel.service';
     }
 })
 export class KbqSidepanelClose implements OnInit, OnChanges {
+    // TODO: Skipped for migration because:
+    //  Your application code writes to the input. This prevents migration.
     @Input('kbq-sidepanel-close') sidepanelResult: any;
 
-    @Input() kbqSidepanelClose: any;
+    readonly kbqSidepanelClose = input<any>();
 
     constructor(
         @Optional() public sidepanelRef: KbqSidepanelRef,
@@ -77,7 +80,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
             <ng-content />
         </div>
 
-        @if (closeable) {
+        @if (closeable()) {
             <button kbq-button kbq-sidepanel-close type="button" [color]="'contrast'" [kbqStyle]="'transparent'">
                 <i kbq-icon="kbq-xmark_16" [color]="'contrast'"></i>
             </button>
@@ -85,16 +88,16 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     `,
     host: {
         class: 'kbq-sidepanel-header',
-        '[class.kbq-sidepanel-header_truncate-text]': 'truncateText',
+        '[class.kbq-sidepanel-header_truncate-text]': 'truncateText()',
         '[class.kbq-sidepanel-header_bottom-overflown]': 'sidepanelRef.bodyOverflow().top'
     }
 })
 export class KbqSidepanelHeader {
     /** Add button for close sidepanel. Default false */
-    @Input({ transform: booleanAttribute }) closeable: boolean = false;
+    readonly closeable = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** Enables text truncation. Default true */
-    @Input({ transform: booleanAttribute }) truncateText: boolean = true;
+    readonly truncateText = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /** @docs-private */
     protected sidepanelRef = inject(KbqSidepanelRef);

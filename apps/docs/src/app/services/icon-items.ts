@@ -1,5 +1,3 @@
-import { Injectable } from '@angular/core';
-
 export interface DocsIconItem {
     id: string;
     name: string;
@@ -10,13 +8,11 @@ export interface DocsIconItem {
     tags: string[];
 }
 
-@Injectable({ providedIn: 'root' })
 export class DocsIconItems {
     allIcons: DocsIconItem[] = [];
     sizes: Set<number> = new Set();
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    constructor(ICONS: Object) {
+    constructor(ICONS: Record<string, { codepoint: string; tags: string[]; description: string }>) {
         this.allIcons = Object.keys(ICONS).map((id) => {
             const { codepoint, tags, description } = ICONS[id];
 

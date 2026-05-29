@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqHighlightModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
@@ -105,7 +104,6 @@ export const DATA_OBJECT = {
 @Component({
     selector: 'tree-select-search-overview-example',
     imports: [
-        KbqFormFieldModule,
         KbqTreeSelectModule,
         FormsModule,
         ReactiveFormsModule,
@@ -117,7 +115,7 @@ export const DATA_OBJECT = {
     template: `
         <kbq-form-field>
             <kbq-tree-select [multiple]="true" [(ngModel)]="selected">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />

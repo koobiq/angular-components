@@ -67,8 +67,8 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
             margin: 0 auto; /* required for test */
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eActionsPanelWithOverlayContainer'
     }

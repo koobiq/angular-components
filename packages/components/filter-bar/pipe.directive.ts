@@ -1,4 +1,4 @@
-import { AfterContentInit, Directive, inject, Injector, Input, ViewContainerRef } from '@angular/core';
+import { AfterContentInit, Directive, inject, Injector, input, ViewContainerRef } from '@angular/core';
 import { KBQ_FILTER_BAR_PIPES, KbqPipe } from './filter-bar.types';
 import { KBQ_PIPE_DATA } from './pipes/base-pipe';
 
@@ -10,16 +10,16 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
     private pipes = inject(KBQ_FILTER_BAR_PIPES);
     private viewContainerRef = inject(ViewContainerRef);
 
-    @Input({ alias: 'kbqPipe' }) pipe: T;
+    readonly pipe = input<T>(undefined!, { alias: 'kbqPipe' });
 
     ngAfterContentInit(): void {
-        const component = this.pipes.get(this.pipe.type);
+        const component = this.pipes.get(this.pipe().type);
 
         if (!component) {
-            throw new Error(`Can't find component for this type: ${this.pipe.type}`);
+            throw new Error(`Can't find component for this type: ${this.pipe().type}`);
         }
 
-        this.viewContainerRef.createComponent(component, { injector: this.getInjector(this.pipe) });
+        this.viewContainerRef.createComponent(component, { injector: this.getInjector(this.pipe()) });
     }
 
     private getInjector(pipe: T): Injector {

@@ -9,11 +9,10 @@ import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqLocaleService } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 
@@ -42,22 +41,20 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
-    emitValueTimeout: number;
+    readonly emitValueTimeout: i0.InputSignalWithTransform<number, unknown>;
     // (undocumented)
     readonly externalConfiguration: unknown;
     protected readonly focusMonitor: FocusMonitor;
-    isEmitValueByEnterEnabled: boolean;
+    readonly isEmitValueByEnterEnabled: i0.InputSignal<boolean>;
     isOpened: boolean;
-    readonly isOpenedChange: EventEmitter<boolean>;
+    readonly isOpenedChange: i0.OutputEmitterRef<boolean>;
     // (undocumented)
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
     get localeData(): any;
-    protected readonly localeService: KbqLocaleService | null;
+    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_emitValueTimeout: unknown;
     // (undocumented)
     static ngAcceptInputType_isOpened: unknown;
     // (undocumented)
@@ -84,7 +81,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     value: BehaviorSubject<string>;
     writeValue(value: string): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; }; "tooltipText": { "alias": "tooltipText"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; "isSignal": true; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; "isSignal": true; }; "tooltipText": { "alias": "tooltipText"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandable, never>;
 }
@@ -95,10 +92,8 @@ export class KbqSearchExpandableModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandableModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSearchExpandableModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSearchExpandableModule, never, [typeof i1.KbqSearchExpandable], [typeof i1.KbqSearchExpandable]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSearchExpandableModule, never, [typeof KbqSearchExpandable], [typeof KbqSearchExpandable]>;
 }
 
 // (No @packageDocumentation comment for this package)

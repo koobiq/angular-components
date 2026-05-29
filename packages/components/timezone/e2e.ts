@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
-import {
-    ErrorStateMatcher,
-    kbqDisableLegacyValidationDirectiveProvider,
-    KbqOptgroup,
-    KbqSelectSearch
-} from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { ErrorStateMatcher, KbqOptgroup, KbqSelectSearch } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -28,7 +22,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 @Component({
     selector: 'e2e-timezone-states',
     imports: [
-        KbqFormFieldModule,
         KbqInputModule,
         KbqOptgroup,
         KbqTimezoneModule,
@@ -43,7 +36,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 [searchMinOptionsThreshold]="undefined"
                 [(value)]="selected"
             >
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input
                         autocomplete="off"
@@ -136,10 +129,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eTimezoneStates'
-    },
-    providers: [
-        kbqDisableLegacyValidationDirectiveProvider()
-    ]
+    }
 })
 export class E2eTimezoneStates {
     control = model('');

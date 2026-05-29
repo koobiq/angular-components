@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -8,7 +7,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  */
 @Component({
     selector: 'select-icon-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqIconModule],
+    imports: [KbqSelectModule, KbqIconModule],
     template: `
         <kbq-form-field>
             <i kbqPrefix color="contrast-fade" kbq-icon="kbq-globe_16"></i>

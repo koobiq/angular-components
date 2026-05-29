@@ -16,8 +16,7 @@ import { KbqIcon } from '@koobiq/components/icon';
             <ng-template #kbqFileIcon let-file>
                 @if (!file.hasError) {
                     <i kbq-icon="kbq-file-text-o_16"></i>
-                }
-                @if (file.hasError) {
+                } @else {
                     <i kbq-icon="kbq-triangle-exclamation_16"></i>
                 }
             </ng-template>

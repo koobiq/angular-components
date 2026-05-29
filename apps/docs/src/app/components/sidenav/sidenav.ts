@@ -89,8 +89,8 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
     ],
     templateUrl: './sidenav.html',
     styleUrl: './sidenav.scss',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-sidenav'
     }
@@ -133,7 +133,7 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
 
     ngAfterViewInit() {
         this.treeControl.expandAll();
-        this.docStates.registerNavbarScrollContainer(this.scrollbar().contentElement.nativeElement);
+        this.docStates.registerNavbarScrollContainer(this.scrollbar().contentElement().nativeElement);
         setTimeout(() => this.tree().highlightSelectedOption());
     }
 

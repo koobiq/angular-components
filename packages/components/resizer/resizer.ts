@@ -51,10 +51,10 @@ export type KbqResizerSizeChangeEvent = {
  */
 @Directive({
     selector: '[kbqResizable]',
-    exportAs: 'kbqResizable',
     host: {
         class: 'kbq-resizable'
-    }
+    },
+    exportAs: 'kbqResizable'
 })
 export class KbqResizable {
     /**
@@ -68,11 +68,11 @@ export class KbqResizable {
  */
 @Directive({
     selector: '[kbqResizer]',
-    exportAs: 'kbqResizer',
     host: {
         class: 'kbq-resizer',
         '[style.cursor]': 'cursor()'
-    }
+    },
+    exportAs: 'kbqResizer'
 })
 export class KbqResizer {
     private readonly element = kbqInjectNativeElement();

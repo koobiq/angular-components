@@ -26,10 +26,10 @@ import { KbqIconButton } from '@koobiq/components/icon';
             color: var(--kbq-foreground-contrast-secondary);
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-row layout-align-left-center layout-gap-3xl'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    }
 })
 export class IconButtonSizeExample {
     colors = KbqComponentColors;
