@@ -5,7 +5,6 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/common';
 
 // @public (undocumented)
 export class KbqDivider {
@@ -28,7 +27,7 @@ export class KbqDividerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqDividerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDividerModule, never, [typeof i1.CommonModule, typeof KbqDivider], [typeof KbqDivider]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDividerModule, never, [typeof KbqDivider], [typeof KbqDivider]>;
 }
 
 // (No @packageDocumentation comment for this package)

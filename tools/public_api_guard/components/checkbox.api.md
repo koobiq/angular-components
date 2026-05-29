@@ -11,7 +11,6 @@ import { CheckboxRequiredValidator } from '@angular/forms';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import * as i1 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
@@ -98,7 +97,7 @@ export class KbqCheckboxModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqCheckboxModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqCheckboxModule, never, [typeof i1.CommonModule, typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator], [typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqCheckboxModule, never, [typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator], [typeof KbqCheckbox, typeof KbqCheckboxRequiredValidator]>;
 }
 
 // @public

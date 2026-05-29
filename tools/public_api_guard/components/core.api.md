@@ -32,7 +32,6 @@ import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -2457,7 +2456,7 @@ export class KbqHighlightModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqHighlightModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof i1.CommonModule, typeof KbqHighlightPipe], [typeof KbqHighlightPipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof KbqHighlightPipe], [typeof KbqHighlightPipe]>;
 }
 
 // @public (undocumented)
@@ -3016,7 +3015,7 @@ export class KbqPseudoCheckboxModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqPseudoCheckboxModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPseudoCheckboxModule, never, [typeof i1.CommonModule, typeof KbqPseudoCheckbox], [typeof KbqPseudoCheckbox]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPseudoCheckboxModule, never, [typeof KbqPseudoCheckbox], [typeof KbqPseudoCheckbox]>;
 }
 
 // @public (undocumented)

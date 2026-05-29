@@ -7,7 +7,6 @@
 import { AfterContentInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/common';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 
@@ -60,7 +59,7 @@ export class KbqSidebarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSidebarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidebarModule, never, [typeof i1.CommonModule, typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar], [typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidebarModule, never, [typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar], [typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar]>;
 }
 
 // @public (undocumented)
