@@ -1,3 +1,4 @@
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { ChangeDetectionStrategy, Component, DebugElement, Provider, Type } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
@@ -5,6 +6,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqTabNavBar } from '@koobiq/components/tabs';
 import { HLJSApi } from 'highlight.js';
+import { Observable, Subject } from 'rxjs';
 import { KBQ_CODE_BLOCK_FALLBACK_FILE_NAME, KbqCodeBlock, kbqCodeBlockLocaleConfigurationProvider } from './code-block';
 import {
     KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE,
@@ -15,6 +17,18 @@ import { KbqCodeBlockModule } from './code-block.module';
 import { KbqCodeBlockFile } from './types';
 
 const HOVER_DEBOUNCE_TIME = 100;
+
+class MockSharedResizeObserver {
+    private readonly subject = new Subject<ResizeObserverEntry[]>();
+
+    observe(_element: Element): Observable<ResizeObserverEntry[]> {
+        return this.subject.asObservable();
+    }
+
+    triggerResize(): void {
+        this.subject.next([]);
+    }
+}
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
@@ -59,6 +73,12 @@ const getLinkButtonElement = (debugElement: DebugElement): HTMLButtonElement => 
 
 const getViewAllButtonElement = (debugElement: DebugElement): HTMLButtonElement => {
     return debugElement.nativeElement.querySelector('.kbq-code-block__view-all__button');
+};
+
+const mockPreHeight = (debugElement: DebugElement, height: number): void => {
+    const pre: HTMLElement = debugElement.nativeElement.querySelector('.kbq-code-block__pre');
+
+    Object.defineProperty(pre, 'offsetHeight', { get: () => height, configurable: true });
 };
 
 @Component({
@@ -129,6 +149,24 @@ export class TestCodeBlockWithTemplateTabLink {
             language: 'html',
             filename: 'index.html',
             content: `<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<title>Koobiq</title>\n\t\t<meta charset="UTF-8" />\n\t\t<base href="/">\n\t</head>\n\t<body>\n\t\t<app-root>Loading...</app-root>\n\t</body>\n</html>`
+        }
+    ];
+}
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block [files]="files" [maxHeight]="maxHeight" />
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class MaxHeightCodeBlock {
+    maxHeight = 200;
+    files: KbqCodeBlockFile[] = [
+        {
+            language: 'html',
+            filename: 'index.html',
+            content: `<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<title>Koobiq</title>\n\t</head>\n\t<body>\n\t\t<app-root>Loading...</app-root>\n\t</body>\n</html>`
         }
     ];
 }
@@ -498,24 +536,32 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
     }));
 
-    it('should show viewAll button', () => {
-        const fixture = createComponent(BaseCodeBlock);
-        const { debugElement, componentInstance } = fixture;
+    it('should show viewAll button when content overflows maxHeight', () => {
+        const mockResizeObserver = new MockSharedResizeObserver();
+        const fixture = createComponent(MaxHeightCodeBlock, [
+            { provide: SharedResizeObserver, useValue: mockResizeObserver }
+        ]);
+        const { debugElement } = fixture;
 
         expect(getViewAllButtonElement(debugElement)).toBeNull();
 
-        componentInstance.maxHeight = 300;
+        mockPreHeight(debugElement, 500);
+        mockResizeObserver.triggerResize();
         fixture.detectChanges();
 
         expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
     });
 
     it('should toggle viewAll property by click', () => {
-        const fixture = createComponent(BaseCodeBlock);
-        const { debugElement, componentInstance } = fixture;
+        const mockResizeObserver = new MockSharedResizeObserver();
+        const fixture = createComponent(MaxHeightCodeBlock, [
+            { provide: SharedResizeObserver, useValue: mockResizeObserver }
+        ]);
+        const { debugElement } = fixture;
         const spy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleViewAll');
 
-        componentInstance.maxHeight = 300;
+        mockPreHeight(debugElement, 500);
+        mockResizeObserver.triggerResize();
         fixture.detectChanges();
 
         getViewAllButtonElement(debugElement).click();
@@ -524,16 +570,63 @@ describe(KbqCodeBlock.name, () => {
     });
 
     it('should toggle viewAll property by ENTER keydown', () => {
-        const fixture = createComponent(BaseCodeBlock);
-        const { debugElement, componentInstance } = fixture;
+        const mockResizeObserver = new MockSharedResizeObserver();
+        const fixture = createComponent(MaxHeightCodeBlock, [
+            { provide: SharedResizeObserver, useValue: mockResizeObserver }
+        ]);
+        const { debugElement } = fixture;
         const spy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleViewAll');
 
-        componentInstance.maxHeight = 300;
+        mockPreHeight(debugElement, 500);
+        mockResizeObserver.triggerResize();
         fixture.detectChanges();
 
         getViewAllButtonElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
 
         expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    describe('viewAll button visibility', () => {
+        it('should not show viewAll button when content fits within maxHeight', () => {
+            const fixture = createComponent(MaxHeightCodeBlock, [
+                { provide: SharedResizeObserver, useValue: new MockSharedResizeObserver() }
+            ]);
+
+            // jsdom returns offsetHeight = 0 by default, which is less than maxHeight = 200
+            expect(getViewAllButtonElement(fixture.debugElement)).toBeNull();
+        });
+
+        it('should show viewAll button when content overflows maxHeight', () => {
+            const mockResizeObserver = new MockSharedResizeObserver();
+            const fixture = createComponent(MaxHeightCodeBlock, [
+                { provide: SharedResizeObserver, useValue: mockResizeObserver }
+            ]);
+            const { debugElement } = fixture;
+
+            mockPreHeight(debugElement, 500);
+            mockResizeObserver.triggerResize();
+            fixture.detectChanges();
+
+            expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
+        });
+
+        it('should hide viewAll button when content shrinks below maxHeight', () => {
+            const mockResizeObserver = new MockSharedResizeObserver();
+            const fixture = createComponent(MaxHeightCodeBlock, [
+                { provide: SharedResizeObserver, useValue: mockResizeObserver }
+            ]);
+            const { debugElement } = fixture;
+
+            mockPreHeight(debugElement, 500);
+            mockResizeObserver.triggerResize();
+            fixture.detectChanges();
+            expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
+
+            mockPreHeight(debugElement, 100);
+            mockResizeObserver.triggerResize();
+            fixture.detectChanges();
+            expect(getViewAllButtonElement(debugElement)).toBeNull();
+        });
     });
 
     it('should use template for tabLink when provided', () => {
