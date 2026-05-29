@@ -317,9 +317,9 @@ export class FilterBarOverviewExample {
 
             this.activeFilter = filter;
 
-            filterBar.filters().filterSavedSuccessfully();
+            filterBar.filters()?.filterSavedSuccessfully();
         } else {
-            filterBar.filters().filterSavedUnsuccessfully({ nameAlreadyExists: true });
+            filterBar.filters()?.filterSavedUnsuccessfully({ nameAlreadyExists: true });
         }
     }
 
@@ -334,9 +334,9 @@ export class FilterBarOverviewExample {
 
             this.activeFilter = filter;
 
-            filterBar.filters().filterSavedSuccessfully();
+            filterBar.filters()?.filterSavedSuccessfully();
         } else {
-            filterBar.filters().filterSavedUnsuccessfully({ nameAlreadyExists: true });
+            filterBar.filters()?.filterSavedUnsuccessfully({ nameAlreadyExists: true });
         }
     }
 
@@ -350,7 +350,7 @@ export class FilterBarOverviewExample {
 
         this.activeFilter = filter;
 
-        filterBar.filters().filterSavedSuccessfully();
+        filterBar.filters()?.filterSavedSuccessfully();
     }
 
     getSavedFilter(filter: KbqFilter | null): KbqFilter {
