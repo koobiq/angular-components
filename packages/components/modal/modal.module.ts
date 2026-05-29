@@ -1,6 +1,6 @@
 import { A11yModule, ConfigurableFocusTrapFactory, FocusTrapFactory } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgStyle, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -19,7 +19,6 @@ import { KbqModalService } from './modal.service';
         KbqIconModule,
         KbqTitleModule,
         NgTemplateOutlet,
-        NgStyle,
         KbqModalComponent,
         KbqModalTitle,
         KbqModalBody,

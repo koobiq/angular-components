@@ -9,7 +9,7 @@
             class="kbq-modal-mask"
             [class.kbq-modal-mask-hidden]="hidden"
             [class]="maskAnimationClassMap"
-            [ngStyle]="kbqMaskStyle"
+            [style]="kbqMaskStyle"
         ></div>
     }
 
@@ -23,7 +23,7 @@
             #modalContainer
             [class]="getContainerClasses()"
             [class.kbq-modal_no-footer]="!kbqFooter"
-            [ngStyle]="kbqStyle"
+            [style]="kbqStyle"
             [style.transform-origin]="transformOrigin"
             [style.width]="kbqWidth | toCssUnit"
         >
@@ -75,7 +75,7 @@
             }
         </div>
     }
-    <div #modalBody class="kbq-modal-body kbq-scrollbar" [ngStyle]="kbqBodyStyle" (scroll)="checkOverflow()">
+    <div #modalBody class="kbq-modal-body kbq-scrollbar" [style]="kbqBodyStyle" (scroll)="checkOverflow()">
         <ng-container #bodyContainer>
             @if (!isComponent(kbqContent)) {
                 @switch (true) {
@@ -143,7 +143,7 @@
 
 <!-- [Predefined] Confirm Modal Content -->
 <ng-template #tplContentConfirm>
-    <div class="kbq-modal-body" [ngStyle]="kbqBodyStyle">
+    <div class="kbq-modal-body" [style]="kbqBodyStyle">
         <ng-container #bodyContainer>
             @if (!isComponent(kbqContent)) {
                 @switch (true) {

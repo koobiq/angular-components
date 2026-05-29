@@ -1,4 +1,3 @@
-import { NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation, input } from '@angular/core';
 import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 
@@ -32,7 +31,6 @@ const MAX_DASH_ARRAY = 295;
 
 @Component({
     selector: 'kbq-progress-spinner',
-    imports: [NgStyle],
     templateUrl: './progress-spinner.component.html',
     styleUrls: ['./progress-spinner.scss', './progress-spinner-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

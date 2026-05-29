@@ -1,4 +1,3 @@
-import { NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -17,8 +16,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         KbqButtonModule,
         KbqInputModule,
         KbqIconModule,
-        KbqPopoverModule,
-        NgStyle
+        KbqPopoverModule
     ],
     templateUrl: 'popover-content-example.html',
     styleUrls: ['popover-content-example.css'],

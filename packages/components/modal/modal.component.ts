@@ -1,7 +1,7 @@
 ﻿import { CdkTrapFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
-import { DOCUMENT, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -52,7 +52,6 @@ type AnimationState = 'enter' | 'leave' | null;
     selector: 'kbq-modal',
     imports: [
         CdkTrapFocus,
-        NgStyle,
         KbqButtonModule,
         KbqIconModule,
         CssUnitPipe,
