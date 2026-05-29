@@ -104,6 +104,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     focus(): void;
     get focused(): boolean;
     set focused(value: boolean);
+    protected getPanelClasses(): string;
     getPanelTheme(): string;
     // (undocumented)
     handleClick(): void;
@@ -264,7 +265,7 @@ export class KbqTreeSelectModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTreeSelectModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTreeSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqTreeModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqPseudoCheckboxModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqTreeSelect], [typeof KbqTreeSelect, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult, typeof i9.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTreeSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqTreeModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqPseudoCheckboxModule, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqTreeSelect], [typeof KbqTreeSelect, typeof i5.KbqSelectSearch, typeof i5.KbqSelectFooter, typeof i5.KbqSelectMatcher, typeof i5.KbqSelectTrigger, typeof i5.KbqSelectSearchEmptyResult, typeof i9.KbqFormFieldModule]>;
 }
 
 // @public

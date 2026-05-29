@@ -254,7 +254,7 @@ export class KbqFileUploadModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqFileUploadModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqFileUploadModule, never, [typeof i1$1.FormsModule, typeof i1$1.ReactiveFormsModule, typeof i2.KbqToolTipModule, typeof i3.KbqProgressSpinnerModule, typeof i4.KbqIconModule, typeof i5.KbqButtonModule, typeof i6.KbqListModule, typeof i7.KbqFormFieldModule, typeof i8.KbqEllipsisCenterModule, typeof _koobiq_components_core.KbqDataSizePipe, typeof i10.KbqLinkModule, typeof i11.AsyncPipe, typeof i11.NgClass, typeof i11.NgTemplateOutlet, typeof KbqFileDropDirective, typeof KbqSingleFileUploadComponent, typeof KbqMultipleFileUploadComponent], [typeof KbqSingleFileUploadComponent, typeof KbqMultipleFileUploadComponent, typeof KbqFileDropDirective]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqFileUploadModule, never, [typeof i1$1.FormsModule, typeof i1$1.ReactiveFormsModule, typeof i2.KbqToolTipModule, typeof i3.KbqProgressSpinnerModule, typeof i4.KbqIconModule, typeof i5.KbqButtonModule, typeof i6.KbqListModule, typeof i7.KbqFormFieldModule, typeof i8.KbqEllipsisCenterModule, typeof _koobiq_components_core.KbqDataSizePipe, typeof i10.KbqLinkModule, typeof i11.AsyncPipe, typeof i11.NgTemplateOutlet, typeof KbqFileDropDirective, typeof KbqSingleFileUploadComponent, typeof KbqMultipleFileUploadComponent], [typeof KbqSingleFileUploadComponent, typeof KbqMultipleFileUploadComponent, typeof KbqFileDropDirective]>;
 }
 
 // @public

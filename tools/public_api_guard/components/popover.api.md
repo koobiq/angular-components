@@ -150,7 +150,7 @@ export class KbqPopoverModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqPopoverModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, never, [typeof i1.OverlayModule, typeof i2.KbqButtonModule, typeof i3.A11yModule, typeof i4.KbqIconModule, typeof i5.CdkObserveContent, typeof i6.NgClass, typeof i6.NgTemplateOutlet, typeof KbqPopoverComponent, typeof KbqPopoverTrigger, typeof KbqPopoverConfirmComponent, typeof KbqPopoverConfirmTrigger], [typeof KbqPopoverComponent, typeof KbqPopoverTrigger, typeof KbqPopoverConfirmComponent, typeof KbqPopoverConfirmTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPopoverModule, never, [typeof i1.OverlayModule, typeof i2.KbqButtonModule, typeof i3.A11yModule, typeof i4.KbqIconModule, typeof i5.CdkObserveContent, typeof i6.NgTemplateOutlet, typeof KbqPopoverComponent, typeof KbqPopoverTrigger, typeof KbqPopoverConfirmComponent, typeof KbqPopoverConfirmTrigger], [typeof KbqPopoverComponent, typeof KbqPopoverTrigger, typeof KbqPopoverConfirmComponent, typeof KbqPopoverConfirmTrigger]>;
 }
 
 // @public

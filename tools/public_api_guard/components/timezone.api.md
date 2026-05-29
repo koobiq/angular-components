@@ -50,7 +50,7 @@ export class KbqTimezoneModule {
     // Warning: (ae-forgotten-export) The symbol "CitiesByFilterPipe" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqSelectModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqToolTipModule, typeof i2.KbqHighlightModule, typeof i7.NgClass, typeof i7.KeyValuePipe, typeof i8.A11yModule, typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger], [typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger, typeof i14.KbqFormFieldModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqSelectModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqToolTipModule, typeof i2.KbqHighlightModule, typeof i7.KeyValuePipe, typeof i8.A11yModule, typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger], [typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger, typeof i14.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)
