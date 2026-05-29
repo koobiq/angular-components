@@ -133,7 +133,7 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
 
     ngAfterViewInit() {
         this.treeControl.expandAll();
-        this.docStates.registerNavbarScrollContainer(this.scrollbar().contentElement.nativeElement);
+        this.docStates.registerNavbarScrollContainer(this.scrollbar().contentElement().nativeElement);
         setTimeout(() => this.tree().highlightSelectedOption());
     }
 
