@@ -6,7 +6,6 @@
 
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/platform';
-import * as i2 from '@angular/common';
 import { KbqColorDirective } from '@koobiq/components/core';
 
 // @public (undocumented)
@@ -48,7 +47,7 @@ export class KbqProgressSpinnerModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqProgressSpinnerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, never, [typeof i1.PlatformModule, typeof i2.NgStyle, typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption], [typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressSpinnerModule, never, [typeof i1.PlatformModule, typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption], [typeof KbqProgressSpinner, typeof KbqProgressSpinnerText, typeof KbqProgressSpinnerCaption]>;
 }
 
 // @public (undocumented)
