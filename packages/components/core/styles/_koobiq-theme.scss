@@ -16,6 +16,7 @@
 
     @include kbq-forms-theme();
     @include kbq-highlight-theme();
+    @include kbq-highlight-background-theme();
     // link is a directive, so styles for it should be applied globally
     @include link-theme.kbq-link-theme();
     @include kbq-markdown-theme();
