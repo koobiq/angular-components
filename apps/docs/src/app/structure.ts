@@ -10,6 +10,7 @@ export enum DocsStructureItemId {
     DesignTokens = 'design-tokens',
     Schematics = 'schematics',
     Migration = 'migration',
+    Angular20BreakingChanges = 'angular-20-breaking-changes',
     // Components
     Accordion = 'accordion',
     ActionsPanel = 'actions-panel',
@@ -96,6 +97,11 @@ export type DocsStructureItem = {
     hasApi: boolean;
     hasExamples: boolean;
     isGuide?: boolean;
+    /**
+     * Hides the item from navigation (sidenav and welcome page) while keeping it
+     * routable by direct URL. Used for pages linked only from other docs.
+     */
+    hidden?: boolean;
     apiId?: string;
     svgPreview?: string;
     /**
@@ -245,6 +251,18 @@ const structure: DocsStructure = makeStructure({
                     hasApi: false,
                     hasExamples: false,
                     isNew: expiresAt('2025-07-13')
+                },
+                {
+                    id: DocsStructureItemId.Angular20BreakingChanges,
+                    name: {
+                        ru: 'Angular 20 breaking changes',
+                        en: 'Angular 20 breaking changes'
+                    },
+                    svgPreview: '',
+                    isGuide: true,
+                    hidden: true,
+                    hasApi: false,
+                    hasExamples: false
                 }
             ]
         }

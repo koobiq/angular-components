@@ -49,7 +49,9 @@ export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     }
 
     ngOnInit(): void {
-        this.structureCategories = docsGetCategories().filter((category) => category.isPreviewed);
+        this.structureCategories = docsGetCategories()
+            .filter((category) => category.isPreviewed)
+            .map((category) => ({ ...category, items: category.items.filter((item) => !item.hidden) }));
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }
 

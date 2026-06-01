@@ -9,7 +9,7 @@
 **До 18.5.3** — безопасная база с обновлением темизации и иконок
 **18.6** — обновление токенов
 **18.22** — изменение атрибутов компонентов
-**После** — финальное обновление до последней версии (с актуальной темизацией)
+**20.0.0** — переход на Angular 20: удаление устаревших API и переименование пакетов
 
 ---
 
@@ -83,16 +83,43 @@ ng g @koobiq/angular-components:empty-state-size-attr --project <your project>
 
 ---
 
-### 4. Обновление до 20.0.0
+### 4. Обновление до Angular 20
 
-В v20.0.0 пакет `@koobiq/cdk` объединён с `@koobiq/components/core`. Удалите `@koobiq/cdk` из `package.json` и запустите миграцию `v20-upgrade` — она перепишет все импорты `@koobiq/cdk/{a11y,keycodes,testing}` в `@koobiq/components/core` вместе с прочими breaking-изменениями v20:
+В v20.0.0 библиотека переведена на **Angular 20**. Это крупный релиз: удалены давно устаревшие API и переименована часть пакетов. Требования: **Angular 20+** и **Node.js ≥ 20.19**. Пакет `@koobiq/cdk` объединён с `@koobiq/components/core` — удалите `@koobiq/cdk` из `package.json`.
+
+#### Запуск миграции
+
+Большую часть изменений применяет схематик `v20-upgrade` (запускается автоматически):
 
 ```bash
-ng update @koobiq/components
+ng update @koobiq/components@20
 ```
 
-Или вручную:
+Или вручную (с предпросмотром без записи — `--fix=false`):
 
 ```bash
 ng g @koobiq/components:v20-upgrade --project <your project>
 ```
+
+#### Что исправляется автоматически
+
+- **Перемещения пакетов:** `@koobiq/components/navbar-ic` → `navbar`, `risk-level` → `badge`, `@koobiq/components-experimental/form-field` → `@koobiq/components/form-field`, `@koobiq/cdk/{a11y,keycodes,testing}` → `@koobiq/components/core`.
+- **Классы, токены, функции:** `KbqNavbarIc*` → `Kbq*`, `KbqRiskLevel*` → `KbqBadge*`, `toBoolean(` → `booleanAttribute(`, `formatDataSize(` → `getFormattedSizeParts(` и др.
+- **Методы инстансов:** `.openPanel()` → `.open()`, `.toggleIsCollapsed()` → `.toggle()`, `.focusViaKeyboard()` → `.focus()`.
+- **Шаблоны:** `<kbq-filter-search>` → `<kbq-search-expandable>`, `<kbq-datepicker-toggle>` → `<kbq-datepicker-toggle-icon>`, `kbqFormFieldWithoutBorders` → `noBorders`, `[kbqWarningTooltip]` → `kbqTooltipModifier="warning" [kbqTooltip]`.
+- **SCSS:** `.kbq-risk-level` → `.kbq-badge`, `.kbq-navbar-ic` → `.kbq-navbar` и др.
+
+#### Что нужно поправить вручную
+
+Схематик подсветит предупреждениями то, что нельзя переписать безопасно:
+
+- `(onSaveAsNew)` у `<kbq-filters>` → слушайте `(onSave)` и проверяйте `$event.status === 'newFilter'`.
+- file-upload `[customValidation]` / `[errors]` → валидаторы `FormControl` / `FormControl.errors`.
+- app-switcher `[apps]` → `[sites]="[{ id, name, apps }]"`.
+- Удалены `KbqValidateDirective` и `kbqDisableLegacyValidationDirectiveProvider()` → используйте `ErrorStateMatcher` (например `ShowOnSubmitErrorStateMatcher`).
+- Модалки: `ModalOptions.kbqComponentParams` → поле `data` + `inject(KBQ_MODAL_DATA)`.
+- «Голый» атрибут больше не подвергается приведению типов: `<kbq-code-block canDownload>` → `[canDownload]="true"`, `[freeRowsHeight]="160"`. Чтение `enterDelay`/`arrow` с инстанса триггера (tooltip/popover) — теперь вызовы сигналов: `trigger.enterDelay()`.
+
+#### После миграции
+
+Миграция работает на регулярных выражениях и не переписывает алиасные импорты, локальные переменные и ре-экспорты — **проверьте диф перед коммитом**, пересоберите проект и прогоните тесты. Полный список ломающих изменений — на странице [Ломающие изменения — Angular 20](/ru/main/angular-20-breaking-changes).
