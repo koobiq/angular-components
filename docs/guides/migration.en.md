@@ -9,7 +9,7 @@ New versions include improvements but also **breaking changes**; they need to be
 **Up to 18.5.3** — safe baseline with theming and icon updates
 **18.6** — token update
 **18.22** — component attribute changes
-**After** — final upgrade to the latest version (with updated theming)
+**20.0.0** — move to Angular 20: removal of deprecated APIs and package renames
 
 ---
 
@@ -83,16 +83,43 @@ ng g @koobiq/angular-components:empty-state-size-attr --project <your project>
 
 ---
 
-### 4. Upgrade to 20.0.0
+### 4. Upgrade to Angular 20
 
-In v20.0.0 the `@koobiq/cdk` package has been merged into `@koobiq/components/core`. Drop `@koobiq/cdk` from your `package.json` and run the `v20-upgrade` migration — it rewrites every `@koobiq/cdk/{a11y,keycodes,testing}` import to `@koobiq/components/core` together with the other v20 breaking changes:
+In v20.0.0 the library moves to **Angular 20**. This is a major release: long-deprecated APIs were removed and some packages were renamed. Requirements: **Angular 20+** and **Node.js ≥ 20.19**. The `@koobiq/cdk` package has been merged into `@koobiq/components/core` — drop `@koobiq/cdk` from your `package.json`.
+
+#### Running the migration
+
+Most of the changes are applied by the `v20-upgrade` schematic (runs automatically):
 
 ```bash
-ng update @koobiq/components
+ng update @koobiq/components@20
 ```
 
-Or invoke the schematic manually:
+Or invoke it manually (use `--fix=false` to preview without writing):
 
 ```bash
 ng g @koobiq/components:v20-upgrade --project <your project>
 ```
+
+#### What is fixed automatically
+
+- **Package moves:** `@koobiq/components/navbar-ic` → `navbar`, `risk-level` → `badge`, `@koobiq/components-experimental/form-field` → `@koobiq/components/form-field`, `@koobiq/cdk/{a11y,keycodes,testing}` → `@koobiq/components/core`.
+- **Classes, tokens, functions:** `KbqNavbarIc*` → `Kbq*`, `KbqRiskLevel*` → `KbqBadge*`, `toBoolean(` → `booleanAttribute(`, `formatDataSize(` → `getFormattedSizeParts(`, etc.
+- **Instance methods:** `.openPanel()` → `.open()`, `.toggleIsCollapsed()` → `.toggle()`, `.focusViaKeyboard()` → `.focus()`.
+- **Templates:** `<kbq-filter-search>` → `<kbq-search-expandable>`, `<kbq-datepicker-toggle>` → `<kbq-datepicker-toggle-icon>`, `kbqFormFieldWithoutBorders` → `noBorders`, `[kbqWarningTooltip]` → `kbqTooltipModifier="warning" [kbqTooltip]`.
+- **SCSS:** `.kbq-risk-level` → `.kbq-badge`, `.kbq-navbar-ic` → `.kbq-navbar`, etc.
+
+#### What you need to fix manually
+
+The schematic emits warnings for changes it cannot rewrite safely:
+
+- `(onSaveAsNew)` on `<kbq-filters>` → listen to `(onSave)` and check `$event.status === 'newFilter'`.
+- file-upload `[customValidation]` / `[errors]` → `FormControl` validators / `FormControl.errors`.
+- app-switcher `[apps]` → `[sites]="[{ id, name, apps }]"`.
+- `KbqValidateDirective` and `kbqDisableLegacyValidationDirectiveProvider()` were removed → use `ErrorStateMatcher` (e.g. `ShowOnSubmitErrorStateMatcher`).
+- Modals: `ModalOptions.kbqComponentParams` → the `data` field + `inject(KBQ_MODAL_DATA)`.
+- A bare attribute is no longer coerced: `<kbq-code-block canDownload>` → `[canDownload]="true"`, `[freeRowsHeight]="160"`. Reading `enterDelay`/`arrow` from a trigger instance (tooltip/popover) is now a signal call: `trigger.enterDelay()`.
+
+#### After the migration
+
+The migration is regex-based and does not rewrite aliased imports, local variables or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full list of breaking changes is on the [Angular 20 breaking changes](/en/main/angular-20-breaking-changes) page.
