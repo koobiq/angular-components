@@ -78,6 +78,8 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     // (undocumented)
     readonly empty: i0.InputSignalWithTransform<boolean, unknown>;
     readonly explicitContent: i0.Signal<TemplateRef<any> | undefined>;
+    // (undocumented)
+    get iconOnlyLabel(): boolean;
     readonly implicitContent: i0.Signal<TemplateRef<any>>;
     isActive: boolean;
     // (undocumented)
@@ -270,7 +272,7 @@ export type KbqTabHeaderPosition = 'above' | 'below';
 
 // @public
 export class KbqTabLabel extends CdkPortal {
-    readonly iconOnly: InputSignalWithTransform<boolean, unknown>;
+    readonly iconOnly: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, { "iconOnly": { "alias": "iconOnly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
