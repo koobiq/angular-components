@@ -60,7 +60,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
 
         if (!width) return width;
 
-        return item!.tab.iconOnlyLabel ? width + 12 : width;
+        return item!.tab?.iconOnlyLabel ? width + 12 : width;
     }
 
     protected get activeTabOffsetLeft(): number | undefined {
@@ -69,7 +69,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
 
         if (left == null) return left;
 
-        return item!.tab.iconOnlyLabel ? left - 6 : left;
+        return item!.tab?.iconOnlyLabel ? left - 6 : left;
     }
 
     protected itemSelected(event: KeyboardEvent): void {
