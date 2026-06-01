@@ -1,3 +1,15 @@
+## 18.39.5 (2026-06-01)
+
+### Koobiq
+
+ * bug fix  **autocomplete:** handle click/input in shadow-dom parent ([#DS-4801](https://github.com/koobiq/angular-components/issues/issue/DS-4801)) ([#1583](https://github.com/koobiq/angular-components/issues/1583)) ([3a45d64](https://github.com/koobiq/angular-components/commit/3a45d64a2ca0c1077907b90621f5b1b8572445be))
+ * bug fix  **form-field:** arrow padding ([#DS-4824](https://github.com/koobiq/angular-components/issues/issue/DS-4824)) ([#1439](https://github.com/koobiq/angular-components/issues/1439)) ([00c89b1](https://github.com/koobiq/angular-components/commit/00c89b19585d43d535567ddc49b845a6926a4860))
+ * bug fix  **modal:** unregister modal ref after close ([#DS-4755](https://github.com/koobiq/angular-components/issues/issue/DS-4755)) ([#1444](https://github.com/koobiq/angular-components/issues/1444)) ([dd05a3c](https://github.com/koobiq/angular-components/commit/dd05a3ce278ac8b733d10905733ac832b13c42d6))
+ * bug fix  **progress-spinner:** custom line height breaks animation ([#DS-4799](https://github.com/koobiq/angular-components/issues/issue/DS-4799)) ([#1448](https://github.com/koobiq/angular-components/issues/1448)) ([dbb3381](https://github.com/koobiq/angular-components/commit/dbb3381520faf52d6d799599425623ca710294c4))
+ * bug fix  **sidepanel:** add type="button" to close button to prevent form submission ([#DS-2889](https://github.com/koobiq/angular-components/issues/issue/DS-2889)) ([#1567](https://github.com/koobiq/angular-components/issues/1567)) ([2e3f21a](https://github.com/koobiq/angular-components/commit/2e3f21a4800757ae414d6ad315066c2ec5763ee7))
+ * bug fix  **title:** empty parent ([#DS-5011](https://github.com/koobiq/angular-components/issues/issue/DS-5011)) ([#1568](https://github.com/koobiq/angular-components/issues/1568)) ([3c56101](https://github.com/koobiq/angular-components/commit/3c5610146bd1ee1616c23c34ff9a4352d3da8c6c))
+ * bug fix  **top-bar:** specified selectors to exclude breadcrumb items ([#DS-5023](https://github.com/koobiq/angular-components/issues/issue/DS-5023)) ([#1601](https://github.com/koobiq/angular-components/issues/1601)) ([23e25c2](https://github.com/koobiq/angular-components/commit/23e25c22dd5cf70be335ae958309c6c0b00e7e10))
+
 ## 18.39.4 (2026-03-19)
 
 ### Koobiq
