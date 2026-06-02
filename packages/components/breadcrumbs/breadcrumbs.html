@@ -13,13 +13,7 @@ resolved SSR issue with official hack https://github.com/angular/angular/issues/
         </div>
     }
 } @else {
-    <div
-        #kbqOverflowItems="kbqOverflowItems"
-        kbqOverflowItems
-        reverseOverflowOrder
-        class="layout-align-start-center"
-        [style.max-width.px]="maxWidth()"
-    >
+    <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems reverseOverflowOrder class="layout-align-start-center">
         <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="0" [order]="items().length">
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items()[0], last: false }" />
             <ng-container [ngTemplateOutlet]="separatorTemplate" />

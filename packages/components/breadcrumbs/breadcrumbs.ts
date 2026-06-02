@@ -7,6 +7,7 @@ import {
     contentChild,
     contentChildren,
     Directive,
+    effect,
     ElementRef,
     forwardRef,
     inject,
@@ -14,26 +15,25 @@ import {
     input,
     OnInit,
     Provider,
-    signal,
     TemplateRef,
     viewChild,
     viewChildren,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
-    ElementVisibilityManager,
     KbqOverflowItem,
+    KbqOverflowItems,
     KbqOverflowItemsModule,
     KbqOverflowItemsResult
 } from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { debounceTime, merge } from 'rxjs';
+import { EMPTY, merge, skip, switchMap } from 'rxjs';
 import { KbqBreadcrumbsConfiguration, KbqBreadcrumbsWrapMode } from './breadcrumbs.types';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
 import { RdxRovingFocusItemDirective } from './roving-focus-item.directive';
@@ -207,8 +207,8 @@ export class KbqBreadcrumbs {
 
     private readonly breadcrumbsResult = viewChild('breadcrumbsResult', { read: ElementRef });
     private readonly result = viewChild(KbqOverflowItemsResult);
-
     private readonly overflowItems = viewChildren<KbqOverflowItem>(forwardRef(() => KbqOverflowItem));
+    private readonly overflowItemsDir = viewChild(KbqOverflowItems);
 
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
@@ -221,24 +221,29 @@ export class KbqBreadcrumbs {
     /** @docs-private */
     protected readonly itemsExcludingEdges = computed(() => this.items().slice(1, -1));
 
-    /**
-     * Calculates the total width of visible items based on the `max` value and overflow items.
-     * @returns {number | null} The computed max width for overflow items or null if conditions are not met.
-     * @docs-private
-     */
-    protected readonly maxWidth = signal<number | null>(null);
+    /** @docs-private */
+    protected readonly maxVisibleItems = computed((): number | null => {
+        const max = this.max();
+        const count = this.items().length;
+
+        if (max === null || max >= count || max < this.minVisibleItems) return null;
+
+        return max - 1;
+    });
 
     constructor() {
         const group = inject(RdxRovingFocusGroupDirective, { self: true });
 
         group.orientation = 'horizontal';
 
-        // Defer measurement to after layout (same pattern as KbqOverflowItems.setupObservers).
-        // computed() fires synchronously during change detection before the browser has finished
-        // layout, so offsetWidth reads return incorrect values at that point.
-        merge(toObservable(this.overflowItems), toObservable(this.max))
-            .pipe(debounceTime(0), takeUntilDestroyed())
-            .subscribe(() => this.maxWidth.set(this.calculateMaxWidth()));
+        merge(
+            toObservable(this.overflowItemsDir).pipe(
+                switchMap((dir) => (dir ? outputToObservable(dir.changes) : EMPTY))
+            ),
+            toObservable(this.max).pipe(skip(1))
+        )
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.enforceMaxVisible());
 
         effect(() => {
             const focusableItems = group.focusableItems();
@@ -252,31 +257,27 @@ export class KbqBreadcrumbs {
         });
     }
 
-    private calculateMaxWidth(): number | null {
-        const overflowItems = this.overflowItems();
-        const max = this.max();
+    private enforceMaxVisible(): void {
+        const max = this.maxVisibleItems();
+        const items = this.overflowItems();
+        const result = this.result();
 
-        if (!overflowItems.length || max === null || max >= overflowItems.length || max < this.minVisibleItems) {
-            return null;
+        if (max === null) return;
+
+        const sorted = Array.from(items, (item, index) => ({ item, order: item.order() ?? index }))
+            .sort((a, b) => a.order - b.order)
+            .map(({ item }) => item);
+
+        const visibleItems = sorted.filter(({ hidden }) => !hidden());
+        const extraToHide = visibleItems.length - max;
+
+        if (extraToHide <= 0) return;
+
+        const hideable = visibleItems.filter(({ alwaysVisible }) => !alwaysVisible());
+
+        for (let i = 0; i < extraToHide && i < hideable.length; i++) {
+            hideable[i].hide();
+            result?.show();
         }
-
-        // Reorders overflow items to prioritize the last and first elements
-        const sortedItems = [
-            ...overflowItems.slice(1, -1),
-            overflowItems[0],
-            overflowItems[overflowItems.length - 1]
-        ];
-
-        let width = this.getItemWidth(this.result()) ?? 0;
-
-        for (let i = 0; i < max - 1; i++) {
-            width += this.getItemWidth(sortedItems[sortedItems.length - i - 1]);
-        }
-
-        return width;
-    }
-
-    private getItemWidth(item?: ElementVisibilityManager) {
-        return item ? item.element.offsetWidth : 0;
     }
 }
