@@ -21,6 +21,9 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
  */
 export type ScrollDirection = 'after' | 'before';
 
+/** Corresponds to `margin-inline: var(--kbq-size-xs)` on `.kbq-tab-label_icon-only`. */
+const ICON_ONLY_TAB_MARGIN_INLINE = 6;
+
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group.
  * When the tabs list's width exceeds the width of the header container,
@@ -60,7 +63,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
 
         if (!width) return width;
 
-        return item!.tab?.iconOnlyLabel ? width + 12 : width;
+        return item!.tab?.iconOnlyLabel ? width + ICON_ONLY_TAB_MARGIN_INLINE * 2 : width;
     }
 
     protected get activeTabOffsetLeft(): number | undefined {
@@ -69,7 +72,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
 
         if (left == null) return left;
 
-        return item!.tab?.iconOnlyLabel ? left - 6 : left;
+        return item!.tab?.iconOnlyLabel ? left - ICON_ONLY_TAB_MARGIN_INLINE : left;
     }
 
     protected itemSelected(event: KeyboardEvent): void {
