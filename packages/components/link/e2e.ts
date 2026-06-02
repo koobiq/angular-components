@@ -171,38 +171,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
             </a>
             text.
         </p>
-
-        <!-- With custom description block (underline only on kbq-link__text) -->
-        <p>
-            <a kbq-link>
-                <span class="kbq-link__text">link with description</span>
-                <span class="e2e-link-description">description</span>
-            </a>
-        </p>
-        <p>
-            <a kbq-link class="kbq-hovered">
-                <span class="kbq-link__text">hovered with description</span>
-                <span class="e2e-link-description">description</span>
-            </a>
-        </p>
-        <p>
-            <a kbq-link pseudo>
-                <span class="kbq-link__text">pseudo with description</span>
-                <span class="e2e-link-description">description</span>
-            </a>
-        </p>
-        <p>
-            <a kbq-link pseudo class="kbq-hovered">
-                <span class="kbq-link__text">pseudo hovered with description</span>
-                <span class="e2e-link-description">description</span>
-            </a>
-        </p>
-        <p>
-            <a kbq-link pseudo class="cdk-keyboard-focused">
-                <span class="kbq-link__text">pseudo focused with description</span>
-                <span class="e2e-link-description">description</span>
-            </a>
-        </p>
     `,
     styles: `
         :host {
