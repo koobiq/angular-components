@@ -12,4 +12,13 @@ test.describe('KbqLinkModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
     });
+
+    test.describe('E2eLinkWithDescription', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eLinkWithDescription');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eLinkWithDescription');
+            await expect(getComponent(page)).toHaveScreenshot('02-light.png');
+        });
+    });
 });

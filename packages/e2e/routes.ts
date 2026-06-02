@@ -35,7 +35,7 @@ import { E2eFormFieldGroup, E2eFormFieldset } from '../components/form-field/e2e
 import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
 import { E2eInlineEditMenuButton, E2eInlineEditStates, E2eInlineEditTruncation } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
-import { E2eLinkStates } from '../components/link/e2e';
+import { E2eLinkStates, E2eLinkWithDescription } from '../components/link/e2e';
 import { E2eListStates } from '../components/list/e2e';
 import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
@@ -146,6 +146,7 @@ const components = [
     E2eIconSvg,
     E2eBadgeStyles,
     E2eLinkStates,
+    E2eLinkWithDescription,
     E2eTagInputStates,
     E2eModalStates,
     E2eListStates,

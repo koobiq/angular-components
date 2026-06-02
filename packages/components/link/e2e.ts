@@ -171,6 +171,38 @@ import { KbqLinkModule } from '@koobiq/components/link';
             </a>
             text.
         </p>
+
+        <!-- With custom description block (underline only on kbq-link__text) -->
+        <p>
+            <a kbq-link>
+                <span class="kbq-link__text">link with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link class="kbq-hovered">
+                <span class="kbq-link__text">hovered with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link pseudo>
+                <span class="kbq-link__text">pseudo with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link pseudo class="kbq-hovered">
+                <span class="kbq-link__text">pseudo hovered with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link pseudo class="cdk-keyboard-focused">
+                <span class="kbq-link__text">pseudo focused with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
     `,
     styles: `
         :host {
@@ -183,6 +215,11 @@ import { KbqLinkModule } from '@koobiq/components/link';
         p {
             margin: 0;
         }
+
+        .e2e-link-description {
+            display: block;
+            color: var(--kbq-foreground-contrast-secondary);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -190,3 +227,70 @@ import { KbqLinkModule } from '@koobiq/components/link';
     }
 })
 export class E2eLinkStates {}
+
+@Component({
+    selector: 'e2e-link-with-description',
+    imports: [KbqLinkModule, KbqIconModule],
+    template: `
+        <!-- With custom description block (underline only on kbq-link__text) -->
+        <p>
+            <a kbq-link>
+                <span class="kbq-link__text">link with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link class="kbq-hovered">
+                <span class="kbq-link__text">hovered with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link pseudo>
+                <span class="kbq-link__text">pseudo with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link pseudo class="kbq-hovered">
+                <span class="kbq-link__text">pseudo hovered with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link pseudo class="cdk-keyboard-focused">
+                <span class="kbq-link__text">pseudo focused with description</span>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+        <p>
+            <a class="kbq-link_external" kbq-link>
+                <span class="kbq-link__text">external with icon and description</span>
+                <i kbq-icon="kbq-north-east_16"></i>
+                <span class="e2e-link-description">description</span>
+            </a>
+        </p>
+    `,
+    styles: `
+        :host {
+            display: inline-grid;
+            grid-template-columns: repeat(3, 120px);
+            gap: var(--kbq-size-xs);
+            padding: var(--kbq-size-s);
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .e2e-link-description {
+            display: block;
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eLinkWithDescription'
+    }
+})
+export class E2eLinkWithDescription {}

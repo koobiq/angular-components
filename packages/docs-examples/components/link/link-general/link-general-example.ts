@@ -8,11 +8,21 @@ import { KbqLinkModule } from '@koobiq/components/link';
     selector: 'link-general-example',
     imports: [KbqLinkModule],
     template: `
-        <div style="padding: 16px">
-            <a class="kbq-link_external" href="https://koobiq.io/en/components/link" target="_blank" kbq-link>
-                Отчет сканирования
-            </a>
-        </div>
+        <a kbq-link>
+            <span class="kbq-link__text">Scan report</span>
+            <span class="example-link-description">task/koobiq.io</span>
+        </a>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            padding: var(--kbq-size-l);
+        }
+
+        .example-link-description {
+            display: block;
+            color: var(--kbq-foreground-contrast-secondary);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
