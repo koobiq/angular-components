@@ -104,6 +104,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
     readonly tabId = input<string>(undefined!);
 
+    /** Whether the tab label contains only an icon (no text). */
     get iconOnlyLabel(): boolean {
         return this.templateLabel?.iconOnly() ?? false;
     }

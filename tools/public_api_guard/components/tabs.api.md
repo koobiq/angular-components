@@ -78,7 +78,6 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     // (undocumented)
     readonly empty: i0.InputSignalWithTransform<boolean, unknown>;
     readonly explicitContent: i0.Signal<TemplateRef<any> | undefined>;
-    // (undocumented)
     get iconOnlyLabel(): boolean;
     readonly implicitContent: i0.Signal<TemplateRef<any>>;
     isActive: boolean;
@@ -244,9 +243,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 //
 // @public
 export class KbqTabHeader extends KbqPaginatedTabHeader {
-    // (undocumented)
     protected get activeTabOffsetLeft(): number | undefined;
-    // (undocumented)
     protected get activeTabOffsetWidth(): number | undefined;
     // (undocumented)
     readonly items: QueryList<KbqTabLabelWrapper>;

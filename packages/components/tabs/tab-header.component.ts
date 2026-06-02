@@ -57,6 +57,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     @ViewChild('nextPaginator') readonly nextPaginator: ElementRef<HTMLElement>;
     @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;
 
+    /** Width of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetWidth(): number | undefined {
         const item = this.items.get(this.selectedIndex);
         const width = item?.elementRef?.nativeElement?.offsetWidth;
@@ -66,6 +67,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
         return item!.tab?.iconOnlyLabel ? width + ICON_ONLY_TAB_MARGIN_INLINE * 2 : width;
     }
 
+    /** Left offset of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetLeft(): number | undefined {
         const item = this.items.get(this.selectedIndex);
         const left = item?.elementRef?.nativeElement?.offsetLeft;
