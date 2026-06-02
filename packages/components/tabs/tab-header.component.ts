@@ -72,7 +72,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
         const item = this.items.get(this.selectedIndex);
         const left = item?.elementRef?.nativeElement?.offsetLeft;
 
-        if (left == null) return left;
+        if (!left) return left;
 
         return item!.tab?.iconOnlyLabel ? left - ICON_ONLY_TAB_MARGIN_INLINE : left;
     }
