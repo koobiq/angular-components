@@ -183,11 +183,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
         p {
             margin: 0;
         }
-
-        .e2e-link-description {
-            display: block;
-            color: var(--kbq-foreground-contrast-secondary);
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
