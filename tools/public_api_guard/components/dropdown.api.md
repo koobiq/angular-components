@@ -55,6 +55,9 @@ export const KBQ_DROPDOWN_DEFAULT_OPTIONS: InjectionToken<KbqDropdownDefaultOpti
 export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOptions;
 
 // @public
+export const KBQ_DROPDOWN_HOST: InjectionToken<unknown>;
+
+// @public
 export const KBQ_DROPDOWN_PANEL: InjectionToken<KbqDropdownPanel>;
 
 // @public
