@@ -27,6 +27,7 @@ import {
     RIGHT_ARROW,
     TAB
 } from '@koobiq/components/core';
+import { KBQ_DROPDOWN_HOST } from '@koobiq/components/dropdown';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import {
@@ -193,6 +194,9 @@ export class KbqNavbarContainer {}
         './navbar-brand.scss',
         './navbar-divider.scss',
         './navbar-tokens.scss'
+    ],
+    providers: [
+        { provide: KBQ_DROPDOWN_HOST, useExisting: KbqNavbar }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

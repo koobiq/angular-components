@@ -14,6 +14,7 @@ import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterContentInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Directive,
     ElementRef,
@@ -51,6 +52,17 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     deps: [Overlay],
     useFactory: KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY
 };
+
+/**
+ * Marker provided by host components that create their own stacking context at
+ * the default overlay z-index (e.g. `KbqTopBar`, `KbqNavbar` use
+ * `position: sticky` + `z-index: $overlay-z-index`). When this token is
+ * available in the injector tree, `KbqDropdownTrigger` defaults `demoteOverlay`
+ * to `false` so the dropdown overlay is not lowered below the host.
+ *
+ * An explicit `[demoteOverlay]` binding on the trigger still wins.
+ */
+export const KBQ_DROPDOWN_HOST = new InjectionToken<unknown>('kbq-dropdown-host');
 
 /** Default top padding of the nested dropdown panel. */
 export const NESTED_PANEL_TOP_PADDING = 4;
@@ -109,6 +121,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     protected readonly isBrowser = inject(Platform).isBrowser;
     private readonly window = inject(KBQ_WINDOW);
+    private readonly host = inject(KBQ_DROPDOWN_HOST, { optional: true });
 
     lastDestroyReason: DropdownCloseReason;
 
@@ -138,7 +151,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: numberAttribute }) demoteOverlay: boolean = true;
+    @Input({ transform: booleanAttribute }) demoteOverlay: boolean = true;
 
     /**
      * Whether focus should be restored when the menu is closed.
@@ -226,6 +239,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
         if (dropdownItemInstance) {
             dropdownItemInstance.isNested = this.isNested();
+        }
+
+        if (this.host) {
+            this.demoteOverlay = false;
         }
     }
 

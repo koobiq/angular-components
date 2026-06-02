@@ -507,8 +507,6 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     updateDropdown(): void {
         if (!this.dropdownTrigger?.dropdown) return;
 
-        this.dropdownTrigger.demoteOverlay = false;
-
         if (this.rectangleElement.vertical) {
             this.dropdownTrigger.dropdown.overlapTriggerX = false;
             this.dropdownTrigger.dropdown.overlapTriggerY = true;
