@@ -40,6 +40,10 @@
     text-decoration: none;
 }
 
+.docs-welcome__category-item-preview {
+    max-width: 100%;
+}
+
 .docs-welcome__category-item-title {
     margin-top: var(--kbq-size-m);
     min-height: var(--kbq-size-xxl);
