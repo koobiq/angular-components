@@ -31,23 +31,23 @@
 
 **Modal**. Возвращены к обычным @Input/@Output в соответствии с ModalOptions компоненты (программный API через KbqModalService остается прежним):
 
-- kbqOkText, 
-- kbqOkType, 
-- kbqRestoreFocus, 
-- kbqCancelText, 
-- kbqModalType, 
-- kbqComponent, 
-- kbqContent, 
-- kbqComponentParams, 
-- kbqFooter, 
-- kbqWidth, 
-- kbqSize, 
-- kbqWrapClassName, 
-- kbqClassName, 
-- kbqStyle, 
-- kbqTitle, 
-- kbqCloseByESC, 
-- kbqOnOk, 
+- kbqOkText,
+- kbqOkType,
+- kbqRestoreFocus,
+- kbqCancelText,
+- kbqModalType,
+- kbqComponent,
+- kbqContent,
+- kbqComponentParams,
+- kbqFooter,
+- kbqWidth,
+- kbqSize,
+- kbqWrapClassName,
+- kbqClassName,
+- kbqStyle,
+- kbqTitle,
+- kbqCloseByESC,
+- kbqOnOk,
 - kbqOnCancel.
 
 **Notification center, App switcher**. Удалены переопределения signal-input placement (конфликтовавшие с KbqPopUpTrigger.placement) — placement снова настраивается через паттерн геттера/сеттера @Input, делегирующий в super.updatePlacement(...). arrow в обоих теперь `Signal<boolean>` (соответствует новому контракту базового класса).
@@ -64,19 +64,19 @@
 
 ### Инструменты
 
-Обновлены зависимости инструментов: 
+Обновлены зависимости инструментов:
 
-| Пакет | Версия | Примечание |
-|-------|--------|-----------|
-| ng-packagr | ^20.3.2 | |
-| @angular-builders/jest | 20.0.0 | |
-| @angular-eslint/* | ^20.7.0 | |
-| @typescript-eslint/* | ^8.59.3 | |
-| ESLint | 8.57.1 | остается на текущей версии |
-| @schematics/angular | 20.3.21 | было 18.2.21 |
-| @angular-devkit/architect | 0.2003.21 | |
+| Пакет                     | Версия    | Примечание                 |
+| ------------------------- | --------- | -------------------------- |
+| ng-packagr                | ^20.3.2   |                            |
+| @angular-builders/jest    | 20.0.0    |                            |
+| @angular-eslint/\*        | ^20.7.0   |                            |
+| @typescript-eslint/\*     | ^8.59.3   |                            |
+| ESLint                    | 8.57.1    | остается на текущей версии |
+| @schematics/angular       | 20.3.21   | было 18.2.21               |
+| @angular-devkit/architect | 0.2003.21 |                            |
 
-В корне каждой библиотеки/приложения добавлены отдельные файлы **tsconfig.spec.json**, расширяющие конфиг из корня workspace. Пути **test.options.tsConfig** в angular.json теперь разрешаются от корня проекта (требуется миграциями схематиков v20). 
+В корне каждой библиотеки/приложения добавлены отдельные файлы **tsconfig.spec.json**, расширяющие конфиг из корня workspace. Пути **test.options.tsConfig** в angular.json теперь разрешаются от корня проекта (требуется миграциями схематиков v20).
 
 Юнит-тесты схематиков обновлены под вывод **@schematics/angular:application** из v20 (имена файлов изменились с app.component.html → app.html).
 
@@ -126,9 +126,9 @@
 
 #### API валидации File upload
 
-- Интерфейсы KbqInputFile и KbqInputFileLabel удалены, тип KbqFileValidatorFn также удален. 
+- Интерфейсы KbqInputFile и KbqInputFileLabel удалены, тип KbqFileValidatorFn также удален.
 - Функция isCorrectExtension() заменена на FileValidators.isCorrectExtension (тип ValidatorFn).
-- 'KbqMultipleFileUploadComponent: удалены errors, customValidation и hasErrors — используйте FormControl.errors и валидаторы FormControl. 
+- 'KbqMultipleFileUploadComponent: удалены errors, customValidation и hasErrors — используйте FormControl.errors и валидаторы FormControl.
 - KbqSingleFileUploadComponent: удалены errors и customValidation — то же самое.
 
 #### API модальных окон
@@ -173,24 +173,24 @@
 
 **Импорты и пакеты**. Импорты из @koobiq/components/navbar-ic, risk-level и components-experimental/form-field переназначаются на сохранившиеся пакеты (navbar, badge, components/form-field).
 
-**Идентификаторы в .ts файлах**. Переименованы идентификаторы: 
+**Идентификаторы в .ts файлах**. Переименованы идентификаторы:
 
-| Старое имя | Новое имя |
-|-----------|-----------|
-| KbqNavbarIc* | Kbq* |
-| KbqRiskLevel* | KbqBadge* |
-| KbqWarningTooltipTrigger | KbqTooltipTrigger |
-| KbqExtendedTooltipTrigger | KbqTooltipTrigger |
-| KbqDatepickerToggle | KbqDatepickerToggleIconComponent |
-| KbqFilterBarSearch | KbqSearchExpandable |
-| RdxAccordionItemState | KbqAccordionItemState |
-| KbqCodeFile | KbqCodeBlockFile |
-| AnimationCurves | KbqAnimationCurves |
-| MeasurementSystem | KbqMeasurementSystem |
-| SizeUnitsConfig | KbqSizeUnitsConfig |
-| KbqFormFieldRef | KbqFormField |
+| Старое имя                | Новое имя                        |
+| ------------------------- | -------------------------------- |
+| KbqNavbarIc\*             | Kbq\*                            |
+| KbqRiskLevel\*            | KbqBadge\*                       |
+| KbqWarningTooltipTrigger  | KbqTooltipTrigger                |
+| KbqExtendedTooltipTrigger | KbqTooltipTrigger                |
+| KbqDatepickerToggle       | KbqDatepickerToggleIconComponent |
+| KbqFilterBarSearch        | KbqSearchExpandable              |
+| RdxAccordionItemState     | KbqAccordionItemState            |
+| KbqCodeFile               | KbqCodeBlockFile                 |
+| AnimationCurves           | KbqAnimationCurves               |
+| MeasurementSystem         | KbqMeasurementSystem             |
+| SizeUnitsConfig           | KbqSizeUnitsConfig               |
+| KbqFormFieldRef           | KbqFormField                     |
 
-**Токены и функции**. Обновляются: toBoolean( → booleanAttribute(, isCorrectExtension( → FileValidators.isCorrectExtension(, formatDataSize( → getFormattedSizeParts(, kbqComponentParams: → data:; 
+**Токены и функции**. Обновляются: toBoolean( → booleanAttribute(, isCorrectExtension( → FileValidators.isCorrectExtension(, formatDataSize( → getFormattedSizeParts(, kbqComponentParams: → data:;
 
 Убираются из импортов удаленные токены: KBQ_VALIDATION,KBQ_SANITY_CHECKS, KBQ_SIDEPANEL_WITH_SHADOW
 
