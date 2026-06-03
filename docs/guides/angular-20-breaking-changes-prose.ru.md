@@ -177,7 +177,7 @@
 
 | Старое имя                | Новое имя                        |
 | ------------------------- | -------------------------------- |
-| KbqNavbarIc\*             | Kbq\*                            |
+| KbqNavbarIc\*             | KbqNavbar\*                            |
 | KbqRiskLevel\*            | KbqBadge\*                       |
 | KbqWarningTooltipTrigger  | KbqTooltipTrigger                |
 | KbqExtendedTooltipTrigger | KbqTooltipTrigger                |
