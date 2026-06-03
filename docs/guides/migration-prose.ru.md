@@ -2,7 +2,6 @@
 
 Новые версии включают улучшения, но содержат **ломающие изменения**; их нужно применять постепенно.
 
-
 ### План обновления
 
 1. **До 18.5.3**: безопасная база с обновлением темизации и иконок.
@@ -31,7 +30,7 @@ npm install @messageformat/core
 Примеры:
 
 - [apps/docs/src/main.scss](https://github.com/koobiq/angular-components/blob/main/apps/docs/src/main.scss)
-- [apps/docs/src/styles/_theme-kbq.scss](https://github.com/koobiq/angular-components/blob/main/apps/docs/src/styles/_theme-kbq.scss)
+- [apps/docs/src/styles/\_theme-kbq.scss](https://github.com/koobiq/angular-components/blob/main/apps/docs/src/styles/_theme-kbq.scss)
 
 #### Обновление пакета иконок
 
@@ -79,7 +78,7 @@ ng g @koobiq/angular-components:empty-state-size-attr --project <your project>
 
 ### 4. Обновление до Angular 20
 
-В версии 20.0.0 библиотека переведена на Angular 20. Это крупный релиз: удалены давно устаревшие API и переименована часть пакетов. Требования: **Angular 20+** и **Node.js ≥ 20.19**. 
+В версии 20.0.0 библиотека переведена на Angular 20. Это крупный релиз: удалены давно устаревшие API и переименована часть пакетов. Требования: **Angular 20+** и **Node.js ≥ 20.19**.
 
 Удалите **@koobiq/cdk** из package.json — пакеты был объединен с @koobiq/components/core.
 
@@ -99,36 +98,36 @@ ng g @koobiq/components:v20-upgrade --project <your project>
 
 #### Что исправляется автоматически
 
-**Перемещения пакетов:** 
+**Перемещения пакетов:**
 
-- @koobiq/components/navbar-ic → navbar 
+- @koobiq/components/navbar-ic → navbar
 - risk-level → badge
 - @koobiq/components-experimental/form-field → @koobiq/components/form-field
 - @koobiq/cdk/{a11y,keycodes,testing} → @koobiq/components/core
 
-**Классы, токены, функции:** 
+**Классы, токены, функции:**
 
-- KbqNavbarIc* → Kbq*, 
-- KbqRiskLevel* → KbqBadge*, 
-- toBoolean → booleanAttribute, 
-- formatDataSize → getFormattedSizeParts 
+- KbqNavbarIc* → Kbq*,
+- KbqRiskLevel* → KbqBadge*,
+- toBoolean → booleanAttribute,
+- formatDataSize → getFormattedSizeParts
 
-**Методы инстансов:** 
+**Методы инстансов:**
 
-- .openPanel() → .open(), 
-- .toggleIsCollapsed() → .toggle(), 
+- .openPanel() → .open(),
+- .toggleIsCollapsed() → .toggle(),
 - .focusViaKeyboard() → .focus().
 
-**Шаблоны:** 
+**Шаблоны:**
 
-- kbq-filter-search → kbq-search-expandable, 
+- kbq-filter-search → kbq-search-expandable,
 - kbq-datepicker-toggle → kbq-datepicker-toggle-icon,
-- kbqFormFieldWithoutBorders → noBorders, 
+- kbqFormFieldWithoutBorders → noBorders,
 - [kbqWarningTooltip] → kbqTooltipModifier="warning" [kbqTooltip].
 
-**SCSS:** 
+**SCSS:**
 
-- .kbq-risk-level → .kbq-badge, 
+- .kbq-risk-level → .kbq-badge,
 - .kbq-navbar-ic → .kbq-navbar и др.
 
 #### Что нужно поправить вручную
