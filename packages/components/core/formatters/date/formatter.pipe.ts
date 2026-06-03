@@ -387,6 +387,10 @@ export class KbqAbsoluteLongDatePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]>
     implements PipeTransform
 {
+    override transform(value: D | string, currYear?: boolean): string {
+        return super.transform(value, currYear);
+    }
+
     protected format(value: D | string, currYear?: boolean): string {
         const date = this.adapter.deserialize(value);
 
@@ -402,6 +406,10 @@ export class KbqAbsoluteShortDatePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]>
     implements PipeTransform
 {
+    override transform(value: D | string, currYear?: boolean): string {
+        return super.transform(value, currYear);
+    }
+
     protected format(value: D | string, currYear?: boolean): string {
         const date = this.adapter.deserialize(value);
 
@@ -417,6 +425,10 @@ export class KbqAbsoluteLongDateTimePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
     implements PipeTransform
 {
+    override transform(value: D | string, options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+
     protected format(value: D | string, options?: DateTimeOptions): string {
         const date = this.adapter.deserialize(value);
 
@@ -432,6 +444,10 @@ export class KbqAbsoluteShortDateTimePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
     implements PipeTransform
 {
+    override transform(value: D | string, options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+
     protected format(value: D | string, options?: DateTimeOptions): string {
         const date = this.adapter.deserialize(value);
 
@@ -447,6 +463,10 @@ export class KbqRelativeLongDatePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D | string, []>
     implements PipeTransform
 {
+    override transform(value: D | string): string {
+        return super.transform(value);
+    }
+
     protected format(value: D | string): string {
         const date = this.adapter.deserialize(value);
 
@@ -462,6 +482,10 @@ export class KbqRelativeShortDatePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D | string, []>
     implements PipeTransform
 {
+    override transform(value: D | string): string {
+        return super.transform(value);
+    }
+
     protected format(value: D | string): string {
         const date = this.adapter.deserialize(value);
 
@@ -477,6 +501,10 @@ export class KbqRelativeLongDateTimePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
     implements PipeTransform
 {
+    override transform(value: D | string, options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+
     protected format(value: D | string, options?: DateTimeOptions): string {
         const date = this.adapter.deserialize(value);
 
@@ -492,6 +520,10 @@ export class KbqRelativeShortDateTimePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
     implements PipeTransform
 {
+    override transform(value: D | string, options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+
     protected format(value: D | string, options?: DateTimeOptions): string {
         const date = this.adapter.deserialize(value);
 
@@ -507,6 +539,10 @@ export class KbqRangeLongDatePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D[] | string[], []>
     implements PipeTransform
 {
+    override transform(value: D[] | string[]): string {
+        return super.transform(value);
+    }
+
     protected format([value1, value2]: D[] | string[]): string {
         const date1 = this.adapter.deserialize(value1);
         const date2 = this.adapter.deserialize(value2);
@@ -523,6 +559,10 @@ export class KbqRangeShortDatePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D[] | string[], []>
     implements PipeTransform
 {
+    override transform(value: D[] | string[]): string {
+        return super.transform(value);
+    }
+
     protected format([value1, value2]: D[] | string[]): string {
         const date1 = this.adapter.deserialize(value1);
         const date2 = this.adapter.deserialize(value2);
@@ -539,6 +579,10 @@ export class KbqRangeLongDateTimePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
     implements PipeTransform
 {
+    override transform(value: D[] | string[], options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+
     protected format([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
         const date1 = this.adapter.deserialize(value1);
         const date2 = this.adapter.deserialize(value2);
@@ -555,6 +599,10 @@ export class KbqRangeMiddleDateTimePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
     implements PipeTransform
 {
+    override transform(value: D[] | string[], options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+
     protected format([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
         const date1 = this.adapter.deserialize(value1);
         const date2 = this.adapter.deserialize(value2);
@@ -571,6 +619,10 @@ export class KbqRangeShortDateTimePipe<D>
     extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
     implements PipeTransform
 {
+    override transform(value: D[] | string[], options?: DateTimeOptions): string {
+        return super.transform(value, options);
+    }
+
     protected format([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
         const date1 = this.adapter.deserialize(value1);
         const date2 = this.adapter.deserialize(value2);

@@ -2167,6 +2167,8 @@ export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, 
     // (undocumented)
     protected format(value: D | string, currYear?: boolean): string;
     // (undocumented)
+    transform(value: D | string, currYear?: boolean): string;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbsoluteLongDatePipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteLongDatePipe<any>, "kbqAbsoluteLongDate", true>;
@@ -2176,6 +2178,8 @@ export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, 
 export class KbqAbsoluteLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D | string, options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbsoluteLongDateTimePipe<any>, never>;
     // (undocumented)
@@ -2187,6 +2191,8 @@ export class KbqAbsoluteShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D,
     // (undocumented)
     protected format(value: D | string, currYear?: boolean): string;
     // (undocumented)
+    transform(value: D | string, currYear?: boolean): string;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbsoluteShortDatePipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteShortDatePipe<any>, "kbqAbsoluteShortDate", true>;
@@ -2196,6 +2202,8 @@ export class KbqAbsoluteShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D,
 export class KbqAbsoluteShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D | string, options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbsoluteShortDateTimePipe<any>, never>;
     // (undocumented)
@@ -3075,6 +3083,8 @@ export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[]
     // (undocumented)
     protected format(input: D[] | string[]): string;
     // (undocumented)
+    transform(value: D[] | string[]): string;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeLongDatePipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeLongDatePipe<any>, "kbqRangeLongDate", true>;
@@ -3084,6 +3094,8 @@ export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[]
 export class KbqRangeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(input: D[] | string[], options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeLongDateTimePipe<any>, never>;
     // (undocumented)
@@ -3095,6 +3107,8 @@ export class KbqRangeMiddleDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<
     // (undocumented)
     protected format(input: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
+    transform(value: D[] | string[], options?: DateTimeOptions): string;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeMiddleDateTimePipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeMiddleDateTimePipe<any>, "kbqRangeMiddleDateTime", true>;
@@ -3105,6 +3119,8 @@ export class KbqRangeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[
     // (undocumented)
     protected format(input: D[] | string[]): string;
     // (undocumented)
+    transform(value: D[] | string[]): string;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeShortDatePipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeShortDatePipe<any>, "kbqRangeShortDate", true>;
@@ -3114,6 +3130,8 @@ export class KbqRangeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[
 export class KbqRangeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(input: D[] | string[], options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeShortDateTimePipe<any>, never>;
     // (undocumented)
@@ -3162,6 +3180,8 @@ export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, 
     // (undocumented)
     protected format(value: D | string): string;
     // (undocumented)
+    transform(value: D | string): string;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeLongDatePipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeLongDatePipe<any>, "kbqRelativeLongDate", true>;
@@ -3171,6 +3191,8 @@ export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, 
 export class KbqRelativeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D | string, options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeLongDateTimePipe<any>, never>;
     // (undocumented)
@@ -3182,6 +3204,8 @@ export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D,
     // (undocumented)
     protected format(value: D | string): string;
     // (undocumented)
+    transform(value: D | string): string;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeShortDatePipe<any>, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeShortDatePipe<any>, "kbqRelativeShortDate", true>;
@@ -3191,6 +3215,8 @@ export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D,
 export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D | string, options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeShortDateTimePipe<any>, never>;
     // (undocumented)
