@@ -92,7 +92,7 @@
 
 **Form field (experimental)**. Подпакет @koobiq/components-experimental/form-field удален — перейдите на @koobiq/components/form-field; экспериментальный пакет был переходным форком и теперь влит обратно.
 
-#### Символы из Сore
+#### Символы из Core
 
 **Enums и interfaces**. Enum `AnimationCurves` удален (используйте KbqAnimationCurves), enum `MeasurementSystem` удален (используйте KbqMeasurementSystem), интерфейс `SizeUnitsConfig` удален (используйте KbqSizeUnitsConfig). Символы KbqCommonModule, KBQ_SANITY_CHECKS и mcSanityChecksFactory больше не используются и удалены.
 
