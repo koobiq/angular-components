@@ -2380,7 +2380,7 @@ describe('Date formatter (imports and providing)', () => {
         beforeEach(() => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [KbqFormattersModule, KbqLuxonDateModule],
+                imports: [HostComponent, KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
                     {
                         provide: KBQ_LOCALE_SERVICE,
@@ -2528,7 +2528,7 @@ describe('Date formatter (imports and providing)', () => {
         beforeEach(() => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [KbqFormattersModule, KbqLuxonDateModule],
+                imports: [AllPipesHostComponent, KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
                     {
                         provide: KBQ_LOCALE_SERVICE,
