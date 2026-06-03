@@ -41,6 +41,7 @@ import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components
 import { Subject } from 'rxjs';
 import {
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
+    KBQ_DROPDOWN_HOST,
     KBQ_DROPDOWN_SCROLL_STRATEGY,
     KbqDropdown,
     KbqDropdownContent,
@@ -1707,6 +1708,47 @@ describe('KbqDropdown default overrides', () => {
     });
 });
 
+describe('KbqDropdownTrigger KBQ_DROPDOWN_HOST', () => {
+    function configureTestBed(providers: Provider[] = []) {
+        TestBed.configureTestingModule({
+            imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown, ExplicitDemoteOverlayDropdown],
+            providers
+        }).compileComponents();
+    }
+
+    afterEach(() => {
+        TestBed.inject(OverlayContainer).ngOnDestroy();
+    });
+
+    it('should default demoteOverlay to true when KBQ_DROPDOWN_HOST is not provided', () => {
+        configureTestBed();
+        const fixture = TestBed.createComponent(SimpleDropdown);
+
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.trigger().demoteOverlay).toBe(true);
+    });
+
+    it('should default demoteOverlay to false when KBQ_DROPDOWN_HOST is provided', () => {
+        configureTestBed([{ provide: KBQ_DROPDOWN_HOST, useValue: {} }]);
+        const fixture = TestBed.createComponent(SimpleDropdown);
+
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.trigger().demoteOverlay).toBe(false);
+    });
+
+    it('should let an explicit [demoteOverlay] binding override the host-based default', () => {
+        configureTestBed([{ provide: KBQ_DROPDOWN_HOST, useValue: {} }]);
+        const fixture = TestBed.createComponent(ExplicitDemoteOverlayDropdown);
+
+        fixture.detectChanges();
+
+        // Without the binding the host default would have produced `false`; the binding wins.
+        expect(fixture.componentInstance.trigger().demoteOverlay).toBeTruthy();
+    });
+});
+
 @Component({
     imports: [KbqDropdownModule],
     template: `
@@ -1740,6 +1782,20 @@ class SimpleDropdown {
     extraItems: string[] = [];
     closeCallback = jest.fn((name: string | undefined) => name);
     backdropClass: string;
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown" [demoteOverlay]="explicitValue">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class ExplicitDemoteOverlayDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly explicitValue = true;
 }
 
 @Component({
