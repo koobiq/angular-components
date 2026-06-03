@@ -39,12 +39,12 @@
             @include _kbq-dropdown-item-state(states-disabled);
         }
 
-        &.kbq-selected:has(+ .kbq-selected) {
+        &:is(.kbq-selected, .cdk-focused):has(+ :is(.kbq-selected, .cdk-focused)) {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
 
-        &.kbq-selected + .kbq-selected {
+        &:is(.kbq-selected, .cdk-focused) + :is(.kbq-selected, .cdk-focused) {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
