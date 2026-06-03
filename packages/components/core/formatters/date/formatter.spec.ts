@@ -2401,6 +2401,7 @@ describe('Date formatter (imports and providing)', () => {
 
         it('renders date in active locale (ru-RU)', () => {
             const fixture = TestBed.createComponent(HostComponent);
+
             fixture.componentInstance.value.set(testAdapter.createDate(2024, 0, 15));
             fixture.detectChanges();
 
@@ -2412,11 +2413,13 @@ describe('Date formatter (imports and providing)', () => {
         it('recomputes when KbqLocaleService.setLocale changes the active locale', () => {
             const fixture = TestBed.createComponent(HostComponent);
             const date = testAdapter.createDate(2024, 0, 15);
+
             fixture.componentInstance.value.set(date);
             fixture.detectChanges();
 
             const ruRendered = fixture.nativeElement.textContent.trim();
             const ruExpected = dateFormatter.absoluteLongDate(date);
+
             expect(ruRendered).toBe(ruExpected);
 
             localeService.setLocale('en-US');
@@ -2424,6 +2427,7 @@ describe('Date formatter (imports and providing)', () => {
 
             const enRendered = fixture.nativeElement.textContent.trim();
             const enExpected = dateFormatter.absoluteLongDate(date);
+
             expect(enRendered).toBe(enExpected);
             expect(enRendered).not.toBe(ruRendered);
         });
@@ -2431,6 +2435,7 @@ describe('Date formatter (imports and providing)', () => {
         it('caches the result and does not call the formatter on every CD tick', () => {
             const fixture = TestBed.createComponent(HostComponent);
             const date = testAdapter.createDate(2024, 0, 15);
+
             fixture.componentInstance.value.set(date);
 
             const spy = jest.spyOn(dateFormatter, 'absoluteLongDate');
@@ -2444,6 +2449,7 @@ describe('Date formatter (imports and providing)', () => {
 
         it('recomputes when the input value changes', () => {
             const fixture = TestBed.createComponent(HostComponent);
+
             fixture.componentInstance.value.set(testAdapter.createDate(2024, 0, 15));
             fixture.detectChanges();
 
@@ -2545,6 +2551,7 @@ describe('Date formatter (imports and providing)', () => {
             const fixture = TestBed.createComponent(AllPipesHostComponent);
             const d1 = testAdapter.createDate(2024, 0, 15);
             const d2 = testAdapter.createDate(2024, 5, 20);
+
             fixture.componentInstance.value.set(d1);
             fixture.componentInstance.range.set([d1, d2]);
 
