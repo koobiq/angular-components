@@ -10,7 +10,9 @@ export enum DocsStructureItemId {
     DesignTokens = 'design-tokens',
     Schematics = 'schematics',
     Migration = 'migration',
+    MigrationProse = 'migration-prose',
     Angular20BreakingChanges = 'angular-20-breaking-changes',
+    Angular20BreakingChangesProse = 'angular-20-breaking-changes-prose',
     // Components
     Accordion = 'accordion',
     ActionsPanel = 'actions-panel',
@@ -257,10 +259,33 @@ const structure: DocsStructure = makeStructure({
                     isNew: expiresAt('2025-07-13')
                 },
                 {
+                    id: DocsStructureItemId.MigrationProse,
+                    name: {
+                        ru: 'Гайды по миграции (абзацы)',
+                        en: 'Migration guides (prose)'
+                    },
+                    svgPreview: '',
+                    isGuide: true,
+                    hasApi: false,
+                    hasExamples: false
+                },
+                {
                     id: DocsStructureItemId.Angular20BreakingChanges,
                     name: {
                         ru: 'Angular 20 breaking changes',
                         en: 'Angular 20 breaking changes'
+                    },
+                    svgPreview: '',
+                    isGuide: true,
+                    hidden: true,
+                    hasApi: false,
+                    hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.Angular20BreakingChangesProse,
+                    name: {
+                        ru: 'Angular 20 breaking changes (абзацы)',
+                        en: 'Angular 20 breaking changes (prose)'
                     },
                     svgPreview: '',
                     isGuide: true,
