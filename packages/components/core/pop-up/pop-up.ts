@@ -120,9 +120,18 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     updateClassMap(placement: string, customClass: string, classMap?): void {
+        // `customClass` may be a whitespace-separated list of class names; expand it into
+        // individual keys so the native `[class]` binding (which doesn't tokenise object keys)
+        // applies each class correctly.
+        const customClasses: Record<string, boolean> = {};
+
+        for (const token of (customClass ?? '').split(/\s+/).filter(Boolean)) {
+            customClasses[token] = true;
+        }
+
         this.classMap = {
             [`${this.prefix}_placement-${placement}`]: true,
-            [customClass]: !!customClass,
+            ...customClasses,
             ...classMap
         };
     }
