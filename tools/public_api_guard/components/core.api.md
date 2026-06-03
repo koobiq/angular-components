@@ -558,7 +558,7 @@ export class ErrorStateMatcher {
 // @public (undocumented)
 export const ESCAPE = 27;
 
-// @public (undocumented)
+// @public
 export function escapeRegExp(value: string): string;
 
 // @public (undocumented)
@@ -2452,7 +2452,7 @@ export const kbqHighlightBackgroundMark: (text: string) => string;
 // @public (undocumented)
 export class KbqHighlightBackgroundPipe implements PipeTransform {
     // (undocumented)
-    transform(value: any, args: any): any;
+    transform(value: unknown, keyword: unknown): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightBackgroundPipe, never>;
     // (undocumented)
@@ -2475,7 +2475,7 @@ export class KbqHighlightModule {
 // @public (undocumented)
 export class KbqHighlightPipe implements PipeTransform {
     // (undocumented)
-    transform(value: any, args: any): any;
+    transform(value: unknown, keyword: unknown): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightPipe, never>;
     // (undocumented)
