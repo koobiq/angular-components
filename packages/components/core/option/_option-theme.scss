@@ -20,16 +20,14 @@
     .kbq-option {
         @include kbq-option(default);
 
-        &.kbq-hovered:not(.kbq-disabled),
-        &:hover:not(.kbq-disabled) {
+        &.kbq-active:not(.kbq-disabled) {
             @include kbq-option(states-hover);
         }
 
         &.kbq-selected:not(.kbq-disabled) {
             @include kbq-option(states-selected);
 
-            &.kbq-hovered,
-            &:hover {
+            &.kbq-active {
                 @include kbq-option(states-selected-hover);
             }
         }
@@ -53,16 +51,9 @@
         &.kbq-selected:not(.kbq-disabled) {
             @include kbq-option(multiple-states-selected);
 
-            &.kbq-hovered,
-            &:hover {
+            &.kbq-active {
                 @include kbq-option(multiple-states-selected-hover);
             }
-        }
-    }
-
-    .cdk-keyboard-focused {
-        .kbq-option.kbq-active {
-            border-color: var(--kbq-list-states-focused-focus-outline-color);
         }
     }
 }

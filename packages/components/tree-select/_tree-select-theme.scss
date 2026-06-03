@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens' as *;
+@use '../tree/tree-theme' as tree-theme;
 
 @mixin kbq-tree-select-theme() {
     .kbq-tree-select {
@@ -33,6 +34,44 @@
     .kbq-tree-select__panel {
         box-shadow: var(--kbq-select-panel-dropdown-shadow);
         background: var(--kbq-select-panel-dropdown-background);
+
+        .kbq-tree-selection .kbq-tree-option:not(.kbq-disabled) {
+            &:hover:not(.kbq-focused),
+            &.kbq-hovered:not(.kbq-focused) {
+                @include tree-theme.kbq-tree-option(default);
+            }
+
+            &.kbq-focused {
+                @include tree-theme.kbq-tree-option(states-hover);
+            }
+
+            &.kbq-selected {
+                &:hover:not(.kbq-focused),
+                &.kbq-hovered:not(.kbq-focused) {
+                    @include tree-theme.kbq-tree-option(states-selected);
+                }
+
+                &.kbq-focused {
+                    @include tree-theme.kbq-tree-option(states-selected-hover);
+                }
+            }
+
+            &.kbq-checked:not(.kbq-selected),
+            &.kbq-tree-option_multiple.kbq-selected {
+                &:hover:not(.kbq-focused),
+                &.kbq-hovered:not(.kbq-focused) {
+                    background: var(--kbq-tree-multiple-states-selected-container-background);
+                }
+
+                &.kbq-focused {
+                    background: var(--kbq-tree-multiple-states-selected-hover-container-background);
+                }
+            }
+
+            &.kbq-focused:not(.kbq-action-button-focused) {
+                border-color: transparent;
+            }
+        }
 
         & .kbq-select__footer {
             border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
