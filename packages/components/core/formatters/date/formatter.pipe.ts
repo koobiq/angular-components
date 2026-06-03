@@ -1,11 +1,87 @@
-import { inject, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateTimeOptions } from '@koobiq/date-formatter';
 import { DateAdapter } from '../../datetime';
+import { KBQ_LOCALE_SERVICE } from '../../locales';
 import { DateFormatter } from './formatter';
 
 export class BaseFormatterPipe<D> {
     protected readonly adapter: DateAdapter<D> = inject(DateAdapter<D>);
     protected readonly formatter: DateFormatter<D> = inject(DateFormatter<D>);
+}
+
+/**
+ * Base class for impure date-formatter pipes that recompute their result
+ * whenever the active locale changes via `KbqLocaleService`.
+ *
+ * The base class owns:
+ * - a subscription to `KbqLocaleService.changes` that invalidates the cache and
+ *   marks the host for check (the same approach the built-in `AsyncPipe` uses);
+ * - caching by `(value, args, localeId)`, so the impure `transform()` only does
+ *   real work when an input or the active locale actually changed.
+ *
+ * Subclasses implement `format()`, which receives the raw pipe input(s) — a
+ * single value for absolute/relative pipes, or a `[from, to]` tuple for range
+ * pipes — deserializes via `this.adapter` and calls the matching
+ * `DateFormatter` method.
+ *
+ * @docs-private
+ */
+export abstract class BaseLocaleAwareFormatterPipe<
+    D,
+    Value = D | string,
+    Args extends unknown[] = unknown[]
+> extends BaseFormatterPipe<D> {
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
+    private cachedValue: Value | null = null;
+    private cachedArgs: Args = [] as unknown as Args;
+    private cachedLocaleId: string | null = null;
+    private cachedResult = '';
+    private hasCache = false;
+
+    constructor() {
+        super();
+
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.hasCache = false;
+            this.changeDetectorRef.markForCheck();
+        });
+    }
+
+    transform(value: Value, ...args: Args): string {
+        const currentLocaleId = this.localeService?.id ?? null;
+
+        if (
+            this.hasCache &&
+            value === this.cachedValue &&
+            currentLocaleId === this.cachedLocaleId &&
+            this.argsEqual(args)
+        ) {
+            return this.cachedResult;
+        }
+
+        this.cachedResult = this.format(value, ...args);
+        this.cachedValue = value;
+        this.cachedArgs = args;
+        this.cachedLocaleId = currentLocaleId;
+        this.hasCache = true;
+
+        return this.cachedResult;
+    }
+
+    protected abstract format(value: Value, ...args: Args): string;
+
+    private argsEqual(args: Args): boolean {
+        if (args.length !== this.cachedArgs.length) return false;
+
+        for (let i = 0; i < args.length; i++) {
+            if (args[i] !== this.cachedArgs[i]) return false;
+        }
+
+        return true;
+    }
 }
 
 @Pipe({
@@ -296,5 +372,209 @@ export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imp
 export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTimeFormatterPipe<D> {
     transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
         return super.transform([value1, value2] as D[] | string[], options);
+    }
+}
+
+// Impure pipes that recompute on `KbqLocaleService` locale changes (see `BaseLocaleAwareFormatterPipe`).
+// Prefer these `kbq`-prefixed pipes when the locale can change at runtime; the pure pipes above are
+// kept for static usages and backward compatibility.
+
+@Pipe({
+    name: 'kbqAbsoluteLongDate',
+    pure: false
+})
+export class KbqAbsoluteLongDatePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]>
+    implements PipeTransform
+{
+    protected format(value: D | string, currYear?: boolean): string {
+        const date = this.adapter.deserialize(value);
+
+        return date ? this.formatter.absoluteLongDate(date, currYear) : '';
+    }
+}
+
+@Pipe({
+    name: 'kbqAbsoluteShortDate',
+    pure: false
+})
+export class KbqAbsoluteShortDatePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]>
+    implements PipeTransform
+{
+    protected format(value: D | string, currYear?: boolean): string {
+        const date = this.adapter.deserialize(value);
+
+        return date ? this.formatter.absoluteShortDate(date, currYear) : '';
+    }
+}
+
+@Pipe({
+    name: 'kbqAbsoluteLongDateTime',
+    pure: false
+})
+export class KbqAbsoluteLongDateTimePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
+    implements PipeTransform
+{
+    protected format(value: D | string, options?: DateTimeOptions): string {
+        const date = this.adapter.deserialize(value);
+
+        return date ? this.formatter.absoluteLongDateTime(date, options) : '';
+    }
+}
+
+@Pipe({
+    name: 'kbqAbsoluteShortDateTime',
+    pure: false
+})
+export class KbqAbsoluteShortDateTimePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
+    implements PipeTransform
+{
+    protected format(value: D | string, options?: DateTimeOptions): string {
+        const date = this.adapter.deserialize(value);
+
+        return date ? this.formatter.absoluteShortDateTime(date, options) : '';
+    }
+}
+
+@Pipe({
+    name: 'kbqRelativeLongDate',
+    pure: false
+})
+export class KbqRelativeLongDatePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D | string, []>
+    implements PipeTransform
+{
+    protected format(value: D | string): string {
+        const date = this.adapter.deserialize(value);
+
+        return date ? this.formatter.relativeLongDate(date) : '';
+    }
+}
+
+@Pipe({
+    name: 'kbqRelativeShortDate',
+    pure: false
+})
+export class KbqRelativeShortDatePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D | string, []>
+    implements PipeTransform
+{
+    protected format(value: D | string): string {
+        const date = this.adapter.deserialize(value);
+
+        return date ? this.formatter.relativeShortDate(date) : '';
+    }
+}
+
+@Pipe({
+    name: 'kbqRelativeLongDateTime',
+    pure: false
+})
+export class KbqRelativeLongDateTimePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
+    implements PipeTransform
+{
+    protected format(value: D | string, options?: DateTimeOptions): string {
+        const date = this.adapter.deserialize(value);
+
+        return date ? this.formatter.relativeLongDateTime(date, options) : '';
+    }
+}
+
+@Pipe({
+    name: 'kbqRelativeShortDateTime',
+    pure: false
+})
+export class KbqRelativeShortDateTimePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
+    implements PipeTransform
+{
+    protected format(value: D | string, options?: DateTimeOptions): string {
+        const date = this.adapter.deserialize(value);
+
+        return date ? this.formatter.relativeShortDateTime(date, options) : '';
+    }
+}
+
+@Pipe({
+    name: 'kbqRangeLongDate',
+    pure: false
+})
+export class KbqRangeLongDatePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], []>
+    implements PipeTransform
+{
+    protected format([value1, value2]: D[] | string[]): string {
+        const date1 = this.adapter.deserialize(value1);
+        const date2 = this.adapter.deserialize(value2);
+
+        return this.formatter.rangeLongDate(date1 as D, date2 as D);
+    }
+}
+
+@Pipe({
+    name: 'kbqRangeShortDate',
+    pure: false
+})
+export class KbqRangeShortDatePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], []>
+    implements PipeTransform
+{
+    protected format([value1, value2]: D[] | string[]): string {
+        const date1 = this.adapter.deserialize(value1);
+        const date2 = this.adapter.deserialize(value2);
+
+        return this.formatter.rangeShortDate(date1 as D, date2 as D);
+    }
+}
+
+@Pipe({
+    name: 'kbqRangeLongDateTime',
+    pure: false
+})
+export class KbqRangeLongDateTimePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
+    implements PipeTransform
+{
+    protected format([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
+        const date1 = this.adapter.deserialize(value1);
+        const date2 = this.adapter.deserialize(value2);
+
+        return this.formatter.rangeLongDateTime(date1 as D, date2 as D, options);
+    }
+}
+
+@Pipe({
+    name: 'kbqRangeMiddleDateTime',
+    pure: false
+})
+export class KbqRangeMiddleDateTimePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
+    implements PipeTransform
+{
+    protected format([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
+        const date1 = this.adapter.deserialize(value1);
+        const date2 = this.adapter.deserialize(value2);
+
+        return this.formatter.rangeMiddleDateTime(date1 as D, date2 as D, options);
+    }
+}
+
+@Pipe({
+    name: 'kbqRangeShortDateTime',
+    pure: false
+})
+export class KbqRangeShortDateTimePipe<D>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
+    implements PipeTransform
+{
+    protected format([value1, value2]: D[] | string[], options?: DateTimeOptions): string {
+        const date1 = this.adapter.deserialize(value1);
+        const date2 = this.adapter.deserialize(value2);
+
+        return this.formatter.rangeShortDateTime(date1 as D, date2 as D, options);
     }
 }

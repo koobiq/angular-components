@@ -1,4 +1,4 @@
-import { LOCALE_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, LOCALE_ID, signal } from '@angular/core';
 import { inject, TestBed } from '@angular/core/testing';
 import { KbqLuxonDateModule, LuxonDateAdapter, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
@@ -8,8 +8,21 @@ import {
     KBQ_DEFAULT_LOCALE_DATA_FACTORY,
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
+    KbqAbsoluteLongDatePipe,
+    KbqAbsoluteLongDateTimePipe,
+    KbqAbsoluteShortDatePipe,
+    KbqAbsoluteShortDateTimePipe,
     KbqFormattersModule,
-    KbqLocaleService
+    KbqLocaleService,
+    KbqRangeLongDatePipe,
+    KbqRangeLongDateTimePipe,
+    KbqRangeMiddleDateTimePipe,
+    KbqRangeShortDatePipe,
+    KbqRangeShortDateTimePipe,
+    KbqRelativeLongDatePipe,
+    KbqRelativeLongDateTimePipe,
+    KbqRelativeShortDatePipe,
+    KbqRelativeShortDateTimePipe
 } from '@koobiq/components/core';
 import { DateTime, DateTimeUnit } from 'luxon';
 
@@ -2346,6 +2359,213 @@ describe('Date formatter (imports and providing)', () => {
             expect(adapter.config.name).toBe('en-US');
             expect(formatter.adapter.config.name).toBe('en-US');
             expect(adapter['localeService']).toBeDefined();
+        });
+    });
+
+    describe('KbqAbsoluteLongDatePipe (locale-aware)', () => {
+        @Component({
+            selector: 'kbq-pipe-host',
+            imports: [KbqAbsoluteLongDatePipe],
+            template: '{{ value() | kbqAbsoluteLongDate }}',
+            changeDetection: ChangeDetectionStrategy.OnPush
+        })
+        class HostComponent {
+            readonly value = signal<DateTime | null>(null);
+        }
+
+        let localeService: KbqLocaleService;
+        let dateFormatter: DateFormatter<DateTime>;
+        let testAdapter: LuxonDateAdapter;
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqFormattersModule, KbqLuxonDateModule],
+                providers: [
+                    {
+                        provide: KBQ_LOCALE_SERVICE,
+                        useFactory: () => new KbqLocaleService('ru-RU', KBQ_DEFAULT_LOCALE_DATA_FACTORY())
+                    }
+                ]
+            });
+        });
+
+        beforeEach(inject(
+            [DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE],
+            (a: LuxonDateAdapter, f: DateFormatter<DateTime>, l: KbqLocaleService) => {
+                testAdapter = a;
+                dateFormatter = f;
+                localeService = l;
+            }
+        ));
+
+        it('renders date in active locale (ru-RU)', () => {
+            const fixture = TestBed.createComponent(HostComponent);
+            fixture.componentInstance.value.set(testAdapter.createDate(2024, 0, 15));
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.textContent.trim()).toBe(
+                dateFormatter.absoluteLongDate(testAdapter.createDate(2024, 0, 15))
+            );
+        });
+
+        it('recomputes when KbqLocaleService.setLocale changes the active locale', () => {
+            const fixture = TestBed.createComponent(HostComponent);
+            const date = testAdapter.createDate(2024, 0, 15);
+            fixture.componentInstance.value.set(date);
+            fixture.detectChanges();
+
+            const ruRendered = fixture.nativeElement.textContent.trim();
+            const ruExpected = dateFormatter.absoluteLongDate(date);
+            expect(ruRendered).toBe(ruExpected);
+
+            localeService.setLocale('en-US');
+            fixture.detectChanges();
+
+            const enRendered = fixture.nativeElement.textContent.trim();
+            const enExpected = dateFormatter.absoluteLongDate(date);
+            expect(enRendered).toBe(enExpected);
+            expect(enRendered).not.toBe(ruRendered);
+        });
+
+        it('caches the result and does not call the formatter on every CD tick', () => {
+            const fixture = TestBed.createComponent(HostComponent);
+            const date = testAdapter.createDate(2024, 0, 15);
+            fixture.componentInstance.value.set(date);
+
+            const spy = jest.spyOn(dateFormatter, 'absoluteLongDate');
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(spy).toHaveBeenCalledTimes(1);
+        });
+
+        it('recomputes when the input value changes', () => {
+            const fixture = TestBed.createComponent(HostComponent);
+            fixture.componentInstance.value.set(testAdapter.createDate(2024, 0, 15));
+            fixture.detectChanges();
+
+            const spy = jest.spyOn(dateFormatter, 'absoluteLongDate');
+
+            fixture.componentInstance.value.set(testAdapter.createDate(2024, 5, 20));
+            fixture.detectChanges();
+
+            expect(spy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('Kbq* locale-aware date pipes (all formats)', () => {
+        @Component({
+            selector: 'kbq-all-pipes-host',
+            imports: [
+                KbqAbsoluteLongDatePipe,
+                KbqAbsoluteLongDateTimePipe,
+                KbqAbsoluteShortDatePipe,
+                KbqAbsoluteShortDateTimePipe,
+                KbqRelativeLongDatePipe,
+                KbqRelativeLongDateTimePipe,
+                KbqRelativeShortDatePipe,
+                KbqRelativeShortDateTimePipe,
+                KbqRangeLongDatePipe,
+                KbqRangeLongDateTimePipe,
+                KbqRangeMiddleDateTimePipe,
+                KbqRangeShortDatePipe,
+                KbqRangeShortDateTimePipe
+            ],
+            template: `
+                <span id="absLong">{{ value() | kbqAbsoluteLongDate }}</span>
+                <span id="absLongTime">{{ value() | kbqAbsoluteLongDateTime }}</span>
+                <span id="absShort">{{ value() | kbqAbsoluteShortDate }}</span>
+                <span id="absShortTime">{{ value() | kbqAbsoluteShortDateTime }}</span>
+                <span id="relLong">{{ value() | kbqRelativeLongDate }}</span>
+                <span id="relLongTime">{{ value() | kbqRelativeLongDateTime }}</span>
+                <span id="relShort">{{ value() | kbqRelativeShortDate }}</span>
+                <span id="relShortTime">{{ value() | kbqRelativeShortDateTime }}</span>
+                <span id="rangeLong">{{ range() | kbqRangeLongDate }}</span>
+                <span id="rangeLongTime">{{ range() | kbqRangeLongDateTime }}</span>
+                <span id="rangeMidTime">{{ range() | kbqRangeMiddleDateTime }}</span>
+                <span id="rangeShort">{{ range() | kbqRangeShortDate }}</span>
+                <span id="rangeShortTime">{{ range() | kbqRangeShortDateTime }}</span>
+            `,
+            changeDetection: ChangeDetectionStrategy.OnPush
+        })
+        class AllPipesHostComponent {
+            readonly value = signal<DateTime | null>(null);
+            readonly range = signal<DateTime[]>([]);
+        }
+
+        let localeService: KbqLocaleService;
+        let dateFormatter: DateFormatter<DateTime>;
+        let testAdapter: LuxonDateAdapter;
+
+        // Each pipe's expected output equals the matching DateFormatter call in the active locale.
+        const singleExpect: Record<string, (f: DateFormatter<DateTime>, d: DateTime) => string> = {
+            absLong: (f, d) => f.absoluteLongDate(d),
+            absLongTime: (f, d) => f.absoluteLongDateTime(d),
+            absShort: (f, d) => f.absoluteShortDate(d),
+            absShortTime: (f, d) => f.absoluteShortDateTime(d),
+            relLong: (f, d) => f.relativeLongDate(d),
+            relLongTime: (f, d) => f.relativeLongDateTime(d),
+            relShort: (f, d) => f.relativeShortDate(d),
+            relShortTime: (f, d) => f.relativeShortDateTime(d)
+        };
+        const rangeExpect: Record<string, (f: DateFormatter<DateTime>, d1: DateTime, d2: DateTime) => string> = {
+            rangeLong: (f, d1, d2) => f.rangeLongDate(d1, d2),
+            rangeLongTime: (f, d1, d2) => f.rangeLongDateTime(d1, d2),
+            rangeMidTime: (f, d1, d2) => f.rangeMiddleDateTime(d1, d2),
+            rangeShort: (f, d1, d2) => f.rangeShortDate(d1, d2),
+            rangeShortTime: (f, d1, d2) => f.rangeShortDateTime(d1, d2)
+        };
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqFormattersModule, KbqLuxonDateModule],
+                providers: [
+                    {
+                        provide: KBQ_LOCALE_SERVICE,
+                        useFactory: () => new KbqLocaleService('ru-RU', KBQ_DEFAULT_LOCALE_DATA_FACTORY())
+                    }
+                ]
+            });
+        });
+
+        beforeEach(inject(
+            [DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE],
+            (a: LuxonDateAdapter, f: DateFormatter<DateTime>, l: KbqLocaleService) => {
+                testAdapter = a;
+                dateFormatter = f;
+                localeService = l;
+            }
+        ));
+
+        it('renders every format and recomputes all of them on locale change', () => {
+            const fixture = TestBed.createComponent(AllPipesHostComponent);
+            const d1 = testAdapter.createDate(2024, 0, 15);
+            const d2 = testAdapter.createDate(2024, 5, 20);
+            fixture.componentInstance.value.set(d1);
+            fixture.componentInstance.range.set([d1, d2]);
+
+            const read = (id: string): string => fixture.nativeElement.querySelector(`#${id}`).textContent.trim();
+
+            // `dateFormatter` is the same instance the pipes use; it tracks the active locale itself.
+            const assertMatchesActiveLocale = () => {
+                Object.entries(singleExpect).forEach(([id, fn]) => expect(read(id)).toBe(fn(dateFormatter, d1)));
+                Object.entries(rangeExpect).forEach(([id, fn]) => expect(read(id)).toBe(fn(dateFormatter, d1, d2)));
+            };
+
+            fixture.detectChanges();
+            assertMatchesActiveLocale();
+
+            const ruAbsLong = read('absLong');
+
+            localeService.setLocale('en-US');
+            fixture.detectChanges();
+            assertMatchesActiveLocale();
+
+            expect(read('absLong')).not.toBe(ruAbsLong);
         });
     });
 });
