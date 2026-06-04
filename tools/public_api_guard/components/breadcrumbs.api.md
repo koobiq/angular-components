@@ -62,11 +62,11 @@ export class KbqBreadcrumbs {
     // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
     // (undocumented)
-    protected readonly separator: _angular_core.Signal<TemplateRef<any> | undefined>;
+    protected readonly separator?: TemplateRef<any>;
     readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
     readonly wrapMode: _angular_core.InputSignal<KbqBreadcrumbsWrapMode>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["items", "separator"], ["*"], true, [{ directive: typeof RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }

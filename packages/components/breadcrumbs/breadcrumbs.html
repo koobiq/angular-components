@@ -14,11 +14,9 @@ resolved SSR issue with official hack https://github.com/angular/angular/issues/
         </div>
     }
 } @else {
-    @let firstItem = allItems[0];
-    @let lastItem = allItems[allItems.length - 1];
     <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems reverseOverflowOrder class="layout-align-start-center">
         <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="0" [order]="allItems.length">
-            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: firstItem, last: false }" />
+            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: allItems[0], last: false }" />
             <ng-container [ngTemplateOutlet]="separatorTemplate" />
         </div>
         <div kbqOverflowItemsResult class="kbq-breadcrumb-item__container">
@@ -51,15 +49,19 @@ resolved SSR issue with official hack https://github.com/angular/angular/issues/
             </div>
         }
         <div alwaysVisible class="kbq-breadcrumb-item__container" [kbqOverflowItem]="allItems.length - 1">
-            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: lastItem, last: true }" />
+            <ng-container
+                *ngTemplateOutlet="
+                    breadcrumbTemplate;
+                    context: { $implicit: allItems[allItems.length - 1], last: true }
+                "
+            />
         </div>
     </div>
 }
 
 <ng-template #breadcrumbTemplate let-item let-last="last">
-    @let customTemplateRef = item.customTemplateRef();
-    @if (customTemplateRef) {
-        <ng-container [ngTemplateOutlet]="customTemplateRef" />
+    @if (item.customTemplateRef()) {
+        <ng-container [ngTemplateOutlet]="item.customTemplateRef()!" />
     } @else {
         <a
             kbq-button
@@ -78,9 +80,8 @@ resolved SSR issue with official hack https://github.com/angular/angular/issues/
 </ng-template>
 
 <ng-template #separatorTemplate>
-    @let separatorTemplate = separator();
-    @if (separatorTemplate) {
-        <ng-container [ngTemplateOutlet]="separatorTemplate" />
+    @if (separator) {
+        <ng-container [ngTemplateOutlet]="separator" />
     } @else {
         <i kbq-icon="" class="kbq-breadcrumb__separator" [color]="KbqComponentColors.ContrastFade">&nbsp;/&nbsp;</i>
     }

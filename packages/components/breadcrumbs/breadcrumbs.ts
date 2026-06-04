@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    ContentChild,
     contentChild,
     contentChildren,
     Directive,
@@ -177,7 +178,7 @@ export class KbqBreadcrumbs {
      *
      * @see KbqBreadcrumbsConfiguration
      */
-    readonly firstItemNegativeMargin = input(this.configuration.firstItemNegativeMargin, {
+    readonly firstItemNegativeMargin = input<boolean, unknown>(this.configuration.firstItemNegativeMargin, {
         transform: booleanAttribute
     });
     /**
@@ -195,13 +196,14 @@ export class KbqBreadcrumbs {
      * Indicates whether the breadcrumbs are disabled.
      * When disabled, user interactions are blocked.
      */
-    readonly disabled = input(false, { transform: booleanAttribute });
+    readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
     /**
      * Wrapping behavior of the breadcrumb items.
      */
     readonly wrapMode = input<KbqBreadcrumbsWrapMode>(this.configuration.wrapMode);
 
-    protected readonly separator = contentChild(KbqBreadcrumbsSeparator, { read: TemplateRef });
+    @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
+    protected readonly separator?: TemplateRef<any>;
 
     protected readonly items = contentChildren<KbqBreadcrumbItem>(forwardRef(() => KbqBreadcrumbItem));
 
