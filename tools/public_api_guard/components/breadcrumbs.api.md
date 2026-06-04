@@ -35,7 +35,7 @@ export class KbqBreadcrumbItem {
     readonly customTemplateRef: _angular_core.Signal<TemplateRef<any> | undefined>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly routerLink: RouterLink | null;
-    readonly text: _angular_core.InputSignal<string | undefined>;
+    readonly text: _angular_core.InputSignal<string>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "current": { "alias": "current"; "required": false; "isSignal": true; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
     // (undocumented)
@@ -49,6 +49,8 @@ export class KbqBreadcrumbs {
     protected readonly configuration: KbqBreadcrumbsConfiguration;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly firstItemNegativeMargin: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    protected readonly hiddenItemIDs: _angular_core.Signal<Set<unknown>>;
     // (undocumented)
     protected readonly items: _angular_core.Signal<readonly KbqBreadcrumbItem[]>;
     protected readonly itemsExcludingEdges: _angular_core.Signal<KbqBreadcrumbItem[]>;
