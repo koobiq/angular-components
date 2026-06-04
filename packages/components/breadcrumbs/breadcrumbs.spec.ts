@@ -6,7 +6,7 @@ import { provideRouter, RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { dispatchEvent, DOWN_ARROW, KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqOverflowItem } from '@koobiq/components/overflow-items';
+import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import {
     KbqBreadcrumbButton,
     KbqBreadcrumbItem,
@@ -235,6 +235,112 @@ describe(KbqBreadcrumbs.name, () => {
             // The effect must return early and leave focusableItems unchanged (empty).
             expect(focusableItems.length).toBe(0);
         });
+    });
+
+    describe('max changes', () => {
+        const ITEMS = [
+            { text: 'Home', disabled: false },
+            { text: 'Library', disabled: false },
+            { text: 'Data', disabled: false },
+            { text: 'Docs', disabled: false },
+            { text: 'Articles', disabled: false },
+            { text: 'Current', disabled: false }
+        ];
+
+        function getOverflowItems(debugElement: DebugElement): KbqOverflowItem[] {
+            return debugElement
+                .queryAll(By.directive(KbqOverflowItem))
+                .map((debugElementItem) => debugElementItem.injector.get(KbqOverflowItem));
+        }
+
+        function getResult(debugElement: DebugElement): KbqOverflowItemsResult {
+            return debugElement.query(By.directive(KbqOverflowItemsResult)).injector.get(KbqOverflowItemsResult);
+        }
+
+        it('should restore hidden items and hide expand button when max becomes null', fakeAsync(() => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.items = ITEMS;
+            fixture.detectChanges();
+            tick(); // flush KbqOverflowItems debounceTime(0) — shows all items in jsdom
+
+            componentInstance.max = 4; // maxVisibleItems = 3 → hides 3 middle items
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(3);
+            expect(getResult(debugElement).hidden()).toBe(false);
+
+            componentInstance.max = null;
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(0);
+            expect(getResult(debugElement).hidden()).toBe(true);
+        }));
+
+        it('should restore hidden items and hide expand button when max exceeds item count', fakeAsync(() => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.items = ITEMS;
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 4;
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(3);
+
+            componentInstance.max = 6; // 6 >= items.length → maxVisibleItems = null
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(0);
+            expect(getResult(debugElement).hidden()).toBe(true);
+        }));
+
+        it('should hide fewer items when max increases', fakeAsync(() => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.items = ITEMS;
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 4; // maxVisibleItems = 3 → hides 3
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 5; // maxVisibleItems = 4 → hides 2
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(2);
+            expect(getResult(debugElement).hidden()).toBe(false);
+        }));
+
+        it('should hide more items when max decreases', fakeAsync(() => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.items = ITEMS;
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 5; // maxVisibleItems = 4 → hides 2
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 4; // maxVisibleItems = 3 → hides 3
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(3);
+            expect(getResult(debugElement).hidden()).toBe(false);
+        }));
     });
 
     describe('customization', () => {

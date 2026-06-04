@@ -242,6 +242,8 @@ export class KbqBreadcrumbs {
         return max - 1;
     });
 
+    private readonly maxHiddenItems = new Set<KbqOverflowItem>();
+
     constructor() {
         const group = inject(RdxRovingFocusGroupDirective, { self: true });
 
@@ -272,22 +274,41 @@ export class KbqBreadcrumbs {
         const max = this.maxVisibleItems();
         const items = this.overflowItems();
         const result = this.result();
+        const overflowHiddenIds = this.overflowItemsDir()?.hiddenItemIDs() ?? new Set();
 
-        if (max === null) return;
+        this.maxHiddenItems.forEach((item) => {
+            if (!overflowHiddenIds.has(item.id())) {
+                item.show();
+            }
+        });
+        this.maxHiddenItems.clear();
 
-        const sorted = Array.from(items, (item, index) => ({ item, order: item.order() ?? index }))
+        const allVisibleItems = items
+            .map((item, index) => ({ item, order: item.order() ?? index }))
+            .filter(({ item }) => !item.hidden());
+
+        const extraToHide = max === null ? 0 : allVisibleItems.length - max;
+
+        const hideResultIfAllVisible = () => {
+            if (allVisibleItems.length === items.length) {
+                result?.hide();
+            }
+        };
+
+        if (extraToHide <= 0) {
+            hideResultIfAllVisible();
+
+            return;
+        }
+
+        const hideable = allVisibleItems
+            .filter(({ item }) => !item.alwaysVisible())
             .sort((a, b) => a.order - b.order)
             .map(({ item }) => item);
 
-        const visibleItems = sorted.filter(({ hidden }) => !hidden());
-        const extraToHide = visibleItems.length - max;
-
-        if (extraToHide <= 0) return;
-
-        const hideable = visibleItems.filter(({ alwaysVisible }) => !alwaysVisible());
-
         for (let i = 0; i < extraToHide && i < hideable.length; i++) {
             hideable[i].hide();
+            this.maxHiddenItems.add(hideable[i]);
             result?.show();
         }
     }
