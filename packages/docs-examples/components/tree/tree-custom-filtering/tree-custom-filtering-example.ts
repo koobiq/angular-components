@@ -140,10 +140,16 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
     imports: [KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],
     template: `
         <kbq-form-field>
-            <input kbqInput type="text" [(ngModel)]="filterValue" (ngModelChange)="onFilterChange($event)" />
+            <input
+                kbqInput
+                type="text"
+                placeholder="Search"
+                [(ngModel)]="filterValue"
+                (ngModelChange)="onFilterChange($event)"
+            />
         </kbq-form-field>
         <kbq-tree-selection
-            class="layout-margin-top-4xl"
+            class="layout-margin-top-m"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             [(ngModel)]="modelValue"
@@ -170,10 +176,10 @@ export class TreeCustomFilteringExample {
     modelValue: any = '';
     filterValue: string = '';
 
-    /** Folders the user manually drilled into while a filter is active. */
-    readonly drilledNodes = signal(new Set<FileFlatNode>());
+    /** Folders (matches) the user manually expanded while a filter is active. */
+    readonly expandedMatches = signal(new Set<FileFlatNode>());
 
-    /** Nodes whose own view value matches the current query (excludes ancestors). Only these are drillable. */
+    /** Nodes whose own view value matches the current query (excludes ancestors). Only these can be expanded by the user. */
     private baseMatches = new Set<FileFlatNode>();
 
     private readonly customFilter: CustomTreeControlFilter<FileFlatNode>;
@@ -195,24 +201,24 @@ export class TreeCustomFilteringExample {
 
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
 
-        // Reset drilled + match state whenever the filter goes idle.
+        // Reset expanded + match state whenever the filter goes idle.
         this.treeControl.filterValue.subscribe((value) => {
             if (!this.isFilterActive(value)) {
-                this.drilledNodes.set(new Set());
+                this.expandedMatches.set(new Set());
                 this.baseMatches = new Set();
             }
         });
     }
 
     onFilterChange(value: string): void {
-        // Each new query starts from a clean drilled state.
-        this.drilledNodes.set(new Set());
+        // Each new query starts from a clean expanded state.
+        this.expandedMatches.set(new Set());
         this.baseMatches = this.computeBaseMatches(value);
         this.treeControl.filterNodes(value);
 
         if (this.baseMatches.size > 0) {
             // FlatTreeControl.filterNodes auto-selects every expandable node in the filter result
-            // (matches + ancestors). For un-drilled MATCH folders the chevron should read "collapsed"
+            // (matches + ancestors). For not-yet-expanded MATCH folders the chevron should read "collapsed"
             // because no children are visible yet — deselect them. Ancestors keep their selection so
             // the chevron correctly shows "expanded" (the path to the match IS visible).
             //
@@ -241,13 +247,13 @@ export class TreeCustomFilteringExample {
     /**
      * Fires on every click on `<kbq-tree-node-toggle>`. When no filter is active the toggle's own
      * host handler runs and the early `return` here makes us a no-op. When a filter is active the
-     * toggle disables itself, so we take over and update the drilled set — but only for nodes that
-     * actually match the search query (ancestors and revealed siblings are not drillable).
+     * toggle disables itself, so we take over and update the expanded set — but only for nodes that
+     * actually match the search query (ancestors and revealed siblings cannot be expanded).
      */
     onChevronClick(node: FileFlatNode, event: Event): void {
         if (!this.isFilterActive(this.treeControl.filterValue.value)) return;
 
-        // Only nodes whose own view value matches the query can be drilled.
+        // Only nodes whose own view value matches the query can be expanded.
         if (!this.baseMatches.has(node)) {
             event.stopPropagation();
 
@@ -256,17 +262,17 @@ export class TreeCustomFilteringExample {
 
         event.stopPropagation();
 
-        const next = new Set(this.drilledNodes());
+        const next = new Set(this.expandedMatches());
 
         if (next.has(node)) {
             next.delete(node);
             // Mirror to expansionModel so the chevron rotates back to "collapsed".
             this.treeControl.expansionModel.deselect(node);
-            // Collapsing a parent must also drop any nested drilled descendants.
-            Array.from(next).forEach((drilled) => {
-                if (this.isDescendantOf(drilled, node)) {
-                    next.delete(drilled);
-                    this.treeControl.expansionModel.deselect(drilled);
+            // Collapsing a parent must also drop any nested expanded descendants.
+            Array.from(next).forEach((expanded) => {
+                if (this.isDescendantOf(expanded, node)) {
+                    next.delete(expanded);
+                    this.treeControl.expansionModel.deselect(expanded);
                 }
             });
         } else {
@@ -275,7 +281,7 @@ export class TreeCustomFilteringExample {
             this.treeControl.expansionModel.select(node);
         }
 
-        this.drilledNodes.set(next);
+        this.expandedMatches.set(next);
         this.rebuildFilterVisible();
     }
 
@@ -298,7 +304,7 @@ export class TreeCustomFilteringExample {
     }
 
     /**
-     * Recomputes `filterModel` as `customFilter.handle(query) ∪ direct children of each drilled folder`,
+     * Recomputes `filterModel` as `customFilter.handle(query) ∪ direct children of each expanded folder`,
      * preserves hierarchical order, and re-emits `filterValue` so the data source rebuilds via
      * `filterHandler()`.
      */
@@ -307,17 +313,17 @@ export class TreeCustomFilteringExample {
         const base = this.customFilter.handle(query);
         const combined = new Set<FileFlatNode>(base);
 
-        this.drilledNodes().forEach((drilled) => {
-            const childLevel = this.treeControl.getLevel(drilled) + 1;
+        this.expandedMatches().forEach((expanded) => {
+            const childLevel = this.treeControl.getLevel(expanded) + 1;
 
-            this.treeControl.getDescendants(drilled).forEach((descendant) => {
+            this.treeControl.getDescendants(expanded).forEach((descendant) => {
                 if (this.treeControl.getLevel(descendant) === childLevel) {
                     combined.add(descendant);
                 }
             });
         });
 
-        // Preserve hierarchical (dataNodes) order so drilled children render next to their parent.
+        // Preserve hierarchical (dataNodes) order so expanded children render next to their parent.
         const ordered = this.treeControl.dataNodes.filter((n) => combined.has(n));
 
         this.treeControl.filterModel.clear();
