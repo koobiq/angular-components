@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -102,21 +102,18 @@ export const DATA_OBJECT = {
     tests: ''
 };
 
-function hasFilteredDescendant<T>(dataNode: T, filteredNodes: T[], control: FlatTreeControl<T>) {
-    const filteredViewValues = filteredNodes.map((node: any) => control.getViewValue(node));
-
-    return (
-        control.getDescendants(dataNode).filter((node) => filteredViewValues.includes(control.getViewValue(node)))
-            .length > 0
-    );
-}
-
 export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
     result: T[];
 
     constructor(private control: FlatTreeControl<T>) {}
 
     handle(value: string | null): T[] {
+        if (!value) {
+            this.result = [];
+
+            return this.result;
+        }
+
         const result: Set<T> = new Set();
 
         const foundedNodes = this.control.dataNodes.filter((node: any) => {
@@ -127,20 +124,6 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
             this.control.getParents(filteredNode, []).forEach((node) => result.add(node));
 
             result.add(filteredNode);
-
-            if (this.control.isExpandable(filteredNode)) {
-                const childNodeLevel = this.control.getLevel(filteredNode) + 1;
-
-                this.control.getDescendants(filteredNode).forEach((childNode) => {
-                    if (
-                        this.control.getLevel(childNode) === childNodeLevel &&
-                        (!this.control.isExpandable(childNode) ||
-                            !hasFilteredDescendant<T>(childNode, foundedNodes, this.control))
-                    ) {
-                        result.add(childNode);
-                    }
-                });
-            }
         });
 
         this.result = Array.from(result);
@@ -157,10 +140,16 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
     imports: [KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],
     template: `
         <kbq-form-field>
-            <input kbqInput type="text" [(ngModel)]="filterValue" (ngModelChange)="onFilterChange($event)" />
+            <input
+                kbqInput
+                type="text"
+                placeholder="Search"
+                [(ngModel)]="filterValue"
+                (ngModelChange)="onFilterChange($event)"
+            />
         </kbq-form-field>
         <kbq-tree-selection
-            class="layout-margin-top-4xl"
+            class="layout-margin-top-m"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             [(ngModel)]="modelValue"
@@ -170,7 +159,7 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
             </kbq-tree-option>
 
             <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
-                <kbq-tree-node-toggle [node]="node" />
+                <kbq-tree-node-toggle [node]="node" (click)="onChevronClick(node, $event)" />
 
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
             </kbq-tree-option>
@@ -187,6 +176,14 @@ export class TreeCustomFilteringExample {
     modelValue: any = '';
     filterValue: string = '';
 
+    /** Folders (matches) the user manually expanded while a filter is active. */
+    readonly expandedMatches = signal(new Set<FileFlatNode>());
+
+    /** Nodes whose own view value matches the current query (excludes ancestors). Only these can be expanded by the user. */
+    private baseMatches = new Set<FileFlatNode>();
+
+    private readonly customFilter: CustomTreeControlFilter<FileFlatNode>;
+
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
@@ -196,19 +193,156 @@ export class TreeCustomFilteringExample {
             this.getValue,
             this.getViewValue
         );
-        this.treeControl.setFilters(new CustomTreeControlFilter<FileFlatNode>(this.treeControl));
+
+        this.customFilter = new CustomTreeControlFilter<FileFlatNode>(this.treeControl);
+        this.treeControl.setFilters(this.customFilter);
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+
+        // Reset expanded + match state whenever the filter goes idle.
+        this.treeControl.filterValue.subscribe((value) => {
+            if (!this.isFilterActive(value)) {
+                this.expandedMatches.set(new Set());
+                this.baseMatches = new Set();
+            }
+        });
     }
 
     onFilterChange(value: string): void {
+        // Each new query starts from a clean expanded state.
+        this.expandedMatches.set(new Set());
+        this.baseMatches = this.computeBaseMatches(value);
         this.treeControl.filterNodes(value);
+
+        if (this.baseMatches.size > 0) {
+            // FlatTreeControl.filterNodes auto-selects every expandable node in the filter result
+            // (matches + ancestors). For not-yet-expanded MATCH folders the chevron should read "collapsed"
+            // because no children are visible yet — deselect them. Ancestors keep their selection so
+            // the chevron correctly shows "expanded" (the path to the match IS visible).
+            //
+            // The deselect is deferred to a microtask so it runs AFTER `updateFilterValue`'s
+            // Promise.resolve callback has set `filterValue.value`. Otherwise `expansionModel.changed`
+            // here would route through the data source's `expansionHandler` and our work would be
+            // overwritten when filterValue is later set.
+            Promise.resolve().then(() => {
+                let mutated = false;
+
+                this.baseMatches.forEach((match) => {
+                    if (this.treeControl.isExpandable(match) && this.treeControl.expansionModel.isSelected(match)) {
+                        this.treeControl.expansionModel.deselect(match);
+                        mutated = true;
+                    }
+                });
+
+                if (mutated) {
+                    // Refresh the filter rendering after expansionModel mutation.
+                    this.treeControl.filterValue.next(this.treeControl.filterValue.value);
+                }
+            });
+        }
+    }
+
+    /**
+     * Fires on every click on `<kbq-tree-node-toggle>`. When no filter is active the toggle's own
+     * host handler runs and the early `return` here makes us a no-op. When a filter is active the
+     * toggle disables itself, so we take over and update the expanded set — but only for nodes that
+     * actually match the search query (ancestors and revealed siblings cannot be expanded).
+     */
+    onChevronClick(node: FileFlatNode, event: Event): void {
+        if (!this.isFilterActive(this.treeControl.filterValue.value)) return;
+
+        // Only nodes whose own view value matches the query can be expanded.
+        if (!this.baseMatches.has(node)) {
+            event.stopPropagation();
+
+            return;
+        }
+
+        event.stopPropagation();
+
+        const next = new Set(this.expandedMatches());
+
+        if (next.has(node)) {
+            next.delete(node);
+            // Mirror to expansionModel so the chevron rotates back to "collapsed".
+            this.treeControl.expansionModel.deselect(node);
+            // Collapsing a parent must also drop any nested expanded descendants.
+            Array.from(next).forEach((expanded) => {
+                if (this.isDescendantOf(expanded, node)) {
+                    next.delete(expanded);
+                    this.treeControl.expansionModel.deselect(expanded);
+                }
+            });
+        } else {
+            next.add(node);
+            // Mirror to expansionModel so the chevron rotates to "expanded".
+            this.treeControl.expansionModel.select(node);
+        }
+
+        this.expandedMatches.set(next);
+        this.rebuildFilterVisible();
+    }
+
+    private computeBaseMatches(value: string | null): Set<FileFlatNode> {
+        if (!value) return new Set();
+
+        return new Set(
+            this.treeControl.dataNodes.filter((node) =>
+                this.treeControl.compareViewValues(this.treeControl.getViewValue(node), value)
+            )
+        );
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {
         return nodeData.expandable;
+    }
+
+    private isFilterActive(value: string | FileFlatNode[] | null): boolean {
+        return Array.isArray(value) ? value.length > 0 : !!value;
+    }
+
+    /**
+     * Recomputes `filterModel` as `customFilter.handle(query) ∪ direct children of each expanded folder`,
+     * preserves hierarchical order, and re-emits `filterValue` so the data source rebuilds via
+     * `filterHandler()`.
+     */
+    private rebuildFilterVisible(): void {
+        const query = this.filterValue;
+        const base = this.customFilter.handle(query);
+        const combined = new Set<FileFlatNode>(base);
+
+        this.expandedMatches().forEach((expanded) => {
+            const childLevel = this.treeControl.getLevel(expanded) + 1;
+
+            this.treeControl.getDescendants(expanded).forEach((descendant) => {
+                if (this.treeControl.getLevel(descendant) === childLevel) {
+                    combined.add(descendant);
+                }
+            });
+        });
+
+        // Preserve hierarchical (dataNodes) order so expanded children render next to their parent.
+        const ordered = this.treeControl.dataNodes.filter((n) => combined.has(n));
+
+        this.treeControl.filterModel.clear();
+        this.treeControl.filterModel.select(...ordered);
+
+        this.treeControl.filterValue.next(this.treeControl.filterValue.value);
+    }
+
+    /** Walks `node.parent` upward; returns true if `ancestor` is reached. */
+    private isDescendantOf(node: FileFlatNode, ancestor: FileFlatNode): boolean {
+        let parent = node.parent;
+
+        while (parent) {
+            if (parent === ancestor) return true;
+
+            parent = parent.parent;
+        }
+
+        return false;
     }
 
     private transformer = (node: FileNode, level: number, parent: any) => {

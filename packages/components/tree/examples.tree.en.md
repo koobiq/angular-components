@@ -1,14 +1,11 @@
-### List with tree and text search
+### Search
 
-If a search query is entered, only the following items are shown in the tree:
+The search results include matches and all of their parents:
 
-- items that match the search query;
-- items that are inside non-leaf items matching the query;
-- items that are parents of items found by the search query.
-
-If a found item is a non-leaf — it is displayed expanded. If the non-leaf items contained within it match the search query or lead to a matching item, they are displayed expanded (otherwise collapsed). All items that are parents of the found item are displayed expanded.
-
-Text matching the search query in the item name is highlighted in bold.
+- the tree collapses down to the matches and the path to them: the found items and the chain of their parents are visible
+- the path to a match is expanded, while the items nested inside it are hidden;
+- matched branches can be expanded and collapsed to view their contents;
+- the matched fragment is highlighted.
 
 <!-- example(tree-custom-filtering) -->
 
