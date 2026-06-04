@@ -222,6 +222,14 @@ export class KbqBreadcrumbs {
 
     /** @docs-private */
     protected readonly itemsExcludingEdges = computed(() => this.items().slice(1, -1));
+    protected readonly hiddenItemIDs = computed(
+        () =>
+            new Set(
+                this.overflowItems()
+                    .filter((item) => item.hidden())
+                    .map((item) => item.id())
+            )
+    );
 
     /** @docs-private */
     protected readonly maxVisibleItems = computed((): number | null => {

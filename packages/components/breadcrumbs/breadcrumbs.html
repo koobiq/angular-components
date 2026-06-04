@@ -34,7 +34,7 @@ resolved SSR issue with official hack https://github.com/angular/angular/issues/
 
             <kbq-dropdown #hiddenBreadcrumbsDropdown="kbqDropdown">
                 @for (item of allItems; track item) {
-                    @if (kbqOverflowItems.hiddenItemIDs().has($index)) {
+                    @if (hiddenItemIDs().has($index)) {
                         <a kbq-dropdown-item [routerLink]="item.routerLink?.urlTree" [disabled]="item.disabled()">
                             {{ item.text() }}
                         </a>
