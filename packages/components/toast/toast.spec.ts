@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, TemplateRef, ViewChild } from '@angular/core';
 import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
@@ -208,3 +208,71 @@ class KbqToastButtonWrapperComponent {
         this.toastService.show({ style: 'warning', title: 'Warning', content: 'Message Content' }, 0);
     }
 }
+
+@Component({
+    selector: 'kbq-toast-template-wrapper',
+    standalone: true,
+    imports: [KbqToastModule],
+    template: `
+        <ng-template #tpl>tpl</ng-template>
+    `
+})
+class KbqToastTemplateWrapperComponent {
+    @ViewChild('tpl', { static: true }) template!: TemplateRef<unknown>;
+}
+
+describe('ToastService regression: multiple containers / cleanup', () => {
+    let service: KbqToastService;
+    let overlayContainer: OverlayContainer;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqToastModule, NoopAnimationsModule, KbqToastTemplateWrapperComponent]
+        }).compileComponents();
+
+        service = TestBed.inject(KbqToastService);
+        overlayContainer = TestBed.inject(OverlayContainer);
+        overlayContainerElement = overlayContainer.getContainerElement();
+    });
+
+    afterEach(() => {
+        overlayContainer.ngOnDestroy();
+    });
+
+    it('disposes overlay on service destroy so re-bootstrap does not leak a second container', () => {
+        service.show(MOCK_TOAST_DATA, 0);
+        expect(overlayContainerElement.querySelectorAll('.kbq-toast-overlay').length).toBe(1);
+
+        service.ngOnDestroy();
+        expect(overlayContainerElement.querySelectorAll('.kbq-toast-overlay').length).toBe(0);
+    });
+
+    it('hideTemplate removes by returned id (regression: off-by-one)', () => {
+        const fixture = TestBed.createComponent(KbqToastTemplateWrapperComponent);
+
+        fixture.detectChanges();
+
+        const { id } = service.showTemplate(MOCK_TOAST_DATA, fixture.componentInstance.template, 0);
+
+        expect(service.templates.length).toBe(1);
+
+        service.hideTemplate(id);
+        expect(service.templates.length).toBe(0);
+    });
+
+    it('keeps container alive while templates are visible after the last toast is hidden', () => {
+        const fixture = TestBed.createComponent(KbqToastTemplateWrapperComponent);
+
+        fixture.detectChanges();
+
+        const toast = service.show(MOCK_TOAST_DATA, 0);
+
+        service.showTemplate(MOCK_TOAST_DATA, fixture.componentInstance.template, 0);
+
+        service.hide(toast.id);
+
+        expect(service.templates.length).toBe(1);
+        expect(overlayContainerElement.querySelectorAll('kbq-toast-container').length).toBe(1);
+    });
+});
