@@ -1242,7 +1242,9 @@ export class KbqSelect
             this.subscribeToScrolledToBottom();
         });
 
-        this.options.changes.pipe(delay(1)).subscribe(() => this.setOverlayPosition());
+        this.options.changes
+            .pipe(delay(1), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.setOverlayPosition());
 
         this.closeSubscription = this.closingActions().subscribe(() => this.close());
     }

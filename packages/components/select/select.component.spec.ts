@@ -6597,6 +6597,38 @@ describe('KbqSelect', () => {
         });
     });
 
+    describe('overlay teardown', () => {
+        let fixture: ComponentFixture<MultiSelect>;
+        let testInstance: MultiSelect;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelect]);
+            fixture = TestBed.createComponent(MultiSelect);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        // Regression: the delayed `options.changes` subscription set up in `onAttached` used to outlive the
+        // component. Destroying the select (e.g. closing a modal) disposed the overlay before the 1ms timer
+        // fired, so the late callback hit `resetOverlay` on a null overlay element and threw
+        // "Cannot read properties of null (reading 'style')".
+        it('should not throw when destroyed before the delayed options.changes callback fires', fakeAsync(() => {
+            testInstance.select().open();
+            fixture.detectChanges();
+            flush();
+
+            // Re-render the options so the select's `options.changes` emits and schedules the delayed callback.
+            testInstance.foods = [{ value: 'ramen-0', viewValue: 'Ramen' }];
+            fixture.detectChanges();
+
+            // Destroying disposes the overlay (overlay element becomes null) before the 1ms timer runs.
+            fixture.destroy();
+
+            expect(() => tick(1)).not.toThrow();
+        }));
+    });
+
     describe('multiline', () => {
         let fixture: ComponentFixture<MultiSelectWithConfigurableInputs>;
         let testInstance: MultiSelectWithConfigurableInputs;
