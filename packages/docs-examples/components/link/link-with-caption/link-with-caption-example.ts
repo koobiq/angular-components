@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
@@ -6,21 +7,22 @@ import { KbqLinkModule } from '@koobiq/components/link';
  */
 @Component({
     selector: 'link-with-caption-example',
-    imports: [KbqLinkModule],
+    imports: [KbqLinkModule, KbqIconModule],
     template: `
-        <a kbq-link pseudo>
+        <span class="kbq-link_external" kbq-link pseudo>
             <span class="kbq-link__text">Scan report</span>
+            <i kbq-icon="kbq-north-east_16"></i>
             <span class="example-link-caption">task/koobiq.io</span>
-        </a>
+        </span>
     `,
     styles: `
         :host {
-            display: flex;
+            display: inline-block;
             padding: var(--kbq-size-l);
         }
 
         .example-link-caption {
-            display: block;
+            display: flex;
             color: var(--kbq-foreground-contrast-secondary);
         }
     `,

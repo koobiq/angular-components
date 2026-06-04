@@ -195,7 +195,6 @@ export class E2eLinkStates {}
     selector: 'e2e-link-with-caption',
     imports: [KbqLinkModule, KbqIconModule],
     template: `
-        <!-- With custom caption block (underline only on kbq-link__text) -->
         <p>
             <a kbq-link>
                 <span class="kbq-link__text">link</span>
@@ -207,6 +206,12 @@ export class E2eLinkStates {}
                 <span class="kbq-link__text">hovered</span>
                 <span class="e2e-link-caption">caption</span>
             </a>
+        </p>
+        <p>
+            <span kbq-link class="cdk-keyboard-focused">
+                <span class="kbq-link__text">focused</span>
+                <span class="e2e-link-caption">caption</span>
+            </span>
         </p>
         <p>
             <span kbq-link pseudo>
@@ -228,7 +233,7 @@ export class E2eLinkStates {}
         </p>
         <p>
             <a class="kbq-link_external" kbq-link>
-                <span class="kbq-link__text">external with icon</span>
+                <span class="kbq-link__text">external</span>
                 <i kbq-icon="kbq-north-east_16"></i>
                 <span class="e2e-link-caption">caption</span>
             </a>

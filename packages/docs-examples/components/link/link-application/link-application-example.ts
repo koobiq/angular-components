@@ -29,7 +29,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
     `,
     styles: `
         :host {
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
             gap: var(--kbq-size-s);
         }
