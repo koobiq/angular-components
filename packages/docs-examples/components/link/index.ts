@@ -12,6 +12,7 @@ import { LinkPrintExample } from './link-print/link-print-example';
 import { LinkPseudoExample } from './link-pseudo/link-pseudo-example';
 import { LinkTargetBlankExample } from './link-target-blank/link-target-blank-example';
 import { LinkVisitedExample } from './link-visited/link-visited-example';
+import { LinkWithCaptionExample } from './link-with-caption/link-with-caption-example';
 
 export {
     LinkApplicationExample,
@@ -26,7 +27,8 @@ export {
     LinkPrintExample,
     LinkPseudoExample,
     LinkTargetBlankExample,
-    LinkVisitedExample
+    LinkVisitedExample,
+    LinkWithCaptionExample
 };
 
 const EXAMPLES = [
@@ -42,7 +44,8 @@ const EXAMPLES = [
     LinkIconsExample,
     LinkVisitedExample,
     LinkDisabledExample,
-    LinkCaptionExample
+    LinkCaptionExample,
+    LinkWithCaptionExample
 ];
 
 @NgModule({

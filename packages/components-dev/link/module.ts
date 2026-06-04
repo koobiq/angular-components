@@ -14,7 +14,8 @@ import {
     LinkPrintExample,
     LinkPseudoExample,
     LinkTargetBlankExample,
-    LinkVisitedExample
+    LinkVisitedExample,
+    LinkWithCaptionExample
 } from 'packages/docs-examples/components/link';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -33,9 +34,12 @@ import { DevThemeToggle } from '../theme-toggle';
         LinkPrintExample,
         LinkPseudoExample,
         LinkTargetBlankExample,
-        LinkVisitedExample
+        LinkVisitedExample,
+        LinkWithCaptionExample
     ],
     template: `
+        <link-with-caption-example />
+        <hr />
         <link-application-example />
         <hr />
         <link-caption-example />

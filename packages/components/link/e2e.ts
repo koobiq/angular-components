@@ -99,10 +99,10 @@ import { KbqLinkModule } from '@koobiq/components/link';
         </p>
         <p>
             Text
-            <a kbq-link pseudo class="kbq-hovered">
+            <span kbq-link pseudo class="kbq-hovered">
                 <i kbq-icon="kbq-calendar-o_16"></i>
                 <span class="kbq-link__text">pseudo hovered</span>
-            </a>
+            </span>
             text.
         </p>
         <p>
@@ -150,10 +150,10 @@ import { KbqLinkModule } from '@koobiq/components/link';
         </p>
         <p>
             Text
-            <a kbq-link useVisited pseudo class="kbq-visited">
+            <span kbq-link useVisited pseudo class="kbq-visited">
                 <i kbq-icon="kbq-calendar-o_16"></i>
                 <span class="kbq-link__text">pseudo visited</span>
-            </a>
+            </span>
             text.
         </p>
 
@@ -192,45 +192,45 @@ import { KbqLinkModule } from '@koobiq/components/link';
 export class E2eLinkStates {}
 
 @Component({
-    selector: 'e2e-link-with-description',
+    selector: 'e2e-link-with-caption',
     imports: [KbqLinkModule, KbqIconModule],
     template: `
-        <!-- With custom description block (underline only on kbq-link__text) -->
+        <!-- With custom caption block (underline only on kbq-link__text) -->
         <p>
             <a kbq-link>
-                <span class="kbq-link__text">link with description</span>
-                <span class="e2e-link-description">description</span>
+                <span class="kbq-link__text">link</span>
+                <span class="e2e-link-caption">caption</span>
             </a>
         </p>
         <p>
             <a kbq-link class="kbq-hovered">
-                <span class="kbq-link__text">hovered with description</span>
-                <span class="e2e-link-description">description</span>
+                <span class="kbq-link__text">hovered</span>
+                <span class="e2e-link-caption">caption</span>
             </a>
         </p>
         <p>
-            <a kbq-link pseudo>
-                <span class="kbq-link__text">pseudo with description</span>
-                <span class="e2e-link-description">description</span>
-            </a>
+            <span kbq-link pseudo>
+                <span class="kbq-link__text">pseudo</span>
+                <span class="e2e-link-caption">caption</span>
+            </span>
         </p>
         <p>
             <a kbq-link pseudo class="kbq-hovered">
-                <span class="kbq-link__text">pseudo hovered with description</span>
-                <span class="e2e-link-description">description</span>
+                <span class="kbq-link__text">pseudo hovered</span>
+                <span class="e2e-link-caption">caption</span>
             </a>
         </p>
         <p>
-            <a kbq-link pseudo class="cdk-keyboard-focused">
-                <span class="kbq-link__text">pseudo focused with description</span>
-                <span class="e2e-link-description">description</span>
-            </a>
+            <span kbq-link pseudo class="cdk-keyboard-focused">
+                <span class="kbq-link__text">pseudo focused</span>
+                <span class="e2e-link-caption">caption</span>
+            </span>
         </p>
         <p>
             <a class="kbq-link_external" kbq-link>
-                <span class="kbq-link__text">external with icon and description</span>
+                <span class="kbq-link__text">external with icon</span>
                 <i kbq-icon="kbq-north-east_16"></i>
-                <span class="e2e-link-description">description</span>
+                <span class="e2e-link-caption">caption</span>
             </a>
         </p>
     `,
@@ -246,14 +246,14 @@ export class E2eLinkStates {}
             margin: 0;
         }
 
-        .e2e-link-description {
+        .e2e-link-caption {
             display: block;
             color: var(--kbq-foreground-contrast-secondary);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'data-testid': 'e2eLinkWithDescription'
+        'data-testid': 'e2eLinkWithCaption'
     }
 })
-export class E2eLinkWithDescription {}
+export class E2eLinkWithCaption {}

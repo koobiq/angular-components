@@ -8,20 +8,12 @@ import { KbqLinkModule } from '@koobiq/components/link';
     selector: 'link-pseudo-example',
     imports: [KbqLinkModule],
     template: `
-        <a kbq-link pseudo>
-            <span class="kbq-link__text">Scan report</span>
-            <span class="example-link-description">task/koobiq.io</span>
-        </a>
+        <span kbq-link pseudo>Scan report</span>
     `,
     styles: `
         :host {
             display: flex;
             padding: var(--kbq-size-l);
-        }
-
-        .example-link-description {
-            display: block;
-            color: var(--kbq-foreground-contrast-secondary);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
