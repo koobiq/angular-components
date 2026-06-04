@@ -123,15 +123,16 @@ export class KbqBreadcrumbItem {
      * The text displayed for the breadcrumb item.
      * This text will be shown if breadcrumb item is hidden in dropdown.
      */
-    readonly text = input<string>();
+    readonly text = input<string>(undefined!);
     /**
      * Indicates whether the breadcrumb item is disabled.
      */
-    readonly disabled = input(false, { transform: booleanAttribute });
+    readonly disabled = input<boolean, unknown>(undefined!, { transform: booleanAttribute });
     /**
      * Indicates whether the breadcrumb item is the current/active item.
+     * Defaults to `false`.
      */
-    readonly current = input(false, { transform: booleanAttribute });
+    readonly current = input<boolean, unknown>(false, { transform: booleanAttribute });
     /**
      * A reference to a custom template provided for the breadcrumb item content.
      * The template can be used to override the default appearance of the breadcrumb.
