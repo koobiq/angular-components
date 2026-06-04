@@ -684,7 +684,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                     // 'changed after checked' errors in some cases. See #12194.
                     this.dropdown.animationDone
                         .pipe(take(1), delay(0, asapScheduler), takeUntil(this.parent.hovered()))
-                        // eslint-disable-next-line rxjs/no-nested-subscribe
+                        // eslint-disable-next-line rxjs-x/no-nested-subscribe
                         .subscribe(() => this.open());
                 } else {
                     this.open();
