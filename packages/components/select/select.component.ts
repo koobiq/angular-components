@@ -1317,6 +1317,12 @@ export class KbqSelect
             const itemsCounter = this.trigger()!.nativeElement.querySelector('.kbq-select__match-hidden-text');
             const matcherList = this.trigger()!.nativeElement.querySelector('.kbq-select__match-list');
 
+            if (!itemsCounter || !matcherList) {
+                this._changeDetectorRef.markForCheck();
+
+                return;
+            }
+
             const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
             const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
 
@@ -1880,7 +1886,12 @@ export class KbqSelect
     private getTotalVisibleItems(): [number, number] {
         const triggerClone = this.buildTriggerClone();
 
-        this._renderer.setStyle(triggerClone.querySelector('.kbq-select__match-hidden-text'), 'display', 'block');
+        const hiddenText = triggerClone.querySelector('.kbq-select__match-hidden-text');
+
+        if (hiddenText) {
+            this._renderer.setStyle(hiddenText, 'display', 'block');
+        }
+
         this._renderer.appendChild(this.trigger()!.nativeElement, triggerClone);
 
         let visibleItemsCount: number = 0;
