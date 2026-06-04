@@ -80,7 +80,7 @@ ng g @koobiq/angular-components:empty-state-size-attr --project <your project>
 
 В версии 20.0.0 библиотека переведена на Angular 20. Это крупный релиз: удалены давно устаревшие API и переименована часть пакетов. Требования: **Angular 20+** и **Node.js ≥ 20.19**.
 
-Удалите **@koobiq/cdk** из package.json — пакеты был объединен с @koobiq/components/core.
+Удалите `@koobiq/cdk` из `package.json` — пакет был объединён с `@koobiq/components/core`.
 
 #### Запуск миграции
 
