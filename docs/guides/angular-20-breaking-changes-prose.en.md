@@ -22,7 +22,7 @@ Build tooling has been updated: `ng-packagr` → `^20.3.2`, `@angular-builders/j
 
 ### Deprecated API removals
 
-Long-standing deprecated symbols have been removed. Use `ng update @koobiq/components@20` for assisted migration (schematics TBD — track follow-up).
+Long-standing deprecated symbols have been removed. Use `ng update @koobiq/components@20` for assisted migration (invokes the `v20-upgrade` schematic).
 
 #### Removed packages
 

@@ -32,7 +32,7 @@ These changes shipped in **Koobiq v20.0.0** (2026-05-13) — the move to Angular
 
 ### Deprecated API removals
 
-Removed long-standing deprecated symbols. Use `ng update @koobiq/components@20` for assisted migration (schematics TBD — track follow-up).
+Removed long-standing deprecated symbols. Use `ng update @koobiq/components@20` for assisted migration (invokes the `v20-upgrade` schematic).
 
 #### Removed packages
 
