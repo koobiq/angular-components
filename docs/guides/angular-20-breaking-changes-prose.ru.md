@@ -82,7 +82,7 @@
 
 ### Удаление устаревших API
 
-Удалены давно устаревшие символы. Для упрощенной миграции используйте `ng update @koobiq/components@20` (схематики — TBD, отслеживается как доработка).
+Удалены давно устаревшие символы. Для упрощенной миграции используйте `ng update @koobiq/components@20` (вызывает схематик `v20-upgrade`).
 
 #### Пакеты
 
@@ -128,7 +128,7 @@
 
 - Интерфейсы KbqInputFile и KbqInputFileLabel удалены, тип KbqFileValidatorFn также удален.
 - Функция isCorrectExtension() заменена на FileValidators.isCorrectExtension (тип ValidatorFn).
-- 'KbqMultipleFileUploadComponent: удалены errors, customValidation и hasErrors — используйте FormControl.errors и валидаторы FormControl.
+- `KbqMultipleFileUploadComponent`: удалены `errors`, `customValidation` и `hasErrors` — используйте `FormControl.errors` и валидаторы `FormControl`.
 - KbqSingleFileUploadComponent: удалены errors и customValidation — то же самое.
 
 #### API модальных окон
@@ -147,7 +147,7 @@
 
 #### Триггеры-модификаторы Tooltip
 
-Директивы KbqWarningTooltipTrigger (`[kbqWarningTooltip]`) и KbqExtendedTooltipTrigger (`[kbqExtendedTooltip]`) удалены. Используйте базовую директиву `[kbqTooltip] с новым публичным input kbqTooltipModifier`:
+Директивы KbqWarningTooltipTrigger (`[kbqWarningTooltip]`) и KbqExtendedTooltipTrigger (`[kbqExtendedTooltip]`) удалены. Используйте базовую директиву `[kbqTooltip]` с новым публичным input `kbqTooltipModifier`:
 
 ```html
 <!-- было -->
@@ -177,7 +177,7 @@
 
 | Старое имя                | Новое имя                        |
 | ------------------------- | -------------------------------- |
-| KbqNavbarIc\*             | KbqNavbar\*                            |
+| KbqNavbarIc\*             | KbqNavbar\*                      |
 | KbqRiskLevel\*            | KbqBadge\*                       |
 | KbqWarningTooltipTrigger  | KbqTooltipTrigger                |
 | KbqExtendedTooltipTrigger | KbqTooltipTrigger                |
