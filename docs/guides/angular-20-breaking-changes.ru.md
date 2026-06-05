@@ -1,142 +1,207 @@
-Эти изменения вошли в **Koobiq v20.0.0** (2026-05-13) — переход на Angular 20. Пошаговый сценарий обновления описан в [гайде по миграции](/ru/main/migration); ниже — полный список ломающих изменений.
+Эти изменения вошли в **Koobiq v20.0.0** (2026-05-13) — переход на Angular 20. Пошаговый сценарий обновления описан в [гайде по миграции](/ru/main/migration-prose); ниже — полный список ломающих изменений.
 
 ### Angular 20
 
-- **angular:** обновление до Angular 20.3.21. `requiredAngularVersion` теперь `^20.0.0`. Все `peerDependencies` публикуемых пакетов нацелены на `^20.0.0`. Потребителям необходимо обновиться до Angular 20+.
-- **node:** минимальная поддерживаемая версия Node.js теперь **20.19** (добавлено `"engines": { "node": ">=20.19" }`).
-- **zone.js:** понижен до `~0.15.1` в соответствии с peer-требованием Angular 20.
-- **components:** `KbqPopUpTrigger` (база tooltip / popover / notification-center / app-switcher) переведён на `Signal<T>` для `enterDelay`, `leaveDelay`, `stickToWindow`, `container`, `hideWithTimeout`, `preventClose` и `arrow`, чтобы существующие переопределения signal-input в подклассах проходили проверку типов. Потребители, читающие эти значения с инстанса триггера, должны вызывать их как сигналы (`.enterDelay()` и т. д.).
-- **popover:** сломанная в рантайме мутация `set trigger(value)` для `hideWithTimeout`/`leaveDelay` (добавлена в DS-3677 #851 и незаметно сломана начиная с DS-4749 #1442) заменена на записываемые backing-сигналы; `leaveDelay` теперь `computed`-сигнал, комбинирующий пользовательский ввод и значение по умолчанию для hover-режима `500ms`.
-- **form-field:** `KbqInput.placeholder`, `KbqInput.errorStateMatcher`, `KbqInputPassword.placeholder`, `KbqInputPassword.errorStateMatcher`, `KbqTextarea.placeholder`, `KbqTextarea.errorStateMatcher`, `KbqSelect.errorStateMatcher`, `KbqTagList.errorStateMatcher`, `KbqTreeSelect.errorStateMatcher`, `KbqSingleFileUploadComponent.errorStateMatcher`, `KbqMultipleFileUploadComponent.errorStateMatcher`, `KbqTagInput.placeholder`/`id` возвращены к примитивам `@Input` — они конфликтуют с типами интерфейсов (`CanUpdateErrorState`, `KbqFormFieldControl`, `KbqTagTextControl`), ожидающими «сырые» значения. Привязки в шаблонах через алиасы остаются прежними.
-- **code-block:** `softWrap`, `viewAll`, `canDownload`, `activeFileIndex` теперь `model()`-сигналы (записываемые + bindable). Краткая запись атрибута без значения `<kbq-code-block canDownload>` больше не приводит к приведению типа — используйте `[canDownload]="true"`, `[activeFileIndex]="1"` и т. д.
-- **textarea:** `freeRowsHeight` теперь `model()`-сигнал; краткая запись атрибута без значения не поддерживается, используйте `[freeRowsHeight]="160"`.
-- **search-expandable / dl / radio / checkbox / toggle / sidepanel:** `isOpened` / `vertical` / `name` / `id` / `sidepanelResult` теперь `model()`-сигналы (внутри используйте `.set()` / `.update()`; двусторонняя привязка `[(x)]` снаружи работает).
-- **modal:** `kbqOkText`, `kbqOkType`, `kbqRestoreFocus`, `kbqCancelText`, `kbqModalType`, `kbqComponent`, `kbqContent`, `kbqComponentParams`, `kbqFooter`, `kbqWidth`, `kbqSize`, `kbqWrapClassName`, `kbqClassName`, `kbqStyle`, `kbqTitle`, `kbqCloseByESC`, `kbqOnOk`, `kbqOnCancel` возвращены к обычным `@Input`/`@Output` в соответствии с `ModalOptions`. Программный API (через `KbqModalService`) остаётся прежним.
-- **notification-center / app-switcher:** удалены переопределения signal-input `placement` (конфликтовавшие с `KbqPopUpTrigger.placement`) — placement снова настраивается через паттерн геттера/сеттера `@Input('kbqNotificationCenterPlacement')` / `@Input('kbqAppSwitcherPlacement')`, делегирующий в `super.updatePlacement(...)`. `arrow` в обоих теперь `Signal<boolean>` (соответствует новому контракту базового класса).
-- **tabs:** `KbqPaginatedTabHeader.disablePagination` теперь `computed`, комбинирующий пользовательский ввод с записываемым fallback, устанавливаемым сеттером `vertical`. `KbqTabGroupComponent.animationDuration` — `computed`, разрешающий пользовательский ввод → значение по умолчанию `KBQ_TABS_CONFIG` → `'0ms'`. `KbqTabLink.disabled` возвращён к обычному `@Input` (соответствует `FocusableOption.disabled`).
-- **dropdown:** `KbqDropdown.backdropClass` возвращён к `@Input` в соответствии с интерфейсом `KbqDropdownPanel`. Конструктор `KbqDropdownContent` больше не принимает `ComponentFactoryResolver` (удалён в Angular 20).
-- **input-number:** убрано приведение в конструкторе через `@Attribute('step' | 'big-step' | 'min' | 'max')`; те же значения по умолчанию теперь задаются через `input(..., { transform: numberAttribute })`. Привязки в шаблоне `[step]="..."` по-прежнему работают; «голые» HTML-атрибуты приводятся через transform.
-- **breadcrumbs:** `RdxRovingFocusGroupDirective.orientation` — `computed`-сигнал, комбинирующий алиас input `orientation` и внутреннее переопределение `setOrientation()`, вызываемое `KbqBreadcrumbs` (заменяет сломанное присваивание `inject(...).orientation = 'horizontal'`).
-- **navbar / navbar-ic / filter-bar / datepicker / timepicker / splitter:** прямые присваивания readonly signal-input (`this.arrow = false`, `this.offset = 0`, `this.popover.preventClose = true`, `tooltip.enterDelay = ...`, `this.ghost.visible = ...` и т. д.) приведены к `any`, чтобы сохранить текущее поведение в рантайме. Перевод этого состояния на записываемые сигналы запланирован как доработка.
+**Angular 20**. Библиотека обновлена до Angular 20.3.21: requiredAngularVersion стал `^20.0.0`, все peerDependencies публикуемых пакетов нацелены на `^20.0.0`. Потребителям необходимо обновиться до Angular 20+. Минимальная версия Node.js — **20.19** (добавлено `"engines": { "node": ">=20.19" }`), zone.js понижен до `~0.15.1` в соответствии с peer-требованием Angular 20.
+
+**Popup trigger**. Переведен на `Signal<T>` для enterDelay, leaveDelay, stickToWindow, container, hideWithTimeout, preventClose и arrow, чтобы существующие переопределения signal-input в подклассах проходили проверку типов. Потребители, читающие эти значения с инстанса триггера, должны вызывать их как сигналы (`.enterDelay()` и т. д.).
+
+**Popover**. Сломанная в рантайме мутация `set trigger(value)` для hideWithTimeout/leaveDelay заменена на записываемые backing-сигналы; leaveDelay теперь computed-сигнал, комбинирующий пользовательский ввод и значение по умолчанию для hover-режима 500ms.
+
+**Form field**. Ряд свойств возвращено к примитивам @Input — они конфликтуют с типами интерфейсов (CanUpdateErrorState, KbqFormFieldControl, KbqTagTextControl), ожидающими «сырые» значения. Привязки в шаблонах через алиасы остаются прежними. Затронуты следующие свойства:
+
+- KbqInput.placeholder
+- KbqInput.errorStateMatcher
+- KbqInputPassword.placeholder
+- KbqInputPassword.errorStateMatcher
+- KbqTextarea.placeholder
+- KbqTextarea.errorStateMatcher
+- KbqSelect.errorStateMatcher
+- KbqTagList.errorStateMatcher
+- KbqTreeSelect.errorStateMatcher
+- KbqSingleFileUploadComponent.errorStateMatcher
+- KbqMultipleFileUploadComponent.errorStateMatcher
+- KbqTagInput.placeholder/id
+
+**Code block**. Поля softWrap, viewAll, canDownload, activeFileIndex стали model-сигналами (записываемые + bindable) — краткая запись без значения `<kbq-code-block canDownload>` больше не приводит к приведению типа, используйте `[canDownload]="true"`, `[activeFileIndex]="1"` и т. д.
+
+**Textarea**. freeRowsHeight стал model-сигналом: краткая запись без значения не поддерживается, используйте `[freeRowsHeight]="160"`.
+
+**Search expandable, DL, Radio, Checkbox, Toggle, Sidepanel**. Поля isOpened, vertical, name, id, sidepanelResult стали model-сигналами — внутри используйте `.set()` / `.update()`, двусторонняя привязка `[(x)]` снаружи работает.
+
+**Modal**. Возвращены к обычным @Input/@Output в соответствии с ModalOptions компоненты (программный API через KbqModalService остается прежним):
+
+- kbqOkText,
+- kbqOkType,
+- kbqRestoreFocus,
+- kbqCancelText,
+- kbqModalType,
+- kbqComponent,
+- kbqContent,
+- kbqComponentParams,
+- kbqFooter,
+- kbqWidth,
+- kbqSize,
+- kbqWrapClassName,
+- kbqClassName,
+- kbqStyle,
+- kbqTitle,
+- kbqCloseByESC,
+- kbqOnOk,
+- kbqOnCancel.
+
+**Notification center, App switcher**. Удалены переопределения signal-input placement (конфликтовавшие с KbqPopUpTrigger.placement) — placement снова настраивается через паттерн геттера/сеттера @Input, делегирующий в super.updatePlacement(...). arrow в обоих теперь `Signal<boolean>` (соответствует новому контракту базового класса).
+
+**Tabs**. KbqPaginatedTabHeader.disablePagination стал computed, комбинирующим пользовательский ввод с записываемым fallback, устанавливаемым сеттером vertical. KbqTabGroupComponent.animationDuration — computed, разрешающий пользовательский ввод → значение по умолчанию KBQ_TABS_CONFIG → '0ms'. KbqTabLink.disabled возвращен к обычному @Input (соответствует FocusableOption.disabled).
+
+**Dropdown**. KbqDropdown.backdropClass возвращен к @Input в соответствии с интерфейсом KbqDropdownPanel; конструктор KbqDropdownContent больше не принимает ComponentFactoryResolver (удален в Angular 20).
+
+**Input number**. Убрано приведение через `@Attribute('step' | 'big-step' | 'min' | 'max')` в конструкторе — те же значения по умолчанию задаются через `input(..., { transform: numberAttribute })`; привязки `[step]="..."` по-прежнему работают.
+
+**Breadcrumbs**. RdxRovingFocusGroupDirective.orientation стал computed-сигналом, комбинирующим алиас input orientation и внутреннее переопределение setOrientation(), — это заменяет сломанное прямое присваивание `inject(...).orientation = 'horizontal'`.
+
+**Navbar, Filter bar, Datepicker, Timepicker, Splitter**. Прямые присваивания readonly signal-input (`this.arrow = false`, `this.offset = 0`, `this.popover.preventClose = true`, `tooltip.enterDelay = ...`, `this.ghost.visible = ...` и т. д.) приведены к **any** для сохранения текущего поведения в рантайме; перевод на записываемые сигналы запланирован как доработка.
 
 ### Инструменты
 
-- `ng-packagr` → `^20.3.2`.
-- `@angular-builders/jest` → `20.0.0`.
-- `@angular-eslint/*` → `^20.7.0`.
-- `@typescript-eslint/*` → `^8.59.3` (ESLint остаётся на `8.57.1`).
-- `@schematics/angular` → `20.3.21` (был зафиксирован на `18.2.21`).
-- `@angular-devkit/architect` → `0.2003.21`.
-- В корне каждой библиотеки/приложения добавлены отдельные файлы `tsconfig.spec.json`, расширяющие конфиг из корня workspace; пути `test.options.tsConfig` в `angular.json` теперь разрешаются от корня проекта (требуется миграциями схематиков v20).
-- Юнит-тесты схематиков обновлены под вывод `@schematics/angular:application` из v20 (имена файлов изменились с `app.component.html` → `app.html`).
+Обновлены зависимости инструментов:
+
+| Пакет                     | Версия    |
+| ------------------------- | --------- |
+| ng-packagr                | ^20.3.2   |
+| @angular-builders/jest    | 20.0.0    |
+| @angular-eslint/\*        | ^20.7.0   |
+| @typescript-eslint/\*     | ^8.59.3   |
+| ESLint                    | ^9.0.0    |
+| @schematics/angular       | 20.3.21   |
+| @angular-devkit/architect | 0.2003.21 |
+
+В корне каждой библиотеки/приложения добавлены отдельные файлы **tsconfig.spec.json**, расширяющие конфиг из корня workspace. Пути **test.options.tsConfig** в angular.json теперь разрешаются от корня проекта (требуется миграциями схематиков v20).
+
+Юнит-тесты схематиков обновлены под вывод **@schematics/angular:application** из v20 (имена файлов изменились с app.component.html → app.html).
 
 ### Удаление устаревших API
 
-Удалены давно устаревшие символы. Для упрощённой миграции используйте `ng update @koobiq/components@20` (вызывает схематик `v20-upgrade`).
+Удалены давно устаревшие символы. Для упрощенной миграции используйте `ng update @koobiq/components@20` (вызывает схематик `v20-upgrade`).
 
-#### Удалённые пакеты
+#### Пакеты
 
-- **`@koobiq/components/navbar-ic`** — пакет удалён целиком. Перейдите на `@koobiq/components/navbar` (`KbqNavbar`, `KbqNavbarItem`, `KbqNavbarModule`).
-- **`@koobiq/components/risk-level`** — пакет удалён целиком. Перейдите на `@koobiq/components/badge` (`KbqBadge` с `[outline]` и `[badgeColor]`). Примечание: плотность по умолчанию и enum цветов у Badge отличаются — проверьте визуальное соответствие.
-- **`@koobiq/components-experimental/form-field`** — подпакет удалён. Перейдите на `@koobiq/components/form-field`. Экспериментальный пакет был переходным форком и теперь влит обратно.
+**Navbar IC**. Пакет @koobiq/components/navbar-ic удален целиком — перейдите на @koobiq/components/navbar (KbqNavbar, KbqNavbarItem, KbqNavbarModule).
 
-#### Удалённые символы из core
+**Risk level**. Пакет @koobiq/components/risk-level удален целиком — используйте @koobiq/components/badge (KbqBadge с `[outline]` и `[badgeColor]`); обратите внимание, что плотность по умолчанию и enum цветов у Badge отличаются — проверьте визуальное соответствие.
 
-- enum `AnimationCurves` → используйте `KbqAnimationCurves`.
-- enum `MeasurementSystem` → используйте `KbqMeasurementSystem`.
-- интерфейс `SizeUnitsConfig` → используйте `KbqSizeUnitsConfig`.
-- `KbqCommonModule`, `KBQ_SANITY_CHECKS`, `mcSanityChecksFactory` → больше не используются.
-- `toBoolean()` → используйте `booleanAttribute` из `@angular/core`.
-- `RdxAccordionItemState` → используйте `KbqAccordionItemState`.
-- `KbqCodeFile` → используйте `KbqCodeBlockFile`.
-- токен `KBQ_SIDEPANEL_WITH_SHADOW` → удалён.
-- поле `KbqSidepanelConfig.requiredBackdrop` → удалено (используется единый общий backdrop).
-- `formatDataSize()` → используйте `getFormattedSizeParts()`.
-- перегрузка `getFormattedSizeParts(value, precision, system)` с 3 аргументами → используйте вариант с 2 аргументами `getFormattedSizeParts(value, system)`.
-- токен `KBQ_VALIDATION` и интерфейс `KbqValidationOptions` → удалены вместе с устаревшим пайплайном валидации.
-- `kbqDisableLegacyValidationDirectiveProvider()` — no-op заглушка, оставленная после удаления `KbqValidateDirective`, тоже удалена в v20.0.0. Запустите `ng update @koobiq/components@20`, чтобы автоматически убрать вызовы и импорт; схематик также пометит получившиеся пустые массивы `providers: []` для ручной очистки.
+**Form field (experimental)**. Подпакет @koobiq/components-experimental/form-field удален — перейдите на @koobiq/components/form-field; экспериментальный пакет был переходным форком и теперь влит обратно.
 
-#### Удалённые методы / входные параметры компонентов
+#### Символы из Core
 
-- `KbqAutocompleteTrigger.openPanel()` → используйте `open()`.
-- `KbqClampedText.toggleIsCollapsed()` → используйте `toggle()`.
-- input `KbqDivider.inset` → удалён.
-- `KbqTagList`: `multiple`, `compareWith`, `emitOnTagChanges`, `orientation`, `selectionModel`, `tagChanges`, `setSelectionByValue()` — все не использовались, удалены.
-- `KbqTagInput`: `countOfSymbolsForUpdateWidth`, `updateInputWidth()` — не использовались, удалены.
-- `KbqFormField.canShowStepper` → используйте `hasStepper` (степпер всегда виден, если задан).
-- input `KbqAppSwitcherTrigger.apps` → используйте `sites` с массивом из одного элемента.
+**Enums и interfaces**. Enum `AnimationCurves` удален (используйте KbqAnimationCurves), enum `MeasurementSystem` удален (используйте KbqMeasurementSystem), интерфейс `SizeUnitsConfig` удален (используйте KbqSizeUnitsConfig). Символы KbqCommonModule, KBQ_SANITY_CHECKS и mcSanityChecksFactory больше не используются и удалены.
 
-#### Удалённая валидация
+**Функции преобразования**. Функция toBoolean() заменена на booleanAttribute из @angular/core. Функция formatDataSize() заменена на getFormattedSizeParts(); перегрузка с тремя аргументами (value, precision, system) заменена двухаргументной (value, system).
 
-- **`KbqValidateDirective`** — устаревшая директива валидации удалена целиком. Новое поведение опирается исключительно на `ErrorStateMatcher`. Потребителям, полагавшимся на устаревший паттерн «показывать ошибки только после blur/submit», следует явно подключить `ShowOnSubmitErrorStateMatcher` (или аналогичный) через input `errorStateMatcher` или провайдер `ErrorStateMatcher`. Поведение «ленивой валидации» (не показывать required до submit) больше недоступно.
+**Состояния и компоненты**. Символ RdxAccordionItemState заменен на KbqAccordionItemState, KbqCodeFile — на KbqCodeBlockFile.
 
-#### Удалённый API валидации file-upload
+**Токены и конфигурация**. Токен KBQ_SIDEPANEL_WITH_SHADOW удален, поле KbqSidepanelConfig.requiredBackdrop тоже удалено (используется единый общий backdrop).
 
-- интерфейсы `KbqInputFile`, `KbqInputFileLabel` — удалены.
-- тип `KbqFileValidatorFn` → удалён.
-- функция `isCorrectExtension()` → используйте `FileValidators.isCorrectExtension` (`ValidatorFn`).
-- `KbqMultipleFileUploadComponent.errors`, `customValidation`, `hasErrors` → используйте `FormControl.errors` и валидаторы `FormControl`.
-- `KbqSingleFileUploadComponent.errors`, `customValidation` → то же самое.
+**Валидация**. Токен KBQ_VALIDATION и интерфейс KbqValidationOptions удалены вместе с устаревшим пайплайном валидации. Функция kbqDisableLegacyValidationDirectiveProvider() — no-op заглушка, оставленная после удаления KbqValidateDirective, — тоже удалена в v20.0.0; запустите `ng update @koobiq/components@20`, чтобы автоматически убрать вызовы и импорт; схематик также пометит получившиеся пустые массивы `providers: []` для ручной очистки.
 
-#### Удалённый API модальных окон
+#### Методы и входные параметры компонентов
 
-- `ModalOptions.kbqComponentParams` → используйте поле `data` + `inject(KBQ_MODAL_DATA)` в дочернем компоненте.
-- `@Input` `KbqModalComponent.kbqComponentParams` → удалён.
+**Autocomplete trigger**. Метод KbqAutocompleteTrigger.openPanel() заменен на open().
 
-#### Удалённый API filter-bar
+**Clamped text**. Метод KbqClampedText.toggleIsCollapsed() заменен на `toggle()`.
 
-- Output `KbqFilters.onSaveAsNew` → используйте `onSave` с `status === 'newFilter'`.
-- **`KbqFilterBarSearch`** компонент (`<kbq-filter-search>`) — удалён. Используйте `<kbq-search-expandable [formControl]="searchControl" />`. Примечание: `kbq-search-expandable` требует привязки `FormControl`/`NgModel`.
+**Divider**. Input `KbqDivider.inset` удален.
 
-#### Удалённые директивы form-field
+**Tag list**. Удалены все неиспользуемые поля и методы: multiple, compareWith, emitOnTagChanges, orientation, selectionModel, tagChanges, setSelectionByValue().
 
-- **`KbqDatepickerToggle`** компонент (`<kbq-datepicker-toggle>`) — удалён. Используйте `<kbq-datepicker-toggle-icon>` (`KbqDatepickerToggleIconComponent`).
-- **`KbqFormFieldWithoutBorders`** директива (`<kbq-form-field kbqFormFieldWithoutBorders>`) — удалена. Используйте input `noBorders` у `KbqFormField`: `<kbq-form-field noBorders>`.
+**Tag input**. Удалены countOfSymbolsForUpdateWidth и updateInputWidth().
 
-#### Удалённые триггеры-модификаторы tooltip
+**Form field**. Метод KbqFormField.canShowStepper заменен на `hasStepper` (степпер всегда виден, если задан).
 
-- Директивы **`KbqWarningTooltipTrigger`** (`[kbqWarningTooltip]`) и **`KbqExtendedTooltipTrigger`** (`[kbqExtendedTooltip]`) удалены. Используйте базовую директиву `[kbqTooltip]` с новым публичным input `kbqTooltipModifier`:
+**App switcher**. У триггера KbqAppSwitcherTrigger.apps заменен на `sites` с массивом из одного элемента.
 
-    ```html
-    <!-- было -->
-    <div #tooltip="kbqWarningTooltip" [kbqWarningTooltip]="msg" />
-    <!-- стало -->
-    <div #tooltip="kbqTooltip" kbqTooltipModifier="warning" [kbqTooltip]="msg" />
-    ```
+#### Валидация
 
-    Для расширенного варианта `[kbqTooltipHeader]` теперь также доступен на базовом триггере:
+Директива **KbqValidateDirective** удалена целиком. Новое поведение опирается исключительно на **ErrorStateMatcher**. Потребителям, полагавшимся на устаревший паттерн «показывать ошибки только после blur/submit», следует явно подключить **ShowOnSubmitErrorStateMatcher** (или аналогичный) через инпуты **errorStateMatcher** или провайдер **ErrorStateMatcher**. Поведение «ленивой валидации» больше недоступно (не показывать required до submit).
 
-    ```html
-    <!-- было -->
-    <button [kbqExtendedTooltip]="content" [kbqTooltipHeader]="header"></button>
-    <!-- стало -->
-    <button kbqTooltipModifier="extended" [kbqTooltip]="content" [kbqTooltipHeader]="header"></button>
-    ```
+#### API валидации File upload
 
-    Сеттеры `KbqDatepickerInput.kbqValidationTooltip` и `KbqTimepicker.kbqValidationTooltip` теперь принимают `KbqTooltipTrigger` (базовый класс) вместо `KbqWarningTooltipTrigger`.
+- Интерфейсы KbqInputFile и KbqInputFileLabel удалены, тип KbqFileValidatorFn также удален.
+- Функция isCorrectExtension() заменена на FileValidators.isCorrectExtension (тип ValidatorFn).
+- `KbqMultipleFileUploadComponent`: удалены `errors`, `customValidation` и `hasErrors` — используйте `FormControl.errors` и валидаторы `FormControl`.
+- KbqSingleFileUploadComponent: удалены errors и customValidation — то же самое.
+
+#### API модальных окон
+
+**ModalOptions.kbqComponentParams** заменяется полем **data** плюс **inject(KBQ_MODAL_DATA)** в дочернем компоненте. @Input KbqModalComponent.kbqComponentParams удален.
+
+#### API Filter bar
+
+**Filter bar**. Output KbqFilters.onSaveAsNew заменен на `onSave` с `status === 'newFilter'`. Компонент KbqFilterBarSearch `<kbq-filter-search>` удален — используйте `<kbq-search-expandable [formControl]="searchControl" />`; обратите внимание, что kbq-search-expandable требует привязки FormControl/NgModel.
+
+#### Директивы Form field
+
+Компонент KbqDatepickerToggle (`<kbq-datepicker-toggle>`) удален — используйте `<kbq-datepicker-toggle-icon>` (KbqDatepickerToggleIconComponent).
+
+Директива KbqFormFieldWithoutBorders (`<kbq-form-field kbqFormFieldWithoutBorders>`) удалена — используйте input noBorders у KbqFormField: `<kbq-form-field noBorders>`.
+
+#### Триггеры-модификаторы Tooltip
+
+Директивы KbqWarningTooltipTrigger (`[kbqWarningTooltip]`) и KbqExtendedTooltipTrigger (`[kbqExtendedTooltip]`) удалены. Используйте базовую директиву `[kbqTooltip]` с новым публичным input `kbqTooltipModifier`:
+
+```html
+<!-- было -->
+<div #tooltip="kbqWarningTooltip" [kbqWarningTooltip]="msg" />
+<!-- стало -->
+<div #tooltip="kbqTooltip" kbqTooltipModifier="warning" [kbqTooltip]="msg" />
+```
+
+Для расширенного варианта `[kbqTooltipHeader]` теперь также доступен на базовом триггере:
+
+```html
+<!-- было -->
+<button [kbqExtendedTooltip]="content" [kbqTooltipHeader]="header"></button>
+<!-- стало -->
+<button kbqTooltipModifier="extended" [kbqTooltip]="content" [kbqTooltipHeader]="header"></button>
+```
+
+**Datepicker, Timepicker**. Сеттеры KbqDatepickerInput.kbqValidationTooltip и KbqTimepicker.kbqValidationTooltip теперь принимают KbqTooltipTrigger (базовый класс) вместо KbqWarningTooltipTrigger.
 
 ### Миграция
 
-Потребители могут запустить автоматическую миграцию:
+**V20 upgrade**. Потребители могут запустить автоматическую миграцию с помощью команды `ng update @koobiq/components@20`. Она вызывает схематик `v20-upgrade`, который переписывает ваш код на месте.
 
-```bash
-ng update @koobiq/components@20
-```
+**Импорты и пакеты**. Импорты из @koobiq/components/navbar-ic, risk-level и components-experimental/form-field переназначаются на сохранившиеся пакеты (navbar, badge, components/form-field).
 
-Она вызывает схематик `v20-upgrade`, который переписывает ваш код на месте:
+**Идентификаторы в .ts файлах**. Переименованы идентификаторы:
 
-- Импорты из `@koobiq/components/navbar-ic` / `risk-level` / `components-experimental/form-field` переназначаются на сохранившиеся пакеты (`navbar`, `badge`, `components/form-field`).
-- Переименования идентификаторов в `.ts`-файлах (`KbqNavbarIc*` → `Kbq*`, `KbqRiskLevel*` → `KbqBadge*`, `KbqWarningTooltipTrigger` / `KbqExtendedTooltipTrigger` → `KbqTooltipTrigger`, `KbqDatepickerToggle` → `KbqDatepickerToggleIconComponent`, `KbqFilterBarSearch` → `KbqSearchExpandable`, `RdxAccordionItemState` → `KbqAccordionItemState`, `KbqCodeFile` → `KbqCodeBlockFile`, `AnimationCurves` → `KbqAnimationCurves`, `MeasurementSystem` → `KbqMeasurementSystem`, `SizeUnitsConfig` → `KbqSizeUnitsConfig`, `KbqFormFieldRef` → `KbqFormField`).
-- Переименования токенов / функций (`toBoolean(` → `booleanAttribute(`, `isCorrectExtension(` → `FileValidators.isCorrectExtension(`, `formatDataSize(` → `getFormattedSizeParts(`, `kbqComponentParams:` → `data:`); удалённые токены `KBQ_VALIDATION`, `KBQ_SANITY_CHECKS`, `KBQ_SIDEPANEL_WITH_SHADOW` убраны из импортов.
-- Переименования методов инстансов (`.openPanel(` → `.open(`, `.toggleIsCollapsed(` → `.toggle(`, `.focusViaKeyboard(` → `.focus(`).
-- Селекторы в шаблонах (`<kbq-filter-search>` → `<kbq-search-expandable>`, `<kbq-datepicker-toggle>` → `<kbq-datepicker-toggle-icon>`, `<kbq-risk-level>` → `<kbq-badge>`, `<kbq-navbar-ic*>` → `<kbq-navbar*>`).
-- Атрибуты в шаблонах (`kbqFormFieldWithoutBorders` → `noBorders`, `[kbqWarningTooltip]` → `kbqTooltipModifier="warning" [kbqTooltip]`, `[kbqExtendedTooltip]` → `kbqTooltipModifier="extended" [kbqTooltip]`, template-ref `="kbqWarningTooltip"` → `="kbqTooltip"`).
-- CSS-классы в SCSS (`.kbq-risk-level` → `.kbq-badge`, `.kbq-navbar-ic` → `.kbq-navbar` и т. д.).
+| Старое имя                | Новое имя                        |
+| ------------------------- | -------------------------------- |
+| KbqNavbarIc\*             | KbqNavbar\*                      |
+| KbqRiskLevel\*            | KbqBadge\*                       |
+| KbqWarningTooltipTrigger  | KbqTooltipTrigger                |
+| KbqExtendedTooltipTrigger | KbqTooltipTrigger                |
+| KbqDatepickerToggle       | KbqDatepickerToggleIconComponent |
+| KbqFilterBarSearch        | KbqSearchExpandable              |
+| RdxAccordionItemState     | KbqAccordionItemState            |
+| KbqCodeFile               | KbqCodeBlockFile                 |
+| AnimationCurves           | KbqAnimationCurves               |
+| MeasurementSystem         | KbqMeasurementSystem             |
+| SizeUnitsConfig           | KbqSizeUnitsConfig               |
+| KbqFormFieldRef           | KbqFormField                     |
 
-Схематик выводит предупреждения для структурных изменений, которые нельзя безопасно исправить автоматически:
+**Токены и функции**. Обновляются: toBoolean( → booleanAttribute(, isCorrectExtension( → FileValidators.isCorrectExtension(, formatDataSize( → getFormattedSizeParts(, kbqComponentParams: → data:;
 
-- Слушатели `(onSaveAsNew)` у `<kbq-filters>` — перейдите на `(onSave)` и ветвитесь по `$event.status === 'newFilter'`.
-- `[customValidation]` / `[errors]` у компонентов file-upload — используйте валидаторы `FormControl` / читайте `FormControl.errors`.
-- `[apps]` у `<button kbqAppSwitcher>` — оберните в один сайт `[sites]="[{ id, name, apps }]"`.
+Убираются из импортов удаленные токены: KBQ_VALIDATION,KBQ_SANITY_CHECKS, KBQ_SIDEPANEL_WITH_SHADOW
 
-После запуска схематика **проверьте диф перед коммитом**: миграция работает на регулярных выражениях и не переписывает значения в локальных переменных, ре-экспортах и алиасных импортах.
+**Методы инстансов**. Обновляются: .openPanel( → .open(, .toggleIsCollapsed( → .toggle(, .focusViaKeyboard( → .focus(.
+
+**Селекторы в шаблонах**. Обновляются: `<kbq-filter-search>` → `<kbq-search-expandable>`, `<kbq-datepicker-toggle>` → `<kbq-datepicker-toggle-icon>`, `<kbq-risk-level>` → `<kbq-badge>`, `<kbq-navbar-ic*>` → `<kbq-navbar*>`.
+
+**Атрибуты в шаблонах**. Обновляются: `kbqFormFieldWithoutBorders` → `noBorders`, `[kbqWarningTooltip]` → `kbqTooltipModifier="warning" [kbqTooltip]`, `[kbqExtendedTooltip]` → `kbqTooltipModifier="extended" [kbqTooltip]`, template-ref `="kbqWarningTooltip"` → `="kbqTooltip"`.
+
+**CSS классы в SCSS**. Обновляются: `.kbq-risk-level` → `.kbq-badge`, `.kbq-navbar-ic` → `.kbq-navbar` и т. д.
+
+**Ручные исправления**. Схематик выводит предупреждения для структурных изменений, которые нельзя безопасно исправить автоматически: слушатели `(onSaveAsNew)` у `<kbq-filters>` нужно перевести на `(onSave)` с ветвлением по `$event.status === 'newFilter'`; атрибуты `[customValidation]` / `[errors]` у file-upload компонентов нужно заменить валидаторами `FormControl`; атрибут `[apps]` у `<button kbqAppSwitcher>` нужно обернуть в один сайт `[sites]="[{ id, name, apps }]"`.
+
+**После миграции**. Проверьте диф перед коммитом: миграция работает на регулярных выражениях и не переписывает значения в локальных переменных, ре-экспортах и алиасных импортах.
