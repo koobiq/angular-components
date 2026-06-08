@@ -2378,10 +2378,9 @@ describe('Date formatter (imports and providing)', () => {
             TestBed.configureTestingModule({
                 imports: [HostComponent, KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
-                    {
-                        provide: KBQ_LOCALE_SERVICE,
-                        useFactory: () => new KbqLocaleService('ru-RU', KBQ_DEFAULT_LOCALE_DATA_FACTORY())
-                    }
+                    { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
+                    { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
+                    { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
                 ]
             });
         });
@@ -2526,10 +2525,9 @@ describe('Date formatter (imports and providing)', () => {
             TestBed.configureTestingModule({
                 imports: [AllPipesHostComponent, KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
-                    {
-                        provide: KBQ_LOCALE_SERVICE,
-                        useFactory: () => new KbqLocaleService('ru-RU', KBQ_DEFAULT_LOCALE_DATA_FACTORY())
-                    }
+                    { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
+                    { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
+                    { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
                 ]
             });
         });
