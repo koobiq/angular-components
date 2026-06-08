@@ -1,15 +1,5 @@
 import { ContentObserver } from '@angular/cdk/observers';
-import {
-    AfterViewInit,
-    ContentChild,
-    Directive,
-    ElementRef,
-    Host,
-    inject,
-    Inject,
-    OnDestroy,
-    Optional
-} from '@angular/core';
+import { AfterViewInit, ContentChild, Directive, ElementRef, inject, OnDestroy } from '@angular/core';
 import { KBQ_TITLE_TEXT_REF, kbqInjectNativeElement, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription, throttleTime } from 'rxjs';
@@ -25,6 +15,7 @@ import { debounceTime } from 'rxjs/operators';
     exportAs: 'kbqTitle'
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+    private componentInstance = inject<KbqTitleTextRef>(KBQ_TITLE_TEXT_REF, { host: true, optional: true })!;
     private readonly nativeElement = kbqInjectNativeElement();
 
     private contentObserver = inject(ContentObserver);
@@ -103,7 +94,10 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     @ContentChild('kbqTitleContainer')
     private parentContainer: ElementRef;
 
-    constructor(@Host() @Optional() @Inject(KBQ_TITLE_TEXT_REF) private componentInstance?: KbqTitleTextRef) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         super();
     }
 

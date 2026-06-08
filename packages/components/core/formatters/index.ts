@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { DateAdapter, KBQ_DATE_LOCALE } from '../datetime';
 import { DateFormatter } from './date/formatter';
 import {
     AbsoluteDateFormatterImpurePipe,
@@ -91,7 +90,7 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         KbqRoundDecimalPipe,
         KbqTableNumberPipe
     ],
-    providers: [{ provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }],
+    providers: [DateFormatter],
     exports: [
         KbqDecimalPipe,
         KbqRoundDecimalPipe,

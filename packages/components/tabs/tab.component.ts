@@ -5,6 +5,7 @@ import {
     Component,
     ContentChild,
     contentChild,
+    inject,
     Input,
     input,
     OnChanges,
@@ -43,6 +44,8 @@ import { KBQ_TAB_LABEL, KbqTabLabel } from './tab-label.directive';
     exportAs: 'kbqTab'
 })
 export class KbqTab implements OnInit, OnChanges, OnDestroy {
+    private readonly viewContainerRef = inject(ViewContainerRef);
+
     /** @docs-private */
     get content(): TemplatePortal | null {
         return this.contentPortal;
@@ -150,7 +153,10 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /** Portal that will be the hosted content of the tab */
     private contentPortal: TemplatePortal | null = null;
 
-    constructor(private readonly viewContainerRef: ViewContainerRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {

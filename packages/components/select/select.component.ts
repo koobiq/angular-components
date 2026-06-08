@@ -16,19 +16,15 @@ import {
     DoCheck,
     ElementRef,
     EventEmitter,
-    Host,
-    Inject,
     InjectionToken,
     Input,
     NgZone,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     Provider,
     QueryList,
     Renderer2,
-    Self,
     TemplateRef,
     ViewChild,
     ViewChildren,
@@ -209,13 +205,25 @@ export class KbqSelect
         KbqFormFieldControl<any>,
         CanUpdateErrorState
 {
+    private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly _ngZone = inject(NgZone);
+    private readonly _renderer = inject(Renderer2);
+    defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private overlayContainer = inject(OverlayContainer);
+    private readonly _dir = inject(Directionality, { optional: true })!;
+    parentForm = inject(NgForm, { optional: true })!;
+    parentFormGroup = inject(FormGroupDirective, { optional: true })!;
+    private readonly parentFormField = inject(KbqFormField, { host: true, optional: true })!;
+    ngControl = inject(NgControl, { self: true, optional: true })!;
+    private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
+    protected localeService? = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
 
-    protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
-
+    protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true })!;
     private readonly window = inject(KBQ_WINDOW);
 
     /** Whether the component is in an error state. */
@@ -838,21 +846,10 @@ export class KbqSelect
 
     private openPanelTimeout: ReturnType<typeof setTimeout>;
 
-    constructor(
-        private readonly _changeDetectorRef: ChangeDetectorRef,
-        private readonly _ngZone: NgZone,
-        private readonly _renderer: Renderer2,
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        public elementRef: ElementRef<HTMLElement>,
-        private overlayContainer: OverlayContainer,
-        @Optional() private readonly _dir: Directionality,
-        @Optional() public parentForm: NgForm,
-        @Optional() public parentFormGroup: FormGroupDirective,
-        @Host() @Optional() private readonly parentFormField: KbqFormField,
-        @Self() @Optional() public ngControl: NgControl,
-        @Inject(KBQ_SELECT_SCROLL_STRATEGY) private readonly scrollStrategyFactory,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) protected localeService?: KbqLocaleService
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         super();
 
         this.localeService?.changes.subscribe(this.updateLocaleParams);

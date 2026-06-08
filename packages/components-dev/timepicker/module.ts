@@ -1,5 +1,5 @@
 import { JsonPipe, LowerCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -50,6 +50,9 @@ export class DevExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private fb = inject(UntypedFormBuilder);
+    private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+
     timeFormats = TimeFormats;
     placeholder: string = 'placeholder';
     minDate: DateTime;
@@ -66,10 +69,10 @@ export class DevApp {
     testForm: UntypedFormGroup;
     selectedLanguage!: { id: string; name: string };
 
-    constructor(
-        private fb: UntypedFormBuilder,
-        private adapter: DateAdapter<DateTime>
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.minDate = this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0);
         this.maxDate = this.adapter.createDateTime(2020, 0, 6, 13, 0, 10, 0);
 

@@ -6,6 +6,7 @@ import {
     OnInit,
     TemplateRef,
     ViewContainerRef,
+    inject,
     input
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -21,10 +22,15 @@ type DropdownItem = {
     selector: '[exampleDropdownOutlet]'
 })
 export class ExampleDropdownPortal implements OnInit {
+    private viewContainerRef = inject(ViewContainerRef);
+
     readonly context = input({}, { alias: 'exampleDropdownOutletContext' });
     readonly template = input<TemplateRef<any>>(undefined!, { alias: 'exampleDropdownOutlet' });
 
-    constructor(private viewContainerRef: ViewContainerRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngOnInit() {
         this.viewContainerRef.createEmbeddedView(this.template(), this.context(), {

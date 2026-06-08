@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 
 interface ICheckbox {
@@ -31,6 +31,8 @@ interface ICheckbox {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxIndeterminateExample {
+    private ref = inject(ChangeDetectorRef);
+
     parentIndeterminate = true;
     parentChecked = true;
 
@@ -40,7 +42,10 @@ export class CheckboxIndeterminateExample {
         { name: 'Grapes', checked: false }
     ];
 
-    constructor(private ref: ChangeDetectorRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     updateCheckboxes(index: number) {
         this.toggleFruitChecked(index);

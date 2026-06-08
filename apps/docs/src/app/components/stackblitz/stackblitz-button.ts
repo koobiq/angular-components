@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Input, ViewEncapsulation, inject } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
@@ -20,6 +20,8 @@ import { DocsStackblitzWriter } from './stackblitz-writer';
     }
 })
 export class DocsStackblitzButtonComponent extends KbqLink {
+    private stackBlitzWriter = inject(DocsStackblitzWriter);
+
     @Input()
     set exampleId(value: string | undefined) {
         if (value) {
@@ -39,11 +41,13 @@ export class DocsStackblitzButtonComponent extends KbqLink {
 
     private exampleData: ExampleData | undefined;
 
-    constructor(
-        elementRef: ElementRef<HTMLAnchorElement>,
-        focusMonitor: FocusMonitor,
-        private stackBlitzWriter: DocsStackblitzWriter
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const elementRef = inject<ElementRef<HTMLAnchorElement>>(ElementRef);
+        const focusMonitor = inject(FocusMonitor);
+
         super(elementRef, focusMonitor);
     }
 

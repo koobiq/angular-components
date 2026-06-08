@@ -8,10 +8,10 @@ import {
     Directive,
     ElementRef,
     forwardRef,
+    inject,
     Input,
     input,
     Renderer2,
-    SkipSelf,
     ViewEncapsulation
 } from '@angular/core';
 import { getNodesWithoutComments } from '@koobiq/components/core';
@@ -50,17 +50,21 @@ export const badgeRightIconClassName = 'kbq-badge-icon_right';
     selector: 'kbq-badge'
 })
 export class KbqBadgeCssStyler implements AfterContentInit {
+    private renderer = inject(Renderer2);
+    private cdr = inject(ChangeDetectorRef, { skipSelf: true });
+
     readonly icons = contentChildren(forwardRef(() => KbqIcon));
 
     nativeElement: HTMLElement;
 
     isIconButton: boolean = false;
 
-    constructor(
-        elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2,
-        @SkipSelf() private cdr: ChangeDetectorRef
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
         this.nativeElement = elementRef.nativeElement;
     }
 

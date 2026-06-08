@@ -5,7 +5,6 @@ import {
     Component,
     DestroyRef,
     inject,
-    Inject,
     Input,
     OnDestroy,
     OnInit,
@@ -42,6 +41,11 @@ interface KbqDocsAnchor {
     }
 })
 export class DocsAnchorsComponent implements OnDestroy, OnInit {
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
+    private ref = inject(ChangeDetectorRef);
+    private document = inject<Document>(DOCUMENT);
+
     @Input() anchors: KbqDocsAnchor[] = [];
     @Input() headerSelectors: string;
 
@@ -76,12 +80,12 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private ref: ChangeDetectorRef,
-        @Inject(DOCUMENT) private document: Document
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const router = this.router;
+
         this.pathName = router.url.split('#')[0];
 
         this.router.events

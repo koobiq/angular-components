@@ -13,8 +13,6 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import { InitializationTarget } from 'overlayscrollbars';
 import { InjectionToken } from '@angular/core';
-import { KbqOverflowShadowSource } from '@koobiq/components/core';
-import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OverlayScrollbars } from 'overlayscrollbars';
 import * as overlayscrollbars from 'overlayscrollbars';
@@ -54,8 +52,8 @@ export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG: KbqScrollbarOptions;
 export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider;
 
 // @public
-export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadowSource {
-    constructor(ngZone: NgZone, targetElement: ElementRef<HTMLElement>);
+export class KbqScrollbar implements AfterViewInit, OnDestroy {
+    constructor(...args: unknown[]);
     readonly contentElement: i0.Signal<ElementRef<HTMLDivElement>>;
     readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
     // (undocumented)
@@ -67,7 +65,6 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadow
         destroyed?: ((instance: overlayscrollbars.OverlayScrollbars, canceled: boolean) => void) | ((instance: overlayscrollbars.OverlayScrollbars, canceled: boolean) => void)[] | null | undefined;
         scroll?: ((instance: overlayscrollbars.OverlayScrollbars, event: Event) => void) | ((instance: overlayscrollbars.OverlayScrollbars, event: Event) => void)[] | null | undefined;
     }>;
-    getScrollElement(): HTMLElement | null;
     readonly initializationTarget: i0.InputSignal<overlayscrollbars.InitializationTarget | undefined>;
     // (undocumented)
     mergeEvents(): KbqScrollbarEvents;
@@ -114,7 +111,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadow
 
 // @public
 export class KbqScrollbarDirective implements OnDestroy {
-    constructor(ngZone: NgZone, scrollbarConfig?: KbqScrollbarOptions | undefined);
+    constructor(...args: unknown[]);
     readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
     set events(value: KbqScrollbarEvents);
     // (undocumented)

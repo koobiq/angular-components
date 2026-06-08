@@ -7,17 +7,16 @@
 import { ActiveDescendantKeyManager } from '@koobiq/components/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_cdk_overlay_module_d from '@angular/cdk/overlay-module.d';
 import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { ChangeDetectorRef } from '@angular/core';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
@@ -35,7 +34,6 @@ import { InjectionToken } from '@angular/core';
 import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOptgroup } from '@koobiq/components/core';
@@ -51,14 +49,11 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqVirtualOption } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -96,7 +91,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 
 // @public (undocumented)
 export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
-    constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef<HTMLElement>, overlayContainer: OverlayContainer, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
+    constructor(...args: unknown[]);
     readonly backdropClass: _angular_core.InputSignal<string>;
     readonly beforeOpened: _angular_core.OutputEmitterRef<void>;
     calculateHiddenItems: () => void;
@@ -120,7 +115,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
         panelWidth: KbqSelectPanelWidth;
         panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
         searchMinOptionsThreshold: "auto" | number;
-    }> | null;
+    }>;
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -217,7 +212,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     resetSearch(): void;
     readonly scrolledToBottom: _angular_core.OutputEmitterRef<void>;
     readonly scrolledToBottomOffset: _angular_core.InputSignalWithTransform<number, unknown>;
-    scrollStrategy: any;
+    scrollStrategy: _angular_cdk_overlay_module_d.ScrollStrategy;
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
     readonly searchEmpty: _angular_core.Signal<KbqSelectSearchEmptyResult | undefined>;
     set searchMinOptionsThreshold(value: 'auto' | number | undefined);
@@ -256,7 +251,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, null, { optional: true; }]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelect, never>;
 }
 
 // @public

@@ -7,14 +7,13 @@
 import { AfterViewInit } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/tooltip';
-import { KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public (undocumented)
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor(componentInstance?: KbqTitleTextRef | undefined);
+    constructor(...args: unknown[]);
     // (undocumented)
     get child(): HTMLElement;
     // (undocumented)
@@ -45,7 +44,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTitleDirective, "[kbq-title]", ["kbqTitle"], {}, {}, ["childContainer", "parentContainer"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTitleDirective, [{ optional: true; host: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTitleDirective, never>;
 }
 
 // @public (undocumented)

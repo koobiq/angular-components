@@ -20,16 +20,13 @@ import {
     ElementRef,
     EventEmitter,
     inject,
-    Inject,
     InjectionToken,
     Input,
     numberAttribute,
     OnDestroy,
-    Optional,
     Output,
     output,
     Renderer2,
-    Self,
     ViewContainerRef
 } from '@angular/core';
 import { defaultOffsetY, DOWN_ARROW, ENTER, KBQ_WINDOW, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/components/core';
@@ -118,13 +115,22 @@ const positionMap = {
     exportAs: 'kbqDropdownTrigger'
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
+    private overlay = inject(Overlay);
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private viewContainerRef = inject(ViewContainerRef);
+    private scrollStrategy = inject(KBQ_DROPDOWN_SCROLL_STRATEGY);
+    private parent = inject(KbqDropdown, { optional: true })!;
+    private dropdownItemInstance = inject(KbqDropdownItem, { optional: true, self: true })!;
+    private _dir = inject(Directionality, { optional: true })!;
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private focusMonitor = inject(FocusMonitor);
+
     private readonly overlayContainer = inject(OverlayContainer);
     private readonly renderer = inject(Renderer2);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
     private readonly window = inject(KBQ_WINDOW);
-    private readonly host = inject(KBQ_DROPDOWN_HOST, { optional: true });
-
+    private readonly host = inject(KBQ_DROPDOWN_HOST, { optional: true })!;
     lastDestroyReason: DropdownCloseReason;
 
     /** Position offset of the dropdown in the X axis. */
@@ -230,17 +236,13 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     private classAddedToOverlayContainer: boolean = false;
 
-    constructor(
-        private overlay: Overlay,
-        private elementRef: ElementRef<HTMLElement>,
-        private viewContainerRef: ViewContainerRef,
-        @Inject(KBQ_DROPDOWN_SCROLL_STRATEGY) private scrollStrategy: any,
-        @Optional() private parent: KbqDropdown,
-        @Optional() @Self() private dropdownItemInstance: KbqDropdownItem,
-        @Optional() private _dir: Directionality,
-        private changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor?: FocusMonitor
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const elementRef = this.elementRef;
+        const dropdownItemInstance = this.dropdownItemInstance;
+
         elementRef.nativeElement.addEventListener('touchstart', this.handleTouchStart, passiveEventListenerOptions);
 
         if (dropdownItemInstance) {

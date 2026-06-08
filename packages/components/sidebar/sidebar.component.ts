@@ -76,6 +76,9 @@ export class KbqSidebarClosed {
     exportAs: 'kbqSidebar'
 })
 export class KbqSidebar implements OnDestroy, AfterContentInit {
+    private ngZone = inject(NgZone);
+    private elementRef = inject(ElementRef);
+
     /**
      * @docs-private
      */
@@ -139,10 +142,10 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
 
     private unbindKeydownListener: ReturnType<Renderer2['listen']> | null = null;
 
-    constructor(
-        private ngZone: NgZone,
-        private elementRef: ElementRef
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         afterNextRender(() => this.registerKeydownListener());
     }
 

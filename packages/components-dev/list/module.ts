@@ -1,7 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -54,6 +54,8 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private clipboard = inject(Clipboard);
+
     list = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
 
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({
@@ -79,7 +81,10 @@ export class DevApp {
         })
     );
 
-    constructor(private clipboard: Clipboard) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     onSelectionChange($event: KbqListSelectionChange) {
         console.log(`onSelectionChange: ${$event.option.value}`);

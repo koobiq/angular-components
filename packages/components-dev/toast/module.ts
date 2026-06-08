@@ -5,6 +5,7 @@ import {
     ElementRef,
     TemplateRef,
     ViewEncapsulation,
+    inject,
     viewChild
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -73,13 +74,21 @@ export class DevDocsExamples {}
     }
 })
 export class DevToastComponent extends KbqToastComponent {
-    constructor(
-        readonly data: KbqToastData,
-        readonly service: KbqToastService,
-        elementRef: ElementRef<HTMLElement>,
-        focusMonitor: FocusMonitor
-    ) {
+    readonly data: KbqToastData;
+    readonly service: KbqToastService;
+
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const data = inject(KbqToastData);
+        const service = inject(KbqToastService);
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+        const focusMonitor = inject(FocusMonitor);
+
         super(data, service, elementRef, focusMonitor);
+        this.data = data;
+        this.service = service;
 
         console.log('MyToastComponent: ');
     }
@@ -106,6 +115,11 @@ export class DevToastComponent extends KbqToastComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private toastService = inject(KbqToastService);
+    private newToastService = inject<KbqToastService<DevToastComponent>>(KbqToastService);
+    private modalService = inject(KbqModalService);
+    private sidepanelService = inject(KbqSidepanelService);
+
     themePalette = ThemePalette;
 
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
@@ -115,12 +129,10 @@ export class DevApp {
     array = new Array(40);
     readonly template = viewChild.required<TemplateRef<any>>('sipanelTemplate');
 
-    constructor(
-        private toastService: KbqToastService,
-        private newToastService: KbqToastService<DevToastComponent>,
-        private modalService: KbqModalService,
-        private sidepanelService: KbqSidepanelService
-    ) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     openTemplateSidepanel() {
         this.sidepanelService.open(this.template(), {

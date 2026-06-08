@@ -82,11 +82,15 @@ export class DevModalLongCustomComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevModalCustomComponent {
+    private modal = inject(KbqModalRef);
+
     componentColors = KbqComponentColors;
 
-    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true });
+    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true })!;
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
 
-    constructor(private modal: KbqModalRef) {
+    constructor() {
         console.log('data: ', this.data);
     }
 
@@ -123,12 +127,17 @@ export class DevModalCustomComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevModalFullCustomComponent {
+    private modal = inject(KbqModalRef);
+
     componentColors = KbqComponentColors;
 
     readonly title = input<string>(undefined!);
     readonly subtitle = input<string>(undefined!);
 
-    constructor(private modal: KbqModalRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     destroyModal() {
         this.modal.destroy({ data: 'this the result data' });
@@ -151,6 +160,8 @@ export class DevModalFullCustomComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private modalService = inject(KbqModalService);
+
     componentColors = KbqComponentColors;
 
     isVisible = false;
@@ -159,7 +170,10 @@ export class DevApp {
 
     isLoading = false;
 
-    constructor(private modalService: KbqModalService) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     showConfirm() {
         this.modalService.success({

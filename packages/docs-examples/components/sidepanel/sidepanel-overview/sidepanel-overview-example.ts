@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
@@ -13,13 +13,18 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelOverviewExample {
+    private sidepanelService = inject(KbqSidepanelService);
+
     position = KbqSidepanelPosition.Right;
 
     @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     arrayLength = 40;
     array = new Array(this.arrayLength);
-    constructor(private sidepanelService: KbqSidepanelService) {}
+
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+    constructor() {}
 
     openSidepanel() {
         this.sidepanelService.open(this.template, {

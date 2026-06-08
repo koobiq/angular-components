@@ -12,7 +12,6 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
-    Inject,
     Input,
     NgZone,
     OnDestroy,
@@ -23,6 +22,7 @@ import {
     ViewChild,
     ViewEncapsulation,
     contentChild,
+    inject,
     input
 } from '@angular/core';
 import { ESCAPE, FocusKeyManager, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
@@ -65,6 +65,10 @@ export class KbqDropdownStaticContent {}
     exportAs: 'kbqDropdown'
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private ngZone = inject(NgZone);
+    private defaultOptions = inject<KbqDropdownDefaultOptions>(KBQ_DROPDOWN_DEFAULT_OPTIONS);
+
     private readonly search = contentChild(KbqFormField);
 
     readonly navigationWithWrap = input<boolean>(false);
@@ -226,11 +230,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     /** Subscription to tab events on the dropdown panel */
     private tabSubscription = Subscription.EMPTY;
 
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private ngZone: NgZone,
-        @Inject(KBQ_DROPDOWN_DEFAULT_OPTIONS) private defaultOptions: KbqDropdownDefaultOptions
-    ) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngOnInit() {
         this.setPositionClasses();

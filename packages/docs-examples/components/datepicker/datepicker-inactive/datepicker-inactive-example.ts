@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
@@ -46,9 +46,14 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerInactiveExample {
+    private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+
     selectedDate: DateTime;
 
-    constructor(private adapter: DateAdapter<DateTime>) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.selectedDate = this.adapter.createDate(1989, 11, 13);
     }
 }

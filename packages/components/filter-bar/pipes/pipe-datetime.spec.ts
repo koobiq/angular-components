@@ -5,7 +5,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -88,7 +88,7 @@ describe('KbqPipeDatetimeComponent', () => {
             imports: [NoopAnimationsModule, KbqFilterBarModule, KbqLuxonDateModule, TestComponent],
             providers: [
                 { provide: LOCALE_ID, useValue: 'ru-RU' },
-                { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+                DateFormatter
             ]
         })
             .overrideComponent(KbqPipeDatetimeComponent, {

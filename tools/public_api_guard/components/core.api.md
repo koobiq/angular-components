@@ -280,11 +280,11 @@ export abstract class DateAdapter<D> extends DateAdapter_2<D> {
 
 // @public (undocumented)
 export class DateFormatter<D> extends DateFormatter_2<D> {
-    constructor(adapter: DateAdapter_2<D>, locale: string);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly adapter: DateAdapter_2<D>;
     // (undocumented)
-    protected localeService: KbqLocaleService | null;
+    protected localeService: KbqLocaleService;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DateFormatter<any>, never>;
     // (undocumented)
@@ -2376,13 +2376,13 @@ export type KbqDateFormats = DateFormats;
 
 // @public (undocumented)
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
-    constructor(id: string, localeService: KbqLocaleService, options: ParsedDigitsInfo);
+    constructor(...args: unknown[]);
     // (undocumented)
     isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean;
     // (undocumented)
     transform(value: any, digitsInfo?: string, locale?: string): string | null;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDecimalPipe, [{ optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDecimalPipe, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqDecimalPipe, "kbqNumber", true>;
     // (undocumented)
@@ -2464,7 +2464,7 @@ export class KbqFormattersModule {
 
 // @public (undocumented)
 export class KbqFormElement implements AfterContentInit {
-    constructor(element: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly elements: i0.Signal<readonly KbqFormElement[]>;
     // (undocumented)
@@ -2556,7 +2556,7 @@ export class KbqLineSetter {
 
 // @public (undocumented)
 export class KbqLocaleService {
-    constructor(id: string, localeData: any);
+    constructor(...args: unknown[]);
     // (undocumented)
     addLocale(id: string, localeData: any): void;
     // (undocumented)
@@ -2572,7 +2572,7 @@ export class KbqLocaleService {
     // (undocumented)
     setLocale(id: string): void;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocaleService, [{ optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLocaleService, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocaleService>;
 }
@@ -2672,7 +2672,7 @@ export class KbqOptgroup {
 
 // @public
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: KbqOptionParentComponent, group: KbqOptgroup);
+    constructor(...args: unknown[]);
     get active(): boolean;
     // (undocumented)
     deselect(emitEvent?: boolean): void;
@@ -2725,7 +2725,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "userSelect": { "alias": "userSelect"; "required": false; "isSignal": true; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "viewValue": { "alias": "viewValue"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, [null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, never>;
 }
 
 // @public (undocumented)
@@ -3274,7 +3274,7 @@ export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPip
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
-    constructor(id: string, localeService: KbqLocaleService);
+    constructor(...args: unknown[]);
     // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -3282,7 +3282,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     // (undocumented)
     transform(value: any, locale?: string): any;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRoundDecimalPipe, [{ optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRoundDecimalPipe, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRoundDecimalPipe, "kbqRoundNumber", true>;
     // (undocumented)
@@ -3318,7 +3318,7 @@ export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => 
 
 // @public (undocumented)
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
-    constructor(formField: KbqFormFieldRef);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly changes: EventEmitter<string>;
     // (undocumented)
@@ -3346,7 +3346,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearch, "[kbqSelectSearch]", ["kbqSelectSearch"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, never>;
 }
 
 // @public (undocumented)
@@ -3381,11 +3381,11 @@ export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top 
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
-    constructor(id: string, localeService: KbqLocaleService, options: ParsedDigitsInfo);
+    constructor(...args: unknown[]);
     // (undocumented)
     transform(value: any, digitsInfo?: string, locale?: string): string | null;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableNumberPipe, [{ optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableNumberPipe, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqTableNumberPipe, "kbqTableNumber", true>;
     // (undocumented)

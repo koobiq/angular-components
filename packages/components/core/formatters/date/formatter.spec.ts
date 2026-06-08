@@ -4,8 +4,8 @@ import { KbqLuxonDateModule, LuxonDateAdapter, LuxonDateModule } from '@koobiq/a
 import {
     DateAdapter,
     DateFormatter,
-    KBQ_DATE_LOCALE,
     KBQ_DEFAULT_LOCALE_DATA_FACTORY,
+    KBQ_LOCALE_DATA,
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KbqAbsoluteLongDatePipe,
@@ -45,7 +45,7 @@ describe('Date formatter', () => {
             providers: [
                 { provide: DateAdapter, useClass: LuxonDateAdapter },
                 { provide: LOCALE_ID, useValue: 'ru-RU' },
-                { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+                DateFormatter
             ]
         }).compileComponents();
     });
@@ -2312,10 +2312,9 @@ describe('Date formatter (imports and providing)', () => {
             TestBed.configureTestingModule({
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
-                    {
-                        provide: KBQ_LOCALE_SERVICE,
-                        useFactory: () => new KbqLocaleService('pt-BR', KBQ_DEFAULT_LOCALE_DATA_FACTORY())
-                    }
+                    { provide: KBQ_LOCALE_ID, useValue: 'pt-BR' },
+                    { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
+                    { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
                 ]
             }).compileComponents();
         });
@@ -2341,11 +2340,8 @@ describe('Date formatter (imports and providing)', () => {
                 imports: [KbqFormattersModule, KbqLuxonDateModule],
                 providers: [
                     { provide: KBQ_LOCALE_ID, useValue: 'en-US' },
-                    {
-                        provide: KBQ_LOCALE_SERVICE,
-                        useFactory: (locale: string) => new KbqLocaleService(locale, KBQ_DEFAULT_LOCALE_DATA_FACTORY()),
-                        deps: [KBQ_LOCALE_ID]
-                    }
+                    { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
+                    { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
                 ]
             }).compileComponents();
         });

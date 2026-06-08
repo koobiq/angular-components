@@ -1,4 +1,4 @@
-import { Directive, TemplateRef, input } from '@angular/core';
+import { Directive, TemplateRef, inject, input } from '@angular/core';
 
 /** Context provided to the tree node component. */
 export class KbqTreeNodeOutletContext<T> {
@@ -28,6 +28,8 @@ export class KbqTreeNodeOutletContext<T> {
     inputs: ['when: kbqTreeNodeDefWhen']
 })
 export class KbqTreeNodeDef<T> {
+    template = inject<TemplateRef<any>>(TemplateRef);
+
     readonly data = input<T>(undefined!, { alias: 'kbqTreeNode' });
 
     /**
@@ -39,6 +41,9 @@ export class KbqTreeNodeDef<T> {
      */
     when: (index: number, nodeData: T) => boolean;
 
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
     /** @docs-private */
-    constructor(public template: TemplateRef<any>) {}
+    constructor() {}
 }

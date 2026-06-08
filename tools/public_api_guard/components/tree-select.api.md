@@ -6,6 +6,7 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_cdk_overlay_module_d from '@angular/cdk/overlay-module.d';
 import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
@@ -13,7 +14,6 @@ import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
-import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
@@ -31,9 +31,7 @@ import { InjectionToken } from '@angular/core';
 import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
 import { KbqSelectTrigger } from '@koobiq/components/core';
@@ -42,13 +40,11 @@ import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelection } from '@koobiq/components/tree';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -62,7 +58,7 @@ export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
 
 // @public (undocumented)
 export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, scrollStrategyFactory: any, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, localeService?: KbqLocaleService | undefined);
+    constructor(...args: unknown[]);
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
@@ -195,7 +191,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     get required(): boolean;
     set required(value: boolean);
-    scrollStrategy: any;
+    scrollStrategy: _angular_cdk_overlay_module_d.ScrollStrategy;
     // (undocumented)
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
     set searchMinOptionsThreshold(value: 'auto' | number | undefined);
@@ -242,7 +238,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; host: true; }, { optional: true; self: true; }, { optional: true; }]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelect, never>;
 }
 
 // @public

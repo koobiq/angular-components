@@ -5,9 +5,7 @@ import {
     Directive,
     DoCheck,
     ElementRef,
-    Host,
     inject,
-    Inject,
     InjectionToken,
     Input,
     input,
@@ -16,9 +14,7 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Optional,
-    Renderer2,
-    Self
+    Renderer2
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
@@ -56,6 +52,14 @@ let nextUniqueId = 0;
 export class KbqTextarea
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
+    protected elementRef = inject<ElementRef<HTMLTextAreaElement>>(ElementRef);
+    ngControl = inject(NgControl, { optional: true, self: true })!;
+    parentForm = inject(NgForm, { optional: true })!;
+    parentFormGroup = inject(FormGroupDirective, { optional: true })!;
+    defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    private parent = inject(KBQ_PARENT_ANIMATION_COMPONENT, { optional: true, host: true })!;
+    private ngZone = inject(NgZone);
+
     /** Whether the component is in an error state. */
     errorState: boolean = false;
 
@@ -210,16 +214,12 @@ export class KbqTextarea
     private minHeight: number = 0;
     private rowsCount: number;
 
-    constructor(
-        protected elementRef: ElementRef<HTMLTextAreaElement>,
-        @Optional() @Self() public ngControl: NgControl,
-        @Optional() public parentForm: NgForm,
-        @Optional() public parentFormGroup: FormGroupDirective,
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        @Optional() @Self() @Inject(KBQ_TEXTAREA_VALUE_ACCESSOR) inputValueAccessor: any,
-        @Optional() @Host() @Inject(KBQ_PARENT_ANIMATION_COMPONENT) private parent: any,
-        private ngZone: NgZone
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const inputValueAccessor = inject(KBQ_TEXTAREA_VALUE_ACCESSOR, { optional: true, self: true });
+
         // If no input value accessor was explicitly specified, use the element as the textarea value
         // accessor.
         this.valueAccessor = inputValueAccessor || this.elementRef.nativeElement;

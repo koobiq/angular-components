@@ -7,23 +7,17 @@
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { CdkScrollable } from '@angular/cdk/overlay';
-import { ChangeDetectorRef } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqReadStateDirective } from '@koobiq/components/core';
-import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import * as rxjs from 'rxjs';
-import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { ViewContainerRef } from '@angular/core';
@@ -50,7 +44,7 @@ export class KbqToastCloseButton {
 export class KbqToastComponent implements OnDestroy {
     // (undocumented)
     $implicit: any;
-    constructor(data: KbqToastData, service: KbqToastService, elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor);
+    constructor(...args: unknown[]);
     // (undocumented)
     animationState: string;
     // (undocumented)
@@ -78,7 +72,7 @@ export class KbqToastComponent implements OnDestroy {
     // (undocumented)
     protected readonly readStateDirective: KbqReadStateDirective;
     // (undocumented)
-    readonly service: KbqToastService;
+    readonly service: KbqToastService<any>;
     // (undocumented)
     themePalette: typeof ThemePalette;
     // (undocumented)
@@ -114,7 +108,7 @@ export const kbqToastConfigurationProvider: (configuration: Partial<KbqToastConf
 
 // @public (undocumented)
 export class KbqToastContainerComponent extends CdkScrollable {
-    constructor(injector: Injector, changeDetectorRef: ChangeDetectorRef, service: KbqToastService, elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone);
+    constructor(...args: unknown[]);
     // (undocumented)
     createTemplate<C>(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<C>;
     // (undocumented)
@@ -126,7 +120,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
     // (undocumented)
     remove(viewRef: ViewRef): void;
     // (undocumented)
-    readonly service: KbqToastService;
+    readonly service: KbqToastService<any>;
     // (undocumented)
     readonly viewContainer: i0.Signal<ViewContainerRef>;
     // (undocumented)
@@ -187,7 +181,7 @@ export enum KbqToastPosition {
 
 // @public
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
-    constructor(overlay: Overlay, injector: Injector, overlayContainer: OverlayContainer, ngZone: NgZone, toastFactory: any, toastConfig: KbqToastConfig);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly animation: BehaviorSubject<AnimationEvent_2 | null>;
     // (undocumented)
@@ -219,7 +213,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     // (undocumented)
     get toasts(): ComponentRef<T>[];
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastService<any>, [null, null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastService<any>, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqToastService<any>>;
 }

@@ -70,11 +70,11 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
     exportAs: 'KbqVerticalNavbar'
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
+    protected elementRef: ElementRef<HTMLElement>;
+
     /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
-    readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true });
-
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true })!;
+    readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true })!;
     configuration;
 
     rectangleElements = contentChildren(
@@ -108,12 +108,16 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     private _expanded: boolean = false;
 
-    constructor(
-        protected elementRef: ElementRef<HTMLElement>,
-        changeDetectorRef: ChangeDetectorRef,
-        focusMonitor: FocusMonitor
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+        const changeDetectorRef = inject(ChangeDetectorRef);
+        const focusMonitor = inject(FocusMonitor);
+
         super(changeDetectorRef, elementRef, focusMonitor);
+        this.elementRef = elementRef;
 
         this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
 

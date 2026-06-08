@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, Directive, ElementRef, Input, Optional, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, Renderer2, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 import { KbqTreeOption } from './tree-option.component';
@@ -13,6 +13,12 @@ const cssUnitPattern = /([A-Za-z%]+)$/;
     exportAs: 'kbqTreeNodePadding'
 })
 export class KbqTreeNodePadding<T> implements AfterViewInit {
+    protected treeNode = inject<KbqTreeNode<T>>(KbqTreeNode);
+    protected tree = inject<KbqTreeBase<T>>(KbqTreeBase);
+    private renderer = inject(Renderer2);
+    private element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private option = inject(KbqTreeOption);
+    private dir = inject(Directionality, { optional: true })!;
     get level(): number {
         return this._level;
     }
@@ -52,14 +58,10 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     withIcon: boolean;
     iconWidth: number = 24;
 
-    constructor(
-        protected treeNode: KbqTreeNode<T>,
-        protected tree: KbqTreeBase<T>,
-        private renderer: Renderer2,
-        private element: ElementRef<HTMLElement>,
-        private option: KbqTreeOption,
-        @Optional() private dir: Directionality
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.dir?.change?.pipe(takeUntilDestroyed()).subscribe(() => this.setPadding());
     }
 

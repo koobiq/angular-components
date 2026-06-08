@@ -1,4 +1,4 @@
-import { AfterContentInit, Directive, ElementRef, contentChildren } from '@angular/core';
+import { AfterContentInit, Directive, ElementRef, contentChildren, inject } from '@angular/core';
 
 @Directive({
     selector: '.kbq-form__row, .kbq-form__fieldset, .kbq-form__legend',
@@ -8,6 +8,8 @@ import { AfterContentInit, Directive, ElementRef, contentChildren } from '@angul
     exportAs: 'kbqFormElement'
 })
 export class KbqFormElement implements AfterContentInit {
+    private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+
     margin = false;
 
     isRow = false;
@@ -17,7 +19,10 @@ export class KbqFormElement implements AfterContentInit {
 
     readonly elements = contentChildren(KbqFormElement);
 
-    constructor(private readonly element: ElementRef<HTMLElement>) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngAfterContentInit(): void {
         const classList = this.element.nativeElement.classList;

@@ -4,7 +4,6 @@
 
 ```ts
 
-import { DomSanitizer } from '@angular/platform-browser';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { MarkedOptions } from 'marked';
@@ -20,7 +19,7 @@ export const KBQ_MARKDOWN_MARKED_OPTIONS: InjectionToken<MarkedOptions<string, s
 
 // @public
 export class KbqMarkdown implements OnDestroy {
-    constructor(markdownService: KbqMarkdownService, sanitizer: DomSanitizer, markedOptions?: MarkedOptions | undefined);
+    constructor(...args: unknown[]);
     get markdownText(): string | null;
     set markdownText(value: string | null);
     // (undocumented)
@@ -30,7 +29,7 @@ export class KbqMarkdown implements OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqMarkdown, "kbq-markdown", never, { "markdownText": { "alias": "markdownText"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqMarkdown, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqMarkdown, never>;
 }
 
 // @public

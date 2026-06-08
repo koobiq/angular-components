@@ -29,6 +29,8 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     }
 })
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
+    private readonly themeService = inject(ThemeService);
+
     protected structureCategories: DocsStructureCategory[];
     readonly currentTheme = toSignal(
         this.themeService.current.pipe(map((theme) => theme?.className.replace('kbq-', '') ?? 'light')),
@@ -38,7 +40,10 @@ export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly docStates = inject(DocsDocStates);
 
-    constructor(private readonly themeService: ThemeService) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         super();
 
         fromEvent(this.elementRef.nativeElement, 'scroll')

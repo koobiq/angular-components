@@ -6,9 +6,9 @@ import {
     Input,
     OnChanges,
     OnDestroy,
-    Optional,
     SimpleChanges,
     ViewEncapsulation,
+    inject,
     input,
     output,
     viewChild
@@ -41,6 +41,9 @@ import { KbqMonthView } from './month-view.component';
     exportAs: 'kbqCalendar'
 })
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
+    private readonly adapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
     /** A date representing the period (month or year) to start the calendar in. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -160,11 +163,13 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** Subscription to value changes in the associated input element. */
     private inputSubscription = Subscription.EMPTY;
 
-    constructor(
-        intl: KbqDatepickerIntl,
-        @Optional() private readonly adapter: DateAdapter<D>,
-        private changeDetectorRef: ChangeDetectorRef
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const intl = inject(KbqDatepickerIntl);
+        const changeDetectorRef = this.changeDetectorRef;
+
         if (!this.adapter) {
             throw createMissingDateImplError('DateAdapter');
         }

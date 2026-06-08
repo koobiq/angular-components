@@ -50,6 +50,9 @@ export const baseURLRegex = /^http(s)?:\/\//;
     exportAs: 'kbqLink'
 })
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
+    private elementRef = inject<ElementRef<HTMLAnchorElement>>(ElementRef);
+    private focusMonitor = inject(FocusMonitor);
+
     protected readonly renderer = inject(Renderer2);
     protected readonly destroyRef = inject(DestroyRef);
     protected readonly nativeElement = kbqInjectNativeElement();
@@ -124,10 +127,10 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
 
     readonly icon = contentChild(KbqIcon);
 
-    constructor(
-        private elementRef: ElementRef<HTMLAnchorElement>,
-        private focusMonitor: FocusMonitor
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.updatePrintUrl();
 
         // @todo 20 In the next major release this line will be deleted.

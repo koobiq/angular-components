@@ -1,11 +1,14 @@
-import { ChangeDetectorRef, Directive, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Directive, ViewContainerRef, inject } from '@angular/core';
 
 @Directive({
     selector: '[kbqTreeNodeOutlet]'
 })
 export class KbqTreeNodeOutlet {
-    constructor(
-        public viewContainer: ViewContainerRef,
-        public changeDetectorRef: ChangeDetectorRef
-    ) {}
+    viewContainer = inject(ViewContainerRef);
+    changeDetectorRef = inject(ChangeDetectorRef);
+
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 }

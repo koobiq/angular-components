@@ -10,11 +10,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/icon';
-import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 
 // @public (undocumented)
 export enum Direction {
@@ -26,7 +24,7 @@ export enum Direction {
 
 // @public (undocumented)
 export class KbqGutterDirective implements OnInit {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
+    constructor(...args: unknown[]);
     // (undocumented)
     get direction(): Direction;
     set direction(direction: Direction);
@@ -54,7 +52,7 @@ export class KbqGutterDirective implements OnInit {
 
 // @public (undocumented)
 export class KbqGutterGhostDirective {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
+    constructor(...args: unknown[]);
     // (undocumented)
     get direction(): Direction;
     set direction(direction: Direction);
@@ -79,7 +77,7 @@ export class KbqGutterGhostDirective {
 
 // @public (undocumented)
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, splitter: KbqSplitterComponent);
+    constructor(...args: unknown[]);
     // (undocumented)
     disableFlex(): void;
     // (undocumented)
@@ -108,7 +106,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
 
 // @public (undocumented)
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, renderer: Renderer2);
+    constructor(...args: unknown[]);
     // (undocumented)
     addArea(area: KbqSplitterAreaDirective): void;
     // (undocumented)

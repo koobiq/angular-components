@@ -17,7 +17,6 @@ import { InjectionToken } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
-import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -31,7 +30,7 @@ export const KBQ_TEXTAREA_VALUE_ACCESSOR: InjectionToken<{
 
 // @public (undocumented)
 export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState {
-    constructor(elementRef: ElementRef<HTMLTextAreaElement>, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, parent: any, ngZone: NgZone);
+    constructor(...args: unknown[]);
     get canGrow(): boolean;
     set canGrow(value: boolean);
     controlType: string;
@@ -95,7 +94,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTextarea, "textarea[kbqTextarea]", ["kbqTextarea"], { "canGrow": { "alias": "canGrow"; "required": false; }; "maxRows": { "alias": "maxRows"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "freeRowsHeight": { "alias": "freeRowsHeight"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTextarea, [null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, { optional: true; host: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTextarea, never>;
 }
 
 // @public (undocumented)

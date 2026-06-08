@@ -69,6 +69,8 @@ const maxIconsForIconButton = 2;
     }
 })
 export class KbqButtonCssStyler implements AfterContentInit {
+    private renderer = inject(Renderer2);
+
     readonly icons = contentChildren(forwardRef(() => KbqIcon));
 
     nativeElement: HTMLElement;
@@ -83,10 +85,12 @@ export class KbqButtonCssStyler implements AfterContentInit {
     private leftIcon: HTMLElement | null = null;
     private rightIcon: HTMLElement | null = null;
 
-    constructor(
-        elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
         this.nativeElement = elementRef.nativeElement;
 
         // The contentChildren query tracks only KbqIcon instances, while icon placement also
@@ -204,6 +208,9 @@ export class KbqButtonCssStyler implements AfterContentInit {
     }
 })
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
+    private focusMonitor = inject(FocusMonitor);
+    protected styler = inject(KbqButtonCssStyler);
+
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     hasFocus: boolean = false;
@@ -257,10 +264,10 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     private _tabIndex = 0;
 
-    constructor(
-        private focusMonitor: FocusMonitor,
-        protected styler: KbqButtonCssStyler
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         super();
 
         this.color = KbqComponentColors.ContrastFade;

@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, Inject, Optional, Provider, Type, viewChild } from '@angular/core';
+﻿import { Component, DebugElement, Provider, Type, inject, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     FormsModule,
@@ -130,9 +130,14 @@ class KbqNumberInputWithFormControl {
     `
 })
 class KbqNumberInputWithFormControlName {
+    private formBuilder = inject(UntypedFormBuilder);
+
     reactiveForm: UntypedFormGroup;
 
-    constructor(private formBuilder: UntypedFormBuilder) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.reactiveForm = this.formBuilder.group({
             reactiveInputValue: new UntypedFormControl(10)
         });
@@ -212,6 +217,8 @@ class KbqNumberInputWithCleaner {
     `
 })
 class KbqNumberInputWithMask {
+    localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+
     value: number | null = null;
     max: number = 10;
     min: number = 3;
@@ -221,7 +228,10 @@ class KbqNumberInputWithMask {
 
     readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 
-    constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 }
 
 @Component({
@@ -237,13 +247,18 @@ class KbqNumberInputWithMask {
     `
 })
 class KbqNumberInputWithInteger {
+    localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+
     value: number | null = null;
     step: number = 1;
     bigStep: number = 5;
 
     readonly inputNumberDirective = viewChild.required(KbqNumberInput);
 
-    constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 }
 
 describe('KbqNumberInput', () => {

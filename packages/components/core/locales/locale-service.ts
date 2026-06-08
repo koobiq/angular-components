@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, inject, Injectable, InjectionToken, Optional, Provider } from '@angular/core';
+import { inject, Injectable, InjectionToken, Provider } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { enUSLocaleData } from './en-US';
 import { esLALocaleData } from './es-LA';
@@ -77,7 +77,13 @@ export class KbqLocaleService {
 
     private readonly langAttrName = inject(KBQ_LOCALE_SERVICE_LANG_ATTR_NAME);
 
-    constructor(@Optional() @Inject(KBQ_LOCALE_ID) id: string, @Optional() @Inject(KBQ_LOCALE_DATA) localeData) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const id = inject(KBQ_LOCALE_ID, { optional: true });
+        const localeData = inject(KBQ_LOCALE_DATA, { optional: true });
+
         this.locales = localeData;
 
         this.id = id || KBQ_DEFAULT_LOCALE_ID;

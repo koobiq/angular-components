@@ -5,8 +5,8 @@ import {
     ContentChild,
     Directive,
     Input,
-    Optional,
     ViewEncapsulation,
+    inject,
     input
 } from '@angular/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
@@ -19,7 +19,11 @@ import { KbqIconItem } from '@koobiq/components/icon';
     }
 })
 export class KbqEmptyStateIcon {
-    constructor(@Optional() private icon: KbqIconItem) {}
+    private icon = inject(KbqIconItem, { optional: true })!;
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     setErrorColor() {
         if (!this.icon) {

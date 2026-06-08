@@ -11,7 +11,6 @@ import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
@@ -29,7 +28,6 @@ import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleTextRef } from '@koobiq/components/core';
-import { KbqTrim } from '@koobiq/components/form-field';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -43,7 +41,7 @@ export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 
 // @public (undocumented)
 export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit {
-    constructor(changeDetectorRef: ChangeDetectorRef);
+    constructor(...args: unknown[]);
     addClassModificatorForIcons(): void;
     addHostClassName(): void;
     readonly avatar: _angular_core.Signal<KbqTagAvatar | undefined>;
@@ -174,7 +172,7 @@ export type KbqTagFocusEvent = KbqTagEvent & {
 //
 // @public
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
-    constructor(elementRef: ElementRef<HTMLInputElement>, defaultOptions: KbqTagsDefaultOptions, trimDirective: KbqTrim, ngControl: NgControl, autocompleteTrigger?: KbqAutocompleteTrigger | undefined);
+    constructor(...args: unknown[]);
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
     readonly addOnPaste: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -211,7 +209,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, true, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagInput, [null, null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; self: true; }]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagInput, never>;
 }
 
 // @public
@@ -222,7 +220,7 @@ export interface KbqTagInputEvent {
 
 // @public (undocumented)
 export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, defaultErrorStateMatcher: ErrorStateMatcher, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, ngControl: NgControl);
+    constructor(...args: unknown[]);
     blur(): void;
     get canShowCleaner(): boolean;
     readonly change: _angular_core.OutputEmitterRef<KbqTagListChange>;
@@ -310,7 +308,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "editable": { "alias": "editable"; "required": false; "isSignal": true; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i2.CdkDropList; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagList, [null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagList, never>;
 }
 
 // @public
@@ -329,7 +327,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
 
 // @public
 export class KbqTagRemove {
-    constructor(parentTag: KbqTag);
+    constructor(...args: unknown[]);
     focus(event: FocusEvent): void;
     handleClick(event: Event): void;
     // (undocumented)

@@ -6,24 +6,21 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
 // @public
 export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
-    constructor(radioGroup: KbqRadioGroup, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, radioDispatcher: UniqueSelectionDispatcher);
+    constructor(...args: unknown[]);
     readonly change: i0.OutputEmitterRef<KbqRadioChange>;
     get checked(): boolean;
     set checked(value: boolean);
@@ -68,7 +65,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioButton, [{ optional: true; }, null, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioButton, never>;
 }
 
 // @public
@@ -82,7 +79,7 @@ export class KbqRadioChange {
 
 // @public (undocumented)
 export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
-    constructor(changeDetector: ChangeDetectorRef);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly big: i0.InputSignal<boolean>;
     readonly change: i0.OutputEmitterRef<KbqRadioChange>;
