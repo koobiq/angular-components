@@ -1,5 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, ViewEncapsulation, inject } from '@angular/core';
+import { Component, Input, ViewEncapsulation, inject } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
@@ -40,16 +39,6 @@ export class DocsStackblitzButtonComponent extends KbqLink {
     }
 
     private exampleData: ExampleData | undefined;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {
-        const elementRef = inject<ElementRef<HTMLAnchorElement>>(ElementRef);
-        const focusMonitor = inject(FocusMonitor);
-
-        super(elementRef, focusMonitor);
-    }
 
     protected openStackBlitz(): void {
         if (!this._exampleId || !this.exampleData) return;
