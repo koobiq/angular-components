@@ -1575,11 +1575,6 @@ class DatepickerWithNgModel {
     selected: DateTime | null = null;
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({

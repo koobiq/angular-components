@@ -20,7 +20,7 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly change: i0.OutputEmitterRef<KbqRadioChange>;
     get checked(): boolean;
     set checked(value: boolean);
@@ -79,7 +79,6 @@ export class KbqRadioChange {
 
 // @public (undocumented)
 export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
-    constructor(...args: unknown[]);
     // (undocumented)
     readonly big: i0.InputSignal<boolean>;
     readonly change: i0.OutputEmitterRef<KbqRadioChange>;

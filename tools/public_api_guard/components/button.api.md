@@ -27,7 +27,7 @@ export const buttonRightIconClassName = "kbq-button-icon_right";
 
 // @public (undocumented)
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
-    constructor(...args: unknown[]);
+    constructor();
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledSignal: i0.WritableSignal<boolean>;
@@ -71,7 +71,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
 // @public (undocumented)
 export class KbqButtonCssStyler implements AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly icons: i0.Signal<readonly any[]>;
     // (undocumented)

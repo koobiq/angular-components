@@ -153,11 +153,6 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /** Portal that will be the hosted content of the tab */
     private contentPortal: TemplatePortal | null = null;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {
             this.stateChanges.next();

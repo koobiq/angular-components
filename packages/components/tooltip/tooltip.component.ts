@@ -79,13 +79,6 @@ export class KbqTooltipComponent extends KbqPopUp {
 
     @ViewChild('tooltip') elementRef: ElementRef;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {
-        super();
-    }
-
     show(delay: number) {
         if (!this.content) {
             return;

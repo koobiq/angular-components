@@ -78,11 +78,6 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     private optionFocusSubscription: Subscription | null;
     private optionBlurSubscription: Subscription | null;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
 
@@ -252,15 +247,12 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     private resizeSubscription: Subscription;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
         const changeDetectorRef = inject(ChangeDetectorRef);
         const focusMonitor = inject(FocusMonitor);
 
-        super(changeDetectorRef, elementRef, focusMonitor);
+        super();
         this.elementRef = elementRef;
         this.changeDetectorRef = changeDetectorRef;
         this.focusMonitor = focusMonitor;

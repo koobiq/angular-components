@@ -39,11 +39,6 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
 
     readonly kbqSidepanelClose = input<any>();
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngOnInit() {
         if (!this.sidepanelRef) {
             // When this directive is included in a sidepanel via TemplateRef (rather than being

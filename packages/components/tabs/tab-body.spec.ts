@@ -191,11 +191,6 @@ class SimpleTabBodyApp implements AfterContentInit {
     readonly tabBody = viewChild.required(KbqTabBody);
     readonly template = viewChild.required(TemplateRef);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterContentInit() {
         this.content = new TemplatePortal(this.template(), this.viewContainerRef);
     }

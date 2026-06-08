@@ -66,7 +66,6 @@ export class KbqStretchTabsCssStyler {
 
 // @public (undocumented)
 export class KbqTab implements OnInit, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
     get content(): TemplatePortal | null;
     // (undocumented)
     get disabled(): boolean;
@@ -113,7 +112,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
 // @public
 export class KbqTabBody implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly afterLeavingCenter: EventEmitter<boolean>;
     readonly animationDuration: i0.InputSignal<string>;
     readonly beforeCentering: EventEmitter<boolean>;
@@ -144,7 +143,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
 
 // @public
 export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     ngOnDestroy(): void;
     ngOnInit(): void;
     // (undocumented)
@@ -164,7 +163,6 @@ export class KbqTabChangeEvent {
 
 // @public
 export class KbqTabContent {
-    constructor(...args: unknown[]);
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
@@ -175,7 +173,7 @@ export class KbqTabContent {
 
 // @public
 export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     get activeTab(): KbqTab | null;
     set activeTab(value: KbqTabSelectBy | null);
@@ -274,7 +272,6 @@ export class KbqTabLabel extends CdkPortal {
 
 // @public
 export class KbqTabLabelWrapper implements AfterViewInit {
-    constructor(...args: unknown[]);
     // (undocumented)
     checkOverflow(): void;
     // (undocumented)

@@ -396,9 +396,6 @@ export class KbqTimepicker<D>
 
     private errorStateTracker: KbqErrorStateTracker;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const dateAdapter = this.dateAdapter;
 

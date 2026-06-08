@@ -94,13 +94,6 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     @ContentChild('kbqTitleContainer')
     private parentContainer: ElementRef;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {
-        super();
-    }
-
     ngAfterViewInit() {
         this.parentContainer = this.parentContainer || this.componentInstance?.parentTextElement || this.elementRef;
         this.childContainer = this.childContainer || this.componentInstance?.textElement || this.elementRef;

@@ -88,9 +88,6 @@ export class KbqToastComponent implements OnDestroy {
         return this.hovered.getValue() || this.focused.getValue();
     }
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.$implicit = this;
 

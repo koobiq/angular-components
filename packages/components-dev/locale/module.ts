@@ -37,9 +37,6 @@ export class DevApp {
     selectedLanguage;
     languages;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.languages = this.localeService.locales.items.map((item) => ({ ...item, selected: false }));
 

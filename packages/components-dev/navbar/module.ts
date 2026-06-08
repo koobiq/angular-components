@@ -80,11 +80,6 @@ export class DevApp {
 
     permission$ = timer(500).pipe(map(() => true));
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     collapsedNavbarWidthChange() {
         this.navbar().updateExpandedStateForItems();
     }

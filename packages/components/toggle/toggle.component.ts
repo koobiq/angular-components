@@ -194,9 +194,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
     private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         super();
 

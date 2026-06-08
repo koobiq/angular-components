@@ -83,7 +83,6 @@ export class KbqModalBody {
 
 // @public (undocumented)
 export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions {
-    constructor(...args: unknown[]);
     // (undocumented)
     get afterClose(): Observable<R | undefined>;
     // (undocumented)
@@ -300,7 +299,6 @@ export abstract class KbqModalRef<C = any, R = unknown> {
 
 // @public (undocumented)
 export class KbqModalService {
-    constructor(...args: unknown[]);
     // (undocumented)
     get afterAllClose(): Observable<void>;
     // (undocumented)
@@ -325,7 +323,6 @@ export class KbqModalService {
 
 // @public (undocumented)
 export class KbqModalTitle {
-    constructor(...args: unknown[]);
     // (undocumented)
     protected modal: KbqModalComponent<any, any>;
     // (undocumented)

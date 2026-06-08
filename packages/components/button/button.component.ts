@@ -59,9 +59,6 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
     isIconButton: boolean = false;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -195,9 +192,6 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     }
 
     private _tabIndex = 0;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         super();

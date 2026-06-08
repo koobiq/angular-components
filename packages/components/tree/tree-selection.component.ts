@@ -6,7 +6,6 @@ import {
     AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ContentChildren,
     ElementRef,
@@ -16,7 +15,6 @@ import {
     inject,
     Input,
     IterableDiffer,
-    IterableDiffers,
     OnDestroy,
     Output,
     output,
@@ -260,15 +258,10 @@ export class KbqTreeSelection
 
     private optionBlurSubscription: Subscription | null;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
-        const differs = inject(IterableDiffers);
-        const changeDetectorRef = inject(ChangeDetectorRef);
         const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
 
-        super(differs, changeDetectorRef);
+        super();
 
         if (multiple === MultipleMode.CHECKBOX || multiple === MultipleMode.KEYBOARD) {
             this.multipleMode = multiple;

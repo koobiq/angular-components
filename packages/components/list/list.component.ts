@@ -38,11 +38,6 @@ export class KbqListItem implements AfterContentInit {
 
     @ContentChildren(KbqLine) lines: QueryList<KbqLine>;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterContentInit() {
         new KbqLineSetter(this.lines, this.elementRef);
     }

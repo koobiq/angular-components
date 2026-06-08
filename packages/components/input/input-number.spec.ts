@@ -134,9 +134,6 @@ class KbqNumberInputWithFormControlName {
 
     reactiveForm: UntypedFormGroup;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.reactiveForm = this.formBuilder.group({
             reactiveInputValue: new UntypedFormControl(10)
@@ -227,11 +224,6 @@ class KbqNumberInputWithMask {
     withMask = true;
 
     readonly inputNumberDirective = viewChild.required(KbqNumberInput);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -254,11 +246,6 @@ class KbqNumberInputWithInteger {
     bigStep: number = 5;
 
     readonly inputNumberDirective = viewChild.required(KbqNumberInput);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 describe('KbqNumberInput', () => {

@@ -81,11 +81,6 @@ export class DevApp {
         })
     );
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     onSelectionChange($event: KbqListSelectionChange) {
         console.log(`onSelectionChange: ${$event.option.value}`);
     }

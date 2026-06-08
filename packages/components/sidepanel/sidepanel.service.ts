@@ -24,11 +24,6 @@ export class KbqSidepanelService implements OnDestroy {
             : this.openedSidepanelsAtThisLevel;
     }
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngOnDestroy() {
         // Only close the sidepanels at this level on destroy
         // since the parent service may still be active.

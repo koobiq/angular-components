@@ -158,11 +158,6 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
      */
     private rawValue: any;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     /**
      * The method to be called in order to update ngModel.
      * Now `ngModel` binding is not supported in multiple selection mode.
@@ -396,11 +391,6 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     private isSingleSelector = false;
     private _checked = false;
     private _disabled: boolean = false;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     ngOnInit() {
         this.isSingleSelector = this.buttonToggleGroup && !this.buttonToggleGroup.multiple;

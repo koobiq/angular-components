@@ -95,11 +95,6 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 
     private subscriptions = new Subscription();
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterViewInit() {
         this.subscriptions.add(
             this.datepicker.stateChanges.subscribe(() => {
@@ -294,9 +289,6 @@ export class KbqDatepicker<D> implements OnDestroy {
     private inputSubscription = Subscription.EMPTY;
 
     private closeSubscription = Subscription.EMPTY;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         const scrollStrategy = inject(KBQ_DATEPICKER_SCROLL_STRATEGY);

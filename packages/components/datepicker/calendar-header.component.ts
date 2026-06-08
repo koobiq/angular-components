@@ -124,9 +124,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     readonly monthSelected = output<D>();
     readonly yearSelected = output<D>();
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {
             return { name, nameShort: this.adapter.getMonthNames('short')[i], value: i, disabled: false };

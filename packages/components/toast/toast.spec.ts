@@ -205,10 +205,6 @@ describe('Standalone ToastService', () => {
 class KbqToastButtonWrapperComponent {
     toastService = inject_1(KbqToastService);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
     show(): void {
         this.toastService.show({ style: 'warning', title: 'Warning', content: 'Message Content' }, 0);
     }

@@ -58,9 +58,6 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     withIcon: boolean;
     iconWidth: number = 24;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.dir?.change?.pipe(takeUntilDestroyed()).subscribe(() => this.setPadding());
     }

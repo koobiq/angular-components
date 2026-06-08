@@ -161,7 +161,6 @@ export class KbqTree extends KbqTreeBase<any> {
 
 // @public (undocumented)
 export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
-    constructor(...args: unknown[]);
     // (undocumented)
     protected changeDetectorRef: ChangeDetectorRef;
     protected dataDiffer: IterableDiffer<T>;
@@ -280,7 +279,7 @@ export class KbqTreeNestedDataSource<T> extends DataSource<T> {
 
 // @public (undocumented)
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     get data(): T;
     set data(value: T);
@@ -307,7 +306,6 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
 
 // @public
 export class KbqTreeNodeDef<T> {
-    constructor(...args: unknown[]);
     // (undocumented)
     readonly data: i0.InputSignal<T>;
     // (undocumented)
@@ -321,7 +319,6 @@ export class KbqTreeNodeDef<T> {
 
 // @public (undocumented)
 export class KbqTreeNodeOutlet {
-    constructor(...args: unknown[]);
     // (undocumented)
     changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
@@ -343,7 +340,7 @@ export class KbqTreeNodeOutletContext<T> {
 
 // @public (undocumented)
 export class KbqTreeNodePadding<T> implements AfterViewInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     iconWidth: number;
     // (undocumented)
@@ -375,7 +372,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
 
 // @public
 export class KbqTreeNodeToggleBaseDirective<T> {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -414,7 +411,7 @@ export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirectiv
 
 // @public (undocumented)
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
     // (undocumented)
@@ -541,7 +538,7 @@ export const kbqTreeSelectAllValue = "selectAll";
 
 // @public (undocumented)
 export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);

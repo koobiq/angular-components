@@ -108,9 +108,6 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 
     private lastControlValue: string;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         super();
         this.color = KbqComponentColors.ContrastFade;

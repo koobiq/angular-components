@@ -116,11 +116,6 @@ export class KbqGutterDirective implements OnInit {
 
     dragged: boolean = false;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngOnInit(): void {
         this.setStyle(StyleProperty.FlexBasis, coerceCssPixelValue(this.size));
         this.setStyle(this.isVertical ? StyleProperty.Height : StyleProperty.Width, coerceCssPixelValue(this.size));
@@ -221,11 +216,6 @@ export class KbqGutterGhostDirective {
     get isVertical(): boolean {
         return this.direction === Direction.Vertical;
     }
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     private updateDimensions(): void {
         this.setStyle(this.isVertical ? StyleProperty.Width : StyleProperty.Height, '100%');
@@ -347,11 +337,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     }
 
     private _resizing: boolean = false;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     addArea(area: KbqSplitterAreaDirective): void {
         this.areas.push(this.mapAndOrderArea(area, this.areas.length));
@@ -596,11 +581,6 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     readonly sizeChange = output<number>();
 
     private readonly window = inject(KBQ_WINDOW);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     isResizing(): boolean {
         return this.splitter.isDragging;

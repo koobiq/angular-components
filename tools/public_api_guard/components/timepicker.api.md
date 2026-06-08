@@ -47,7 +47,7 @@ export const KBQ_TIMEPICKER_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
 export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     controlType: string;
     // (undocumented)
     get disabled(): boolean;

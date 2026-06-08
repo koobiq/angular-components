@@ -55,7 +55,7 @@ export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider;
 
 // @public (undocumented)
 export class KbqAutocomplete implements AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     get autoActiveFirstOption(): boolean;
     set autoActiveFirstOption(value: boolean);
     get classList(): string;
@@ -128,7 +128,6 @@ export class KbqAutocompleteModule {
 
 // @public
 export class KbqAutocompleteOrigin {
-    constructor(...args: unknown[]);
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -148,7 +147,7 @@ export class KbqAutocompleteSelectedEvent {
 
 // @public (undocumented)
 export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler {
-    constructor(...args: unknown[]);
+    constructor();
     get activeOption(): KbqOption | null;
     readonly autocomplete: i0.InputSignal<KbqAutocomplete>;
     readonly autocompleteAttribute: i0.InputSignal<string>;

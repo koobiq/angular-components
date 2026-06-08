@@ -25,11 +25,6 @@ export class AccordionInPanelExample {
 
     @ViewChild('template', { static: false }) template: TemplateRef<any>;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     openPanel() {
         this.sidepanelService.open(this.template, {
             position: this.position,

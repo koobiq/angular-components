@@ -183,11 +183,6 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
         return -1;
     }
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef);
     }
@@ -475,9 +470,6 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     get hasCroppedText(): boolean {
         return !!this.title()?.isOverflown;
     }
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         super();

@@ -68,7 +68,6 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public (undocumented)
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
-    constructor(...args: unknown[]);
     animationDone: Subject<AnimationEvent_2>;
     backdropClass: string;
     classList: {
@@ -129,7 +128,6 @@ export const kbqDropdownAnimations: {
 
 // @public
 export class KbqDropdownContent implements OnDestroy {
-    constructor(...args: unknown[]);
     attach(context?: any): void;
     attached: Subject<void>;
     detach(): void;
@@ -155,7 +153,6 @@ export interface KbqDropdownDefaultOptions {
 
 // @public
 export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     checkDisabled(event: Event): void;
     protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
@@ -254,7 +251,7 @@ export class KbqDropdownStaticContent {
 
 // @public
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     close(): void;
     data: any;
     demoteOverlay: boolean;

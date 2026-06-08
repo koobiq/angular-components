@@ -13,7 +13,6 @@ import { Subject } from 'rxjs';
 
 // @public (undocumented)
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     get child(): HTMLElement;
     // (undocumented)

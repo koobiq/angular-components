@@ -87,9 +87,6 @@ export class DevModalCustomComponent {
     componentColors = KbqComponentColors;
 
     data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true })!;
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         console.log('data: ', this.data);
     }
@@ -134,11 +131,6 @@ export class DevModalFullCustomComponent {
     readonly title = input<string>(undefined!);
     readonly subtitle = input<string>(undefined!);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     destroyModal() {
         this.modal.destroy({ data: 'this the result data' });
     }
@@ -169,11 +161,6 @@ export class DevApp {
     htmlModalVisible = false;
 
     isLoading = false;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     showConfirm() {
         this.modalService.success({

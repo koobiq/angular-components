@@ -230,11 +230,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     /** Subscription to tab events on the dropdown panel */
     private tabSubscription = Subscription.EMPTY;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngOnInit() {
         this.setPositionClasses();
     }

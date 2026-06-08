@@ -163,9 +163,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** Subscription to value changes in the associated input element. */
     private inputSubscription = Subscription.EMPTY;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const intl = inject(KbqDatepickerIntl);
         const changeDetectorRef = this.changeDetectorRef;

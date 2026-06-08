@@ -46,11 +46,6 @@ export class KbqTabLabelWrapper implements AfterViewInit {
 
     private _disabled: boolean = false;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterViewInit(): void {
         this.addClassModifierForIcons(Array.from(this.elementRef.nativeElement.querySelectorAll('.kbq-icon')));
     }

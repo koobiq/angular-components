@@ -27,11 +27,6 @@ export class ExampleDropdownPortal implements OnInit {
     readonly context = input({}, { alias: 'exampleDropdownOutletContext' });
     readonly template = input<TemplateRef<any>>(undefined!, { alias: 'exampleDropdownOutlet' });
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngOnInit() {
         this.viewContainerRef.createEmbeddedView(this.template(), this.context(), {
             injector: Injector.create({

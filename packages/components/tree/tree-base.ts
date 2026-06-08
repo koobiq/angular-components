@@ -99,11 +99,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
     protected readonly destroyRef = inject(DestroyRef);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngOnInit() {
         this.dataDiffer = this.differs.find([]).create(this.trackBy());
 
@@ -313,9 +308,6 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
 
         return treeControl.getLevel ? treeControl.getLevel(this._data) : 0;
     }
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         KbqTreeNode.mostRecentTreeNode = this;

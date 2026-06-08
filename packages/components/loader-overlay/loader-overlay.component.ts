@@ -112,11 +112,6 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     @ContentChild(KbqLoaderOverlayText) externalText: KbqLoaderOverlayText | null;
     @ContentChild(KbqLoaderOverlayCaption) externalCaption: KbqLoaderOverlayCaption | null;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngOnInit(): void {
         this.parent = this.elementRef.nativeElement.parentElement;
 

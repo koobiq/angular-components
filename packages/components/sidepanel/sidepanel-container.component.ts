@@ -98,13 +98,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     /** Whether the component has been destroyed. */
     private destroyed: boolean;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {
-        super();
-    }
-
     ngOnDestroy(): void {
         this.destroyed = true;
     }

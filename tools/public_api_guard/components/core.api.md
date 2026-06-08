@@ -280,7 +280,7 @@ export abstract class DateAdapter<D> extends DateAdapter_2<D> {
 
 // @public (undocumented)
 export class DateFormatter<D> extends DateFormatter_2<D> {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly adapter: DateAdapter_2<D>;
     // (undocumented)
@@ -2373,7 +2373,7 @@ export type KbqDateFormats = DateFormats;
 
 // @public (undocumented)
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean;
     // (undocumented)
@@ -2461,7 +2461,6 @@ export class KbqFormattersModule {
 
 // @public (undocumented)
 export class KbqFormElement implements AfterContentInit {
-    constructor(...args: unknown[]);
     // (undocumented)
     readonly elements: i0.Signal<readonly KbqFormElement[]>;
     // (undocumented)
@@ -2553,7 +2552,7 @@ export class KbqLineSetter {
 
 // @public (undocumented)
 export class KbqLocaleService {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     addLocale(id: string, localeData: any): void;
     // (undocumented)
@@ -2669,7 +2668,6 @@ export class KbqOptgroup {
 
 // @public
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
-    constructor(...args: unknown[]);
     get active(): boolean;
     // (undocumented)
     deselect(emitEvent?: boolean): void;
@@ -3225,7 +3223,7 @@ export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPip
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
-    constructor(...args: unknown[]);
+    constructor();
     // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
@@ -3269,7 +3267,7 @@ export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => 
 
 // @public (undocumented)
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly changes: EventEmitter<string>;
     // (undocumented)
@@ -3332,7 +3330,7 @@ export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top 
 
 // @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     transform(value: any, digitsInfo?: string, locale?: string): string | null;
     // (undocumented)

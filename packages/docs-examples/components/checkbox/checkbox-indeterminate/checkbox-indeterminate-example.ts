@@ -42,11 +42,6 @@ export class CheckboxIndeterminateExample {
         { name: 'Grapes', checked: false }
     ];
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     updateCheckboxes(index: number) {
         this.toggleFruitChecked(index);
         this.updateIndeterminate();

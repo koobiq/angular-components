@@ -460,11 +460,6 @@ class SidepanelFromDropdownComponent {
 
     readonly trigger = viewChild.required<KbqDropdownTrigger>('trigger');
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     showSidepanel() {
         this.ss.open(ComponentForSidepanel);
     }
@@ -485,11 +480,6 @@ class SidepanelWithCustomToken {
 class SimpleSidepanelExample {
     sidepanelRef = injectCore<KbqSidepanelRef<SimpleSidepanelExample>>(KbqSidepanelRef);
     data = injectCore(KBQ_SIDEPANEL_DATA);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({

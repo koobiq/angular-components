@@ -35,9 +35,6 @@ export class KbqToastContainerComponent extends CdkScrollable {
 
     readonly viewContainer = viewChild.required('container', { read: ViewContainerRef });
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
         const scrollDispatcher = inject(ScrollDispatcher);

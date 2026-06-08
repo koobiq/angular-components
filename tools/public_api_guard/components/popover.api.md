@@ -122,7 +122,7 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
 
 // @public (undocumented)
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly confirm: i0.OutputEmitterRef<void>;
     // (undocumented)

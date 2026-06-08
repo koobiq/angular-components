@@ -24,7 +24,6 @@ export enum Direction {
 
 // @public (undocumented)
 export class KbqGutterDirective implements OnInit {
-    constructor(...args: unknown[]);
     // (undocumented)
     get direction(): Direction;
     set direction(direction: Direction);
@@ -52,7 +51,6 @@ export class KbqGutterDirective implements OnInit {
 
 // @public (undocumented)
 export class KbqGutterGhostDirective {
-    constructor(...args: unknown[]);
     // (undocumented)
     get direction(): Direction;
     set direction(direction: Direction);
@@ -77,7 +75,6 @@ export class KbqGutterGhostDirective {
 
 // @public (undocumented)
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     disableFlex(): void;
     // (undocumented)
@@ -106,7 +103,6 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
 
 // @public (undocumented)
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     addArea(area: KbqSplitterAreaDirective): void;
     // (undocumented)

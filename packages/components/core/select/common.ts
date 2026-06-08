@@ -52,9 +52,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
 
     private searchChangesSubscription: Subscription = new Subscription();
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.formField.canCleanerClearByEsc = false;
         this.formField.inOverlay.set(true);

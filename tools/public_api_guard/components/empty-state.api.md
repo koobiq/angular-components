@@ -39,7 +39,6 @@ export class KbqEmptyStateActions {
 
 // @public (undocumented)
 export class KbqEmptyStateIcon {
-    constructor(...args: unknown[]);
     // (undocumented)
     setErrorColor(): void;
     // (undocumented)

@@ -50,9 +50,6 @@ export class DatepickerInactiveExample {
 
     selectedDate: DateTime;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.selectedDate = this.adapter.createDate(1989, 11, 13);
     }

@@ -19,7 +19,7 @@ export const KBQ_MARKDOWN_MARKED_OPTIONS: InjectionToken<MarkedOptions<string, s
 
 // @public
 export class KbqMarkdown implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     get markdownText(): string | null;
     set markdownText(value: string | null);
     // (undocumented)

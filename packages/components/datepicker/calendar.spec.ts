@@ -348,11 +348,6 @@ class StandardCalendar {
     selectedYear: DateTime;
     selectedMonth: DateTime;
     startDate = this.adapter.createDate(2017, 0, 31);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -367,11 +362,6 @@ class CalendarWithMinMax {
     startAt: DateTime;
     minDate = this.adapter.createDate(2016, 0, 1);
     maxDate = this.adapter.createDate(2018, 0, 1);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -385,11 +375,6 @@ class CalendarWithDateFilter {
 
     selected: DateTime;
     startDate = this.adapter.createDate(2017, 0, 1);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     dateFilter = (date: DateTime): boolean => !(this.adapter.getDate(date) % 2) && this.adapter.getMonth(date) !== 10;
 }

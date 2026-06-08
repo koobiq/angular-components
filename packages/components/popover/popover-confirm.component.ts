@@ -80,9 +80,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
     private _confirmButtonText: string = 'Да';
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const confirmText = inject(KBQ_POPOVER_CONFIRM_TEXT, { optional: true });
         const confirmButtonText = inject(KBQ_POPOVER_CONFIRM_BUTTON_TEXT, { optional: true });

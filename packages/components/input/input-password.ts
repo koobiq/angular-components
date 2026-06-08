@@ -177,9 +177,6 @@ export class KbqInputPassword
 
     private _inputValueAccessor: { value: any };
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const inputValueAccessor = inject(KBQ_INPUT_VALUE_ACCESSOR, { optional: true, self: true });
 

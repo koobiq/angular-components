@@ -91,7 +91,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 
 // @public (undocumented)
 export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
-    constructor(...args: unknown[]);
+    constructor();
     readonly backdropClass: _angular_core.InputSignal<string>;
     readonly beforeOpened: _angular_core.OutputEmitterRef<void>;
     calculateHiddenItems: () => void;

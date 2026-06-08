@@ -185,11 +185,6 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
     private _labelPosition: 'before' | 'after' = 'after';
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     /** The method to be called in order to update ngModel */
     controlValueAccessorChangeFn: (value: any) => void = () => {};
 
@@ -472,9 +467,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
 
     /** Value assigned to this radio. */
     private _value: any = null;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         const radioGroup = inject(KbqRadioGroup, { optional: true })!;

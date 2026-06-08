@@ -218,7 +218,7 @@ export class KbqLegend {
 
 // @public (undocumented)
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     checked: boolean;
     // (undocumented)
@@ -327,7 +327,7 @@ export class KbqSuffix {
 
 // @public
 export class KbqTrim {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     trim(value: any): any;
     // (undocumented)

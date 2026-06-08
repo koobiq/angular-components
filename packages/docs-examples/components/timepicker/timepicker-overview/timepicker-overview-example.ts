@@ -30,9 +30,6 @@ export class TimepickerOverviewExample {
 
     time: DateTime;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.time = this.adapter.today().startOf('hour');
     }

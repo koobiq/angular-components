@@ -10,7 +10,7 @@ import { OnDestroy } from '@angular/core';
 
 // @public (undocumented)
 export class KbqSidebar implements OnDestroy, AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point index.d.ts
     get animationState(): KbqSidebarAnimationState;
     readonly closedContent: i0.Signal<KbqSidebarClosed | undefined>;

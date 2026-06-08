@@ -214,9 +214,6 @@ export class KbqTextarea
     private minHeight: number = 0;
     private rowsCount: number;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const inputValueAccessor = inject(KBQ_TEXTAREA_VALUE_ACCESSOR, { optional: true, self: true });
 
