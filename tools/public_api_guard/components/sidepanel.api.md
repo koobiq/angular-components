@@ -53,6 +53,7 @@ export class KbqSidepanelActions {
 
 // @public
 export class KbqSidepanelBody {
+    constructor();
     protected checkOverflow(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, true, never>;

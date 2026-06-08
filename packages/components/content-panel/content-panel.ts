@@ -200,15 +200,20 @@ export class KbqContentPanel {
 
         if (!contentPanelBody) return;
 
-        contentPanelBody
-            .scrollbar()
-            .onScroll.pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(([instance]) => {
-                const { scrollTop, scrollHeight, clientHeight } = instance.elements().scrollOffsetElement;
+        const scrollbar = contentPanelBody.scrollbar();
+        const scrollElement = scrollbar.contentElement().nativeElement;
 
-                this.setupContentHeaderShadow(scrollTop >= 1);
-                this.setupContentFooterShadow(scrollHeight - (scrollTop + clientHeight) >= 1);
-            });
+        this.setupContentHeaderShadow(scrollElement.scrollTop >= 1);
+        this.setupContentFooterShadow(
+            scrollElement.scrollHeight - (scrollElement.scrollTop + scrollElement.clientHeight) >= 1
+        );
+
+        scrollbar.onScroll.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(([instance]) => {
+            const { scrollTop, scrollHeight, clientHeight } = instance.elements().scrollOffsetElement;
+
+            this.setupContentHeaderShadow(scrollTop >= 1);
+            this.setupContentFooterShadow(scrollHeight - (scrollTop + clientHeight) >= 1);
+        });
     }
 
     private setupContentHeaderShadow(shouldShowShadow: boolean): void {

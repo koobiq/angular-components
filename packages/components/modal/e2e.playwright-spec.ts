@@ -29,4 +29,45 @@ test.describe('KbqModalModule', () => {
             await expect(component).toHaveScreenshot('02-light.png');
         });
     });
+
+    test.describe('overflow shadow', () => {
+        test('should show footer shadow on init when body content overflows', async ({ page }) => {
+            await page.setViewportSize({ width: 400, height: 350 });
+            await page.goto('/E2eModalStates');
+            await page.getByTestId('e2eOpenModal').click();
+            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
+            await page.waitForTimeout(400);
+
+            await expect(page.locator('.kbq-modal-footer')).toHaveClass(/kbq-modal-body_bottom-overflow/);
+        });
+
+        test('should show header shadow after scrolling down', async ({ page }) => {
+            await page.setViewportSize({ width: 400, height: 350 });
+            await page.goto('/E2eModalStates');
+            await page.getByTestId('e2eOpenModal').click();
+            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
+            await page.waitForTimeout(400);
+
+            await page.locator('.kbq-modal-body').evaluate((el) => {
+                el.scrollTop = 50;
+            });
+
+            await expect(page.locator('.kbq-modal-header')).toHaveClass(/kbq-modal-body_top-overflow/);
+        });
+
+        test('should show both shadows when scrolled to the middle', async ({ page }) => {
+            await page.setViewportSize({ width: 400, height: 350 });
+            await page.goto('/E2eModalStates');
+            await page.getByTestId('e2eOpenModal').click();
+            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
+            await page.waitForTimeout(400);
+
+            await page.locator('.kbq-modal-body').evaluate((el) => {
+                el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
+            });
+
+            await expect(page.locator('.kbq-modal-header')).toHaveClass(/kbq-modal-body_top-overflow/);
+            await expect(page.locator('.kbq-modal-footer')).toHaveClass(/kbq-modal-body_bottom-overflow/);
+        });
+    });
 });

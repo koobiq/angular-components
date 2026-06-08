@@ -9,6 +9,7 @@ import {
     Component,
     ComponentFactoryResolver,
     ComponentRef,
+    DestroyRef,
     ElementRef,
     EventEmitter,
     inject,
@@ -28,6 +29,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ENTER, ESCAPE, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -71,6 +73,7 @@ export class KbqModalComponent<T = any, R = any>
     implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions
 {
     protected readonly document = inject<Document>(DOCUMENT);
+    private readonly destroyRef = inject(DestroyRef);
 
     componentColors = KbqComponentColors;
 
@@ -365,7 +368,7 @@ export class KbqModalComponent<T = any, R = any>
 
         (this.getElement().querySelector('button[autofocus]') as HTMLButtonElement)?.focus();
 
-        this.checkOverflow();
+        this.kbqAfterOpen.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.checkOverflow());
     }
 
     ngOnDestroy() {

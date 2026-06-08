@@ -5,6 +5,46 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
+    selector: 'e2e-content-panel-scroll-overflow',
+    imports: [KbqButtonModule, KbqContentPanelModule],
+    template: `
+        <kbq-content-panel-container width="350" maxWidth="400" minWidth="300" [opened]="true">
+            <div>Content panel container content</div>
+            <kbq-content-panel>
+                <kbq-content-panel-header>
+                    <div kbqContentPanelHeaderTitle>Title</div>
+                </kbq-content-panel-header>
+                <kbq-content-panel-body>
+                    @for (_i of items; track $index) {
+                        <p>Item {{ $index }}</p>
+                    }
+                </kbq-content-panel-body>
+                <kbq-content-panel-footer>
+                    <button kbq-button>Action</button>
+                </kbq-content-panel-footer>
+            </kbq-content-panel>
+        </kbq-content-panel-container>
+    `,
+    styles: `
+        :host {
+            display: inline-flex;
+        }
+
+        .kbq-content-panel-container {
+            height: 300px;
+            width: 500px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eContentPanelScrollOverflow'
+    }
+})
+export class E2eContentPanelScrollOverflow {
+    protected readonly items = Array.from({ length: 100 });
+}
+
+@Component({
     selector: 'e2e-content-panel-state',
     imports: [KbqButtonModule, KbqContentPanelModule, KbqIconModule],
     standalone: true,

@@ -1,4 +1,5 @@
 import {
+    afterNextRender,
     booleanAttribute,
     Component,
     Directive,
@@ -116,6 +117,12 @@ export class KbqSidepanelHeader {
 export class KbqSidepanelBody {
     private readonly sidepanelRef = inject(KbqSidepanelRef);
     private readonly elementRef = inject<ElementRef>(ElementRef);
+
+    constructor() {
+        afterNextRender(() => {
+            this.checkOverflow();
+        });
+    }
 
     /** @docs-private */
     protected checkOverflow() {
