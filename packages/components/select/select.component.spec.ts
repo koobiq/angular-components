@@ -5364,6 +5364,45 @@ describe('KbqSelect', () => {
                 while (restore.length) restore.pop()!();
             }
         }));
+
+        it('should not throw when the hidden-text element is not yet in the DOM', fakeAsync(() => {
+            // Regression: in multiple mode with preset values restored programmatically,
+            // `calculateHiddenItems` may run (via setTimeout) before the trigger view has
+            // materialized `.kbq-select__match-hidden-text`. `querySelector` then returns null,
+            // and on Angular 20 `Renderer2.setStyle(null, ...)` throws. We must tolerate the
+            // missing element instead of crashing.
+            const originalQuerySelector = HTMLElement.prototype.querySelector;
+
+            const fixtureTest = TestBed.createComponent(MultiSelectNarrow);
+            const componentInstance: MultiSelectNarrow = fixtureTest.componentInstance;
+            const triggerEl = fixtureTest.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
+            fixtureTest.detectChanges();
+
+            triggerEl.click();
+            fixtureTest.detectChanges();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+            options.item(0)?.click();
+            options.item(1)?.click();
+
+            fixtureTest.detectChanges();
+            tick();
+            flush();
+
+            HTMLElement.prototype.querySelector = function (selectors: string) {
+                if (selectors === '.kbq-select__match-hidden-text') return null;
+
+                return originalQuerySelector.call(this, selectors);
+            } as typeof HTMLElement.prototype.querySelector;
+
+            try {
+                expect(() => componentInstance.select().calculateHiddenItems()).not.toThrow();
+            } finally {
+                HTMLElement.prototype.querySelector = originalQuerySelector;
+            }
+        }));
     });
 
     describe('option tooltip', () => {
