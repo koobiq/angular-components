@@ -78,6 +78,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     // (undocumented)
     readonly empty: i0.InputSignalWithTransform<boolean, unknown>;
     readonly explicitContent: i0.Signal<TemplateRef<any> | undefined>;
+    get iconOnlyLabel(): boolean;
     readonly implicitContent: i0.Signal<TemplateRef<any>>;
     isActive: boolean;
     // (undocumented)
@@ -242,9 +243,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 //
 // @public
 export class KbqTabHeader extends KbqPaginatedTabHeader {
-    // (undocumented)
     protected get activeTabOffsetLeft(): number | undefined;
-    // (undocumented)
     protected get activeTabOffsetWidth(): number | undefined;
     // (undocumented)
     readonly items: QueryList<KbqTabLabelWrapper>;
@@ -270,8 +269,9 @@ export type KbqTabHeaderPosition = 'above' | 'below';
 
 // @public
 export class KbqTabLabel extends CdkPortal {
+    readonly iconOnly: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, { "iconOnly": { "alias": "iconOnly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabLabel, never>;
 }

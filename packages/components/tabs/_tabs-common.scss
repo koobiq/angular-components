@@ -81,6 +81,28 @@
         bottom: -10px;
     }
 
+    &.kbq-tab-label_icon-only {
+        width: var(--kbq-size-3xl);
+        height: var(--kbq-size-3xl);
+        padding: 0 !important;
+        margin-inline: var(--kbq-size-xs);
+        box-sizing: content-box;
+
+        // Keep the space between icon-only tabs clickable after adding margins.
+        &:not(.kbq-tab-label_vertical):after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            // Absolute offsets are calculated from the padding box, so we add
+            // focus outline width to fully cover the visual margin gap.
+            left: calc(-1 * (var(--kbq-size-xs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            right: calc(-1 * (var(--kbq-size-xs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            background: transparent;
+        }
+    }
+
     &.kbq-tab-label_vertical {
         justify-content: flex-start;
 
@@ -89,6 +111,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        &.kbq-tab-label_icon-only {
+            margin-inline: 0;
+            justify-content: center;
         }
     }
 }

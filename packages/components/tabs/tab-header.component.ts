@@ -21,6 +21,9 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
  */
 export type ScrollDirection = 'after' | 'before';
 
+/** Corresponds to `margin-inline: var(--kbq-size-xs)` on `.kbq-tab-label_icon-only`. */
+const ICON_ONLY_TAB_MARGIN_INLINE = 6;
+
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group.
  * When the tabs list's width exceeds the width of the header container,
@@ -54,12 +57,24 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     @ViewChild('nextPaginator') readonly nextPaginator: ElementRef<HTMLElement>;
     @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;
 
+    /** Width of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetWidth(): number | undefined {
-        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetWidth;
+        const item = this.items.get(this.selectedIndex);
+        const width = item?.elementRef?.nativeElement?.offsetWidth;
+
+        if (!width) return width;
+
+        return item!.tab?.iconOnlyLabel ? width + ICON_ONLY_TAB_MARGIN_INLINE * 2 : width;
     }
 
+    /** Left offset of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetLeft(): number | undefined {
-        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft;
+        const item = this.items.get(this.selectedIndex);
+        const left = item?.elementRef?.nativeElement?.offsetLeft;
+
+        if (!left) return left;
+
+        return item!.tab?.iconOnlyLabel ? left - ICON_ONLY_TAB_MARGIN_INLINE : left;
     }
 
     protected itemSelected(event: KeyboardEvent): void {
