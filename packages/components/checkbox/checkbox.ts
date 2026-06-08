@@ -89,6 +89,9 @@ export class KbqCheckboxChange {
     exportAs: 'kbqCheckbox'
 })
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private focusMonitor = inject(FocusMonitor);
+
     readonly big = input<boolean>(false);
 
     /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
@@ -213,10 +216,10 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     private currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
-    constructor(
-        private changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         super();
 
         this.id = this.uniqueId;

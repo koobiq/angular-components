@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
@@ -24,11 +24,16 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerOverviewExample {
+    private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+
     timeFormats = TimeFormats;
 
     time: DateTime;
 
-    constructor(private adapter: DateAdapter<DateTime>) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.time = this.adapter.today().startOf('hour');
     }
 }

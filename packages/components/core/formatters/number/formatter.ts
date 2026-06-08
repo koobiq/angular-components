@@ -1,5 +1,5 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { Inject, Injectable, InjectionToken, Optional, Pipe, PipeTransform } from '@angular/core';
+import { Injectable, InjectionToken, Pipe, PipeTransform, inject } from '@angular/core';
 import {
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_ID,
@@ -149,11 +149,13 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
     pure: false
 })
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
-    constructor(
-        @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
-        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
-    ) {
+    private id = inject(KBQ_LOCALE_ID, { optional: true })!;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
@@ -223,11 +225,13 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     pure: false
 })
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
-    constructor(
-        @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
-        @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
-    ) {
+    private id = inject(KBQ_LOCALE_ID, { optional: true })!;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
@@ -289,12 +293,14 @@ export function isWithin(startRange: number, endRange: number, valueToCheck: num
     pure: false
 })
 export class KbqRoundDecimalPipe implements PipeTransform {
+    private id = inject(KBQ_LOCALE_ID, { optional: true })!;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
     roundingOptions: RoundDecimalOptions;
 
-    constructor(
-        @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
     }
 

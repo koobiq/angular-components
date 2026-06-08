@@ -1,6 +1,5 @@
 import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import {
-    KBQ_LOCALE_DATA,
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
@@ -17,7 +16,7 @@ describe('KbqRoundDecimalPipe', () => {
             imports: [KbqFormattersModule],
             providers: [
                 { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
-                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService, deps: [KBQ_LOCALE_ID, KBQ_LOCALE_DATA] }
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
             ]
         }).compileComponents();
 

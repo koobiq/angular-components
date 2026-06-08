@@ -2,7 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    Inject,
+    inject,
     model,
     viewChild,
     viewChildren,
@@ -79,6 +79,8 @@ export class DevDocsExamples {}
     }
 })
 export class DevApp implements AfterViewInit {
+    localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
+
     passwordRules = PasswordRules;
     password = '456';
 
@@ -96,7 +98,10 @@ export class DevApp implements AfterViewInit {
     readonly passwordHints = viewChildren(KbqPasswordHint);
     readonly formField = viewChild.required<KbqFormField>('formField');
 
-    constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.locales = Object.keys(this.localeService.locales).filter((key) => key !== 'items');
     }
 

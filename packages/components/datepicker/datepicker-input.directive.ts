@@ -7,11 +7,9 @@ import {
     EventEmitter,
     forwardRef,
     inject,
-    Inject,
     InjectionToken,
     Input,
     OnDestroy,
-    Optional,
     output,
     Renderer2
 } from '@angular/core';
@@ -248,14 +246,15 @@ interface DateTimeObject {
 export class KbqDatepickerInput<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
 {
+    elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    private readonly renderer = inject(Renderer2);
+    readonly adapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
+    private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true })!;
     /** @docs-private */
-    protected readonly formField = inject(KbqFormField, { optional: true, host: true });
+    protected readonly formField = inject(KbqFormField, { optional: true, host: true })!; /** @docs-private */
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true })!;
     /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
-    /** @docs-private */
-    protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true });
-
+    protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true })!;
     protected configuration;
 
     readonly stateChanges: Subject<void> = new Subject<void>();
@@ -557,12 +556,10 @@ export class KbqDatepickerInput<D>
 
     private errorStateTracker: KbqErrorStateTracker;
 
-    constructor(
-        public elementRef: ElementRef<HTMLInputElement>,
-        private readonly renderer: Renderer2,
-        @Optional() readonly adapter: DateAdapter<D>,
-        @Optional() @Inject(KBQ_DATE_FORMATS) private readonly dateFormats: KbqDateFormats
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.validator = Validators.compose([
             this.parseValidator,
             this.minValidator,

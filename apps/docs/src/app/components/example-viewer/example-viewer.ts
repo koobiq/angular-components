@@ -41,6 +41,13 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
     }
 })
 export class DocsExampleViewerComponent extends DocsLocaleState implements OnDestroy {
+    private appRef = inject(ApplicationRef);
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private injector = inject(Injector);
+    private viewContainerRef = inject(ViewContainerRef);
+    private ngZone = inject(NgZone);
+    private domSanitizer = inject(DomSanitizer);
+
     private portalHosts: DomPortalOutlet[] = [];
     private documentFetchSubscription: Subscription | undefined;
     private readonly window = inject(KBQ_WINDOW);
@@ -71,14 +78,10 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
     private readonly documentLoader = inject(DocsDocumentLoader);
     private readonly platformId = inject(PLATFORM_ID);
 
-    constructor(
-        private appRef: ApplicationRef,
-        private elementRef: ElementRef<HTMLElement>,
-        private injector: Injector,
-        private viewContainerRef: ViewContainerRef,
-        private ngZone: NgZone,
-        private domSanitizer: DomSanitizer
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         super();
     }
 

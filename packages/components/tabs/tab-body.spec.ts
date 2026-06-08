@@ -1,6 +1,6 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
-import { AfterContentInit, Component, TemplateRef, ViewContainerRef, viewChild } from '@angular/core';
+import { AfterContentInit, Component, TemplateRef, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
@@ -182,6 +182,8 @@ describe('KbqTabBody', () => {
     `
 })
 class SimpleTabBodyApp implements AfterContentInit {
+    private viewContainerRef = inject(ViewContainerRef);
+
     content: TemplatePortal;
     position: number;
     origin: number | null;
@@ -189,7 +191,10 @@ class SimpleTabBodyApp implements AfterContentInit {
     readonly tabBody = viewChild.required(KbqTabBody);
     readonly template = viewChild.required(TemplateRef);
 
-    constructor(private viewContainerRef: ViewContainerRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngAfterContentInit() {
         this.content = new TemplatePortal(this.template(), this.viewContainerRef);

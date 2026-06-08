@@ -6,11 +6,9 @@
 
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
@@ -28,7 +26,7 @@ export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
-    constructor(changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly big: _angular_core.InputSignal<boolean>;
     readonly change: _angular_core.OutputEmitterRef<KbqCheckboxChange>;

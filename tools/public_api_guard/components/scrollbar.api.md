@@ -13,7 +13,6 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import { InitializationTarget } from 'overlayscrollbars';
 import { InjectionToken } from '@angular/core';
-import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OverlayScrollbars } from 'overlayscrollbars';
 import * as overlayscrollbars from 'overlayscrollbars';
@@ -54,7 +53,7 @@ export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider;
 
 // @public
 export class KbqScrollbar implements AfterViewInit, OnDestroy {
-    constructor(ngZone: NgZone, targetElement: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
     readonly contentElement: i0.Signal<ElementRef<HTMLDivElement>>;
     readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
     // (undocumented)
@@ -112,7 +111,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
 
 // @public
 export class KbqScrollbarDirective implements OnDestroy {
-    constructor(ngZone: NgZone, scrollbarConfig?: KbqScrollbarOptions | undefined);
+    constructor(...args: unknown[]);
     readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
     set events(value: KbqScrollbarEvents);
     // (undocumented)

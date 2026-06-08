@@ -10,7 +10,7 @@ import {
     contentChild,
     ElementRef,
     EventEmitter,
-    Inject,
+    inject,
     InjectionToken,
     Input,
     input,
@@ -97,6 +97,10 @@ let uniqueIdCounter: number = 0;
     exportAs: 'kbqTreeOption'
 })
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private ngZone = inject(NgZone);
+    tree: any;
+
     readonly onFocus = new Subject<KbqTreeOptionEvent>();
 
     readonly onBlur = new Subject<KbqTreeOptionEvent>();
@@ -214,13 +218,16 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     checkboxState: KbqPseudoCheckboxState;
 
-    constructor(
-        elementRef: ElementRef<HTMLElement>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private ngZone: NgZone,
-        @Inject(KBQ_TREE_OPTION_PARENT_COMPONENT) public tree: any
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+        const tree = inject(KBQ_TREE_OPTION_PARENT_COMPONENT);
+
         super(elementRef, tree);
+
+        this.tree = tree;
     }
 
     ngAfterContentInit(): void {

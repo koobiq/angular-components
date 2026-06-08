@@ -1,12 +1,6 @@
 import { NgModule } from '@angular/core';
-import {
-    DateAdapter,
-    KBQ_DATE_FORMATS,
-    KBQ_DATE_LOCALE,
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleServiceModule
-} from '@koobiq/components/core';
-import { KBQ_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from './moment-date-adapter';
+import { DateAdapter, KBQ_DATE_FORMATS, KbqLocaleServiceModule } from '@koobiq/components/core';
+import { MomentDateAdapter } from './moment-date-adapter';
 
 export * from './moment-date-adapter';
 export * from './moment-date-formats';
@@ -15,8 +9,7 @@ export * from './moment-date-formats';
     providers: [
         {
             provide: DateAdapter,
-            useClass: MomentDateAdapter,
-            deps: [KBQ_DATE_LOCALE, KBQ_MOMENT_DATE_ADAPTER_OPTIONS, KBQ_LOCALE_SERVICE]
+            useClass: MomentDateAdapter
         }
     ]
 })

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqMomentDateModule } from '@koobiq/angular-moment-adapter/adapter';
@@ -78,6 +78,8 @@ const MAX_PERCENT: number = 100;
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp implements OnDestroy {
+    private modalService = inject(KbqModalService);
+
     themePalette = ThemePalette;
     popUpPlacements = PopUpPlacements;
 
@@ -162,7 +164,10 @@ export class DevApp implements OnDestroy {
     dataSource: KbqTreeFlatDataSource<DevFileNode, DevFileFlatNode>;
     treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
 
-    constructor(private modalService: KbqModalService) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         setInterval(() => (this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP)), INTERVAL);
 
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);

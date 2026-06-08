@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewEncapsulation, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
@@ -58,6 +58,8 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp implements AfterViewInit {
+    private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+
     date = this.adapter.today();
     formControlValue: UntypedFormControl;
     minDate;
@@ -66,7 +68,10 @@ export class DevApp implements AfterViewInit {
 
     readonly datepicker = viewChild.required(KbqDatepicker);
 
-    constructor(private adapter: DateAdapter<DateTime>) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2021, 8, 11, 12, 0, 0, 0));
         this.formControlValue.valueChanges.subscribe((value) => {
             console.log('this.formControlValue.valueChanges: ', value?.toString());

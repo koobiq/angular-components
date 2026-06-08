@@ -6,14 +6,13 @@ import {
     ComponentRef,
     ElementRef,
     EmbeddedViewRef,
-    Inject,
     Injector,
     NgZone,
     TemplateRef,
     ViewContainerRef,
     ViewEncapsulation,
     ViewRef,
-    forwardRef,
+    inject,
     viewChild
 } from '@angular/core';
 import { KbqToastService } from './toast.service';
@@ -30,17 +29,20 @@ import { KbqToastData } from './toast.type';
     }
 })
 export class KbqToastContainerComponent extends CdkScrollable {
+    private injector = inject(Injector);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    readonly service = inject(KbqToastService);
+
     readonly viewContainer = viewChild.required('container', { read: ViewContainerRef });
 
-    constructor(
-        private injector: Injector,
-        private changeDetectorRef: ChangeDetectorRef,
-        @Inject(forwardRef(() => KbqToastService)) readonly service: KbqToastService,
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
 
-        elementRef: ElementRef<HTMLElement>,
-        scrollDispatcher: ScrollDispatcher,
-        ngZone: NgZone
-    ) {
+    constructor() {
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+        const scrollDispatcher = inject(ScrollDispatcher);
+        const ngZone = inject(NgZone);
+
         super(elementRef, scrollDispatcher, ngZone);
 
         this.service.animation.subscribe(this.dispatchScrollEvent);

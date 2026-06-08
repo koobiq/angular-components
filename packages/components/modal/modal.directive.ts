@@ -1,4 +1,4 @@
-import { Component, Directive } from '@angular/core';
+import { Component, Directive, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
@@ -34,7 +34,12 @@ import { KbqModalComponent } from './modal.component';
     }
 })
 export class KbqModalTitle {
-    constructor(protected modal: KbqModalComponent) {}
+    protected modal = inject(KbqModalComponent);
+
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 }
 
 @Directive({

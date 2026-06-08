@@ -7,10 +7,7 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { ElementRef } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i1 from '@koobiq/components/button';
 import * as i2 from '@koobiq/components/title';
 import { KbqButton } from '@koobiq/components/button';
@@ -23,7 +20,7 @@ export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
 
 // @public
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(buttonToggleGroup: KbqButtonToggleGroup, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor, element: ElementRef);
+    constructor(...args: unknown[]);
     // (undocumented)
     buttonToggleGroup: KbqButtonToggleGroup;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
@@ -56,7 +53,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggle, [{ optional: true; }, null, null, null]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggle, never>;
 }
 
 // @public
@@ -70,7 +67,7 @@ export class KbqButtonToggleChange {
 
 // @public
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
-    constructor(_changeDetector: ChangeDetectorRef);
+    constructor(...args: unknown[]);
     readonly buttonToggles: _angular_core.Signal<readonly any[]>;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
     controlValueAccessorChangeFn: (value: any) => void;

@@ -18,7 +18,6 @@ import {
     OnDestroy,
     Renderer2,
     signal,
-    SkipSelf,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -51,17 +50,21 @@ export const buttonRightIconClassName = 'kbq-button-icon_right';
     }
 })
 export class KbqButtonCssStyler implements AfterContentInit {
+    private renderer = inject(Renderer2);
+    private cdr = inject(ChangeDetectorRef, { skipSelf: true });
+
     readonly icons = contentChildren(forwardRef(() => KbqIcon));
 
     nativeElement: HTMLElement;
 
     isIconButton: boolean = false;
 
-    constructor(
-        elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2,
-        @SkipSelf() private cdr: ChangeDetectorRef
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
         this.nativeElement = elementRef.nativeElement;
     }
 
@@ -137,6 +140,9 @@ export class KbqButtonCssStyler implements AfterContentInit {
     }
 })
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
+    private focusMonitor = inject(FocusMonitor);
+    private styler = inject(KbqButtonCssStyler);
+
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     hasFocus: boolean = false;
@@ -190,10 +196,10 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     private _tabIndex = 0;
 
-    constructor(
-        private focusMonitor: FocusMonitor,
-        private styler: KbqButtonCssStyler
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         super();
 
         this.color = KbqComponentColors.ContrastFade;

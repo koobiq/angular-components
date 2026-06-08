@@ -9,13 +9,10 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
-    Host,
     inject,
-    Inject,
     InjectionToken,
     Input,
     numberAttribute,
-    Optional,
     output,
     QueryList,
     TemplateRef,
@@ -90,6 +87,9 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     exportAs: 'kbqAutocomplete'
 })
 export class KbqAutocomplete implements AfterContentInit {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly parentFormField = inject(KbqFormField, { host: true, optional: true })!;
     private readonly destroyRef = inject(DestroyRef);
     /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
     id: string = `kbq-autocomplete-${uniqueAutocompleteIdCounter++}`;
@@ -203,12 +203,12 @@ export class KbqAutocomplete implements AfterContentInit {
 
     private _openOnFocus: boolean = true;
 
-    constructor(
-        private changeDetectorRef: ChangeDetectorRef,
-        private elementRef: ElementRef<HTMLElement>,
-        @Inject(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS) defaults: KbqAutocompleteDefaultOptions,
-        @Host() @Optional() private readonly parentFormField: KbqFormField
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const defaults = inject<KbqAutocompleteDefaultOptions>(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS);
+
         this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
     }
 

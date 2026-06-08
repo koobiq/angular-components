@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
@@ -26,6 +26,11 @@ import { DevLocaleSelector } from '../locale-selector';
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private cdr = inject(ChangeDetectorRef);
+    formatter = inject<DateFormatter<DateTime>>(DateFormatter);
+    adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+    localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
+
     lang = {
         absolute: {
             long: {
@@ -329,12 +334,10 @@ export class DevApp {
         }
     };
 
-    constructor(
-        private cdr: ChangeDetectorRef,
-        public formatter: DateFormatter<DateTime>,
-        public adapter: DateAdapter<DateTime>,
-        @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
     }
 

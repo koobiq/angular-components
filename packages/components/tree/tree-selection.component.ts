@@ -5,7 +5,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
     AfterViewInit,
-    Attribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -13,12 +12,12 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
+    HostAttributeToken,
     inject,
     Input,
     IterableDiffer,
     IterableDiffers,
     OnDestroy,
-    Optional,
     Output,
     output,
     QueryList,
@@ -135,6 +134,9 @@ export class KbqTreeSelection
     extends KbqTreeBase<any>
     implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy
 {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private scheduler = inject(AsyncScheduler);
+    private clipboard = inject(Clipboard, { optional: true })!;
     protected readonly focusMonitor = inject(FocusMonitor);
 
     /** Indicates whether this component is placed inside a KbqFormField component. */
@@ -258,14 +260,14 @@ export class KbqTreeSelection
 
     private optionBlurSubscription: Subscription | null;
 
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private scheduler: AsyncScheduler,
-        differs: IterableDiffers,
-        changeDetectorRef: ChangeDetectorRef,
-        @Attribute('multiple') multiple: MultipleMode,
-        @Optional() private clipboard: Clipboard
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const differs = inject(IterableDiffers);
+        const changeDetectorRef = inject(ChangeDetectorRef);
+        const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
+
         super(differs, changeDetectorRef);
 
         if (multiple === MultipleMode.CHECKBOX || multiple === MultipleMode.KEYBOARD) {

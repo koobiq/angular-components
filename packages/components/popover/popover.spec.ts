@@ -1,6 +1,6 @@
 ﻿import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, ElementRef, Provider, Type, viewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, Provider, Type, inject as inject_1, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -414,9 +414,14 @@ describe('KbqPopover', () => {
     `
 })
 export class PopoverSimple {
+    elementRef = inject_1(ElementRef);
+
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
     readonly triggerElementRef = viewChild.required(KbqPopoverTrigger, { read: ElementRef });
-    constructor(public elementRef: ElementRef) {}
+
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+    constructor() {}
 }
 
 @Component({

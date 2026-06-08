@@ -7,20 +7,16 @@
 import { ActiveDescendantKeyManager } from '@koobiq/components/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
-import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
 import { KeyboardNavigationHandler } from '@koobiq/components/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
@@ -28,8 +24,6 @@ import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
-import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
@@ -61,7 +55,7 @@ export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider;
 
 // @public (undocumented)
 export class KbqAutocomplete implements AfterContentInit {
-    constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, defaults: KbqAutocompleteDefaultOptions, parentFormField: KbqFormField);
+    constructor(...args: unknown[]);
     get autoActiveFirstOption(): boolean;
     set autoActiveFirstOption(value: boolean);
     get classList(): string;
@@ -106,7 +100,7 @@ export class KbqAutocomplete implements AfterContentInit {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["optionGroups", "options"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, [null, null, null, { optional: true; host: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, never>;
 }
 
 // @public
@@ -134,7 +128,7 @@ export class KbqAutocompleteModule {
 
 // @public
 export class KbqAutocompleteOrigin {
-    constructor(elementRef: ElementRef<HTMLElement>);
+    constructor(...args: unknown[]);
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -154,7 +148,7 @@ export class KbqAutocompleteSelectedEvent {
 
 // @public (undocumented)
 export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler {
-    constructor(elementRef: ElementRef<HTMLInputElement>, viewContainerRef: ViewContainerRef, changeDetectorRef: ChangeDetectorRef, overlay: Overlay, zone: NgZone, scrollStrategy: any, dir: Directionality, formField: KbqFormField, viewportRuler?: ViewportRuler | undefined);
+    constructor(...args: unknown[]);
     get activeOption(): KbqOption | null;
     readonly autocomplete: i0.InputSignal<KbqAutocomplete>;
     readonly autocompleteAttribute: i0.InputSignal<string>;
@@ -200,7 +194,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; "isSignal": true; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; "isSignal": true; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, never>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -6,9 +6,7 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
@@ -19,7 +17,6 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 
 // @public (undocumented)
@@ -30,7 +27,7 @@ export const buttonRightIconClassName = "kbq-button-icon_right";
 
 // @public (undocumented)
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
-    constructor(focusMonitor: FocusMonitor, styler: KbqButtonCssStyler);
+    constructor(...args: unknown[]);
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledSignal: i0.WritableSignal<boolean>;
@@ -74,7 +71,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
 // @public (undocumented)
 export class KbqButtonCssStyler implements AfterContentInit {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly icons: i0.Signal<readonly any[]>;
     // (undocumented)
@@ -88,7 +85,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonCssStyler, "[kbq-button]", never, {}, {}, ["icons"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonCssStyler, [null, null, { skipSelf: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonCssStyler, never>;
 }
 
 // @public

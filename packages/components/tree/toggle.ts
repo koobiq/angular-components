@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
+    inject,
     Input,
     input,
     ViewEncapsulation
@@ -14,6 +15,9 @@ import { KbqTreeBase, KbqTreeNode } from './tree-base';
 /** @docs-private */
 @Directive()
 export class KbqTreeNodeToggleBaseDirective<T> {
+    private tree = inject<KbqTreeBase<T>>(KbqTreeBase);
+    private treeNode = inject<KbqTreeNode<T>>(KbqTreeNode);
+
     readonly node = input<T>(undefined!);
 
     // TODO: Skipped for migration because:
@@ -48,10 +52,10 @@ export class KbqTreeNodeToggleBaseDirective<T> {
         return this.tree.treeControl.isExpanded(this.node());
     }
 
-    constructor(
-        private tree: KbqTreeBase<T>,
-        private treeNode: KbqTreeNode<T>
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         this.tree.treeControl.filterValue.subscribe((value) => (this.disabled = !!value?.length));
     }
 

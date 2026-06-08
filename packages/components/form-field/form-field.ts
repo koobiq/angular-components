@@ -4,7 +4,6 @@ import {
     AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
-    Attribute,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -15,15 +14,14 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
+    HostAttributeToken,
     inject,
     InjectionToken,
     input,
     model,
     OnDestroy,
-    Optional,
     Provider,
     QueryList,
-    Self,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -134,8 +132,7 @@ export class KbqFormField
     private readonly destroyRef = inject(DestroyRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
-    private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
-    /**
+    private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true })!; /**
      * @docs-private
      */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -535,14 +532,15 @@ export class KbqFormField
     exportAs: 'KbqTrim'
 })
 export class KbqTrim {
+    private readonly noTrim = coerceBooleanProperty(inject(new HostAttributeToken('no-trim'), { optional: true }));
+    private ngControl = inject(NgControl, { optional: true, self: true })!;
+
     private original: (fn: any) => void;
 
-    constructor(
-        @Attribute('no-trim') private readonly noTrim: boolean,
-        @Optional() @Self() private ngControl: NgControl
-    ) {
-        this.noTrim = coerceBooleanProperty(noTrim);
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
 
+    constructor() {
         if (this.noTrim || !this.ngControl?.valueAccessor) {
             return;
         }

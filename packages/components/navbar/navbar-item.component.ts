@@ -12,7 +12,6 @@ import {
     Input,
     NgZone,
     OnDestroy,
-    Optional,
     ViewEncapsulation,
     booleanAttribute,
     contentChild,
@@ -128,6 +127,11 @@ export class KbqNavbarDivider {}
     }
 })
 export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetector = inject(ChangeDetectorRef);
+    private focusMonitor = inject(FocusMonitor);
+    private ngZone = inject(NgZone);
+
     readonly title = contentChild(KbqNavbarTitle);
 
     readonly button = contentChild(KbqButton);
@@ -179,12 +183,10 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
         return -1;
     }
 
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private changeDetector: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor,
-        private ngZone: NgZone
-    ) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef);
@@ -369,6 +371,11 @@ export class KbqNavbarRectangleElement {
     exportAs: 'kbqNavbarItem'
 })
 export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
+    rectangleElement = inject(KbqNavbarRectangleElement);
+    navbarFocusableItem = inject(KbqNavbarFocusableItem);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private dropdownTrigger = inject(KbqDropdownTrigger, { optional: true })!;
+    private bento = inject(KbqNavbarBento, { optional: true })!;
     readonly title = contentChild(KbqNavbarTitle);
 
     readonly icon = contentChild(KbqIcon);
@@ -469,13 +476,10 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
         return !!this.title()?.isOverflown;
     }
 
-    constructor(
-        public rectangleElement: KbqNavbarRectangleElement,
-        public navbarFocusableItem: KbqNavbarFocusableItem,
-        private changeDetectorRef: ChangeDetectorRef,
-        @Optional() private dropdownTrigger: KbqDropdownTrigger,
-        @Optional() private bento: KbqNavbarBento
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         super();
 
         if (this.hasDropDownTrigger) {

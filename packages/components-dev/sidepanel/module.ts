@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, TemplateRef, ViewEncapsulation, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
@@ -83,13 +83,20 @@ export class DevDocsExamples {}
     }
 })
 export class DevSidepanelComponent {
+    data = inject(KBQ_SIDEPANEL_DATA);
+
     themePalette = ThemePalette;
 
     openComponentSidepanel: () => void;
 
     array = new Array(60);
 
-    constructor(@Inject(KBQ_SIDEPANEL_DATA) public data: any) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const data = this.data;
+
         this.openComponentSidepanel = data.openComponentSidepanel;
     }
 }
@@ -112,6 +119,8 @@ export class DevSidepanelComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private sidepanelService = inject(KbqSidepanelService);
+
     themePalette = ThemePalette;
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
     size: KbqSidepanelSize = KbqSidepanelSize.Medium;
@@ -121,7 +130,10 @@ export class DevApp {
     readonly template = viewChild.required(TemplateRef);
 
     array = new Array(40);
-    constructor(private sidepanelService: KbqSidepanelService) {}
+
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+    constructor() {}
 
     openComponentSidepanel() {
         this.sidepanelService.open(DevSidepanelComponent, {

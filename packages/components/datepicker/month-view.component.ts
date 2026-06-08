@@ -4,8 +4,8 @@ import {
     ChangeDetectorRef,
     Component,
     Input,
-    Optional,
     ViewEncapsulation,
+    inject,
     input,
     output,
     viewChild
@@ -31,6 +31,9 @@ const DAYS_PER_WEEK = 7;
     exportAs: 'kbqMonthView'
 })
 export class KbqMonthView<D> implements AfterContentInit {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    adapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
+
     /**
      * The date to display in this month view (everything other than the month and year is ignored).
      */
@@ -110,10 +113,10 @@ export class KbqMonthView<D> implements AfterContentInit {
     /** The names of the weekdays. */
     weekdays: { long: string; narrow: string }[];
 
-    constructor(
-        private changeDetectorRef: ChangeDetectorRef,
-        @Optional() public adapter: DateAdapter<D>
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         if (!this.adapter) {
             throw createMissingDateImplError('DateAdapter');
         }

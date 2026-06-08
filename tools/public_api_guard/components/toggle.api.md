@@ -6,10 +6,8 @@
 
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i1 from '@angular/cdk/a11y';
 import { KbqCheckboxClickAction } from '@koobiq/components/checkbox';
 import { KbqCheckedState } from '@koobiq/components/core';
@@ -27,7 +25,7 @@ export class KbqToggleChange {
 
 // @public (undocumented)
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
-    constructor(focusMonitor: FocusMonitor, changeDetectorRef: ChangeDetectorRef);
+    constructor(...args: unknown[]);
     // (undocumented)
     readonly ariaLabel: _angular_core.InputSignal<string>;
     // (undocumented)

@@ -9,7 +9,6 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import { KbqDefaultSizes } from '@koobiq/components/core';
-import { KbqIconItem } from '@koobiq/components/icon';
 
 // @public (undocumented)
 export class KbqEmptyState implements AfterContentInit {
@@ -40,13 +39,13 @@ export class KbqEmptyStateActions {
 
 // @public (undocumented)
 export class KbqEmptyStateIcon {
-    constructor(icon: KbqIconItem);
+    constructor(...args: unknown[]);
     // (undocumented)
     setErrorColor(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEmptyStateIcon, "[kbq-empty-state-icon]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyStateIcon, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqEmptyStateIcon, never>;
 }
 
 // @public (undocumented)

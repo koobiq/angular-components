@@ -6,10 +6,9 @@ import {
     Component,
     ContentChild,
     ElementRef,
-    Inject,
+    inject,
     Input,
     OnDestroy,
-    Optional,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -49,6 +48,9 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
     exportAs: 'kbqDropdownItem'
 })
 export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private focusMonitor = inject(FocusMonitor);
+    parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true })!;
     @ViewChild('kbqTitleText', { static: true }) textElement: ElementRef;
 
     @ContentChild(KbqIcon) icon: KbqIcon;
@@ -83,11 +85,10 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     /** @docs-private */
     protected readonly componentColors = KbqComponentColors;
 
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private focusMonitor: FocusMonitor,
-        @Inject(KBQ_DROPDOWN_PANEL) @Optional() public parentDropdownPanel?: KbqDropdownPanel
-    ) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngAfterViewInit() {
         if (this.focusMonitor) {

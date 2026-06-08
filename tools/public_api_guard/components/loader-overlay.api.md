@@ -4,7 +4,6 @@
 
 ```ts
 
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
@@ -12,11 +11,10 @@ import * as i3 from '@koobiq/components/progress-spinner';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 
 // @public (undocumented)
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
+    constructor(...args: unknown[]);
     // (undocumented)
     caption: string;
     readonly card: i0.InputSignalWithTransform<boolean, unknown>;

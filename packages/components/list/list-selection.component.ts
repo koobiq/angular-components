@@ -5,7 +5,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
     AfterViewInit,
-    Attribute,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -18,14 +17,13 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
+    HostAttributeToken,
     inject,
-    Inject,
     Input,
     input,
     NgZone,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     output,
     QueryList,
@@ -128,6 +126,9 @@ export class KbqListCopyEvent<T> {
     preserveWhitespaces: false
 })
 export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private clipboard = inject(Clipboard, { optional: true })!;
     protected readonly focusMonitor = inject(FocusMonitor);
 
     keyManager: FocusKeyManager<KbqListOption>;
@@ -235,12 +236,12 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     private optionBlurSubscription: Subscription | null;
 
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private changeDetectorRef: ChangeDetectorRef,
-        @Attribute('multiple') multiple: MultipleMode,
-        @Optional() private clipboard: Clipboard
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
+
         if (multiple === MultipleMode.CHECKBOX || multiple === MultipleMode.KEYBOARD) {
             this.multipleMode = multiple;
         } else if (multiple !== null) {
@@ -707,6 +708,11 @@ export class KbqListOptionCaption {}
     preserveWhitespaces: false
 })
 export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetector = inject(ChangeDetectorRef);
+    private ngZone = inject(NgZone);
+    listSelection = inject(KbqListSelection);
+    readonly group = inject(KbqOptgroup, { optional: true })!;
     hasFocus: boolean = false;
     preventBlur: boolean = false;
 
@@ -807,13 +813,10 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         return !!this.pseudoCheckbox();
     }
 
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private changeDetector: ChangeDetectorRef,
-        private ngZone: NgZone,
-        @Inject(forwardRef(() => KbqListSelection)) public listSelection: KbqListSelection,
-        @Optional() readonly group: KbqOptgroup
-    ) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngOnInit() {
         const list = this.listSelection;

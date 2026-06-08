@@ -7,12 +7,11 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    Inject,
+    inject,
     InjectionToken,
     Input,
     input,
     OnDestroy,
-    Optional,
     Output,
     QueryList,
     ViewChild,
@@ -163,6 +162,10 @@ export class KbqVirtualOption extends KbqOptionBase {
     exportAs: 'kbqOption'
 })
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    protected readonly parent = inject<KbqOptionParentComponent>(KBQ_OPTION_PARENT_COMPONENT, { optional: true })!;
+    readonly group = inject(KbqOptgroup, { optional: true })!;
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
     /** The form value of the option. */
@@ -264,12 +267,10 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      */
     private isFocusedByMouse: boolean = false;
 
-    constructor(
-        private readonly elementRef: ElementRef<HTMLElement>,
-        private readonly changeDetectorRef: ChangeDetectorRef,
-        @Optional() @Inject(KBQ_OPTION_PARENT_COMPONENT) protected readonly parent: KbqOptionParentComponent,
-        @Optional() readonly group: KbqOptgroup
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
         super();
     }
 

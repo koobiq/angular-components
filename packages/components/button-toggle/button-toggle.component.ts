@@ -11,11 +11,11 @@ import {
     Directive,
     ElementRef,
     forwardRef,
+    inject,
     Input,
     input,
     OnDestroy,
     OnInit,
-    Optional,
     output,
     viewChild,
     ViewEncapsulation
@@ -61,6 +61,8 @@ export class KbqButtonToggleChange {
     exportAs: 'kbqButtonToggleGroup'
 })
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
+    private _changeDetector = inject(ChangeDetectorRef);
+
     /** Whether the toggle group is vertical. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -156,7 +158,10 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
      */
     private rawValue: any;
 
-    constructor(private _changeDetector: ChangeDetectorRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     /**
      * The method to be called in order to update ngModel.
@@ -332,6 +337,11 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     exportAs: 'kbqButtonToggle'
 })
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+    buttonToggleGroup = inject(KbqButtonToggleGroup, { optional: true })!;
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private focusMonitor = inject(FocusMonitor);
+    private element = inject(ElementRef);
+
     readonly icons = contentChildren(KbqIcon, { descendants: true });
 
     /** Whether the button is checked. */
@@ -387,12 +397,10 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     private _checked = false;
     private _disabled: boolean = false;
 
-    constructor(
-        @Optional() public buttonToggleGroup: KbqButtonToggleGroup,
-        private changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor,
-        private element: ElementRef
-    ) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     ngOnInit() {
         this.isSingleSelector = this.buttonToggleGroup && !this.buttonToggleGroup.multiple;

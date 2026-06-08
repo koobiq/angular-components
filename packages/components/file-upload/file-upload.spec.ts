@@ -1,6 +1,6 @@
 ﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, signal, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject as inject_1, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -1532,6 +1532,8 @@ describe('KbqLocalDropzone', () => {
     `
 })
 class BasicSingleFileUpload {
+    elementRef = inject_1(ElementRef);
+
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     disabled: boolean;
     file: KbqFileItem | null;
@@ -1540,7 +1542,10 @@ class BasicSingleFileUpload {
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
 
-    constructor(public elementRef: ElementRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     onChange = jest.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
@@ -1562,12 +1567,17 @@ class BasicSingleFileUpload {
     `
 })
 class ControlValueAccessorSingleFileUpload {
+    elementRef = inject_1(ElementRef);
+
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     file: KbqFileItem | null;
     accept: string[] = [];
     control = new FormControl();
 
-    constructor(public elementRef: ElementRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     onChange = jest.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
@@ -1590,6 +1600,9 @@ class ControlValueAccessorSingleFileUpload {
     `
 })
 class BasicMultipleFileUpload {
+    elementRef = inject_1(ElementRef);
+    cdr = inject_1(ChangeDetectorRef);
+
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     disabled: boolean;
     files: KbqFileItem[];
@@ -1597,10 +1610,10 @@ class BasicMultipleFileUpload {
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
 
-    constructor(
-        public elementRef: ElementRef,
-        public cdr: ChangeDetectorRef
-    ) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
@@ -1622,12 +1635,17 @@ class BasicMultipleFileUpload {
     `
 })
 class ControlValueAccessorMultipleFileUpload {
+    elementRef = inject_1(ElementRef);
+
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     files: KbqFileItem[];
     accept: string[] = [];
     control = new FormControl();
 
-    constructor(public elementRef: ElementRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
@@ -1642,12 +1660,17 @@ class ControlValueAccessorMultipleFileUpload {
     `
 })
 class SingleFileUploadWithAsyncValidator {
+    elementRef = inject_1(ElementRef);
+
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [getAsyncValidator()]
     });
 
-    constructor(public elementRef: ElementRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 }
 
 @Component({
@@ -1658,12 +1681,17 @@ class SingleFileUploadWithAsyncValidator {
     `
 })
 class SingleFileUploadWithInvalidAsyncValidator {
+    elementRef = inject_1(ElementRef);
+
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [getAsyncValidator(false)]
     });
 
-    constructor(public elementRef: ElementRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 }
 
 @Component({
@@ -1674,12 +1702,17 @@ class SingleFileUploadWithInvalidAsyncValidator {
     `
 })
 class SingleFileUploadWithFileReaderValidator {
+    elementRef = inject_1(ElementRef);
+
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [fileContentLinesValidator(MAX_FILE_LINES_FOR_TEST)]
     });
 
-    constructor(public elementRef: ElementRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 }
 
 @Component({
@@ -1690,12 +1723,17 @@ class SingleFileUploadWithFileReaderValidator {
     `
 })
 class MultipleFileUploadWithAsyncValidator {
+    elementRef = inject_1(ElementRef);
+
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem[] | null>(null, {
         asyncValidators: [getAsyncValidator()]
     });
 
-    constructor(public elementRef: ElementRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 }
 
 @Component({
@@ -1706,12 +1744,17 @@ class MultipleFileUploadWithAsyncValidator {
     `
 })
 class MultipleFileUploadWithInvalidAsyncValidator {
+    elementRef = inject_1(ElementRef);
+
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     readonly control = new FormControl<KbqFileItem[] | null>(null, {
         asyncValidators: [getAsyncValidator(false)]
     });
 
-    constructor(public elementRef: ElementRef) {}
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {}
 }
 
 // Test host component
