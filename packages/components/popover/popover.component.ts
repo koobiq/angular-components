@@ -105,7 +105,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
                 }
             }
 
-            if (this.offset !== null && state) {
+            if (this.offset !== null && state && this.elementRef) {
                 applyPopupMargins(
                     this.renderer,
                     this.elementRef.nativeElement,
