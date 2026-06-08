@@ -40,9 +40,6 @@ export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly docStates = inject(DocsDocStates);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         super();
 

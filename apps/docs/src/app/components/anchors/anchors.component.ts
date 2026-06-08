@@ -80,9 +80,6 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const router = this.router;
 

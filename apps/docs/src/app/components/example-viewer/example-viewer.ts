@@ -78,13 +78,6 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
     private readonly documentLoader = inject(DocsDocumentLoader);
     private readonly platformId = inject(PLATFORM_ID);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {
-        super();
-    }
-
     ngOnDestroy() {
         this.clearLiveExamples();
         this.documentFetchSubscription?.unsubscribe();
