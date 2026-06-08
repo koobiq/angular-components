@@ -128,6 +128,7 @@ export class KbqNotificationCenterService {
     readonly loadingMode: BehaviorSubject<boolean>;
     readonly loadingMore: BehaviorSubject<boolean>;
     readonly loadMoreErrorMode: BehaviorSubject<boolean>;
+    readonly onDelete: EventEmitter<KbqNotificationDeleteEvent>;
     readonly onNextPage: EventEmitter<void>;
     readonly onRead: BehaviorSubject<KbqNotificationItem | null>;
     readonly onReload: EventEmitter<void>;
@@ -200,6 +201,12 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterTrigger, never>;
 }
+
+// @public
+export type KbqNotificationDeleteEvent = {
+    type: 'item' | 'group' | 'all';
+    items: KbqNotificationItem[];
+};
 
 // @public (undocumented)
 export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {

@@ -8,7 +8,8 @@ import { KbqFormattersModule } from '@koobiq/components/core';
 import {
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
-    KbqNotificationCenterTrigger
+    KbqNotificationCenterTrigger,
+    KbqNotificationItem
 } from '@koobiq/components/notification-center';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
@@ -180,6 +181,55 @@ describe('KbqNotificationCenter', () => {
 
                 service.setHasMore(false);
                 expect(service.hasMore.value).toBe(false);
+            });
+        });
+
+        describe('onDelete', () => {
+            const getService = () =>
+                (componentInstance.trigger as unknown as { service: KbqNotificationCenterService }).service;
+
+            const createItem = (title: string): KbqNotificationItem => ({ title, date: new Date().toISOString() });
+
+            it('emits an "item" event with the removed item on remove()', () => {
+                const service = getService();
+                const item = createItem('a');
+
+                service.items = [item];
+
+                const emitSpy = jest.spyOn(service.onDelete, 'emit');
+
+                service.remove(item);
+
+                expect(emitSpy).toHaveBeenCalledWith({ type: 'item', items: [item] });
+                expect(service.isEmpty).toBe(true);
+            });
+
+            it('emits a "group" event with the group items on removeGroup()', () => {
+                const service = getService();
+                const item = createItem('a');
+
+                service.items = [item];
+
+                const emitSpy = jest.spyOn(service.onDelete, 'emit');
+
+                service.removeGroup({ title: 'group', items: [item] });
+
+                expect(emitSpy).toHaveBeenCalledWith({ type: 'group', items: [item] });
+                expect(service.isEmpty).toBe(true);
+            });
+
+            it('emits an "all" event with a snapshot of all items on removeAll()', () => {
+                const service = getService();
+                const items = [createItem('a'), createItem('b')];
+
+                service.items = items;
+
+                const emitSpy = jest.spyOn(service.onDelete, 'emit');
+
+                service.removeAll();
+
+                expect(emitSpy).toHaveBeenCalledWith({ type: 'all', items });
+                expect(service.isEmpty).toBe(true);
             });
         });
     });

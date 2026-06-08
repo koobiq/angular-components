@@ -28,6 +28,14 @@ type KbqNotificationsGroup = { title: string; items: KbqNotificationItem[] };
 
 type KbqNotificationsGroups = Record<string, KbqNotificationsGroup>;
 
+/** Payload emitted by `KbqNotificationCenterService.onDelete`. */
+export type KbqNotificationDeleteEvent = {
+    /** What was removed: a single item, a whole date group, or all notifications. */
+    type: 'item' | 'group' | 'all';
+    /** The notification items that were removed. */
+    items: KbqNotificationItem[];
+};
+
 @Injectable({ providedIn: 'root' })
 export class KbqNotificationCenterService {
     /** @docs-private */
@@ -67,6 +75,9 @@ export class KbqNotificationCenterService {
 
     /** Triggers an event when the list is scrolled to the bottom and the next page should be loaded. */
     readonly onNextPage = new EventEmitter<void>();
+
+    /** Triggers an event when an item, a group, or all notifications are removed. */
+    readonly onDelete = new EventEmitter<KbqNotificationDeleteEvent>();
 
     private originalItems = new BehaviorSubject([] as KbqNotificationItem[]);
 
@@ -176,16 +187,24 @@ export class KbqNotificationCenterService {
     /** Remove notification item */
     remove(removedItem: KbqNotificationItem) {
         this.originalItems.next(this.originalItems.value.filter((item) => removedItem !== item));
+
+        this.onDelete.emit({ type: 'item', items: [removedItem] });
     }
 
     /** Remove group of notification items */
     removeGroup(group: KbqNotificationsGroup) {
         this.originalItems.next(this.originalItems.value.filter((item) => !group.items.includes(item)));
+
+        this.onDelete.emit({ type: 'group', items: [...group.items] });
     }
 
     /** Remove all notification items */
     removeAll() {
+        const items = this.originalItems.value;
+
         this.originalItems.next([]);
+
+        this.onDelete.emit({ type: 'all', items });
     }
 
     private makeGroup = (item: KbqNotificationItem, groups: KbqNotificationsGroups) => {

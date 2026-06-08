@@ -39,6 +39,10 @@ The list can load notifications page by page as the user scrolls to the bottom. 
 
 <!-- example(notification-center-infinite-scroll) -->
 
+### Deletion
+
+Notifications can be removed one by one, by date group, or all at once. Subscribe to `KbqNotificationCenterService.onDelete` to react to a removal — for example, to delete the items on the server. The event fires for all three cases and carries `type` (`'item'`, `'group'` or `'all'`) and `items` — the notifications that were removed.
+
 ### Dropdown window
 
 The notification center can be opened in a popover. For example, when placed in a horizontal menu.
