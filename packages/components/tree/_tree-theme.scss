@@ -53,10 +53,14 @@
 
             &.kbq-checked:not(.kbq-selected),
             &.kbq-tree-option_multiple.kbq-selected {
+                --kbq-option-background: var(--kbq-tree-multiple-states-selected-container-background);
+
                 background: var(--kbq-tree-multiple-states-selected-container-background);
 
                 &:hover,
                 &.kbq-hovered {
+                    --kbq-option-background: var(--kbq-tree-multiple-states-selected-hover-container-background);
+
                     background: var(--kbq-tree-multiple-states-selected-hover-container-background);
                 }
             }
