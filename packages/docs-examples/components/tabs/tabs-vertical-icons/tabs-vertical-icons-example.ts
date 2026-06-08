@@ -16,7 +16,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         <div class="example-tabs-vertical-icons">
             <kbq-tab-group vertical>
                 <kbq-tab tooltipTitle="BruteForce" empty [tooltipPlacement]="PopUpPlacements.Left">
-                    <ng-template kbq-tab-label>
+                    <ng-template kbqTabLabel iconOnly>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
                     <p>
@@ -41,7 +41,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                     </p>
                 </kbq-tab>
                 <kbq-tab tooltipTitle="Complex Attack" empty [tooltipPlacement]="PopUpPlacements.Left">
-                    <ng-template kbq-tab-label>
+                    <ng-template kbqTabLabel iconOnly>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
                     <p>
@@ -60,7 +60,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                     </p>
                 </kbq-tab>
                 <kbq-tab tooltipTitle="DDoS" empty [tooltipPlacement]="PopUpPlacements.Left">
-                    <ng-template kbq-tab-label>
+                    <ng-template kbqTabLabel iconOnly>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
                     <p>
@@ -85,7 +85,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                     </p>
                 </kbq-tab>
                 <kbq-tab tooltipTitle="DoS" empty [tooltipPlacement]="PopUpPlacements.Left">
-                    <ng-template kbq-tab-label>
+                    <ng-template kbqTabLabel iconOnly>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
                     <p>
