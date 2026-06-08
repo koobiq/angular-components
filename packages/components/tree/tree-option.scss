@@ -46,6 +46,26 @@
         padding-bottom: var(--kbq-list-size-text-padding-vertical, 0);
     }
 
+    // Two-line options only: align leading content to the center of the FIRST line.
+    &:has(.kbq-option-caption) {
+        & > [kbq-tree-node-toggle],
+        & > [kbqTreeNodeToggle],
+        & > .kbq-tree-node-toggle,
+        & > .kbq-pseudo-checkbox,
+        & > kbq-checkbox,
+        & > [kbq-icon],
+        & > kbq-progress-spinner {
+            align-self: flex-start;
+            // (20px line-height − 16px element box) / 2 = 2px
+            margin-top: var(--kbq-size-3xs);
+        }
+
+        & > .kbq-tree-node-toggle {
+            height: var(--kbq-typography-text-normal-line-height);
+            margin-top: 0;
+        }
+    }
+
     &:focus {
         outline: none;
     }
