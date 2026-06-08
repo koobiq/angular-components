@@ -35,9 +35,6 @@ export class TimepickerVariationsExample {
     timeFormat = TimeFormats.HHmm;
     protected readonly TimeFormats = TimeFormats;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.value = this.adapter.today();
     }

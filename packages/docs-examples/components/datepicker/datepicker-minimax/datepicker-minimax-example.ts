@@ -53,9 +53,4 @@ export class DatepickerMinimaxExample {
 
     readonly minDate = this.adapter.createDate(2023, 11, 14);
     readonly maxDate = this.adapter.createDate(2024, 7, 25);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }

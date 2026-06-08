@@ -236,9 +236,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     private classAddedToOverlayContainer: boolean = false;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const elementRef = this.elementRef;
         const dropdownItemInstance = this.dropdownItemInstance;

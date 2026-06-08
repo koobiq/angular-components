@@ -38,11 +38,6 @@ export class KbqModalControlService {
         return this.parentService ? this.parentService.registeredMetaMap : this.rootRegisteredMetaMap;
     }
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     // Register a modal to listen its open/close
     registerModal(modalRef: KbqModalRef): void {
         if (!this.hasRegistered(modalRef)) {

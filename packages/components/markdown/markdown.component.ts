@@ -73,9 +73,6 @@ export class KbqMarkdown implements OnDestroy {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly links: HTMLAnchorElement[] = [];
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         afterNextRender(() => {
             const contentWrapper = this.contentWrapper();

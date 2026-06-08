@@ -267,13 +267,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      */
     private isFocusedByMouse: boolean = false;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {
-        super();
-    }
-
     ngAfterViewChecked() {
         // Since parent components could be using the option's label to display the selected values
         // (e.g. `kbq-select`) and they don't have a way of knowing if the option's label has changed

@@ -1,16 +1,7 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    TemplateRef,
-    ViewEncapsulation,
-    inject,
-    viewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -39,16 +30,11 @@ export class DevToastComponent extends KbqToastComponent {
     readonly data: KbqToastData;
     readonly service: KbqToastService;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const data = inject(KbqToastData);
         const service = inject(KbqToastService);
-        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-        const focusMonitor = inject(FocusMonitor);
 
-        super(data, service, elementRef, focusMonitor);
+        super();
 
         this.data = data;
         this.service = service;
@@ -96,9 +82,6 @@ export class DevApp {
 
     array = new Array(40);
     readonly template = viewChild.required<TemplateRef<any>>('sipanelTemplate');
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         const overlayRef = this.overlayRef;

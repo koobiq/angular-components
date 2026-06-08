@@ -20,10 +20,6 @@ import { KbqIconItem } from '@koobiq/components/icon';
 })
 export class KbqEmptyStateIcon {
     private icon = inject(KbqIconItem, { optional: true })!;
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     setErrorColor() {
         if (!this.icon) {

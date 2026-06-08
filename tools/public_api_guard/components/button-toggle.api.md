@@ -20,7 +20,6 @@ export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
 
 // @public
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     buttonToggleGroup: KbqButtonToggleGroup;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
@@ -67,7 +66,6 @@ export class KbqButtonToggleChange {
 
 // @public
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
-    constructor(...args: unknown[]);
     readonly buttonToggles: _angular_core.Signal<readonly any[]>;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
     controlValueAccessorChangeFn: (value: any) => void;

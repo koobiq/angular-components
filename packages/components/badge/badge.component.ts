@@ -59,9 +59,6 @@ export class KbqBadgeCssStyler implements AfterContentInit {
 
     isIconButton: boolean = false;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 

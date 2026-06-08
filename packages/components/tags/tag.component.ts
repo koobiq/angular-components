@@ -415,9 +415,6 @@ export class KbqTag
         return (this.tagList?.draggable ?? false) && !this.disabled;
     }
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         super();
 
@@ -733,11 +730,6 @@ export class KbqTag
 })
 export class KbqTagRemove {
     protected parentTag = inject(KbqTag);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     /** @docs-private */
     focus(event: FocusEvent): void {

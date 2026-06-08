@@ -236,9 +236,6 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     private optionBlurSubscription: Subscription | null;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
 
@@ -812,11 +809,6 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     get externalPseudoCheckbox(): boolean {
         return !!this.pseudoCheckbox();
     }
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     ngOnInit() {
         const list = this.listSelection;

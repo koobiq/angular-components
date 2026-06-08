@@ -91,9 +91,6 @@ export class DevSidepanelComponent {
 
     array = new Array(60);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const data = this.data;
 
@@ -130,10 +127,6 @@ export class DevApp {
     readonly template = viewChild.required(TemplateRef);
 
     array = new Array(40);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-    constructor() {}
 
     openComponentSidepanel() {
         this.sidepanelService.open(DevSidepanelComponent, {

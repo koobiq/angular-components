@@ -203,9 +203,6 @@ export class KbqAutocomplete implements AfterContentInit {
 
     private _openOnFocus: boolean = true;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const defaults = inject<KbqAutocompleteDefaultOptions>(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS);
 

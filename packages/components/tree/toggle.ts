@@ -52,9 +52,6 @@ export class KbqTreeNodeToggleBaseDirective<T> {
         return this.tree.treeControl.isExpanded(this.node());
     }
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.tree.treeControl.filterValue.subscribe((value) => (this.disabled = !!value?.length));
     }

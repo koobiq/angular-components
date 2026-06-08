@@ -69,7 +69,7 @@ export enum KbqBadgeColors {
 
 // @public (undocumented)
 export class KbqBadgeCssStyler implements AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly icons: i0.Signal<readonly any[]>;
     // (undocumented)

@@ -88,11 +88,6 @@ export class KbqModalService {
         return this.modalControl.afterAllClose.asObservable();
     }
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     // Closes all of the currently-open dialogs
     closeAll(): void {
         this.modalControl.closeAll();

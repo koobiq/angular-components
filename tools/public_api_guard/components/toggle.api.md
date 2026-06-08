@@ -25,7 +25,7 @@ export class KbqToggleChange {
 
 // @public (undocumented)
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly ariaLabel: _angular_core.InputSignal<string>;
     // (undocumented)

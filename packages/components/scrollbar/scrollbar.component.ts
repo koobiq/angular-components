@@ -100,11 +100,6 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadow
 
     private readonly injector = inject(Injector);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterViewInit() {
         afterNextRender(
             () => {

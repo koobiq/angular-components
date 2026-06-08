@@ -98,9 +98,6 @@ export class DevApp implements AfterViewInit {
     readonly passwordHints = viewChildren(KbqPasswordHint);
     readonly formField = viewChild.required<KbqFormField>('formField');
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.locales = Object.keys(this.localeService.locales).filter((key) => key !== 'items');
     }

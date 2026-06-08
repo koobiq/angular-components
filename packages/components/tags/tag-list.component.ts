@@ -424,9 +424,6 @@ export class KbqTagList
     /** Triggers unsubscription from all per-tags streams when tags are reset. */
     private readonly tagsSubscriptions$ = new Subject<void>();
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;

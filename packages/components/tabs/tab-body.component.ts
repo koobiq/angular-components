@@ -111,9 +111,6 @@ export class KbqTabBody implements OnInit, OnDestroy {
     /** Subscription to the directionality change observable. */
     private readonly dirChangeSubscription = Subscription.EMPTY;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -211,9 +208,6 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     private centeringSub = Subscription.EMPTY;
     /** Subscription to events for when the tab body finishes leaving from center position. */
     private leavingSub = Subscription.EMPTY;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         const componentFactoryResolver = inject(ComponentFactoryResolver);

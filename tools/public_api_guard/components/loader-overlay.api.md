@@ -14,7 +14,6 @@ import { OnInit } from '@angular/core';
 
 // @public (undocumented)
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     caption: string;
     readonly card: i0.InputSignalWithTransform<boolean, unknown>;

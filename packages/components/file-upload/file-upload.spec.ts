@@ -1542,11 +1542,6 @@ class BasicSingleFileUpload {
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     onChange = jest.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
     });
@@ -1573,11 +1568,6 @@ class ControlValueAccessorSingleFileUpload {
     file: KbqFileItem | null;
     accept: string[] = [];
     control = new FormControl();
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     onChange = jest.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
@@ -1610,11 +1600,6 @@ class BasicMultipleFileUpload {
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
     });
@@ -1642,11 +1627,6 @@ class ControlValueAccessorMultipleFileUpload {
     accept: string[] = [];
     control = new FormControl();
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
     });
@@ -1666,11 +1646,6 @@ class SingleFileUploadWithAsyncValidator {
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [getAsyncValidator()]
     });
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -1687,11 +1662,6 @@ class SingleFileUploadWithInvalidAsyncValidator {
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [getAsyncValidator(false)]
     });
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -1708,11 +1678,6 @@ class SingleFileUploadWithFileReaderValidator {
     readonly control = new FormControl<KbqFileItem | null>(null, {
         asyncValidators: [fileContentLinesValidator(MAX_FILE_LINES_FOR_TEST)]
     });
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -1729,11 +1694,6 @@ class MultipleFileUploadWithAsyncValidator {
     readonly control = new FormControl<KbqFileItem[] | null>(null, {
         asyncValidators: [getAsyncValidator()]
     });
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -1750,11 +1710,6 @@ class MultipleFileUploadWithInvalidAsyncValidator {
     readonly control = new FormControl<KbqFileItem[] | null>(null, {
         asyncValidators: [getAsyncValidator(false)]
     });
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 // Test host component

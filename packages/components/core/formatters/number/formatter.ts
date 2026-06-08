@@ -152,9 +152,6 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true })!;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
     private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
@@ -228,9 +225,6 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true })!;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
     private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
@@ -296,9 +290,6 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true })!;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
     roundingOptions: RoundDecimalOptions;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));

@@ -61,7 +61,6 @@ export class KbqSidepanelBody {
 
 // @public
 export class KbqSidepanelClose implements OnInit, OnChanges {
-    constructor(...args: unknown[]);
     // (undocumented)
     readonly kbqSidepanelClose: i0.InputSignal<any>;
     // (undocumented)
@@ -98,7 +97,6 @@ export class KbqSidepanelConfig<D = any> {
 
 // @public (undocumented)
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
-    constructor(...args: unknown[]);
     // Warning: (ae-forgotten-export) The symbol "KbqSidepanelAnimationState" needs to be exported by the entry point index.d.ts
     animationState: KbqSidepanelAnimationState;
     animationStateChanged: EventEmitter<AnimationEvent_2>;
@@ -198,7 +196,6 @@ export class KbqSidepanelRef<T = any, R = any> {
 
 // @public (undocumented)
 export class KbqSidepanelService implements OnDestroy {
-    constructor(...args: unknown[]);
     closeAll(): void;
     getSidepanelById(id: string): KbqSidepanelRef | undefined;
     // (undocumented)

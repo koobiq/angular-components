@@ -27,9 +27,6 @@ export function KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): IKbqMomentDateAdapter
 export class MomentDateAdapter extends BaseMomentDateAdapter {
     protected readonly options?: IKbqMomentDateAdapterOptions;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const dateLocale = inject(KBQ_DATE_LOCALE, { optional: true })!;
         const options =

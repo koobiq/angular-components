@@ -54,7 +54,6 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public (undocumented)
 export class KbqTooltipComponent extends KbqPopUp {
-    constructor(...args: unknown[]);
     // (undocumented)
     elementRef: ElementRef;
     // (undocumented)

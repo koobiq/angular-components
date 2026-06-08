@@ -53,7 +53,6 @@ export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider;
 
 // @public
 export class KbqScrollbar implements AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     readonly contentElement: i0.Signal<ElementRef<HTMLDivElement>>;
     readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
     // (undocumented)
@@ -111,7 +110,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
 
 // @public
 export class KbqScrollbarDirective implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
     set events(value: KbqScrollbarEvents);
     // (undocumented)

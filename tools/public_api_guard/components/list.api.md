@@ -55,7 +55,6 @@ export class KbqListCopyEvent<T> {
 
 // @public (undocumented)
 export class KbqListItem implements AfterContentInit {
-    constructor(...args: unknown[]);
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
@@ -84,7 +83,6 @@ export class KbqListModule {
 
 // @public
 export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
-    constructor(...args: unknown[]);
     // (undocumented)
     readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
     // (undocumented)
@@ -175,7 +173,7 @@ export class KbqListSelectAllEvent<T> {
 
 // @public (undocumented)
 export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);

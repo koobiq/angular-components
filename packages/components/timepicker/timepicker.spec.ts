@@ -146,9 +146,6 @@ class TestApp {
     timeValue: DateTime;
     isDisabled: boolean;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const adapter = this.adapter;
 
@@ -1039,11 +1036,6 @@ class TimepickerWithLocaleChange {
 
     timeFormat: TimeFormats;
     model: any = null;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 describe('with Locale change', () => {

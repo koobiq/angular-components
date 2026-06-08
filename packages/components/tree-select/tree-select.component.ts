@@ -642,9 +642,6 @@ export class KbqTreeSelect
     private readonly destroyRef = inject(DestroyRef);
     private readonly window = inject(KBQ_WINDOW);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         super();
 

@@ -42,7 +42,6 @@ export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: {
 
 // @public (undocumented)
 export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -82,7 +81,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
 // @public (undocumented)
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
@@ -168,7 +167,6 @@ export class KbqNavbarDivider {
 
 // @public (undocumented)
 export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
-    constructor(...args: unknown[]);
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -222,7 +220,7 @@ export interface KbqNavbarFocusableItemEvent {
 
 // @public (undocumented)
 export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     get collapsable(): boolean;
     set collapsable(value: boolean);
@@ -366,7 +364,7 @@ export class KbqNavbarToggle implements OnDestroy {
 
 // @public (undocumented)
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly animationDone: Subject<void>;
     // (undocumented)

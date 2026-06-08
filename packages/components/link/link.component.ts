@@ -127,9 +127,6 @@ export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
 
     readonly icon = contentChild(KbqIcon);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.updatePrintUrl();
 

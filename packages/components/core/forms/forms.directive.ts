@@ -19,11 +19,6 @@ export class KbqFormElement implements AfterContentInit {
 
     readonly elements = contentChildren(KbqFormElement);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterContentInit(): void {
         const classList = this.element.nativeElement.classList;
 

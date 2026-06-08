@@ -77,9 +77,6 @@ export class KbqLocaleService {
 
     private readonly langAttrName = inject(KBQ_LOCALE_SERVICE_LANG_ATTR_NAME);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const id = inject(KBQ_LOCALE_ID, { optional: true });
         const localeData = inject(KBQ_LOCALE_DATA, { optional: true });

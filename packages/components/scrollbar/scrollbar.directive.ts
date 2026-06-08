@@ -103,9 +103,6 @@ export class KbqScrollbarDirective implements OnDestroy {
 
     scrollbarInstance?: OverlayScrollbars;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const [requestDefer, cancelDefer] = createDefer();
 

@@ -556,9 +556,6 @@ export class KbqDatepickerInput<D>
 
     private errorStateTracker: KbqErrorStateTracker;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.validator = Validators.compose([
             this.parseValidator,

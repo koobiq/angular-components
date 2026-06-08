@@ -310,13 +310,6 @@ export class KbqModalComponent<T = any, R = any>
     private animationState: AnimationState;
     private container: HTMLElement | OverlayRef;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {
-        super();
-    }
-
     // TODO: Skipped for migration because:
     //  This input overrides a field from a superclass, while the superclass field
     //  is not migrated.

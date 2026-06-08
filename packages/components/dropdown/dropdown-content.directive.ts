@@ -22,11 +22,6 @@ export class KbqDropdownContent implements OnDestroy {
     private portal: TemplatePortal;
     private outlet: DomPortalOutlet;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     /**
      * Attaches the content with a particular context.
      * @docs-private

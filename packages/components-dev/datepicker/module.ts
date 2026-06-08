@@ -68,9 +68,6 @@ export class DevApp implements AfterViewInit {
 
     readonly datepicker = viewChild.required(KbqDatepicker);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.formControlValue = new UntypedFormControl(this.adapter.createDateTime(2021, 8, 11, 12, 0, 0, 0));
         this.formControlValue.valueChanges.subscribe((value) => {

@@ -113,9 +113,6 @@ export class KbqMonthView<D> implements AfterContentInit {
     /** The names of the weekdays. */
     weekdays: { long: string; narrow: string }[];
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         if (!this.adapter) {
             throw createMissingDateImplError('DateAdapter');

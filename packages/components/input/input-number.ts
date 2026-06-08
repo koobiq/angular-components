@@ -232,9 +232,6 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private valueFromPaste: number | null;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const step = inject(new HostAttributeToken('step'), { optional: true })!;
         const bigStep = inject(new HostAttributeToken('big-step'), { optional: true })!;

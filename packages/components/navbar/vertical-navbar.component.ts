@@ -1,9 +1,8 @@
-﻿import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
+﻿import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     contentChild,
     contentChildren,
@@ -108,15 +107,10 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     private _expanded: boolean = false;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-        const changeDetectorRef = inject(ChangeDetectorRef);
-        const focusMonitor = inject(FocusMonitor);
 
-        super(changeDetectorRef, elementRef, focusMonitor);
+        super();
         this.elementRef = elementRef;
 
         this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);

@@ -611,11 +611,6 @@ class TestComponentLevelService {
 export class CustomModalComponent {
     componentLevelService = inject(TestComponentLevelService);
     injector = inject(Injector);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -631,11 +626,6 @@ export class CustomModalComponent {
 export class CustomComponent {
     modalService = inject(KbqModalService);
     injector = inject(Injector);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     open() {
         return this.modalService.open({
@@ -667,11 +657,6 @@ class TestModalContentComponent {}
 })
 class ModalByServiceComponent {
     nonServiceModalVisible = false;
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -694,11 +679,6 @@ class ModalByServiceFromDropdownComponent {
 
     nonServiceModalVisible = false;
     kbqOkText = 'Save';
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 
     showConfirm() {
         this.modalService.success({

@@ -20,7 +20,7 @@ export const baseURLRegex: RegExp;
 
 // @public (undocumented)
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly big: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)

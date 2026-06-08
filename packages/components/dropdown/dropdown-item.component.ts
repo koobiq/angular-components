@@ -85,11 +85,6 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     /** @docs-private */
     protected readonly componentColors = KbqComponentColors;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
-
     ngAfterViewInit() {
         if (this.focusMonitor) {
             // Start monitoring the element so it gets the appropriate focused classes. We want

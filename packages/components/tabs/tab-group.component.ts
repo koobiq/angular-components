@@ -222,9 +222,6 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     private readonly groupId: number;
     private readonly resizeDebounceInterval: number = 100;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const defaultConfig = inject<KbqTabsConfig>(KBQ_TABS_CONFIG, { optional: true });
 

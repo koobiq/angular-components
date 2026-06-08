@@ -1434,11 +1434,6 @@ class CdkVirtualScrollViewportSelect<T = string> {
     readonly select = viewChild.required(KbqSelect);
     readonly viewport = viewChild.required(CdkVirtualScrollViewport);
     options: any[] = OPTIONS.sort();
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Component({
@@ -1493,9 +1488,6 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
         return { id: index, name: option, active: true };
     });
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
 
     constructor() {
         const scrollDispatcher = inject_1(ScrollDispatcher);

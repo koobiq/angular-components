@@ -25,10 +25,6 @@ export class SidepanelNormalModeExample {
     arrayLength = 40;
     array = new Array(this.arrayLength);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-    constructor() {}
-
     toggleSidepanel() {
         if (!this.isOpened) {
             const sidepanel = this.sidepanelService.open(this.template, {

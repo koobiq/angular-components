@@ -227,9 +227,6 @@ export class KbqAutocompleteTrigger
     private readonly closeKeyEventStream = new Subject<void>();
     private readonly window = inject(KBQ_WINDOW);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const zone = this.zone;
         const scrollStrategy = inject(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY);

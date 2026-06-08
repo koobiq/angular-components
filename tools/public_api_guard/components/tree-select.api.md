@@ -58,7 +58,7 @@ export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
 
 // @public (undocumented)
 export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);

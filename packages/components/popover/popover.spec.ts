@@ -418,10 +418,6 @@ export class PopoverSimple {
 
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
     readonly triggerElementRef = viewChild.required(KbqPopoverTrigger, { read: ElementRef });
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-    constructor() {}
 }
 
 @Component({

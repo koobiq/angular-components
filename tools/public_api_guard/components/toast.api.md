@@ -44,7 +44,7 @@ export class KbqToastCloseButton {
 export class KbqToastComponent implements OnDestroy {
     // (undocumented)
     $implicit: any;
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     animationState: string;
     // (undocumented)
@@ -108,7 +108,7 @@ export const kbqToastConfigurationProvider: (configuration: Partial<KbqToastConf
 
 // @public (undocumented)
 export class KbqToastContainerComponent extends CdkScrollable {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     createTemplate<C>(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<C>;
     // (undocumented)
@@ -181,7 +181,7 @@ export enum KbqToastPosition {
 
 // @public
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly animation: BehaviorSubject<AnimationEvent_2 | null>;
     // (undocumented)

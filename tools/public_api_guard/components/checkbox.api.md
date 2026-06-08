@@ -26,7 +26,7 @@ export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly big: _angular_core.InputSignal<boolean>;
     readonly change: _angular_core.OutputEmitterRef<KbqCheckboxChange>;

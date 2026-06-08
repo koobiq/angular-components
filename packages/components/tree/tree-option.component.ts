@@ -218,14 +218,10 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     checkboxState: KbqPseudoCheckboxState;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
-        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
         const tree = inject(KBQ_TREE_OPTION_PARENT_COMPONENT);
 
-        super(elementRef, tree);
+        super();
 
         this.tree = tree;
     }

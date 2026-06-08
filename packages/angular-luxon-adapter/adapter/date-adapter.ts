@@ -33,9 +33,6 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
 
     private _localeChanges = new BehaviorSubject<string>(KBQ_DEFAULT_LOCALE_ID);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const dateLocale = inject(KBQ_DATE_LOCALE);
         const options =

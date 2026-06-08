@@ -537,9 +537,6 @@ export class KbqTrim {
 
     private original: (fn: any) => void;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         if (this.noTrim || !this.ngControl?.valueAccessor) {
             return;

@@ -63,9 +63,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private toastsDict: { [id: number]: ComponentRef<T> } = {};
     private templatesDict: { [id: number]: EmbeddedViewRef<T> } = {};
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.ngZone.runOutsideAngular(() => {
             this.timerSubscription = this.timer.subscribe(this.processToasts);

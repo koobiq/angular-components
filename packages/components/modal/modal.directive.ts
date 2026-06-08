@@ -35,11 +35,6 @@ import { KbqModalComponent } from './modal.component';
 })
 export class KbqModalTitle {
     protected modal = inject(KbqModalComponent);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }
 
 @Directive({

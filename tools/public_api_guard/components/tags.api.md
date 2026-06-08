@@ -41,7 +41,7 @@ export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 
 // @public (undocumented)
 export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit {
-    constructor(...args: unknown[]);
+    constructor();
     addClassModificatorForIcons(): void;
     addHostClassName(): void;
     readonly avatar: _angular_core.Signal<KbqTagAvatar | undefined>;
@@ -172,7 +172,7 @@ export type KbqTagFocusEvent = KbqTagEvent & {
 //
 // @public
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
-    constructor(...args: unknown[]);
+    constructor();
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
     readonly addOnPaste: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -220,7 +220,7 @@ export interface KbqTagInputEvent {
 
 // @public (undocumented)
 export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
-    constructor(...args: unknown[]);
+    constructor();
     blur(): void;
     get canShowCleaner(): boolean;
     readonly change: _angular_core.OutputEmitterRef<KbqTagListChange>;
@@ -327,7 +327,6 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
 
 // @public
 export class KbqTagRemove {
-    constructor(...args: unknown[]);
     focus(event: FocusEvent): void;
     handleClick(event: Event): void;
     // (undocumented)

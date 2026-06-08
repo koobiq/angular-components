@@ -68,7 +68,7 @@ export const KBQ_DATEPICKER_VALUE_ACCESSOR: any;
 
 // @public
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
-    constructor(...args: unknown[]);
+    constructor();
     get activeDate(): D;
     set activeDate(value: D | null);
     readonly dateClass: _angular_core.InputSignal<(date: D) => KbqCalendarCellCssClasses>;
@@ -150,7 +150,7 @@ export type KbqCalendarCellCssClasses = string | string[] | Set<string> | {
 
 // @public
 export class KbqCalendarHeader<D> implements AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     get activeDate(): D;
     set activeDate(value: D);
@@ -195,7 +195,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
 // @public
 export class KbqDatepicker<D> implements OnDestroy {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly backdropClass: _angular_core.InputSignal<string>;
     close(restoreFocus?: boolean): void;
@@ -254,7 +254,6 @@ export const kbqDatepickerAnimations: {
 
 // @public
 export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
-    constructor(...args: unknown[]);
     readonly animationDone: Subject<void>;
     animationState: 'enter' | 'void';
     readonly calendar: _angular_core.Signal<KbqCalendar<any>>;
@@ -273,7 +272,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 
 // @public
 export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     // (undocumented)
     readonly adapter: DateAdapter<D>;
     // (undocumented)
@@ -451,7 +450,7 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
 
 // @public
 export class KbqMonthView<D> implements AfterContentInit {
-    constructor(...args: unknown[]);
+    constructor();
     get activeDate(): D;
     set activeDate(value: D);
     readonly activeDateChange: _angular_core.OutputEmitterRef<D>;

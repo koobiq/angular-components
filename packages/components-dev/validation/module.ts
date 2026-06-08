@@ -131,9 +131,6 @@ export class DevApp {
     formControlTags: UntypedFormControl;
     formControlTagInputFormControl: UntypedFormControl;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 

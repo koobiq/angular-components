@@ -29,10 +29,6 @@ export class SidepanelSizesExample {
     arrayLength = 40;
     array = new Array(this.arrayLength);
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-    constructor() {}
-
     showSmall() {
         this.sidepanelService.open(this.template, {
             position: KbqSidepanelPosition.Right,

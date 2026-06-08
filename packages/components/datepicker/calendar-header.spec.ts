@@ -87,9 +87,4 @@ class StandardCalendar {
     selectedYear: DateTime;
     selectedMonth: DateTime;
     startDate = this.adapter.createDate(2017, 0, 31);
-
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
-    constructor() {}
 }

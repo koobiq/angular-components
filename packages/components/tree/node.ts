@@ -41,9 +41,5 @@ export class KbqTreeNodeDef<T> {
      */
     when: (index: number, nodeData: T) => boolean;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     /** @docs-private */
-    constructor() {}
 }

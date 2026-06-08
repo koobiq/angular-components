@@ -174,9 +174,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** The native input element to which this directive is attached. */
     private inputElement: HTMLInputElement;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
     }
