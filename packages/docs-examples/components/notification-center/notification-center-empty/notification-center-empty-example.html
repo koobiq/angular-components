@@ -87,7 +87,12 @@
                 <i kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
                 <div kbq-navbar-title>Notifications</div>
                 @if (trigger.unreadItemsCounter | async; as unreadItems) {
-                    <kbq-badge [badgeColor]="'error'" [compact]="true">{{ unreadItems }}</kbq-badge>
+                    <kbq-badge
+                        [badgeColor]="notificationService.silentMode.value ? 'disabled' : 'error'"
+                        [compact]="true"
+                    >
+                        {{ unreadItems }}
+                    </kbq-badge>
                 }
             </div>
 
