@@ -1492,7 +1492,7 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     constructor() {
         const scrollDispatcher = inject_1(ScrollDispatcher);
 
-        super(scrollDispatcher);
+        super();
 
         this.scrollDispatcher = scrollDispatcher;
     }
