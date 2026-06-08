@@ -180,6 +180,15 @@ export class BaseFormatterPipe<D> {
     protected readonly formatter: DateFormatter<D>;
 }
 
+// @public
+export abstract class BaseLocaleAwareFormatterPipe<D, Value = D | string, Args extends unknown[] = unknown[]> extends BaseFormatterPipe<D> {
+    constructor();
+    // (undocumented)
+    protected abstract format(value: Value, ...args: Args): string;
+    // (undocumented)
+    transform(value: Value, ...args: Args): string;
+}
+
 // @public (undocumented)
 export const BOTTOM_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
 
@@ -2153,6 +2162,54 @@ export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 // @public
 export const KBQ_WINDOW: InjectionToken<Window>;
 
+// @public (undocumented)
+export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]> implements PipeTransform {
+    // (undocumented)
+    protected format(value: D | string, currYear?: boolean): string;
+    // (undocumented)
+    transform(value: D | string, currYear?: boolean): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbsoluteLongDatePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteLongDatePipe<any>, "kbqAbsoluteLongDate", true>;
+}
+
+// @public (undocumented)
+export class KbqAbsoluteLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]> implements PipeTransform {
+    // (undocumented)
+    protected format(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbsoluteLongDateTimePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteLongDateTimePipe<any>, "kbqAbsoluteLongDateTime", true>;
+}
+
+// @public (undocumented)
+export class KbqAbsoluteShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]> implements PipeTransform {
+    // (undocumented)
+    protected format(value: D | string, currYear?: boolean): string;
+    // (undocumented)
+    transform(value: D | string, currYear?: boolean): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbsoluteShortDatePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteShortDatePipe<any>, "kbqAbsoluteShortDate", true>;
+}
+
+// @public (undocumented)
+export class KbqAbsoluteShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]> implements PipeTransform {
+    // (undocumented)
+    protected format(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbsoluteShortDateTimePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteShortDateTimePipe<any>, "kbqAbsoluteShortDateTime", true>;
+}
+
 // @public
 export abstract class KbqAbstractSelect {
     // (undocumented)
@@ -2399,7 +2456,7 @@ export class KbqFormattersModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFormattersModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, never, [typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof KbqDataSizePipe, typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe], [typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe, typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof KbqDataSizePipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, never, [typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof KbqAbsoluteLongDatePipe, typeof KbqAbsoluteLongDateTimePipe, typeof KbqAbsoluteShortDatePipe, typeof KbqAbsoluteShortDateTimePipe, typeof KbqRelativeLongDatePipe, typeof KbqRelativeLongDateTimePipe, typeof KbqRelativeShortDatePipe, typeof KbqRelativeShortDateTimePipe, typeof KbqRangeLongDatePipe, typeof KbqRangeLongDateTimePipe, typeof KbqRangeMiddleDateTimePipe, typeof KbqRangeShortDatePipe, typeof KbqRangeShortDateTimePipe, typeof KbqDataSizePipe, typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe], [typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe, typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof KbqAbsoluteLongDatePipe, typeof KbqAbsoluteLongDateTimePipe, typeof KbqAbsoluteShortDatePipe, typeof KbqAbsoluteShortDateTimePipe, typeof KbqRelativeLongDatePipe, typeof KbqRelativeLongDateTimePipe, typeof KbqRelativeShortDatePipe, typeof KbqRelativeShortDateTimePipe, typeof KbqRangeLongDatePipe, typeof KbqRangeLongDateTimePipe, typeof KbqRangeMiddleDateTimePipe, typeof KbqRangeShortDatePipe, typeof KbqRangeShortDateTimePipe, typeof KbqDataSizePipe]>;
 }
 
 // @public (undocumented)
@@ -3022,6 +3079,66 @@ export class KbqPseudoCheckboxModule {
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
 
 // @public (undocumented)
+export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[], []> implements PipeTransform {
+    // (undocumented)
+    protected format(input: D[] | string[]): string;
+    // (undocumented)
+    transform(value: D[] | string[]): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeLongDatePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeLongDatePipe<any>, "kbqRangeLongDate", true>;
+}
+
+// @public (undocumented)
+export class KbqRangeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]> implements PipeTransform {
+    // (undocumented)
+    protected format(input: D[] | string[], options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D[] | string[], options?: DateTimeOptions): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeLongDateTimePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeLongDateTimePipe<any>, "kbqRangeLongDateTime", true>;
+}
+
+// @public (undocumented)
+export class KbqRangeMiddleDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]> implements PipeTransform {
+    // (undocumented)
+    protected format(input: D[] | string[], options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D[] | string[], options?: DateTimeOptions): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeMiddleDateTimePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeMiddleDateTimePipe<any>, "kbqRangeMiddleDateTime", true>;
+}
+
+// @public (undocumented)
+export class KbqRangeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[], []> implements PipeTransform {
+    // (undocumented)
+    protected format(input: D[] | string[]): string;
+    // (undocumented)
+    transform(value: D[] | string[]): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeShortDatePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeShortDatePipe<any>, "kbqRangeShortDate", true>;
+}
+
+// @public (undocumented)
+export class KbqRangeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]> implements PipeTransform {
+    // (undocumented)
+    protected format(input: D[] | string[], options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D[] | string[], options?: DateTimeOptions): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRangeShortDateTimePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeShortDateTimePipe<any>, "kbqRangeShortDateTime", true>;
+}
+
+// @public (undocumented)
 export class KbqReadStateDirective {
     // (undocumented)
     mouseenterHandler(): void;
@@ -3056,6 +3173,54 @@ export class KbqRectangleItem {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqRectangleItem, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRectangleItem, never>;
+}
+
+// @public (undocumented)
+export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, []> implements PipeTransform {
+    // (undocumented)
+    protected format(value: D | string): string;
+    // (undocumented)
+    transform(value: D | string): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeLongDatePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeLongDatePipe<any>, "kbqRelativeLongDate", true>;
+}
+
+// @public (undocumented)
+export class KbqRelativeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]> implements PipeTransform {
+    // (undocumented)
+    protected format(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeLongDateTimePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeLongDateTimePipe<any>, "kbqRelativeLongDateTime", true>;
+}
+
+// @public (undocumented)
+export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, []> implements PipeTransform {
+    // (undocumented)
+    protected format(value: D | string): string;
+    // (undocumented)
+    transform(value: D | string): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeShortDatePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeShortDatePipe<any>, "kbqRelativeShortDate", true>;
+}
+
+// @public (undocumented)
+export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]> implements PipeTransform {
+    // (undocumented)
+    protected format(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    transform(value: D | string, options?: DateTimeOptions): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeShortDateTimePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeShortDateTimePipe<any>, "kbqRelativeShortDateTime", true>;
 }
 
 // @public (undocumented)
