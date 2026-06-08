@@ -43,6 +43,7 @@ export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: {
     noNotifications: string;
     failedToLoadNotifications: string;
     repeat: string;
+    loadingMore: string;
 };
 
 // @public
@@ -85,7 +86,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     set popoverHeight(value: string);
     protected popoverMode: boolean;
     prefix: string;
-    scrolledToBottomOffset: number;
+    protected scrolledToBottomOffset: number;
     protected readonly service: KbqNotificationCenterService;
     // (undocumented)
     switcher: KbqButton;

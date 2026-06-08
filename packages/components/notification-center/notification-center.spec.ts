@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement, Provider, Type, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, inject } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -82,6 +82,34 @@ describe('KbqNotificationCenter', () => {
             const openCenter = () => {
                 componentInstance.trigger.show();
                 fixture.detectChanges();
+            };
+
+            // Mirrors SCROLLED_TO_BOTTOM_AUDIT_TIME in notification-center.ts (private to that module).
+            const scrollAuditTime = 100;
+
+            // The scroll-to-bottom detection lives on the rendered overlay component, not the trigger.
+            const getCenter = () =>
+                (
+                    componentInstance.trigger as unknown as {
+                        instance: {
+                            scrollContainer: { contentElement: { nativeElement: HTMLElement } };
+                            onContainerScroll: () => void;
+                        };
+                    }
+                ).instance;
+
+            // Fakes the container geometry so the list sits exactly at the bottom (distance 0 <= the
+            // default scrolledToBottomOffset of 0), then fires the container's scroll handler.
+            const scrollToBottom = () => {
+                const center = getCenter();
+                const element = center.scrollContainer.contentElement.nativeElement;
+
+                Object.defineProperty(element, 'scrollHeight', { configurable: true, value: 1000 });
+                Object.defineProperty(element, 'clientHeight', { configurable: true, value: 500 });
+                Object.defineProperty(element, 'offsetHeight', { configurable: true, value: 500 });
+                Object.defineProperty(element, 'scrollTop', { configurable: true, value: 500 });
+
+                center.onContainerScroll();
             };
 
             it('shows the bottom "load more" spinner without replacing the list', fakeAsync(() => {
@@ -182,6 +210,60 @@ describe('KbqNotificationCenter', () => {
                 service.setHasMore(false);
                 expect(service.hasMore.value).toBe(false);
             });
+
+            it('emits onNextPage when scrolled to the bottom with more to load', fakeAsync(() => {
+                const service = getService();
+                const emitSpy = jest.spyOn(service.onNextPage, 'emit');
+
+                openCenter();
+
+                scrollToBottom();
+                tick(scrollAuditTime);
+
+                expect(emitSpy).toHaveBeenCalled();
+            }));
+
+            it('does not emit onNextPage when there is nothing more to load', fakeAsync(() => {
+                const service = getService();
+                const emitSpy = jest.spyOn(service.onNextPage, 'emit');
+
+                openCenter();
+
+                service.setHasMore(false);
+
+                scrollToBottom();
+                tick(scrollAuditTime);
+
+                expect(emitSpy).not.toHaveBeenCalled();
+            }));
+
+            it('does not emit onNextPage while a page is already loading', fakeAsync(() => {
+                const service = getService();
+                const emitSpy = jest.spyOn(service.onNextPage, 'emit');
+
+                openCenter();
+
+                service.setLoadingMore(true);
+
+                scrollToBottom();
+                tick(scrollAuditTime);
+
+                expect(emitSpy).not.toHaveBeenCalled();
+            }));
+
+            it('does not emit onNextPage while the load-more error is shown', fakeAsync(() => {
+                const service = getService();
+                const emitSpy = jest.spyOn(service.onNextPage, 'emit');
+
+                openCenter();
+
+                service.setLoadMoreErrorMode(true);
+
+                scrollToBottom();
+                tick(scrollAuditTime);
+
+                expect(emitSpy).not.toHaveBeenCalled();
+            }));
         });
 
         describe('onDelete', () => {

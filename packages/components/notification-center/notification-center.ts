@@ -53,8 +53,8 @@ import { KbqNotificationItemComponent } from './notification-item';
 
 const defaultOffsetX = 8;
 
-/** Throttle (ms) for the scroll-to-bottom check that drives infinite scroll. */
-const SCROLLED_TO_BOTTOM_THROTTLE_TIME = 100;
+/** Rate-limit window (ms) for the scroll-to-bottom check that drives infinite scroll. */
+const SCROLLED_TO_BOTTOM_AUDIT_TIME = 100;
 
 /**default configuration of notification-center */
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION = ruRULocaleData.notificationCenter;
@@ -131,8 +131,9 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     protected isBottomOverflow: boolean = false;
 
-    /** Distance in pixels from the bottom of the list at which the next page is requested. */
-    scrolledToBottomOffset: number = 0;
+    /** Distance in pixels from the bottom of the list at which the next page is requested.
+     * @docs-private */
+    protected scrolledToBottomOffset: number = 0;
 
     /** Emits on every scroll of the list container; drives the scroll-to-bottom check.
      * @docs-private */
@@ -207,14 +208,14 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
     /**
      * Requests the next page (via `service.onNextPage`) once the list is scrolled to within
-     * `scrolledToBottomOffset` pixels of the bottom. Throttled and de-duplicated so a single
+     * `scrolledToBottomOffset` pixels of the bottom. Rate-limited and de-duplicated so a single
      * request fires per arrival at the bottom; suppressed while a load is in flight, errored,
      * or when there is nothing more to load.
      */
     private subscribeToScrolledToBottom(): void {
         this.scroll$
             .pipe(
-                auditTime(SCROLLED_TO_BOTTOM_THROTTLE_TIME),
+                auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME),
                 map(() => {
                     const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer.contentElement.nativeElement;
 
