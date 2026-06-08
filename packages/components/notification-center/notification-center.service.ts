@@ -43,11 +43,30 @@ export class KbqNotificationCenterService {
     readonly loadingMode = new BehaviorSubject(false);
     /** @docs-private */
     readonly errorMode = new BehaviorSubject(false);
+    /**
+     * Whether the bottom "load more" spinner is shown while the next page is being loaded.
+     * Note: this is the infinite-scroll indicator and is distinct from `loadingMode`,
+     * which renders the full-screen loader instead of the list.
+     */
+    readonly loadingMore = new BehaviorSubject(false);
+    /**
+     * Whether the bottom "load more" error row (with a retry button) is shown.
+     * Distinct from `errorMode`, which replaces the whole list with the full-screen error state.
+     */
+    readonly loadMoreErrorMode = new BehaviorSubject(false);
+    /**
+     * Whether there are more notifications to load. While `true`, scrolling to the bottom
+     * emits `onNextPage`; set it to `false` to stop further infinite-scroll requests.
+     */
+    readonly hasMore = new BehaviorSubject(true);
     /** @docs-private */
     readonly onRead = new BehaviorSubject<KbqNotificationItem | null>(null);
 
     /** Triggers an event when the user presses the reload button. */
     readonly onReload = new EventEmitter<void>();
+
+    /** Triggers an event when the list is scrolled to the bottom and the next page should be loaded. */
+    readonly onNextPage = new EventEmitter<void>();
 
     private originalItems = new BehaviorSubject([] as KbqNotificationItem[]);
 
@@ -63,7 +82,15 @@ export class KbqNotificationCenterService {
     );
 
     /** Emits an event whenever the changes. */
-    readonly changes = merge(this.silentMode, this.loadingMode, this.errorMode, this.originalItems, this.onRead);
+    readonly changes = merge(
+        this.silentMode,
+        this.loadingMode,
+        this.errorMode,
+        this.loadingMore,
+        this.loadMoreErrorMode,
+        this.originalItems,
+        this.onRead
+    );
 
     /** Notification items */
     get items() {
@@ -118,6 +145,21 @@ export class KbqNotificationCenterService {
     /** Set error mode */
     setErrorMode(value: boolean) {
         this.errorMode.next(value);
+    }
+
+    /** Set the bottom "load more" spinner visibility. */
+    setLoadingMore(value: boolean) {
+        this.loadingMore.next(value);
+    }
+
+    /** Set the bottom "load more" error state visibility. */
+    setLoadMoreErrorMode(value: boolean) {
+        this.loadMoreErrorMode.next(value);
+    }
+
+    /** Set whether there are more notifications to load via infinite scroll. */
+    setHasMore(value: boolean) {
+        this.hasMore.next(value);
     }
 
     /** Push new notification item in center */

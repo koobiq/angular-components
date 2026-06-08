@@ -33,6 +33,12 @@ The panel supports scrolling with a sticky header and lazy loading of records. I
 
 <!-- example(notification-center-error) -->
 
+### Infinite scroll
+
+The list can load notifications page by page as the user scrolls to the bottom. Subscribe to `KbqNotificationCenterService.onNextPage` to fetch the next page, append the result to `items`, and control the flow with `setLoadingMore`, `setHasMore` and `setLoadMoreErrorMode`. The threshold at which loading starts is configured with the `scrolledToBottomOffset` input.
+
+<!-- example(notification-center-infinite-scroll) -->
+
 ### Dropdown window
 
 The notification center can be opened in a popover. For example, when placed in a horizontal menu.

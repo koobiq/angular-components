@@ -42,14 +42,19 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
+import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { Subscription, merge } from 'rxjs';
+import { Subject, Subscription, merge } from 'rxjs';
+import { auditTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
 import { KbqNotificationCenterService } from './notification-center.service';
 import { KbqNotificationItemComponent } from './notification-item';
 
 const defaultOffsetX = 8;
+
+/** Throttle (ms) for the scroll-to-bottom check that drives infinite scroll. */
+const SCROLLED_TO_BOTTOM_THROTTLE_TIME = 100;
 
 /**default configuration of notification-center */
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION = ruRULocaleData.notificationCenter;
@@ -87,7 +92,8 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         KbqToolTipModule,
         AsyncPipe,
         KbqNotificationItemComponent,
-        KbqLoaderOverlayModule
+        KbqLoaderOverlayModule,
+        KbqProgressSpinnerModule
     ],
     templateUrl: './notification-center.html',
     styleUrls: ['./notification-center.scss'],
@@ -124,6 +130,13 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     protected isTopOverflow: boolean = false;
     /** @docs-private */
     protected isBottomOverflow: boolean = false;
+
+    /** Distance in pixels from the bottom of the list at which the next page is requested. */
+    scrolledToBottomOffset: number = 0;
+
+    /** Emits on every scroll of the list container; drives the scroll-to-bottom check.
+     * @docs-private */
+    private readonly scroll$ = new Subject<void>();
 
     /** localized data
      * @docs-private */
@@ -181,6 +194,46 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         this.switcher.focus();
 
         setTimeout(this.checkOverflow);
+
+        this.subscribeToScrolledToBottom();
+    }
+
+    /** Handles the list container scroll: updates overflow shadows and feeds the scroll-to-bottom check.
+     * @docs-private */
+    protected onContainerScroll(): void {
+        this.checkOverflow();
+        this.scroll$.next();
+    }
+
+    /**
+     * Requests the next page (via `service.onNextPage`) once the list is scrolled to within
+     * `scrolledToBottomOffset` pixels of the bottom. Throttled and de-duplicated so a single
+     * request fires per arrival at the bottom; suppressed while a load is in flight, errored,
+     * or when there is nothing more to load.
+     */
+    private subscribeToScrolledToBottom(): void {
+        this.scroll$
+            .pipe(
+                auditTime(SCROLLED_TO_BOTTOM_THROTTLE_TIME),
+                map(() => {
+                    const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer.contentElement.nativeElement;
+
+                    return scrollHeight - scrollTop - clientHeight;
+                }),
+                map((distance) => distance <= this.scrolledToBottomOffset),
+                distinctUntilChanged(),
+                filter(Boolean),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => {
+                if (
+                    this.service.hasMore.value &&
+                    !this.service.loadingMore.value &&
+                    !this.service.loadMoreErrorMode.value
+                ) {
+                    this.service.onNextPage.emit();
+                }
+            });
     }
 
     /** @docs-private */
@@ -270,6 +323,9 @@ export class KbqNotificationCenterTrigger
 
     /** Offset of popUp */
     @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetX;
+
+    /** Distance in pixels from the bottom of the list at which the next page is requested via `onNextPage`. */
+    @Input({ transform: numberAttribute }) scrolledToBottomOffset: number = 0;
 
     /** Use popover or not */
     @Input({ transform: booleanAttribute })
@@ -392,6 +448,7 @@ export class KbqNotificationCenterTrigger
         this.instance.footer = this.footer;
         this.instance.popoverMode = this.popoverMode;
         this.instance.popoverHeight = this.popoverHeight;
+        this.instance.scrolledToBottomOffset = this.scrolledToBottomOffset;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
 

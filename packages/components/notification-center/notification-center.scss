@@ -103,6 +103,31 @@
     }
 }
 
+.kbq-notification-center-load-more {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: var(--kbq-size-m) 0;
+}
+
+.kbq-notification-center-load-more-error {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: var(--kbq-size-m) var(--kbq-size-xxl);
+
+    text-align: center;
+
+    & .kbq-button {
+        margin-top: var(--kbq-size-s);
+    }
+}
+
 .kbq-notification-center-empty-container,
 .kbq-notification-center-error-container {
     display: flex;

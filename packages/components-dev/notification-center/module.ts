@@ -23,6 +23,9 @@ import { NotificationCenterExamplesModule } from '../../docs-examples/components
         <notification-center-error-example />
         <br />
         <br />
+        <notification-center-infinite-scroll-example />
+        <br />
+        <br />
         <notification-center-popover-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

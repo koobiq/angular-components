@@ -33,6 +33,12 @@ npm install overlayscrollbars@2.7.3
 
 <!-- example(notification-center-error) -->
 
+### Бесконечная прокрутка
+
+Список может догружать уведомления постранично по мере прокрутки к низу. Подпишитесь на `KbqNotificationCenterService.onNextPage`, чтобы загрузить следующую страницу, добавьте результат в `items` и управляйте процессом через `setLoadingMore`, `setHasMore` и `setLoadMoreErrorMode`. Порог, при котором начинается загрузка, настраивается входом `scrolledToBottomOffset`.
+
+<!-- example(notification-center-infinite-scroll) -->
+
 ### Выпадающее окно
 
 Центр уведомлений можно открыть в поповере. Например, при размещении в горизонтальном меню.

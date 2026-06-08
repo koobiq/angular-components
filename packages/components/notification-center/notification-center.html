@@ -48,7 +48,7 @@
     kbq-scrollbar
     class="kbq-notification-center-container"
     [class.kbq-notification-center_bottom-overflow]="isBottomOverflow"
-    (onScroll)="checkOverflow()"
+    (onScroll)="onContainerScroll()"
 >
     @if (!service.errorMode.value) {
         @if (!service.loadingMode.value) {
@@ -79,6 +79,21 @@
                 <div class="kbq-notification-center-empty-container">
                     <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
                     {{ localeData.noNotifications }}
+                </div>
+            }
+
+            @if (service.loadingMore.value) {
+                <div class="kbq-notification-center-load-more">
+                    <kbq-progress-spinner [mode]="'indeterminate'" [size]="'compact'" />
+                </div>
+            }
+
+            @if (service.loadMoreErrorMode.value) {
+                <div class="kbq-notification-center-load-more-error">
+                    {{ localeData.failedToLoadNotifications }}
+                    <button kbq-button [kbqStyle]="'transparent'" [color]="'theme'" (click)="service.onNextPage.emit()">
+                        {{ localeData.repeat }}
+                    </button>
                 </div>
             }
         } @else {
