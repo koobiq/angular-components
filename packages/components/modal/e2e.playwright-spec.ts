@@ -36,7 +36,6 @@ test.describe('KbqModalModule', () => {
             await page.goto('/E2eModalStates');
             await page.getByTestId('e2eOpenModal').click();
             await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
-            await page.waitForTimeout(400);
 
             await expect(page.locator('.kbq-modal-footer')).toHaveClass(/kbq-modal-body_bottom-overflow/);
         });
@@ -46,7 +45,6 @@ test.describe('KbqModalModule', () => {
             await page.goto('/E2eModalStates');
             await page.getByTestId('e2eOpenModal').click();
             await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
-            await page.waitForTimeout(400);
 
             await page.locator('.kbq-modal-body').evaluate((el) => {
                 el.scrollTop = 50;
@@ -60,7 +58,6 @@ test.describe('KbqModalModule', () => {
             await page.goto('/E2eModalStates');
             await page.getByTestId('e2eOpenModal').click();
             await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
-            await page.waitForTimeout(400);
 
             await page.locator('.kbq-modal-body').evaluate((el) => {
                 el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
