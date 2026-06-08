@@ -353,6 +353,45 @@ describe('KbqNotificationCenter', () => {
                 ]);
             });
         });
+
+        describe('onRead', () => {
+            const getService = () =>
+                (componentInstance.trigger as unknown as { service: KbqNotificationCenterService }).service;
+
+            const createItem = (title: string): KbqNotificationItem => ({ title, date: new Date().toISOString() });
+
+            const openCenter = () => {
+                componentInstance.trigger.show();
+                fixture.detectChanges();
+            };
+
+            // The rendered notification item hosts KbqReadStateDirective, whose (click) handler emits
+            // read=true on every click. onRead must still fire only on the unread -> read transition.
+            it('emits onRead only once per item across repeated read events', () => {
+                const service = getService();
+                const item = createItem('a');
+
+                service.items = [item];
+
+                openCenter();
+
+                const itemElement = overlayContainer
+                    .getContainerElement()
+                    .querySelector<HTMLElement>('kbq-notification-item');
+
+                expect(itemElement).not.toBeNull();
+
+                const onReadSpy = jest.spyOn(service.onRead, 'next');
+
+                itemElement!.click();
+                itemElement!.click();
+                itemElement!.click();
+
+                expect(onReadSpy).toHaveBeenCalledTimes(1);
+                expect(onReadSpy).toHaveBeenCalledWith(item);
+                expect(item.read).toBe(true);
+            });
+        });
     });
 });
 

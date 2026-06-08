@@ -76,6 +76,10 @@ export class KbqNotificationItemComponent {
                 takeUntilDestroyed()
             )
             .subscribe(() => {
+                if (this.data.read) {
+                    return;
+                }
+
                 this.data.read = true;
 
                 this.service.onRead.next(this.data);
