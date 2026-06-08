@@ -457,7 +457,6 @@ export const enUSLocaleData: {
         showPopUpNotifications: string;
         noNotifications: string;
         failedToLoadNotifications: string;
-        failedToLoadMore: string;
         repeat: string;
     };
 };
@@ -689,7 +688,6 @@ export const esLALocaleData: {
         showPopUpNotifications: string;
         noNotifications: string;
         failedToLoadNotifications: string;
-        failedToLoadMore: string;
         repeat: string;
     };
 };
@@ -1009,7 +1007,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPopUpNotifications: string;
             noNotifications: string;
             failedToLoadNotifications: string;
-            failedToLoadMore: string;
             repeat: string;
         };
     };
@@ -1222,7 +1219,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPopUpNotifications: string;
             noNotifications: string;
             failedToLoadNotifications: string;
-            failedToLoadMore: string;
             repeat: string;
         };
     };
@@ -1431,7 +1427,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPopUpNotifications: string;
             noNotifications: string;
             failedToLoadNotifications: string;
-            failedToLoadMore: string;
             repeat: string;
         };
     };
@@ -1646,7 +1641,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPopUpNotifications: string;
             noNotifications: string;
             failedToLoadNotifications: string;
-            failedToLoadMore: string;
             repeat: string;
         };
     };
@@ -1857,7 +1851,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             showPopUpNotifications: string;
             noNotifications: string;
             failedToLoadNotifications: string;
-            failedToLoadMore: string;
             repeat: string;
         };
     };
@@ -3455,7 +3448,6 @@ export const ptBRLocaleData: {
         showPopUpNotifications: string;
         noNotifications: string;
         failedToLoadNotifications: string;
-        failedToLoadMore: string;
         repeat: string;
     };
 };
@@ -3868,7 +3860,6 @@ export const ruRULocaleData: {
         showPopUpNotifications: string;
         noNotifications: string;
         failedToLoadNotifications: string;
-        failedToLoadMore: string;
         repeat: string;
     };
 };
@@ -4185,7 +4176,6 @@ export const tkTMLocaleData: {
         showPopUpNotifications: string;
         noNotifications: string;
         failedToLoadNotifications: string;
-        failedToLoadMore: string;
         repeat: string;
     };
 };

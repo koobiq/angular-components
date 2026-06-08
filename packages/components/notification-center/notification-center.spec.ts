@@ -232,6 +232,45 @@ describe('KbqNotificationCenter', () => {
                 expect(service.isEmpty).toBe(true);
             });
         });
+
+        describe('ordering', () => {
+            const getService = () =>
+                (componentInstance.trigger as unknown as { service: KbqNotificationCenterService }).service;
+
+            const createItem = (title: string, date: string): KbqNotificationItem => ({ title, date });
+
+            // groupedItems is built from a BehaviorSubject, so it emits synchronously on subscribe.
+            const readTitles = (service: KbqNotificationCenterService): string[][] => {
+                let titles: string[][] = [];
+
+                service.groupedItems
+                    .subscribe(
+                        (groups) => (titles = groups.map((group) => group.items.map((item) => String(item.title))))
+                    )
+                    .unsubscribe();
+
+                return titles;
+            };
+
+            it('always orders groups and items from newest to oldest, regardless of input order', () => {
+                const service = getService();
+
+                // Two days × two times, provided deliberately scrambled. Midday UTC times keep each
+                // pair in the same day-group regardless of the test machine's timezone.
+                service.items = [
+                    createItem('1a', '2025-10-01T12:00:00.000Z'),
+                    createItem('2b', '2025-10-02T15:00:00.000Z'),
+                    createItem('1b', '2025-10-01T15:00:00.000Z'),
+                    createItem('2a', '2025-10-02T12:00:00.000Z')
+                ];
+
+                // Newest day first; within each day the newest notification first.
+                expect(readTitles(service)).toEqual([
+                    ['2b', '2a'],
+                    ['1b', '1a']
+                ]);
+            });
+        });
     });
 });
 

@@ -81,14 +81,24 @@ export class KbqNotificationCenterService {
 
     private originalItems = new BehaviorSubject([] as KbqNotificationItem[]);
 
-    /** @docs-private */
+    /**
+     * Grouped notifications, always ordered from newest to oldest: day groups are sorted by date
+     * descending, and notifications within each day are sorted by date descending.
+     * @docs-private
+     */
     readonly groupedItems = this.originalItems.pipe(
         map((items) => {
             const result: KbqNotificationsGroups = {};
 
-            items.map((item) => this.makeGroup(item, result));
+            items.forEach((item) => this.makeGroup(item, result));
 
-            return Object.values(result).reverse();
+            const groups = Object.values(result);
+
+            // Newest notifications first within each day.
+            groups.forEach((group) => group.items.sort(this.compareByDateDesc));
+
+            // Newest day first.
+            return groups.sort((a, b) => this.compareByDateDesc(a.items[0], b.items[0]));
         })
     );
 
@@ -213,13 +223,25 @@ export class KbqNotificationCenterService {
         const groupTitle = this.formatter.absoluteLongDate(parsedDate);
 
         if (groups[groupId]) {
-            groups[groupId].items.unshift(item);
+            groups[groupId].items.push(item);
         } else {
             groups[groupId] = {
                 title: groupTitle,
                 items: [item]
             };
         }
+    };
+
+    /** Compares two notifications by date so the newest comes first. */
+    private compareByDateDesc = (a: KbqNotificationItem, b: KbqNotificationItem): number => {
+        const parsedA = this.adapter.parse(a.date, '');
+        const parsedB = this.adapter.parse(b.date, '');
+
+        if (!parsedA || !parsedB) {
+            return 0;
+        }
+
+        return this.adapter.compareDateTime(parsedB, parsedA);
     };
 
     private setIds(items: KbqNotificationItem[]) {

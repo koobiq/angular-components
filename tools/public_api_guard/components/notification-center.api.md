@@ -42,7 +42,6 @@ export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: {
     showPopUpNotifications: string;
     noNotifications: string;
     failedToLoadNotifications: string;
-    failedToLoadMore: string;
     repeat: string;
 };
 
