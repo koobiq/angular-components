@@ -29,7 +29,8 @@ let id = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-notification-item',
-        '[class]': 'style'
+        '[class]': 'style',
+        'data-testid': 'kbq-notification-item'
     },
     hostDirectives: [KbqReadStateDirective]
 })

@@ -432,7 +432,7 @@ export class KbqNotificationCenterTrigger
                     }
                 });
             } else {
-                this.preventClosingByInnerScrollSubscription.unsubscribe();
+                this.preventClosingByInnerScrollSubscription?.unsubscribe();
                 this.focus();
             }
         });
