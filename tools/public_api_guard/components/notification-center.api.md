@@ -122,6 +122,7 @@ export class KbqNotificationCenterService {
     // Warning: (ae-forgotten-export) The symbol "KbqNotificationsGroup" needs to be exported by the entry point index.d.ts
     readonly groupedItems: Observable<KbqNotificationsGroup[]>;
     readonly hasMore: BehaviorSubject<boolean>;
+    hideToast(item: KbqNotificationItem): void;
     get isEmpty(): boolean;
     get items(): KbqNotificationItem[];
     set items(values: KbqNotificationItem[]);
@@ -230,6 +231,7 @@ export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
     style?: string | KbqToastStyle;
     // (undocumented)
     title?: string | TemplateRef<unknown>;
+    toastId?: number;
 }
 
 // @public (undocumented)

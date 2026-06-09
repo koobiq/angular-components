@@ -8,6 +8,9 @@ import { map } from 'rxjs/operators';
 export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
     id?: string;
 
+    /** Numeric id of the shown toast, set by `push()` and consumed by `hideToast()`. */
+    toastId?: number;
+
     title?: string | TemplateRef<unknown>;
     style?: string | KbqToastStyle;
 
@@ -188,10 +191,20 @@ export class KbqNotificationCenterService {
         this.setReadState(this.setIds([item]));
 
         if (!this.silentMode.value) {
-            this.toastService.show(item);
+            item.toastId = this.toastService.show(item).id;
         }
 
         return this.originalItems.next([...this.originalItems.value, item]);
+    }
+
+    /** Hides the toast that corresponds to the given notification item. */
+    hideToast(item: KbqNotificationItem): void {
+        if (item.toastId === undefined) {
+            return;
+        }
+
+        this.toastService.hide(item.toastId);
+        item.toastId = undefined;
     }
 
     /** Remove notification item */

@@ -12,6 +12,7 @@ import {
     KbqNotificationItem
 } from '@koobiq/components/notification-center';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqToastService } from '@koobiq/components/toast';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 
@@ -312,6 +313,49 @@ describe('KbqNotificationCenter', () => {
 
                 expect(emitSpy).toHaveBeenCalledWith({ type: 'all', items });
                 expect(service.isEmpty).toBe(true);
+            });
+        });
+
+        describe('hideToast', () => {
+            const getService = () =>
+                (componentInstance.trigger as unknown as { service: KbqNotificationCenterService }).service;
+
+            const createItem = (title: string): KbqNotificationItem => ({ title, date: new Date().toISOString() });
+
+            it('push() stores the returned toast id on the item', () => {
+                const service = getService();
+                const toastService = TestBed.inject(KbqToastService);
+
+                jest.spyOn(toastService, 'show').mockReturnValue({ id: 42, ref: {} as any });
+
+                const item = createItem('a');
+
+                service.push(item);
+
+                expect(item.toastId).toBe(42);
+            });
+
+            it('hides the toast by the stored toastId and clears it', () => {
+                const service = getService();
+                const toastService = TestBed.inject(KbqToastService);
+                const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+
+                const item: KbqNotificationItem = { ...createItem('a'), toastId: 42 };
+
+                service.hideToast(item);
+
+                expect(hideSpy).toHaveBeenCalledWith(42);
+                expect(item.toastId).toBeUndefined();
+            });
+
+            it('does nothing when the item has no toastId', () => {
+                const service = getService();
+                const toastService = TestBed.inject(KbqToastService);
+                const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+
+                service.hideToast(createItem('a'));
+
+                expect(hideSpy).not.toHaveBeenCalled();
             });
         });
 
