@@ -29,9 +29,19 @@ In the empty state, a "No notifications" message is displayed and the "Delete al
 
 ### Error
 
-The panel supports scrolling with a sticky header and lazy loading of records. In the empty state, a "No notifications" message is displayed and the "Delete all" button is hidden.
+If notifications fail to load, a "Failed to load notifications" message and a "Repeat" button are shown instead of the list. Enable this state with `setErrorMode`, and subscribe to `KbqNotificationCenterService.onReload` to retry loading when the button is pressed.
 
 <!-- example(notification-center-error) -->
+
+### Infinite scroll
+
+The list can load notifications page by page as the user scrolls to the bottom. Subscribe to `KbqNotificationCenterService.onNextPage` to fetch the next page, append the result to `items`, and control the flow with `setLoadingMore`, `setHasMore` and `setLoadMoreErrorMode`. The threshold at which loading starts is configured with the `scrolledToBottomOffset` input.
+
+<!-- example(notification-center-infinite-scroll) -->
+
+### Deletion
+
+Notifications can be removed one by one, by date group, or all at once. Subscribe to `KbqNotificationCenterService.onDelete` to react to a removal — for example, to delete the items on the server. The event fires for all three cases and carries `type` (`'item'`, `'group'` or `'all'`) and `items` — the notifications that were removed.
 
 ### Dropdown window
 

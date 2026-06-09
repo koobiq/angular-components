@@ -217,6 +217,7 @@ export const ptBRLocaleData = {
         showPopUpNotifications: 'Mostrar notificações pop-up',
         noNotifications: 'Sem notificações',
         failedToLoadNotifications: 'Falha ao carregar notificações',
-        repeat: 'Repetir'
+        repeat: 'Repetir',
+        loadingMore: 'Carregando mais notificações'
     }
 };

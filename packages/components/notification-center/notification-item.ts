@@ -29,7 +29,8 @@ let id = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-notification-item',
-        '[class]': 'style'
+        '[class]': 'style',
+        'data-testid': 'kbq-notification-item'
     },
     hostDirectives: [KbqReadStateDirective]
 })
@@ -76,6 +77,10 @@ export class KbqNotificationItemComponent {
                 takeUntilDestroyed()
             )
             .subscribe(() => {
+                if (this.data.read) {
+                    return;
+                }
+
                 this.data.read = true;
 
                 this.service.onRead.next(this.data);

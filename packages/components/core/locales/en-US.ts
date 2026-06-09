@@ -218,6 +218,7 @@ export const enUSLocaleData = {
         showPopUpNotifications: 'Show pop-up notifications',
         noNotifications: 'No notifications',
         failedToLoadNotifications: 'Failed to load notifications',
-        repeat: 'Repeat'
+        repeat: 'Repeat',
+        loadingMore: 'Loading more notifications'
     }
 };
