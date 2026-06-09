@@ -93,7 +93,7 @@
                 <div kbq-navbar-title>Notifications</div>
                 @if (trigger.unreadItemsCounter | async; as unreadItems) {
                     <kbq-badge
-                        [badgeColor]="notificationService.silentMode.value ? 'disabled' : 'error'"
+                        [badgeColor]="notificationService.silentMode.value ? 'fade-contrast' : 'error'"
                         [compact]="true"
                     >
                         {{ unreadItems }}
