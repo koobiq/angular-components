@@ -36,7 +36,7 @@
 
     justify-content: space-between;
 
-    padding: var(--kbq-size-xl) var(--kbq-size-xl) var(--kbq-size-xxs) var(--kbq-size-xxl);
+    padding: var(--kbq-size-m) var(--kbq-size-l) var(--kbq-size-xxs) var(--kbq-size-xxl);
 }
 
 .kbq-notification-center-title {
@@ -92,7 +92,7 @@
 
     border-radius: inherit;
 
-    padding-bottom: var(--kbq-size-m);
+    padding-bottom: var(--kbq-size-xl);
 
     & .kbq-loader-overlay_parent {
         border-radius: inherit;
