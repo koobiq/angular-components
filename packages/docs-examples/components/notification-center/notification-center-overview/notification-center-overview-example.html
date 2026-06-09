@@ -27,7 +27,7 @@
     <kbq-vertical-navbar>
         <kbq-navbar-container>
             <kbq-navbar-item bento>
-                <i kbq-icon="kbq-bento-menu_16"></i>
+                <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
             </kbq-navbar-item>
 
             <a href="#" kbq-navbar-brand>
@@ -45,7 +45,7 @@
                 [class.kbq-active]="selected === items.Assets"
                 (click)="selected = items.Assets"
             >
-                <i kbq-icon="kbq-diamond_16"></i>
+                <i kbq-icon="kbq-diamond_16" color="contrast"></i>
                 <div kbq-navbar-title>Assets</div>
             </a>
 
@@ -54,7 +54,7 @@
                 [class.kbq-active]="selected === items.Issues"
                 [kbqDropdownTriggerFor]="issuesDropdown"
             >
-                <i kbq-icon="kbq-diamond_16"></i>
+                <i kbq-icon="kbq-diamond_16" color="contrast"></i>
                 <div kbq-navbar-title>Issues</div>
             </kbq-navbar-item>
 
@@ -64,7 +64,7 @@
                 [class.kbq-active]="selected === items.Incidents"
                 (click)="selected = items.Incidents"
             >
-                <i kbq-icon="kbq-diamond_16"></i>
+                <i kbq-icon="kbq-diamond_16" color="contrast"></i>
                 <div kbq-navbar-title>Incidents</div>
             </a>
 
@@ -74,7 +74,7 @@
                 [class.kbq-active]="selected === items.Policies"
                 (click)="selected = items.Policies"
             >
-                <i kbq-icon="kbq-diamond_16"></i>
+                <i kbq-icon="kbq-diamond_16" color="contrast"></i>
                 <div kbq-navbar-title>Policies</div>
             </a>
 
@@ -83,7 +83,7 @@
                 [class.kbq-active]="selected === items.Security"
                 [kbqDropdownTriggerFor]="securityDropdown"
             >
-                <i kbq-icon="kbq-diamond_16"></i>
+                <i kbq-icon="kbq-diamond_16" color="contrast"></i>
                 <div kbq-navbar-title>Security</div>
             </kbq-navbar-item>
         </kbq-navbar-container>
@@ -96,7 +96,10 @@
                 [popoverHeight]="'500px'"
                 [kbqNotificationCenterPanelClass]="'example-notification-center-panel'"
             >
-                <i kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
+                <i
+                    kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"
+                    color="contrast"
+                ></i>
                 <div kbq-navbar-title>Notifications</div>
                 @if (trigger.unreadItemsCounter | async; as unreadItems) {
                     <kbq-badge
@@ -109,12 +112,12 @@
             </div>
 
             <a href="#" kbq-navbar-item>
-                <i kbq-icon="kbq-circle_16" [color]="'success'"></i>
+                <i kbq-icon="kbq-circle_16" color="success"></i>
                 <div kbq-navbar-title>System Monitor</div>
             </a>
 
             <a href="#" kbq-navbar-item>
-                <i kbq-icon="kbq-user_16"></i>
+                <i kbq-icon="kbq-user_16" color="contrast"></i>
                 <span kbq-navbar-title>Administrator</span>
             </a>
         </kbq-navbar-container>

@@ -112,6 +112,7 @@ export class KbqNotificationCenterService {
         this.errorMode,
         this.loadingMore,
         this.loadMoreErrorMode,
+        this.hasMore,
         this.originalItems,
         this.onRead
     );
@@ -209,6 +210,8 @@ export class KbqNotificationCenterService {
 
     /** Remove notification item */
     remove(removedItem: KbqNotificationItem) {
+        this.hideToast(removedItem);
+
         this.originalItems.next(this.originalItems.value.filter((item) => removedItem !== item));
 
         this.onDelete.emit({ type: 'item', items: [removedItem] });
@@ -216,6 +219,8 @@ export class KbqNotificationCenterService {
 
     /** Remove group of notification items */
     removeGroup(group: KbqNotificationsGroup) {
+        group.items.forEach((item) => this.hideToast(item));
+
         this.originalItems.next(this.originalItems.value.filter((item) => !group.items.includes(item)));
 
         this.onDelete.emit({ type: 'group', items: [...group.items] });
@@ -224,6 +229,8 @@ export class KbqNotificationCenterService {
     /** Remove all notification items */
     removeAll() {
         const items = this.originalItems.value;
+
+        items.forEach((item) => this.hideToast(item));
 
         this.originalItems.next([]);
 

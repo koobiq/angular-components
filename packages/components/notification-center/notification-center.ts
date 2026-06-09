@@ -46,7 +46,7 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Subject, Subscription, merge } from 'rxjs';
-import { auditTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { auditTime, distinctUntilChanged, filter, map, pairwise } from 'rxjs/operators';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
 import { KbqNotificationCenterService } from './notification-center.service';
 import { KbqNotificationItemComponent } from './notification-item';
@@ -135,8 +135,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * @docs-private */
     protected scrolledToBottomOffset: number = 0;
 
-    /** Emits on every scroll of the list container; drives the scroll-to-bottom check.
-     * @docs-private */
+    /** Emits on every scroll of the list container; drives the scroll-to-bottom check. */
     private readonly scroll$ = new Subject<void>();
 
     /** localized data
@@ -177,7 +176,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     }
 
     ngAfterViewInit() {
-        this.visibleChange.subscribe((state) => {
+        this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
             if (this.offset !== null && state) {
                 applyPopupMargins(
                     this.renderer,
@@ -190,7 +189,9 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             this.setStickPosition();
         });
 
-        this.service.changes.subscribe(() => this.changeDetectorRef.markForCheck());
+        this.service.changes
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.changeDetectorRef.markForCheck());
 
         this.switcher.focus();
 
@@ -206,35 +207,70 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         this.scroll$.next();
     }
 
+    /** Retries loading the next page from the bottom error row.
+     * @docs-private */
+    protected retryLoadMore(): void {
+        // The retry button is about to unmount; keep keyboard focus inside the panel instead of
+        // letting it fall back to <body>.
+        this.focusScrollContainer();
+
+        // Clear the bottom error state here so the spinner and the error row can never be shown at
+        // the same time, regardless of what the consumer's `onNextPage` handler does.
+        this.service.setLoadMoreErrorMode(false);
+
+        this.service.onNextPage.emit();
+    }
+
     /**
      * Requests the next page (via `service.onNextPage`) once the list is scrolled to within
-     * `scrolledToBottomOffset` pixels of the bottom. Rate-limited and de-duplicated so a single
-     * request fires per arrival at the bottom; suppressed while a load is in flight, errored,
-     * or when there is nothing more to load.
+     * `scrolledToBottomOffset` pixels of the bottom. Two triggers feed it: the user scrolling, and a
+     * page finishing loading. The latter keeps paging when a freshly loaded page is too short to
+     * overflow the viewport — otherwise no further scroll event would fire and pagination would
+     * stall. Suppressed while a load is in flight, errored, or when there is nothing more to load.
      */
     private subscribeToScrolledToBottom(): void {
-        this.scroll$
-            .pipe(
-                auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME),
-                map(() => {
-                    const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer.contentElement.nativeElement;
+        const scrolledToBottom$ = this.scroll$.pipe(
+            auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME),
+            map(() => this.isScrolledToBottom()),
+            distinctUntilChanged(),
+            filter(Boolean)
+        );
 
-                    return scrollHeight - scrollTop - clientHeight;
-                }),
-                map((distance) => distance <= this.scrolledToBottomOffset),
-                distinctUntilChanged(),
-                filter(Boolean),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(() => {
-                if (
-                    this.service.hasMore.value &&
-                    !this.service.loadingMore.value &&
-                    !this.service.loadMoreErrorMode.value
-                ) {
-                    this.service.onNextPage.emit();
-                }
-            });
+        // Re-measure once a load completes (and the appended items have rendered): if the list still
+        // sits at the bottom, continue paging instead of waiting for a scroll event that never comes.
+        const loadCompleted$ = this.service.loadingMore.pipe(
+            distinctUntilChanged(),
+            pairwise(),
+            filter(([wasLoading, isLoading]) => wasLoading && !isLoading),
+            auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME),
+            filter(() => this.isScrolledToBottom())
+        );
+
+        merge(scrolledToBottom$, loadCompleted$)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.requestNextPage());
+    }
+
+    /** Whether the list is scrolled to within `scrolledToBottomOffset` pixels of the bottom. */
+    private isScrolledToBottom(): boolean {
+        const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer.contentElement.nativeElement;
+
+        return scrollHeight - scrollTop - clientHeight <= this.scrolledToBottomOffset;
+    }
+
+    /** Emits `onNextPage` unless a load is already in flight, errored, or there is nothing more to load. */
+    private requestNextPage(): void {
+        if (this.service.hasMore.value && !this.service.loadingMore.value && !this.service.loadMoreErrorMode.value) {
+            this.service.onNextPage.emit();
+        }
+    }
+
+    private focusScrollContainer(): void {
+        const element = this.scrollContainer.contentElement.nativeElement;
+
+        // tabindex -1 keeps the container out of the Tab order while allowing programmatic focus.
+        element.setAttribute('tabindex', '-1');
+        element.focus({ preventScroll: true });
     }
 
     /** @docs-private */

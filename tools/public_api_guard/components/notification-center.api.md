@@ -86,6 +86,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     set popoverHeight(value: string);
     protected popoverMode: boolean;
     prefix: string;
+    protected retryLoadMore(): void;
     protected scrolledToBottomOffset: number;
     protected readonly service: KbqNotificationCenterService;
     // (undocumented)

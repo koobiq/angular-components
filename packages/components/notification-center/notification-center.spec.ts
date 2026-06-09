@@ -100,17 +100,21 @@ describe('KbqNotificationCenter', () => {
                 ).instance;
 
             // Fakes the container geometry so the list sits exactly at the bottom (distance 0 <= the
-            // default scrolledToBottomOffset of 0), then fires the container's scroll handler.
-            const scrollToBottom = () => {
-                const center = getCenter();
-                const element = center.scrollContainer.contentElement.nativeElement;
+            // default scrolledToBottomOffset of 0).
+            const setAtBottomGeometry = () => {
+                const element = getCenter().scrollContainer.contentElement.nativeElement;
 
                 Object.defineProperty(element, 'scrollHeight', { configurable: true, value: 1000 });
                 Object.defineProperty(element, 'clientHeight', { configurable: true, value: 500 });
                 Object.defineProperty(element, 'offsetHeight', { configurable: true, value: 500 });
                 Object.defineProperty(element, 'scrollTop', { configurable: true, value: 500 });
+            };
 
-                center.onContainerScroll();
+            // Sits the list at the bottom, then fires the container's scroll handler.
+            const scrollToBottom = () => {
+                setAtBottomGeometry();
+
+                getCenter().onContainerScroll();
             };
 
             it('shows the bottom "load more" spinner without replacing the list', fakeAsync(() => {
@@ -144,7 +148,7 @@ describe('KbqNotificationCenter', () => {
                 expect(debugElement.query(By.css('.kbq-notification-center-error-container'))).toBe(null);
             }));
 
-            it('re-emits onNextPage when the bottom retry button is clicked', fakeAsync(() => {
+            it('re-emits onNextPage and clears the error when the bottom retry button is clicked', fakeAsync(() => {
                 const service = getService();
                 const emitSpy = jest.spyOn(service.onNextPage, 'emit');
 
@@ -156,6 +160,25 @@ describe('KbqNotificationCenter', () => {
                 debugElement
                     .query(By.css('.kbq-notification-center-load-more-error button'))
                     .triggerEventHandler('click', {});
+
+                expect(emitSpy).toHaveBeenCalled();
+                // retry must reset the error state itself so the spinner and the error row can never coexist
+                expect(service.loadMoreErrorMode.value).toBe(false);
+            }));
+
+            it('keeps paging when a completed load leaves the list still at the bottom', fakeAsync(() => {
+                const service = getService();
+                const emitSpy = jest.spyOn(service.onNextPage, 'emit');
+
+                openCenter();
+
+                // The just-loaded page was too short to overflow: the list is still at the bottom and
+                // no further scroll event will fire — completing the load must re-trigger paging.
+                setAtBottomGeometry();
+
+                service.setLoadingMore(true);
+                service.setLoadingMore(false);
+                tick(scrollAuditTime);
 
                 expect(emitSpy).toHaveBeenCalled();
             }));
@@ -356,6 +379,38 @@ describe('KbqNotificationCenter', () => {
                 service.hideToast(createItem('a'));
 
                 expect(hideSpy).not.toHaveBeenCalled();
+            });
+
+            it('remove() hides the toast of the removed item', () => {
+                const service = getService();
+                const toastService = TestBed.inject(KbqToastService);
+
+                jest.spyOn(toastService, 'show').mockReturnValue({ id: 7, ref: {} as any });
+                const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+
+                const item = createItem('a');
+
+                service.push(item);
+                service.remove(item);
+
+                expect(hideSpy).toHaveBeenCalledWith(7);
+            });
+
+            it('removeAll() hides the toasts of all items shown via push()', () => {
+                const service = getService();
+                const toastService = TestBed.inject(KbqToastService);
+
+                jest.spyOn(toastService, 'show')
+                    .mockReturnValueOnce({ id: 1, ref: {} as any })
+                    .mockReturnValueOnce({ id: 2, ref: {} as any });
+                const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+
+                service.push(createItem('a'));
+                service.push(createItem('b'));
+                service.removeAll();
+
+                expect(hideSpy).toHaveBeenCalledWith(1);
+                expect(hideSpy).toHaveBeenCalledWith(2);
             });
         });
 

@@ -1,18 +1,25 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormattersModule } from '@koobiq/components/core';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqComponentColors, KbqFormattersModule, ThemeService } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLink } from '@koobiq/components/link';
+import { KbqNavbarModule } from '@koobiq/components/navbar';
 import {
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
     KbqNotificationItem
 } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
-import { timer } from 'rxjs';
+import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { of, timer } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /** Items per loaded page. */
 const PAGE_SIZE = 20;
@@ -24,6 +31,23 @@ const LOAD_DELAY = 800;
 const BASE_DATE = Date.parse('2025-10-08T12:00:00Z');
 
 const STYLES = [KbqToastStyle.Success, KbqToastStyle.Warning, KbqToastStyle.Error, KbqToastStyle.Contrast];
+
+type ExampleAction = {
+    id: string;
+    icon?: string;
+    text?: string;
+    action?: () => void;
+    style: KbqButtonStyles | string;
+    color: KbqComponentColors;
+};
+
+enum NavbarIcItems {
+    Assets,
+    Issues,
+    Incidents,
+    Policies,
+    Security
+}
 
 /**
  * @title notification-center-infinite-scroll
@@ -37,7 +61,12 @@ const STYLES = [KbqToastStyle.Success, KbqToastStyle.Warning, KbqToastStyle.Erro
         KbqBadgeModule,
         AsyncPipe,
         LuxonDateModule,
-        KbqFormattersModule
+        KbqFormattersModule,
+        KbqDropdownModule,
+        KbqEmptyStateModule,
+        KbqLink,
+        KbqNavbarModule,
+        KbqTopBarModule
     ],
     templateUrl: 'notification-center-infinite-scroll-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,6 +81,24 @@ export class NotificationCenterInfiniteScrollExample {
     private currentPage = 0;
     /** Used to demonstrate the bottom error state once, then succeed on retry. */
     private hasFailedOnce = false;
+
+    protected readonly actions: ExampleAction[] = [
+        {
+            id: '1',
+            color: KbqComponentColors.Contrast,
+            style: KbqButtonStyles.Filled,
+            text: 'Primary Action'
+        },
+        {
+            id: '2',
+            color: KbqComponentColors.Contrast,
+            style: KbqButtonStyles.Transparent,
+            icon: 'kbq-ellipsis-horizontal_16'
+        }
+    ];
+
+    protected items = NavbarIcItems;
+    protected selected: NavbarIcItems = NavbarIcItems.Assets;
 
     constructor() {
         // Initial page loads immediately; subsequent pages are appended on scroll.
@@ -104,4 +151,27 @@ export class NotificationCenterInfiniteScrollExample {
             };
         });
     }
+
+    protected readonly srcSet = computed(() => {
+        const currentTheme = this.currentTheme();
+
+        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.png 1x, assets/images/${currentTheme}/empty_192@2x.png 2x`;
+    });
+
+    protected readonly currentTheme = toSignal(
+        inject(ThemeService, { optional: true })?.current.pipe(
+            map((theme) => theme && theme.className.replace('kbq-', ''))
+        ) || of('light'),
+        { initialValue: 'light' }
+    );
+
+    readonly isDesktop = toSignal(
+        inject(BreakpointObserver)
+            .observe('(min-width: 900px)')
+            .pipe(
+                takeUntilDestroyed(),
+                map(({ matches }) => matches)
+            ),
+        { initialValue: true }
+    );
 }

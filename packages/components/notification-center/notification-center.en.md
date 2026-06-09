@@ -29,7 +29,7 @@ In the empty state, a "No notifications" message is displayed and the "Delete al
 
 ### Error
 
-The panel supports scrolling with a sticky header and lazy loading of records. In the empty state, a "No notifications" message is displayed and the "Delete all" button is hidden.
+If notifications fail to load, a "Failed to load notifications" message and a "Repeat" button are shown instead of the list. Enable this state with `setErrorMode`, and subscribe to `KbqNotificationCenterService.onReload` to retry loading when the button is pressed.
 
 <!-- example(notification-center-error) -->
 

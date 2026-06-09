@@ -6,7 +6,7 @@
 <kbq-navbar style="border-top-left-radius: 12px; border-top-right-radius: 12px">
     <kbq-navbar-container>
         <kbq-navbar-item bento>
-            <i kbq-icon="kbq-bento-menu_16"></i>
+            <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
         </kbq-navbar-item>
 
         <a href="#" kbq-navbar-brand>
@@ -18,7 +18,7 @@
         </a>
 
         <button kbq-navbar-item class="kbq-active">
-            <i kbq-icon="kbq-dashboard_16"></i>
+            <i kbq-icon="kbq-dashboard_16" color="contrast"></i>
         </button>
 
         <kbq-navbar-item>
@@ -37,7 +37,10 @@
             [popoverMode]="true"
             [popoverHeight]="'430px'"
         >
-            <i kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
+            <i
+                kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"
+                color="contrast"
+            ></i>
             @if (trigger.unreadItemsCounter | async; as unreadItems) {
                 <kbq-badge
                     [badgeColor]="notificationService.silentMode.value ? 'fade-contrast' : 'error'"
@@ -49,11 +52,11 @@
         </kbq-navbar-item>
 
         <kbq-navbar-item>
-            <i kbq-icon="kbq-gear_16"></i>
+            <i kbq-icon="kbq-gear_16" color="contrast"></i>
         </kbq-navbar-item>
 
         <kbq-navbar-item>
-            <i kbq-icon="kbq-user_16"></i>
+            <i kbq-icon="kbq-user_16" color="contrast"></i>
         </kbq-navbar-item>
     </kbq-navbar-container>
 </kbq-navbar>

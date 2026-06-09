@@ -10,6 +10,7 @@
             [kbqDropdownTriggerFor]="notificationSwitcherDropdown"
             [kbqTooltip]="service.silentMode.value ? localeData.doNotDisturb : localeData.showPopUpNotifications"
             [kbqTooltipArrow]="false"
+            [kbqPlacement]="'right'"
             [kbqTooltipOffset]="4"
             [kbqTooltipDisabled]="dropdownTrigger.opened"
             [kbqStyle]="'transparent'"
@@ -71,6 +72,7 @@
                         [kbqStyle]="'transparent'"
                         [color]="'contrast'"
                         [kbqTooltip]="localeData.remove"
+                        [kbqPlacement]="'right'"
                         [kbqTooltipArrow]="false"
                         (click)="service.removeGroup(group)"
                     >
@@ -82,10 +84,12 @@
                     <kbq-notification-item [data]="item" />
                 }
             } @empty {
-                <div class="kbq-notification-center-empty-container" data-testid="kbq-notification-center-empty">
-                    <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
-                    {{ localeData.noNotifications }}
-                </div>
+                @if (!service.loadingMore.value) {
+                    <div class="kbq-notification-center-empty-container" data-testid="kbq-notification-center-empty">
+                        <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
+                        {{ localeData.noNotifications }}
+                    </div>
+                }
             }
 
             @if (service.loadingMore.value) {
@@ -111,7 +115,7 @@
                         data-testid="kbq-notification-center-load-more-retry-button"
                         [kbqStyle]="'transparent'"
                         [color]="'theme'"
-                        (click)="service.onNextPage.emit()"
+                        (click)="retryLoadMore()"
                     >
                         {{ localeData.repeat }}
                     </button>
