@@ -11,7 +11,8 @@
         }
     }
 
-    .kbq-notification-center-error-container {
+    .kbq-notification-center-error-container,
+    .kbq-notification-center-load-more-error {
         color: var(--kbq-foreground-error);
     }
 }

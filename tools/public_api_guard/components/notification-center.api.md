@@ -44,6 +44,7 @@ export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: {
     noNotifications: string;
     failedToLoadNotifications: string;
     repeat: string;
+    loadingMore: string;
 };
 
 // @public
@@ -76,11 +77,14 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     // (undocumented)
     ngAfterViewInit(): void;
+    protected onContainerScroll(): void;
     // (undocumented)
     get popoverHeight(): string;
     set popoverHeight(value: string);
     protected popoverMode: boolean;
     prefix: string;
+    protected retryLoadMore(): void;
+    protected scrolledToBottomOffset: number;
     protected readonly service: KbqNotificationCenterService;
     // (undocumented)
     readonly switcher: i0.Signal<KbqButton>;
@@ -113,10 +117,16 @@ export class KbqNotificationCenterService {
     readonly errorMode: BehaviorSubject<boolean>;
     // Warning: (ae-forgotten-export) The symbol "KbqNotificationsGroup" needs to be exported by the entry point index.d.ts
     readonly groupedItems: Observable<KbqNotificationsGroup[]>;
+    readonly hasMore: BehaviorSubject<boolean>;
+    hideToast(item: KbqNotificationItem): void;
     get isEmpty(): boolean;
     get items(): KbqNotificationItem[];
     set items(values: KbqNotificationItem[]);
     readonly loadingMode: BehaviorSubject<boolean>;
+    readonly loadingMore: BehaviorSubject<boolean>;
+    readonly loadMoreErrorMode: BehaviorSubject<boolean>;
+    readonly onDelete: EventEmitter<KbqNotificationDeleteEvent>;
+    readonly onNextPage: EventEmitter<void>;
     readonly onRead: BehaviorSubject<KbqNotificationItem | null>;
     readonly onReload: EventEmitter<void>;
     push(item: KbqNotificationItem): void;
@@ -124,7 +134,10 @@ export class KbqNotificationCenterService {
     removeAll(): void;
     removeGroup(group: KbqNotificationsGroup): void;
     setErrorMode(value: boolean): void;
+    setHasMore(value: boolean): void;
     setLoadingMode(value: boolean): void;
+    setLoadingMore(value: boolean): void;
+    setLoadMoreErrorMode(value: boolean): void;
     setSilentMode(value: boolean): void;
     readonly silentMode: BehaviorSubject<boolean>;
     get unreadItemsCounter(): Observable<string>;
@@ -156,6 +169,8 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     // (undocumented)
     static ngAcceptInputType_popoverMode: unknown;
     // (undocumented)
+    static ngAcceptInputType_scrolledToBottomOffset: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     offset: number | null;
     protected originSelector: string;
@@ -168,6 +183,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     get popoverMode(): boolean;
     set popoverMode(value: boolean);
     protected preventClosingByInnerScrollSubscription: Subscription;
+    scrolledToBottomOffset: number;
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
     stickToWindow: KbqStickToWindowPlacementValues;
@@ -178,10 +194,16 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     updatePosition(reapplyPosition?: boolean): void;
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "stickToWindow": { "alias": "stickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "stickToWindow": { "alias": "stickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterTrigger, never>;
 }
+
+// @public
+export type KbqNotificationDeleteEvent = {
+    type: 'item' | 'group' | 'all';
+    items: KbqNotificationItem[];
+};
 
 // @public (undocumented)
 export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
@@ -205,6 +227,7 @@ export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
     style?: string | KbqToastStyle;
     // (undocumented)
     title?: string | TemplateRef<unknown>;
+    toastId?: number;
 }
 
 // @public (undocumented)

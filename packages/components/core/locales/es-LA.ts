@@ -217,6 +217,7 @@ export const esLALocaleData = {
         showPopUpNotifications: 'Mostrar notificaciones emergentes',
         noNotifications: 'Sin notificaciones',
         failedToLoadNotifications: 'Error al cargar las notificaciones',
-        repeat: 'Repetir'
+        repeat: 'Repetir',
+        loadingMore: 'Cargando más notificaciones'
     }
 };

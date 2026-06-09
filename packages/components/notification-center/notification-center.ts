@@ -45,14 +45,19 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
+import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { Subscription, merge } from 'rxjs';
+import { Subject, Subscription, merge } from 'rxjs';
+import { auditTime, distinctUntilChanged, filter, map, pairwise } from 'rxjs/operators';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
 import { KbqNotificationCenterService } from './notification-center.service';
 import { KbqNotificationItemComponent } from './notification-item';
 
 const defaultOffsetX = 8;
+
+/** Rate-limit window (ms) for the scroll-to-bottom check that drives infinite scroll. */
+const SCROLLED_TO_BOTTOM_AUDIT_TIME = 100;
 
 /**default configuration of notification-center */
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION = ruRULocaleData.notificationCenter;
@@ -91,6 +96,7 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         AsyncPipe,
         KbqNotificationItemComponent,
         KbqLoaderOverlayModule,
+        KbqProgressSpinnerModule,
         KbqOverflowShadowContainer,
         KbqOverflowShadowTop,
         KbqOverflowShadowBottom
@@ -124,6 +130,13 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     protected popoverMode: boolean;
 
+    /** Distance in pixels from the bottom of the list at which the next page is requested.
+     * @docs-private */
+    protected scrolledToBottomOffset: number = 0;
+
+    /** Emits on every scroll of the list container; drives the scroll-to-bottom check. */
+    private readonly scroll$ = new Subject<void>();
+
     /** localized data
      * @docs-private */
     get localeData() {
@@ -138,6 +151,9 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     isTrapFocus: boolean = false;
 
     readonly switcher = viewChild.required<KbqButton>('notificationSwitcher');
+
+    /** Scrollable list container; used to measure scroll position for infinite scroll. */
+    private readonly scrollContainer = viewChild.required(KbqScrollbar);
 
     get popoverHeight(): string {
         return this._popoverHeight;
@@ -162,7 +178,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     }
 
     ngAfterViewInit() {
-        this.visibleChange.subscribe((state) => {
+        this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
             if (this.offset !== null && state) {
                 applyPopupMargins(
                     this.renderer,
@@ -175,9 +191,86 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             this.setStickPosition();
         });
 
-        this.service.changes.subscribe(() => this.changeDetectorRef.markForCheck());
+        this.service.changes
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.changeDetectorRef.markForCheck());
 
         this.switcher().focus();
+
+        this.subscribeToScrolledToBottom();
+    }
+
+    /** Handles the list container scroll: feeds the scroll-to-bottom check that drives infinite scroll.
+     * Overflow shadows are handled declaratively by the `kbqOverflowShadow*` directives.
+     * @docs-private */
+    protected onContainerScroll(): void {
+        this.scroll$.next();
+    }
+
+    /** Retries loading the next page from the bottom error row.
+     * @docs-private */
+    protected retryLoadMore(): void {
+        // The retry button is about to unmount; keep keyboard focus inside the panel instead of
+        // letting it fall back to <body>.
+        this.focusScrollContainer();
+
+        // Clear the bottom error state here so the spinner and the error row can never be shown at
+        // the same time, regardless of what the consumer's `onNextPage` handler does.
+        this.service.setLoadMoreErrorMode(false);
+
+        this.service.onNextPage.emit();
+    }
+
+    /**
+     * Requests the next page (via `service.onNextPage`) once the list is scrolled to within
+     * `scrolledToBottomOffset` pixels of the bottom. Two triggers feed it: the user scrolling, and a
+     * page finishing loading. The latter keeps paging when a freshly loaded page is too short to
+     * overflow the viewport — otherwise no further scroll event would fire and pagination would
+     * stall. Suppressed while a load is in flight, errored, or when there is nothing more to load.
+     */
+    private subscribeToScrolledToBottom(): void {
+        const scrolledToBottom$ = this.scroll$.pipe(
+            auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME),
+            map(() => this.isScrolledToBottom()),
+            distinctUntilChanged(),
+            filter(Boolean)
+        );
+
+        // Re-measure once a load completes (and the appended items have rendered): if the list still
+        // sits at the bottom, continue paging instead of waiting for a scroll event that never comes.
+        const loadCompleted$ = this.service.loadingMore.pipe(
+            distinctUntilChanged(),
+            pairwise(),
+            filter(([wasLoading, isLoading]) => wasLoading && !isLoading),
+            auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME),
+            filter(() => this.isScrolledToBottom())
+        );
+
+        merge(scrolledToBottom$, loadCompleted$)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.requestNextPage());
+    }
+
+    /** Whether the list is scrolled to within `scrolledToBottomOffset` pixels of the bottom. */
+    private isScrolledToBottom(): boolean {
+        const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer().contentElement().nativeElement;
+
+        return scrollHeight - scrollTop - clientHeight <= this.scrolledToBottomOffset;
+    }
+
+    /** Emits `onNextPage` unless a load is already in flight, errored, or there is nothing more to load. */
+    private requestNextPage(): void {
+        if (this.service.hasMore.value && !this.service.loadingMore.value && !this.service.loadMoreErrorMode.value) {
+            this.service.onNextPage.emit();
+        }
+    }
+
+    private focusScrollContainer(): void {
+        const element = this.scrollContainer().contentElement().nativeElement;
+
+        // tabindex -1 keeps the container out of the Tab order while allowing programmatic focus.
+        element.setAttribute('tabindex', '-1');
+        element.focus({ preventScroll: true });
     }
 
     /** @docs-private */
@@ -263,6 +356,9 @@ export class KbqNotificationCenterTrigger
     // TODO: Skipped for migration because:
     //  Class of this input is referenced in the signature of another class.
     @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetX;
+
+    /** Distance in pixels from the bottom of the list at which the next page is requested via `onNextPage`. */
+    @Input({ transform: numberAttribute }) scrolledToBottomOffset: number = 0;
 
     /** Use popover or not */
     // TODO: Skipped for migration because:
@@ -380,7 +476,7 @@ export class KbqNotificationCenterTrigger
                     }
                 });
             } else {
-                this.preventClosingByInnerScrollSubscription.unsubscribe();
+                this.preventClosingByInnerScrollSubscription?.unsubscribe();
                 this.focus();
             }
         });
@@ -397,6 +493,7 @@ export class KbqNotificationCenterTrigger
         this.instance.footer = this.footer;
         this.instance.popoverMode = this.popoverMode;
         this.instance.popoverHeight = this.popoverHeight;
+        this.instance.scrolledToBottomOffset = this.scrolledToBottomOffset;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
 
