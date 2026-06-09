@@ -1,3 +1,11 @@
+## 19.8.1 (2026-06-09)
+
+### Koobiq
+
+ * bug fix  **code-block:** show viewAll on overflow ([#DS-4920](https://github.com/koobiq/angular-components/issues/issue/DS-4920)) ([#1602](https://github.com/koobiq/angular-components/issues/1602)) ([96b8ed7](https://github.com/koobiq/angular-components/commit/96b8ed7bc5021e43d9cd7594bf3fe3f388fb1078))
+ * bug fix  **notification-center:** add infinite scroll, delete events and loading states ([#DS-5164](https://github.com/koobiq/angular-components/issues/issue/DS-5164)) ([#1627](https://github.com/koobiq/angular-components/issues/1627)) ([b76c433](https://github.com/koobiq/angular-components/commit/b76c433deb60df001f71ce3ea6d4929293fa24b6))
+ * bug fix  **tabs:** disabled pagination button color ([#DS-5022](https://github.com/koobiq/angular-components/issues/issue/DS-5022)) ([#1599](https://github.com/koobiq/angular-components/issues/1599)) ([f6321e4](https://github.com/koobiq/angular-components/commit/f6321e4e2543305218d7cee4d647416a6b4e740a))
+
 # 19.8.0 (2026-05-26)
 
 ### Koobiq
