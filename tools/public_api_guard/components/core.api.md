@@ -567,7 +567,7 @@ export class ErrorStateMatcher {
 // @public (undocumented)
 export const ESCAPE = 27;
 
-// @public (undocumented)
+// @public
 export function escapeRegExp(value: string): string;
 
 // @public (undocumented)
@@ -2504,6 +2504,19 @@ export class KbqFormsModule {
 }
 
 // @public
+export const kbqHighlightBackgroundMark: (text: string) => string;
+
+// @public (undocumented)
+export class KbqHighlightBackgroundPipe implements PipeTransform {
+    // (undocumented)
+    transform(value: unknown, keyword: unknown): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightBackgroundPipe, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqHighlightBackgroundPipe, "kbqHighlightBackground", true>;
+}
+
+// @public
 export const kbqHighlightMark: (text: string) => string;
 
 // @public (undocumented)
@@ -2513,13 +2526,13 @@ export class KbqHighlightModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqHighlightModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof KbqHighlightPipe], [typeof KbqHighlightPipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof KbqHighlightPipe, typeof KbqHighlightBackgroundPipe], [typeof KbqHighlightPipe, typeof KbqHighlightBackgroundPipe]>;
 }
 
 // @public (undocumented)
 export class KbqHighlightPipe implements PipeTransform {
     // (undocumented)
-    transform(value: any, args: any): any;
+    transform(value: unknown, keyword: unknown): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightPipe, never>;
     // (undocumented)
