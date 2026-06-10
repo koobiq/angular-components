@@ -54,4 +54,43 @@ test.describe('KbqSidepanel', () => {
             await expect(sidepanelContainer).toHaveScreenshot('04-dark.png');
         });
     });
+
+    test.describe('overflow shadow', () => {
+        test('should show footer shadow on init when body content overflows', async ({ page }) => {
+            await page.setViewportSize({ width: 640, height: 300 });
+            await page.goto('/E2eSidepanelStateAndStyle');
+            await page.getByTestId('e2eSidepanelMedium').click();
+            await expect(page.locator('.kbq-sidepanel-container')).toBeVisible();
+
+            // Bug: footer shadow should be visible immediately since body overflows
+            await expect(page.locator('.kbq-sidepanel-footer')).toHaveClass(/kbq-sidepanel-footer_top-overflown/);
+        });
+
+        test('should show header shadow after scrolling to bottom', async ({ page }) => {
+            await page.setViewportSize({ width: 640, height: 300 });
+            await page.goto('/E2eSidepanelStateAndStyle');
+            await page.getByTestId('e2eSidepanelMedium').click();
+            await expect(page.locator('.kbq-sidepanel-container')).toBeVisible();
+
+            await page.locator('.kbq-sidepanel-body').evaluate((el) => {
+                el.scrollTop = el.scrollHeight;
+            });
+
+            await expect(page.locator('.kbq-sidepanel-header')).toHaveClass(/kbq-sidepanel-header_bottom-overflown/);
+        });
+
+        test('should show both shadows when scrolled to the middle', async ({ page }) => {
+            await page.setViewportSize({ width: 640, height: 300 });
+            await page.goto('/E2eSidepanelStateAndStyle');
+            await page.getByTestId('e2eSidepanelMedium').click();
+            await expect(page.locator('.kbq-sidepanel-container')).toBeVisible();
+
+            await page.locator('.kbq-sidepanel-body').evaluate((el) => {
+                el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
+            });
+
+            await expect(page.locator('.kbq-sidepanel-header')).toHaveClass(/kbq-sidepanel-header_bottom-overflown/);
+            await expect(page.locator('.kbq-sidepanel-footer')).toHaveClass(/kbq-sidepanel-footer_top-overflown/);
+        });
+    });
 });

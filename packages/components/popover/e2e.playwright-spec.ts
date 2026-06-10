@@ -15,4 +15,46 @@ test.describe('KbqPopoverModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
+
+    test.describe('overflow shadow', () => {
+        test('should show footer shadow on init when content overflows', async ({ page }) => {
+            await page.goto('/E2ePopoverStates');
+            const mediumPopover = page.locator('.kbq-popover_medium').first();
+
+            await expect(mediumPopover).toBeVisible();
+
+            await expect(mediumPopover.locator('.kbq-popover__footer')).toHaveClass(
+                /kbq-popover__footer_bottom-overflow/
+            );
+        });
+
+        test('should show header shadow after scrolling down', async ({ page }) => {
+            await page.goto('/E2ePopoverStates');
+            const mediumPopover = page.locator('.kbq-popover_medium').first();
+
+            await expect(mediumPopover).toBeVisible();
+
+            await mediumPopover.locator('.kbq-popover__content').evaluate((el) => {
+                el.scrollTop = 50;
+            });
+
+            await expect(mediumPopover.locator('.kbq-popover__header')).toHaveClass(/kbq-popover__header_top-overflow/);
+        });
+
+        test('should show both shadows when scrolled to the middle', async ({ page }) => {
+            await page.goto('/E2ePopoverStates');
+            const mediumPopover = page.locator('.kbq-popover_medium').first();
+
+            await expect(mediumPopover).toBeVisible();
+
+            await mediumPopover.locator('.kbq-popover__content').evaluate((el) => {
+                el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
+            });
+
+            await expect(mediumPopover.locator('.kbq-popover__header')).toHaveClass(/kbq-popover__header_top-overflow/);
+            await expect(mediumPopover.locator('.kbq-popover__footer')).toHaveClass(
+                /kbq-popover__footer_bottom-overflow/
+            );
+        });
+    });
 });
