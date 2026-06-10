@@ -5,6 +5,7 @@ import {
     ElementRef,
     inject,
     Input,
+    NgZone,
     signal,
     Type,
     ViewChild,
@@ -98,9 +99,9 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     @ViewChild('exampleElement') exampleElement: ElementRef<HTMLElement>;
 
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly documentLoader = inject(DocsDocumentLoader);
     private readonly cdr = inject(ChangeDetectorRef);
+    private readonly ngZone = inject(NgZone);
     private readonly window = inject(KBQ_WINDOW);
     private readonly sidepanelService = inject(KbqSidepanelService, { optional: true });
     private readonly modalService = inject(KbqModalService, { optional: true });
@@ -196,23 +197,21 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         return this.documentLoader.get(importPath);
     }
 
-    private async loadExampleComponent() {
-        if (this._example != null) {
-            const { componentName } = this.exampleData;
-            // Lazily loads the example package that contains the requested example.
-            const moduleExports = await loadExample(this._example);
+    private loadExampleComponent(): Promise<void> {
+        if (this._example == null) return Promise.resolve();
+
+        const { componentName } = this.exampleData;
+
+        // Run inside Angular zone so zone.js tracks the dynamic import Promise.
+        // This ensures ngZone.onStable fires only after the example module is loaded
+        // and the component is rendered — preventing premature anchor scroll.
+        return this.ngZone.run(async () => {
+            const moduleExports = await loadExample(this._example!);
 
             this.exampleComponentType = moduleExports[componentName];
 
-            // Since the data is loaded asynchronously, we can't count on the native behavior
-            // that scrolls the element into view automatically. We do it ourselves while giving
-            // the page some time to render.
-            if (typeof this.window.location !== 'undefined' && this.window.location.hash.slice(1) === this._example) {
-                setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), 300);
-            }
-
             this.cdr.markForCheck();
-        }
+        });
     }
 
     private prepareCodeFiles(codeFiles: ExampleFileData[]) {
