@@ -97,7 +97,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    readonly dropdownTrigger: i0.Signal<KbqDropdownTrigger | undefined>;
+    dropdownTrigger: KbqDropdownTrigger;
     // (undocumented)
     get externalPseudoCheckbox(): boolean;
     // (undocumented)
@@ -149,12 +149,12 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    readonly tooltipTrigger: i0.Signal<KbqTooltipTrigger | undefined>;
+    tooltipTrigger: KbqTooltipTrigger;
     // (undocumented)
     get value(): any;
     set value(newValue: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "tooltipTrigger", "dropdownTrigger", "pseudoCheckbox"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOption, [null, null, null, null, { optional: true; }]>;
 }
