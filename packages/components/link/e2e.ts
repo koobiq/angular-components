@@ -99,10 +99,10 @@ import { KbqLinkModule } from '@koobiq/components/link';
         </p>
         <p>
             Text
-            <a kbq-link pseudo class="kbq-hovered">
+            <span kbq-link pseudo class="kbq-hovered">
                 <i kbq-icon="kbq-calendar-o_16"></i>
                 <span class="kbq-link__text">pseudo hovered</span>
-            </a>
+            </span>
             text.
         </p>
         <p>
@@ -150,10 +150,10 @@ import { KbqLinkModule } from '@koobiq/components/link';
         </p>
         <p>
             Text
-            <a kbq-link useVisited pseudo class="kbq-visited">
+            <span kbq-link useVisited pseudo class="kbq-visited">
                 <i kbq-icon="kbq-calendar-o_16"></i>
                 <span class="kbq-link__text">pseudo visited</span>
-            </a>
+            </span>
             text.
         </p>
 
@@ -190,3 +190,75 @@ import { KbqLinkModule } from '@koobiq/components/link';
     }
 })
 export class E2eLinkStates {}
+
+@Component({
+    selector: 'e2e-link-with-caption',
+    imports: [KbqLinkModule, KbqIconModule],
+    template: `
+        <p>
+            <a kbq-link>
+                <span class="kbq-link__text">link</span>
+                <span class="e2e-link-caption">caption</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link class="kbq-hovered">
+                <span class="kbq-link__text">hovered</span>
+                <span class="e2e-link-caption">caption</span>
+            </a>
+        </p>
+        <p>
+            <span kbq-link class="cdk-keyboard-focused">
+                <span class="kbq-link__text">focused</span>
+                <span class="e2e-link-caption">caption</span>
+            </span>
+        </p>
+        <p>
+            <span kbq-link pseudo>
+                <span class="kbq-link__text">pseudo</span>
+                <span class="e2e-link-caption">caption</span>
+            </span>
+        </p>
+        <p>
+            <a kbq-link pseudo class="kbq-hovered">
+                <span class="kbq-link__text">pseudo hovered</span>
+                <span class="e2e-link-caption">caption</span>
+            </a>
+        </p>
+        <p>
+            <span kbq-link pseudo class="cdk-keyboard-focused">
+                <span class="kbq-link__text">pseudo focused</span>
+                <span class="e2e-link-caption">caption</span>
+            </span>
+        </p>
+        <p>
+            <a class="kbq-link_external" kbq-link>
+                <span class="kbq-link__text">external</span>
+                <i kbq-icon="kbq-north-east_16"></i>
+                <span class="e2e-link-caption">caption</span>
+            </a>
+        </p>
+    `,
+    styles: `
+        :host {
+            display: inline-grid;
+            grid-template-columns: repeat(3, 120px);
+            gap: var(--kbq-size-xs);
+            padding: var(--kbq-size-s);
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .e2e-link-caption {
+            display: block;
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eLinkWithCaption'
+    }
+})
+export class E2eLinkWithCaption {}

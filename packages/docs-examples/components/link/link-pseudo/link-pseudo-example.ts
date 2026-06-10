@@ -8,9 +8,13 @@ import { KbqLinkModule } from '@koobiq/components/link';
     selector: 'link-pseudo-example',
     imports: [KbqLinkModule],
     template: `
-        <div style="padding: 16px">
-            <span kbq-link pseudo>Отчет от 19.05.2020</span>
-        </div>
+        <span kbq-link pseudo>Scan report</span>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            padding: var(--kbq-size-l);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

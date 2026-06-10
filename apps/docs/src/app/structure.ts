@@ -628,7 +628,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'link',
                     hasApi: true,
                     apiId: 'link',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.List,
