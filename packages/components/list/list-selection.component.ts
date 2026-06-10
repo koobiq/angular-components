@@ -720,8 +720,8 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // so they must stay decorator queries. A signal `contentChild` would expose the query function
     // instead of the trigger, making `dropdownTrigger.dropdownClosed` undefined and throwing on `.pipe`
     // when an action button is rendered — see #DS-5079.
-    @ContentChild(KbqTooltipTrigger) tooltipTrigger: KbqTooltipTrigger;
-    @ContentChild(KbqDropdownTrigger) dropdownTrigger: KbqDropdownTrigger;
+    @ContentChild(KbqTooltipTrigger) tooltipTrigger?: KbqTooltipTrigger;
+    @ContentChild(KbqDropdownTrigger) dropdownTrigger?: KbqDropdownTrigger;
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
 
     readonly text = viewChild.required<ElementRef>('text');

@@ -113,8 +113,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // so they must stay decorator queries. A signal `contentChild` would expose the query function
     // instead of the trigger, making `dropdownTrigger.dropdownClosed` undefined and throwing on `.pipe`
     // when an action button is rendered (e.g. on tree node expansion) — see #DS-5079.
-    @ContentChild(KbqTooltipTrigger) tooltipTrigger: KbqTooltipTrigger;
-    @ContentChild(KbqDropdownTrigger) dropdownTrigger: KbqDropdownTrigger;
+    @ContentChild(KbqTooltipTrigger) tooltipTrigger?: KbqTooltipTrigger;
+    @ContentChild(KbqDropdownTrigger) dropdownTrigger?: KbqDropdownTrigger;
 
     readonly checkboxThirdState = input<boolean>(false);
 
