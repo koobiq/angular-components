@@ -438,7 +438,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     get disabled(): any;
     set disabled(value: any);
     // (undocumented)
-    dropdownTrigger: KbqDropdownTrigger;
+    dropdownTrigger?: KbqDropdownTrigger;
     // (undocumented)
     emitSelectionChangeEvent(): void;
     // (undocumented)
@@ -497,7 +497,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     readonly toggleElementDirective: i0.Signal<KbqTreeNodeToggleDirective<any> | undefined>;
     // (undocumented)
-    tooltipTrigger: KbqTooltipTrigger;
+    tooltipTrigger?: KbqTooltipTrigger;
     // (undocumented)
     tree: any;
     // (undocumented)

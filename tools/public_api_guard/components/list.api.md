@@ -97,7 +97,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    dropdownTrigger: KbqDropdownTrigger;
+    dropdownTrigger?: KbqDropdownTrigger;
     // (undocumented)
     get externalPseudoCheckbox(): boolean;
     // (undocumented)
@@ -149,7 +149,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    tooltipTrigger: KbqTooltipTrigger;
+    tooltipTrigger?: KbqTooltipTrigger;
     // (undocumented)
     get value(): any;
     set value(newValue: any);
