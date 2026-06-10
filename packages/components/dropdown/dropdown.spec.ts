@@ -23,6 +23,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DOWN_ARROW,
+    ENTER,
     ESCAPE,
     LEFT_ARROW,
     MockNgZone,
@@ -434,7 +435,7 @@ describe('KbqDropdown', () => {
         expect(fixture.componentInstance.items().at(-1)!.getLabel()).toBe('Item with an icon');
     });
 
-    it('should set the proper focus origin when opening by mouse', fakeAsync(() => {
+    it('should focus the panel instead of the first item when opening by mouse', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -447,10 +448,14 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         tick(500);
 
-        expect(focusSpyFn).toHaveBeenCalledWith('mouse');
+        const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
+
+        expect(focusSpyFn).not.toHaveBeenCalled();
+        expect(document.activeElement).toBe(overlayContainerElement.querySelector(PANEL_SELECTOR));
+        expect(items.some((item) => item.classList.contains('cdk-focused'))).toBe(false);
     }));
 
-    it('should set the proper focus origin when opening by touch', fakeAsync(() => {
+    it('should focus the panel instead of the first item when opening by touch', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -463,7 +468,26 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         flush();
 
-        expect(focusSpyFn).toHaveBeenCalledWith('touch');
+        const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
+
+        expect(focusSpyFn).not.toHaveBeenCalled();
+        expect(document.activeElement).toBe(overlayContainerElement.querySelector(PANEL_SELECTOR));
+        expect(items.some((item) => item.classList.contains('cdk-focused'))).toBe(false);
+    }));
+
+    it('should focus the first item when opening by keyboard', fakeAsync(() => {
+        const fixture = createComponent(SimpleDropdown, [], []);
+
+        fixture.detectChanges();
+        const focusSpyFn = jest.spyOn(fixture.componentInstance.items().at(0)!, 'focus');
+
+        const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+
+        dispatchKeyboardEvent(triggerEl, 'keydown', ENTER);
+        fixture.detectChanges();
+        tick(500);
+
+        expect(focusSpyFn).toHaveBeenCalledWith('keyboard');
     }));
 
     it('should close the dropdown when using the CloseScrollStrategy', fakeAsync(() => {
@@ -515,7 +539,11 @@ describe('KbqDropdown', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
-        fixture.componentInstance.triggerEl().nativeElement.click();
+
+        const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+
+        dispatchMouseEvent(triggerEl, 'mousedown');
+        triggerEl.click();
         fixture.detectChanges();
 
         const panel = document.querySelector(PANEL_SELECTOR)! as HTMLElement;
@@ -534,9 +562,43 @@ describe('KbqDropdown', () => {
         // Flush due to the additional tick that is necessary for the FocusMonitor.
         flush();
 
+        // Since no item was active after opening by mouse, the first arrow press
+        // should highlight the first item.
+        expect(items[0].classList).toContain('cdk-focused');
+        expect(items[0].classList).toContain('cdk-keyboard-focused');
+
+        dispatchKeyboardEvent(panel, 'keydown', DOWN_ARROW);
+        fixture.detectChanges();
+        flush();
+
         // We skip to the third item, because the second one is disabled.
         expect(items[2].classList).toContain('cdk-focused');
         expect(items[2].classList).toContain('cdk-keyboard-focused');
+    }));
+
+    it('should highlight an item on hover after opening by mouse', fakeAsync(() => {
+        const fixture = createComponent(SimpleDropdown, [], []);
+
+        fixture.detectChanges();
+
+        const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+
+        dispatchMouseEvent(triggerEl, 'mousedown');
+        triggerEl.click();
+        fixture.detectChanges();
+        tick(500);
+
+        const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
+
+        dispatchMouseEvent(items[2], 'mouseenter');
+        fixture.detectChanges();
+
+        // Flush due to the additional tick that is necessary for the FocusMonitor.
+        flush();
+
+        expect(document.activeElement).toBe(items[2]);
+        expect(items[2].classList).toContain('cdk-focused');
+        expect(items[2].classList).toContain('cdk-mouse-focused');
     }));
 
     it('should throw the correct error if the dropdown is not defined after init', () => {
