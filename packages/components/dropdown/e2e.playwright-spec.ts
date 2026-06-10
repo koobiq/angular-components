@@ -23,6 +23,10 @@ test.describe('KbqDropdownModule', () => {
             await component.scrollIntoViewIfNeeded();
             await getDropdownTrigger(page).click();
             await getSubmenuTrigger(page).hover();
+            // Opening by mouse/hover no longer highlights the first item, so the submenu starts with
+            // no active item. The first ArrowDown highlights its first item; two more reach the nested
+            // trigger ("Item with icon"), which ArrowRight then opens.
+            await page.keyboard.press('ArrowDown');
             await page.keyboard.press('ArrowDown');
             await page.keyboard.press('ArrowDown');
             await page.keyboard.press('ArrowRight');

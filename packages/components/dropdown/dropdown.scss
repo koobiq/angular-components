@@ -32,6 +32,10 @@
 }
 
 .kbq-dropdown__panel {
+    // The panel receives programmatic focus when the dropdown is opened by mouse or touch,
+    // so the focus outline should never be rendered on it.
+    outline: none;
+
     overflow-x: hidden;
     overflow-y: auto;
 
