@@ -49,8 +49,8 @@ import {
     applyPopupMargins
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { NEVER, fromEvent, merge } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { EMPTY, NEVER, fromEvent, merge } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
 
 export const defaultOffsetYWithArrow = 8;
@@ -94,21 +94,18 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     isContentBottomOverflow: boolean = false;
 
     ngAfterViewInit() {
-        const popoverContent = this.popoverContent();
+        // visibleChange subscription must be set up before the early return so that programmatic
+        // popovers (where content is set after creation) also get the overflow check on show().
+        this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
+            if (state) {
+                const popoverContent = this.popoverContent();
 
-        if (!popoverContent) return;
+                if (popoverContent) {
+                    this.checkContentOverflow(popoverContent.nativeElement);
+                }
+            }
 
-        this.checkContentOverflow(popoverContent.nativeElement);
-
-        fromEvent(popoverContent.nativeElement, 'scroll')
-            .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
-            .subscribe((event) => {
-                this.checkContentOverflow(event.target as HTMLElement);
-            });
-
-        this.cdkTrapFocus().focusTrap.focusFirstTabbableElement();
-        this.visibleChange.subscribe((state) => {
-            if (this.offset !== null && state) {
+            if (this.offset !== null && state && this.elementRef) {
                 applyPopupMargins(
                     this.renderer,
                     this.elementRef.nativeElement,
@@ -119,6 +116,29 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
                 this.setStickPosition();
             }
         });
+
+        // switchMap cancels the previous scroll subscription on each visibility change,
+        // so no flag is needed to prevent double subscriptions.
+        this.visibleChange
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                switchMap((state) => {
+                    const el = state ? this.popoverContent()?.nativeElement : null;
+
+                    return el ? fromEvent(el, 'scroll').pipe(debounceTime(this.debounceTime)) : EMPTY;
+                })
+            )
+            .subscribe((event) => {
+                this.checkContentOverflow(event.target as HTMLElement);
+            });
+
+        const popoverContent = this.popoverContent();
+
+        if (!popoverContent) return;
+
+        this.checkContentOverflow(popoverContent.nativeElement);
+
+        this.cdkTrapFocus().focusTrap.focusFirstTabbableElement();
     }
 
     onContentChange() {

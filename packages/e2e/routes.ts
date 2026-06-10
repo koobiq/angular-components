@@ -18,7 +18,7 @@ import { E2eButtonGroup, E2eButtonStateAndStyle } from '../components/button/e2e
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
 import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
-import { E2eContentPanelState } from '../components/content-panel/e2e';
+import { E2eContentPanelScrollOverflow, E2eContentPanelState } from '../components/content-panel/e2e';
 import { E2eDatepickerStates } from '../components/datepicker/e2e';
 import { E2eDividerStateAndStyle } from '../components/divider/e2e';
 import { E2eDlStates } from '../components/dl/e2e';
@@ -138,6 +138,7 @@ const components = [
     E2eTableStates,
     E2eAppSwitcherStates,
     E2eContentPanelState,
+    E2eContentPanelScrollOverflow,
     E2eAppSwitcherWithSitesStates,
     E2eTagAutocompleteStates,
     E2eFilterBarStates,
