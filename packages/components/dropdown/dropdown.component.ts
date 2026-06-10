@@ -301,12 +301,37 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     focusFirstItem(origin: FocusOrigin = 'program'): void {
         // When the content is rendered lazily, it takes a bit before the items are inside the DOM.
         if (this.lazyContent) {
-            this.ngZone.onStable
-                .pipe(take(1))
-                .subscribe(() => this.keyManager.setFocusOrigin(origin).setFirstItemActive());
+            this.ngZone.onStable.pipe(take(1)).subscribe(() => this.applyInitialFocus(origin));
         } else {
-            this.keyManager.setFocusOrigin(origin).setFirstItemActive();
+            this.applyInitialFocus(origin);
         }
+    }
+
+    /**
+     * Applies focus when the dropdown is opened. When opened by mouse or touch, the first item
+     * should not be highlighted, so the panel itself is focused instead — keyboard events still
+     * reach the panel and the first arrow key press will highlight the first item.
+     */
+    private applyInitialFocus(origin: FocusOrigin): void {
+        // The origin should be set even when no item gets activated,
+        // since `close` relies on it to emit the correct close reason.
+        this.keyManager.setFocusOrigin(origin);
+
+        if (origin === 'mouse' || origin === 'touch') {
+            this.focusPanel();
+        } else {
+            this.keyManager.setFirstItemActive();
+        }
+    }
+
+    /** Moves DOM focus onto the dropdown panel so that keydown events keep being handled. */
+    private focusPanel(): void {
+        // The panel is rendered into the overlay through a `TemplatePortal`, so it can't be
+        // queried with a `ViewChild`. If there are no rendered items, focus stays on the trigger,
+        // same as `setFirstItemActive` no-ops in that case.
+        const panel = this.directDescendantItems.first?.getHostElement().closest<HTMLElement>('.kbq-dropdown__panel');
+
+        panel?.focus();
     }
 
     /**
@@ -360,7 +385,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         // when the animation is done, however moving focus asynchronously will interrupt screen
         // readers which are in the process of reading out the dropdown already. We take the `element`
         // from the `event` since we can't use a `ViewChild` to access the pane.
-        if (event.toState === 'enter' && this.keyManager.activeItemIndex === 0) {
+        if (event.toState === 'enter' && this.keyManager.activeItemIndex <= 0) {
             event.element.scrollTop = 0;
         }
     }

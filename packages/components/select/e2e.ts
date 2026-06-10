@@ -20,7 +20,6 @@ import { KbqSelectModule } from './select.module';
             <kbq-select data-testid="e2eSelect" [value]="'selected'">
                 <kbq-optgroup class="cdk-keyboard-focused" [label]="'group'">
                     <kbq-option [value]="'default'">default</kbq-option>
-                    <kbq-option class="kbq-hovered" [value]="'hovered'">hover</kbq-option>
                     <kbq-option [value]="'selected'">selected</kbq-option>
                     <kbq-option class="kbq-active" [value]="'focused'">focused</kbq-option>
                     <kbq-option [disabled]="true" [value]="'disabled'">disabled</kbq-option>
@@ -62,7 +61,6 @@ export class E2eSelectStates {}
                         <div class="kbq-option-caption">caption</div>
                     </kbq-option>
                     <kbq-option [value]="'default1'">default1 long name long name long name</kbq-option>
-                    <kbq-option class="kbq-hovered" [value]="'hovered'">hover</kbq-option>
                     <kbq-option [value]="'selected'">selected</kbq-option>
                     <kbq-option class="kbq-active" [value]="'focused'">focused</kbq-option>
                     <kbq-option [disabled]="true" [value]="'disabled'">disabled</kbq-option>
@@ -105,7 +103,6 @@ export class E2eMultiSelectStates {}
                 <kbq-optgroup class="cdk-keyboard-focused" [label]="'group'">
                     <kbq-option [value]="'default'">default</kbq-option>
                     <kbq-option [value]="'default1'">default1 long name long name long name</kbq-option>
-                    <kbq-option class="kbq-hovered" [value]="'hovered'">hover</kbq-option>
                     <kbq-option [value]="'selected'">selected</kbq-option>
                     <kbq-option class="kbq-active" [value]="'focused'">focused</kbq-option>
                     <kbq-option [disabled]="true" [value]="'disabled'">disabled</kbq-option>
@@ -153,7 +150,6 @@ export class E2eMultilineSelectStates {}
                 <kbq-optgroup class="cdk-keyboard-focused" [label]="'group'">
                     <kbq-option [value]="'default'">default</kbq-option>
                     <kbq-option [value]="'default1'">default1 long name long name long name</kbq-option>
-                    <kbq-option class="kbq-hovered" [value]="'hovered'">hover</kbq-option>
                     <kbq-option [value]="'selected'">selected</kbq-option>
                     <kbq-option class="kbq-active" [value]="'focused'">focused</kbq-option>
                     <kbq-option [disabled]="true" [value]="'disabled'">disabled</kbq-option>

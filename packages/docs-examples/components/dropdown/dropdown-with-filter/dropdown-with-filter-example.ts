@@ -43,7 +43,13 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
         <kbq-dropdown #dropdown="kbqDropdown">
             <kbq-form-field [noBorders]="true" (click)="$event.stopPropagation()">
                 <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                <input kbqInput placeholder="Search" [formControl]="control" (keydown)="handleKeydown($event)" />
+                <input
+                    autocomplete="off"
+                    kbqInput
+                    placeholder="Search"
+                    [formControl]="control"
+                    (keydown)="handleKeydown($event)"
+                />
                 <kbq-cleaner />
             </kbq-form-field>
 

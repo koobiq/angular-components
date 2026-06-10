@@ -103,15 +103,11 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                     <kbq-optgroup class="cdk-keyboard-focused" [label]="group.countryName">
                         <kbq-timezone-option [timezone]="group.zones[0]" />
 
-                        <kbq-timezone-option class="kbq-hovered" [timezone]="group.zones[1]" />
-
                         <kbq-timezone-option class="kbq-active" [timezone]="group.zones[2]" />
 
                         <kbq-timezone-option class="kbq-selected" [timezone]="group.zones[3]" />
 
                         <kbq-timezone-option [disabled]="true" [timezone]="group.zones[4]" />
-
-                        <kbq-timezone-option class="kbq-hovered kbq-selected" [timezone]="group.zones[5]" />
 
                         <kbq-timezone-option class="kbq-active kbq-selected" [timezone]="group.zones[6]" />
                     </kbq-optgroup>

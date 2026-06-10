@@ -1,5 +1,5 @@
 <kbq-form-field class="layout-margin-bottom-l">
-    <input kbqInput style="max-width: 200px" type="text" [(ngModel)]="someValue" />
+    <input autocomplete="off" kbqInput style="max-width: 200px" type="text" [(ngModel)]="someValue" />
 </kbq-form-field>
 
 <button kbq-button [kbqDropdownTriggerData]="{ someValue: someValue }" [kbqDropdownTriggerFor]="appDropdownLazy">

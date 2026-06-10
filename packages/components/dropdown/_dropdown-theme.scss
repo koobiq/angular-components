@@ -23,18 +23,14 @@
         }
 
         &.kbq-dropdown-item_highlighted,
-        &:hover:not(.kbq-disabled) {
+        &.cdk-focused:not(.kbq-disabled) {
             @include _kbq-dropdown-item-state(states-hover);
-        }
-
-        &.cdk-keyboard-focused {
-            border-color: var(--kbq-list-states-focused-focus-outline-color);
         }
 
         &.kbq-selected {
             @include _kbq-dropdown-item-state(states-selected);
 
-            &:hover:not(.kbq-disabled) {
+            &.cdk-focused:not(.kbq-disabled) {
                 @include _kbq-dropdown-item-state(states-selected-hover);
             }
         }
@@ -43,12 +39,12 @@
             @include _kbq-dropdown-item-state(states-disabled);
         }
 
-        &:is(.kbq-selected, .cdk-keyboard-focused):has(+ :is(.kbq-selected, .cdk-keyboard-focused)) {
+        &:is(.kbq-selected, .cdk-focused):has(+ :is(.kbq-selected, .cdk-focused)) {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
 
-        &:is(.kbq-selected, .cdk-keyboard-focused) + :is(.kbq-selected, .cdk-keyboard-focused) {
+        &:is(.kbq-selected, .cdk-focused) + :is(.kbq-selected, .cdk-focused) {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
