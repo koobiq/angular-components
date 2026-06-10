@@ -46,10 +46,6 @@
 }
 
 @mixin kbq-button-theme() {
-    .kbq-button-overlay {
-        display: none;
-    }
-
     .kbq-button,
     .kbq-button-icon {
         -webkit-font-smoothing: antialiased;
@@ -87,7 +83,9 @@
         &.kbq-button_filled,
         &.kbq-button_outline,
         &.kbq-button_transparent {
-            &.cdk-keyboard-focused {
+            // :not(.kbq-disabled): a disabled <a kbq-button> can keep DOM focus (tabindex=-1 does
+            // not blur it), and FocusMonitor stays attached for the whole component lifetime.
+            &.cdk-keyboard-focused:not(.kbq-disabled) {
                 $focused-color: var(--kbq-states-line-focus-theme);
                 outline: 1px solid $focused-color;
                 border-color: $focused-color;
@@ -100,11 +98,5 @@
     .kbq-button,
     .kbq-button-icon {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
-    }
-
-    .kbq-button-icon.kbq-button-wrapper {
-        .kbq-icon {
-            @include kbq-css-font-variable(typography, body, line-height, '');
-        }
     }
 }

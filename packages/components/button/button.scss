@@ -24,16 +24,5 @@
     padding-right: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
 }
 
-.kbq-button-overlay {
-    position: absolute;
-
-    top: calc(-1 * #{var(--kbq-button-size-border-width)});
-    left: calc(-1 * #{var(--kbq-button-size-border-width)});
-    right: calc(-1 * #{var(--kbq-button-size-border-width)});
-    bottom: calc(-1 * #{var(--kbq-button-size-border-width)});
-
-    border-radius: inherit;
-}
-
 @include kbq-button-theme();
 @include kbq-button-typography();

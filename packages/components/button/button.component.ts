@@ -14,23 +14,25 @@ import {
     forwardRef,
     inject,
     Input,
+    isDevMode,
     numberAttribute,
     OnDestroy,
     Renderer2,
     signal,
-    SkipSelf,
+    untracked,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import {
+    ENTER,
     getNodesWithoutComments,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
     KbqComponentColors,
     KbqTitleTextRef,
     leftIconClassName,
-    rightIconClassName
+    rightIconClassName,
+    SPACE
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -43,6 +45,19 @@ export enum KbqButtonStyles {
 export const buttonLeftIconClassName = 'kbq-button-icon_left';
 export const buttonRightIconClassName = 'kbq-button-icon_right';
 
+/** A button containing more icons than this keeps regular (non icon-button) styling. */
+const maxIconsForIconButton = 2;
+
+/**
+ * Applies the `kbq-button`/`kbq-button-icon` host class and the left/right icon modifier classes.
+ *
+ * A button is treated as an icon button when its projected content consists only of `KbqIcon`s
+ * and there are at most 2 of them. When icons are mixed with other content, only the outermost
+ * icons receive the left/right classes.
+ *
+ * Must be used together with `KbqButton` (both match `[kbq-button]`): icon detection relies on
+ * the `.kbq-button-wrapper` element rendered by the component's template.
+ */
 @Directive({
     selector: '[kbq-button]',
     host: {
@@ -55,14 +70,31 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
     nativeElement: HTMLElement;
 
-    isIconButton: boolean = false;
+    /** Whether the button contains only icons (at most 2). */
+    get isIconButton(): boolean {
+        return this._isIconButton();
+    }
+
+    private readonly _isIconButton = signal(false);
+
+    private leftIcon: HTMLElement | null = null;
+    private rightIcon: HTMLElement | null = null;
 
     constructor(
         elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2,
-        @SkipSelf() private cdr: ChangeDetectorRef
+        private renderer: Renderer2
     ) {
         this.nativeElement = elementRef.nativeElement;
+
+        // The contentChildren query tracks only KbqIcon instances, while icon placement also
+        // depends on sibling text nodes that are invisible to the query — those are covered by
+        // the MutationObserver in the component template. This effect covers icon creation and
+        // removal (e.g. via @if) while the observer is disabled for icon-less buttons.
+        effect(() => {
+            this.icons();
+
+            untracked(() => this.updateClassModifierForIcons());
+        });
     }
 
     ngAfterContentInit() {
@@ -70,47 +102,62 @@ export class KbqButtonCssStyler implements AfterContentInit {
     }
 
     updateClassModifierForIcons() {
-        this.renderer.removeClass(this.nativeElement, buttonLeftIconClassName);
-        this.renderer.removeClass(this.nativeElement, buttonRightIconClassName);
-        this.icons()
-            .map((item) => item.getHostElement())
-            .forEach((iconHostElement) => {
-                this.renderer.removeClass(iconHostElement, leftIconClassName);
-                this.renderer.removeClass(iconHostElement, rightIconClassName);
-            });
+        const wrapper = this.nativeElement.querySelector('.kbq-button-wrapper');
 
-        const twoIcons = 2;
-        const filteredNodesWithoutComments = getNodesWithoutComments(
-            this.nativeElement.querySelector('.kbq-button-wrapper')!.childNodes as NodeList
-        );
+        if (!wrapper) {
+            if (isDevMode()) {
+                // eslint-disable-next-line no-console
+                console.warn('KbqButtonCssStyler should be imported together with KbqButton.');
+            }
 
-        const icons = this.icons();
-        const currentIsIconButtonValue =
-            !!icons.length && icons.length === filteredNodesWithoutComments.length && icons.length <= twoIcons;
-
-        if (currentIsIconButtonValue !== this.isIconButton) {
-            this.isIconButton = currentIsIconButtonValue;
-            this.cdr.detectChanges();
+            return;
         }
 
-        const iconsValue = this.icons();
+        const icons = this.icons();
+        const nodes = getNodesWithoutComments(wrapper.childNodes);
 
-        if (iconsValue.length && filteredNodesWithoutComments.length > 1) {
-            iconsValue
-                .map((item) => item.getHostElement())
-                .forEach((iconHostElement) => {
-                    const iconIndex = filteredNodesWithoutComments.findIndex((node) => node === iconHostElement);
+        this._isIconButton.set(
+            !!icons.length && icons.length === nodes.length && icons.length <= maxIconsForIconButton
+        );
 
-                    if (iconIndex === 0) {
-                        this.renderer.addClass(iconHostElement, leftIconClassName);
-                        this.renderer.addClass(this.nativeElement, buttonLeftIconClassName);
-                    }
+        let leftIcon: HTMLElement | null = null;
+        let rightIcon: HTMLElement | null = null;
 
-                    if (iconIndex === filteredNodesWithoutComments.length - 1) {
-                        this.renderer.addClass(iconHostElement, rightIconClassName);
-                        this.renderer.addClass(this.nativeElement, buttonRightIconClassName);
-                    }
-                });
+        if (icons.length && nodes.length > 1) {
+            for (const icon of icons) {
+                const iconHostElement = icon.getHostElement();
+                const iconIndex = nodes.indexOf(iconHostElement);
+
+                if (iconIndex === 0) leftIcon = iconHostElement;
+
+                if (iconIndex === nodes.length - 1) rightIcon = iconHostElement;
+            }
+        }
+
+        this.updateIconClass(this.leftIcon, leftIcon, leftIconClassName, buttonLeftIconClassName);
+        this.updateIconClass(this.rightIcon, rightIcon, rightIconClassName, buttonRightIconClassName);
+
+        this.leftIcon = leftIcon;
+        this.rightIcon = rightIcon;
+    }
+
+    private updateIconClass(
+        previous: HTMLElement | null,
+        current: HTMLElement | null,
+        iconClassName: string,
+        buttonClassName: string
+    ) {
+        if (previous === current) return;
+
+        if (previous) {
+            this.renderer.removeClass(previous, iconClassName);
+        }
+
+        if (current) {
+            this.renderer.addClass(current, iconClassName);
+            this.renderer.addClass(this.nativeElement, buttonClassName);
+        } else {
+            this.renderer.removeClass(this.nativeElement, buttonClassName);
         }
     }
 }
@@ -129,10 +176,11 @@ export class KbqButtonCssStyler implements AfterContentInit {
     encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.disabled]': 'disabled || null',
+        '[attr.aria-disabled]': 'disabled || null',
         '[class.kbq-disabled]': 'disabled',
         '[attr.tabIndex]': 'tabIndex',
         '[class]': 'kbqStyle',
-        '(focus)': 'onFocus($event)',
+        '(focus)': 'onFocus()',
         '(blur)': 'onBlur()'
     }
 })
@@ -141,7 +189,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     hasFocus: boolean = false;
 
-    @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
+    @ViewChild('kbqTitleText') textElement: ElementRef<HTMLElement>;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -164,15 +212,12 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledSignal();
     }
 
     set disabled(value: boolean) {
         this.disabledSignal.set(value);
     }
-
-    // @todo 20 In the next major release this line will be deleted.
-    private _disabled: boolean;
 
     /** @docs-private */
     readonly disabledSignal = signal(false);
@@ -192,17 +237,20 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
     constructor(
         private focusMonitor: FocusMonitor,
-        private styler: KbqButtonCssStyler
+        protected styler: KbqButtonCssStyler
     ) {
         super();
 
         this.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);
 
-        // @todo 20 In the next major release this line will be deleted.
-        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
-
-        effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
+        // Native capture-phase listeners instead of host listeners: Angular coalesces listeners
+        // for the same event on the same element, so stopImmediatePropagation from a host listener
+        // would not stop consumer-bound handlers. Matters for <a kbq-button> hosts only —
+        // a disabled native <button> does not emit these events at all. The keydown guard covers
+        // directives activating on ENTER/SPACE keydown directly (e.g. KbqDropdownTrigger).
+        this.getHostElement().addEventListener('click', this.haltDisabledEvents, true);
+        this.getHostElement().addEventListener('keydown', this.haltDisabledKeydownEvents, true);
     }
 
     ngAfterViewInit(): void {
@@ -210,12 +258,12 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     }
 
     ngOnDestroy() {
+        this.getHostElement().removeEventListener('click', this.haltDisabledEvents, true);
+        this.getHostElement().removeEventListener('keydown', this.haltDisabledKeydownEvents, true);
         this.stopFocusMonitor();
     }
 
-    onFocus($event) {
-        $event.stopPropagation();
-
+    onFocus() {
         this.hasFocus = true;
     }
 
@@ -228,24 +276,30 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     }
 
     focus(): void {
-        this.hasFocus = true;
+        if (this.disabled) return;
 
         this.getHostElement().focus();
     }
 
     focusViaKeyboard(): void {
-        this.hasFocus = true;
+        if (this.disabled) return;
 
         this.focusMonitor.focusVia(this.getHostElement(), 'keyboard');
     }
 
-    haltDisabledEvents(event: Event) {
+    haltDisabledEvents = (event: Event) => {
         if (this.disabled) {
             event.preventDefault();
             event.stopImmediatePropagation();
             event.stopPropagation();
         }
-    }
+    };
+
+    private haltDisabledKeydownEvents = (event: KeyboardEvent) => {
+        if ([ENTER, SPACE].includes(event.keyCode)) {
+            this.haltDisabledEvents(event);
+        }
+    };
 
     projectContentChanged() {
         this.styler.updateClassModifierForIcons();

@@ -1,4 +1,8 @@
-<span #kbqTitleText class="kbq-button-wrapper" (cdkObserveContent)="projectContentChanged()">
+<span
+    #kbqTitleText
+    class="kbq-button-wrapper"
+    [cdkObserveContentDisabled]="!styler.icons().length"
+    (cdkObserveContent)="projectContentChanged()"
+>
     <ng-content />
 </span>
-<span class="kbq-button-overlay" (click)="haltDisabledEvents($event)"></span>

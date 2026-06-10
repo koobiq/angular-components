@@ -4,9 +4,12 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     dispatchFakeEvent,
+    dispatchKeyboardEvent,
+    ENTER,
     KbqComponentColors,
     leftIconClassName,
     rightIconClassName,
+    SPACE,
     ThemePalette
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -111,12 +114,45 @@ describe('KbqButton', () => {
         it('should not redirect if disabled', () => {
             const fixture = TestBed.createComponent(TestApp);
             const testComponent = fixture.debugElement.componentInstance;
-            const buttonDebugElement = fixture.debugElement.query(By.css('.kbq-button-overlay'));
+            const anchorElement: HTMLAnchorElement = fixture.debugElement.query(By.css('a')).nativeElement;
 
             testComponent.isDisabled = true;
             fixture.detectChanges();
 
-            buttonDebugElement.nativeElement.click();
+            const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+            anchorElement.dispatchEvent(event);
+
+            expect(testComponent.clickCount).toBe(0);
+            expect(event.defaultPrevented).toBe(true);
+        });
+
+        it('should halt ENTER and SPACE keydown if disabled', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const testComponent = fixture.debugElement.componentInstance;
+            const anchorElement: HTMLAnchorElement = fixture.debugElement.query(By.css('a')).nativeElement;
+
+            testComponent.isDisabled = true;
+            fixture.detectChanges();
+
+            const enterEvent = dispatchKeyboardEvent(anchorElement, 'keydown', ENTER);
+            const spaceEvent = dispatchKeyboardEvent(anchorElement, 'keydown', SPACE);
+
+            expect(enterEvent.defaultPrevented).toBe(true);
+            expect(spaceEvent.defaultPrevented).toBe(true);
+        });
+
+        it('should set aria-disabled if disabled', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const testComponent = fixture.debugElement.componentInstance;
+            const anchorElement: HTMLAnchorElement = fixture.debugElement.query(By.css('a')).nativeElement;
+
+            expect(anchorElement.getAttribute('aria-disabled')).toBeNull();
+
+            testComponent.isDisabled = true;
+            fixture.detectChanges();
+
+            expect(anchorElement.getAttribute('aria-disabled')).toBe('true');
         });
 
         it('should remove tabindex if disabled', () => {
@@ -171,6 +207,7 @@ describe('Button with icon', () => {
                 KbqButtonTextIconLeftRightNgIfCaseTestApp,
                 KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp,
                 KbqButtonTwoIconsCaseTestApp,
+                KbqButtonThreeIconsCaseTestApp,
                 KbqButtonIconNgIfCaseTestApp
             ]
         }).compileComponents();
@@ -204,6 +241,23 @@ describe('Button with icon', () => {
 
         expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`))).not.toBeNull();
         expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`))).not.toBeNull();
+    });
+
+    it('should keep regular button styling and mark only outermost icons for more than 2 icons', () => {
+        const fixture = TestBed.createComponent(KbqButtonThreeIconsCaseTestApp);
+
+        fixture.detectChanges();
+
+        const hostElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        expect(hostElement.classList.contains('kbq-button')).toBeTruthy();
+        expect(hostElement.classList.contains('kbq-button-icon')).toBeFalsy();
+
+        expect(fixture.debugElement.query(By.css(`#icon1.${leftIconClassName}`))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css(`#icon3.${rightIconClassName}`))).not.toBeNull();
+
+        expect(fixture.debugElement.query(By.css(`#icon2.${leftIconClassName}`))).toBeNull();
+        expect(fixture.debugElement.query(By.css(`#icon2.${rightIconClassName}`))).toBeNull();
     });
 
     it('should add right css class when the previous sibling is an html element', () => {
@@ -580,6 +634,19 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
     `
 })
 class KbqButtonTwoIconsCaseTestApp {}
+
+@Component({
+    selector: 'kbq-button-three-icons-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <i id="icon1" kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="icon2" kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="icon3" kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+    `
+})
+class KbqButtonThreeIconsCaseTestApp {}
 
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',

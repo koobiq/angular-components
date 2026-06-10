@@ -21,10 +21,6 @@
 }
 
 @mixin kbq-button-changed-filter() {
-    .kbq-button-overlay {
-        display: none;
-    }
-
     .kbq-button,
     .kbq-button-icon {
         -webkit-font-smoothing: antialiased;
