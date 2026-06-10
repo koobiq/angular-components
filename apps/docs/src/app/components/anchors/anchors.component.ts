@@ -1,3 +1,4 @@
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { DOCUMENT, NgClass } from '@angular/common';
 import {
     ChangeDetectorRef,
@@ -12,23 +13,19 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
-import { KBQ_WINDOW, PopUpPlacements } from '@koobiq/components/core';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { filter, fromEvent, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { filter, fromEvent, Subscription, timer } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
 interface KbqDocsAnchor {
     href: string;
     name: string;
-    /* If the anchor is in view of the page */
+    /** If the anchor is in view of the page */
     active: boolean;
-    /* top offset px of the anchor */
-    top: number;
     level: number;
     element: HTMLElement;
 }
-
-const NEXT_ROUTE_KEY = 'KBQ_nextRoute';
 
 @Component({
     selector: 'docs-anchors',
@@ -48,22 +45,17 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     @Input() anchors: KbqDocsAnchor[] = [];
     @Input() headerSelectors: string;
 
-    // If smooth scroll is supported bigger debounce time is needed to avoid active anchor's hitch
-    readonly isSmoothScrollSupported;
-
     pathName: string;
 
-    private headerHeight: number = 64;
+    private readonly headerHeight: number = 64;
 
     private fragment = '';
 
-    // coef for calculating the distance between anchor and header when scrolling (== headerHeight * anchorHeaderCoef)
-    private anchorHeaderCoef: number = 2;
-
-    private noSmoothScrollDebounce = 10;
-    private debounceTime = 15;
+    private readonly debounceTime = 15;
 
     private scrollSubscription: Subscription;
+    private fragmentScrollSubscription: Subscription | undefined;
+    private fragmentScrollTimer: ReturnType<typeof setTimeout> | undefined;
 
     private get scrollContainer(): HTMLElement {
         return this.document.querySelector('docs-component-viewer')!;
@@ -78,11 +70,11 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private get scrollOffset(): number {
-        return this.scrollContainer.scrollTop + this.headerHeight * this.anchorHeaderCoef;
+        return this.scrollContainer.scrollTop + this.headerHeight;
     }
 
     private readonly destroyRef = inject(DestroyRef);
-    private readonly window = inject(KBQ_WINDOW);
+    private readonly resizeObserver = inject(SharedResizeObserver);
 
     constructor(
         private router: Router,
@@ -90,14 +82,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         private ref: ChangeDetectorRef,
         @Inject(DOCUMENT) private document: Document
     ) {
-        this.isSmoothScrollSupported = 'scrollBehavior' in this.scrollContainer.style;
-
-        if (!this.isSmoothScrollSupported) {
-            this.debounceTime = this.noSmoothScrollDebounce;
-        }
-
         this.pathName = router.url.split('#')[0];
-        this.window.localStorage.setItem(NEXT_ROUTE_KEY, this.pathName);
 
         this.router.events
             .pipe(
@@ -108,8 +93,6 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
                 const [rootUrl] = router.url.split('#');
 
                 if (rootUrl !== this.pathName) {
-                    this.window.localStorage.setItem(NEXT_ROUTE_KEY, rootUrl);
-
                     this.pathName = rootUrl;
                 }
             });
@@ -124,6 +107,8 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
     ngOnDestroy() {
         this.scrollSubscription?.unsubscribe();
+        this.fragmentScrollSubscription?.unsubscribe();
+        clearTimeout(this.fragmentScrollTimer);
     }
 
     getAnchorByHref(href: string): KbqDocsAnchor | null {
@@ -138,9 +123,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         const target = this.document.getElementById(this.fragment);
 
         if (target) {
-            target.scrollTop += this.headerHeight;
-            // scroll after docs-sidepanel scrolled
-            setTimeout(() => target.scrollIntoView());
+            this.scrollToFragment(target);
         } else {
             // For SSR compatibility
             if (typeof this.scrollContainer.scroll === 'function') this.scrollContainer.scroll(0, 0);
@@ -158,22 +141,31 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         this.ref.detectChanges();
     }
 
-    /* TODO Техдолг: при изменении ширины экрана должен переопределяться параметр top
-     *   делать это по window:resize нельзя, т.к. изменение ширины контента страницы происходит после window:resize */
-    onResize() {
-        const headers = Array.from(this.document.querySelectorAll(this.headerSelectors));
-
-        for (let i = 0; i < this.anchors.length; i++) {
-            const { top } = headers[i].getBoundingClientRect();
-
-            this.anchors[i].top = top;
-        }
-
-        this.ref.detectChanges();
+    scrollIntoView(anchor: KbqDocsAnchor) {
+        anchor.element.scrollIntoView({ behavior: 'smooth' });
     }
 
-    scrollIntoView(anchor: KbqDocsAnchor) {
-        setTimeout(() => anchor.element.scrollIntoView());
+    private scrollToFragment(target: HTMLElement): void {
+        clearTimeout(this.fragmentScrollTimer);
+        this.fragmentScrollSubscription?.unsubscribe();
+
+        this.fragmentScrollTimer = setTimeout(() => {
+            target.scrollIntoView({ behavior: 'instant' });
+
+            // Guard against layout shifts caused by lazily-loaded example components:
+            // re-scroll to target whenever the scroll container grows, for up to 2s.
+            this.fragmentScrollSubscription = this.resizeObserver
+                .observe(this.scrollContainer)
+                .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(timer(2000)))
+                .subscribe(() => {
+                    const distanceFromTop =
+                        target.getBoundingClientRect().top - this.scrollContainer.getBoundingClientRect().top;
+
+                    if (distanceFromTop > 10) {
+                        target.scrollIntoView({ behavior: 'instant' });
+                    }
+                });
+        });
     }
 
     private updateActiveAnchor() {
@@ -199,32 +191,29 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
     private createAnchors(): KbqDocsAnchor[] {
         return Array.from(this.document.querySelectorAll<HTMLElement>(this.headerSelectors)).map(
-            (header: HTMLElement, i: number): KbqDocsAnchor => {
-                return {
-                    href: header ? `${header.id}` : '',
-                    name: header.innerText.trim(),
-                    top: this.getHeaderTopOffset(header),
-                    active: i === 0,
-                    level: this.getLevel(header.classList),
-                    element: header
-                };
-            }
+            (header: HTMLElement, i: number): KbqDocsAnchor => ({
+                href: header.id,
+                name: header.innerText.trim(),
+                active: i === 0,
+                level: this.getLevel(header.classList),
+                element: header
+            })
         );
     }
 
+    /** Returns the element's absolute scroll position within the scroll container. */
     private getHeaderTopOffset(header: HTMLElement): number {
         // For SSR compatibility
-        if (typeof this.document.body.getBoundingClientRect !== 'function') return 0;
+        if (typeof this.scrollContainer.getBoundingClientRect !== 'function') return 0;
 
         return (
             this.scrollContainer.scrollTop +
             header.getBoundingClientRect().top -
-            this.document.body.getBoundingClientRect().top +
-            this.headerHeight
+            this.scrollContainer.getBoundingClientRect().top
         );
     }
 
-    private getLevel(classList): number {
+    private getLevel(classList: DOMTokenList): number {
         const className = Array.from<string>(classList).find((name) => name.startsWith('kbq-markdown__')) || '';
 
         return [
@@ -248,10 +237,11 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         });
     };
 
-    private isLinkActive(currentLink, nextLink): boolean {
-        // A link is active if the scroll position is lower than the anchor position + headerHeight*anchorHeaderCoef
-        // and above the next anchor
-        return this.scrollOffset >= currentLink.top && !(nextLink?.top < this.scrollOffset);
+    private isLinkActive(current: KbqDocsAnchor, next?: KbqDocsAnchor): boolean {
+        const currentTop = this.getHeaderTopOffset(current.element);
+        const nextTop = next ? this.getHeaderTopOffset(next.element) : Infinity;
+
+        return this.scrollOffset >= currentTop && !(nextTop < this.scrollOffset);
     }
 
     private setActiveAnchor(anchor: KbqDocsAnchor) {
