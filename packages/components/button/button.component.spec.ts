@@ -5,6 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
+    DOWN_ARROW,
     ENTER,
     KbqComponentColors,
     leftIconClassName,
@@ -12,7 +13,7 @@ import {
     SPACE,
     ThemePalette
 } from '@koobiq/components/core';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     buttonLeftIconClassName,
@@ -154,6 +155,12 @@ describe('KbqButton', () => {
             fixture.detectChanges();
 
             expect(anchorElement.getAttribute('aria-disabled')).toBe('true');
+
+            // `disabled || null` must remove the attribute (not set "false") when re-enabled
+            testComponent.isDisabled = false;
+            fixture.detectChanges();
+
+            expect(anchorElement.getAttribute('aria-disabled')).toBeNull();
         });
 
         it('should remove tabindex if disabled', () => {
@@ -180,6 +187,32 @@ describe('KbqButton', () => {
         dispatchFakeEvent(trigger.nativeElement, 'click');
         fixture.detectChanges();
         expect(trigger.nativeElement.classList.contains('kbq-active')).toBeTruthy();
+    });
+
+    it('should not open an associated dropdown when the disabled button is clicked or keyboard-activated', () => {
+        const fixture: ComponentFixture<DisabledButtonDropdownTrigger> =
+            TestBed.createComponent(DisabledButtonDropdownTrigger);
+
+        fixture.detectChanges();
+
+        const { dropdownTrigger, trigger } = fixture.componentInstance;
+        const anchorElement = trigger().nativeElement as HTMLAnchorElement;
+
+        // click is halted by the capture-phase listener (stopImmediatePropagation), so the
+        // dropdown trigger's own click handler never runs and the dropdown stays closed
+        dispatchFakeEvent(anchorElement, 'click');
+        fixture.detectChanges();
+
+        expect(dropdownTrigger().opened).toBe(false);
+        expect(anchorElement.classList.contains('kbq-active')).toBe(false);
+
+        // ENTER / SPACE and the arrow keys the trigger opens on are all halted too
+        [ENTER, SPACE, DOWN_ARROW].forEach((keyCode) => {
+            dispatchKeyboardEvent(anchorElement, 'keydown', keyCode);
+            fixture.detectChanges();
+
+            expect(dropdownTrigger().opened).toBe(false);
+        });
     });
 
     it('should handle a click on the button', () => {
@@ -362,6 +395,28 @@ describe('Button with icon', () => {
             done();
         });
     });
+
+    it('should switch to kbq-button-icon via the effect when an icon is revealed while the content observer is disabled', (done) => {
+        const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
+        const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
+
+        // start with no icon: cdkObserveContent is disabled (styler.icons() is empty), so the
+        // styler's effect() — not the MutationObserver — is the only thing that can recompute
+        fixture.componentInstance.visible = false;
+        fixture.detectChanges();
+
+        expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalsy();
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
+
+        fixture.componentInstance.visible = true;
+        fixture.detectChanges();
+
+        setTimeout(() => {
+            expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeTruthy();
+            expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalsy();
+            done();
+        });
+    });
 });
 
 describe('Button with explicit icon slots', () => {
@@ -504,6 +559,30 @@ describe('Button text container', () => {
 
         expect(button.textElement.nativeElement.classList.contains('kbq-button-text')).toBe(true);
         expect(button.parentTextElement.nativeElement.classList.contains('kbq-button-wrapper')).toBe(true);
+
+        // parent (width container) must wrap the child (measured text) — guards against the two
+        // ViewChildren being swapped, which would break kbq-title overflow detection
+        expect(button.parentTextElement.nativeElement.contains(button.textElement.nativeElement)).toBe(true);
+    });
+});
+
+describe('KbqButtonCssStyler without KbqButton', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [StylerOnlyTestApp]
+        }).compileComponents();
+    });
+
+    it('should warn in dev mode when there is no .kbq-button-wrapper (styler used without KbqButton)', () => {
+        const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+        const fixture = TestBed.createComponent(StylerOnlyTestApp);
+
+        fixture.detectChanges();
+
+        expect(warnSpy).toHaveBeenCalledWith('KbqButtonCssStyler should be imported together with KbqButton.');
+
+        warnSpy.mockRestore();
     });
 });
 
@@ -827,6 +906,20 @@ class ButtonDropdownTrigger {
 }
 
 @Component({
+    imports: [KbqButtonModule, KbqDropdownModule],
+    template: `
+        <a #triggerEl href="#" kbq-button disabled [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</a>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class DisabledButtonDropdownTrigger {
+    readonly trigger = viewChild.required('triggerEl', { read: ElementRef });
+    readonly dropdownTrigger = viewChild.required(KbqDropdownTrigger);
+}
+
+@Component({
     imports: [KbqButtonModule],
     template: `
         <div kbqButtonGroupRoot [kbqStyle]="style" [color]="color" [disabled]="disabled">
@@ -911,3 +1004,13 @@ class KbqButtonLeftRightIconSlotTestApp {}
     `
 })
 class KbqButtonTwoIconsSlotTestApp {}
+
+@Component({
+    selector: 'styler-only-test-app',
+    // KbqButton is intentionally NOT imported, so the host has no .kbq-button-wrapper
+    imports: [KbqButtonCssStyler],
+    template: `
+        <div kbq-button></div>
+    `
+})
+class StylerOnlyTestApp {}

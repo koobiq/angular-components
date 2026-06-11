@@ -24,13 +24,16 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
+    DOWN_ARROW,
     ENTER,
     getNodesWithoutComments,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
     KbqComponentColors,
     KbqTitleTextRef,
+    LEFT_ARROW,
     leftIconClassName,
+    RIGHT_ARROW,
     rightIconClassName,
     SPACE
 } from '@koobiq/components/core';
@@ -47,9 +50,6 @@ export const buttonRightIconClassName = 'kbq-button-icon_right';
 
 /** A button containing more icons than this keeps regular (non icon-button) styling. */
 const maxIconsForIconButton = 2;
-
-/** `Node.COMMENT_NODE` nodeType value. */
-const COMMENT_NODE = 8;
 
 /**
  * Applies the `kbq-button`/`kbq-button-icon` host class and the left/right icon modifier classes.
@@ -127,9 +127,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
         // existed. With no marker slots this list equals the old wrapper children.
         const effectiveNodes: Node[] = [];
 
-        for (const node of Array.from(wrapper.childNodes)) {
-            if (node.nodeType === COMMENT_NODE) continue;
-
+        for (const node of getNodesWithoutComments(wrapper.childNodes)) {
             if (node === textElement) {
                 effectiveNodes.push(...getNodesWithoutComments((node as HTMLElement).childNodes));
             } else {
@@ -272,7 +270,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
         // for the same event on the same element, so stopImmediatePropagation from a host listener
         // would not stop consumer-bound handlers. Matters for <a kbq-button> hosts only —
         // a disabled native <button> does not emit these events at all. The keydown guard covers
-        // directives activating on ENTER/SPACE keydown directly (e.g. KbqDropdownTrigger).
+        // directives that activate on keydown directly (e.g. KbqDropdownTrigger, which opens on
+        // ENTER/SPACE and on DOWN/LEFT/RIGHT arrows).
         this.getHostElement().addEventListener('click', this.haltDisabledEvents, true);
         this.getHostElement().addEventListener('keydown', this.haltDisabledKeydownEvents, true);
     }
@@ -320,7 +319,10 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     };
 
     private haltDisabledKeydownEvents = (event: KeyboardEvent) => {
-        if ([ENTER, SPACE].includes(event.keyCode)) {
+        // Keys that activate sibling host directives on the same host (e.g. KbqDropdownTrigger opens
+        // on ENTER/SPACE and on DOWN/LEFT/RIGHT arrows). Tab/Escape are intentionally left untouched
+        // so focus can still move away from a disabled — but still focusable — <a kbq-button> host.
+        if ([ENTER, SPACE, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(event.keyCode)) {
             this.haltDisabledEvents(event);
         }
     };
