@@ -13,6 +13,7 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import { InitializationTarget } from 'overlayscrollbars';
 import { InjectionToken } from '@angular/core';
+import { KbqOverflowShadowSource } from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OverlayScrollbars } from 'overlayscrollbars';
@@ -53,7 +54,7 @@ export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG: KbqScrollbarOptions;
 export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider;
 
 // @public
-export class KbqScrollbar implements AfterViewInit, OnDestroy {
+export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadowSource {
     constructor(ngZone: NgZone, targetElement: ElementRef<HTMLElement>);
     readonly contentElement: i0.Signal<ElementRef<HTMLDivElement>>;
     readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
@@ -66,6 +67,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
         destroyed?: ((instance: overlayscrollbars.OverlayScrollbars, canceled: boolean) => void) | ((instance: overlayscrollbars.OverlayScrollbars, canceled: boolean) => void)[] | null | undefined;
         scroll?: ((instance: overlayscrollbars.OverlayScrollbars, event: Event) => void) | ((instance: overlayscrollbars.OverlayScrollbars, event: Event) => void)[] | null | undefined;
     }>;
+    getScrollElement(): HTMLElement | null;
     readonly initializationTarget: i0.InputSignal<overlayscrollbars.InitializationTarget | undefined>;
     // (undocumented)
     mergeEvents(): KbqScrollbarEvents;

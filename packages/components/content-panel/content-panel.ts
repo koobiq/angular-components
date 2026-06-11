@@ -1,29 +1,30 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {
-    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChild,
-    DestroyRef,
     Directive,
-    ElementRef,
     inject,
     input,
     numberAttribute,
     output,
-    Renderer2,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqAnimationCurves, KbqAnimationDurations, KbqComponentColors } from '@koobiq/components/core';
+import {
+    KbqAnimationCurves,
+    KbqAnimationDurations,
+    KbqComponentColors,
+    KbqOverflowShadowContainer
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
-import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
 
 const KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION = trigger('contentAnimation', [
@@ -110,7 +111,9 @@ export class KbqContentPanelHeaderActions {}
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-content-panel-header'
+        class: 'kbq-content-panel-header',
+        '[style.box-shadow]':
+            'contentPanel?.bodyOverflow()?.top ? "var(--kbq-content-panel-header-overflow-box-shadow)" : null'
     }
 })
 export class KbqContentPanelHeader {
@@ -118,6 +121,8 @@ export class KbqContentPanelHeader {
      * @docs-private
      */
     protected readonly contentPanelContainer = inject(KbqContentPanelContainer);
+    /** @docs-private */
+    protected readonly contentPanel = inject(KbqContentPanel, { optional: true });
     /**
      * @docs-private
      */
@@ -130,9 +135,13 @@ export class KbqContentPanelHeader {
 
 @Component({
     selector: 'kbq-content-panel-body',
-    imports: [KbqScrollbarModule],
+    imports: [KbqScrollbarModule, KbqOverflowShadowContainer],
     template: `
-        <kbq-scrollbar class="kbq-content-panel-body__content">
+        <kbq-scrollbar
+            #overflowContainer="kbqOverflowShadowContainer"
+            kbqOverflowShadowContainer
+            class="kbq-content-panel-body__content"
+        >
             <ng-content />
         </kbq-scrollbar>
     `,
@@ -148,7 +157,7 @@ export class KbqContentPanelBody {
     /**
      * @docs-private
      */
-    readonly scrollbar = viewChild.required(KbqScrollbar);
+    readonly overflowContainer = viewChild.required(KbqOverflowShadowContainer);
 }
 
 @Component({
@@ -160,10 +169,15 @@ export class KbqContentPanelBody {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-content-panel-footer'
+        class: 'kbq-content-panel-footer',
+        '[style.box-shadow]':
+            'contentPanel?.bodyOverflow()?.bottom ? "var(--kbq-content-panel-footer-overflow-box-shadow)" : null'
     }
 })
-export class KbqContentPanelFooter {}
+export class KbqContentPanelFooter {
+    /** @docs-private */
+    protected readonly contentPanel = inject(KbqContentPanel, { optional: true });
+}
 
 @Component({
     selector: 'kbq-content-panel',
@@ -186,55 +200,12 @@ export class KbqContentPanelFooter {}
     }
 })
 export class KbqContentPanel {
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly renderer = inject(Renderer2);
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly contentPanelBody = contentChild(KbqContentPanelBody);
 
-    constructor() {
-        afterNextRender(() => this.handleContentBodyScroll());
-    }
-
-    private handleContentBodyScroll(): void {
-        const contentPanelBody = this.contentPanelBody();
-
-        if (!contentPanelBody) return;
-
-        const scrollbar = contentPanelBody.scrollbar();
-        const scrollElement = scrollbar.contentElement().nativeElement;
-
-        this.setupContentHeaderShadow(scrollElement.scrollTop >= 1);
-        this.setupContentFooterShadow(
-            scrollElement.scrollHeight - (scrollElement.scrollTop + scrollElement.clientHeight) >= 1
-        );
-
-        scrollbar.onScroll.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(([instance]) => {
-            const { scrollTop, scrollHeight, clientHeight } = instance.elements().scrollOffsetElement;
-
-            this.setupContentHeaderShadow(scrollTop >= 1);
-            this.setupContentFooterShadow(scrollHeight - (scrollTop + clientHeight) >= 1);
-        });
-    }
-
-    private setupContentHeaderShadow(shouldShowShadow: boolean): void {
-        const className = 'kbq-content-panel_header-with-shadow';
-
-        if (shouldShowShadow) {
-            this.renderer.addClass(this.elementRef.nativeElement, className);
-        } else {
-            this.renderer.removeClass(this.elementRef.nativeElement, className);
-        }
-    }
-
-    private setupContentFooterShadow(shouldShowShadow: boolean): void {
-        const className = 'kbq-content-panel_footer-with-shadow';
-
-        if (shouldShowShadow) {
-            this.renderer.addClass(this.elementRef.nativeElement, className);
-        } else {
-            this.renderer.removeClass(this.elementRef.nativeElement, className);
-        }
-    }
+    /** Current body overflow state. Read by the header and footer to render their `box-shadow`. */
+    readonly bodyOverflow = computed(
+        () => this.contentPanelBody()?.overflowContainer().overflow() ?? { top: false, bottom: false }
+    );
 }
 
 @Component({

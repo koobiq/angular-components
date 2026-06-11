@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eHasOverflowShadow } from '../../e2e/utils';
 
 test.describe('KbqPopoverModule', () => {
     test.describe('E2ePopoverStates', () => {
@@ -23,9 +23,7 @@ test.describe('KbqPopoverModule', () => {
 
             await expect(mediumPopover).toBeVisible();
 
-            await expect(mediumPopover.locator('.kbq-popover__footer')).toHaveClass(
-                /kbq-popover__footer_bottom-overflow/
-            );
+            await expect.poll(() => e2eHasOverflowShadow(mediumPopover.locator('.kbq-popover__footer'))).toBeTruthy();
         });
 
         test('should show header shadow after scrolling down', async ({ page }) => {
@@ -38,7 +36,7 @@ test.describe('KbqPopoverModule', () => {
                 el.scrollTop = 50;
             });
 
-            await expect(mediumPopover.locator('.kbq-popover__header')).toHaveClass(/kbq-popover__header_top-overflow/);
+            await expect.poll(() => e2eHasOverflowShadow(mediumPopover.locator('.kbq-popover__header'))).toBeTruthy();
         });
 
         test('should show both shadows when scrolled to the middle', async ({ page }) => {
@@ -51,10 +49,8 @@ test.describe('KbqPopoverModule', () => {
                 el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
             });
 
-            await expect(mediumPopover.locator('.kbq-popover__header')).toHaveClass(/kbq-popover__header_top-overflow/);
-            await expect(mediumPopover.locator('.kbq-popover__footer')).toHaveClass(
-                /kbq-popover__footer_bottom-overflow/
-            );
+            await expect.poll(() => e2eHasOverflowShadow(mediumPopover.locator('.kbq-popover__header'))).toBeTruthy();
+            await expect.poll(() => e2eHasOverflowShadow(mediumPopover.locator('.kbq-popover__footer'))).toBeTruthy();
         });
     });
 });

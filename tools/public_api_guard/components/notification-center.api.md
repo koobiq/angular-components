@@ -66,15 +66,11 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    protected checkOverflow: () => void;
-    // (undocumented)
     configuration: any;
     protected readonly dateAdapter: DateAdapter<any>;
     escapeHandler(): void;
     // (undocumented)
     readonly externalConfiguration: unknown;
-    protected isBottomOverflow: boolean;
-    protected isTopOverflow: boolean;
     isTrapFocus: boolean;
     get localeData(): any;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;

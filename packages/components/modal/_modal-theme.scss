@@ -18,14 +18,6 @@
         .kbq-modal-content {
             color: var(--kbq-modal-content-text-color);
         }
-
-        .kbq-modal-header.kbq-modal-body_top-overflow {
-            box-shadow: var(--kbq-shadow-overflow-normal-bottom);
-        }
-
-        .kbq-modal-footer.kbq-modal-body_bottom-overflow {
-            box-shadow: var(--kbq-shadow-overflow-normal-top);
-        }
     }
 
     .kbq-modal-mask {

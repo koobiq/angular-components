@@ -1,6 +1,6 @@
 ﻿import { OverlayRef } from '@angular/cdk/overlay';
 import { signal } from '@angular/core';
-import { ESCAPE, isHtmlElement } from '@koobiq/components/core';
+import { ESCAPE, isHtmlElement, KbqOverflowShadowState } from '@koobiq/components/core';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, take, tap } from 'rxjs/operators';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
@@ -17,7 +17,7 @@ export class KbqSidepanelRef<T = any, R = any> {
      * Vertical scroll overflow state of the sidepanel body.
      * Updated on scroll and used for visual adjustments.
      */
-    bodyOverflow = signal({ top: false, bottom: false });
+    bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
 
     /** Instance of the component making up the content of the sidepanel. */
     instance: T;

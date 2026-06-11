@@ -5,6 +5,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    forwardRef,
     inject,
     Injector,
     input,
@@ -14,6 +15,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { KBQ_OVERFLOW_SHADOW_SOURCE, KbqOverflowShadowSource } from '@koobiq/components/core';
 import { KbqScrollbarDirective } from './scrollbar.directive';
 import {
     KbqScrollbarEventListenerArgs,
@@ -58,6 +60,9 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
         </div>
     `,
     styleUrls: ['./scrollbar.component.scss', 'scrollbar-tokens.scss'],
+    providers: [
+        { provide: KBQ_OVERFLOW_SHADOW_SOURCE, useExisting: forwardRef(() => KbqScrollbar) }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -66,7 +71,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     },
     exportAs: 'kbqScrollbar'
 })
-export class KbqScrollbar implements AfterViewInit, OnDestroy {
+export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadowSource {
     /** Element that is being overflowed */
     readonly contentElement = viewChild.required<ElementRef<HTMLDivElement>>('content');
     private readonly kbqScrollbarDirective = viewChild.required('content', { read: KbqScrollbarDirective });
@@ -125,6 +130,11 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     /** Wrapper function for native scroll */
     scrollTo(options?: ScrollToOptions): void {
         this.contentElement()?.nativeElement.scroll(options);
+    }
+
+    /** @docs-private Implementation of `KbqOverflowShadowSource`. */
+    getScrollElement(): HTMLElement | null {
+        return this.contentElement()?.nativeElement ?? null;
     }
 
     mergeEvents(): KbqScrollbarEvents {
