@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Directive, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import {
     KBQ_OVERFLOW_SHADOW_SOURCE,
@@ -66,6 +66,34 @@ class TestHostCustomShadowComponent {
     readonly container = viewChild.required(KbqOverflowShadowContainer);
 }
 
+@Component({
+    selector: 'test-overflow-shadow-debounce-host',
+    imports: [KbqOverflowShadowContainer],
+    template: `
+        <div #container="kbqOverflowShadowContainer" data-testid="body" kbqOverflowShadowContainer [debounce]="50">
+            body
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestHostDebounceComponent {
+    readonly container = viewChild.required(KbqOverflowShadowContainer);
+}
+
+@Component({
+    selector: 'test-overflow-shadow-undefined-ref-host',
+    imports: [KbqOverflowShadowContainer, KbqOverflowShadowTop],
+    template: `
+        <header data-testid="bound" [kbqOverflowShadowTop]="container">bound</header>
+        <header data-testid="unbound" [kbqOverflowShadowTop]="undefined">unbound</header>
+        <div #container="kbqOverflowShadowContainer" data-testid="body" kbqOverflowShadowContainer>body</div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestHostUndefinedRefComponent {
+    readonly container = viewChild.required(KbqOverflowShadowContainer);
+}
+
 class MockOverflowShadowSource implements KbqOverflowShadowSource {
     readonly onScroll = new Subject<unknown>();
     readonly element: HTMLDivElement = document.createElement('div');
@@ -92,6 +120,34 @@ class TestProvideExternalSourceDirective {}
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestHostExternalSourceComponent {
+    readonly container = viewChild.required(KbqOverflowShadowContainer);
+}
+
+class MockNullSource implements KbqOverflowShadowSource {
+    readonly onScroll = new Subject<unknown>();
+
+    getScrollElement(): HTMLElement | null {
+        return null;
+    }
+}
+
+const nullSource = new MockNullSource();
+
+@Directive({
+    selector: '[testProvideNullSource]',
+    providers: [{ provide: KBQ_OVERFLOW_SHADOW_SOURCE, useFactory: () => nullSource }]
+})
+class TestProvideNullSourceDirective {}
+
+@Component({
+    selector: 'test-overflow-shadow-null-source-host',
+    imports: [KbqOverflowShadowContainer, TestProvideNullSourceDirective],
+    template: `
+        <div testProvideNullSource kbqOverflowShadowContainer>body</div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestHostNullSourceComponent {
     readonly container = viewChild.required(KbqOverflowShadowContainer);
 }
 
@@ -129,6 +185,49 @@ describe(KbqOverflowShadowContainer.name, () => {
 
             expect(fixture.componentInstance.container().overflow()).toEqual({ top: false, bottom: false });
         });
+
+        it('should not set bottom=true for a sub-pixel gap at the very bottom (rounded)', () => {
+            const fixture = createComponent(TestHostComponent);
+            const body = fixture.debugElement.nativeElement.querySelector('[data-testid="body"]') as HTMLElement;
+
+            // Fractional scroll metrics (HiDPI / browser zoom) at the very bottom: scrollTop + clientHeight
+            // is a hair below scrollHeight. Without rounding the bottom shadow would stay stuck on.
+            setScrollMetrics(body, { scrollTop: 399.6, clientHeight: 100, scrollHeight: 500 });
+            body.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.container().overflow()).toEqual({ top: true, bottom: false });
+        });
+    });
+
+    describe('debounce', () => {
+        it('should delay overflow updates by the [debounce] window', fakeAsync(() => {
+            TestBed.configureTestingModule({ imports: [TestHostDebounceComponent] });
+            const fixture = TestBed.createComponent(TestHostDebounceComponent);
+
+            fixture.detectChanges();
+            flush();
+
+            const container = fixture.componentInstance.container();
+            const body = fixture.debugElement.nativeElement.querySelector('[data-testid="body"]') as HTMLElement;
+
+            // Settle a known baseline (content overflows below, not scrolled yet).
+            setScrollMetrics(body, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            body.dispatchEvent(new Event('scroll'));
+            tick(50);
+            expect(container.overflow()).toEqual({ top: false, bottom: true });
+
+            // Scroll down: the change must not be visible before the debounce window elapses.
+            setScrollMetrics(body, { scrollTop: 10, clientHeight: 100, scrollHeight: 500 });
+            body.dispatchEvent(new Event('scroll'));
+            tick(20);
+            expect(container.overflow()).toEqual({ top: false, bottom: true });
+
+            tick(40);
+            expect(container.overflow()).toEqual({ top: true, bottom: true });
+
+            flush();
+        }));
     });
 
     describe('checkOverflow()', () => {
@@ -196,6 +295,42 @@ describe(KbqOverflowShadowContainer.name, () => {
 
             expect(fixture.componentInstance.container().overflow()).toEqual({ top: true, bottom: true });
         });
+
+        it('should observe the external source element for resize', () => {
+            const observed: Element[] = [];
+
+            class MockResizeObserver {
+                constructor(_callback: ResizeObserverCallback) {}
+                observe(target: Element): void {
+                    observed.push(target);
+                }
+                unobserve(): void {}
+                disconnect(): void {}
+            }
+
+            const original = (globalThis as { ResizeObserver?: typeof ResizeObserver }).ResizeObserver;
+
+            (globalThis as { ResizeObserver?: typeof ResizeObserver }).ResizeObserver =
+                MockResizeObserver as unknown as typeof ResizeObserver;
+
+            try {
+                createComponent(TestHostExternalSourceComponent);
+
+                expect(observed).toContain(externalSource.element);
+            } finally {
+                (globalThis as { ResizeObserver?: typeof ResizeObserver }).ResizeObserver = original;
+            }
+        });
+    });
+
+    describe('source without a scroll element', () => {
+        it('should leave overflow untouched when getScrollElement() returns null', () => {
+            const fixture = createComponent(TestHostNullSourceComponent);
+            const container = fixture.componentInstance.container();
+
+            expect(() => container.checkOverflow()).not.toThrow();
+            expect(container.overflow()).toEqual({ top: false, bottom: false });
+        });
     });
 });
 
@@ -230,6 +365,20 @@ describe(KbqOverflowShadowTop.name, () => {
         fixture.detectChanges();
 
         expect(header.style.boxShadow).toBe('10px 10px red');
+    });
+
+    it('should not set box-shadow when the container ref is undefined', () => {
+        // Mirrors the notification-center case where only the first sub-header passes the container
+        // ref (`$first ? nc : undefined`); the rest must stay shadowless even when top=true.
+        const fixture = createComponent(TestHostUndefinedRefComponent);
+        const bound = fixture.debugElement.nativeElement.querySelector('[data-testid="bound"]') as HTMLElement;
+        const unbound = fixture.debugElement.nativeElement.querySelector('[data-testid="unbound"]') as HTMLElement;
+
+        fixture.componentInstance.container().overflow.set({ top: true, bottom: false });
+        fixture.detectChanges();
+
+        expect(bound.style.boxShadow).toBe('var(--kbq-shadow-overflow-normal-bottom)');
+        expect(unbound.style.boxShadow).toBe('');
     });
 });
 

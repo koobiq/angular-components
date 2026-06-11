@@ -1,7 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
-
-const hasOverflowShadow = (locator: Locator) => locator.evaluate((el) => getComputedStyle(el).boxShadow !== 'none');
+import { e2eEnableDarkTheme, e2eHasOverflowShadow } from '../../e2e/utils';
 
 test.describe('KbqContentPanelModule', () => {
     test.describe('E2eContentPanelState', () => {
@@ -21,7 +19,7 @@ test.describe('KbqContentPanelModule', () => {
             // Waiting for scrollbar initialization and overflow check
             await page.waitForTimeout(100);
 
-            await expect.poll(() => hasOverflowShadow(page.locator('.kbq-content-panel-footer'))).toBeTruthy();
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-content-panel-footer'))).toBeTruthy();
         });
 
         test('should show header shadow after scrolling down', async ({ page }) => {
@@ -31,7 +29,7 @@ test.describe('KbqContentPanelModule', () => {
                 el.scrollTop = 50;
             });
 
-            await expect.poll(() => hasOverflowShadow(page.locator('.kbq-content-panel-header'))).toBeTruthy();
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-content-panel-header'))).toBeTruthy();
         });
 
         test('should show both shadows when scrolled to the middle', async ({ page }) => {
@@ -41,8 +39,8 @@ test.describe('KbqContentPanelModule', () => {
                 el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
             });
 
-            await expect.poll(() => hasOverflowShadow(page.locator('.kbq-content-panel-header'))).toBeTruthy();
-            await expect.poll(() => hasOverflowShadow(page.locator('.kbq-content-panel-footer'))).toBeTruthy();
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-content-panel-header'))).toBeTruthy();
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-content-panel-footer'))).toBeTruthy();
         });
     });
 });

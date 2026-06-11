@@ -16,7 +16,9 @@ import { kbqInjectNativeElement } from '../utils';
 
 /** Shadow visibility state — which of the two shadows should be rendered. */
 export interface KbqOverflowShadowState {
+    /** Whether the top (header) shadow should be visible — content is scrolled past the top. */
     top: boolean;
+    /** Whether the bottom (footer) shadow should be visible — more content remains below the fold. */
     bottom: boolean;
 }
 
@@ -26,10 +28,16 @@ export interface KbqOverflowShadowState {
  * not have to subscribe to the native `scroll` event directly.
  */
 export interface KbqOverflowShadowSource {
+    /** Emits whenever the wrapped element scrolls. */
     readonly onScroll: Observable<unknown>;
+    /** The element whose `scrollTop`/`clientHeight`/`scrollHeight` drive the shadows, or `null` if not ready yet. */
     getScrollElement(): HTMLElement | null;
 }
 
+/**
+ * DI token a scrollable wrapper component can provide to expose itself as the scroll source
+ * for a co-located `KbqOverflowShadowContainer` (see `KbqScrollbar`).
+ */
 export const KBQ_OVERFLOW_SHADOW_SOURCE = new InjectionToken<KbqOverflowShadowSource>('KBQ_OVERFLOW_SHADOW_SOURCE');
 
 /**
@@ -92,11 +100,14 @@ export class KbqOverflowShadowContainer implements OnInit {
 
         if (!source) return;
 
+        // `clientHeight` (content-box) is the visible scroll-viewport height. `Math.round` on the
+        // bottom comparison absorbs sub-pixel scroll metrics (HiDPI / browser zoom) so the bottom
+        // shadow reliably clears at the very bottom instead of lingering on a fractional gap.
         const { scrollTop, clientHeight, scrollHeight } = source;
 
         this.overflow.set({
             top: scrollTop > 0,
-            bottom: scrollTop + clientHeight < scrollHeight
+            bottom: Math.round(scrollTop + clientHeight) < scrollHeight
         });
     }
 
@@ -161,5 +172,6 @@ export class KbqOverflowShadowBottom {
     /** Reference to the container directive. See {@link KbqOverflowShadowTop.ref}. */
     readonly ref = input<KbqOverflowShadowContainer | undefined>(undefined, { alias: 'kbqOverflowShadowBottom' });
 
+    /** Value of `box-shadow` when the shadow is active. Defaults to the standard Koobiq token. */
     readonly shadow = input<string>('var(--kbq-shadow-overflow-normal-top)');
 }

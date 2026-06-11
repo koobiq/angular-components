@@ -210,8 +210,6 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     modalAnimationClassMap: object | null;
     // (undocumented)
-    readonly modalBody: i0.Signal<ElementRef<any> | undefined>;
-    // (undocumented)
     readonly modalContainer: i0.Signal<ElementRef<any>>;
     // (undocumented)
     ngAfterViewInit(): void;

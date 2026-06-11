@@ -1,5 +1,6 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     CdkScrollable,
     FlexibleConnectedPositionStrategy,
@@ -60,6 +61,7 @@ export const defaultOffsetYWithArrow = 8;
     selector: 'kbq-popover-component',
     imports: [
         NgTemplateOutlet,
+        CdkObserveContent,
         KbqButtonModule,
         KbqIconModule,
         CdkTrapFocus,

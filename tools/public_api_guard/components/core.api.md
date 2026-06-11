@@ -2131,7 +2131,7 @@ export const KBQ_OPTION_ACTION_PARENT: InjectionToken<KbqOptionActionParent>;
 // @public
 export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponent>;
 
-// @public (undocumented)
+// @public
 export const KBQ_OVERFLOW_SHADOW_SOURCE: InjectionToken<KbqOverflowShadowSource>;
 
 // @public (undocumented)
@@ -2831,7 +2831,6 @@ export type KbqOrientation = 'horizontal' | 'vertical';
 // @public
 export class KbqOverflowShadowBottom {
     readonly ref: i0.InputSignal<KbqOverflowShadowContainer | undefined>;
-    // (undocumented)
     readonly shadow: i0.InputSignal<string>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowShadowBottom, "[kbqOverflowShadowBottom]", ["kbqOverflowShadowBottom"], { "ref": { "alias": "kbqOverflowShadowBottom"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
@@ -2855,17 +2854,13 @@ export class KbqOverflowShadowContainer implements OnInit {
 
 // @public
 export interface KbqOverflowShadowSource {
-    // (undocumented)
     getScrollElement(): HTMLElement | null;
-    // (undocumented)
     readonly onScroll: Observable<unknown>;
 }
 
 // @public
 export interface KbqOverflowShadowState {
-    // (undocumented)
     bottom: boolean;
-    // (undocumented)
     top: boolean;
 }
 

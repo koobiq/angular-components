@@ -55,7 +55,7 @@
     @if (!service.errorMode.value) {
         @if (!service.loadingMode.value) {
             @for (group of service.groupedItems | async; track group) {
-                <div class="kbq-notification-center-sub-header" [kbqOverflowShadowTop]="nc">
+                <div class="kbq-notification-center-sub-header" [kbqOverflowShadowTop]="$first ? nc : undefined">
                     <div class="kbq-notification-center-sub-header__date">{{ group.title }}</div>
 
                     <button

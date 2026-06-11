@@ -24,6 +24,7 @@ import * as i5 from '@koobiq/components/title';
 import * as i6 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { KbqOverflowShadowState } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -184,10 +185,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     afterClosed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;
     beforeClosed(): Observable<void>;
-    bodyOverflow: i0.WritableSignal<{
-        top: boolean;
-        bottom: boolean;
-    }>;
+    bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
     // (undocumented)
     close(result?: R): void;
     // (undocumented)

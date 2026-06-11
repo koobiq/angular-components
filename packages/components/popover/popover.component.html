@@ -30,10 +30,12 @@
 
         @if (content) {
             <div
+                #popoverContent="kbqOverflowShadowContainer"
                 kbqOverflowShadowContainer
                 class="kbq-popover__content kbq-scrollbar"
                 [class.kbq-popover__content_default-paddings]="defaultPaddings"
                 [debounce]="15"
+                (cdkObserveContent)="popoverContent.checkOverflow()"
             >
                 @if (hasCloseButton && !header) {
                     <div class="kbq-popover__close-container">
