@@ -18,6 +18,7 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
+    EventEmitter,
     inject,
     Inject,
     InjectionToken,
@@ -25,6 +26,7 @@ import {
     numberAttribute,
     OnDestroy,
     Optional,
+    Output,
     output,
     Renderer2,
     Self,
@@ -195,8 +197,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     /** Event emitted when the associated dropdown is opened. */
     readonly dropdownOpened = output<void>();
 
-    /** Event emitted when the associated dropdown is closed. */
-    readonly dropdownClosed = output<void>();
+    /**
+     * Event emitted when the associated dropdown is closed. Kept as an `@Output()` EventEmitter
+     * (not `output()`): `KbqOptionActionComponent` subscribes to it via `.pipe()` through the
+     * KBQ_OPTION_ACTION_PARENT contract, which an `OutputEmitterRef` does not support — see #DS-5079.
+     */
+    @Output() readonly dropdownClosed = new EventEmitter<void>();
 
     // Tracking input type is necessary so it's possible to only auto-focus
     // the first item of the list when the dropdown is opened via the keyboard

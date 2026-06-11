@@ -6,6 +6,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     contentChild,
     ElementRef,
     EventEmitter,
@@ -107,8 +108,13 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     readonly toggleElementComponent = contentChild(KbqTreeNodeToggleComponent);
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
     readonly actionButton = contentChild(KbqOptionActionComponent);
-    readonly tooltipTrigger = contentChild(KbqTooltipTrigger);
-    readonly dropdownTrigger = contentChild(KbqDropdownTrigger);
+
+    // `KbqOptionActionComponent` reads these as directive instances through KBQ_OPTION_ACTION_PARENT,
+    // so they must stay decorator queries. A signal `contentChild` would expose the query function
+    // instead of the trigger, making `dropdownTrigger.dropdownClosed` undefined and throwing on `.pipe`
+    // when an action button is rendered (e.g. on tree node expansion) — see #DS-5079.
+    @ContentChild(KbqTooltipTrigger) tooltipTrigger?: KbqTooltipTrigger;
+    @ContentChild(KbqDropdownTrigger) dropdownTrigger?: KbqDropdownTrigger;
 
     readonly checkboxThirdState = input<boolean>(false);
 
@@ -143,6 +149,12 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     private _disabled: boolean = false;
 
+    /**
+     * Whether the option can be selected by user interaction (click, keyboard, select all).
+     * A non-selectable option remains focusable, navigable and expandable.
+     * Programmatic selection (`setSelected`, `select`, value accessor) is not affected.
+     * Options that are not rendered (e.g. collapsed) are not checked by "select all".
+     */
     readonly selectable = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     // TODO: Skipped for migration because:

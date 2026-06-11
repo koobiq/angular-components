@@ -122,6 +122,6 @@ When navigating the list, the selected item does not change along with the focus
 
 ### Expanding a branch on click
 
-Clicking an element expands the first level of child nodes, only leaf elements can be selected.
+Clicking an element expands the first level of child nodes, only leaf elements can be selected. Selection is disabled with the `selectable` attribute of `kbq-tree-option`: with `[selectable]="false"` the option remains focusable, navigable and expandable, but cannot be selected.
 
 <!-- example(tree-toggle-on-click) -->

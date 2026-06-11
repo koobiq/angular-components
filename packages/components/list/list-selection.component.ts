@@ -10,6 +10,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChild,
     contentChild,
     ContentChildren,
     DestroyRef,
@@ -714,8 +715,13 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     readonly onBlur = new Subject<KbqOptionEvent>();
 
     readonly actionButton = contentChild(KbqOptionActionComponent);
-    readonly tooltipTrigger = contentChild(KbqTooltipTrigger);
-    readonly dropdownTrigger = contentChild(KbqDropdownTrigger);
+
+    // `KbqOptionActionComponent` reads these as directive instances through KBQ_OPTION_ACTION_PARENT,
+    // so they must stay decorator queries. A signal `contentChild` would expose the query function
+    // instead of the trigger, making `dropdownTrigger.dropdownClosed` undefined and throwing on `.pipe`
+    // when an action button is rendered — see #DS-5079.
+    @ContentChild(KbqTooltipTrigger) tooltipTrigger?: KbqTooltipTrigger;
+    @ContentChild(KbqDropdownTrigger) dropdownTrigger?: KbqDropdownTrigger;
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
 
     readonly text = viewChild.required<ElementRef>('text');

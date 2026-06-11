@@ -438,7 +438,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     get disabled(): any;
     set disabled(value: any);
     // (undocumented)
-    readonly dropdownTrigger: i0.Signal<KbqDropdownTrigger | undefined>;
+    dropdownTrigger?: KbqDropdownTrigger;
     // (undocumented)
     emitSelectionChangeEvent(): void;
     // (undocumented)
@@ -477,7 +477,6 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     readonly pseudoCheckbox: i0.Signal<KbqPseudoCheckbox | undefined>;
     // (undocumented)
     select(setFocus?: boolean): void;
-    // (undocumented)
     readonly selectable: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get selected(): boolean;
@@ -498,7 +497,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     readonly toggleElementDirective: i0.Signal<KbqTreeNodeToggleDirective<any> | undefined>;
     // (undocumented)
-    readonly tooltipTrigger: i0.Signal<KbqTooltipTrigger | undefined>;
+    tooltipTrigger?: KbqTooltipTrigger;
     // (undocumented)
     tree: any;
     // (undocumented)

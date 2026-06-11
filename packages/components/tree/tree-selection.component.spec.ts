@@ -1,9 +1,20 @@
 ﻿import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, DebugElement, ViewChild, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { A, C, createKeyboardEvent, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
+import {
+    A,
+    C,
+    createKeyboardEvent,
+    createMouseEvent,
+    dispatchEvent,
+    dispatchFakeEvent,
+    DOWN_ARROW,
+    KbqOptionModule,
+    SPACE
+} from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -503,6 +514,267 @@ describe('KbqTreeSelection', () => {
                     });
                 }));
             });
+        });
+
+        describe('selectable', () => {
+            let fixture: ComponentFixture<KbqTreeAppMultiple>;
+            let component: KbqTreeAppMultiple;
+            let testScheduler: TestScheduler;
+
+            beforeEach(() => {
+                testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
+
+                configureKbqTreeTestingModule([{ provide: AsyncScheduler, useValue: testScheduler }]);
+                fixture = TestBed.createComponent(KbqTreeAppMultiple);
+
+                component = fixture.componentInstance;
+                component.unselectableNodes = ['Documents'];
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                fixture.detectChanges();
+            });
+
+            it('should not select non-selectable option on click', () => {
+                const onSelectionChange = jest.spyOn(component, 'onSelectionChange');
+                const nodes = getNodes(treeElement);
+
+                dispatchEvent(nodes[2], createMouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(component.modelValue.length).toBe(0);
+                expect(onSelectionChange).not.toHaveBeenCalled();
+            });
+
+            it('should not select non-selectable option on SPACE', fakeAsync(() => {
+                component.tree.keyManager.setActiveItem(2);
+
+                component.tree.onKeyDown(createKeyboardEvent('keydown', SPACE));
+                fixture.detectChanges();
+                flush();
+
+                expect(component.modelValue.length).toBe(0);
+            }));
+
+            it('should keep selection when arrowing onto non-selectable option', fakeAsync(() => {
+                const nodes = getNodes(treeElement);
+
+                dispatchEvent(nodes[1], createMouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(component.modelValue).toEqual(['Pictures']);
+
+                component.tree.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
+                fixture.detectChanges();
+                flush();
+
+                expect(component.tree.keyManager.activeItemIndex).toBe(2);
+                expect(component.modelValue).toEqual(['Pictures']);
+            }));
+
+            it('should skip non-selectable option in shift-click range selection', fakeAsync(() => {
+                testScheduler.run(() => {
+                    const nodes = getNodes(treeElement);
+
+                    const event = createMouseEvent('click');
+
+                    (nodes[0] as HTMLElement).focus();
+                    dispatchEvent(nodes[0], event);
+
+                    expect(component.modelValue.length).toBe(1);
+
+                    fixture.detectChanges();
+                    testScheduler.flush();
+
+                    Object.defineProperty(event, 'shiftKey', { get: () => true });
+
+                    component.tree.keyManager.setActiveItem(3);
+                    dispatchEvent(nodes[3], event);
+
+                    testScheduler.flush();
+                    fixture.detectChanges();
+
+                    expect(component.modelValue.length).toBe(3);
+                    expect(component.modelValue).not.toContain('Documents');
+                });
+            }));
+
+            it('should not toggle non-selectable option on shift+arrow when active item can not move', fakeAsync(() => {
+                testScheduler.run(() => {
+                    component.unselectableNodes = ['Documents', 'Applications'];
+                    fixture.detectChanges();
+
+                    const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
+                    Object.defineProperty(event, 'shiftKey', { get: () => true });
+
+                    component.tree.keyManager.setActiveItem(4);
+                    component.tree.keyManager.previousActiveItemIndex = 4;
+
+                    component.tree.onKeyDown(event);
+
+                    testScheduler.flush();
+                    fixture.detectChanges();
+
+                    expect(component.modelValue.length).toBe(0);
+                });
+            }));
+
+            it('should exclude non-selectable options on CTRL + A', fakeAsync(() => {
+                const selectAllKeyEvent = createKeyboardEvent('keydown', A);
+
+                Object.defineProperty(selectAllKeyEvent, 'ctrlKey', { get: () => true });
+
+                expect(component.modelValue.length).toBe(0);
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(component.savedSelectAllEvent!.options.length).toBe(4);
+                expect(component.savedSelectionChangeEvent!.options!.length).toBe(4);
+                expect(component.modelValue.length).toBe(16);
+                expect(component.modelValue).not.toContain('Documents');
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(component.modelValue.length).toBe(0);
+            }));
+
+            it('should not select non-selectable option via setSelectedOptionsByClick', () => {
+                const option = component.tree.renderedOptions.toArray()[2];
+
+                component.tree.setSelectedOptionsByClick(option, false, false);
+                fixture.detectChanges();
+
+                expect(component.modelValue.length).toBe(0);
+            });
+
+            it('should select non-selectable option programmatically', () => {
+                const option = component.tree.renderedOptions.toArray()[2];
+
+                option.setSelected(true);
+                fixture.detectChanges();
+
+                expect(component.modelValue).toEqual(['Documents']);
+            });
+        });
+
+        describe('with an action button and dropdown (#DS-5079)', () => {
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+            });
+
+            it('renders deeper nodes as selectable options without crashing the action button', fakeAsync(() => {
+                const fixture = TestBed.createComponent(TreeWithActionButtonApp);
+
+                fixture.detectChanges();
+
+                const component = fixture.componentInstance;
+                const parent = component.treeControl.dataNodes.find((node) => node.name === 'Pictures')!;
+
+                component.treeControl.expand(parent);
+                fixture.detectChanges();
+                tick();
+
+                // Before the fix, KbqOptionActionComponent.ngAfterViewInit threw — `dropdownTrigger` was a
+                // signal query and `dropdownClosed` an `output()` without `.pipe` — aborting the tree render,
+                // so nodes revealed on expand never registered in renderedOptions and could not be selected.
+                const renderedHasSun = component.tree.renderedOptions
+                    .toArray()
+                    .some((option) => option.getHostElement().textContent!.includes('Sun'));
+
+                expect(renderedHasSun).toBe(true);
+            }));
+        });
+
+        describe('selectable with non-selectable parents', () => {
+            let fixture: ComponentFixture<KbqTreeAppNonSelectableParents>;
+            let component: KbqTreeAppNonSelectableParents;
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(KbqTreeAppNonSelectableParents);
+
+                component = fixture.componentInstance;
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                fixture.detectChanges();
+            });
+
+            it('should not select non-selectable parent on click before expand', fakeAsync(() => {
+                const nodes = getNodes(treeElement);
+
+                dispatchEvent(nodes[1], createMouseEvent('click'));
+                fixture.detectChanges();
+                flush();
+
+                expect(component.modelValue).toBe('');
+            }));
+
+            it('should not select non-selectable parent on click after expand', fakeAsync(() => {
+                let nodes = getNodes(treeElement);
+
+                (nodes[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
+                fixture.detectChanges();
+                tick();
+
+                nodes = getNodes(treeElement);
+                expect(nodes.length).toBe(5);
+
+                dispatchEvent(nodes[1], createMouseEvent('click'));
+                fixture.detectChanges();
+                flush();
+
+                expect(component.modelValue).toBe('');
+            }));
+
+            it('should not select newly rendered non-selectable parent on click after expand', fakeAsync(() => {
+                let nodes = getNodes(treeElement);
+
+                (nodes[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
+                fixture.detectChanges();
+                tick();
+
+                nodes = getNodes(treeElement);
+                // docs, src, cdk, README, tests
+                expect(nodes[2].textContent!.trim()).toContain('cdk');
+
+                dispatchEvent(nodes[2], createMouseEvent('click'));
+                fixture.detectChanges();
+                flush();
+
+                expect(component.modelValue).toBe('');
+            }));
+
+            it('should not select non-selectable options on arrow navigation after expand', fakeAsync(() => {
+                let nodes = getNodes(treeElement);
+
+                (nodes[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
+                fixture.detectChanges();
+                tick();
+
+                nodes = getNodes(treeElement);
+
+                dispatchEvent(nodes[0], createMouseEvent('click'));
+                fixture.detectChanges();
+                flush();
+
+                expect(component.modelValue).toBe('docs');
+
+                component.tree.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
+                fixture.detectChanges();
+                flush();
+
+                expect(component.tree.keyManager.activeItemIndex).toBe(1);
+                expect(component.modelValue).toBe('docs');
+
+                component.tree.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
+                fixture.detectChanges();
+                flush();
+
+                expect(component.tree.keyManager.activeItemIndex).toBe(2);
+                expect(component.modelValue).toBe('docs');
+            }));
         });
 
         // todo need recover
@@ -1053,11 +1325,19 @@ class TreeSelectionFocusStates extends TreeParams {}
             (onSelectAll)="onSelectAll($event)"
             (selectionChange)="onSelectionChange($event)"
         >
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+                [selectable]="!unselectableNodes.includes(node.name)"
+            >
                 {{ node.name }}
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+                [selectable]="!unselectableNodes.includes(node.name)"
+            >
                 <kbq-tree-node-toggle />
 
                 {{ node.name }}
@@ -1067,6 +1347,7 @@ class TreeSelectionFocusStates extends TreeParams {}
 })
 class KbqTreeAppMultiple extends TreeParams {
     modelValue: string[] = [];
+    unselectableNodes: string[] = [];
     @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
 
     savedSelectionChangeEvent?: KbqTreeSelectionChange<KbqTreeOption>;
@@ -1126,6 +1407,77 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
     onModelValueChange(values) {
         this.modelValue = values;
         this.filterByValues.setValues(values);
+    }
+}
+
+@Component({
+    imports: [
+        KbqTreeModule,
+        KbqDropdownModule,
+        KbqOptionModule
+    ],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                {{ node.name }}
+                <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+                <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
+            </kbq-tree-option>
+        </kbq-tree-selection>
+
+        <kbq-dropdown #dropdown>
+            <button kbq-dropdown-item>action</button>
+        </kbq-dropdown>
+    `
+})
+class TreeWithActionButtonApp extends TreeParams {
+    @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
+}
+
+export const DEEP_DATA_OBJECT = {
+    docs: 'app',
+    src: {
+        cdk: {
+            a11y: 'ts',
+            keycodes: 'ts'
+        },
+        README: 'md'
+    },
+    tests: 'ts'
+};
+
+@Component({
+    imports: [
+        KbqTreeModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                {{ node.name }}
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [selectable]="false">
+                <kbq-tree-node-toggle [node]="node" />
+
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class KbqTreeAppNonSelectableParents extends TreeParams {
+    modelValue: any = '';
+    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+
+    constructor() {
+        super();
+
+        this.dataSource.data = this.treeData = buildFileTree(DEEP_DATA_OBJECT, 0);
     }
 }
 

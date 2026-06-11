@@ -445,7 +445,7 @@ export class KbqTreeSelection
             if (!this.canDeselectLast(option)) {
                 return;
             }
-        } else if (this.autoSelect) {
+        } else if (this.autoSelect && option.selectable()) {
             this.selectionModel.clear();
             this.selectionModel.toggle(option.data);
 
@@ -454,6 +454,10 @@ export class KbqTreeSelection
     }
 
     setSelectedOptionsByClick(option: KbqTreeOption, shiftKey: boolean, ctrlKey: boolean): void {
+        if (option.disabled || !option.selectable()) {
+            return;
+        }
+
         if (!shiftKey && !ctrlKey) {
             this.keyManager.setActiveItem(option);
         }
@@ -486,7 +490,9 @@ export class KbqTreeSelection
         const selectedOptionState = options[fromIndex]?.selected;
 
         if (toIndex === fromIndex || fromIndex === -1) {
-            options[toIndex].toggle();
+            if (options[toIndex]?.selectable()) {
+                options[toIndex].toggle();
+            }
 
             return;
         }
@@ -497,7 +503,7 @@ export class KbqTreeSelection
 
         options
             .slice(fromIndex, toIndex + 1)
-            .filter((item) => !item.disabled)
+            .filter((item) => !item.disabled && item.selectable())
             .forEach((renderedOption) => {
                 if (!selectedOptionState && this.noUnselectLast && this.selectionModel.selected.length === 1) {
                     return;
@@ -544,13 +550,15 @@ export class KbqTreeSelection
     }
 
     selectAllOptions(): void {
-        const disabledDataNodes = this.renderedOptions.filter((option) => option.disabled).map((option) => option.data);
+        const nonSelectableDataNodes = this.renderedOptions
+            .filter((option) => option.disabled || !option.selectable())
+            .map((option) => option.data);
 
         const dataNodes = this.treeControl.dataNodes.filter(
-            (node) => !this.treeControl.isDisabled(node) && !disabledDataNodes.includes(node)
+            (node) => !this.treeControl.isDisabled(node) && !nonSelectableDataNodes.includes(node)
         );
 
-        const selectableOptions = this.renderedOptions.filter((option) => !option.disabled);
+        const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());
         let changedOptions: KbqTreeOption[] = selectableOptions;
 
         if (dataNodes.length === this.selectionModel.selected.length) {
