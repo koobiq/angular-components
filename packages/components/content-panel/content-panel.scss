@@ -7,14 +7,6 @@
     box-sizing: border-box;
     position: relative;
 
-    &.kbq-content-panel_header-with-shadow .kbq-content-panel-header {
-        box-shadow: var(--kbq-content-panel-header-overflow-box-shadow);
-    }
-
-    &.kbq-content-panel_footer-with-shadow .kbq-content-panel-footer {
-        box-shadow: var(--kbq-content-panel-footer-overflow-box-shadow);
-    }
-
     .kbq-content-panel__content {
         display: flex;
         flex: 1;

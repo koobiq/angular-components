@@ -2132,6 +2132,9 @@ export const KBQ_OPTION_ACTION_PARENT: InjectionToken<KbqOptionActionParent>;
 export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponent>;
 
 // @public (undocumented)
+export const KBQ_OVERFLOW_SHADOW_SOURCE: InjectionToken<KbqOverflowShadowSource>;
+
+// @public (undocumented)
 export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 
 // @public
@@ -2824,6 +2827,57 @@ export class KbqOptionSelectionChange<T = KbqOption> {
 
 // @public
 export type KbqOrientation = 'horizontal' | 'vertical';
+
+// @public
+export class KbqOverflowShadowBottom {
+    readonly ref: i0.InputSignal<KbqOverflowShadowContainer | undefined>;
+    // (undocumented)
+    readonly shadow: i0.InputSignal<string>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowShadowBottom, "[kbqOverflowShadowBottom]", ["kbqOverflowShadowBottom"], { "ref": { "alias": "kbqOverflowShadowBottom"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowShadowBottom, never>;
+}
+
+// @public
+export class KbqOverflowShadowContainer implements OnInit {
+    constructor();
+    checkOverflow(): void;
+    readonly debounce: i0.InputSignalWithTransform<number, unknown>;
+    // (undocumented)
+    ngOnInit(): void;
+    readonly overflow: i0.WritableSignal<KbqOverflowShadowState>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowShadowContainer, "[kbqOverflowShadowContainer]", ["kbqOverflowShadowContainer"], { "debounce": { "alias": "debounce"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowShadowContainer, never>;
+}
+
+// @public
+export interface KbqOverflowShadowSource {
+    // (undocumented)
+    getScrollElement(): HTMLElement | null;
+    // (undocumented)
+    readonly onScroll: Observable<unknown>;
+}
+
+// @public
+export interface KbqOverflowShadowState {
+    // (undocumented)
+    bottom: boolean;
+    // (undocumented)
+    top: boolean;
+}
+
+// @public
+export class KbqOverflowShadowTop {
+    readonly ref: i0.InputSignal<KbqOverflowShadowContainer | undefined>;
+    readonly shadow: i0.InputSignal<string>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowShadowTop, "[kbqOverflowShadowTop]", ["kbqOverflowShadowTop"], { "ref": { "alias": "kbqOverflowShadowTop"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowShadowTop, never>;
+}
 
 // @public (undocumented)
 export interface KbqParentPopup {

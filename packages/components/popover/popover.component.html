@@ -17,8 +17,8 @@
             <div
                 class="kbq-popover__header"
                 [class.kbq-popover__header_default-paddings]="defaultPaddings"
-                [class.kbq-popover__header_top-overflow]="isContentTopOverflow"
                 [class.kbq-popover__header_with-close-button]="hasCloseButton"
+                [kbqOverflowShadowTop]="overflowContainer()"
             >
                 @if (isTemplateRef(header)) {
                     <ng-container [ngTemplateOutlet]="$any(header)" [ngTemplateOutletContext]="context" />
@@ -30,10 +30,10 @@
 
         @if (content) {
             <div
-                #popoverContent
+                kbqOverflowShadowContainer
                 class="kbq-popover__content kbq-scrollbar"
                 [class.kbq-popover__content_default-paddings]="defaultPaddings"
-                (cdkObserveContent)="onContentChange()"
+                [debounce]="15"
             >
                 @if (hasCloseButton && !header) {
                     <div class="kbq-popover__close-container">
@@ -52,7 +52,7 @@
             <div
                 class="kbq-popover__footer"
                 [class.kbq-popover__footer_default-paddings]="defaultPaddings"
-                [class.kbq-popover__footer_bottom-overflow]="isContentBottomOverflow"
+                [kbqOverflowShadowBottom]="overflowContainer()"
             >
                 @if (isTemplateRef(footer)) {
                     <ng-container [ngTemplateOutlet]="$any(footer)" [ngTemplateOutletContext]="context" />

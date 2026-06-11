@@ -12,6 +12,7 @@ export * from './line/line';
 export * from './locales/index';
 export * from './navbar/index';
 export * from './option/index';
+export * from './overflow-shadow/index';
 export * from './overlay/overlay-position-map';
 export * from './pop-up/index';
 export * from './select/index';

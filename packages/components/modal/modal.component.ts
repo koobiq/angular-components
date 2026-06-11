@@ -9,7 +9,6 @@ import {
     Component,
     ComponentFactoryResolver,
     ComponentRef,
-    DestroyRef,
     ElementRef,
     EventEmitter,
     inject,
@@ -29,9 +28,15 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ENTER, ESCAPE, KbqComponentColors } from '@koobiq/components/core';
+import {
+    ENTER,
+    ESCAPE,
+    KbqComponentColors,
+    KbqOverflowShadowBottom,
+    KbqOverflowShadowContainer,
+    KbqOverflowShadowTop
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -57,7 +62,10 @@ type AnimationState = 'enter' | 'leave' | null;
         KbqButtonModule,
         KbqIconModule,
         CssUnitPipe,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        KbqOverflowShadowContainer,
+        KbqOverflowShadowTop,
+        KbqOverflowShadowBottom
     ],
     templateUrl: './modal.component.html',
     styleUrls: ['./modal.scss', 'modal-tokens.scss'],
@@ -73,7 +81,6 @@ export class KbqModalComponent<T = any, R = any>
     implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions
 {
     protected readonly document = inject<Document>(DOCUMENT);
-    private readonly destroyRef = inject(DestroyRef);
 
     componentColors = KbqComponentColors;
 
@@ -253,9 +260,6 @@ export class KbqModalComponent<T = any, R = any>
 
     readonly modalBody = viewChild<ElementRef>('modalBody');
 
-    isTopOverflow: boolean = false;
-    isBottomOverflow: boolean = false;
-
     maskAnimationClassMap: object | null;
     modalAnimationClassMap: object | null;
     // The origin point that animation based on
@@ -367,28 +371,12 @@ export class KbqModalComponent<T = any, R = any>
         this.getElement().getElementsByTagName('button')[0]?.focus();
 
         (this.getElement().querySelector('button[autofocus]') as HTMLButtonElement)?.focus();
-
-        this.kbqAfterOpen.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.checkOverflow());
     }
 
     ngOnDestroy() {
         if (this.container instanceof OverlayRef) {
             this.container.dispose();
         }
-    }
-
-    checkOverflow(): void {
-        const nativeElement: HTMLElement = this.modalBody()?.nativeElement;
-
-        if (!nativeElement) {
-            return;
-        }
-
-        const { scrollTop, offsetHeight, scrollHeight } = nativeElement;
-
-        this.isTopOverflow = scrollTop > 0;
-
-        this.isBottomOverflow = scrollTop + offsetHeight < scrollHeight;
     }
 
     open() {

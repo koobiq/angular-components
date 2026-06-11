@@ -192,10 +192,6 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
             @include common.kbq-truncate-line();
         }
     }
-
-    &.kbq-sidepanel-header_bottom-overflown {
-        box-shadow: var(--kbq-shadow-overflow-normal-bottom);
-    }
 }
 
 .kbq-sidepanel-title {
@@ -240,10 +236,6 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
         }
 
         gap: var(--kbq-sidepanel-size-footer-content-gap-horizontal);
-    }
-
-    &.kbq-sidepanel-footer_top-overflown {
-        box-shadow: var(--kbq-shadow-overflow-normal-top);
     }
 }
 

@@ -104,8 +104,6 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     get cancelText(): string;
     // (undocumented)
-    checkOverflow(): void;
-    // (undocumented)
     close(result?: R): void;
     // (undocumented)
     componentColors: typeof KbqComponentColors;
@@ -131,8 +129,6 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     get hidden(): boolean;
     // (undocumented)
-    isBottomOverflow: boolean;
-    // (undocumented)
     isComponent(value: {}): boolean;
     // (undocumented)
     isModalButtons(value: {}): boolean;
@@ -142,8 +138,6 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     isNonEmptyString(value: {}): boolean;
     // (undocumented)
     isTemplateRef(value: {}): boolean;
-    // (undocumented)
-    isTopOverflow: boolean;
     // (undocumented)
     readonly kbqAfterClose: EventEmitter<R | undefined>;
     // (undocumented)

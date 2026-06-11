@@ -1,5 +1,7 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
+
+const hasOverflowShadow = (locator: Locator) => locator.evaluate((el) => getComputedStyle(el).boxShadow !== 'none');
 
 test.describe('KbqModalModule', () => {
     test.describe('E2eModalStates', () => {
@@ -37,7 +39,7 @@ test.describe('KbqModalModule', () => {
             await page.getByTestId('e2eOpenModal').click();
             await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
 
-            await expect(page.locator('.kbq-modal-footer')).toHaveClass(/kbq-modal-body_bottom-overflow/);
+            await expect.poll(() => hasOverflowShadow(page.locator('.kbq-modal-footer'))).toBeTruthy();
         });
 
         test('should show header shadow after scrolling down', async ({ page }) => {
@@ -50,7 +52,7 @@ test.describe('KbqModalModule', () => {
                 el.scrollTop = 50;
             });
 
-            await expect(page.locator('.kbq-modal-header')).toHaveClass(/kbq-modal-body_top-overflow/);
+            await expect.poll(() => hasOverflowShadow(page.locator('.kbq-modal-header'))).toBeTruthy();
         });
 
         test('should show both shadows when scrolled to the middle', async ({ page }) => {
@@ -63,8 +65,8 @@ test.describe('KbqModalModule', () => {
                 el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
             });
 
-            await expect(page.locator('.kbq-modal-header')).toHaveClass(/kbq-modal-body_top-overflow/);
-            await expect(page.locator('.kbq-modal-footer')).toHaveClass(/kbq-modal-body_bottom-overflow/);
+            await expect.poll(() => hasOverflowShadow(page.locator('.kbq-modal-header'))).toBeTruthy();
+            await expect.poll(() => hasOverflowShadow(page.locator('.kbq-modal-footer'))).toBeTruthy();
         });
     });
 });
