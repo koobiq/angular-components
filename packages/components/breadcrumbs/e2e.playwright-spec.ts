@@ -14,10 +14,28 @@ test.describe('KbqBreadcrumbs overflow', () => {
         await expect(allItems).toHaveCount(5);
         await expect(visibleItems).toHaveCount(3);
     });
+
+    test('should show hidden items in the expand dropdown when max is exceeded', async ({ page }) => {
+        await page.goto('/E2eBreadcrumbsOverflowMax');
+
+        const breadcrumbs = page.getByTestId('e2eBreadcrumbsOverflowMax');
+
+        await breadcrumbs.locator('.kbq-breadcrumb__expand').click();
+
+        const dropdownPanel = page.locator('.kbq-dropdown__panel');
+
+        await expect(dropdownPanel).toBeVisible();
+
+        const dropdownItems = dropdownPanel.locator('[kbq-dropdown-item]');
+
+        // max=4, items.length=5 → 2 middle items are hidden (Item #1, Item #2)
+        await expect(dropdownItems).toHaveCount(2);
+        await expect(dropdownItems.nth(0)).toHaveText('Item #1');
+        await expect(dropdownItems.nth(1)).toHaveText('Item #2');
+    });
 });
 
-// @TODO: should be fixed (#DS-4622)
-test.fixme('KbqBreadcrumbsModule', () => {
+test.describe('KbqBreadcrumbsModule', () => {
     test.describe('E2eBreadcrumbsStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eBreadcrumbsStateAndStyle');
         const getBreadcrumbsWithDropdown = (locator: Locator) => locator.getByTestId('e2eBreadcrumbsWithDropdown');

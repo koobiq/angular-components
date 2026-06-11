@@ -7,6 +7,13 @@
     gap: var(--kbq-breadcrumbs-gap);
     flex-grow: 1;
 
+    kbq-breadcrumb-item {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
     .kbq-overflow-items {
         // add space not to cut focus outline
         padding: 1px;
