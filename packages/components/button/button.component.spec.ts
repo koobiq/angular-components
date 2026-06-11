@@ -17,6 +17,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import {
     buttonLeftIconClassName,
     buttonRightIconClassName,
+    KbqButton,
     KbqButtonCssStyler,
     KbqButtonGroupRoot,
     KbqButtonModule,
@@ -360,6 +361,149 @@ describe('Button with icon', () => {
             expect(debugElement.nativeElement.classList.contains(buttonRightIconClassName)).toBeFalsy();
             done();
         });
+    });
+});
+
+describe('Button with explicit icon slots', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                KbqButtonModule,
+                KbqIconModule,
+                KbqButtonLeftIconSlotReorderTestApp,
+                KbqButtonRightIconSlotReorderTestApp,
+                KbqButtonLeftRightIconSlotTestApp,
+                KbqButtonTwoIconsSlotTestApp
+            ]
+        }).compileComponents();
+    });
+
+    it('should mark a [kbqButtonLeftIcon] as the left icon even when written after the text', () => {
+        const fixture = TestBed.createComponent(KbqButtonLeftIconSlotReorderTestApp);
+
+        fixture.detectChanges();
+
+        const icon = fixture.debugElement.query(By.css('#left-icon')).nativeElement;
+        const host = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        // the leading slot moves the icon to the front, so the styler marks it left, not right
+        expect(icon.classList.contains(leftIconClassName)).toBeTruthy();
+        expect(icon.classList.contains(rightIconClassName)).toBeFalsy();
+
+        expect(host.classList.contains(buttonLeftIconClassName)).toBeTruthy();
+        expect(host.classList.contains(buttonRightIconClassName)).toBeFalsy();
+
+        // text present -> regular (not icon-only) button
+        expect(host.classList.contains('kbq-button')).toBeTruthy();
+        expect(host.classList.contains('kbq-button-icon')).toBeFalsy();
+    });
+
+    it('should mark a [kbqButtonRightIcon] as the right icon even when written before the text', () => {
+        const fixture = TestBed.createComponent(KbqButtonRightIconSlotReorderTestApp);
+
+        fixture.detectChanges();
+
+        const icon = fixture.debugElement.query(By.css('#right-icon')).nativeElement;
+        const host = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        expect(icon.classList.contains(rightIconClassName)).toBeTruthy();
+        expect(icon.classList.contains(leftIconClassName)).toBeFalsy();
+
+        expect(host.classList.contains(buttonRightIconClassName)).toBeTruthy();
+        expect(host.classList.contains(buttonLeftIconClassName)).toBeFalsy();
+    });
+
+    it('should place icons into the left/right slots regardless of their source order', () => {
+        const fixture = TestBed.createComponent(KbqButtonLeftRightIconSlotTestApp);
+
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css(`#left-icon.${leftIconClassName}`))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css(`#left-icon.${rightIconClassName}`))).toBeNull();
+
+        expect(fixture.debugElement.query(By.css(`#right-icon.${rightIconClassName}`))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css(`#right-icon.${leftIconClassName}`))).toBeNull();
+
+        const host = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        expect(host.classList.contains(buttonLeftIconClassName)).toBeTruthy();
+        expect(host.classList.contains(buttonRightIconClassName)).toBeTruthy();
+        expect(host.classList.contains('kbq-button')).toBeTruthy();
+    });
+
+    it('should stay an icon-only button when both icons use slots in reversed order', () => {
+        const fixture = TestBed.createComponent(KbqButtonTwoIconsSlotTestApp);
+
+        fixture.detectChanges();
+
+        const host = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        expect(host.classList.contains('kbq-button-icon')).toBeTruthy();
+        expect(host.classList.contains('kbq-button')).toBeFalsy();
+
+        expect(fixture.debugElement.query(By.css(`#icon1.${leftIconClassName}`))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css(`#icon2.${rightIconClassName}`))).not.toBeNull();
+
+        expect(host.classList.contains(buttonLeftIconClassName)).toBeTruthy();
+        expect(host.classList.contains(buttonRightIconClassName)).toBeTruthy();
+    });
+});
+
+describe('Button text container', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                KbqButtonModule,
+                KbqIconModule,
+                KbqButtonLeftRightIconSlotTestApp,
+                KbqButtonHtmlIconLeftCaseTestApp
+            ]
+        }).compileComponents();
+    });
+
+    it('should keep the text in .kbq-button-text and the marker-slot icons outside of it', () => {
+        const fixture = TestBed.createComponent(KbqButtonLeftRightIconSlotTestApp);
+
+        fixture.detectChanges();
+
+        const textSpan = fixture.debugElement.query(By.css('.kbq-button-text')).nativeElement;
+        const wrapper = fixture.debugElement.query(By.css('.kbq-button-wrapper')).nativeElement;
+        const leftIcon = fixture.debugElement.query(By.css('#left-icon')).nativeElement;
+        const rightIcon = fixture.debugElement.query(By.css('#right-icon')).nativeElement;
+
+        // the text container holds only the text
+        expect(textSpan.textContent.trim()).toBe('Some text');
+
+        // marker icons are siblings of the text container, not nested inside it
+        expect(textSpan.contains(leftIcon)).toBe(false);
+        expect(textSpan.contains(rightIcon)).toBe(false);
+        expect(leftIcon.parentElement).toBe(wrapper);
+        expect(rightIcon.parentElement).toBe(wrapper);
+    });
+
+    it('should nest a legacy default-slot icon inside .kbq-button-text and still mark it left', () => {
+        const fixture = TestBed.createComponent(KbqButtonHtmlIconLeftCaseTestApp);
+
+        fixture.detectChanges();
+
+        const textSpan = fixture.debugElement.query(By.css('.kbq-button-text')).nativeElement;
+        const icon = textSpan.querySelector('.kbq-icon');
+
+        // legacy icon (no marker) lands inside the text container...
+        expect(icon).not.toBeNull();
+        // ...and the styler still flattens it out to mark it as the left icon
+        expect(icon.classList.contains(leftIconClassName)).toBe(true);
+    });
+
+    it('should expose textElement (.kbq-button-text) and parentTextElement (.kbq-button-wrapper)', () => {
+        const fixture = TestBed.createComponent(KbqButtonHtmlIconLeftCaseTestApp);
+
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.query(By.directive(KbqButton)).componentInstance as KbqButton;
+
+        expect(button.textElement.nativeElement.classList.contains('kbq-button-text')).toBe(true);
+        expect(button.parentTextElement.nativeElement.classList.contains('kbq-button-wrapper')).toBe(true);
     });
 });
 
@@ -718,3 +862,52 @@ class DynamicChildrenTestComponent {
     color: KbqComponentColors | string = KbqComponentColors.Theme;
     showExtra = false;
 }
+
+@Component({
+    selector: 'kbq-button-left-icon-slot-reorder-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            Some text
+            <i id="left-icon" kbqButtonLeftIcon kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+    `
+})
+class KbqButtonLeftIconSlotReorderTestApp {}
+
+@Component({
+    selector: 'kbq-button-right-icon-slot-reorder-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <i id="right-icon" kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
+            Some text
+        </button>
+    `
+})
+class KbqButtonRightIconSlotReorderTestApp {}
+
+@Component({
+    selector: 'kbq-button-left-right-icon-slot-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <i id="right-icon" kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
+            Some text
+            <i id="left-icon" kbqButtonLeftIcon kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+    `
+})
+class KbqButtonLeftRightIconSlotTestApp {}
+
+@Component({
+    selector: 'kbq-button-two-icons-slot-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <i id="icon2" kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="icon1" kbqButtonLeftIcon kbq-icon="kbq-play_16"></i>
+        </button>
+    `
+})
+class KbqButtonTwoIconsSlotTestApp {}

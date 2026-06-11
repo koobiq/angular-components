@@ -48,6 +48,9 @@ export const buttonRightIconClassName = 'kbq-button-icon_right';
 /** A button containing more icons than this keeps regular (non icon-button) styling. */
 const maxIconsForIconButton = 2;
 
+/** `Node.COMMENT_NODE` nodeType value. */
+const COMMENT_NODE = 8;
+
 /**
  * Applies the `kbq-button`/`kbq-button-icon` host class and the left/right icon modifier classes.
  *
@@ -114,23 +117,41 @@ export class KbqButtonCssStyler implements AfterContentInit {
         }
 
         const icons = this.icons();
-        const nodes = getNodesWithoutComments(wrapper.childNodes);
+        const textElement = wrapper.querySelector('.kbq-button-text');
+
+        // Build an ordered list of "effective" content nodes: the left-slot content, then the
+        // default-slot content flattened out of `.kbq-button-text`, then the right-slot content.
+        // Flattening the text span keeps legacy `<i kbq-icon> Text` markup (projected into the
+        // default slot) working: those icons live inside `.kbq-button-text`, but for placement
+        // they must be treated as direct siblings of the text, exactly as before the text span
+        // existed. With no marker slots this list equals the old wrapper children.
+        const effectiveNodes: Node[] = [];
+
+        for (const node of Array.from(wrapper.childNodes)) {
+            if (node.nodeType === COMMENT_NODE) continue;
+
+            if (node === textElement) {
+                effectiveNodes.push(...getNodesWithoutComments((node as HTMLElement).childNodes));
+            } else {
+                effectiveNodes.push(node);
+            }
+        }
 
         this._isIconButton.set(
-            !!icons.length && icons.length === nodes.length && icons.length <= maxIconsForIconButton
+            !!icons.length && icons.length === effectiveNodes.length && icons.length <= maxIconsForIconButton
         );
 
         let leftIcon: HTMLElement | null = null;
         let rightIcon: HTMLElement | null = null;
 
-        if (icons.length && nodes.length > 1) {
+        if (icons.length && effectiveNodes.length > 1) {
             for (const icon of icons) {
                 const iconHostElement = icon.getHostElement();
-                const iconIndex = nodes.indexOf(iconHostElement);
+                const iconIndex = effectiveNodes.indexOf(iconHostElement);
 
                 if (iconIndex === 0) leftIcon = iconHostElement;
 
-                if (iconIndex === nodes.length - 1) rightIcon = iconHostElement;
+                if (iconIndex === effectiveNodes.length - 1) rightIcon = iconHostElement;
             }
         }
 
@@ -190,6 +211,9 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     hasFocus: boolean = false;
 
     @ViewChild('kbqTitleText') textElement: ElementRef<HTMLElement>;
+
+    /** The flex row that lays out the icons and text, used as the overflow width constraint. */
+    @ViewChild('parentTextElement') parentTextElement: ElementRef<HTMLElement>;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.

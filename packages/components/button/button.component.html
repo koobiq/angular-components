@@ -1,8 +1,12 @@
 <span
-    #kbqTitleText
+    #parentTextElement
     class="kbq-button-wrapper"
     [cdkObserveContentDisabled]="!styler.icons().length"
     (cdkObserveContent)="projectContentChanged()"
 >
-    <ng-content />
+    <ng-content select="[kbqButtonLeftIcon]" />
+    <span #kbqTitleText class="kbq-button-text">
+        <ng-content />
+    </span>
+    <ng-content select="[kbqButtonRightIcon]" />
 </span>
