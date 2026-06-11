@@ -6,11 +6,9 @@ import {
     Component,
     Directive,
     ElementRef,
-    Inject,
     OnDestroy,
     TemplateRef,
     ViewEncapsulation,
-    forwardRef,
     inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -60,6 +58,11 @@ let id = 0;
     animations: [kbqToastAnimations.toastState]
 })
 export class KbqToastComponent implements OnDestroy {
+    readonly data = inject(KbqToastData);
+    readonly service = inject(KbqToastService);
+    elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private focusMonitor = inject(FocusMonitor);
+
     protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });
 
     themePalette = ThemePalette;
@@ -85,12 +88,7 @@ export class KbqToastComponent implements OnDestroy {
         return this.hovered.getValue() || this.focused.getValue();
     }
 
-    constructor(
-        readonly data: KbqToastData,
-        @Inject(forwardRef(() => KbqToastService)) readonly service: KbqToastService,
-        public elementRef: ElementRef<HTMLElement>,
-        private focusMonitor: FocusMonitor
-    ) {
+    constructor() {
         this.$implicit = this;
 
         this.data.style = this.data.style || KbqToastStyle.Contrast;

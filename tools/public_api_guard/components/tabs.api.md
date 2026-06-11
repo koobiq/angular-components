@@ -12,10 +12,8 @@ import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkPortal } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import { ChangeDetectorRef } from '@angular/core';
-import { ComponentFactoryResolver } from '@angular/core';
 import { DestroyRef } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
@@ -31,12 +29,10 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
 
 // @public (undocumented)
 export const KBQ_TAB_LABEL: InjectionToken<KbqTabLabel>;
@@ -70,7 +66,6 @@ export class KbqStretchTabsCssStyler {
 
 // @public (undocumented)
 export class KbqTab implements OnInit, OnChanges, OnDestroy {
-    constructor(viewContainerRef: ViewContainerRef);
     get content(): TemplatePortal | null;
     // (undocumented)
     get disabled(): boolean;
@@ -117,7 +112,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
 // @public
 export class KbqTabBody implements OnInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, dir: Directionality, changeDetectorRef: ChangeDetectorRef);
+    constructor();
     readonly afterLeavingCenter: EventEmitter<boolean>;
     readonly animationDuration: i0.InputSignal<string>;
     readonly beforeCentering: EventEmitter<boolean>;
@@ -140,7 +135,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabBody, "kbq-tab-body", never, { "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; "isSignal": true; }; "origin": { "alias": "origin"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; "isSignal": true; }; }, { "onCentering": "onCentering"; "beforeCentering": "beforeCentering"; "afterLeavingCenter": "afterLeavingCenter"; "onCentered": "onCentered"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabBody, [null, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabBody, never>;
 }
 
 // @public
@@ -148,7 +143,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
 
 // @public
 export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
-    constructor(componentFactoryResolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, host: KbqTabBody);
+    constructor();
     ngOnDestroy(): void;
     ngOnInit(): void;
     // (undocumented)
@@ -168,7 +163,6 @@ export class KbqTabChangeEvent {
 
 // @public
 export class KbqTabContent {
-    constructor(template: TemplateRef<any>);
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
@@ -179,7 +173,7 @@ export class KbqTabContent {
 
 // @public
 export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
-    constructor(changeDetectorRef: ChangeDetectorRef, defaultConfig?: KbqTabsConfig);
+    constructor();
     // (undocumented)
     get activeTab(): KbqTab | null;
     set activeTab(value: KbqTabSelectBy | null);
@@ -236,7 +230,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "onSurface": { "alias": "onSurface"; "required": false; "isSignal": true; }; "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; "isSignal": true; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, never>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "KbqPaginatedTabHeader" needs to be exported by the entry point index.d.ts
@@ -278,7 +272,6 @@ export class KbqTabLabel extends CdkPortal {
 
 // @public
 export class KbqTabLabelWrapper implements AfterViewInit {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
     // (undocumented)
     checkOverflow(): void;
     // (undocumented)

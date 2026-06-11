@@ -5,12 +5,9 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { ComponentFactoryResolver } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import * as i2 from '@angular/cdk/a11y';
@@ -28,9 +25,7 @@ import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
-import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
@@ -88,8 +83,6 @@ export class KbqModalBody {
 
 // @public (undocumented)
 export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions {
-    // Warning: (ae-forgotten-export) The symbol "KbqModalControlService" needs to be exported by the entry point index.d.ts
-    constructor(overlay: Overlay, renderer: Renderer2, cfr: ComponentFactoryResolver, elementRef: ElementRef<HTMLElement>, viewContainer: ViewContainerRef, modalControl: KbqModalControlService, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
     get afterClose(): Observable<R | undefined>;
     // (undocumented)
@@ -306,7 +299,6 @@ export abstract class KbqModalRef<C = any, R = unknown> {
 
 // @public (undocumented)
 export class KbqModalService {
-    constructor(overlay: Overlay, modalControl: KbqModalControlService, injector: Injector);
     // (undocumented)
     get afterAllClose(): Observable<void>;
     // (undocumented)
@@ -331,9 +323,8 @@ export class KbqModalService {
 
 // @public (undocumented)
 export class KbqModalTitle {
-    constructor(modal: KbqModalComponent);
     // (undocumented)
-    protected modal: KbqModalComponent;
+    protected modal: KbqModalComponent<any, any>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [kbqModalTitle]", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)

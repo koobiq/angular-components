@@ -1,4 +1,13 @@
-import { AfterViewInit, booleanAttribute, ContentChild, Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import {
+    AfterViewInit,
+    booleanAttribute,
+    ContentChild,
+    Directive,
+    ElementRef,
+    inject,
+    Input,
+    Renderer2
+} from '@angular/core';
 import { KbqTab } from './tab.component';
 
 /**
@@ -13,6 +22,9 @@ import { KbqTab } from './tab.component';
     }
 })
 export class KbqTabLabelWrapper implements AfterViewInit {
+    elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private renderer = inject(Renderer2);
+
     @ContentChild('labelContent') labelContent: ElementRef;
 
     // TODO: Skipped for migration because:
@@ -33,11 +45,6 @@ export class KbqTabLabelWrapper implements AfterViewInit {
     }
 
     private _disabled: boolean = false;
-
-    constructor(
-        public elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2
-    ) {}
 
     ngAfterViewInit(): void {
         this.addClassModifierForIcons(Array.from(this.elementRef.nativeElement.querySelectorAll('.kbq-icon')));

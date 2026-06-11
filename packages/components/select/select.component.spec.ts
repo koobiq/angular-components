@@ -10,6 +10,7 @@ import {
     TemplateRef,
     Type,
     getDebugNode,
+    inject as inject_1,
     viewChild,
     viewChildren
 } from '@angular/core';
@@ -1421,6 +1422,8 @@ class MultiSelectWithCustomizedTagContent {
     `
 })
 class CdkVirtualScrollViewportSelect<T = string> {
+    scrollDispatcher = inject_1(ScrollDispatcher);
+
     itemSize = 32;
     control = new UntypedFormControl();
     isRequired: boolean;
@@ -1431,8 +1434,6 @@ class CdkVirtualScrollViewportSelect<T = string> {
     readonly select = viewChild.required(KbqSelect);
     readonly viewport = viewChild.required(CdkVirtualScrollViewport);
     options: any[] = OPTIONS.sort();
-
-    constructor(public scrollDispatcher: ScrollDispatcher) {}
 }
 
 @Component({
@@ -1476,6 +1477,8 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     id: number;
     name: string;
 }> {
+    scrollDispatcher: ScrollDispatcher;
+
     values: any[] = [
         { id: 3, name: 'Anapa' },
         { id: 55, name: 'Lyubertsy' },
@@ -1486,8 +1489,12 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
         return { id: index, name: option, active: true };
     });
 
-    constructor(public scrollDispatcher: ScrollDispatcher) {
-        super(scrollDispatcher);
+    constructor() {
+        const scrollDispatcher = inject_1(ScrollDispatcher);
+
+        super();
+
+        this.scrollDispatcher = scrollDispatcher;
     }
 }
 

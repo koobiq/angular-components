@@ -3,11 +3,10 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    Inject,
     InjectionToken,
     Input,
-    Optional,
     ViewEncapsulation,
+    inject,
     output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -81,10 +80,10 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
     private _confirmButtonText: string = 'Да';
 
-    constructor(
-        @Optional() @Inject(KBQ_POPOVER_CONFIRM_TEXT) confirmText: string,
-        @Optional() @Inject(KBQ_POPOVER_CONFIRM_BUTTON_TEXT) confirmButtonText: string
-    ) {
+    constructor() {
+        const confirmText = inject(KBQ_POPOVER_CONFIRM_TEXT, { optional: true });
+        const confirmButtonText = inject(KBQ_POPOVER_CONFIRM_BUTTON_TEXT, { optional: true });
+
         super();
 
         this.confirmText = confirmText || 'Вы уверены, что хотите продолжить?';

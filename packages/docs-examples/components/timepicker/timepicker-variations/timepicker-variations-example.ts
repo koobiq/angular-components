@@ -1,5 +1,5 @@
 import { LowerCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
@@ -28,12 +28,14 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerVariationsExample {
+    private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+
     value: DateTime;
 
     timeFormat = TimeFormats.HHmm;
     protected readonly TimeFormats = TimeFormats;
 
-    constructor(private adapter: DateAdapter<DateTime>) {
+    constructor() {
         this.value = this.adapter.today();
     }
 }

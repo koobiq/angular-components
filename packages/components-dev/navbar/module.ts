@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -54,6 +54,8 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private modalService = inject(KbqModalService);
+
     popUpPlacements = PopUpPlacements;
 
     readonly navbar = viewChild.required<KbqNavbar>('verticalNavbar');
@@ -77,8 +79,6 @@ export class DevApp {
     private _collapsedNavbarWidth: number = 1280;
 
     permission$ = timer(500).pipe(map(() => true));
-
-    constructor(private modalService: KbqModalService) {}
 
     collapsedNavbarWidthChange() {
         this.navbar().updateExpandedStateForItems();

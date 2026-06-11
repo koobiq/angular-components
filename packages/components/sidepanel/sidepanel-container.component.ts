@@ -9,7 +9,7 @@ import {
     ElementRef,
     EmbeddedViewRef,
     EventEmitter,
-    Inject,
+    inject,
     InjectionToken,
     OnDestroy,
     viewChild,
@@ -51,6 +51,11 @@ export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepa
     animations: [kbqSidepanelAnimations.sidepanelState]
 })
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    sidepanelConfig = inject(KbqSidepanelConfig);
+    withIndent = inject(KBQ_SIDEPANEL_WITH_INDENT);
+
     /** ID for the container DOM element. */
     id: string;
 
@@ -92,15 +97,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** Whether the component has been destroyed. */
     private destroyed: boolean;
-
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private changeDetectorRef: ChangeDetectorRef,
-        public sidepanelConfig: KbqSidepanelConfig,
-        @Inject(KBQ_SIDEPANEL_WITH_INDENT) public withIndent: boolean
-    ) {
-        super();
-    }
 
     ngOnDestroy(): void {
         this.destroyed = true;

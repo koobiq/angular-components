@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqSidepanelModule,
@@ -20,13 +20,14 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelSizesExample {
+    private sidepanelService = inject(KbqSidepanelService);
+
     size = KbqSidepanelPosition.Right;
 
     @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     arrayLength = 40;
     array = new Array(this.arrayLength);
-    constructor(private sidepanelService: KbqSidepanelService) {}
 
     showSmall() {
         this.sidepanelService.open(this.template, {

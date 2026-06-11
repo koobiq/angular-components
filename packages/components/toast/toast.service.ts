@@ -4,14 +4,13 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import {
     ComponentRef,
     EmbeddedViewRef,
-    Inject,
     Injectable,
     InjectionToken,
     Injector,
     NgZone,
     OnDestroy,
-    Optional,
-    TemplateRef
+    TemplateRef,
+    inject
 } from '@angular/core';
 import { BehaviorSubject, Subscription, filter, shareReplay, timer } from 'rxjs';
 import { KbqToastContainerComponent } from './toast-container.component';
@@ -29,6 +28,13 @@ let templateId = 0;
 /** Generic `T` is a type hint only; the runtime component comes from `KBQ_TOAST_FACTORY`. */
 @Injectable({ providedIn: 'root' })
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy {
+    private overlay = inject(Overlay);
+    private injector = inject(Injector);
+    private overlayContainer = inject(OverlayContainer);
+    private ngZone = inject(NgZone);
+    private toastFactory = inject(KBQ_TOAST_FACTORY);
+    private toastConfig = inject<KbqToastConfig>(KBQ_TOAST_CONFIG, { optional: true })!;
+
     get toasts(): ComponentRef<T>[] {
         return Object.values(this.toastsDict).filter((item) => !item.hostView.destroyed);
     }
@@ -44,7 +50,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     timer = timer(CHECK_INTERVAL, CHECK_INTERVAL).pipe(
         filter(() => this.toasts.length > 0 && !this.hovered.getValue() && !this.focused.getValue()),
-        // eslint-disable-next-line rxjs/no-ignored-replay-buffer
+        // eslint-disable-next-line rxjs-x/no-ignored-replay-buffer
         shareReplay()
     );
 
@@ -57,14 +63,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private toastsDict: { [id: number]: ComponentRef<T> } = {};
     private templatesDict: { [id: number]: EmbeddedViewRef<T> } = {};
 
-    constructor(
-        private overlay: Overlay,
-        private injector: Injector,
-        private overlayContainer: OverlayContainer,
-        private ngZone: NgZone,
-        @Inject(KBQ_TOAST_FACTORY) private toastFactory: any,
-        @Optional() @Inject(KBQ_TOAST_CONFIG) private toastConfig: KbqToastConfig
-    ) {
+    constructor() {
         this.ngZone.runOutsideAngular(() => {
             this.timerSubscription = this.timer.subscribe(this.processToasts);
         });

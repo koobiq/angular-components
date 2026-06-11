@@ -3,11 +3,9 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    forwardRef,
-    Inject,
+    inject,
     Input,
     input,
-    Optional,
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
@@ -62,6 +60,9 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
     }
 })
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private formField = inject(KBQ_FORM_FIELD_REF, { optional: true })!;
+
     readonly id = input<string>(`kbq-hint-${nextPasswordHintUniqueId++}`);
 
     readonly rule = input<PasswordRules | any>();
@@ -107,10 +108,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 
     private lastControlValue: string;
 
-    constructor(
-        private changeDetectorRef: ChangeDetectorRef,
-        @Optional() @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: any
-    ) {
+    constructor() {
         super();
         this.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);

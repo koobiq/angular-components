@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
@@ -49,8 +49,8 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerMinimaxExample {
+    private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+
     readonly minDate = this.adapter.createDate(2023, 11, 14);
     readonly maxDate = this.adapter.createDate(2024, 7, 25);
-
-    constructor(private adapter: DateAdapter<DateTime>) {}
 }

@@ -9,7 +9,6 @@ import {
     input,
     OnChanges,
     OnInit,
-    Optional,
     SimpleChanges
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -30,17 +29,15 @@ import { KbqSidepanelService } from './sidepanel.service';
     }
 })
 export class KbqSidepanelClose implements OnInit, OnChanges {
+    sidepanelRef = inject(KbqSidepanelRef, { optional: true })!;
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private sidepanelService = inject(KbqSidepanelService);
+
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input('kbq-sidepanel-close') sidepanelResult: any;
 
     readonly kbqSidepanelClose = input<any>();
-
-    constructor(
-        @Optional() public sidepanelRef: KbqSidepanelRef,
-        private elementRef: ElementRef<HTMLElement>,
-        private sidepanelService: KbqSidepanelService
-    ) {}
 
     ngOnInit() {
         if (!this.sidepanelRef) {

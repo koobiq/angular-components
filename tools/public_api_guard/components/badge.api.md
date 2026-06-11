@@ -5,13 +5,10 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import { KbqIconItem } from '@koobiq/components/icon';
-import { Renderer2 } from '@angular/core';
 
 // @public (undocumented)
 export const badgeLeftIconClassName = "kbq-badge-icon_left";
@@ -72,7 +69,7 @@ export enum KbqBadgeColors {
 
 // @public (undocumented)
 export class KbqBadgeCssStyler implements AfterContentInit {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
+    constructor();
     // (undocumented)
     readonly icons: i0.Signal<readonly any[]>;
     // (undocumented)
@@ -86,7 +83,7 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBadgeCssStyler, "kbq-badge", never, {}, {}, ["icons"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBadgeCssStyler, [null, null, { skipSelf: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBadgeCssStyler, never>;
 }
 
 // @public (undocumented)

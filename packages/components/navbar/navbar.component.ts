@@ -41,6 +41,10 @@ export type KbqNavbarContainerPositionType = 'left' | 'right';
 
 @Directive()
 export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    protected readonly focusMonitor = inject(FocusMonitor);
+
     @ContentChildren(forwardRef(() => KbqNavbarFocusableItem), { descendants: true })
     focusableItems: QueryList<KbqNavbarFocusableItem>;
 
@@ -73,12 +77,6 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
     private optionFocusSubscription: Subscription | null;
     private optionBlurSubscription: Subscription | null;
-
-    constructor(
-        protected readonly changeDetectorRef: ChangeDetectorRef,
-        protected readonly elementRef: ElementRef<HTMLElement>,
-        protected readonly focusMonitor: FocusMonitor
-    ) {}
 
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
@@ -210,6 +208,10 @@ export class KbqNavbarContainer {}
     }
 })
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
+    protected readonly elementRef: ElementRef<HTMLElement>;
+    protected readonly changeDetectorRef: ChangeDetectorRef;
+    protected readonly focusMonitor: FocusMonitor;
+
     readonly rectangleElements = contentChildren(
         forwardRef(() => KbqNavbarRectangleElement),
         { descendants: true }
@@ -245,12 +247,15 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     private resizeSubscription: Subscription;
 
-    constructor(
-        protected readonly elementRef: ElementRef<HTMLElement>,
-        protected readonly changeDetectorRef: ChangeDetectorRef,
-        protected readonly focusMonitor: FocusMonitor
-    ) {
-        super(changeDetectorRef, elementRef, focusMonitor);
+    constructor() {
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+        const changeDetectorRef = inject(ChangeDetectorRef);
+        const focusMonitor = inject(FocusMonitor);
+
+        super();
+        this.elementRef = elementRef;
+        this.changeDetectorRef = changeDetectorRef;
+        this.focusMonitor = focusMonitor;
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval), takeUntilDestroyed())

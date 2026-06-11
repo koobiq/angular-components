@@ -103,6 +103,12 @@ export const tsReplacements: Replacement[] = [
     },
     { from: '\\bKbqFormFieldRef\\b', to: 'KbqFormField' },
 
+    // Deprecated dropdown position type aliases → Kbq-prefixed names. The
+    // `\b…\b` boundaries make these idempotent: `KbqDropdownPositionX` is not
+    // re-matched because the `D` is preceded by a word char (`q`).
+    { from: '\\bDropdownPositionX\\b', to: 'KbqDropdownPositionX' },
+    { from: '\\bDropdownPositionY\\b', to: 'KbqDropdownPositionY' },
+
     // ─── Tokens / function renames ────────────────────────────────────────
     {
         from: '\\bKBQ_VALIDATION\\b',
@@ -218,6 +224,14 @@ export const templateReplacements: Replacement[] = [
     // ─── Attribute renames ────────────────────────────────────────────────
     { from: '\\bkbqFormFieldWithoutBorders\\b', to: 'noBorders' },
 
+    // ─── KbqCodeBlock deprecated input renames ────────────────────────────
+    // Scoped strictly to the attribute form (`[x]` binding or `x="…"` static)
+    // so the common words `canDownload` / `files` elsewhere are never touched.
+    { from: '\\[canLoad\\]', to: '[canDownload]' },
+    { from: '\\bcanLoad="', to: 'canDownload="' },
+    { from: '\\[codeFiles\\]', to: '[files]' },
+    { from: '\\bcodeFiles="', to: 'files="' },
+
     // ─── Tooltip warning trigger → kbqTooltip + modifier ───────────────────
     // Two-step: first add modifier attribute, then rename binding key.
     // The modifier insertion must come before the binding rename otherwise we
@@ -287,5 +301,22 @@ export const warnPatterns: WarnPattern[] = [
             'kbqComponentParams is being rewritten to "data:" — remember the CHILD modal ' +
             "component must read the payload via inject(KBQ_MODAL_DATA) (from '@koobiq/components/modal') " +
             'instead of @Input.'
+    },
+    {
+        pattern: '\\bscrollableCodeContent\\b',
+        message:
+            'KbqCodeBlock.scrollableCodeContent is deprecated; use the scrollTo() method instead. Manual migration required.'
+    },
+    {
+        pattern: '\\.canLoad\\b|\\.codeFiles\\b',
+        message:
+            'KbqCodeBlock.canLoad → canDownload and .codeFiles → files. Template bindings are auto-migrated; ' +
+            'update any programmatic (TypeScript) access manually.'
+    },
+    {
+        pattern: '\\brequired:\\s*(true|false)',
+        message:
+            'KbqFilter.required is deprecated — use cleanable = false and removable = false instead. ' +
+            'NOTE: this warning is best-effort and may match unrelated `required:` keys; verify it is a KbqFilter config.'
     }
 ];

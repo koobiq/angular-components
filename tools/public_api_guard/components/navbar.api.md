@@ -20,12 +20,10 @@ import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonCssStyler } from '@koobiq/components/button';
-import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import * as _koobiq_components_core from '@koobiq/components/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -44,7 +42,6 @@ export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: {
 
 // @public (undocumented)
 export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor);
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -84,7 +81,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
 // @public (undocumented)
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
+    constructor();
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
@@ -170,7 +167,6 @@ export class KbqNavbarDivider {
 
 // @public (undocumented)
 export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, ngZone: NgZone);
     // (undocumented)
     blur(): void;
     // (undocumented)
@@ -224,7 +220,7 @@ export interface KbqNavbarFocusableItemEvent {
 
 // @public (undocumented)
 export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
-    constructor(rectangleElement: KbqNavbarRectangleElement, navbarFocusableItem: KbqNavbarFocusableItem, changeDetectorRef: ChangeDetectorRef, dropdownTrigger: KbqDropdownTrigger, bento: KbqNavbarBento);
+    constructor();
     // (undocumented)
     get collapsable(): boolean;
     set collapsable(value: boolean);
@@ -274,7 +270,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "collapsable": { "alias": "collapsable"; "required": false; }; }, {}, ["title", "icon"], ["[kbq-icon]", "kbq-navbar-title, [kbq-navbar-title]", "*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, [null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, never>;
 }
 
 // @public (undocumented)
@@ -368,7 +364,7 @@ export class KbqNavbarToggle implements OnDestroy {
 
 // @public (undocumented)
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
+    constructor();
     // (undocumented)
     readonly animationDone: Subject<void>;
     // (undocumented)
@@ -381,10 +377,10 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     get expanded(): boolean;
     set expanded(value: boolean);
     // (undocumented)
-    readonly externalConfiguration: unknown;
+    readonly externalConfiguration: {};
     // (undocumented)
     readonly items: i0.Signal<readonly any[]>;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
+    protected readonly localeService: _koobiq_components_core.KbqLocaleService;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)

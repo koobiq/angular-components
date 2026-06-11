@@ -385,7 +385,7 @@ export class KbqNotificationCenterTrigger
     ngAfterContentInit(): void {
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible: boolean) => {
             if (visible) {
-                // eslint-disable-next-line rxjs/no-nested-subscribe
+                // eslint-disable-next-line rxjs-x/no-nested-subscribe
                 this.preventClosingByInnerScrollSubscription = this.closingActions().subscribe((event) => {
                     if (event && event['scrollDispatcher']) {
                         this.instance.setStickPosition();

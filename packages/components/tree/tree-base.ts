@@ -6,7 +6,6 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
-    Inject,
     Input,
     IterableChangeRecord,
     IterableDiffer,
@@ -17,7 +16,6 @@ import {
     TrackByFunction,
     ViewChild,
     ViewContainerRef,
-    forwardRef,
     inject,
     input
 } from '@angular/core';
@@ -36,6 +34,9 @@ import {
 
 @Directive()
 export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+    protected differs = inject(IterableDiffers);
+    protected changeDetectorRef = inject(ChangeDetectorRef);
+
     // TODO: Skipped for migration because:
     //  Subclass KbqTreeSelection overrides this input with a narrower type
     //  (FlatTreeControl<any>) via `@Input() declare`, which is incompatible
@@ -97,11 +98,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     private _dataSource: DataSource<T> | Observable<T[]> | T[];
 
     protected readonly destroyRef = inject(DestroyRef);
-
-    constructor(
-        protected differs: IterableDiffers,
-        protected changeDetectorRef: ChangeDetectorRef
-    ) {}
 
     ngOnInit() {
         this.dataDiffer = this.differs.find([]).create(this.trackBy());
@@ -282,6 +278,9 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     exportAs: 'kbqTreeNode'
 })
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
+    protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    tree = inject<KbqTreeBase<T>>(KbqTreeBase);
+
     /**
      * The most recently created `KbqTreeNode`. We save it in static variable so we can retrieve it
      * in `KbqTree` and set the data to it.
@@ -310,10 +309,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
         return treeControl.getLevel ? treeControl.getLevel(this._data) : 0;
     }
 
-    constructor(
-        protected elementRef: ElementRef<HTMLElement>,
-        @Inject(forwardRef(() => KbqTreeBase)) public tree: KbqTreeBase<T>
-    ) {
+    constructor() {
         KbqTreeNode.mostRecentTreeNode = this;
     }
 

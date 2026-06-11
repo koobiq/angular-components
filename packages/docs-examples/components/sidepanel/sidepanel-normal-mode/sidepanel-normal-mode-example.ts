@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
@@ -14,6 +14,8 @@ import { take } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelNormalModeExample {
+    private sidepanelService = inject(KbqSidepanelService);
+
     position = KbqSidepanelPosition.Right;
 
     isOpened = false;
@@ -22,7 +24,6 @@ export class SidepanelNormalModeExample {
 
     arrayLength = 40;
     array = new Array(this.arrayLength);
-    constructor(private sidepanelService: KbqSidepanelService) {}
 
     toggleSidepanel() {
         if (!this.isOpened) {

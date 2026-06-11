@@ -1,5 +1,5 @@
 import { getLocaleFirstDayOfWeek } from '@angular/common';
-import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { KBQ_DATE_LOCALE, KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { LuxonDateAdapter as BaseLuxonDateAdapter, LuxonDateAdapterOptions } from '@koobiq/luxon-date-adapter';
 import { Info } from 'luxon';
@@ -24,6 +24,8 @@ export function KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): KbqLuxonDateAdapterOpt
 
 @Injectable()
 export class LuxonDateAdapter extends BaseLuxonDateAdapter {
+    protected readonly options?: LuxonDateAdapterOptions;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
     /** A stream that emits when the locale changes. */
     get localeChanges(): Observable<any> {
         return this._localeChanges;
@@ -31,12 +33,13 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
 
     private _localeChanges = new BehaviorSubject<string>(KBQ_DEFAULT_LOCALE_ID);
 
-    constructor(
-        @Inject(KBQ_DATE_LOCALE) dateLocale: string,
-        @Optional() @Inject(KBQ_LUXON_DATE_ADAPTER_OPTIONS) protected readonly options?: LuxonDateAdapterOptions,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
-    ) {
+    constructor() {
+        const dateLocale = inject(KBQ_DATE_LOCALE);
+        const options =
+            inject<LuxonDateAdapterOptions>(KBQ_LUXON_DATE_ADAPTER_OPTIONS, { optional: true }) ?? undefined;
+
         super(dateLocale, options);
+        this.options = options;
 
         this.setLocale(this.localeService?.id || dateLocale);
 

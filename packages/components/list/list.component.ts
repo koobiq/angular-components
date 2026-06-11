@@ -6,7 +6,8 @@ import {
     ContentChildren,
     ElementRef,
     QueryList,
-    ViewEncapsulation
+    ViewEncapsulation,
+    inject
 } from '@angular/core';
 import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
 
@@ -33,9 +34,9 @@ export class KbqList {}
     preserveWhitespaces: false
 })
 export class KbqListItem implements AfterContentInit {
-    @ContentChildren(KbqLine) lines: QueryList<KbqLine>;
+    private elementRef = inject(ElementRef);
 
-    constructor(private elementRef: ElementRef) {}
+    @ContentChildren(KbqLine) lines: QueryList<KbqLine>;
 
     ngAfterContentInit() {
         new KbqLineSetter(this.lines, this.elementRef);

@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import {
     AbstractControl,
     FormsModule,
@@ -83,6 +83,9 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private formBuilder = inject(UntypedFormBuilder);
+    changeDetectorRef = inject(ChangeDetectorRef);
+
     themePalette = ThemePalette;
 
     reactiveTypeaheadItems: string[] = [];
@@ -128,10 +131,7 @@ export class DevApp {
     formControlTags: UntypedFormControl;
     formControlTagInputFormControl: UntypedFormControl;
 
-    constructor(
-        private formBuilder: UntypedFormBuilder,
-        public changeDetectorRef: ChangeDetectorRef
-    ) {
+    constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<DevFileFlatNode>(

@@ -125,7 +125,7 @@ export const DATA_OBJECT = {
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
                 <i kbq-icon="kbq-circle-info_16"></i>
 
-                <div class="layout-row layout-align-space-between">
+                <div class="layout-row layout-align-space-between-center">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
                     <kbq-badge badgeColor="theme" [compact]="true">badge</kbq-badge>
                 </div>
@@ -142,7 +142,7 @@ export const DATA_OBJECT = {
 
                 <kbq-tree-node-toggle [node]="node" />
 
-                <div class="layout-row layout-align-space-between">
+                <div class="layout-row layout-align-space-between-center">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
                     <kbq-badge badgeColor="theme" [compact]="true">badge</kbq-badge>
                 </div>

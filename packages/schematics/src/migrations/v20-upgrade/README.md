@@ -19,15 +19,19 @@ from three ordered tables in `data.ts`:
   removals (`KBQ_VALIDATION`, `KBQ_SANITY_CHECKS`, `KBQ_SIDEPANEL_WITH_SHADOW`),
   function renames (`toBoolean(` → `booleanAttribute(`, `isCorrectExtension(` →
   `FileValidators.isCorrectExtension(`, `formatDataSize(` → `getFormattedSizeParts(`),
-  and method renames on instances (`.openPanel(` → `.open(`, `.toggleIsCollapsed(` →
-  `.toggle(`, `.focusViaKeyboard(` → `.focus(`).
+  method renames on instances (`.openPanel(` → `.open(`, `.toggleIsCollapsed(` →
+  `.toggle(`, `.focusViaKeyboard(` → `.focus(`), and deprecated type-alias
+  renames (`DropdownPositionX` → `KbqDropdownPositionX`, `DropdownPositionY` →
+  `KbqDropdownPositionY`).
 - **`templateReplacements`** — selectors and attributes in Angular templates
   (both external `.html` files and inline `template:` strings inside `.ts`):
   `<kbq-filter-search>` → `<kbq-search-expandable>`, `<kbq-datepicker-toggle>` →
   `<kbq-datepicker-toggle-icon>`, `<kbq-risk-level>` → `<kbq-badge>`,
   `<kbq-navbar-ic>` → `<kbq-navbar>`, `[kbqWarningTooltip]` →
   `kbqTooltipModifier="warning" [kbqTooltip]`, `kbqFormFieldWithoutBorders` →
-  `noBorders`, and template-ref exportAs renames
+  `noBorders`, the deprecated `KbqCodeBlock` input attributes
+  (`[canLoad]` / `canLoad=` → `canDownload`, `[codeFiles]` / `codeFiles=` →
+  `files`), and template-ref exportAs renames
   (`="kbqWarningTooltip"` → `="kbqTooltip"`).
 - **`scssReplacements`** — CSS class selectors renamed at the component level.
 
@@ -36,12 +40,15 @@ from three ordered tables in `data.ts`:
 Some changes require code restructuring and are surfaced as console warnings
 without auto-fixing:
 
-| Pattern                  | Manual migration                                                                        |
-| ------------------------ | --------------------------------------------------------------------------------------- |
-| `(onSaveAsNew)`          | Listen to `(onSave)` and branch on `$event.status === 'newFilter'`                      |
-| `[customValidation]`     | Use `FormControl` validators (e.g. `FileValidators.isCorrectExtension`)                 |
-| `[errors]` (file-upload) | Use `FormControl.errors`                                                                |
-| `[apps]` (app-switcher)  | Wrap in single-site `[sites]="[{ id, name, apps }]"` and read with `KbqAppSwitcherSite` |
+| Pattern                                           | Manual migration                                                                                      |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `(onSaveAsNew)`                                   | Listen to `(onSave)` and branch on `$event.status === 'newFilter'`                                    |
+| `[customValidation]`                              | Use `FormControl` validators (e.g. `FileValidators.isCorrectExtension`)                               |
+| `[errors]` (file-upload)                          | Use `FormControl.errors`                                                                              |
+| `[apps]` (app-switcher)                           | Wrap in single-site `[sites]="[{ id, name, apps }]"` and read with `KbqAppSwitcherSite`               |
+| `scrollableCodeContent` (code-block)              | Use the `scrollTo()` method instead                                                                   |
+| `.canLoad` / `.codeFiles` (code-block, TS access) | Template bindings are auto-migrated; update programmatic access to `.canDownload` / `.files` manually |
+| `required` (KbqFilter)                            | Use `cleanable = false` and `removable = false` (best-effort match — verify it is a KbqFilter config) |
 
 ## Running it manually
 

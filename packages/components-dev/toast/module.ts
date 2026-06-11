@@ -1,12 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    TemplateRef,
-    ViewEncapsulation,
-    viewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -73,13 +65,16 @@ export class DevDocsExamples {}
     }
 })
 export class DevToastComponent extends KbqToastComponent {
-    constructor(
-        readonly data: KbqToastData,
-        readonly service: KbqToastService,
-        elementRef: ElementRef<HTMLElement>,
-        focusMonitor: FocusMonitor
-    ) {
-        super(data, service, elementRef, focusMonitor);
+    readonly data: KbqToastData;
+    readonly service: KbqToastService;
+
+    constructor() {
+        const data = inject(KbqToastData);
+        const service = inject(KbqToastService);
+
+        super();
+        this.data = data;
+        this.service = service;
 
         console.log('MyToastComponent: ');
     }
@@ -106,6 +101,11 @@ export class DevToastComponent extends KbqToastComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private toastService = inject(KbqToastService);
+    private newToastService = inject<KbqToastService<DevToastComponent>>(KbqToastService);
+    private modalService = inject(KbqModalService);
+    private sidepanelService = inject(KbqSidepanelService);
+
     themePalette = ThemePalette;
 
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
@@ -114,13 +114,6 @@ export class DevApp {
 
     array = new Array(40);
     readonly template = viewChild.required<TemplateRef<any>>('sipanelTemplate');
-
-    constructor(
-        private toastService: KbqToastService,
-        private newToastService: KbqToastService<DevToastComponent>,
-        private modalService: KbqModalService,
-        private sidepanelService: KbqSidepanelService
-    ) {}
 
     openTemplateSidepanel() {
         this.sidepanelService.open(this.template(), {

@@ -1,4 +1,4 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, inject } from '@angular/core';
 
 /**
  * Directive applied to an element to make it usable
@@ -9,5 +9,5 @@ import { Directive, ElementRef } from '@angular/core';
     exportAs: 'kbqAutocompleteOrigin'
 })
 export class KbqAutocompleteOrigin {
-    constructor(public elementRef: ElementRef<HTMLElement>) {}
+    elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 }

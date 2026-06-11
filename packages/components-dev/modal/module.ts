@@ -82,11 +82,12 @@ export class DevModalLongCustomComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevModalCustomComponent {
+    private modal = inject(KbqModalRef);
+
     componentColors = KbqComponentColors;
 
-    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true });
-
-    constructor(private modal: KbqModalRef) {
+    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true })!;
+    constructor() {
         console.log('data: ', this.data);
     }
 
@@ -123,12 +124,12 @@ export class DevModalCustomComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevModalFullCustomComponent {
+    private modal = inject(KbqModalRef);
+
     componentColors = KbqComponentColors;
 
     readonly title = input<string>(undefined!);
     readonly subtitle = input<string>(undefined!);
-
-    constructor(private modal: KbqModalRef) {}
 
     destroyModal() {
         this.modal.destroy({ data: 'this the result data' });
@@ -151,6 +152,8 @@ export class DevModalFullCustomComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private modalService = inject(KbqModalService);
+
     componentColors = KbqComponentColors;
 
     isVisible = false;
@@ -158,8 +161,6 @@ export class DevApp {
     htmlModalVisible = false;
 
     isLoading = false;
-
-    constructor(private modalService: KbqModalService) {}
 
     showConfirm() {
         this.modalService.success({

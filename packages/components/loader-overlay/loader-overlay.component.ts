@@ -5,6 +5,7 @@ import {
     ContentChild,
     Directive,
     ElementRef,
+    inject,
     Input,
     input,
     OnDestroy,
@@ -58,6 +59,9 @@ export class KbqLoaderOverlayCaption {}
     }
 })
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private renderer = inject(Renderer2);
+
     // TODO: Skipped for migration because:
     //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
     //  and migrating would break narrowing currently.
@@ -107,11 +111,6 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     @ContentChild(KbqLoaderOverlayIndicator) externalIndicator: KbqLoaderOverlayIndicator | null;
     @ContentChild(KbqLoaderOverlayText) externalText: KbqLoaderOverlayText | null;
     @ContentChild(KbqLoaderOverlayCaption) externalCaption: KbqLoaderOverlayCaption | null;
-
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2
-    ) {}
 
     ngOnInit(): void {
         this.parent = this.elementRef.nativeElement.parentElement;

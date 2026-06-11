@@ -1,5 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, DoCheck, ElementRef, Inject, Input, OnChanges, OnDestroy, Optional, Self } from '@angular/core';
+import { Directive, DoCheck, ElementRef, Input, OnChanges, OnDestroy, inject } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -34,6 +34,12 @@ let nextUniqueId = 0;
 export class KbqInputPassword
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
 {
+    protected elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    ngControl = inject(NgControl, { optional: true, self: true })!;
+    parentForm = inject(NgForm, { optional: true })!;
+    parentFormGroup = inject(FormGroupDirective, { optional: true })!;
+    defaultErrorStateMatcher = inject(ErrorStateMatcher);
+
     /** Whether the component is in an error state. */
     errorState: boolean = false;
 
@@ -171,14 +177,9 @@ export class KbqInputPassword
 
     private _inputValueAccessor: { value: any };
 
-    constructor(
-        protected elementRef: ElementRef<HTMLInputElement>,
-        @Optional() @Self() public ngControl: NgControl,
-        @Optional() public parentForm: NgForm,
-        @Optional() public parentFormGroup: FormGroupDirective,
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        @Optional() @Self() @Inject(KBQ_INPUT_VALUE_ACCESSOR) inputValueAccessor: any
-    ) {
+    constructor() {
+        const inputValueAccessor = inject(KBQ_INPUT_VALUE_ACCESSOR, { optional: true, self: true });
+
         // If no input value accessor was explicitly specified, use the element as the input value
         // accessor.
         this._inputValueAccessor = inputValueAccessor || this.elementRef.nativeElement;

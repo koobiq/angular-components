@@ -12,13 +12,12 @@ import {
     Directive,
     ElementRef,
     forwardRef,
-    Inject,
+    inject,
     InjectionToken,
     Input,
     input,
     numberAttribute,
     OnDestroy,
-    Optional,
     output,
     QueryList,
     viewChild,
@@ -108,6 +107,8 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
     exportAs: 'kbqTabGroup'
 })
 export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     readonly resizeStream = new Subject<Event>();
 
     @ContentChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -221,10 +222,9 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     private readonly groupId: number;
     private readonly resizeDebounceInterval: number = 100;
 
-    constructor(
-        private readonly changeDetectorRef: ChangeDetectorRef,
-        @Inject(KBQ_TABS_CONFIG) @Optional() defaultConfig?: KbqTabsConfig
-    ) {
+    constructor() {
+        const defaultConfig = inject<KbqTabsConfig>(KBQ_TABS_CONFIG, { optional: true });
+
         this.groupId = nextId++;
         this.animationDuration = defaultConfig?.animationDuration || '0ms';
 

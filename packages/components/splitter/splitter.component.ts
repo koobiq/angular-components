@@ -8,7 +8,6 @@ import {
     ContentChildren,
     Directive,
     ElementRef,
-    Inject,
     Input,
     NgZone,
     OnDestroy,
@@ -69,6 +68,9 @@ export enum Direction {
     }
 })
 export class KbqGutterDirective implements OnInit {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private renderer = inject(Renderer2);
+
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -114,11 +116,6 @@ export class KbqGutterDirective implements OnInit {
 
     dragged: boolean = false;
 
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2
-    ) {}
-
     ngOnInit(): void {
         this.setStyle(StyleProperty.FlexBasis, coerceCssPixelValue(this.size));
         this.setStyle(this.isVertical ? StyleProperty.Height : StyleProperty.Width, coerceCssPixelValue(this.size));
@@ -153,6 +150,9 @@ export class KbqGutterDirective implements OnInit {
     }
 })
 export class KbqGutterGhostDirective {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private renderer = inject(Renderer2);
+
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input() visible: boolean;
@@ -217,11 +217,6 @@ export class KbqGutterGhostDirective {
         return this.direction === Direction.Vertical;
     }
 
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2
-    ) {}
-
     private updateDimensions(): void {
         this.setStyle(this.isVertical ? StyleProperty.Width : StyleProperty.Height, '100%');
         this.setStyle(this.isVertical ? StyleProperty.Height : StyleProperty.Width, coerceCssPixelValue(this.size));
@@ -246,6 +241,11 @@ export class KbqGutterGhostDirective {
     preserveWhitespaces: false
 })
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
+    elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    changeDetectorRef = inject(ChangeDetectorRef);
+    private ngZone = inject(NgZone);
+    private renderer = inject(Renderer2);
+
     readonly gutterPositionChange = output<void>();
 
     areas: IArea[] = [];
@@ -337,13 +337,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     }
 
     private _resizing: boolean = false;
-
-    constructor(
-        public elementRef: ElementRef<HTMLElement>,
-        public changeDetectorRef: ChangeDetectorRef,
-        private ngZone: NgZone,
-        private renderer: Renderer2
-    ) {}
 
     addArea(area: KbqSplitterAreaDirective): void {
         this.areas.push(this.mapAndOrderArea(area, this.areas.length));
@@ -581,15 +574,13 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     }
 })
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private renderer = inject(Renderer2);
+    private splitter = inject(KbqSplitterComponent);
+
     readonly sizeChange = output<number>();
 
     private readonly window = inject(KBQ_WINDOW);
-
-    constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2,
-        @Inject(forwardRef(() => KbqSplitterComponent)) private splitter: KbqSplitterComponent
-    ) {}
 
     isResizing(): boolean {
         return this.splitter.isDragging;

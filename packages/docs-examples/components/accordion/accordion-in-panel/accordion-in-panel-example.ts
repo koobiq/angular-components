@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -18,12 +18,12 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInPanelExample {
+    private sidepanelService = inject(KbqSidepanelService);
+
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
     size: KbqSidepanelSize = KbqSidepanelSize.Medium;
 
     @ViewChild('template', { static: false }) template: TemplateRef<any>;
-
-    constructor(private sidepanelService: KbqSidepanelService) {}
 
     openPanel() {
         this.sidepanelService.open(this.template, {

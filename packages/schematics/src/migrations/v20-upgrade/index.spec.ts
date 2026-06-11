@@ -322,6 +322,108 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).not.toContain('.kbq-risk-level');
     });
 
+    it('rewrites DropdownPositionX / DropdownPositionY type aliases to the Kbq-prefixed names', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            "import { DropdownPositionX, DropdownPositionY } from '@koobiq/components/dropdown';\n" +
+                "const x: DropdownPositionX = 'before';\n" +
+                "const y: DropdownPositionY = 'below';\n"
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        expect(updated).toContain('KbqDropdownPositionX');
+        expect(updated).toContain('KbqDropdownPositionY');
+        // Old (un-prefixed) names are gone; `\b` boundaries leave the new
+        // `Kbq…` names intact (no double-rewrite).
+        expect(updated).not.toMatch(/\bDropdownPositionX\b/);
+        expect(updated).not.toMatch(/\bDropdownPositionY\b/);
+    });
+
+    it('rewrites KbqCodeBlock [canLoad]/[codeFiles] bindings to [canDownload]/[files]', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+
+        appTree.overwrite(html, '<kbq-code-block [canLoad]="x" [codeFiles]="files"></kbq-code-block>\n');
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(html);
+
+        expect(updated).toContain('[canDownload]="x"');
+        expect(updated).toContain('[files]="files"');
+        expect(updated).not.toContain('[canLoad]');
+        expect(updated).not.toContain('[codeFiles]');
+    });
+
+    it('rewrites the static canLoad="true" attribute form to canDownload', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+
+        appTree.overwrite(html, '<kbq-code-block canLoad="true"></kbq-code-block>\n');
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(html)).toContain('canDownload="true"');
+    });
+
+    it('warns about KbqCodeBlock.scrollableCodeContent (use scrollTo())', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(ts, 'const el = cb.scrollableCodeContent();\n');
+
+        const messages: string[] = [];
+
+        runner.logger.subscribe((entry) => {
+            if (entry.message) messages.push(entry.message);
+        });
+
+        await runner.runSchematic(SCHEMATIC_NAME, { project: first, fix: true } satisfies Schema, appTree);
+
+        expect(messages.some((m) => m.includes('scrollableCodeContent'))).toBe(true);
+    });
+
+    it('warns about deprecated KbqFilter.required without auto-fixing it', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const original = "const f = { name: 'x', required: true, cleanable: true };\n";
+
+        appTree.overwrite(ts, original);
+
+        const messages: string[] = [];
+
+        runner.logger.subscribe((entry) => {
+            if (entry.message) messages.push(entry.message);
+        });
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toContain('required: true'); // not auto-fixed
+        expect(messages.some((m) => m.includes('required'))).toBe(true);
+    });
+
     it('warns about (onSaveAsNew) without auto-fixing', async () => {
         const [first] = projects.keys();
         const { html } = paths(projects.get(first)!);

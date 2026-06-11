@@ -1,5 +1,13 @@
 import { TitleCasePipe } from '@angular/common';
-import { AfterContentInit, ChangeDetectionStrategy, Component, Input, ViewEncapsulation, output } from '@angular/core';
+import {
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    Input,
+    ViewEncapsulation,
+    inject,
+    output
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, KbqOptionModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -35,6 +43,8 @@ export type MonthName = {
     exportAs: 'kbqCalendarHeader'
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
+    private readonly adapter = inject<DateAdapter<D>>(DateAdapter);
+
     monthNames: MonthName[];
     selectedMonth: number;
 
@@ -114,7 +124,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     readonly monthSelected = output<D>();
     readonly yearSelected = output<D>();
 
-    constructor(private readonly adapter: DateAdapter<D>) {
+    constructor() {
         this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {
             return { name, nameShort: this.adapter.getMonthNames('short')[i], value: i, disabled: false };
         });

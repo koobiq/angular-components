@@ -609,10 +609,8 @@ class TestComponentLevelService {
     `
 })
 export class CustomModalComponent {
-    constructor(
-        public componentLevelService: TestComponentLevelService,
-        public injector: Injector
-    ) {}
+    componentLevelService = inject(TestComponentLevelService);
+    injector = inject(Injector);
 }
 
 @Component({
@@ -626,10 +624,8 @@ export class CustomModalComponent {
     ]
 })
 export class CustomComponent {
-    constructor(
-        public modalService: KbqModalService,
-        public injector: Injector
-    ) {}
+    modalService = inject(KbqModalService);
+    injector = inject(Injector);
 
     open() {
         return this.modalService.open({
@@ -661,8 +657,6 @@ class TestModalContentComponent {}
 })
 class ModalByServiceComponent {
     nonServiceModalVisible = false;
-
-    constructor(_modalControlService: KbqModalControlService) {}
 }
 
 @Component({
@@ -680,13 +674,11 @@ class ModalByServiceComponent {
     providers: [KbqModalControlService]
 })
 class ModalByServiceFromDropdownComponent {
+    modalControlService = inject(KbqModalControlService);
+    modalService = inject(KbqModalService);
+
     nonServiceModalVisible = false;
     kbqOkText = 'Save';
-
-    constructor(
-        public modalControlService: KbqModalControlService,
-        public modalService: KbqModalService
-    ) {}
 
     showConfirm() {
         this.modalService.success({

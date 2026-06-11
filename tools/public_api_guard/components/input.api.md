@@ -19,14 +19,12 @@ import * as i3 from '@koobiq/components/icon';
 import * as i8 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqNumberInputLocaleConfig } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ValidationErrors } from '@angular/forms';
@@ -68,7 +66,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
 export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
-    constructor(elementRef: ElementRef<HTMLInputElement>, ngControl: NgControl, numberInput: KbqNumberInput, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any);
+    constructor();
     controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -124,7 +122,7 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInput, "input[kbqInput],input[kbqNumberInput]", ["kbqInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInput, [null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInput, never>;
 }
 
 // @public (undocumented)
@@ -147,7 +145,7 @@ export class KbqInputMono {
 
 // @public (undocumented)
 export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
-    constructor(elementRef: ElementRef<HTMLInputElement>, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any);
+    constructor();
     // (undocumented)
     readonly checkRule: Subject<void>;
     // (undocumented)
@@ -205,12 +203,12 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputPassword, [null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputPassword, never>;
 }
 
 // @public (undocumented)
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, step: string, bigStep: string, min: string, max: string, localeService?: KbqLocaleService | undefined);
+    constructor();
     // (undocumented)
     bigStep: number;
     // (undocumented)
@@ -288,7 +286,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, [null, null, { attribute: "step"; }, { attribute: "big-step"; }, { attribute: "min"; }, { attribute: "max"; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, never>;
 }
 
 // @public (undocumented)
