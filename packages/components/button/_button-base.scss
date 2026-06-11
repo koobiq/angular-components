@@ -49,17 +49,15 @@
         display: flex;
         align-items: center;
 
-        // Allow the wrapper (a flex item of the button host) to shrink below its content width,
-        // so a width constraint on the button propagates down to `.kbq-button-text` ellipsis.
         min-width: 0;
     }
 
     & .kbq-button-text {
         @include list.kbq-truncate-line();
 
-        // The text container is a flex item of `.kbq-button-wrapper`; min-width:0 lets it shrink
-        // below its content width so `text-overflow: ellipsis` can clip when the button is
-        // width-constrained (split-button, filter-bar, an explicit max-width, etc.).
+        display: flex;
+        align-items: center;
+
         min-width: 0;
     }
 
