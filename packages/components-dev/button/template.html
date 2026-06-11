@@ -2,6 +2,59 @@
 
 <hr />
 
+<div id="icon-slots-demo">
+    <h4>Explicit icon slots (source order is reversed on purpose)</h4>
+
+    <!-- left icon written AFTER the text, right icon written BEFORE — slots put them in place -->
+    <button kbq-button [color]="colors.Contrast">
+        Кнопка
+        <i kbqButtonLeftIcon kbq-icon="kbq-plus_16"></i>
+    </button>
+    &nbsp;
+    <button kbq-button [color]="colors.Contrast">
+        <i kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
+        Кнопка
+    </button>
+    &nbsp;
+    <button kbq-button [color]="colors.Contrast">
+        <i kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
+        Кнопка
+        <i kbqButtonLeftIcon kbq-icon="kbq-plus_16"></i>
+    </button>
+    &nbsp;
+    <!-- icon-only two-icon trigger, markers in reversed order -->
+    <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast">
+        <i kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
+        <i kbqButtonLeftIcon kbq-icon="kbq-play_16"></i>
+    </button>
+</div>
+
+<hr />
+
+<div id="ellipsis-demo">
+    <h4>Text ellipsis (width-constrained)</h4>
+
+    <!-- text only -->
+    <button kbq-button style="max-width: 160px" kbq-title [color]="colors.Contrast">
+        Очень длинный текст кнопки, который не помещается
+    </button>
+    &nbsp;
+    <!-- with marker icons: icons stay, only the text is clipped -->
+    <button kbq-button style="max-width: 160px" kbq-title [color]="colors.Contrast">
+        <i kbqButtonLeftIcon kbq-icon="kbq-plus_16"></i>
+        Очень длинный текст кнопки, который не помещается
+        <i kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
+    </button>
+    &nbsp;
+    <!-- legacy: icon in default slot, nested inside .kbq-button-text -->
+    <button kbq-button style="max-width: 160px" kbq-title [color]="colors.Contrast">
+        <i kbq-icon="kbq-plus_16"></i>
+        Очень длинный текст кнопки, который не помещается
+    </button>
+</div>
+
+<hr />
+
 <div>
     <div>
         <button disabled kbq-button class="kbq-dropdown-trigger">
