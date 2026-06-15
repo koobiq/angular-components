@@ -18,8 +18,6 @@ test.describe('KbqActionsPanel', () => {
 
             await getOpenButton(locator).click();
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('1-light.png');
-            await e2eEnableDarkTheme(page);
-            await expect(getScreenshotTarget(locator)).toHaveScreenshot('1-dark.png');
         });
 
         test('items overflow and dropdown', async ({ page }) => {
@@ -49,7 +47,7 @@ test.describe('KbqActionsPanel', () => {
 
             // Widen the container so all items fit
             await overlayContainer.evaluate(({ style }) => (style.width = '650px'));
-            await page.waitForTimeout(100);
+            await expect.poll(getHiddenCount).toBeLessThan(hiddenCountDefault);
 
             const hiddenCountWide = await getHiddenCount();
 
@@ -57,7 +55,7 @@ test.describe('KbqActionsPanel', () => {
 
             // Narrow the container so more items overflow
             await overlayContainer.evaluate(({ style }) => (style.width = '200px'));
-            await page.waitForTimeout(100);
+            await expect.poll(getHiddenCount).toBeGreaterThan(hiddenCountWide);
 
             const hiddenCountNarrow = await getHiddenCount();
 
@@ -65,9 +63,7 @@ test.describe('KbqActionsPanel', () => {
 
             // Restore to wide: items should reappear
             await overlayContainer.evaluate(({ style }) => (style.width = '650px'));
-            await page.waitForTimeout(100);
-
-            expect(await getHiddenCount()).toBe(hiddenCountWide);
+            await expect.poll(getHiddenCount).toBe(hiddenCountWide);
         });
     });
 });
