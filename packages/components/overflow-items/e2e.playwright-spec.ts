@@ -14,6 +14,9 @@ const blockOnPage = (page: Page, route: string, testid: string) => {
 const horizontal = (page: Page, testid: string) => blockOnPage(page, '/E2eOverflowItemsHorizontal', testid);
 const vertical = (page: Page, testid: string) => blockOnPage(page, '/E2eOverflowItemsVertical', testid);
 const ordered = (page: Page, testid: string) => blockOnPage(page, '/E2eOverflowItemsOrdered', testid);
+const additionalTargets = (page: Page, testid: string) =>
+    blockOnPage(page, '/E2eOverflowItemsAdditionalTargets', testid);
+const dynamic = (page: Page, testid: string) => blockOnPage(page, '/E2eOverflowItemsDynamic', testid);
 
 test.describe('KbqOverflowItems', () => {
     test('should hide overflown items', async ({ page }) => {
@@ -286,5 +289,107 @@ test.describe('KbqOverflowItems', () => {
 
         await expect(visibleItems(block)).toHaveCount(2);
         await expect(visibleItems(block).first()).toHaveText('Item7');
+    });
+
+    test('should recalculate hidden items on live container resize', async ({ page }) => {
+        const { navigate, block } = horizontal(page, 'overflowItems_default');
+        const container = block.locator('.kbq-overflow-items');
+
+        await navigate();
+        await expect(hiddenItems(block)).toHaveCount(12);
+
+        await container.evaluate((element) => {
+            (element as HTMLElement).style.width = '600px';
+        });
+        await expect(hiddenItems(block)).toHaveCount(10);
+
+        await container.evaluate((element) => {
+            (element as HTMLElement).style.width = '400px';
+        });
+        await expect(hiddenItems(block)).toHaveCount(14);
+    });
+
+    test('should recalculate hidden items on resize when debounceTime is configured', async ({ page }) => {
+        const { navigate, block } = horizontal(page, 'overflowItems_debounceResize');
+        const container = block.locator('.kbq-overflow-items');
+
+        await navigate();
+        await expect(hiddenItems(block)).toHaveCount(12);
+
+        await container.evaluate((element) => {
+            (element as HTMLElement).style.width = '600px';
+        });
+        await expect(hiddenItems(block)).toHaveCount(10);
+    });
+
+    test('should recalculate on additionalResizeObserverTargets resize', async ({ page }) => {
+        const { navigate, block } = additionalTargets(page, 'overflowItemsAdditionalTargets_block');
+        const toggle = page.getByTestId('overflowItemsAdditionalTargets_toggle');
+
+        await navigate();
+        await expect(hiddenItems(block)).toHaveCount(11);
+
+        await toggle.click();
+
+        await expect(hiddenItems(block)).toHaveCount(14);
+    });
+
+    test('should hide overflown items with left margin', async ({ page }) => {
+        // hidden = 20 - floor((500 - 100) / (50 + 10)) = 14
+        const { navigate, block } = horizontal(page, 'overflowItems_marginLeft');
+
+        await navigate();
+
+        await expect(hiddenItems(block)).toHaveCount(14);
+    });
+
+    test('should display result score (vertical orientation)', async ({ page }) => {
+        // hidden = 20 - floor((500 - 50) / 50) = 11
+        const { navigate, block } = vertical(page, 'overflowItemsVertical_default');
+
+        await navigate();
+
+        await expect(result(block)).toHaveText('and 11 more');
+    });
+
+    test('should prevent hiding item with alwaysVisible when no space is available (vertical orientation)', async ({
+        page
+    }) => {
+        // containerHeight=49 < itemHeight=50, so every item except Item7 (alwaysVisible) is hidden
+        const { navigate, block } = vertical(page, 'overflowItemsVertical_alwaysVisibleNoSpace');
+
+        await navigate();
+
+        await expect(visibleItems(block)).toHaveCount(1);
+        await expect(visibleItems(block).first()).toHaveText('Item7');
+    });
+
+    test('should prevent hiding item with alwaysVisible attribute when reverseOverflowOrder is enabled (vertical orientation)', async ({
+        page
+    }) => {
+        const { navigate, block } = vertical(page, 'overflowItemsVertical_alwaysVisibleReverse');
+
+        await navigate();
+
+        await expect(visibleItems(block).first()).toHaveText('Item7');
+    });
+
+    test('should recalculate hidden items when items list changes dynamically', async ({ page }) => {
+        // containerWidth=100, resultWidth=50, itemWidth=50
+        // 4 items: 4*50=200 > 100 → 3 hidden (1 visible + result)
+        // 3 items: 3*50=150 > 100 → 2 hidden
+        // 1 item:  1*50=50 ≤ 100 → 0 hidden
+        const { navigate, block } = dynamic(page, 'overflowItemsDynamic_block');
+        const removeButton = page.getByTestId('overflowItemsDynamic_removeItem');
+
+        await navigate();
+        await expect(hiddenItems(block)).toHaveCount(3);
+
+        await removeButton.click();
+        await expect(hiddenItems(block)).toHaveCount(2);
+
+        await removeButton.click();
+        await removeButton.click();
+        await expect(hiddenItems(block)).toHaveCount(0);
     });
 });

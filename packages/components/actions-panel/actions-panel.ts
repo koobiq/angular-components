@@ -193,19 +193,28 @@ export class KbqActionsPanel implements OnDestroy {
         if (overlayContainer) {
             const { afterClosed } = actionsPanelRef;
 
+            this.syncOverlayMaxWidth(overlayContainer.nativeElement, overlayRef.overlayElement);
+
             this.resizeObserver
                 .observe(overlayContainer.nativeElement)
                 .pipe(takeUntil(afterClosed))
                 .subscribe(() => {
-                    const { width: maxWidth } = overlayContainer.nativeElement.getBoundingClientRect();
-
-                    if (!maxWidth) return;
-
-                    overlayRef.overlayElement.style.maxWidth = coerceCssPixelValue(maxWidth);
-                    overlayRef.updatePosition();
+                    if (this.syncOverlayMaxWidth(overlayContainer.nativeElement, overlayRef.overlayElement)) {
+                        overlayRef.updatePosition();
+                    }
                 });
         }
 
         return actionsPanelRef;
+    }
+
+    private syncOverlayMaxWidth(container: HTMLElement, overlayElement: HTMLElement): boolean {
+        const { width } = container.getBoundingClientRect();
+
+        if (!width) return false;
+
+        overlayElement.style.maxWidth = coerceCssPixelValue(width);
+
+        return true;
     }
 }

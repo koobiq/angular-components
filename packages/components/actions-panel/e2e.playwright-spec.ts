@@ -18,6 +18,8 @@ test.describe('KbqActionsPanel', () => {
 
             await getOpenButton(locator).click();
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('1-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('1-dark.png');
         });
 
         test('items overflow and dropdown', async ({ page }) => {
@@ -31,6 +33,41 @@ test.describe('KbqActionsPanel', () => {
             await expect(screenshotTarget).toHaveScreenshot('2-light.png');
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('2-dark.png');
+        });
+
+        test('items overflow on container resize', async ({ page }) => {
+            await page.goto('/E2eActionsPanelWithOverlayContainer');
+            const locator = getComponent(page);
+            const overlayContainer = getOverlayContainer(locator);
+            const getHiddenCount = () =>
+                page.evaluate(() => document.querySelectorAll('.kbq-overflow-item-hidden').length);
+
+            await getOpenButton(locator).click();
+
+            // Capture baseline hidden count at default container width (400px)
+            const hiddenCountDefault = await getHiddenCount();
+
+            // Widen the container so all items fit
+            await overlayContainer.evaluate(({ style }) => (style.width = '650px'));
+            await page.waitForTimeout(100);
+
+            const hiddenCountWide = await getHiddenCount();
+
+            expect(hiddenCountWide).toBeLessThan(hiddenCountDefault);
+
+            // Narrow the container so more items overflow
+            await overlayContainer.evaluate(({ style }) => (style.width = '200px'));
+            await page.waitForTimeout(100);
+
+            const hiddenCountNarrow = await getHiddenCount();
+
+            expect(hiddenCountNarrow).toBeGreaterThan(hiddenCountWide);
+
+            // Restore to wide: items should reappear
+            await overlayContainer.evaluate(({ style }) => (style.width = '650px'));
+            await page.waitForTimeout(100);
+
+            expect(await getHiddenCount()).toBe(hiddenCountWide);
         });
     });
 });

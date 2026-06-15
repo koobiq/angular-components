@@ -15,7 +15,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { lastValueFrom } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
-import { KbqActionsPanelConfig } from './actions-panel-config';
+import { KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
 import { KbqActionsPanelRef } from './actions-panel-ref';
 import { KbqActionsPanelModule } from './module';
 
@@ -162,7 +162,7 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getOverlayPaneElement().style.maxWidth).toBe('500px');
     });
 
-    it('should apply maxHeight', () => {
+    it('should apply minWidth', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
 
         componentInstance.openFromTemplate({ minWidth: '50%' });
@@ -397,5 +397,72 @@ describe(KbqActionsPanelModule.name, () => {
         componentInstance.openFromTemplate();
 
         expect(getOverlayContainerElement().classList.contains(selector)).toBeTruthy();
+    });
+
+    it('should apply containerClass as array', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+
+        componentInstance.openFromTemplate({ containerClass: ['classA', 'classB'] });
+        expect(getActionsPanelContainerElement().classList.contains('classA')).toBeTruthy();
+        expect(getActionsPanelContainerElement().classList.contains('classB')).toBeTruthy();
+    });
+
+    it('should apply overlayPanelClass as array', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+
+        componentInstance.openFromTemplate({ overlayPanelClass: ['classA', 'classB'] });
+        expect(getOverlayPaneElement().classList.contains('classA')).toBeTruthy();
+        expect(getOverlayPaneElement().classList.contains('classB')).toBeTruthy();
+    });
+
+    it('should close previously opened panel when opening a new one', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const { componentInstance } = fixture;
+
+        const firstRef = componentInstance.openFromTemplate();
+
+        expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
+
+        componentInstance.openFromTemplate();
+        await fixture.whenStable();
+
+        expect(firstRef.afterClosed).toBeDefined();
+        // New panel is now open
+        expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
+    });
+
+    it('should apply kbqActionsPanelDefaultConfigProvider', () => {
+        const { componentInstance } = createComponent(ActionsPanelController, [
+            kbqActionsPanelDefaultConfigProvider({ disableClose: true })
+        ]);
+
+        componentInstance.openFromTemplate();
+        expect(getActionsPanelCloseButton()).toBeNull();
+    });
+
+    it('should set maxWidth on overlay element when overlayContainer is provided', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const containerElement = componentInstance.elementRef.nativeElement;
+
+        jest.spyOn(containerElement, 'getBoundingClientRect').mockReturnValue({ width: 800 } as DOMRect);
+
+        const overlayContainer = { nativeElement: containerElement } as ElementRef<HTMLElement>;
+
+        componentInstance.openFromTemplate({ overlayContainer });
+
+        expect(getOverlayPaneElement().style.maxWidth).toBe('800px');
+    });
+
+    it('should ignore maxWidth config when overlayContainer is provided', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const containerElement = componentInstance.elementRef.nativeElement;
+
+        jest.spyOn(containerElement, 'getBoundingClientRect').mockReturnValue({ width: 800 } as DOMRect);
+
+        const overlayContainer = { nativeElement: containerElement } as ElementRef<HTMLElement>;
+
+        componentInstance.openFromTemplate({ overlayContainer, maxWidth: '999px' });
+
+        expect(getOverlayPaneElement().style.maxWidth).toBe('800px');
     });
 });

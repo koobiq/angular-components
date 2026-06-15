@@ -210,25 +210,33 @@ export class KbqOverflowItems {
         }
     > = {
         horizontal: {
-            containerSize: (element) => element.clientWidth,
+            containerSize: (element) => element.getBoundingClientRect().width,
             paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
             paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
             itemSize: (element) => {
                 const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
-                return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
+                return (
+                    element.getBoundingClientRect().width +
+                    (parseFloat(marginLeft) || 0) +
+                    (parseFloat(marginRight) || 0)
+                );
             },
             isCrossAxisExceeded: ({ clientHeight, scrollHeight }) => scrollHeight > clientHeight,
             flexDirection: 'row'
         },
         vertical: {
-            containerSize: (element) => element.clientHeight,
+            containerSize: (element) => element.getBoundingClientRect().height,
             paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
             paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
             itemSize: (element) => {
                 const { marginTop, marginBottom } = this.window.getComputedStyle(element);
 
-                return element.offsetHeight + (parseFloat(marginTop) || 0) + (parseFloat(marginBottom) || 0);
+                return (
+                    element.getBoundingClientRect().height +
+                    (parseFloat(marginTop) || 0) +
+                    (parseFloat(marginBottom) || 0)
+                );
             },
             isCrossAxisExceeded: ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth,
             flexDirection: 'column'
@@ -297,7 +305,13 @@ export class KbqOverflowItems {
         result?.hide();
         items.forEach((item) => item.show());
 
-        while (this.hasOverflown(container, items, result, orientation)) {
+        // Capture the container size once while all items are visible.
+        // The container may shrink as items are hidden (e.g. when the overlay is fit-content),
+        // so re-reading clientWidth each iteration would create a circular dependency where
+        // each hidden item reduces the threshold by the same amount, causing all items to be hidden.
+        const availableSize = this.getAvailableSize(container, orientation);
+
+        while (this.hasOverflown(availableSize, items, result, orientation)) {
             const itemToHide = reverseOverflowOrder
                 ? items.find(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible())
                 : this.findLast(items, ({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible());
@@ -333,22 +347,30 @@ export class KbqOverflowItems {
             .subscribe((wrap) => this.renderer.setStyle(this.element, 'flex-wrap', wrap));
     }
 
+    private getAvailableSize(container: HTMLElement, orientation: KbqOrientation): number {
+        if (this.wrap() === 'wrap') return 0;
+
+        const { containerSize, paddingStart, paddingEnd } = this.orientationConfig[orientation];
+        const computedStyle = this.window.getComputedStyle(container);
+
+        return containerSize(container) - paddingStart(computedStyle) - paddingEnd(computedStyle);
+    }
+
     private hasOverflown(
-        container: HTMLElement,
+        availableSize: number,
         items: ReadonlyArray<KbqOverflowItem>,
         result: KbqOverflowItemsResult | undefined,
         orientation: KbqOrientation
     ): boolean {
-        if (this.wrap() === 'wrap') return this.orientationConfig[orientation].isCrossAxisExceeded(container);
+        if (this.wrap() === 'wrap') {
+            return this.orientationConfig[orientation].isCrossAxisExceeded(this.element);
+        }
 
-        const { containerSize, paddingStart, paddingEnd, itemSize } = this.orientationConfig[orientation];
-        const computedStyle = this.window.getComputedStyle(container);
-        const containerSizeWithoutPaddings =
-            containerSize(container) - paddingStart(computedStyle) - paddingEnd(computedStyle);
+        const { itemSize } = this.orientationConfig[orientation];
         const itemsSize = items.reduce((size, item) => size + (item.hidden() ? 0 : itemSize(item.element)), 0);
         const resultSize = !result || result.hidden() ? 0 : itemSize(result.element);
 
-        return itemsSize + resultSize > containerSizeWithoutPaddings;
+        return itemsSize + resultSize > availableSize;
     }
 
     /**
