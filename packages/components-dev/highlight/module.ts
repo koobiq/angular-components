@@ -65,8 +65,6 @@ export class DevApp {
     );
 
     private filter(value: string | null, source: string[]): string[] {
-        return value
-            ? source.filter((option) => option.toLowerCase().includes(value.toLowerCase()))
-            : source;
+        return value ? source.filter((option) => option.toLowerCase().includes(value.toLowerCase())) : source;
     }
 }
