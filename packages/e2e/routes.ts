@@ -43,6 +43,8 @@ import { E2eModalStates } from '../components/modal/e2e';
 import { E2eHorizontalNavbarStates, E2eVerticalNavbarStates } from '../components/navbar/e2e';
 import { E2eNotificationCenterStates } from '../components/notification-center/e2e';
 import {
+    E2eOverflowItemsAdditionalTargets,
+    E2eOverflowItemsDynamic,
     E2eOverflowItemsHorizontal,
     E2eOverflowItemsOrdered,
     E2eOverflowItemsVertical
@@ -214,9 +216,11 @@ const components = [
     E2eFormHorizontal,
     E2eTypographyStyles,
     E2eTreeTwoLineNode,
+    E2eOverflowItemsAdditionalTargets,
     E2eOverflowItemsHorizontal,
     E2eOverflowItemsVertical,
-    E2eOverflowItemsOrdered
+    E2eOverflowItemsOrdered,
+    E2eOverflowItemsDynamic
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {
