@@ -1,28 +1,28 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqHighlightModule } from '@koobiq/components/core';
+import { KbqHighlightPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
+import { KbqSelectModule } from '@koobiq/components/select';
 import { map, startWith } from 'rxjs/operators';
 
 /**
- * @title Select search
+ * @title Highlight in select
  */
 @Component({
-    selector: 'select-search-example',
+    selector: 'highlight-select-example',
     imports: [
         KbqSelectModule,
         KbqIconModule,
         KbqInputModule,
         AsyncPipe,
         ReactiveFormsModule,
-        KbqHighlightModule
+        KbqHighlightPipe
     ],
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder">
+            <kbq-select placeholder="Choose a club">
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
@@ -43,21 +43,26 @@ import { map, startWith } from 'rxjs/operators';
         :host {
             display: flex;
             justify-content: center;
-            padding: var(--kbq-size-l);
         }
 
         .kbq-form-field-type-select {
             width: 320px;
         }
     `,
-    providers: [
-        kbqSelectOptionsProvider({ searchMinOptionsThreshold: 'auto' })
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectSearchExample {
-    readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
-    readonly searchControl = new FormControl();
+export class HighlightSelectExample {
+    readonly options = [
+        'Manchester United',
+        'Manchester 62 FC',
+        'FC United of Manchester',
+        'Manchester United Reserves',
+        'Manchester United U23',
+        'Manchester United U19',
+        'Manchester United Academy',
+        'Manchester United Women (W)'
+    ];
+    readonly searchControl = new FormControl('');
     readonly filteredOptions = this.searchControl.valueChanges.pipe(
         startWith(''),
         map((query) => this.search(query))

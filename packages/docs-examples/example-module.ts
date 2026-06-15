@@ -2355,6 +2355,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "vertical-form-example.ts",
     "importPath": "components/forms"
   },
+  "highlight-background-complex": {
+    "packagePath": "components/highlight/highlight-background-complex",
+    "title": "Highlight in complex content",
+    "componentName": "HighlightBackgroundComplexExample",
+    "files": [
+      "highlight-background-complex-example.ts"
+    ],
+    "selector": "highlight-background-complex-example",
+    "additionalComponents": [],
+    "primaryFile": "highlight-background-complex-example.ts",
+    "importPath": "components/highlight"
+  },
+  "highlight-background-table": {
+    "packagePath": "components/highlight/highlight-background-table",
+    "title": "Highlight in table",
+    "componentName": "HighlightBackgroundTableExample",
+    "files": [
+      "highlight-background-table-example.ts"
+    ],
+    "selector": "highlight-background-table-example",
+    "additionalComponents": [],
+    "primaryFile": "highlight-background-table-example.ts",
+    "importPath": "components/highlight"
+  },
+  "highlight-background": {
+    "packagePath": "components/highlight/highlight-background",
+    "title": "Highlight with background color",
+    "componentName": "HighlightBackgroundExample",
+    "files": [
+      "highlight-background-example.ts"
+    ],
+    "selector": "highlight-background-example",
+    "additionalComponents": [],
+    "primaryFile": "highlight-background-example.ts",
+    "importPath": "components/highlight"
+  },
+  "highlight-select": {
+    "packagePath": "components/highlight/highlight-select",
+    "title": "Highlight in select",
+    "componentName": "HighlightSelectExample",
+    "files": [
+      "highlight-select-example.ts"
+    ],
+    "selector": "highlight-select-example",
+    "additionalComponents": [],
+    "primaryFile": "highlight-select-example.ts",
+    "importPath": "components/highlight"
+  },
   "icon-button-custom-size": {
     "packagePath": "components/icon/icon-button-custom size",
     "title": "Icon-button custom size",
@@ -2914,6 +2962,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-visited-example",
     "additionalComponents": [],
     "primaryFile": "link-visited-example.ts",
+    "importPath": "components/link"
+  },
+  "link-with-caption": {
+    "packagePath": "components/link/link-with-caption",
+    "title": "Link with caption",
+    "componentName": "LinkWithCaptionExample",
+    "files": [
+      "link-with-caption-example.ts"
+    ],
+    "selector": "link-with-caption-example",
+    "additionalComponents": [],
+    "primaryFile": "link-with-caption-example.ts",
     "importPath": "components/link"
   },
   "list-action-button": {
@@ -6669,6 +6729,14 @@ return import('@koobiq/docs-examples/components/forms');
 return import('@koobiq/docs-examples/components/forms');
   case 'vertical-form':
 return import('@koobiq/docs-examples/components/forms');
+  case 'highlight-background-complex':
+return import('@koobiq/docs-examples/components/highlight');
+  case 'highlight-background-table':
+return import('@koobiq/docs-examples/components/highlight');
+  case 'highlight-background':
+return import('@koobiq/docs-examples/components/highlight');
+  case 'highlight-select':
+return import('@koobiq/docs-examples/components/highlight');
   case 'icon-button-custom-size':
 return import('@koobiq/docs-examples/components/icon');
   case 'icon-button-overview':
@@ -6760,6 +6828,8 @@ return import('@koobiq/docs-examples/components/link');
   case 'link-target-blank':
 return import('@koobiq/docs-examples/components/link');
   case 'link-visited':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-with-caption':
 return import('@koobiq/docs-examples/components/link');
   case 'list-action-button':
 return import('@koobiq/docs-examples/components/list');

@@ -222,6 +222,7 @@
         "dev:flex-layout": "ng serve dev-flex-layout --port 3003",
         "dev:form-field": "ng serve dev-form-field --port 3003",
         "dev:forms": "ng serve dev-forms --port 3003",
+        "dev:highlight": "ng serve dev-highlight --port 3003",
         "dev:hint": "ng serve dev-hint --port 3003",
         "dev:icon": "ng serve dev-icon --port 3003",
         "dev:icon-item": "ng serve dev-icon-item --port 3003",
