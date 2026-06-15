@@ -9,6 +9,7 @@ import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import * as _koobiq_components_core from '@koobiq/components/core';
 
 // @public (undocumented)
@@ -31,6 +32,7 @@ export class KbqContentPanelAside {
 // @public (undocumented)
 export class KbqContentPanelBody {
     readonly overflowContainer: i0.Signal<KbqOverflowShadowContainer>;
+    readonly scrollbar: i0.Signal<KbqScrollbar>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelBody, "kbq-content-panel-body", ["kbqContentPanelBody"], {}, {}, never, ["*"], true, never>;
     // (undocumented)

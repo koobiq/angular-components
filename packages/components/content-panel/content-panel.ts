@@ -24,7 +24,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
 
 const KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION = trigger('contentAnimation', [
@@ -154,9 +154,9 @@ export class KbqContentPanelHeader {
     exportAs: 'kbqContentPanelBody'
 })
 export class KbqContentPanelBody {
-    /**
-     * @docs-private
-     */
+    /** @docs-private */
+    readonly scrollbar = viewChild.required(KbqScrollbar);
+    /** @docs-private */
     readonly overflowContainer = viewChild.required(KbqOverflowShadowContainer);
 }
 
