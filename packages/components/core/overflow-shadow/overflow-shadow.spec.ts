@@ -1,6 +1,7 @@
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { ChangeDetectionStrategy, Component, Directive, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
     KBQ_OVERFLOW_SHADOW_SOURCE,
     KbqOverflowShadowBottom,
@@ -37,6 +38,32 @@ const setScrollMetrics = (
         Object.defineProperty(el, 'scrollHeight', { configurable: true, value: metrics.scrollHeight });
     }
 };
+
+/**
+ * Minimal `SharedResizeObserver` stand-in: records observed elements and lets a test emit a
+ * resize for a specific element to trigger the directive's `checkOverflow()`.
+ */
+class MockSharedResizeObserver {
+    readonly observed: Element[] = [];
+    private readonly subjects = new Map<Element, Subject<ResizeObserverEntry[]>>();
+
+    observe(target: Element): Observable<ResizeObserverEntry[]> {
+        this.observed.push(target);
+
+        let subject = this.subjects.get(target);
+
+        if (!subject) {
+            subject = new Subject<ResizeObserverEntry[]>();
+            this.subjects.set(target, subject);
+        }
+
+        return subject.asObservable();
+    }
+
+    emit(target: Element): void {
+        this.subjects.get(target)?.next([]);
+    }
+}
 
 @Component({
     selector: 'test-overflow-shadow-host',
@@ -243,41 +270,21 @@ describe(KbqOverflowShadowContainer.name, () => {
         });
     });
 
-    describe('ResizeObserver', () => {
+    describe('SharedResizeObserver', () => {
         it('should re-check overflow when the scroll source is resized', () => {
-            const observed: Element[] = [];
-            const callbacks: ResizeObserverCallback[] = [];
+            const resizeObserver = new MockSharedResizeObserver();
+            const fixture = createComponent(TestHostComponent, [
+                { provide: SharedResizeObserver, useValue: resizeObserver }
+            ]);
+            const body = fixture.debugElement.nativeElement.querySelector('[data-testid="body"]') as HTMLElement;
 
-            class MockResizeObserver {
-                constructor(callback: ResizeObserverCallback) {
-                    callbacks.push(callback);
-                }
-                observe(target: Element): void {
-                    observed.push(target);
-                }
-                unobserve(): void {}
-                disconnect(): void {}
-            }
+            expect(resizeObserver.observed).toContain(body);
 
-            const original = (globalThis as { ResizeObserver?: typeof ResizeObserver }).ResizeObserver;
+            setScrollMetrics(body, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            resizeObserver.emit(body);
+            fixture.detectChanges();
 
-            (globalThis as { ResizeObserver?: typeof ResizeObserver }).ResizeObserver =
-                MockResizeObserver as unknown as typeof ResizeObserver;
-
-            try {
-                const fixture = createComponent(TestHostComponent);
-                const body = fixture.debugElement.nativeElement.querySelector('[data-testid="body"]') as HTMLElement;
-
-                expect(observed).toContain(body);
-
-                setScrollMetrics(body, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
-                callbacks[callbacks.length - 1]([], {} as ResizeObserver);
-                fixture.detectChanges();
-
-                expect(fixture.componentInstance.container().overflow()).toEqual({ top: false, bottom: true });
-            } finally {
-                (globalThis as { ResizeObserver?: typeof ResizeObserver }).ResizeObserver = original;
-            }
+            expect(fixture.componentInstance.container().overflow()).toEqual({ top: false, bottom: true });
         });
     });
 
@@ -297,29 +304,13 @@ describe(KbqOverflowShadowContainer.name, () => {
         });
 
         it('should observe the external source element for resize', () => {
-            const observed: Element[] = [];
+            const resizeObserver = new MockSharedResizeObserver();
 
-            class MockResizeObserver {
-                constructor(_callback: ResizeObserverCallback) {}
-                observe(target: Element): void {
-                    observed.push(target);
-                }
-                unobserve(): void {}
-                disconnect(): void {}
-            }
+            createComponent(TestHostExternalSourceComponent, [
+                { provide: SharedResizeObserver, useValue: resizeObserver }
+            ]);
 
-            const original = (globalThis as { ResizeObserver?: typeof ResizeObserver }).ResizeObserver;
-
-            (globalThis as { ResizeObserver?: typeof ResizeObserver }).ResizeObserver =
-                MockResizeObserver as unknown as typeof ResizeObserver;
-
-            try {
-                createComponent(TestHostExternalSourceComponent);
-
-                expect(observed).toContain(externalSource.element);
-            } finally {
-                (globalThis as { ResizeObserver?: typeof ResizeObserver }).ResizeObserver = original;
-            }
+            expect(resizeObserver.observed).toContain(externalSource.element);
         });
     });
 

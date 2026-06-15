@@ -113,7 +113,7 @@ export class KbqContentPanelHeaderActions {}
     host: {
         class: 'kbq-content-panel-header',
         '[style.box-shadow]':
-            'contentPanel?.bodyOverflow()?.top ? "var(--kbq-content-panel-header-overflow-box-shadow)" : null'
+            'contentPanel.bodyOverflow().top ? "var(--kbq-content-panel-header-overflow-box-shadow)" : null'
     }
 })
 export class KbqContentPanelHeader {
@@ -122,7 +122,7 @@ export class KbqContentPanelHeader {
      */
     protected readonly contentPanelContainer = inject(KbqContentPanelContainer);
     /** @docs-private */
-    protected readonly contentPanel = inject(KbqContentPanel, { optional: true });
+    protected readonly contentPanel = inject(KbqContentPanel);
     /**
      * @docs-private
      */
@@ -171,12 +171,12 @@ export class KbqContentPanelBody {
     host: {
         class: 'kbq-content-panel-footer',
         '[style.box-shadow]':
-            'contentPanel?.bodyOverflow()?.bottom ? "var(--kbq-content-panel-footer-overflow-box-shadow)" : null'
+            'contentPanel.bodyOverflow().bottom ? "var(--kbq-content-panel-footer-overflow-box-shadow)" : null'
     }
 })
 export class KbqContentPanelFooter {
     /** @docs-private */
-    protected readonly contentPanel = inject(KbqContentPanel, { optional: true });
+    protected readonly contentPanel = inject(KbqContentPanel);
 }
 
 @Component({

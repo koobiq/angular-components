@@ -1,3 +1,4 @@
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
     afterNextRender,
     DestroyRef,
@@ -49,9 +50,11 @@ export const KBQ_OVERFLOW_SHADOW_SOURCE = new InjectionToken<KbqOverflowShadowSo
  * host's DI, that source is used; otherwise the native `scroll` event on the host element
  * is observed.
  *
- * In addition to scroll events, the directive observes scroll source size changes via
- * `ResizeObserver` — this covers cases where layout changes without a scroll (modal open
- * animation, dynamic content load, window resize).
+ * In addition to scroll events, the directive observes the scroll source's box-size changes
+ * via CDK's `SharedResizeObserver` — this covers layout changes that happen without a scroll
+ * and alter the viewport size (modal open/close animation, window resize, reflow that resizes
+ * the element). Content that only grows `scrollHeight` without changing the element's box size
+ * is not detected by the resize observer; call `checkOverflow()` manually for those cases.
  */
 @Directive({
     selector: '[kbqOverflowShadowContainer]',
@@ -61,6 +64,7 @@ export class KbqOverflowShadowContainer implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly hostElement = kbqInjectNativeElement();
     private readonly externalSource = inject(KBQ_OVERFLOW_SHADOW_SOURCE, { optional: true, self: true });
+    private readonly sharedResizeObserver = inject(SharedResizeObserver);
 
     /** Optional debounce for scroll events, in milliseconds. Default is 0. */
     readonly debounce = input(0, { transform: numberAttribute });
@@ -68,15 +72,11 @@ export class KbqOverflowShadowContainer implements OnInit {
     /** Current shadow state. Updated on every scroll event. */
     readonly overflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
 
-    private resizeObserver: ResizeObserver | null = null;
-
     constructor() {
         afterNextRender(() => {
             this.checkOverflow();
             this.observeResize();
         });
-
-        this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
     }
 
     ngOnInit(): void {
@@ -91,9 +91,9 @@ export class KbqOverflowShadowContainer implements OnInit {
 
     /**
      * Force-rechecks overflow and updates the signal. Calling this manually is normally not
-     * necessary — scroll events plus `ResizeObserver` cover the standard scenarios. Kept for
-     * rare cases when external code knows about a layout change more precisely than the
-     * browser observers.
+     * necessary — scroll events plus `SharedResizeObserver` cover the standard scenarios. Kept
+     * for rare cases when external code knows about a layout change more precisely than the
+     * browser observers (e.g. content that only grows `scrollHeight`).
      */
     checkOverflow(): void {
         const source = this.getScrollSource();
@@ -116,14 +116,14 @@ export class KbqOverflowShadowContainer implements OnInit {
     }
 
     private observeResize(): void {
-        if (typeof ResizeObserver === 'undefined') return;
-
         const source = this.getScrollSource();
 
         if (!source) return;
 
-        this.resizeObserver = new ResizeObserver(() => this.checkOverflow());
-        this.resizeObserver.observe(source);
+        this.sharedResizeObserver
+            .observe(source)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.checkOverflow());
     }
 }
 

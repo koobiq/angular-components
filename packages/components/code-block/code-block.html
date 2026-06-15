@@ -1,6 +1,6 @@
 @let file = files[activeFileIndex];
 
-<div class="kbq-code-block__header">
+<div class="kbq-code-block__header" [kbqOverflowShadowTop]="codeBlockContent">
     @if (!hideTabs) {
         <div class="kbq-code-block__header-tabs">
             <div kbqTabNavBar transparent [tabNavPanel]="tabPanel">
@@ -91,8 +91,10 @@
 
 <div
     #tabPanel="kbqTabNavPanel"
+    #codeBlockContent="kbqOverflowShadowContainer"
     cdkMonitorElementFocus
     cdkScrollable
+    kbqOverflowShadowContainer
     kbqTabNavPanel
     class="kbq-code-block__main kbq-scrollbar"
     [style.max-height.px]="calculatedMaxHeight"

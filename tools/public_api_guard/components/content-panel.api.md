@@ -73,7 +73,7 @@ export class KbqContentPanelContainer {
 
 // @public (undocumented)
 export class KbqContentPanelFooter {
-    protected readonly contentPanel: KbqContentPanel | null;
+    protected readonly contentPanel: KbqContentPanel;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelFooter, "kbq-content-panel-footer", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
@@ -84,7 +84,7 @@ export class KbqContentPanelFooter {
 export class KbqContentPanelHeader {
     protected readonly buttonStyles: typeof KbqButtonStyles;
     protected readonly componentColors: typeof KbqComponentColors;
-    protected readonly contentPanel: KbqContentPanel | null;
+    protected readonly contentPanel: KbqContentPanel;
     protected readonly contentPanelContainer: KbqContentPanelContainer;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelHeader, "kbq-content-panel-header", never, {}, {}, never, ["[kbqContentPanelHeaderTitle]", "[kbqContentPanelHeaderActions]", "*"], true, never>;

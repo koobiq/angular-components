@@ -45,17 +45,20 @@
 </div>
 
 <div
-    #nc="kbqOverflowShadowContainer"
+    #notificationCenterContainer="kbqOverflowShadowContainer"
     kbq-scrollbar
     kbqOverflowShadowContainer
     class="kbq-notification-center-container"
-    [kbqOverflowShadowBottom]="nc"
+    [kbqOverflowShadowBottom]="notificationCenterContainer"
     [shadow]="'var(--kbq-shadow-overflow-normal-bottom)'"
 >
     @if (!service.errorMode.value) {
         @if (!service.loadingMode.value) {
             @for (group of service.groupedItems | async; track group) {
-                <div class="kbq-notification-center-sub-header" [kbqOverflowShadowTop]="$first ? nc : undefined">
+                <div
+                    class="kbq-notification-center-sub-header"
+                    [kbqOverflowShadowTop]="$first ? notificationCenterContainer : undefined"
+                >
                     <div class="kbq-notification-center-sub-header__date">{{ group.title }}</div>
 
                     <button
