@@ -34,7 +34,7 @@ export function getKbqFormFieldMissingControlError(): Error;
 export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error;
 
 // @public (undocumented)
-export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint>) => boolean;
+export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint> | readonly KbqPasswordHint[]) => boolean;
 
 // @public
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{

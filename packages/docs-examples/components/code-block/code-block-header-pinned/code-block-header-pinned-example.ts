@@ -22,7 +22,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     template: `
         <kbq-code-block
             canToggleSoftWrap
-            [lineNumbers
+            lineNumbers
             filled
             [canDownload]="true"
             [files]="files"
@@ -34,7 +34,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 
         <kbq-code-block
             canToggleSoftWrap
-            [lineNumbers
+            lineNumbers
             [canDownload]="true"
             [softWrap]="true"
             [files]="files"

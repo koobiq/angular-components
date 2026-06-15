@@ -101,6 +101,9 @@ export class KbqCodeBlockTabLinkContent {}
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-code-block',
+        // highlight.js rewrites the <code> subtree on the client (and builds a <table> for line numbers),
+        // which never matches the server-rendered DOM — skip hydration for this component to avoid NG0500.
+        ngSkipHydration: 'true',
         '[class.kbq-code-block_filled]': 'filled()',
         '[class.kbq-code-block_outline]': '!filled()',
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers()',

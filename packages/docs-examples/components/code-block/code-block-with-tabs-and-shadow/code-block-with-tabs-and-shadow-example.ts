@@ -14,7 +14,7 @@ import {
     imports: [KbqCodeBlockModule],
     template: `
         <kbq-code-block
-            [lineNumbers
+            lineNumbers
             canToggleSoftWrap
             [activeFileIndex]="2"
             [softWrap]="true"

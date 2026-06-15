@@ -33,8 +33,10 @@ export const regExpPasswordValidator = {
     [PasswordRules.LatinAndSpecialSymbols]: RegExp(/[^ !`"'#№$%&()*+,-./\\:;<=>?@[\]^_{|}~A-Za-z0-9]/)
 };
 
-export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHint>): boolean => {
-    return passwordHints.some((hint) => hint.hasError);
+export const hasPasswordStrengthError = (
+    passwordHints: QueryList<KbqPasswordHint> | readonly KbqPasswordHint[]
+): boolean => {
+    return passwordHints.some((hint: KbqPasswordHint) => hint.hasError);
 };
 
 @Component({
