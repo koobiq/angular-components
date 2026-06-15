@@ -307,7 +307,7 @@ export class KbqOverflowItems {
 
         // Capture the container size once while all items are visible.
         // The container may shrink as items are hidden (e.g. when the overlay is fit-content),
-        // so re-reading clientWidth each iteration would create a circular dependency where
+        // so re-reading the container size each iteration would create a circular dependency where
         // each hidden item reduces the threshold by the same amount, causing all items to be hidden.
         const availableSize = this.getAvailableSize(container, orientation);
 
