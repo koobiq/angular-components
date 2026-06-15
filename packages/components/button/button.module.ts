@@ -3,7 +3,7 @@ import { ObserversModule } from '@angular/cdk/observers';
 import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
 import { KbqButtonGroup, KbqButtonGroupRoot } from './button-group';
-import { KbqButtonLeftIcon, KbqButtonRightIcon } from './button-icon';
+import { KbqButtonPrefix, KbqButtonSuffix } from './button-slots';
 import { KbqButton, KbqButtonCssStyler } from './button.component';
 import { KbqButtonDropdownTrigger } from './button.dropdown-trigger.directive';
 
@@ -15,16 +15,16 @@ import { KbqButtonDropdownTrigger } from './button.dropdown-trigger.directive';
         KbqButtonDropdownTrigger,
         KbqButton,
         KbqButtonCssStyler,
-        KbqButtonLeftIcon,
-        KbqButtonRightIcon,
+        KbqButtonPrefix,
+        KbqButtonSuffix,
         KbqButtonGroup,
         KbqButtonGroupRoot
     ],
     exports: [
         KbqButton,
         KbqButtonCssStyler,
-        KbqButtonLeftIcon,
-        KbqButtonRightIcon,
+        KbqButtonPrefix,
+        KbqButtonSuffix,
         KbqButtonDropdownTrigger,
         KbqButtonGroup,
         KbqButtonGroupRoot

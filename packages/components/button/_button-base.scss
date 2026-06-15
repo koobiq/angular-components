@@ -68,4 +68,12 @@
     & .kbq-icon_right {
         margin-left: var(--kbq-button-size-content-padding);
     }
+
+    & .kbq-button-prefix {
+        margin-right: var(--kbq-button-size-content-padding);
+    }
+
+    & .kbq-button-suffix {
+        margin-left: var(--kbq-button-size-content-padding);
+    }
 }

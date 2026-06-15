@@ -419,22 +419,23 @@ describe('Button with icon', () => {
     });
 });
 
-describe('Button with explicit icon slots', () => {
+describe('Button with explicit prefix/suffix slots', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 KbqButtonModule,
                 KbqIconModule,
-                KbqButtonLeftIconSlotReorderTestApp,
-                KbqButtonRightIconSlotReorderTestApp,
-                KbqButtonLeftRightIconSlotTestApp,
-                KbqButtonTwoIconsSlotTestApp
+                KbqButtonPrefixSlotReorderTestApp,
+                KbqButtonSuffixSlotReorderTestApp,
+                KbqButtonPrefixSuffixSlotTestApp,
+                KbqButtonTwoIconsSlotTestApp,
+                KbqButtonNonIconSlotsTestApp
             ]
         }).compileComponents();
     });
 
-    it('should mark a [kbqButtonLeftIcon] as the left icon even when written after the text', () => {
-        const fixture = TestBed.createComponent(KbqButtonLeftIconSlotReorderTestApp);
+    it('should project [kbqButtonPrefix] into the leading slot even when written after the text', () => {
+        const fixture = TestBed.createComponent(KbqButtonPrefixSlotReorderTestApp);
 
         fixture.detectChanges();
 
@@ -453,8 +454,8 @@ describe('Button with explicit icon slots', () => {
         expect(host.classList.contains('kbq-button-icon')).toBeFalsy();
     });
 
-    it('should mark a [kbqButtonRightIcon] as the right icon even when written before the text', () => {
-        const fixture = TestBed.createComponent(KbqButtonRightIconSlotReorderTestApp);
+    it('should project [kbqButtonSuffix] into the trailing slot even when written before the text', () => {
+        const fixture = TestBed.createComponent(KbqButtonSuffixSlotReorderTestApp);
 
         fixture.detectChanges();
 
@@ -469,7 +470,7 @@ describe('Button with explicit icon slots', () => {
     });
 
     it('should place icons into the left/right slots regardless of their source order', () => {
-        const fixture = TestBed.createComponent(KbqButtonLeftRightIconSlotTestApp);
+        const fixture = TestBed.createComponent(KbqButtonPrefixSuffixSlotTestApp);
 
         fixture.detectChanges();
 
@@ -502,6 +503,19 @@ describe('Button with explicit icon slots', () => {
         expect(host.classList.contains(buttonLeftIconClassName)).toBeTruthy();
         expect(host.classList.contains(buttonRightIconClassName)).toBeTruthy();
     });
+
+    it('should give non-icon slot content the prefix/suffix host class so it is spaced from the text', () => {
+        const fixture = TestBed.createComponent(KbqButtonNonIconSlotsTestApp);
+
+        fixture.detectChanges();
+
+        const prefix = fixture.debugElement.query(By.css('#prefix')).nativeElement;
+        const suffix = fixture.debugElement.query(By.css('#suffix')).nativeElement;
+
+        // the slot markers no longer depend on KbqIcon: arbitrary content carries its own spacing class
+        expect(prefix.classList.contains('kbq-button-prefix')).toBeTruthy();
+        expect(suffix.classList.contains('kbq-button-suffix')).toBeTruthy();
+    });
 });
 
 describe('Button text container', () => {
@@ -510,14 +524,14 @@ describe('Button text container', () => {
             imports: [
                 KbqButtonModule,
                 KbqIconModule,
-                KbqButtonLeftRightIconSlotTestApp,
+                KbqButtonPrefixSuffixSlotTestApp,
                 KbqButtonHtmlIconLeftCaseTestApp
             ]
         }).compileComponents();
     });
 
     it('should keep the text in .kbq-button-text and the marker-slot icons outside of it', () => {
-        const fixture = TestBed.createComponent(KbqButtonLeftRightIconSlotTestApp);
+        const fixture = TestBed.createComponent(KbqButtonPrefixSuffixSlotTestApp);
 
         fixture.detectChanges();
 
@@ -957,53 +971,66 @@ class DynamicChildrenTestComponent {
 }
 
 @Component({
-    selector: 'kbq-button-left-icon-slot-reorder-test-app',
+    selector: 'kbq-button-prefix-slot-reorder-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
             Some text
-            <i id="left-icon" kbqButtonLeftIcon kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="left-icon" kbqButtonPrefix kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
     `
 })
-class KbqButtonLeftIconSlotReorderTestApp {}
+class KbqButtonPrefixSlotReorderTestApp {}
 
 @Component({
-    selector: 'kbq-button-right-icon-slot-reorder-test-app',
+    selector: 'kbq-button-suffix-slot-reorder-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
-            <i id="right-icon" kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="right-icon" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
             Some text
         </button>
     `
 })
-class KbqButtonRightIconSlotReorderTestApp {}
+class KbqButtonSuffixSlotReorderTestApp {}
 
 @Component({
-    selector: 'kbq-button-left-right-icon-slot-test-app',
+    selector: 'kbq-button-prefix-suffix-slot-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
-            <i id="right-icon" kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="right-icon" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
             Some text
-            <i id="left-icon" kbqButtonLeftIcon kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="left-icon" kbqButtonPrefix kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
     `
 })
-class KbqButtonLeftRightIconSlotTestApp {}
+class KbqButtonPrefixSuffixSlotTestApp {}
 
 @Component({
     selector: 'kbq-button-two-icons-slot-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
-            <i id="icon2" kbqButtonRightIcon kbq-icon="kbq-chevron-down-s_16"></i>
-            <i id="icon1" kbqButtonLeftIcon kbq-icon="kbq-play_16"></i>
+            <i id="icon2" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="icon1" kbqButtonPrefix kbq-icon="kbq-play_16"></i>
         </button>
     `
 })
 class KbqButtonTwoIconsSlotTestApp {}
+
+@Component({
+    selector: 'kbq-button-non-icon-slots-test-app',
+    imports: [KbqButtonModule],
+    template: `
+        <button kbq-button type="button">
+            <span id="prefix" kbqButtonPrefix>1</span>
+            Some text
+            <span id="suffix" kbqButtonSuffix>K</span>
+        </button>
+    `
+})
+class KbqButtonNonIconSlotsTestApp {}
 
 @Component({
     selector: 'styler-only-test-app',

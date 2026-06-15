@@ -4,9 +4,9 @@
     [cdkObserveContentDisabled]="!styler.icons().length"
     (cdkObserveContent)="projectContentChanged()"
 >
-    <ng-content select="[kbqButtonLeftIcon]" />
+    <ng-content select="[kbqButtonPrefix]" />
     <span #kbqTitleText class="kbq-button-text">
         <ng-content />
     </span>
-    <ng-content select="[kbqButtonRightIcon]" />
+    <ng-content select="[kbqButtonSuffix]" />
 </span>

@@ -43,9 +43,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Slots (order-independent)</div>
                 <button kbq-button [color]="colors.Contrast">
-                    <i kbqButtonRightIcon kbq-icon="kbq-plus_16"></i>
+                    <i kbqButtonSuffix kbq-icon="kbq-plus_16"></i>
                     Кнопка
-                    <i kbqButtonLeftIcon kbq-icon="kbq-plus_16"></i>
+                    <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
                 </button>
             </div>
         </div>
