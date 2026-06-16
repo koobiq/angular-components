@@ -8,9 +8,9 @@
     },
     "main": "./dist/cli.js",
     "engines": {
-        "node": ">=18.19",
-        "npm": ">=8",
-        "yarn": ">=1.22"
+        "node": ">=24.16",
+        "npm": ">=11",
+        "yarn": ">=4"
     },
     "keywords": [
         "development",

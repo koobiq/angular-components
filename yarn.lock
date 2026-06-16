@@ -8506,7 +8506,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:*, @types/eslint@npm:^9.0.0":
+"@types/eslint@npm:*":
   version: 9.6.1
   resolution: "@types/eslint@npm:9.6.1"
   dependencies:
@@ -17920,7 +17920,6 @@ __metadata:
     "@types/chalk": "npm:^2.2.0"
     "@types/conventional-changelog": "npm:^3.1.5"
     "@types/conventional-changelog-writer": "npm:^4.0.10"
-    "@types/eslint": "npm:^9.0.0"
     "@types/express": "npm:^4.17.21"
     "@types/fs-extra": "npm:^5.1.0"
     "@types/glob": "npm:^7.1.4"
@@ -17969,7 +17968,6 @@ __metadata:
     merge2: "npm:^1.2.3"
     moment: "npm:~2.29.2"
     ng-packagr: "npm:^20.3.2"
-    node-fetch: "npm:^3.3.1"
     nunjucks: "npm:^3.2.4"
     overlayscrollbars: "npm:2.7.3"
     path-normalize: "npm:^6.0.7"
@@ -19680,7 +19678,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^3.3.1, node-fetch@npm:^3.3.2":
+"node-fetch@npm:^3.3.2":
   version: 3.3.2
   resolution: "node-fetch@npm:3.3.2"
   dependencies:
