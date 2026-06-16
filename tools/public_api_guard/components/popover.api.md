@@ -21,6 +21,7 @@ import * as i5 from '@angular/cdk/observers';
 import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
@@ -67,8 +68,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
     readonly cdkTrapFocus: i0.Signal<CdkTrapFocus>;
     // (undocumented)
-    checkContentOverflow(contentElement: HTMLElement): void;
-    // (undocumented)
     protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
     elementRef: ElementRef;
@@ -79,19 +78,12 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
     header: string | TemplateRef<any>;
     // (undocumented)
-    isContentBottomOverflow: boolean;
-    // (undocumented)
-    isContentTopOverflow: boolean;
-    // (undocumented)
     isTrapFocus: boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    onContentChange(): void;
-    // (undocumented)
     onEscape(): void;
-    // (undocumented)
-    readonly popoverContent: i0.Signal<ElementRef<HTMLDivElement> | undefined>;
+    readonly overflowContainer: i0.Signal<KbqOverflowShadowContainer | undefined>;
     // (undocumented)
     prefix: string;
     // (undocumented)

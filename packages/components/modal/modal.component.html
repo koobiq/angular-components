@@ -51,7 +51,7 @@
 <!-- [Predefined] Default Modal Content -->
 <ng-template #tplContentDefault>
     @if (kbqTitle) {
-        <div kbq-title class="kbq-modal-header" [class.kbq-modal-body_top-overflow]="isTopOverflow">
+        <div kbq-title class="kbq-modal-header" [kbqOverflowShadowTop]="modalBodyOverflow">
             <div class="kbq-modal-title">
                 @switch (true) {
                     @case (isTemplateRef(kbqTitle)) {
@@ -75,7 +75,12 @@
             }
         </div>
     }
-    <div #modalBody class="kbq-modal-body kbq-scrollbar" [style]="kbqBodyStyle" (scroll)="checkOverflow()">
+    <div
+        #modalBodyOverflow="kbqOverflowShadowContainer"
+        kbqOverflowShadowContainer
+        class="kbq-modal-body kbq-scrollbar"
+        [style]="kbqBodyStyle"
+    >
         <ng-container #bodyContainer>
             @if (!isComponent(kbqContent)) {
                 @switch (true) {
@@ -93,7 +98,7 @@
         </ng-container>
     </div>
     @if (kbqFooter || kbqOkText || kbqCancelText) {
-        <div class="kbq-modal-footer" [class.kbq-modal-body_bottom-overflow]="isBottomOverflow">
+        <div class="kbq-modal-footer" [kbqOverflowShadowBottom]="modalBodyOverflow">
             @switch (true) {
                 @case (isTemplateRef(kbqFooter)) {
                     <ng-container [ngTemplateOutlet]="$any(kbqFooter)" />

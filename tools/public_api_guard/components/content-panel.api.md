@@ -7,12 +7,14 @@
 import * as i0 from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
+import * as _koobiq_components_core from '@koobiq/components/core';
 
 // @public (undocumented)
 export class KbqContentPanel {
-    constructor();
+    readonly bodyOverflow: i0.Signal<_koobiq_components_core.KbqOverflowShadowState>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["contentPanelBody"], ["kbq-content-panel-aside", "kbq-content-panel-header", "kbq-content-panel-body", "kbq-content-panel-footer"], true, never>;
     // (undocumented)
@@ -29,6 +31,7 @@ export class KbqContentPanelAside {
 
 // @public (undocumented)
 export class KbqContentPanelBody {
+    readonly overflowContainer: i0.Signal<KbqOverflowShadowContainer>;
     readonly scrollbar: i0.Signal<KbqScrollbar>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelBody, "kbq-content-panel-body", ["kbqContentPanelBody"], {}, {}, never, ["*"], true, never>;
@@ -70,6 +73,7 @@ export class KbqContentPanelContainer {
 
 // @public (undocumented)
 export class KbqContentPanelFooter {
+    protected readonly contentPanel: KbqContentPanel;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelFooter, "kbq-content-panel-footer", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
@@ -80,6 +84,7 @@ export class KbqContentPanelFooter {
 export class KbqContentPanelHeader {
     protected readonly buttonStyles: typeof KbqButtonStyles;
     protected readonly componentColors: typeof KbqComponentColors;
+    protected readonly contentPanel: KbqContentPanel;
     protected readonly contentPanelContainer: KbqContentPanelContainer;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelHeader, "kbq-content-panel-header", never, {}, {}, never, ["[kbqContentPanelHeaderTitle]", "[kbqContentPanelHeaderActions]", "*"], true, never>;

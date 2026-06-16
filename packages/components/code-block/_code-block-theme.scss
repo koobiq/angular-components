@@ -14,12 +14,6 @@
         background: var(--kbq-#{$base}-header-background);
     }
 
-    &.kbq-code-block_header-with-shadow {
-        & .kbq-code-block__header {
-            box-shadow: var(--kbq-#{$base}-header-scroll-shadow);
-        }
-    }
-
     &.kbq-code-block_hide-tabs {
         .kbq-code-block__actionbar {
             .kbq-code-block__actionbar__button-stack {

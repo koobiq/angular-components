@@ -38,6 +38,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqComponentColors,
+    KbqOverflowShadowBottom,
+    KbqOverflowShadowContainer,
+    KbqOverflowShadowTop,
     KbqPopUp,
     KbqPopUpPlacementValues,
     KbqPopUpSizeValues,
@@ -49,8 +52,7 @@ import {
     applyPopupMargins
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { EMPTY, NEVER, fromEvent, merge } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { NEVER, merge } from 'rxjs';
 import { kbqPopoverAnimations } from './popover-animations';
 
 export const defaultOffsetYWithArrow = 8;
@@ -62,7 +64,10 @@ export const defaultOffsetYWithArrow = 8;
         CdkObserveContent,
         KbqButtonModule,
         KbqIconModule,
-        CdkTrapFocus
+        CdkTrapFocus,
+        KbqOverflowShadowContainer,
+        KbqOverflowShadowTop,
+        KbqOverflowShadowBottom
     ],
     templateUrl: './popover.component.html',
     styleUrls: ['./popover.scss', './popover-tokens.scss'],
@@ -85,26 +90,13 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
 
-    readonly popoverContent = viewChild<ElementRef<HTMLDivElement>>('popoverContent');
     @ViewChild('popover') elementRef: ElementRef;
     readonly cdkTrapFocus = viewChild.required(CdkTrapFocus);
-
-    private debounceTime = 15;
-    isContentTopOverflow: boolean = false;
-    isContentBottomOverflow: boolean = false;
+    /** @docs-private */
+    readonly overflowContainer = viewChild(KbqOverflowShadowContainer);
 
     ngAfterViewInit() {
-        // visibleChange subscription must be set up before the early return so that programmatic
-        // popovers (where content is set after creation) also get the overflow check on show().
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
-            if (state) {
-                const popoverContent = this.popoverContent();
-
-                if (popoverContent) {
-                    this.checkContentOverflow(popoverContent.nativeElement);
-                }
-            }
-
             if (this.offset !== null && state && this.elementRef) {
                 applyPopupMargins(
                     this.renderer,
@@ -117,46 +109,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
             }
         });
 
-        // switchMap cancels the previous scroll subscription on each visibility change,
-        // so no flag is needed to prevent double subscriptions.
-        this.visibleChange
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                switchMap((state) => {
-                    const el = state ? this.popoverContent()?.nativeElement : null;
-
-                    return el ? fromEvent(el, 'scroll').pipe(debounceTime(this.debounceTime)) : EMPTY;
-                })
-            )
-            .subscribe((event) => {
-                this.checkContentOverflow(event.target as HTMLElement);
-            });
-
-        const popoverContent = this.popoverContent();
-
-        if (!popoverContent) return;
-
-        this.checkContentOverflow(popoverContent.nativeElement);
-
         this.cdkTrapFocus().focusTrap.focusFirstTabbableElement();
-    }
-
-    onContentChange() {
-        const popoverContent = this.popoverContent();
-
-        if (popoverContent) {
-            this.checkContentOverflow(popoverContent.nativeElement);
-        }
-    }
-
-    checkContentOverflow(contentElement: HTMLElement) {
-        const { scrollTop, offsetHeight, scrollHeight } = contentElement;
-
-        this.isContentTopOverflow = scrollTop > 0;
-
-        this.isContentBottomOverflow = Math.round(scrollTop + offsetHeight) < scrollHeight;
-
-        super.detectChanges();
     }
 
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {

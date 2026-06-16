@@ -37,6 +37,8 @@ import {
     KBQ_WINDOW,
     KbqCodeBlockLocaleConfiguration,
     KbqComponentColors,
+    KbqOverflowShadowContainer,
+    KbqOverflowShadowTop,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -89,7 +91,9 @@ export class KbqCodeBlockTabLinkContent {}
         CdkScrollableModule,
         KbqToolTipModule,
         KbqIconModule,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        KbqOverflowShadowContainer,
+        KbqOverflowShadowTop
     ],
     templateUrl: './code-block.html',
     styleUrls: ['./code-block.scss', './code-block-tokens.scss'],
@@ -334,7 +338,6 @@ export class KbqCodeBlock implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.handleScroll();
         this.trackHoverState();
         this.setupContentOverflowDetection();
 
@@ -466,33 +469,6 @@ export class KbqCodeBlock implements AfterViewInit {
             .observe(this.preElementRef().nativeElement)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(checkOverflow);
-    }
-
-    /**
-     * Handles the scroll event on the scrollable code content element and updates the header shadow accordingly.
-     */
-    private handleScroll(): void {
-        this.scrollableCodeContent()
-            .elementScrolled()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.setupHeaderShadow(this.scrollableCodeContent().measureScrollOffset('top') > 0);
-            });
-    }
-
-    /**
-     * Adds or removes the shadow class from the code block based on the specified condition.
-     *
-     * @param shouldShowShadow - A boolean indicating whether to add or remove the shadow class.
-     */
-    private setupHeaderShadow(shouldShowShadow: boolean): void {
-        const className = 'kbq-code-block_header-with-shadow';
-
-        if (shouldShowShadow) {
-            this.renderer.addClass(this.elementRef.nativeElement, className);
-        } else {
-            this.renderer.removeClass(this.elementRef.nativeElement, className);
-        }
     }
 
     /**
