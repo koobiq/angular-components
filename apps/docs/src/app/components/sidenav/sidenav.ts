@@ -65,9 +65,7 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
         data.push(
             new TreeNode(
                 id,
-                items
-                    .filter((item) => !item.hidden)
-                    .map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item, item.isNew)),
+                items.map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item, item.isNew)),
                 name,
                 TreeNodeType.Category
             )

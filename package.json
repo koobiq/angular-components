@@ -15,7 +15,7 @@
     "packageManager": "yarn@4.1.1",
     "requiredAngularVersion": ">=20.0.0",
     "engines": {
-        "node": ">=20.19"
+        "node": ">=24.16"
     },
     "dependencies": {
         "@angular/animations": "20.3.24",

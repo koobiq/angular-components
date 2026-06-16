@@ -144,7 +144,7 @@ ng g @koobiq/components:v20-upgrade --project <your project>
 
 **Модалки**: ModalOptions.kbqComponentParams → поле data + inject(KBQ_MODAL_DATA).
 
-**«Голый» атрибут больше не подвергается приведению типов**: `<kbq-code-block canDownload>` → `[canDownload]="true"`, `[freeRowsHeight]="160"`. Чтение enterDelay/arrow с инстанса триггера (tooltip/popover) → теперь вызовы сигналов: `trigger.enterDelay()`.
+**Code block**: устаревшие input `canLoad` / `codeFiles` переименованы в `canDownload` / `files`. Привязки в шаблонах схематик переписывает автоматически; программное обращение (`.canLoad`, `.codeFiles`) нужно поправить вручную.
 
 ### После миграции
 

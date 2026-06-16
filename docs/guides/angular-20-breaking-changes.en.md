@@ -2,65 +2,11 @@ These changes are part of **Koobiq v20.0.0** (2026-05-13) — the move to Angula
 
 ### Angular 20
 
-**Angular 20**. The library has been updated to Angular 20.3.21: requiredAngularVersion is now `^20.0.0`, and all peerDependencies of the published packages target `^20.0.0`. Consumers must upgrade to Angular 20+. The minimum Node.js version is **20.19** (added `"engines": { "node": ">=20.19" }`), and zone.js has been downgraded to `~0.15.1` to match Angular 20's peer requirement.
+**Angular 20**. The library has been updated to Angular 20: `requiredAngularVersion` is now `^20.0.0`, and all `peerDependencies` of the published packages target `^20.0.0`. Consumers must upgrade to Angular 20+. The minimum Node.js version is **24.16** and `zone.js` is aligned with Angular 20's peer requirement.
 
-**Popup trigger**. Switched to `Signal<T>` for enterDelay, leaveDelay, stickToWindow, container, hideWithTimeout, preventClose, and arrow, so that existing signal-input overrides in subclasses pass type checking. Consumers reading these values from a trigger instance must call them as signals (`.enterDelay()`, etc.).
+**Code block**. The deprecated `canLoad` input has been renamed to `canDownload`, and `codeFiles` to `files`. The old names still work (marked `@deprecated`) but will be removed in the next major release. The `v20-upgrade` schematic rewrites the template bindings (`[canLoad]` → `[canDownload]`, `[codeFiles]` → `[files]`) automatically and warns about programmatic `.canLoad` / `.codeFiles` access that must be updated by hand.
 
-**Popover**. The runtime-broken `set trigger(value)` mutation for hideWithTimeout/leaveDelay has been replaced with writable backing signals; leaveDelay is now a computed signal that combines user input with the default 500ms value for hover mode.
-
-**Form field**. A number of properties have been reverted to plain @Input primitives — they conflict with the interface types (CanUpdateErrorState, KbqFormFieldControl, KbqTagTextControl) that expect raw values. Template bindings via aliases remain unchanged. The following properties are affected:
-
-- KbqInput.placeholder
-- KbqInput.errorStateMatcher
-- KbqInputPassword.placeholder
-- KbqInputPassword.errorStateMatcher
-- KbqTextarea.placeholder
-- KbqTextarea.errorStateMatcher
-- KbqSelect.errorStateMatcher
-- KbqTagList.errorStateMatcher
-- KbqTreeSelect.errorStateMatcher
-- KbqSingleFileUploadComponent.errorStateMatcher
-- KbqMultipleFileUploadComponent.errorStateMatcher
-- KbqTagInput.placeholder/id
-
-**Code block**. The softWrap, viewAll, canDownload, and activeFileIndex fields have become model signals (writable + bindable) — the bare shorthand `<kbq-code-block canDownload>` is no longer coerced, so use `[canDownload]="true"`, `[activeFileIndex]="1"`, etc.
-
-**Textarea**. freeRowsHeight has become a model signal: the bare shorthand is not supported, use `[freeRowsHeight]="160"`.
-
-**Search expandable, DL, Radio, Checkbox, Toggle, Sidepanel**. The isOpened, vertical, name, id, and sidepanelResult fields have become model signals — internally use `.set()` / `.update()`; two-way binding `[(x)]` from the outside works.
-
-**Modal**. The following members have been reverted to plain @Input/@Output to match the component's ModalOptions (the programmatic API via KbqModalService is unchanged):
-
-- kbqOkText,
-- kbqOkType,
-- kbqRestoreFocus,
-- kbqCancelText,
-- kbqModalType,
-- kbqComponent,
-- kbqContent,
-- kbqComponentParams,
-- kbqFooter,
-- kbqWidth,
-- kbqSize,
-- kbqWrapClassName,
-- kbqClassName,
-- kbqStyle,
-- kbqTitle,
-- kbqCloseByESC,
-- kbqOnOk,
-- kbqOnCancel.
-
-**Notification center, App switcher**. The signal-input placement overrides (which conflicted with KbqPopUpTrigger.placement) have been removed — placement is again configured through the @Input getter/setter pattern that delegates to super.updatePlacement(...). In both, arrow is now `Signal<boolean>` (matching the base class's new contract).
-
-**Tabs**. KbqPaginatedTabHeader.disablePagination is now a computed that combines user input with a writable fallback set by the vertical setter. KbqTabGroupComponent.animationDuration is a computed resolving user input → the KBQ_TABS_CONFIG default → `'0ms'`. KbqTabLink.disabled has been reverted to a plain @Input (matching FocusableOption.disabled).
-
-**Dropdown**. KbqDropdown.backdropClass has been reverted to an @Input to match the KbqDropdownPanel interface; the KbqDropdownContent constructor no longer accepts ComponentFactoryResolver (removed in Angular 20).
-
-**Input number**. Coercion via `@Attribute('step' | 'big-step' | 'min' | 'max')` in the constructor has been removed — the same defaults are now provided through `input(..., { transform: numberAttribute })`; `[step]="..."` bindings still work.
-
-**Breadcrumbs**. RdxRovingFocusGroupDirective.orientation is now a computed signal that combines the orientation input alias with an internal setOrientation() override — this replaces the broken direct assignment `inject(...).orientation = 'horizontal'`.
-
-**Navbar, Filter bar, Datepicker, Timepicker, Splitter**. Direct assignments to readonly signal-inputs (`this.arrow = false`, `this.offset = 0`, `this.popover.preventClose = true`, `tooltip.enterDelay = ...`, `this.ghost.visible = ...`, etc.) have been cast to **any** to preserve the current runtime behavior; migrating them to writable signals is planned as a follow-up.
+**Dropdown**. Code that subclassed `KbqDropdownContent` no longer receives `ComponentFactoryResolver` in its constructor (removed in Angular 20).
 
 ### Tooling
 
@@ -71,10 +17,10 @@ Tooling dependencies have been updated:
 | ng-packagr                | ^20.3.2   |
 | @angular-builders/jest    | 20.0.0    |
 | @angular-eslint/\*        | ^20.7.0   |
-| @typescript-eslint/\*     | ^8.59.3   |
+| @typescript-eslint/\*     | ^8.60.1   |
 | ESLint                    | ^9.0.0    |
-| @schematics/angular       | 20.3.21   |
-| @angular-devkit/architect | 0.2003.21 |
+| @schematics/angular       | 20.3.27   |
+| @angular-devkit/architect | 0.2003.27 |
 
 Separate **tsconfig.spec.json** files have been added at the root of each library/application, extending the config from the workspace root. The **test.options.tsConfig** paths in angular.json are now resolved relative to the project root (required by the v20 schematic migrations).
 
@@ -91,6 +37,8 @@ Long-deprecated symbols have been removed. For a simplified migration, use `ng u
 **Risk level**. The @koobiq/components/risk-level package has been removed entirely — use @koobiq/components/badge (KbqBadge with `[outline]` and `[badgeColor]`); note that Badge's default density and color enum differ — verify the visual result.
 
 **Form field (experimental)**. The @koobiq/components-experimental/form-field subpackage has been removed — switch to @koobiq/components/form-field; the experimental package was a transitional fork and has now been merged back.
+
+**CDK (Core)**. The @koobiq/cdk package has been removed entirely; its a11y, keycodes, and testing utilities now live in @koobiq/components/core. Remove @koobiq/cdk from package.json and import these symbols from @koobiq/components/core (the v20-upgrade schematic remaps the imports automatically).
 
 #### Symbols from Core
 
@@ -116,7 +64,7 @@ Long-deprecated symbols have been removed. For a simplified migration, use `ng u
 
 **Tag input**. countOfSymbolsForUpdateWidth and updateInputWidth() have been removed.
 
-**Form field**. The KbqFormField.canShowStepper method has been replaced with `hasStepper` (the stepper is always visible when set).
+**Form field**. The KbqFormField.canShowStepper property has been replaced with `hasStepper` (the stepper is always visible when set).
 
 **App switcher**. On the trigger, KbqAppSwitcherTrigger.apps has been replaced with `sites` taking a single-element array.
 
@@ -189,6 +137,7 @@ For the extended variant, `[kbqTooltipHeader]` is now also available on the base
 | MeasurementSystem         | KbqMeasurementSystem             |
 | SizeUnitsConfig           | KbqSizeUnitsConfig               |
 | KbqFormFieldRef           | KbqFormField                     |
+| DropdownPositionX/Y       | KbqDropdownPositionX/Y           |
 
 **Tokens and functions**. Updated: toBoolean( → booleanAttribute(, isCorrectExtension( → FileValidators.isCorrectExtension(, formatDataSize( → getFormattedSizeParts(, kbqComponentParams: → data:;
 

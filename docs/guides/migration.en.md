@@ -144,7 +144,7 @@ The schematic emits warnings for what cannot be rewritten safely:
 
 **Modals**: ModalOptions.kbqComponentParams → the data field + inject(KBQ_MODAL_DATA).
 
-**A bare attribute is no longer coerced**: `<kbq-code-block canDownload>` → `[canDownload]="true"`, `[freeRowsHeight]="160"`. Reading enterDelay/arrow from a trigger instance (tooltip/popover) → now signal calls: `trigger.enterDelay()`.
+**Code block**: the deprecated `canLoad` / `codeFiles` inputs are renamed to `canDownload` / `files`. Template bindings are migrated automatically; programmatic access (`.canLoad`, `.codeFiles`) must be updated by hand.
 
 ### After the migration
 

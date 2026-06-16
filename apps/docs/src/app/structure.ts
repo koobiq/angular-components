@@ -96,11 +96,6 @@ export type DocsStructureItem = {
     hasApi: boolean;
     hasExamples: boolean;
     isGuide?: boolean;
-    /**
-     * Hides the item from navigation (sidenav and welcome page) while keeping it
-     * routable by direct URL. Used for pages linked only from other docs.
-     */
-    hidden?: boolean;
     apiId?: string;
     svgPreview?: string;
     /**
