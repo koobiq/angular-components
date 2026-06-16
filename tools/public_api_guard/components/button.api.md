@@ -38,7 +38,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
-    haltDisabledEvents(event: Event): void;
+    haltDisabledEvents: (event: Event) => void;
     // (undocumented)
     hasFocus: boolean;
     // (undocumented)
@@ -55,27 +55,29 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     onBlur(): void;
     // (undocumented)
-    onFocus($event: any): void;
+    onFocus(): void;
+    parentTextElement: ElementRef<HTMLElement>;
     // (undocumented)
     projectContentChanged(): void;
+    // (undocumented)
+    protected styler: KbqButtonCssStyler;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
-    textElement: ElementRef;
+    textElement: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButton, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqButtonCssStyler implements AfterContentInit {
     constructor();
     // (undocumented)
     readonly icons: i0.Signal<readonly any[]>;
-    // (undocumented)
-    isIconButton: boolean;
+    get isIconButton(): boolean;
     // (undocumented)
     nativeElement: HTMLElement;
     // (undocumented)
@@ -132,7 +134,15 @@ export class KbqButtonModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqButtonModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof KbqButtonDropdownTrigger, typeof KbqButton, typeof KbqButtonCssStyler, typeof KbqButtonGroup, typeof KbqButtonGroupRoot], [typeof KbqButton, typeof KbqButtonCssStyler, typeof KbqButtonDropdownTrigger, typeof KbqButtonGroup, typeof KbqButtonGroupRoot]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof KbqButtonDropdownTrigger, typeof KbqButton, typeof KbqButtonCssStyler, typeof KbqButtonPrefix, typeof KbqButtonSuffix, typeof KbqButtonGroup, typeof KbqButtonGroupRoot], [typeof KbqButton, typeof KbqButtonCssStyler, typeof KbqButtonPrefix, typeof KbqButtonSuffix, typeof KbqButtonDropdownTrigger, typeof KbqButtonGroup, typeof KbqButtonGroupRoot]>;
+}
+
+// @public
+export class KbqButtonPrefix {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonPrefix, "[kbqButtonPrefix]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonPrefix, never>;
 }
 
 // @public (undocumented)
@@ -143,6 +153,14 @@ export enum KbqButtonStyles {
     Outline = "outline",
     // (undocumented)
     Transparent = "transparent"
+}
+
+// @public
+export class KbqButtonSuffix {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonSuffix, "[kbqButtonSuffix]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonSuffix, never>;
 }
 
 // (No @packageDocumentation comment for this package)
