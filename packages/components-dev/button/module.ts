@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { ButtonExamplesModule } from 'packages/docs-examples/components/button';
 
 @Component({
@@ -26,7 +27,7 @@ export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqButtonModule, KbqIconModule, DevDocsExamples],
+    imports: [KbqButtonModule, KbqIconModule, DevDocsExamples, KbqTitleModule],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
     encapsulation: ViewEncapsulation.None,
