@@ -4,10 +4,10 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqLink } from '@koobiq/components/link';
 
 type SearchResult = {
     title: string;
-    suffix: string;
     url: string;
     snippet: string;
 };
@@ -22,7 +22,8 @@ type SearchResult = {
         KbqIcon,
         KbqButtonModule,
         ReactiveFormsModule,
-        KbqHighlightBackgroundPipe
+        KbqHighlightBackgroundPipe,
+        KbqLink
     ],
     template: `
         <div style="margin-bottom: var(--kbq-size-xl)">
@@ -37,12 +38,9 @@ type SearchResult = {
 
         @for (result of results; track result.url) {
             <article style="margin-bottom: var(--kbq-size-l)">
-                <div class="kbq-text-big-strong">
-                    <span [innerHTML]="result.title | kbqHighlightBackground: query()"></span>
-                    @if (result.suffix) {
-                        <span class="highlight-example__suffix">{{ result.suffix }}</span>
-                    }
-                </div>
+                <a href="{{ result.url }}" class="highlight-example__title" target="_blank" kbq-link>
+                    <span class="kbq-link__text" [innerHTML]="result.title | kbqHighlightBackground: query()"></span>
+                </a>
                 <div class="highlight-example__header">{{ result.url }}</div>
                 <p style="margin: 0" [innerHTML]="result.snippet | kbqHighlightBackground: query()"></p>
             </article>
@@ -53,8 +51,12 @@ type SearchResult = {
             display: block;
         }
 
-        .highlight-example__suffix {
-            color: var(--kbq-foreground-theme);
+        .highlight-example__title {
+            font-family: var(--kbq-typography-headline-font-family),serif;
+            font-size: var(--kbq-typography-headline-font-size);
+            line-height: var(--kbq-typography-headline-line-height);
+            font-weight: var(--kbq-typography-headline-font-weight);
+            letter-spacing: var(--kbq-typography-headline-letter-spacing);
         }
 
         .highlight-example__header {
@@ -71,32 +73,28 @@ export class HighlightBackgroundComplexExample {
     protected readonly results: SearchResult[] = [
         {
             title: 'Cube',
-            suffix: '',
-            url: 'https://en.wikipedia.org › wiki › Cube',
+            url: 'https://en.wikipedia.org/wiki/Cube',
             snippet:
                 'A cube is a three-dimensional solid object in geometry. A cube has eight vertices and twelve straight' +
                 ' edges of the same length, so that these edges form six faces.'
         },
         {
-            title: 'Cube',
-            suffix: ' (1997 film)',
-            url: 'https://en.wikipedia.org › wiki › Cube_(1997_film)',
+            title: 'Cube (1997 film)',
+            url: 'https://en.wikipedia.org/wiki/Cube_(1997_film)',
             snippet:
                 'Cube is a 1997 Canadian science fiction horror film directed and co-written by Vincenzo Natali.' +
                 " A product of the Canadian Film Centre's First Feature Project."
         },
         {
-            title: 'Cube',
-            suffix: ' (algebra)',
-            url: 'https://en.wikipedia.org › wiki › Cube_(algebra)',
+            title: 'Cube (algebra)',
+            url: 'https://en.wikipedia.org/wiki/Cube_(algebra)',
             snippet:
                 'In arithmetic and algebra, the cube of a number n is its third power, that is, the result of' +
                 ' multiplying three instances of n together.'
         },
         {
-            title: 'Cube',
-            suffix: ' (2021 film)',
-            url: 'https://en.wikipedia.org › wiki › Cube_(2021_film)',
+            title: 'Cube (2021 film)',
+            url: 'https://en.wikipedia.org/wiki/Cube_(2021_film)',
             snippet:
                 'The story centers on a group of strangers who awaken in a cube-shaped room connected to adjacent' +
                 ' rooms, forming an elaborate maze filled with traps.'

@@ -9,8 +9,7 @@
 
 @mixin kbq-highlight-background-theme() {
     .kbq-highlight-background {
-        color: inherit;
-
+        color: var(--kbq-foreground-contrast);
         background-color: var(--kbq-background-highlight);
 
         border-radius: var(--kbq-size-xxs);

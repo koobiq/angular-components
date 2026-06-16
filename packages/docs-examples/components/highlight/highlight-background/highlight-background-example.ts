@@ -8,8 +8,8 @@ import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
     selector: 'highlight-background-example',
     imports: [KbqHighlightBackgroundPipe],
     template: `
-        <h3 class="kbq-headline" [innerHTML]="title | kbqHighlightBackground: keyword"></h3>
-        <p class="kbq-text-normal" [innerHTML]="text | kbqHighlightBackground: keyword"></p>
+        <div class="kbq-headline layout-margin-bottom-s" [innerHTML]="title | kbqHighlightBackground: keyword"></div>
+        <div class="kbq-text-normal" [innerHTML]="text | kbqHighlightBackground: keyword"></div>
     `,
     styles: `
         :host {
