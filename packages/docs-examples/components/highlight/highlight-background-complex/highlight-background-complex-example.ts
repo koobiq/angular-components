@@ -38,8 +38,11 @@ type SearchResult = {
 
         @for (result of results; track result.url) {
             <article style="margin-bottom: var(--kbq-size-l)">
-                <a href="{{ result.url }}" class="highlight-example__title" target="_blank" kbq-link>
-                    <span class="kbq-link__text" [innerHTML]="result.title | kbqHighlightBackground: query()"></span>
+                <a href="{{ result.url }}" target="_blank" kbq-link>
+                    <span
+                        class="kbq-text-big-strong kbq-link__text"
+                        [innerHTML]="result.title | kbqHighlightBackground: query()"
+                    ></span>
                 </a>
                 <div class="highlight-example__header">{{ result.url }}</div>
                 <p style="margin: 0" [innerHTML]="result.snippet | kbqHighlightBackground: query()"></p>
@@ -49,14 +52,6 @@ type SearchResult = {
     styles: `
         :host {
             display: block;
-        }
-
-        .highlight-example__title {
-            font-family: var(--kbq-typography-headline-font-family),serif;
-            font-size: var(--kbq-typography-headline-font-size);
-            line-height: var(--kbq-typography-headline-line-height);
-            font-weight: var(--kbq-typography-headline-font-weight);
-            letter-spacing: var(--kbq-typography-headline-letter-spacing);
         }
 
         .highlight-example__header {
