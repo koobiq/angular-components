@@ -2,6 +2,66 @@
 
 <hr />
 
+<div id="icon-slots-demo">
+    <h4>Explicit prefix/suffix slots (source order is reversed on purpose)</h4>
+
+    <!-- prefix written AFTER the text, suffix written BEFORE — slots put them in place -->
+    <button kbq-button [color]="colors.Contrast">
+        Кнопка
+        <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
+    </button>
+    &nbsp;
+    <button kbq-button [color]="colors.Contrast">
+        <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+        Кнопка
+    </button>
+    &nbsp;
+    <button kbq-button [color]="colors.Contrast">
+        <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+        Кнопка
+        <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
+    </button>
+    &nbsp;
+    <!-- icon-only two-icon trigger, markers in reversed order -->
+    <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast">
+        <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+        <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
+    </button>
+    &nbsp;
+    <!-- non-icon slot content: any element can be projected into a slot and is spaced from the text -->
+    <button kbq-button [color]="colors.Contrast">
+        <span kbqButtonPrefix>1</span>
+        Кнопка
+        <span kbqButtonSuffix>⌘K</span>
+    </button>
+</div>
+
+<hr />
+
+<div id="ellipsis-demo">
+    <h4>Text ellipsis (width-constrained)</h4>
+
+    <!-- text only -->
+    <button kbq-button style="max-width: 160px" kbq-title [color]="colors.Contrast">
+        Очень длинный текст кнопки, который не помещается
+    </button>
+    &nbsp;
+    <!-- with marker icons: icons stay, only the text is clipped -->
+    <button kbq-button style="max-width: 160px" kbq-title [color]="colors.Contrast">
+        <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
+        Очень длинный текст кнопки, который не помещается
+        <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+    </button>
+    &nbsp;
+    <!-- legacy: icon in default slot, nested inside .kbq-button-text -->
+    <button kbq-button style="max-width: 160px" kbq-title [color]="colors.Contrast">
+        <i kbq-icon="kbq-plus_16"></i>
+        Очень длинный текст кнопки, который не помещается
+    </button>
+</div>
+
+<hr />
+
 <div>
     <div>
         <button disabled kbq-button class="kbq-dropdown-trigger">

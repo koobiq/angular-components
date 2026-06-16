@@ -4,16 +4,21 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     dispatchFakeEvent,
+    dispatchKeyboardEvent,
+    DOWN_ARROW,
+    ENTER,
     KbqComponentColors,
     leftIconClassName,
     rightIconClassName,
+    SPACE,
     ThemePalette
 } from '@koobiq/components/core';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     buttonLeftIconClassName,
     buttonRightIconClassName,
+    KbqButton,
     KbqButtonCssStyler,
     KbqButtonGroupRoot,
     KbqButtonModule,
@@ -111,12 +116,51 @@ describe('KbqButton', () => {
         it('should not redirect if disabled', () => {
             const fixture = TestBed.createComponent(TestApp);
             const testComponent = fixture.debugElement.componentInstance;
-            const buttonDebugElement = fixture.debugElement.query(By.css('.kbq-button-overlay'));
+            const anchorElement: HTMLAnchorElement = fixture.debugElement.query(By.css('a')).nativeElement;
 
             testComponent.isDisabled = true;
             fixture.detectChanges();
 
-            buttonDebugElement.nativeElement.click();
+            const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+            anchorElement.dispatchEvent(event);
+
+            expect(testComponent.clickCount).toBe(0);
+            expect(event.defaultPrevented).toBe(true);
+        });
+
+        it('should halt ENTER and SPACE keydown if disabled', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const testComponent = fixture.debugElement.componentInstance;
+            const anchorElement: HTMLAnchorElement = fixture.debugElement.query(By.css('a')).nativeElement;
+
+            testComponent.isDisabled = true;
+            fixture.detectChanges();
+
+            const enterEvent = dispatchKeyboardEvent(anchorElement, 'keydown', ENTER);
+            const spaceEvent = dispatchKeyboardEvent(anchorElement, 'keydown', SPACE);
+
+            expect(enterEvent.defaultPrevented).toBe(true);
+            expect(spaceEvent.defaultPrevented).toBe(true);
+        });
+
+        it('should set aria-disabled if disabled', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const testComponent = fixture.debugElement.componentInstance;
+            const anchorElement: HTMLAnchorElement = fixture.debugElement.query(By.css('a')).nativeElement;
+
+            expect(anchorElement.getAttribute('aria-disabled')).toBeNull();
+
+            testComponent.isDisabled = true;
+            fixture.detectChanges();
+
+            expect(anchorElement.getAttribute('aria-disabled')).toBe('true');
+
+            // `disabled || null` must remove the attribute (not set "false") when re-enabled
+            testComponent.isDisabled = false;
+            fixture.detectChanges();
+
+            expect(anchorElement.getAttribute('aria-disabled')).toBeNull();
         });
 
         it('should remove tabindex if disabled', () => {
@@ -145,6 +189,32 @@ describe('KbqButton', () => {
         expect(trigger.nativeElement.classList.contains('kbq-active')).toBeTruthy();
     });
 
+    it('should not open an associated dropdown when the disabled button is clicked or keyboard-activated', () => {
+        const fixture: ComponentFixture<DisabledButtonDropdownTrigger> =
+            TestBed.createComponent(DisabledButtonDropdownTrigger);
+
+        fixture.detectChanges();
+
+        const { dropdownTrigger, trigger } = fixture.componentInstance;
+        const anchorElement = trigger().nativeElement as HTMLAnchorElement;
+
+        // click is halted by the capture-phase listener (stopImmediatePropagation), so the
+        // dropdown trigger's own click handler never runs and the dropdown stays closed
+        dispatchFakeEvent(anchorElement, 'click');
+        fixture.detectChanges();
+
+        expect(dropdownTrigger().opened).toBe(false);
+        expect(anchorElement.classList.contains('kbq-active')).toBe(false);
+
+        // ENTER / SPACE and the arrow keys the trigger opens on are all halted too
+        [ENTER, SPACE, DOWN_ARROW].forEach((keyCode) => {
+            dispatchKeyboardEvent(anchorElement, 'keydown', keyCode);
+            fixture.detectChanges();
+
+            expect(dropdownTrigger().opened).toBe(false);
+        });
+    });
+
     it('should handle a click on the button', () => {
         const fixture = TestBed.createComponent(TestApp);
         const testComponent = fixture.debugElement.componentInstance;
@@ -171,6 +241,7 @@ describe('Button with icon', () => {
                 KbqButtonTextIconLeftRightNgIfCaseTestApp,
                 KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp,
                 KbqButtonTwoIconsCaseTestApp,
+                KbqButtonThreeIconsCaseTestApp,
                 KbqButtonIconNgIfCaseTestApp
             ]
         }).compileComponents();
@@ -204,6 +275,23 @@ describe('Button with icon', () => {
 
         expect(fixture.debugElement.query(By.css(`.${buttonLeftIconClassName}`))).not.toBeNull();
         expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`))).not.toBeNull();
+    });
+
+    it('should keep regular button styling and mark only outermost icons for more than 2 icons', () => {
+        const fixture = TestBed.createComponent(KbqButtonThreeIconsCaseTestApp);
+
+        fixture.detectChanges();
+
+        const hostElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        expect(hostElement.classList.contains('kbq-button')).toBeTruthy();
+        expect(hostElement.classList.contains('kbq-button-icon')).toBeFalsy();
+
+        expect(fixture.debugElement.query(By.css(`#icon1.${leftIconClassName}`))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css(`#icon3.${rightIconClassName}`))).not.toBeNull();
+
+        expect(fixture.debugElement.query(By.css(`#icon2.${leftIconClassName}`))).toBeNull();
+        expect(fixture.debugElement.query(By.css(`#icon2.${rightIconClassName}`))).toBeNull();
     });
 
     it('should add right css class when the previous sibling is an html element', () => {
@@ -306,6 +394,209 @@ describe('Button with icon', () => {
             expect(debugElement.nativeElement.classList.contains(buttonRightIconClassName)).toBeFalsy();
             done();
         });
+    });
+
+    it('should switch to kbq-button-icon via the effect when an icon is revealed while the content observer is disabled', (done) => {
+        const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
+        const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
+
+        // start with no icon: cdkObserveContent is disabled (styler.icons() is empty), so the
+        // styler's effect() — not the MutationObserver — is the only thing that can recompute
+        fixture.componentInstance.visible = false;
+        fixture.detectChanges();
+
+        expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalsy();
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
+
+        fixture.componentInstance.visible = true;
+        fixture.detectChanges();
+
+        setTimeout(() => {
+            expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeTruthy();
+            expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalsy();
+            done();
+        });
+    });
+});
+
+describe('Button with explicit prefix/suffix slots', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                KbqButtonModule,
+                KbqIconModule,
+                KbqButtonPrefixSlotReorderTestApp,
+                KbqButtonSuffixSlotReorderTestApp,
+                KbqButtonPrefixSuffixSlotTestApp,
+                KbqButtonTwoIconsSlotTestApp,
+                KbqButtonNonIconSlotsTestApp
+            ]
+        }).compileComponents();
+    });
+
+    it('should project [kbqButtonPrefix] into the leading slot even when written after the text', () => {
+        const fixture = TestBed.createComponent(KbqButtonPrefixSlotReorderTestApp);
+
+        fixture.detectChanges();
+
+        const icon = fixture.debugElement.query(By.css('#left-icon')).nativeElement;
+        const host = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        // the leading slot moves the icon to the front, so the styler marks it left, not right
+        expect(icon.classList.contains(leftIconClassName)).toBeTruthy();
+        expect(icon.classList.contains(rightIconClassName)).toBeFalsy();
+
+        expect(host.classList.contains(buttonLeftIconClassName)).toBeTruthy();
+        expect(host.classList.contains(buttonRightIconClassName)).toBeFalsy();
+
+        // text present -> regular (not icon-only) button
+        expect(host.classList.contains('kbq-button')).toBeTruthy();
+        expect(host.classList.contains('kbq-button-icon')).toBeFalsy();
+    });
+
+    it('should project [kbqButtonSuffix] into the trailing slot even when written before the text', () => {
+        const fixture = TestBed.createComponent(KbqButtonSuffixSlotReorderTestApp);
+
+        fixture.detectChanges();
+
+        const icon = fixture.debugElement.query(By.css('#right-icon')).nativeElement;
+        const host = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        expect(icon.classList.contains(rightIconClassName)).toBeTruthy();
+        expect(icon.classList.contains(leftIconClassName)).toBeFalsy();
+
+        expect(host.classList.contains(buttonRightIconClassName)).toBeTruthy();
+        expect(host.classList.contains(buttonLeftIconClassName)).toBeFalsy();
+    });
+
+    it('should place icons into the left/right slots regardless of their source order', () => {
+        const fixture = TestBed.createComponent(KbqButtonPrefixSuffixSlotTestApp);
+
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css(`#left-icon.${leftIconClassName}`))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css(`#left-icon.${rightIconClassName}`))).toBeNull();
+
+        expect(fixture.debugElement.query(By.css(`#right-icon.${rightIconClassName}`))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css(`#right-icon.${leftIconClassName}`))).toBeNull();
+
+        const host = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        expect(host.classList.contains(buttonLeftIconClassName)).toBeTruthy();
+        expect(host.classList.contains(buttonRightIconClassName)).toBeTruthy();
+        expect(host.classList.contains('kbq-button')).toBeTruthy();
+    });
+
+    it('should stay an icon-only button when both icons use slots in reversed order', () => {
+        const fixture = TestBed.createComponent(KbqButtonTwoIconsSlotTestApp);
+
+        fixture.detectChanges();
+
+        const host = fixture.debugElement.query(By.directive(KbqButtonCssStyler)).nativeElement;
+
+        expect(host.classList.contains('kbq-button-icon')).toBeTruthy();
+        expect(host.classList.contains('kbq-button')).toBeFalsy();
+
+        expect(fixture.debugElement.query(By.css(`#icon1.${leftIconClassName}`))).not.toBeNull();
+        expect(fixture.debugElement.query(By.css(`#icon2.${rightIconClassName}`))).not.toBeNull();
+
+        expect(host.classList.contains(buttonLeftIconClassName)).toBeTruthy();
+        expect(host.classList.contains(buttonRightIconClassName)).toBeTruthy();
+    });
+
+    it('should give non-icon slot content the prefix/suffix host class so it is spaced from the text', () => {
+        const fixture = TestBed.createComponent(KbqButtonNonIconSlotsTestApp);
+
+        fixture.detectChanges();
+
+        const prefix = fixture.debugElement.query(By.css('#prefix')).nativeElement;
+        const suffix = fixture.debugElement.query(By.css('#suffix')).nativeElement;
+
+        // the slot markers no longer depend on KbqIcon: arbitrary content carries its own spacing class
+        expect(prefix.classList.contains('kbq-button-prefix')).toBeTruthy();
+        expect(suffix.classList.contains('kbq-button-suffix')).toBeTruthy();
+    });
+});
+
+describe('Button text container', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                KbqButtonModule,
+                KbqIconModule,
+                KbqButtonPrefixSuffixSlotTestApp,
+                KbqButtonHtmlIconLeftCaseTestApp
+            ]
+        }).compileComponents();
+    });
+
+    it('should keep the text in .kbq-button-text and the marker-slot icons outside of it', () => {
+        const fixture = TestBed.createComponent(KbqButtonPrefixSuffixSlotTestApp);
+
+        fixture.detectChanges();
+
+        const textSpan = fixture.debugElement.query(By.css('.kbq-button-text')).nativeElement;
+        const wrapper = fixture.debugElement.query(By.css('.kbq-button-wrapper')).nativeElement;
+        const leftIcon = fixture.debugElement.query(By.css('#left-icon')).nativeElement;
+        const rightIcon = fixture.debugElement.query(By.css('#right-icon')).nativeElement;
+
+        // the text container holds only the text
+        expect(textSpan.textContent.trim()).toBe('Some text');
+
+        // marker icons are siblings of the text container, not nested inside it
+        expect(textSpan.contains(leftIcon)).toBe(false);
+        expect(textSpan.contains(rightIcon)).toBe(false);
+        expect(leftIcon.parentElement).toBe(wrapper);
+        expect(rightIcon.parentElement).toBe(wrapper);
+    });
+
+    it('should nest a legacy default-slot icon inside .kbq-button-text and still mark it left', () => {
+        const fixture = TestBed.createComponent(KbqButtonHtmlIconLeftCaseTestApp);
+
+        fixture.detectChanges();
+
+        const textSpan = fixture.debugElement.query(By.css('.kbq-button-text')).nativeElement;
+        const icon = textSpan.querySelector('.kbq-icon');
+
+        // legacy icon (no marker) lands inside the text container...
+        expect(icon).not.toBeNull();
+        // ...and the styler still flattens it out to mark it as the left icon
+        expect(icon.classList.contains(leftIconClassName)).toBe(true);
+    });
+
+    it('should expose textElement (.kbq-button-text) and parentTextElement (.kbq-button-wrapper)', () => {
+        const fixture = TestBed.createComponent(KbqButtonHtmlIconLeftCaseTestApp);
+
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.query(By.directive(KbqButton)).componentInstance as KbqButton;
+
+        expect(button.textElement.nativeElement.classList.contains('kbq-button-text')).toBe(true);
+        expect(button.parentTextElement.nativeElement.classList.contains('kbq-button-wrapper')).toBe(true);
+
+        // parent (width container) must wrap the child (measured text) — guards against the two
+        // ViewChildren being swapped, which would break kbq-title overflow detection
+        expect(button.parentTextElement.nativeElement.contains(button.textElement.nativeElement)).toBe(true);
+    });
+});
+
+describe('KbqButtonCssStyler without KbqButton', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [StylerOnlyTestApp]
+        }).compileComponents();
+    });
+
+    it('should warn in dev mode when there is no .kbq-button-wrapper (styler used without KbqButton)', () => {
+        const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+        const fixture = TestBed.createComponent(StylerOnlyTestApp);
+
+        fixture.detectChanges();
+
+        expect(warnSpy).toHaveBeenCalledWith('KbqButtonCssStyler should be imported together with KbqButton.');
+
+        warnSpy.mockRestore();
     });
 });
 
@@ -582,6 +873,19 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
 class KbqButtonTwoIconsCaseTestApp {}
 
 @Component({
+    selector: 'kbq-button-three-icons-case-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <i id="icon1" kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="icon2" kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="icon3" kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+    `
+})
+class KbqButtonThreeIconsCaseTestApp {}
+
+@Component({
     selector: 'kbq-button-text-icon-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
@@ -613,6 +917,20 @@ class KbqButtonIconNgIfCaseTestApp {
 class ButtonDropdownTrigger {
     readonly trigger = viewChild.required('triggerEl', { read: ElementRef });
     backdropClass: string;
+}
+
+@Component({
+    imports: [KbqButtonModule, KbqDropdownModule],
+    template: `
+        <a #triggerEl href="#" kbq-button disabled [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</a>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class DisabledButtonDropdownTrigger {
+    readonly trigger = viewChild.required('triggerEl', { read: ElementRef });
+    readonly dropdownTrigger = viewChild.required(KbqDropdownTrigger);
 }
 
 @Component({
@@ -651,3 +969,75 @@ class DynamicChildrenTestComponent {
     color: KbqComponentColors | string = KbqComponentColors.Theme;
     showExtra = false;
 }
+
+@Component({
+    selector: 'kbq-button-prefix-slot-reorder-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            Some text
+            <i id="left-icon" kbqButtonPrefix kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+    `
+})
+class KbqButtonPrefixSlotReorderTestApp {}
+
+@Component({
+    selector: 'kbq-button-suffix-slot-reorder-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <i id="right-icon" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+            Some text
+        </button>
+    `
+})
+class KbqButtonSuffixSlotReorderTestApp {}
+
+@Component({
+    selector: 'kbq-button-prefix-suffix-slot-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <i id="right-icon" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+            Some text
+            <i id="left-icon" kbqButtonPrefix kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+    `
+})
+class KbqButtonPrefixSuffixSlotTestApp {}
+
+@Component({
+    selector: 'kbq-button-two-icons-slot-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <i id="icon2" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="icon1" kbqButtonPrefix kbq-icon="kbq-play_16"></i>
+        </button>
+    `
+})
+class KbqButtonTwoIconsSlotTestApp {}
+
+@Component({
+    selector: 'kbq-button-non-icon-slots-test-app',
+    imports: [KbqButtonModule],
+    template: `
+        <button kbq-button type="button">
+            <span id="prefix" kbqButtonPrefix>1</span>
+            Some text
+            <span id="suffix" kbqButtonSuffix>K</span>
+        </button>
+    `
+})
+class KbqButtonNonIconSlotsTestApp {}
+
+@Component({
+    selector: 'styler-only-test-app',
+    // KbqButton is intentionally NOT imported, so the host has no .kbq-button-wrapper
+    imports: [KbqButtonCssStyler],
+    template: `
+        <div kbq-button></div>
+    `
+})
+class StylerOnlyTestApp {}
