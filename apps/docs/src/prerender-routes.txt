@@ -84,6 +84,7 @@
 /en/components/layout-flex/overview
 /en/components/link/overview
 /en/components/link/api
+/en/components/link/examples
 /en/components/list/overview
 /en/components/list/api
 /en/components/list/examples
@@ -185,10 +186,6 @@
 /en/other/number-formatter/overview
 /en/other/validation/overview
 /en/other/validation/examples
-/en/cdk/a11y/overview
-/en/cdk/a11y/api
-/en/cdk/keycodes/overview
-/en/cdk/keycodes/api
 /en/icons
 /ru
 /ru/main/installation/overview
@@ -276,6 +273,7 @@
 /ru/components/layout-flex/overview
 /ru/components/link/overview
 /ru/components/link/api
+/ru/components/link/examples
 /ru/components/list/overview
 /ru/components/list/api
 /ru/components/list/examples
@@ -377,8 +375,4 @@
 /ru/other/number-formatter/overview
 /ru/other/validation/overview
 /ru/other/validation/examples
-/ru/cdk/a11y/overview
-/ru/cdk/a11y/api
-/ru/cdk/keycodes/overview
-/ru/cdk/keycodes/api
 /ru/icons

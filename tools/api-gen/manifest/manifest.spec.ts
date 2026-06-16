@@ -7,7 +7,7 @@ describe('api manifest generation', () => {
         expect(
             generateManifest([
                 {
-                    moduleName: 'cdk',
+                    moduleName: 'components',
                     packagesApiInfo: [
                         {
                             packageName: 'button',
@@ -825,7 +825,7 @@ describe('getFunctionRenderable', () => {
             returnType: 'boolean'
         };
 
-        const renderable = getFunctionRenderable(fn, 'cdk');
+        const renderable = getFunctionRenderable(fn, 'components');
 
         expect(renderable.params).toHaveLength(1);
         expect(renderable.params[0].name).toBe('event');
@@ -862,7 +862,7 @@ describe('getFunctionRenderable', () => {
             ]
         } as unknown as FunctionEntry;
 
-        const renderable = getFunctionRenderable(fn, 'cdk');
+        const renderable = getFunctionRenderable(fn, 'components');
 
         expect(renderable.params).toHaveLength(2);
         expect(renderable.params[0].name).toBe('event');
@@ -878,7 +878,7 @@ describe('getFunctionRenderable', () => {
             returnType: undefined
         } as unknown as FunctionEntry;
 
-        const renderable = getFunctionRenderable(fn, 'cdk');
+        const renderable = getFunctionRenderable(fn, 'components');
 
         expect(renderable.params).toEqual([]);
         expect(renderable.returnType).toBe('');
@@ -900,7 +900,7 @@ describe('getFunctionRenderable', () => {
             ]
         } as unknown as FunctionEntry;
 
-        const renderable = getFunctionRenderable(fn, 'cdk');
+        const renderable = getFunctionRenderable(fn, 'components');
 
         expect(renderable.params[0].name).toBe('direct');
         expect(renderable.returnType).toBe('void');

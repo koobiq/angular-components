@@ -1,8 +1,6 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Route, Routes, UrlSegment } from '@angular/router';
 import {
-    DocsCdkApiComponent,
-    DocsCdkOverviewComponent,
     DocsComponentApiComponent,
     DocsComponentExamplesComponent,
     DocsComponentOverviewComponent,
@@ -134,38 +132,6 @@ export const DOCS_ROUTES: Routes = [
                     {
                         path: DocsStructureItemTab.Api,
                         component: DocsComponentApiComponent,
-                        pathMatch: 'full'
-                    },
-                    {
-                        path: DocsStructureItemTab.Examples,
-                        component: DocsComponentExamplesComponent,
-                        pathMatch: 'full'
-                    },
-                    { path: '**', redirectTo: DocsStructureItemTab.Overview }
-                ]
-            },
-
-            /**
-             * CDK section routes
-             */
-            {
-                path: DocsStructureCategoryId.CDK,
-                redirectTo: `${DocsStructureCategoryId.CDK}/${DocsStructureItemId.A11y}`,
-                pathMatch: 'full'
-            },
-            {
-                path: `${DocsStructureCategoryId.CDK}/:id`,
-                component: DocsComponentViewerComponent,
-                children: [
-                    { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
-                    {
-                        path: DocsStructureItemTab.Overview,
-                        component: DocsCdkOverviewComponent,
-                        pathMatch: 'full'
-                    },
-                    {
-                        path: DocsStructureItemTab.Api,
-                        component: DocsCdkApiComponent,
                         pathMatch: 'full'
                     },
                     {
