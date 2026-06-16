@@ -24,7 +24,6 @@ updates:
       eslint:
         patterns:
           - 'eslint*'
-          - '@types/eslint'
           - '@typescript-eslint/*'
           - '@angular-eslint/*'
           - '@stylistic/*'
