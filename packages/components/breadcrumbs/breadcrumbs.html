@@ -3,8 +3,9 @@
 resolved SSR issue with official hack https://github.com/angular/angular/issues/50543#issuecomment-1572900259
 -->
 <ng-content />
-@if (items.length < minVisibleItems || wrapMode() !== 'auto') {
-    @for (item of items; track item) {
+@let allItems = items();
+@if (allItems.length < minVisibleItems || wrapMode() !== 'auto') {
+    @for (item of allItems; track item) {
         <div class="kbq-breadcrumb-item__container">
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: $last }" />
             @if (!$last) {
@@ -13,50 +14,47 @@ resolved SSR issue with official hack https://github.com/angular/angular/issues/
         </div>
     }
 } @else {
-    <div
-        #kbqOverflowItems="kbqOverflowItems"
-        kbqOverflowItems
-        reverseOverflowOrder
-        class="layout-align-start-center"
-        [style.max-width.px]="maxWidth"
-    >
-        <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="0" [order]="items.length">
-            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
+    <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems reverseOverflowOrder class="layout-align-start-center">
+        <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="0" [order]="allItems.length">
+            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: allItems[0], last: false }" />
             <ng-container [ngTemplateOutlet]="separatorTemplate" />
         </div>
-        <!-- @TODO delay rendering for proper elements order (#DS-3334)--->
-        @if (true) {
-            <div kbqOverflowItemsResult class="kbq-breadcrumb-item__container">
-                <button
-                    kbq-button
-                    kbqBreadcrumb
-                    class="kbq-breadcrumb__expand"
-                    [kbqDropdownTriggerFor]="hiddenBreadcrumbsDropdown"
-                    [kbqStyle]="KbqButtonStyles.Transparent"
-                >
-                    <i kbq-icon="kbq-ellipsis-horizontal_16" [color]="KbqComponentColors.ContrastFade"></i>
-                </button>
-                <ng-container [ngTemplateOutlet]="separatorTemplate" />
+        <div kbqOverflowItemsResult class="kbq-breadcrumb-item__container">
+            <button
+                #breadcrumbsResult
+                kbq-button
+                kbqBreadcrumb
+                class="kbq-breadcrumb__expand"
+                [kbqDropdownTriggerFor]="hiddenBreadcrumbsDropdown"
+                [kbqStyle]="KbqButtonStyles.Transparent"
+            >
+                <i kbq-icon="kbq-ellipsis-horizontal_16" [color]="KbqComponentColors.ContrastFade"></i>
+            </button>
+            <ng-container [ngTemplateOutlet]="separatorTemplate" />
 
-                <kbq-dropdown #hiddenBreadcrumbsDropdown="kbqDropdown">
-                    @for (item of items; track item) {
-                        @if (kbqOverflowItems.hiddenItemIDs().has($index)) {
-                            <a kbq-dropdown-item [routerLink]="item.routerLink?.urlTree" [disabled]="item.disabled()">
-                                {{ item.text() }}
-                            </a>
-                        }
+            <kbq-dropdown #hiddenBreadcrumbsDropdown="kbqDropdown">
+                @for (item of allItems; track item) {
+                    @if (hiddenItemIDs().has($index)) {
+                        <a kbq-dropdown-item [routerLink]="item.routerLink?.urlTree" [disabled]="item.disabled()">
+                            {{ item.text() }}
+                        </a>
                     }
-                </kbq-dropdown>
-            </div>
-        }
-        @for (item of itemsExcludingEdges; track item) {
+                }
+            </kbq-dropdown>
+        </div>
+        @for (item of itemsExcludingEdges(); track item) {
             <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="$index + 1">
                 <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: false }" />
                 <ng-container [ngTemplateOutlet]="separatorTemplate" />
             </div>
         }
-        <div alwaysVisible class="kbq-breadcrumb-item__container" [kbqOverflowItem]="items.length - 1">
-            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.last, last: true }" />
+        <div alwaysVisible class="kbq-breadcrumb-item__container" [kbqOverflowItem]="allItems.length - 1">
+            <ng-container
+                *ngTemplateOutlet="
+                    breadcrumbTemplate;
+                    context: { $implicit: allItems[allItems.length - 1], last: true }
+                "
+            />
         </div>
     </div>
 }

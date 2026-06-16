@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
@@ -14,7 +13,6 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
-import { QueryList } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TemplateRef } from '@angular/core';
 
@@ -45,24 +43,24 @@ export class KbqBreadcrumbItem {
 }
 
 // @public (undocumented)
-export class KbqBreadcrumbs implements AfterContentInit {
+export class KbqBreadcrumbs {
     constructor();
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly firstItemNegativeMargin: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    protected readonly items: QueryList<KbqBreadcrumbItem>;
-    protected get itemsExcludingEdges(): KbqBreadcrumbItem[];
+    protected readonly hiddenItemIDs: _angular_core.Signal<Set<unknown>>;
+    // (undocumented)
+    protected readonly items: _angular_core.Signal<readonly KbqBreadcrumbItem[]>;
+    protected readonly itemsExcludingEdges: _angular_core.Signal<KbqBreadcrumbItem[]>;
     // (undocumented)
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
     readonly max: _angular_core.InputSignal<number | null>;
-    protected get maxWidth(): number | null;
+    protected readonly maxVisibleItems: _angular_core.Signal<number | null>;
     protected readonly minVisibleItems = 2;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
     // (undocumented)
@@ -70,7 +68,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
     readonly wrapMode: _angular_core.InputSignal<KbqBreadcrumbsWrapMode>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["items", "separator"], ["*"], true, [{ directive: typeof RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }

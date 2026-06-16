@@ -1,15 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
+    computed,
     ContentChild,
     contentChild,
-    ContentChildren,
-    DestroyRef,
+    contentChildren,
     Directive,
+    effect,
     ElementRef,
     forwardRef,
     inject,
@@ -17,20 +16,25 @@ import {
     input,
     OnInit,
     Provider,
-    QueryList,
     TemplateRef,
     viewChild,
     viewChildren,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqOverflowItem, KbqOverflowItemsModule, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
+import {
+    KbqOverflowItem,
+    KbqOverflowItems,
+    KbqOverflowItemsModule,
+    KbqOverflowItemsResult
+} from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { EMPTY, merge, skip, switchMap } from 'rxjs';
 import { KbqBreadcrumbsConfiguration, KbqBreadcrumbsWrapMode } from './breadcrumbs.types';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
 import { RdxRovingFocusItemDirective } from './roving-focus-item.directive';
@@ -168,7 +172,7 @@ export class KbqBreadcrumbItem {
     },
     hostDirectives: [RdxRovingFocusGroupDirective]
 })
-export class KbqBreadcrumbs implements AfterContentInit {
+export class KbqBreadcrumbs {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
     /**
      * Determines if a negative margin should be applied to the first breadcrumb item.
@@ -202,12 +206,12 @@ export class KbqBreadcrumbs implements AfterContentInit {
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     protected readonly separator?: TemplateRef<any>;
 
-    @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
-    protected readonly items: QueryList<KbqBreadcrumbItem>;
+    protected readonly items = contentChildren<KbqBreadcrumbItem>(forwardRef(() => KbqBreadcrumbItem));
 
-    private readonly result = viewChild(KbqOverflowItemsResult, { read: ElementRef });
-
-    private readonly overflowItems = viewChildren(KbqOverflowItem, { read: ElementRef });
+    private readonly breadcrumbsResult = viewChild('breadcrumbsResult', { read: ElementRef });
+    private readonly result = viewChild(KbqOverflowItemsResult);
+    private readonly overflowItems = viewChildren<KbqOverflowItem>(forwardRef(() => KbqOverflowItem));
+    private readonly overflowItemsDir = viewChild(KbqOverflowItems);
 
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
@@ -216,61 +220,96 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
-    private readonly cdr = inject(ChangeDetectorRef);
-    private readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
-    protected get itemsExcludingEdges() {
-        return this.items.toArray().slice(1, -1);
-    }
+    protected readonly itemsExcludingEdges = computed(() => this.items().slice(1, -1));
+    protected readonly hiddenItemIDs = computed(
+        () =>
+            new Set(
+                this.overflowItems()
+                    .filter((item) => item.hidden())
+                    .map((item) => item.id())
+            )
+    );
 
-    /**
-     * Calculates the total width of visible items based on the `max` value and overflow items.
-     * @returns {number | null} The computed max width for overflow items or null if conditions are not met.
-     * @docs-private
-     */
-    protected get maxWidth(): number | null {
+    /** @docs-private */
+    protected readonly maxVisibleItems = computed((): number | null => {
         const max = this.max();
+        const count = this.items().length;
 
-        const overflowItems = this.overflowItems();
+        if (max === null || max >= count || max < this.minVisibleItems) return null;
 
-        const result = this.result();
+        return max - 1;
+    });
 
-        if (
-            !overflowItems ||
-            !overflowItems.length ||
-            !result ||
-            max === null ||
-            max >= this.items.length ||
-            max < this.minVisibleItems
-        ) {
-            return null;
-        }
-
-        let visibleItemsWidth = this.getItemWidth(result);
-        // Reorders overflow items to prioritize the first and last elements
-        const sortedItems = [
-            ...overflowItems.slice(1, -1),
-            overflowItems.at(0)!,
-            overflowItems.at(-1)!
-        ];
-
-        for (let i = 0; i < max - 1; i++) {
-            visibleItemsWidth += this.getItemWidth(sortedItems[sortedItems.length - i - 1]);
-        }
-
-        return visibleItemsWidth;
-    }
+    private readonly maxHiddenItems = new Set<KbqOverflowItem>();
 
     constructor() {
-        inject(RdxRovingFocusGroupDirective, { self: true }).orientation = 'horizontal';
+        const group = inject(RdxRovingFocusGroupDirective, { self: true });
+
+        group.orientation = 'horizontal';
+
+        merge(
+            toObservable(this.overflowItemsDir).pipe(
+                switchMap((dir) => (dir ? outputToObservable(dir.changes) : EMPTY))
+            ),
+            toObservable(this.max).pipe(skip(1))
+        )
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.enforceMaxVisible());
+
+        effect(() => {
+            const focusableItems = group.focusableItems();
+            const expandButton = this.breadcrumbsResult()?.nativeElement;
+
+            if (focusableItems.length < 2 || focusableItems[0] !== expandButton) return;
+
+            const [first, second, ...rest] = focusableItems;
+
+            group.focusableItems.set([second, first, ...rest]);
+        });
     }
 
-    ngAfterContentInit() {
-        this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
-    }
+    private enforceMaxVisible(): void {
+        const max = this.maxVisibleItems();
+        const items = this.overflowItems();
+        const result = this.result();
+        const overflowHiddenIds = this.overflowItemsDir()?.hiddenItemIDs() ?? new Set();
 
-    private getItemWidth(item?: ElementRef) {
-        return item ? item.nativeElement.offsetWidth : 0;
+        this.maxHiddenItems.forEach((item) => {
+            if (!overflowHiddenIds.has(item.id())) {
+                item.show();
+            }
+        });
+        this.maxHiddenItems.clear();
+
+        const allVisibleItems = items
+            .map((item, index) => ({ item, order: item.order() ?? index }))
+            .filter(({ item }) => !item.hidden());
+
+        const extraToHide = max === null ? 0 : allVisibleItems.length - max;
+
+        const hideResultIfAllVisible = () => {
+            if (allVisibleItems.length === items.length) {
+                result?.hide();
+            }
+        };
+
+        if (extraToHide <= 0) {
+            hideResultIfAllVisible();
+
+            return;
+        }
+
+        const hideable = allVisibleItems
+            .filter(({ item }) => !item.alwaysVisible())
+            .sort((a, b) => a.order - b.order)
+            .map(({ item }) => item);
+
+        for (let i = 0; i < extraToHide && i < hideable.length; i++) {
+            hideable[i].hide();
+            this.maxHiddenItems.add(hideable[i]);
+            result?.show();
+        }
     }
 }
