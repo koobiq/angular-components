@@ -40,7 +40,7 @@ type SearchResult = {
             <article style="margin-bottom: var(--kbq-size-l)">
                 <a href="{{ result.url }}" target="_blank" kbq-link>
                     <span
-                        class="kbq-text-big-strong kbq-link__text"
+                        class="kbq-text-big-strong"
                         [innerHTML]="result.title | kbqHighlightBackground: query()"
                     ></span>
                 </a>
