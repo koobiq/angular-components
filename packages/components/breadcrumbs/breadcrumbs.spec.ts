@@ -1,14 +1,14 @@
-import { Component, DebugElement, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
+﻿import { Component, DebugElement, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { DOWN_ARROW } from '@koobiq/cdk/keycodes';
 import { dispatchEvent } from '@koobiq/cdk/testing';
-import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqOverflowItem } from '@koobiq/components/overflow-items';
+import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import {
     KbqBreadcrumbButton,
     KbqBreadcrumbItem,
@@ -16,6 +16,7 @@ import {
     kbqBreadcrumbsConfigurationProvider
 } from './breadcrumbs';
 import { KbqBreadcrumbsModule } from './breadcrumbs.module';
+import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = [], imports: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, ...imports], providers }).compileComponents();
@@ -184,6 +185,166 @@ describe(KbqBreadcrumbs.name, () => {
         }));
     });
 
+    describe('focusable items ordering', () => {
+        function getRovingGroup(fixture: ComponentFixture<any>): RdxRovingFocusGroupDirective {
+            return fixture.debugElement.query(By.directive(KbqBreadcrumbs)).injector.get(RdxRovingFocusGroupDirective);
+        }
+
+        function getExpandButton(fixture: ComponentFixture<any>): HTMLElement | null {
+            return fixture.debugElement.query(By.css('.kbq-breadcrumb__expand'))?.nativeElement ?? null;
+        }
+
+        it('should not place the expand button as the first focusable item on initial render', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const focusableItems = getRovingGroup(fixture).focusableItems();
+            const expandButton = getExpandButton(fixture);
+
+            expect(focusableItems.length).toBeGreaterThan(0);
+            expect(focusableItems[0]).not.toBe(expandButton);
+        });
+
+        it('should not place the expand button as the first focusable item after items are added', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+
+            fixture.componentInstance.items.push({ text: 'New Item', disabled: false });
+            fixture.detectChanges();
+
+            const focusableItems = getRovingGroup(fixture).focusableItems();
+            const expandButton = getExpandButton(fixture);
+
+            expect(focusableItems.length).toBeGreaterThan(0);
+            expect(focusableItems[0]).not.toBe(expandButton);
+        });
+
+        it('should not place the expand button as the first focusable item after items are removed', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+
+            fixture.componentInstance.items.splice(1, 1);
+            fixture.detectChanges();
+
+            const focusableItems = getRovingGroup(fixture).focusableItems();
+            const expandButton = getExpandButton(fixture);
+
+            expect(focusableItems.length).toBeGreaterThan(0);
+            expect(focusableItems[0]).not.toBe(expandButton);
+        });
+
+        it('should not modify focusableItems when fewer than two items are registered', () => {
+            const fixture = createComponent(SingleBreadcrumb, [provideRouter([])]);
+            const focusableItems = getRovingGroup(fixture).focusableItems();
+
+            // A single breadcrumb renders as $last → focusable=false → nothing registered.
+            // The effect must return early and leave focusableItems unchanged (empty).
+            expect(focusableItems.length).toBe(0);
+        });
+    });
+
+    describe('max changes', () => {
+        const ITEMS = [
+            { text: 'Home', disabled: false },
+            { text: 'Library', disabled: false },
+            { text: 'Data', disabled: false },
+            { text: 'Docs', disabled: false },
+            { text: 'Articles', disabled: false },
+            { text: 'Current', disabled: false }
+        ];
+
+        function getOverflowItems(debugElement: DebugElement): KbqOverflowItem[] {
+            return debugElement
+                .queryAll(By.directive(KbqOverflowItem))
+                .map((debugElementItem) => debugElementItem.injector.get(KbqOverflowItem));
+        }
+
+        function getResult(debugElement: DebugElement): KbqOverflowItemsResult {
+            return debugElement.query(By.directive(KbqOverflowItemsResult)).injector.get(KbqOverflowItemsResult);
+        }
+
+        it('should restore hidden items and hide expand button when max becomes null', fakeAsync(() => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.items = ITEMS;
+            fixture.detectChanges();
+            tick(); // flush KbqOverflowItems debounceTime(0) — shows all items in jsdom
+
+            componentInstance.max = 4; // maxVisibleItems = 3 → hides 3 middle items
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(3);
+            expect(getResult(debugElement).hidden()).toBe(false);
+
+            componentInstance.max = null;
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(0);
+            expect(getResult(debugElement).hidden()).toBe(true);
+        }));
+
+        it('should restore hidden items and hide expand button when max exceeds item count', fakeAsync(() => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.items = ITEMS;
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 4;
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(3);
+
+            componentInstance.max = 6; // 6 >= items.length → maxVisibleItems = null
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(0);
+            expect(getResult(debugElement).hidden()).toBe(true);
+        }));
+
+        it('should hide fewer items when max increases', fakeAsync(() => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.items = ITEMS;
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 4; // maxVisibleItems = 3 → hides 3
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 5; // maxVisibleItems = 4 → hides 2
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(2);
+            expect(getResult(debugElement).hidden()).toBe(false);
+        }));
+
+        it('should hide more items when max decreases', fakeAsync(() => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.items = ITEMS;
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 5; // maxVisibleItems = 4 → hides 2
+            fixture.detectChanges();
+            tick();
+
+            componentInstance.max = 4; // maxVisibleItems = 3 → hides 3
+            fixture.detectChanges();
+            tick();
+
+            expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(3);
+            expect(getResult(debugElement).hidden()).toBe(false);
+        }));
+    });
+
     describe('customization', () => {
         it('should use the custom separator template', () => {
             const fixture = createComponent(BreadcrumbsCustomization, [
@@ -222,7 +383,7 @@ describe(KbqBreadcrumbs.name, () => {
     `
 })
 class SimpleBreadcrumbs {
-    @ViewChild(KbqBreadcrumbs) breadcrumbs: KbqBreadcrumbs;
+    readonly breadcrumbs = viewChild.required(KbqBreadcrumbs);
 
     max: number | null = null;
     size: KbqDefaultSizes = 'normal';
@@ -252,8 +413,8 @@ class SimpleBreadcrumbs {
     `
 })
 class BreadcrumbsCustomization {
-    @ViewChild(KbqBreadcrumbs) breadcrumbs: KbqBreadcrumbs;
-    @ViewChildren(KbqBreadcrumbItem) breadcrumbItems: QueryList<KbqBreadcrumbItem>;
+    readonly breadcrumbs = viewChild.required(KbqBreadcrumbs);
+    readonly breadcrumbItems = viewChildren(KbqBreadcrumbItem);
 
     max: number | null = null;
     size: KbqDefaultSizes = 'normal';
@@ -307,3 +468,13 @@ class TestDropdownBreadcrumbs extends SimpleBreadcrumbs {
         return `./${text}`;
     }
 }
+
+@Component({
+    imports: [KbqBreadcrumbsModule],
+    template: `
+        <kbq-breadcrumbs>
+            <kbq-breadcrumb-item text="Home" />
+        </kbq-breadcrumbs>
+    `
+})
+class SingleBreadcrumb {}
