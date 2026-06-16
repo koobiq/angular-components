@@ -10,19 +10,17 @@ import { Subject } from 'rxjs';
     selector: 'ng-template[kbqDropdownContent]'
 })
 export class KbqDropdownContent implements OnDestroy {
+    private template = inject<TemplateRef<any>>(TemplateRef);
+    private appRef = inject(ApplicationRef);
+    private injector = inject(Injector);
+    private viewContainerRef = inject(ViewContainerRef);
+
     protected readonly document = inject<Document>(DOCUMENT);
 
     /** Emits when the dropdown content has been attached. */
     attached = new Subject<void>();
     private portal: TemplatePortal;
     private outlet: DomPortalOutlet;
-
-    constructor(
-        private template: TemplateRef<any>,
-        private appRef: ApplicationRef,
-        private injector: Injector,
-        private viewContainerRef: ViewContainerRef
-    ) {}
 
     /**
      * Attaches the content with a particular context.

@@ -34,7 +34,7 @@ export function getKbqFormFieldMissingControlError(): Error;
 export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error;
 
 // @public (undocumented)
-export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint>) => boolean;
+export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint> | readonly KbqPasswordHint[]) => boolean;
 
 // @public
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
@@ -217,7 +217,7 @@ export class KbqLegend {
 
 // @public (undocumented)
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
-    constructor(changeDetectorRef: ChangeDetectorRef, formField: any);
+    constructor();
     // (undocumented)
     checked: boolean;
     // (undocumented)
@@ -246,7 +246,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordHint, "kbq-password-hint", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; "rule": { "alias": "rule"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "regex": { "alias": "regex"; "required": false; }; "customCheckRule": { "alias": "checkRule"; "required": false; "isSignal": true; }; "viewFormField": { "alias": "viewFormField"; "required": false; "isSignal": true; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordHint, [null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordHint, never>;
 }
 
 // @public
@@ -326,13 +326,13 @@ export class KbqSuffix {
 
 // @public
 export class KbqTrim {
-    constructor(noTrim: boolean, ngControl: NgControl);
+    constructor();
     // (undocumented)
     trim(value: any): any;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTrim, "[kbqInput], [kbqTextarea]", ["KbqTrim"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTrim, [{ attribute: "no-trim"; }, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTrim, never>;
 }
 
 // @public (undocumented)

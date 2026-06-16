@@ -1,9 +1,8 @@
-﻿import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
+﻿import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     contentChild,
     contentChildren,
@@ -70,11 +69,11 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
     exportAs: 'KbqVerticalNavbar'
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
+    protected elementRef: ElementRef<HTMLElement>;
+
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
     readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true });
-
     configuration;
 
     rectangleElements = contentChildren(
@@ -108,12 +107,11 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     private _expanded: boolean = false;
 
-    constructor(
-        protected elementRef: ElementRef<HTMLElement>,
-        changeDetectorRef: ChangeDetectorRef,
-        focusMonitor: FocusMonitor
-    ) {
-        super(changeDetectorRef, elementRef, focusMonitor);
+    constructor() {
+        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+        super();
+        this.elementRef = elementRef;
 
         this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
 

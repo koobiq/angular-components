@@ -7,7 +7,6 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
@@ -18,7 +17,6 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 
 // @public (undocumented)
@@ -29,7 +27,7 @@ export const buttonRightIconClassName = "kbq-button-icon_right";
 
 // @public (undocumented)
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
-    constructor(focusMonitor: FocusMonitor, styler: KbqButtonCssStyler);
+    constructor();
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledSignal: i0.WritableSignal<boolean>;
@@ -76,7 +74,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
 
 // @public
 export class KbqButtonCssStyler implements AfterContentInit {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
+    constructor();
     // (undocumented)
     readonly icons: i0.Signal<readonly any[]>;
     get isIconButton(): boolean;

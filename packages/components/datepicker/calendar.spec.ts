@@ -1,4 +1,4 @@
-﻿import { Component, LOCALE_ID } from '@angular/core';
+﻿import { Component, LOCALE_ID, inject as inject_1 } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
@@ -342,12 +342,12 @@ describe('KbqCalendar', () => {
     `
 })
 class StandardCalendar {
+    adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
+
     selected: DateTime;
     selectedYear: DateTime;
     selectedMonth: DateTime;
     startDate = this.adapter.createDate(2017, 0, 31);
-
-    constructor(public adapter: DateAdapter<DateTime>) {}
 }
 
 @Component({
@@ -357,11 +357,11 @@ class StandardCalendar {
     `
 })
 class CalendarWithMinMax {
+    adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
+
     startAt: DateTime;
     minDate = this.adapter.createDate(2016, 0, 1);
     maxDate = this.adapter.createDate(2018, 0, 1);
-
-    constructor(public adapter: DateAdapter<DateTime>) {}
 }
 
 @Component({
@@ -371,10 +371,10 @@ class CalendarWithMinMax {
     `
 })
 class CalendarWithDateFilter {
+    adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
+
     selected: DateTime;
     startDate = this.adapter.createDate(2017, 0, 1);
-
-    constructor(public adapter: DateAdapter<DateTime>) {}
 
     dateFilter = (date: DateTime): boolean => !(this.adapter.getDate(date) % 2) && this.adapter.getMonth(date) !== 10;
 }

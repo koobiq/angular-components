@@ -6,10 +6,8 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Inject,
     Input,
     OnDestroy,
-    Optional,
     output,
     Renderer2
 } from '@angular/core';
@@ -116,6 +114,10 @@ const fullFormatSize: number = 8;
 export class KbqTimepicker<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
 {
+    private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    private renderer = inject(Renderer2);
+    private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
@@ -394,12 +396,9 @@ export class KbqTimepicker<D>
 
     private errorStateTracker: KbqErrorStateTracker;
 
-    constructor(
-        private elementRef: ElementRef<HTMLInputElement>,
-        private renderer: Renderer2,
-        @Optional() private dateAdapter: DateAdapter<any>,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
-    ) {
+    constructor() {
+        const dateAdapter = this.dateAdapter;
+
         if (!this.dateAdapter) {
             throw Error(
                 `KbqTimepicker: No provider found for DateAdapter. You must import one of the existing ` +

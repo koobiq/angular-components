@@ -1,16 +1,15 @@
 ﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-    Attribute,
     booleanAttribute,
     Directive,
     ElementRef,
     EventEmitter,
     forwardRef,
-    Inject,
+    HostAttributeToken,
+    inject,
     Input,
     input,
     OnDestroy,
-    Optional,
     Renderer2
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -102,6 +101,9 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
     exportAs: 'kbqNumericalInput'
 })
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
+    private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    private readonly renderer = inject(Renderer2);
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     /** Emits when the value changes (either due to user input or programmatic change). */
     valueChange = new EventEmitter<number | null>();
 
@@ -230,15 +232,13 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private valueFromPaste: number | null;
 
-    constructor(
-        private elementRef: ElementRef<HTMLInputElement>,
-        private readonly renderer: Renderer2,
-        @Attribute('step') step: string,
-        @Attribute('big-step') bigStep: string,
-        @Attribute('min') min: string,
-        @Attribute('max') max: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
-    ) {
+    constructor() {
+        const step = inject(new HostAttributeToken('step'), { optional: true })!;
+        const bigStep = inject(new HostAttributeToken('big-step'), { optional: true })!;
+        const min = inject(new HostAttributeToken('min'), { optional: true })!;
+        const max = inject(new HostAttributeToken('max'), { optional: true })!;
+        const localeService = this.localeService;
+
         this.step = isDigit(step) ? parseFloat(step) : SMALL_STEP;
         this.bigStep = isDigit(bigStep) ? parseFloat(bigStep) : BIG_STEP;
         this.min = isDigit(min) ? parseFloat(min) : -Infinity;

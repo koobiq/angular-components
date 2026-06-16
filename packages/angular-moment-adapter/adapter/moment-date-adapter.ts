@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { MomentDateAdapter as BaseMomentDateAdapter, MomentDateAdapterOptions } from '@koobiq/moment-date-adapter';
 import { Observable, Subject } from 'rxjs';
@@ -25,12 +25,15 @@ export function KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): IKbqMomentDateAdapter
 
 @Injectable()
 export class MomentDateAdapter extends BaseMomentDateAdapter {
-    constructor(
-        @Optional() @Inject(KBQ_DATE_LOCALE) dateLocale: string,
-        @Optional() @Inject(KBQ_MOMENT_DATE_ADAPTER_OPTIONS) protected readonly options?: IKbqMomentDateAdapterOptions,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
-    ) {
+    protected readonly options?: IKbqMomentDateAdapterOptions;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
+    constructor() {
+        const dateLocale = inject(KBQ_DATE_LOCALE, { optional: true })!;
+        const options =
+            inject<IKbqMomentDateAdapterOptions>(KBQ_MOMENT_DATE_ADAPTER_OPTIONS, { optional: true }) ?? undefined;
+
         super(dateLocale, options);
+        this.options = options;
 
         this.setLocale(this.localeService?.id || dateLocale);
 

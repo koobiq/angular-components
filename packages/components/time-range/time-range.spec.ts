@@ -5,7 +5,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KbqFormattersModule } from '@koobiq/components/core';
+import { DateFormatter, KbqFormattersModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverComponent } from '@koobiq/components/popover';
@@ -132,7 +132,7 @@ describe('KbqTimeRange', () => {
             const customDefaultTypes = customTypes.map(({ type }) => type);
 
             const fixture = setup(TestComponent, [
-                { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] },
+                DateFormatter,
                 { provide: KBQ_CUSTOM_TIME_RANGE_TYPES, useValue: customTypes },
                 { provide: KBQ_DEFAULT_TIME_RANGE_TYPES, useValue: customDefaultTypes }
             ]);

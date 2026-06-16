@@ -114,7 +114,7 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
 
 // @public (undocumented)
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
-    constructor(confirmText: string, confirmButtonText: string);
+    constructor();
     // (undocumented)
     readonly confirm: i0.OutputEmitterRef<void>;
     // (undocumented)
@@ -132,7 +132,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopoverConfirmTrigger, "[kbqPopoverConfirm]", ["kbqPopoverConfirm"], { "confirmText": { "alias": "kbqPopoverConfirmText"; "required": false; }; "confirmButtonText": { "alias": "kbqPopoverConfirmButtonText"; "required": false; }; }, { "confirm": "confirm"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverConfirmTrigger, [{ optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopoverConfirmTrigger, never>;
 }
 
 // @public (undocumented)

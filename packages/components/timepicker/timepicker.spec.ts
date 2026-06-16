@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, Inject, Type, viewChild } from '@angular/core';
+﻿import { Component, DebugElement, inject as inject_1, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -136,6 +136,8 @@ class TimepickerControlWithAsyncValidators {
     `
 })
 class TestApp {
+    adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
+
     readonly ngModel = viewChild.required<NgModel>('ngModel');
 
     timeFormat: TimeFormats;
@@ -144,7 +146,9 @@ class TestApp {
     timeValue: DateTime;
     isDisabled: boolean;
 
-    constructor(public adapter: DateAdapter<DateTime>) {
+    constructor() {
+        const adapter = this.adapter;
+
         this.timeValue = adapter.createDateTime(1970, 1, 1, 12, 18, 28, 100);
     }
 }
@@ -1028,10 +1032,10 @@ describe('KbqTimepicker with null model value', () => {
     `
 })
 class TimepickerWithLocaleChange {
+    localeService = inject_1<KbqLocaleService>(KBQ_LOCALE_SERVICE);
+
     timeFormat: TimeFormats;
     model: any = null;
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
 }
 
 describe('with Locale change', () => {

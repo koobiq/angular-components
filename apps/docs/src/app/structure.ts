@@ -87,10 +87,7 @@ export enum DocsStructureItemId {
     FilesizeFormatter = 'filesize-formatter',
     Forms = 'forms',
     NumberFormatter = 'number-formatter',
-    Validation = 'validation',
-    // CDK
-    A11y = 'a11y',
-    Keycodes = 'keycodes'
+    Validation = 'validation'
 }
 
 export type DocsStructureItem = {
@@ -116,8 +113,7 @@ export enum DocsStructureCategoryId {
     Main = 'main',
     Components = 'components',
     Other = 'other',
-    Icons = 'icons',
-    CDK = 'cdk'
+    Icons = 'icons'
 }
 
 export type DocsStructureCategory = {
@@ -1130,38 +1126,6 @@ const structure: DocsStructure = makeStructure({
             },
             isPreviewed: false,
             items: []
-        }
-    ],
-    [DocsStructureCategoryId.CDK]: [
-        {
-            id: DocsStructureCategoryId.CDK,
-            name: {
-                ru: 'CDK',
-                en: 'CDK'
-            },
-            isPreviewed: false,
-            items: [
-                {
-                    id: DocsStructureItemId.A11y,
-                    name: {
-                        ru: 'Key managers',
-                        en: 'Key managers'
-                    },
-                    hasApi: true,
-                    apiId: 'a11y',
-                    hasExamples: false
-                },
-                {
-                    id: DocsStructureItemId.Keycodes,
-                    name: {
-                        ru: 'Keycodes',
-                        en: 'Keycodes'
-                    },
-                    hasApi: true,
-                    apiId: 'keycodes',
-                    hasExamples: false
-                }
-            ]
         }
     ]
 });

@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLocaleServiceModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
+import { E2eSplitButtonStateAndStyle } from '../../components/split-button/e2e';
 import { SplitButtonExamplesModule } from '../../docs-examples/components/split-button';
 
 @Component({
@@ -34,7 +35,8 @@ export class DevDocsExamples {}
         KbqSplitButtonModule,
         DevDocsExamples,
         KbqButtonModule,
-        KbqIconModule
+        KbqIconModule,
+        E2eSplitButtonStateAndStyle
     ],
     templateUrl: './template.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

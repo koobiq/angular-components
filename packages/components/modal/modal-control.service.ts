@@ -1,4 +1,4 @@
-import { Injectable, Optional, SkipSelf } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
@@ -12,6 +12,7 @@ interface IRegisteredMeta {
 
 @Injectable({ providedIn: 'root' })
 export class KbqModalControlService {
+    private parentService = inject(KbqModalControlService, { optional: true, skipSelf: true });
     // Track singleton afterAllClose through over the injection tree
     get afterAllClose(): Subject<void> {
         return this.parentService ? this.parentService.afterAllClose : this.rootAfterAllClose;
@@ -36,8 +37,6 @@ export class KbqModalControlService {
     private get registeredMetaMap(): Map<KbqModalRef, IRegisteredMeta> {
         return this.parentService ? this.parentService.registeredMetaMap : this.rootRegisteredMetaMap;
     }
-
-    constructor(@Optional() @SkipSelf() private parentService: KbqModalControlService) {}
 
     // Register a modal to listen its open/close
     registerModal(modalRef: KbqModalRef): void {

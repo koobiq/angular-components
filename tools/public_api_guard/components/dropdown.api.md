@@ -8,24 +8,18 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
-import { ApplicationRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
 import * as i2 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
-import { Injector } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleTextRef } from '@koobiq/components/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -34,7 +28,6 @@ import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
 
 // @public
 export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
@@ -75,7 +68,6 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public (undocumented)
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone, defaultOptions: KbqDropdownDefaultOptions);
     animationDone: Subject<AnimationEvent_2>;
     backdropClass: string;
     classList: {
@@ -136,7 +128,6 @@ export const kbqDropdownAnimations: {
 
 // @public
 export class KbqDropdownContent implements OnDestroy {
-    constructor(template: TemplateRef<any>, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef);
     attach(context?: any): void;
     attached: Subject<void>;
     detach(): void;
@@ -162,7 +153,6 @@ export interface KbqDropdownDefaultOptions {
 
 // @public
 export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor, parentDropdownPanel?: KbqDropdownPanel | undefined);
     checkDisabled(event: Event): void;
     protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
@@ -188,7 +178,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    parentDropdownPanel?: KbqDropdownPanel | undefined;
+    parentDropdownPanel?: KbqDropdownPanel | null | undefined;
     // (undocumented)
     resetStyles(): void;
     // (undocumented)
@@ -196,7 +186,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, never>;
 }
 
 // @public (undocumented)
@@ -261,7 +251,7 @@ export class KbqDropdownStaticContent {
 
 // @public
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
-    constructor(overlay: Overlay, elementRef: ElementRef<HTMLElement>, viewContainerRef: ViewContainerRef, scrollStrategy: any, parent: KbqDropdown, dropdownItemInstance: KbqDropdownItem, _dir: Directionality, changeDetectorRef: ChangeDetectorRef, focusMonitor?: FocusMonitor | undefined);
+    constructor();
     close(): void;
     data: any;
     demoteOverlay: boolean;
@@ -302,7 +292,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; }; "offsetY": { "alias": "offsetY"; "required": false; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; }; "demoteOverlay": { "alias": "demoteOverlay"; "required": false; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; }; }, { "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownTrigger, [null, null, null, null, { optional: true; }, { optional: true; self: true; }, { optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownTrigger, never>;
 }
 
 // @public (undocumented)

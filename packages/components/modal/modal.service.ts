@@ -1,6 +1,6 @@
 ﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ComponentRef, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
+import { ComponentRef, inject, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
 import { ESCAPE } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
@@ -75,6 +75,10 @@ export class ModalBuilderForService {
 
 @Injectable({ providedIn: 'root' })
 export class KbqModalService {
+    private readonly overlay = inject(Overlay);
+    private readonly modalControl = inject(KbqModalControlService);
+    private injector = inject(Injector);
+
     // Track of the current close modals (we assume invisible is close this time)
     get openModals(): KbqModalRef[] {
         return this.modalControl.openModals;
@@ -83,12 +87,6 @@ export class KbqModalService {
     get afterAllClose(): Observable<void> {
         return this.modalControl.afterAllClose.asObservable();
     }
-
-    constructor(
-        private readonly overlay: Overlay,
-        private readonly modalControl: KbqModalControlService,
-        private injector: Injector
-    ) {}
 
     // Closes all of the currently-open dialogs
     closeAll(): void {

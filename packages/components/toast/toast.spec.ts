@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, NgZone, TemplateRef, viewChild } from '@angular/core';
+import { Component, NgZone, TemplateRef, inject as inject_1, viewChild } from '@angular/core';
 import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
@@ -203,7 +203,8 @@ describe('Standalone ToastService', () => {
     `
 })
 class KbqToastButtonWrapperComponent {
-    constructor(public toastService: KbqToastService) {}
+    toastService = inject_1(KbqToastService);
+
     show(): void {
         this.toastService.show({ style: 'warning', title: 'Warning', content: 'Message Content' }, 0);
     }

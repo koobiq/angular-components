@@ -9,7 +9,6 @@ import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i1 from '@angular/cdk/a11y';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
@@ -21,7 +20,7 @@ export const baseURLRegex: RegExp;
 
 // @public (undocumented)
 export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLAnchorElement>, focusMonitor: FocusMonitor);
+    constructor();
     // (undocumented)
     readonly big: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)

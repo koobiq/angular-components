@@ -20,10 +20,8 @@ import {
     Input,
     input,
     OnDestroy,
-    Optional,
     output,
     QueryList,
-    Self,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -101,6 +99,14 @@ export class KbqTagList
         CanUpdateErrorState,
         AfterViewInit
 {
+    protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    private dir = inject(Directionality, { optional: true });
+    parentForm = inject(NgForm, { optional: true });
+    parentFormGroup = inject(FormGroupDirective, { optional: true });
+    ngControl = inject(NgControl, { optional: true, self: true })!;
+
     private readonly dropList = inject(CdkDropList, { host: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly focusMonitor = inject(FocusMonitor);
@@ -418,15 +424,7 @@ export class KbqTagList
     /** Triggers unsubscription from all per-tags streams when tags are reset. */
     private readonly tagsSubscriptions$ = new Subject<void>();
 
-    constructor(
-        protected elementRef: ElementRef<HTMLElement>,
-        private changeDetectorRef: ChangeDetectorRef,
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        @Optional() private dir: Directionality,
-        @Optional() public parentForm: NgForm,
-        @Optional() public parentFormGroup: FormGroupDirective,
-        @Optional() @Self() public ngControl: NgControl
-    ) {
+    constructor() {
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }

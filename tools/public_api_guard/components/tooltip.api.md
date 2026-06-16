@@ -28,11 +28,15 @@ import { Type } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
-export const KBQ_TOOLTIP_OPEN_TIME: InjectionToken<() => ScrollStrategy>;
+export const KBQ_TOOLTIP_OPEN_TIME: InjectionToken<{
+    value: number;
+}>;
 
 // @public
 export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
+    provide: InjectionToken<{
+        value: number;
+    }>;
     useValue: {
         value: number;
     };
@@ -50,7 +54,6 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public (undocumented)
 export class KbqTooltipComponent extends KbqPopUp {
-    constructor(openTime: any);
     // (undocumented)
     elementRef: ElementRef;
     // (undocumented)

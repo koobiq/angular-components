@@ -79,6 +79,9 @@ export class KbqToggleChange {
     exportAs: 'kbqToggle'
 })
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
+    private focusMonitor = inject(FocusMonitor);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
     readonly big = input<boolean>(false);
 
     readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
@@ -191,10 +194,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
     private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
 
-    constructor(
-        private focusMonitor: FocusMonitor,
-        private changeDetectorRef: ChangeDetectorRef
-    ) {
+    constructor() {
         super();
 
         this.id = this.uniqueId;

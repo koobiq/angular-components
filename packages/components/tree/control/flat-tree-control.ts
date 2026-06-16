@@ -92,7 +92,7 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
     }
 
     hasValue(value: string): T | undefined {
-        return this.dataNodes.find((node: any) => this.compareValues(this.getValue(node), value));
+        return this.dataNodes?.find((node: any) => this.compareValues(this.getValue(node), value));
     }
 
     filterNodes(value: string | null = null): void {

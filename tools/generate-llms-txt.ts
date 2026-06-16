@@ -61,11 +61,7 @@ try {
     let contentFull = content;
 
     for (const category of docsGetCategories()) {
-        if (
-            category.id === DocsStructureCategoryId.Other ||
-            category.id === DocsStructureCategoryId.Icons ||
-            category.id === DocsStructureCategoryId.CDK
-        ) {
+        if (category.id === DocsStructureCategoryId.Other || category.id === DocsStructureCategoryId.Icons) {
             continue;
         }
 

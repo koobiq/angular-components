@@ -12,7 +12,7 @@ import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } 
 import { COMMA, ENTER, KbqComponentColors, SPACE, TAB } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
     TagAutocompleteDraggableExample,
@@ -201,15 +201,13 @@ export class DevApp implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.autocompleteFilteredTags = merge(
-            this.autocompleteTagList()
-                .tagChanges.asObservable()
-                .pipe(
-                    map((selectedTags: KbqTag[]) => {
-                        const values = selectedTags.map((tag) => tag.value);
+            this.autocompleteTagList().tagSelectionChanges.pipe(
+                map(() => {
+                    const values = this.autocompleteTagList().selected.map((tag) => tag.value);
 
-                        return this.autocompleteAllTags.filter((tag) => !values.includes(tag));
-                    })
-                ),
+                    return this.autocompleteAllTags.filter((tag) => !values.includes(tag));
+                })
+            ),
             this.tagCtrl.valueChanges.pipe(
                 map((value: any) => {
                     const typedText = (value?.new ? value.value : value)?.trim();

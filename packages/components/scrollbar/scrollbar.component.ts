@@ -72,6 +72,9 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     exportAs: 'kbqScrollbar'
 })
 export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadowSource {
+    private ngZone = inject(NgZone);
+    private targetElement = inject<ElementRef<HTMLElement>>(ElementRef);
+
     /** Element that is being overflowed */
     readonly contentElement = viewChild.required<ElementRef<HTMLDivElement>>('content');
     private readonly kbqScrollbarDirective = viewChild.required('content', { read: KbqScrollbarDirective });
@@ -96,11 +99,6 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadow
     }
 
     private readonly injector = inject(Injector);
-
-    constructor(
-        private ngZone: NgZone,
-        private targetElement: ElementRef<HTMLElement>
-    ) {}
 
     ngAfterViewInit() {
         afterNextRender(

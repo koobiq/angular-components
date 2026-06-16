@@ -1,6 +1,6 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, FactoryProvider, Type, ValueProvider, viewChild } from '@angular/core';
+import { Component, FactoryProvider, inject as inject_1, Type, ValueProvider, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -1570,11 +1570,11 @@ class DatepickerWithStartAt {
     `
 })
 class DatepickerWithNgModel {
+    adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
+
     selected: DateTime | null = null;
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
-
-    constructor(public adapter: DateAdapter<DateTime>) {}
 }
 
 @Component({

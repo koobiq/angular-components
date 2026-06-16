@@ -11,13 +11,11 @@ import {
     Component,
     ComponentRef,
     inject,
-    Inject,
     InjectionToken,
     Input,
     input,
     NgZone,
     OnDestroy,
-    Optional,
     output,
     viewChild,
     ViewContainerRef,
@@ -81,6 +79,8 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     exportAs: 'kbqDatepickerContent'
 })
 export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
     /** Emits when an animation has finished. */
     readonly animationDone = new Subject<void>();
 
@@ -94,8 +94,6 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     readonly calendar = viewChild.required(KbqCalendar);
 
     private subscriptions = new Subscription();
-
-    constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
     ngAfterViewInit() {
         this.subscriptions.add(
@@ -129,6 +127,12 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     exportAs: 'kbqDatepicker'
 })
 export class KbqDatepicker<D> implements OnDestroy {
+    private overlay = inject(Overlay);
+    private ngZone = inject(NgZone);
+    private viewContainerRef = inject(ViewContainerRef);
+    private readonly dateAdapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
+    private dir = inject(Directionality, { optional: true })!;
+
     protected readonly document = inject<Document>(DOCUMENT);
 
     // TODO: Skipped for migration because:
@@ -286,14 +290,9 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     private closeSubscription = Subscription.EMPTY;
 
-    constructor(
-        private overlay: Overlay,
-        private ngZone: NgZone,
-        private viewContainerRef: ViewContainerRef,
-        @Inject(KBQ_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
-        @Optional() private readonly dateAdapter: DateAdapter<D>,
-        @Optional() private dir: Directionality
-    ) {
+    constructor() {
+        const scrollStrategy = inject(KBQ_DATEPICKER_SCROLL_STRATEGY);
+
         if (!this.dateAdapter) {
             throw createMissingDateImplError('DateAdapter');
         }

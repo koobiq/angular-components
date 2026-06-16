@@ -10,7 +10,6 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
-    Inject,
     InjectionToken,
     Input,
     OnChanges,
@@ -51,7 +50,7 @@ export enum TooltipModifier {
     Extended = 'extended'
 }
 
-export const KBQ_TOOLTIP_OPEN_TIME = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-open-time');
+export const KBQ_TOOLTIP_OPEN_TIME = new InjectionToken<{ value: number }>('kbq-tooltip-open-time');
 
 /** @docs-private */
 export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER = {
@@ -74,13 +73,11 @@ export const MIN_TIME_FOR_DELAY = 2000;
     animations: [kbqTooltipAnimations.tooltipState]
 })
 export class KbqTooltipComponent extends KbqPopUp {
+    private openTime = inject(KBQ_TOOLTIP_OPEN_TIME);
+
     prefix = 'kbq-tooltip';
 
     @ViewChild('tooltip') elementRef: ElementRef;
-
-    constructor(@Inject(KBQ_TOOLTIP_OPEN_TIME) private openTime) {
-        super();
-    }
 
     show(delay: number) {
         if (!this.content) {

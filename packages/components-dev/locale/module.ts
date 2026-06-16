@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -31,11 +31,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
+
     themePalette = ThemePalette;
     selectedLanguage;
     languages;
 
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
+    constructor() {
         this.languages = this.localeService.locales.items.map((item) => ({ ...item, selected: false }));
 
         this.selectLanguage(this.languages[0]);

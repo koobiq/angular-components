@@ -11,12 +11,12 @@ import {
     Directive,
     ElementRef,
     forwardRef,
+    inject,
     Input,
     input,
     numberAttribute,
     OnDestroy,
     OnInit,
-    Optional,
     output,
     QueryList,
     viewChild,
@@ -61,6 +61,8 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
     exportAs: 'kbqRadioGroup'
 })
 export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     readonly big = input<boolean>(false);
 
     /** Name of the radio button group. All radio buttons inside this group will use this name. */
@@ -182,8 +184,6 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
 
     /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
     private _labelPosition: 'before' | 'after' = 'after';
-
-    constructor(private readonly changeDetector: ChangeDetectorRef) {}
 
     /** The method to be called in order to update ngModel */
     controlValueAccessorChangeFn: (value: any) => void = () => {};
@@ -308,6 +308,10 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     exportAs: 'kbqRadioButton'
 })
 export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
+    private readonly changeDetector = inject(ChangeDetectorRef);
+    private focusMonitor = inject(FocusMonitor);
+    private readonly radioDispatcher = inject(UniqueSelectionDispatcher);
+
     /** Whether this radio button is checked. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -464,13 +468,11 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     /** Value assigned to this radio. */
     private _value: any = null;
 
-    constructor(
-        @Optional() radioGroup: KbqRadioGroup,
-        private readonly changeDetector: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor,
-        private readonly radioDispatcher: UniqueSelectionDispatcher
-    ) {
+    constructor() {
+        const radioGroup = inject(KbqRadioGroup, { optional: true })!;
+
         super();
+        const radioDispatcher = this.radioDispatcher;
 
         this.id = this.uniqueId;
 

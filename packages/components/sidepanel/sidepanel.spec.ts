@@ -1,7 +1,6 @@
 ﻿import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
-    Inject,
     InjectionToken,
     Injector,
     NgModule,
@@ -457,9 +456,9 @@ class SidepanelWithFormComponent {
     providers: [KbqSidepanelService]
 })
 class SidepanelFromDropdownComponent {
-    readonly trigger = viewChild.required<KbqDropdownTrigger>('trigger');
+    ss = injectCore(KbqSidepanelService);
 
-    constructor(public ss: KbqSidepanelService) {}
+    readonly trigger = viewChild.required<KbqDropdownTrigger>('trigger');
 
     showSidepanel() {
         this.ss.open(ComponentForSidepanel);
@@ -479,10 +478,8 @@ class SidepanelWithCustomToken {
     template: '<div>Simple Sidepanel</div>'
 })
 class SimpleSidepanelExample {
-    constructor(
-        public sidepanelRef: KbqSidepanelRef<SimpleSidepanelExample>,
-        @Inject(KBQ_SIDEPANEL_DATA) public data: any
-    ) {}
+    sidepanelRef = injectCore<KbqSidepanelRef<SimpleSidepanelExample>>(KbqSidepanelRef);
+    data = injectCore(KBQ_SIDEPANEL_DATA);
 }
 
 @Component({

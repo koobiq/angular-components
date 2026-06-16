@@ -4,13 +4,11 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
-    Inject,
+    inject,
     Input,
     input,
     OnChanges,
-    Optional,
-    output,
-    Self
+    output
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
@@ -65,6 +63,11 @@ let nextUniqueId = 0;
     exportAs: 'kbqTagInput, kbqTagInputFor'
 })
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
+    private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    private defaultOptions = inject<KbqTagsDefaultOptions>(KBQ_TAGS_DEFAULT_OPTIONS);
+    private trimDirective = inject(KbqTrim, { optional: true, self: true });
+    ngControl = inject(NgControl, { optional: true, self: true })!;
+    autocompleteTrigger? = inject(KbqAutocompleteTrigger, { optional: true, self: true });
     /** Whether the control is focused. */
     focused: boolean = false;
 
@@ -171,13 +174,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** The native input element to which this directive is attached. */
     private inputElement: HTMLInputElement;
 
-    constructor(
-        private elementRef: ElementRef<HTMLInputElement>,
-        @Inject(KBQ_TAGS_DEFAULT_OPTIONS) private defaultOptions: KbqTagsDefaultOptions,
-        @Optional() @Self() private trimDirective: KbqTrim,
-        @Optional() @Self() public ngControl: NgControl,
-        @Optional() @Self() public autocompleteTrigger?: KbqAutocompleteTrigger
-    ) {
+    constructor() {
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
     }
 

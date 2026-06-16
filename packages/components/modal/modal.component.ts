@@ -80,6 +80,15 @@ export class KbqModalComponent<T = any, R = any>
     extends KbqModalRef<T, R>
     implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions
 {
+    private overlay = inject(Overlay);
+    private renderer = inject(Renderer2);
+    private cfr = inject(ComponentFactoryResolver);
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private viewContainer = inject(ViewContainerRef);
+    private modalControl = inject(KbqModalControlService);
+    private changeDetector = inject(ChangeDetectorRef);
+    private focusMonitor = inject(FocusMonitor);
+
     protected readonly document = inject<Document>(DOCUMENT);
 
     componentColors = KbqComponentColors;
@@ -300,19 +309,6 @@ export class KbqModalComponent<T = any, R = any>
     // Current animation state
     private animationState: AnimationState;
     private container: HTMLElement | OverlayRef;
-
-    constructor(
-        private overlay: Overlay,
-        private renderer: Renderer2,
-        private cfr: ComponentFactoryResolver,
-        private elementRef: ElementRef<HTMLElement>,
-        private viewContainer: ViewContainerRef,
-        private modalControl: KbqModalControlService,
-        private changeDetector: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor
-    ) {
-        super();
-    }
 
     // TODO: Skipped for migration because:
     //  This input overrides a field from a superclass, while the superclass field

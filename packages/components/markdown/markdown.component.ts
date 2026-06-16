@@ -6,11 +6,9 @@ import {
     effect,
     ElementRef,
     inject,
-    Inject,
     InjectionToken,
     Input,
     OnDestroy,
-    Optional,
     Provider,
     signal,
     viewChild,
@@ -45,6 +43,11 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
     }
 })
 export class KbqMarkdown implements OnDestroy {
+    private readonly markdownService = inject(KbqMarkdownService);
+    private sanitizer = inject(DomSanitizer);
+    private readonly markedOptions =
+        inject<MarkedOptions | undefined>(KBQ_MARKDOWN_MARKED_OPTIONS, { optional: true }) ?? undefined;
+
     private readonly contentWrapper = viewChild.required<ElementRef<HTMLPreElement>>('contentWrapper');
     private readonly outputWrapper = viewChild.required<ElementRef<HTMLDivElement>>('outputWrapper');
 
@@ -70,11 +73,7 @@ export class KbqMarkdown implements OnDestroy {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly links: HTMLAnchorElement[] = [];
 
-    constructor(
-        private readonly markdownService: KbqMarkdownService,
-        private sanitizer: DomSanitizer,
-        @Optional() @Inject(KBQ_MARKDOWN_MARKED_OPTIONS) private readonly markedOptions?: MarkedOptions | undefined
-    ) {
+    constructor() {
         afterNextRender(() => {
             const contentWrapper = this.contentWrapper();
 

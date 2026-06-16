@@ -15,7 +15,6 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Inject,
     Input,
     input,
     OnDestroy,
@@ -223,6 +222,8 @@ export class KbqTag
     extends KbqColorDirective
     implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit
 {
+    changeDetectorRef = inject(ChangeDetectorRef);
+
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
     private readonly drag: CdkDrag<KbqTagDragData> = inject(CdkDrag, { host: true });
@@ -414,7 +415,7 @@ export class KbqTag
         return (this.tagList?.draggable ?? false) && !this.disabled;
     }
 
-    constructor(public changeDetectorRef: ChangeDetectorRef) {
+    constructor() {
         super();
 
         this.color = KbqComponentColors.ContrastFade;
@@ -728,7 +729,7 @@ export class KbqTag
     }
 })
 export class KbqTagRemove {
-    constructor(@Inject(forwardRef(() => KbqTag)) protected parentTag: KbqTag) {}
+    protected parentTag = inject(KbqTag);
 
     /** @docs-private */
     focus(event: FocusEvent): void {

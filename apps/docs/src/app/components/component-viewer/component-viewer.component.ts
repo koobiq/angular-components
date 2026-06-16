@@ -70,7 +70,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
         super();
 
         // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
-        // parent route for the section (koobiq/cdk).
+        // parent route for the section (e.g. components, other).
         this.activatedRoute.url
             .pipe(
                 map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
@@ -108,7 +108,7 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
         super();
 
         // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
-        // parent route for the section (koobiq/cdk).
+        // parent route for the section (e.g. components, other).
         this.activatedRoute
             .parent!.url.pipe(
                 map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
@@ -146,31 +146,6 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
         this.titleService.setTitle(title);
 
         this.changeDetectorRef.detectChanges();
-    }
-}
-
-@Component({
-    selector: 'docs-cdk-overview',
-    imports: [
-        DocsAnchorsComponent,
-        DocsLiveExampleComponent,
-        KbqDividerModule,
-        KbqLinkModule
-    ],
-    templateUrl: './component-overview.template.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'docs-component-overview'
-    }
-})
-export class DocsCdkOverviewComponent extends DocsOverviewComponentBase {
-    get docItemUrl(): string | null {
-        if (!this.componentDocItem) {
-            return null;
-        }
-
-        return `docs-content/cdk/${this.componentDocItem.id}.${this.locale()}.html`;
     }
 }
 
@@ -221,31 +196,6 @@ export class DocsComponentApiComponent extends DocsOverviewComponentBase {
         }
 
         return `docs-content/api-docs/components-${this.componentDocItem.apiId}.html`;
-    }
-}
-
-@Component({
-    selector: 'docs-cdk-api',
-    imports: [
-        DocsAnchorsComponent,
-        DocsLiveExampleComponent,
-        KbqDividerModule,
-        KbqLinkModule
-    ],
-    templateUrl: './component-overview.template.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'docs-component-overview'
-    }
-})
-export class DocsCdkApiComponent extends DocsOverviewComponentBase {
-    get docItemUrl(): string | null {
-        if (!this.componentDocItem) {
-            return null;
-        }
-
-        return `docs-content/api-docs/cdk-${this.componentDocItem.id}.html`;
     }
 }
 

@@ -1,15 +1,7 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    TemplateRef,
-    ViewEncapsulation,
-    viewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -35,13 +27,17 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class DevToastComponent extends KbqToastComponent {
-    constructor(
-        readonly data: KbqToastData,
-        readonly service: KbqToastService,
-        elementRef: ElementRef<HTMLElement>,
-        focusMonitor: FocusMonitor
-    ) {
-        super(data, service, elementRef, focusMonitor);
+    readonly data: KbqToastData;
+    readonly service: KbqToastService;
+
+    constructor() {
+        const data = inject(KbqToastData);
+        const service = inject(KbqToastService);
+
+        super();
+
+        this.data = data;
+        this.service = service;
     }
 }
 
@@ -71,6 +67,11 @@ export class DevToastComponent extends KbqToastComponent {
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
+    private toastService = inject(KbqToastService);
+    private modalService = inject(KbqModalService);
+    private sidepanelService = inject(KbqSidepanelService);
+    private overlayRef = inject(OverlayContainer);
+
     themePalette = ThemePalette;
 
     selectValue = '';
@@ -82,12 +83,9 @@ export class DevApp {
     array = new Array(40);
     readonly template = viewChild.required<TemplateRef<any>>('sipanelTemplate');
 
-    constructor(
-        private toastService: KbqToastService,
-        private modalService: KbqModalService,
-        private sidepanelService: KbqSidepanelService,
-        private overlayRef: OverlayContainer
-    ) {
+    constructor() {
+        const overlayRef = this.overlayRef;
+
         console.log('overlayRef: ', overlayRef);
         console.log('overlayRef.getContainerElement(): ', overlayRef.getContainerElement());
         console.log('qwe: ', overlayRef.getContainerElement().childNodes.length);

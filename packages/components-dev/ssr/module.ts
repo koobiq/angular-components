@@ -36,7 +36,6 @@ import { LoaderOverlayOverviewExample } from 'packages/docs-examples/components/
 import { MarkdownOverviewExample } from 'packages/docs-examples/components/markdown';
 import { ModalOverviewExample } from 'packages/docs-examples/components/modal';
 import { NavbarOverviewExample } from 'packages/docs-examples/components/navbar';
-import { NavbarIcOverviewExample } from 'packages/docs-examples/components/navbar-ic';
 import { NotificationCenterOverviewExample } from 'packages/docs-examples/components/notification-center';
 import { OverflowItemsOverviewExample } from 'packages/docs-examples/components/overflow-items';
 import { PopoverOverviewExample } from 'packages/docs-examples/components/popover';
@@ -109,7 +108,6 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         MarkdownOverviewExample,
         ModalOverviewExample,
         NavbarOverviewExample,
-        NavbarIcOverviewExample,
         NotificationCenterOverviewExample,
         OverflowItemsOverviewExample,
         PopoverOverviewExample,
@@ -207,8 +205,6 @@ import { DevBreadcrumbsHydration } from './components/breadcrumbs';
         <modal-overview-example />
         <hr />
         <navbar-overview-example />
-        <hr />
-        <navbar-ic-overview-example />
         <hr />
         <notification-center-overview-example />
         <hr />

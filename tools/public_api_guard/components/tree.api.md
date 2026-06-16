@@ -7,15 +7,12 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
-import { Clipboard as Clipboard_2 } from '@angular/cdk/clipboard';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { ControlValueAccessor } from '@angular/forms';
 import { DataSource } from '@angular/cdk/collections';
 import { DestroyRef } from '@angular/core';
-import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/components/core';
@@ -35,12 +32,10 @@ import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { MultipleMode } from '@koobiq/components/core';
-import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { Renderer2 } from '@angular/core';
 import { SelectionChange } from '@angular/cdk/collections';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
@@ -166,7 +161,6 @@ export class KbqTree extends KbqTreeBase<any> {
 
 // @public (undocumented)
 export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
-    constructor(differs: IterableDiffers, changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     protected changeDetectorRef: ChangeDetectorRef;
     protected dataDiffer: IterableDiffer<T>;
@@ -285,7 +279,7 @@ export class KbqTreeNestedDataSource<T> extends DataSource<T> {
 
 // @public (undocumented)
 export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, tree: KbqTreeBase<T>);
+    constructor();
     // (undocumented)
     get data(): T;
     set data(value: T);
@@ -312,7 +306,6 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
 
 // @public
 export class KbqTreeNodeDef<T> {
-    constructor(template: TemplateRef<any>);
     // (undocumented)
     readonly data: i0.InputSignal<T>;
     // (undocumented)
@@ -326,7 +319,6 @@ export class KbqTreeNodeDef<T> {
 
 // @public (undocumented)
 export class KbqTreeNodeOutlet {
-    constructor(viewContainer: ViewContainerRef, changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
@@ -348,7 +340,7 @@ export class KbqTreeNodeOutletContext<T> {
 
 // @public (undocumented)
 export class KbqTreeNodePadding<T> implements AfterViewInit {
-    constructor(treeNode: KbqTreeNode<T>, tree: KbqTreeBase<T>, renderer: Renderer2, element: ElementRef<HTMLElement>, option: KbqTreeOption, dir: Directionality);
+    constructor();
     // (undocumented)
     iconWidth: number;
     // (undocumented)
@@ -375,12 +367,12 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodePadding<any>, "[kbqTreeNodePadding]", ["kbqTreeNodePadding"], { "indent": { "alias": "kbqTreeNodePaddingIndent"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodePadding<any>, [null, null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodePadding<any>, never>;
 }
 
 // @public
 export class KbqTreeNodeToggleBaseDirective<T> {
-    constructor(tree: KbqTreeBase<T>, treeNode: KbqTreeNode<T>);
+    constructor();
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -419,7 +411,7 @@ export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirectiv
 
 // @public (undocumented)
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, tree: any);
+    constructor();
     // (undocumented)
     readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
     // (undocumented)
@@ -546,7 +538,7 @@ export const kbqTreeSelectAllValue = "selectAll";
 
 // @public (undocumented)
 export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, scheduler: AsyncScheduler, differs: IterableDiffers, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
+    constructor();
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
@@ -658,7 +650,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelection, [null, null, null, null, { attribute: "multiple"; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelection, never>;
 }
 
 // @public (undocumented)

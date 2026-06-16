@@ -7,11 +7,9 @@
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { BasePortalOutlet } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
-import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
-import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -29,7 +27,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -64,7 +61,6 @@ export class KbqSidepanelBody {
 
 // @public
 export class KbqSidepanelClose implements OnInit, OnChanges {
-    constructor(sidepanelRef: KbqSidepanelRef, elementRef: ElementRef<HTMLElement>, sidepanelService: KbqSidepanelService);
     // (undocumented)
     readonly kbqSidepanelClose: i0.InputSignal<any>;
     // (undocumented)
@@ -72,13 +68,13 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
-    sidepanelRef: KbqSidepanelRef;
+    sidepanelRef: KbqSidepanelRef<any, any>;
     // (undocumented)
     sidepanelResult: any;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelClose, "button[kbq-sidepanel-close], button[kbqSidepanelClose]", never, { "sidepanelResult": { "alias": "kbq-sidepanel-close"; "required": false; }; "kbqSidepanelClose": { "alias": "kbqSidepanelClose"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelClose, [{ optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelClose, never>;
 }
 
 // @public (undocumented)
@@ -101,7 +97,6 @@ export class KbqSidepanelConfig<D = any> {
 
 // @public (undocumented)
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
-    constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, sidepanelConfig: KbqSidepanelConfig, withIndent: boolean);
     // Warning: (ae-forgotten-export) The symbol "KbqSidepanelAnimationState" needs to be exported by the entry point index.d.ts
     animationState: KbqSidepanelAnimationState;
     animationStateChanged: EventEmitter<AnimationEvent_2>;
@@ -125,7 +120,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     readonly portalOutlet: i0.Signal<CdkPortalOutlet>;
     setAnimationState(state: KbqSidepanelAnimationState): void;
     // (undocumented)
-    sidepanelConfig: KbqSidepanelConfig;
+    sidepanelConfig: KbqSidepanelConfig<any>;
     get size(): string;
     get trapFocus(): boolean;
     get trapFocusAutoCapture(): boolean;
@@ -201,7 +196,6 @@ export class KbqSidepanelRef<T = any, R = any> {
 
 // @public (undocumented)
 export class KbqSidepanelService implements OnDestroy {
-    constructor(overlay: Overlay, injector: Injector, defaultOptions: KbqSidepanelConfig, parentSidepanelService: KbqSidepanelService);
     closeAll(): void;
     getSidepanelById(id: string): KbqSidepanelRef | undefined;
     // (undocumented)
@@ -210,7 +204,7 @@ export class KbqSidepanelService implements OnDestroy {
     open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config?: KbqSidepanelConfig<D>): KbqSidepanelRef<T>;
     get openedSidepanels(): KbqSidepanelRef[];
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelService, [null, null, { optional: true; }, { optional: true; skipSelf: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelService, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqSidepanelService>;
 }

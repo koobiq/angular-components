@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject as inject_1 } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
@@ -81,10 +81,10 @@ describe('KbqCalendarHeader', () => {
     `
 })
 class StandardCalendar {
+    adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
+
     selected: DateTime;
     selectedYear: DateTime;
     selectedMonth: DateTime;
     startDate = this.adapter.createDate(2017, 0, 31);
-
-    constructor(public adapter: DateAdapter<DateTime>) {}
 }

@@ -1,5 +1,5 @@
 import { SelectionChange } from '@angular/cdk/collections';
-import { ChangeDetectionStrategy, Component, Injectable } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injectable, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
@@ -202,6 +202,8 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectLazyloadExample {
+    private dataService = inject(LazyLoadDataService);
+
     selected = '';
     treeControl: FlatTreeControl<FlatNode>;
     treeFlattener: KbqTreeFlattener<LazyLoadNode, FlatNode>;
@@ -210,7 +212,7 @@ export class TreeSelectLazyloadExample {
 
     nodeMap = new Map<string, FlatNode>();
 
-    constructor(private dataService: LazyLoadDataService) {
+    constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FlatNode>(

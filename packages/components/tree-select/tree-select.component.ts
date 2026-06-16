@@ -15,19 +15,15 @@ import {
     DoCheck,
     ElementRef,
     EventEmitter,
-    Host,
-    Inject,
     InjectionToken,
     Input,
     NgZone,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     Provider,
     QueryList,
     Renderer2,
-    Self,
     TemplateRef,
     ViewChild,
     ViewChildren,
@@ -190,10 +186,21 @@ export class KbqTreeSelect
         KbqFormFieldControl<KbqTreeOption>,
         CanUpdateErrorState
 {
+    elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly ngZone = inject(NgZone);
+    private readonly renderer = inject(Renderer2);
+    defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
+    private readonly dir = inject(Directionality, { optional: true });
+    parentForm = inject(NgForm, { optional: true });
+    parentFormGroup = inject(FormGroupDirective, { optional: true });
+    private readonly parentFormField = inject(KbqFormField, { host: true, optional: true })!;
+    ngControl = inject(NgControl, { optional: true, self: true });
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
-
     /** Whether the component is in an error state. */
     errorState: boolean = false;
     /**
@@ -635,20 +642,7 @@ export class KbqTreeSelect
     private readonly destroyRef = inject(DestroyRef);
     private readonly window = inject(KBQ_WINDOW);
 
-    constructor(
-        public elementRef: ElementRef<HTMLElement>,
-        readonly changeDetectorRef: ChangeDetectorRef,
-        private readonly ngZone: NgZone,
-        private readonly renderer: Renderer2,
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        @Inject(KBQ_SELECT_SCROLL_STRATEGY) private readonly scrollStrategyFactory,
-        @Optional() private readonly dir: Directionality,
-        @Optional() public parentForm: NgForm,
-        @Optional() public parentFormGroup: FormGroupDirective,
-        @Host() @Optional() private readonly parentFormField: KbqFormField,
-        @Optional() @Self() public ngControl: NgControl,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
-    ) {
+    constructor() {
         super();
 
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);

@@ -18,13 +18,10 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    Host,
-    Inject,
     InjectionToken,
     Input,
     NgZone,
     OnDestroy,
-    Optional,
     Provider,
     ViewContainerRef,
     afterNextRender,
@@ -116,6 +113,15 @@ export function getKbqAutocompleteMissingPanelError(): Error {
 export class KbqAutocompleteTrigger
     implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler
 {
+    private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    private viewContainerRef = inject(ViewContainerRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private overlay = inject(Overlay);
+    private zone = inject(NgZone);
+    private dir = inject(Directionality, { optional: true })!;
+    private formField = inject(KbqFormField, { optional: true, host: true });
+    private viewportRuler = inject(ViewportRuler);
+
     protected readonly document = inject<Document>(DOCUMENT);
 
     readonly optionSelections: Observable<KbqOptionSelectionChange> = defer(() => {
@@ -221,18 +227,10 @@ export class KbqAutocompleteTrigger
     private readonly closeKeyEventStream = new Subject<void>();
     private readonly window = inject(KBQ_WINDOW);
 
-    constructor(
-        private elementRef: ElementRef<HTMLInputElement>,
-        private viewContainerRef: ViewContainerRef,
-        private changeDetectorRef: ChangeDetectorRef,
-        private overlay: Overlay,
-        private zone: NgZone,
-        @Inject(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
-        @Optional() private dir: Directionality,
-        @Optional() @Host() private formField: KbqFormField,
-        // @breaking-change 8.0.0 Make `_viewportRuler` required.
-        private viewportRuler?: ViewportRuler
-    ) {
+    constructor() {
+        const zone = this.zone;
+        const scrollStrategy = inject(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY);
+
         afterNextRender(() => {
             zone.runOutsideAngular(() => this.window.addEventListener('blur', this.windowBlurHandler));
         });

@@ -10,15 +10,14 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
-    Inject,
     Input,
     OnDestroy,
     OnInit,
-    Optional,
     Output,
     ViewContainerRef,
     ViewEncapsulation,
     forwardRef,
+    inject,
     input,
     output,
     viewChild
@@ -64,6 +63,8 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     animations: [kbqTabsAnimations.translateTab]
 })
 export class KbqTabBody implements OnInit, OnDestroy {
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly dir = inject(Directionality, { optional: true });
     /** The shifted index position of the tab body, where zero represents the active center tab. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -110,11 +111,9 @@ export class KbqTabBody implements OnInit, OnDestroy {
     /** Subscription to the directionality change observable. */
     private readonly dirChangeSubscription = Subscription.EMPTY;
 
-    constructor(
-        private readonly elementRef: ElementRef<HTMLElement>,
-        @Optional() private readonly dir: Directionality,
-        changeDetectorRef: ChangeDetectorRef
-    ) {
+    constructor() {
+        const changeDetectorRef = inject(ChangeDetectorRef);
+
         if (this.dir && changeDetectorRef) {
             this.dirChangeSubscription = this.dir.change.subscribe((direction: Direction) => {
                 this.computePositionAnimationState(direction);
@@ -203,16 +202,17 @@ export class KbqTabBody implements OnInit, OnDestroy {
     selector: '[kbqTabBodyHost]'
 })
 export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
+    private readonly host = inject(KbqTabBody);
+
     /** Subscription to events for when the tab body begins centering. */
     private centeringSub = Subscription.EMPTY;
     /** Subscription to events for when the tab body finishes leaving from center position. */
     private leavingSub = Subscription.EMPTY;
 
-    constructor(
-        componentFactoryResolver: ComponentFactoryResolver,
-        viewContainerRef: ViewContainerRef,
-        @Inject(forwardRef(() => KbqTabBody)) private readonly host: KbqTabBody
-    ) {
+    constructor() {
+        const componentFactoryResolver = inject(ComponentFactoryResolver);
+        const viewContainerRef = inject(ViewContainerRef);
+
         super(componentFactoryResolver, viewContainerRef);
     }
 

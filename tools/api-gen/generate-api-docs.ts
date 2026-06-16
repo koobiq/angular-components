@@ -6,11 +6,6 @@ import { ModuleInfo } from './types';
 
 const modules: ModuleInfo[] = [
     {
-        /** List of CDK packages that need to be documented. */
-        moduleName: 'cdk',
-        exclude: ['testing']
-    },
-    {
         /** List of koobiq packages that need to be documented. */
         moduleName: 'components'
     },

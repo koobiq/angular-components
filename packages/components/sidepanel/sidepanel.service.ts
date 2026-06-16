@@ -1,16 +1,6 @@
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType, TemplatePortal } from '@angular/cdk/portal';
-import {
-    ComponentRef,
-    Inject,
-    Injectable,
-    InjectionToken,
-    Injector,
-    OnDestroy,
-    Optional,
-    SkipSelf,
-    TemplateRef
-} from '@angular/core';
+import { ComponentRef, Injectable, InjectionToken, Injector, OnDestroy, TemplateRef, inject } from '@angular/core';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import { KBQ_SIDEPANEL_DATA, KbqSidepanelConfig } from './sidepanel-config';
 import { KBQ_SIDEPANEL_WITH_INDENT, KbqSidepanelContainerComponent } from './sidepanel-container.component';
@@ -21,6 +11,10 @@ export const KBQ_SIDEPANEL_DEFAULT_OPTIONS = new InjectionToken<KbqSidepanelConf
 
 @Injectable()
 export class KbqSidepanelService implements OnDestroy {
+    private overlay = inject(Overlay);
+    private injector = inject(Injector);
+    private defaultOptions = inject<KbqSidepanelConfig>(KBQ_SIDEPANEL_DEFAULT_OPTIONS, { optional: true });
+    private parentSidepanelService = inject(KbqSidepanelService, { optional: true, skipSelf: true });
     private openedSidepanelsAtThisLevel: KbqSidepanelRef[] = [];
 
     /** Keeps track of the currently-open sidepanels. */
@@ -29,13 +23,6 @@ export class KbqSidepanelService implements OnDestroy {
             ? this.parentSidepanelService.openedSidepanels
             : this.openedSidepanelsAtThisLevel;
     }
-
-    constructor(
-        private overlay: Overlay,
-        private injector: Injector,
-        @Optional() @Inject(KBQ_SIDEPANEL_DEFAULT_OPTIONS) private defaultOptions: KbqSidepanelConfig,
-        @Optional() @SkipSelf() private parentSidepanelService: KbqSidepanelService
-    ) {}
 
     ngOnDestroy() {
         // Only close the sidepanels at this level on destroy

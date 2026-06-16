@@ -3,7 +3,7 @@
 exports[`api manifest generation should generate a manifest from multiple collections 1`] = `
 [
   {
-    "moduleName": "cdk",
+    "moduleName": "components",
     "packagesApiInfo": [
       {
         "entries": [
@@ -13,7 +13,7 @@ exports[`api manifest generation should generate a manifest from multiple collec
             "jsdocTags": [],
             "members": [],
             "name": "KbqButton",
-            "publicUrl": "cdk/button/api#KbqButton",
+            "publicUrl": "components/button/api#KbqButton",
             "rawComment": "",
           },
           {
@@ -22,7 +22,7 @@ exports[`api manifest generation should generate a manifest from multiple collec
             "jsdocTags": [],
             "members": [],
             "name": "TOOLTIP_TIMEOUT",
-            "publicUrl": "cdk/button/api#TOOLTIP_TIMEOUT",
+            "publicUrl": "components/button/api#TOOLTIP_TIMEOUT",
             "rawComment": "",
           },
         ],
