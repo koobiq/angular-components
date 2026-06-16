@@ -616,7 +616,6 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Highlight',
                         en: 'Highlight'
                     },
-                    svgPreview: 'highlight',
                     hasApi: false,
                     isNew: expiresAt('2026-07-15'),
                     hasExamples: false
