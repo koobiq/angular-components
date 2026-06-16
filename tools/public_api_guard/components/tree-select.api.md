@@ -138,7 +138,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngControl: NgControl;
+    ngControl: NgControl | null;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -179,9 +179,9 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     get panelOpen(): boolean;
     readonly panelWidth: _angular_core.InputSignal<KbqTreeSelectPanelWidth>;
     // (undocumented)
-    parentForm: NgForm;
+    parentForm: NgForm | null;
     // (undocumented)
-    parentFormGroup: FormGroupDirective;
+    parentFormGroup: FormGroupDirective | null;
     // (undocumented)
     get placeholder(): string;
     set placeholder(value: string);

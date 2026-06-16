@@ -370,7 +370,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     navbarFocusableItem = inject(KbqNavbarFocusableItem);
     private changeDetectorRef = inject(ChangeDetectorRef);
     private dropdownTrigger = inject(KbqDropdownTrigger, { optional: true })!;
-    private bento = inject(KbqNavbarBento, { optional: true })!;
+    private bento = inject(KbqNavbarBento, { optional: true });
     readonly title = contentChild(KbqNavbarTitle);
 
     readonly icon = contentChild(KbqIcon);

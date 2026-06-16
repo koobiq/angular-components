@@ -117,7 +117,7 @@ export class KbqTimepicker<D>
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private

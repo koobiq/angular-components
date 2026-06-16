@@ -115,7 +115,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
         panelWidth: KbqSelectPanelWidth;
         panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
         searchMinOptionsThreshold: "auto" | number;
-    }>;
+    }> | null;
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -149,7 +149,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     isRtl(): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
-    protected localeService?: KbqLocaleService | undefined;
+    protected localeService?: KbqLocaleService | null | undefined;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get multiple(): boolean;
     set multiple(value: boolean);
@@ -164,7 +164,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     static ngAcceptInputType_tabIndex: unknown;
     ngAfterContentInit(): void;
     // (undocumented)
-    ngControl: NgControl;
+    ngControl: NgControl | null;
     ngDoCheck(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
@@ -198,9 +198,9 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     panelOpen: boolean;
     panelWidth: KbqSelectPanelWidth;
     // (undocumented)
-    parentForm: NgForm;
+    parentForm: NgForm | null;
     // (undocumented)
-    parentFormGroup: FormGroupDirective;
+    parentFormGroup: FormGroupDirective | null;
     get placeholder(): string;
     set placeholder(value: string);
     positions: ConnectedPosition[];

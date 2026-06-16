@@ -25,7 +25,7 @@ export function KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): KbqLuxonDateAdapterOpt
 @Injectable()
 export class LuxonDateAdapter extends BaseLuxonDateAdapter {
     protected readonly options?: LuxonDateAdapterOptions;
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     /** A stream that emits when the locale changes. */
     get localeChanges(): Observable<any> {
         return this._localeChanges;

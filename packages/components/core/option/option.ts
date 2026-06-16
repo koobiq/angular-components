@@ -165,7 +165,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     protected readonly parent = inject<KbqOptionParentComponent>(KBQ_OPTION_PARENT_COMPONENT, { optional: true })!;
-    readonly group = inject(KbqOptgroup, { optional: true })!;
+    readonly group = inject(KbqOptgroup, { optional: true });
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
     /** The form value of the option. */

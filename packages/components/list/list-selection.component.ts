@@ -128,7 +128,7 @@ export class KbqListCopyEvent<T> {
 export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
-    private clipboard = inject(Clipboard, { optional: true })!;
+    private clipboard = inject(Clipboard, { optional: true });
     protected readonly focusMonitor = inject(FocusMonitor);
 
     keyManager: FocusKeyManager<KbqListOption>;
@@ -709,7 +709,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     private changeDetector = inject(ChangeDetectorRef);
     private ngZone = inject(NgZone);
     listSelection = inject(KbqListSelection);
-    readonly group = inject(KbqOptgroup, { optional: true })!;
+    readonly group = inject(KbqOptgroup, { optional: true });
     hasFocus: boolean = false;
     preventBlur: boolean = false;
 

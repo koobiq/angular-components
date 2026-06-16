@@ -301,14 +301,14 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set errorState(value: boolean);
     get errorStateMatcher(): ErrorStateMatcher;
     set errorStateMatcher(value: ErrorStateMatcher);
-    protected readonly externalConfiguration: {};
+    protected readonly externalConfiguration: unknown;
     // (undocumented)
     focus(): void;
     // (undocumented)
     focusChanged(isFocused: boolean): void;
     // (undocumented)
     focused: boolean;
-    protected readonly formField: KbqFormField;
+    protected readonly formField: KbqFormField | null;
     getOrigin(): ElementRef;
     // (undocumented)
     get id(): string;
@@ -322,8 +322,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set kbqDatepickerFilter(value: (date: D | null) => boolean);
     // (undocumented)
     set kbqValidationTooltip(tooltip: KbqTooltipTrigger);
-    // (undocumented)
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService;
+    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     get max(): D | null;
     set max(value: D | null);
     get min(): D | null;

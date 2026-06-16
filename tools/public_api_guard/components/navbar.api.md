@@ -377,10 +377,10 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     get expanded(): boolean;
     set expanded(value: boolean);
     // (undocumented)
-    readonly externalConfiguration: {};
+    readonly externalConfiguration: unknown;
     // (undocumented)
     readonly items: i0.Signal<readonly any[]>;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService;
+    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)

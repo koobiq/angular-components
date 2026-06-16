@@ -12,7 +12,7 @@ interface IRegisteredMeta {
 
 @Injectable({ providedIn: 'root' })
 export class KbqModalControlService {
-    private parentService = inject(KbqModalControlService, { optional: true, skipSelf: true })!;
+    private parentService = inject(KbqModalControlService, { optional: true, skipSelf: true });
     // Track singleton afterAllClose through over the injection tree
     get afterAllClose(): Subject<void> {
         return this.parentService ? this.parentService.afterAllClose : this.rootAfterAllClose;

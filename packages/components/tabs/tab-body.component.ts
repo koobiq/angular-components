@@ -64,7 +64,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
 })
 export class KbqTabBody implements OnInit, OnDestroy {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly dir = inject(Directionality, { optional: true })!;
+    private readonly dir = inject(Directionality, { optional: true });
     /** The shifted index position of the tab body, where zero represents the active center tab. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.

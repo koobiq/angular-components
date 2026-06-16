@@ -178,7 +178,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    parentDropdownPanel?: KbqDropdownPanel | undefined;
+    parentDropdownPanel?: KbqDropdownPanel | null | undefined;
     // (undocumented)
     resetStyles(): void;
     // (undocumented)

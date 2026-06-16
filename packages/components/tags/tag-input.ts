@@ -65,9 +65,9 @@ let nextUniqueId = 0;
 export class KbqTagInput implements KbqTagTextControl, OnChanges {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private defaultOptions = inject<KbqTagsDefaultOptions>(KBQ_TAGS_DEFAULT_OPTIONS);
-    private trimDirective = inject(KbqTrim, { optional: true, self: true })!;
+    private trimDirective = inject(KbqTrim, { optional: true, self: true });
     ngControl = inject(NgControl, { optional: true, self: true })!;
-    autocompleteTrigger? = inject(KbqAutocompleteTrigger, { optional: true, self: true })!;
+    autocompleteTrigger? = inject(KbqAutocompleteTrigger, { optional: true, self: true });
     /** Whether the control is focused. */
     focused: boolean = false;
 

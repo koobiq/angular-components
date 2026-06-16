@@ -35,9 +35,9 @@ export class KbqInputPassword
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
 {
     protected elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
-    ngControl = inject(NgControl, { optional: true, self: true })!;
-    parentForm = inject(NgForm, { optional: true })!;
-    parentFormGroup = inject(FormGroupDirective, { optional: true })!;
+    ngControl = inject(NgControl, { optional: true, self: true });
+    parentForm = inject(NgForm, { optional: true });
+    parentFormGroup = inject(FormGroupDirective, { optional: true });
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
     /** Whether the component is in an error state. */

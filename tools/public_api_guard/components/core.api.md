@@ -284,7 +284,7 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
     // (undocumented)
     readonly adapter: DateAdapter_2<D>;
     // (undocumented)
-    protected localeService: KbqLocaleService;
+    protected localeService: KbqLocaleService | null;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DateFormatter<any>, never>;
     // (undocumented)
@@ -2686,7 +2686,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     getTabIndex(): string;
     // (undocumented)
-    readonly group: KbqOptgroup;
+    readonly group: KbqOptgroup | null;
     handleClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
     // (undocumented)

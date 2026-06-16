@@ -15,7 +15,7 @@ import { debounceTime } from 'rxjs/operators';
     exportAs: 'kbqTitle'
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    private componentInstance = inject<KbqTitleTextRef>(KBQ_TITLE_TEXT_REF, { host: true, optional: true })!;
+    private componentInstance = inject<KbqTitleTextRef>(KBQ_TITLE_TEXT_REF, { host: true, optional: true });
     private readonly nativeElement = kbqInjectNativeElement();
 
     private contentObserver = inject(ContentObserver);

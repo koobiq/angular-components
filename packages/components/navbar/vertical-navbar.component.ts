@@ -72,8 +72,8 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     protected elementRef: ElementRef<HTMLElement>;
 
     /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true })!;
-    readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true })!;
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true });
     configuration;
 
     rectangleElements = contentChildren(

@@ -53,11 +53,11 @@ export class KbqTextarea
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
     protected elementRef = inject<ElementRef<HTMLTextAreaElement>>(ElementRef);
-    ngControl = inject(NgControl, { optional: true, self: true })!;
-    parentForm = inject(NgForm, { optional: true })!;
-    parentFormGroup = inject(FormGroupDirective, { optional: true })!;
+    ngControl = inject(NgControl, { optional: true, self: true });
+    parentForm = inject(NgForm, { optional: true });
+    parentFormGroup = inject(FormGroupDirective, { optional: true });
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
-    private parent = inject(KBQ_PARENT_ANIMATION_COMPONENT, { optional: true, host: true })!;
+    private parent = inject(KBQ_PARENT_ANIMATION_COMPONENT, { optional: true, host: true });
     private ngZone = inject(NgZone);
 
     /** Whether the component is in an error state. */

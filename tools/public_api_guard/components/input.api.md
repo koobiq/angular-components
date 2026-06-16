@@ -88,7 +88,7 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     // (undocumented)
     protected neverEmptyInputTypes: string[];
     // (undocumented)
-    ngControl: NgControl;
+    ngControl: NgControl | null;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -96,14 +96,14 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    numberInput: KbqNumberInput;
+    numberInput: KbqNumberInput | null;
     // (undocumented)
     onBlur(): void;
     onContainerClick(): void;
     // (undocumented)
-    parentForm: NgForm;
+    parentForm: NgForm | null;
     // (undocumented)
-    parentFormGroup: FormGroupDirective;
+    parentFormGroup: FormGroupDirective | null;
     placeholder: string;
     // (undocumented)
     protected previousNativeValue: any;
@@ -170,7 +170,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
     set id(value: string);
     protected isBadInput(): boolean;
     // (undocumented)
-    ngControl: NgControl;
+    ngControl: NgControl | null;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -183,9 +183,9 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
     // (undocumented)
     onInput(): void;
     // (undocumented)
-    parentForm: NgForm;
+    parentForm: NgForm | null;
     // (undocumented)
-    parentFormGroup: FormGroupDirective;
+    parentFormGroup: FormGroupDirective | null;
     placeholder: string;
     // (undocumented)
     protected previousNativeValue: any;

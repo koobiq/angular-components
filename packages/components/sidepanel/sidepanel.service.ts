@@ -13,8 +13,8 @@ export const KBQ_SIDEPANEL_DEFAULT_OPTIONS = new InjectionToken<KbqSidepanelConf
 export class KbqSidepanelService implements OnDestroy {
     private overlay = inject(Overlay);
     private injector = inject(Injector);
-    private defaultOptions = inject<KbqSidepanelConfig>(KBQ_SIDEPANEL_DEFAULT_OPTIONS, { optional: true })!;
-    private parentSidepanelService = inject(KbqSidepanelService, { optional: true, skipSelf: true })!;
+    private defaultOptions = inject<KbqSidepanelConfig>(KBQ_SIDEPANEL_DEFAULT_OPTIONS, { optional: true });
+    private parentSidepanelService = inject(KbqSidepanelService, { optional: true, skipSelf: true });
     private openedSidepanelsAtThisLevel: KbqSidepanelRef[] = [];
 
     /** Keeps track of the currently-open sidepanels. */

@@ -19,7 +19,7 @@ import { KbqIconItem } from '@koobiq/components/icon';
     }
 })
 export class KbqEmptyStateIcon {
-    private icon = inject(KbqIconItem, { optional: true })!;
+    private icon = inject(KbqIconItem, { optional: true });
 
     setErrorColor() {
         if (!this.icon) {

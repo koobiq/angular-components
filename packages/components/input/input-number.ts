@@ -103,7 +103,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     /** Emits when the value changes (either due to user input or programmatic change). */
     valueChange = new EventEmitter<number | null>();
 

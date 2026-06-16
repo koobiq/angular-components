@@ -18,7 +18,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     private renderer = inject(Renderer2);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
     private option = inject(KbqTreeOption);
-    private dir = inject(Directionality, { optional: true })!;
+    private dir = inject(Directionality, { optional: true });
     get level(): number {
         return this._level;
     }

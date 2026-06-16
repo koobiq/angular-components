@@ -249,12 +249,13 @@ export class KbqDatepickerInput<D>
     elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
     readonly adapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
-    private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true })!;
+    private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true });
     /** @docs-private */
-    protected readonly formField = inject(KbqFormField, { optional: true, host: true })!; /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true })!;
+    protected readonly formField = inject(KbqFormField, { optional: true, host: true });
     /** @docs-private */
-    protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true })!;
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    /** @docs-private */
+    protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true });
     protected configuration;
 
     readonly stateChanges: Subject<void> = new Subject<void>();

@@ -384,6 +384,24 @@ describe(SCHEMATIC_NAME, () => {
         expect(result.readText(html)).toContain('canDownload="true"');
     });
 
+    it('rewrites the static codeFiles="…" attribute form to files', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+
+        appTree.overwrite(html, '<kbq-code-block codeFiles="a.ts"></kbq-code-block>\n');
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(html);
+
+        expect(updated).toContain('files="a.ts"');
+        expect(updated).not.toContain('codeFiles=');
+    });
+
     it('warns about KbqCodeBlock.scrollableCodeContent (use scrollTo())', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
@@ -399,6 +417,33 @@ describe(SCHEMATIC_NAME, () => {
         await runner.runSchematic(SCHEMATIC_NAME, { project: first, fix: true } satisfies Schema, appTree);
 
         expect(messages.some((m) => m.includes('scrollableCodeContent'))).toBe(true);
+    });
+
+    it('warns about programmatic KbqCodeBlock.canLoad/.codeFiles access (TS) without auto-fixing', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        // Property access (`.canLoad` / `.codeFiles`) must be warned, but NOT auto-migrated
+        // (only template attribute bindings are rewritten).
+        appTree.overwrite(ts, 'const a = cb.canLoad;\nconst b = cb.codeFiles;\n');
+
+        const messages: string[] = [];
+
+        runner.logger.subscribe((entry) => {
+            if (entry.message) messages.push(entry.message);
+        });
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        expect(updated).toContain('cb.canLoad');
+        expect(updated).toContain('cb.codeFiles');
+        expect(messages.some((m) => m.includes('canDownload'))).toBe(true);
     });
 
     it('warns about deprecated KbqFilter.required without auto-fixing it', async () => {

@@ -177,7 +177,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     set addOnBlur(value: boolean);
     readonly addOnPaste: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    autocompleteTrigger?: KbqAutocompleteTrigger | undefined;
+    autocompleteTrigger?: KbqAutocompleteTrigger | null | undefined;
     blur(event: FocusEvent): void;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -268,9 +268,9 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     onContainerClick(): void;
     onTouched: () => void;
     // (undocumented)
-    parentForm: NgForm;
+    parentForm: NgForm | null;
     // (undocumented)
-    parentFormGroup: FormGroupDirective;
+    parentFormGroup: FormGroupDirective | null;
     get placeholder(): string;
     set placeholder(value: string);
     registerInput(inputElement: KbqTagTextControl): void;

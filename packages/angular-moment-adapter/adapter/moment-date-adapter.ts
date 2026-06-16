@@ -26,7 +26,7 @@ export function KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): IKbqMomentDateAdapter
 @Injectable()
 export class MomentDateAdapter extends BaseMomentDateAdapter {
     protected readonly options?: IKbqMomentDateAdapterOptions;
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     constructor() {
         const dateLocale = inject(KBQ_DATE_LOCALE, { optional: true })!;
         const options =

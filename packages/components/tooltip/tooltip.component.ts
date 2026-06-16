@@ -136,7 +136,7 @@ export class KbqTooltipTrigger
     implements AfterViewInit, OnChanges, OnDestroy
 {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
-    protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true })!;
+    protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
     protected focusMonitor: FocusMonitor = inject(FocusMonitor);
     /** @docs-private */
     protected renderer: Renderer2 = inject(Renderer2);

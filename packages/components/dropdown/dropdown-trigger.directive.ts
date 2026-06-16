@@ -121,7 +121,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private scrollStrategy = inject(KBQ_DROPDOWN_SCROLL_STRATEGY);
     private parent = inject(KbqDropdown, { optional: true })!;
     private dropdownItemInstance = inject(KbqDropdownItem, { optional: true, self: true })!;
-    private _dir = inject(Directionality, { optional: true })!;
+    private _dir = inject(Directionality, { optional: true });
     private changeDetectorRef = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
 
@@ -130,7 +130,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     protected readonly isBrowser = inject(Platform).isBrowser;
     private readonly window = inject(KBQ_WINDOW);
-    private readonly host = inject(KBQ_DROPDOWN_HOST, { optional: true })!;
+    private readonly host = inject(KBQ_DROPDOWN_HOST, { optional: true });
     lastDestroyReason: DropdownCloseReason;
 
     /** Position offset of the dropdown in the X axis. */

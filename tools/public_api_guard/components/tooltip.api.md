@@ -140,7 +140,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     // (undocumented)
     protected overlayConfig: OverlayConfig;
     // (undocumented)
-    protected parentPopup: KbqParentPopup;
+    protected parentPopup: KbqParentPopup | null;
     // (undocumented)
     readonly placementChange: EventEmitter<any>;
     relativeToPointer: boolean;

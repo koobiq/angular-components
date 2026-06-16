@@ -96,7 +96,6 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly contentClass: i0.InputSignal<string | string[] | Set<string> | undefined>;
     readonly control: i0.Signal<KbqFormFieldControl<any>>;
     get disabled(): boolean;
-    // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
     focus(options?: FocusOptions): void;
     get focusOrigin(): FocusOrigin;

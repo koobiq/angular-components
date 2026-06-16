@@ -132,7 +132,8 @@ export class KbqFormField
     private readonly destroyRef = inject(DestroyRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
-    private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true })!; /**
+    private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
+    /**
      * @docs-private
      */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

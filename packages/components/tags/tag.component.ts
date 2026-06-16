@@ -225,7 +225,7 @@ export class KbqTag
     changeDetectorRef = inject(ChangeDetectorRef);
 
     private readonly focusMonitor = inject(FocusMonitor);
-    private readonly tagList = inject(KbqTagList, { optional: true })!;
+    private readonly tagList = inject(KbqTagList, { optional: true });
     private readonly drag: CdkDrag<KbqTagDragData> = inject(CdkDrag, { host: true });
     private readonly destroyRef = inject(DestroyRef);
 

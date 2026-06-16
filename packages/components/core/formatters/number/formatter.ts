@@ -149,8 +149,8 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
     pure: false
 })
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
-    private id = inject(KBQ_LOCALE_ID, { optional: true })!;
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    private id = inject(KBQ_LOCALE_ID, { optional: true });
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
@@ -222,8 +222,8 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     pure: false
 })
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
-    private id = inject(KBQ_LOCALE_ID, { optional: true })!;
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    private id = inject(KBQ_LOCALE_ID, { optional: true });
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly options = inject<ParsedDigitsInfo>(KBQ_NUMBER_FORMATTER_OPTIONS, { optional: true })!;
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
@@ -287,8 +287,8 @@ export function isWithin(startRange: number, endRange: number, valueToCheck: num
     pure: false
 })
 export class KbqRoundDecimalPipe implements PipeTransform {
-    private id = inject(KBQ_LOCALE_ID, { optional: true })!;
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    private id = inject(KBQ_LOCALE_ID, { optional: true });
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     roundingOptions: RoundDecimalOptions;
 
     constructor() {

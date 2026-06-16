@@ -192,15 +192,15 @@ export class KbqTreeSelect
     private readonly renderer = inject(Renderer2);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
-    private readonly dir = inject(Directionality, { optional: true })!;
-    parentForm = inject(NgForm, { optional: true })!;
-    parentFormGroup = inject(FormGroupDirective, { optional: true })!;
+    private readonly dir = inject(Directionality, { optional: true });
+    parentForm = inject(NgForm, { optional: true });
+    parentFormGroup = inject(FormGroupDirective, { optional: true });
     private readonly parentFormField = inject(KbqFormField, { host: true, optional: true })!;
-    ngControl = inject(NgControl, { optional: true, self: true })!;
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    ngControl = inject(NgControl, { optional: true, self: true });
+    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly isBrowser = inject(Platform).isBrowser;
 
-    private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true })!;
+    private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
     /** Whether the component is in an error state. */
     errorState: boolean = false;
     /**

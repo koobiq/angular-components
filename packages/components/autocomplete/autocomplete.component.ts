@@ -89,7 +89,7 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
 export class KbqAutocomplete implements AfterContentInit {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly parentFormField = inject(KbqFormField, { host: true, optional: true })!;
+    private readonly parentFormField = inject(KbqFormField, { host: true, optional: true });
     private readonly destroyRef = inject(DestroyRef);
     /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
     id: string = `kbq-autocomplete-${uniqueAutocompleteIdCounter++}`;

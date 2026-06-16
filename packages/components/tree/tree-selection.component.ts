@@ -134,7 +134,7 @@ export class KbqTreeSelection
 {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private scheduler = inject(AsyncScheduler);
-    private clipboard = inject(Clipboard, { optional: true })!;
+    private clipboard = inject(Clipboard, { optional: true });
     protected readonly focusMonitor = inject(FocusMonitor);
 
     /** Indicates whether this component is placed inside a KbqFormField component. */

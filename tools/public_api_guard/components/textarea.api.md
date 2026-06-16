@@ -61,7 +61,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     // (undocumented)
     static ngAcceptInputType_freeRowsHeight: unknown;
     // (undocumented)
-    ngControl: NgControl;
+    ngControl: NgControl | null;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -74,9 +74,9 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges,
     onBlur(): void;
     onContainerClick(): void;
     // (undocumented)
-    parentForm: NgForm;
+    parentForm: NgForm | null;
     // (undocumented)
-    parentFormGroup: FormGroupDirective;
+    parentFormGroup: FormGroupDirective | null;
     placeholder: string;
     // (undocumented)
     protected previousNativeValue: any;

@@ -102,9 +102,9 @@ export class KbqTagList
     protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
-    private dir = inject(Directionality, { optional: true })!;
-    parentForm = inject(NgForm, { optional: true })!;
-    parentFormGroup = inject(FormGroupDirective, { optional: true })!;
+    private dir = inject(Directionality, { optional: true });
+    parentForm = inject(NgForm, { optional: true });
+    parentFormGroup = inject(FormGroupDirective, { optional: true });
     ngControl = inject(NgControl, { optional: true, self: true })!;
 
     private readonly dropList = inject(CdkDropList, { host: true });

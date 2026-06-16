@@ -211,19 +211,19 @@ export class KbqSelect
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private overlayContainer = inject(OverlayContainer);
-    private readonly _dir = inject(Directionality, { optional: true })!;
-    parentForm = inject(NgForm, { optional: true })!;
-    parentFormGroup = inject(FormGroupDirective, { optional: true })!;
+    private readonly _dir = inject(Directionality, { optional: true });
+    parentForm = inject(NgForm, { optional: true });
+    parentFormGroup = inject(FormGroupDirective, { optional: true });
     private readonly parentFormField = inject(KbqFormField, { host: true, optional: true })!;
-    ngControl = inject(NgControl, { self: true, optional: true })!;
+    ngControl = inject(NgControl, { self: true, optional: true });
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
-    protected localeService? = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
+    protected localeService? = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
 
-    protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true })!;
+    protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
     private readonly window = inject(KBQ_WINDOW);
 
     /** Whether the component is in an error state. */

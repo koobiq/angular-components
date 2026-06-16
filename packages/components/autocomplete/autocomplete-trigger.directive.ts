@@ -119,7 +119,7 @@ export class KbqAutocompleteTrigger
     private overlay = inject(Overlay);
     private zone = inject(NgZone);
     private dir = inject(Directionality, { optional: true })!;
-    private formField = inject(KbqFormField, { optional: true, host: true })!;
+    private formField = inject(KbqFormField, { optional: true, host: true });
     private viewportRuler = inject(ViewportRuler);
 
     protected readonly document = inject<Document>(DOCUMENT);
