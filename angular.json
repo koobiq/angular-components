@@ -594,6 +594,43 @@
                 }
             }
         },
+        "dev-icon-adopted-stylesheets": {
+            "projectType": "application",
+            "root": "packages/components-dev/icon-adopted-stylesheets",
+            "sourceRoot": "packages/components-dev/icon-adopted-stylesheets",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/icon-adopted-stylesheets"
+                        },
+                        "tsConfig": "packages/components-dev/icon-adopted-stylesheets/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/icon-adopted-stylesheets/global.scss"],
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/fonts",
+                                "output": "assets/kbq-icons"
+                            }
+                        ],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/icon-adopted-stylesheets/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-icon-adopted-stylesheets:build"
+                    }
+                }
+            }
+        },
         "dev-button-toggle": {
             "projectType": "application",
             "root": "packages/components-dev/button-toggle",
