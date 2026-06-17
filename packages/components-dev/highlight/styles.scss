@@ -1,0 +1,29 @@
+dev-app {
+    display: block;
+    width: 800px;
+}
+
+.dev-container {
+    max-width: 760px;
+    padding: var(--kbq-size-xxl);
+    margin-bottom: var(--kbq-size-xl);
+}
+
+.dev-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dev-list li {
+    padding: var(--kbq-size-xs) 0;
+}
+
+.dev-row {
+    display: flex;
+    gap: var(--kbq-size-xl);
+}
+
+.dev-col {
+    flex: 1;
+}

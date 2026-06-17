@@ -42,6 +42,7 @@ export enum DocsStructureItemId {
     FileUpload = 'file-upload',
     FilterBar = 'filter-bar',
     FormField = 'form-field',
+    Highlight = 'highlight',
     LayoutFlex = 'layout-flex',
     Link = 'link',
     List = 'list',
@@ -603,6 +604,16 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'form-field',
                     isNew: expiresAt('2025-07-26'),
+                    hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.Highlight,
+                    name: {
+                        ru: 'Highlight',
+                        en: 'Highlight'
+                    },
+                    hasApi: false,
+                    isNew: expiresAt('2026-07-15'),
                     hasExamples: false
                 },
                 {
