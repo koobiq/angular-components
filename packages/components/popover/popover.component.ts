@@ -328,7 +328,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     set size(value: KbqPopUpSizeValues) {
-        if ([PopUpSizes.Small, PopUpSizes.Medium, PopUpSizes.Large].includes(value as PopUpSizes)) {
+        if ([PopUpSizes.Small, PopUpSizes.Medium, PopUpSizes.Large, PopUpSizes.Custom].includes(value as PopUpSizes)) {
             this._size = value;
 
             this.updateClassMap();
