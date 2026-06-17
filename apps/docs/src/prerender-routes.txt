@@ -69,6 +69,7 @@
 /en/components/filter-bar/examples
 /en/components/form-field/overview
 /en/components/form-field/api
+/en/components/highlight/overview
 /en/components/icon/overview
 /en/components/icon/api
 /en/components/icon-button/overview
@@ -258,6 +259,7 @@
 /ru/components/filter-bar/examples
 /ru/components/form-field/overview
 /ru/components/form-field/api
+/ru/components/highlight/overview
 /ru/components/icon/overview
 /ru/components/icon/api
 /ru/components/icon-button/overview

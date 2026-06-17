@@ -11,6 +11,12 @@
         "next": [
           "koobiq-next"
         ],
+        "v19": [
+          "koobiq-v19"
+        ],
+        "v18": [
+          "koobiq-v18"
+        ],
         "v17": [
           "koobiq-v17"
         ],
