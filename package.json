@@ -222,6 +222,7 @@
         "dev:highlight": "ng serve dev-highlight --port 3003",
         "dev:hint": "ng serve dev-hint --port 3003",
         "dev:icon": "ng serve dev-icon --port 3003",
+        "dev:icon-adopted-stylesheets": "ng serve dev-icon-adopted-stylesheets --port 3003",
         "dev:icon-item": "ng serve dev-icon-item --port 3003",
         "dev:inline-edit": "ng serve dev-inline-edit --port 3003",
         "dev:input": "ng serve dev-input --port 3003",

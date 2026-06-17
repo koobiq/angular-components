@@ -1,0 +1,38 @@
+// Copy of packages/components-dev/main.scss WITHOUT the `@use '@koobiq/icons/fonts/kbq-icons'` line.
+// The base icon CSS is intentionally NOT loaded as an author <style> — it is delivered at runtime
+// via adoptedStyleSheets/<style> (see module.ts) to reproduce the bug and verify the fix.
+
+@use '@koobiq/design-tokens/web/new/css-tokens.css';
+@use '@koobiq/design-tokens/web/new/css-tokens-light.css';
+@use '@koobiq/design-tokens/web/new/css-tokens-dark.css';
+
+@use '../../components/core/styles/theming/prebuilt/theme';
+@use '../../components/core/styles/visual/layout';
+@use '../../components/core/styles/common/list';
+@use '../../components/core/styles/common/tokens';
+
+// Inter
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/400-italic.css';
+@import '@fontsource/inter/500-italic.css';
+
+// JetBrains Mono
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/700.css';
+
+@include layout.layouts-for-breakpoint();
+
+body {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    background: var(--kbq-background-bg);
+    color: var(--kbq-foreground-contrast);
+    margin: 0;
+}
+
+hr {
+    margin: var(--kbq-size-xxl) 0;
+}

@@ -1,0 +1,183 @@
+<div class="dev-toolbar">
+    <div class="dev-toolbar__modes">
+        <button kbq-button [color]="mode() === 'style' ? colors.Theme : colors.ContrastFade" (click)="apply('style')">
+            &lt;style&gt; — эталон
+        </button>
+        <button
+            kbq-button
+            [color]="mode() === 'adopted' ? colors.Error : colors.ContrastFade"
+            (click)="apply('adopted')"
+        >
+            adoptedStyleSheets без слоя — БАГ
+        </button>
+        <button
+            kbq-button
+            [color]="mode() === 'adopted-layer' ? colors.Success : colors.ContrastFade"
+            (click)="apply('adopted-layer')"
+        >
+            adoptedStyleSheets + &#64;layer — ФИКС
+        </button>
+    </div>
+
+    <dev-theme-toggle />
+</div>
+
+<div class="dev-hint">
+    <b>Текущий режим: {{ mode() }}</b>
+    <div>
+        База шрифта иконок
+        <code>.kbq &#123; transform: rotate(0.001deg) &#125;</code>
+        (специфичность 0-1-0) конкурирует с хелперами иконки
+        <code>.kbq-icon-rotate_*</code>
+        /
+        <code>.kbq-icon-flip-*</code>
+        (тоже 0-1-0). В режиме
+        <b>adoptedStyleSheets без слоя</b>
+        база сортируется в каскаде последней и побеждает — повороты и флипы пропадают. Обёртка в
+        <code>&#64;layer kbq-icons</code>
+        возвращает приоритет переопределениям компонентов.
+    </div>
+</div>
+
+<h3>1. Повороты и флипы — наглядный баг</h3>
+<p class="dev-section-note">
+    Хелперы из
+    <code>icon.scss</code>
+    . В режиме «БАГ» иконки распрямляются в 0°; в «ФИКС» и «эталон» — повёрнуты.
+</p>
+<div class="dev-grid">
+    <span class="dev-cell">
+        <i kbq-icon="kbq-chevron-down-s_16"></i>
+        <small>без класса (0°)</small>
+    </span>
+    <span class="dev-cell">
+        <i kbq-icon="kbq-chevron-down-s_16" class="kbq-icon-rotate_90"></i>
+        <small>rotate_90</small>
+    </span>
+    <span class="dev-cell">
+        <i kbq-icon="kbq-chevron-down-s_16" class="kbq-icon-rotate_180"></i>
+        <small>rotate_180</small>
+    </span>
+    <span class="dev-cell">
+        <i kbq-icon="kbq-chevron-down-s_16" class="kbq-icon-rotate_270"></i>
+        <small>rotate_270</small>
+    </span>
+    <span class="dev-cell">
+        <i kbq-icon="kbq-north-east_16" class="kbq-icon-flip-h"></i>
+        <small>flip-h</small>
+    </span>
+    <span class="dev-cell">
+        <i kbq-icon="kbq-north-east_16" class="kbq-icon-flip-v"></i>
+        <small>flip-v</small>
+    </span>
+    <span class="dev-cell">
+        <i kbq-icon="kbq-north-east_16" class="kbq-icon-flip-vh"></i>
+        <small>flip-vh</small>
+    </span>
+</div>
+
+<h3>2. Input с password toggle — смещение иконки</h3>
+<p class="dev-section-note">
+    Иконка-глаз (
+    <code>kbq-password-toggle</code>
+    , это
+    <code>kbq-icon-button</code>
+    ) в суффиксе поля. В режиме «БАГ» база
+    <code>.kbq</code>
+    ломает выравнивание — глаз уезжает по вертикали; в «ФИКС»/«эталон» — на месте.
+</p>
+<div class="dev-grid dev-grid_column">
+    <kbq-form-field style="width: 280px">
+        <input kbqInputPassword placeholder="Пароль" [(ngModel)]="password" />
+        <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
+    </kbq-form-field>
+</div>
+
+<h3>3. Кнопки с иконками</h3>
+<div class="dev-grid">
+    <button kbq-button>
+        <i kbq-icon="kbq-play_16"></i>
+        Слева
+    </button>
+    <button kbq-button>
+        Справа
+        <i kbq-icon="kbq-chevron-down-s_16"></i>
+    </button>
+    <button kbq-button>
+        <i kbq-icon="kbq-play_16"></i>
+        Обе
+        <i kbq-icon="kbq-chevron-down-s_16"></i>
+    </button>
+    <button kbq-button [color]="colors.Theme">
+        <i kbq-icon="kbq-magnifying-glass_16"></i>
+        Поиск
+    </button>
+</div>
+
+<h3>4. Бейджи с иконками</h3>
+<div class="dev-grid">
+    <kbq-badge [badgeColor]="badgeColors.FadeTheme">
+        <i kbq-icon="kbq-play_16"></i>
+        Новый
+    </kbq-badge>
+    <kbq-badge [badgeColor]="badgeColors.FadeSuccess">
+        Готово
+        <i kbq-icon="kbq-play_16"></i>
+    </kbq-badge>
+    <kbq-badge [badgeColor]="badgeColors.FadeError" [compact]="true">
+        <i kbq-icon="kbq-play_16"></i>
+        Ошибка
+    </kbq-badge>
+</div>
+
+<h3>5. Ссылки с иконками</h3>
+<div class="dev-grid dev-grid_column">
+    <a kbq-link href="https://koobiq.io">
+        <i kbq-icon="kbq-clock_16"></i>
+        <span class="kbq-link__text">Ссылка с ведущей иконкой</span>
+    </a>
+    <a kbq-link target="_blank" class="kbq-link_external" href="https://koobiq.io">
+        <span class="kbq-link__text">Внешняя ссылка</span>
+        <i kbq-icon="kbq-north-east_16"></i>
+    </a>
+</div>
+
+<h3>6. Теги с иконками</h3>
+<kbq-tag-list>
+    <kbq-tag value="search">
+        <i kbq-icon="kbq-magnifying-glass_16"></i>
+        с иконкой
+        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+    </kbq-tag>
+    <kbq-tag value="plain">
+        обычный
+        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+    </kbq-tag>
+</kbq-tag-list>
+
+<h3>7. icon-item</h3>
+<div class="dev-grid">
+    <i kbq-icon-item="kbq-folder-open_16" [color]="colors.Theme"></i>
+    <i kbq-icon-item="kbq-calendar-o_16" [color]="colors.Contrast"></i>
+    <i kbq-icon-item="kbq-clock_16" [color]="colors.Error"></i>
+    <i kbq-icon-item="kbq-folder-open_16" [big]="true" [color]="colors.Success"></i>
+</div>
+
+<h3>8. Голые иконки разных размеров</h3>
+<div class="dev-grid dev-grid_baseline">
+    <span class="dev-cell">
+        текст
+        <i kbq-icon="kbq-play_16"></i>
+        <small>16</small>
+    </span>
+    <span class="dev-cell">
+        текст
+        <i kbq-icon="kbq-calendar-o_16"></i>
+        <small>16</small>
+    </span>
+    <span class="dev-cell">
+        текст
+        <i kbq-icon="kbq-clock_16"></i>
+        <small>16</small>
+    </span>
+</div>
