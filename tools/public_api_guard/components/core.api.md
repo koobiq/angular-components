@@ -3186,11 +3186,11 @@ export enum PopUpPlacements {
 // @public (undocumented)
 export enum PopUpSizes {
     // (undocumented)
+    Custom = "custom",
+    // (undocumented)
     Large = "large",
     // (undocumented)
     Medium = "medium",
-    // (undocumented)
-    Normal = "medium",
     // (undocumented)
     Small = "small"
 }

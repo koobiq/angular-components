@@ -50,9 +50,8 @@ export enum PopUpTriggers {
 export enum PopUpSizes {
     Small = 'small',
     Medium = 'medium',
-    // Normal is deprecated and will be deleted in 16.x
-    Normal = 'medium',
-    Large = 'large'
+    Large = 'large',
+    Custom = 'custom'
 }
 
 export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
