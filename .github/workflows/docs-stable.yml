@@ -35,7 +35,7 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
           firebaseToolsVersion: '15.3.1'
           projectId: koobiq
-          target: stable
+          target: v19
           channelId: live
 
       - name: Run Algolia DocSearch Crawler
