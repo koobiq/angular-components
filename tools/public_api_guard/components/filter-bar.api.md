@@ -27,14 +27,12 @@ import { KbqOption } from '@koobiq/components/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTreeFlatDataSource } from '@koobiq/components/tree';
 import { KbqTreeFlattener } from '@koobiq/components/tree';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
-import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { PopUpSizes } from '@koobiq/components/core';
@@ -219,7 +217,7 @@ export class KbqFilterBarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFilterBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeTitleDirective, typeof KbqPipeState], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeTitleDirective, typeof KbqPipeState]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState]>;
 }
 
 // @public
@@ -612,33 +610,6 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeTextComponent, "kbq-pipe-text", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTextComponent, never>;
-}
-
-// @public (undocumented)
-export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    constructor();
-    // (undocumented)
-    get child(): HTMLElement;
-    // (undocumented)
-    handleElementEnter(): void;
-    // (undocumented)
-    hideTooltip(): void;
-    // (undocumented)
-    get isOverflown(): boolean;
-    // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    get parent(): HTMLElement;
-    // (undocumented)
-    readonly resizeStream: Subject<Event>;
-    // (undocumented)
-    readonly viewValue: i0.InputSignal<TemplateRef<any>>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeTitleDirective, "[kbqPipeTitle]", ["kbqPipeTitle"], { "viewValue": { "alias": "kbqPipeTitle"; "required": false; "isSignal": true; }; }, {}, ["parentContainer", "childContainer"], never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTitleDirective, never>;
 }
 
 // @public (undocumented)

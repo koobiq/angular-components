@@ -1,7 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, ElementRef, Type, ViewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, TemplateRef, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -486,6 +486,75 @@ describe('KbqTitleDirective', () => {
         }));
     });
 
+    describe('explicit content input ([kbq-title])', () => {
+        it('should use the bound TemplateRef as tooltip content', () => {
+            const { debugElement } = createComponent(TemplateContentTitleComponent);
+            const directive = getTitleDirective(debugElement);
+
+            expect(directive.content).toBeInstanceOf(TemplateRef);
+        });
+
+        it('should use a bound string as tooltip content', () => {
+            const { debugElement } = createComponent(StringContentTitleComponent);
+            const directive = getTitleDirective(debugElement);
+
+            expect(directive.content).toBe('Explicit tooltip');
+        });
+
+        it('should fall back to host textContent for a bare kbq-title attribute', () => {
+            const { debugElement } = createComponent(SimpleTitleComponent);
+            const directive = getTitleDirective(debugElement);
+
+            expect(directive.content).toBe('Hello World');
+        });
+
+        it('should render the TemplateRef content inside the tooltip on overflow', fakeAsync(() => {
+            const fixture = createComponent(TemplateContentTitleComponent);
+            const host = fixture.debugElement.query(By.css('#tpl-overflow')).nativeElement;
+            const textEl = fixture.debugElement.query(By.css('.tpl-text')).nativeElement;
+
+            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
+            jest.spyOn(textEl, 'scrollWidth', 'get').mockReturnValue(300);
+
+            dispatchMouseEvent(host, 'mouseenter');
+            fixture.detectChanges();
+            flush();
+
+            const tooltip = getTooltipElement();
+
+            expect(tooltip).not.toBeNull();
+            expect(tooltip?.textContent).toContain('Custom tooltip');
+        }));
+    });
+
+    describe('multiple #kbqTitleText children', () => {
+        it('should be overflown when any child overflows', () => {
+            const { debugElement } = createComponent(MultiChildTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const parentEl = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
+
+            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(100);
+            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(200);
+
+            expect(directive.isOverflown).toBe(true);
+        });
+
+        it('should not be overflown when all children fit', () => {
+            const { debugElement } = createComponent(MultiChildTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const parentEl = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const nameEl = debugElement.query(By.css('.child-name')).nativeElement;
+            const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
+
+            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(300);
+            jest.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(100);
+            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(150);
+
+            expect(directive.isOverflown).toBe(false);
+        });
+    });
+
     describe('ngOnDestroy', () => {
         it('should unsubscribe resizeSubscription', () => {
             const fixture = createComponent(SimpleTitleComponent);
@@ -721,3 +790,41 @@ class TitleTextRefHostComponent implements KbqTitleTextRef {
     `
 })
 class TitleTextRefHostWrapperComponent {}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
+        <div id="tpl-overflow" [kbq-title]="tooltipTpl">
+            <span #kbqTitleText class="tpl-text">{{ longValue }}</span>
+        </div>
+        <ng-template #tooltipTpl>
+            <span class="custom-tooltip-content">Custom tooltip</span>
+        </ng-template>
+    `
+})
+class TemplateContentTitleComponent {
+    defaultValue = 'Just a text';
+    longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text`;
+}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
+        <div [kbq-title]="'Explicit tooltip'">Hello World</div>
+    `
+})
+class StringContentTitleComponent {}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
+        <div kbq-title>
+            <span #kbqTitleText class="child-name">Name</span>
+            <span #kbqTitleText class="child-value">Value</span>
+        </div>
+    `
+})
+class MultiChildTitleComponent {}

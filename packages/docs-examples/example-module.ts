@@ -5341,6 +5341,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "timezone-trigger-overview-example.ts",
     "importPath": "components/timezone"
   },
+  "title-custom-content": {
+    "packagePath": "components/title/title-custom-content",
+    "title": "Custom tooltip content",
+    "componentName": "TitleCustomContentExample",
+    "files": [
+      "title-custom-content-example.ts",
+      "./title-custom-content-example.css"
+    ],
+    "selector": "title-custom-content-example",
+    "additionalComponents": [],
+    "primaryFile": "title-custom-content-example.ts",
+    "importPath": "components/title"
+  },
+  "title-list-option": {
+    "packagePath": "components/title/title-list-option",
+    "title": "Two-line list options",
+    "componentName": "TitleListOptionExample",
+    "files": [
+      "title-list-option-example.ts",
+      "./title-list-option-example.css"
+    ],
+    "selector": "title-list-option-example",
+    "additionalComponents": [],
+    "primaryFile": "title-list-option-example.ts",
+    "importPath": "components/title"
+  },
+  "title-multiple-text": {
+    "packagePath": "components/title/title-multiple-text",
+    "title": "Multiple text elements",
+    "componentName": "TitleMultipleTextExample",
+    "files": [
+      "title-multiple-text-example.ts",
+      "./title-multiple-text-example.css"
+    ],
+    "selector": "title-multiple-text-example",
+    "additionalComponents": [],
+    "primaryFile": "title-multiple-text-example.ts",
+    "importPath": "components/title"
+  },
   "title-overview": {
     "packagePath": "components/title/title-overview",
     "title": "Title",
@@ -5352,6 +5391,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "title-overview-example",
     "additionalComponents": [],
     "primaryFile": "title-overview-example.ts",
+    "importPath": "components/title"
+  },
+  "title-vertical-overflow": {
+    "packagePath": "components/title/title-vertical-overflow",
+    "title": "Multiline text",
+    "componentName": "TitleVerticalOverflowExample",
+    "files": [
+      "title-vertical-overflow-example.ts",
+      "./title-vertical-overflow-example.css"
+    ],
+    "selector": "title-vertical-overflow-example",
+    "additionalComponents": [],
+    "primaryFile": "title-vertical-overflow-example.ts",
     "importPath": "components/title"
   },
   "toast-actions-overview": {
@@ -7215,7 +7267,15 @@ return import('@koobiq/docs-examples/components/timezone');
 return import('@koobiq/docs-examples/components/timezone');
   case 'timezone-trigger-overview':
 return import('@koobiq/docs-examples/components/timezone');
+  case 'title-custom-content':
+return import('@koobiq/docs-examples/components/title');
+  case 'title-list-option':
+return import('@koobiq/docs-examples/components/title');
+  case 'title-multiple-text':
+return import('@koobiq/docs-examples/components/title');
   case 'title-overview':
+return import('@koobiq/docs-examples/components/title');
+  case 'title-vertical-overflow':
 return import('@koobiq/docs-examples/components/title');
   case 'toast-actions-overview':
 return import('@koobiq/docs-examples/components/toast');

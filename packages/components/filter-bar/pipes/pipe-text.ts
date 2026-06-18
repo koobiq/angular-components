@@ -11,7 +11,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
-import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
     selector: 'kbq-pipe-text',
@@ -26,7 +25,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         ReactiveFormsModule,
         KbqTitleModule,
         KbqPipeState,
-        KbqPipeTitleDirective,
         KbqPipeMinWidth
     ],
     templateUrl: 'pipe-text.html',

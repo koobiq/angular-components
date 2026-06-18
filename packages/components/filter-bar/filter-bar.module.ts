@@ -9,7 +9,6 @@ import { KbqPipeAdd } from './pipe-add';
 import { KbqPipeDirective } from './pipe.directive';
 import { KbqPipeButton } from './pipes/pipe-button';
 import { KbqPipeState } from './pipes/pipe-state';
-import { KbqPipeTitleDirective } from './pipes/pipe-title';
 
 const COMPONENTS = [
     KbqFilterBar,
@@ -20,7 +19,6 @@ const COMPONENTS = [
     KbqPipeAdd,
     KbqPipeDirective,
     KbqPipeButton,
-    KbqPipeTitleDirective,
     KbqPipeState
 ];
 

@@ -2969,141 +2969,80 @@ export type KbqPopUpPlacementValues = KbqEnumValues<PopUpPlacements>;
 // @public (undocumented)
 export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 
-// @public (undocumented)
+// @public
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
-    // (undocumented)
     abstract arrow: boolean;
-    // (undocumented)
     protected readonly availablePositions: {
         [key: string]: ConnectionPositionPair;
     };
-    // (undocumented)
     protected clearListeners(): void;
-    // (undocumented)
     abstract closingActions(): Observable<any>;
-    // (undocumented)
     protected closingActionsSubscription: Subscription;
-    // (undocumented)
     container: HTMLElement;
-    // (undocumented)
     abstract content: string | TemplateRef<any>;
-    // (undocumented)
     protected _content: string | TemplateRef<any>;
     createOverlay(): OverlayRef;
-    // (undocumented)
     abstract customClass: string;
-    // (undocumented)
     protected _customClass: string;
-    // (undocumented)
     protected readonly destroyRef: DestroyRef;
-    // (undocumented)
     detach: () => void;
-    // (undocumented)
     protected readonly direction: Directionality | null;
-    // (undocumented)
     abstract disabled: boolean;
-    // (undocumented)
     protected _disabled: boolean;
-    // (undocumented)
     protected readonly elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
     enterDelay: number;
     protected externalNativeElement: HTMLElement;
-    // (undocumented)
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
-    // (undocumented)
     getMouseLeaveListener(): (delay?: number) => void;
     getNativeElement(): HTMLElement;
-    // (undocumented)
     abstract getOverlayHandleComponentType(): Type<T>;
-    // (undocumented)
     protected getPrioritizedPositions(): ConnectionPositionPair[];
-    // (undocumented)
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[];
-    // (undocumented)
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
-    // (undocumented)
     protected readonly hostView: ViewContainerRef;
     readonly hovered: BehaviorSubject<boolean>;
-    // (undocumented)
     initListeners(): void;
-    // (undocumented)
     protected instance: any | null;
-    // (undocumented)
     get isOpen(): boolean;
     set isOpen(value: boolean);
-    // (undocumented)
     keydownHandler(event: KeyboardEvent): void;
-    // (undocumented)
     leaveDelay: number;
-    // (undocumented)
     protected listeners: Map<string, EventListener>;
-    // (undocumented)
     protected mouseEvent?: MouseEvent;
-    // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
     protected readonly ngZone: NgZone;
-    // (undocumented)
     onPositionChange: ($event: ConnectedOverlayPositionChange) => void;
-    // (undocumented)
     protected abstract originSelector: string;
-    // (undocumented)
     protected readonly overlay: Overlay;
-    // (undocumented)
     protected abstract overlayConfig: OverlayConfig;
-    // (undocumented)
     overlayRef: OverlayRef | null;
-    // (undocumented)
     protected placement: KbqPopUpPlacementValues;
-    // (undocumented)
     abstract placementChange: EventEmitter<string>;
-    // (undocumented)
     protected placementPriority: string | string[] | null;
-    // (undocumented)
     protected portal: ComponentPortal<T>;
     protected preventClose: boolean;
-    // (undocumented)
     resetOrigin(): void;
-    // (undocumented)
     protected readonly scheduler: AsyncScheduler | undefined;
-    // (undocumented)
     protected readonly scrollable: CdkScrollable | null;
-    // (undocumented)
     protected readonly scrollDispatcher: ScrollDispatcher;
-    // (undocumented)
     protected abstract scrollStrategy: () => ScrollStrategy;
     setExternalNativeElement(value: HTMLElement): void;
-    // (undocumented)
     show(delay?: number): void;
-    // (undocumented)
     stickToWindow: KbqStickToWindowPlacementValues;
-    // (undocumented)
     protected strategy: FlexibleConnectedPositionStrategy;
-    // (undocumented)
     touchendHandler(): void;
-    // (undocumented)
     abstract trigger: string;
-    // (undocumented)
     triggerName: string;
-    // (undocumented)
     abstract updateClassMap(newPlacement?: string): void;
-    // (undocumented)
     abstract updateData(): void;
-    // (undocumented)
     updatePlacement(value: KbqPopUpPlacementValues): void;
-    // (undocumented)
     updatePlacementPriority(value: any): void;
     updatePosition(reapplyPosition?: boolean): void;
-    // (undocumented)
     updateVisible(externalValue: boolean): void;
-    // (undocumented)
     protected visible: boolean;
-    // (undocumented)
     abstract visibleChange: EventEmitter<boolean>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopUpTrigger<any>, never, never, {}, {}, never, never, true, never>;

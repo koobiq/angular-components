@@ -15,7 +15,6 @@ import {
     KbqPipeMinWidth,
     KbqPipeState,
     KbqPipeTemplate,
-    KbqPipeTitleDirective,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -35,7 +34,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
         ReactiveFormsModule,
         KbqTitleModule,
         KbqPipeState,
-        KbqPipeTitleDirective,
         KbqPipeMinWidth,
         KbqPipeButton
     ],
@@ -45,7 +43,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             kbqPopover
             [disabled]="data.disabled"
             [kbqPipeState]="data"
-            [kbqPipeTitle]="pipeTooltip"
+            [kbq-title]="pipeTooltip"
             [kbqPopoverArrow]="false"
             [kbqPopoverClass]="'kbq-pipe__popover'"
             [kbqPopoverContent]="content"

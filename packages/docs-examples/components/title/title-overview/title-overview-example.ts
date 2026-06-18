@@ -13,28 +13,9 @@ import { KbqTitleModule } from '@koobiq/components/title';
     ],
     template: `
         <div class="example-title-overview-container example-title-overview-container-responsive">
-            <div class="kbq-subheading">Responsive text with tooltip</div>
-            <br />
             <div class="example-title-overview-child wide kbq-text-big" kbq-title>
                 {{ longValue }}
             </div>
-        </div>
-
-        <div class="example-title-overview-container">
-            <div class="kbq-subheading">Tooltip tracking for parent & child as parameters</div>
-            <br />
-
-            <div kbq-title style="max-width: 50%">
-                <div #kbqTitleContainer class="example-title-overview-parent">
-                    <div #kbqTitleText class="example-title-overview-child kbq-text-normal">
-                        {{ field }}
-                    </div>
-                </div>
-            </div>
-            <br />
-            <button kbq-button (click)="onAddText()">Add text</button>
-            <br />
-            <button kbq-button (click)="field = defaultValue">Set Default text</button>
         </div>
     `,
     styleUrls: ['./title-overview-example.css'],

@@ -1,0 +1,10 @@
+.example-title-list {
+    max-width: 320px;
+}
+
+/* Allow the text column to shrink below its content width so each kbq-truncate-line row clips
+   and the kbq-title directive can detect the overflow. */
+.example-title-list__text {
+    flex: 1;
+    min-width: 0;
+}

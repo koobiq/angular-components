@@ -10,38 +10,27 @@ import * as i1 from '@koobiq/components/tooltip';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
+import { TemplateRef } from '@angular/core';
 
-// @public (undocumented)
+// @public
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    // (undocumented)
     get child(): HTMLElement;
-    // (undocumented)
     handleElementEnter(): void;
-    // (undocumented)
     get hasOnlyText(): boolean;
-    // (undocumented)
     hideTooltip(): void;
-    // (undocumented)
     get isHorizontalOverflown(): boolean;
-    // (undocumented)
     get isOverflown(): boolean;
-    // (undocumented)
     get isVerticalOverflown(): boolean;
-    // (undocumented)
     ngAfterViewInit(): void;
-    // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     get parent(): HTMLElement;
-    // (undocumented)
     readonly resizeStream: Subject<Event>;
+    readonly titleContent: i0.InputSignal<string | TemplateRef<any>>;
     set trigger(value: string);
-    // (undocumented)
     get trigger(): string;
-    // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTitleDirective, "[kbq-title]", ["kbqTitle"], {}, {}, ["childContainer", "parentContainer"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTitleDirective, "[kbq-title]", ["kbqTitle"], { "titleContent": { "alias": "kbq-title"; "required": false; "isSignal": true; }; }, {}, ["parentContainer", "childContainer"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTitleDirective, never>;
 }

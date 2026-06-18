@@ -4,7 +4,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
-import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
     selector: 'kbq-pipe-readonly',
@@ -12,12 +11,11 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqButtonModule,
         KbqTitleModule,
         KbqPipeState,
-        KbqPipeTitleDirective,
         KbqPipeMinWidth,
         KbqPipeButton
     ],
     template: `
-        <button kbq-button [disabled]="data.disabled" [kbqPipeState]="data" [kbqPipeTitle]="pipeTooltip">
+        <button kbq-button [disabled]="data.disabled" [kbqPipeState]="data" [kbq-title]="pipeTooltip">
             <span #kbqTitleText class="kbq-pipe__name" kbqPipeMinWidth>{{ data.name }}</span>
             <span #kbqTitleText class="kbq-pipe__value" kbqPipeMinWidth [class.kbq-pipe__value_empty]="!data.value">
                 {{ data.value }}

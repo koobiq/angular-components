@@ -1,0 +1,25 @@
+.example-title-multiple-text {
+    max-width: 280px;
+}
+
+.example-title-multiple-text__row {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.example-title-multiple-text__name {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.example-title-multiple-text__value {
+    flex-grow: 1;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
