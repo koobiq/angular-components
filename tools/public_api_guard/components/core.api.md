@@ -42,6 +42,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -2154,6 +2155,9 @@ export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
 export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 
 // @public
+export const KBQ_SHADOW_DOM_OVERLAY_HOST: InjectionToken<KbqShadowDomOverlayHost>;
+
+// @public
 export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 
 // @public (undocumented)
@@ -3377,6 +3381,19 @@ export class KbqSelectTrigger {
 }
 
 // @public
+export class KbqShadowDomOverlayContainer extends OverlayContainer {
+    // (undocumented)
+    protected _createContainer(): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqShadowDomOverlayContainer, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqShadowDomOverlayContainer>;
+}
+
+// @public
+export type KbqShadowDomOverlayHost = HTMLElement | ElementRef<HTMLElement> | (() => Node | null | undefined);
+
+// @public
 export interface KbqSizeUnitsConfig {
     defaultPrecision: number;
     defaultUnitSystem: KbqMeasurementSystemType;
@@ -3818,6 +3835,9 @@ export const POSITION_TO_CSS_MAP: {
 
 // @public (undocumented)
 export const PRINT_SCREEN = 44;
+
+// @public
+export const provideKbqShadowDomOverlay: (host?: KbqShadowDomOverlayHost) => Provider[];
 
 // @public (undocumented)
 export const ptBRFormattersData: {

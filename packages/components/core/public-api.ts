@@ -14,6 +14,7 @@ export * from './navbar/index';
 export * from './option/index';
 export * from './overflow-shadow/index';
 export * from './overlay/overlay-position-map';
+export * from './overlay/shadow-dom-overlay-container';
 export * from './pop-up/index';
 export * from './select/index';
 export * from './selection/index';

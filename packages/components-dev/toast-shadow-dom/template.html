@@ -1,0 +1,32 @@
+<div class="dev-mfe">
+    <h2>Toast inside an emulated MFE (Shadow DOM)</h2>
+
+    <p class="dev-mfe__hint">
+        This app root uses
+        <code>ViewEncapsulation.ShadowDom</code>
+        with the
+        <code>kbq-light</code>
+        theme scoped to the shadow root. Open with
+        <code>?container=default</code>
+        to see the bug (the toast escapes to
+        <code>document.body</code>
+        and loses its theme tokens) and with
+        <code>?container=shadow</code>
+        to see the fix (
+        <code>provideKbqShadowDomOverlay</code>
+        keeps the toast inside the shadow root).
+    </p>
+
+    <div class="dev-mfe__buttons">
+        <button kbq-button (click)="showToast(toastStyle.Contrast)">contrast</button>
+        <button kbq-button (click)="showToast(toastStyle.Success)">success</button>
+        <button kbq-button (click)="showToast(toastStyle.Warning)">warning</button>
+        <button kbq-button (click)="showToast(toastStyle.Error)">error</button>
+    </div>
+
+    <p class="dev-mfe__status">
+        <code>.cdk-overlay-container</code>
+        location:
+        <b>{{ containerLocation() }}</b>
+    </p>
+</div>

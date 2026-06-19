@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <title>Dev Example — Toast in Shadow DOM (MFE)</title>
+    </head>
+    <!-- NB: the body is intentionally NOT themed (no `kbq-light` class). The theme lives only inside the MFE's
+         shadow root, so a toast that escapes to `document.body` has no theme tokens — reproducing the bug. -->
+    <body>
+        <dev-app></dev-app>
+    </body>
+</html>

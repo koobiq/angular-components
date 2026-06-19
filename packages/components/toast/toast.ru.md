@@ -124,3 +124,25 @@ import { kbqToastConfigurationProvider, KbqToastPosition } from '@koobiq/compone
 ##### Исчезновение
 
 Тост сдвигается по горизонтали за правую границу экрана. Высота окна тоста не меняется. По мере сдвига элемент становится прозрачным. Сообщения под ним плавно поднимаются на освободившееся место в стопке.
+
+### Module Federation и Shadow DOM
+
+Тосты отображаются через CDK overlay, который по умолчанию добавляет свой контейнер в `document.body`. Когда приложение монтируется внутри **Shadow DOM** — типичный сценарий для микрофронтендов Module Federation, изолирующих свои стили, — тост выходит из shadow root в light DOM. Там он теряет стили и токены темы, ограниченные областью shadow root (токены темы Koobiq определены на предке `.kbq-light` / `.kbq-dark`), поэтому тост отображается без оформления.
+
+Используйте `provideKbqShadowDomOverlay`, чтобы направить все CDK overlay (тост, модальное окно, выпадающее меню, тултип и т. д.) внутрь shadow root:
+
+```ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideKbqShadowDomOverlay } from '@koobiq/components/core';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        // Передайте корневой элемент микрофронтенда (или любой элемент внутри его shadow-дерева).
+        provideKbqShadowDomOverlay(() => document.querySelector('my-mfe-root')!)
+    ]
+});
+```
+
+При вызове без аргументов для поиска shadow root используется элемент корневого компонента приложения. Если хост не находится внутри shadow root, контейнер остаётся в `document.body`, поэтому провайдер можно добавлять безусловно.
+
+> Провайдер исправляет только **размещение** контейнера overlay. Микрофронтенд по-прежнему отвечает за доставку необходимого CSS в свой shadow root — как стилей компонентов и темы Koobiq, так и структурных стилей overlay из `@angular/cdk` (`@angular/cdk/overlay-prebuilt.css`), поскольку глобальные таблицы стилей из `document.head` не пересекают границу shadow DOM.

@@ -124,3 +124,25 @@ The toast appears from the left horizontally. As it slides in, the new element b
 ##### Disappearance
 
 The toast slides horizontally to the right beyond the screen edge. The toast window height does not change. As it slides, the element becomes transparent. Messages below it smoothly rise to fill the freed space in the stack.
+
+### Module Federation and Shadow DOM
+
+Toasts are rendered through the CDK overlay, which by default appends its container to `document.body`. When the application is mounted inside a **Shadow DOM** — a common setup for Module Federation micro-frontends that isolate their styles — the toast escapes the shadow root into the light DOM. There it loses the styles and theme tokens scoped to the shadow root (Koobiq theme tokens are defined on the `.kbq-light` / `.kbq-dark` ancestor), so the toast appears unstyled.
+
+Use `provideKbqShadowDomOverlay` to route all CDK overlays (toast, modal, dropdown, tooltip, etc.) into the shadow root:
+
+```ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideKbqShadowDomOverlay } from '@koobiq/components/core';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        // Pass the micro-frontend root element (or any element inside its shadow tree).
+        provideKbqShadowDomOverlay(() => document.querySelector('my-mfe-root')!)
+    ]
+});
+```
+
+When called without arguments, the application root component element is used to resolve the shadow root. If the host is not inside a shadow root, the container stays on `document.body`, so the provider is safe to add unconditionally.
+
+> The provider only fixes the overlay container **placement**. The micro-frontend is still responsible for delivering the required CSS into its shadow root — both the Koobiq component/theme styles and the structural overlay styles from `@angular/cdk` (`@angular/cdk/overlay-prebuilt.css`) — because global `document.head` stylesheets do not cross a shadow boundary.

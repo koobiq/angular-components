@@ -1,0 +1,20 @@
+.dev-mfe {
+    padding: var(--kbq-size-xl);
+}
+
+.dev-mfe__hint {
+    max-width: 720px;
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.dev-mfe__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kbq-size-m);
+
+    margin: var(--kbq-size-l) 0;
+}
+
+.dev-mfe__status code {
+    color: var(--kbq-foreground-contrast);
+}

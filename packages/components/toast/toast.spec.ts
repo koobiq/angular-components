@@ -276,3 +276,52 @@ describe('ToastService regression: multiple containers / cleanup', () => {
         expect(overlayContainerElement.querySelectorAll('kbq-toast-container').length).toBe(1);
     });
 });
+
+describe('ToastService in a Shadow DOM overlay container', () => {
+    /**
+     * OverlayContainer that hosts the `.cdk-overlay-container` inside a real shadow root, emulating a Module
+     * Federation micro-frontend. Mirrors the custom-container test pattern used in actions-panel.spec.ts.
+     */
+    class TestShadowOverlayContainer extends OverlayContainer {
+        shadowHost: HTMLElement;
+        shadowRoot: ShadowRoot;
+
+        protected _createContainer(): void {
+            super._createContainer();
+
+            this.shadowHost = this._document.createElement('div');
+            this._document.body.appendChild(this.shadowHost);
+
+            this.shadowRoot = this.shadowHost.attachShadow({ mode: 'open' });
+            this.shadowRoot.appendChild(this._containerElement);
+        }
+    }
+
+    let service: KbqToastService;
+    let overlayContainer: TestShadowOverlayContainer;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqToastModule, NoopAnimationsModule],
+            providers: [{ provide: OverlayContainer, useClass: TestShadowOverlayContainer }]
+        }).compileComponents();
+
+        service = TestBed.inject(KbqToastService);
+        overlayContainer = TestBed.inject(OverlayContainer) as TestShadowOverlayContainer;
+    });
+
+    afterEach(() => {
+        overlayContainer.ngOnDestroy();
+        overlayContainer.shadowHost?.remove();
+    });
+
+    it('renders the toast inside the shadow root, not in the light DOM', () => {
+        service.show(MOCK_TOAST_DATA, 0);
+
+        // The overlay container itself now lives in the shadow tree...
+        expect(overlayContainer.getContainerElement().getRootNode()).toBe(overlayContainer.shadowRoot);
+        // ...and so does the toast (querying the shadow root finds it, the light-DOM body does not).
+        expect(overlayContainer.shadowRoot.querySelectorAll('kbq-toast').length).toBe(1);
+        expect(overlayContainer.shadowHost.ownerDocument.body.querySelectorAll('kbq-toast').length).toBe(0);
+    });
+});
