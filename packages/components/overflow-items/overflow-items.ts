@@ -341,15 +341,6 @@ export class KbqOverflowItems {
             .subscribe((wrap) => this.renderer.setStyle(this.element, 'flex-wrap', wrap));
     }
 
-    _getAvailableSize(container: HTMLElement, orientation: KbqOrientation): number {
-        if (this.wrap() === 'wrap') return 0;
-
-        const { containerSize, paddingStart, paddingEnd } = this.orientationConfig[orientation];
-        const computedStyle = this.window.getComputedStyle(container);
-
-        return containerSize(container) - paddingStart(computedStyle) - paddingEnd(computedStyle);
-    }
-
     private hasOverflown(
         container: HTMLElement,
         items: ReadonlyArray<KbqOverflowItem>,

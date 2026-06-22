@@ -9,6 +9,9 @@ test.describe('KbqBreadcrumbs overflow', () => {
         const allItems = breadcrumbs.locator('.kbq-overflow-item');
         const visibleItems = breadcrumbs.locator('.kbq-overflow-item:not(.kbq-overflow-item-hidden)');
 
+        // Wait for the breadcrumbs to render and apply overflow logic
+        await page.waitForTimeout(100);
+
         // max = 4, items.length = 5 — total breadcrumb items rendered should equal items.length,
         // and visible (non-hidden) items should equal max - 1.
         await expect(allItems).toHaveCount(5);
