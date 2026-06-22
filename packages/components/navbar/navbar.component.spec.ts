@@ -1,9 +1,11 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from './../icon/icon.module';
 import {
     KbqNavbar,
@@ -648,6 +650,40 @@ describe('KbqNavbar', () => {
         }));
     });
 });
+
+describe('KbqNavbar dropdown host', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, KbqNavbarModule, KbqDropdownModule, NavbarWithDropdownApp]
+        }).compileComponents();
+    });
+
+    it('should default demoteOverlay to false on a KbqDropdownTrigger nested inside kbq-navbar', () => {
+        const fixture = TestBed.createComponent(NavbarWithDropdownApp);
+
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.trigger().demoteOverlay).toBe(false);
+    });
+});
+
+@Component({
+    selector: 'test-app-navbar-with-dropdown',
+    imports: [KbqNavbarModule, KbqDropdownModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <button [kbqDropdownTriggerFor]="dropdown">Open</button>
+                <kbq-dropdown #dropdown="kbqDropdown">
+                    <button kbq-dropdown-item>Item</button>
+                </kbq-dropdown>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class NavbarWithDropdownApp {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+}
 
 @Component({
     selector: 'test-app',

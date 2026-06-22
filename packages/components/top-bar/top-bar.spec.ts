@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTopBarModule } from './module';
 import { KbqTopBar } from './top-bar';
 
@@ -36,6 +38,20 @@ describe(KbqTopBar.name, () => {
         fixture.detectChanges();
         expect(menuElement.classList.contains('kbq-top-bar_with-shadow')).toBeFalsy();
     });
+
+    it('should default demoteOverlay to false on a KbqDropdownTrigger nested inside kbq-top-bar', async () => {
+        await TestBed.resetTestingModule()
+            .configureTestingModule({
+                imports: [KbqTopBarModule, KbqDropdownModule, NoopAnimationsModule, TopBarWithDropdownApp]
+            })
+            .compileComponents();
+
+        const dropdownFixture = TestBed.createComponent(TopBarWithDropdownApp);
+
+        dropdownFixture.detectChanges();
+
+        expect(dropdownFixture.componentInstance.trigger().demoteOverlay).toBe(false);
+    });
 });
 
 @Component({
@@ -46,4 +62,20 @@ describe(KbqTopBar.name, () => {
 class TestApp {
     @ViewChild(KbqTopBar) topBar: KbqTopBar;
     withShadow = false;
+}
+
+@Component({
+    selector: 'test-app-top-bar-with-dropdown',
+    imports: [KbqTopBarModule, KbqDropdownModule],
+    template: `
+        <kbq-top-bar>
+            <button [kbqDropdownTriggerFor]="dropdown">Open</button>
+            <kbq-dropdown #dropdown="kbqDropdown">
+                <button kbq-dropdown-item>Item</button>
+            </kbq-dropdown>
+        </kbq-top-bar>
+    `
+})
+class TopBarWithDropdownApp {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
 }

@@ -7,6 +7,7 @@ import {
     Input,
     ViewEncapsulation
 } from '@angular/core';
+import { KBQ_DROPDOWN_HOST } from '@koobiq/components/dropdown';
 
 @Directive({
     selector: '[kbqTopBarSpacer]',
@@ -42,6 +43,9 @@ export class KbqTopBarContainer {
     styleUrls: [
         './top-bar.scss',
         './top-bar-tokens.scss'
+    ],
+    providers: [
+        { provide: KBQ_DROPDOWN_HOST, useExisting: KbqTopBar }
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,

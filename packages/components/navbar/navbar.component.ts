@@ -21,6 +21,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { isHorizontalMovement, isVerticalMovement, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
+import { KBQ_DROPDOWN_HOST } from '@koobiq/components/dropdown';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import {
@@ -185,6 +186,9 @@ export class KbqNavbarContainer {}
         './navbar-brand.scss',
         './navbar-divider.scss',
         './navbar-tokens.scss'
+    ],
+    providers: [
+        { provide: KBQ_DROPDOWN_HOST, useExisting: KbqNavbar }
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
