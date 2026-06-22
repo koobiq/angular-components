@@ -149,6 +149,7 @@ export class E2eBreadcrumbsStateAndStyle {
         :host {
             display: block;
             padding: var(--kbq-size-s);
+            width: 300px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
