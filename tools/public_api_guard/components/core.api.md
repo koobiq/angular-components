@@ -3382,7 +3382,7 @@ export class KbqSelectTrigger {
 
 // @public
 export class KbqShadowDomOverlayContainer extends OverlayContainer {
-    // (undocumented)
+    // @internal
     protected _createContainer(): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqShadowDomOverlayContainer, never>;
@@ -3391,7 +3391,10 @@ export class KbqShadowDomOverlayContainer extends OverlayContainer {
 }
 
 // @public
-export type KbqShadowDomOverlayHost = HTMLElement | ElementRef<HTMLElement> | (() => Node | null | undefined);
+export type KbqShadowDomOverlayHost = HTMLElement | ElementRef<HTMLElement> | (() => Element | null | undefined);
+
+// @public
+export const kbqShadowDomOverlayProvider: (host?: KbqShadowDomOverlayHost) => Provider[];
 
 // @public
 export interface KbqSizeUnitsConfig {
@@ -3835,9 +3838,6 @@ export const POSITION_TO_CSS_MAP: {
 
 // @public (undocumented)
 export const PRINT_SCREEN = 44;
-
-// @public
-export const provideKbqShadowDomOverlay: (host?: KbqShadowDomOverlayHost) => Provider[];
 
 // @public (undocumented)
 export const ptBRFormattersData: {

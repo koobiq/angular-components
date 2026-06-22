@@ -17,12 +17,11 @@
     }
 
     <p class="dev-mfe__hint">
-        Toasts go to
-        <b>one shared stack</b>
-        owned by the root MFE (level 1) — trigger them from any level and they never overlap. Modals &amp; sidepanels
-        stay
-        <b>per-MFE</b>
-        , in this MFE's own shadow root.
+        All overlays — toasts, modals &amp; sidepanels — go to
+        <b>one shared container</b>
+        owned by the root MFE (level 1). Trigger them from any level: they share one stacking context and the
+        <b>root MFE's theme</b>
+        (so a nested MFE's own dark/light toggle no longer themes its overlays).
     </p>
 
     <div class="dev-mfe__buttons">
@@ -35,7 +34,7 @@
     </div>
 
     <p class="dev-mfe__status">
-        modal/sidepanel
+        shared overlay
         <code>.cdk-overlay-container</code>
         :
         <b>{{ overlayLocation() }}</b>

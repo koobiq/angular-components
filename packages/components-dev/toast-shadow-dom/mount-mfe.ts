@@ -1,7 +1,8 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { ApplicationRef, EnvironmentProviders, InjectionToken, Provider, Type, createComponent } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideKbqShadowDomOverlay } from '@koobiq/components/core';
+import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { KbqToastData, KbqToastPosition, kbqToastConfigurationProvider } from '@koobiq/components/toast';
 
 /** Per-MFE configuration propagated through DI. */
@@ -32,7 +33,7 @@ export interface DevMountedMfe {
 /**
  * Bootstraps an independent Angular application for `rootComponent` into `host`, emulating a Module Federation
  * micro-frontend. Each MFE gets its own root injector — so its own `OverlayContainer` (via
- * `provideKbqShadowDomOverlay`), its own toast/modal/sidepanel services, and its own theme.
+ * `kbqShadowDomOverlayProvider`), its own toast/modal/sidepanel services, and its own theme.
  *
  * `rootComponent` is passed in (rather than imported) to avoid a circular import with `module.ts`.
  */
@@ -40,7 +41,8 @@ export async function devMountMfe(
     host: HTMLElement,
     config: DevMfeConfig,
     rootComponent: Type<unknown>,
-    toastBridge?: DevToastBridge
+    toastBridge?: DevToastBridge,
+    sharedOverlayContainer?: OverlayContainer
 ): Promise<DevMountedMfe> {
     const providers: (Provider | EnvironmentProviders)[] = [
         provideAnimations(),
@@ -49,9 +51,16 @@ export async function devMountMfe(
     ];
 
     if (config.useShadow) {
-        // `host` is the MFE root element; the container resolves its shadow root (even when `host` is itself
-        // nested inside another shadow root).
-        providers.push(...provideKbqShadowDomOverlay(() => host));
+        if (sharedOverlayContainer) {
+            // Nested MFEs reuse the ROOT MFE's single `OverlayContainer` instance, so every overlay
+            // (modal/sidepanel/select/…) from any level lands in one shared container — one stacking context,
+            // one theme (the root's).
+            providers.push({ provide: OverlayContainer, useValue: sharedOverlayContainer });
+        } else {
+            // Root MFE: `host` is the MFE root element; the container resolves its shadow root (even when `host`
+            // is itself nested inside another shadow root). This instance becomes the single shared container.
+            providers.push(...kbqShadowDomOverlayProvider(() => host));
+        }
     }
 
     if (toastBridge) {
@@ -74,10 +83,13 @@ export async function devMountMfe(
 }
 
 /**
- * Emulates an MFE delivering its CSS into its shadow root: clones every global stylesheet from `document.head`
- * into `shadowRoot`, and keeps mirroring stylesheets injected later (Koobiq components use
- * `ViewEncapsulation.None`, so their styles land in `document.head` on first use — e.g. the modal/sidepanel/toast
- * styles added when they first open). Returns the observer so the caller can disconnect it on destroy.
+ * Emulates an MFE delivering its CSS into its shadow root: clones the global `<style>` / `<link rel="stylesheet">`
+ * nodes from `document.head` into `shadowRoot`, copies the initial `document.adoptedStyleSheets`, and keeps mirroring
+ * stylesheet nodes added to `document.head` later (Koobiq components use `ViewEncapsulation.None`, so their styles
+ * land in `document.head` on first use — e.g. the modal/sidepanel/toast styles added when they first open).
+ *
+ * Mirrors `document.head` `<style>`/`<link>` additions and the initial `adoptedStyleSheets` only; it does not track
+ * later removals or `adoptedStyleSheets` changes. Returns the observer so the caller can disconnect it on destroy.
  */
 export function devMirrorGlobalStyles(shadowRoot: ShadowRoot, document: Document): MutationObserver {
     const isStyleNode = (node: Node): node is HTMLStyleElement | HTMLLinkElement =>
@@ -86,6 +98,11 @@ export function devMirrorGlobalStyles(shadowRoot: ShadowRoot, document: Document
     document.head.querySelectorAll('style, link[rel="stylesheet"]').forEach((node) => {
         shadowRoot.appendChild(node.cloneNode(true));
     });
+
+    // Some Koobiq styles are delivered as constructable stylesheets via `adoptedStyleSheets` rather than `<style>`.
+    if (document.adoptedStyleSheets.length) {
+        shadowRoot.adoptedStyleSheets = [...shadowRoot.adoptedStyleSheets, ...document.adoptedStyleSheets];
+    }
 
     const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {

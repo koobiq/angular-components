@@ -1,3 +1,4 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
@@ -63,6 +64,12 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
     private readonly parentToastBridge = inject(DEV_TOAST_BRIDGE, { optional: true });
 
     /**
+     * The single shared `OverlayContainer`. The root MFE owns its own (a `KbqShadowDomOverlayContainer` in its
+     * shadow root); nested MFEs receive that same instance via DI (`useValue`), so every overlay lands in it.
+     */
+    private readonly sharedOverlayContainer = inject(OverlayContainer);
+
+    /**
      * Bridge used to show toasts. The root MFE builds its own (zone-bound to its `NgZone` + `KbqToastService`);
      * nested MFEs reuse the root's, so every toast lands in the single shared root stack.
      */
@@ -84,6 +91,7 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
 
     private observer?: MutationObserver;
     private child?: DevMountedMfe;
+    private destroyed = false;
 
     protected get hasChild(): boolean {
         return this.config.level < this.config.maxLevel;
@@ -101,14 +109,23 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
         if (this.hasChild && host) {
             // Defer so we don't create a child application during this app's change-detection pass.
             queueMicrotask(() => {
-                devMountMfe(host, { ...this.config, level: this.config.level + 1 }, DevMfeRoot, this.toastBridge)
-                    .then((child) => (this.child = child))
+                devMountMfe(
+                    host,
+                    { ...this.config, level: this.config.level + 1 },
+                    DevMfeRoot,
+                    this.toastBridge,
+                    this.sharedOverlayContainer
+                )
+                    // If this MFE was destroyed before the deferred mount resolved, tear the child down immediately
+                    // instead of leaking an independent Angular app that ngOnDestroy already missed.
+                    .then((child) => (this.destroyed ? child.appRef.destroy() : (this.child = child)))
                     .catch((error) => console.error('Failed to mount nested MFE', error));
             });
         }
     }
 
     ngOnDestroy(): void {
+        this.destroyed = true;
         this.observer?.disconnect();
         this.child?.appRef.destroy();
     }
@@ -150,9 +167,13 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
     }
 
     private updateOverlayLocation(): void {
-        const inShadow = this.elementRef.nativeElement.shadowRoot?.querySelector('.cdk-overlay-container');
-        const inBody = this.document.body.querySelector('.cdk-overlay-container');
+        // Report where the single shared container actually lives (the root MFE's shadow root in fix mode), not
+        // this MFE's own shadow root — nested MFEs no longer host their own container.
+        const container = this.sharedOverlayContainer.getContainerElement();
+        const inSharedShadow = container.getRootNode() instanceof ShadowRoot;
 
-        this.overlayLocation.set(inShadow ? 'this MFE shadow root ✅' : inBody ? 'document.body ❌ (bug)' : '—');
+        this.overlayLocation.set(
+            inSharedShadow ? 'shared root MFE shadow root ✅' : container.isConnected ? 'document.body ❌ (bug)' : '—'
+        );
     }
 }

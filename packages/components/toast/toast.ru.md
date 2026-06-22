@@ -129,20 +129,51 @@ import { kbqToastConfigurationProvider, KbqToastPosition } from '@koobiq/compone
 
 Тосты отображаются через CDK overlay, который по умолчанию добавляет свой контейнер в `document.body`. Когда приложение монтируется внутри **Shadow DOM** — типичный сценарий для микрофронтендов Module Federation, изолирующих свои стили, — тост выходит из shadow root в light DOM. Там он теряет стили и токены темы, ограниченные областью shadow root (токены темы Koobiq определены на предке `.kbq-light` / `.kbq-dark`), поэтому тост отображается без оформления.
 
-Используйте `provideKbqShadowDomOverlay`, чтобы направить все CDK overlay (тост, модальное окно, выпадающее меню, тултип и т. д.) внутрь shadow root:
+Используйте `kbqShadowDomOverlayProvider`, чтобы направить все CDK overlay (тост, модальное окно, выпадающее меню, тултип и т. д.) внутрь shadow root:
 
 ```ts
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideKbqShadowDomOverlay } from '@koobiq/components/core';
+import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 
 bootstrapApplication(AppComponent, {
     providers: [
         // Передайте корневой элемент микрофронтенда (или любой элемент внутри его shadow-дерева).
-        provideKbqShadowDomOverlay(() => document.querySelector('my-mfe-root')!)
+        kbqShadowDomOverlayProvider(() => document.querySelector('my-mfe-root')!)
     ]
 });
 ```
 
-При вызове без аргументов для поиска shadow root используется элемент корневого компонента приложения. Если хост не находится внутри shadow root, контейнер остаётся в `document.body`, поэтому провайдер можно добавлять безусловно.
+При вызове без аргументов для поиска shadow root используется элемент корневого компонента приложения. Если хост не находится внутри **открытого** shadow root, контейнер остаётся в `document.body`, поэтому провайдер можно добавлять безусловно.
 
-> Провайдер исправляет только **размещение** контейнера overlay. Микрофронтенд по-прежнему отвечает за доставку необходимого CSS в свой shadow root — как стилей компонентов и темы Koobiq, так и структурных стилей overlay из `@angular/cdk` (`@angular/cdk/overlay-prebuilt.css`), поскольку глобальные таблицы стилей из `document.head` не пересекают границу shadow DOM.
+> Провайдер заменяет глобальный `OverlayContainer`, поэтому его нельзя комбинировать с другим кастомным `OverlayContainer` (например, с `FullscreenOverlayContainer` из CDK) — побеждает последний провайдер.
+>
+> Помимо перемещения контейнера, провайдер автоматически доставляет **структурные** стили overlay из CDK (позиционирование, `z-index`, подложку) в shadow root. Микрофронтенд по-прежнему отвечает за доставку **стилей компонентов и темы Koobiq** (токенов `.kbq-light` / `.kbq-dark` и CSS компонентов) в свой shadow root, поскольку глобальные таблицы стилей из `document.head` не пересекают границу shadow DOM.
+
+#### Один общий overlay-контейнер на все микрофронтенды
+
+По умолчанию каждый микрофронтенд, добавивший `kbqShadowDomOverlayProvider`, получает **свой** `OverlayContainer`, поэтому его overlay рендерятся в **его собственном** shadow root и теме. Это правильное поведение по умолчанию, когда каждый микрофронтенд должен сохранять свою тему.
+
+Если же нужно, чтобы **все** микрофронтенды использовали **один** overlay-контейнер — единый stacking-контекст, поэтому overlay, открытые в разных микрофронтендах, накладываются в порядке открытия, — пусть host создаёт контейнер и передаёт этот единственный экземпляр каждому remote:
+
+```ts
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { createApplication } from '@angular/platform-browser';
+import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
+
+// Host: создаёт единый общий контейнер в своём shadow root.
+const hostApp = await createApplication({
+    providers: [kbqShadowDomOverlayProvider(() => hostElement)]
+});
+const sharedOverlayContainer = hostApp.injector.get(OverlayContainer);
+
+// Каждый remote-микрофронтенд переиспользует этот же экземпляр вместо создания своего.
+const remoteApp = await createApplication({
+    providers: [{ provide: OverlayContainer, useValue: sharedOverlayContainer }]
+});
+```
+
+Компромиссы:
+
+- Все overlay (modal, sidepanel, select, dropdown, tooltip, toast, …) рендерятся в **теме host**, а не в собственной теме каждого remote.
+- **Host должен жить дольше любого remote** — он владеет элементом контейнера, и его `ngOnDestroy` удаляет этот элемент.
+- Так объединяется только **контейнер** overlay. Единый **стек тостов** дополнительно требует единого `KbqToastService` (каждый сервис ведёт свой стек), поэтому направляйте тосты через один общий сервис.

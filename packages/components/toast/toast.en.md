@@ -129,20 +129,51 @@ The toast slides horizontally to the right beyond the screen edge. The toast win
 
 Toasts are rendered through the CDK overlay, which by default appends its container to `document.body`. When the application is mounted inside a **Shadow DOM** — a common setup for Module Federation micro-frontends that isolate their styles — the toast escapes the shadow root into the light DOM. There it loses the styles and theme tokens scoped to the shadow root (Koobiq theme tokens are defined on the `.kbq-light` / `.kbq-dark` ancestor), so the toast appears unstyled.
 
-Use `provideKbqShadowDomOverlay` to route all CDK overlays (toast, modal, dropdown, tooltip, etc.) into the shadow root:
+Use `kbqShadowDomOverlayProvider` to route all CDK overlays (toast, modal, dropdown, tooltip, etc.) into the shadow root:
 
 ```ts
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideKbqShadowDomOverlay } from '@koobiq/components/core';
+import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 
 bootstrapApplication(AppComponent, {
     providers: [
         // Pass the micro-frontend root element (or any element inside its shadow tree).
-        provideKbqShadowDomOverlay(() => document.querySelector('my-mfe-root')!)
+        kbqShadowDomOverlayProvider(() => document.querySelector('my-mfe-root')!)
     ]
 });
 ```
 
-When called without arguments, the application root component element is used to resolve the shadow root. If the host is not inside a shadow root, the container stays on `document.body`, so the provider is safe to add unconditionally.
+When called without arguments, the application root component element is used to resolve the shadow root. If the host is not inside an **open** shadow root, the container stays on `document.body`, so the provider is safe to add unconditionally.
 
-> The provider only fixes the overlay container **placement**. The micro-frontend is still responsible for delivering the required CSS into its shadow root — both the Koobiq component/theme styles and the structural overlay styles from `@angular/cdk` (`@angular/cdk/overlay-prebuilt.css`) — because global `document.head` stylesheets do not cross a shadow boundary.
+> The provider replaces the global `OverlayContainer`, so it cannot be combined with another custom `OverlayContainer` (such as CDK's `FullscreenOverlayContainer`) — the last provider wins.
+>
+> Besides relocating the container, the provider automatically delivers the CDK **structural** overlay styles (position, `z-index`, backdrop) into the shadow root. The micro-frontend is still responsible for delivering the **Koobiq component/theme styles** (the `.kbq-light` / `.kbq-dark` tokens and component CSS) into its shadow root, because global `document.head` stylesheets do not cross a shadow boundary.
+
+#### One shared overlay container across micro-frontends
+
+By default each micro-frontend that adds `kbqShadowDomOverlayProvider` gets **its own** `OverlayContainer`, so its overlays render inside **its own** shadow root and theme. That is the right default when every micro-frontend should keep its own theme.
+
+If instead you want **all** micro-frontends to share a **single** overlay container — one stacking context, so overlays opened in different micro-frontends stack by open order — let the host create the container and pass that one instance to every remote:
+
+```ts
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { createApplication } from '@angular/platform-browser';
+import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
+
+// Host: create the single shared container in the host's shadow root.
+const hostApp = await createApplication({
+    providers: [kbqShadowDomOverlayProvider(() => hostElement)]
+});
+const sharedOverlayContainer = hostApp.injector.get(OverlayContainer);
+
+// Each remote micro-frontend reuses that same instance instead of creating its own.
+const remoteApp = await createApplication({
+    providers: [{ provide: OverlayContainer, useValue: sharedOverlayContainer }]
+});
+```
+
+Trade-offs:
+
+- All overlays (modal, sidepanel, select, dropdown, tooltip, toast, …) render in the **host's theme**, not each remote's own theme.
+- The **host must outlive every remote** — it owns the container element, and its `ngOnDestroy` removes it.
+- This unifies only the overlay **container**. A single toast **stack** additionally needs a single `KbqToastService` (each service keeps its own stack), so route toasts through one shared service.
