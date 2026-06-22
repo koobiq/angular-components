@@ -17,7 +17,12 @@
     }
 
     <p class="dev-mfe__hint">
-        Open a modal or sidepanel, then “Show toast” — the toast must appear on top, inside this MFE's own shadow root.
+        Toasts go to
+        <b>one shared stack</b>
+        owned by the root MFE (level 1) — trigger them from any level and they never overlap. Modals &amp; sidepanels
+        stay
+        <b>per-MFE</b>
+        , in this MFE's own shadow root.
     </p>
 
     <div class="dev-mfe__buttons">
@@ -30,6 +35,7 @@
     </div>
 
     <p class="dev-mfe__status">
+        modal/sidepanel
         <code>.cdk-overlay-container</code>
         :
         <b>{{ overlayLocation() }}</b>

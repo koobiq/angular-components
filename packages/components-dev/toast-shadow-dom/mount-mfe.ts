@@ -2,7 +2,7 @@ import { ApplicationRef, EnvironmentProviders, InjectionToken, Provider, Type, c
 import { createApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideKbqShadowDomOverlay } from '@koobiq/components/core';
-import { KbqToastPosition, kbqToastConfigurationProvider } from '@koobiq/components/toast';
+import { KbqToastData, KbqToastPosition, kbqToastConfigurationProvider } from '@koobiq/components/toast';
 
 /** Per-MFE configuration propagated through DI. */
 export interface DevMfeConfig {
@@ -15,6 +15,15 @@ export interface DevMfeConfig {
 }
 
 export const DEV_MFE_CONFIG = new InjectionToken<DevMfeConfig>('DEV_MFE_CONFIG');
+
+/**
+ * Zone-bound function that shows a toast through the ROOT MFE's `KbqToastService`, so every MFE shares one stack.
+ * It must run `show()` inside the root app's `NgZone` (a nested MFE's click runs in its own zone and would not tick
+ * the root app, leaving the toast unrendered).
+ */
+export type DevToastBridge = (data: KbqToastData, duration?: number) => void;
+
+export const DEV_TOAST_BRIDGE = new InjectionToken<DevToastBridge>('DEV_TOAST_BRIDGE');
 
 export interface DevMountedMfe {
     appRef: ApplicationRef;
@@ -30,7 +39,8 @@ export interface DevMountedMfe {
 export async function devMountMfe(
     host: HTMLElement,
     config: DevMfeConfig,
-    rootComponent: Type<unknown>
+    rootComponent: Type<unknown>,
+    toastBridge?: DevToastBridge
 ): Promise<DevMountedMfe> {
     const providers: (Provider | EnvironmentProviders)[] = [
         provideAnimations(),
@@ -42,6 +52,11 @@ export async function devMountMfe(
         // `host` is the MFE root element; the container resolves its shadow root (even when `host` is itself
         // nested inside another shadow root).
         providers.push(...provideKbqShadowDomOverlay(() => host));
+    }
+
+    if (toastBridge) {
+        // Nested MFEs delegate toasts to the root MFE's stack via this bridge (one shared stack, no overlap).
+        providers.push({ provide: DEV_TOAST_BRIDGE, useValue: toastBridge });
     }
 
     const appRef = await createApplication({ providers });

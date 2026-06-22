@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    NgZone,
     OnDestroy,
     TemplateRef,
     ViewEncapsulation,
@@ -18,7 +19,14 @@ import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { DEV_MFE_CONFIG, DevMountedMfe, devMirrorGlobalStyles, devMountMfe } from './mount-mfe';
+import {
+    DEV_MFE_CONFIG,
+    DEV_TOAST_BRIDGE,
+    DevMountedMfe,
+    DevToastBridge,
+    devMirrorGlobalStyles,
+    devMountMfe
+} from './mount-mfe';
 
 /**
  * One micro-frontend rendered inside a shadow root (`ViewEncapsulation.ShadowDom`). Reused at every nesting level:
@@ -51,6 +59,15 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
     private readonly toastService = inject(KbqToastService);
     private readonly modalService = inject(KbqModalService);
     private readonly sidepanelService = inject(KbqSidepanelService);
+    private readonly ngZone = inject(NgZone);
+    private readonly parentToastBridge = inject(DEV_TOAST_BRIDGE, { optional: true });
+
+    /**
+     * Bridge used to show toasts. The root MFE builds its own (zone-bound to its `NgZone` + `KbqToastService`);
+     * nested MFEs reuse the root's, so every toast lands in the single shared root stack.
+     */
+    private readonly toastBridge: DevToastBridge =
+        this.parentToastBridge ?? ((data, duration) => this.ngZone.run(() => this.toastService.show(data, duration)));
 
     protected readonly config = inject(DEV_MFE_CONFIG);
     protected readonly toastStyle = KbqToastStyle;
@@ -58,8 +75,8 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
     /** Per-MFE theme — toggles the theme class on this MFE's host element (see host bindings). */
     protected readonly isDark = model(false);
 
-    /** Where this MFE's `.cdk-overlay-container` ended up, updated after opening an overlay. */
-    protected readonly overlayLocation = signal('— (open something)');
+    /** Where this MFE's modal/sidepanel `.cdk-overlay-container` ended up, updated after opening one. */
+    protected readonly overlayLocation = signal('— (open modal/sidepanel)');
 
     readonly childHost = viewChild<ElementRef<HTMLElement>>('childHost');
     readonly modalContent = viewChild.required<TemplateRef<any>>('modalContent');
@@ -84,7 +101,7 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
         if (this.hasChild && host) {
             // Defer so we don't create a child application during this app's change-detection pass.
             queueMicrotask(() => {
-                devMountMfe(host, { ...this.config, level: this.config.level + 1 }, DevMfeRoot)
+                devMountMfe(host, { ...this.config, level: this.config.level + 1 }, DevMfeRoot, this.toastBridge)
                     .then((child) => (this.child = child))
                     .catch((error) => console.error('Failed to mount nested MFE', error));
             });
@@ -105,13 +122,12 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
     }
 
     protected showToast(style: KbqToastStyle): void {
-        this.toastService.show({
+        // Goes to the single shared root stack (via the bridge), not this MFE's own container.
+        this.toastBridge({
             style,
-            title: `${style} toast · MFE level ${this.config.level}`,
-            caption: 'Should appear on top, inside this MFE shadow root'
+            title: `${style} toast · from MFE level ${this.config.level}`,
+            caption: 'Shown in the shared root toast stack'
         });
-
-        this.updateOverlayLocation();
     }
 
     protected openModal(): void {
