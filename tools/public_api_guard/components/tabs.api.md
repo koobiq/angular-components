@@ -27,6 +27,7 @@ import * as i4 from '@koobiq/components/icon';
 import * as i5 from '@koobiq/components/tooltip';
 import * as i6 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -284,7 +285,7 @@ export type KbqTabHeaderPosition = 'above' | 'below';
 
 // @public
 export class KbqTabLabel extends CdkPortal {
-    readonly iconOnly: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly iconOnly: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, { "iconOnly": { "alias": "iconOnly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
