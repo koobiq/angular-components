@@ -1,7 +1,7 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from 'packages/e2e/utils';
 
-test.fixme('KbqBreadcrumbs overflow', () => {
+test.describe('KbqBreadcrumbs overflow', () => {
     test('should enforce the max limit of breadcrumb items displayed', async ({ page }) => {
         await page.goto('/E2eBreadcrumbsOverflowMax');
 
