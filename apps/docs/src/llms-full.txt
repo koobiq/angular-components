@@ -3069,10 +3069,11 @@ If it is necessary to display the breadcrumb values without truncation or hiding
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
@@ -3080,7 +3081,6 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
-import { QueryList } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
@@ -3101,52 +3101,44 @@ export class KbqBreadcrumbButton implements OnInit {
 
 // @public
 export class KbqBreadcrumbItem {
-    current: boolean;
-    customTemplateRef: TemplateRef<any>;
-    disabled: boolean;
-    // (undocumented)
-    static ngAcceptInputType_current: unknown;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
+    readonly current: InputSignalWithTransform<boolean, unknown>;
+    readonly customTemplateRef: Signal<TemplateRef<any> | undefined>;
+    readonly disabled: InputSignalWithTransform<boolean, unknown>;
     readonly routerLink: RouterLink | null;
-    text: string;
+    readonly text: InputSignal<string>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "current": { "alias": "current"; "required": false; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "current": { "alias": "current"; "required": false; "isSignal": true; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbItem, never>;
 }
 
 // @public (undocumented)
-export class KbqBreadcrumbs implements AfterContentInit {
+export class KbqBreadcrumbs {
     constructor();
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
-    disabled: boolean;
-    firstItemNegativeMargin: boolean;
+    readonly disabled: InputSignalWithTransform<boolean, unknown>;
+    readonly firstItemNegativeMargin: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    protected readonly items: QueryList<KbqBreadcrumbItem>;
-    protected get itemsExcludingEdges(): KbqBreadcrumbItem[];
+    protected readonly hiddenItemIDs: Signal<Set<unknown>>;
+    // (undocumented)
+    protected readonly items: Signal<readonly KbqBreadcrumbItem[]>;
+    protected readonly itemsExcludingEdges: Signal<KbqBreadcrumbItem[]>;
     // (undocumented)
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
-    max: number | null;
-    protected get maxWidth(): number | null;
+    readonly max: InputSignal<number | null>;
+    protected readonly maxVisibleItems: Signal<number | null>;
     protected readonly minVisibleItems = 2;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_firstItemNegativeMargin: unknown;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
     // (undocumented)
     protected readonly separator?: TemplateRef<any>;
-    size: KbqDefaultSizes;
-    wrapMode: KbqBreadcrumbsWrapMode;
+    readonly size: InputSignal<KbqDefaultSizes>;
+    readonly wrapMode: InputSignal<KbqBreadcrumbsWrapMode>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof i2.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["items", "separator"], ["*"], true, [{ directive: typeof i2.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
@@ -3274,7 +3266,7 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
 // Warnings were encountered during analysis:
 //
 // dist/components/breadcrumbs/breadcrumbs.d.ts:27:134 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-// dist/components/breadcrumbs/breadcrumbs.d.ts:124:450 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+// dist/components/breadcrumbs/breadcrumbs.d.ts:119:540 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
@@ -3369,7 +3361,6 @@ To enable the button progress indication, use `class="kbq-progress"` which can b
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
@@ -3380,12 +3371,11 @@ import { InputSignal } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqIcon } from '@koobiq/components/icon';
 import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
-import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { Signal } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { WritableSignal } from '@angular/core';
 
@@ -3408,7 +3398,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
-    haltDisabledEvents(event: Event): void;
+    haltDisabledEvents: (event: Event) => void;
     // (undocumented)
     hasFocus: boolean;
     // (undocumented)
@@ -3425,27 +3415,29 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     onBlur(): void;
     // (undocumented)
-    onFocus($event: any): void;
+    onFocus(): void;
+    parentTextElement: ElementRef<HTMLElement>;
     // (undocumented)
     projectContentChanged(): void;
+    // (undocumented)
+    protected styler: KbqButtonCssStyler;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
-    textElement: ElementRef;
+    textElement: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButton, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqButtonCssStyler implements AfterContentInit {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
+    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
     // (undocumented)
-    icons: QueryList<KbqIcon>;
-    // (undocumented)
-    isIconButton: boolean;
+    readonly icons: Signal<readonly any[]>;
+    get isIconButton(): boolean;
     // (undocumented)
     nativeElement: HTMLElement;
     // (undocumented)
@@ -3455,7 +3447,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonCssStyler, "[kbq-button]", never, {}, {}, ["icons"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonCssStyler, [null, null, { skipSelf: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonCssStyler, never>;
 }
 
 // @public
@@ -3504,9 +3496,18 @@ export class KbqButtonModule {
     // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof i4.KbqButtonDropdownTrigger, typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i6.KbqButtonGroup, typeof i6.KbqButtonGroupRoot], [typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i4.KbqButtonDropdownTrigger, typeof i6.KbqButtonGroup, typeof i6.KbqButtonGroupRoot]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof i4.KbqButtonDropdownTrigger, typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i6.KbqButtonPrefix, typeof i6.KbqButtonSuffix, typeof i7.KbqButtonGroup, typeof i7.KbqButtonGroupRoot], [typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i6.KbqButtonPrefix, typeof i6.KbqButtonSuffix, typeof i4.KbqButtonDropdownTrigger, typeof i7.KbqButtonGroup, typeof i7.KbqButtonGroupRoot]>;
+}
+
+// @public
+export class KbqButtonPrefix {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonPrefix, "[kbqButtonPrefix]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonPrefix, never>;
 }
 
 // @public (undocumented)
@@ -3517,6 +3518,14 @@ export enum KbqButtonStyles {
     Outline = "outline",
     // (undocumented)
     Transparent = "transparent"
+}
+
+// @public
+export class KbqButtonSuffix {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonSuffix, "[kbqButtonSuffix]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonSuffix, never>;
 }
 
 // (No @packageDocumentation comment for this package)
@@ -3612,7 +3621,6 @@ Only icon buttons can be combined into a vertical group. In a group without a ba
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
@@ -3623,12 +3631,11 @@ import { InputSignal } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqIcon } from '@koobiq/components/icon';
 import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
-import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { Signal } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { WritableSignal } from '@angular/core';
 
@@ -3651,7 +3658,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
-    haltDisabledEvents(event: Event): void;
+    haltDisabledEvents: (event: Event) => void;
     // (undocumented)
     hasFocus: boolean;
     // (undocumented)
@@ -3668,27 +3675,29 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     onBlur(): void;
     // (undocumented)
-    onFocus($event: any): void;
+    onFocus(): void;
+    parentTextElement: ElementRef<HTMLElement>;
     // (undocumented)
     projectContentChanged(): void;
+    // (undocumented)
+    protected styler: KbqButtonCssStyler;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
-    textElement: ElementRef;
+    textElement: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButton, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqButtonCssStyler implements AfterContentInit {
-    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
+    constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2);
     // (undocumented)
-    icons: QueryList<KbqIcon>;
-    // (undocumented)
-    isIconButton: boolean;
+    readonly icons: Signal<readonly any[]>;
+    get isIconButton(): boolean;
     // (undocumented)
     nativeElement: HTMLElement;
     // (undocumented)
@@ -3698,7 +3707,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonCssStyler, "[kbq-button]", never, {}, {}, ["icons"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonCssStyler, [null, null, { skipSelf: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonCssStyler, never>;
 }
 
 // @public
@@ -3747,9 +3756,18 @@ export class KbqButtonModule {
     // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i6" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof i4.KbqButtonDropdownTrigger, typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i6.KbqButtonGroup, typeof i6.KbqButtonGroupRoot], [typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i4.KbqButtonDropdownTrigger, typeof i6.KbqButtonGroup, typeof i6.KbqButtonGroupRoot]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.ObserversModule, typeof i4.KbqButtonDropdownTrigger, typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i6.KbqButtonPrefix, typeof i6.KbqButtonSuffix, typeof i7.KbqButtonGroup, typeof i7.KbqButtonGroupRoot], [typeof i5.KbqButton, typeof i5.KbqButtonCssStyler, typeof i6.KbqButtonPrefix, typeof i6.KbqButtonSuffix, typeof i4.KbqButtonDropdownTrigger, typeof i7.KbqButtonGroup, typeof i7.KbqButtonGroupRoot]>;
+}
+
+// @public
+export class KbqButtonPrefix {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonPrefix, "[kbqButtonPrefix]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonPrefix, never>;
 }
 
 // @public (undocumented)
@@ -3760,6 +3778,14 @@ export enum KbqButtonStyles {
     Outline = "outline",
     // (undocumented)
     Transparent = "transparent"
+}
+
+// @public
+export class KbqButtonSuffix {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonSuffix, "[kbqButtonSuffix]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonSuffix, never>;
 }
 
 // (No @packageDocumentation comment for this package)
@@ -8480,11 +8506,11 @@ export enum PopUpPlacements {
 // @public (undocumented)
 export enum PopUpSizes {
     // (undocumented)
+    Custom = "custom",
+    // (undocumented)
     Large = "large",
     // (undocumented)
     Medium = "medium",
-    // (undocumented)
-    Normal = "medium",
     // (undocumented)
     Small = "small"
 }
@@ -10503,6 +10529,9 @@ export const KBQ_DROPDOWN_DEFAULT_OPTIONS: InjectionToken<KbqDropdownDefaultOpti
 
 // @public
 export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOptions;
+
+// @public
+export const KBQ_DROPDOWN_HOST: InjectionToken<unknown>;
 
 // @public
 export const KBQ_DROPDOWN_PANEL: InjectionToken<KbqDropdownPanel>;
@@ -21567,6 +21596,8 @@ Use the `underlined` attribute.
 
 <!-- example(tabs-underlined) -->
 
+If a tab contains only an icon without a label, add the `iconOnly` attribute to the `kbqTabLabel` directive - this sets a fixed size of 32×32px for the clickable area.
+
 #### Disabled
 
 A disabled tab can't be selected. It doesn't have interactive states.
@@ -21599,7 +21630,7 @@ By default, the width of horizontal tabs depends on the text inside them. If nec
 
 ### Customizable tab design
 
-You can configure how tabs look according to your product design using the `kbq-tab-label` directive.
+You can configure how tabs look according to your product design using the `kbqTabLabel` directive.
 
 <!-- example(tabs-custom-label) -->
 
@@ -21667,6 +21698,7 @@ import * as i4 from '@koobiq/components/icon';
 import * as i5 from '@koobiq/components/tooltip';
 import * as i6 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -21719,6 +21751,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     // (undocumented)
     empty: boolean;
     explicitContent: TemplateRef<any>;
+    get iconOnlyLabel(): boolean;
     implicitContent: TemplateRef<any>;
     isActive: boolean;
     // (undocumented)
@@ -21895,9 +21928,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 //
 // @public
 export class KbqTabHeader extends KbqPaginatedTabHeader {
-    // (undocumented)
     protected get activeTabOffsetLeft(): number | undefined;
-    // (undocumented)
     protected get activeTabOffsetWidth(): number | undefined;
     // (undocumented)
     readonly items: QueryList<KbqTabLabelWrapper>;
@@ -21925,8 +21956,9 @@ export type KbqTabHeaderPosition = 'above' | 'below';
 
 // @public
 export class KbqTabLabel extends CdkPortal {
+    readonly iconOnly: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, { "iconOnly": { "alias": "iconOnly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabLabel, never>;
 }

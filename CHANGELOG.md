@@ -1,3 +1,19 @@
+## 19.8.2 (2026-06-22)
+
+### Koobiq
+
+ * bug fix  adapt backported specs to ng19 idioms (top-bar, dropdown, select) ([da6474e](https://github.com/koobiq/angular-components/commit/da6474ed5fc22452a8d7a7b2dfadc2323dc368d9))
+ * bug fix  **breadcrumbs:** removed item rendering flick ([#DS-4622](https://github.com/koobiq/angular-components/issues/issue/DS-4622)) ([#1579](https://github.com/koobiq/angular-components/issues/1579)) ([f6964b0](https://github.com/koobiq/angular-components/commit/f6964b0a285dddbb4306ec3d445324066319707f))
+ * bug fix  **button:** block clicks and ENTER/SPACE on disabled anchor hosts ([#DS-4364](https://github.com/koobiq/angular-components/issues/issue/DS-4364)) ([#1630](https://github.com/koobiq/angular-components/issues/1630)) ([1ee25cd](https://github.com/koobiq/angular-components/commit/1ee25cdb76245db06acfc0b1df8b50d27b817c87))
+ * bug fix  **filter-bar:** default size for pipe popover ([#DS-5184](https://github.com/koobiq/angular-components/issues/issue/DS-5184)) ([#1642](https://github.com/koobiq/angular-components/issues/1642)) ([5cee13e](https://github.com/koobiq/angular-components/commit/5cee13e3635036e6b7838c70e66c2ca0252e8aa1))
+ * bug fix  **icon:** use contrast color for filled warning icon-item ([#DS-5085](https://github.com/koobiq/angular-components/issues/issue/DS-5085)) ([#1643](https://github.com/koobiq/angular-components/issues/1643)) ([54d07a6](https://github.com/koobiq/angular-components/commit/54d07a6b57edc2b9138c6d04c4407cf24e459009))
+ * bug fix  **select:** unsubscribe delayed options.changes to prevent overlay teardown error ([#DS-5161](https://github.com/koobiq/angular-components/issues/issue/DS-5161)) ([#1624](https://github.com/koobiq/angular-components/issues/1624)) ([e37498a](https://github.com/koobiq/angular-components/commit/e37498a0d8a169f2c0442d0e11eeec3afcde60fe))
+ * bug fix  **tabs:** icon only tab label ([#DS-5084](https://github.com/koobiq/angular-components/issues/issue/DS-5084)) ([#1600](https://github.com/koobiq/angular-components/issues/1600)) ([91077b4](https://github.com/koobiq/angular-components/commit/91077b45f344312b474ea2d34e9d747ef04ee72e))
+ * bug fix  **top-bar:** positioning ([#DS-4934](https://github.com/koobiq/angular-components/issues/issue/DS-4934)) ([#1609](https://github.com/koobiq/angular-components/issues/1609)) ([18a2219](https://github.com/koobiq/angular-components/commit/18a221977ad9f36f27169ef4e827715c37f193cf))
+ * bug fix  **tree:** sync action button background with option state in multiple selection ([#DS-5113](https://github.com/koobiq/angular-components/issues/issue/DS-5113)) ([#1621](https://github.com/koobiq/angular-components/issues/1621)) ([f9912f5](https://github.com/koobiq/angular-components/commit/f9912f56febacfd865675c67317bffce9f9477eb))
+ * bug fix  unify hover and keyboard-focus highlight ([#DS-4584](https://github.com/koobiq/angular-components/issues/issue/DS-4584)) ([#1608](https://github.com/koobiq/angular-components/issues/1608)) ([5ac2735](https://github.com/koobiq/angular-components/commit/5ac2735e6ee1830089225575675e4761fff31a3e))
+ * feature  setup required angular version to `>=19.0.0` ([#DS-5078](https://github.com/koobiq/angular-components/issues/issue/DS-5078)) ([#1632](https://github.com/koobiq/angular-components/issues/1632)) ([4a1ac5b](https://github.com/koobiq/angular-components/commit/4a1ac5ba36147bd5ac138131669c96f8c9708a69))
+
 ## 19.8.1 (2026-06-09)
 
 ### Koobiq
