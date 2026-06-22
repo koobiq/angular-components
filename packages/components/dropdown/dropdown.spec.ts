@@ -14,6 +14,7 @@ import {
     QueryList,
     TemplateRef,
     Type,
+    viewChild,
     ViewChild,
     ViewChildren
 } from '@angular/core';
@@ -1764,7 +1765,7 @@ describe('KbqDropdownTrigger KBQ_DROPDOWN_HOST', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.trigger().demoteOverlay).toBe(true);
+        expect(fixture.componentInstance.trigger.demoteOverlay).toBe(true);
     });
 
     it('should default demoteOverlay to false when KBQ_DROPDOWN_HOST is provided', () => {
@@ -1773,7 +1774,7 @@ describe('KbqDropdownTrigger KBQ_DROPDOWN_HOST', () => {
 
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.trigger().demoteOverlay).toBe(false);
+        expect(fixture.componentInstance.trigger.demoteOverlay).toBe(false);
     });
 
     it('should let an explicit [demoteOverlay] binding override the host-based default', () => {

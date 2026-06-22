@@ -6677,7 +6677,7 @@ describe('KbqSelect', () => {
         // fired, so the late callback hit `resetOverlay` on a null overlay element and threw
         // "Cannot read properties of null (reading 'style')".
         it('should not throw when destroyed before the delayed options.changes callback fires', fakeAsync(() => {
-            testInstance.select().open();
+            testInstance.select.open();
             fixture.detectChanges();
             flush();
 
