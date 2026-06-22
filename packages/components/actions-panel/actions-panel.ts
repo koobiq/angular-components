@@ -213,7 +213,11 @@ export class KbqActionsPanel implements OnDestroy {
 
         if (!width) return false;
 
-        overlayElement.style.maxWidth = coerceCssPixelValue(width);
+        const maxWidth = coerceCssPixelValue(width);
+
+        if (overlayElement.style.maxWidth === maxWidth) return false;
+
+        overlayElement.style.maxWidth = maxWidth;
 
         return true;
     }
