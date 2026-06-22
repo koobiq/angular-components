@@ -184,11 +184,11 @@ export class KbqButtonCssStyler implements AfterContentInit {
     ],
     templateUrl: './button.component.html',
     styleUrls: ['./button.scss', './button-tokens.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.disabled]': 'disabled || null',
         '[attr.aria-disabled]': 'disabled || null',

@@ -3,9 +3,9 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
-import { KbqButtonModule } from '@koobiq/components/button';
 import { DOWN_ARROW } from '@koobiq/cdk/keycodes';
 import { dispatchEvent } from '@koobiq/cdk/testing';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';

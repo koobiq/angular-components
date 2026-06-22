@@ -14,9 +14,9 @@ import {
     QueryList,
     TemplateRef,
     Type,
-    viewChild,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
