@@ -23,7 +23,14 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
  */
 @Component({
     selector: 'tag-autocomplete-onpaste-off-example',
-    imports: [KbqTagsModule, KbqFormFieldModule, KbqIconModule, ReactiveFormsModule, KbqAutocompleteModule, AsyncPipe],
+    imports: [
+        KbqTagsModule,
+        KbqFormFieldModule,
+        KbqIconModule,
+        ReactiveFormsModule,
+        KbqAutocompleteModule,
+        AsyncPipe
+    ],
     templateUrl: 'tag-autocomplete-onpaste-off-example.html',
     styles: `
         :host {
