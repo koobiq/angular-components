@@ -144,7 +144,7 @@ export class KbqShadowDomOverlayContainer extends OverlayContainer {
  *
  * ```ts
  * bootstrapApplication(AppComponent, {
- *     providers: [kbqShadowDomOverlayProvider(() => document.querySelector('my-mfe-root')!)]
+ *     providers: kbqShadowDomOverlayProvider(() => document.querySelector('my-mfe-root')!)
  * });
  * ```
  *

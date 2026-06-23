@@ -138,7 +138,7 @@ import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 bootstrapApplication(AppComponent, {
     providers: [
         // Pass the micro-frontend root element (or any element inside its shadow tree).
-        kbqShadowDomOverlayProvider(() => document.querySelector('my-mfe-root')!)
+        ...kbqShadowDomOverlayProvider(() => document.querySelector('my-mfe-root')!)
     ]
 });
 ```
@@ -162,7 +162,7 @@ import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 
 // Host: create the single shared container in the host's shadow root.
 const hostApp = await createApplication({
-    providers: [kbqShadowDomOverlayProvider(() => hostElement)]
+    providers: [...kbqShadowDomOverlayProvider(() => hostElement)]
 });
 const sharedOverlayContainer = hostApp.injector.get(OverlayContainer);
 

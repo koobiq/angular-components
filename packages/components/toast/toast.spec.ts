@@ -294,7 +294,7 @@ describe('ToastService in a Shadow DOM overlay container', () => {
 
         TestBed.configureTestingModule({
             imports: [KbqToastModule, NoopAnimationsModule],
-            providers: [kbqShadowDomOverlayProvider(shadowHost)]
+            providers: kbqShadowDomOverlayProvider(shadowHost)
         }).compileComponents();
 
         service = TestBed.inject(KbqToastService);
