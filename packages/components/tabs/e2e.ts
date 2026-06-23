@@ -157,12 +157,10 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     `,
     styles: `
         :host {
-            box-sizing: border-box;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            display: inline-grid;
+            grid-template-columns: repeat(3, 400px);
             gap: var(--kbq-size-m);
             padding: var(--kbq-size-xs);
-            width: 100%;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
