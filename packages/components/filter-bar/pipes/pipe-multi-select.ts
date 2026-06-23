@@ -24,7 +24,6 @@ import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
-import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
     selector: 'kbq-pipe-multi-select',
@@ -37,7 +36,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqBadgeModule,
         KbqPipeButton,
         KbqTitleModule,
-        KbqPipeTitleDirective,
         NgTemplateOutlet,
         KbqIconModule,
         KbqInputModule,

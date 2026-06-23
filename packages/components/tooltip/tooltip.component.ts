@@ -121,6 +121,11 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     useFactory: kbqTooltipScrollStrategyFactory
 };
 
+/**
+ * Trigger directive that shows a `KbqTooltipComponent` for its host element. Extends `KbqPopUpTrigger` with
+ * tooltip-specific inputs (content, placement, color, arrow, enter/leave delays, modifier and header) and
+ * behavior such as opening on keyboard focus only and positioning relative to the mouse cursor.
+ */
 @Directive({
     selector: '[kbqTooltip]',
     host: {
@@ -135,8 +140,11 @@ export class KbqTooltipTrigger
     extends KbqPopUpTrigger<KbqTooltipComponent>
     implements AfterViewInit, OnChanges, OnDestroy
 {
+    /** @docs-private */
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
+    /** @docs-private */
     protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
+    /** @docs-private */
     protected focusMonitor: FocusMonitor = inject(FocusMonitor);
     /** @docs-private */
     protected renderer: Renderer2 = inject(Renderer2);
@@ -168,6 +176,7 @@ export class KbqTooltipTrigger
     //  is not migrated.
     @Input({ transform: booleanAttribute }) hideWithTimeout: boolean = false;
 
+    /** Input (`kbqVisible`) that programmatically shows or hides the tooltip; reflects the current `visible` state. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqVisible')
@@ -179,11 +188,16 @@ export class KbqTooltipTrigger
         super.updateVisible(value);
     }
 
+    /** Input (`kbqPlacement`) that sets the tooltip placement relative to its trigger; reflects the current `placement`. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPlacement')
     get tooltipPlacement(): KbqPopUpPlacementValues {
         return this.placement;
+    }
+
+    set tooltipPlacement(value: KbqPopUpPlacementValues) {
+        super.updatePlacement(value);
     }
 
     /**
@@ -195,10 +209,7 @@ export class KbqTooltipTrigger
     //  migration.
     @Input({ alias: 'kbqRelativeToPointer', transform: booleanAttribute }) relativeToPointer: boolean = false;
 
-    set tooltipPlacement(value: KbqPopUpPlacementValues) {
-        super.updatePlacement(value);
-    }
-
+    /** Input (`kbqPlacementPriority`) that sets the ordered fallback placements; reflects the current `placementPriority`. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqPlacementPriority')
@@ -210,6 +221,7 @@ export class KbqTooltipTrigger
         super.updatePlacementPriority(value);
     }
 
+    /** Input (`kbqTooltip`) with the tooltip content — a string or a template. Updating it refreshes an open tooltip. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltip')
@@ -223,6 +235,7 @@ export class KbqTooltipTrigger
         this.updateData();
     }
 
+    /** Input (`kbqTooltipDisabled`) controlling whether the tooltip is disabled; setting it to `true` hides it. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipDisabled')
@@ -238,14 +251,17 @@ export class KbqTooltipTrigger
         }
     }
 
+    /** Input (`kbqEnterDelay`) — delay in milliseconds before the tooltip is shown. Defaults to `400`. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input('kbqEnterDelay') enterDelay = 400;
+    /** Input (`kbqLeaveDelay`) — delay in milliseconds before the tooltip is hidden. Defaults to `0`. */
     // TODO: Skipped for migration because:
     //  This input overrides a field from a superclass, while the superclass field
     //  is not migrated.
     @Input('kbqLeaveDelay') leaveDelay = 0;
 
+    /** Input (`kbqTrigger`) with the comma-separated trigger events. An empty value resets to hover + focus and rebinds listeners. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTrigger')
@@ -263,8 +279,10 @@ export class KbqTooltipTrigger
         this.initListeners();
     }
 
+    /** Backing field for `trigger`; defaults to hover + focus. */
     protected _trigger = `${PopUpTriggers.Hover}, ${PopUpTriggers.Focus}`;
 
+    /** Input (`kbqTooltipClass`) with an extra CSS class applied to the tooltip; updating it refreshes the class map. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipClass')
@@ -282,6 +300,7 @@ export class KbqTooltipTrigger
         }
     }
 
+    /** Input (`kbqTooltipContext`) with the context object passed to a template tooltip; updating it refreshes the open tooltip. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipContext')
@@ -294,8 +313,10 @@ export class KbqTooltipTrigger
         this.updateData();
     }
 
+    /** Backing field for `context`. */
     private _context: any = null;
 
+    /** Input (`kbqTooltipColor`) with the tooltip color theme; the getter returns the `kbq-`-prefixed CSS class. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipColor')
@@ -307,25 +328,33 @@ export class KbqTooltipTrigger
         this._color = value || KbqComponentColors.Contrast;
     }
 
+    /** Backing field for `color`; defaults to `KbqComponentColors.Contrast`. */
     private _color: KbqComponentColors | string = KbqComponentColors.Contrast;
 
+    /** Input (`kbqTooltipArrow`) — whether to render the tooltip's arrow/pointer. Defaults to `false`. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input({ alias: 'kbqTooltipArrow', transform: booleanAttribute }) arrow: boolean = false;
+    /** Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger; `null` uses the default. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input({ alias: 'kbqTooltipOffset', transform: numberAttribute }) offset: number | null = null;
 
+    /** Output (`kbqPlacementChange`) that emits the new placement whenever the tooltip repositions. */
     @Output('kbqPlacementChange') readonly placementChange = new EventEmitter();
 
+    /** Output (`kbqVisibleChange`) that emits when the tooltip's visibility changes. */
     @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
 
+    /** Whether the configured trigger list includes the `click` trigger. */
     private get hasClickInTrigger(): boolean {
         return this.trigger.includes(PopUpTriggers.Click);
     }
 
+    /** @docs-private */
     protected originSelector = '.kbq-tooltip';
 
+    /** @docs-private */
     protected overlayConfig: OverlayConfig = {
         panelClass: ['kbq-tooltip-panel']
     };
@@ -370,6 +399,10 @@ export class KbqTooltipTrigger
         }
     }
 
+    /**
+     * Sets up an effect that mirrors a `forDisabledComponent`'s disabled signal: when that component is disabled it
+     * makes the host focusable (so the tooltip can still be triggered) and enables the tooltip, otherwise disables it.
+     */
     constructor() {
         super();
 
@@ -389,6 +422,10 @@ export class KbqTooltipTrigger
         });
     }
 
+    /**
+     * Hides the tooltip when a parent pop-up closes, starts focus monitoring on the host, and—when
+     * `ignoreTooltipPointerEvents` is set—adds the panel class that makes the tooltip ignore pointer events.
+     */
     ngAfterViewInit(): void {
         this.parentPopup?.closedStream.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.hide());
 
@@ -399,12 +436,17 @@ export class KbqTooltipTrigger
         }
     }
 
+    /** Stops focus monitoring on the host element and runs the base-class teardown. */
     ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
 
         super.ngOnDestroy();
     }
 
+    /**
+     * Shows the tooltip after `delay` ms. Suppresses showing on a focus trigger that did not originate from
+     * the keyboard, and applies cursor-relative positioning when `relativeToPointer` is enabled.
+     */
     show(delay: number = this.enterDelay) {
         if (this.triggerName === 'focus' && this.focusMonitor['_lastFocusOrigin'] !== 'keyboard') {
             return;
@@ -417,7 +459,8 @@ export class KbqTooltipTrigger
         }
     }
 
-    /** method allows to show the tooltip relative to the given mouse event. */
+    /** method allows to show the tooltip relative to the given mouse event.
+     * @docs-private */
     showForMouseEvent(event: MouseEvent) {
         if (!(event.currentTarget instanceof HTMLElement)) return;
 
@@ -437,12 +480,13 @@ export class KbqTooltipTrigger
      * For example:
      * const tooltip = new KbqTooltipTrigger();
      * tooltip.showForElement(element);
-     */
+     * @docs-private */
     showForElement(element: HTMLElement) {
         this.show();
         this.strategy.setOrigin(element);
     }
 
+    /** @docs-private */
     updateData() {
         if (!this.instance) {
             return;
@@ -457,6 +501,7 @@ export class KbqTooltipTrigger
         this.updatePosition(true);
     }
 
+    /** @docs-private */
     closingActions() {
         return merge(
             this.hasClickInTrigger ? this.overlayRef!.outsidePointerEvents() : EMPTY,
@@ -464,10 +509,12 @@ export class KbqTooltipTrigger
         );
     }
 
+    /** @docs-private */
     getOverlayHandleComponentType(): Type<KbqTooltipComponent> {
         return KbqTooltipComponent;
     }
 
+    /** @docs-private */
     updateClassMap(newPlacement: string = this.placement) {
         if (!this.instance) {
             return;
@@ -479,6 +526,7 @@ export class KbqTooltipTrigger
         this.instance.markForCheck();
     }
 
+    /** @docs-private */
     protected applyRelativeToPointer() {
         if (
             !this.strategy ||

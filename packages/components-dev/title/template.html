@@ -28,27 +28,10 @@
 </div>
 
 <div class="dev-container dev-container-responsive">
-    <div class="kbq-subheading">Responsive text with tooltip</div>
     <br />
     <div kbq-title class="dev-child wide kbq-text-big">
         {{ longValue }}
     </div>
-</div>
-
-<div class="dev-container">
-    <div class="kbq-subheading">Tooltip tracking for parent & child as parameters</div>
-    <br />
-
-    <div kbq-title style="max-width: 50%">
-        <div #kbqTitleContainer class="dev-parent">
-            <div #kbqTitleText class="dev-child kbq-text-normal">
-                {{ field }}
-            </div>
-        </div>
-    </div>
-
-    <button kbq-button (click)="onAddText()">Add text</button>
-    <button kbq-button (click)="field = defaultValue">Set Default text</button>
 </div>
 
 <div class="dev-container">

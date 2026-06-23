@@ -21,7 +21,6 @@ import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNo
 import { getId, KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
-import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
     selector: 'kbq-pipe-tree-select',
@@ -31,7 +30,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeState,
         KbqPipeButton,
         KbqTitleModule,
-        KbqPipeTitleDirective,
         KbqPipeMinWidth,
         KbqIconModule,
         KbqInputModule,

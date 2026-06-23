@@ -1,0 +1,20 @@
+.example-title-custom-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    max-width: 320px;
+}
+
+.example-title-custom-content__row {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.example-title-custom-content__tooltip {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}

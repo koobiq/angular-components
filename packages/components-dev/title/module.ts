@@ -55,6 +55,7 @@ const options = [
         <title-overview-example />
         <br />
         <br />
+        <title-custom-content-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

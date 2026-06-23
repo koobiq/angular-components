@@ -23,7 +23,6 @@ import { KbqDateTimeValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
-import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
     selector: 'kbq-pipe-date',
@@ -41,7 +40,6 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqFormattersModule,
         KbqPipeButton,
         KbqTitleModule,
-        KbqPipeTitleDirective,
         FormsModule
     ],
     templateUrl: 'pipe-date.html',
