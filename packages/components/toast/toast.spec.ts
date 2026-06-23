@@ -2,6 +2,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, NgZone, TemplateRef, inject as inject_1, viewChild } from '@angular/core';
 import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { KbqToastModule } from './toast.module';
@@ -274,5 +275,44 @@ describe('ToastService regression: multiple containers / cleanup', () => {
 
         expect(service.templates.length).toBe(1);
         expect(overlayContainerElement.querySelectorAll('kbq-toast-container').length).toBe(1);
+    });
+});
+
+describe('ToastService in a Shadow DOM overlay container', () => {
+    // Integration smoke test: drives the real `KbqShadowDomOverlayContainer` via `kbqShadowDomOverlayProvider`
+    // against a host that owns an open shadow root (emulating a Module Federation micro-frontend). The container's
+    // own resolution branches are covered in core/overlay/shadow-dom-overlay-container.spec.ts.
+    let service: KbqToastService;
+    let overlayContainer: OverlayContainer;
+    let shadowHost: HTMLElement;
+    let shadowRoot: ShadowRoot;
+
+    beforeEach(() => {
+        shadowHost = document.createElement('div');
+        document.body.appendChild(shadowHost);
+        shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+
+        TestBed.configureTestingModule({
+            imports: [KbqToastModule, NoopAnimationsModule],
+            providers: kbqShadowDomOverlayProvider(shadowHost)
+        }).compileComponents();
+
+        service = TestBed.inject(KbqToastService);
+        overlayContainer = TestBed.inject(OverlayContainer);
+    });
+
+    afterEach(() => {
+        overlayContainer.ngOnDestroy();
+        shadowHost.remove();
+    });
+
+    it('renders the toast inside the shadow root, not in the light DOM', () => {
+        service.show(MOCK_TOAST_DATA, 0);
+
+        // The overlay container itself now lives in the shadow tree...
+        expect(overlayContainer.getContainerElement().getRootNode()).toBe(shadowRoot);
+        // ...and so does the toast (querying the shadow root finds it, the light-DOM body does not).
+        expect(shadowRoot.querySelectorAll('kbq-toast').length).toBe(1);
+        expect(document.body.querySelectorAll('kbq-toast').length).toBe(0);
     });
 });

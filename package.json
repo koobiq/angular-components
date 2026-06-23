@@ -260,6 +260,7 @@
         "dev:timezone": "ng serve dev-timezone --port 3003",
         "dev:title": "ng serve dev-title --port 3003",
         "dev:toast": "ng serve dev-toast --port 3003",
+        "dev:toast-shadow-dom": "ng serve dev-toast-shadow-dom --port 3003",
         "dev:toggle": "ng serve dev-toggle --port 3003",
         "dev:tooltip": "ng serve dev-tooltip --port 3003",
         "dev:top-bar": "ng serve dev-top-bar --port 3003",

@@ -2424,6 +2424,34 @@
                 }
             }
         },
+        "dev-toast-shadow-dom": {
+            "projectType": "application",
+            "root": "packages/components-dev/toast-shadow-dom",
+            "sourceRoot": "packages/components-dev/toast-shadow-dom",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": "dist/components-dev/toast-shadow-dom",
+                        "tsConfig": "packages/components-dev/toast-shadow-dom/tsconfig.app.json",
+                        "index": "packages/components-dev/toast-shadow-dom/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "browser": "packages/components-dev/toast-shadow-dom/main.ts",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-toast-shadow-dom:build"
+                    }
+                }
+            }
+        },
         "dev-toggle": {
             "projectType": "application",
             "root": "packages/components-dev/toggle",

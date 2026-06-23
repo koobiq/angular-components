@@ -1,0 +1,120 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ApplicationRef, EnvironmentProviders, InjectionToken, Provider, Type, createComponent } from '@angular/core';
+import { createApplication } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
+import { KbqToastData, KbqToastPosition, kbqToastConfigurationProvider } from '@koobiq/components/toast';
+
+/** Per-MFE configuration propagated through DI. */
+export interface DevMfeConfig {
+    /** 1-based nesting level. */
+    level: number;
+    /** Deepest level to mount. */
+    maxLevel: number;
+    /** When true, overlays are routed into this MFE's shadow root; otherwise they escape to `document.body`. */
+    useShadow: boolean;
+}
+
+export const DEV_MFE_CONFIG = new InjectionToken<DevMfeConfig>('DEV_MFE_CONFIG');
+
+/**
+ * Zone-bound function that shows a toast through the ROOT MFE's `KbqToastService`, so every MFE shares one stack.
+ * It must run `show()` inside the root app's `NgZone` (a nested MFE's click runs in its own zone and would not tick
+ * the root app, leaving the toast unrendered).
+ */
+export type DevToastBridge = (data: KbqToastData, duration?: number) => void;
+
+export const DEV_TOAST_BRIDGE = new InjectionToken<DevToastBridge>('DEV_TOAST_BRIDGE');
+
+export interface DevMountedMfe {
+    appRef: ApplicationRef;
+}
+
+/**
+ * Bootstraps an independent Angular application for `rootComponent` into `host`, emulating a Module Federation
+ * micro-frontend. Each MFE gets its own root injector — so its own `OverlayContainer` (via
+ * `kbqShadowDomOverlayProvider`), its own toast/modal/sidepanel services, and its own theme.
+ *
+ * `rootComponent` is passed in (rather than imported) to avoid a circular import with `module.ts`.
+ */
+export async function devMountMfe(
+    host: HTMLElement,
+    config: DevMfeConfig,
+    rootComponent: Type<unknown>,
+    toastBridge?: DevToastBridge,
+    sharedOverlayContainer?: OverlayContainer
+): Promise<DevMountedMfe> {
+    const providers: (Provider | EnvironmentProviders)[] = [
+        provideAnimations(),
+        kbqToastConfigurationProvider({ position: KbqToastPosition.TOP_RIGHT }),
+        { provide: DEV_MFE_CONFIG, useValue: config }
+    ];
+
+    if (config.useShadow) {
+        if (sharedOverlayContainer) {
+            // Nested MFEs reuse the ROOT MFE's single `OverlayContainer` instance, so every overlay
+            // (modal/sidepanel/select/…) from any level lands in one shared container — one stacking context,
+            // one theme (the root's).
+            providers.push({ provide: OverlayContainer, useValue: sharedOverlayContainer });
+        } else {
+            // Root MFE: `host` is the MFE root element; the container resolves its shadow root (even when `host`
+            // is itself nested inside another shadow root). This instance becomes the single shared container.
+            providers.push(...kbqShadowDomOverlayProvider(() => host));
+        }
+    }
+
+    if (toastBridge) {
+        // Nested MFEs delegate toasts to the root MFE's stack via this bridge (one shared stack, no overlap).
+        providers.push({ provide: DEV_TOAST_BRIDGE, useValue: toastBridge });
+    }
+
+    const appRef = await createApplication({ providers });
+
+    const componentRef = createComponent(rootComponent, {
+        environmentInjector: appRef.injector,
+        hostElement: host
+    });
+
+    appRef.attachView(componentRef.hostView);
+    // The component was created outside this app's NgZone, so render its initial view explicitly.
+    appRef.tick();
+
+    return { appRef };
+}
+
+/**
+ * Emulates an MFE delivering its CSS into its shadow root: clones the global `<style>` / `<link rel="stylesheet">`
+ * nodes from `document.head` into `shadowRoot`, copies the initial `document.adoptedStyleSheets`, and keeps mirroring
+ * stylesheet nodes added to `document.head` later (Koobiq components use `ViewEncapsulation.None`, so their styles
+ * land in `document.head` on first use — e.g. the modal/sidepanel/toast styles added when they first open).
+ *
+ * Mirrors `document.head` `<style>`/`<link>` additions and the initial `adoptedStyleSheets` only; it does not track
+ * later removals or `adoptedStyleSheets` changes. Returns the observer so the caller can disconnect it on destroy.
+ */
+export function devMirrorGlobalStyles(shadowRoot: ShadowRoot, document: Document): MutationObserver {
+    const isStyleNode = (node: Node): node is HTMLStyleElement | HTMLLinkElement =>
+        node instanceof HTMLStyleElement || (node instanceof HTMLLinkElement && node.rel === 'stylesheet');
+
+    document.head.querySelectorAll('style, link[rel="stylesheet"]').forEach((node) => {
+        shadowRoot.appendChild(node.cloneNode(true));
+    });
+
+    // Some Koobiq styles are delivered as constructable stylesheets via `adoptedStyleSheets` rather than `<style>`.
+    if (document.adoptedStyleSheets.length) {
+        shadowRoot.adoptedStyleSheets = [...shadowRoot.adoptedStyleSheets, ...document.adoptedStyleSheets];
+    }
+
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            mutation.addedNodes.forEach((node) => {
+                if (isStyleNode(node)) {
+                    shadowRoot.appendChild(node.cloneNode(true));
+                }
+            });
+        }
+    });
+
+    observer.observe(document.head, { childList: true });
+
+    return observer;
+}

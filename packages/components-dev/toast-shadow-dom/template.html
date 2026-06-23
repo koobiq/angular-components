@@ -1,0 +1,68 @@
+<div class="dev-mfe">
+    <div class="dev-mfe__bar">
+        <b class="dev-mfe__title">MFE level {{ config.level }} · shadow DOM</b>
+        <kbq-toggle [(ngModel)]="isDark">dark theme</kbq-toggle>
+    </div>
+
+    @if (config.level === 1) {
+        <div class="dev-mfe__mode">
+            <span>
+                Overlay container:
+                <b>{{ config.useShadow ? 'shadow root (fix) ✅' : 'document.body (bug) ❌' }}</b>
+            </span>
+            <button kbq-button [color]="'contrast'" (click)="toggleContainerMode()">
+                Switch to {{ config.useShadow ? '?container=default' : '?container=shadow' }} (reloads)
+            </button>
+        </div>
+    }
+
+    <p class="dev-mfe__hint">
+        All overlays — toasts, modals &amp; sidepanels — go to
+        <b>one shared container</b>
+        owned by the root MFE (level 1). Trigger them from any level: they share one stacking context and the
+        <b>root MFE's theme</b>
+        (so a nested MFE's own dark/light toggle no longer themes its overlays).
+    </p>
+
+    <div class="dev-mfe__buttons">
+        <button kbq-button [color]="'contrast'" (click)="openModal()">Open modal</button>
+        <button kbq-button [color]="'contrast'" (click)="openSidepanel()">Open sidepanel</button>
+        <button kbq-button (click)="showToast(toastStyle.Contrast)">toast: contrast</button>
+        <button kbq-button (click)="showToast(toastStyle.Success)">toast: success</button>
+        <button kbq-button (click)="showToast(toastStyle.Warning)">toast: warning</button>
+        <button kbq-button (click)="showToast(toastStyle.Error)">toast: error</button>
+    </div>
+
+    <p class="dev-mfe__status">
+        shared overlay
+        <code>.cdk-overlay-container</code>
+        :
+        <b>{{ overlayLocation() }}</b>
+    </p>
+
+    @if (hasChild) {
+        <div #childHost class="dev-mfe__child"></div>
+    }
+</div>
+
+<ng-template #modalContent>
+    <p>Modal body — MFE level {{ config.level }}.</p>
+    <button kbq-button [color]="'contrast'" (click)="showToast(toastStyle.Error)">Show toast over modal</button>
+</ng-template>
+
+<ng-template #sidepanelContent>
+    <kbq-sidepanel-header [closeable]="true">Sidepanel · MFE level {{ config.level }}</kbq-sidepanel-header>
+
+    <kbq-sidepanel-body class="layout-padding">
+        <p>Sidepanel body.</p>
+        <button kbq-button [color]="'contrast'" (click)="showToast(toastStyle.Success)">
+            Show toast over sidepanel
+        </button>
+    </kbq-sidepanel-body>
+
+    <kbq-sidepanel-footer>
+        <kbq-sidepanel-actions align="right">
+            <button kbq-button kbq-sidepanel-close>Close</button>
+        </kbq-sidepanel-actions>
+    </kbq-sidepanel-footer>
+</ng-template>

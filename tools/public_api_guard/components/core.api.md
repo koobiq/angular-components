@@ -42,6 +42,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -2154,6 +2155,9 @@ export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
 export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 
 // @public
+export const KBQ_SHADOW_DOM_OVERLAY_HOST: InjectionToken<KbqShadowDomOverlayHost>;
+
+// @public
 export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 
 // @public (undocumented)
@@ -3314,6 +3318,22 @@ export class KbqSelectTrigger {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectTrigger, never>;
 }
+
+// @public
+export class KbqShadowDomOverlayContainer extends OverlayContainer {
+    // @internal
+    protected _createContainer(): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqShadowDomOverlayContainer, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqShadowDomOverlayContainer>;
+}
+
+// @public
+export type KbqShadowDomOverlayHost = HTMLElement | ElementRef<HTMLElement> | (() => Element | null | undefined);
+
+// @public
+export const kbqShadowDomOverlayProvider: (host?: KbqShadowDomOverlayHost) => Provider[];
 
 // @public
 export interface KbqSizeUnitsConfig {
