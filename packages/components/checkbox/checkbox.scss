@@ -32,9 +32,7 @@
 
     max-width: calc(100% - var(--padding));
 
-    // `cursor: inherit` ensures that the wrapper element gets the same cursor as the kbq-checkbox
-    // (e.g. pointer by default, regular when disabled), instead of the browser default.
-    cursor: inherit;
+    cursor: pointer;
 
     padding-top: var(--kbq-checkbox-size-normal-padding-top);
 
@@ -56,7 +54,6 @@
 .kbq-checkbox {
     display: inline-block;
 
-    cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 
     max-width: 100%;
@@ -88,6 +85,10 @@
 
     &.kbq-disabled {
         cursor: default;
+
+        .kbq-checkbox__layout {
+            cursor: default;
+        }
 
         .kbq-checkbox__frame {
             box-shadow: none;
