@@ -1,4 +1,4 @@
-﻿import { AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -17,6 +17,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import {
     TagAutocompleteDraggableExample,
     TagAutocompleteEditableExample,
+    TagAutocompleteOnpasteOffExample,
     TagAutocompleteOptionOperationsExample,
     TagAutocompleteOverviewExample,
     TagAutocompleteRemovableExample,
@@ -26,6 +27,7 @@ import {
     TagFillAndStyleExample,
     TagInputDraggableExample,
     TagInputEditableExample,
+    TagInputOnpasteOffExample,
     TagInputOverviewExample,
     TagInputRemovableExample,
     TagInputWithFormControlValidatorsExample,
@@ -36,9 +38,7 @@ import {
     TagLongTextExample,
     TagOverviewExample,
     TagRemovableExample,
-    TagsAutocompleteOnpasteOffExample,
     TagSelectableExample,
-    TagsInputOnpasteOffExample,
     TagWithIconExample
 } from 'packages/docs-examples/components/tags';
 import { merge, Observable } from 'rxjs';
@@ -55,8 +55,8 @@ import { DevThemeToggle } from '../theme-toggle';
         TagListOverviewExample,
         TagAutocompleteOverviewExample,
         TagAutocompleteOptionOperationsExample,
-        TagsInputOnpasteOffExample,
-        TagsAutocompleteOnpasteOffExample,
+        TagInputOnpasteOffExample,
+        TagAutocompleteOnpasteOffExample,
         TagInputWithFormControlValidatorsExample,
         TagDisabledExample,
         TagWithIconExample,
@@ -75,28 +75,7 @@ import { DevThemeToggle } from '../theme-toggle';
         TagSelectableExample
     ],
     template: `
-        <tag-selectable-example />
-        <hr />
-        <tag-list-draggable-example />
-        <hr />
-        <tag-input-draggable-example />
-        <hr />
-        <tag-removable-example />
-        <hr />
-        <tag-list-removable-example />
-        <hr />
-        <tag-input-removable-example />
-        <hr />
-        <tag-editable-example />
-        <hr />
-        <tag-editable-with-validation-example />
-        <hr />
-        <tag-list-editable-example />
-        <hr />
-        <tag-input-editable-example />
-        <hr />
-        <tag-input-overview-example />
-        <hr />
+        <!-- Autocomplete -->
         <tag-autocomplete-option-operations-example />
         <hr />
         <tag-autocomplete-overview-example />
@@ -107,6 +86,42 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <tag-autocomplete-removable-example />
         <hr />
+        <tag-autocomplete-onpaste-off-example />
+        <hr />
+
+        <!-- List -->
+        <tag-list-draggable-example />
+        <hr />
+        <tag-list-removable-example />
+        <hr />
+        <tag-list-editable-example />
+        <hr />
+        <tag-list-overview-example />
+        <hr />
+
+        <!-- Input -->
+        <tag-input-removable-example />
+        <hr />
+        <tag-input-draggable-example />
+        <hr />
+        <tag-input-editable-example />
+        <hr />
+        <tag-input-overview-example />
+        <hr />
+        <tag-input-with-form-control-validators-example />
+        <hr />
+        <tag-input-onpaste-off-example />
+        <hr />
+
+        <!-- Tag -->
+        <tag-selectable-example />
+        <hr />
+        <tag-removable-example />
+        <hr />
+        <tag-editable-example />
+        <hr />
+        <tag-editable-with-validation-example />
+        <hr />
         <tag-overview-example />
         <hr />
         <tag-fill-and-style-example />
@@ -115,15 +130,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <tag-with-icon-example />
         <hr />
-        <tag-input-with-form-control-validators-example />
-        <hr />
-        <tag-list-overview-example />
-        <hr />
         <tag-long-text-example />
         <hr />
-        <tags-input-onpaste-off-example />
-        <hr />
-        <tags-autocomplete-onpaste-off-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
