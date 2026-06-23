@@ -21,7 +21,7 @@ import { debounceTime } from 'rxjs/operators';
  * i.e. it overflows horizontally, or vertically when clamped to several lines. The tooltip opens on
  * hover and on keyboard focus, and hides on blur, mouse leave, or window resize.
  *
- * By default the tooltip content is the trimmed `textContent` of the host. Provide explicit content
+ * By default, the tooltip content is the trimmed `textContent` of the host. Provide explicit content
  * with `[kbq-title]="stringOrTemplateRef"`. For nested markup, mark the measured container with the
  * `#kbqTitleContainer` template reference and the text element(s) with `#kbqTitleText`; several
  * `#kbqTitleText` elements are supported and the tooltip is shown when any of them overflows.
@@ -228,6 +228,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     /** Enables the tooltip only when the content is overflown. Bound to `mouseenter` and keyboard focus.
      * @docs-private */
     handleElementEnter() {
+        this.content = this.resolvedContent;
         this.disabled = !this.isOverflown;
     }
 

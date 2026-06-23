@@ -26,7 +26,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 
         <ng-template #templateContent>
             <div class="example-title-custom-content__tooltip">
-                <i kbq-icon="kbq-circle-info_16"></i>
+                <i kbq-icon="kbq-circle-info_16" style="color: var(--kbq-icon-white)"></i>
                 <span>Rich tooltip with custom markup</span>
             </div>
         </ng-template>
