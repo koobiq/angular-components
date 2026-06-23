@@ -8,6 +8,7 @@
     overflow: hidden;
     position: relative;
     flex-shrink: 0;
+    border-radius: var(--kbq-tabs-size-tab-stack-horizontal-border-radius);
 }
 
 .kbq-tab-list__content {
