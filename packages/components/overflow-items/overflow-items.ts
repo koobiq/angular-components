@@ -210,25 +210,33 @@ export class KbqOverflowItems {
         }
     > = {
         horizontal: {
-            containerSize: (element) => element.clientWidth,
+            containerSize: (element) => element.getBoundingClientRect().width,
             paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
             paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
             itemSize: (element) => {
                 const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
-                return element.offsetWidth + (parseFloat(marginLeft) || 0) + (parseFloat(marginRight) || 0);
+                return (
+                    element.getBoundingClientRect().width +
+                    (parseFloat(marginLeft) || 0) +
+                    (parseFloat(marginRight) || 0)
+                );
             },
             isCrossAxisExceeded: ({ clientHeight, scrollHeight }) => scrollHeight > clientHeight,
             flexDirection: 'row'
         },
         vertical: {
-            containerSize: (element) => element.clientHeight,
+            containerSize: (element) => element.getBoundingClientRect().height,
             paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
             paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
             itemSize: (element) => {
                 const { marginTop, marginBottom } = this.window.getComputedStyle(element);
 
-                return element.offsetHeight + (parseFloat(marginTop) || 0) + (parseFloat(marginBottom) || 0);
+                return (
+                    element.getBoundingClientRect().height +
+                    (parseFloat(marginTop) || 0) +
+                    (parseFloat(marginBottom) || 0)
+                );
             },
             isCrossAxisExceeded: ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth,
             flexDirection: 'column'

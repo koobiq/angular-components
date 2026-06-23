@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqFlexWrap } from '@koobiq/components/core';
 import { KbqOverflowItemsModule } from './module';
 
@@ -10,11 +10,13 @@ type HorizontalScenario = {
     itemWidth: number;
     itemHeight: number | null;
     itemMarginRight: number;
+    itemMarginLeft: number;
     resultWidth: number;
     resultHeight: number | null;
     justifyContent: 'start' | 'end';
     flexWrap: KbqFlexWrap;
     reverseOverflowOrder: boolean;
+    debounceTime: number;
 };
 
 type VerticalScenario = {
@@ -45,11 +47,13 @@ const HORIZONTAL_DEFAULTS: Omit<HorizontalScenario, 'testid'> = {
     itemWidth: 50,
     itemHeight: null,
     itemMarginRight: 0,
+    itemMarginLeft: 0,
     resultWidth: 100,
     resultHeight: null,
     justifyContent: 'start',
     flexWrap: 'nowrap',
-    reverseOverflowOrder: false
+    reverseOverflowOrder: false,
+    debounceTime: 0
 };
 
 const VERTICAL_DEFAULTS: Omit<VerticalScenario, 'testid'> = {
@@ -89,6 +93,7 @@ function scenarioV(testid: string, overrides: Partial<VerticalScenario> = {}): V
                     [style.box-sizing]="'border-box'"
                     [reverseOverflowOrder]="s.reverseOverflowOrder"
                     [wrap]="s.flexWrap"
+                    [debounceTime]="s.debounceTime"
                 >
                     <div
                         kbqOverflowItemsResult
@@ -106,6 +111,7 @@ function scenarioV(testid: string, overrides: Partial<VerticalScenario> = {}): V
                             [style.height.px]="s.itemHeight"
                             [style.flex-shrink]="0"
                             [style.margin-right.px]="s.itemMarginRight"
+                            [style.margin-left.px]="s.itemMarginLeft"
                         >
                             {{ item.id }}
                         </div>
@@ -149,8 +155,65 @@ export class E2eOverflowItemsHorizontal {
         scenarioH('overflowItems_reverseOrderJustifyEnd', { reverseOverflowOrder: true, justifyContent: 'end' }),
         scenarioH('overflowItems_alwaysVisible', { containerWidth: 250 }),
         scenarioH('overflowItems_alwaysVisibleNoSpace', { containerWidth: 49 }),
-        scenarioH('overflowItems_alwaysVisibleReverse', { containerWidth: 200, reverseOverflowOrder: true })
+        scenarioH('overflowItems_alwaysVisibleReverse', { containerWidth: 200, reverseOverflowOrder: true }),
+        scenarioH('overflowItems_marginLeft', { itemMarginLeft: 10 }),
+        scenarioH('overflowItems_debounceResize', { debounceTime: 700 })
     ];
+}
+
+@Component({
+    selector: 'e2e-overflow-items-additional-targets',
+    imports: [KbqOverflowItemsModule],
+    template: `
+        <button data-testid="overflowItemsAdditionalTargets_toggle" (click)="toggle()">Toggle</button>
+
+        <div #target data-testid="overflowItemsAdditionalTargets_target" [style.width.px]="targetWidth"></div>
+
+        <div
+            #ref="kbqOverflowItems"
+            kbqOverflowItems
+            data-testid="overflowItemsAdditionalTargets_block"
+            [style.width.px]="containerWidth"
+            [additionalResizeObserverTargets]="target"
+        >
+            <div kbqOverflowItemsResult [style.width.px]="resultWidth" [style.flex-shrink]="0">
+                and {{ ref.hiddenItemIDs().size }} more
+            </div>
+            @for (item of items; track item.id) {
+                <div [kbqOverflowItem]="item.id" [style.width.px]="itemWidth" [style.flex-shrink]="0">
+                    {{ item.id }}
+                </div>
+            }
+        </div>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-m);
+            padding: var(--kbq-size-s);
+        }
+
+        [data-testid='overflowItemsAdditionalTargets_target'] {
+            height: 8px;
+            overflow: hidden;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { 'data-testid': 'e2eOverflowItemsAdditionalTargets' }
+})
+export class E2eOverflowItemsAdditionalTargets {
+    protected readonly items = Array.from({ length: 20 }, (_, i) => ({ id: `Item${i}` }));
+
+    protected readonly containerWidth = 500;
+    protected readonly itemWidth = 50;
+    protected targetWidth = 50;
+    protected resultWidth = 50;
+
+    protected toggle(): void {
+        this.targetWidth = this.targetWidth === 50 ? 200 : 50;
+        this.resultWidth = this.targetWidth;
+    }
 }
 
 @Component({
@@ -223,7 +286,9 @@ export class E2eOverflowItemsVertical {
         }),
         scenarioV('overflowItemsVertical_heightChanged', { containerHeight: 600 }),
         scenarioV('overflowItemsVertical_reverseOrder', { reverseOverflowOrder: true }),
-        scenarioV('overflowItemsVertical_alwaysVisible', { containerHeight: 200 })
+        scenarioV('overflowItemsVertical_alwaysVisible', { containerHeight: 200 }),
+        scenarioV('overflowItemsVertical_alwaysVisibleNoSpace', { containerHeight: 49 }),
+        scenarioV('overflowItemsVertical_alwaysVisibleReverse', { containerHeight: 150, reverseOverflowOrder: true })
     ];
 }
 
@@ -295,4 +360,45 @@ export class E2eOverflowItemsOrdered {
             lastItemOrder: -Infinity
         }
     ];
+}
+
+@Component({
+    selector: 'e2e-overflow-items-dynamic',
+    imports: [KbqOverflowItemsModule],
+    template: `
+        <button data-testid="overflowItemsDynamic_addItem" (click)="addItem()">Add item</button>
+        <button data-testid="overflowItemsDynamic_removeItem" (click)="removeItem()">Remove item</button>
+
+        <div
+            #ref="kbqOverflowItems"
+            kbqOverflowItems
+            data-testid="overflowItemsDynamic_block"
+            [style.width.px]="containerWidth"
+        >
+            <div kbqOverflowItemsResult [style.width.px]="resultWidth" [style.flex-shrink]="0">
+                and {{ ref.hiddenItemIDs().size }} more
+            </div>
+            @for (item of items(); track item) {
+                <div [kbqOverflowItem]="item" [style.width.px]="itemWidth" [style.flex-shrink]="0">
+                    {{ item }}
+                </div>
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { 'data-testid': 'e2eOverflowItemsDynamic' }
+})
+export class E2eOverflowItemsDynamic {
+    protected readonly containerWidth = 100;
+    protected readonly itemWidth = 50;
+    protected readonly resultWidth = 50;
+    protected readonly items = signal(Array.from({ length: 4 }, (_, i) => `Item${i}`));
+
+    protected addItem(): void {
+        this.items.update((items) => [...items, `Item${items.length}`]);
+    }
+
+    protected removeItem(): void {
+        this.items.update((items) => items.slice(0, -1));
+    }
 }
