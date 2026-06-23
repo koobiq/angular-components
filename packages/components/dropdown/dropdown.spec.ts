@@ -31,6 +31,7 @@ import {
     TAB,
     createKeyboardEvent,
     createMouseEvent,
+    defaultOffsetY,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
@@ -1004,16 +1005,16 @@ describe('KbqDropdown', () => {
             // Primary positions: overlayY='bottom' means panel is above trigger.
             // offsetY must be negative to push the panel UP and create a gap (not overlap).
             expect(positions[0].overlayY).toBe('bottom');
-            expect(positions[0].offsetY).toBe(-4); // -defaultOffsetY
+            expect(positions[0].offsetY).toBe(-defaultOffsetY);
             expect(positions[1].overlayY).toBe('bottom');
-            expect(positions[1].offsetY).toBe(-4);
+            expect(positions[1].offsetY).toBe(-defaultOffsetY);
 
             // Fallback positions: overlayY='top' means panel is below trigger.
             // offsetY must be positive to push the panel DOWN and create a gap.
             expect(positions[2].overlayY).toBe('top');
-            expect(positions[2].offsetY).toBe(4); // +defaultOffsetY
+            expect(positions[2].offsetY).toBe(defaultOffsetY);
             expect(positions[3].overlayY).toBe('top');
-            expect(positions[3].offsetY).toBe(4);
+            expect(positions[3].offsetY).toBe(defaultOffsetY);
         });
 
         it('should pass positive offsetY for primary positions when yPosition is below', () => {
@@ -1029,12 +1030,12 @@ describe('KbqDropdown', () => {
             // Primary positions: overlayY='top' means panel is below trigger.
             // offsetY must be positive to push the panel DOWN and create a gap.
             expect(positions[0].overlayY).toBe('top');
-            expect(positions[0].offsetY).toBe(4); // +defaultOffsetY
+            expect(positions[0].offsetY).toBe(defaultOffsetY);
 
             // Fallback positions: overlayY='bottom' means panel is above trigger.
             // offsetY must be negative to push the panel UP and create a gap.
             expect(positions[2].overlayY).toBe('bottom');
-            expect(positions[2].offsetY).toBe(-4); // -defaultOffsetY
+            expect(positions[2].offsetY).toBe(-defaultOffsetY);
         });
     });
 
