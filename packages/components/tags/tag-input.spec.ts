@@ -5,6 +5,7 @@ import { Component, DebugElement, Provider, signal, Type, viewChild } from '@ang
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import { COMMA, createKeyboardEvent, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
@@ -365,6 +366,64 @@ describe(KbqTagInput.name, () => {
 
         expect(componentInstance.add).toHaveBeenCalledTimes(1);
         expect(componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'a,b,c' }));
+    });
+
+    describe('autocomplete interaction', () => {
+        it('should NOT emit tagEnd on ENTER when autocomplete panel is open with an active option', () => {
+            const fixture = createComponent(TestTagInputDefaultSeparators);
+            const directive = fixture.componentInstance.tagInput();
+            const inputElement = getInputElement(fixture);
+
+            inputElement.value = 'some text';
+            directive.autocompleteTrigger = { panelOpen: true, activeOption: {} } as KbqAutocompleteTrigger;
+
+            directive.onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
+
+            expect(fixture.componentInstance.add).not.toHaveBeenCalled();
+        });
+
+        it('should emit tagEnd on ENTER when autocomplete panel is open but no active option', () => {
+            const fixture = createComponent(TestTagInputDefaultSeparators);
+            const directive = fixture.componentInstance.tagInput();
+            const inputElement = getInputElement(fixture);
+
+            inputElement.value = 'some text';
+            directive.autocompleteTrigger = { panelOpen: true, activeOption: null } as KbqAutocompleteTrigger;
+
+            directive.onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
+
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'some text' }));
+        });
+
+        it('should emit tagEnd on ENTER when autocomplete panel is closed', () => {
+            const fixture = createComponent(TestTagInputDefaultSeparators);
+            const directive = fixture.componentInstance.tagInput();
+            const inputElement = getInputElement(fixture);
+
+            inputElement.value = 'some text';
+            directive.autocompleteTrigger = { panelOpen: false, activeOption: {} } as KbqAutocompleteTrigger;
+
+            directive.onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
+
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'some text' }));
+        });
+
+        it('should emit tagEnd on COMMA when autocomplete panel is open with an active option', () => {
+            const fixture = createComponent(TestTagInputSeparators);
+            const { componentInstance } = fixture;
+            const directive = componentInstance.tagInput();
+            const inputElement = getInputElement(fixture);
+
+            componentInstance.separatorKeyCodes.set([COMMA]);
+            fixture.detectChanges();
+
+            inputElement.value = 'some text';
+            directive.autocompleteTrigger = { panelOpen: true, activeOption: {} } as KbqAutocompleteTrigger;
+
+            directive.onKeydown(createKeyboardEvent('keydown', COMMA, inputElement, ','));
+
+            expect(componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'some text' }));
+        });
     });
 });
 
