@@ -423,10 +423,12 @@ describe(KbqActionsPanelModule.name, () => {
 
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
 
+        const afterClosed = lastValueFrom(firstRef.afterClosed);
+
         componentInstance.openFromTemplate();
         await fixture.whenStable();
 
-        expect(firstRef.afterClosed).toBeDefined();
+        await expect(afterClosed).resolves.toBeUndefined();
         // New panel is now open
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
     });
