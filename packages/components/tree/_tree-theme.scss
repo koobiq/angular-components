@@ -91,7 +91,7 @@
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
-    .kbq-tree-option-caption {
+    .kbq-option-caption {
         @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }

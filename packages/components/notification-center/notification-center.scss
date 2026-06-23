@@ -78,7 +78,8 @@
         display: none;
     }
 
-    &:hover .kbq-notification-center-sub-header__button {
+    &:hover .kbq-notification-center-sub-header__button,
+    &:focus-within .kbq-notification-center-sub-header__button {
         display: flex;
     }
 }

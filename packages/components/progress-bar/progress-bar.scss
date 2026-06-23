@@ -48,6 +48,10 @@
 
     &.kbq-progress-bar_indeterminate .kbq-progress-bar__line {
         animation: kbq-progress-bar-indeterminate 2.1s timing.$ease-in-out-quad infinite;
+
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+        }
     }
 }
 

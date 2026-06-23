@@ -36,5 +36,9 @@
             repeat;
         background-size: 32px 32px;
         animation: kbq-progress 1s linear infinite;
+
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+        }
     }
 }

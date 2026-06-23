@@ -6,7 +6,7 @@
 
         &:hover,
         &.kbq-gutter_dragged {
-            background-color: rgba(106, 115, 150, 0.08);
+            background-color: var(--kbq-states-background-transparent-hover);
         }
 
         &.kbq-gutter_vertical {
@@ -21,6 +21,6 @@
     }
 
     .kbq-gutter-ghost {
-        background: rgba(106, 115, 150, 0.16);
+        background: var(--kbq-states-background-transparent-active);
     }
 }
