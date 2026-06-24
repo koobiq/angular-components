@@ -18,6 +18,8 @@ const pasteFromClipboard = async (page: Page, textarea: Locator, text: string) =
 };
 
 test.describe('KbqTextareaModule', () => {
+    test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
+
     test.describe('E2eTextareaStates', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eTextareaStates');
 
