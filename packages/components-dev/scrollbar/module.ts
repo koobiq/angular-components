@@ -6,6 +6,7 @@ import {
     KbqScrollbarModule,
     KbqScrollbarOptions
 } from '@koobiq/components/scrollbar';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-scrollbar-with-options',
@@ -98,7 +99,8 @@ export class DevScrollbarScrollToTop {
         // components
         DevScrollbarWithOptions,
         DevScrollbarWithCustomConfig,
-        DevScrollbarScrollToTop
+        DevScrollbarScrollToTop,
+        DevThemeToggle
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
