@@ -9,7 +9,18 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
-const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag ${i}`);
+const getAutocompleteOptions = () => [
+    'BruteForce',
+    'Complex Attack',
+    'DDoS',
+    'HIPS alert',
+    'IDS/IPS Alert',
+    'Zero-Day Exploit',
+    'XSS',
+    'Malware',
+    'Ransomware',
+    'Phishing'
+];
 
 /**
  * @title Tag autocomplete option operations
@@ -129,7 +140,7 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     onSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        this.selectedTags.push(autocompleteValueCoercion(option.value()));
+        this.selectedTags.push(autocompleteValueCoercion(option.value));
         this.control.setValue(null);
         this.tagInput.nativeElement.value = '';
     }

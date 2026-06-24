@@ -6,7 +6,18 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
-const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Removable tag ${i}`);
+const getAutocompleteOptions = () => [
+    'BruteForce',
+    'Complex Attack',
+    'DDoS',
+    'HIPS alert',
+    'IDS/IPS Alert',
+    'Zero-Day Exploit',
+    'XSS',
+    'Malware',
+    'Ransomware',
+    'Phishing'
+];
 
 /**
  * @title Tag autocomplete removable
@@ -89,7 +100,7 @@ export class TagAutocompleteRemovableExample {
     }
 
     protected selected({ option }: KbqAutocompleteSelectedEvent, input: HTMLInputElement): void {
-        this.tags.update((tags) => [...tags, option.value()]);
+        this.tags.update((tags) => [...tags, option.value]);
         input.value = '';
         this.tagInputModel.set('');
         option.deselect();

@@ -8,7 +8,18 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 
-const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Editable tag ${i}`);
+const getAutocompleteOptions = () => [
+    'BruteForce',
+    'Complex Attack',
+    'DDoS',
+    'HIPS alert',
+    'IDS/IPS Alert',
+    'Zero-Day Exploit',
+    'XSS',
+    'Malware',
+    'Ransomware',
+    'Phishing'
+];
 
 /**
  * @title Tag autocomplete editable
@@ -111,7 +122,7 @@ export class TagAutocompleteEditableExample {
     }
 
     protected selected({ option }: KbqAutocompleteSelectedEvent, input: HTMLInputElement): void {
-        this.tags.update((tags) => [...tags, option.value()]);
+        this.tags.update((tags) => [...tags, option.value]);
         input.value = '';
         this.tagInputModel.set('');
         option.deselect();
