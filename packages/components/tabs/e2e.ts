@@ -114,13 +114,52 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                 </kbq-tab>
             }
         </kbq-tab-group>
+
+        <!-- base on-surface -->
+        <kbq-tab-group [onSurface]="true">
+            @for (tab of tabs.slice(0, 2); track tab) {
+                <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- base with icons on-surface -->
+        <kbq-tab-group [onSurface]="true" [activeTab]="tabs[5]">
+            @for (tab of tabs; track tab) {
+                <kbq-tab [tabId]="tab">
+                    <ng-template kbq-tab-label>
+                        <i kbq-icon="kbq-bug_16"></i>
+                        {{ tab }}
+                    </ng-template>
+                    Active tab is {{ tab }}
+                </kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- underlined on-surface -->
+        <kbq-tab-group underlined [onSurface]="true">
+            @for (tab of tabs; track tab) {
+                <kbq-tab [tabId]="tab" [disabled]="$index === 1">
+                    <ng-template kbq-tab-label>
+                        <i kbq-icon="kbq-bug_16"></i>
+                        {{ tab }}
+                    </ng-template>
+                    Active tab is {{ tab }}
+                </kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- vertical on-surface -->
+        <kbq-tab-group vertical [onSurface]="true" [style.height.px]="100">
+            @for (tab of tabs; track tab) {
+                <kbq-tab [disabled]="$index === 1" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
     `,
     styles: `
         :host {
-            display: flex;
-            flex-direction: column;
+            display: inline-grid;
+            grid-template-columns: repeat(3, 400px);
             gap: var(--kbq-size-m);
-            width: 400px;
             padding: var(--kbq-size-xs);
         }
     `,
