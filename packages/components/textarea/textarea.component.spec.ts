@@ -142,6 +142,19 @@ class TextareaControlWithAsyncValidators {
 }
 
 @Component({
+    imports: [KbqTextareaModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea [canGrow]="true" [maxRows]="3" [(ngModel)]="value"></textarea>
+        </kbq-form-field>
+    `
+})
+class KbqTextareaGrowWithMaxRows {
+    readonly textarea = viewChild.required(KbqTextarea);
+    value: string = 'line1\nline2';
+}
+
+@Component({
     imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <form [formGroup]="form">
@@ -279,6 +292,30 @@ describe('KbqTextarea', () => {
 
             expect(getTextareaElement(fixture).classList.contains('kbq-textarea-resizable')).toBe(false);
         });
+
+        it('should not have kbq-textarea_max-row-limit-reached class when maxRows is not exceeded', () => {
+            const fixture = createComponent(KbqTextareaGrowWithMaxRows);
+
+            fixture.detectChanges();
+
+            expect(getTextareaElement(fixture).classList.contains('kbq-textarea_max-row-limit-reached')).toBe(false);
+        });
+    });
+
+    describe('grow behavior', () => {
+        it('should call stateChanges.next when input event fires', fakeAsync(() => {
+            const fixture = createComponent(KbqTextareaForBehaviors);
+
+            fixture.detectChanges();
+            tick();
+
+            const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+            const spy = jest.spyOn(textarea.stateChanges, 'next');
+
+            dispatchFakeEvent(getTextareaElement(fixture), 'input');
+
+            expect(spy).toHaveBeenCalled();
+        }));
     });
 
     describe('ErrorStateMatcher', () => {

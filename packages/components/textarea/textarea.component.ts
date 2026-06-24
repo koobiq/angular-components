@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceCssPixelValue } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {
     booleanAttribute,
@@ -25,7 +25,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject, Subscription } from 'rxjs';
-import { delay } from 'rxjs/operators';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
@@ -45,7 +44,7 @@ let nextUniqueId = 0;
         '[required]': 'required',
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
-        '(paste)': 'stateChanges.next()'
+        '(input)': 'stateChanges.next()'
     },
     exportAs: 'kbqTextarea'
 })
@@ -229,7 +228,7 @@ export class KbqTextarea
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.parent?.animationDone.subscribe(() => this.ngOnInit());
 
-        this.growSubscription = this.stateChanges.pipe(delay(0)).subscribe(this.grow);
+        this.growSubscription = this.stateChanges.subscribe(this.grow);
     }
 
     ngOnInit() {
@@ -313,12 +312,9 @@ export class KbqTextarea
 
             this.rowsCount = Math.floor(height / this.lineHeight);
 
-            if (!this.maxRowLimitReached) {
-                textarea.style.minHeight = `${height}px`;
-            } else if (!textarea.style.minHeight && this.lineHeight) {
-                // need for first initialization when value above maxRows
-                textarea.style.minHeight = `${this.maxRows() * this.lineHeight}px`;
-            }
+            textarea.style.minHeight = coerceCssPixelValue(
+                this.maxRowLimitReached ? this.maxRows() * this.lineHeight : height
+            );
         });
     };
 

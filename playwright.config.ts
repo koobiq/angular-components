@@ -52,6 +52,7 @@ export default defineConfig({
             deviceScaleFactor: 2,
             reducedMotion: 'reduce',
             viewport
-        }
+        },
+        permissions: ['clipboard-read', 'clipboard-write']
     }
 });
