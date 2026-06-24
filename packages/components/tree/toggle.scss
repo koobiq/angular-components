@@ -9,9 +9,10 @@
     flex-shrink: 0;
 
     height: 100%;
-    // @TODO define --kbq-tree-size-toggle-padding in design-tokens; fallback keeps spacing meanwhile
-    padding-left: var(--kbq-tree-size-toggle-padding, var(--kbq-size-xs));
-    padding-right: var(--kbq-tree-size-toggle-padding, var(--kbq-size-xs));
+
+    // FIXME: default token doesn't exist
+    padding-left: var(--kbq-tree-size-toggle-padding);
+    padding-right: var(--kbq-tree-size-toggle-padding);
 
     cursor: pointer;
 

@@ -44,12 +44,6 @@
             color: var(--kbq-datepicker-grid-cell-states-disabled-text);
             background: var(--kbq-datepicker-grid-cell-states-disabled-background);
         }
-
-        // Visible keyboard-focus indicator for the active (arrow-navigated) cell; the td keeps outline:none
-        .kbq-calendar__body_active & {
-            outline: var(--kbq-size-3xs) solid var(--kbq-states-line-focus-theme);
-            outline-offset: calc(-1 * var(--kbq-size-3xs));
-        }
     }
 }
 
