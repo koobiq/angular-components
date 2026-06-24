@@ -29,11 +29,11 @@ test.describe('KbqCheckboxModule', () => {
             const checkbox = getComponent(page).locator('kbq-checkbox').first();
             const label = checkbox.locator('.kbq-checkbox__layout');
 
-            const hostCursor = await checkbox.evaluate((el) => window.getComputedStyle(el).cursor);
-            const labelCursor = await label.evaluate((el) => window.getComputedStyle(el).cursor);
+            await expect(checkbox).toBeVisible();
+            await expect(label).toBeVisible();
 
-            expect(hostCursor).not.toBe('pointer');
-            expect(labelCursor).toBe('pointer');
+            await expect(checkbox).not.toHaveCSS('cursor', 'pointer');
+            await expect(label).toHaveCSS('cursor', 'pointer');
         });
 
         test('cursor is default on disabled checkbox host and label', async ({ page }) => {
