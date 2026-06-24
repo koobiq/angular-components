@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
@@ -26,13 +26,13 @@ import {
     MockNgZone,
     createKeyboardEvent,
     createMouseEvent,
-    defaultOffsetY,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
     patchElementFocus
 } from '@koobiq/cdk/testing';
+import { defaultOffsetY } from '@koobiq/components/core';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
@@ -945,14 +945,14 @@ describe('KbqDropdown', () => {
             const fixture = createComponent(PositionedDropdown);
 
             fixture.detectChanges();
-            const trigger = fixture.componentInstance.triggerEl().nativeElement;
+            const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
             // Push trigger down so it has space to open above
             trigger.style.position = 'fixed';
             trigger.style.top = '600px';
             trigger.style.left = '100px';
 
-            fixture.componentInstance.trigger().open();
+            fixture.componentInstance.trigger.open();
             fixture.detectChanges();
 
             const overlayPane = getOverlayPane();
@@ -976,7 +976,7 @@ describe('KbqDropdown', () => {
             const fixture = createComponent(PositionedDropdown); // yPosition='above' by default
 
             fixture.detectChanges();
-            fixture.componentInstance.trigger().open();
+            fixture.componentInstance.trigger.open();
             fixture.detectChanges();
 
             const positions = withPositionsSpy.mock.calls[0][0];
@@ -1001,7 +1001,7 @@ describe('KbqDropdown', () => {
             const fixture = createComponent(SimpleDropdown); // yPosition='below' by default
 
             fixture.detectChanges();
-            fixture.componentInstance.trigger().open();
+            fixture.componentInstance.trigger.open();
             fixture.detectChanges();
 
             const positions = withPositionsSpy.mock.calls[0][0];
