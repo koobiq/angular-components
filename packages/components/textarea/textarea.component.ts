@@ -16,6 +16,7 @@ import {
     OnInit,
     Renderer2
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
@@ -24,7 +25,7 @@ import {
     KBQ_WINDOW
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Subject, Subscription } from 'rxjs';
+import { asapScheduler, observeOn, Subject } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
@@ -44,7 +45,7 @@ let nextUniqueId = 0;
         '[required]': 'required',
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
-        '(input)': 'stateChanges.next()'
+        '(input)': 'dirtyCheckNativeValue()'
     },
     exportAs: 'kbqTextarea'
 })
@@ -207,7 +208,6 @@ export class KbqTextarea
     private _required = false;
 
     private valueAccessor: { value: any };
-    private growSubscription: Subscription;
 
     private lineHeight: number = 0;
     private minHeight: number = 0;
@@ -228,7 +228,7 @@ export class KbqTextarea
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.parent?.animationDone.subscribe(() => this.ngOnInit());
 
-        this.growSubscription = this.stateChanges.subscribe(this.grow);
+        this.stateChanges.pipe(observeOn(asapScheduler), takeUntilDestroyed()).subscribe(() => this.grow());
     }
 
     ngOnInit() {
@@ -256,7 +256,6 @@ export class KbqTextarea
 
     ngOnDestroy() {
         this.stateChanges.complete();
-        this.growSubscription.unsubscribe();
     }
 
     ngDoCheck() {

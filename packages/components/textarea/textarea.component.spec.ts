@@ -1,5 +1,13 @@
 ﻿import { Component, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import {
+    ComponentFixture,
+    ComponentFixtureAutoDetect,
+    TestBed,
+    fakeAsync,
+    flush,
+    flushMicrotasks,
+    tick
+} from '@angular/core/testing';
 import {
     AsyncValidatorFn,
     FormControl,
@@ -303,18 +311,61 @@ describe('KbqTextarea', () => {
     });
 
     describe('grow behavior', () => {
-        it('should call stateChanges.next when input event fires', fakeAsync(() => {
+        it('should call stateChanges.next when input event fires with a changed value', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
 
             fixture.detectChanges();
             tick();
 
+            const textareaEl = getTextareaElement(fixture);
             const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
             const spy = jest.spyOn(textarea.stateChanges, 'next');
 
-            dispatchFakeEvent(getTextareaElement(fixture), 'input');
+            textareaEl.value = 'changed value';
+            dispatchFakeEvent(textareaEl, 'input');
 
             expect(spy).toHaveBeenCalled();
+        }));
+
+        it('should emit stateChanges once per input change: dirtyCheckNativeValue in (input) prevents ngDoCheck from re-emitting', fakeAsync(() => {
+            const fixture = createComponent(KbqTextareaForBehaviors);
+
+            fixture.detectChanges();
+            tick(); // flush initial setTimeout(grow, 0) from ngOnInit
+
+            const textareaEl = getTextareaElement(fixture);
+            const textareaDir = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+            const nextSpy = jest.spyOn(textareaDir.stateChanges, 'next');
+
+            textareaEl.value = 'test\ntest\ntest\ntest\ntest';
+            // (input) → dirtyCheckNativeValue() → previousNativeValue updated → stateChanges.next() [#1]
+            // Zone.js auto-CD → ngDoCheck → dirtyCheckNativeValue: previousNativeValue === value → no emit
+            dispatchFakeEvent(textareaEl, 'input');
+            fixture.detectChanges(); // explicit CD: no further changes
+
+            expect(nextSpy).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should defer grow to microtask so lineHeight is initialized before first grow call', fakeAsync(() => {
+            const fixture = createComponent(KbqTextareaGrowWithMaxRows);
+
+            const textareaDir = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+
+            fixture.detectChanges(); // ngOnInit queues M1 (lineHeight init); stateChanges may emit → grow microtasks pending
+            flushMicrotasks(); // drain M1 + any grow microtasks queued during detectChanges
+            tick(); // flush setTimeout(grow, 0) from ngOnInit
+
+            // Spy set up AFTER initial flushes — only captures subsequent grow() calls
+            const growSpy = jest.spyOn(textareaDir, 'grow');
+
+            // observeOn(asapScheduler) defers grow to microtask (M2), NOT synchronous
+            textareaDir.stateChanges.next();
+
+            expect(growSpy).not.toHaveBeenCalled(); // M2 still pending
+
+            flushMicrotasks(); // M2 runs → grow()
+
+            expect(growSpy).toHaveBeenCalledTimes(1);
         }));
     });
 
