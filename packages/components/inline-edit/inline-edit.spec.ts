@@ -552,6 +552,60 @@ describe('KbqInlineEdit', () => {
             expect(overlay?.classList.contains('test-custom-inline-edit-panel')).toBeTruthy();
         });
     });
+
+    describe('validationTooltip', () => {
+        const openEditAndInvalidate = (fixture: ComponentFixture<TestWithDynamicValidationTooltip>) => {
+            const { componentInstance, debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+
+            getOverlayElement()!.querySelector<HTMLElement>('.kbq-textarea')?.focus();
+            componentInstance.control.markAsTouched();
+            componentInstance.control.updateValueAndValidity();
+            fixture.detectChanges();
+
+            return inlineEditDebugElement;
+        };
+
+        const clickSave = () => {
+            (
+                document.querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+                    .firstElementChild as HTMLButtonElement
+            ).click();
+        };
+
+        it('should not show tooltip when empty string is passed and control is invalid', () => {
+            const fixture = setup(TestWithDynamicValidationTooltip);
+            const { componentInstance } = fixture;
+
+            componentInstance.validationTooltip.set('');
+
+            const inlineEditDebugElement = openEditAndInvalidate(fixture);
+            const tooltipTrigger = (inlineEditDebugElement.componentInstance as any).tooltipTrigger();
+            const showSpy = jest.spyOn(tooltipTrigger, 'show');
+
+            clickSave();
+
+            expect(showSpy).not.toHaveBeenCalled();
+        });
+
+        it('should show tooltip when message is provided and control is invalid', () => {
+            const fixture = setup(TestWithDynamicValidationTooltip);
+            const { componentInstance } = fixture;
+
+            componentInstance.validationTooltip.set('Required field');
+
+            const inlineEditDebugElement = openEditAndInvalidate(fixture);
+            const tooltipTrigger = (inlineEditDebugElement.componentInstance as any).tooltipTrigger();
+            const showSpy = jest.spyOn(tooltipTrigger, 'show');
+
+            clickSave();
+
+            expect(showSpy).toHaveBeenCalled();
+        });
+    });
 });
 
 @Directive({
@@ -904,6 +958,25 @@ export class TestWithSelect extends BaseTestComponent {
     }
 
     cancel = jest.fn();
+}
+
+@Component({
+    selector: 'name',
+    imports: [ReactiveFormsModule, KbqInlineEditModule, KbqTextareaModule],
+    template: `
+        <kbq-inline-edit showActions [validationTooltip]="validationTooltip()" (saved)="update()">
+            <div kbqInlineEditViewMode>{{ control.value }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <textarea kbqTextarea [formControl]="control"></textarea>
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithDynamicValidationTooltip {
+    readonly control = new FormControl('', Validators.required);
+    readonly validationTooltip = signal('');
+
+    update() {}
 }
 
 @Component({

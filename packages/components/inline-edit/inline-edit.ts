@@ -314,7 +314,7 @@ export class KbqInlineEdit {
         if (this.isInvalid()) {
             $event?.stopPropagation();
 
-            if (this.showTooltipOnError()) {
+            if (this.showTooltipOnError() && this.validationTooltip()) {
                 this.tooltipTrigger()?.show();
             }
         } else {
