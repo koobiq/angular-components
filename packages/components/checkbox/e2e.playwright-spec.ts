@@ -42,11 +42,11 @@ test.describe('KbqCheckboxModule', () => {
             const disabledCheckbox = getComponent(page).locator('kbq-checkbox.kbq-disabled').first();
             const label = disabledCheckbox.locator('.kbq-checkbox__layout');
 
-            const hostCursor = await disabledCheckbox.evaluate((el) => window.getComputedStyle(el).cursor);
-            const labelCursor = await label.evaluate((el) => window.getComputedStyle(el).cursor);
+            await expect(disabledCheckbox).toBeVisible();
+            await expect(label).toBeVisible();
 
-            expect(hostCursor).toBe('default');
-            expect(labelCursor).toBe('default');
+            await expect(disabledCheckbox).toHaveCSS('cursor', 'default');
+            await expect(label).toHaveCSS('cursor', 'default');
         });
     });
 });
