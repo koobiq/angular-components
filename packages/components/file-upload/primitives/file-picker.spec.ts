@@ -515,6 +515,14 @@ describe('KbqFileList', () => {
             directive.removeAt(0);
             expect(directive.list()).toEqual([]);
         });
+
+        it('should return a new array reference so signal consumers detect the change', () => {
+            const before = directive.list();
+
+            directive.removeAt(1);
+
+            expect(directive.list()).not.toBe(before);
+        });
     });
 
     describe('integration', () => {

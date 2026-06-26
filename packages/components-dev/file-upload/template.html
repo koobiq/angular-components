@@ -125,12 +125,7 @@
         <div class="dev-container">
             <div class="kbq-subheading">Multiple file upload, no validation</div>
             <br />
-            <kbq-multiple-file-upload
-                [disabled]="disabled"
-                [files]="files"
-                [progressMode]="'indeterminate'"
-                (fileQueueChanged)="addFileMultiple($event)"
-            >
+            <kbq-multiple-file-upload [disabled]="disabled" [progressMode]="'indeterminate'" [(files)]="files">
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
@@ -145,9 +140,8 @@
                 multiple
                 [accept]="accept"
                 [disabled]="disabled"
-                [files]="files"
                 [progressMode]="'indeterminate'"
-                (fileQueueChanged)="addFileMultiple($event)"
+                [(files)]="files"
             >
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>
@@ -225,7 +219,7 @@
         <div class="dev-container">
             <div class="kbq-subheading">Multiple file upload compact</div>
             <br />
-            <dev-file-upload-compact [disabled]="disabled" [files]="files" (addedFile)="addFileMultiple($event)" />
+            <dev-file-upload-compact [disabled]="disabled" [(files)]="files" />
         </div>
     </div>
 </div>

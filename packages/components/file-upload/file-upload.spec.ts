@@ -176,7 +176,8 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 BasicMultipleFileUpload,
                 ControlValueAccessorMultipleFileUpload,
                 MultipleFileUploadWithAsyncValidator,
-                MultipleFileUploadWithInvalidAsyncValidator
+                MultipleFileUploadWithInvalidAsyncValidator,
+                TwoWayBindingMultipleFileUpload
             ]
         }).compileComponents();
 
@@ -602,6 +603,96 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(component.files.length).toEqual(mockFiles.length);
         });
     });
+
+    describe('with two-way binding', () => {
+        let twoWayFixture: ComponentFixture<TwoWayBindingMultipleFileUpload>;
+        let twoWayComponent: TwoWayBindingMultipleFileUpload;
+
+        beforeEach(() => {
+            twoWayFixture = TestBed.createComponent(TwoWayBindingMultipleFileUpload);
+            twoWayComponent = twoWayFixture.componentInstance;
+            twoWayFixture.detectChanges();
+        });
+
+        it('should update bound variable when files are added via input click', () => {
+            expect(twoWayComponent.files).toEqual([]);
+
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            expect(twoWayComponent.files).toHaveLength(1);
+            expect(twoWayComponent.files[0].file.name).toBe(FILE_NAME);
+        });
+
+        it('should update bound variable when file is removed', () => {
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            twoWayFixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement.click();
+            twoWayFixture.detectChanges();
+
+            expect(twoWayComponent.files).toHaveLength(0);
+        });
+
+        it('should emit filesChange with updated list when file is added', () => {
+            const filesChangeSpy = jest.fn();
+            const subscription = twoWayComponent.fileUpload().filesChange.subscribe(filesChangeSpy);
+
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(filesChangeSpy).toHaveBeenCalledTimes(1);
+            expect(filesChangeSpy.mock.calls[0][0]).toHaveLength(1);
+            expect(filesChangeSpy.mock.calls[0][0][0].file.name).toBe(FILE_NAME);
+        });
+
+        it('should emit filesChange with updated list when file is removed', () => {
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            const filesChangeSpy = jest.fn();
+            const subscription = twoWayComponent.fileUpload().filesChange.subscribe(filesChangeSpy);
+
+            twoWayFixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement.click();
+            twoWayFixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(filesChangeSpy).toHaveBeenCalledTimes(1);
+            expect(filesChangeSpy.mock.calls[0][0]).toHaveLength(0);
+        });
+
+        it('should also emit deprecated fileQueueChanged when file is added', () => {
+            const deprecatedSpy = jest.fn();
+            const subscription = twoWayComponent.fileUpload().fileQueueChanged.subscribe(deprecatedSpy);
+
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(deprecatedSpy).toHaveBeenCalledTimes(1);
+            expect(deprecatedSpy.mock.calls[0][0]).toHaveLength(1);
+        });
+
+        it('should also emit deprecated fileQueueChanged when file is removed', () => {
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            const deprecatedSpy = jest.fn();
+            const subscription = twoWayComponent.fileUpload().fileQueueChanged.subscribe(deprecatedSpy);
+
+            twoWayFixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement.click();
+            twoWayFixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(deprecatedSpy).toHaveBeenCalledTimes(1);
+            expect(deprecatedSpy.mock.calls[0][0]).toHaveLength(0);
+        });
+    });
 });
 
 describe(KbqSingleFileUploadComponent.name, () => {
@@ -619,7 +710,8 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 ControlValueAccessorSingleFileUpload,
                 SingleFileUploadWithAsyncValidator,
                 SingleFileUploadWithInvalidAsyncValidator,
-                SingleFileUploadWithFileReaderValidator
+                SingleFileUploadWithFileReaderValidator,
+                TwoWayBindingSingleFileUpload
             ]
         }).compileComponents();
 
@@ -1152,6 +1244,94 @@ describe(KbqSingleFileUploadComponent.name, () => {
             dropzoneService.filesDropped.emit(mockFiles);
 
             expect(component.file?.file).toEqual(mockFiles[0]);
+        });
+    });
+
+    describe('with two-way binding', () => {
+        let twoWayFixture: ComponentFixture<TwoWayBindingSingleFileUpload>;
+        let twoWayComponent: TwoWayBindingSingleFileUpload;
+
+        beforeEach(() => {
+            twoWayFixture = TestBed.createComponent(TwoWayBindingSingleFileUpload);
+            twoWayComponent = twoWayFixture.componentInstance;
+            twoWayFixture.detectChanges();
+        });
+
+        it('should update bound variable when a file is selected via input click', () => {
+            expect(twoWayComponent.file).toBeNull();
+
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            expect(twoWayComponent.file?.file.name).toBe(FILE_NAME);
+        });
+
+        it('should update bound variable to null when file is removed', () => {
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            twoWayComponent.elementRef.nativeElement.querySelector(`.${fileItemActionCssClass}`).click();
+            twoWayFixture.detectChanges();
+
+            expect(twoWayComponent.file).toBeNull();
+        });
+
+        it('should emit fileChange with the selected file', () => {
+            const fileChangeSpy = jest.fn();
+            const subscription = twoWayComponent.fileUpload().fileChange.subscribe(fileChangeSpy);
+
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(fileChangeSpy).toHaveBeenCalledTimes(1);
+            expect(fileChangeSpy.mock.calls[0][0]?.file.name).toBe(FILE_NAME);
+        });
+
+        it('should emit fileChange with null when file is removed', () => {
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            const fileChangeSpy = jest.fn();
+            const subscription = twoWayComponent.fileUpload().fileChange.subscribe(fileChangeSpy);
+
+            twoWayComponent.elementRef.nativeElement.querySelector(`.${fileItemActionCssClass}`).click();
+            twoWayFixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(fileChangeSpy).toHaveBeenCalledTimes(1);
+            expect(fileChangeSpy.mock.calls[0][0]).toBeNull();
+        });
+
+        it('should also emit deprecated fileQueueChange when a file is selected', () => {
+            const deprecatedSpy = jest.fn();
+            const subscription = twoWayComponent.fileUpload().fileQueueChange.subscribe(deprecatedSpy);
+
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(deprecatedSpy).toHaveBeenCalledTimes(1);
+            expect(deprecatedSpy.mock.calls[0][0]?.file.name).toBe(FILE_NAME);
+        });
+
+        it('should also emit deprecated fileQueueChange with null when file is removed', () => {
+            dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            twoWayFixture.detectChanges();
+
+            const deprecatedSpy = jest.fn();
+            const subscription = twoWayComponent.fileUpload().fileQueueChange.subscribe(deprecatedSpy);
+
+            twoWayComponent.elementRef.nativeElement.querySelector(`.${fileItemActionCssClass}`).click();
+            twoWayFixture.detectChanges();
+
+            subscription.unsubscribe();
+
+            expect(deprecatedSpy).toHaveBeenCalledTimes(1);
+            expect(deprecatedSpy.mock.calls[0][0]).toBeNull();
         });
     });
 });
@@ -1710,6 +1890,32 @@ class MultipleFileUploadWithInvalidAsyncValidator {
     readonly control = new FormControl<KbqFileItem[] | null>(null, {
         asyncValidators: [getAsyncValidator(false)]
     });
+}
+
+@Component({
+    selector: 'two-way-binding-multiple-file-upload',
+    imports: [KbqFileUploadModule],
+    template: `
+        <kbq-multiple-file-upload #fileUpload [(files)]="files" />
+    `
+})
+class TwoWayBindingMultipleFileUpload {
+    readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
+    files: KbqFileItem[] = [];
+}
+
+@Component({
+    selector: 'two-way-binding-single-file-upload',
+    imports: [KbqFileUploadModule],
+    template: `
+        <kbq-single-file-upload #fileUpload [(file)]="file" />
+    `
+})
+class TwoWayBindingSingleFileUpload {
+    elementRef = inject_1(ElementRef);
+
+    readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
+    file: KbqFileItem | null = null;
 }
 
 // Test host component

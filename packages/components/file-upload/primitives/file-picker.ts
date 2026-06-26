@@ -155,11 +155,11 @@ export class KbqFileList<T> {
         const removed: T[] = [];
 
         this.update((current) => {
-            const removedItem = current.splice(index, 1);
+            const copy = [...current];
 
-            removed.push(...removedItem);
+            removed.push(...copy.splice(index, 1));
 
-            return current;
+            return copy;
         });
         this.itemRemoved.emit([removed[0], index]);
 
