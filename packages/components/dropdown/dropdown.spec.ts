@@ -1,6 +1,6 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
-import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
@@ -32,6 +32,7 @@ import {
     dispatchMouseEvent,
     patchElementFocus
 } from '@koobiq/cdk/testing';
+import { defaultOffsetY } from '@koobiq/components/core';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
@@ -940,9 +941,81 @@ describe('KbqDropdown', () => {
             expect(Math.floor(overlayRect.top)).toBe(Math.floor(triggerRect.bottom));
         });
 
+        it('should open above trigger when yPosition is above and there is space above', () => {
+            const fixture = createComponent(PositionedDropdown);
+
+            fixture.detectChanges();
+            const trigger = fixture.componentInstance.triggerEl.nativeElement;
+
+            // Push trigger down so it has space to open above
+            trigger.style.position = 'fixed';
+            trigger.style.top = '600px';
+            trigger.style.left = '100px';
+
+            fixture.componentInstance.trigger.open();
+            fixture.detectChanges();
+
+            const overlayPane = getOverlayPane();
+            const triggerRect = trigger.getBoundingClientRect();
+            const overlayRect = overlayPane.getBoundingClientRect();
+
+            // Panel is above: overlay bottom should not exceed trigger top
+            expect(Math.floor(overlayRect.bottom)).toBeLessThanOrEqual(Math.floor(triggerRect.top));
+        });
+
         function getOverlayPane(): HTMLElement {
             return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         }
+    });
+
+    describe('y-position offsetY', () => {
+        afterEach(() => jest.restoreAllMocks());
+
+        it('should pass negative offsetY for primary positions when yPosition is above', () => {
+            const withPositionsSpy = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'withPositions');
+            const fixture = createComponent(PositionedDropdown); // yPosition='above' by default
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger.open();
+            fixture.detectChanges();
+
+            const positions = withPositionsSpy.mock.calls[0][0];
+
+            // Primary positions: overlayY='bottom' means panel is above trigger.
+            // offsetY must be negative to push the panel UP and create a gap (not overlap).
+            expect(positions[0].overlayY).toBe('bottom');
+            expect(positions[0].offsetY).toBe(-defaultOffsetY);
+            expect(positions[1].overlayY).toBe('bottom');
+            expect(positions[1].offsetY).toBe(-defaultOffsetY);
+
+            // Fallback positions: overlayY='top' means panel is below trigger.
+            // offsetY must be positive to push the panel DOWN and create a gap.
+            expect(positions[2].overlayY).toBe('top');
+            expect(positions[2].offsetY).toBe(defaultOffsetY);
+            expect(positions[3].overlayY).toBe('top');
+            expect(positions[3].offsetY).toBe(defaultOffsetY);
+        });
+
+        it('should pass positive offsetY for primary positions when yPosition is below', () => {
+            const withPositionsSpy = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'withPositions');
+            const fixture = createComponent(SimpleDropdown); // yPosition='below' by default
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger.open();
+            fixture.detectChanges();
+
+            const positions = withPositionsSpy.mock.calls[0][0];
+
+            // Primary positions: overlayY='top' means panel is below trigger.
+            // offsetY must be positive to push the panel DOWN and create a gap.
+            expect(positions[0].overlayY).toBe('top');
+            expect(positions[0].offsetY).toBe(defaultOffsetY);
+
+            // Fallback positions: overlayY='bottom' means panel is above trigger.
+            // offsetY must be negative to push the panel UP and create a gap.
+            expect(positions[2].overlayY).toBe('bottom');
+            expect(positions[2].offsetY).toBe(-defaultOffsetY);
+        });
     });
 
     describe('overlapping trigger', () => {

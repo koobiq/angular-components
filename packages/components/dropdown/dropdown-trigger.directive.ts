@@ -568,21 +568,17 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             }
         }
 
+        const resolvedOffsetY = this.offsetY ?? (overlayY === 'top' ? offsetY : -offsetY);
+        const resolvedFallbackOffsetY = this.offsetY ?? (overlayFallbackY === 'top' ? offsetY : -offsetY);
+
         positionStrategy.withPositions([
-            {
-                originX,
-                originY,
-                overlayX,
-                overlayY,
-                offsetY: this.offsetY ?? offsetY,
-                offsetX: this.offsetX ?? -offsetX
-            },
+            { originX, originY, overlayX, overlayY, offsetY: resolvedOffsetY, offsetX: this.offsetX ?? -offsetX },
             {
                 originX: originFallbackX,
                 originY,
                 overlayX: overlayFallbackX,
                 overlayY,
-                offsetY: this.offsetY ?? offsetY,
+                offsetY: resolvedOffsetY,
                 offsetX: this.offsetX ?? offsetX
             },
             {
@@ -590,7 +586,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                 originY: originFallbackY,
                 overlayX,
                 overlayY: overlayFallbackY,
-                offsetY: this.offsetY ?? -offsetY,
+                offsetY: resolvedFallbackOffsetY,
                 offsetX: this.offsetX ?? -offsetX
             },
             {
@@ -598,7 +594,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                 originY: originFallbackY,
                 overlayX: overlayFallbackX,
                 overlayY: overlayFallbackY,
-                offsetY: this.offsetY ?? -offsetY,
+                offsetY: resolvedFallbackOffsetY,
                 offsetX: this.offsetX ?? -offsetX
             }
         ]);
