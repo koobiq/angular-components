@@ -139,7 +139,7 @@ export class KbqMultipleFileUploadComponent
     /** Emits an event containing an updated file list. */
     readonly filesChange = output<KbqFileItem[]>();
     /** @deprecated Use `filesChange` instead.
-     * Will be removed in next major release (#DS-3700) */
+     * Will be removed in next major release (#DS-5229) */
     readonly fileQueueChanged = output<KbqFileItem[]>();
     /**
      * Emits an event containing a chunk of files added to the file list.

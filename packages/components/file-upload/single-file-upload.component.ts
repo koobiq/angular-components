@@ -139,7 +139,7 @@ export class KbqSingleFileUploadComponent
     /** Emits an event containing an updated file. */
     readonly fileChange = output<KbqFileItem | null>();
     /** @deprecated Use `fileChange` instead.
-     * Will be removed in next major release (#DS-3700) */
+     * Will be removed in next major release (#DS-5229) */
     readonly fileQueueChange = output<KbqFileItem | null>();
 
     /** @docs-private */
