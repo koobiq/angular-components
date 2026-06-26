@@ -21,3 +21,11 @@ To format the full name, use the `kbqUsernameCustom` pipe with a format string a
 The component can be conveniently used inside links. To visually match the link style, set the `inherit` style — this ensures that color and appearance are inherited from the parent element.
 
 <!-- example(username-as-link) -->
+
+### Search and highlight
+
+To filter a list of users by the displayed value, inject `KbqUsernamePipe` as a service and call its `transform` method — it returns the same formatted string that `kbq-username` renders by default.
+
+To highlight the matched substring, use `kbq-username-custom-view` together with the `kbqHighlightBackground` pipe.
+
+<!-- example(username-search) -->

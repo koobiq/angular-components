@@ -9,6 +9,7 @@ import { UsernameExamplesModule } from '../../docs-examples/components/username'
         <username-playground-example />
         <username-custom-example />
         <username-as-link-example />
+        <username-search-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
