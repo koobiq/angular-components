@@ -14,6 +14,7 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -37,6 +38,7 @@ const componentCssClasses = {
     panel: '.kbq-inline-edit__panel',
     focusContainer: '.kbq-inline-edit',
     terminalButtons: '.kbq-inline-edit__action-buttons',
+    terminalButtonItem: '.kbq-inline-edit__action-button',
     menuMask: '.kbq-inline-edit__menu-mask',
     menu: '.kbq-inline-edit__menu',
     overlay: '.cdk-overlay-pane',
@@ -570,10 +572,13 @@ describe('KbqInlineEdit', () => {
         };
 
         const clickSave = () => {
-            (
-                document.querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
-                    .firstElementChild as HTMLButtonElement
-            ).click();
+            const terminalButtonList = document.querySelectorAll(
+                `${componentCssClasses.panel} ${componentCssClasses.terminalButtonItem}`
+            );
+
+            if (terminalButtonList.length && terminalButtonList[0].firstElementChild instanceof HTMLButtonElement) {
+                terminalButtonList[0].firstElementChild.click();
+            }
         };
 
         it('should not show tooltip when empty string is passed and control is invalid', () => {
@@ -962,7 +967,7 @@ export class TestWithSelect extends BaseTestComponent {
 
 @Component({
     selector: 'name',
-    imports: [ReactiveFormsModule, KbqInlineEditModule, KbqTextareaModule],
+    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInlineEditModule, KbqTextareaModule],
     template: `
         <kbq-inline-edit showActions [validationTooltip]="validationTooltip()" (saved)="update()">
             <div kbqInlineEditViewMode>{{ control.value }}</div>
