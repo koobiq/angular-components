@@ -40,6 +40,7 @@
                     class="kbq-inline-edit__control-container"
                     [kbqTooltipColor]="colors.Error"
                     [kbqTooltip]="validationTooltip() ?? ''"
+                    [kbqTooltipDisabled]="!validationTooltip()"
                     [kbqTooltipArrow]="false"
                     [kbqTrigger]="'manual'"
                     [kbqPlacement]="tooltipPlacement() ?? placements.TopLeft"
