@@ -27,6 +27,8 @@ export class E2eModalStates {
         this.modal.create({
             kbqWidth: '300px',
             kbqTitle: 'Multi-line modal title multi-line modal title multi-line modal title',
+            kbqCaption:
+                'Multi-line caption text that overflows after two lines multi-line caption text that overflows after two lines',
             kbqContent: `In a distributed denial-of-service attack (DDoS attack), the incoming traffic flooding the victim originates
             from many different sources. More sophisticated strategies are required to mitigate this type of attack;
             simply attempting to block a single source is insufficient as there are multiple sources. A DoS or DDoS

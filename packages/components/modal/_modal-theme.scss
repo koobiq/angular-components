@@ -18,6 +18,10 @@
         .kbq-modal-content {
             color: var(--kbq-modal-content-text-color);
         }
+
+        .kbq-modal-caption {
+            color: var(--kbq-foreground-contrast-secondary);
+        }
     }
 
     .kbq-modal-mask {
@@ -30,6 +34,7 @@
         @include kbq-typography-level-to-styles-css-variables(typography, title);
     }
 
+    .kbq-modal-caption,
     .kbq-modal-body {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }

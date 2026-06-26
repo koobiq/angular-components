@@ -38,6 +38,7 @@ import {
     KbqOverflowShadowTop
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTitleDirective } from '@koobiq/components/title';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CssUnitPipe } from './css-unit.pipe';
@@ -65,7 +66,8 @@ type AnimationState = 'enter' | 'leave' | null;
         NgTemplateOutlet,
         KbqOverflowShadowContainer,
         KbqOverflowShadowTop,
-        KbqOverflowShadowBottom
+        KbqOverflowShadowBottom,
+        KbqTitleDirective
     ],
     templateUrl: './modal.component.html',
     styleUrls: ['./modal.scss', 'modal-tokens.scss'],
@@ -157,6 +159,8 @@ export class KbqModalComponent<T = any, R = any>
     //  and migrating would break narrowing currently.
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     @Input() kbqTitle: string | TemplateRef<{}>;
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    @Input() kbqCaption: string | TemplateRef<{}>;
     // TODO: Skipped for migration because:
     //  This input overrides a field from a superclass, while the superclass field
     //  is not migrated.

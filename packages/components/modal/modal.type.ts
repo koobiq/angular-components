@@ -34,6 +34,8 @@ export interface ModalOptions<C = any, R = any> {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     kbqTitle?: string | TemplateRef<{}>;
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    kbqCaption?: string | TemplateRef<{}>;
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     kbqContent?: string | TemplateRef<{}> | Type<C>;
     kbqComponent?: Type<C>; // The instance of component opened into the dialog.
     kbqClosable?: boolean;
