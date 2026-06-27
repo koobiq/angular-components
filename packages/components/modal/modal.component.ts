@@ -38,7 +38,7 @@ import {
     KbqOverflowShadowTop
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTitleDirective } from '@koobiq/components/title';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CssUnitPipe } from './css-unit.pipe';
@@ -67,7 +67,7 @@ type AnimationState = 'enter' | 'leave' | null;
         KbqOverflowShadowContainer,
         KbqOverflowShadowTop,
         KbqOverflowShadowBottom,
-        KbqTitleDirective
+        KbqTitleModule
     ],
     templateUrl: './modal.component.html',
     styleUrls: ['./modal.scss', 'modal-tokens.scss'],
