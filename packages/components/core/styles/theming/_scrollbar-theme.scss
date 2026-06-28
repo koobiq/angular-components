@@ -73,7 +73,11 @@
 
         &::-webkit-scrollbar-track,
         &::-webkit-scrollbar-corner,
+        &::-webkit-resizer,
         &::-webkit-scrollbar,
+        ::-webkit-scrollbar-track,
+        ::-webkit-scrollbar-corner,
+        ::-webkit-resizer,
         ::-webkit-scrollbar {
             background-color: transparent;
         }
