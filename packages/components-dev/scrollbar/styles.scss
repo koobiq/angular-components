@@ -16,3 +16,14 @@ textarea {
     white-space: nowrap;
     overflow: visible;
 }
+
+.dev-nested-scroll {
+    width: 200px;
+    height: 200px;
+    overflow: auto;
+    margin: 10px;
+}
+
+.dev-nested-scroll__content {
+    width: 800px;
+}

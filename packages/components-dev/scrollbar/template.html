@@ -1,3 +1,5 @@
+<dev-theme-toggle />
+
 <dev-scrollbar-with-options />
 <hr />
 
@@ -45,6 +47,18 @@
             <textarea style="height: 300px; width: 400px; overflow-y: auto" class="kbq-scrollbar dev-with-buttons">{{
                 longText
             }}</textarea>
+
+            <h3>Nested scroll — class on wrapper</h3>
+            <div class="kbq-scrollbar">
+                <div class="dev-nested-scroll">
+                    <div class="dev-nested-scroll__content">{{ longText }}</div>
+                </div>
+            </div>
+
+            <h3>Nested scroll — class on scroller (reference)</h3>
+            <div class="dev-nested-scroll kbq-scrollbar">
+                <div class="dev-nested-scroll__content">{{ longText }}</div>
+            </div>
         </div>
     </div>
 </div>
