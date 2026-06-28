@@ -9,5 +9,6 @@
 }
 
 .example-label {
+    white-space: nowrap;
     margin-bottom: 12px;
 }
