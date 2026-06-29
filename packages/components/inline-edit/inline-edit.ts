@@ -265,10 +265,12 @@ export class KbqInlineEdit {
             this.overlayOrigin = this.label() ? this.viewContainer().nativeElement : this.elementRef.nativeElement;
         });
 
-        effect(() => {
+        effect((onCleanup) => {
             const selectors = this.interactiveSelectors();
 
-            setTimeout(() => this.detectInteractiveContent(selectors));
+            const timeoutId = setTimeout(() => this.detectInteractiveContent(selectors));
+
+            onCleanup(() => clearTimeout(timeoutId));
         });
     }
 
