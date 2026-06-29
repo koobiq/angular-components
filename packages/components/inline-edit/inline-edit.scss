@@ -46,7 +46,8 @@
         outline: none;
     }
 
-    &.cdk-keyboard-focused {
+    &.cdk-keyboard-focused,
+    &.kbq-inline-edit_anchor-focused {
         box-shadow: inset 0 0 0.1px 1px var(--kbq-states-line-focus-theme);
         border-color: var(--kbq-states-line-focus-theme);
     }
@@ -125,7 +126,8 @@
     }
 
     &:hover,
-    &.cdk-keyboard-focused {
+    &.cdk-keyboard-focused,
+    &.kbq-inline-edit_anchor-focused {
         .kbq-inline-edit__menu-mask {
             opacity: 1;
         }

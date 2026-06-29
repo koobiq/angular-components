@@ -10,6 +10,15 @@
             <ng-content select="[kbqInlineEditViewMode]" />
         </div>
 
+        @if (hasInteractiveContent() && mode() === 'view' && !disabled()) {
+            <div
+                class="kbq-inline-edit__focus-anchor cdk-visually-hidden"
+                tabindex="0"
+                (focus)="anchorFocused.set(true)"
+                (blur)="anchorFocused.set(false)"
+            ></div>
+        }
+
         @if (menu() && mode() === 'view') {
             <div class="kbq-inline-edit__menu-mask kbq-mask">
                 <div class="kbq-inline-edit__menu-mask-fade kbq-mask__fade"></div>
