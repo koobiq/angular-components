@@ -14,6 +14,7 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -37,6 +38,7 @@ const componentCssClasses = {
     panel: '.kbq-inline-edit__panel',
     focusContainer: '.kbq-inline-edit',
     terminalButtons: '.kbq-inline-edit__action-buttons',
+    terminalButtonItem: '.kbq-inline-edit__action-button',
     menuMask: '.kbq-inline-edit__menu-mask',
     menu: '.kbq-inline-edit__menu',
     overlay: '.cdk-overlay-pane',
@@ -176,9 +178,9 @@ describe('KbqInlineEdit', () => {
         inlineEditDebugElement.nativeElement.click();
         fixture.detectChanges();
 
-        const saveButtonHTMLElement = document.querySelector(
-            `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
-        )!.firstElementChild as HTMLButtonElement | null;
+        const saveButtonHTMLElement = document
+            .querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+            .querySelector('button') as HTMLButtonElement | null;
 
         saveButtonHTMLElement?.click();
 
@@ -213,9 +215,9 @@ describe('KbqInlineEdit', () => {
         inlineEditDebugElement.nativeElement.click();
         fixture.detectChanges();
 
-        const cancelButtonHTMLElement = document.querySelector(
-            `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
-        )!.lastElementChild as HTMLButtonElement | null;
+        const cancelButtonHTMLElement = document
+            .querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+            .querySelectorAll('button')[1] as HTMLButtonElement | null;
 
         cancelButtonHTMLElement?.click();
 
@@ -251,9 +253,9 @@ describe('KbqInlineEdit', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const cancelButtonHTMLElement = document.querySelector(
-            `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
-        )!.lastElementChild as HTMLButtonElement | null;
+        const cancelButtonHTMLElement = document
+            .querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+            .querySelectorAll('button')[1] as HTMLButtonElement | null;
 
         const control = getOverlayElement()!.querySelector('input');
 
@@ -333,9 +335,9 @@ describe('KbqInlineEdit', () => {
         componentInstance.control.updateValueAndValidity();
         fixture.detectChanges();
 
-        const saveButtonHTMLElement = document.querySelector(
-            `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
-        )!.firstElementChild as HTMLButtonElement | null;
+        const saveButtonHTMLElement = document
+            .querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+            .querySelector('button') as HTMLButtonElement | null;
 
         saveButtonHTMLElement?.click();
 
@@ -404,9 +406,9 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
             await fixture.whenStable();
 
-            const saveButton = document.querySelector(
-                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
-            )!.firstElementChild as HTMLButtonElement;
+            const saveButton = document
+                .querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+                .querySelector('button') as HTMLButtonElement;
 
             saveButton.click();
 
@@ -430,9 +432,9 @@ describe('KbqInlineEdit', () => {
             componentInstance.form.controls.firstName.updateValueAndValidity();
             fixture.detectChanges();
 
-            const saveButton = document.querySelector(
-                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
-            )!.firstElementChild as HTMLButtonElement;
+            const saveButton = document
+                .querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+                .querySelector('button') as HTMLButtonElement;
 
             saveButton.click();
 
@@ -456,9 +458,9 @@ describe('KbqInlineEdit', () => {
             componentInstance.form.controls.lastName.updateValueAndValidity();
             fixture.detectChanges();
 
-            const saveButton = document.querySelector(
-                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
-            )!.firstElementChild as HTMLButtonElement;
+            const saveButton = document
+                .querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+                .querySelector('button') as HTMLButtonElement;
 
             saveButton.click();
 
@@ -485,9 +487,9 @@ describe('KbqInlineEdit', () => {
             inputs[1].dispatchEvent(new Event('input'));
             fixture.detectChanges();
 
-            const cancelButton = document.querySelector(
-                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`
-            )!.lastElementChild as HTMLButtonElement;
+            const cancelButton = document
+                .querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+                .querySelectorAll('button')[1] as HTMLButtonElement;
 
             cancelButton.click();
 
@@ -570,10 +572,16 @@ describe('KbqInlineEdit', () => {
         };
 
         const clickSave = () => {
-            (
-                document.querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
-                    .firstElementChild as HTMLButtonElement
-            ).click();
+            const terminalButtonList = document.querySelectorAll(
+                `${componentCssClasses.panel} ${componentCssClasses.terminalButtonItem}`
+            );
+
+            const saveButton = terminalButtonList.length && terminalButtonList[0].firstElementChild;
+
+            expect(saveButton).toBeTruthy();
+            expect(saveButton instanceof HTMLButtonElement).toBeTruthy();
+
+            (saveButton as HTMLButtonElement).click();
         };
 
         it('should not show tooltip when empty string is passed and control is invalid', () => {
@@ -962,7 +970,7 @@ export class TestWithSelect extends BaseTestComponent {
 
 @Component({
     selector: 'name',
-    imports: [ReactiveFormsModule, KbqInlineEditModule, KbqTextareaModule],
+    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInlineEditModule, KbqTextareaModule],
     template: `
         <kbq-inline-edit showActions [validationTooltip]="validationTooltip()" (saved)="update()">
             <div kbqInlineEditViewMode>{{ control.value }}</div>

@@ -33,7 +33,12 @@ import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components
 import { E2eFilterBarStates } from '../components/filter-bar/e2e';
 import { E2eFormFieldGroup, E2eFormFieldset } from '../components/form-field/e2e';
 import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
-import { E2eInlineEditMenuButton, E2eInlineEditStates, E2eInlineEditTruncation } from '../components/inline-edit/e2e';
+import {
+    E2eInlineEditActionButtons,
+    E2eInlineEditMenuButton,
+    E2eInlineEditStates,
+    E2eInlineEditTruncation
+} from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eLinkStates, E2eLinkWithCaption } from '../components/link/e2e';
 import { E2eListStates } from '../components/list/e2e';
@@ -219,6 +224,7 @@ const components = [
     E2eInlineEditStates,
     E2eInlineEditMenuButton,
     E2eInlineEditTruncation,
+    E2eInlineEditActionButtons,
     E2eFormHorizontal,
     E2eTypographyStyles,
     E2eTreeTwoLineNode,

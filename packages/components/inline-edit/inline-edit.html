@@ -50,12 +50,17 @@
 
                 @if (showActions()) {
                     <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
-                        <button kbq-button [color]="'contrast'" (click)="save($event)">
-                            <i kbq-icon="kbq-check_16"></i>
-                        </button>
-                        <button kbq-button [color]="'contrast-fade'" (click)="cancel()">
-                            <i kbq-icon="kbq-xmark_16"></i>
-                        </button>
+                        <div class="kbq-inline-edit__action-button">
+                            <button kbq-button [color]="'contrast'" (click)="save($event)">
+                                <i kbq-icon="kbq-check_16"></i>
+                            </button>
+                        </div>
+
+                        <div class="kbq-inline-edit__action-button">
+                            <button kbq-button [color]="'contrast-fade'" (click)="cancel()">
+                                <i kbq-icon="kbq-xmark_16"></i>
+                            </button>
+                        </div>
                     </div>
                 }
             </div>
