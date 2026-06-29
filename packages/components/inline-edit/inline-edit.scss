@@ -176,10 +176,6 @@
 .kbq-inline-edit__panel {
     width: 100%;
 
-    .kbq-inline-edit__control-container {
-        border-radius: var(--kbq-size-border-radius);
-    }
-
     .kbq-inline-edit__action-buttons {
         position: absolute;
         left: calc(-1 * var(--kbq-inline-edit-padding-horizontal));
@@ -190,7 +186,9 @@
     }
 
     .kbq-inline-edit__control-container,
-    .kbq-inline-edit__action-buttons > .kbq-button-icon {
+    .kbq-inline-edit__action-button {
         box-shadow: var(--kbq-shadow-popup);
+        background-color: var(--kbq-background-bg);
+        border-radius: var(--kbq-size-border-radius);
     }
 }

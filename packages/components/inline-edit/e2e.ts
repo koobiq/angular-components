@@ -1,12 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqInlineEdit } from './inline-edit';
 import { KbqInlineEditModule } from './module';
 
@@ -216,3 +217,41 @@ export class E2eInlineEditTruncation {}
     }
 })
 export class E2eInlineEditMenuButton {}
+
+@Component({
+    selector: 'e2e-inline-edit-action-buttons',
+    imports: [
+        ReactiveFormsModule,
+        KbqInlineEditModule,
+        KbqTextareaModule,
+        KbqButtonModule
+    ],
+    template: `
+        <button kbq-button data-testid="e2eInlineEditActionButtonsOpen" (click)="textareaInlineEdit.toggleMode()">
+            open
+        </button>
+
+        <div data-testid="e2eInlineEditActionButtonsContainer" style="height: 120px">
+            <kbq-inline-edit #textareaInlineEdit showActions>
+                <div kbqInlineEditViewMode>{{ control.value || 'empty' }}</div>
+
+                <div kbqInlineEditEditMode>
+                    @if (textareaInlineEdit.modeAsReadonly() === 'edit') {
+                        <kbq-form-field>
+                            <textarea kbqTextarea [formControl]="control"></textarea>
+                        </kbq-form-field>
+                    }
+                </div>
+            </kbq-inline-edit>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-column layout-gap-m',
+        style: 'max-width: 400px',
+        'data-testid': 'e2eInlineEditActionButtons'
+    }
+})
+export class E2eInlineEditActionButtons {
+    readonly control = new FormControl('Initial value', Validators.required);
+}

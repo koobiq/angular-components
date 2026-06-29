@@ -64,6 +64,27 @@ test.describe('KbqInlineEdit', () => {
         });
     });
 
+    test.describe('E2eInlineEditActionButtons', () => {
+        const getContainer = (page: Page) => page.getByTestId('e2eInlineEditActionButtonsContainer');
+        const openEdit = (page: Page) => page.getByTestId('e2eInlineEditActionButtonsOpen').click();
+        const getSaveButton = (page: Page) =>
+            page.locator('.kbq-inline-edit__action-buttons .kbq-inline-edit__action-button').first().locator('button');
+
+        test('invalid state on save attempt', async ({ page }) => {
+            await page.goto('/E2eInlineEditActionButtons');
+
+            await openEdit(page);
+            await page.getByRole('textbox').clear();
+            await getSaveButton(page).click();
+
+            const screenshotTarget = getContainer(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('07-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('07-dark.png');
+        });
+    });
+
     test.describe('E2eInlineEditMenuButton', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eInlineEditMenuButton');
         const getContainer = (page: Page) => page.getByTestId('e2eInlineEditMenuButtonContainer');
