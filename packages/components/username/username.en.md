@@ -29,3 +29,11 @@ To filter a list of users by the displayed value, inject `KbqUsernamePipe` as a 
 To highlight the matched substring, use `kbq-username-custom-view` together with the `kbqHighlightBackground` pipe.
 
 <!-- example(username-search) -->
+
+#### Usage in filter-bar
+
+The same approach works inside `kbq-pipe-select`. Use `valueTemplate` to render `kbq-username` as an option label. The search text is available via `pipe.searchControl.value` — `pipe` is the `$implicit` template context, which is the pipe component instance itself.
+
+Set `item.name` to the formatted name (used as the trigger display value) and `item.searchKey` to include login and site so the built-in option filter covers all displayed fields.
+
+<!-- example(username-filter-bar-option) -->
