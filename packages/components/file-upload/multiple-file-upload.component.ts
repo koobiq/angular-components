@@ -85,7 +85,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
             directive: KbqFileUploadContext,
             inputs: ['id', 'disabled']
         },
-        { directive: KbqFileList, outputs: ['listChange: filesChange', 'itemsAdded', 'itemRemoved'] }
+        { directive: KbqFileList, outputs: ['itemsAdded', 'itemRemoved'] }
     ]
 })
 export class KbqMultipleFileUploadComponent
@@ -136,9 +136,11 @@ export class KbqMultipleFileUploadComponent
     /** Optional configuration to override default labels with localized text.*/
     readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfig>>();
 
-    /** Emits an event containing updated file list.
-     * public output will be renamed to filesChange in next major release (#DS-3700) */
-    readonly filesChange = output<KbqFileItem[]>({ alias: 'fileQueueChanged' });
+    /** Emits an event containing an updated file list. */
+    readonly filesChange = output<KbqFileItem[]>();
+    /** @deprecated Use `filesChange` instead.
+     * Will be removed in next major release (#DS-5229) */
+    readonly fileQueueChanged = output<KbqFileItem[]>();
     /**
      * Emits an event containing a chunk of files added to the file list.
      * Useful when handling added files, skipping filtering file list.
@@ -304,6 +306,7 @@ export class KbqMultipleFileUploadComponent
 
         this.files = files instanceof FileList || !files ? this.mapToFileItem(files) : files;
         this.filesChange.emit(this.files);
+        this.fileQueueChanged.emit(this.files);
     }
 
     /** Implemented as part of ControlValueAccessor.
@@ -359,6 +362,7 @@ export class KbqMultipleFileUploadComponent
 
         this.fileRemoved.emit([removedFile, index]);
         this.filesChange.emit(this.files);
+        this.fileQueueChanged.emit(this.files);
         this.onTouched();
 
         if (this.files.length === 0) {
@@ -393,6 +397,7 @@ export class KbqMultipleFileUploadComponent
 
         this.filesAdded.emit(filesToAdd);
         this.filesChange.emit(this.files);
+        this.fileQueueChanged.emit(this.files);
         this.onTouched();
     }
 }

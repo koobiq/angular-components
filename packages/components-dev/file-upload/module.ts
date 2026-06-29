@@ -317,10 +317,6 @@ export class DevApp {
         this.toggleDisabled();
     }
 
-    addFileMultiple(files: KbqFileItem[]) {
-        this.files = files;
-    }
-
     checkValidation() {
         this.errorMessagesForSingle = [];
 
