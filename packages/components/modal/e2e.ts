@@ -25,8 +25,8 @@ export class E2eModalStates {
 
     protected open(): void {
         this.modal.create({
-            kbqWidth: '300px',
-            kbqTitle: 'Multi-line modal title multi-line modal title multi-line modal title',
+            kbqWidth: '400px',
+            kbqTitle: 'Multi-line modal title multi-line modal title multi-line modal title multi-line modal title',
             kbqCaption:
                 'Multi-line caption text that overflows after two lines multi-line caption text that overflows after two lines',
             kbqContent: `In a distributed denial-of-service attack (DDoS attack), the incoming traffic flooding the victim originates
