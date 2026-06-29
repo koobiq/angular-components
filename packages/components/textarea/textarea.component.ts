@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceCssPixelValue } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {
     booleanAttribute,
@@ -16,6 +16,7 @@ import {
     OnInit,
     Renderer2
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
@@ -24,8 +25,7 @@ import {
     KBQ_WINDOW
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Subject, Subscription } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { asapScheduler, observeOn, Subject } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
@@ -45,7 +45,7 @@ let nextUniqueId = 0;
         '[required]': 'required',
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
-        '(paste)': 'stateChanges.next()'
+        '(input)': 'dirtyCheckNativeValue()'
     },
     exportAs: 'kbqTextarea'
 })
@@ -208,7 +208,6 @@ export class KbqTextarea
     private _required = false;
 
     private valueAccessor: { value: any };
-    private growSubscription: Subscription;
 
     private lineHeight: number = 0;
     private minHeight: number = 0;
@@ -229,7 +228,7 @@ export class KbqTextarea
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.parent?.animationDone.subscribe(() => this.ngOnInit());
 
-        this.growSubscription = this.stateChanges.pipe(delay(0)).subscribe(this.grow);
+        this.stateChanges.pipe(observeOn(asapScheduler), takeUntilDestroyed()).subscribe(() => this.grow());
     }
 
     ngOnInit() {
@@ -257,7 +256,6 @@ export class KbqTextarea
 
     ngOnDestroy() {
         this.stateChanges.complete();
-        this.growSubscription.unsubscribe();
     }
 
     ngDoCheck() {
@@ -313,12 +311,9 @@ export class KbqTextarea
 
             this.rowsCount = Math.floor(height / this.lineHeight);
 
-            if (!this.maxRowLimitReached) {
-                textarea.style.minHeight = `${height}px`;
-            } else if (!textarea.style.minHeight && this.lineHeight) {
-                // need for first initialization when value above maxRows
-                textarea.style.minHeight = `${this.maxRows() * this.lineHeight}px`;
-            }
+            textarea.style.minHeight = coerceCssPixelValue(
+                this.maxRowLimitReached ? this.maxRows() * this.lineHeight : height
+            );
         });
     };
 

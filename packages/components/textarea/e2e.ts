@@ -101,10 +101,6 @@ export class E2eTextareaStates {
         <kbq-form-field>
             <textarea kbqTextarea data-testid="grow_textarea" [(ngModel)]="value"></textarea>
         </kbq-form-field>
-
-        <button data-testid="grow_set_short" type="button" (click)="value.set(short)">Short</button>
-        <button data-testid="grow_set_medium" type="button" (click)="value.set(medium)">Medium</button>
-        <button data-testid="grow_set_long" type="button" (click)="value.set(long)">Long</button>
     `,
     styles: `
         :host {
@@ -121,11 +117,39 @@ export class E2eTextareaStates {
     }
 })
 export class E2eTextareaGrowBehavior {
-    protected readonly short = 'test\ntest';
-    protected readonly medium = 'test\ntest\ntest';
-    protected readonly long = 'test\ntest\ntest\ntest\ntest\ntest';
+    protected readonly value = model('test\ntest\ntest');
+}
 
-    protected readonly value = model<string>(this.medium);
+@Component({
+    selector: 'e2e-textarea-grow-max-rows',
+    imports: [KbqTextareaModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <textarea
+                kbqTextarea
+                data-testid="grow-max-rows_textarea"
+                [canGrow]="true"
+                [maxRows]="5"
+                [(ngModel)]="value"
+            ></textarea>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-s);
+            padding: var(--kbq-size-s);
+            width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTextareaGrowMaxRows'
+    }
+})
+export class E2eTextareaGrowMaxRows {
+    protected readonly value = model('line1\nline2\nline3');
 }
 
 const longTextareaContent =

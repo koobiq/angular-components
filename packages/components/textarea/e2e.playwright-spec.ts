@@ -1,7 +1,25 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
+const getHeight = async (locator: Locator): Promise<number> => {
+    await expect(locator).toBeVisible();
+    const box = await locator.boundingBox();
+
+    expect(box).not.toBeNull();
+
+    return box!.height;
+};
+
+const pasteFromClipboard = async (page: Page, textarea: Locator, text: string) => {
+    await page.evaluate((t) => navigator.clipboard.writeText(t), text);
+    await textarea.click();
+    await page.keyboard.press('ControlOrMeta+a');
+    await page.keyboard.press('ControlOrMeta+v');
+};
+
 test.describe('KbqTextareaModule', () => {
+    test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
+
     test.describe('E2eTextareaStates', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eTextareaStates');
 
@@ -16,18 +34,6 @@ test.describe('KbqTextareaModule', () => {
     test.describe('E2eTextareaGrowBehavior', () => {
         const getTextarea = (page: Page): Locator => page.getByTestId('grow_textarea');
 
-        // Wait for the locator to be visible, then resolve its rendered height.
-        // Auto-retries via `toBeVisible` and asserts the bounding box is non-null
-        // so a transient detach surfaces as a readable expect failure, not a TypeError.
-        const getHeight = async (locator: Locator): Promise<number> => {
-            await expect(locator).toBeVisible();
-            const box = await locator.boundingBox();
-
-            expect(box).not.toBeNull();
-
-            return box!.height;
-        };
-
         test('should grow initially when ngModel has multiple lines', async ({ page }) => {
             await page.goto('/E2eTextareaGrowBehavior');
 
@@ -38,10 +44,10 @@ test.describe('KbqTextareaModule', () => {
             await page.goto('/E2eTextareaGrowBehavior');
             const textarea = getTextarea(page);
 
-            await page.getByTestId('grow_set_short').click();
+            await pasteFromClipboard(page, textarea, 'test\ntest');
             const shortHeight = await getHeight(textarea);
 
-            await page.getByTestId('grow_set_long').click();
+            await pasteFromClipboard(page, textarea, 'test\ntest\ntest\ntest\ntest\ntest');
             const longHeight = await getHeight(textarea);
 
             expect(longHeight).toBeGreaterThan(shortHeight);
@@ -51,13 +57,51 @@ test.describe('KbqTextareaModule', () => {
             await page.goto('/E2eTextareaGrowBehavior');
             const textarea = getTextarea(page);
 
-            await page.getByTestId('grow_set_long').click();
+            await pasteFromClipboard(page, textarea, 'test\ntest\ntest\ntest\ntest\ntest');
             const longHeight = await getHeight(textarea);
 
-            await page.getByTestId('grow_set_short').click();
+            await pasteFromClipboard(page, textarea, 'test\ntest');
             const shortHeight = await getHeight(textarea);
 
             expect(shortHeight).toBeLessThan(longHeight);
+        });
+    });
+
+    test.describe('E2eTextareaGrowMaxRows', () => {
+        const getTextarea = (page: Page): Locator => page.getByTestId('grow-max-rows_textarea');
+
+        test('should grow initially when ngModel has multiple lines', async ({ page }) => {
+            await page.goto('/E2eTextareaGrowMaxRows');
+
+            expect(await getHeight(getTextarea(page))).toBeGreaterThan(50);
+        });
+
+        test('should grow to maxRows height when pasting text exceeding maxRows', async ({ page }) => {
+            await page.goto('/E2eTextareaGrowMaxRows');
+            const textarea = getTextarea(page);
+            const shortHeight = await getHeight(textarea);
+
+            await pasteFromClipboard(
+                page,
+                textarea,
+                'line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10'
+            );
+            expect(await getHeight(textarea)).toBeGreaterThan(shortHeight);
+        });
+
+        test('should not grow beyond maxRows height', async ({ page }) => {
+            await page.goto('/E2eTextareaGrowMaxRows');
+            const textarea = getTextarea(page);
+
+            await pasteFromClipboard(page, textarea, 'line1\nline2\nline3\nline4\nline5');
+            const atMaxRowsHeight = await getHeight(textarea);
+
+            await pasteFromClipboard(
+                page,
+                textarea,
+                'line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10'
+            );
+            expect(await getHeight(textarea)).toBe(atMaxRowsHeight);
         });
     });
 
