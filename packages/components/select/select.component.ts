@@ -989,7 +989,7 @@ export class KbqSelect
         // need to prevent scrolling
         $event.preventDefault();
 
-        this.selectionModel.clear(false);
+        this.selectionModel.clear();
         this.keyManager.setActiveItem(-1);
 
         this.propagateChanges();
