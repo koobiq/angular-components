@@ -29,19 +29,19 @@ import { startWith } from 'rxjs';
         </kbq-form-field>
 
         <div class="example__users-list">
-            @for (user of filteredUsers(); track user.login) {
+            @for (user of filteredUsers(); track user) {
                 <kbq-username>
                     <kbq-username-custom-view>
                         @let fullName = user | kbqUsername;
                         <span
                             kbqUsernamePrimary
-                            [innerHTML]="fullName | kbqHighlightBackground: searchControl.value"
+                            [innerHTML]="fullName | kbqHighlightBackground: searchControl.value.trim()"
                         ></span>
 
                         @if (user.login) {
                             <span
                                 kbqUsernameSecondary
-                                [innerHTML]="user.login | kbqHighlightBackground: searchControl.value"
+                                [innerHTML]="user.login | kbqHighlightBackground: searchControl.value.trim()"
                             ></span>
                         }
                     </kbq-username-custom-view>
@@ -66,7 +66,7 @@ import { startWith } from 'rxjs';
 export class UsernameSearchExample {
     private readonly usernamePipe = inject(KbqUsernamePipe);
 
-    protected readonly searchControl = new FormControl('');
+    protected readonly searchControl = new FormControl('', { nonNullable: true });
 
     private readonly searchText = toSignal(this.searchControl.valueChanges.pipe(startWith('')), { initialValue: '' });
 
