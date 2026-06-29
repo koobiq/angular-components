@@ -576,9 +576,12 @@ describe('KbqInlineEdit', () => {
                 `${componentCssClasses.panel} ${componentCssClasses.terminalButtonItem}`
             );
 
-            if (terminalButtonList.length && terminalButtonList[0].firstElementChild instanceof HTMLButtonElement) {
-                terminalButtonList[0].firstElementChild.click();
-            }
+            const saveButton = terminalButtonList.length && terminalButtonList[0].firstElementChild;
+
+            expect(saveButton).toBeTruthy();
+            expect(saveButton instanceof HTMLButtonElement).toBeTruthy();
+
+            (saveButton as HTMLButtonElement).click();
         };
 
         it('should not show tooltip when empty string is passed and control is invalid', () => {
