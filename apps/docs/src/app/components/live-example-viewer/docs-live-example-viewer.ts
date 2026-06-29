@@ -10,16 +10,16 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import { KbqDivider } from '@koobiq/components/divider';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqToastService } from '@koobiq/components/toast';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -43,11 +43,10 @@ interface ExampleFileData {
         KbqLinkModule,
         KbqCodeBlockModule,
         NgComponentOutlet,
-        KbqButton,
-        KbqButtonCssStyler,
-        KbqIcon,
-        KbqDivider,
-        KbqTooltipTrigger
+        KbqButtonModule,
+        KbqDividerModule,
+        KbqToolTipModule,
+        KbqIconModule
     ],
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],

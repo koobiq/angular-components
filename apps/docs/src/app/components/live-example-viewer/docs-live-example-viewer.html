@@ -27,11 +27,10 @@
         <div class="layout-row layout-align-center-center">
             <button
                 kbq-button
-                class="docs-live-example-footer__reload-button"
-                [color]="'theme'"
-                [kbqStyle]="'transparent'"
+                color="theme"
+                kbqStyle="transparent"
+                kbqPlacement="bottom"
                 [kbqTooltip]="isRuLocale() ? 'Сбросить состояние' : 'Reset state'"
-                [kbqPlacement]="'bottom'"
                 (click)="reload()"
             >
                 <i kbq-icon="kbq-arrow-rotate-left_16"></i>
