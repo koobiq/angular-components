@@ -40,13 +40,13 @@ $animation-duration-base: 0.3s;
 @mixin zoom-motion($className, $keyframeName, $duration: $animation-duration-base) {
     @include _make-motion($className, $keyframeName, $duration);
 
-    .#{className}-enter,
-    .#{className}-appear {
+    .#{$className}-enter,
+    .#{$className}-appear {
         transform: translate(0, -25%);
         animation-timing-function: $ease-out-circ;
     }
 
-    .#{className}-leave {
+    .#{$className}-leave {
         transform: translate(0, 0);
         animation-timing-function: $ease-in-out-circ;
     }
@@ -55,13 +55,13 @@ $animation-duration-base: 0.3s;
 @mixin fade-motion($className, $keyframeName) {
     @include _make-motion($className, $keyframeName);
 
-    .#{className}-enter,
-    .#{className}-appear {
+    .#{$className}-enter,
+    .#{$className}-appear {
         opacity: 0;
         animation-timing-function: ease-out;
     }
 
-    .#{className}-leave {
+    .#{$className}-leave {
         animation-timing-function: ease-out;
     }
 }

@@ -1,8 +1,8 @@
 @use '../core/styles/common/tokens' as *;
 
 .kbq-timepicker {
-    // FIXME: default token doesn't exist
-    padding-right: var(--kbq-timepicker-size-padding-right);
+    // @TODO define --kbq-timepicker-size-padding-right in design-tokens; fallback keeps spacing meanwhile
+    padding-right: var(--kbq-timepicker-size-padding-right, var(--kbq-size-s));
 }
 
 .kbq-form-field-type-timepicker {

@@ -641,7 +641,7 @@
             variable-constant-background: map.get($tokens, 'code-block-#{$scheme}-hljs-variable-constant-background'),
             variable-constant-color: map.get($tokens, 'code-block-#{$scheme}-hljs-variable-constant-color'),
             variable-language-background: map.get($tokens, 'code-block-#{$scheme}-hljs-variable-language-background'),
-            variable-language-color: map.get($tokens, 'code-block-#{$scheme}-hljs-variable-language-color') r
+            variable-language-color: map.get($tokens, 'code-block-#{$scheme}-hljs-variable-language-color')
         )
     );
 

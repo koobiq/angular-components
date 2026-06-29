@@ -1,7 +1,7 @@
 @mixin kbq-split-button-theme() {
     .kbq-split-button {
         &:hover:has(.kbq-button_transparent) {
-            background: var(--kbq-states-background-transparent-hover, rgba(108, 115, 147, 0.08));
+            background: var(--kbq-states-background-transparent-hover);
         }
 
         & .kbq-split-button_item {
@@ -102,7 +102,7 @@
             }
 
             & .kbq-split-button_second:before {
-                background: rgba(138, 143, 168, 0.6);
+                background: var(--kbq-states-line-disabled);
             }
         }
 

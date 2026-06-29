@@ -29,13 +29,20 @@
     }
 
     &[data-state='open'] {
-        transition: 300ms ease-out;
+        transition: height 300ms ease-out;
         height: var(--radix-accordion-content-height);
     }
 
     &[data-state='closed'] {
-        transition: 300ms ease-out;
+        transition: height 300ms ease-out;
         height: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &[data-state='open'],
+        &[data-state='closed'] {
+            transition: none;
+        }
     }
 }
 

@@ -41,7 +41,7 @@
         }
 
         &.kbq-disabled {
-            color: var(--kbq-states-foreground-disabled);
+            color: var(--kbq-datepicker-grid-cell-states-disabled-text);
             background: var(--kbq-datepicker-grid-cell-states-disabled-background);
         }
     }

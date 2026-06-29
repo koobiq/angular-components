@@ -13,10 +13,6 @@
 }
 
 @mixin kbq-alert-theme() {
-    .kbq-alert__close:focus {
-        outline: none;
-    }
-
     .kbq-alert.kbq-alert_default {
         &.kbq-alert_error {
             @include kbq-alert-style(default, error);

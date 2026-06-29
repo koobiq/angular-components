@@ -3,10 +3,6 @@
     flex-direction: row;
     align-items: center;
 
-    background: transparent;
-    border: none;
-    outline: none;
-
     & .kbq-accordion-trigger__icon {
         box-sizing: initial;
 
@@ -26,14 +22,6 @@
     & .kbq-accordion-trigger__action {
         padding: var(--kbq-size-xxs) var(--kbq-size-xxs) var(--kbq-size-3xs);
         margin-bottom: calc(-1 * #{var(--kbq-size-3xs)});
-    }
-
-    &:hover:not([data-disabled='true']) {
-        cursor: pointer;
-
-        & .kbq-accordion-trigger__icon {
-            color: var(--kbq-accordion-item-states-hover-icon-color);
-        }
     }
 
     &.kbq-accordion-trigger_fill {
@@ -63,12 +51,6 @@
 
         &[data-state='open'] > .kbq-accordion-trigger__icon {
             transform: rotate(-180deg);
-        }
-    }
-
-    &[data-disabled='true'] {
-        & .kbq-accordion-trigger__icon {
-            color: var(--kbq-accordion-item-states-disabled-icon-color) !important;
         }
     }
 }

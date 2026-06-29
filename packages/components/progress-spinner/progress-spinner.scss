@@ -18,7 +18,7 @@
 
 .kbq-progress-spinner__circle {
     fill: none;
-    stroke: black;
+    stroke: var(--stroke, var(--kbq-progress-spinner-circle-background));
     stroke-dasharray: 295%;
     stroke-width: 13%;
     transition: stroke-dashoffset 0.3s;
@@ -64,6 +64,10 @@
 
 .kbq-progress-spinner_indeterminate .kbq-progress-spinner__inner {
     animation: kbq-progress-spinner-indeterminate 1.5s timing.$ease-in-out-quad infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
 
     // TODO: rework this place
     .kbq-progress-spinner__circle {

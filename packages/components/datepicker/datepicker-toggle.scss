@@ -12,9 +12,9 @@
 }
 
 .kbq-datepicker-toggle__button.kbq-button-icon {
-    // FIXME: no such tokens in design-tokens, component needs to be reviewed
-    width: var(--kbq-datepicker-toggle-size-width);
-    height: var(--kbq-datepicker-toggle-size-height);
+    // @TODO define --kbq-datepicker-toggle-size-* in design-tokens; fallback matches the icon-button control size meanwhile
+    width: var(--kbq-datepicker-toggle-size-width, var(--kbq-size-3xl));
+    height: var(--kbq-datepicker-toggle-size-height, var(--kbq-size-3xl));
     margin-left: 2px;
 }
 

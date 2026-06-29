@@ -9,6 +9,8 @@
     min-height: 50px;
 
     border-radius: var(--kbq-size-xs);
+    // base transparent border so the .cdk-keyboard-focused border-color renders a focus ring (matches list-item-base)
+    border: var(--kbq-size-3xs) solid transparent;
 
     @include common.user-select(none);
 
