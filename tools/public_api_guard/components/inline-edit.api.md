@@ -34,6 +34,7 @@ export class KbqFocusRegionItem {
 // @public
 export class KbqInlineEdit {
     constructor();
+    protected readonly anchorFocused: _angular_core.WritableSignal<boolean>;
     protected cancel(): void;
     protected readonly canceled: _angular_core.OutputEmitterRef<void>;
     readonly canSaveOnEnter: _angular_core.InputSignal<(event: KeyboardEvent) => boolean>;
@@ -46,6 +47,7 @@ export class KbqInlineEdit {
     protected readonly formFieldRef: _angular_core.Signal<KbqFormField | undefined>;
     protected readonly formFieldRefList: _angular_core.Signal<readonly KbqFormField[]>;
     readonly getValueHandler: _angular_core.InputSignal<(() => unknown) | undefined>;
+    protected readonly hasInteractiveContent: _angular_core.WritableSignal<boolean>;
     readonly interactiveSelectors: _angular_core.InputSignal<string[]>;
     protected readonly isEditMode: _angular_core.Signal<boolean>;
     protected readonly label: _angular_core.Signal<KbqLabel | undefined>;

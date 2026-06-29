@@ -1,6 +1,6 @@
 ﻿import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, DebugElement, Directive, model, Provider, signal, TemplateRef, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +18,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqInlineEdit } from './inline-edit';
 import { KbqInlineEditModule } from './module';
@@ -42,7 +43,8 @@ const componentCssClasses = {
     menuMask: '.kbq-inline-edit__menu-mask',
     menu: '.kbq-inline-edit__menu',
     overlay: '.cdk-overlay-pane',
-    selectPanel: '.kbq-select__panel'
+    selectPanel: '.kbq-select__panel',
+    focusAnchor: '.kbq-inline-edit__focus-anchor'
 };
 
 const simulateKeyboardFocus = <T>(fixture: ComponentFixture<T>, debugElement: DebugElement): void => {
@@ -378,6 +380,104 @@ describe('KbqInlineEdit', () => {
 
             expect(spyFn).not.toHaveBeenCalled();
         });
+    });
+
+    describe('focus anchor', () => {
+        it('should render focus anchor when interactive content exists', fakeAsync(() => {
+            const fixture = setup(TestWithTagContent);
+            const { debugElement } = fixture;
+
+            tick();
+            fixture.detectChanges();
+
+            const anchor = debugElement.query(By.css(componentCssClasses.focusAnchor));
+
+            expect(anchor).toBeTruthy();
+            expect(anchor.nativeElement.getAttribute('tabindex')).toBe('0');
+        }));
+
+        it('should set host tabindex to -1 when interactive content exists', fakeAsync(() => {
+            const fixture = setup(TestWithTagContent);
+            const { debugElement } = fixture;
+
+            tick();
+            fixture.detectChanges();
+
+            expect(getInlineEditDebugElement(debugElement).nativeElement.getAttribute('tabindex')).toBe('-1');
+        }));
+
+        it('should add anchor-focused class to host when focus anchor receives focus', fakeAsync(() => {
+            const fixture = setup(TestWithTagContent);
+            const { debugElement } = fixture;
+
+            tick();
+            fixture.detectChanges();
+
+            const anchor = debugElement.query(By.css(componentCssClasses.focusAnchor));
+
+            anchor.nativeElement.dispatchEvent(new FocusEvent('focus'));
+            fixture.detectChanges();
+
+            expect(getInlineEditDebugElement(debugElement).classes['kbq-inline-edit_anchor-focused']).toBeTruthy();
+        }));
+
+        it('should remove anchor-focused class from host when focus anchor loses focus', fakeAsync(() => {
+            const fixture = setup(TestWithTagContent);
+            const { debugElement } = fixture;
+
+            tick();
+            fixture.detectChanges();
+
+            const anchor = debugElement.query(By.css(componentCssClasses.focusAnchor));
+
+            anchor.nativeElement.dispatchEvent(new FocusEvent('focus'));
+            fixture.detectChanges();
+
+            anchor.nativeElement.dispatchEvent(new FocusEvent('blur'));
+            fixture.detectChanges();
+
+            expect(getInlineEditDebugElement(debugElement).classes['kbq-inline-edit_anchor-focused']).toBeFalsy();
+        }));
+
+        it('should open edit mode on Enter keydown on focus anchor', fakeAsync(() => {
+            const fixture = setup(TestWithTagContent);
+            const { componentInstance, debugElement } = fixture;
+            const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+
+            tick();
+            fixture.detectChanges();
+
+            const anchor = debugElement.query(By.css(componentCssClasses.focusAnchor));
+
+            dispatchEvent(anchor.nativeElement, createKeyboardEvent('keydown', ENTER, anchor.nativeElement, 'Enter'));
+            fixture.detectChanges();
+
+            expect(spyFn).toHaveBeenCalledWith('edit');
+        }));
+
+        it('should not render focus anchor in edit mode', fakeAsync(() => {
+            const fixture = setup(TestWithTagContent);
+            const { debugElement } = fixture;
+            const inlineEditEl = getInlineEditDebugElement(debugElement).nativeElement;
+
+            tick();
+            fixture.detectChanges();
+
+            inlineEditEl.click();
+            fixture.detectChanges();
+
+            expect(debugElement.query(By.css(componentCssClasses.focusAnchor))).toBeNull();
+        }));
+
+        it('should not render focus anchor when no interactive content exists', fakeAsync(() => {
+            const fixture = setup(TestComponent);
+            const { debugElement } = fixture;
+
+            tick();
+            fixture.detectChanges();
+
+            expect(debugElement.query(By.css(componentCssClasses.focusAnchor))).toBeNull();
+        }));
     });
 
     it('should open select panel on mode toggle', async () => {
@@ -894,6 +994,54 @@ export class TestWithValidatedControl extends BaseTestComponent {
 export class TestWithClickableContent {
     readonly interactiveSelectors = signal<string[]>(['a', 'kbq-tag']);
 
+    onModeChange(_event: 'edit' | 'view') {}
+}
+
+@Component({
+    selector: 'name',
+    imports: [FormsModule, KbqInputModule, KbqInlineEditModule, KbqTagsModule],
+    template: `
+        <kbq-inline-edit (modeChange)="onModeChange($event)">
+            <div kbqInlineEditViewMode>
+                <kbq-tag-list>
+                    <kbq-tag value="critical">Critical</kbq-tag>
+                    <kbq-tag value="high">High</kbq-tag>
+                </kbq-tag-list>
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput />
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithTagContent {
+    onModeChange(_event: 'edit' | 'view') {}
+}
+
+@Component({
+    selector: 'name',
+    imports: [FormsModule, KbqInputModule, KbqInlineEditModule, KbqTagsModule, KbqIconModule],
+    template: `
+        <kbq-inline-edit (modeChange)="onModeChange($event)">
+            <i kbqInlineEditMenu kbq-icon-button="kbq-undo_16" [color]="'contrast-fade'"></i>
+            <kbq-label>
+                Tags
+                <i data-testid="label-action" kbq-icon-button="kbq-circle-info_16"></i>
+            </kbq-label>
+
+            <div kbqInlineEditViewMode>
+                <kbq-tag-list>
+                    <kbq-tag value="critical">Critical</kbq-tag>
+                    <kbq-tag value="high">High</kbq-tag>
+                </kbq-tag-list>
+            </div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput />
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithFullTabOrder {
     onModeChange(_event: 'edit' | 'view') {}
 }
 

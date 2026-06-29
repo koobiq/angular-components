@@ -53,15 +53,15 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 ></i>
             </kbq-label>
 
-            <div class="example-inline-text" kbqInlineEditViewMode>
-                @if (!badgeControl.value) {
+            <div kbqInlineEditViewMode>
+                @if (!badgeControl.value.length) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
                     <kbq-tag-list removable>
                         @for (option of options(); track option) {
                             <kbq-tag
                                 [value]="option"
-                                [selected]="badgeControl.value === option"
+                                [class.kbq-selected]="badgeControl.value.includes(option)"
                                 (removed)="removed($event)"
                             >
                                 {{ option }}
@@ -72,7 +72,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 }
             </div>
             <kbq-form-field kbqInlineEditEditMode>
-                <kbq-select [placeholder]="placeholder" [formControl]="badgeControl">
+                <kbq-select multiple [placeholder]="placeholder" [formControl]="badgeControl">
                     @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -125,7 +125,7 @@ export class InlineEditCustomizedDesignExample {
     protected readonly options = signal(['Critical', 'High', 'Medium', 'Low']);
 
     protected readonly linkControl = new FormControl('https://github.com/koobiq/icons');
-    protected readonly badgeControl = new FormControl(this.options()[0]);
+    protected readonly badgeControl = new FormControl([this.options()[0]], { nonNullable: true });
     protected readonly iconControl = new FormControl('Value');
     protected readonly popupPlacements = PopUpPlacements;
 
@@ -139,9 +139,9 @@ export class InlineEditCustomizedDesignExample {
 
             if (event.tag.value === this.badgeControl.value) {
                 if (!tags.length) {
-                    this.badgeControl.setValue(null);
+                    this.badgeControl.setValue([]);
                 } else {
-                    this.badgeControl.setValue(tags[index]);
+                    this.badgeControl.setValue([tags[index]]);
                 }
             }
 

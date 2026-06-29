@@ -132,12 +132,12 @@ export class KbqInlineEditMenu {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: baseClass,
-        // @TODO: resolve tab queue with content-first (DS-4810)
         '[attr.tabindex]': 'tabIndex()',
         '[class]': 'className()',
         '[class.kbq-inline-edit_with-label]': '!!label()',
         '[class.kbq-inline-edit_with-menu]': '!!menu()',
         '[class.kbq-inline-edit_disabled]': 'disabled()',
+        '[class.kbq-inline-edit_anchor-focused]': 'anchorFocused()',
         '(click)': 'onClick($event)',
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
@@ -238,7 +238,15 @@ export class KbqInlineEdit {
     /** @docs-private */
     protected readonly isEditMode = computed(() => this.mode() === 'edit');
     /** @docs-private */
-    protected readonly tabIndex = computed(() => (this.isEditMode() || this.disabled() ? -1 : 0));
+    protected readonly hasInteractiveContent = signal(false);
+    /** @docs-private */
+    protected readonly anchorFocused = signal(false);
+    /** @docs-private */
+    protected readonly tabIndex = computed(() => {
+        if (this.isEditMode() || this.disabled() || this.hasInteractiveContent()) return -1;
+
+        return 0;
+    });
 
     /** @docs-private */
     protected readonly placements = PopUpPlacements;
@@ -255,6 +263,14 @@ export class KbqInlineEdit {
 
         effect(() => {
             this.overlayOrigin = this.label() ? this.viewContainer().nativeElement : this.elementRef.nativeElement;
+        });
+
+        effect((onCleanup) => {
+            const selectors = this.interactiveSelectors();
+
+            const timeoutId = setTimeout(() => this.detectInteractiveContent(selectors));
+
+            onCleanup(() => clearTimeout(timeoutId));
         });
     }
 
@@ -376,12 +392,24 @@ export class KbqInlineEdit {
         this.save($event);
     }
 
+    private detectInteractiveContent(selectors: string[]): void {
+        if (!selectors.length) {
+            this.hasInteractiveContent.set(false);
+
+            return;
+        }
+
+        const viewContent = this.viewContainer().nativeElement.querySelector('.kbq-inline-edit__view-content');
+
+        this.hasInteractiveContent.set(!!viewContent?.querySelector(selectors.join(',')));
+    }
+
     private isInteractiveElement(target: EventTarget | null): boolean {
         const selectors = this.interactiveSelectors();
 
         if (!selectors.length) return false;
 
-        return isElement(target) && !!target.closest(this.interactiveSelectors().join(','));
+        return isElement(target) && !!target.closest(selectors.join(','));
     }
 
     /**
