@@ -1994,6 +1994,30 @@ class VirtualSelectWithScrolledToBottom {
     }
 }
 
+@Component({
+    selector: 'multi-select-with-cleaner',
+    imports: [KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple multiline [formControl]="control">
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
+                }
+                <kbq-cleaner #kbqSelectCleaner />
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithCleaner {
+    foods = [
+        { value: 'steak-0', viewValue: 'Steak' },
+        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'tacos-2', viewValue: 'Tacos' }
+    ];
+    control = new UntypedFormControl(['steak-0', 'pizza-1']);
+    readonly select = viewChild.required(KbqSelect);
+}
+
 describe('KbqSelect', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
@@ -2047,6 +2071,7 @@ describe('KbqSelect', () => {
                 BasicSelect,
                 BasicEvents,
                 MultiSelect,
+                MultiSelectWithCleaner,
                 SelectWithGroups,
                 SelectWithGroupsAndNgContainer,
                 SelectWithFormFieldLabel,
@@ -3329,6 +3354,74 @@ describe('KbqSelect', () => {
                 flush();
 
                 expect(value.nativeElement.textContent).toContain('Food');
+            }));
+
+            it('should update FormControl value to null after clear on single select', fakeAsync(() => {
+                fixture.componentInstance.control = new UntypedFormControl('pizza-1');
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toBe('pizza-1');
+
+                cleaner = fixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
+                cleaner.click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toBeUndefined();
+            }));
+        });
+
+        describe('Clear value — multiple select', () => {
+            let multiFixture: ComponentFixture<MultiSelectWithCleaner>;
+
+            beforeEach(fakeAsync(() => {
+                multiFixture = TestBed.createComponent(MultiSelectWithCleaner);
+                multiFixture.detectChanges();
+                flush();
+                multiFixture.detectChanges();
+            }));
+
+            it('should update FormControl value to empty array after clear', fakeAsync(() => {
+                expect(multiFixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1']);
+
+                const multiCleaner = multiFixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
+
+                multiCleaner.click();
+                multiFixture.detectChanges();
+                flush();
+
+                expect(multiFixture.componentInstance.control.value).toEqual([]);
+            }));
+
+            it('should deselect all options visually after clear', fakeAsync(() => {
+                multiFixture.componentInstance.select().open();
+                multiFixture.detectChanges();
+                flush();
+
+                const optionsBefore = Array.from(
+                    overlayContainerElement.querySelectorAll('kbq-option')
+                ) as HTMLElement[];
+
+                expect(optionsBefore.filter((o) => o.classList.contains('kbq-selected')).length).toBe(2);
+
+                multiFixture.componentInstance.select().close();
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement.click();
+                multiFixture.detectChanges();
+                flush();
+
+                multiFixture.componentInstance.select().open();
+                multiFixture.detectChanges();
+                flush();
+
+                const optionsAfter = Array.from(
+                    overlayContainerElement.querySelectorAll('kbq-option')
+                ) as HTMLElement[];
+
+                expect(optionsAfter.filter((o) => o.classList.contains('kbq-selected')).length).toBe(0);
             }));
         });
 
