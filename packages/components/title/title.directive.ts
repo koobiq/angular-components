@@ -11,7 +11,13 @@ import {
     QueryList,
     TemplateRef
 } from '@angular/core';
-import { KBQ_TITLE_TEXT_REF, kbqInjectNativeElement, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
+import {
+    KBQ_TITLE_TEXT_REF,
+    kbqInjectNativeElement,
+    KbqTitleTextRef,
+    PopUpPlacements,
+    PopUpTriggers
+} from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -197,6 +203,18 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      */
     ngAfterViewInit() {
         this.content = this.resolvedContent;
+
+        // Keep the title tooltip centered on the trigger: fall back only to center-aligned placements
+        // (top/bottom center horizontally; left/right center vertically), never to edge-anchored corner
+        // positions. Guarded so an explicit consumer `kbqPlacementPriority` or `kbqPlacement` is respected.
+        if (!this.placementPriority && this.placement === PopUpPlacements.Top) {
+            this.placementPriority = [
+                PopUpPlacements.Top,
+                PopUpPlacements.Bottom,
+                PopUpPlacements.Right,
+                PopUpPlacements.Left
+            ];
+        }
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.debounceInterval))
