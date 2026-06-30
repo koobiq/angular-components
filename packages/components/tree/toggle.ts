@@ -57,9 +57,7 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     }
 
     toggle(event: Event): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         if (this.recursive) {
             this.tree.treeControl.toggleDescendants(this.treeNode.data);
@@ -73,9 +71,7 @@ export class KbqTreeNodeToggleBaseDirective<T> {
 
 @Component({
     selector: 'kbq-tree-node-toggle',
-    imports: [
-        KbqIcon
-    ],
+    imports: [KbqIcon],
     template: `
         <ng-content>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
