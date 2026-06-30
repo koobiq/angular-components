@@ -18,3 +18,17 @@ exports[`KbqUsernamePipe should format full name using custom format 1`] = `
   "Alice B. C.",
 ]
 `;
+
+exports[`kbqBuildUsernameText should append login after name 1`] = `"Root M. A. mroot"`;
+
+exports[`kbqBuildUsernameText should include site without login 1`] = `"Root M. A. (corp)"`;
+
+exports[`kbqBuildUsernameText should return name only when login and site are absent 1`] = `"Root M. A."`;
+
+exports[`kbqBuildUsernameText should skip empty name and join remaining parts 1`] = `"mroot (corp)"`;
+
+exports[`kbqBuildUsernameText should use custom formatLogin 1`] = `"Root M. A. [@mroot]"`;
+
+exports[`kbqBuildUsernameText should use custom formatSite 1`] = `"Root M. A. corp"`;
+
+exports[`kbqBuildUsernameText should wrap site in parentheses by default 1`] = `"Root M. A. mroot (corp)"`;

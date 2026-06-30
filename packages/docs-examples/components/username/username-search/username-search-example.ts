@@ -5,7 +5,7 @@ import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqUserInfo, KbqUsernameModule, KbqUsernamePipe } from '@koobiq/components/username';
+import { kbqBuildUsernameText, KbqUserInfo, KbqUsernameModule, KbqUsernamePipe } from '@koobiq/components/username';
 import { startWith } from 'rxjs';
 
 /**
@@ -82,10 +82,13 @@ export class UsernameSearchExample {
 
         if (!query) return this.users;
 
-        return this.users.filter((user) => {
-            const formatted = this.usernamePipe.transform(user).toLowerCase();
-
-            return formatted.includes(query) || (user.login?.toLowerCase().includes(query) ?? false);
-        });
+        return this.users.filter((user) =>
+            kbqBuildUsernameText(
+                { name: this.usernamePipe.transform(user), login: user.login, site: user.site },
+                { formatSite: (s) => s }
+            )
+                .toLowerCase()
+                .includes(query)
+        );
     });
 }

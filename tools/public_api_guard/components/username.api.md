@@ -12,6 +12,11 @@ import { PipeTransform } from '@angular/core';
 export const KBQ_PROFILE_MAPPING: InjectionToken<KbqFormatKeyToProfileMapping | KbqFormatKeyToProfileMappingExtended>;
 
 // @public
+export function kbqBuildUsernameText(data: {
+    name: string;
+} & Partial<Pick<KbqUserInfo, 'login' | 'site'>>, options?: KbqUsernameTextOptions): string;
+
+// @public
 export const kbqDefaultFullNameFormat = "lf.m.";
 
 // @public
@@ -136,6 +141,12 @@ export class KbqUsernameSecondaryHint {
 
 // @public
 export type KbqUsernameStyle = 'default' | 'error' | 'accented' | 'inherit';
+
+// @public (undocumented)
+export interface KbqUsernameTextOptions {
+    formatLogin?: (login: string) => string;
+    formatSite?: (site: string) => string;
+}
 
 // (No @packageDocumentation comment for this package)
 

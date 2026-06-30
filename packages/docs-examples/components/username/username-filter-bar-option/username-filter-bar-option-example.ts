@@ -1,7 +1,7 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
-import { KbqUserInfo, KbqUsernameModule, KbqUsernamePipe } from '@koobiq/components/username';
+import { kbqBuildUsernameText, KbqUserInfo, KbqUsernameModule, KbqUsernamePipe } from '@koobiq/components/username';
 
 const USERS: KbqUserInfo[] = [
     { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
@@ -45,8 +45,7 @@ const USERS: KbqUserInfo[] = [
 })
 export class UsernameFilterBarOptionExample implements AfterViewInit {
     private readonly usernamePipe = inject(KbqUsernamePipe);
-
-    @ViewChild('userOption') userOptionTemplate: TemplateRef<any>;
+    private readonly userOptionTemplate = viewChild<TemplateRef<any>>('userOption');
 
     activeFilter: KbqFilter = {
         name: '',
@@ -75,11 +74,14 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
                 name: 'Assignee',
                 type: KbqPipeTypes.Select,
                 values: USERS.map((user) => ({
-                    name: `${this.usernamePipe.transform(user)} ${[user.login, user.site].filter(Boolean).join(' ')}`,
+                    name: kbqBuildUsernameText(
+                        { name: this.usernamePipe.transform(user), login: user.login, site: user.site },
+                        { formatSite: (s) => s }
+                    ),
                     value: user,
                     id: user.login
                 })),
-                valueTemplate: this.userOptionTemplate,
+                valueTemplate: this.userOptionTemplate(),
                 cleanable: true,
                 removable: false,
                 disabled: false
