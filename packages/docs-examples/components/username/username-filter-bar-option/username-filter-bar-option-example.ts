@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
-import { KbqHighlightPipe } from '@koobiq/components/core';
+import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqUserInfo, KbqUsernameModule, KbqUsernamePipe } from '@koobiq/components/username';
 
@@ -15,7 +15,7 @@ const USERS: KbqUserInfo[] = [
  */
 @Component({
     selector: 'username-filter-bar-option-example',
-    imports: [KbqFilterBarModule, KbqUsernameModule, KbqHighlightPipe],
+    imports: [KbqFilterBarModule, KbqUsernameModule, KbqHighlightBackgroundPipe],
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             @for (pipe of activeFilter.pipes; track pipe) {
@@ -29,10 +29,13 @@ const USERS: KbqUserInfo[] = [
             <kbq-username>
                 <kbq-username-custom-view>
                     @let fullName = option.value | kbqUsername;
-                    <span kbqUsernamePrimary [innerHTML]="fullName | mcHighlight: searchText"></span>
+                    <span kbqUsernamePrimary [innerHTML]="fullName | kbqHighlightBackground: searchText"></span>
 
                     @if (option.value?.login) {
-                        <span kbqUsernameSecondary [innerHTML]="option.value.login | mcHighlight: searchText"></span>
+                        <span
+                            kbqUsernameSecondary
+                            [innerHTML]="option.value.login | kbqHighlightBackground: searchText"
+                        ></span>
                     }
                 </kbq-username-custom-view>
             </kbq-username>
