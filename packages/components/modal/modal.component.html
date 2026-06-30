@@ -50,16 +50,32 @@
 
 <!-- [Predefined] Default Modal Content -->
 <ng-template #tplContentDefault>
-    @if (kbqTitle) {
-        <div kbq-title class="kbq-modal-header" [kbqOverflowShadowTop]="modalBodyOverflow">
-            <div class="kbq-modal-title">
-                @switch (true) {
-                    @case (isTemplateRef(kbqTitle)) {
-                        <ng-container [ngTemplateOutlet]="$any(kbqTitle)" />
-                    }
-                    @case (isNonEmptyString(kbqTitle)) {
-                        <div [innerHTML]="kbqTitle"></div>
-                    }
+    @if (kbqTitle || kbqCaption) {
+        <div class="kbq-modal-header" [kbqOverflowShadowTop]="modalBodyOverflow">
+            <div class="kbq-modal-header-content">
+                @if (kbqTitle) {
+                    <div class="kbq-modal-title" kbq-title>
+                        @switch (true) {
+                            @case (isTemplateRef(kbqTitle)) {
+                                <ng-container [ngTemplateOutlet]="$any(kbqTitle)" />
+                            }
+                            @case (isNonEmptyString(kbqTitle)) {
+                                <div #kbqTitleText [innerHTML]="kbqTitle"></div>
+                            }
+                        }
+                    </div>
+                }
+                @if (kbqCaption) {
+                    <div class="kbq-modal-caption" kbq-title>
+                        @switch (true) {
+                            @case (isTemplateRef(kbqCaption)) {
+                                <ng-container [ngTemplateOutlet]="$any(kbqCaption)" />
+                            }
+                            @case (isNonEmptyString(kbqCaption)) {
+                                <div #kbqTitleText [innerHTML]="kbqCaption"></div>
+                            }
+                        }
+                    </div>
                 }
             </div>
             @if (kbqClosable) {

@@ -5,6 +5,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { ModalCaptionExample } from 'packages/docs-examples/components/modal/modal-caption/modal-caption-example';
 import { ModalComponentWithInjectorExample } from 'packages/docs-examples/components/modal/modal-component-with-injector/modal-component-with-injector-example';
 import { ModalComponentExample } from 'packages/docs-examples/components/modal/modal-component/modal-component-example';
 import { ModalMultipleExample } from 'packages/docs-examples/components/modal/modal-multiple/modal-multiple-example';
@@ -22,7 +23,8 @@ import { ModalTemplateExample } from 'packages/docs-examples/components/modal/mo
         ModalTemplateExample,
         ModalScrollExample,
         ModalSizesExample,
-        ModalMultipleExample
+        ModalMultipleExample,
+        ModalCaptionExample
     ],
     template: `
         <modal-overview-example />
@@ -39,6 +41,7 @@ import { ModalTemplateExample } from 'packages/docs-examples/components/modal/mo
         <hr />
         <modal-multiple-example />
         <hr />
+        <modal-caption-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

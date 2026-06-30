@@ -21,6 +21,12 @@ Resembles a browser alert. Use when the system asks a single question or deliver
 
 <!-- example(modal-overview) -->
 
+#### Dialog with a title and caption
+
+Use a caption to provide additional context below the dialog title — for example, a brief description of the action or its scope. The caption is limited to two lines and truncates with an ellipsis if the text is longer.
+
+<!-- example(modal-caption) -->
+
 ### How it works
 
 The page is dimmed and cannot be interacted with: buttons cannot be clicked, there is no hover, scrolling, etc. On top of the dim, the modal dialog window opens.

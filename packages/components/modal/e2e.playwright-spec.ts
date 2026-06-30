@@ -8,15 +8,15 @@ test.describe('KbqModalModule', () => {
         const getMultipleModalsButton = (page: Page) => page.getByTestId('e2eMultipleModals');
 
         test('states', async ({ page }) => {
-            await page.setViewportSize({ width: 400, height: 350 });
+            await page.setViewportSize({ width: 450, height: 550 });
             await page.goto('/E2eModalStates');
             const component = getComponent(page);
 
             await component.scrollIntoViewIfNeeded();
             await getOpenButton(page).click();
-            await expect(component).toHaveScreenshot('01-light.png');
+            await expect(page).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(component).toHaveScreenshot('01-dark.png');
+            await expect(page).toHaveScreenshot('01-dark.png');
         });
 
         test('multiple modals', async ({ page }) => {

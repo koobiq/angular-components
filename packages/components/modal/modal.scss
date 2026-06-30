@@ -102,6 +102,21 @@
     padding-bottom: var(--kbq-size-3xs);
 }
 
+.kbq-modal-header-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.kbq-modal-caption {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .kbq-modal-body {
     display: block;
     overflow-y: auto;

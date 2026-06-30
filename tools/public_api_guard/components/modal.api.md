@@ -144,6 +144,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     kbqCancelText: string;
     // (undocumented)
+    kbqCaption: string | TemplateRef<{}>;
+    // (undocumented)
     kbqClassName: string;
     // (undocumented)
     get kbqClosable(): boolean;
@@ -233,7 +235,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     triggerOk(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalComponent<any, any>, "kbq-modal", never, { "kbqModalType": { "alias": "kbqModalType"; "required": false; }; "kbqComponent": { "alias": "kbqComponent"; "required": false; }; "kbqContent": { "alias": "kbqContent"; "required": false; }; "kbqFooter": { "alias": "kbqFooter"; "required": false; }; "kbqVisible": { "alias": "kbqVisible"; "required": false; }; "kbqWidth": { "alias": "kbqWidth"; "required": false; }; "kbqSize": { "alias": "kbqSize"; "required": false; }; "kbqWrapClassName": { "alias": "kbqWrapClassName"; "required": false; }; "kbqClassName": { "alias": "kbqClassName"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "kbqTitle": { "alias": "kbqTitle"; "required": false; }; "kbqCloseByESC": { "alias": "kbqCloseByESC"; "required": false; }; "kbqClosable": { "alias": "kbqClosable"; "required": false; }; "kbqMask": { "alias": "kbqMask"; "required": false; }; "kbqMaskClosable": { "alias": "kbqMaskClosable"; "required": false; }; "kbqMaskStyle": { "alias": "kbqMaskStyle"; "required": false; }; "kbqBodyStyle": { "alias": "kbqBodyStyle"; "required": false; }; "kbqOkText": { "alias": "kbqOkText"; "required": false; }; "kbqOkType": { "alias": "kbqOkType"; "required": false; }; "kbqRestoreFocus": { "alias": "kbqRestoreFocus"; "required": false; }; "kbqOkLoading": { "alias": "kbqOkLoading"; "required": false; }; "kbqOnOk": { "alias": "kbqOnOk"; "required": false; }; "kbqCancelText": { "alias": "kbqCancelText"; "required": false; }; "kbqCancelLoading": { "alias": "kbqCancelLoading"; "required": false; }; "kbqOnCancel": { "alias": "kbqOnCancel"; "required": false; }; "kbqGetContainer": { "alias": "kbqGetContainer"; "required": false; }; }, { "kbqVisibleChange": "kbqVisibleChange"; "kbqAfterOpen": "kbqAfterOpen"; "kbqAfterClose": "kbqAfterClose"; "kbqBeforeClose": "kbqBeforeClose"; "kbqOnOk": "kbqOnOk"; "kbqOnCancel": "kbqOnCancel"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalComponent<any, any>, "kbq-modal", never, { "kbqModalType": { "alias": "kbqModalType"; "required": false; }; "kbqComponent": { "alias": "kbqComponent"; "required": false; }; "kbqContent": { "alias": "kbqContent"; "required": false; }; "kbqFooter": { "alias": "kbqFooter"; "required": false; }; "kbqVisible": { "alias": "kbqVisible"; "required": false; }; "kbqWidth": { "alias": "kbqWidth"; "required": false; }; "kbqSize": { "alias": "kbqSize"; "required": false; }; "kbqWrapClassName": { "alias": "kbqWrapClassName"; "required": false; }; "kbqClassName": { "alias": "kbqClassName"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "kbqTitle": { "alias": "kbqTitle"; "required": false; }; "kbqCaption": { "alias": "kbqCaption"; "required": false; }; "kbqCloseByESC": { "alias": "kbqCloseByESC"; "required": false; }; "kbqClosable": { "alias": "kbqClosable"; "required": false; }; "kbqMask": { "alias": "kbqMask"; "required": false; }; "kbqMaskClosable": { "alias": "kbqMaskClosable"; "required": false; }; "kbqMaskStyle": { "alias": "kbqMaskStyle"; "required": false; }; "kbqBodyStyle": { "alias": "kbqBodyStyle"; "required": false; }; "kbqOkText": { "alias": "kbqOkText"; "required": false; }; "kbqOkType": { "alias": "kbqOkType"; "required": false; }; "kbqRestoreFocus": { "alias": "kbqRestoreFocus"; "required": false; }; "kbqOkLoading": { "alias": "kbqOkLoading"; "required": false; }; "kbqOnOk": { "alias": "kbqOnOk"; "required": false; }; "kbqCancelText": { "alias": "kbqCancelText"; "required": false; }; "kbqCancelLoading": { "alias": "kbqCancelLoading"; "required": false; }; "kbqOnCancel": { "alias": "kbqOnCancel"; "required": false; }; "kbqGetContainer": { "alias": "kbqGetContainer"; "required": false; }; }, { "kbqVisibleChange": "kbqVisibleChange"; "kbqAfterOpen": "kbqAfterOpen"; "kbqAfterClose": "kbqAfterClose"; "kbqBeforeClose": "kbqBeforeClose"; "kbqOnOk": "kbqOnOk"; "kbqOnCancel": "kbqOnCancel"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalComponent<any, any>, never>;
 }
@@ -350,6 +352,8 @@ export interface ModalOptions<C = any, R = any> {
     kbqCancelLoading?: boolean;
     // (undocumented)
     kbqCancelText?: string;
+    // (undocumented)
+    kbqCaption?: string | TemplateRef<{}>;
     // (undocumented)
     kbqClassName?: string;
     // (undocumented)
