@@ -598,6 +598,30 @@ describe('KbqTitleDirective', () => {
             expect(spy).toHaveBeenCalled();
         });
     });
+
+    describe('default placementPriority', () => {
+        it('should default to center-aligned placements for a bare kbq-title', () => {
+            const { debugElement } = createComponent(SimpleTitleComponent);
+            const directive = getTitleDirective(debugElement);
+
+            // Only top/bottom (centered horizontally) and right/left (centered vertically) — no corner positions.
+            expect(directive['placementPriority']).toEqual(['top', 'bottom', 'right', 'left']);
+        });
+
+        it('should respect an explicit kbqPlacementPriority', () => {
+            const { debugElement } = createComponent(ExplicitPriorityTitleComponent);
+            const directive = getTitleDirective(debugElement);
+
+            expect(directive['placementPriority']).toEqual(['bottom']);
+        });
+
+        it('should not set the default priority when an explicit kbqPlacement is provided', () => {
+            const { debugElement } = createComponent(ExplicitPlacementTitleComponent);
+            const directive = getTitleDirective(debugElement);
+
+            expect(directive['placementPriority']).toBeNull();
+        });
+    });
 });
 
 @Component({
@@ -828,3 +852,21 @@ class StringContentTitleComponent {}
     `
 })
 class MultiChildTitleComponent {}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
+        <div kbq-title [kbqPlacementPriority]="['bottom']">Hello World</div>
+    `
+})
+class ExplicitPriorityTitleComponent {}
+
+@Component({
+    imports: [KbqTitleDirective],
+    standalone: true,
+    template: `
+        <div kbq-title [kbqPlacement]="'left'">Hello World</div>
+    `
+})
+class ExplicitPlacementTitleComponent {}
