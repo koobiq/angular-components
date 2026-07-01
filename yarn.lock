@@ -8813,6 +8813,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/luxon@npm:^3.7.2":
+  version: 3.7.2
+  resolution: "@types/luxon@npm:3.7.2"
+  checksum: 10c0/c29fd286d0804221b14b3380dd9b290390c188a0df67fa770ced16994e637ab62de89425daf4de82150ea44b9bbbbb9537e4c85677d381d98bec5afcf53f0b5a
+  languageName: node
+  linkType: hard
+
 "@types/merge2@npm:^0.3.30":
   version: 0.3.30
   resolution: "@types/merge2@npm:0.3.30"
@@ -18011,7 +18018,7 @@ __metadata:
     "@types/inquirer": "npm:^7.3.3"
     "@types/jest": "npm:^30.0.0"
     "@types/license-checker": "npm:^25.0.6"
-    "@types/luxon": "npm:^3.7.1"
+    "@types/luxon": "npm:^3.7.2"
     "@types/merge2": "npm:^0.3.30"
     "@types/node": "npm:^24.10.4"
     "@types/nunjucks": "npm:^3.2.1"
