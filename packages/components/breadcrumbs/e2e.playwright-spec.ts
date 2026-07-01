@@ -33,6 +33,27 @@ test.describe('KbqBreadcrumbs overflow', () => {
         await expect(dropdownItems.nth(0)).toHaveText('Item #1');
         await expect(dropdownItems.nth(1)).toHaveText('Item #2');
     });
+
+    test('should hide dropdown panel when breadcrumb items fits into container', async ({ page }) => {
+        await page.goto('/E2eBreadcrumbsOverflowMax');
+
+        const dropdownPanel = () => page.locator('.kbq-dropdown__panel');
+
+        const breadcrumbs = page.getByTestId('e2eBreadcrumbsOverflow');
+        const breadcrumbsHost = page.getByTestId('e2eBreadcrumbsOverflowMaxHost');
+
+        await breadcrumbs.locator('.kbq-breadcrumb__expand').click();
+
+        await expect(dropdownPanel()).toBeVisible();
+
+        const dropdownItems = dropdownPanel().locator('[kbq-dropdown-item]');
+
+        await expect(dropdownItems).toBeVisible();
+
+        await breadcrumbsHost.evaluate(({ style }) => (style.width = '1000px'));
+
+        await expect(dropdownPanel()).not.toBeVisible();
+    });
 });
 
 test.describe('KbqBreadcrumbsModule', () => {

@@ -144,6 +144,13 @@ export class E2eBreadcrumbsStateAndStyle {
                 <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb" />
             }
         </nav>
+
+        <!-- Container used for width overflow tests -->
+        <nav kbq-breadcrumbs data-testid="e2eBreadcrumbsOverflow" [max]="null">
+            @for (breadcrumb of items; track breadcrumb) {
+                <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb" />
+            }
+        </nav>
     `,
     styles: `
         :host {
