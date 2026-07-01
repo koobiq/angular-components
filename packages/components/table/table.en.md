@@ -13,3 +13,9 @@ In most cases, borders should be avoided, but sometimes they help support the la
 Borders are also useful in tables with complex structures — for example, when rows are grouped or some cells are merged vertically.
 
 <!-- example(table-with-borders) -->
+
+### Disable hover
+
+Use `[disableHover]="true"` to remove the background color change on row hover. This is useful when rows are not interactive and the hover highlight would be misleading.
+
+<!-- example(table-disable-hover) -->

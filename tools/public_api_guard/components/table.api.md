@@ -14,7 +14,9 @@ export class KbqTable {
     // (undocumented)
     readonly border: i0.InputSignal<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    readonly disableHover: i0.InputSignal<boolean>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; "isSignal": true; }; "disableHover": { "alias": "disableHover"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTable, never>;
 }
