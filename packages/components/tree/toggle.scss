@@ -28,6 +28,10 @@
 
     &[disabled] {
         cursor: default;
+
+        & .kbq-icon {
+            color: var(--kbq-tree-states-disabled-tree-toggle-color);
+        }
     }
 }
 
