@@ -36,6 +36,12 @@ const DATA_OBJECT = {
         Focused: '',
         Disabled: ''
     },
+    DisabledParent: {
+        child: ''
+    },
+    DisabledToggle: {
+        child: ''
+    },
     Documents: {
         angular: {
             src: {
@@ -98,8 +104,14 @@ function buildFileTree(value: any, level: number): FileNode[] {
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
-                <kbq-tree-node-toggle [node]="node" />
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+                [checkboxThirdState]="true"
+                [disabled]="node.name === 'DisabledParent'"
+            >
+                <i kbq-icon="kbq-circle-info_16"></i>
+                <kbq-tree-node-toggle [node]="node" [disabled]="node.name === 'DisabledToggle'" />
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -125,8 +137,14 @@ function buildFileTree(value: any, level: number): FileNode[] {
                 <kbq-option-action [kbqTooltip]="'Tooltip text'" />
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
-                <kbq-tree-node-toggle [node]="node" />
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+                [checkboxThirdState]="true"
+                [disabled]="node.name === 'DisabledParent'"
+            >
+                <i kbq-icon="kbq-circle-info_16"></i>
+                <kbq-tree-node-toggle [node]="node" [disabled]="node.name === 'DisabledToggle'" />
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
