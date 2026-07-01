@@ -193,6 +193,14 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         }
 
         if (isSeparatorKey) {
+            if (
+                event.keyCode === ENTER &&
+                this.autocompleteTrigger?.panelOpen &&
+                this.autocompleteTrigger?.activeOption
+            ) {
+                return;
+            }
+
             this.emitTagEnd();
 
             event.preventDefault();
