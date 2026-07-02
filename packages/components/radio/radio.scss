@@ -92,9 +92,18 @@
         margin-top: var(--kbq-radio-size-normal-vertical-content-padding);
     }
 
-    [dir='rtl'] & {
-        padding-right: var(--kbq-radio-size-normal-horizontal-content-padding);
+    &.kbq-radio-label-before {
         padding-left: 0;
+        padding-right: kbq-sum-series-css-variables(
+            [radio-size-normal-outer-size,
+            radio-size-normal-horizontal-content-padding,
+            calc(var(--kbq-radio-size-normal-outer-circle-border-width) * 2)]
+        );
+
+        .kbq-radio-button__outer-circle {
+            left: unset;
+            right: 0;
+        }
     }
 }
 
@@ -128,8 +137,13 @@
             margin-top: var(--kbq-radio-size-big-vertical-content-padding);
         }
 
-        [dir='rtl'] & {
-            padding-right: var(--kbq-radio-size-big-horizontal-content-padding);
+        &.kbq-radio-label-before {
+            padding-left: 0;
+            padding-right: kbq-sum-series-css-variables(
+                [radio-size-big-outer-size,
+                radio-size-big-horizontal-content-padding,
+                calc(var(--kbq-radio-size-big-outer-circle-border-width) * 2)]
+            );
         }
     }
 }
