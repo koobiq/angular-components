@@ -16,7 +16,11 @@
                 & > td {
                     color: var(--kbq-foreground-contrast);
                 }
+            }
+        }
 
+        &:not(.kbq-table_disable-hover) > tbody {
+            & > tr {
                 &.kbq-hovered td,
                 &:hover td {
                     background-color: var(--kbq-states-background-transparent-hover);

@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, Directive, ViewEncapsulation, contentChild, input } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Directive,
+    ViewEncapsulation,
+    booleanAttribute,
+    contentChild,
+    input
+} from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 
 @Component({
@@ -9,12 +17,14 @@ import { KbqButton } from '@koobiq/components/button';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-table',
-        '[class.kbq-table_bordered]': 'border()'
+        '[class.kbq-table_bordered]': 'border()',
+        '[class.kbq-table_disable-hover]': 'disableHover()'
     },
     exportAs: 'kbqTable'
 })
 export class KbqTable {
-    readonly border = input<boolean>(false);
+    readonly border = input(false, { transform: booleanAttribute });
+    readonly disableHover = input(false, { transform: booleanAttribute });
 }
 
 @Directive({
