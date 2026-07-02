@@ -411,6 +411,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     /** Whether this radio is required. */
     private _required: boolean;
 
+    /** Whether the label should appear after or before the radio button. Defaults to 'after' */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
