@@ -1428,6 +1428,8 @@ describe(KbqTagList.name, () => {
         // the host holds `tabIndex=0`, and the browser re-focuses it, triggering
         // (focus) → setFirstItemActive() loop (reproducible with provideZoneChangeDetection({ eventCoalescing: true })).
         expect(tagListEl.tabIndex).toBe(-1);
+
+        tick();
     }));
 
     it('should restore tabIndex to userTabIndex after tabOut', fakeAsync(() => {
