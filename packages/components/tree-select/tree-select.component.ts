@@ -565,7 +565,9 @@ export class KbqTreeSelect
         tree.selectAllOptions(select.selectAllToggle());
 
         const options = tree.renderedOptions.filter((option) => !option.disabled && option.selectable());
-        const selected = options.some((option) => tree.selectionModel.isSelected(option.data));
+        // `selected` per the KbqSelectAllEvent contract: `true` only when every selectable option is
+        // now selected, `false` otherwise (deselected or partial); guarded for the empty-options case.
+        const selected = options.length > 0 && options.every((option) => tree.selectionModel.isSelected(option.data));
 
         select.onSelectAll.emit(new KbqSelectAllEvent(select, options, selected));
     }

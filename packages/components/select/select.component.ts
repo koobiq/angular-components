@@ -1887,8 +1887,9 @@ export class KbqSelect
         event.preventDefault();
 
         const options = select.options.toArray();
+        const selectableOptions = options.filter((option) => !option.disabled);
 
-        const changed = toggleSelectAll<KbqOption>(
+        toggleSelectAll<KbqOption>(
             {
                 items: options,
                 isSelectable: (option) => !option.disabled,
@@ -1898,15 +1899,12 @@ export class KbqSelect
             { allowDeselect: select.selectAllToggle() }
         );
 
-        const selected = changed.length > 0 && changed[0].selected;
+        // `selected` per the KbqSelectAllEvent contract: `true` only when every selectable option is
+        // now selected, `false` otherwise (deselected or partial). Reading the live option state keeps
+        // this correct even on a no-op (Ctrl+A while everything is already selected, selectAllToggle off).
+        const selected = selectableOptions.length > 0 && selectableOptions.every((option) => option.selected);
 
-        select.onSelectAll.emit(
-            new KbqSelectAllEvent(
-                select,
-                options.filter((option) => !option.disabled),
-                selected
-            )
-        );
+        select.onSelectAll.emit(new KbqSelectAllEvent(select, selectableOptions, selected));
     }
 
     /**

@@ -584,9 +584,10 @@ export class KbqTreeSelection
         );
 
         const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());
-        const shouldSelect = !allowDeselect || dataNodes.some((node) => !this.selectionModel.isSelected(node));
 
-        toggleSelectAll(
+        // `toggleSelectAll` returns the data nodes whose selection actually flipped — the source of
+        // truth, unlike the cached `option.selected` which lags until change detection.
+        const changed = toggleSelectAll(
             {
                 items: dataNodes,
                 isSelectable: () => true,
@@ -597,13 +598,15 @@ export class KbqTreeSelection
             { allowDeselect }
         );
 
-        // `option.selected` is cached until change detection, so this still reflects the pre-toggle
-        // state — on select it yields the newly-selected options, matching the previous behaviour.
-        const changedOptions = shouldSelect
-            ? selectableOptions.filter((option) => !option.selected)
-            : selectableOptions;
+        const changedData = new Set(changed);
+        const changedOptions = selectableOptions.filter((option) => changedData.has(option.data));
 
-        this.selectionChange.emit(new KbqTreeSelectionChange(this, changedOptions[0], changedOptions));
+        // Skip `selectionChange` on a no-op (e.g. Ctrl+A while everything is already selected and
+        // `allowDeselect` is off) so `KbqTreeSelectionChange.option` is never `undefined`.
+        if (changedOptions.length > 0) {
+            this.selectionChange.emit(new KbqTreeSelectionChange(this, changedOptions[0], changedOptions));
+        }
+
         this.onSelectAll.emit(new KbqTreeSelectAllEvent(this, selectableOptions));
     }
 

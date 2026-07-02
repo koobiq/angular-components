@@ -1119,6 +1119,23 @@ describe('KbqTreeSelection', () => {
                 expect(component.savedSelectAllEvent!.options.length).toBe(5);
                 expect(component.modelValue.length).toBe(0);
             }));
+
+            it('should not emit selectionChange with an undefined option on a no-op CTRL + A (default)', fakeAsync(() => {
+                // first press selects everything (default: selectAllToggle off)
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                const onSelectionChange = jest.spyOn(component, 'onSelectionChange');
+
+                component.savedSelectionChangeEvent = undefined;
+
+                // second press is a no-op: everything is already selected and allowDeselect is off
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(onSelectionChange).not.toHaveBeenCalled();
+                expect(component.savedSelectionChangeEvent).toBeUndefined();
+            }));
         });
     });
 });

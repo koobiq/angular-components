@@ -4359,6 +4359,30 @@ describe('KbqTreeSelect', () => {
 
             expect(testInstance.control.getRawValue().length).toEqual(25);
         });
+
+        it('should emit onSelectAll with selected=true on a no-op CTRL + A when everything is already selected', () => {
+            const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
+            const onSelectAll = jest.fn();
+
+            fixture.componentInstance.select().onSelectAll.subscribe(onSelectAll);
+            fixture.componentInstance.select().open();
+            fixture.detectChanges();
+
+            const event = createKeyboardEvent('keydown', A, selectElement);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+
+            // first press selects everything
+            dispatchEvent(selectElement, event);
+            fixture.detectChanges();
+
+            // second press is a no-op (all already selected, selectAllToggle off) — still "all selected"
+            dispatchEvent(selectElement, event);
+            fixture.detectChanges();
+
+            expect(onSelectAll).toHaveBeenCalledTimes(2);
+            expect(onSelectAll.mock.calls[1][0].selected).toBe(true);
+        });
     });
 
     describe('with parent selection', () => {

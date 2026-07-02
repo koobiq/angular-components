@@ -5455,6 +5455,31 @@ describe('KbqSelect', () => {
             expect(options.every((option) => option.selected)).toBe(true);
         });
 
+        it('should emit onSelectAll with selected=true on a no-op ctrl + a when everything is already selected', () => {
+            const selectElement = fixture.nativeElement.querySelector('kbq-select');
+            const options = fixture.componentInstance.options();
+            const onSelectAll = jest.fn();
+
+            fixture.componentInstance.select().onSelectAll.subscribe(onSelectAll);
+
+            options.forEach((option) => option.select());
+            fixture.detectChanges();
+
+            fixture.componentInstance.select().open();
+            fixture.detectChanges();
+
+            const event = createKeyboardEvent('keydown', A, selectElement);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+            dispatchEvent(selectElement, event);
+            fixture.detectChanges();
+
+            expect(onSelectAll).toHaveBeenCalledTimes(1);
+            // reflects the post-shortcut state (everything is still selected), not a stale false
+            expect(onSelectAll.mock.calls[0][0].selected).toBe(true);
+            expect(options.every((option) => option.selected)).toBe(true);
+        });
+
         it('should allow providing custom tag content', fakeAsync(() => {
             const fixtureCustomizedContent = TestBed.createComponent(MultiSelectWithCustomizedTagContent);
             const componentInstance = fixtureCustomizedContent.componentInstance;
