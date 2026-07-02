@@ -138,6 +138,7 @@
         }
 
         &.kbq-radio-label-before {
+            padding-left: 0;
             padding-right: kbq-sum-series-css-variables(
                 [radio-size-big-outer-size,
                 radio-size-big-horizontal-content-padding,
