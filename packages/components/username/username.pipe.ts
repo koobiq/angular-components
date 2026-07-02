@@ -6,6 +6,7 @@ import {
     KbqMappingMissingError
 } from './constants';
 import { KbqFormatKeyToProfileMapping, KbqFormatKeyToProfileMappingExtended, KbqUsernameFormatKey } from './types';
+import { KbqUserInfo } from './username';
 
 @Injectable({ providedIn: 'root' })
 @Pipe({
@@ -94,4 +95,32 @@ export class KbqUsernameCustomPipe<T = unknown> implements PipeTransform {
 
         return result.trim();
     }
+}
+
+export interface KbqUsernameTextOptions {
+    /** Formats the login segment. Defaults to identity. */
+    formatLogin?: (login: string) => string;
+    /**
+     * Formats the site segment.
+     * Defaults to wrapping in parentheses, matching kbq-username display.
+     */
+    formatSite?: (site: string) => string;
+}
+
+/**
+ * Builds a full username string from a pre-formatted name plus optional login and site,
+ * mirroring the text rendered by `kbq-username`.
+ *
+ * Provide custom `formatLogin` / `formatSite` to tailor the output.
+ */
+export function kbqBuildUsernameText(
+    data: { name: string } & Partial<Pick<KbqUserInfo, 'login' | 'site'>>,
+    options?: KbqUsernameTextOptions
+): string {
+    const formatLogin = options?.formatLogin ?? ((login) => login);
+    const formatSite = options?.formatSite ?? ((site) => `(${site})`);
+
+    return [data.name, data.login && formatLogin(data.login), data.site && formatSite(data.site)]
+        .filter(Boolean)
+        .join(' ');
 }

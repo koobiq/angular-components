@@ -9,7 +9,7 @@ import {
     KbqUsernameStyle
 } from './types';
 import { KbqUsername, KbqUsernameCustomView } from './username';
-import { KbqUsernameCustomPipe, KbqUsernamePipe } from './username.pipe';
+import { kbqBuildUsernameText, KbqUsernameCustomPipe, KbqUsernamePipe } from './username.pipe';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
@@ -117,6 +117,38 @@ describe(KbqUsernamePipe.name, () => {
         const result = pipe.transform(mockProfile, `lf.m.${irrelevantLetter}`, mockMapping);
 
         expect(result.includes(irrelevantLetter)).toBeTruthy();
+    });
+});
+
+describe('kbqBuildUsernameText', () => {
+    it('should return name only when login and site are absent', () => {
+        expect(kbqBuildUsernameText({ name: 'Root M. A.' })).toMatchSnapshot();
+    });
+
+    it('should append login after name', () => {
+        expect(kbqBuildUsernameText({ name: 'Root M. A.', login: 'mroot' })).toMatchSnapshot();
+    });
+
+    it('should wrap site in parentheses by default', () => {
+        expect(kbqBuildUsernameText({ name: 'Root M. A.', login: 'mroot', site: 'corp' })).toMatchSnapshot();
+    });
+
+    it('should include site without login', () => {
+        expect(kbqBuildUsernameText({ name: 'Root M. A.', site: 'corp' })).toMatchSnapshot();
+    });
+
+    it('should use custom formatSite', () => {
+        expect(kbqBuildUsernameText({ name: 'Root M. A.', site: 'corp' }, { formatSite: (s) => s })).toMatchSnapshot();
+    });
+
+    it('should use custom formatLogin', () => {
+        expect(
+            kbqBuildUsernameText({ name: 'Root M. A.', login: 'mroot' }, { formatLogin: (s) => `[@${s}]` })
+        ).toMatchSnapshot();
+    });
+
+    it('should skip empty name and join remaining parts', () => {
+        expect(kbqBuildUsernameText({ name: '', login: 'mroot', site: 'corp' })).toMatchSnapshot();
     });
 });
 
