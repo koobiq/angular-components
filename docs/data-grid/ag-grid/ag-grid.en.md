@@ -72,28 +72,51 @@ Directives save and restore grid state across page reloads.
 
 `LocalStorageStore` is used by default. Switch to `QueryParamsStore` if needed.
 
-| Directive                      | Saves                                     |
-| ------------------------------ | ----------------------------------------- |
-| `kbqAgGridColumnState`         | Sort, column order, visibility, and width |
-| `kbqAgGridFilterState`         | Column filter models                      |
-| `kbqAgGridQuickFilterState`    | Quick filter value                        |
-| `kbqAgGridExternalFilterState` | External filter value                     |
-
 #### Columns
+
+The `kbqAgGridColumnState` directive saves sort order, column order, visibility, and width. Add it with a unique key and connect the store provider via `kbqAgGridColumnStateStoreProvider`.
 
 <!-- example(ag-grid-column-state) -->
 
 #### Filters
 
+The `kbqAgGridFilterState` directive saves column filter models. Add it with a unique key and connect the store provider via `kbqAgGridFilterStateStoreProvider`.
+
 <!-- example(ag-grid-filter-state) -->
 
 #### Quick filter
+
+The `kbqAgGridQuickFilterState` directive saves the quick filter value. Add it with a unique key, connect the store provider via `kbqAgGridQuickFilterStateStoreProvider`, and bind the input value via `[(kbqAgGridQuickFilterStateValue)]`.
 
 <!-- example(ag-grid-quick-filter-state) -->
 
 #### External filter
 
+The `kbqAgGridExternalFilterState` directive saves the external filter value. Add it with a unique key, connect the store provider via `kbqAgGridExternalFilterStateStoreProvider`, bind the value via `[(kbqAgGridExternalFilterStateValue)]`, and pass the row check function via `kbqAgGridExternalFilterStatePass`.
+
 <!-- example(ag-grid-external-filter-state) -->
+
+### Loading overlay
+
+The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when the value is `true`, a skeleton overlay is shown on top of the rows. The number of skeleton rows and columns is configured via `kbqAgGridLoadingOverlayConfigProvider`.
+
+<!-- example(ag-grid-loading-overlay) -->
+
+### Skeleton cell renderer
+
+`KbqAgGridSkeletonCellRenderer` is used together with the infinite row model (`rowModelType="infinite"`). While a data block is not yet loaded (`params.data === undefined`), cells display skeleton placeholders.
+
+<!-- example(ag-grid-skeleton-cell-renderer) -->
+
+### Infinite selection
+
+The `kbqAgGridInfiniteSelection` directive implements inverse selection for the infinite row model: the state is stored as `KbqAgGridInfiniteSelectionState` — equivalent to `WHERE id NOT IN (excludedIds)`. This is convenient for passing to the backend without loading all rows.
+
+Instead of `datasource`, use `kbqAgGridInfiniteSelectionDatasource` — the directive wraps the data source to automatically select rows as new blocks load. Also make sure to specify `getRowId` for stable row identification.
+
+<span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span> selects all rows; pressing it again when all rows are already selected does nothing.
+
+<!-- example(ag-grid-infinite-selection) -->
 
 ### Custom keyboard shortcuts
 
@@ -106,6 +129,7 @@ You can add custom keyboard shortcuts by adding the appropriate directives to yo
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span>  | Select a row           | `kbqAgGridSelectRowsByCtrlClick`  |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>      | Copy selected rows     | `kbqAgGridCopyByCtrlC`            |
 | <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">click</span> | Select a range of rows | `kbqAgGridSelectRowsByShiftClick` |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>      | Select all rows        | `kbqAgGridInfiniteSelection`      |
 
 More information about keyboard shortcuts can be found in the [ag-grid-angular documentation](https://www.ag-grid.com/angular-data-grid/keyboard-navigation/).
 

@@ -72,30 +72,51 @@ import { AgGridModule } from 'ag-grid-angular';
 
 По умолчанию используется `LocalStorageStore`. При необходимости можно переключиться на `QueryParamsStore`.
 
-| Директива                      | Что сохраняет                           |
-| ------------------------------ | --------------------------------------- |
-| `kbqAgGridColumnState`         | Сортировку, порядок, видимость и ширину |
-| `kbqAgGridFilterState`         | Модели фильтров колонок                 |
-| `kbqAgGridQuickFilterState`    | Значение быстрого фильтра               |
-| `kbqAgGridExternalFilterState` | Значение внешнего фильтра               |
-
-Ниже примеры для каждого типа состояния.
-
 #### Колонки
+
+Директива `kbqAgGridColumnState` сохраняет сортировку, порядок, видимость и ширину колонок. Добавьте её с уникальным ключом и подключите провайдер хранилища через `kbqAgGridColumnStateStoreProvider`.
 
 <!-- example(ag-grid-column-state) -->
 
 #### Фильтры
 
+Директива `kbqAgGridFilterState` сохраняет модели фильтров колонок. Добавьте её с уникальным ключом и подключите провайдер хранилища через `kbqAgGridFilterStateStoreProvider`.
+
 <!-- example(ag-grid-filter-state) -->
 
 #### Быстрый фильтр
+
+Директива `kbqAgGridQuickFilterState` сохраняет значение быстрого фильтра. Добавьте её с уникальным ключом, подключите провайдер хранилища через `kbqAgGridQuickFilterStateStoreProvider` и привяжите значение поля ввода через `[(kbqAgGridQuickFilterStateValue)]`.
 
 <!-- example(ag-grid-quick-filter-state) -->
 
 #### Внешний фильтр
 
+Директива `kbqAgGridExternalFilterState` сохраняет значение внешнего фильтра. Добавьте её с уникальным ключом, подключите провайдер хранилища через `kbqAgGridExternalFilterStateStoreProvider`, привяжите значение через `[(kbqAgGridExternalFilterStateValue)]` и передайте функцию проверки строк через `kbqAgGridExternalFilterStatePass`.
+
 <!-- example(ag-grid-external-filter-state) -->
+
+### Оверлей загрузки
+
+Директива `kbqAgGridLoadingOverlay` управляет состоянием загрузки таблицы: когда значение `true`, поверх строк отображается скелетон-оверлей. Число строк и колонок скелетона задаётся через `kbqAgGridLoadingOverlayConfigProvider`.
+
+<!-- example(ag-grid-loading-overlay) -->
+
+### Скелетон в ячейках
+
+`KbqAgGridSkeletonCellRenderer` используется совместно с моделью бесконечной прокрутки (`rowModelType="infinite"`). Пока блок данных не загружен (`params.data === undefined`), ячейки отображают скелетон-заглушки.
+
+<!-- example(ag-grid-skeleton-cell-renderer) -->
+
+### Бесконечная выборка
+
+Директива `kbqAgGridInfiniteSelection` реализует инвертированную выборку для модели бесконечной прокрутки: состояние хранится как `KbqAgGridInfiniteSelectionState` — эквивалент `WHERE id NOT IN (excludedIds)`. Это удобно для передачи на backend без загрузки всех строк.
+
+Вместо `datasource` используйте `kbqAgGridInfiniteSelectionDatasource` — директива оборачивает источник данных, чтобы автоматически выделять строки при загрузке новых блоков. Также обязательно укажите `getRowId` для стабильной идентификации строк.
+
+Комбинация клавиш <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span> выделяет все строки, повторное нажатие, когда все строки уже выделены, не снимает выделение.
+
+<!-- example(ag-grid-infinite-selection) -->
 
 ### Пользовательские сочетания клавиш
 
@@ -108,6 +129,7 @@ import { AgGridModule } from 'ag-grid-angular';
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span>  | Выделить строку              | `kbqAgGridSelectRowsByCtrlClick`  |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>      | Копировать выделенные строки | `kbqAgGridCopyByCtrlC`            |
 | <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">click</span> | Выделить диапазон строк      | `kbqAgGridSelectRowsByShiftClick` |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>      | Выделить все строки          | `kbqAgGridInfiniteSelection`      |
 
 Больше информации о сочетаниях клавиш можно найти в [документации ag-grid-angular](https://www.ag-grid.com/angular-data-grid/keyboard-navigation/).
 

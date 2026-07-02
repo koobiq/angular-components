@@ -142,8 +142,6 @@ export class AgGridOverviewExample {
     }));
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
-        api.setFocusedCell(0, 'column0');
-
         api.forEachNode((node) => {
             if (node.rowIndex === 3 || node.rowIndex === 4) {
                 node.setSelected(true);
