@@ -793,7 +793,12 @@ class BasicSelectOnPushPreselected {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tree-select placeholder="Food" [multiple]="true" [formControl]="control">
+            <kbq-tree-select
+                placeholder="Food"
+                [multiple]="true"
+                [selectAllToggle]="selectAllToggle"
+                [formControl]="control"
+            >
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
@@ -810,6 +815,7 @@ class BasicSelectOnPushPreselected {
 })
 class MultiSelect {
     control = new UntypedFormControl();
+    selectAllToggle: boolean = false;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -4317,7 +4323,8 @@ describe('KbqTreeSelect', () => {
         it('should deselect all options with CTRL + A if all options are selected and selectAllToggle is enabled', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
 
-            fixture.componentInstance.select().selectAllToggle = true;
+            fixture.componentInstance.selectAllToggle = true;
+            fixture.detectChanges();
             fixture.componentInstance.select().open();
             fixture.detectChanges();
 

@@ -453,7 +453,7 @@ export class KbqTreeSelect
     private _autoSelect: boolean = true;
 
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
-    @Input({ transform: booleanAttribute }) selectAllToggle: boolean = false;
+    readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
     get value(): any {
         return this.tree()!.getSelectedValues();
@@ -562,7 +562,7 @@ export class KbqTreeSelect
 
         const tree = select.tree()!;
 
-        tree.selectAllOptions(select.selectAllToggle);
+        tree.selectAllOptions(select.selectAllToggle());
 
         const options = tree.renderedOptions.filter((option) => !option.disabled && option.selectable());
         const selected = options.some((option) => tree.selectionModel.isSelected(option.data));

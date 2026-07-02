@@ -612,7 +612,7 @@ export class KbqSelect
     readonly virtualOptionFactory = input<(value: any) => KbqVirtualOption>();
 
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
-    @Input({ transform: booleanAttribute }) selectAllToggle: boolean = false;
+    readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
     /**
      * Function for handling the Ctrl + A (select all) keyboard combination.
@@ -1895,7 +1895,7 @@ export class KbqSelect
                 isSelected: (option) => option.selected,
                 setSelected: (option, selected) => (selected ? option.select() : option.deselect())
             },
-            { allowDeselect: select.selectAllToggle }
+            { allowDeselect: select.selectAllToggle() }
         );
 
         const selected = changed.length > 0 && changed[0].selected;

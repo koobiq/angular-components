@@ -685,7 +685,13 @@ class BasicSelectOnPushPreselected {
     ],
     template: `
         <kbq-form-field>
-            <kbq-select multiple placeholder="Food" [formControl]="control" [sortComparator]="sortComparator">
+            <kbq-select
+                multiple
+                placeholder="Food"
+                [formControl]="control"
+                [sortComparator]="sortComparator"
+                [selectAllToggle]="selectAllToggle"
+            >
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -708,6 +714,7 @@ class BasicSelectOnPushPreselected {
     `
 })
 class MultiSelect {
+    selectAllToggle: boolean = false;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
@@ -5396,7 +5403,8 @@ describe('KbqSelect', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
             const options = fixture.componentInstance.options();
 
-            fixture.componentInstance.select().selectAllToggle = true;
+            fixture.componentInstance.selectAllToggle = true;
+            fixture.detectChanges();
 
             options.forEach((option) => option.select());
             fixture.detectChanges();

@@ -493,7 +493,8 @@ describe('KbqListSelection without forms', () => {
             const list: KbqListSelection = selectionList.componentInstance;
             const enabledOptions = listOptions.filter(({ componentInstance: o }) => !o.disabled);
 
-            list.selectAllToggle = true;
+            fixture.componentInstance.selectAllToggle = true;
+            fixture.detectChanges();
 
             const pressCtrlA = () => {
                 const event = createKeyboardEvent('keydown', A);
@@ -1222,6 +1223,7 @@ class SelectionListWithCustomComparator {
             multiple="keyboard"
             [autoSelect]="false"
             [noUnselectLast]="false"
+            [selectAllToggle]="selectAllToggle"
             (selectionChange)="onValueChange($event)"
         >
             <kbq-list-option checkboxPosition="before" disabled="true" [value]="'inbox'">
@@ -1237,6 +1239,7 @@ class SelectionListWithCustomComparator {
 })
 class SelectionListWithListOptions {
     showLastOption: boolean = true;
+    selectAllToggle: boolean = false;
 
     onValueChange(_change: KbqListSelectionChange) {}
 }

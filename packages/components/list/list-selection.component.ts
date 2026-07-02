@@ -167,7 +167,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     private _noUnselectLast: boolean = true;
 
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
-    @Input({ transform: booleanAttribute }) selectAllToggle: boolean = false;
+    readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
     multipleMode: MultipleMode | null;
 
@@ -666,7 +666,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
                 isSelected: (option) => option.selected,
                 setSelected: (option, selected) => option.setSelected(selected)
             },
-            { allowDeselect: list.selectAllToggle }
+            { allowDeselect: list.selectAllToggle() }
         );
 
         list.reportValueChange();

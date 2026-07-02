@@ -15,6 +15,7 @@ import {
     HostAttributeToken,
     inject,
     Input,
+    input,
     IterableDiffer,
     OnDestroy,
     Output,
@@ -216,7 +217,7 @@ export class KbqTreeSelection
     private _noUnselectLast: boolean = true;
 
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
-    @Input({ transform: booleanAttribute }) selectAllToggle: boolean = false;
+    readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -571,7 +572,7 @@ export class KbqTreeSelection
         tree.selectAllOptions();
     }
 
-    selectAllOptions(allowDeselect: boolean = this.selectAllToggle): void {
+    selectAllOptions(allowDeselect: boolean = this.selectAllToggle()): void {
         const nonSelectableDataNodes = this.renderedOptions
             .filter((option) => option.disabled || !option.selectable())
             .map((option) => option.data);

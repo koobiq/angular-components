@@ -621,7 +621,8 @@ describe('KbqTreeSelection', () => {
 
             it('should exclude non-selectable options on CTRL + A', fakeAsync(() => {
                 // selectAllToggle enables deselect on the second press asserted below
-                component.tree.selectAllToggle = true;
+                component.selectAllToggle = true;
+                fixture.detectChanges();
 
                 const selectAllKeyEvent = createKeyboardEvent('keydown', A);
 
@@ -1100,7 +1101,8 @@ describe('KbqTreeSelection', () => {
             }));
 
             it('should deselect all visible options and values', fakeAsync(() => {
-                component.tree.selectAllToggle = true;
+                component.selectAllToggle = true;
+                fixture.detectChanges();
 
                 component.tree.onKeyDown(selectAllKeyEvent);
                 fixture.detectChanges();
@@ -1359,6 +1361,7 @@ class TreeSelectionFocusStates extends TreeParams {}
     template: `
         <kbq-tree-selection
             multiple="keyboard"
+            [selectAllToggle]="selectAllToggle"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             [(ngModel)]="modelValue"
@@ -1388,6 +1391,7 @@ class TreeSelectionFocusStates extends TreeParams {}
 class KbqTreeAppMultiple extends TreeParams {
     modelValue: string[] = [];
     unselectableNodes: string[] = [];
+    selectAllToggle: boolean = false;
     @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
 
     savedSelectionChangeEvent?: KbqTreeSelectionChange<KbqTreeOption>;
