@@ -11,7 +11,9 @@
 
     &:not(:has(> :not(.kbq-contrast-fade.kbq-button_filled))),
     &:not(:has(> :not(.kbq-contrast.kbq-button_filled))) {
-        // @TODO tech debt (#DS-4847)
-        gap: var(--kbq-size-3xs);
+        :is(.kbq-button, .kbq-button-icon),
+        :is(.kbq-button, .kbq-button-icon):hover {
+            background-clip: padding-box;
+        }
     }
 }
