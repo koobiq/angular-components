@@ -199,6 +199,208 @@ describe('KbqTitleDirective', () => {
 
             expect(directive.isOverflown).toBe(true);
         });
+
+        it('should NOT be overflown for a sub-pixel clip (text-overflow: clip)', () => {
+            const { debugElement } = createComponent(SimpleTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            // JSDOM scrollWidth === 0 → enters the special-case branch; hasOnlyText === true → wrapper-span path.
+            // With `clip` a <1px overflow is invisible, so it must not be reported as truncation.
+            const cssSpy = jest
+                .spyOn(window, 'getComputedStyle')
+                .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
+            const rectSpy = jest
+                .spyOn(Element.prototype, 'getBoundingClientRect')
+                .mockReturnValueOnce({ width: 124, height: 20, top: 0, left: 0, right: 124, bottom: 20 } as DOMRect)
+                .mockReturnValueOnce({
+                    width: 124.4,
+                    height: 20,
+                    top: 0,
+                    left: 0,
+                    right: 124.4,
+                    bottom: 20
+                } as DOMRect);
+
+            expect(directive.isOverflown).toBe(false);
+
+            rectSpy.mockRestore();
+            cssSpy.mockRestore();
+        });
+
+        it('should be overflown for a sub-pixel overflow when text-overflow is ellipsis', () => {
+            const { debugElement } = createComponent(SimpleTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            // With `ellipsis` even a sub-pixel overflow drops the trailing glyph for `…`, so the text IS truncated.
+            const cssSpy = jest
+                .spyOn(window, 'getComputedStyle')
+                .mockReturnValue({ textOverflow: 'ellipsis' } as CSSStyleDeclaration);
+            const rectSpy = jest
+                .spyOn(Element.prototype, 'getBoundingClientRect')
+                .mockReturnValueOnce({ width: 124, height: 20, top: 0, left: 0, right: 124, bottom: 20 } as DOMRect)
+                .mockReturnValueOnce({
+                    width: 124.4,
+                    height: 20,
+                    top: 0,
+                    left: 0,
+                    right: 124.4,
+                    bottom: 20
+                } as DOMRect);
+
+            expect(directive.isOverflown).toBe(true);
+
+            rectSpy.mockRestore();
+            cssSpy.mockRestore();
+        });
+
+        it('should be overflown for a >= 1px clip even without ellipsis', () => {
+            const { debugElement } = createComponent(SimpleTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const cssSpy = jest
+                .spyOn(window, 'getComputedStyle')
+                .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
+            const rectSpy = jest
+                .spyOn(Element.prototype, 'getBoundingClientRect')
+                .mockReturnValueOnce({ width: 124, height: 20, top: 0, left: 0, right: 124, bottom: 20 } as DOMRect)
+                .mockReturnValueOnce({ width: 130, height: 20, top: 0, left: 0, right: 130, bottom: 20 } as DOMRect);
+
+            expect(directive.isOverflown).toBe(true);
+
+            rectSpy.mockRestore();
+            cssSpy.mockRestore();
+        });
+
+        it('should NOT be overflown for a sub-pixel clip (element-child, text-overflow: clip)', () => {
+            const { debugElement } = createComponent(WithRefsTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const containerEl = debugElement.query(By.css('.container-el')).nativeElement;
+            const textEl = debugElement.query(By.css('.text-el')).nativeElement;
+            // scrollWidth === 0 (JSDOM) → enters the branch; hasOnlyText === false → parent/child rect comparison.
+            const cssSpy = jest
+                .spyOn(window, 'getComputedStyle')
+                .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
+
+            jest.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
+                width: 100,
+                height: 20,
+                top: 0,
+                left: 0,
+                right: 100,
+                bottom: 20
+            } as DOMRect);
+            jest.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
+                width: 100.4,
+                height: 20,
+                top: 0,
+                left: 0,
+                right: 100.4,
+                bottom: 20
+            } as DOMRect);
+
+            expect(directive.isOverflown).toBe(false);
+
+            cssSpy.mockRestore();
+        });
+
+        it('should be overflown for a sub-pixel overflow when text-overflow is ellipsis (element-child)', () => {
+            const { debugElement } = createComponent(WithRefsTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const containerEl = debugElement.query(By.css('.container-el')).nativeElement;
+            const textEl = debugElement.query(By.css('.text-el')).nativeElement;
+            const cssSpy = jest
+                .spyOn(window, 'getComputedStyle')
+                .mockReturnValue({ textOverflow: 'ellipsis' } as CSSStyleDeclaration);
+
+            jest.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
+                width: 100,
+                height: 20,
+                top: 0,
+                left: 0,
+                right: 100,
+                bottom: 20
+            } as DOMRect);
+            jest.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
+                width: 100.4,
+                height: 20,
+                top: 0,
+                left: 0,
+                right: 100.4,
+                bottom: 20
+            } as DOMRect);
+
+            expect(directive.isOverflown).toBe(true);
+
+            cssSpy.mockRestore();
+        });
+
+        it('should be overflown for a sub-pixel overflow when the ellipsis is on the container, not the child (tree-option case)', () => {
+            const { debugElement } = createComponent(WithRefsTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const containerEl = debugElement.query(By.css('.container-el')).nativeElement;
+            const textEl = debugElement.query(By.css('.text-el')).nativeElement;
+            // Mirrors kbq-tree-option: `text-overflow: ellipsis` lives on the wrapping #kbqTitleContainer
+            // (the parent), while the measured #kbqTitleText child keeps the default `clip`. A sub-pixel
+            // overflow still renders a visible `…` on the container, so it MUST be reported as truncation.
+            const cssSpy = jest
+                .spyOn(window, 'getComputedStyle')
+                .mockImplementation(
+                    (element: Element) =>
+                        ({ textOverflow: element === containerEl ? 'ellipsis' : 'clip' }) as CSSStyleDeclaration
+                );
+
+            jest.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
+                width: 100,
+                height: 20,
+                top: 0,
+                left: 0,
+                right: 100,
+                bottom: 20
+            } as DOMRect);
+            jest.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
+                width: 100.4,
+                height: 20,
+                top: 0,
+                left: 0,
+                right: 100.4,
+                bottom: 20
+            } as DOMRect);
+
+            expect(directive.isOverflown).toBe(true);
+
+            cssSpy.mockRestore();
+        });
+
+        it('should be overflown for a clip whose widths straddle the rounding boundary (124 vs 124.5)', () => {
+            const { debugElement } = createComponent(WithRefsTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const containerEl = debugElement.query(By.css('.container-el')).nativeElement;
+            const textEl = debugElement.query(By.css('.text-el')).nativeElement;
+            // The other clip tests use a 0.4 fraction that rounds DOWN (124.4 -> 124 == 124 -> not overflown).
+            // Here the widths round to different integers (124 vs 125), i.e. a whole visible pixel of clip,
+            // so it MUST be reported. Pins the Math.round boundary of isWidthOverflown.
+            const cssSpy = jest
+                .spyOn(window, 'getComputedStyle')
+                .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
+
+            jest.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
+                width: 124,
+                height: 20,
+                top: 0,
+                left: 0,
+                right: 124,
+                bottom: 20
+            } as DOMRect);
+            jest.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
+                width: 124.5,
+                height: 20,
+                top: 0,
+                left: 0,
+                right: 124.5,
+                bottom: 20
+            } as DOMRect);
+
+            expect(directive.isOverflown).toBe(true);
+
+            cssSpy.mockRestore();
+        });
     });
 
     describe('handleElementEnter()', () => {
