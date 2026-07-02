@@ -25,7 +25,7 @@ import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/c
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KbqOverflowItem,
@@ -209,6 +209,7 @@ export class KbqBreadcrumbs {
     protected readonly items = contentChildren<KbqBreadcrumbItem>(forwardRef(() => KbqBreadcrumbItem));
 
     private readonly breadcrumbsResult = viewChild('breadcrumbsResult', { read: ElementRef });
+    private readonly resultDropdownTrigger = viewChild('breadcrumbsResult', { read: KbqDropdownTrigger });
     private readonly result = viewChild(KbqOverflowItemsResult);
     private readonly overflowItems = viewChildren<KbqOverflowItem>(forwardRef(() => KbqOverflowItem));
     private readonly overflowItemsDir = viewChild(KbqOverflowItems);
@@ -292,6 +293,7 @@ export class KbqBreadcrumbs {
         const hideResultIfAllVisible = () => {
             if (allVisibleItems.length === items.length) {
                 result?.hide();
+                this.resultDropdownTrigger()?.close();
             }
         };
 
