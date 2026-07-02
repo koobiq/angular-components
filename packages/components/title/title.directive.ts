@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import {
     KBQ_TITLE_TEXT_REF,
+    KBQ_WINDOW,
     kbqInjectNativeElement,
     KbqTitleTextRef,
     PopUpPlacements,
@@ -32,6 +33,9 @@ import { debounceTime } from 'rxjs/operators';
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
+
+    /** SSR-safe window reference used for `getComputedStyle` reads. */
+    private readonly window = inject(KBQ_WINDOW);
 
     private contentObserver = inject(ContentObserver);
 
@@ -56,14 +60,20 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
                 wrapper.innerText = this.child.innerText;
                 this.parent.appendChild(wrapper);
 
-                const result = this.parent.getBoundingClientRect().width < wrapper.getBoundingClientRect().width;
+                const result = this.isWidthOverflown(
+                    this.parent.getBoundingClientRect().width,
+                    wrapper.getBoundingClientRect().width
+                );
 
                 wrapper.remove();
 
                 return result;
             }
 
-            return this.parent.getBoundingClientRect().width < this.child.getBoundingClientRect().width;
+            return this.isWidthOverflown(
+                this.parent.getBoundingClientRect().width,
+                this.child.getBoundingClientRect().width
+            );
         }
 
         return this.isHorizontalOverflown || this.isVerticalOverflown;
@@ -75,6 +85,16 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
     get isVerticalOverflown(): boolean {
         return this.parent?.offsetHeight < this.child.scrollHeight;
+    }
+
+    /**
+     * Compares measured widths, treating only *visible* clipping as overflow. With `text-overflow: ellipsis`
+     * any positive difference counts (even a sub-pixel overflow shows `…`). With `text-overflow: clip` the
+     * widths are rounded to whole CSS pixels first — mirroring the integer `offsetWidth`/`scrollWidth` path —
+     * so an imperceptible sub-pixel clip is not treated as truncation.
+     * @docs-private */
+    private isWidthOverflown(parentWidth: number, childWidth: number): boolean {
+        return this.hasEllipsis ? parentWidth < childWidth : Math.round(parentWidth) < Math.round(childWidth);
     }
 
     get viewValue(): string {
@@ -93,6 +113,24 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         return (
             this.nativeElement.childNodes.length === 1 && this.nativeElement.childNodes[0].nodeType === Node.TEXT_NODE
         );
+    }
+
+    /**
+     * Whether the measured text truncates with an ellipsis on either the child text element or its
+     * wrapping container. Only then is a sub-pixel overflow actually visible (the trailing glyph is
+     * replaced by `…`); with the default `text-overflow: clip` a sub-pixel clip is imperceptible, so
+     * it must not be reported as truncation. Both elements are checked because `text-overflow` is not
+     * inherited and consumers place it differently: `KbqOption`/`KbqDropdownItem` style the measured
+     * `child`, whereas `KbqTreeOption` styles the `parent` container that wraps the child.
+     * @docs-private */
+    private get hasEllipsis(): boolean {
+        return this.elementHasEllipsis(this.child) || this.elementHasEllipsis(this.parent);
+    }
+
+    /** Whether the element's computed `text-overflow` renders an ellipsis.
+     * @docs-private */
+    private elementHasEllipsis(element: HTMLElement): boolean {
+        return this.window.getComputedStyle(element).textOverflow.includes('ellipsis');
     }
 
     readonly resizeStream = new Subject<Event>();
