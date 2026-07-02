@@ -79,6 +79,16 @@ export class E2eRadioStateAndStyle {
             { size: 'normal', labelPosition: 'after', color: ThemePalette.Error, hovered: true }
         ],
         [
+            { size: 'normal', labelPosition: 'before' },
+            { size: 'big', labelPosition: 'before' },
+            { size: 'normal', labelPosition: 'before', color: ThemePalette.Error }
+        ],
+        [
+            { size: 'normal', labelPosition: 'before', hovered: true },
+            { size: 'big', labelPosition: 'before', hovered: true },
+            { size: 'normal', labelPosition: 'before', color: ThemePalette.Error, hovered: true }
+        ],
+        [
             { size: 'normal', hint: true, labelPosition: 'after' },
             { size: 'big', hint: true, labelPosition: 'after' },
             { size: 'normal', hint: true, labelPosition: 'after', color: ThemePalette.Error }
@@ -92,6 +102,11 @@ export class E2eRadioStateAndStyle {
             { size: 'normal', hint: true, labelPosition: 'after', disabled: true },
             { size: 'big', hint: true, labelPosition: 'after', disabled: true },
             { size: 'normal', hint: true, labelPosition: 'after', color: ThemePalette.Error, disabled: true }
+        ],
+        [
+            { size: 'normal', hint: true, labelPosition: 'before', disabled: true },
+            { size: 'big', hint: true, labelPosition: 'before', disabled: true },
+            { size: 'normal', hint: true, labelPosition: 'before', color: ThemePalette.Error, disabled: true }
         ]
     ];
     protected readonly kbqComponentColors = KbqComponentColors;
