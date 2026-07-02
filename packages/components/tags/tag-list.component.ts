@@ -457,6 +457,7 @@ export class KbqTagList
         // it back to the first tag when the user tabs out.
         this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this._tabIndex = -1;
+            this.elementRef.nativeElement.tabIndex = -1;
 
             setTimeout(() => {
                 this._tabIndex = this.userTabIndex || 0;
