@@ -34,7 +34,7 @@ test.describe('KbqBreadcrumbs overflow', () => {
         await expect(dropdownItems.nth(1)).toHaveText('Item #2');
     });
 
-    test('should hide dropdown panel when breadcrumb items fits into container', async ({ page }) => {
+    test('should hide dropdown panel when breadcrumb items fit into container', async ({ page }) => {
         await page.goto('/E2eBreadcrumbsOverflowMax');
 
         const dropdownPanel = () => page.locator('.kbq-dropdown__panel');
@@ -48,7 +48,7 @@ test.describe('KbqBreadcrumbs overflow', () => {
 
         const dropdownItems = dropdownPanel().locator('[kbq-dropdown-item]');
 
-        await expect(dropdownItems).toBeVisible();
+        await expect(dropdownItems).toHaveCount(2);
 
         await breadcrumbsHost.evaluate(({ style }) => (style.width = '1000px'));
 
