@@ -64,6 +64,7 @@ export class ExampleRowActionsComponent {
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [kbqAgGridRowActions]="rowActionsComponent"
             [rowSelection]="rowSelection"
             [style.height.px]="300"

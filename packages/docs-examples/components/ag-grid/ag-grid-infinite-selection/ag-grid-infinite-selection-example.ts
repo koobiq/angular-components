@@ -45,6 +45,7 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowSelection]="rowSelection"

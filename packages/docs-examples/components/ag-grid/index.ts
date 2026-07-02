@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { AgGridColumnMenuExample } from './ag-grid-column-menu/ag-grid-column-menu-example';
 import { AgGridColumnStateExample } from './ag-grid-column-state/ag-grid-column-state-example';
 import { AgGridCopySelectedExample } from './ag-grid-copy-selected/ag-grid-copy-selected-example';
 import { AgGridExternalFilterStateExample } from './ag-grid-external-filter-state/ag-grid-external-filter-state-example';
@@ -13,6 +14,7 @@ import { AgGridSkeletonCellRendererExample } from './ag-grid-skeleton-cell-rende
 import { AgGridStatusBarExample } from './ag-grid-status-bar/ag-grid-status-bar-example';
 
 export {
+    AgGridColumnMenuExample,
     AgGridColumnStateExample,
     AgGridCopySelectedExample,
     AgGridExternalFilterStateExample,
@@ -28,6 +30,7 @@ export {
 };
 
 const EXAMPLES = [
+    AgGridColumnMenuExample,
     AgGridOverviewExample,
     AgGridRowDraggingExample,
     AgGridCopySelectedExample,

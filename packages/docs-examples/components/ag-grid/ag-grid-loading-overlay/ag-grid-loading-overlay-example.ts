@@ -23,6 +23,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [kbqAgGridLoadingOverlay]="loading()"
             [rowData]="rowData"
             [columnDefs]="columnDefs"

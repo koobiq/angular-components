@@ -96,6 +96,20 @@ import { AgGridModule } from 'ag-grid-angular';
 
 <!-- example(ag-grid-external-filter-state) -->
 
+### Меню колонок
+
+Директива `kbqAgGridColumnMenu` добавляет кнопку управления колонками в правом верхнем углу таблицы. Панель позволяет переключать видимость колонок, изменять их порядок перетаскиванием и закреплять слева или справа.
+
+По умолчанию используются русские подписи. Для смены языка подключите провайдер:
+
+```ts
+providers: [kbqAgGridColumnMenuLabelsProvider(KBQ_AG_GRID_COLUMN_MENU_LABELS_EN)];
+```
+
+Чтобы запретить скрытие конкретной колонки, добавьте `lockVisible: true` в её `ColDef`.
+
+<!-- example(ag-grid-column-menu) -->
+
 ### Оверлей загрузки
 
 Директива `kbqAgGridLoadingOverlay` управляет состоянием загрузки таблицы: когда значение `true`, поверх строк отображается скелетон-оверлей. Число строк и колонок скелетона задаётся через `kbqAgGridLoadingOverlayConfigProvider`.

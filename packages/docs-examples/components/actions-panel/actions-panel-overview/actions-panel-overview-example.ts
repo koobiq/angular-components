@@ -51,6 +51,7 @@ type ExampleTableItem = unknown;
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
             [columnDefs]="columnDefs"

@@ -23,6 +23,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridColumnState="dev-ag-grid-column-state"
+            [alwaysMultiSort]="true"
             [rowData]="rowData"
             [columnDefs]="columnDefs"
             [style.height.px]="300"

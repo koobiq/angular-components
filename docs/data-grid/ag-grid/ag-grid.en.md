@@ -96,6 +96,20 @@ The `kbqAgGridExternalFilterState` directive saves the external filter value. Ad
 
 <!-- example(ag-grid-external-filter-state) -->
 
+### Column menu
+
+The `kbqAgGridColumnMenu` directive adds a column management button in the top-right corner of the grid. The panel allows toggling column visibility, reordering columns via drag-and-drop, and pinning them to the left or right.
+
+Russian labels are used by default. To switch the language, provide a labels provider:
+
+```ts
+providers: [kbqAgGridColumnMenuLabelsProvider(KBQ_AG_GRID_COLUMN_MENU_LABELS_EN)];
+```
+
+To prevent a specific column from being hidden, set `lockVisible: true` in its `ColDef`.
+
+<!-- example(ag-grid-column-menu) -->
+
 ### Loading overlay
 
 The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when the value is `true`, a skeleton overlay is shown on top of the rows. The number of skeleton rows and columns is configured via `kbqAgGridLoadingOverlayConfigProvider`.

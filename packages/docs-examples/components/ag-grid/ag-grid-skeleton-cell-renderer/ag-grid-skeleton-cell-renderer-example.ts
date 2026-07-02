@@ -40,6 +40,7 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
             rowModelType="infinite"
+            [alwaysMultiSort]="true"
             [columnDefs]="columnDefs"
             [datasource]="datasource"
             [defaultColDef]="defaultColDef"

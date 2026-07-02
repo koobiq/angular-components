@@ -32,6 +32,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             #externalFilterState="kbqAgGridExternalFilterState"
             kbqAgGridTheme
             kbqAgGridExternalFilterState="dev-ag-grid-external-filter-state"
+            [alwaysMultiSort]="true"
             [rowData]="rowData"
             [columnDefs]="columnDefs"
             [style.height.px]="300"

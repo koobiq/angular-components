@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
+    AgGridColumnMenuExample,
     AgGridColumnStateExample,
     AgGridCopySelectedExample,
     AgGridExternalFilterStateExample,
@@ -18,6 +19,7 @@ import { DevThemeToggle } from '../theme-toggle';
 @Component({
     selector: 'dev-examples',
     imports: [
+        AgGridColumnMenuExample,
         AgGridOverviewExample,
         AgGridRowDraggingExample,
         AgGridCopySelectedExample,
@@ -32,6 +34,8 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridInfiniteSelectionExample
     ],
     template: `
+        <ag-grid-column-menu-example />
+        <hr />
         <ag-grid-loading-overlay-example />
         <hr />
         <ag-grid-skeleton-cell-renderer-example />

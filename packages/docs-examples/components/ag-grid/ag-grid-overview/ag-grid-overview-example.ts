@@ -54,6 +54,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
             [style.height.px]="300"
