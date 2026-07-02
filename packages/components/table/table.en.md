@@ -16,6 +16,6 @@ Borders are also useful in tables with complex structures — for example, when 
 
 ### Disable hover
 
-Use `[disableHover]="true"` to remove the background color change on row hover. This is useful when rows are not interactive and the hover highlight would be misleading.
+Use `disableHover` to remove the background color change on row hover. This is useful when rows are not interactive and the hover highlight would be misleading.
 
 <!-- example(table-disable-hover) -->
