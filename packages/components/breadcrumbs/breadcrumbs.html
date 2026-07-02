@@ -1,8 +1,3 @@
-<!--
-@TODO: check when updated to Angular 20.x (#DS-4034)
-resolved SSR issue with official hack https://github.com/angular/angular/issues/50543#issuecomment-1572900259
--->
-<ng-content />
 @let allItems = items();
 @if (allItems.length < minVisibleItems || wrapMode() !== 'auto') {
     @for (item of allItems; track item) {
