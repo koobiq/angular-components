@@ -676,7 +676,7 @@ export class KbqTreeSelect
 
         this.selectionModel = this.tree.selectionModel = new SelectionModel<any>(this.multiSelection);
 
-        this.selectionModel.changed.subscribe(() => {
+        this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.onChange(this.selectedValues);
 
             if (this.multiSelection) {
@@ -684,7 +684,9 @@ export class KbqTreeSelect
             }
         });
 
-        this.selectionModel.changed.pipe(delay(0)).subscribe(() => this.setOverlayPosition());
+        this.selectionModel.changed
+            .pipe(delay(0), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.setOverlayPosition());
 
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.tree.ngAfterContentInit();
@@ -1060,6 +1062,12 @@ export class KbqTreeSelect
             const itemsCounter = this.trigger.nativeElement.querySelector('.kbq-select__match-hidden-text');
             const matcherList = this.trigger.nativeElement.querySelector('.kbq-select__match-list');
 
+            if (!itemsCounter || !matcherList) {
+                this.changeDetectorRef.markForCheck();
+
+                return;
+            }
+
             const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
             const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
 
@@ -1227,7 +1235,12 @@ export class KbqTreeSelect
     private getTotalVisibleItems(): [number, number] {
         const triggerClone = this.buildTriggerClone();
 
-        this.renderer.setStyle(triggerClone.querySelector('.kbq-select__match-hidden-text'), 'display', 'block');
+        const hiddenText = triggerClone.querySelector('.kbq-select__match-hidden-text');
+
+        if (hiddenText) {
+            this.renderer.setStyle(hiddenText, 'display', 'block');
+        }
+
         this.renderer.appendChild(this.trigger.nativeElement, triggerClone);
 
         let visibleItemsCount: number = 0;
@@ -1368,9 +1381,14 @@ export class KbqTreeSelect
     private subscribeOnSearchChanges() {
         if (!this.search?.ngControl.valueChanges) return;
 
-        this.search.ngControl.valueChanges.pipe(audit(() => this.tree.unorderedOptions.changes)).subscribe((value) => {
-            this.isEmptySearchResult = !!value && this.tree.isEmpty;
-            this.changeDetectorRef.markForCheck();
-        });
+        this.search.ngControl.valueChanges
+            .pipe(
+                audit(() => this.tree.unorderedOptions.changes),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((value) => {
+                this.isEmptySearchResult = !!value && this.tree.isEmpty;
+                this.changeDetectorRef.markForCheck();
+            });
     }
 }
