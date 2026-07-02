@@ -5,6 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ContentChildren,
@@ -44,6 +45,7 @@ import {
     RIGHT_ARROW,
     SPACE,
     TAB,
+    toggleSelectAll,
     UP_ARROW
 } from '@koobiq/components/core';
 import { merge, Observable, Subscription } from 'rxjs';
@@ -213,6 +215,9 @@ export class KbqTreeSelection
 
     private _noUnselectLast: boolean = true;
 
+    /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
+    @Input({ transform: booleanAttribute }) selectAllToggle: boolean = false;
+
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -375,8 +380,7 @@ export class KbqTreeSelection
         }
 
         if (this.multiple && isSelectAll(event)) {
-            this.selectAllOptions();
-            event.preventDefault();
+            this.selectAllHandler(event, this);
 
             return;
         } else if (isCopy(event)) {
@@ -544,24 +548,59 @@ export class KbqTreeSelection
         this.selectionChange.emit(new KbqTreeSelectionChange(this, option, [option]));
     }
 
-    selectAllOptions(): void {
+    /**
+     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
+     * which toggles the selection of all non-disabled, selectable options.
+     */
+    @Input()
+    get selectAllHandler() {
+        return this._selectAllHandler;
+    }
+
+    set selectAllHandler(fn: (event: KeyboardEvent, tree: KbqTreeSelection) => void) {
+        if (typeof fn !== 'function') {
+            throw Error('`selectAllHandler` must be a function.');
+        }
+
+        this._selectAllHandler = fn;
+    }
+
+    private _selectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection): void {
+        event.preventDefault();
+
+        tree.selectAllOptions();
+    }
+
+    selectAllOptions(allowDeselect: boolean = this.selectAllToggle): void {
         const nonSelectableDataNodes = this.renderedOptions
             .filter((option) => option.disabled || !option.selectable())
             .map((option) => option.data);
 
+        // Selection is applied at the data-node level (incl. collapsed/non-rendered nodes),
+        // while the emitted events carry the selectable rendered options.
         const dataNodes = this.treeControl.dataNodes.filter(
             (node) => !this.treeControl.isDisabled(node) && !nonSelectableDataNodes.includes(node)
         );
 
         const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());
-        let changedOptions: KbqTreeOption[] = selectableOptions;
+        const shouldSelect = !allowDeselect || dataNodes.some((node) => !this.selectionModel.isSelected(node));
 
-        if (dataNodes.length === this.selectionModel.selected.length) {
-            this.selectionModel.clear();
-        } else {
-            this.selectionModel.select(...dataNodes);
-            changedOptions = selectableOptions.filter((option) => !option.selected);
-        }
+        toggleSelectAll(
+            {
+                items: dataNodes,
+                isSelectable: () => true,
+                isSelected: (node) => this.selectionModel.isSelected(node),
+                setSelected: (node, selected) =>
+                    selected ? this.selectionModel.select(node) : this.selectionModel.deselect(node)
+            },
+            { allowDeselect }
+        );
+
+        // `option.selected` is cached until change detection, so this still reflects the pre-toggle
+        // state — on select it yields the newly-selected options, matching the previous behaviour.
+        const changedOptions = shouldSelect
+            ? selectableOptions.filter((option) => !option.selected)
+            : selectableOptions;
 
         this.selectionChange.emit(new KbqTreeSelectionChange(this, changedOptions[0], changedOptions));
         this.onSelectAll.emit(new KbqTreeSelectAllEvent(this, selectableOptions));

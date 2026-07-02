@@ -620,6 +620,9 @@ describe('KbqTreeSelection', () => {
             }));
 
             it('should exclude non-selectable options on CTRL + A', fakeAsync(() => {
+                // selectAllToggle enables deselect on the second press asserted below
+                component.tree.selectAllToggle = true;
+
                 const selectAllKeyEvent = createKeyboardEvent('keydown', A);
 
                 Object.defineProperty(selectAllKeyEvent, 'ctrlKey', { get: () => true });
@@ -637,6 +640,41 @@ describe('KbqTreeSelection', () => {
                 component.tree.onKeyDown(selectAllKeyEvent);
                 fixture.detectChanges();
 
+                expect(component.modelValue.length).toBe(0);
+            }));
+
+            it('should keep all options selected on a second CTRL + A by default (selectAllToggle off)', fakeAsync(() => {
+                const selectAllKeyEvent = createKeyboardEvent('keydown', A);
+
+                Object.defineProperty(selectAllKeyEvent, 'ctrlKey', { get: () => true });
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                const selectedAfterFirst = component.modelValue.length;
+
+                expect(selectedAfterFirst).toBeGreaterThan(0);
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(component.modelValue.length).toBe(selectedAfterFirst);
+            }));
+
+            it('should invoke a custom selectAllHandler on CTRL + A instead of the default', fakeAsync(() => {
+                const customHandler = jest.fn();
+
+                component.tree.selectAllHandler = customHandler;
+
+                const selectAllKeyEvent = createKeyboardEvent('keydown', A);
+
+                Object.defineProperty(selectAllKeyEvent, 'ctrlKey', { get: () => true });
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(customHandler).toHaveBeenCalledTimes(1);
+                // default behaviour is bypassed -> nothing gets selected
                 expect(component.modelValue.length).toBe(0);
             }));
 
@@ -1062,6 +1100,8 @@ describe('KbqTreeSelection', () => {
             }));
 
             it('should deselect all visible options and values', fakeAsync(() => {
+                component.tree.selectAllToggle = true;
+
                 component.tree.onKeyDown(selectAllKeyEvent);
                 fixture.detectChanges();
 

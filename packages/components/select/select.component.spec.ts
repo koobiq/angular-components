@@ -517,6 +517,34 @@ class SelectWithSearch implements OnInit {
 }
 
 @Component({
+    selector: 'multiple-select-with-search',
+    imports: [
+        KbqSelectModule,
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select #select multiple>
+                <kbq-form-field kbqSelectSearch>
+                    <input class="search-input" kbqInput type="text" [formControl]="searchCtrl" />
+                </kbq-form-field>
+
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultipleSelectWithSearch {
+    readonly select = viewChild.required(KbqSelect);
+
+    searchCtrl: UntypedFormControl = new UntypedFormControl();
+    options: string[] = ['One', 'Two', 'Three', 'Four'];
+}
+
+@Component({
     selector: 'custom-select-accessor',
     imports: [
         KbqFormField,
@@ -3704,6 +3732,82 @@ describe('KbqSelect', () => {
         }));
     });
 
+    describe('Ctrl+A with search (multiple)', () => {
+        let fixture: ComponentFixture<MultipleSelectWithSearch>;
+        let testInstance: MultipleSelectWithSearch;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultipleSelectWithSearch]);
+            fixture = TestBed.createComponent(MultipleSelectWithSearch);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+
+            testInstance.select().open();
+            fixture.detectChanges();
+            flush();
+        }));
+
+        const getSearchInput = (): HTMLInputElement =>
+            fixture.debugElement.query(By.css('.search-input')).nativeElement;
+
+        const pressCtrlA = (target: HTMLElement) => {
+            const event = createKeyboardEvent('keydown', A);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+            dispatchEvent(target, event);
+            fixture.detectChanges();
+        };
+
+        const allOptionsSelected = (): boolean =>
+            testInstance
+                .select()
+                .options.toArray()
+                .every((o) => o.selected);
+        const anyOptionSelected = (): boolean =>
+            testInstance
+                .select()
+                .options.toArray()
+                .some((o) => o.selected);
+
+        it('should select all options when the search field is empty', () => {
+            const input = getSearchInput();
+
+            input.value = '';
+
+            pressCtrlA(input);
+
+            expect(allOptionsSelected()).toBe(true);
+        });
+
+        it('should select the search text (not options) when the text is only partially selected', () => {
+            const input = getSearchInput();
+            const onSelectAll = jest.fn();
+
+            testInstance.select().onSelectAll.subscribe(onSelectAll);
+
+            input.value = 'Th';
+            input.setSelectionRange(0, 1);
+
+            pressCtrlA(input);
+
+            expect(input.selectionStart).toBe(0);
+            expect(input.selectionEnd).toBe(input.value.length);
+            expect(anyOptionSelected()).toBe(false);
+            expect(onSelectAll).not.toHaveBeenCalled();
+        });
+
+        it('should select all options when the search text is already fully selected', () => {
+            const input = getSearchInput();
+
+            input.value = 'Th';
+            input.setSelectionRange(0, input.value.length);
+
+            pressCtrlA(input);
+
+            expect(allOptionsSelected()).toBe(true);
+        });
+    });
+
     describe('with search', () => {
         beforeEach(() => {
             configureKbqSelectTestingModule([SelectWithSearch]);
@@ -5210,6 +5314,24 @@ describe('KbqSelect', () => {
             ]);
         });
 
+        it('should select all options when pressing cmd + a on macOS (metaKey)', () => {
+            const selectElement = fixture.nativeElement.querySelector('kbq-select');
+            const options = fixture.componentInstance.options();
+
+            expect(options.every((option) => option.selected)).toBe(false);
+
+            fixture.componentInstance.select().open();
+            fixture.detectChanges();
+
+            const event = createKeyboardEvent('keydown', A, selectElement);
+
+            Object.defineProperty(event, 'metaKey', { get: () => true });
+            dispatchEvent(selectElement, event);
+            fixture.detectChanges();
+
+            expect(options.every((option) => option.selected)).toBe(true);
+        });
+
         it('should skip disabled options when using ctrl + a', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
             const options = fixture.componentInstance.options();
@@ -5270,9 +5392,11 @@ describe('KbqSelect', () => {
             ]);
         });
 
-        it('should deselect all options with ctrl + a if all options are selected', () => {
+        it('should deselect all options with ctrl + a if all options are selected and selectAllToggle is enabled', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
             const options = fixture.componentInstance.options();
+
+            fixture.componentInstance.select().selectAllToggle = true;
 
             options.forEach((option) => option.select());
             fixture.detectChanges();
@@ -5300,6 +5424,27 @@ describe('KbqSelect', () => {
 
             expect(options.some((option) => option.selected)).toBe(false);
             expect(testInstance.control.value).toEqual([]);
+        });
+
+        it('should keep all options selected with ctrl + a by default (selectAllToggle off)', () => {
+            const selectElement = fixture.nativeElement.querySelector('kbq-select');
+            const options = fixture.componentInstance.options();
+
+            options.forEach((option) => option.select());
+            fixture.detectChanges();
+
+            expect(options.every((option) => option.selected)).toBe(true);
+
+            fixture.componentInstance.select().open();
+            fixture.detectChanges();
+
+            const event = createKeyboardEvent('keydown', A, selectElement);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+            dispatchEvent(selectElement, event);
+            fixture.detectChanges();
+
+            expect(options.every((option) => option.selected)).toBe(true);
         });
 
         it('should allow providing custom tag content', fakeAsync(() => {

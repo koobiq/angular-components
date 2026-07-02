@@ -489,6 +489,92 @@ describe('KbqListSelection without forms', () => {
             expect(event.options.every((o) => !o.disabled)).toBe(true);
         });
 
+        it('should deselect all options on a second Ctrl+A when selectAllToggle is enabled', () => {
+            const list: KbqListSelection = selectionList.componentInstance;
+            const enabledOptions = listOptions.filter(({ componentInstance: o }) => !o.disabled);
+
+            list.selectAllToggle = true;
+
+            const pressCtrlA = () => {
+                const event = createKeyboardEvent('keydown', A);
+
+                Object.defineProperty(event, 'ctrlKey', { get: () => true });
+                list.onKeyDown(event);
+                fixture.detectChanges();
+            };
+
+            pressCtrlA();
+            expect(enabledOptions.every(({ componentInstance: o }) => o.selected)).toBe(true);
+
+            pressCtrlA();
+            expect(enabledOptions.every(({ componentInstance: o }) => !o.selected)).toBe(true);
+        });
+
+        it('should keep all options selected on a second Ctrl+A by default (selectAllToggle off)', () => {
+            const list: KbqListSelection = selectionList.componentInstance;
+            const enabledOptions = listOptions.filter(({ componentInstance: o }) => !o.disabled);
+
+            const pressCtrlA = () => {
+                const event = createKeyboardEvent('keydown', A);
+
+                Object.defineProperty(event, 'ctrlKey', { get: () => true });
+                list.onKeyDown(event);
+                fixture.detectChanges();
+            };
+
+            pressCtrlA();
+            pressCtrlA();
+
+            expect(enabledOptions.every(({ componentInstance: o }) => o.selected)).toBe(true);
+        });
+
+        it('should update the form-control value when Ctrl+A is pressed', () => {
+            const list: KbqListSelection = selectionList.componentInstance;
+            const onChangeSpy = jest.fn();
+
+            list.registerOnChange(onChangeSpy);
+
+            const selectAllEvent = createKeyboardEvent('keydown', A);
+
+            Object.defineProperty(selectAllEvent, 'ctrlKey', { get: () => true });
+
+            list.onKeyDown(selectAllEvent);
+            fixture.detectChanges();
+
+            expect(onChangeSpy).toHaveBeenCalled();
+
+            const enabledCount = listOptions.filter(({ componentInstance: o }) => !o.disabled).length;
+            const [reportedValue] = onChangeSpy.mock.calls[onChangeSpy.mock.calls.length - 1];
+
+            expect(reportedValue.length).toBe(enabledCount);
+        });
+
+        it('should invoke a custom selectAllHandler on Ctrl+A instead of the default', () => {
+            const list: KbqListSelection = selectionList.componentInstance;
+            const customHandler = jest.fn();
+
+            list.selectAllHandler = customHandler;
+
+            const selectAllEvent = createKeyboardEvent('keydown', A);
+
+            Object.defineProperty(selectAllEvent, 'ctrlKey', { get: () => true });
+
+            list.onKeyDown(selectAllEvent);
+            fixture.detectChanges();
+
+            expect(customHandler).toHaveBeenCalledTimes(1);
+            // default behaviour is bypassed -> nothing gets selected
+            expect(listOptions.every(({ componentInstance: o }) => !o.selected)).toBe(true);
+        });
+
+        it('should throw when selectAllHandler is set to a non-function', () => {
+            const list: KbqListSelection = selectionList.componentInstance;
+
+            expect(() => {
+                (list as unknown as { selectAllHandler: unknown }).selectAllHandler = 'not a function';
+            }).toThrow('`selectAllHandler` must be a function.');
+        });
+
         it('should navigate to next page when PAGE_DOWN is pressed', () => {
             const manager = selectionList.componentInstance.keyManager;
 

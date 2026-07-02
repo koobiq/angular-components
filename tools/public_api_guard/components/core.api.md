@@ -3244,6 +3244,25 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 }
 
 // @public
+export interface KbqSelectAllAdapter<T> {
+    isSelectable: (item: T) => boolean;
+    isSelected: (item: T) => boolean;
+    items: readonly T[];
+    setSelected: (item: T, selected: boolean) => void;
+}
+
+// @public
+export class KbqSelectAllEvent<T> {
+    constructor(
+    source: unknown,
+    options: T[],
+    selected: boolean);
+    options: T[];
+    selected: boolean;
+    source: unknown;
+}
+
+// @public
 export const kbqSelectAnimations: {
     readonly transformPanel: AnimationTriggerMetadata;
     readonly fadeInContent: AnimationTriggerMetadata;
@@ -3406,6 +3425,11 @@ export interface KbqTitleTextRef {
     parentTextElement?: ElementRef;
     // (undocumented)
     textElement?: ElementRef;
+}
+
+// @public
+export interface KbqToggleSelectAllOptions {
+    allowDeselect?: boolean;
 }
 
 // @public (undocumented)
@@ -4438,6 +4462,9 @@ export const SEVEN = 55;
 export const SHIFT = 16;
 
 // @public
+export function shouldSelectSearchText(input: HTMLInputElement | null | undefined): boolean;
+
+// @public
 export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {
     // (undocumented)
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
@@ -4757,6 +4784,9 @@ export const tkTMLocaleData: {
         repeat: string;
     };
 };
+
+// @public
+export function toggleSelectAll<T>(adapter: KbqSelectAllAdapter<T>, options?: KbqToggleSelectAllOptions): T[];
 
 // @public (undocumented)
 export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
