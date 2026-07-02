@@ -139,7 +139,7 @@ import { KbqTableModule } from '@koobiq/components/table';
 
         <!-- disable hover -->
         <div>
-            <table kbq-table highlightHover>
+            <table kbq-table disableHover>
                 <thead>
                     <tr>
                         @for (th of [0, 1, 2, 3]; track $index) {
