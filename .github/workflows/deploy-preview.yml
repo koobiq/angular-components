@@ -20,7 +20,7 @@ jobs:
       - uses: ./.github/workflows/actions/setup-node
       - uses: ./.github/workflows/actions/build-packages
       - uses: ./.github/workflows/actions/build-docs
-      - if: ${{ contains(fromJSON('["OWNER", "MEMBER"]'), github.event.pull_request.author_association) }}
+      - if: ${{ github.event.pull_request.author_association == 'OWNER' || github.event.pull_request.author_association == 'MEMBER' }}
         uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0.11.0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
