@@ -1414,6 +1414,41 @@ describe(KbqTagList.name, () => {
         );
     });
 
+    it('should synchronously set native tabIndex to -1 on tabOut to prevent focus-back loop', fakeAsync(() => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
+        const tagListEl = getTagListElement(debugElement);
+
+        expect(tagListEl.tabIndex).toBe(0);
+
+        componentInstance.tagList().keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+
+        // Native DOM must be -1 immediately — before any CD cycle — so the browser does not see
+        // the list host as a tab stop when processing the Tab key event. Without this, sync writes
+        // the host holds `tabIndex=0`, and the browser re-focuses it, triggering
+        // (focus) → setFirstItemActive() loop (reproducible with provideZoneChangeDetection({ eventCoalescing: true })).
+        expect(tagListEl.tabIndex).toBe(-1);
+
+        tick();
+    }));
+
+    it('should restore tabIndex to userTabIndex after tabOut', fakeAsync(() => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { componentInstance } = fixture;
+        const tagList = componentInstance.tagList();
+
+        tagList.tabIndex = 3;
+        fixture.detectChanges();
+
+        tagList.keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+
+        expect(tagList.tabIndex).toBe(-1);
+
+        tick();
+
+        expect(tagList.tabIndex).toBe(3);
+    }));
+
     it('should be draggable when draggable is enabled', () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
