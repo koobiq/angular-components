@@ -176,7 +176,7 @@ export class E2eButtonStateAndStyle {
             }
             <tr>
                 <td>
-                    <div class="layout-gap-3xs" kbq-button-group [kbqStyle]="style" [color]="color">
+                    <div kbq-button-group [kbqStyle]="style" [color]="color">
                         <button kbq-button>
                             <i kbq-icon="kbq-diamond_16"></i>
                             {{ data[0] }}
