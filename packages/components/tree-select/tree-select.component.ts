@@ -318,7 +318,7 @@ export class KbqTreeSelect
      * Event emitted when all options are selected or deselected via the Ctrl/Cmd + A shortcut.
      * Not emitted when a custom `selectAllHandler` is supplied — the handler owns the behaviour then.
      */
-    readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption>>();
+    readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect>>();
 
     /**
      * Event that emits whenever the raw value of the select changes. This is here primarily

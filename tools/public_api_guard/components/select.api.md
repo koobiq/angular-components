@@ -177,7 +177,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     onContainerClick(): void;
     onFocus(): void;
     onRemoveMatcherItem(option: KbqOptionBase, $event: any): void;
-    readonly onSelectAll: _angular_core.OutputEmitterRef<KbqSelectAllEvent<KbqOption>>;
+    readonly onSelectAll: _angular_core.OutputEmitterRef<KbqSelectAllEvent<KbqOption, KbqSelect>>;
     onTouched: () => void;
     open(): void;
     readonly openedChange: EventEmitter<boolean>;

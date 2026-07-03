@@ -48,14 +48,14 @@ export function toggleSelectAll<T>(adapter: KbqSelectAllAdapter<T>, options?: Kb
 }
 
 /** Event emitted by the `onSelectAll` outputs when the select-all toggle runs. */
-export class KbqSelectAllEvent<T> {
+export class KbqSelectAllEvent<T, S = unknown> {
     constructor(
         /** Component that emitted the event. */
-        public source: unknown,
+        public readonly source: S,
         /** The selectable options affected by the toggle. */
-        public options: T[],
+        public readonly options: T[],
         /** `true` when all options were selected, `false` when all were deselected. */
-        public selected: boolean
+        public readonly selected: boolean
     ) {}
 }
 

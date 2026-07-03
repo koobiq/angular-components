@@ -3252,14 +3252,14 @@ export interface KbqSelectAllAdapter<T> {
 }
 
 // @public
-export class KbqSelectAllEvent<T> {
+export class KbqSelectAllEvent<T, S = unknown> {
     constructor(
-    source: unknown,
+    source: S,
     options: T[],
     selected: boolean);
-    options: T[];
-    selected: boolean;
-    source: unknown;
+    readonly options: T[];
+    readonly selected: boolean;
+    readonly source: S;
 }
 
 // @public

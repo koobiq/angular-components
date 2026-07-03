@@ -154,7 +154,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     onFocus(): void;
     onRemoveSelectedOption(selectedOption: any, $event: any): void;
-    readonly onSelectAll: _angular_core.OutputEmitterRef<KbqSelectAllEvent<KbqTreeOption>>;
+    readonly onSelectAll: _angular_core.OutputEmitterRef<KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect>>;
     onTouched: () => void;
     // (undocumented)
     open(): void;
