@@ -14,28 +14,23 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     template: `
-        <div class="kbq-button-toggle-group_stretched layout-margin-bottom-l">
-            <kbq-button-toggle-group class="kbq-button-toggle-group_stretched" [(ngModel)]="model">
-                @for (toggle of group; track toggle) {
-                    <kbq-button-toggle [value]="$index">
-                        {{ toggle }}
-                    </kbq-button-toggle>
-                }
-            </kbq-button-toggle-group>
-        </div>
+        <kbq-button-toggle-group class="layout-margin-bottom-l" stretched [(ngModel)]="model">
+            @for (toggle of group; track toggle) {
+                <kbq-button-toggle [value]="$index">
+                    {{ toggle }}
+                </kbq-button-toggle>
+            }
+        </kbq-button-toggle-group>
 
-        <div>
-            <kbq-button-toggle-group class="kbq-button-toggle-group_stretched" [(ngModel)]="model">
-                @for (toggle of group; track toggle) {
-                    <kbq-button-toggle [value]="$index">
-                        <i kbq-icon="kbq-briefcase_16"></i>
-                        <span>{{ toggle }}</span>
-                    </kbq-button-toggle>
-                }
-            </kbq-button-toggle-group>
-        </div>
+        <kbq-button-toggle-group stretched [(ngModel)]="model">
+            @for (toggle of group; track toggle) {
+                <kbq-button-toggle [value]="$index">
+                    <i kbq-icon="kbq-briefcase_16"></i>
+                    <span>{{ toggle }}</span>
+                </kbq-button-toggle>
+            }
+        </kbq-button-toggle-group>
     `,
-    styleUrls: ['button-toggle-tooltip-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleTooltipOverviewExample {

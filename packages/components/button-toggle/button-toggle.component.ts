@@ -4,6 +4,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -56,7 +57,8 @@ export class KbqButtonToggleChange {
     providers: [KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR],
     host: {
         class: 'kbq-button-toggle-group',
-        '[class.kbq-button-toggle_vertical]': 'vertical'
+        '[class.kbq-button-toggle_vertical]': 'vertical',
+        '[class.kbq-button-toggle-group_stretched]': 'stretched()'
     },
     exportAs: 'kbqButtonToggleGroup'
 })
@@ -74,6 +76,9 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set vertical(value: boolean) {
         this._vertical = coerceBooleanProperty(value);
     }
+
+    /** Whether the toggle group stretches to fill its container width, with toggles sharing equal space. */
+    readonly stretched = input(false, { transform: booleanAttribute });
 
     /** Value of the toggle group. */
     // TODO: Skipped for migration because:
