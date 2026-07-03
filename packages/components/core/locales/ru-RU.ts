@@ -232,6 +232,7 @@ export const ruRULocaleData = {
         showPopUpNotifications: 'Показывать всплывающие уведомления',
         noNotifications: 'Нет уведомлений',
         failedToLoadNotifications: 'Не удалось загрузить уведомления',
-        repeat: 'Повторить'
+        repeat: 'Повторить',
+        loadingMore: 'Загрузка уведомлений'
     }
 };

@@ -28,7 +28,8 @@ let id = 0;
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-notification-item',
-        '[class]': 'style'
+        '[class]': 'style',
+        'data-testid': 'kbq-notification-item'
     },
     hostDirectives: [KbqReadStateDirective]
 })
@@ -77,6 +78,10 @@ export class KbqNotificationItemComponent {
                 takeUntilDestroyed()
             )
             .subscribe(() => {
+                if (this.data.read) {
+                    return;
+                }
+
                 this.data.read = true;
 
                 this.service.onRead.next(this.data);

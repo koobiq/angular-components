@@ -20,6 +20,15 @@
         min-height: var(--kbq-size-l);
     }
 
+    // Filled fade-contrast only: its background is a semi-transparent tint, so the
+    // navbar icon shows through. Composite the tint over an opaque bg-tertiary substrate.
+    // The outline variant is intentionally left untouched — it stays a clean transparent outline.
+    & .kbq-badge-filled.kbq-badge_fade-contrast {
+        background:
+            linear-gradient(var(--kbq-background-contrast-fade), var(--kbq-background-contrast-fade)),
+            var(--kbq-background-bg-tertiary);
+    }
+
     & .kbq-button-icon {
         position: absolute;
         padding-left: var(--kbq-size-xs);

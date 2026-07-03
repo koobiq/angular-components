@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { NotificationCenterEmptyExample } from './notification-center-empty/notification-center-empty-example';
 import { NotificationCenterErrorExample } from './notification-center-error/notification-center-error-example';
+import { NotificationCenterInfiniteScrollExample } from './notification-center-infinite-scroll/notification-center-infinite-scroll-example';
 import { NotificationCenterOverviewExample } from './notification-center-overview/notification-center-overview-example';
 import { NotificationCenterPopoverExample } from './notification-center-popover/notification-center-popover-example';
 import { NotificationCenterPushExample } from './notification-center-push/notification-center-push-example';
@@ -8,6 +9,7 @@ import { NotificationCenterPushExample } from './notification-center-push/notifi
 export {
     NotificationCenterEmptyExample,
     NotificationCenterErrorExample,
+    NotificationCenterInfiniteScrollExample,
     NotificationCenterOverviewExample,
     NotificationCenterPopoverExample,
     NotificationCenterPushExample
@@ -17,6 +19,7 @@ const EXAMPLES = [
     NotificationCenterOverviewExample,
     NotificationCenterEmptyExample,
     NotificationCenterErrorExample,
+    NotificationCenterInfiniteScrollExample,
     NotificationCenterPopoverExample,
     NotificationCenterPushExample
 ];

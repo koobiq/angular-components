@@ -218,6 +218,7 @@ export const tkTMLocaleData = {
         showPopUpNotifications: 'Açylýan bildirişleri görkeziň',
         noNotifications: 'Duýduryş ýok',
         failedToLoadNotifications: 'Duýduryşlary ýükläp bilmedi',
-        repeat: 'Gaýtalama'
+        repeat: 'Gaýtalama',
+        loadingMore: 'Duýduryşlar ýüklenýär'
     }
 };

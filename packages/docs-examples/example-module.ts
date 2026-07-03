@@ -3482,6 +3482,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "notification-center-error-example.ts",
     "importPath": "components/notification-center"
   },
+  "notification-center-infinite-scroll": {
+    "packagePath": "components/notification-center/notification-center-infinite-scroll",
+    "title": "notification-center-infinite-scroll",
+    "componentName": "NotificationCenterInfiniteScrollExample",
+    "files": [
+      "notification-center-infinite-scroll-example.ts",
+      "notification-center-infinite-scroll-example.html"
+    ],
+    "selector": "notification-center-infinite-scroll-example",
+    "additionalComponents": [],
+    "primaryFile": "notification-center-infinite-scroll-example.ts",
+    "importPath": "components/notification-center"
+  },
   "notification-center-overview": {
     "packagePath": "components/notification-center/notification-center-overview",
     "title": "notification-center",
@@ -6962,6 +6975,8 @@ return import('@koobiq/docs-examples/components/navbar');
   case 'notification-center-empty':
 return import('@koobiq/docs-examples/components/notification-center');
   case 'notification-center-error':
+return import('@koobiq/docs-examples/components/notification-center');
+  case 'notification-center-infinite-scroll':
 return import('@koobiq/docs-examples/components/notification-center');
   case 'notification-center-overview':
 return import('@koobiq/docs-examples/components/notification-center');
