@@ -1,3 +1,5 @@
+import { FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
     AfterViewInit,
@@ -47,6 +49,15 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
+    /** @docs-private */
+    protected readonly focusMonitor = inject(FocusMonitor);
+    /** @docs-private */
+    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly inputModalityDetector = inject(InputModalityDetector);
+    private readonly document = inject(DOCUMENT);
+
+    /** Last known focus origin within the pipe. Used to preserve the keyboard focus ring on restore. */
+    private focusOrigin: FocusOrigin = null;
 
     /** values to select from the pipe template */
     protected values;
@@ -88,6 +99,18 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         });
 
         this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
+
+        // Track the focus origin so the trigger's keyboard focus ring can be restored after
+        // a value is chosen. `checkChildren` captures focus on the inner trigger button.
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(
+                filter((origin) => !!origin),
+                takeUntilDestroyed()
+            )
+            .subscribe((origin) => (this.focusOrigin = origin));
+
+        this.destroyRef.onDestroy(() => this.focusMonitor.stopMonitoring(this.elementRef));
 
         afterNextRender(() => {
             this.isMac = isMac();
@@ -144,6 +167,41 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
         this.filterBar?.onClearPipe.emit(this.data);
         this.filterBar?.onChangePipe.next(this.data);
+    }
+
+    /**
+     * Restores focus to the pipe's trigger button after a value is chosen or the panel closes.
+     * Focuses via {@link FocusMonitor} with the captured origin so a keyboard-driven interaction
+     * keeps its focus ring, while a mouse-driven one does not.
+     *
+     * @docs-private
+     */
+    protected restoreTriggerFocus(): void {
+        const active = this.document.activeElement;
+
+        // The panel may have been closed by moving focus to another interactive element
+        // (e.g. an outside click) — stealing focus back would break the user's intent.
+        // Focus inside the pipe or inside a not-yet-detached overlay is fine to take over.
+        if (
+            active &&
+            active !== this.document.body &&
+            !this.elementRef.nativeElement.contains(active) &&
+            !active.closest('.cdk-overlay-container')
+        ) {
+            return;
+        }
+
+        const trigger = this.elementRef.nativeElement.querySelector<HTMLElement>(
+            'button:not(.kbq-pipe__remove-button)'
+        );
+
+        // A pipe opened right after being added from pipe-add never received focus itself,
+        // so `focusOrigin` is unknown there — fall back to the detected input modality.
+        const origin = this.focusOrigin ?? this.inputModalityDetector.mostRecentModality ?? 'program';
+
+        if (trigger) {
+            this.focusMonitor.focusVia(trigger, origin);
+        }
     }
 
     /** @docs-private */

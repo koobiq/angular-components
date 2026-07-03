@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -597,9 +598,28 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             // call onClose directly
             component.onClose();
+            flush();
 
             // after close with all selected, internalSelected should be updated
             expect(component.selected).toBeDefined();
+        }));
+
+        it('should restore focus to the trigger button on close', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
+            getPipeComponent().onClose();
+            flush();
+
+            expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
         }));
     });
 

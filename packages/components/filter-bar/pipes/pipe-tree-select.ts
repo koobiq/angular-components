@@ -114,7 +114,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
         this.data.value = item.value;
         this.filterBar?.onChangePipe.emit(this.data);
         this.select().close();
-        setTimeout(() => this.select().focus());
+        setTimeout(() => this.restoreTriggerFocus());
         this.stateChanges.next();
     }
 

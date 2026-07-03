@@ -18,7 +18,6 @@ import { KbqListModule, KbqListSelection } from '@koobiq/components/list';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { filter } from 'rxjs/operators';
 import { KbqDateTimeValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
@@ -133,7 +132,9 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     /** @docs-private */
     readonly popover = viewChild.required<KbqPopoverTrigger>('popover');
     /** @docs-private */
-    listSelection = viewChild.required('listSelection', { read: KbqListSelection });
+    // Optional: the list only exists while the popover is open in list mode, and it is read
+    // in deferred callbacks that may fire after the popover has already closed.
+    listSelection = viewChild('listSelection', { read: KbqListSelection });
     /** @docs-private */
     returnButton = viewChild.required('returnButton', { read: KbqButton });
 
@@ -141,11 +142,18 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
         super.ngAfterViewInit();
 
         this.popover()
-            .visibleChange.pipe(
-                filter((visible) => !visible),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
+            .visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((visible) => {
+                if (visible) {
+                    // Move keyboard focus onto the period list so Enter selects a preset
+                    // instead of the focus trap landing on the "custom period" row.
+                    if (this.isListMode) {
+                        setTimeout(() => this.listSelection()?.focus());
+                    }
+                } else {
+                    this.filterBar?.onClosePipe.emit(this.data);
+                }
+            });
     }
 
     /** keydown handler
@@ -170,6 +178,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
         this.filterBar?.onChangePipe.next(this.data);
 
         this.popover().hide();
+
+        setTimeout(() => this.restoreTriggerFocus());
     }
 
     onSelect(item: KbqDateTimeValue) {
@@ -179,6 +189,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
         this.filterBar?.onChangePipe.next(this.data);
 
         this.popover().hide();
+
+        setTimeout(() => this.restoreTriggerFocus());
     }
 
     showPeriod() {
@@ -197,7 +209,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     showList() {
         this.isListMode = true;
 
-        setTimeout(() => this.listSelection().focus());
+        setTimeout(() => this.listSelection()?.focus());
         this.popover().updatePosition(true);
     }
 

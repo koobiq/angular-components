@@ -1,5 +1,6 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -254,7 +255,7 @@ describe('KbqPipeTextComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should set data.value from control value', () => {
+        it('should set data.value from control value', fakeAsync(() => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
@@ -262,11 +263,12 @@ describe('KbqPipeTextComponent', () => {
 
             component.control.setValue('new text');
             component.onApply();
+            flush();
 
             expect(component.data.value).toBe('new text');
-        });
+        }));
 
-        it('should mark control as pristine after apply', () => {
+        it('should mark control as pristine after apply', fakeAsync(() => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
@@ -275,11 +277,12 @@ describe('KbqPipeTextComponent', () => {
             component.control.setValue('new text');
             component.control.markAsDirty();
             component.onApply();
+            flush();
 
             expect(component.control.pristine).toBe(true);
-        });
+        }));
 
-        it('should call popover.hide()', () => {
+        it('should call popover.hide()', fakeAsync(() => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
@@ -287,11 +290,24 @@ describe('KbqPipeTextComponent', () => {
             const hideSpy = jest.spyOn(component.popover(), 'hide');
 
             component.onApply();
+            flush();
 
             expect(hideSpy).toHaveBeenCalled();
-        });
+        }));
 
-        it('should emit onChangePipe event', () => {
+        it('should restore focus to the trigger button after apply', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
+            fixture.detectChanges();
+
+            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
+            getPipeComponent().onApply();
+            flush();
+
+            expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
+        }));
+
+        it('should emit onChangePipe event', fakeAsync(() => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
@@ -301,9 +317,10 @@ describe('KbqPipeTextComponent', () => {
             filterBar.onChangePipe.subscribe(spy);
 
             getPipeComponent().onApply();
+            flush();
 
             expect(spy).toHaveBeenCalled();
-        });
+        }));
     });
 
     describe('onKeydown', () => {

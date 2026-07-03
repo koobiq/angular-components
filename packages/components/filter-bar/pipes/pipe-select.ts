@@ -81,6 +81,8 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
         this.data.value = item;
         this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
+
+        setTimeout(() => this.restoreTriggerFocus());
     }
 
     /** Comparator of selected options */
