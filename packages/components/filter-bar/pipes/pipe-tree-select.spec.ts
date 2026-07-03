@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -312,6 +313,20 @@ describe('KbqPipeTreeSelectComponent', () => {
             flush();
 
             expect(closeSpy).toHaveBeenCalled();
+        }));
+
+        it('should restore focus to the trigger button after selection', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: null })
+            ]);
+            fixture.detectChanges();
+
+            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
+            getPipeComponent().onSelect({ value: SINGLE_VALUE } as KbqTreeOption);
+            flush();
+
+            expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
         }));
     });
 

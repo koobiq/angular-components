@@ -215,6 +215,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         if (this.allOptionsSelected) {
             this.updateInternalSelected();
         }
+
+        setTimeout(() => this.restoreTriggerFocus());
     }
 
     /** opens select */
