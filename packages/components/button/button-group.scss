@@ -3,10 +3,18 @@
 .kbq-button-group {
     &.kbq-button-group_horizontal {
         @include groups-mixins.group(':is(.kbq-button, .kbq-button-icon)');
+
+        & > :is(.kbq-button, .kbq-button-icon):not(:last-child, .cdk-keyboard-focused) {
+            border-right-color: transparent;
+        }
     }
 
     &.kbq-button-group_vertical {
         @include groups-mixins.vertical-group(':is(.kbq-button, .kbq-button-icon)');
+
+        & > :is(.kbq-button, .kbq-button-icon):not(:last-child, .cdk-keyboard-focused) {
+            border-bottom-color: transparent;
+        }
     }
 
     &:not(:has(> :not(.kbq-contrast-fade.kbq-button_filled))),
@@ -14,6 +22,36 @@
         :is(.kbq-button, .kbq-button-icon),
         :is(.kbq-button, .kbq-button-icon):hover {
             background-clip: padding-box;
+        }
+    }
+
+    &.kbq-contrast-fade.kbq-button-group-root_filled {
+        --button-group-divider-color: var(--kbq-line-contrast-fade);
+
+        &.kbq-button-group_horizontal {
+            :is(.kbq-button, .kbq-button-icon):not(:first-child)::before {
+                content: '';
+                position: absolute;
+                // offset by -1px because absolute positioning is relative to the padding edge,
+                // but the visual junction sits 1px to the left in the transparent border area
+                left: calc(-1 * var(--kbq-size-border-width));
+                top: 0;
+                bottom: 0;
+                width: 1px;
+                background: var(--button-group-divider-color);
+            }
+        }
+
+        &.kbq-button-group_vertical {
+            :is(.kbq-button, .kbq-button-icon):not(:first-child)::before {
+                content: '';
+                position: absolute;
+                top: calc(-1 * var(--kbq-size-border-width));
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: var(--button-group-divider-color);
+            }
         }
     }
 }
