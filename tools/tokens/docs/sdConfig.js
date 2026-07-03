@@ -1,10 +1,7 @@
 const { BASE_PATH, BUILD_PATH } = require('./config');
 
 module.exports = {
-    source: [
-        `${BASE_PATH}/properties/!(colors|shadows).json5`,
-        `${BASE_PATH}/tokens-new/*.json5`
-    ],
+    source: [`${BASE_PATH}/properties/!(colors.v1|shadows.v1).json5`],
     platforms: {
         css: {
             buildPath: BUILD_PATH,
