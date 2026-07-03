@@ -1,7 +1,9 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { dispatchKeyboardEvent, ENTER } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -301,6 +303,50 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             expect(spy).toHaveBeenCalled();
+        }));
+    });
+
+    describe('keyboard selection & focus restore', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        const enterSelectsAndRestoresFocus = (search: boolean) => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null, search })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+            const filterBar = getFilterBar();
+            const changeSpy = jest.fn();
+            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
+            filterBar.onChangePipe.subscribe(changeSpy);
+
+            const selectEl = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
+
+            component.select().open();
+            flush();
+            fixture.detectChanges();
+
+            // Highlight the first option, then confirm it with Enter.
+            component.select().keyManager.setActiveItem(0);
+            dispatchKeyboardEvent(selectEl, 'keydown', ENTER);
+            flush();
+            fixture.detectChanges();
+
+            expect(changeSpy).toHaveBeenCalled();
+            expect(component.data.value).toEqual(SELECT_VALUES[0]);
+            expect(component.select().panelOpen).toBe(false);
+            expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
+        };
+
+        it('should select the active option with Enter and restore focus (no search)', fakeAsync(() => {
+            enterSelectsAndRestoresFocus(false);
+        }));
+
+        it('should select the active option with Enter and restore focus (with search)', fakeAsync(() => {
+            enterSelectsAndRestoresFocus(true);
         }));
     });
 

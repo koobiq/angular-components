@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
@@ -393,11 +394,12 @@ describe('KbqPipeDateComponent', () => {
             setupSinglePipe({ value: null });
         });
 
-        it('should set data.value, emit onChangePipe and hide popover', () => {
+        it('should set data.value, emit onChangePipe, hide popover and restore focus', fakeAsync(() => {
             const component = getPipeComponent();
             const filterBar = getFilterBar();
             const spy = jest.fn();
             const hide = jest.fn();
+            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             asInternal(component).popover = () => ({ hide });
             filterBar.onChangePipe.subscribe(spy);
@@ -407,7 +409,11 @@ describe('KbqPipeDateComponent', () => {
             expect(component.data.value).toEqual({ name: 'test', start: '', end: '' });
             expect(spy).toHaveBeenCalledWith(component.data);
             expect(hide).toHaveBeenCalled();
-        });
+
+            flush();
+
+            expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
+        }));
     });
 
     describe('onApplyPeriod', () => {
@@ -415,12 +421,13 @@ describe('KbqPipeDateComponent', () => {
             setupSinglePipe({ value: null });
         });
 
-        it('should save custom period as ISO strings and emit onChangePipe', () => {
+        it('should save custom period as ISO strings, emit onChangePipe and restore focus', fakeAsync(() => {
             const component = getPipeComponent();
             const internal = asInternal(component);
             const filterBar = getFilterBar();
             const spy = jest.fn();
             const hide = jest.fn();
+            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
             const start = adapter.today().minus({ days: 5 });
             const end = adapter.today();
 
@@ -439,7 +446,11 @@ describe('KbqPipeDateComponent', () => {
             });
             expect(spy).toHaveBeenCalledWith(component.data);
             expect(hide).toHaveBeenCalled();
-        });
+
+            flush();
+
+            expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
+        }));
     });
 
     describe('disabled', () => {
@@ -573,6 +584,19 @@ describe('KbqPipeDateComponent', () => {
 
             expect(spy).toHaveBeenCalledWith(component.data);
         });
+
+        it('should focus the period list when the popover opens so Enter can pick a preset', fakeAsync(() => {
+            const component = getPipeComponent();
+            const focus = jest.fn();
+
+            asInternal(component).isListMode = true;
+            asInternal(component).listSelection = () => ({ focus });
+
+            component.popover().visibleChange.emit(true);
+            flush();
+
+            expect(focus).toHaveBeenCalled();
+        }));
     });
 
     describe('onClear', () => {

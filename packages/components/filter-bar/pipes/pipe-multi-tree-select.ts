@@ -278,6 +278,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         if (this.allOptionsSelected) {
             this.updateInternalSelected();
         }
+
+        setTimeout(() => this.restoreTriggerFocus());
     }
 
     /** handler for select all options in select */

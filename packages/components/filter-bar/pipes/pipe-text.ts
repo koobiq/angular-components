@@ -78,6 +78,8 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
         this.popover().hide();
 
         this.filterBar?.onChangePipe.next(this.data);
+
+        setTimeout(() => this.restoreTriggerFocus());
     }
 
     /** @docs-private */

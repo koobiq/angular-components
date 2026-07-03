@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/cor
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { createKeyboardEvent, dispatchEvent, ENTER } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -410,6 +411,81 @@ describe('KbqPipeAdd', () => {
             fixture.detectChanges();
 
             expect(filterBar.filter!.pipes.length).toBe(1);
+        }));
+    });
+
+    describe('keyboard (Enter)', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.detectChanges();
+        });
+
+        const pressEnterOnFirstOption = () => {
+            const option = document.querySelectorAll('.kbq-option')[0] as HTMLElement;
+
+            dispatchEvent(option, createKeyboardEvent('keydown', ENTER, undefined, 'Enter'));
+        };
+
+        it('should add a pipe when Enter is pressed on a template option', fakeAsync(() => {
+            const filterBar = getFilterBar();
+            const pipeAdd = getPipeAdd();
+
+            pipeAdd.select().open();
+            flush();
+            fixture.detectChanges();
+
+            pressEnterOnFirstOption();
+            flush();
+            fixture.detectChanges();
+
+            expect(filterBar.filter!.pipes.length).toBe(1);
+            expect(filterBar.filter!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
+        }));
+
+        it('should emit onAddPipe when Enter is pressed on a template option', fakeAsync(() => {
+            const pipeAdd = getPipeAdd();
+            const spy = jest.fn();
+
+            pipeAdd.onAddPipe.subscribe(spy);
+
+            pipeAdd.select().open();
+            flush();
+            fixture.detectChanges();
+
+            pressEnterOnFirstOption();
+            flush();
+            fixture.detectChanges();
+
+            expect(spy).toHaveBeenCalledWith(expect.objectContaining({ id: PIPE_TEMPLATE_ID_1 }));
+        }));
+
+        it('should call filterBar.openPipe.next when Enter is pressed on an already-added option', fakeAsync(() => {
+            const filterBar = getFilterBar();
+            const pipeAdd = getPipeAdd();
+            const openPipeSpy = jest.spyOn(filterBar.openPipe, 'next');
+
+            // First Enter — add the pipe
+            pipeAdd.select().open();
+            flush();
+            fixture.detectChanges();
+
+            pressEnterOnFirstOption();
+            flush();
+            fixture.detectChanges();
+
+            // Second Enter — option is now selected, should trigger openPipe
+            pipeAdd.select().open();
+            flush();
+            fixture.detectChanges();
+
+            openPipeSpy.mockClear();
+
+            pressEnterOnFirstOption();
+            flush();
+            fixture.detectChanges();
+
+            expect(openPipeSpy).toHaveBeenCalledWith(PIPE_TEMPLATE_ID_1);
         }));
     });
 
