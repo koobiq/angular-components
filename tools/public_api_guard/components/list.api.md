@@ -240,6 +240,9 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     selectActiveOptions(): void;
     // (undocumented)
     selectAll(): void;
+    get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection) => void;
+    set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection) => void);
+    readonly selectAllToggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: i0.OutputEmitterRef<KbqListSelectionChange>;
     // (undocumented)
@@ -268,7 +271,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     // (undocumented)
     writeValue(values: string[]): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListSelection, never>;
 }

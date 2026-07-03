@@ -58,6 +58,7 @@ import {
     RIGHT_ARROW,
     SPACE,
     TAB,
+    toggleSelectAll,
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -164,6 +165,9 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     }
 
     private _noUnselectLast: boolean = true;
+
+    /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
+    readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
     multipleMode: MultipleMode | null;
 
@@ -494,8 +498,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         }
 
         if (this.multiple && isSelectAll(event)) {
-            this.selectAllOptions();
-            event.preventDefault();
+            this.selectAllHandler(event, this);
 
             return;
         } else if (isCopy(event)) {
@@ -634,12 +637,46 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     // View to model callback that should be called whenever the selected options change.
     private onChange: (value: any) => void = (_: any) => {};
 
-    private selectAllOptions() {
-        const optionsToSelect = this.options.filter((option) => !option.disabled);
+    /**
+     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
+     * which toggles the selection of all non-disabled options.
+     */
+    @Input()
+    get selectAllHandler() {
+        return this._selectAllHandler;
+    }
 
-        optionsToSelect.forEach((option) => option.setSelected(true));
+    set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection) => void) {
+        if (typeof fn !== 'function') {
+            throw Error('`selectAllHandler` must be a function.');
+        }
 
-        this.onSelectAll.emit(new KbqListSelectAllEvent(this, optionsToSelect));
+        this._selectAllHandler = fn;
+    }
+
+    private _selectAllHandler(event: KeyboardEvent, list: KbqListSelection): void {
+        event.preventDefault();
+
+        const options = list.options.toArray();
+
+        toggleSelectAll<KbqListOption>(
+            {
+                items: options,
+                isSelectable: (option) => !option.disabled,
+                isSelected: (option) => option.selected,
+                setSelected: (option, selected) => option.setSelected(selected)
+            },
+            { allowDeselect: list.selectAllToggle() }
+        );
+
+        list.reportValueChange();
+
+        list.onSelectAll.emit(
+            new KbqListSelectAllEvent(
+                list,
+                options.filter((option) => !option.disabled)
+            )
+        );
     }
 
     private copyActiveOption(event: KeyboardEvent) {

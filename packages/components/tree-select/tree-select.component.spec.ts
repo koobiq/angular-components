@@ -526,6 +526,51 @@ class SelectWithSearch implements OnInit {
 }
 
 @Component({
+    selector: 'multiple-select-with-search',
+    imports: [
+        KbqTreeModule,
+        KbqInputModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select multiple [formControl]="control">
+                <kbq-form-field noBorders kbqSelectSearch>
+                    <input class="search-input" kbqInput type="text" [formControl]="searchControl" />
+                </kbq-form-field>
+
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class MultipleTreeSelectWithSearch implements OnInit {
+    control = new UntypedFormControl();
+
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+    searchControl: UntypedFormControl = new UntypedFormControl();
+
+    readonly select = viewChild.required(KbqTreeSelect);
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(TREE_DATA, 0);
+    }
+
+    ngOnInit(): void {
+        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+    }
+}
+
+@Component({
     selector: 'select-with-change-event',
     imports: [
         KbqTreeModule,
@@ -748,7 +793,12 @@ class BasicSelectOnPushPreselected {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tree-select placeholder="Food" [multiple]="true" [formControl]="control">
+            <kbq-tree-select
+                placeholder="Food"
+                [multiple]="true"
+                [selectAllToggle]="selectAllToggle"
+                [formControl]="control"
+            >
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
@@ -765,6 +815,7 @@ class BasicSelectOnPushPreselected {
 })
 class MultiSelect {
     control = new UntypedFormControl();
+    selectAllToggle: boolean = false;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -2846,6 +2897,77 @@ describe('KbqTreeSelect', () => {
         }));
     });
 
+    describe('Ctrl+A with search (multiple)', () => {
+        let fixture: ComponentFixture<MultipleTreeSelectWithSearch>;
+        let testInstance: MultipleTreeSelectWithSearch;
+        let trigger: HTMLElement;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqTreeSelectTestingModule([MultipleTreeSelectWithSearch]);
+            fixture = TestBed.createComponent(MultipleTreeSelectWithSearch);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+
+            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            trigger.click();
+            fixture.detectChanges();
+            tick();
+            flush();
+        }));
+
+        const getSearchInput = (): HTMLInputElement =>
+            fixture.debugElement.query(By.css('.search-input')).nativeElement;
+
+        const pressCtrlA = (target: HTMLElement) => {
+            const event = createKeyboardEvent('keydown', A);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+            dispatchEvent(target, event);
+            fixture.detectChanges();
+            tick(0);
+        };
+
+        const selectedCount = (): number => testInstance.control.value?.length ?? 0;
+
+        it('should select all options when the search field is empty', fakeAsync(() => {
+            const input = getSearchInput();
+
+            input.value = '';
+
+            pressCtrlA(input);
+
+            expect(selectedCount()).toBeGreaterThan(0);
+        }));
+
+        it('should select the search text (not options) when the text is only partially selected', fakeAsync(() => {
+            const input = getSearchInput();
+            const onSelectAll = jest.fn();
+
+            testInstance.select().onSelectAll.subscribe(onSelectAll);
+
+            input.value = 'src';
+            input.setSelectionRange(0, 1);
+
+            pressCtrlA(input);
+
+            expect(input.selectionStart).toBe(0);
+            expect(input.selectionEnd).toBe(input.value.length);
+            expect(selectedCount()).toBe(0);
+            expect(onSelectAll).not.toHaveBeenCalled();
+        }));
+
+        it('should select all options when the search text is already fully selected', fakeAsync(() => {
+            const input = getSearchInput();
+
+            input.value = 'src';
+            input.setSelectionRange(0, input.value.length);
+
+            pressCtrlA(input);
+
+            expect(selectedCount()).toBeGreaterThan(0);
+        }));
+    });
+
     describe('with search', () => {
         let fixture: ComponentFixture<SelectWithSearch>;
         let trigger: HTMLElement;
@@ -4198,7 +4320,28 @@ describe('KbqTreeSelect', () => {
             ]);
         }));
 
-        it('should deselect all options with CTRL + A if all options are selected', () => {
+        it('should deselect all options with CTRL + A if all options are selected and selectAllToggle is enabled', () => {
+            const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
+
+            fixture.componentInstance.selectAllToggle = true;
+            fixture.detectChanges();
+            fixture.componentInstance.select().open();
+            fixture.detectChanges();
+
+            const event = createKeyboardEvent('keydown', A, selectElement);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+            dispatchEvent(selectElement, event);
+
+            expect(testInstance.control.getRawValue().length).toEqual(25);
+
+            dispatchEvent(selectElement, event);
+            fixture.detectChanges();
+
+            expect(testInstance.control.getRawValue()).toEqual([]);
+        });
+
+        it('should keep all options selected with CTRL + A by default (selectAllToggle off)', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
 
             fixture.componentInstance.select().open();
@@ -4214,7 +4357,31 @@ describe('KbqTreeSelect', () => {
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
 
-            expect(testInstance.control.getRawValue()).toEqual([]);
+            expect(testInstance.control.getRawValue().length).toEqual(25);
+        });
+
+        it('should emit onSelectAll with selected=true on a no-op CTRL + A when everything is already selected', () => {
+            const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
+            const onSelectAll = jest.fn();
+
+            fixture.componentInstance.select().onSelectAll.subscribe(onSelectAll);
+            fixture.componentInstance.select().open();
+            fixture.detectChanges();
+
+            const event = createKeyboardEvent('keydown', A, selectElement);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+
+            // first press selects everything
+            dispatchEvent(selectElement, event);
+            fixture.detectChanges();
+
+            // second press is a no-op (all already selected, selectAllToggle off) — still "all selected"
+            dispatchEvent(selectElement, event);
+            fixture.detectChanges();
+
+            expect(onSelectAll).toHaveBeenCalledTimes(2);
+            expect(onSelectAll.mock.calls[1][0].selected).toBe(true);
         });
     });
 

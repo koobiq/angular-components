@@ -620,6 +620,10 @@ describe('KbqTreeSelection', () => {
             }));
 
             it('should exclude non-selectable options on CTRL + A', fakeAsync(() => {
+                // selectAllToggle enables deselect on the second press asserted below
+                component.selectAllToggle = true;
+                fixture.detectChanges();
+
                 const selectAllKeyEvent = createKeyboardEvent('keydown', A);
 
                 Object.defineProperty(selectAllKeyEvent, 'ctrlKey', { get: () => true });
@@ -637,6 +641,41 @@ describe('KbqTreeSelection', () => {
                 component.tree.onKeyDown(selectAllKeyEvent);
                 fixture.detectChanges();
 
+                expect(component.modelValue.length).toBe(0);
+            }));
+
+            it('should keep all options selected on a second CTRL + A by default (selectAllToggle off)', fakeAsync(() => {
+                const selectAllKeyEvent = createKeyboardEvent('keydown', A);
+
+                Object.defineProperty(selectAllKeyEvent, 'ctrlKey', { get: () => true });
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                const selectedAfterFirst = component.modelValue.length;
+
+                expect(selectedAfterFirst).toBeGreaterThan(0);
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(component.modelValue.length).toBe(selectedAfterFirst);
+            }));
+
+            it('should invoke a custom selectAllHandler on CTRL + A instead of the default', fakeAsync(() => {
+                const customHandler = jest.fn();
+
+                component.tree.selectAllHandler = customHandler;
+
+                const selectAllKeyEvent = createKeyboardEvent('keydown', A);
+
+                Object.defineProperty(selectAllKeyEvent, 'ctrlKey', { get: () => true });
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(customHandler).toHaveBeenCalledTimes(1);
+                // default behaviour is bypassed -> nothing gets selected
                 expect(component.modelValue.length).toBe(0);
             }));
 
@@ -1062,6 +1101,9 @@ describe('KbqTreeSelection', () => {
             }));
 
             it('should deselect all visible options and values', fakeAsync(() => {
+                component.selectAllToggle = true;
+                fixture.detectChanges();
+
                 component.tree.onKeyDown(selectAllKeyEvent);
                 fixture.detectChanges();
 
@@ -1076,6 +1118,23 @@ describe('KbqTreeSelection', () => {
                 expect(component.savedSelectionChangeEvent!.options!.length).toBe(5);
                 expect(component.savedSelectAllEvent!.options.length).toBe(5);
                 expect(component.modelValue.length).toBe(0);
+            }));
+
+            it('should not emit selectionChange with an undefined option on a no-op CTRL + A (default)', fakeAsync(() => {
+                // first press selects everything (default: selectAllToggle off)
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                const onSelectionChange = jest.spyOn(component, 'onSelectionChange');
+
+                component.savedSelectionChangeEvent = undefined;
+
+                // second press is a no-op: everything is already selected and allowDeselect is off
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(onSelectionChange).not.toHaveBeenCalled();
+                expect(component.savedSelectionChangeEvent).toBeUndefined();
             }));
         });
     });
@@ -1319,6 +1378,7 @@ class TreeSelectionFocusStates extends TreeParams {}
     template: `
         <kbq-tree-selection
             multiple="keyboard"
+            [selectAllToggle]="selectAllToggle"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             [(ngModel)]="modelValue"
@@ -1348,6 +1408,7 @@ class TreeSelectionFocusStates extends TreeParams {}
 class KbqTreeAppMultiple extends TreeParams {
     modelValue: string[] = [];
     unselectableNodes: string[] = [];
+    selectAllToggle: boolean = false;
     @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
 
     savedSelectionChangeEvent?: KbqTreeSelectionChange<KbqTreeOption>;

@@ -54,6 +54,7 @@ import {
     KbqAbstractSelect,
     KbqComponentColors,
     KbqLocaleService,
+    KbqSelectAllEvent,
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectTrigger,
@@ -69,9 +70,11 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     hasModifierKey,
+    isInput,
     isSelectAll,
     isUndefined,
-    kbqSelectAnimations
+    kbqSelectAnimations,
+    shouldSelectSearchText
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -312,6 +315,12 @@ export class KbqTreeSelect
     readonly selectionChange = output<KbqTreeSelectChange>();
 
     /**
+     * Event emitted when all options are selected or deselected via the Ctrl/Cmd + A shortcut.
+     * Not emitted when a custom `selectAllHandler` is supplied — the handler owns the behaviour then.
+     */
+    readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect>>();
+
+    /**
      * Event that emits whenever the raw value of the select changes. This is here primarily
      * to facilitate the two-way binding for the `value` input.
      * @docs-private
@@ -443,6 +452,9 @@ export class KbqTreeSelect
 
     private _autoSelect: boolean = true;
 
+    /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
+    readonly selectAllToggle = input(false, { transform: booleanAttribute });
+
     get value(): any {
         return this.tree()!.getSelectedValues();
     }
@@ -537,9 +549,27 @@ export class KbqTreeSelect
 
     /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
     private _selectAllHandler(event: KeyboardEvent, select: KbqTreeSelect): void {
+        const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
+
+        if (shouldSelectSearchText(searchInput)) {
+            searchInput!.select();
+            event.preventDefault();
+
+            return;
+        }
+
         event.preventDefault();
 
-        select.tree()!.selectAllOptions();
+        const tree = select.tree()!;
+
+        tree.selectAllOptions(select.selectAllToggle());
+
+        const options = tree.renderedOptions.filter((option) => !option.disabled && option.selectable());
+        // `selected` per the KbqSelectAllEvent contract: `true` only when every selectable option is
+        // now selected, `false` otherwise (deselected or partial); guarded for the empty-options case.
+        const selected = options.length > 0 && options.every((option) => tree.selectionModel.isSelected(option.data));
+
+        select.onSelectAll.emit(new KbqSelectAllEvent(select, options, selected));
     }
 
     /** Whether the select is focused. */

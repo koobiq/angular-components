@@ -43,7 +43,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
-    A,
     ActiveDescendantKeyManager,
     BACKSPACE,
     CanUpdateErrorState,
@@ -66,6 +65,7 @@ import {
     KbqOption,
     KbqOptionBase,
     KbqOptionSelectionChange,
+    KbqSelectAllEvent,
     KbqSelectFooter,
     KbqSelectMatcher,
     KbqSelectSearch,
@@ -83,8 +83,12 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
+    isInput,
+    isSelectAll,
     isUndefined,
-    kbqSelectAnimations
+    kbqSelectAnimations,
+    shouldSelectSearchText,
+    toggleSelectAll
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -469,6 +473,12 @@ export class KbqSelect
     readonly selectionChange = output<KbqSelectChange>();
 
     /**
+     * Event emitted when all options are selected or deselected via the Ctrl/Cmd + A shortcut.
+     * Not emitted when a custom `selectAllHandler` is supplied — the handler owns the behaviour then.
+     */
+    readonly onSelectAll = output<KbqSelectAllEvent<KbqOption, KbqSelect>>();
+
+    /**
      * Event that emits whenever the raw value of the select changes. This is here primarily
      * to facilitate the two-way binding for the `value` input.
      * @docs-private
@@ -600,6 +610,9 @@ export class KbqSelect
      * for primitive values where `value` itself is the display label.
      */
     readonly virtualOptionFactory = input<(value: any) => KbqVirtualOption>();
+
+    /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
+    readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
     /**
      * Function for handling the Ctrl + A (select all) keyboard combination.
@@ -1583,7 +1596,7 @@ export class KbqSelect
         } else if ((keyCode === ENTER || keyCode === SPACE) && this.keyManager.activeItem) {
             event.preventDefault();
             this.keyManager.activeItem.selectViaInteraction();
-        } else if (this.multiSelection && keyCode === A && event.ctrlKey) {
+        } else if (this.multiSelection && isSelectAll(event)) {
             this.selectAllHandler(event, this);
         } else {
             const previouslyFocusedIndex = this.keyManager.activeItemIndex;
@@ -1862,17 +1875,36 @@ export class KbqSelect
 
     /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
     private _selectAllHandler(event: KeyboardEvent, select: KbqSelect): void {
+        const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
+
+        if (shouldSelectSearchText(searchInput)) {
+            searchInput!.select();
+            event.preventDefault();
+
+            return;
+        }
+
         event.preventDefault();
 
-        const hasDeselectedOptions = select.options.some((option) => !option.selected);
+        const options = select.options.toArray();
+        const selectableOptions = options.filter((option) => !option.disabled);
 
-        select.options.forEach((option) => {
-            if (hasDeselectedOptions && !option.disabled) {
-                option.select();
-            } else {
-                option.deselect();
-            }
-        });
+        toggleSelectAll<KbqOption>(
+            {
+                items: options,
+                isSelectable: (option) => !option.disabled,
+                isSelected: (option) => option.selected,
+                setSelected: (option, selected) => (selected ? option.select() : option.deselect())
+            },
+            { allowDeselect: select.selectAllToggle() }
+        );
+
+        // `selected` per the KbqSelectAllEvent contract: `true` only when every selectable option is
+        // now selected, `false` otherwise (deselected or partial). Reading the live option state keeps
+        // this correct even on a no-op (Ctrl+A while everything is already selected, selectAllToggle off).
+        const selected = selectableOptions.length > 0 && selectableOptions.every((option) => option.selected);
+
+        select.onSelectAll.emit(new KbqSelectAllEvent(select, selectableOptions, selected));
     }
 
     /**
