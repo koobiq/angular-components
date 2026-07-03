@@ -1,10 +1,10 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, Provider, Type, viewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFormattersModule } from '@koobiq/components/core';
+import { KbqFormattersModule, dispatchFakeEvent } from '@koobiq/components/core';
 import {
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
@@ -493,6 +493,112 @@ describe('KbqNotificationCenter', () => {
             });
         });
     });
+
+    describe('stickToWindow', () => {
+        beforeAll(() => {
+            Object.defineProperty(global.window, 'getComputedStyle', {
+                value: () => ({
+                    getPropertyValue: (_property: string) => ''
+                })
+            });
+        });
+
+        beforeEach(() => {
+            testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
+        });
+
+        afterEach(() => {
+            overlayContainer.ngOnDestroy();
+        });
+
+        // OverlayContainer should be injected after createComponent, otherwise TestBed
+        // gets instantiated before configureTestingModule
+        const createStickComponent = <T>(component: Type<T>): ComponentFixture<T> => {
+            const fixture = createComponent(component);
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+
+            return fixture;
+        };
+
+        const getOverlayPane = (): HTMLElement =>
+            overlayContainer.getContainerElement().querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        it('should re-apply stick position on window resize', fakeAsync(() => {
+            const stickFixture = createStickComponent(KbqNotificationCenterWithStick);
+
+            stickFixture.componentInstance.trigger().show();
+            stickFixture.detectChanges();
+            tick();
+
+            const pane = getOverlayPane();
+
+            expect(pane.style.right).toMatch(/^0(px)?$/);
+            expect(pane.style.left).toBe('unset');
+
+            // simulate the position strategy wiping the manual stick styles on resize
+            pane.style.right = '';
+            pane.style.left = '50px';
+
+            dispatchFakeEvent(window, 'resize');
+            tick(20);
+
+            expect(pane.style.right).toMatch(/^0(px)?$/);
+            expect(pane.style.left).toBe('unset');
+        }));
+
+        it('should recalculate stick position against the container on window resize', fakeAsync(() => {
+            const stickFixture = createStickComponent(KbqNotificationCenterWithStickContainer);
+
+            stickFixture.componentInstance.trigger().show();
+            stickFixture.detectChanges();
+            tick();
+
+            const pane = getOverlayPane();
+            const panel = overlayContainer.getContainerElement().querySelector('.kbq-notification-center')!;
+
+            jest.spyOn(panel, 'getBoundingClientRect').mockReturnValue({ width: 400, height: 300 } as DOMRect);
+            jest.spyOn(
+                stickFixture.componentInstance.container().nativeElement,
+                'getBoundingClientRect'
+            ).mockReturnValue({
+                left: 0,
+                right: 800,
+                top: 0,
+                bottom: 500
+            } as DOMRect);
+
+            dispatchFakeEvent(window, 'resize');
+            tick(20);
+
+            expect(pane.style.left).toBe('400px');
+            expect(pane.style.right).toBe('unset');
+        }));
+
+        it('should stop re-applying stick position after the panel is closed', fakeAsync(() => {
+            const stickFixture = createStickComponent(KbqNotificationCenterWithStick);
+            const trigger = stickFixture.componentInstance.trigger();
+
+            trigger.show();
+            stickFixture.detectChanges();
+            tick();
+
+            const pane = getOverlayPane();
+
+            trigger.hide();
+            stickFixture.detectChanges();
+            tick();
+
+            pane.style.right = '';
+            pane.style.left = '50px';
+
+            dispatchFakeEvent(window, 'resize');
+            tick(20);
+
+            expect(pane.style.right).toBe('');
+            expect(pane.style.left).toBe('50px');
+        }));
+    });
 });
 
 @Component({
@@ -506,4 +612,35 @@ describe('KbqNotificationCenter', () => {
 })
 export class KbqNotificationCenterSimple {
     readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
+}
+
+@Component({
+    selector: 'notification-center-with-stick',
+    imports: [
+        KbqNotificationCenterModule
+    ],
+    template: `
+        <button kbqNotificationCenterTrigger stickToWindow="right">notification-center Trigger</button>
+    `
+})
+export class KbqNotificationCenterWithStick {
+    readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
+}
+
+@Component({
+    selector: 'notification-center-with-stick-container',
+    imports: [
+        KbqNotificationCenterModule
+    ],
+    template: `
+        <div #containerRef>
+            <button kbqNotificationCenterTrigger stickToWindow="right" [container]="containerRef">
+                notification-center Trigger
+            </button>
+        </div>
+    `
+})
+export class KbqNotificationCenterWithStickContainer {
+    readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
+    readonly container = viewChild.required<ElementRef<HTMLElement>>('containerRef');
 }

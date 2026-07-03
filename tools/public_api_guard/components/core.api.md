@@ -59,6 +59,7 @@ import { Type } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public (undocumented)
 export const A = 65;
@@ -3053,6 +3054,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     updatePlacementPriority(value: any): void;
     updatePosition(reapplyPosition?: boolean): void;
     updateVisible(externalValue: boolean): void;
+    protected readonly viewportRuler: ViewportRuler;
     protected visible: boolean;
     abstract visibleChange: EventEmitter<boolean>;
     // (undocumented)
