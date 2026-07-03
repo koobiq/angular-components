@@ -41,6 +41,7 @@ import { getId } from './pipes/base-pipe';
                     [showCheckbox]="false"
                     (click)="addPipeFromTemplate(option)"
                     (keydown.enter)="addPipeFromTemplate(option)"
+                    (keydown.space)="addPipeFromTemplate(option)"
                 >
                     {{ template.name }}
                 </kbq-option>

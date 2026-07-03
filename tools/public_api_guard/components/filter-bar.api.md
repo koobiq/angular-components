@@ -108,7 +108,9 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     readonly data: KbqPipeData<V>;
     protected readonly destroyRef: DestroyRef;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     protected readonly filterBar: KbqFilterBar | null;
+    protected readonly focusMonitor: FocusMonitor;
     get isEmpty(): boolean;
     isMac: boolean;
     isTemplateRef(value: unknown): boolean;
@@ -118,6 +120,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     onClear(): void;
     onRemove(): void;
     abstract open(): void;
+    protected restoreTriggerFocus(): void;
     get showRemoveButton(): boolean;
     readonly stateChanges: Subject<void>;
     updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
@@ -401,7 +404,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     hideCalendars(): void;
     get isEmpty(): boolean;
     protected isListMode: boolean;
-    listSelection: i0.Signal<KbqListSelection>;
+    listSelection: i0.Signal<KbqListSelection | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -448,7 +451,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> i
     hideCalendars(): void;
     get isEmpty(): boolean;
     protected isListMode: boolean;
-    listSelection: i0.Signal<KbqListSelection>;
+    listSelection: i0.Signal<KbqListSelection | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     onApplyPeriod(): void;

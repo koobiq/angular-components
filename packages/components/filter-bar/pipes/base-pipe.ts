@@ -1,4 +1,5 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
     AfterViewInit,
@@ -52,6 +53,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected readonly focusMonitor = inject(FocusMonitor);
     /** @docs-private */
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly inputModalityDetector = inject(InputModalityDetector);
+    private readonly document = inject(DOCUMENT);
 
     /** Last known focus origin within the pipe. Used to preserve the keyboard focus ring on restore. */
     private focusOrigin: FocusOrigin = null;
@@ -174,12 +177,30 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      * @docs-private
      */
     protected restoreTriggerFocus(): void {
+        const active = this.document.activeElement;
+
+        // The panel may have been closed by moving focus to another interactive element
+        // (e.g. an outside click) — stealing focus back would break the user's intent.
+        // Focus inside the pipe or inside a not-yet-detached overlay is fine to take over.
+        if (
+            active &&
+            active !== this.document.body &&
+            !this.elementRef.nativeElement.contains(active) &&
+            !active.closest('.cdk-overlay-container')
+        ) {
+            return;
+        }
+
         const trigger = this.elementRef.nativeElement.querySelector<HTMLElement>(
             'button:not(.kbq-pipe__remove-button)'
         );
 
+        // A pipe opened right after being added from pipe-add never received focus itself,
+        // so `focusOrigin` is unknown there — fall back to the detected input modality.
+        const origin = this.focusOrigin ?? this.inputModalityDetector.mostRecentModality ?? 'program';
+
         if (trigger) {
-            this.focusMonitor.focusVia(trigger, this.focusOrigin ?? 'keyboard');
+            this.focusMonitor.focusVia(trigger, origin);
         }
     }
 

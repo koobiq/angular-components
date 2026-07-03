@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/cor
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { createKeyboardEvent, dispatchEvent, ENTER } from '@koobiq/components/core';
+import { createKeyboardEvent, dispatchEvent, ENTER, SPACE } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -414,7 +414,7 @@ describe('KbqPipeAdd', () => {
         }));
     });
 
-    describe('keyboard (Enter)', () => {
+    describe('keyboard (Enter/Space)', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
@@ -427,6 +427,12 @@ describe('KbqPipeAdd', () => {
             dispatchEvent(option, createKeyboardEvent('keydown', ENTER, undefined, 'Enter'));
         };
 
+        const pressSpaceOnFirstOption = () => {
+            const option = document.querySelectorAll('.kbq-option')[0] as HTMLElement;
+
+            dispatchEvent(option, createKeyboardEvent('keydown', SPACE, undefined, ' '));
+        };
+
         it('should add a pipe when Enter is pressed on a template option', fakeAsync(() => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
@@ -436,6 +442,22 @@ describe('KbqPipeAdd', () => {
             fixture.detectChanges();
 
             pressEnterOnFirstOption();
+            flush();
+            fixture.detectChanges();
+
+            expect(filterBar.filter!.pipes.length).toBe(1);
+            expect(filterBar.filter!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
+        }));
+
+        it('should add a pipe when Space is pressed on a template option', fakeAsync(() => {
+            const filterBar = getFilterBar();
+            const pipeAdd = getPipeAdd();
+
+            pipeAdd.select().open();
+            flush();
+            fixture.detectChanges();
+
+            pressSpaceOnFirstOption();
             flush();
             fixture.detectChanges();
 

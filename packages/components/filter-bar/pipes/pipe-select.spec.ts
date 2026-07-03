@@ -338,7 +338,8 @@ describe('KbqPipeSelectComponent', () => {
             expect(changeSpy).toHaveBeenCalled();
             expect(component.data.value).toEqual(SELECT_VALUES[0]);
             expect(component.select().panelOpen).toBe(false);
-            expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
+            // The keyboard origin is what actually keeps the focus ring visible.
+            expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), 'keyboard');
         };
 
         it('should select the active option with Enter and restore focus (no search)', fakeAsync(() => {
