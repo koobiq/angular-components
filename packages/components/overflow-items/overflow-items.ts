@@ -18,6 +18,7 @@ import {
     KBQ_WINDOW,
     KbqFlexDirection,
     KbqFlexWrap,
+    kbqGetBoundingClientRect,
     kbqInjectNativeElement,
     KbqOrientation
 } from '@koobiq/components/core';
@@ -210,14 +211,14 @@ export class KbqOverflowItems {
         }
     > = {
         horizontal: {
-            containerSize: (element) => element.getBoundingClientRect().width,
+            containerSize: (element) => kbqGetBoundingClientRect(element).width,
             paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
             paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
             itemSize: (element) => {
                 const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
                 return (
-                    element.getBoundingClientRect().width +
+                    kbqGetBoundingClientRect(element).width +
                     (parseFloat(marginLeft) || 0) +
                     (parseFloat(marginRight) || 0)
                 );
@@ -226,14 +227,14 @@ export class KbqOverflowItems {
             flexDirection: 'row'
         },
         vertical: {
-            containerSize: (element) => element.getBoundingClientRect().height,
+            containerSize: (element) => kbqGetBoundingClientRect(element).height,
             paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
             paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
             itemSize: (element) => {
                 const { marginTop, marginBottom } = this.window.getComputedStyle(element);
 
                 return (
-                    element.getBoundingClientRect().height +
+                    kbqGetBoundingClientRect(element).height +
                     (parseFloat(marginTop) || 0) +
                     (parseFloat(marginBottom) || 0)
                 );

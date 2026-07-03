@@ -23,6 +23,7 @@ import {
     FocusKeyManager,
     isHorizontalMovement,
     isVerticalMovement,
+    kbqGetBoundingClientRect,
     LEFT_ARROW,
     RIGHT_ARROW,
     TAB
@@ -227,12 +228,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private readonly resizeDebounceInterval: number = 100;
 
     private get width(): number {
-        const element = this.elementRef.nativeElement;
-
-        // For SSR compatibility
-        if (typeof element.getClientRects !== 'function') return 0;
-
-        return element.getBoundingClientRect().width;
+        return kbqGetBoundingClientRect(this.elementRef.nativeElement).width;
     }
 
     private get totalItemsWidth(): number {

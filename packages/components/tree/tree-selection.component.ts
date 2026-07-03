@@ -39,6 +39,7 @@ import {
     isSelectAll,
     isVerticalMovement,
     KBQ_FORM_FIELD_REF,
+    kbqGetClientRects,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -738,12 +739,7 @@ export class KbqTreeSelection
     }
 
     private getHeight(): number {
-        const element = this.elementRef.nativeElement;
-
-        // For SSR compatibility
-        if (typeof element.getClientRects !== 'function') return 0;
-
-        return element.getClientRects()[0]?.height ?? 0;
+        return kbqGetClientRects(this.elementRef.nativeElement)[0]?.height ?? 0;
     }
 
     private updateTabIndex(): void {

@@ -47,6 +47,7 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
+    kbqGetClientRects,
     KbqOptgroup,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
@@ -462,12 +463,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     /** @docs-private */
     getHeight(): number {
-        const element = this.elementRef.nativeElement;
-
-        // For SSR compatibility
-        if (typeof element.getClientRects !== 'function') return 0;
-
-        return element.getClientRects()[0]?.height ?? 0;
+        return kbqGetClientRects(this.elementRef.nativeElement)[0]?.height ?? 0;
     }
 
     // View to model callback that should be called if the list or its options lost focus.
@@ -909,12 +905,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     /** @docs-private */
     getHeight(): number {
-        const element = this.elementRef.nativeElement;
-
-        // For SSR compatibility
-        if (typeof element.getClientRects !== 'function') return 0;
-
-        return element.getClientRects()[0]?.height ?? 0;
+        return kbqGetClientRects(this.elementRef.nativeElement)[0]?.height ?? 0;
     }
 
     /** Handles click events on the list option. */

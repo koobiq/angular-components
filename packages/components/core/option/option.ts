@@ -21,6 +21,7 @@ import { Subject } from 'rxjs';
 import { ActiveDescendantKeyManager } from '../a11y';
 import { ENTER, hasModifierKey, SPACE } from '../keycodes';
 import { KbqPseudoCheckboxModule } from '../selection';
+import { kbqGetClientRects } from '../ssr';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
 import { KbqOptgroup } from './optgroup';
 
@@ -289,12 +290,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** @docs-private */
     getHeight(): number {
-        const element = this.elementRef.nativeElement;
-
-        // For SSR compatibility
-        if (typeof element.getClientRects !== 'function') return 0;
-
-        return element.getClientRects()[0]?.height ?? 0;
+        return kbqGetClientRects(this.elementRef.nativeElement)[0]?.height ?? 0;
     }
 
     select(emitEvent: boolean = true): void {

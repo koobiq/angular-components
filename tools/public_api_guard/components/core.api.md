@@ -2518,6 +2518,12 @@ export class KbqFormsModule {
 }
 
 // @public
+export function kbqGetBoundingClientRect(element: Element): DOMRect;
+
+// @public
+export function kbqGetClientRects(element: Element): DOMRectList | readonly DOMRect[];
+
+// @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
 
 // @public (undocumented)
