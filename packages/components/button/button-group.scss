@@ -19,13 +19,13 @@
 
     &:not(:has(> :not(.kbq-contrast-fade.kbq-button_filled))),
     &:not(:has(> :not(.kbq-contrast.kbq-button_filled))) {
-        :is(.kbq-button, .kbq-button-icon),
-        :is(.kbq-button, .kbq-button-icon):hover {
+        :is(.kbq-button, .kbq-button-icon) {
             background-clip: padding-box !important;
         }
     }
 
     &.kbq-contrast-fade.kbq-button-group-root_filled {
+        // internal css variable, so don't prefixed with kbq
         --button-group-divider-color: var(--kbq-line-contrast-fade);
 
         &.kbq-button-group_horizontal {
@@ -37,7 +37,7 @@
                 left: calc(-1 * var(--kbq-size-border-width));
                 top: 0;
                 bottom: 0;
-                width: 1px;
+                width: var(--kbq-size-border-width);
                 background: var(--button-group-divider-color);
             }
         }
@@ -49,7 +49,7 @@
                 top: calc(-1 * var(--kbq-size-border-width));
                 left: 0;
                 right: 0;
-                height: 1px;
+                height: var(--kbq-size-border-width);
                 background: var(--button-group-divider-color);
             }
         }
