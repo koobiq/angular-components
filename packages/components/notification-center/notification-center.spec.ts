@@ -22,6 +22,27 @@ describe('KbqNotificationCenter', () => {
     let debugElement: DebugElement;
     let overlayContainer: OverlayContainer;
     let testScheduler: TestScheduler;
+    let originalGetComputedStyle: typeof window.getComputedStyle;
+
+    // jsdom's getComputedStyle returns values the scrollbar and overlay position strategy can't parse,
+    // so stub it for the whole suite. Keep the stub configurable and restore the original afterwards so
+    // the redefine is always permitted and nothing leaks past these tests.
+    beforeAll(() => {
+        originalGetComputedStyle = window.getComputedStyle;
+        Object.defineProperty(global.window, 'getComputedStyle', {
+            configurable: true,
+            value: () => ({
+                getPropertyValue: (_property: string) => ''
+            })
+        });
+    });
+
+    afterAll(() => {
+        Object.defineProperty(global.window, 'getComputedStyle', {
+            configurable: true,
+            value: originalGetComputedStyle
+        });
+    });
 
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
@@ -39,14 +60,6 @@ describe('KbqNotificationCenter', () => {
     };
 
     describe('Check test cases', () => {
-        beforeAll(() => {
-            Object.defineProperty(global.window, 'getComputedStyle', {
-                value: () => ({
-                    getPropertyValue: (_property: string) => ''
-                })
-            });
-        });
-
         beforeEach(() => {
             testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
             fixture = createComponent(KbqNotificationCenterSimple);
@@ -57,7 +70,7 @@ describe('KbqNotificationCenter', () => {
         beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => (overlayContainer = oc)));
 
         afterEach(() => {
-            overlayContainer.ngOnDestroy();
+            overlayContainer?.ngOnDestroy();
         });
 
         it('default trigger is click', fakeAsync(() => {
@@ -495,20 +508,12 @@ describe('KbqNotificationCenter', () => {
     });
 
     describe('stickToWindow', () => {
-        beforeAll(() => {
-            Object.defineProperty(global.window, 'getComputedStyle', {
-                value: () => ({
-                    getPropertyValue: (_property: string) => ''
-                })
-            });
-        });
-
         beforeEach(() => {
             testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
         });
 
         afterEach(() => {
-            overlayContainer.ngOnDestroy();
+            overlayContainer?.ngOnDestroy();
         });
 
         // OverlayContainer should be injected after createComponent, otherwise TestBed
