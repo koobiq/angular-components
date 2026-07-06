@@ -21,7 +21,8 @@
 }
 
 .kbq-top-bar {
-    z-index: overlay.$overlay-z-index;
+    // TODO: Disabled, need fix in DS-5288
+    //z-index: overlay.$overlay-z-index;
 
     display: flex;
     align-items: center;

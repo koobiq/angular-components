@@ -42,9 +42,10 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
             display: none;
         }
 
-        &.cdk-overlay-container_dropdown {
-            z-index: calc($overlay-container-z-index - 1);
-        }
+        // TODO: Disabled, need fix in DS-5288
+        //&.cdk-overlay-container_dropdown {
+        //    z-index: calc($overlay-container-z-index - 1);
+        //}
     }
 
     // We use an extra wrapper element in order to use make the overlay itself a flex item.
