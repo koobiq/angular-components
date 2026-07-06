@@ -98,15 +98,18 @@ The `kbqAgGridExternalFilterState` directive saves the external filter value. Ad
 
 ### Column menu
 
-The `kbqAgGridColumnMenu` directive adds a column management button in the top-right corner of the grid. The panel allows toggling column visibility, reordering columns via drag-and-drop, and pinning them to the left or right.
+The `kbqAgGridColumnMenu` directive adds a button in the top-right corner of the grid that opens a column management menu. The menu allows showing and hiding columns, reordering them via drag-and-drop, pinning them to the left or right, and searching for a column by name. The reset button restores columns to their initial state.
+
+Constraints are configured via `ColDef`:
+
+- `lockVisible: true` prevents hiding a column. The last visible column can never be hidden regardless.
+- `lockPinned: true` prevents pinning and unpinning a column.
 
 Russian labels are used by default. To switch the language, provide a labels provider:
 
 ```ts
 providers: [kbqAgGridColumnMenuLabelsProvider(KBQ_AG_GRID_COLUMN_MENU_LABELS_EN)];
 ```
-
-To prevent a specific column from being hidden, set `lockVisible: true` in its `ColDef`.
 
 <!-- example(ag-grid-column-menu) -->
 
@@ -122,13 +125,16 @@ The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when th
 
 <!-- example(ag-grid-skeleton-cell-renderer) -->
 
-### Infinite selection
+### Row selection with infinite scrolling
 
-The `kbqAgGridInfiniteSelection` directive implements inverse selection for the infinite row model: the state is stored as `KbqAgGridInfiniteSelectionState` — equivalent to `WHERE id NOT IN (excludedIds)`. This is convenient for passing to the backend without loading all rows.
+With infinite scrolling, data is loaded in blocks, so it is not possible to select all rows using a regular list — most of them are not yet loaded. The `kbqAgGridInfiniteSelection` directive inverts the selection: instead of a list of selected rows, it stores an "all selected" flag and a list of exceptions.
 
-Instead of `datasource`, use `kbqAgGridInfiniteSelectionDatasource` — the directive wraps the data source to automatically select rows as new blocks load. Also make sure to specify `getRowId` for stable row identification.
+This state mirrors the condition "all except the specified IDs", so it can be passed to the server without loading all rows.
 
-<span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span> selects all rows; pressing it again when all rows are already selected does nothing.
+The directive requires two parameters:
+
+- `kbqAgGridInfiniteSelectionDatasource` accepts a data source. When all rows are selected, newly loaded blocks are automatically added to the selection.
+- `getRowId` returns a stable unique row identifier.
 
 <!-- example(ag-grid-infinite-selection) -->
 
