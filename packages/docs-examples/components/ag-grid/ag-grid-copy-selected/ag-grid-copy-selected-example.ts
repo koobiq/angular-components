@@ -51,6 +51,7 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
             kbqAgGridCopyByCtrlC
+            [alwaysMultiSort]="true"
             [kbqAgGridCopyFormatter]="copyFormatter()"
             [rowSelection]="rowSelection"
             [style.height.px]="300"

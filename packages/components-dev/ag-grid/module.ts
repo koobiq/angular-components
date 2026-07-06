@@ -1,13 +1,17 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
+    AgGridColumnMenuExample,
     AgGridColumnStateExample,
     AgGridCopySelectedExample,
     AgGridExternalFilterStateExample,
     AgGridFilterStateExample,
+    AgGridInfiniteSelectionExample,
+    AgGridLoadingOverlayExample,
     AgGridOverviewExample,
     AgGridQuickFilterStateExample,
     AgGridRowActionsExample,
     AgGridRowDraggingExample,
+    AgGridSkeletonCellRendererExample,
     AgGridStatusBarExample
 } from 'packages/docs-examples/components/ag-grid';
 import { DevThemeToggle } from '../theme-toggle';
@@ -15,6 +19,7 @@ import { DevThemeToggle } from '../theme-toggle';
 @Component({
     selector: 'dev-examples',
     imports: [
+        AgGridColumnMenuExample,
         AgGridOverviewExample,
         AgGridRowDraggingExample,
         AgGridCopySelectedExample,
@@ -23,9 +28,20 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridColumnStateExample,
         AgGridFilterStateExample,
         AgGridQuickFilterStateExample,
-        AgGridExternalFilterStateExample
+        AgGridExternalFilterStateExample,
+        AgGridLoadingOverlayExample,
+        AgGridSkeletonCellRendererExample,
+        AgGridInfiniteSelectionExample
     ],
     template: `
+        <ag-grid-column-menu-example />
+        <hr />
+        <ag-grid-loading-overlay-example />
+        <hr />
+        <ag-grid-skeleton-cell-renderer-example />
+        <hr />
+        <ag-grid-infinite-selection-example />
+        <hr />
         <ag-grid-external-filter-state-example />
         <hr />
         <ag-grid-quick-filter-state-example />

@@ -51,6 +51,7 @@ type ExampleTableItem = unknown;
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
             [columnDefs]="columnDefs"
@@ -133,7 +134,6 @@ export class ExampleGrid {
     }
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
-        api.setFocusedCell(0, 'column0');
         api.forEachNode((node) => {
             if (node.rowIndex === 3 || node.rowIndex === 4) {
                 node.setSelected(true);

@@ -33,7 +33,7 @@ const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
         'highlight.js': '^11.11.1'
     },
     '@koobiq/ag-grid-angular-theme': {
-        '@koobiq/ag-grid-angular-theme': '^34.3.1',
+        '@koobiq/ag-grid-angular-theme': '^34',
         'ag-grid-angular': '^34',
         'ag-grid-community': '^34'
     }

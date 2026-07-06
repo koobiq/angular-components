@@ -70,6 +70,7 @@ export class ExampleAgGridStatusBarComponent {
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
             pagination
+            [alwaysMultiSort]="true"
             [kbqAgGridStatusBar]="statusBarComponent"
             [rowSelection]="rowSelection"
             [style.height.px]="300"

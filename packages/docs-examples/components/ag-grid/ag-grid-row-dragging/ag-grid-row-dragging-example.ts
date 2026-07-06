@@ -25,6 +25,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [style.height.px]="300"
             [columnDefs]="columnDefs"

@@ -36,6 +36,7 @@ type ExampleRowData = Record<string, string>;
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [style.height]="'100%'"
             [columnDefs]="columnDefs"

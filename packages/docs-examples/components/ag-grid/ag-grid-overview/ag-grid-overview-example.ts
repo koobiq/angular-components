@@ -54,6 +54,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
             [style.height.px]="300"
@@ -142,8 +143,6 @@ export class AgGridOverviewExample {
     }));
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
-        api.setFocusedCell(0, 'column0');
-
         api.forEachNode((node) => {
             if (node.rowIndex === 3 || node.rowIndex === 4) {
                 node.setSelected(true);

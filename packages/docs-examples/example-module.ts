@@ -243,6 +243,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-filter-state-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-infinite-selection": {
+    "packagePath": "components/ag-grid/ag-grid-infinite-selection",
+    "title": "AG Grid with infinite selection",
+    "componentName": "AgGridInfiniteSelectionExample",
+    "files": [
+      "ag-grid-infinite-selection-example.ts"
+    ],
+    "selector": "ag-grid-infinite-selection-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-infinite-selection-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-loading-overlay": {
+    "packagePath": "components/ag-grid/ag-grid-loading-overlay",
+    "title": "AG Grid with loading overlay",
+    "componentName": "AgGridLoadingOverlayExample",
+    "files": [
+      "ag-grid-loading-overlay-example.ts"
+    ],
+    "selector": "ag-grid-loading-overlay-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-loading-overlay-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-overview": {
     "packagePath": "components/ag-grid/ag-grid-overview",
     "title": "AG Grid overview",
@@ -293,6 +317,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "ag-grid-row-dragging-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-row-dragging-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-skeleton-cell-renderer": {
+    "packagePath": "components/ag-grid/ag-grid-skeleton-cell-renderer",
+    "title": "AG Grid with skeleton cell renderer",
+    "componentName": "AgGridSkeletonCellRendererExample",
+    "files": [
+      "ag-grid-skeleton-cell-renderer-example.ts"
+    ],
+    "selector": "ag-grid-skeleton-cell-renderer-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-skeleton-cell-renderer-example.ts",
     "importPath": "components/ag-grid"
   },
   "ag-grid-status-bar": {
@@ -3327,6 +3363,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "markdown-table-example.ts",
     "importPath": "components/markdown"
   },
+  "modal-caption": {
+    "packagePath": "components/modal/modal-caption",
+    "title": "Modal with caption",
+    "componentName": "ModalCaptionExample",
+    "files": [
+      "modal-caption-example.ts"
+    ],
+    "selector": "modal-caption-example",
+    "additionalComponents": [],
+    "primaryFile": "modal-caption-example.ts",
+    "importPath": "components/modal"
+  },
   "modal-component-with-injector": {
     "packagePath": "components/modal/modal-component-with-injector",
     "title": "Modal component With Injector",
@@ -4858,6 +4906,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-editable-example.ts",
     "importPath": "components/tags"
   },
+  "tag-autocomplete-onpaste-off": {
+    "packagePath": "components/tags/tag-autocomplete-onpaste-off",
+    "title": "Tag autocomplete onpaste off",
+    "componentName": "TagAutocompleteOnpasteOffExample",
+    "files": [
+      "tag-autocomplete-onpaste-off-example.ts",
+      "tag-autocomplete-onpaste-off-example.html"
+    ],
+    "selector": "tag-autocomplete-onpaste-off-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-onpaste-off-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-autocomplete-option-operations": {
     "packagePath": "components/tags/tag-autocomplete-option-operations",
     "title": "Tag autocomplete option operations",
@@ -4964,6 +5025,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-editable-example.ts",
+    "importPath": "components/tags"
+  },
+  "tag-input-onpaste-off": {
+    "packagePath": "components/tags/tag-input-onpaste-off",
+    "title": "Tag input onpaste off",
+    "componentName": "TagInputOnpasteOffExample",
+    "files": [
+      "tag-input-onpaste-off-example.ts",
+      "tag-input-onpaste-off-example.html"
+    ],
+    "selector": "tag-input-onpaste-off-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-onpaste-off-example.ts",
     "importPath": "components/tags"
   },
   "tag-input-overview": {
@@ -5108,32 +5182,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-with-icon-example",
     "additionalComponents": [],
     "primaryFile": "tag-with-icon-example.ts",
-    "importPath": "components/tags"
-  },
-  "tags-autocomplete-onpaste-off": {
-    "packagePath": "components/tags/tags-autocomplete-onpaste-off",
-    "title": "Tags autocomplete onpaste off",
-    "componentName": "TagsAutocompleteOnpasteOffExample",
-    "files": [
-      "tags-autocomplete-onpaste-off-example.ts",
-      "tags-autocomplete-onpaste-off-example.html"
-    ],
-    "selector": "tags-autocomplete-onpaste-off-example",
-    "additionalComponents": [],
-    "primaryFile": "tags-autocomplete-onpaste-off-example.ts",
-    "importPath": "components/tags"
-  },
-  "tags-input-onpaste-off": {
-    "packagePath": "components/tags/tags-input-onpaste-off",
-    "title": "Tags input onpaste off",
-    "componentName": "TagsInputOnpasteOffExample",
-    "files": [
-      "tags-input-onpaste-off-example.ts",
-      "tags-input-onpaste-off-example.html"
-    ],
-    "selector": "tags-input-onpaste-off-example",
-    "additionalComponents": [],
-    "primaryFile": "tags-input-onpaste-off-example.ts",
     "importPath": "components/tags"
   },
   "textarea-can-grow": {
@@ -6452,6 +6500,10 @@ return import('@koobiq/docs-examples/components/ag-grid');
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-filter-state':
 return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-infinite-selection':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-loading-overlay':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-overview':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-quick-filter-state':
@@ -6459,6 +6511,8 @@ return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-row-actions':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-row-dragging':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-skeleton-cell-renderer':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-status-bar':
 return import('@koobiq/docs-examples/components/ag-grid');
@@ -6952,6 +7006,8 @@ return import('@koobiq/docs-examples/components/markdown');
 return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-table':
 return import('@koobiq/docs-examples/components/markdown');
+  case 'modal-caption':
+return import('@koobiq/docs-examples/components/modal');
   case 'modal-component-with-injector':
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-component':
@@ -7200,6 +7256,8 @@ return import('@koobiq/docs-examples/components/tabs');
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-editable':
 return import('@koobiq/docs-examples/components/tags');
+  case 'tag-autocomplete-onpaste-off':
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-option-operations':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-overview':
@@ -7217,6 +7275,8 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-draggable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-editable':
+return import('@koobiq/docs-examples/components/tags');
+  case 'tag-input-onpaste-off':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-overview':
 return import('@koobiq/docs-examples/components/tags');
@@ -7241,10 +7301,6 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-selectable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-with-icon':
-return import('@koobiq/docs-examples/components/tags');
-  case 'tags-autocomplete-onpaste-off':
-return import('@koobiq/docs-examples/components/tags');
-  case 'tags-input-onpaste-off':
 return import('@koobiq/docs-examples/components/tags');
   case 'textarea-can-grow':
 return import('@koobiq/docs-examples/components/textarea');
