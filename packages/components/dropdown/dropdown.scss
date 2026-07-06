@@ -3,8 +3,10 @@
 
 .kbq-dropdown-trigger {
     &.kbq-button {
-        padding-left: calc(10px - var(--kbq-size-border-width));
-        padding-right: calc(10px - var(--kbq-size-border-width));
+        --kbq-dropdown-trigger-horizontal-padding: 10px;
+
+        padding-left: calc(var(--kbq-dropdown-trigger-horizontal-padding) - var(--kbq-size-border-width));
+        padding-right: calc(var(--kbq-dropdown-trigger-horizontal-padding) - var(--kbq-size-border-width));
 
         & .kbq-icon_left {
             margin-right: var(--kbq-size-xs);
