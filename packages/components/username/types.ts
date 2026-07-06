@@ -39,10 +39,12 @@ export enum KbqUsernameFormatKey {
  * Allows flexible formatting regardless of profile field names.
  */
 export type KbqFormatKeyToProfileMapping<T = any> = {
-    [key in Exclude<
-        KbqUsernameFormatKey,
-        KbqUsernameFormatKey.FirstNameFull | KbqUsernameFormatKey.MiddleNameFull | KbqUsernameFormatKey.LastNameFull
-    >]: keyof T | undefined;
+    [
+        key in Exclude<
+            KbqUsernameFormatKey,
+            KbqUsernameFormatKey.FirstNameFull | KbqUsernameFormatKey.MiddleNameFull | KbqUsernameFormatKey.LastNameFull
+        >
+    ]: keyof T | undefined;
 };
 
 /**

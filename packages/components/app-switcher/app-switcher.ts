@@ -610,14 +610,12 @@ export class KbqAppSwitcherTrigger
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
         const containerRect = this.scrollable.getElementRef().nativeElement.getBoundingClientRect();
 
-        if (
-            !(
-                rect.bottom >= containerRect.top &&
-                rect.right >= containerRect.left &&
-                rect.top <= containerRect.bottom &&
-                rect.left <= containerRect.right
-            )
-        ) {
+        if (!(
+            rect.bottom >= containerRect.top &&
+            rect.right >= containerRect.left &&
+            rect.top <= containerRect.bottom &&
+            rect.left <= containerRect.right
+        )) {
             this.hide();
         }
     };
