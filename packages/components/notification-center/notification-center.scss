@@ -91,6 +91,18 @@
 
     padding-bottom: var(--kbq-size-xl);
 
+    // Smoothly reveal the just-appended "load more" spinner / error row. The row is scrolled into
+    // view via KbqScrollbar.scrollTo(), which calls a behavior-less scroll on the overlayscrollbars
+    // viewport — so `scroll-behavior` on the viewport controls the animation. Disabled for users who
+    // prefer reduced motion.
+    & [data-overlayscrollbars-viewport] {
+        scroll-behavior: smooth;
+
+        @media (prefers-reduced-motion: reduce) {
+            scroll-behavior: auto;
+        }
+    }
+
     & .kbq-loader-overlay_parent {
         border-radius: inherit;
     }

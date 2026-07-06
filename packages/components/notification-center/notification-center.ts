@@ -48,7 +48,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { Subject, Subscription, merge } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, merge } from 'rxjs';
 import { auditTime, distinctUntilChanged, filter, map, pairwise } from 'rxjs/operators';
 import { KbqNotificationCenterAnimations } from './notification-center-animations';
 import { KbqNotificationCenterService } from './notification-center.service';
@@ -198,6 +198,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         this.switcher().focus();
 
         this.subscribeToScrolledToBottom();
+        this.subscribeToRevealLoadMoreRow();
     }
 
     /** Handles the list container scroll: feeds the scroll-to-bottom check that drives infinite scroll.
@@ -263,6 +264,28 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         if (this.service.hasMore.value && !this.service.loadingMore.value && !this.service.loadMoreErrorMode.value) {
             this.service.onNextPage.emit();
         }
+    }
+
+    /**
+     * Reveals the bottom "load more" spinner / error row when it first appears. Both rows are appended
+     * below the last item and can land outside the viewport (the next page is requested while the user
+     * is up to `scrolledToBottomOffset` px above the true bottom). On each false->true transition, once
+     * the row has rendered, scroll the container to the bottom so the indicator is visible.
+     */
+    private subscribeToRevealLoadMoreRow(): void {
+        const reveal = (source: BehaviorSubject<boolean>) =>
+            source.pipe(distinctUntilChanged(), filter(Boolean), auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME));
+
+        merge(reveal(this.service.loadingMore), reveal(this.service.loadMoreErrorMode))
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.scrollToBottom());
+    }
+
+    /** Scrolls the list container to its bottom so a freshly-appended bottom row becomes visible. */
+    private scrollToBottom(): void {
+        const { scrollHeight } = this.scrollContainer().contentElement().nativeElement;
+
+        this.scrollContainer().scrollTo({ top: scrollHeight });
     }
 
     private focusScrollContainer(): void {
