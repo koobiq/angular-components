@@ -1,3 +1,15 @@
+## 19.8.3 (2026-07-06)
+
+### Koobiq
+
+ * bug fix  **breadcrumbs:** close result dropdown when no hidden items ([#DS-4578](https://github.com/koobiq/angular-components/issues/issue/DS-4578)) ([#1692](https://github.com/koobiq/angular-components/issues/1692)) ([2fc3084](https://github.com/koobiq/angular-components/commit/2fc308451977d1e7b6b762a9084a14fcf99c6487))
+ * bug fix  **dropdown:** correct offsetY for explicit yPosition='above' ([#DS-5168](https://github.com/koobiq/angular-components/issues/issue/DS-5168)) ([#1648](https://github.com/koobiq/angular-components/issues/1648)) ([#1656](https://github.com/koobiq/angular-components/issues/1656)) ([376a06d](https://github.com/koobiq/angular-components/commit/376a06dc9ab7c217ee8631fa2668fab9fa72a674))
+ * bug fix  **inline-edit:** hide empty tooltip when validationTooltip is falsy ([#DS-5170](https://github.com/koobiq/angular-components/issues/issue/DS-5170)) ([#1660](https://github.com/koobiq/angular-components/issues/1660)) ([8d25754](https://github.com/koobiq/angular-components/commit/8d257540f22f5dad52848060fe87f7a148db52be))
+ * bug fix  **overflow-items,actions-panel:** flaky visibility recalculations ([#DS-5130](https://github.com/koobiq/angular-components/issues/issue/DS-5130)) ([#1673](https://github.com/koobiq/angular-components/issues/1673)) ([4fd4e6c](https://github.com/koobiq/angular-components/commit/4fd4e6c9f1bc62e75481318e6c394a1896e6c0e4))
+ * bug fix  **select:** reset FormControl after clear ([#DS-5182](https://github.com/koobiq/angular-components/issues/issue/DS-5182)) ([#1658](https://github.com/koobiq/angular-components/issues/1658)) ([#1668](https://github.com/koobiq/angular-components/issues/1668)) ([d93a9d8](https://github.com/koobiq/angular-components/commit/d93a9d80204161c5b88ac97d19c6f103bf103352))
+ * bug fix  **tags:** autocomplete create tag ([#DS-5172](https://github.com/koobiq/angular-components/issues/issue/DS-5172)) ([#1674](https://github.com/koobiq/angular-components/issues/1674)) ([6b1d320](https://github.com/koobiq/angular-components/commit/6b1d32014f554f30d7063fd7ac8cba0a51019e16))
+ * bug fix  z-index in navbar and topbar ([#DS-5264](https://github.com/koobiq/angular-components/issues/issue/DS-5264)) ([#1700](https://github.com/koobiq/angular-components/issues/1700)) ([a5a8a43](https://github.com/koobiq/angular-components/commit/a5a8a4313e0984cf8d14488d184e77f0f3841bc6))
+
 ## 19.8.2 (2026-06-22)
 
 ### Koobiq
