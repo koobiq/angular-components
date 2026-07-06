@@ -88,6 +88,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     get selected(): any;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
+    readonly stretched: _angular_core.InputSignalWithTransform<boolean, unknown>;
     syncButtonToggle(toggle: KbqButtonToggle, select: boolean, isUserInput?: boolean): void;
     get value(): any;
     set value(newValue: any);
@@ -96,7 +97,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set vertical(value: boolean);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }

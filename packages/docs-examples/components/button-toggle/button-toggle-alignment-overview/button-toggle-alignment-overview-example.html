@@ -1,8 +1,4 @@
-<kbq-button-toggle-group
-    #group1="kbqButtonToggleGroup"
-    class="kbq-button-toggle-group_stretched layout-margin-bottom-l"
-    [(ngModel)]="model"
->
+<kbq-button-toggle-group #group1="kbqButtonToggleGroup" class="layout-margin-bottom-l" stretched [(ngModel)]="model">
     @for (toggle of group; track toggle) {
         <kbq-button-toggle [value]="$index">
             <i kbq-icon="kbq-briefcase_16"></i>
@@ -11,10 +7,7 @@
     }
 </kbq-button-toggle-group>
 
-<kbq-button-toggle-group
-    #group2="kbqButtonToggleGroup"
-    class="kbq-button-toggle-group_stretched layout-margin-bottom-l"
->
+<kbq-button-toggle-group #group2="kbqButtonToggleGroup" class="layout-margin-bottom-l" stretched>
     @for (toggle of group; track toggle) {
         <kbq-button-toggle [checked]="$index === 1" [value]="$index">
             {{ toggle }}
@@ -22,7 +15,7 @@
     }
 </kbq-button-toggle-group>
 
-<kbq-button-toggle-group #group3="kbqButtonToggleGroup" class="kbq-button-toggle-group_stretched">
+<kbq-button-toggle-group #group3="kbqButtonToggleGroup" [stretched]="true">
     @for (toggle of group; track toggle) {
         <kbq-button-toggle [checked]="$index === 2" [value]="$index">
             <i kbq-icon="kbq-briefcase_16"></i>

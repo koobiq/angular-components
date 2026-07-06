@@ -7,6 +7,16 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { combineLatest } from 'rxjs';
 
+const E2E_BUTTON_STATES: E2eButtonState[] = [
+    { title: 'disabled', disabled: true },
+    { title: 'checked', checked: true },
+    { title: 'normal' },
+    { title: 'hover', hover: true },
+    { title: 'active', active: true },
+    { title: 'focus', focused: true },
+    { title: 'progress', progress: true }
+];
+
 type E2eButtonState = Partial<{
     title: string;
     disabled: boolean;
@@ -102,15 +112,7 @@ export class E2eButtonToggleStates {
     readonly showTitle = model(true);
     readonly showSuffixIcon = model(false);
 
-    private readonly states: E2eButtonState[] = [
-        { title: 'disabled', disabled: true },
-        { title: 'checked', checked: true },
-        { title: 'normal' },
-        { title: 'hover', hover: true },
-        { title: 'active', active: true },
-        { title: 'focus', focused: true },
-        { title: 'progress', progress: true }
-    ];
+    private readonly states: E2eButtonState[] = E2E_BUTTON_STATES;
 
     private readonly orientation: E2eButtonOrientation[] = [
         { vertical: false },
@@ -122,6 +124,88 @@ export class E2eButtonToggleStates {
     readonly rows: DevButton[][] = this.orientation.map((style) =>
         this.states.map((state) => ({ ...state, ...style }))
     );
+
+    constructor() {
+        combineLatest([toObservable(this.showPrefixIcon), toObservable(this.showSuffixIcon)])
+            .pipe(takeUntilDestroyed())
+            .subscribe((args) => {
+                if (args.every((a) => a === false)) this.showTitle.set(true);
+            });
+    }
+}
+
+@Component({
+    selector: 'e2e-button-toggle-states-stretched',
+    imports: [KbqIconModule, FormsModule, KbqCheckboxModule, KbqButtonToggleModule],
+    template: `
+        <div class="dev-options">
+            <kbq-checkbox data-testid="e2eShowPrefixIcon" [(ngModel)]="showPrefixIcon">show prefix icon</kbq-checkbox>
+            <kbq-checkbox
+                data-testid="e2eShowTitle"
+                [disabled]="!showPrefixIcon() && !showSuffixIcon()"
+                [(ngModel)]="showTitle"
+            >
+                show title
+            </kbq-checkbox>
+            <kbq-checkbox data-testid="e2eShowSuffixIcon" [(ngModel)]="showSuffixIcon">show suffix icon</kbq-checkbox>
+        </div>
+
+        <div data-testid="e2eScreenshotTarget">
+            @for (state of states; track state.title) {
+                <kbq-button-toggle-group stretched>
+                    <kbq-button-toggle
+                        [value]="1"
+                        [checked]="state.checked!"
+                        [class.cdk-keyboard-focused]="state.focused"
+                        [class.kbq-active]="state.active"
+                        [class.kbq-hover]="state.hover"
+                        [class.kbq-progress]="state.progress"
+                        [disabled]="state.disabled!"
+                    >
+                        @if (showPrefixIcon()) {
+                            <i kbq-icon="kbq-play_16"></i>
+                        }
+                        @if (showTitle()) {
+                            {{ state.title }}
+                        }
+                        @if (showSuffixIcon()) {
+                            <i kbq-icon="kbq-chevron-down-s_16"></i>
+                        }
+                    </kbq-button-toggle>
+                    <kbq-button-toggle [value]="2">default 2</kbq-button-toggle>
+                    <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
+                </kbq-button-toggle-group>
+            }
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 400px;
+        }
+
+        .dev-options {
+            display: flex;
+            gap: var(--kbq-size-m);
+            margin-bottom: var(--kbq-size-l);
+            padding: var(--kbq-size-xxs);
+        }
+
+        kbq-button-toggle-group + kbq-button-toggle-group {
+            margin-top: var(--kbq-size-xxs);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eButtonToggleStatesStretched'
+    }
+})
+export class E2eButtonToggleStatesStretched {
+    readonly showPrefixIcon = model(false);
+    readonly showTitle = model(true);
+    readonly showSuffixIcon = model(false);
+
+    readonly states: E2eButtonState[] = E2E_BUTTON_STATES;
 
     constructor() {
         combineLatest([toObservable(this.showPrefixIcon), toObservable(this.showSuffixIcon)])

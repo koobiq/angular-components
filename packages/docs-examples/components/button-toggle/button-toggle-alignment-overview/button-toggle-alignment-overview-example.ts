@@ -14,7 +14,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     templateUrl: 'button-toggle-alignment-overview-example.html',
-    styleUrls: ['button-toggle-alignment-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleAlignmentOverviewExample {

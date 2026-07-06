@@ -6,7 +6,20 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { ButtonToggleExamplesModule } from '../../docs-examples/components/button-toggle';
+import {
+    ButtonToggleAlignmentOverviewExample,
+    ButtonToggleExamplesModule
+} from '../../docs-examples/components/button-toggle';
+
+@Component({
+    selector: 'dev-examples',
+    imports: [ButtonToggleAlignmentOverviewExample],
+    template: `
+        <button-toggle-alignment-overview-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -18,7 +31,8 @@ import { ButtonToggleExamplesModule } from '../../docs-examples/components/butto
         FormsModule,
         KbqTitleModule,
         KbqTextareaModule,
-        KbqPopoverModule
+        KbqPopoverModule,
+        DevExamples
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
