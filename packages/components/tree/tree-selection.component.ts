@@ -740,7 +740,7 @@ export class KbqTreeSelection
     }
 
     private getHeight(): number {
-        return this.geometryService.kbqGetClientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
+        return this.geometryService.clientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
     }
 
     private updateTabIndex(): void {

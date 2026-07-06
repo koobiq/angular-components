@@ -212,14 +212,14 @@ export class KbqOverflowItems {
         }
     > = {
         horizontal: {
-            containerSize: (element) => this.geometryService.kbqGetBoundingClientRect(element)?.width ?? 0,
+            containerSize: (element) => this.geometryService.boundingClientRect(element)?.width ?? 0,
             paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
             paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
             itemSize: (element) => {
                 const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
                 return (
-                    (this.geometryService.kbqGetBoundingClientRect(element)?.width ?? 0) +
+                    (this.geometryService.boundingClientRect(element)?.width ?? 0) +
                     (parseFloat(marginLeft) || 0) +
                     (parseFloat(marginRight) || 0)
                 );
@@ -228,14 +228,14 @@ export class KbqOverflowItems {
             flexDirection: 'row'
         },
         vertical: {
-            containerSize: (element) => this.geometryService.kbqGetBoundingClientRect(element)?.height ?? 0,
+            containerSize: (element) => this.geometryService.boundingClientRect(element)?.height ?? 0,
             paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
             paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
             itemSize: (element) => {
                 const { marginTop, marginBottom } = this.window.getComputedStyle(element);
 
                 return (
-                    (this.geometryService.kbqGetBoundingClientRect(element)?.height ?? 0) +
+                    (this.geometryService.boundingClientRect(element)?.height ?? 0) +
                     (parseFloat(marginTop) || 0) +
                     (parseFloat(marginBottom) || 0)
                 );

@@ -337,7 +337,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     /** @docs-private */
     getHeight(): number {
-        return this.geometryService.kbqGetClientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
+        return this.geometryService.clientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
     }
 
     select(setFocus = true): void {

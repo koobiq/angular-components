@@ -78,8 +78,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     private checkTooltipDisabled = () => {
-        const count: number =
-            this.geometryService.kbqGetClientRects(this.option.tooltipContent().nativeElement)?.length ?? 0;
+        const count: number = this.geometryService.clientRects(this.option.tooltipContent().nativeElement)?.length ?? 0;
 
         this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;
 

@@ -2520,9 +2520,9 @@ export class KbqFormsModule {
 // @public
 export class KbqGeometryService {
     // (undocumented)
-    kbqGetBoundingClientRect(element: Element | null | undefined): DOMRect | null;
+    boundingClientRect(element: Element | null | undefined): DOMRect | null;
     // (undocumented)
-    kbqGetClientRects(element: Element | null | undefined): DOMRectList | null;
+    clientRects(element: Element | null | undefined): DOMRectList | null;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqGeometryService, never>;
     // (undocumented)

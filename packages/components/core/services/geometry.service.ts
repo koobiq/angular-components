@@ -10,14 +10,14 @@ import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 export class KbqGeometryService {
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-    kbqGetBoundingClientRect(element: Element | null | undefined): DOMRect | null {
+    boundingClientRect(element: Element | null | undefined): DOMRect | null {
         if (!this.isBrowser || !element) return null;
 
         // eslint-disable-next-line no-restricted-properties
         return element.getBoundingClientRect();
     }
 
-    kbqGetClientRects(element: Element | null | undefined): DOMRectList | null {
+    clientRects(element: Element | null | undefined): DOMRectList | null {
         if (!this.isBrowser || !element) return null;
 
         // eslint-disable-next-line no-restricted-properties

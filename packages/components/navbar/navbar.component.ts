@@ -229,7 +229,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private readonly resizeDebounceInterval: number = 100;
 
     private get width(): number {
-        return this.geometryService.kbqGetBoundingClientRect(this.elementRef.nativeElement)?.width ?? 0;
+        return this.geometryService.boundingClientRect(this.elementRef.nativeElement)?.width ?? 0;
     }
 
     private get totalItemsWidth(): number {
