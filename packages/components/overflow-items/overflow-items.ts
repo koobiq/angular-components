@@ -18,7 +18,7 @@ import {
     KBQ_WINDOW,
     KbqFlexDirection,
     KbqFlexWrap,
-    kbqGetBoundingClientRect,
+    KbqGeometryService,
     kbqInjectNativeElement,
     KbqOrientation
 } from '@koobiq/components/core';
@@ -136,6 +136,7 @@ export class KbqOverflowItems {
     private readonly renderer = inject(Renderer2);
     private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly geometryService = inject(KbqGeometryService);
 
     /**
      * `KbqOverflowItem` directive references.
@@ -211,14 +212,14 @@ export class KbqOverflowItems {
         }
     > = {
         horizontal: {
-            containerSize: (element) => kbqGetBoundingClientRect(element).width,
+            containerSize: (element) => this.geometryService.kbqGetBoundingClientRect(element)?.width ?? 0,
             paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
             paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
             itemSize: (element) => {
                 const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
                 return (
-                    kbqGetBoundingClientRect(element).width +
+                    (this.geometryService.kbqGetBoundingClientRect(element)?.width ?? 0) +
                     (parseFloat(marginLeft) || 0) +
                     (parseFloat(marginRight) || 0)
                 );
@@ -227,14 +228,14 @@ export class KbqOverflowItems {
             flexDirection: 'row'
         },
         vertical: {
-            containerSize: (element) => kbqGetBoundingClientRect(element).height,
+            containerSize: (element) => this.geometryService.kbqGetBoundingClientRect(element)?.height ?? 0,
             paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
             paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
             itemSize: (element) => {
                 const { marginTop, marginBottom } = this.window.getComputedStyle(element);
 
                 return (
-                    kbqGetBoundingClientRect(element).height +
+                    (this.geometryService.kbqGetBoundingClientRect(element)?.height ?? 0) +
                     (parseFloat(marginTop) || 0) +
                     (parseFloat(marginBottom) || 0)
                 );

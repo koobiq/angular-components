@@ -108,6 +108,22 @@ const noRestrictedGlobalsOptionsForSSR = (() => {
     return restrictedOptions;
 })();
 
+/**
+ * @see https://eslint.org/docs/latest/rules/no-restricted-properties
+ */
+const noRestrictedPropertiesOptionsForSSR = [
+    {
+        property: 'getBoundingClientRect',
+        message:
+            'Direct DOM measurement is not SSR-safe. Use KbqGeometryService.kbqGetBoundingClientRect() from @koobiq/components/core instead.'
+    },
+    {
+        property: 'getClientRects',
+        message:
+            'Direct DOM measurement is not SSR-safe. Use KbqGeometryService.kbqGetClientRects() from @koobiq/components/core instead.'
+    }
+];
+
 module.exports = tseslint.config(
     // Global ignores (ported from .eslintignore)
     {
@@ -425,6 +441,10 @@ module.exports = tseslint.config(
             'no-restricted-globals': [
                 1,
                 ...noRestrictedGlobalsOptionsForSSR
+            ],
+            'no-restricted-properties': [
+                1,
+                ...noRestrictedPropertiesOptionsForSSR
             ]
         }
     },

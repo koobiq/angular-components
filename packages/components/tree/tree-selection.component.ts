@@ -39,7 +39,7 @@ import {
     isSelectAll,
     isVerticalMovement,
     KBQ_FORM_FIELD_REF,
-    kbqGetClientRects,
+    KbqGeometryService,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -140,6 +140,7 @@ export class KbqTreeSelection
     private scheduler = inject(AsyncScheduler);
     private clipboard = inject(Clipboard, { optional: true });
     protected readonly focusMonitor = inject(FocusMonitor);
+    private readonly geometryService = inject(KbqGeometryService);
 
     /** Indicates whether this component is placed inside a KbqFormField component. */
     protected readonly inSelect = !!inject(KBQ_FORM_FIELD_REF, { optional: true, host: true });
@@ -739,7 +740,7 @@ export class KbqTreeSelection
     }
 
     private getHeight(): number {
-        return kbqGetClientRects(this.elementRef.nativeElement)[0]?.height ?? 0;
+        return this.geometryService.kbqGetClientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
     }
 
     private updateTabIndex(): void {

@@ -2518,10 +2518,16 @@ export class KbqFormsModule {
 }
 
 // @public
-export function kbqGetBoundingClientRect(element: Element): DOMRect;
-
-// @public
-export function kbqGetClientRects(element: Element): DOMRectList | readonly DOMRect[];
+export class KbqGeometryService {
+    // (undocumented)
+    kbqGetBoundingClientRect(element: Element | null | undefined): DOMRect | null;
+    // (undocumented)
+    kbqGetClientRects(element: Element | null | undefined): DOMRectList | null;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqGeometryService, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqGeometryService>;
+}
 
 // @public
 export const kbqHighlightBackgroundMark: (text: string) => string;

@@ -47,7 +47,7 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
-    kbqGetClientRects,
+    KbqGeometryService,
     KbqOptgroup,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
@@ -132,6 +132,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     private changeDetectorRef = inject(ChangeDetectorRef);
     private clipboard = inject(Clipboard, { optional: true });
     protected readonly focusMonitor = inject(FocusMonitor);
+    private readonly geometryService = inject(KbqGeometryService);
 
     keyManager: FocusKeyManager<KbqListOption>;
 
@@ -463,7 +464,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     /** @docs-private */
     getHeight(): number {
-        return kbqGetClientRects(this.elementRef.nativeElement)[0]?.height ?? 0;
+        return this.geometryService.kbqGetClientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
     }
 
     // View to model callback that should be called if the list or its options lost focus.
@@ -743,6 +744,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     private ngZone = inject(NgZone);
     listSelection = inject(KbqListSelection);
     readonly group = inject(KbqOptgroup, { optional: true });
+    private readonly geometryService = inject(KbqGeometryService);
     hasFocus: boolean = false;
     preventBlur: boolean = false;
 
@@ -905,7 +907,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     /** @docs-private */
     getHeight(): number {
-        return kbqGetClientRects(this.elementRef.nativeElement)[0]?.height ?? 0;
+        return this.geometryService.kbqGetClientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
     }
 
     /** Handles click events on the list option. */

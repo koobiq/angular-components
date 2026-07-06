@@ -23,7 +23,7 @@ import {
     FocusKeyManager,
     isHorizontalMovement,
     isVerticalMovement,
-    kbqGetBoundingClientRect,
+    KbqGeometryService,
     LEFT_ARROW,
     RIGHT_ARROW,
     TAB
@@ -225,10 +225,11 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     readonly resizeStream = new Subject<Event>();
 
+    private readonly geometryService = inject(KbqGeometryService);
     private readonly resizeDebounceInterval: number = 100;
 
     private get width(): number {
-        return kbqGetBoundingClientRect(this.elementRef.nativeElement).width;
+        return this.geometryService.kbqGetBoundingClientRect(this.elementRef.nativeElement)?.width ?? 0;
     }
 
     private get totalItemsWidth(): number {
