@@ -4,7 +4,8 @@
 @use './navbar-theme' as *;
 
 .kbq-navbar {
-    z-index: overlay.$overlay-z-index;
+    // TODO: Disabled, need fix in DS-5288
+    //z-index: overlay.$overlay-z-index;
 
     display: flex;
     flex-direction: row;
