@@ -40,17 +40,33 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridColumnMenuExample {
     readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Column 0', lockVisible: true, pinned: 'left', width: 150 },
-        { field: 'column1', headerName: 'Column 1', lockVisible: true, width: 150 },
-        { field: 'column2', headerName: 'Column 2', width: 150 },
-        { field: 'column3', headerName: 'Column 3', pinned: 'right', width: 150 },
-        { field: 'column4', headerName: 'Column 4', width: 150 }
+        // Pinned and always visible — can't be hidden.
+        { field: 'incidentId', headerName: 'Incident ID', lockVisible: true, pinned: 'left', width: 110 },
+        // Shown by default. Severity and status are also locked from hiding.
+        { field: 'severity', headerName: 'Severity', lockVisible: true, width: 100 },
+        { field: 'status', headerName: 'Status', lockVisible: true, width: 140 },
+        { field: 'attackType', headerName: 'Attack type', width: 170 },
+        { field: 'sourceIp', headerName: 'Source IP', width: 128 },
+        // Hidden by default, but available to show from the column menu.
+        { field: 'affectedHost', headerName: 'Affected host', hide: true, width: 170 },
+        { field: 'destinationIp', headerName: 'Destination IP', hide: true, width: 128 },
+        { field: 'assignedAnalyst', headerName: 'Assigned analyst', hide: true, width: 170 },
+        { field: 'mitreTechnique', headerName: 'MITRE technique', hide: true, width: 130 },
+        { field: 'mitreTechniqueName', headerName: 'MITRE technique name', hide: true, width: 260 },
+        { field: 'responseAction', headerName: 'Response action', hide: true, width: 180 },
+        { field: 'sourcePort', headerName: 'Source port', hide: true, width: 130 },
+        { field: 'destinationPort', headerName: 'Destination port', hide: true, width: 150 },
+        { field: 'protocol', headerName: 'Protocol', hide: true, width: 120 },
+        { field: 'detectionSource', headerName: 'Detection source', hide: true, width: 170 },
+        { field: 'confidenceScore', headerName: 'Confidence score', hide: true, width: 160 },
+        { field: 'assetOwner', headerName: 'Asset owner', hide: true, width: 150 },
+        { field: 'businessUnit', headerName: 'Business unit', hide: true, width: 150 },
+        { field: 'threatActor', headerName: 'Threat actor', hide: true, width: 150 },
+        { field: 'malwareFamily', headerName: 'Malware family', hide: true, width: 160 },
+        { field: 'remediationStatus', headerName: 'Remediation status', hide: true, width: 180 }
     ];
-    readonly rowData = Array.from({ length: 30 }, (_, index) => ({
-        column0: 'Text ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index
-    }));
+
+    readonly rowData = Array.from({ length: 30 }, (_, index) =>
+        Object.fromEntries(this.columnDefs.map(({ field }) => [field as string, 'Text ' + index]))
+    );
 }
