@@ -12,6 +12,7 @@ import {
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 import {
     ChangeDetectorRef,
     DestroyRef,
@@ -105,6 +106,11 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly ngZone: NgZone = inject(NgZone);
     protected readonly scrollDispatcher: ScrollDispatcher = inject(ScrollDispatcher);
+    /** CDK ViewportRuler, used to re-apply the stick-to-window position on window resize.
+     * @docs-private */
+    protected readonly viewportRuler: ViewportRuler = inject(ViewportRuler);
+    /** View container the pop-up component portal is attached to.
+     * @docs-private */
     protected readonly hostView: ViewContainerRef = inject(ViewContainerRef);
     protected readonly direction = inject(Directionality, { optional: true });
     protected readonly destroyRef = inject(DestroyRef);
@@ -279,6 +285,15 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.updatePosition();
 
         this.instance.show(delay);
+
+        // The position strategy re-applies the overlay position on window resize (its ViewportRuler
+        // subscription is created inside OverlayRef.attach(), i.e. before this one), wiping the manual
+        // styles written by setStickPosition. Re-apply them after the strategy has run.
+        // No-op when stickToWindow is not set.
+        this.viewportRuler
+            .change()
+            .pipe(takeUntilDestroyed(this.instance.destroyRef))
+            .subscribe(() => this.instance?.setStickPosition());
 
         if (this.hideWithTimeout && this.trigger.includes(PopUpTriggers.Hover)) {
             this.ngZone.runOutsideAngular(() => {
