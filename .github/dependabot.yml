@@ -95,10 +95,6 @@ updates:
         patterns:
           - 'chalk'
           - '@types/chalk'
-      fs-extra:
-        patterns:
-          - 'fs-extra'
-          - '@types/fs-extra'
       glob:
         patterns:
           - 'glob'
