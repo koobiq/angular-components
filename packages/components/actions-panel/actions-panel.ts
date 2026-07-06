@@ -209,6 +209,7 @@ export class KbqActionsPanel implements OnDestroy {
     }
 
     private syncOverlayMaxWidth(container: HTMLElement, overlayElement: HTMLElement): boolean {
+        // eslint-disable-next-line no-restricted-properties
         const { width } = container.getBoundingClientRect();
 
         if (!width) return false;

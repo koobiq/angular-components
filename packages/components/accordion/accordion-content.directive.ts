@@ -68,6 +68,7 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     ngAfterContentInit(): void {
         if (!this.platform.isBrowser) return;
 
+        // eslint-disable-next-line no-restricted-properties
         const { height, width } = this.nativeElement.getBoundingClientRect();
 
         this.renderer.setProperty(

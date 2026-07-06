@@ -455,7 +455,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
             this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable | void) => {
                 if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
 
+                // eslint-disable-next-line no-restricted-properties
                 const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
+                // eslint-disable-next-line no-restricted-properties
                 const childRects = this.elementRef.nativeElement.getBoundingClientRect();
 
                 if (childRects.bottom < parentRects.top || childRects.top > parentRects.bottom) {
@@ -548,7 +550,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     private hideIfScrolledOutOfView = () => {
         if (!this.scrollable || !this.hideIfNotInViewPort()) return;
 
+        // eslint-disable-next-line no-restricted-properties
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
+        // eslint-disable-next-line no-restricted-properties
         const containerRect = this.scrollable.getElementRef().nativeElement.getBoundingClientRect();
 
         if (!(

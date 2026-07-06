@@ -526,7 +526,9 @@ export class KbqAppSwitcherTrigger
             this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable | void) => {
                 if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
 
+                // eslint-disable-next-line no-restricted-properties
                 const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
+                // eslint-disable-next-line no-restricted-properties
                 const childRects = this.elementRef.nativeElement.getBoundingClientRect();
 
                 if (childRects.bottom < parentRects.top || childRects.top > parentRects.bottom) {
@@ -607,7 +609,9 @@ export class KbqAppSwitcherTrigger
     private hideIfNotInViewPort = () => {
         if (!this.scrollable) return;
 
+        // eslint-disable-next-line no-restricted-properties
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
+        // eslint-disable-next-line no-restricted-properties
         const containerRect = this.scrollable.getElementRef().nativeElement.getBoundingClientRect();
 
         if (!(

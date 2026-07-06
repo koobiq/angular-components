@@ -1073,6 +1073,7 @@ export class KbqSelect
         if (!trigger || !this.keyManager) return;
 
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
+        // eslint-disable-next-line no-restricted-properties
         this.triggerRect = (
             this.parentFormField?.getConnectedOverlayOrigin().nativeElement || trigger.nativeElement
         ).getBoundingClientRect();
@@ -1118,6 +1119,7 @@ export class KbqSelect
                 this.addClassToOverlayContainer();
 
                 if (this.search() && !this.overlayWidth) {
+                    // eslint-disable-next-line no-restricted-properties
                     const measuredPanelWidth = this.panel()?.nativeElement.getBoundingClientRect().width;
 
                     if (measuredPanelWidth) {
@@ -1333,8 +1335,9 @@ export class KbqSelect
             }
 
             const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
+            // eslint-disable-next-line no-restricted-properties
             const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
-
+            // eslint-disable-next-line no-restricted-properties
             const matcherListWidth: number = Math.floor(matcherList.getBoundingClientRect().width);
             const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
 
@@ -1471,6 +1474,7 @@ export class KbqSelect
 
     /** Gets the height of the options container element. */
     private getHeightOfOptionsContainer(): number {
+        // eslint-disable-next-line no-restricted-properties
         return this.optionsContainer().nativeElement.getClientRects()[0]?.height;
     }
 
@@ -1864,6 +1868,7 @@ export class KbqSelect
         if (this.panelWidth === 'auto') {
             const elementRef = origin instanceof CdkOverlayOrigin ? origin.elementRef : origin || this.elementRef;
 
+            // eslint-disable-next-line no-restricted-properties
             return elementRef.nativeElement.getBoundingClientRect().width;
         }
 

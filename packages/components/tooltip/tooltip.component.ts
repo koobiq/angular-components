@@ -538,6 +538,7 @@ export class KbqTooltipTrigger
             return;
         }
 
+        // eslint-disable-next-line no-restricted-properties
         const triggerRects = this.getNativeElement().getBoundingClientRect();
         const point: Point = { x: 0, y: 0 };
 

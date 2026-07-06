@@ -107,7 +107,9 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
                 this.parent.appendChild(wrapper);
 
                 const result = this.isWidthOverflown(
+                    // eslint-disable-next-line no-restricted-properties
                     this.parent.getBoundingClientRect().width,
+                    // eslint-disable-next-line no-restricted-properties
                     wrapper.getBoundingClientRect().width
                 );
 
@@ -117,7 +119,9 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
             }
 
             return this.isWidthOverflown(
+                // eslint-disable-next-line no-restricted-properties
                 this.parent.getBoundingClientRect().width,
+                // eslint-disable-next-line no-restricted-properties
                 this.child.getBoundingClientRect().width
             );
         }
