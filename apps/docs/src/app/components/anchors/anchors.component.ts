@@ -218,6 +218,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         const className = Array.from<string>(classList).find((name) => name.startsWith('kbq-markdown__')) || '';
 
         return [
+            'kbq-markdown__h2',
             'kbq-markdown__h3',
             'kbq-markdown__h4',
             'kbq-markdown__h5'

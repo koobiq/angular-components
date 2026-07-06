@@ -83,7 +83,7 @@ export class DocsMarkdownRenderer extends Renderer {
     heading({ tokens, depth }: Tokens.Heading): string {
         const text = this.parser.parseInline(tokens);
 
-        if ([3, 4, 5].includes(depth)) {
+        if ([2, 3, 4, 5].includes(depth)) {
             const escapedText = text.toLowerCase().replace(/\s/g, '-');
 
             return `
