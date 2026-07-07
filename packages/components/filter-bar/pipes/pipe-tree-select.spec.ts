@@ -99,7 +99,15 @@ describe('KbqPipeTreeSelectComponent', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
 
-    window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    const originalStructuredClone = window.structuredClone;
+
+    beforeAll(() => {
+        window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    });
+
+    afterAll(() => {
+        window.structuredClone = originalStructuredClone;
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -434,13 +442,13 @@ describe('KbqPipeTreeSelectComponent', () => {
         it('should return true for expandable nodes', () => {
             const component = getPipeComponent();
 
-            expect(component.hasChild(0, { expandable: true })).toBe(true);
+            expect(component.hasChild(0, { name: 'node', value: null, level: 0, expandable: true })).toBe(true);
         });
 
         it('should return false for leaf nodes', () => {
             const component = getPipeComponent();
 
-            expect(component.hasChild(0, { expandable: false })).toBe(false);
+            expect(component.hasChild(0, { name: 'node', value: null, level: 0, expandable: false })).toBe(false);
         });
     });
 

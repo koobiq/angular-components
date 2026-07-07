@@ -77,7 +77,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
         this.control.markAsPristine();
         this.popover().hide();
 
-        this.filterBar?.onChangePipe.next(this.data);
+        this.filterBar?.onChangePipe.emit(this.data);
 
         setTimeout(() => this.restoreTriggerFocus());
     }

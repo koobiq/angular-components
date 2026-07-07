@@ -39,12 +39,13 @@
         kbq-button
         kbqFilterBarButton
         class="kbq-button_action"
+        [attr.aria-label]="localeData.saveNewFilterTooltip"
         [class.kbq-active]="focusedElementBeforeIs(saveNewFilterButton) && opened"
         [color]="colors.Empty"
         [disabled]="isSaving"
         (click)="openSaveAsNewFilterPopover()"
     >
-        <i kbq-icon="kbq-floppy-disk_16"></i>
+        <i kbq-icon="kbq-floppy-disk_16" aria-hidden="true"></i>
     </button>
 }
 
@@ -54,13 +55,14 @@
         kbq-button
         kbqFilterBarButton
         class="kbq-button_action"
+        [attr.aria-label]="localeData.actionsTooltip"
         [color]="colors.Empty"
         [kbqDropdownTriggerFor]="filterActions"
         [disabled]="isSaving"
         [class.kbq-active]="focusedElementBeforeIs(filterActionsButton) && filterActionsOpened"
         [class]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
     >
-        <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+        <i kbq-icon="kbq-ellipsis-vertical_16" aria-hidden="true"></i>
     </button>
 
     <i kbq-icon="kbq-chevron-right-s_16" class="kbq-filter-bar__arrow" [color]="'theme'"></i>
@@ -78,6 +80,7 @@
                 placeholder="{{ localeData.searchPlaceholder }}"
                 autocomplete="off"
                 kbqInput
+                [attr.aria-label]="localeData.searchPlaceholder"
                 [formControl]="searchControl"
                 (click)="stopEventPropagation($event)"
                 (keydown)="searchKeydownHandler($event)"
@@ -159,7 +162,13 @@
 
 <ng-template #saveAsNewPopoverContent>
     @if (showFilterSavingError) {
-        <kbq-alert class="layout-margin-bottom-m" [alertColor]="'error'" [alertStyle]="'colored'" [compact]="true">
+        <kbq-alert
+            class="layout-margin-bottom-m"
+            role="alert"
+            [alertColor]="'error'"
+            [alertStyle]="'colored'"
+            [compact]="true"
+        >
             {{ filterSavingErrorText }}
         </kbq-alert>
     }
@@ -172,6 +181,7 @@
                     #newFilterName
                     kbqInput
                     type="text"
+                    [attr.aria-label]="localeData.name"
                     [formControl]="filterName"
                     (keydown.enter)="saveAsNew($event)"
                 />

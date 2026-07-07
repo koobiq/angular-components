@@ -26,11 +26,12 @@ import { getId } from './pipes/base-pipe';
                 kbqTooltip="{{ filterBar.configuration.add.tooltip }}"
                 kbq-button
                 kbq-select-matcher
+                [attr.aria-label]="filterBar.configuration.add.tooltip"
                 [color]="'contrast-fade'"
                 [kbqStyle]="'outline'"
                 [class]="{ 'kbq-active': select.panelOpen }"
             >
-                <i kbq-icon="kbq-plus_16"></i>
+                <i kbq-icon="kbq-plus_16" aria-hidden="true"></i>
             </button>
 
             @for (template of filterBar.pipeTemplates; track template) {
@@ -97,9 +98,11 @@ export class KbqPipeAdd {
             }
 
             this.filterBar.filter.changed = true;
-            this.filterBar.filter.pipes.push(
+            // New array (not in-place push) to keep `pipes` on a new-reference-on-change model.
+            this.filterBar.filter.pipes = [
+                ...this.filterBar.filter.pipes,
                 Object.assign({}, option.value, { values: undefined, valueTemplate: undefined, openOnAdd: true })
-            );
+            ];
 
             this.onAddPipe.emit(option.value);
             this.filterBar.filterChange.emit(this.filterBar.filter);

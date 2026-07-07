@@ -16,7 +16,13 @@ import { isMac } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { delay, filter } from 'rxjs/operators';
 import { KbqFilterBar } from '../filter-bar';
-import { KbqPipeData, KbqPipeTemplate, KbqPipeType } from '../filter-bar.types';
+import {
+    KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+    KbqFilterBarConfiguration,
+    KbqPipeData,
+    KbqPipeTemplate,
+    KbqPipeType
+} from '../filter-bar.types';
 
 /** Injection Token for providing configuration of filter-bar */
 export const KBQ_PIPE_DATA = new InjectionToken('KBQ_PIPE_DATA');
@@ -59,6 +65,13 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     /** Last known focus origin within the pipe. Used to preserve the keyboard focus ring on restore. */
     private focusOrigin: FocusOrigin = null;
 
+    /**
+     * Whether this pipe has been destroyed. Guards deferred (`setTimeout`) work that could otherwise
+     * read view queries or mutate `data` after the pipe was removed or the filter switched.
+     * @docs-private
+     */
+    protected destroyed = false;
+
     /** values to select from the pipe template */
     protected values;
     /** TemplateRef for selecting an option */
@@ -87,14 +100,14 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
     /** localized data
      * @docs-private */
-    get localeData() {
-        return this.filterBar?.configuration;
+    get localeData(): KbqFilterBarConfiguration {
+        return this.filterBar?.configuration ?? KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
     }
 
     constructor() {
         this.$implicit = this;
 
-        this.stateChanges.subscribe(() => {
+        this.stateChanges.pipe(takeUntilDestroyed()).subscribe(() => {
             this.changeDetectorRef.markForCheck();
         });
 
@@ -110,7 +123,10 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
             )
             .subscribe((origin) => (this.focusOrigin = origin));
 
-        this.destroyRef.onDestroy(() => this.focusMonitor.stopMonitoring(this.elementRef));
+        this.destroyRef.onDestroy(() => {
+            this.destroyed = true;
+            this.focusMonitor.stopMonitoring(this.elementRef);
+        });
 
         afterNextRender(() => {
             this.isMac = isMac();
@@ -166,7 +182,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         this.stateChanges.next();
 
         this.filterBar?.onClearPipe.emit(this.data);
-        this.filterBar?.onChangePipe.next(this.data);
+        this.filterBar?.onChangePipe.emit(this.data);
     }
 
     /**
@@ -234,7 +250,7 @@ export class KbqPipeMinWidth {
     }
 
     constructor() {
-        this.filterBar?.changes.pipe(delay(0)).subscribe(this.update);
+        this.filterBar?.changes.pipe(delay(0), takeUntilDestroyed()).subscribe(this.update);
 
         afterNextRender({ read: this.update });
     }

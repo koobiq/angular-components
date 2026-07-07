@@ -8,9 +8,10 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { DateAdapter } from '@koobiq/components/core';
+import { DateFormatter } from '@koobiq/components/core';
 import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FlatTreeControl } from '@koobiq/components/tree';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
@@ -35,20 +36,66 @@ import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { PopUpSizes } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { Type } from '@angular/core';
 
 // @public
-export const defaultFilterBarPipes: [string, unknown][];
+export const defaultFilterBarPipes: [KbqPipeType, Type<KbqBasePipe<unknown>>][];
 
 // @public
 export function getId(item: KbqPipeTemplate): KbqPipeType | string | number;
 
 // @public
-export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<unknown>;
+export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<{
+    reset: {
+        buttonName: string;
+    };
+    search: {
+        tooltip: string;
+        placeholder: string;
+    };
+    filters: {
+        defaultName: string;
+        saveNewFilterTooltip: string;
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        saveAsNewFilter: string;
+        saveChanges: string;
+        saveAsNew: string;
+        change: string;
+        resetChanges: string;
+        remove: string;
+        name: string;
+        error: string;
+        errorHint: string;
+        saveButton: string;
+        cancelButton: string;
+        actionsTooltip: string;
+    };
+    add: {
+        tooltip: string;
+    };
+    refresher: {
+        refresh: string;
+        settings: string;
+    };
+    pipe: {
+        clearButtonTooltip: string;
+        removeButtonTooltip: string;
+        applyButton: string;
+        emptySearchResult: string;
+        selectAll: string;
+    };
+    datePipe: {
+        customPeriod: string;
+        customPeriodFrom: string;
+        customPeriodTo: string;
+        customPeriodErrorHint: string;
+        backToPeriodSelection: string;
+    };
+}>;
 
 // @public
 export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
@@ -75,9 +122,14 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
         errorHint: string;
         saveButton: string;
         cancelButton: string;
+        actionsTooltip: string;
     };
     add: {
         tooltip: string;
+    };
+    refresher: {
+        refresh: string;
+        settings: string;
     };
     pipe: {
         clearButtonTooltip: string;
@@ -96,7 +148,7 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
 };
 
 // @public
-export const KBQ_FILTER_BAR_PIPES: InjectionToken<any>;
+export const KBQ_FILTER_BAR_PIPES: InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>;
 
 // @public
 export const KBQ_PIPE_DATA: InjectionToken<unknown>;
@@ -107,6 +159,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     readonly data: KbqPipeData<V>;
+    protected destroyed: boolean;
     protected readonly destroyRef: DestroyRef;
     protected readonly elementRef: ElementRef<HTMLElement>;
     protected readonly filterBar: KbqFilterBar | null;
@@ -114,7 +167,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     get isEmpty(): boolean;
     isMac: boolean;
     isTemplateRef(value: unknown): boolean;
-    get localeData(): any;
+    get localeData(): KbqFilterBarConfiguration;
     // (undocumented)
     ngAfterViewInit(): void;
     onClear(): void;
@@ -133,7 +186,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 }
 
 // @public
-export function kbqBuildTree<T extends KbqTreeSelectNode>(value: any, level: number): T[];
+export function kbqBuildTree<T extends KbqTreeSelectNode>(value: Record<string, unknown>, level: number): T[];
 
 // @public (undocumented)
 export interface KbqDateTimeValue {
@@ -166,10 +219,56 @@ export class KbqFilterBar {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     readonly changes: BehaviorSubject<void>;
+    configuration: KbqFilterBarConfiguration;
     // (undocumented)
-    configuration: any;
-    // (undocumented)
-    readonly externalConfiguration: unknown;
+    readonly externalConfiguration: {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+            actionsTooltip: string;
+        };
+        add: {
+            tooltip: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+            selectAll: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
+    } | null;
     get filter(): KbqFilter | null;
     set filter(value: KbqFilter | null);
     readonly filterChange: i0.OutputEmitterRef<KbqFilter | null>;
@@ -183,7 +282,7 @@ export class KbqFilterBar {
     get isSaved(): boolean;
     get isSavedAndChanged(): boolean;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
-    readonly onChangePipe: EventEmitter<KbqPipe>;
+    readonly onChangePipe: i0.OutputEmitterRef<KbqPipe>;
     readonly onClearPipe: i0.OutputEmitterRef<KbqPipe>;
     readonly onClosePipe: i0.OutputEmitterRef<KbqPipe>;
     readonly onRemovePipe: i0.OutputEmitterRef<KbqPipe>;
@@ -213,6 +312,9 @@ export class KbqFilterBarButton {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarButton, never>;
 }
 
+// @public
+export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
+
 // @public (undocumented)
 export class KbqFilterBarModule {
     // (undocumented)
@@ -220,23 +322,71 @@ export class KbqFilterBarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqFilterBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState]>;
 }
 
 // @public
 export const kbqFilterBarPipesProvider: () => Provider;
 
 // @public (undocumented)
-export class KbqFilterBarRefresher {
+export class KbqFilterRefresher {
+    protected get localeData(): {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+            actionsTooltip: string;
+        };
+        add: {
+            tooltip: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+            selectAll: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
+    };
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarRefresher, "kbq-filter-refresher, [kbq-filter-refresher]", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterRefresher, "kbq-filter-refresher, [kbq-filter-refresher]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarRefresher, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterRefresher, never>;
 }
 
 // @public (undocumented)
 export class KbqFilterReset {
-    get localeData(): any;
+    get localeData(): string;
     readonly onResetFilter: i0.OutputEmitterRef<KbqFilter | null>;
     // (undocumented)
     protected resetFilter(): void;
@@ -274,7 +424,24 @@ export class KbqFilters implements OnInit {
     get isEmpty(): boolean;
     // (undocumented)
     isSaving: boolean;
-    get localeData(): any;
+    get localeData(): {
+        defaultName: string;
+        saveNewFilterTooltip: string;
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        saveAsNewFilter: string;
+        saveChanges: string;
+        saveAsNew: string;
+        change: string;
+        resetChanges: string;
+        remove: string;
+        name: string;
+        error: string;
+        errorHint: string;
+        saveButton: string;
+        cancelButton: string;
+        actionsTooltip: string;
+    };
     protected readonly mainButton: i0.Signal<KbqButton>;
     // (undocumented)
     ngOnInit(): void;
@@ -292,8 +459,8 @@ export class KbqFilters implements OnInit {
     protected readonly placements: typeof PopUpPlacements;
     protected readonly popover: i0.Signal<KbqPopoverTrigger>;
     get popoverHeader(): string;
-    popoverOffset: number;
-    popoverSize: PopUpSizes;
+    protected readonly popoverOffset: number;
+    protected readonly popoverSize = PopUpSizes.Medium;
     // (undocumented)
     preparePopover(): void;
     // (undocumented)
@@ -309,7 +476,7 @@ export class KbqFilters implements OnInit {
     saveFocusedElement(button?: KbqButton): void;
     saveNewFilter: boolean;
     protected readonly saveNewFilterButton: i0.Signal<KbqButton>;
-    searchControl: UntypedFormControl;
+    readonly searchControl: FormControl<string | null>;
     searchKeydownHandler(event: KeyboardEvent): void;
     // (undocumented)
     selectFilter(filter: KbqFilter): void;
@@ -320,7 +487,7 @@ export class KbqFilters implements OnInit {
     stopEventPropagation(event: Event): void;
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": false; "isSignal": true; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": true; "isSignal": true; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilters, never>;
 }
@@ -376,7 +543,13 @@ export class KbqPipeButton {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly filterBar: KbqFilterBar;
-    get localeData(): any;
+    get localeData(): {
+        clearButtonTooltip: string;
+        removeButtonTooltip: string;
+        applyButton: string;
+        emptySearchResult: string;
+        selectAll: string;
+    };
     protected readonly pipe: KbqBasePipe<any>;
     readonly readonly: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
@@ -391,20 +564,27 @@ export interface KbqPipeData<V> extends KbqPipe {
     value: V | null;
 }
 
-// @public (undocumented)
-export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
+// @public
+export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
+    // (undocumented)
+    protected readonly adapter: DateAdapter<any>;
     protected readonly colors: typeof KbqComponentColors;
     get defaultEnd(): D;
     get defaultStart(): D;
     get disabled(): boolean;
     get end(): D;
+    protected abstract formatRange(start: D, end: D): string;
     get formattedValue(): string;
+    // (undocumented)
+    protected readonly formatter: DateFormatter<any>;
     protected formGroup: FormGroup;
+    protected abstract getDefaultEnd(): D;
+    protected abstract getDefaultStart(): D;
     // (undocumented)
     hideCalendars(): void;
     get isEmpty(): boolean;
     protected isListMode: boolean;
-    listSelection: i0.Signal<KbqListSelection | undefined>;
+    readonly listSelection: i0.Signal<KbqListSelection | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -423,7 +603,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
     readonly popover: i0.Signal<KbqPopoverTrigger>;
-    returnButton: i0.Signal<KbqButton>;
+    readonly returnButton: i0.Signal<KbqButton>;
     protected showEndCalendar: boolean;
     // (undocumented)
     showList(): void;
@@ -432,6 +612,20 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     protected showStartCalendar: boolean;
     get start(): D;
     protected readonly styles: typeof KbqButtonStyles;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeDateBaseComponent<any>, never, never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDateBaseComponent<any>, never>;
+}
+
+// @public (undocumented)
+export class KbqPipeDateComponent<D> extends KbqPipeDateBaseComponent<D> {
+    // (undocumented)
+    protected formatRange(start: D, end: D): string;
+    // (undocumented)
+    protected getDefaultEnd(): D;
+    // (undocumented)
+    protected getDefaultStart(): D;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeDateComponent<any>, "kbq-pipe-date", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -439,45 +633,13 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
 }
 
 // @public (undocumented)
-export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
-    protected readonly colors: typeof KbqComponentColors;
-    get defaultEnd(): D;
-    get defaultStart(): D;
-    get disabled(): boolean;
-    get end(): D;
-    get formattedValue(): string;
-    protected formGroup: FormGroup;
+export class KbqPipeDatetimeComponent<D> extends KbqPipeDateBaseComponent<D> {
     // (undocumented)
-    hideCalendars(): void;
-    get isEmpty(): boolean;
-    protected isListMode: boolean;
-    listSelection: i0.Signal<KbqListSelection | undefined>;
+    protected formatRange(start: D, end: D): string;
     // (undocumented)
-    ngAfterViewInit(): void;
-    onApplyPeriod(): void;
+    protected getDefaultEnd(): D;
     // (undocumented)
-    onFocusEndInput(): void;
-    // (undocumented)
-    onFocusStartInput(): void;
-    onKeydown($event: KeyboardEvent): void;
-    // (undocumented)
-    onSelect(item: KbqDateTimeValue): void;
-    // (undocumented)
-    onSelectEndDate(value: D): void;
-    // (undocumented)
-    onSelectStartDate(value: D): void;
-    open(): void;
-    protected readonly placements: typeof PopUpPlacements;
-    readonly popover: i0.Signal<KbqPopoverTrigger>;
-    returnButton: i0.Signal<KbqButton>;
-    protected showEndCalendar: boolean;
-    // (undocumented)
-    showList(): void;
-    // (undocumented)
-    showPeriod(): void;
-    protected showStartCalendar: boolean;
-    get start(): D;
-    protected readonly styles: typeof KbqButtonStyles;
+    protected getDefaultStart(): D;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeDatetimeComponent<any>, "kbq-pipe-datetime", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -518,8 +680,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     get allOptionsSelected(): boolean;
     get allVisibleOptionsSelected(): boolean;
     get checkboxState(): KbqPseudoCheckboxState;
-    compareByValue: (o1: any, o2: any) => boolean;
-    filteredOptions: Observable<any[]>;
+    compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
+    filteredOptions: Observable<KbqSelectValue[]>;
     get isEmpty(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -529,7 +691,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     onSelect(item: KbqSelectValue[]): void;
     open(): void;
     readonly options: i0.Signal<readonly KbqOption[]>;
-    searchControl: UntypedFormControl;
+    readonly searchControl: FormControl<string | null>;
     readonly select: i0.Signal<KbqSelect>;
     selectAllHandler: (event: KeyboardEvent) => void;
     get selected(): KbqSelectValue[] | null;
@@ -555,8 +717,8 @@ export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {
 
 // @public (undocumented)
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {
-    compareByValue: (o1: any, o2: any) => boolean;
-    filteredOptions: Observable<any[]>;
+    compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
+    filteredOptions: Observable<KbqSelectValue[]>;
     get isEmpty(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -564,7 +726,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     // (undocumented)
     onSelect(item: KbqSelectValue): void;
     open(): void;
-    searchControl: UntypedFormControl;
+    readonly searchControl: FormControl<string | null>;
     readonly select: i0.Signal<KbqSelect>;
     get selected(): KbqSelectValue | null;
     // (undocumented)
@@ -620,9 +782,8 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     constructor();
     // (undocumented)
     dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-    filteredOptions: Observable<any[]>;
     // (undocumented)
-    hasChild(_: number, nodeData: any): any;
+    hasChild(_: number, nodeData: KbqTreeSelectFlatNode): boolean;
     get isEmpty(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -633,11 +794,9 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     // (undocumented)
     onSelect(item: KbqTreeOption): void;
     open(): void;
-    searchControl: UntypedFormControl;
+    readonly searchControl: FormControl<string | null>;
     readonly select: i0.Signal<KbqTreeSelect>;
     get selected(): KbqSelectValue | null;
-    // (undocumented)
-    template: any;
     // (undocumented)
     treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
     // (undocumented)
@@ -650,7 +809,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
 }
 
 // @public (undocumented)
-export type KbqPipeType = `${KbqPipeTypes}` | string;
+export type KbqPipeType = `${KbqPipeTypes}` | (string & {});
 
 // @public
 export enum KbqPipeTypes {
@@ -702,6 +861,7 @@ export enum KbqSaveFilterStatuses {
 
 // @public (undocumented)
 export interface KbqSelectValue {
+    id?: string | number;
     // (undocumented)
     name: string;
     // (undocumented)

@@ -41,6 +41,7 @@
                 autocomplete="off"
                 kbqInput
                 type="text"
+                [attr.aria-label]="localeData.search.placeholder"
                 [formControl]="searchControl"
                 (keydown.enter)="toggleSelectionAllByEnterKey()"
             />

@@ -78,7 +78,15 @@ describe('KbqFilterBar', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
 
-    window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    const originalStructuredClone = window.structuredClone;
+
+    beforeAll(() => {
+        window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    });
+
+    afterAll(() => {
+        window.structuredClone = originalStructuredClone;
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -291,6 +299,36 @@ describe('KbqFilterBar', () => {
             filterBar.removePipe(pipe1);
 
             expect(filterBar.filter!.pipes).toEqual([pipe2]);
+        });
+
+        it('should leave filter.pipes untouched when the pipe is not part of the filter', () => {
+            const pipe1 = createPipe({ name: 'pipe1' });
+            const pipe2 = createPipe({ name: 'pipe2' });
+            const absentPipe = createPipe({ name: 'absent' });
+            const filterBar = getFilterBar();
+
+            filterBar.filter = createFilter([pipe1, pipe2]);
+
+            filterBar.removePipe(absentPipe);
+
+            expect(filterBar.filter!.pipes).toEqual([pipe1, pipe2]);
+        });
+
+        it('should not emit onRemovePipe when the pipe is not part of the filter', () => {
+            const pipe = createPipe({ name: 'pipe1' });
+            const absentPipe = createPipe({ name: 'absent' });
+            const filterBar = getFilterBar();
+
+            filterBar.filter = createFilter([pipe]);
+
+            const spy = jest.fn();
+
+            filterBar.onRemovePipe.subscribe(spy);
+            spy.mockClear();
+
+            filterBar.removePipe(absentPipe);
+
+            expect(spy).not.toHaveBeenCalled();
         });
 
         it('should emit onRemovePipe event', () => {

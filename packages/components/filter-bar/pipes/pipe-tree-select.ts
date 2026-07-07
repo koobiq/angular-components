@@ -1,7 +1,6 @@
-import { NgIf } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -16,7 +15,6 @@ import {
     KbqTreeOption
 } from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { Observable } from 'rxjs';
 import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
 import { getId, KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
@@ -37,7 +35,6 @@ import { KbqPipeState } from './pipe-state';
         KbqHighlightModule,
         KbqTreeModule,
         KbqTreeSelectModule,
-        NgIf,
         FormsModule
     ],
     templateUrl: 'pipe-tree-select.html',
@@ -53,16 +50,12 @@ import { KbqPipeState } from './pipe-state';
 })
 export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit, AfterViewInit {
     /** control for search options */
-    searchControl: UntypedFormControl = new UntypedFormControl();
-    /** filtered by search options */
-    filteredOptions: Observable<any[]>;
+    readonly searchControl = new FormControl<string | null>(null);
 
     treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
     treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
 
     dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-
-    template: any;
 
     /** @docs-private */
     readonly select = viewChild.required(KbqTreeSelect);
@@ -95,7 +88,9 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     }
 
     ngOnInit(): void {
-        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((value) => this.treeControl.filterNodes(value));
     }
 
     override ngAfterViewInit() {
@@ -106,7 +101,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
             .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
-    hasChild(_: number, nodeData) {
+    hasChild(_: number, nodeData: KbqTreeSelectFlatNode) {
         return nodeData.expandable;
     }
 
@@ -118,14 +113,15 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
         this.stateChanges.next();
     }
 
-    /** updates values for selection and value template */
+    /**
+     * Populates the tree data source from the pipe template. The shared `values`/`valueTemplate`
+     * assignment is already performed by the base subscription, so this override only does the
+     * tree-specific work and avoids a redundant double assignment.
+     */
     override updateTemplates = (templates: KbqPipeTemplate[] | null) => {
-        const template = templates?.find((template) => getId(template) === getId(this.data));
+        const template = templates?.find((item) => getId(item) === getId(this.data));
 
         if (template?.values) {
-            this.values = template.values;
-            this.valueTemplate = template.valueTemplate;
-
             this.dataSource.data = template.values as KbqTreeSelectNode[];
         }
     };
@@ -139,12 +135,12 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
         this.treeControl.expandAll();
     }
 
-    private transformer = (node: KbqTreeSelectNode, level: number, parent: any) => {
+    private transformer = (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => {
         const flatNode = new KbqTreeSelectFlatNode();
 
         flatNode.name = node.name;
         flatNode.value = node.value;
-        flatNode.parent = parent;
+        flatNode.parent = parent ?? undefined;
         flatNode.level = level;
         flatNode.expandable = !!node.children;
 

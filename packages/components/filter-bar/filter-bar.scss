@@ -15,7 +15,7 @@
         gap: var(--kbq-size-s);
 
         .kbq-button > .kbq-icon {
-            margin-right: var(--kbq-size-xxs);
+            margin-inline-end: var(--kbq-size-xxs);
         }
 
         & > .kbq-icon {
@@ -27,7 +27,7 @@
         display: flex;
         flex-direction: row;
 
-        margin-left: var(--kbq-size-3xl);
+        margin-inline-start: var(--kbq-size-3xl);
     }
 }
 

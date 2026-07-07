@@ -1,6 +1,7 @@
-import { InjectionToken, Provider, TemplateRef } from '@angular/core';
+import { InjectionToken, Provider, TemplateRef, Type } from '@angular/core';
 import { ruRULocaleData } from '@koobiq/components/core';
 import { KbqFilterBar } from './filter-bar';
+import type { KbqBasePipe } from './pipes/base-pipe';
 import { KbqPipeDateComponent } from './pipes/pipe-date';
 import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';
 import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
@@ -10,20 +11,25 @@ import { KbqPipeSelectComponent } from './pipes/pipe-select';
 import { KbqPipeTextComponent } from './pipes/pipe-text';
 import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select';
 
-/**default configuration of filter-bar */
+/** default configuration of filter-bar */
 export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION = ruRULocaleData.filterBar;
 
+/** Shape of the localized strings consumed by the filter-bar and its pipes. */
+export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
+
 /** Injection Token for providing configuration of filter-bar */
-export const KBQ_FILTER_BAR_CONFIGURATION = new InjectionToken('KbqFilterBarConfiguration');
+export const KBQ_FILTER_BAR_CONFIGURATION = new InjectionToken<KbqFilterBarConfiguration>('KbqFilterBarConfiguration');
 
 /** Injection Token for providing pipes in filter-bar */
-export const KBQ_FILTER_BAR_PIPES = new InjectionToken<any>('kbq-filter-bar-pipes');
+export const KBQ_FILTER_BAR_PIPES = new InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>(
+    'kbq-filter-bar-pipes'
+);
 
 /** Utility provider for `KBQ_FILTER_BAR_PIPES`. */
 export const kbqFilterBarPipesProvider = (): Provider => {
     return {
         provide: KBQ_FILTER_BAR_PIPES,
-        useValue: new Map<string, unknown>(defaultFilterBarPipes)
+        useValue: new Map<KbqPipeType, Type<KbqBasePipe<unknown>>>(defaultFilterBarPipes)
     };
 };
 
@@ -39,10 +45,11 @@ export enum KbqPipeTypes {
     Datetime = 'datetime'
 }
 
-export type KbqPipeType = `${KbqPipeTypes}` | string;
+// `string & {}` keeps the literal union members visible to autocomplete while still allowing custom pipe types.
+export type KbqPipeType = `${KbqPipeTypes}` | (string & {});
 
 /** list of pipes available out of the box. */
-export const defaultFilterBarPipes: [string, unknown][] = [
+export const defaultFilterBarPipes: [KbqPipeType, Type<KbqBasePipe<unknown>>][] = [
     [KbqPipeTypes.ReadOnly, KbqPipeReadonlyComponent],
     [KbqPipeTypes.Text, KbqPipeTextComponent],
     [KbqPipeTypes.Select, KbqPipeSelectComponent],
@@ -62,6 +69,8 @@ export interface KbqDateTimeValue {
 export interface KbqSelectValue {
     name: string;
     value: unknown;
+    /** Optional stable identifier used by the select/multi-select pipe comparators. */
+    id?: string | number;
 }
 
 export interface KbqFilter {
@@ -147,14 +156,16 @@ export interface KbqTreeSelectNode {
  * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
  * The return value is the list of extends `KbqTreeSelectNode`.
  */
-export function kbqBuildTree<T extends KbqTreeSelectNode>(value: any, level: number): T[] {
+export function kbqBuildTree<T extends KbqTreeSelectNode>(value: Record<string, unknown>, level: number): T[] {
     const data: T[] = [];
 
     for (const [k, v] of Object.entries(value)) {
+        const isBranch = typeof v === 'object' && v !== null && !(v as Record<string, unknown>)['value'];
+
         data.push({
             name: k.toString(),
             value: v,
-            children: typeof v === 'object' && v && !v['value'] ? kbqBuildTree(v, level + 1) : null
+            children: isBranch ? kbqBuildTree(v as Record<string, unknown>, level + 1) : null
         } as T);
     }
 

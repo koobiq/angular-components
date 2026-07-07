@@ -5,7 +5,7 @@
     display: flex;
 
     > .kbq-button {
-        max-width: 320px;
+        max-width: var(--kbq-filter-bar-pipe-max-width, 320px);
 
         & .kbq-button-wrapper {
             width: 100%;
@@ -13,7 +13,7 @@
     }
 
     > .kbq-button .kbq-icon {
-        margin-right: var(--kbq-size-xxs);
+        margin-inline-end: var(--kbq-size-xxs);
     }
 
     & .kbq-filters__filter-name {
@@ -36,7 +36,7 @@
     & .kbq-filter-bar__arrow {
         align-self: center;
 
-        margin-left: var(--kbq-size-s);
+        margin-inline-start: var(--kbq-size-s);
     }
 
     .kbq-button.kbq-button_changed-filter {

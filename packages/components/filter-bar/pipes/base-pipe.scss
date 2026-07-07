@@ -12,7 +12,7 @@
     }
 
     .kbq-button-wrapper {
-        max-width: 320px;
+        max-width: var(--kbq-filter-bar-pipe-max-width, 320px);
     }
 
     .kbq-pipe__name {
@@ -29,15 +29,15 @@
         flex: 1 1 auto;
 
         &:not(.kbq-pipe__value_empty) {
-            margin-left: 4px;
+            margin-inline-start: 4px;
         }
     }
 
     .kbq-pipe__separator {
         z-index: 1;
 
-        margin-left: -1px;
-        margin-right: 0;
+        margin-inline-start: -1px;
+        margin-inline-end: 0;
 
         height: var(--kbq-size-l);
 

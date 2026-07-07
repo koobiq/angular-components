@@ -89,7 +89,15 @@ describe('KbqFilters', () => {
     let filterBarDebugElement: DebugElement;
     let filtersDebugElement: DebugElement;
 
-    window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    const originalStructuredClone = window.structuredClone;
+
+    beforeAll(() => {
+        window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    });
+
+    afterAll(() => {
+        window.structuredClone = originalStructuredClone;
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -283,7 +291,8 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            Object.defineProperty(component.filterName, 'invalid', { get: () => true });
+            // Empty value fails the real Validators.required guard built in preparePopover.
+            component.filterName.setValue('');
             component.saveAsNew();
 
             expect(fixture.componentInstance.onSaveSpy).not.toHaveBeenCalled();

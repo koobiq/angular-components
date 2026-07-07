@@ -1,0 +1,6 @@
+.kbq-filter-bar {
+    /* Maximum width of a pipe / filters trigger before its label truncates. */
+    --kbq-filter-bar-pipe-max-width: 320px;
+    /* Minimum width reserved for the refresher control. */
+    --kbq-filter-bar-refresher-min-width: 64px;
+}

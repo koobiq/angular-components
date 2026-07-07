@@ -9,7 +9,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
@@ -56,9 +56,9 @@ import { KbqPipeState } from './pipe-state';
 })
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
     /** control for search options */
-    searchControl: UntypedFormControl = new UntypedFormControl();
+    readonly searchControl = new FormControl<string | null>(null);
     /** filtered by search options */
-    filteredOptions: Observable<any[]>;
+    filteredOptions: Observable<KbqSelectValue[]>;
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);
@@ -203,7 +203,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     /** Comparator of selected options */
-    compareByValue = (o1: any, o2: any): boolean => o1?.id === o2?.id;
+    compareByValue = (o1: Pick<KbqSelectValue, 'id'> | null, o2: Pick<KbqSelectValue, 'id'> | null): boolean =>
+        o1?.id === o2?.id;
 
     /** handler for select all options in select */
     selectAllHandler = (event: KeyboardEvent) => {
@@ -241,8 +242,10 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     private getFilteredOptions = (): KbqSelectValue[] => {
-        return this.searchControl.value
-            ? this.values.filter((item) => item.name.toLowerCase().includes(this.searchControl.value.toLowerCase()))
+        const search = this.searchControl.value;
+
+        return search
+            ? this.values.filter((item: KbqSelectValue) => item.name.toLowerCase().includes(search.toLowerCase()))
             : this.values;
     };
 }

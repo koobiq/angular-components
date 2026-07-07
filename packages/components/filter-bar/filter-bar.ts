@@ -4,11 +4,9 @@ import {
     ChangeDetectorRef,
     Component,
     contentChild,
-    EventEmitter,
     inject,
     Input,
     input,
-    Output,
     output,
     ViewEncapsulation
 } from '@angular/core';
@@ -20,6 +18,7 @@ import {
     KBQ_FILTER_BAR_CONFIGURATION,
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
     KbqFilter,
+    KbqFilterBarConfiguration,
     KbqPipe,
     KbqPipeTemplate
 } from './filter-bar.types';
@@ -46,7 +45,7 @@ import { KbqFilters } from './filters';
             <ng-content select="kbq-filter-refresher, [kbq-filter-refresher]" />
         </div>
     `,
-    styleUrls: ['filter-bar.scss'],
+    styleUrls: ['filter-bar-tokens.scss', 'filter-bar.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -61,7 +60,8 @@ export class KbqFilterBar {
 
     readonly externalConfiguration = inject(KBQ_FILTER_BAR_CONFIGURATION, { optional: true });
 
-    configuration;
+    /** Localized strings and configuration for the filter-bar and its pipes. */
+    configuration: KbqFilterBarConfiguration = KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
 
     /** @docs-private */
     readonly filters = contentChild(KbqFilters);
@@ -114,7 +114,7 @@ export class KbqFilterBar {
      */
     readonly filterChange = output<KbqFilter | null>();
     /** Event that emits whenever the value of the pipe changes. */
-    @Output() readonly onChangePipe = new EventEmitter<KbqPipe>();
+    readonly onChangePipe = output<KbqPipe>();
     /** Event that emits whenever the pipe deleted. */
     readonly onRemovePipe = output<KbqPipe>();
     /** Event that emits whenever the pipe cleared. */
@@ -174,7 +174,7 @@ export class KbqFilterBar {
             this.initDefaultParams();
         }
 
-        merge(this.onChangePipe, outputToObservable(this.onRemovePipe))
+        merge(outputToObservable(this.onChangePipe), outputToObservable(this.onRemovePipe))
             .pipe(takeUntilDestroyed())
             .subscribe(() => {
                 if (this.filter) {
@@ -185,7 +185,7 @@ export class KbqFilterBar {
 
         merge(
             outputToObservable(this.filterChange),
-            this.onChangePipe,
+            outputToObservable(this.onChangePipe),
             outputToObservable(this.onRemovePipe),
             this.internalFilterChanges
         )
@@ -198,7 +198,11 @@ export class KbqFilterBar {
 
     /** Remove pipe from current filter and emit event */
     removePipe(pipe: KbqPipe) {
-        this.filter?.pipes.splice(this.filter?.pipes.indexOf(pipe), 1);
+        if (!this.filter?.pipes.includes(pipe)) return;
+
+        // Replace the array instead of splicing in place so `pipes` follows a new-reference-on-change
+        // model (friendlier to OnPush / signal reference-equality) and unknown pipes are left untouched.
+        this.filter.pipes = this.filter.pipes.filter((item) => item !== pipe);
 
         this.onRemovePipe.emit(pipe);
         this.changes.next();
@@ -216,7 +220,9 @@ export class KbqFilterBar {
 
     /** Set the filter state "changed" to false */
     resetFilterChangedState() {
-        this.filter!.changed = false;
+        if (!this.filter) return;
+
+        this.filter.changed = false;
     }
 
     private updateLocaleParams = () => {

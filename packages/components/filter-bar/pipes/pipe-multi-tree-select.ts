@@ -1,7 +1,6 @@
-import { NgIf } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
@@ -18,7 +17,6 @@ import {
     KbqTreeSelection
 } from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { Observable } from 'rxjs';
 import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
 import { getId, KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
@@ -39,7 +37,6 @@ import { KbqPipeState } from './pipe-state';
         KbqHighlightModule,
         KbqTreeModule,
         KbqTreeSelectModule,
-        NgIf,
         FormsModule,
         KbqBadgeModule,
         KbqPseudoCheckboxModule
@@ -57,16 +54,12 @@ import { KbqPipeState } from './pipe-state';
 })
 export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit, AfterViewInit {
     /** control for search options */
-    searchControl: UntypedFormControl = new UntypedFormControl();
-    /** filtered by search options */
-    filteredOptions: Observable<any[]>;
+    readonly searchControl = new FormControl<string | null>(null);
 
     treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
     treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
 
     dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-
-    template: any;
 
     /** @docs-private */
     readonly select = viewChild.required(KbqTreeSelect);
@@ -151,7 +144,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     ngOnInit(): void {
         this.updateInternalSelected();
 
-        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+        this.searchControl.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((value) => this.treeControl.filterNodes(value));
     }
 
     override ngAfterViewInit() {
@@ -162,11 +157,11 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
     }
 
-    isNodeHasChild(_: number, nodeData) {
+    isNodeHasChild(_: number, nodeData: KbqTreeSelectFlatNode) {
         return nodeData.expandable;
     }
 
-    isNodeSelectAll(_: number, nodeData) {
+    isNodeSelectAll(_: number, nodeData: KbqTreeSelectFlatNode) {
         return nodeData.value === kbqTreeSelectAllValue;
     }
 
@@ -182,6 +177,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         this.toggleParents(option.data.parent);
 
         setTimeout(() => {
+            if (this.destroyed) return;
+
             if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
                 this.data.value = [];
             } else {
@@ -221,6 +218,8 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         }
 
         setTimeout(() => {
+            if (this.destroyed) return;
+
             if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
                 this.data.value = [];
             } else {
@@ -235,14 +234,15 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         });
     }
 
-    /** updates values for selection and value template */
+    /**
+     * Populates the tree data source from the pipe template. The shared `values`/`valueTemplate`
+     * assignment is already performed by the base subscription, so this override only does the
+     * tree-specific work and avoids a redundant double assignment.
+     */
     override updateTemplates = (templates: KbqPipeTemplate[] | null) => {
-        const template = templates?.find((template) => getId(template) === getId(this.data));
+        const template = templates?.find((item) => getId(item) === getId(this.data));
 
         if (template?.values) {
-            this.values = template.values;
-            this.valueTemplate = template.valueTemplate;
-
             const values = [...(template.values as KbqTreeSelectNode[])];
 
             if (this.data.selectAll) {
@@ -303,7 +303,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         }
     }
 
-    private toggleParents(parent) {
+    private toggleParents(parent: KbqTreeSelectFlatNode | undefined) {
         if (!parent) {
             return;
         }
@@ -311,7 +311,10 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         const descendants = this.treeControl.getDescendants(parent);
         const isParentSelected = this.select().selectionModel.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d: any) => this.select().selectionModel.selected.includes(d))) {
+        if (
+            !isParentSelected &&
+            descendants.every((d: KbqTreeSelectFlatNode) => this.select().selectionModel.selected.includes(d))
+        ) {
             this.select().selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
@@ -320,12 +323,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         }
     }
 
-    private transformer = (node: KbqTreeSelectNode, level: number, parent: any) => {
+    private transformer = (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => {
         const flatNode = new KbqTreeSelectFlatNode();
 
         flatNode.name = node.name;
         flatNode.value = node.value;
-        flatNode.parent = parent;
+        flatNode.parent = parent ?? undefined;
         flatNode.level = level;
         flatNode.expandable = !!node.children;
 

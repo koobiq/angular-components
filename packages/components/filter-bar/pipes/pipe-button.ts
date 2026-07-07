@@ -29,12 +29,13 @@ import { KbqPipeState } from './pipe-state';
             kbqTooltip="{{ pipe.data.cleanable ? localeData.clearButtonTooltip : localeData.removeButtonTooltip }}"
             class="kbq-pipe__remove-button"
             kbq-button
+            [attr.aria-label]="pipe.data.cleanable ? localeData.clearButtonTooltip : localeData.removeButtonTooltip"
             [disabled]="pipe.data.disabled"
             [kbqPipeState]="pipe.data"
             [kbqTooltipDisabled]="pipe.data.disabled"
             (click)="pipe.data.cleanable ? pipe.onClear() : pipe.onRemove()"
         >
-            <i kbq-icon="kbq-xmark-s_16" [color]="pipe.data.disabled ? 'empty' : 'contrast'"></i>
+            <i kbq-icon="kbq-xmark-s_16" aria-hidden="true" [color]="pipe.data.disabled ? 'empty' : 'contrast'"></i>
         </button>
     `,
     styleUrl: 'pipe-button.scss',

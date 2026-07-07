@@ -88,7 +88,15 @@ describe('KbqPipeMultiSelectComponent', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
 
-    window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    const originalStructuredClone = window.structuredClone;
+
+    beforeAll(() => {
+        window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    });
+
+    afterAll(() => {
+        window.structuredClone = originalStructuredClone;
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -683,14 +691,19 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
+            let lastFiltered: any[] = [];
+
+            // Subscribe before emitting: filteredOptions is a cold merge with no replay, so the
+            // subscription must be active when searchControl emits.
+            component.filteredOptions.subscribe((filtered) => {
+                lastFiltered = filtered;
+            });
 
             component.searchControl.setValue('Option 1');
             flush();
 
-            component.filteredOptions.subscribe((filtered) => {
-                expect(filtered.length).toBe(1);
-                expect(filtered[0].name).toBe('Option 1');
-            });
+            expect(lastFiltered.length).toBe(1);
+            expect(lastFiltered[0].name).toBe('Option 1');
         }));
 
         it('should return all options when search is empty', fakeAsync(() => {
@@ -700,13 +713,18 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
+            let lastFiltered: any[] = [];
 
+            component.filteredOptions.subscribe((filtered) => {
+                lastFiltered = filtered;
+            });
+
+            component.searchControl.setValue('Option 1');
+            flush();
             component.searchControl.setValue('');
             flush();
 
-            component.filteredOptions.subscribe((filtered) => {
-                expect(filtered.length).toBe(SELECT_VALUES.length);
-            });
+            expect(lastFiltered.length).toBe(SELECT_VALUES.length);
         }));
     });
 

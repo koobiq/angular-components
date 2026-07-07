@@ -14,7 +14,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormsModule, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
@@ -97,14 +97,14 @@ export class KbqFilters implements OnInit {
     private readonly saveFilterButton = viewChild.required<KbqButton>('saveFilterButton');
 
     /** control for search filter */
-    searchControl: UntypedFormControl = new UntypedFormControl();
+    readonly searchControl = new FormControl<string | null>(null);
     /** filtered by search filters */
     filteredOptions: Observable<KbqFilter[]>;
 
     /** @docs-private */
-    popoverSize = PopUpSizes.Medium;
+    protected readonly popoverSize = PopUpSizes.Medium;
     /** @docs-private */
-    popoverOffset: number = 4;
+    protected readonly popoverOffset: number = 4;
 
     /** new filter name for saving */
     filterName: FormControl<string | null>;
@@ -113,11 +113,11 @@ export class KbqFilters implements OnInit {
     saveNewFilter: boolean;
 
     showFilterSavingError: boolean = false;
-    filterSavingErrorText: string;
+    filterSavingErrorText: string = '';
 
     isSaving: boolean = false;
 
-    readonly filters = input<KbqFilter[]>(undefined!);
+    readonly filters = input.required<KbqFilter[]>();
 
     /** Event that is generated whenever the user selects a filter. */
     readonly onSelectFilter = output<KbqFilter>();
@@ -172,7 +172,7 @@ export class KbqFilters implements OnInit {
     private focusedElementBeforeOpen: KbqButton | null;
 
     constructor() {
-        this.filterBar.changes.subscribe(() => this.changeDetectorRef.markForCheck());
+        this.filterBar.changes.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
     ngOnInit(): void {
@@ -252,16 +252,24 @@ export class KbqFilters implements OnInit {
     }
 
     restoreFocus() {
-        if (this.focusedElementBeforeOpen && !this.focusedElementBeforeOpen.disabled) {
-            this.focusMonitor.focusVia(this.focusedElementBeforeOpen.elementRef, this.focusOrigin);
-            this.focusedElementBeforeOpen = null;
+        // The popover can be opened from the dropdown item or programmatically, paths that never
+        // capture a trigger via `saveFocusedElement`. Fall back to the main button so focus returns
+        // to the filters control instead of being dropped on `<body>` (WCAG 2.4.3).
+        const target = this.focusedElementBeforeOpen ?? this.mainButton();
+
+        if (target && !target.disabled) {
+            this.focusMonitor.focusVia(target.elementRef, this.focusOrigin);
         }
+
+        this.focusedElementBeforeOpen = null;
     }
 
     preparePopover() {
         this.filterName = new FormControl<string>(this.filter?.name || '', Validators.required);
 
-        this.filterName.valueChanges.pipe(distinctUntilChanged()).subscribe(() => (this.showFilterSavingError = false));
+        this.filterName.valueChanges
+            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => (this.showFilterSavingError = false));
 
         this.popover().show();
 
@@ -370,11 +378,9 @@ export class KbqFilters implements OnInit {
         this.changeDetectorRef.markForCheck();
     }
 
-    private getFilteredOptions(value): KbqFilter[] {
-        const searchFilter = value && value.new ? value.value : value;
-
-        return searchFilter
-            ? this.filters().filter((filter) => filter.name.toLowerCase().includes(searchFilter.toLowerCase()))
+    private getFilteredOptions(value: string | null): KbqFilter[] {
+        return value
+            ? this.filters().filter((filter) => filter.name.toLowerCase().includes(value.toLowerCase()))
             : this.filters();
     }
 }
