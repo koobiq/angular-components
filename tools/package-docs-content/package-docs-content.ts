@@ -11,6 +11,6 @@ if (require.main === module) {
     // eslint-disable-next-line @angular-eslint/no-experimental
     cpSync(execPath, outDir, {
         recursive: true,
-        filter: (path) => !/.json/.test(path)
+        filter: (path) => path.endsWith('.json')
     });
 }
