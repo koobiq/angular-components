@@ -1,4 +1,5 @@
-﻿import { DOCUMENT } from '@angular/common';
+﻿import { Platform } from '@angular/cdk/platform';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     afterNextRender,
@@ -85,6 +86,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     protected readonly document = inject<Document>(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly isBrowser = inject(Platform).isBrowser;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -215,6 +217,8 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     }
 
     private saveWidth() {
+        if (!this.isBrowser) return;
+
         this.params.openedStateWidth = `${this.elementRef.nativeElement.offsetWidth}px`;
     }
 }

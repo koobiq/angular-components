@@ -239,7 +239,6 @@ export class KbqLocalDropzone extends KbqDrop {
     });
 
     private readonly elementRef = kbqInjectNativeElement();
-    private readonly rects = this.elementRef.getBoundingClientRect();
     private readonly overlay: Overlay = inject(Overlay);
     private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
     private readonly injector = inject(Injector);
@@ -347,13 +346,14 @@ export class KbqLocalDropzone extends KbqDrop {
     private onDragLeave(event: DragEvent): void {
         if (!isHtmlElementOrNull(event.currentTarget) || !isHtmlElementOrNull(event.relatedTarget)) return;
 
+        const rects = this.elementRef.getBoundingClientRect();
         const isWithinViewport = this.isSafari
             ? !isOutsideViewport({
                   event,
-                  innerWidth: this.rects.x + this.elementRef.offsetWidth,
-                  innerHeight: this.rects.y + this.elementRef.offsetHeight,
-                  xAxisMinThreshold: this.rects.x,
-                  yAxisMinThreshold: this.rects.y
+                  innerWidth: rects.x + this.elementRef.offsetWidth,
+                  innerHeight: rects.y + this.elementRef.offsetHeight,
+                  xAxisMinThreshold: rects.x,
+                  yAxisMinThreshold: rects.y
               })
             : event.currentTarget?.contains(event.relatedTarget);
 

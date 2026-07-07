@@ -84,6 +84,8 @@ export class KbqNavbarTitle implements AfterViewInit {
     }
 
     get isOverflown() {
+        if (!this.isBrowser) return false;
+
         return this.nativeElement.scrollWidth > this.nativeElement.clientWidth;
     }
 

@@ -1,5 +1,6 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { Platform } from '@angular/cdk/platform';
 import { AfterViewInit, ChangeDetectorRef, Directive, inject, OnDestroy } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -21,6 +22,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly contentObserver = inject(ContentObserver);
+    private readonly platform = inject(Platform);
 
     private readonly debounceInterval = 100;
 
@@ -34,6 +36,8 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     ngAfterViewInit(): void {
+        if (!this.platform.isBrowser) return;
+
         super.ngAfterViewInit();
 
         const tooltipContentWrapper = this.option.tooltipContentWrapper();
@@ -77,6 +81,8 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     private checkTooltipDisabled = () => {
+        if (!this.platform.isBrowser) return;
+
         const count: number = this.option.tooltipContent().nativeElement.getClientRects().length;
 
         this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;

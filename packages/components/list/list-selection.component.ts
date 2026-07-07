@@ -2,6 +2,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -235,6 +236,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     _value: string[] | null;
 
     private readonly destroyRef = inject(DestroyRef);
+    private readonly platform = inject(Platform);
 
     private optionFocusSubscription: Subscription | null;
 
@@ -292,6 +294,8 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
             this.updateTabIndex();
             this.initializeSelection();
         });
+
+        if (!this.platform.isBrowser) return;
 
         this.updateScrollSize();
     }
@@ -462,12 +466,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     /** @docs-private */
     getHeight(): number {
-        const element = this.elementRef.nativeElement;
-
-        // For SSR compatibility
-        if (typeof element.getClientRects !== 'function') return 0;
-
-        return element.getClientRects()[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
     }
 
     // View to model callback that should be called if the list or its options lost focus.
@@ -909,12 +908,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     /** @docs-private */
     getHeight(): number {
-        const element = this.elementRef.nativeElement;
-
-        // For SSR compatibility
-        if (typeof element.getClientRects !== 'function') return 0;
-
-        return element.getClientRects()[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
     }
 
     /** Handles click events on the list option. */

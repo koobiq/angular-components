@@ -1,4 +1,5 @@
 ﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -211,6 +212,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     protected readonly elementRef: ElementRef<HTMLElement>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly focusMonitor: FocusMonitor;
+    private readonly platform = inject(Platform);
 
     readonly rectangleElements = contentChildren(
         forwardRef(() => KbqNavbarRectangleElement),
@@ -227,12 +229,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private readonly resizeDebounceInterval: number = 100;
 
     private get width(): number {
-        const element = this.elementRef.nativeElement;
-
-        // For SSR compatibility
-        if (typeof element.getClientRects !== 'function') return 0;
-
-        return element.getBoundingClientRect().width;
+        return this.elementRef.nativeElement.getBoundingClientRect().width;
     }
 
     private get totalItemsWidth(): number {
@@ -273,6 +270,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     ngAfterViewInit(): void {
         super.ngAfterViewInit();
 
+        if (!this.platform.isBrowser) return;
         // Note: this wait is required for loading and rendering fonts for icons;
         // unfortunately we cannot control font rendering
         setTimeout(this.updateExpandedStateForItems);
