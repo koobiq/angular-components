@@ -6431,12 +6431,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@maskito/kit@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "@maskito/kit@npm:5.1.0"
+"@maskito/kit@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "@maskito/kit@npm:5.3.1"
   peerDependencies:
-    "@maskito/core": ^5.1.0
-  checksum: 10c0/ce368577bf7ae12e179d44697c74869177ad7aeedb2d5c659b4b6e7e2ae3011b45c2f9d111f184082e8a9d9967140b37e159a8b9d8333d7f08a91c023a236bb0
+    "@maskito/core": ^5.3.1
+  checksum: 10c0/6cd6b3f5c9fa375b4954b8759483fde79782e86aaf88f316f3233530543458ce6d5e6c6b8a43322c9447496b385fa64baa8cb8d87f8714236aae8f9f7590e7a6
   languageName: node
   linkType: hard
 
@@ -18293,7 +18293,7 @@ __metadata:
     "@koobiq/tokens-builder": "npm:^3.17.2"
     "@maskito/angular": "npm:^5.1.0"
     "@maskito/core": "npm:^5.1.0"
-    "@maskito/kit": "npm:^5.1.0"
+    "@maskito/kit": "npm:^5.3.1"
     "@messageformat/core": "npm:^3.4.0"
     "@microsoft/api-extractor": "npm:7.56.0"
     "@octokit/rest": "npm:^18.9.1"
