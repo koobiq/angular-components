@@ -1,4 +1,5 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -110,6 +111,7 @@ export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly platform = inject(Platform);
 
     /**
      * Clamped text locale configuration.
@@ -150,6 +152,8 @@ export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        if (!this.platform.isBrowser) return;
+
         const textContainer = this.textContainer().nativeElement;
 
         this.resizeObserver

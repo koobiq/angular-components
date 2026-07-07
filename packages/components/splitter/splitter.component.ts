@@ -1,4 +1,5 @@
 import { coerceBooleanProperty, coerceCssPixelValue, coerceNumberProperty } from '@angular/cdk/coercion';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -558,6 +559,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     @Output() readonly sizeChange: EventEmitter<number> = new EventEmitter<number>();
 
     private readonly window = inject(KBQ_WINDOW);
+    private readonly platform = inject(Platform);
 
     constructor(
         private elementRef: ElementRef<HTMLElement>,
@@ -606,6 +608,8 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     }
 
     getSize(): number {
+        if (!this.platform.isBrowser) return 0;
+
         return this.elementRef.nativeElement[this.getOffsetSizeProperty()];
     }
 

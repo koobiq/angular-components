@@ -1,3 +1,4 @@
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -35,9 +36,10 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly platform = inject(Platform);
 
     ngAfterContentInit(): void {
-        if (this.vertical !== null) {
+        if (this.vertical !== null || !this.platform.isBrowser) {
             return;
         }
 

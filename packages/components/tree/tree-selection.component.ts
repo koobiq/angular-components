@@ -2,6 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -132,6 +133,7 @@ export class KbqTreeSelection
     extends KbqTreeBase<any>
     implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy
 {
+    private readonly platform = inject(Platform);
     protected readonly focusMonitor = inject(FocusMonitor);
 
     /** Indicates whether this component is placed inside a KbqFormField component. */
@@ -270,7 +272,9 @@ export class KbqTreeSelection
     }
 
     ngAfterContentInit(): void {
-        this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
+        if (this.platform.isBrowser) {
+            this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
+        }
 
         this.keyManager = new FocusKeyManager<KbqTreeOption>(this.renderedOptions)
             .withVerticalOrientation(true)
@@ -679,12 +683,7 @@ export class KbqTreeSelection
     }
 
     private getHeight(): number {
-        const element = this.elementRef.nativeElement;
-
-        // For SSR compatibility
-        if (typeof element.getClientRects !== 'function') return 0;
-
-        return element.getClientRects()[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
     }
 
     private updateTabIndex(): void {

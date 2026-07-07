@@ -1,4 +1,5 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
@@ -135,6 +136,7 @@ export class KbqOverflowItems {
     private readonly renderer = inject(Renderer2);
     private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly platform = inject(Platform);
 
     /**
      * `KbqOverflowItem` directive references.
@@ -249,6 +251,8 @@ export class KbqOverflowItems {
     }
 
     private setupObservers(): void {
+        if (!this.platform.isBrowser) return;
+
         const resizeObservers = merge(
             this.resizeObserver.observe(this.element),
             toObservable(this.additionalResizeObserverTargets).pipe(
