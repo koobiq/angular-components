@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
-import { outputFileSync } from 'fs-extra';
+import { mkdirSync, writeFileSync } from 'fs';
+import { dirname } from 'path';
 
 type VersionInfo = {
     version: string;
@@ -60,6 +61,7 @@ if (require.main === module) {
     const versions = getNPMVersions();
     const outputPath = './apps/docs/src/assets/versions.json';
 
-    outputFileSync(outputPath, JSON.stringify(versions, null, 4));
+    mkdirSync(dirname(outputPath), { recursive: true });
+    writeFileSync(outputPath, JSON.stringify(versions, null, 4));
     console.log(`Version information written to ${outputPath}`);
 }

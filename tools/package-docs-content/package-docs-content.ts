@@ -1,4 +1,4 @@
-import { copySync, ensureDirSync } from 'fs-extra';
+import { cpSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
 
 if (require.main === module) {
@@ -6,9 +6,11 @@ if (require.main === module) {
     const execPath = 'packages/docs-examples/components/';
     const outDir = 'dist/docs-content/examples-source/components';
 
-    ensureDirSync(dirname(outDir));
+    mkdirSync(dirname(outDir), { recursive: true });
 
-    copySync(execPath, outDir, {
-        filter: (path) => !/.json/.test(path)
+    // eslint-disable-next-line @angular-eslint/no-experimental
+    cpSync(execPath, outDir, {
+        recursive: true,
+        filter: (path) => path.endsWith('.json')
     });
 }
