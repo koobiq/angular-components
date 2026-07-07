@@ -48,6 +48,7 @@
             "@koobiq/components/form-field": ["packages/components/form-field/index.ts"],
             "@koobiq/components/file-upload": ["packages/components/file-upload/index.ts"],
             "@koobiq/components/filter-bar": ["packages/components/filter-bar/index.ts"],
+            "@koobiq/components/flag": ["packages/components/flag/index.ts"],
             "@koobiq/components/icon": ["packages/components/icon/index.ts"],
             "@koobiq/components/inline-edit": ["packages/components/inline-edit/index.ts"],
             "@koobiq/components/input": ["packages/components/input/index.ts"],

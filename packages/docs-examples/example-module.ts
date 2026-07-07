@@ -2205,6 +2205,116 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-uniq-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
+  "flag-accessibility": {
+    "packagePath": "components/flag/flag-accessibility",
+    "title": "Accessible and decorative flags",
+    "componentName": "FlagAccessibilityExample",
+    "files": [
+      "flag-accessibility-example.ts"
+    ],
+    "selector": "flag-accessibility-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-accessibility-example.ts",
+    "importPath": "components/flag"
+  },
+  "flag-circle": {
+    "packagePath": "components/flag/flag-circle",
+    "title": "Circular flags",
+    "componentName": "FlagCircleExample",
+    "files": [
+      "flag-circle-example.ts"
+    ],
+    "selector": "flag-circle-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-circle-example.ts",
+    "importPath": "components/flag"
+  },
+  "flag-fallback": {
+    "packagePath": "components/flag/flag-fallback",
+    "title": "Fallback for a missing flag",
+    "componentName": "FlagFallbackExample",
+    "files": [
+      "flag-fallback-example.ts"
+    ],
+    "selector": "flag-fallback-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-fallback-example.ts",
+    "importPath": "components/flag"
+  },
+  "flag-language": {
+    "packagePath": "components/flag/flag-language",
+    "title": "Flag is not a language (anti-pattern)",
+    "componentName": "FlagLanguageExample",
+    "files": [
+      "flag-language-example.ts"
+    ],
+    "selector": "flag-language-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-language-example.ts",
+    "importPath": "components/flag"
+  },
+  "flag-overview": {
+    "packagePath": "components/flag/flag-overview",
+    "title": "Flag overview",
+    "componentName": "FlagOverviewExample",
+    "files": [
+      "flag-overview-example.ts"
+    ],
+    "selector": "flag-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-overview-example.ts",
+    "importPath": "components/flag"
+  },
+  "flag-shadow": {
+    "packagePath": "components/flag/flag-shadow",
+    "title": "Flag inset shadow",
+    "componentName": "FlagShadowExample",
+    "files": [
+      "flag-shadow-example.ts"
+    ],
+    "selector": "flag-shadow-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-shadow-example.ts",
+    "importPath": "components/flag"
+  },
+  "flag-sizes": {
+    "packagePath": "components/flag/flag-sizes",
+    "title": "Integer flag sizes",
+    "componentName": "FlagSizesExample",
+    "files": [
+      "flag-sizes-example.ts"
+    ],
+    "selector": "flag-sizes-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-sizes-example.ts",
+    "importPath": "components/flag"
+  },
+  "flag-square": {
+    "packagePath": "components/flag/flag-square",
+    "title": "Square flags",
+    "componentName": "FlagSquareExample",
+    "files": [
+      "flag-square-example.ts"
+    ],
+    "selector": "flag-square-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-square-example.ts",
+    "importPath": "components/flag"
+  },
+  "flag-stylized": {
+    "packagePath": "components/flag/flag-stylized",
+    "title": "Stylized flag",
+    "componentName": "FlagStylizedExample",
+    "files": [
+      "flag-stylized-example.ts",
+      "flag-stylized-example.html",
+      "flag-stylized-example.css"
+    ],
+    "selector": "flag-stylized-example",
+    "additionalComponents": [],
+    "primaryFile": "flag-stylized-example.ts",
+    "importPath": "components/flag"
+  },
   "form-field-horizontal": {
     "packagePath": "components/form-field/form-field-horizontal",
     "title": "Form field horizontal",
@@ -6876,6 +6986,24 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
+  case 'flag-accessibility':
+return import('@koobiq/docs-examples/components/flag');
+  case 'flag-circle':
+return import('@koobiq/docs-examples/components/flag');
+  case 'flag-fallback':
+return import('@koobiq/docs-examples/components/flag');
+  case 'flag-language':
+return import('@koobiq/docs-examples/components/flag');
+  case 'flag-overview':
+return import('@koobiq/docs-examples/components/flag');
+  case 'flag-shadow':
+return import('@koobiq/docs-examples/components/flag');
+  case 'flag-sizes':
+return import('@koobiq/docs-examples/components/flag');
+  case 'flag-square':
+return import('@koobiq/docs-examples/components/flag');
+  case 'flag-stylized':
+return import('@koobiq/docs-examples/components/flag');
   case 'form-field-horizontal':
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-overview':

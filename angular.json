@@ -534,6 +534,36 @@
                 }
             }
         },
+        "dev-flag": {
+            "projectType": "application",
+            "root": "packages/components-dev/flag",
+            "sourceRoot": "packages/components-dev/flag",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/flag"
+                        },
+                        "tsConfig": "packages/components-dev/flag/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/flag/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-flag:build"
+                    }
+                }
+            }
+        },
         "dev-breadcrumbs": {
             "projectType": "application",
             "root": "packages/components-dev/breadcrumbs",

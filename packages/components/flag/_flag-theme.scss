@@ -1,0 +1,8 @@
+@mixin kbq-flag-theme() {
+    .kbq-flag {
+        // Faded contrast line resolves to a dark hairline in the light theme and a light one in the
+        // dark theme, so the flag stays separated from the background in both.
+        --kbq-flag-shadow-color: var(--kbq-line-contrast-fade);
+        --kbq-flag-empty-background: var(--kbq-states-background-disabled);
+    }
+}

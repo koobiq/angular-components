@@ -1,0 +1,78 @@
+@use './flag-theme' as *;
+
+.kbq-flag {
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    // Default sizing follows the surrounding text; 3:2 gives width = 1.5 × line height.
+    height: 1em;
+    aspect-ratio: 3 / 2;
+    vertical-align: middle;
+    overflow: hidden;
+    border-radius: var(--kbq-flag-border-radius);
+
+    > svg,
+    > img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    // Inset hairline drawn on top of the flag, gated by the shadow input.
+    &.kbq-flag_shadow-inset::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 1px var(--kbq-flag-shadow-color);
+        pointer-events: none;
+    }
+
+    &.kbq-flag_square,
+    &.kbq-flag_circle {
+        aspect-ratio: 1 / 1;
+    }
+
+    &.kbq-flag_circle {
+        border-radius: 50%;
+    }
+
+    // Integer sizes keep the flag edges crisp. Explicit dimensions override the aspect-ratio sizing.
+    &.kbq-flag_size-24x16 {
+        width: var(--kbq-flag-size-24x16-width);
+        height: var(--kbq-flag-size-24x16-height);
+        aspect-ratio: auto;
+    }
+
+    &.kbq-flag_size-21x14 {
+        width: var(--kbq-flag-size-21x14-width);
+        height: var(--kbq-flag-size-21x14-height);
+        aspect-ratio: auto;
+    }
+
+    &.kbq-flag_size-18x12 {
+        width: var(--kbq-flag-size-18x12-width);
+        height: var(--kbq-flag-size-18x12-height);
+        aspect-ratio: auto;
+    }
+
+    &.kbq-flag_size-15x10 {
+        width: var(--kbq-flag-size-15x10-width);
+        height: var(--kbq-flag-size-15x10-height);
+        aspect-ratio: auto;
+    }
+
+    &.kbq-flag_size-12x8 {
+        width: var(--kbq-flag-size-12x8-width);
+        height: var(--kbq-flag-size-12x8-height);
+        aspect-ratio: auto;
+    }
+
+    // Neutral placeholder when no flag is projected (unknown / invalid country code).
+    &.kbq-flag_empty {
+        background: var(--kbq-flag-empty-background);
+    }
+}
+
+@include kbq-flag-theme();
