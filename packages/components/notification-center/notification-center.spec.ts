@@ -60,6 +60,14 @@ describe('KbqNotificationCenter', () => {
     };
 
     describe('Check test cases', () => {
+        // jsdom does not implement Element.prototype.scroll; the container reveal calls it via
+        // KbqScrollbar.scrollTo. Stub it only when it's missing so a real implementation is never shadowed.
+        beforeAll(() => {
+            if (!HTMLElement.prototype.scroll) {
+                Object.defineProperty(HTMLElement.prototype, 'scroll', { configurable: true, value: () => {} });
+            }
+        });
+
         beforeEach(() => {
             testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
             fixture = createComponent(KbqNotificationCenterSimple);
@@ -106,7 +114,10 @@ describe('KbqNotificationCenter', () => {
                 (
                     componentInstance.trigger() as unknown as {
                         instance: {
-                            scrollContainer: () => { contentElement: () => { nativeElement: HTMLElement } };
+                            scrollContainer: () => {
+                                contentElement: () => { nativeElement: HTMLElement };
+                                scrollTo: (options?: ScrollToOptions) => void;
+                            };
                             onContainerScroll: () => void;
                         };
                     }
@@ -301,6 +312,76 @@ describe('KbqNotificationCenter', () => {
                 tick(scrollAuditTime);
 
                 expect(emitSpy).not.toHaveBeenCalled();
+            }));
+
+            it('scrolls the list to the bottom when the load-more spinner appears', fakeAsync(() => {
+                const service = getService();
+
+                openCenter();
+                setAtBottomGeometry();
+
+                const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+
+                service.setLoadingMore(true);
+                fixture.detectChanges();
+                tick(scrollAuditTime);
+
+                expect(scrollSpy).toHaveBeenCalledWith({ top: 1000 });
+            }));
+
+            it('scrolls the list to the bottom when the load-more error row appears', fakeAsync(() => {
+                const service = getService();
+
+                openCenter();
+                setAtBottomGeometry();
+
+                const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+
+                service.setLoadMoreErrorMode(true);
+                fixture.detectChanges();
+                tick(scrollAuditTime);
+
+                expect(scrollSpy).toHaveBeenCalledWith({ top: 1000 });
+            }));
+
+            it('does not scroll again when the spinner is turned off', fakeAsync(() => {
+                const service = getService();
+
+                openCenter();
+                setAtBottomGeometry();
+
+                const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+
+                service.setLoadingMore(true);
+                fixture.detectChanges();
+                tick(scrollAuditTime);
+
+                scrollSpy.mockClear();
+
+                // true -> false must NOT scroll
+                service.setLoadingMore(false);
+                fixture.detectChanges();
+                tick(scrollAuditTime);
+
+                expect(scrollSpy).not.toHaveBeenCalled();
+            }));
+
+            it('does not scroll to the bottom on open when a load-more error is already shown', fakeAsync(() => {
+                const service = getService();
+
+                // Error left over from a previous session, before the panel is opened.
+                service.setLoadMoreErrorMode(true);
+
+                openCenter();
+                setAtBottomGeometry();
+
+                const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+
+                // The replayed BehaviorSubject value must not be treated as a fresh appearance: the panel
+                // always opens scrolled to the top.
+                tick(scrollAuditTime);
+
+                expect(scrollSpy).not.toHaveBeenCalled();
             }));
         });
 
