@@ -73,6 +73,10 @@
             --kbq-button-size-border-radius: var(--kbq-breadcrumb-item-border-radius);
         }
 
+        &.kbq-dropdown-trigger {
+            --kbq-dropdown-trigger-horizontal-padding: var(--kbq-breadcrumb-item-horizontal-padding);
+        }
+
         &:focus-visible {
             outline-offset: unset;
         }
