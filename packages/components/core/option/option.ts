@@ -21,7 +21,6 @@ import { Subject } from 'rxjs';
 import { ActiveDescendantKeyManager } from '../a11y';
 import { ENTER, hasModifierKey, SPACE } from '../keycodes';
 import { KbqPseudoCheckboxModule } from '../selection';
-import { KbqGeometryService } from '../services/geometry.service';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '../title';
 import { KbqOptgroup } from './optgroup';
 
@@ -165,7 +164,6 @@ export class KbqVirtualOption extends KbqOptionBase {
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly geometryService = inject(KbqGeometryService);
     protected readonly parent = inject<KbqOptionParentComponent>(KBQ_OPTION_PARENT_COMPONENT, { optional: true })!;
     readonly group = inject(KbqOptgroup, { optional: true });
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
@@ -291,7 +289,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** @docs-private */
     getHeight(): number {
-        return this.geometryService.clientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
     }
 
     select(emitEvent: boolean = true): void {

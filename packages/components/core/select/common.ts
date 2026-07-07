@@ -179,7 +179,6 @@ export abstract class KbqAbstractSelect {
     }
 
     protected getOverlayRect(): DOMRect {
-        // eslint-disable-next-line no-restricted-properties
         return this.overlayDir.overlayRef.overlayElement.getBoundingClientRect();
     }
 

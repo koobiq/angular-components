@@ -2,6 +2,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -39,7 +40,6 @@ import {
     isSelectAll,
     isVerticalMovement,
     KBQ_FORM_FIELD_REF,
-    KbqGeometryService,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -139,8 +139,8 @@ export class KbqTreeSelection
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private scheduler = inject(AsyncScheduler);
     private clipboard = inject(Clipboard, { optional: true });
+    private readonly platform = inject(Platform);
     protected readonly focusMonitor = inject(FocusMonitor);
-    private readonly geometryService = inject(KbqGeometryService);
 
     /** Indicates whether this component is placed inside a KbqFormField component. */
     protected readonly inSelect = !!inject(KBQ_FORM_FIELD_REF, { optional: true, host: true });
@@ -286,7 +286,9 @@ export class KbqTreeSelection
     }
 
     ngAfterContentInit(): void {
-        this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
+        if (this.platform.isBrowser) {
+            this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
+        }
 
         this.keyManager = new FocusKeyManager<KbqTreeOption>(this.renderedOptions)
             .withVerticalOrientation(true)
@@ -740,7 +742,7 @@ export class KbqTreeSelection
     }
 
     private getHeight(): number {
-        return this.geometryService.clientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
     }
 
     private updateTabIndex(): void {

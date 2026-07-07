@@ -578,8 +578,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         for (const pos of this.getPrioritizedPositions()) {
             const offset: KbqPopupTriggerOffset = this.arrow
-                ? // eslint-disable-next-line no-restricted-properties
-                  getOffset(pos, this.getNativeElement().getBoundingClientRect())
+                ? getOffset(pos, this.getNativeElement().getBoundingClientRect())
                 : {};
 
             res.push({

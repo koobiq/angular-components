@@ -1,7 +1,8 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { Platform } from '@angular/cdk/platform';
 import { AfterViewInit, ChangeDetectorRef, Directive, inject, OnDestroy } from '@angular/core';
-import { KbqGeometryService, PopUpPlacements } from '@koobiq/components/core';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -21,7 +22,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly contentObserver = inject(ContentObserver);
-    private readonly geometryService = inject(KbqGeometryService);
+    private readonly platform = inject(Platform);
 
     private readonly debounceInterval = 100;
 
@@ -35,6 +36,8 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     ngAfterViewInit(): void {
+        if (!this.platform.isBrowser) return;
+
         super.ngAfterViewInit();
 
         const tooltipContentWrapper = this.option.tooltipContentWrapper();
@@ -78,7 +81,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     private checkTooltipDisabled = () => {
-        const count: number = this.geometryService.clientRects(this.option.tooltipContent().nativeElement)?.length ?? 0;
+        const count: number = this.option.tooltipContent().nativeElement.getClientRects().length;
 
         this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;
 

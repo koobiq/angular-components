@@ -1,4 +1,5 @@
 ﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -23,7 +24,6 @@ import {
     FocusKeyManager,
     isHorizontalMovement,
     isVerticalMovement,
-    KbqGeometryService,
     LEFT_ARROW,
     RIGHT_ARROW,
     TAB
@@ -212,6 +212,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     protected readonly elementRef: ElementRef<HTMLElement>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly focusMonitor: FocusMonitor;
+    private readonly platform = inject(Platform);
 
     readonly rectangleElements = contentChildren(
         forwardRef(() => KbqNavbarRectangleElement),
@@ -225,11 +226,10 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     readonly resizeStream = new Subject<Event>();
 
-    private readonly geometryService = inject(KbqGeometryService);
     private readonly resizeDebounceInterval: number = 100;
 
     private get width(): number {
-        return this.geometryService.boundingClientRect(this.elementRef.nativeElement)?.width ?? 0;
+        return this.elementRef.nativeElement.getBoundingClientRect().width;
     }
 
     private get totalItemsWidth(): number {
@@ -270,6 +270,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     ngAfterViewInit(): void {
         super.ngAfterViewInit();
 
+        if (!this.platform.isBrowser) return;
         // Note: this wait is required for loading and rendering fonts for icons;
         // unfortunately we cannot control font rendering
         setTimeout(this.updateExpandedStateForItems);

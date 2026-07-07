@@ -161,7 +161,6 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         if (this.panelAutoWidth()) {
             // we need to use a timeout of about 50ms to wait for the styles to apply
             setTimeout(() => {
-                // eslint-disable-next-line no-restricted-properties
                 const { width } = this.nativeElement.getClientRects()[0];
 
                 const dropdownTrigger = this.dropdownTrigger();

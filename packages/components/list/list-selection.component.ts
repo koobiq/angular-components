@@ -2,6 +2,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -47,7 +48,6 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
-    KbqGeometryService,
     KbqOptgroup,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
@@ -132,7 +132,6 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     private changeDetectorRef = inject(ChangeDetectorRef);
     private clipboard = inject(Clipboard, { optional: true });
     protected readonly focusMonitor = inject(FocusMonitor);
-    private readonly geometryService = inject(KbqGeometryService);
 
     keyManager: FocusKeyManager<KbqListOption>;
 
@@ -237,6 +236,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     _value: string[] | null;
 
     private readonly destroyRef = inject(DestroyRef);
+    private readonly platform = inject(Platform);
 
     private optionFocusSubscription: Subscription | null;
 
@@ -294,6 +294,8 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
             this.updateTabIndex();
             this.initializeSelection();
         });
+
+        if (!this.platform.isBrowser) return;
 
         this.updateScrollSize();
     }
@@ -464,7 +466,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     /** @docs-private */
     getHeight(): number {
-        return this.geometryService.clientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
     }
 
     // View to model callback that should be called if the list or its options lost focus.
@@ -744,7 +746,6 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     private ngZone = inject(NgZone);
     listSelection = inject(KbqListSelection);
     readonly group = inject(KbqOptgroup, { optional: true });
-    private readonly geometryService = inject(KbqGeometryService);
     hasFocus: boolean = false;
     preventBlur: boolean = false;
 
@@ -907,7 +908,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     /** @docs-private */
     getHeight(): number {
-        return this.geometryService.clientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
     }
 
     /** Handles click events on the list option. */

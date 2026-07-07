@@ -687,7 +687,6 @@ export class KbqAutocompleteTrigger
     }
 
     private getHostWidth(): number {
-        // eslint-disable-next-line no-restricted-properties
         return this.getConnectedElement().nativeElement.getBoundingClientRect().width;
     }
 

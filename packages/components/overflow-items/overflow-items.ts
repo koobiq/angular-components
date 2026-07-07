@@ -1,4 +1,5 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
@@ -18,7 +19,6 @@ import {
     KBQ_WINDOW,
     KbqFlexDirection,
     KbqFlexWrap,
-    KbqGeometryService,
     kbqInjectNativeElement,
     KbqOrientation
 } from '@koobiq/components/core';
@@ -136,7 +136,7 @@ export class KbqOverflowItems {
     private readonly renderer = inject(Renderer2);
     private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
-    private readonly geometryService = inject(KbqGeometryService);
+    private readonly platform = inject(Platform);
 
     /**
      * `KbqOverflowItem` directive references.
@@ -212,14 +212,14 @@ export class KbqOverflowItems {
         }
     > = {
         horizontal: {
-            containerSize: (element) => this.geometryService.boundingClientRect(element)?.width ?? 0,
+            containerSize: (element) => element.getBoundingClientRect().width,
             paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
             paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
             itemSize: (element) => {
                 const { marginRight, marginLeft } = this.window.getComputedStyle(element);
 
                 return (
-                    (this.geometryService.boundingClientRect(element)?.width ?? 0) +
+                    element.getBoundingClientRect().width +
                     (parseFloat(marginLeft) || 0) +
                     (parseFloat(marginRight) || 0)
                 );
@@ -228,14 +228,14 @@ export class KbqOverflowItems {
             flexDirection: 'row'
         },
         vertical: {
-            containerSize: (element) => this.geometryService.boundingClientRect(element)?.height ?? 0,
+            containerSize: (element) => element.getBoundingClientRect().height,
             paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
             paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
             itemSize: (element) => {
                 const { marginTop, marginBottom } = this.window.getComputedStyle(element);
 
                 return (
-                    (this.geometryService.boundingClientRect(element)?.height ?? 0) +
+                    element.getBoundingClientRect().height +
                     (parseFloat(marginTop) || 0) +
                     (parseFloat(marginBottom) || 0)
                 );
@@ -251,6 +251,8 @@ export class KbqOverflowItems {
     }
 
     private setupObservers(): void {
+        if (!this.platform.isBrowser) return;
+
         const resizeObservers = merge(
             this.resizeObserver.observe(this.element),
             toObservable(this.additionalResizeObserverTargets).pipe(

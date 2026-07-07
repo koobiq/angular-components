@@ -2518,18 +2518,6 @@ export class KbqFormsModule {
 }
 
 // @public
-export class KbqGeometryService {
-    // (undocumented)
-    boundingClientRect(element: Element | null | undefined): DOMRect | null;
-    // (undocumented)
-    clientRects(element: Element | null | undefined): DOMRectList | null;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqGeometryService, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqGeometryService>;
-}
-
-// @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
 
 // @public (undocumented)

@@ -886,7 +886,6 @@ export class KbqTreeSelect
         if (this.disabled || !this.options || !this.options.length || this._panelOpen) return;
 
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
-        // eslint-disable-next-line no-restricted-properties
         this.triggerRect = (
             this.parentFormField?.getConnectedOverlayOrigin().nativeElement || this.trigger().nativeElement
         ).getBoundingClientRect();
@@ -1159,9 +1158,7 @@ export class KbqTreeSelect
             }
 
             const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
-            // eslint-disable-next-line no-restricted-properties
             const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
-            // eslint-disable-next-line no-restricted-properties
             const matcherListWidth: number = Math.floor(matcherList.getBoundingClientRect().width);
             const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
 
@@ -1356,7 +1353,6 @@ export class KbqTreeSelect
         if (panelWidth === 'auto') {
             const elementRef = origin instanceof CdkOverlayOrigin ? origin.elementRef : origin || this.elementRef;
 
-            // eslint-disable-next-line no-restricted-properties
             return elementRef.nativeElement.getBoundingClientRect().width;
         }
 

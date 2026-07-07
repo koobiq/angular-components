@@ -186,9 +186,7 @@ export abstract class KbqPopUp implements OnDestroy {
         this.arrow = false;
 
         if (this.trigger.container) {
-            // eslint-disable-next-line no-restricted-properties
             const { width, height } = this.elementRef.nativeElement.getBoundingClientRect();
-            // eslint-disable-next-line no-restricted-properties
             const { right, left, top, bottom } = this.trigger.container.getBoundingClientRect();
 
             if (this.trigger.stickToWindow === PopUpPlacements.Right) {

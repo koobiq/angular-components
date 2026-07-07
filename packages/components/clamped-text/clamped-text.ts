@@ -197,7 +197,6 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     };
 
     private getRowsCount(): number {
-        // eslint-disable-next-line no-restricted-properties
         const rects = Array.from(this.text().nativeElement.getClientRects());
 
         return [...new Set(rects.map(({ top }) => top))].length;

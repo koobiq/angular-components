@@ -346,7 +346,6 @@ export class KbqLocalDropzone extends KbqDrop {
     private onDragLeave(event: DragEvent): void {
         if (!isHtmlElementOrNull(event.currentTarget) || !isHtmlElementOrNull(event.relatedTarget)) return;
 
-        // eslint-disable-next-line no-restricted-properties
         const rects = this.elementRef.getBoundingClientRect();
         const isWithinViewport = this.isSafari
             ? !isOutsideViewport({

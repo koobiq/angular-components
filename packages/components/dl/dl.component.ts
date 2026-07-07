@@ -56,7 +56,6 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     }
 
     private readonly updateState = (): void => {
-        // eslint-disable-next-line no-restricted-properties
         const domRect = this.elementRef.nativeElement.getClientRects()[0];
         const width = domRect?.width || 0;
 

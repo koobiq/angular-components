@@ -24,7 +24,6 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
-    KbqGeometryService,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -100,7 +99,6 @@ let uniqueIdCounter: number = 0;
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private ngZone = inject(NgZone);
-    private readonly geometryService = inject(KbqGeometryService);
     tree: any;
 
     readonly onFocus = new Subject<KbqTreeOptionEvent>();
@@ -337,7 +335,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     /** @docs-private */
     getHeight(): number {
-        return this.geometryService.clientRects(this.elementRef.nativeElement)?.[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
     }
 
     select(setFocus = true): void {

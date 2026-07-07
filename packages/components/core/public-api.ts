@@ -18,7 +18,6 @@ export * from './overlay/shadow-dom-overlay-container';
 export * from './pop-up/index';
 export * from './select/index';
 export * from './selection/index';
-export * from './services/geometry.service';
 export * from './services/measure-scrollbar.service';
 export * from './services/theme.service';
 export * from './testing/index';
