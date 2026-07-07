@@ -202,9 +202,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.stateChanges.next();
     }
 
-    /** Comparator of selected options */
+    /** Comparator of selected options. Two null/absent values never match (aligned with the select pipe). */
     compareByValue = (o1: Pick<KbqSelectValue, 'id'> | null, o2: Pick<KbqSelectValue, 'id'> | null): boolean =>
-        o1?.id === o2?.id;
+        !!o1 && !!o2 && o1.id === o2.id;
 
     /** handler for select all options in select */
     selectAllHandler = (event: KeyboardEvent) => {

@@ -13,6 +13,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiSelectComponent } from './pipe-multi-select';
+import { registerPipeStatesTests } from './pipe-states.spec-helper';
 
 const SELECT_VALUES = [
     { id: 1, name: 'Option 1', value: 'value1' },
@@ -127,87 +128,18 @@ describe('KbqPipeMultiSelectComponent', () => {
         fixture.detectChanges();
     };
 
-    describe('Pipe states', () => {
-        beforeEach(() => {
+    registerPipeStatesTests({
+        label: 'MultiSelect',
+        pipeClass: 'kbq-pipe__multiselect',
+        createPipe,
+        createFilter,
+        nonEmptyValue: () => [SELECT_VALUES[0]],
+        createContext: () => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
-            fixture.componentInstance.activeFilter = createFilter([
-                createPipe({
-                    name: 'required',
-                    value: [SELECT_VALUES[0]],
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({ name: 'empty', value: null, cleanable: true, removable: false, disabled: false }),
-                createPipe({
-                    name: 'cleanable',
-                    value: [SELECT_VALUES[1]],
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({
-                    name: 'removable',
-                    value: [SELECT_VALUES[1]],
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                }),
-                createPipe({
-                    name: 'disabled',
-                    value: [SELECT_VALUES[1]],
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                })
-            ]);
-            fixture.detectChanges();
-        });
 
-        it('should render all MultiSelect pipes', () => {
-            const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
-
-            expect(pipes.length).toBe(5);
-            pipes.forEach((pipe) => {
-                expect(pipe.nativeElement.classList).toContain('kbq-pipe__multiselect');
-            });
-        });
-
-        it('should apply required state (no special classes)', () => {
-            const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
-
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
-        });
-
-        it('should apply empty state', () => {
-            const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[1];
-
-            expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
-        });
-
-        it('should apply cleanable state', () => {
-            const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
-
-            expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
-            expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
-        });
-
-        it('should apply removable state', () => {
-            const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
-
-            expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
-            expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-        });
-
-        it('should apply disabled state', () => {
-            const disabled = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
-
-            expect(disabled.nativeElement.classList).toContain('kbq-pipe_disabled');
-        });
+            return { fixture, filterBar: filterBarDebugElement };
+        }
     });
 
     describe('isEmpty', () => {
@@ -569,7 +501,7 @@ describe('KbqPipeMultiSelectComponent', () => {
         it('should update internalSelected on close when all options selected', fakeAsync(() => {
             fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
             fixture.componentInstance.activeFilter = createFilter([
-                createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
+                createPipe({ name: 'test', value: [SELECT_VALUES[0]], selectAll: true })
             ]);
             fixture.detectChanges();
 
@@ -579,10 +511,22 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             const component = getPipeComponent();
 
+            // Select every option. Under selectedAllEqualsSelectedNothing this collapses data.value
+            // to [], while internalSelected still holds the previously committed value (stale).
+            component.toggleSelectionAll();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.data.value).toEqual([]);
+            // internalSelected is not refreshed during selection, so `selected` is still the old value.
+            expect(component.selected).toEqual([SELECT_VALUES[0]]);
+
+            // onClose refreshes internalSelected from the current data.value.
             component.onClose();
             flush();
 
-            expect(component.selected).toBeDefined();
+            expect(component.selected).toEqual([]);
         }));
 
         it('should restore focus to the trigger button on close', fakeAsync(() => {
@@ -643,10 +587,22 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(component.compareByValue({ id: 1 }, { id: 2 })).toBe(false);
         });
 
-        it('should handle null gracefully', () => {
+        it('should return false when the first argument is null', () => {
             const component = getPipeComponent();
 
             expect(component.compareByValue(null, { id: 1 })).toBe(false);
+        });
+
+        it('should return false when the second argument is null', () => {
+            const component = getPipeComponent();
+
+            expect(component.compareByValue({ id: 1 }, null)).toBe(false);
+        });
+
+        it('should return false when both arguments are null', () => {
+            const component = getPipeComponent();
+
+            expect(component.compareByValue(null, null)).toBe(false);
         });
     });
 

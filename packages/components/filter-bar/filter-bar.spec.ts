@@ -3,16 +3,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import {
+    KBQ_FILTER_BAR_CONFIGURATION,
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
     KbqFilter,
     KbqFilterBar,
+    KbqFilterBarConfiguration,
     KbqFilterBarModule,
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqSearchExpandable, KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
+import { BehaviorSubject } from 'rxjs';
 
 const PIPE_TEMPLATE_ID = 'TestText';
 
@@ -546,6 +550,93 @@ describe('KbqFilterBar', () => {
             // The projected component should be rendered inside the right slot.
             expect(rightSlot!.querySelector('kbq-search-expandable')).not.toBeNull();
             expect(localFixture.debugElement.query(By.directive(KbqSearchExpandable))).not.toBeNull();
+        });
+    });
+
+    // Precedence implemented by KbqFilterBar.updateLocaleParams:
+    //   configuration = externalConfiguration (KBQ_FILTER_BAR_CONFIGURATION) || localeService.getParams('filterBar')
+    // The subscription to KBQ_LOCALE_SERVICE.changes re-runs updateLocaleParams on every locale emission.
+    describe('locale-change / externalConfiguration precedence', () => {
+        // Minimal stand-in for KbqLocaleService: a BehaviorSubject-backed `changes` stream plus
+        // `getParams`, returning a distinct configuration per locale id so swaps are observable.
+        class MockLocaleService {
+            readonly changes = new BehaviorSubject<string>('locale-a');
+
+            private readonly params: Record<string, KbqFilterBarConfiguration> = {
+                'locale-a': {
+                    ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+                    filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'Locale A name' }
+                },
+                'locale-b': {
+                    ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+                    filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'Locale B name' }
+                }
+            };
+
+            getParams(): KbqFilterBarConfiguration {
+                return this.params[this.changes.value];
+            }
+
+            // Mirror of KbqLocaleService.setLocale: publish the new id through `changes`.
+            setLocale(id: string): void {
+                this.changes.next(id);
+            }
+        }
+
+        const externalConfiguration: KbqFilterBarConfiguration = {
+            ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+            filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'External name' }
+        };
+
+        it('should update configuration when the locale service emits a change', () => {
+            const localeService = new MockLocaleService();
+
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: localeService }]
+            });
+
+            const localFixture = TestBed.createComponent(TestComponent);
+
+            localFixture.detectChanges();
+
+            const filterBar = localFixture.debugElement.query(By.directive(KbqFilterBar))
+                .componentInstance as KbqFilterBar;
+
+            // Initial locale ('locale-a') is applied via the BehaviorSubject's replayed value.
+            expect(filterBar.configuration.filters.defaultName).toBe('Locale A name');
+
+            // Switching the locale must re-run updateLocaleParams and swap the configuration.
+            localeService.setLocale('locale-b');
+
+            expect(filterBar.configuration.filters.defaultName).toBe('Locale B name');
+        });
+
+        it('should let externalConfiguration win over the locale service', () => {
+            const localeService = new MockLocaleService();
+
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                providers: [
+                    { provide: KBQ_LOCALE_SERVICE, useValue: localeService },
+                    { provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: externalConfiguration }
+                ]
+            });
+
+            const localFixture = TestBed.createComponent(TestComponent);
+
+            localFixture.detectChanges();
+
+            const filterBar = localFixture.debugElement.query(By.directive(KbqFilterBar))
+                .componentInstance as KbqFilterBar;
+
+            // externalConfiguration takes precedence over the locale-provided params.
+            expect(filterBar.configuration.filters.defaultName).toBe('External name');
+
+            // A locale change must NOT override the external configuration.
+            localeService.setLocale('locale-b');
+
+            expect(filterBar.configuration.filters.defaultName).toBe('External name');
         });
     });
 });

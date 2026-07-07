@@ -15,6 +15,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeSelectComponent } from './pipe-select';
+import { registerPipeStatesTests } from './pipe-states.spec-helper';
 
 const SELECT_VALUES: KbqSelectValue[] = [
     { name: 'Option 1', value: 'value1' },
@@ -119,87 +120,18 @@ describe('KbqPipeSelectComponent', () => {
         fixture.detectChanges();
     };
 
-    describe('Pipe states', () => {
-        beforeEach(() => {
+    registerPipeStatesTests({
+        label: 'Select',
+        pipeClass: 'kbq-pipe__select',
+        createPipe,
+        createFilter,
+        nonEmptyValue: () => SELECT_VALUES[0],
+        createContext: () => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
-            fixture.componentInstance.activeFilter = createFilter([
-                createPipe({
-                    name: 'required',
-                    value: SELECT_VALUES[0],
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({ name: 'empty', value: null, cleanable: true, removable: false, disabled: false }),
-                createPipe({
-                    name: 'cleanable',
-                    value: SELECT_VALUES[1],
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({
-                    name: 'removable',
-                    value: SELECT_VALUES[1],
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                }),
-                createPipe({
-                    name: 'disabled',
-                    value: SELECT_VALUES[1],
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                })
-            ]);
-            fixture.detectChanges();
-        });
 
-        it('should render all Select pipes', () => {
-            const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
-
-            expect(pipes.length).toBe(5);
-            pipes.forEach((pipe) => {
-                expect(pipe.nativeElement.classList).toContain('kbq-pipe__select');
-            });
-        });
-
-        it('should apply required state (no special classes)', () => {
-            const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
-
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
-        });
-
-        it('should apply empty state', () => {
-            const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[1];
-
-            expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
-        });
-
-        it('should apply cleanable state', () => {
-            const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
-
-            expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
-            expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
-        });
-
-        it('should apply removable state', () => {
-            const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
-
-            expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
-            expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-        });
-
-        it('should apply disabled state', () => {
-            const disabled = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
-
-            expect(disabled.nativeElement.classList).toContain('kbq-pipe_disabled');
-        });
+            return { fixture, filterBar: filterBarDebugElement };
+        }
     });
 
     describe('isEmpty', () => {
@@ -381,16 +313,22 @@ describe('KbqPipeSelectComponent', () => {
             expect(component.compareByValue({ id: 1 }, { id: 2 })).toBe(false);
         });
 
-        it('should return falsy when first argument is null', () => {
+        it('should return false when the first argument is null', () => {
             const component = getPipeComponent();
 
-            expect(component.compareByValue(null, { id: 1 })).toBeFalsy();
+            expect(component.compareByValue(null, { id: 1 })).toBe(false);
         });
 
-        it('should return falsy when second argument is null', () => {
+        it('should return false when the second argument is null', () => {
             const component = getPipeComponent();
 
-            expect(component.compareByValue({ id: 1 }, null)).toBeFalsy();
+            expect(component.compareByValue({ id: 1 }, null)).toBe(false);
+        });
+
+        it('should return false when both arguments are null', () => {
+            const component = getPipeComponent();
+
+            expect(component.compareByValue(null, null)).toBe(false);
         });
     });
 
