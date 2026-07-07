@@ -269,12 +269,19 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /**
      * Reveals the bottom "load more" spinner / error row when it first appears. Both rows are appended
      * below the last item and can land outside the viewport (the next page is requested while the user
-     * is up to `scrolledToBottomOffset` px above the true bottom). On each false->true transition, once
-     * the row has rendered, scroll the container to the bottom so the indicator is visible.
+     * is up to `scrolledToBottomOffset` px above the true bottom). Only a genuine false->true transition
+     * reveals the row: the BehaviorSubject's replayed current value is ignored (`pairwise` needs two
+     * emissions), so the panel always opens scrolled to the top — reopening it while a load-more error
+     * is still set never jumps to the bottom.
      */
     private subscribeToRevealLoadMoreRow(): void {
         const reveal = (source: BehaviorSubject<boolean>) =>
-            source.pipe(distinctUntilChanged(), filter(Boolean), auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME));
+            source.pipe(
+                distinctUntilChanged(),
+                pairwise(),
+                filter(([wasShown, isShown]) => !wasShown && isShown),
+                auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME)
+            );
 
         merge(reveal(this.service.loadingMore), reveal(this.service.loadMoreErrorMode))
             .pipe(takeUntilDestroyed(this.destroyRef))
