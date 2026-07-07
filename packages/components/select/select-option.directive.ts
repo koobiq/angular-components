@@ -1,5 +1,6 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { Platform } from '@angular/cdk/platform';
 import { AfterViewInit, Directive, inject, OnDestroy } from '@angular/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -17,6 +18,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     private readonly option = inject(KbqOption);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly contentObserver = inject(ContentObserver);
+    private readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly debounceInterval = 100;
 
@@ -29,6 +31,8 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     }
 
     get isOverflown(): boolean {
+        if (!this.isBrowser) return false;
+
         return this.textElement.clientWidth < this.textElement.scrollWidth;
     }
 

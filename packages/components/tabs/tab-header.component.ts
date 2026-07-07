@@ -1,10 +1,12 @@
 import { CdkObserveContent } from '@angular/cdk/observers';
+import { Platform } from '@angular/cdk/platform';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ContentChildren,
     ElementRef,
+    inject,
     input,
     QueryList,
     ViewChild,
@@ -57,8 +59,12 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     @ViewChild('nextPaginator') readonly nextPaginator: ElementRef<HTMLElement>;
     @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;
 
+    private readonly isBrowser = inject(Platform).isBrowser;
+
     /** Width of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetWidth(): number | undefined {
+        if (!this.isBrowser) return undefined;
+
         const item = this.items.get(this.selectedIndex);
         const width = item?.elementRef?.nativeElement?.offsetWidth;
 
@@ -69,6 +75,8 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
 
     /** Left offset of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetLeft(): number | undefined {
+        if (!this.isBrowser) return undefined;
+
         const item = this.items.get(this.selectedIndex);
         const left = item?.elementRef?.nativeElement?.offsetLeft;
 

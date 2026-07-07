@@ -304,6 +304,8 @@ export class KbqCodeBlock implements AfterViewInit {
      * has a scroll, and the calculated maximum height is not set.
      */
     private get canCodeContentBeFocused(): boolean {
+        if (!this.platform.isBrowser) return false;
+
         const element = this.scrollableCodeContent()?.getElementRef().nativeElement;
 
         return element && this.hasScroll(element) && !this.calculatedMaxHeight;
@@ -449,6 +451,8 @@ export class KbqCodeBlock implements AfterViewInit {
     }
 
     private setupContentOverflowDetection(): void {
+        if (!this.platform.isBrowser) return;
+
         if (!this.maxHeight()) return;
 
         const checkOverflow = () => {

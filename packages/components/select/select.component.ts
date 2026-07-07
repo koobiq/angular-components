@@ -1428,6 +1428,8 @@ export class KbqSelect
 
     /** Checks if the component is currently visible in the viewport. */
     private isVisible(): boolean {
+        if (!this.isBrowser) return false;
+
         return this.elementRef.nativeElement.offsetTop < this.elementRef.nativeElement.offsetHeight;
     }
 

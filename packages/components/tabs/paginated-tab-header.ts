@@ -351,6 +351,8 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * page.
      */
     updatePagination() {
+        if (!this.platform.isBrowser) return;
+
         this.checkPaginationEnabled();
         this.checkScrollingControls();
         this.updateTabScrollPosition();

@@ -81,6 +81,8 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     private checkTooltipDisabled = () => {
+        if (!this.platform.isBrowser) return;
+
         const count: number = this.option.tooltipContent().nativeElement.getClientRects().length;
 
         this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;

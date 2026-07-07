@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CdkObserveContent } from '@angular/cdk/observers';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -66,6 +67,8 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;
     @ContentChildren(forwardRef(() => KbqTabLink), { descendants: true }) readonly items: QueryList<KbqTabLink>;
 
+    private readonly isBrowser = inject(Platform).isBrowser;
+
     /** Whether the nav bar background should be transparent. */
     readonly transparent = input<boolean, unknown>(false, { transform: booleanAttribute });
     readonly onSurface = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -83,10 +86,14 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     }
 
     protected get activeTabOffsetWidth(): number | undefined {
+        if (!this.isBrowser) return undefined;
+
         return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetWidth;
     }
 
     protected get activeTabOffsetLeft(): number | undefined {
+        if (!this.isBrowser) return undefined;
+
         return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft;
     }
 
