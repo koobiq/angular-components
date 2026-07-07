@@ -97,7 +97,7 @@
         "@types/spdx-satisfies": "^0.1.2",
         "@types/ws": "<8.18.2",
         "angular-eslint": "^20.7.0",
-        "autoprefixer": "^10.4.21",
+        "autoprefixer": "^10.5.2",
         "chalk": "^4.1.2",
         "commander": "^11.1.0",
         "conventional-changelog": "^3.1.10",
