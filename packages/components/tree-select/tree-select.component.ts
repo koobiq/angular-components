@@ -1159,6 +1159,7 @@ export class KbqTreeSelect
 
             const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
             const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
+
             const matcherListWidth: number = Math.floor(matcherList.getBoundingClientRect().width);
             const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
 

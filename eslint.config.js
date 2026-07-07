@@ -434,7 +434,7 @@ module.exports = tseslint.config(
         files: ['**/*.spec.ts'],
         rules: {
             // plugin:eslint
-            // ignore SSR restrictions in specs, because they are not executed in SSR context
+            // ignore `noRestrictedGlobalsOptionsForSSR` in specs, because they are not executed in SSR context
             'no-restricted-globals': 0,
 
             // plugin:@angular-eslint
