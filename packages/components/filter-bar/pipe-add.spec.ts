@@ -156,7 +156,7 @@ describe('KbqPipeAdd', () => {
         });
 
         it('should be empty initially when no filter is set', () => {
-            expect(getPipeAdd().addedPipes).toEqual([]);
+            expect(getPipeAdd().addedPipes()).toEqual([]);
         });
 
         it('should update addedPipes when filter with pipes is set', () => {
@@ -168,7 +168,7 @@ describe('KbqPipeAdd', () => {
             ]);
             fixture.detectChanges();
 
-            expect(getPipeAdd().addedPipes).toEqual([PIPE_TEMPLATE_ID_1, PIPE_TEMPLATE_ID_2]);
+            expect(getPipeAdd().addedPipes()).toEqual([PIPE_TEMPLATE_ID_1, PIPE_TEMPLATE_ID_2]);
         });
 
         it('should not update addedPipes when filter is null', () => {
@@ -178,7 +178,7 @@ describe('KbqPipeAdd', () => {
             filterBar.filter = null;
             fixture.detectChanges();
 
-            expect(pipeAdd.addedPipes).toEqual([]);
+            expect(pipeAdd.addedPipes()).toEqual([]);
         });
     });
 
@@ -337,7 +337,7 @@ describe('KbqPipeAdd', () => {
             expect(closeSpy).toHaveBeenCalled();
         }));
 
-        it('should reuse existing filter when filter is already set', fakeAsync(() => {
+        it('should derive from the existing filter when one is already set', fakeAsync(() => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
             const existingFilter = createFilter([]);
@@ -355,8 +355,11 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter).toBe(existingFilter);
-            expect(filterBar.filter.pipes.length).toBe(1);
+            // Immutable add: a new filter reference derived from the existing one — its data is reused
+            // (name kept, not the empty pipe-add default template) with the new pipe appended.
+            expect(filterBar.filter).not.toBe(existingFilter);
+            expect(filterBar.filter!.name).toBe(existingFilter.name);
+            expect(filterBar.filter!.pipes.length).toBe(1);
         }));
 
         it('should call filterBar.openPipe.next when option is already selected', fakeAsync(() => {

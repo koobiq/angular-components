@@ -31,7 +31,6 @@ export class KbqFilterReset {
     protected resetFilter() {
         this.onResetFilter.emit(this.filterBar.filter!);
 
-        this.filterBar.changes.next();
         this.filterBar.onResetFilter.next(true);
     }
 }

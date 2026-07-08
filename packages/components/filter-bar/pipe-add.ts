@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, input, output, viewChild, ViewEncapsulation } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    input,
+    output,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -20,7 +28,7 @@ import { getId } from './pipes/base-pipe';
         KbqSelectModule
     ],
     template: `
-        <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">
+        <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes()" [compareWith]="compareWith">
             <button
                 kbqTooltip="{{ filterBar.configuration.add.tooltip }}"
                 kbq-button
@@ -75,16 +83,11 @@ export class KbqPipeAdd {
         saved: false
     });
 
-    /** already added pipes. Used to open an already added pipe. */
-    addedPipes: (string | number)[] = [];
-
-    constructor() {
-        this.filterBar.changes.pipe(takeUntilDestroyed()).subscribe(() => {
-            if (this.filterBar?.filter) {
-                this.addedPipes = this.filterBar.filter.pipes.map((pipe: KbqPipe) => getId(pipe));
-            }
-        });
-    }
+    /**
+     * Ids of the pipes already added to the current filter. Used to open an already-added pipe.
+     * Derived from the `filter` signal so it stays in sync without the retired `changes` bus.
+     */
+    readonly addedPipes = computed(() => this.filterBar.filter?.pipes.map((pipe: KbqPipe) => getId(pipe)) ?? []);
 
     addPipeFromTemplate(option: KbqOption) {
         if (option.selected) {
@@ -92,16 +95,18 @@ export class KbqPipeAdd {
         } else {
             option.select();
 
-            if (!this.filterBar.filter) {
-                this.filterBar.filter = structuredClone(this.filterTemplate());
-            }
+            const current = this.filterBar.filter ?? structuredClone(this.filterTemplate());
 
-            this.filterBar.filter.changed = true;
-            // New array (not in-place push) to keep `pipes` on a new-reference-on-change model.
-            this.filterBar.filter.pipes = [
-                ...this.filterBar.filter.pipes,
-                Object.assign({}, option.value, { values: undefined, valueTemplate: undefined, openOnAdd: true })
-            ];
+            // Build a new filter reference (immutable add) so the `filter` signal reacts; keep `pipes` on a
+            // new-reference-on-change model instead of an in-place push.
+            this.filterBar.filter = {
+                ...current,
+                changed: true,
+                pipes: [
+                    ...current.pipes,
+                    Object.assign({}, option.value, { values: undefined, valueTemplate: undefined, openOnAdd: true })
+                ]
+            };
 
             this.onAddPipe.emit(option.value);
             this.filterBar.filterChange.emit(this.filterBar.filter);

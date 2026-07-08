@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -121,31 +121,44 @@ describe('KbqFilterBar', () => {
             fixture.detectChanges();
         });
 
-        it('should emit changes when filter is set', () => {
+        it('should recompute derived state when a new filter reference is set', () => {
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            let computeCount = 0;
+            // `filter` is signal-backed, so a `computed()` reading it recomputes on every new reference.
+            const probe = computed(() => {
+                computeCount++;
 
-            filterBar.changes.subscribe(spy);
-            spy.mockClear();
+                return filterBar.filter;
+            });
+
+            probe();
+            const before = computeCount;
 
             filterBar.filter = createFilter([]);
-            expect(spy).toHaveBeenCalled();
+            probe();
+
+            expect(computeCount).toBe(before + 1);
         });
 
-        it('should not emit changes when same filter reference is set', () => {
+        it('should not recompute derived state when the same filter reference is set again', () => {
             const filterBar = getFilterBar();
             const filter = createFilter([]);
+            let computeCount = 0;
+            const probe = computed(() => {
+                computeCount++;
+
+                return filterBar.filter;
+            });
 
             filterBar.filter = filter;
-            fixture.detectChanges();
+            probe();
+            const before = computeCount;
 
-            const spy = jest.fn();
-
-            filterBar.changes.subscribe(spy);
-            spy.mockClear();
-
+            // Setting the identical reference is deduped by the signal — no recompute.
             filterBar.filter = filter;
-            expect(spy).not.toHaveBeenCalled();
+            probe();
+
+            expect(computeCount).toBe(before);
         });
 
         it('should emit filterChange via internalFilterChanges subscription', () => {
@@ -206,7 +219,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = createFilter([], { saved: true });
 
-            expect(filterBar.isSaved).toBe(true);
+            expect(filterBar.isSaved()).toBe(true);
         });
 
         it('should return isSaved false when filter.saved is false', () => {
@@ -214,7 +227,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = createFilter([], { saved: false });
 
-            expect(filterBar.isSaved).toBe(false);
+            expect(filterBar.isSaved()).toBe(false);
         });
 
         it('should return isChanged true when filter.changed is true', () => {
@@ -222,7 +235,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = createFilter([], { changed: true });
 
-            expect(filterBar.isChanged).toBe(true);
+            expect(filterBar.isChanged()).toBe(true);
         });
 
         it('should return isChanged false when filter.changed is false', () => {
@@ -230,7 +243,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = createFilter([], { changed: false });
 
-            expect(filterBar.isChanged).toBe(false);
+            expect(filterBar.isChanged()).toBe(false);
         });
 
         it('should return isSavedAndChanged true only when both saved and changed', () => {
@@ -238,7 +251,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = createFilter([], { saved: true, changed: true });
 
-            expect(filterBar.isSavedAndChanged).toBe(true);
+            expect(filterBar.isSavedAndChanged()).toBe(true);
         });
 
         it('should return isSavedAndChanged false when only saved', () => {
@@ -246,7 +259,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = createFilter([], { saved: true, changed: false });
 
-            expect(filterBar.isSavedAndChanged).toBe(false);
+            expect(filterBar.isSavedAndChanged()).toBe(false);
         });
 
         it('should return isSavedAndChanged false when only changed', () => {
@@ -254,7 +267,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = createFilter([], { saved: false, changed: true });
 
-            expect(filterBar.isSavedAndChanged).toBe(false);
+            expect(filterBar.isSavedAndChanged()).toBe(false);
         });
 
         it('should return isReadOnly true when filter.readonly is true', () => {
@@ -262,7 +275,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = createFilter([], { readonly: true });
 
-            expect(filterBar.isReadOnly).toBe(true);
+            expect(filterBar.isReadOnly()).toBe(true);
         });
 
         it('should return isDisabled true when filter.disabled is true', () => {
@@ -270,7 +283,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = createFilter([], { disabled: true });
 
-            expect(filterBar.isDisabled).toBe(true);
+            expect(filterBar.isDisabled()).toBe(true);
         });
 
         it('should return false for all when filter is null', () => {
@@ -278,11 +291,11 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter = null;
 
-            expect(filterBar.isSaved).toBe(false);
-            expect(filterBar.isChanged).toBe(false);
-            expect(filterBar.isSavedAndChanged).toBe(false);
-            expect(filterBar.isReadOnly).toBe(false);
-            expect(filterBar.isDisabled).toBe(false);
+            expect(filterBar.isSaved()).toBe(false);
+            expect(filterBar.isChanged()).toBe(false);
+            expect(filterBar.isSavedAndChanged()).toBe(false);
+            expect(filterBar.isReadOnly()).toBe(false);
+            expect(filterBar.isDisabled()).toBe(false);
         });
     });
 
@@ -351,20 +364,19 @@ describe('KbqFilterBar', () => {
             expect(spy).toHaveBeenCalledWith(pipe);
         });
 
-        it('should emit changes', () => {
+        it('should replace the filter with a new reference on remove', () => {
             const pipe = createPipe({ name: 'removable' });
             const filterBar = getFilterBar();
 
             filterBar.filter = createFilter([pipe]);
 
-            const spy = jest.fn();
-
-            filterBar.changes.subscribe(spy);
-            spy.mockClear();
+            const before = filterBar.filter;
 
             filterBar.removePipe(pipe);
 
-            expect(spy).toHaveBeenCalled();
+            // Immutable update: a new `filter` reference (not an in-place splice) drives signal reactivity.
+            expect(filterBar.filter).not.toBe(before);
+            expect(filterBar.filter!.pipes).toEqual([]);
         });
     });
 

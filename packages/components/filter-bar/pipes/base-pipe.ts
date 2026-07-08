@@ -6,6 +6,7 @@ import {
     ChangeDetectorRef,
     DestroyRef,
     Directive,
+    effect,
     ElementRef,
     inject,
     InjectionToken,
@@ -14,7 +15,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isMac } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
-import { delay, filter } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import {
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
@@ -250,7 +251,10 @@ export class KbqPipeMinWidth {
     }
 
     constructor() {
-        this.filterBar?.changes.pipe(delay(0), takeUntilDestroyed()).subscribe(this.update);
+        // Recompute the min-width whenever the filter changes. The pipe's text content updates during CD,
+        // so defer the read to the next macrotask (mirrors the old `changes.pipe(delay(0))`). Passing the
+        // `filterBar.filter` read into the scheduler subscribes the effect, replacing the `changes` bus.
+        effect((onCleanup) => onCleanup(this.scheduleMinWidthUpdate(this.filterBar?.filter)));
 
         afterNextRender({ read: this.update });
     }
@@ -259,4 +263,11 @@ export class KbqPipeMinWidth {
         this.minWidth = this.textLength < this.maxSymbolsForFitContent ? 'fit-content' : 'unset';
         this.changeDetectorRef.markForCheck();
     };
+
+    /** Schedules a deferred min-width recompute and returns the effect-cleanup that cancels it. */
+    private scheduleMinWidthUpdate(_filter: unknown): () => void {
+        const timerId = setTimeout(this.update);
+
+        return () => clearTimeout(timerId);
+    }
 }

@@ -30,7 +30,7 @@
     </span>
 </button>
 
-@if (filterBar.isChanged && !filterBar.isSaved) {
+@if (filterBar.isChanged() && !filterBar.isSaved()) {
     <button
         #saveNewFilterButton
         kbqTooltip="{{ localeData.saveNewFilterTooltip }}"
@@ -47,7 +47,7 @@
     </button>
 }
 
-@if (filterBar.isSaved) {
+@if (filterBar.isSaved()) {
     <button
         #filterActionsButton
         kbq-button
@@ -58,7 +58,7 @@
         [kbqDropdownTriggerFor]="filterActions"
         [disabled]="savePopover.isSaving"
         [class.kbq-active]="focusedElementBeforeIs(filterActionsButton) && filterActionsOpened"
-        [class]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
+        [class]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged() }"
     >
         <i kbq-icon="kbq-ellipsis-vertical_16" aria-hidden="true"></i>
     </button>
@@ -113,15 +113,15 @@
 </kbq-dropdown>
 
 <kbq-dropdown #filterActions="kbqDropdown" [class]="'kbq-filters__dropdown'">
-    @if (filterBar.isSavedAndChanged && !filterBar.isReadOnly) {
+    @if (filterBar.isSavedAndChanged() && !filterBar.isReadOnly()) {
         <button
             kbq-dropdown-item
-            [class]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
+            [class]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged() }"
             (click)="saveChanges()"
         >
             <i kbq-icon="kbq-floppy-disk_16"></i>
             {{ localeData.saveChanges }}
-            @if (filterBar.isSavedAndChanged) {
+            @if (filterBar.isSavedAndChanged()) {
                 <i kbq-icon="kbq-circle-xs_16" class="kbq-icon-button kbq-warning layout-margin-left-xs"></i>
             }
         </button>
@@ -131,24 +131,24 @@
         {{ localeData.saveAsNew }}
     </button>
 
-    @if (!filterBar.isReadOnly) {
+    @if (!filterBar.isReadOnly()) {
         <button kbq-dropdown-item (click)="savePopover.openChangeFilterNamePopover()">
             <i kbq-icon="kbq-pencil_16"></i>
             {{ localeData.change }}
         </button>
     }
 
-    @if (filterBar.isSavedAndChanged || !filterBar.isReadOnly) {
+    @if (filterBar.isSavedAndChanged() || !filterBar.isReadOnly()) {
         <kbq-divider />
     }
 
-    @if (filterBar.isSavedAndChanged) {
+    @if (filterBar.isSavedAndChanged()) {
         <button kbq-dropdown-item (click)="resetFilterChanges()">
             <i kbq-icon="kbq-circle-xmark_16"></i>
             {{ localeData.resetChanges }}
         </button>
     }
-    @if (!filterBar.isReadOnly) {
+    @if (!filterBar.isReadOnly()) {
         <button kbq-dropdown-item (click)="removeFilter()">
             <i kbq-icon="kbq-trash_16"></i>
             {{ localeData.remove }}

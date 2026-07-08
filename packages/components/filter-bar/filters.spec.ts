@@ -139,6 +139,23 @@ describe('KbqFilters', () => {
         filtersDebugElement = fixture.debugElement.query(By.directive(KbqFilters));
     };
 
+    describe('filter-bar button style (effect-driven)', () => {
+        it('should switch the main button to the changed-filter style when the filter becomes saved', () => {
+            initFixture(createFilter([]));
+
+            const mainButton = getMainButton();
+
+            // Unsaved & unchanged → default outline style.
+            expect(mainButton.kbqStyle).not.toBe('kbq-button_changed-filter');
+
+            // `KbqFilterBarButton` reacts to the signal-backed `filter` via an effect (was the `changes` bus).
+            fixture.componentInstance.activeFilter = createFilter([], { saved: true });
+            fixture.detectChanges();
+
+            expect(mainButton.kbqStyle).toBe('kbq-button_changed-filter');
+        });
+    });
+
     describe('Getters', () => {
         describe('isEmpty', () => {
             it('should return true when filters array is empty', () => {

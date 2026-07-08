@@ -46,13 +46,13 @@ export interface KbqFilterBarHost {
     readonly selectedAllEqualsSelectedNothing: Signal<boolean>;
 
     /** Whether the current filter is saved. */
-    readonly isSaved: boolean;
+    readonly isSaved: Signal<boolean>;
     /** Whether the current filter is changed. */
-    readonly isChanged: boolean;
+    readonly isChanged: Signal<boolean>;
     /** Whether the current filter is both saved and changed. */
-    readonly isSavedAndChanged: boolean;
+    readonly isSavedAndChanged: Signal<boolean>;
     /** Whether the current filter is readonly. */
-    readonly isReadOnly: boolean;
+    readonly isReadOnly: Signal<boolean>;
 
     /** Emits the two-way-bound `filter` value. */
     readonly filterChange: OutputEmitterRef<KbqFilter | null>;
@@ -63,8 +63,6 @@ export interface KbqFilterBarHost {
     /** Emits whenever a select/multiselect pipe closes. */
     readonly onClosePipe: OutputEmitterRef<KbqPipe>;
 
-    /** State-change bus. */
-    readonly changes: BehaviorSubject<void>;
     /** Internal filter changes. */
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     /** Internal pipe-template changes. */

@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    effect,
     inject,
     input,
     ViewEncapsulation
@@ -11,7 +12,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { merge } from 'rxjs';
 import { KBQ_FILTER_BAR_HOST } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeState } from './pipe-state';
@@ -63,8 +63,15 @@ export class KbqPipeButton {
     }
 
     constructor() {
-        merge(this.pipe.stateChanges, this.filterBar.changes)
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.changeDetectorRef.markForCheck());
+        this.pipe.stateChanges.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
+
+        // The pipe template renders plain `data` (not signals), so mark it for check when the filter
+        // changes. Passing the `filterBar.filter` read into the handler subscribes this effect, replacing
+        // the retired `changes` bus.
+        effect(() => this.markForCheckOnFilterChange(this.filterBar.filter));
+    }
+
+    private markForCheckOnFilterChange(_filter: unknown): void {
+        this.changeDetectorRef.markForCheck();
     }
 }

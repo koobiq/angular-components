@@ -1,5 +1,4 @@
-import { DestroyRef, Directive, inject, Input, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Directive, effect, inject, Input } from '@angular/core';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KBQ_FILTER_BAR_HOST } from '../filter-bar.types';
@@ -8,9 +7,7 @@ import { KbqBasePipe } from './base-pipe';
 @Directive({
     selector: '[kbqPipeState]'
 })
-export class KbqPipeState<T> implements OnInit {
-    /** @docs-private */
-    private readonly destroyRef = inject(DestroyRef);
+export class KbqPipeState<T> {
     /** @docs-private */
     private readonly button = inject(KbqButton);
     /** @docs-private */
@@ -35,11 +32,14 @@ export class KbqPipeState<T> implements OnInit {
 
     private _state: T | null = null;
 
-    ngOnInit(): void {
-        this.filterBar.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
+    constructor() {
+        // Re-derive the button style whenever the filter changes (a pipe's emptiness may change with it).
+        // Passing the `filterBar.filter` read into `updateState` subscribes this effect to the signal-backed
+        // accessor, replacing the retired `changes` bus.
+        effect(() => this.updateState(this.filterBar.filter));
     }
 
-    private updateState = () => {
+    private updateState = (_filter?: unknown) => {
         this.button.kbqStyle = KbqButtonStyles.Outline;
         this.button.color = KbqComponentColors.ContrastFade;
 

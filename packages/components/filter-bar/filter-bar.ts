@@ -3,12 +3,14 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     contentChild,
     forwardRef,
     inject,
     Input,
     input,
     output,
+    signal,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -78,23 +80,26 @@ export class KbqFilterBar implements KbqFilterBarHost {
      * */
     readonly selectedAllEqualsSelectedNothing = input<boolean, unknown>(true, { transform: booleanAttribute });
 
+    /**
+     * Signal backing the `filter` accessor input. Derived state (`isSaved`/`isChanged`/…) is exposed via
+     * `computed()` off this signal and change detection is driven by signal reactivity, which replaces the
+     * retired `changes` Subject and its manual `markForCheck` fan-out (P1-6).
+     */
+    private readonly _filter = signal<KbqFilter | null>(null);
+
     /** Filter that is currently selected */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get filter(): KbqFilter | null {
-        return this._filter;
+        return this._filter();
     }
 
     set filter(value: KbqFilter | null) {
-        if (this._filter === value) return;
+        if (this._filter() === value) return;
 
-        this._filter = value;
-
-        this.changes.next();
+        this._filter.set(value);
     }
-
-    private _filter: KbqFilter | null;
 
     /** An array of templates that are used when adding a pipe. Also contains lists of options to select (values). */
     // TODO: Skipped for migration because:
@@ -126,37 +131,25 @@ export class KbqFilterBar implements KbqFilterBarHost {
     /** Event that emits whenever the select or multiselect pipe closed. */
     readonly onClosePipe = output<KbqPipe>();
 
-    /** Whether the current filter is saved and changed */
-    get isSavedAndChanged(): boolean {
-        return this.isSaved && this.isChanged;
-    }
-
     /** Whether the current filter is saved */
-    get isSaved(): boolean {
-        return !!this.filter?.saved;
-    }
+    readonly isSaved = computed(() => !!this._filter()?.saved);
 
     /** Whether the current filter is changed */
-    get isChanged(): boolean {
-        return !!this.filter?.changed;
-    }
+    readonly isChanged = computed(() => !!this._filter()?.changed);
+
+    /** Whether the current filter is saved and changed */
+    readonly isSavedAndChanged = computed(() => this.isSaved() && this.isChanged());
 
     /** Whether the current filter is readonly */
-    get isReadOnly(): boolean {
-        return !!this.filter?.readonly;
-    }
+    readonly isReadOnly = computed(() => !!this._filter()?.readonly);
 
     /** Whether the current filter is disabled */
-    get isDisabled(): boolean {
-        return !!this.filter?.disabled;
-    }
+    readonly isDisabled = computed(() => !!this._filter()?.disabled);
 
     private savedFilter: KbqFilter | null = null;
 
     /** Event that emits whenever the filter is reset. */
     readonly onResetFilter = new BehaviorSubject<boolean>(false);
-    /** all changes */
-    readonly changes = new BehaviorSubject<void>(undefined);
     /** internal filter changes */
     readonly internalFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
     /** internal changes in templates */
@@ -167,7 +160,7 @@ export class KbqFilterBar implements KbqFilterBarHost {
 
     constructor() {
         this.internalFilterChanges.pipe(takeUntilDestroyed()).subscribe((filter) => {
-            this._filter = filter;
+            this._filter.set(filter);
 
             this.filterChange.emit(this.filter);
         });
@@ -178,38 +171,33 @@ export class KbqFilterBar implements KbqFilterBarHost {
             this.initDefaultParams();
         }
 
+        // A pipe value change or removal marks the current filter as "changed". Produce a new filter
+        // reference (not an in-place mutation) so the `filter` signal — and every `computed()`/`effect()`
+        // reading it — reacts. This replaces the retired `changes` Subject + `markForCheck` fan-out (P1-6).
         merge(outputToObservable(this.onChangePipe), outputToObservable(this.onRemovePipe))
             .pipe(takeUntilDestroyed())
             .subscribe(() => {
-                if (this.filter) {
-                    this.filter.changed = true;
+                const current = this.filter;
+
+                if (current) {
+                    this._filter.set({ ...current, changed: true });
+
                     this.filterChange.emit(this.filter);
                 }
-            });
-
-        merge(
-            outputToObservable(this.filterChange),
-            outputToObservable(this.onChangePipe),
-            outputToObservable(this.onRemovePipe),
-            this.internalFilterChanges
-        )
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this.changes.next();
-                this.changeDetectorRef.markForCheck();
             });
     }
 
     /** Remove pipe from current filter and emit event */
     removePipe(pipe: KbqPipe) {
-        if (!this.filter?.pipes.includes(pipe)) return;
+        const current = this.filter;
 
-        // Replace the array instead of splicing in place so `pipes` follows a new-reference-on-change
-        // model (friendlier to OnPush / signal reference-equality) and unknown pipes are left untouched.
-        this.filter.pipes = this.filter.pipes.filter((item) => item !== pipe);
+        if (!current?.pipes.includes(pipe)) return;
+
+        // Replace the filter (and its `pipes` array) with new references instead of mutating in place, so
+        // the `filter` signal reacts; unknown pipes are left untouched. `onRemovePipe` then flags "changed".
+        this._filter.set({ ...current, pipes: current.pipes.filter((item) => item !== pipe) });
 
         this.onRemovePipe.emit(pipe);
-        this.changes.next();
     }
 
     /** Save current state of filter */
@@ -229,9 +217,11 @@ export class KbqFilterBar implements KbqFilterBarHost {
 
     /** Set the filter state "changed" to false */
     resetFilterChangedState() {
-        if (!this.filter) return;
+        const current = this.filter;
 
-        this.filter.changed = false;
+        if (!current) return;
+
+        this._filter.set({ ...current, changed: false });
     }
 
     private updateLocaleParams = () => {

@@ -156,10 +156,6 @@ export class KbqFilters implements OnInit {
 
     private focusedElementBeforeOpen: KbqButton | null;
 
-    constructor() {
-        this.filterBar.changes.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
-    }
-
     ngOnInit(): void {
         this.filteredOptions = merge(
             of(this.filters()),
@@ -187,15 +183,18 @@ export class KbqFilters implements OnInit {
     }
 
     saveChanges() {
-        if (!this.filterBar.filter) return;
+        const current = this.filterBar.filter;
 
-        this.filterBar.filter.saved = true;
-        this.filterBar.filter.changed = false;
+        if (!current) return;
 
-        this.filterBar.internalFilterChanges.next(this.filterBar.filter);
+        // Immutable update (new reference) so the `filter` signal reacts; `internalFilterChanges` sets the
+        // signal and emits `filterChange`.
+        const updated = { ...current, saved: true, changed: false };
+
+        this.filterBar.internalFilterChanges.next(updated);
 
         this.onSave.emit({
-            filter: this.filterBar.filter,
+            filter: updated,
             filterBar: this.filterBar,
             status: KbqSaveFilterStatuses.OnlyChanges
         });
