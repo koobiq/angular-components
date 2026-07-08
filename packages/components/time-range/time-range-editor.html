@@ -80,13 +80,13 @@
         @case ('other') {
             @switch (context.type) {
                 @case ('allTime') {
-                    {{ localeConfig.editor.allTime }}
+                    {{ localeConfig.editor.allTimeOption ?? localeConfig.editor.allTime }}
                 }
                 @case ('currentQuarter') {
-                    {{ localeConfig.editor.currentQuarter }}
+                    {{ localeConfig.editor.currentQuarterOption ?? localeConfig.editor.currentQuarter }}
                 }
                 @case ('currentYear') {
-                    {{ localeConfig.editor.currentYear }}
+                    {{ localeConfig.editor.currentYearOption ?? localeConfig.editor.currentYear }}
                 }
             }
         }

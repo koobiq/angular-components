@@ -1848,6 +1848,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
+                allTimeOption: string;
+                currentQuarterOption: string;
+                currentYearOption: string;
             };
             durationTemplate: {
                 title: {
@@ -3421,6 +3424,9 @@ export type KbqTimeRangeLocaleConfig = {
         allTime: string;
         currentQuarter: string;
         currentYear: string;
+        allTimeOption?: string;
+        currentQuarterOption?: string;
+        currentYearOption?: string;
     };
     durationTemplate: {
         title: FormatterDurationTemplate;
@@ -4409,6 +4415,9 @@ export const ruRULocaleData: {
             allTime: string;
             currentQuarter: string;
             currentYear: string;
+            allTimeOption: string;
+            currentQuarterOption: string;
+            currentYearOption: string;
         };
         durationTemplate: {
             title: {

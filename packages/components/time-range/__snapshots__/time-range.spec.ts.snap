@@ -10,7 +10,7 @@ exports[`KbqTimeRange Component initialization should apply custom option templa
   " Currentquarter ",
   " Currentyear ",
   " Alltime ",
-  "за период",
+  "Период",
 ]
 `;
 
@@ -25,7 +25,7 @@ exports[`KbqTimeRange Component initialization should check range as default if 
 
 exports[`KbqTimeRange Component initialization should check selected radio if external value provided 1`] = `
 {
-  "checkedRadio": " за текущий год ",
+  "checkedRadio": " Текущий год ",
   "trigger": "за текущий год",
 }
 `;

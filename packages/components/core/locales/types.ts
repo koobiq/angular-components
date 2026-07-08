@@ -62,6 +62,12 @@ export type KbqTimeRangeLocaleConfig = {
         allTime: string;
         currentQuarter: string;
         currentYear: string;
+        /** Label for the `allTime` option in the presets list, as opposed to the trigger label in `allTime` */
+        allTimeOption?: string;
+        /** Label for the `currentQuarter` option in the presets list, as opposed to the trigger label in `currentQuarter` */
+        currentQuarterOption?: string;
+        /** Label for the `currentYear` option in the presets list, as opposed to the trigger label in `currentYear` */
+        currentYearOption?: string;
     };
     durationTemplate: {
         title: FormatterDurationTemplate;
