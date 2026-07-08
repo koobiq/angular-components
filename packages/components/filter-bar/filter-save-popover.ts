@@ -175,7 +175,7 @@ export class KbqFilterSavePopover implements AfterViewInit {
         const name = this.filterName.value || '';
 
         // @todo default filter
-        const filter = structuredClone<KbqFilter>(this.filterBar().filter as KbqFilter) || { pipes: [] };
+        const filter = structuredClone<KbqFilter>(this.filterBar().filter() as KbqFilter) || { pipes: [] };
 
         filter.name = name;
         filter.saved = true;
@@ -236,7 +236,7 @@ export class KbqFilterSavePopover implements AfterViewInit {
     }
 
     private preparePopover() {
-        this.filterName = new FormControl<string>(this.filterBar().filter?.name || '', Validators.required);
+        this.filterName = new FormControl<string>(this.filterBar().filter()?.name || '', Validators.required);
 
         this.filterName.valueChanges
             .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))

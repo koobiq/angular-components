@@ -325,9 +325,9 @@ export class FilterBarOverviewExample {
 
     saveCurrentFilterWithNewName(filter: KbqFilter, filterBar: KbqFilterBar) {
         // This logic simulates the behavior of the backend
-        if (filterBar.filter?.name !== filter.name) {
+        if (filterBar.filter()?.name !== filter.name) {
             this.filters.splice(
-                this.filters.findIndex(({ name }) => name === filterBar.filter?.name),
+                this.filters.findIndex(({ name }) => name === filterBar.filter()?.name),
                 1,
                 filter!
             );

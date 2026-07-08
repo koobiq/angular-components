@@ -5,12 +5,12 @@ import {
     Component,
     computed,
     contentChild,
+    effect,
     forwardRef,
     inject,
-    Input,
     input,
+    model,
     output,
-    signal,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -81,47 +81,15 @@ export class KbqFilterBar implements KbqFilterBarHost {
     readonly selectedAllEqualsSelectedNothing = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /**
-     * Signal backing the `filter` accessor input. Derived state (`isSaved`/`isChanged`/…) is exposed via
-     * `computed()` off this signal and change detection is driven by signal reactivity, which replaces the
-     * retired `changes` Subject and its manual `markForCheck` fan-out (P1-6).
+     * Filter that is currently selected. A two-way-bindable `model()`: derived state (`isSaved`/`isChanged`/…)
+     * is exposed via `computed()` off it and change detection is driven by signal reactivity. `model()`
+     * auto-provides the `filterChange` output for `[(filter)]` two-way binding.
      */
-    private readonly _filter = signal<KbqFilter | null>(null);
-
-    /** Filter that is currently selected */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get filter(): KbqFilter | null {
-        return this._filter();
-    }
-
-    set filter(value: KbqFilter | null) {
-        if (this._filter() === value) return;
-
-        this._filter.set(value);
-    }
+    readonly filter = model<KbqFilter | null>(null);
 
     /** An array of templates that are used when adding a pipe. Also contains lists of options to select (values). */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get pipeTemplates(): KbqPipeTemplate[] {
-        return this._templates;
-    }
+    readonly pipeTemplates = input<KbqPipeTemplate[]>([]);
 
-    set pipeTemplates(value: KbqPipeTemplate[]) {
-        this._templates = value;
-
-        this.internalTemplatesChanges.next(this._templates);
-    }
-
-    private _templates: KbqPipeTemplate[] = [];
-    /**
-     * Event that emits whenever the raw value of the filter changes. This is here primarily
-     * to facilitate the two-way binding for the `filter` input.
-     * @docs-private
-     */
-    readonly filterChange = output<KbqFilter | null>();
     /** Event that emits whenever the value of the pipe changes. */
     readonly onChangePipe = output<KbqPipe>();
     /** Event that emits whenever the pipe deleted. */
@@ -132,19 +100,19 @@ export class KbqFilterBar implements KbqFilterBarHost {
     readonly onClosePipe = output<KbqPipe>();
 
     /** Whether the current filter is saved */
-    readonly isSaved = computed(() => !!this._filter()?.saved);
+    readonly isSaved = computed(() => !!this.filter()?.saved);
 
     /** Whether the current filter is changed */
-    readonly isChanged = computed(() => !!this._filter()?.changed);
+    readonly isChanged = computed(() => !!this.filter()?.changed);
 
     /** Whether the current filter is saved and changed */
     readonly isSavedAndChanged = computed(() => this.isSaved() && this.isChanged());
 
     /** Whether the current filter is readonly */
-    readonly isReadOnly = computed(() => !!this._filter()?.readonly);
+    readonly isReadOnly = computed(() => !!this.filter()?.readonly);
 
     /** Whether the current filter is disabled */
-    readonly isDisabled = computed(() => !!this._filter()?.disabled);
+    readonly isDisabled = computed(() => !!this.filter()?.disabled);
 
     private savedFilter: KbqFilter | null = null;
 
@@ -159,10 +127,13 @@ export class KbqFilterBar implements KbqFilterBarHost {
     readonly openPipe = new BehaviorSubject<string | number | null>(null);
 
     constructor() {
-        this.internalFilterChanges.pipe(takeUntilDestroyed()).subscribe((filter) => {
-            this._filter.set(filter);
+        // Push template changes into the internal stream — replaces the retired `pipeTemplates` accessor
+        // setter side effect now that `pipeTemplates` is a signal `input()`.
+        effect(() => this.internalTemplatesChanges.next(this.pipeTemplates()));
 
-            this.filterChange.emit(this.filter);
+        this.internalFilterChanges.pipe(takeUntilDestroyed()).subscribe((filter) => {
+            // `model.set(...)` auto-emits `filterChange` for the two-way binding.
+            this.filter.set(filter);
         });
 
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
@@ -172,37 +143,35 @@ export class KbqFilterBar implements KbqFilterBarHost {
         }
 
         // A pipe value change or removal marks the current filter as "changed". Produce a new filter
-        // reference (not an in-place mutation) so the `filter` signal — and every `computed()`/`effect()`
-        // reading it — reacts. This replaces the retired `changes` Subject + `markForCheck` fan-out (P1-6).
+        // reference (not an in-place mutation) so the `filter` model — and every `computed()`/`effect()`
+        // reading it — reacts. `model.set(...)` auto-emits `filterChange` for the two-way binding.
         merge(outputToObservable(this.onChangePipe), outputToObservable(this.onRemovePipe))
             .pipe(takeUntilDestroyed())
             .subscribe(() => {
-                const current = this.filter;
+                const current = this.filter();
 
                 if (current) {
-                    this._filter.set({ ...current, changed: true });
-
-                    this.filterChange.emit(this.filter);
+                    this.filter.set({ ...current, changed: true });
                 }
             });
     }
 
     /** Remove pipe from current filter and emit event */
     removePipe(pipe: KbqPipe) {
-        const current = this.filter;
+        const current = this.filter();
 
         if (!current?.pipes.includes(pipe)) return;
 
         // Replace the filter (and its `pipes` array) with new references instead of mutating in place, so
         // the `filter` signal reacts; unknown pipes are left untouched. `onRemovePipe` then flags "changed".
-        this._filter.set({ ...current, pipes: current.pipes.filter((item) => item !== pipe) });
+        this.filter.set({ ...current, pipes: current.pipes.filter((item) => item !== pipe) });
 
         this.onRemovePipe.emit(pipe);
     }
 
     /** Save current state of filter */
     saveFilterState(filter?: KbqFilter) {
-        this.savedFilter = structuredClone(filter ?? this.filter);
+        this.savedFilter = structuredClone(filter ?? this.filter());
     }
 
     /** Restore previously saved filter state */
@@ -212,16 +181,16 @@ export class KbqFilterBar implements KbqFilterBarHost {
         // Nothing to restore — bail out instead of wiping the current filter with `structuredClone(null)`.
         if (!state) return;
 
-        this.filter = structuredClone(state);
+        this.filter.set(structuredClone(state));
     }
 
     /** Set the filter state "changed" to false */
     resetFilterChangedState() {
-        const current = this.filter;
+        const current = this.filter();
 
         if (!current) return;
 
-        this._filter.set({ ...current, changed: false });
+        this.filter.set({ ...current, changed: false });
     }
 
     private updateLocaleParams = () => {

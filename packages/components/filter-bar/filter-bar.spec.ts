@@ -114,7 +114,7 @@ describe('KbqFilterBar', () => {
         });
     });
 
-    describe('filter getter/setter', () => {
+    describe('filter (model)', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
@@ -128,13 +128,13 @@ describe('KbqFilterBar', () => {
             const probe = computed(() => {
                 computeCount++;
 
-                return filterBar.filter;
+                return filterBar.filter();
             });
 
             probe();
             const before = computeCount;
 
-            filterBar.filter = createFilter([]);
+            filterBar.filter.set(createFilter([]));
             probe();
 
             expect(computeCount).toBe(before + 1);
@@ -147,15 +147,15 @@ describe('KbqFilterBar', () => {
             const probe = computed(() => {
                 computeCount++;
 
-                return filterBar.filter;
+                return filterBar.filter();
             });
 
-            filterBar.filter = filter;
+            filterBar.filter.set(filter);
             probe();
             const before = computeCount;
 
             // Setting the identical reference is deduped by the signal — no recompute.
-            filterBar.filter = filter;
+            filterBar.filter.set(filter);
             probe();
 
             expect(computeCount).toBe(before);
@@ -165,7 +165,7 @@ describe('KbqFilterBar', () => {
             const filterBar = getFilterBar();
             const spy = jest.fn();
 
-            filterBar.filterChange.subscribe(spy);
+            filterBar.filter.subscribe(spy);
             spy.mockClear();
 
             const filter = createFilter([]);
@@ -176,7 +176,7 @@ describe('KbqFilterBar', () => {
         });
     });
 
-    describe('pipeTemplates getter/setter', () => {
+    describe('pipeTemplates (input effect)', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
@@ -201,7 +201,10 @@ describe('KbqFilterBar', () => {
                 }
             ];
 
-            filterBar.pipeTemplates = templates;
+            // `pipeTemplates` is a signal `input()` — drive it via the host binding. The push into
+            // `internalTemplatesChanges` now flows from an effect(), so run change detection to trigger it.
+            fixture.componentInstance.pipeTemplates = templates;
+            fixture.detectChanges();
 
             expect(spy).toHaveBeenCalledWith(templates);
         });
@@ -217,7 +220,7 @@ describe('KbqFilterBar', () => {
         it('should return isSaved true when filter.saved is true', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { saved: true });
+            filterBar.filter.set(createFilter([], { saved: true }));
 
             expect(filterBar.isSaved()).toBe(true);
         });
@@ -225,7 +228,7 @@ describe('KbqFilterBar', () => {
         it('should return isSaved false when filter.saved is false', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { saved: false });
+            filterBar.filter.set(createFilter([], { saved: false }));
 
             expect(filterBar.isSaved()).toBe(false);
         });
@@ -233,7 +236,7 @@ describe('KbqFilterBar', () => {
         it('should return isChanged true when filter.changed is true', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { changed: true });
+            filterBar.filter.set(createFilter([], { changed: true }));
 
             expect(filterBar.isChanged()).toBe(true);
         });
@@ -241,7 +244,7 @@ describe('KbqFilterBar', () => {
         it('should return isChanged false when filter.changed is false', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { changed: false });
+            filterBar.filter.set(createFilter([], { changed: false }));
 
             expect(filterBar.isChanged()).toBe(false);
         });
@@ -249,7 +252,7 @@ describe('KbqFilterBar', () => {
         it('should return isSavedAndChanged true only when both saved and changed', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { saved: true, changed: true });
+            filterBar.filter.set(createFilter([], { saved: true, changed: true }));
 
             expect(filterBar.isSavedAndChanged()).toBe(true);
         });
@@ -257,7 +260,7 @@ describe('KbqFilterBar', () => {
         it('should return isSavedAndChanged false when only saved', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { saved: true, changed: false });
+            filterBar.filter.set(createFilter([], { saved: true, changed: false }));
 
             expect(filterBar.isSavedAndChanged()).toBe(false);
         });
@@ -265,7 +268,7 @@ describe('KbqFilterBar', () => {
         it('should return isSavedAndChanged false when only changed', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { saved: false, changed: true });
+            filterBar.filter.set(createFilter([], { saved: false, changed: true }));
 
             expect(filterBar.isSavedAndChanged()).toBe(false);
         });
@@ -273,7 +276,7 @@ describe('KbqFilterBar', () => {
         it('should return isReadOnly true when filter.readonly is true', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { readonly: true });
+            filterBar.filter.set(createFilter([], { readonly: true }));
 
             expect(filterBar.isReadOnly()).toBe(true);
         });
@@ -281,7 +284,7 @@ describe('KbqFilterBar', () => {
         it('should return isDisabled true when filter.disabled is true', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { disabled: true });
+            filterBar.filter.set(createFilter([], { disabled: true }));
 
             expect(filterBar.isDisabled()).toBe(true);
         });
@@ -289,7 +292,7 @@ describe('KbqFilterBar', () => {
         it('should return false for all when filter is null', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = null;
+            filterBar.filter.set(null);
 
             expect(filterBar.isSaved()).toBe(false);
             expect(filterBar.isChanged()).toBe(false);
@@ -311,11 +314,11 @@ describe('KbqFilterBar', () => {
             const pipe2 = createPipe({ name: 'pipe2' });
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([pipe1, pipe2]);
+            filterBar.filter.set(createFilter([pipe1, pipe2]));
 
             filterBar.removePipe(pipe1);
 
-            expect(filterBar.filter!.pipes).toEqual([pipe2]);
+            expect(filterBar.filter()!.pipes).toEqual([pipe2]);
         });
 
         it('should leave filter.pipes untouched when the pipe is not part of the filter', () => {
@@ -324,11 +327,11 @@ describe('KbqFilterBar', () => {
             const absentPipe = createPipe({ name: 'absent' });
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([pipe1, pipe2]);
+            filterBar.filter.set(createFilter([pipe1, pipe2]));
 
             filterBar.removePipe(absentPipe);
 
-            expect(filterBar.filter!.pipes).toEqual([pipe1, pipe2]);
+            expect(filterBar.filter()!.pipes).toEqual([pipe1, pipe2]);
         });
 
         it('should not emit onRemovePipe when the pipe is not part of the filter', () => {
@@ -336,7 +339,7 @@ describe('KbqFilterBar', () => {
             const absentPipe = createPipe({ name: 'absent' });
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([pipe]);
+            filterBar.filter.set(createFilter([pipe]));
 
             const spy = jest.fn();
 
@@ -352,7 +355,7 @@ describe('KbqFilterBar', () => {
             const pipe = createPipe({ name: 'removable' });
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([pipe]);
+            filterBar.filter.set(createFilter([pipe]));
 
             const spy = jest.fn();
 
@@ -368,15 +371,15 @@ describe('KbqFilterBar', () => {
             const pipe = createPipe({ name: 'removable' });
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([pipe]);
+            filterBar.filter.set(createFilter([pipe]));
 
-            const before = filterBar.filter;
+            const before = filterBar.filter();
 
             filterBar.removePipe(pipe);
 
             // Immutable update: a new `filter` reference (not an in-place splice) drives signal reactivity.
-            expect(filterBar.filter).not.toBe(before);
-            expect(filterBar.filter!.pipes).toEqual([]);
+            expect(filterBar.filter()).not.toBe(before);
+            expect(filterBar.filter()!.pipes).toEqual([]);
         });
     });
 
@@ -391,7 +394,7 @@ describe('KbqFilterBar', () => {
             const filterBar = getFilterBar();
             const filter = createFilter([createPipe({ name: 'test', value: 'hello' })]);
 
-            filterBar.filter = filter;
+            filterBar.filter.set(filter);
 
             filterBar.saveFilterState();
 
@@ -399,22 +402,22 @@ describe('KbqFilterBar', () => {
 
             filterBar.restoreFilterState();
 
-            expect(filterBar.filter!.pipes[0].value).toBe('hello');
+            expect(filterBar.filter()!.pipes[0].value).toBe('hello');
         });
 
         it('should restore to previously saved state', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([createPipe({ name: 'original', value: 'v1' })]);
+            filterBar.filter.set(createFilter([createPipe({ name: 'original', value: 'v1' })]));
 
             filterBar.saveFilterState();
 
-            filterBar.filter = createFilter([createPipe({ name: 'changed', value: 'v2' })]);
+            filterBar.filter.set(createFilter([createPipe({ name: 'changed', value: 'v2' })]));
 
             filterBar.restoreFilterState();
 
-            expect(filterBar.filter!.pipes[0].name).toBe('original');
-            expect(filterBar.filter!.pipes[0].value).toBe('v1');
+            expect(filterBar.filter()!.pipes[0].name).toBe('original');
+            expect(filterBar.filter()!.pipes[0].value).toBe('v1');
         });
 
         it('should save explicit filter arg', () => {
@@ -425,31 +428,31 @@ describe('KbqFilterBar', () => {
 
             filterBar.restoreFilterState();
 
-            expect(filterBar.filter!.pipes[0].name).toBe('explicit');
+            expect(filterBar.filter()!.pipes[0].name).toBe('explicit');
         });
 
         it('should restore explicit filter arg', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([createPipe({ name: 'current' })]);
+            filterBar.filter.set(createFilter([createPipe({ name: 'current' })]));
 
             const restoreFilter = createFilter([createPipe({ name: 'restored' })]);
 
             filterBar.restoreFilterState(restoreFilter);
 
-            expect(filterBar.filter!.pipes[0].name).toBe('restored');
+            expect(filterBar.filter()!.pipes[0].name).toBe('restored');
         });
 
         it('should not wipe the current filter when there is nothing to restore', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([createPipe({ name: 'current', value: 'v' })]);
+            filterBar.filter.set(createFilter([createPipe({ name: 'current', value: 'v' })]));
 
             // Nothing saved and no explicit arg → must be a no-op, not a silent `structuredClone(null)` wipe.
             filterBar.restoreFilterState();
 
-            expect(filterBar.filter).not.toBeNull();
-            expect(filterBar.filter!.pipes[0].name).toBe('current');
+            expect(filterBar.filter()).not.toBeNull();
+            expect(filterBar.filter()!.pipes[0].name).toBe('current');
         });
     });
 
@@ -463,11 +466,11 @@ describe('KbqFilterBar', () => {
         it('should set filter.changed to false', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { changed: true });
+            filterBar.filter.set(createFilter([], { changed: true }));
 
             filterBar.resetFilterChangedState();
 
-            expect(filterBar.filter!.changed).toBe(false);
+            expect(filterBar.filter()!.changed).toBe(false);
         });
     });
 
@@ -481,32 +484,32 @@ describe('KbqFilterBar', () => {
         it('should mark filter as changed when onChangePipe emits', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([], { changed: false });
+            filterBar.filter.set(createFilter([], { changed: false }));
 
             filterBar.onChangePipe.emit(createPipe());
 
-            expect(filterBar.filter!.changed).toBe(true);
+            expect(filterBar.filter()!.changed).toBe(true);
         });
 
         it('should mark filter as changed when onRemovePipe emits', () => {
             const filterBar = getFilterBar();
             const pipe = createPipe();
 
-            filterBar.filter = createFilter([pipe], { changed: false });
+            filterBar.filter.set(createFilter([pipe], { changed: false }));
 
             filterBar.removePipe(pipe);
 
-            expect(filterBar.filter!.changed).toBe(true);
+            expect(filterBar.filter()!.changed).toBe(true);
         });
 
         it('should emit filterChange when onChangePipe emits', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([]);
+            filterBar.filter.set(createFilter([]));
 
             const spy = jest.fn();
 
-            filterBar.filterChange.subscribe(spy);
+            filterBar.filter.subscribe(spy);
             spy.mockClear();
 
             filterBar.onChangePipe.emit(createPipe());

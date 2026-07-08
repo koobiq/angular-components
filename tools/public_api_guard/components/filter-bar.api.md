@@ -33,6 +33,7 @@ import { KbqTreeFlattener } from '@koobiq/components/tree';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { ModelSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
@@ -276,9 +277,7 @@ export class KbqFilterBar implements KbqFilterBarHost {
             backToPeriodSelection: string;
         };
     } | null;
-    get filter(): KbqFilter | null;
-    set filter(value: KbqFilter | null);
-    readonly filterChange: _angular_core.OutputEmitterRef<KbqFilter | null>;
+    readonly filter: _angular_core.ModelSignal<KbqFilter | null>;
     readonly filterReset: _angular_core.Signal<KbqFilterReset | undefined>;
     readonly filters: _angular_core.Signal<KbqFilters | undefined>;
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
@@ -295,15 +294,14 @@ export class KbqFilterBar implements KbqFilterBarHost {
     readonly onRemovePipe: _angular_core.OutputEmitterRef<KbqPipe>;
     readonly onResetFilter: BehaviorSubject<boolean>;
     readonly openPipe: BehaviorSubject<string | number | null>;
-    get pipeTemplates(): KbqPipeTemplate[];
-    set pipeTemplates(value: KbqPipeTemplate[]);
+    readonly pipeTemplates: _angular_core.InputSignal<KbqPipeTemplate[]>;
     removePipe(pipe: KbqPipe): void;
     resetFilterChangedState(): void;
     restoreFilterState(filter?: KbqFilter): void;
     saveFilterState(filter?: KbqFilter): void;
     readonly selectedAllEqualsSelectedNothing: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -325,8 +323,7 @@ export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURAT
 // @public
 export interface KbqFilterBarHost {
     configuration: KbqFilterBarConfiguration;
-    filter: KbqFilter | null;
-    readonly filterChange: OutputEmitterRef<KbqFilter | null>;
+    readonly filter: ModelSignal<KbqFilter | null>;
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
     readonly isChanged: Signal<boolean>;
@@ -338,7 +335,7 @@ export interface KbqFilterBarHost {
     readonly onClosePipe: OutputEmitterRef<KbqPipe>;
     readonly onResetFilter: BehaviorSubject<boolean>;
     readonly openPipe: BehaviorSubject<string | number | null>;
-    pipeTemplates: KbqPipeTemplate[];
+    readonly pipeTemplates: Signal<KbqPipeTemplate[]>;
     removePipe(pipe: KbqPipe): void;
     resetFilterChangedState(): void;
     readonly selectedAllEqualsSelectedNothing: Signal<boolean>;
@@ -818,10 +815,9 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
 // @public (undocumented)
 export class KbqPipeState<T> {
     constructor();
-    get state(): T | null;
-    set state(pipe: T | null);
+    readonly state: _angular_core.InputSignal<T | null>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeState<any>, "[kbqPipeState]", never, { "state": { "alias": "kbqPipeState"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeState<any>, "[kbqPipeState]", never, { "state": { "alias": "kbqPipeState"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeState<any>, never>;
 }

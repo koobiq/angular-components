@@ -254,7 +254,7 @@ export class KbqPipeMinWidth {
         // Recompute the min-width whenever the filter changes. The pipe's text content updates during CD,
         // so defer the read to the next macrotask (mirrors the old `changes.pipe(delay(0))`). Passing the
         // `filterBar.filter` read into the scheduler subscribes the effect, replacing the `changes` bus.
-        effect((onCleanup) => onCleanup(this.scheduleMinWidthUpdate(this.filterBar?.filter)));
+        effect((onCleanup) => onCleanup(this.scheduleMinWidthUpdate(this.filterBar?.filter())));
 
         afterNextRender({ read: this.update });
     }

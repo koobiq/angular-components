@@ -1,4 +1,4 @@
-import { InjectionToken, OutputEmitterRef, Provider, Signal, TemplateRef, Type } from '@angular/core';
+import { InjectionToken, ModelSignal, OutputEmitterRef, Provider, Signal, TemplateRef, Type } from '@angular/core';
 import { ruRULocaleData } from '@koobiq/components/core';
 import { BehaviorSubject } from 'rxjs';
 import { KbqFilterBar } from './filter-bar';
@@ -36,11 +36,11 @@ export interface KbqFilterBarHost {
     /** Localized strings and configuration for the filter-bar and its pipes. */
     configuration: KbqFilterBarConfiguration;
 
-    /** Currently selected filter. */
-    filter: KbqFilter | null;
+    /** Currently selected filter. A two-way-bindable `model()`: read via `filter()`, write via `filter.set()`. */
+    readonly filter: ModelSignal<KbqFilter | null>;
 
-    /** Templates used when adding a pipe (also hold the option lists). */
-    pipeTemplates: KbqPipeTemplate[];
+    /** Templates used when adding a pipe (also hold the option lists). Read via `pipeTemplates()`. */
+    readonly pipeTemplates: Signal<KbqPipeTemplate[]>;
 
     /** Whether selecting all options counts as selecting nothing. */
     readonly selectedAllEqualsSelectedNothing: Signal<boolean>;
@@ -54,9 +54,10 @@ export interface KbqFilterBarHost {
     /** Whether the current filter is readonly. */
     readonly isReadOnly: Signal<boolean>;
 
-    /** Emits the two-way-bound `filter` value. */
-    readonly filterChange: OutputEmitterRef<KbqFilter | null>;
-    /** Emits whenever a pipe value changes. */
+    /**
+     * Emits whenever a pipe value changes.
+     * (The two-way-bound `filter` value is emitted by the `filter` model's `filterChange` output.)
+     */
     readonly onChangePipe: OutputEmitterRef<KbqPipe>;
     /** Emits whenever a pipe is cleared. */
     readonly onClearPipe: OutputEmitterRef<KbqPipe>;

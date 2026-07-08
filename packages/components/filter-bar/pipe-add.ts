@@ -42,7 +42,7 @@ import { getId } from './pipes/base-pipe';
                 <i kbq-icon="kbq-plus_16" aria-hidden="true"></i>
             </button>
 
-            @for (template of filterBar.pipeTemplates; track template) {
+            @for (template of filterBar.pipeTemplates(); track template) {
                 <kbq-option
                     #option
                     [userSelect]="true"
@@ -91,7 +91,7 @@ export class KbqPipeAdd {
      * Ids of the pipes already added to the current filter. Used to open an already-added pipe.
      * Derived from the `filter` signal so it stays in sync without the retired `changes` bus.
      */
-    readonly addedPipes = computed(() => this.filterBar.filter?.pipes.map((pipe: KbqPipe) => getId(pipe)) ?? []);
+    readonly addedPipes = computed(() => this.filterBar.filter()?.pipes.map((pipe: KbqPipe) => getId(pipe)) ?? []);
 
     /**
      * Visually-hidden live-region text announcing a newly-added pipe to assistive tech (WCAG 4.1.3).
@@ -105,21 +105,21 @@ export class KbqPipeAdd {
         } else {
             option.select();
 
-            const current = this.filterBar.filter ?? structuredClone(this.filterTemplate());
+            const current = this.filterBar.filter() ?? structuredClone(this.filterTemplate());
 
-            // Build a new filter reference (immutable add) so the `filter` signal reacts; keep `pipes` on a
-            // new-reference-on-change model instead of an in-place push.
-            this.filterBar.filter = {
+            // Build a new filter reference (immutable add) so the `filter` model reacts; keep `pipes` on a
+            // new-reference-on-change model instead of an in-place push. `model.set(...)` auto-emits
+            // `filterChange` for the two-way binding.
+            this.filterBar.filter.set({
                 ...current,
                 changed: true,
                 pipes: [
                     ...current.pipes,
                     Object.assign({}, option.value, { values: undefined, valueTemplate: undefined, openOnAdd: true })
                 ]
-            };
+            });
 
             this.onAddPipe.emit(option.value);
-            this.filterBar.filterChange.emit(this.filterBar.filter);
 
             this.announcement.set(
                 this.filterBar.configuration.add.addedAnnouncement.replace('{{ name }}', option.value.name)

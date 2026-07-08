@@ -92,7 +92,7 @@
             <button
                 kbq-dropdown-item
                 kbq-title
-                [class.kbq-selected]="filterBar.filter?.name === filter.name"
+                [class.kbq-selected]="filterBar.filter()?.name === filter.name"
                 (click)="selectFilter(filter)"
             >
                 {{ filter.name }}

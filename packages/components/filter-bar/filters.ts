@@ -130,9 +130,9 @@ export class KbqFilters implements OnInit {
         return !!(this.popover()?.isOpen || this.filterActionsDropdown()?.opened);
     }
 
-    /** Selected filter */
+    /** Selected filter. Kept as a plain getter facade over the bar's `filter` model. */
     get filter(): KbqFilter | null {
-        return this.filterBar.filter;
+        return this.filterBar.filter();
     }
 
     /** Component state. True if 'filters' input contains no elements. */
@@ -188,7 +188,7 @@ export class KbqFilters implements OnInit {
     }
 
     saveChanges() {
-        const current = this.filterBar.filter;
+        const current = this.filterBar.filter();
 
         if (!current) return;
 

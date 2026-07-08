@@ -177,7 +177,7 @@ describe('KbqFilters', () => {
 
                 initFixture(filter);
 
-                expect(getFiltersComponent().filter).toBe(getFilterBar().filter);
+                expect(getFiltersComponent().filter).toBe(getFilterBar().filter());
             });
 
             it('should return null when filterBar has no filter', () => {
@@ -287,8 +287,8 @@ describe('KbqFilters', () => {
 
             getFiltersComponent().saveChanges();
 
-            expect(getFilterBar().filter!.saved).toBe(true);
-            expect(getFilterBar().filter!.changed).toBe(false);
+            expect(getFilterBar().filter()!.saved).toBe(true);
+            expect(getFilterBar().filter()!.changed).toBe(false);
         });
 
         it('should emit onSave with status OnlyChanges', () => {

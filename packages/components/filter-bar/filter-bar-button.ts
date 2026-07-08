@@ -22,7 +22,7 @@ export class KbqFilterBarButton {
         // Reflect the current filter's saved/changed state in the button style. Reading `filterBar.filter`
         // (a signal-backed accessor) subscribes this effect, replacing the retired `changes` bus.
         effect(() => {
-            const filter = this.filterBar.filter;
+            const filter = this.filterBar.filter();
 
             this.button.kbqStyle = KbqButtonStyles.Outline;
             this.button.color = KbqComponentColors.ContrastFade;

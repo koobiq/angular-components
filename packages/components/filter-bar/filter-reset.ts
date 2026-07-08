@@ -29,7 +29,7 @@ export class KbqFilterReset {
     }
 
     protected resetFilter() {
-        this.onResetFilter.emit(this.filterBar.filter!);
+        this.onResetFilter.emit(this.filterBar.filter()!);
 
         this.filterBar.onResetFilter.next(true);
     }
