@@ -456,6 +456,7 @@ export const enUSLocaleData: {
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
         };
         refresher: {
             refresh: string;
@@ -699,6 +700,7 @@ export const esLALocaleData: {
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
         };
         refresher: {
             refresh: string;
@@ -1165,6 +1167,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
             };
             refresher: {
                 refresh: string;
@@ -1383,6 +1386,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
             };
             refresher: {
                 refresh: string;
@@ -1597,6 +1601,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
             };
             refresher: {
                 refresh: string;
@@ -1817,6 +1822,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
             };
             refresher: {
                 refresh: string;
@@ -2033,6 +2039,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
             };
             refresher: {
                 refresh: string;
@@ -3963,6 +3970,7 @@ export const ptBRLocaleData: {
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
         };
         refresher: {
             refresh: string;
@@ -4393,6 +4401,7 @@ export const ruRULocaleData: {
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
         };
         refresher: {
             refresh: string;
@@ -4744,6 +4753,7 @@ export const tkTMLocaleData: {
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
         };
         refresher: {
             refresh: string;

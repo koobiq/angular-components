@@ -82,7 +82,8 @@ export const tkTMLocaleData = {
             actionsTooltip: 'Filtr amallary'
         },
         add: {
-            tooltip: 'Filtr goş'
+            tooltip: 'Filtr goş',
+            addedAnnouncement: '{{ name }} filtri goşuldy'
         },
         refresher: {
             refresh: 'Täzele',

@@ -82,7 +82,8 @@ export const enUSLocaleData = {
             actionsTooltip: 'Filter actions'
         },
         add: {
-            tooltip: 'Add filter'
+            tooltip: 'Add filter',
+            addedAnnouncement: '{{ name }} filter added'
         },
         refresher: {
             refresh: 'Refresh',

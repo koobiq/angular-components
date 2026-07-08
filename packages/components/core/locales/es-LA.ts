@@ -81,7 +81,8 @@ export const esLALocaleData = {
             actionsTooltip: 'Acciones de filtro'
         },
         add: {
-            tooltip: 'Agregar filtro'
+            tooltip: 'Agregar filtro',
+            addedAnnouncement: 'Filtro {{ name }} agregado'
         },
         refresher: {
             refresh: 'Actualizar',

@@ -82,7 +82,8 @@ export const ruRULocaleData = {
             actionsTooltip: 'Действия с фильтром'
         },
         add: {
-            tooltip: 'Добавить фильтр'
+            tooltip: 'Добавить фильтр',
+            addedAnnouncement: 'Фильтр {{ name }} добавлен'
         },
         refresher: {
             refresh: 'Обновить',

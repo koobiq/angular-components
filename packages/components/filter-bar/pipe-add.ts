@@ -5,6 +5,7 @@ import {
     inject,
     input,
     output,
+    signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -55,6 +56,9 @@ import { getId } from './pipes/base-pipe';
                 </kbq-option>
             }
         </kbq-select>
+
+        <!-- Announces a newly-added pipe to assistive tech (WCAG 4.1.3). -->
+        <div class="cdk-visually-hidden" aria-live="polite" aria-atomic="true">{{ announcement() }}</div>
     `,
     styleUrl: 'pipe-add.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,6 +93,12 @@ export class KbqPipeAdd {
      */
     readonly addedPipes = computed(() => this.filterBar.filter?.pipes.map((pipe: KbqPipe) => getId(pipe)) ?? []);
 
+    /**
+     * Visually-hidden live-region text announcing a newly-added pipe to assistive tech (WCAG 4.1.3).
+     * @docs-private
+     */
+    protected readonly announcement = signal('');
+
     addPipeFromTemplate(option: KbqOption) {
         if (option.selected) {
             this.filterBar.openPipe.next(getId(option.value));
@@ -110,6 +120,10 @@ export class KbqPipeAdd {
 
             this.onAddPipe.emit(option.value);
             this.filterBar.filterChange.emit(this.filterBar.filter);
+
+            this.announcement.set(
+                this.filterBar.configuration.add.addedAnnouncement.replace('{{ name }}', option.value.name)
+            );
         }
 
         this.select().close();

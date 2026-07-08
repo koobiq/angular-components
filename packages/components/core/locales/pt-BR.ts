@@ -81,7 +81,8 @@ export const ptBRLocaleData = {
             actionsTooltip: 'Ações do filtro'
         },
         add: {
-            tooltip: 'Adicionar filtros'
+            tooltip: 'Adicionar filtros',
+            addedAnnouncement: 'Filtro {{ name }} adicionado'
         },
         refresher: {
             refresh: 'Atualizar',

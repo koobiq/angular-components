@@ -78,6 +78,7 @@ export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<{
     };
     add: {
         tooltip: string;
+        addedAnnouncement: string;
     };
     refresher: {
         refresh: string;
@@ -128,6 +129,7 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
     };
     add: {
         tooltip: string;
+        addedAnnouncement: string;
     };
     refresher: {
         refresh: string;
@@ -253,6 +255,7 @@ export class KbqFilterBar implements KbqFilterBarHost {
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
         };
         refresher: {
             refresh: string;
@@ -384,6 +387,7 @@ export class KbqFilterRefresher {
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
         };
         refresher: {
             refresh: string;
@@ -602,6 +606,7 @@ export class KbqPipeAdd {
     readonly addedPipes: _angular_core.Signal<(string | number | (string & {}))[]>;
     // (undocumented)
     addPipeFromTemplate(option: KbqOption): void;
+    protected readonly announcement: _angular_core.WritableSignal<string>;
     compareWith(o1: KbqPipe, o2: string): boolean;
     protected readonly filterBar: KbqFilterBarHost;
     readonly filterTemplate: _angular_core.InputSignal<KbqFilter>;

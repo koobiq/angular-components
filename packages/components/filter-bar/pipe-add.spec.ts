@@ -362,6 +362,27 @@ describe('KbqPipeAdd', () => {
             expect(filterBar.filter!.pipes.length).toBe(1);
         }));
 
+        it('should announce the added pipe in the visually-hidden live region (WCAG 4.1.3)', fakeAsync(() => {
+            const pipeAdd = getPipeAdd();
+
+            pipeAdd.select().open();
+            flush();
+            fixture.detectChanges();
+
+            const options = document.querySelectorAll('.kbq-option');
+
+            (options[0] as HTMLElement).click();
+            flush();
+            fixture.detectChanges();
+
+            const liveRegion = fixture.debugElement
+                .query(By.directive(KbqPipeAdd))
+                .query(By.css('[aria-live="polite"]'));
+
+            // Default (ru-RU) locale message with the added template's name interpolated.
+            expect(liveRegion.nativeElement.textContent.trim()).toBe('Фильтр PipeA добавлен');
+        }));
+
         it('should call filterBar.openPipe.next when option is already selected', fakeAsync(() => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
