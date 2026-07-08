@@ -438,6 +438,45 @@ describe('KbqPipeSelectComponent', () => {
         }));
     });
 
+    describe('late pipeTemplates (first-open options)', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should render options on first open when templates are supplied after the pipe is created', fakeAsync(() => {
+            // Reproduce a parent assigning `pipeTemplates` in ngAfterViewInit: the Select pipe is
+            // created before its template (carrying the option `values`) arrives.
+            fixture.componentInstance.pipeTemplates = [];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: null, search: true })
+            ]);
+            fixture.detectChanges();
+
+            // Templates arrive after the pipe is already initialized.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const options = document.querySelectorAll('.kbq-option');
+
+            expect(options.length).toBe(SELECT_VALUES.length);
+        }));
+    });
+
     describe('onClear', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
