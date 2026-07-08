@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlagModule, KbqFlagShape } from '@koobiq/components/flag';
 
 // A minimal inline SVG (Norway-like) is enough to exercise shape/shadow decoration without
@@ -24,7 +25,7 @@ const sampleFlag = `<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
             <kbq-flag shadow="none" [innerHTML]="flag" />
             <kbq-flag shadow="inset" [innerHTML]="flag" />
             <kbq-flag stylized [innerHTML]="flag" />
-            <kbq-flag class="kbq-flag_empty" />
+            <kbq-flag isEmpty />
         </div>
     `,
     styles: `
@@ -48,6 +49,7 @@ const sampleFlag = `<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
     }
 })
 export class E2eFlagStyles {
-    protected readonly flag = sampleFlag;
+    private readonly sanitizer = inject(DomSanitizer);
+    protected readonly flag = this.sanitizer.bypassSecurityTrustHtml(sampleFlag);
     protected readonly shapes: KbqFlagShape[] = ['rectangle', 'square', 'circle'];
 }
