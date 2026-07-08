@@ -98,12 +98,12 @@ export const DATA_OBJECT = {
                         [color]="deletedIds.has(option.value) ? 'error' : ''"
                     >
                         {{ option.viewValue }}
-                        <!-- error (deleted) tags stay removable even when the node is disabled -->
-                        @if (!select.disabled && (deletedIds.has(option.value) || !option.disabled)) {
+                        <!-- remove control; hidden when the tag or the whole select is disabled -->
+                        @if (!select.disabled && !option.disabled) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
-                                [color]="deletedIds.has(option.value) && !option.disabled ? 'error' : ''"
+                                [color]="deletedIds.has(option.value) ? 'error' : ''"
                                 (click)="select.onRemoveSelectedOption(option, $event)"
                             ></i>
                         }
@@ -175,16 +175,14 @@ export class TreeSelectDeletedNodesExample {
     ) {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
-        // The tree resolves nodes by their stable id; one deleted node is disabled to show that its
-        // error tag stays removable even when disabled.
+        // The tree resolves nodes by their stable id (not the display name).
         this.treeControl = new FlatTreeControl<FileFlatNode>(
             this.getLevel,
             this.isExpandable,
             this.getValue,
             this.getViewValue,
             defaultCompareValues,
-            defaultCompareViewValues,
-            this.isDisabled
+            defaultCompareViewValues
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -247,7 +245,4 @@ export class TreeSelectDeletedNodesExample {
     private getValue = (node: FileFlatNode): string => node.id;
 
     private getViewValue = (node: FileFlatNode): string => node.name;
-
-    // One deleted node is disabled to demonstrate that its error tag stays removable.
-    private isDisabled = (node: FileFlatNode): boolean => node.id === 'Downloads/November';
 }
