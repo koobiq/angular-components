@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTimeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
 
 /**
@@ -12,10 +14,27 @@ import { KbqTimeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
     imports: [
         ReactiveFormsModule,
         KbqTimeRange,
-        LuxonDateModule
+        LuxonDateModule,
+        KbqLinkModule,
+        KbqIconModule
     ],
     template: `
-        <kbq-time-range [availableTimeRangeTypes]="availableTimeRangeTypes" />
+        <ng-template #titleTemplate let-context>
+            <a kbq-link pseudo>
+                <span class="kbq-link__text">
+                    {{
+                        dateFormatter.rangeLongDate(
+                            dateAdapter.deserialize(context.startDateTime),
+                            dateAdapter.deserialize(context.endDateTime)
+                        )
+                    }}
+                </span>
+
+                <i kbq-icon="kbq-calendar-o_16"></i>
+            </a>
+        </ng-template>
+
+        <kbq-time-range [titleTemplate]="titleTemplate" [availableTimeRangeTypes]="availableTimeRangeTypes" />
     `,
     providers: [
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
@@ -26,5 +45,8 @@ import { KbqTimeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
     }
 })
 export class TimeRangeEmptyTypeListExample {
+    protected readonly dateAdapter = inject(DateAdapter);
+    protected readonly dateFormatter = inject(DateFormatter);
+
     protected readonly availableTimeRangeTypes: KbqTimeRangeType[] = [];
 }
