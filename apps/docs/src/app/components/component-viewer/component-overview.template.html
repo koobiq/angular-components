@@ -12,15 +12,14 @@
             {{ isRuLocale() ? 'Предложения по улучшению' : 'Suggestions for improvement' }}
         </div>
 
+        <!-- prettier-ignore -->
         <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
             @if (isRuLocale()) {
                 Если вы нашли ошибку или хотите доработать статью,
-                <!-- prettier-ignore -->
-                <span><a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>создайте запрос на&nbsp;GitHub</a>.</span>
+                <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>создайте запрос на&nbsp;GitHub</a>.
             } @else {
                 If you found a mistake or want to improve the article,
-                <!-- prettier-ignore -->
-                <span><a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>create an issue on GitHub</a>.</span>
+                <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>create an issue on GitHub</a>.
             }
         </div>
     </div>
