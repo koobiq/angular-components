@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFlag } from '@koobiq/components/flag';
-import { FlagSrcPipe } from '../flag-string.pipe';
+import { FlagSvgPipe } from '../flag-string.pipe';
 
 type FlagSizeItem = {
     width: number;
@@ -15,13 +15,16 @@ type FlagSizeItem = {
  */
 @Component({
     selector: 'flag-sizes-example',
-    imports: [KbqFlag, FlagSrcPipe],
+    imports: [KbqFlag, FlagSvgPipe],
     template: `
         @for (item of sizes; track $index) {
             <div class="layout-row layout-align-start-center layout-gap-s" style="width: 200px">
-                <kbq-flag decorative [style.width.px]="item.width" [style.height.px]="item.height">
-                    <img alt="" [src]="'AD' | flagSrc" />
-                </kbq-flag>
+                <kbq-flag
+                    decorative
+                    [style.width.px]="item.width"
+                    [style.height.px]="item.height"
+                    [innerHTML]="'AD' | flagSvg"
+                />
                 <span [class]="item.typography">{{ item.label }} {{ item.width }}×{{ item.height }}</span>
             </div>
         }

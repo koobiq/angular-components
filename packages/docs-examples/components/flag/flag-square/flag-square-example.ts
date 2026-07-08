@@ -1,24 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFlag } from '@koobiq/components/flag';
-import { FlagSrcPipe } from '../flag-string.pipe';
+import { FlagSvgPipe } from '../flag-string.pipe';
 
 /**
  * @title Square flags
  */
 @Component({
     selector: 'flag-square-example',
-    imports: [KbqFlag, FlagSrcPipe],
+    imports: [KbqFlag, FlagSvgPipe],
     template: `
-        <div class="layout-row layout-align-start-center layout-gap-m example-flag-row">
-            @for (country of countries; track country.code) {
-                <kbq-flag shape="square" [label]="country.name">
-                    <img alt="" [src]="country.code | flagSrc: 'square'" />
-                </kbq-flag>
-            }
-        </div>
+        @for (country of countries; track country.code) {
+            <kbq-flag shape="square" [label]="country.name" [innerHTML]="country.code | flagSvg: 'square'" />
+        }
     `,
     styles: `
-        .example-flag-row {
+        :host {
             font-size: 64px;
         }
     `,

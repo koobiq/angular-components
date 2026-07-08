@@ -1,20 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFlag } from '@koobiq/components/flag';
-import { FlagSrcPipe } from '../flag-string.pipe';
+import { FlagSvgPipe } from '../flag-string.pipe';
 
 /**
  * @title Stylized flag
  */
 @Component({
     selector: 'flag-stylized-example',
-    imports: [KbqFlag, FlagSrcPipe],
+    imports: [KbqFlag, FlagSvgPipe],
     template: `
-        <kbq-flag class="example-stylized-flag" stylized shadow="none" label="Brazil">
-            <img alt="" [src]="'BR' | flagSrc" />
-        </kbq-flag>
+        <kbq-flag stylized shadow="none" label="Brazil" [innerHTML]="'BR' | flagSvg" />
     `,
     styles: `
-        :host {
+        .kbq-flag {
             font-size: 64px;
         }
     `,

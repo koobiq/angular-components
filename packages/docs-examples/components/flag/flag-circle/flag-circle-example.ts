@@ -1,18 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFlag } from '@koobiq/components/flag';
-import { FlagSrcPipe } from '../flag-string.pipe';
+import { FlagSvgPipe } from '../flag-string.pipe';
 
 /**
  * @title Circular flags
  */
 @Component({
     selector: 'flag-circle-example',
-    imports: [KbqFlag, FlagSrcPipe],
+    imports: [KbqFlag, FlagSvgPipe],
     template: `
         @for (country of countries; track country.code) {
-            <kbq-flag shape="circle" [label]="country.name">
-                <img alt="" [src]="country.code | flagSrc: 'circle'" />
-            </kbq-flag>
+            <kbq-flag shape="circle" [label]="country.name" [innerHTML]="country.code | flagSvg: 'circle'" />
         }
     `,
     styles: `

@@ -6,7 +6,7 @@ import { KbqFlag } from '@koobiq/components/flag';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { countries } from 'country-flag-icons';
-import { FlagSrcPipe } from '../flag-string.pipe';
+import { FlagSvgPipe } from '../flag-string.pipe';
 
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
@@ -26,12 +26,15 @@ type Country = { code: string; name: string };
  */
 @Component({
     selector: 'flag-aspect-ratio-example',
-    imports: [ReactiveFormsModule, ScrollingModule, KbqFormFieldModule, KbqSelectModule, KbqFlag, FlagSrcPipe],
+    imports: [ReactiveFormsModule, ScrollingModule, KbqFormFieldModule, KbqSelectModule, KbqFlag, FlagSvgPipe],
     template: `
         <kbq-form-field>
-            <kbq-flag kbqPrefix decorative class="example-flag-prefix layout-margin-left-s layout-margin-right-s">
-                <img alt="" [src]="control.value?.code ?? '' | flagSrc" />
-            </kbq-flag>
+            <kbq-flag
+                kbqPrefix
+                decorative
+                class="example-flag-prefix layout-margin-left-s layout-margin-right-s"
+                [innerHTML]="control.value?.code ?? '' | flagSvg"
+            />
             <kbq-select
                 placeholder="Select a country"
                 [formControl]="control"
@@ -41,9 +44,7 @@ type Country = { code: string; name: string };
             >
                 <cdk-virtual-scroll-viewport itemSize="32" minBufferPx="300" maxBufferPx="300">
                     <kbq-option *cdkVirtualFor="let country of countries" [value]="country">
-                        <kbq-flag decorative class="example-flag-option">
-                            <img alt="" [src]="country.code | flagSrc" />
-                        </kbq-flag>
+                        <kbq-flag decorative class="example-flag-option" [innerHTML]="country.code | flagSvg" />
                         {{ country.name }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFlag, KbqFlagShadow } from '@koobiq/components/flag';
 import { hasFlag } from 'country-flag-icons';
-import { FlagSrcPipe } from '../flag-string.pipe';
+import { FlagSvgPipe } from '../flag-string.pipe';
 
 type FallbackCountry = { code: string; name: string; custom?: string; shadow?: KbqFlagShadow };
 
@@ -10,13 +10,13 @@ type FallbackCountry = { code: string; name: string; custom?: string; shadow?: K
  */
 @Component({
     selector: 'flag-fallback-example',
-    imports: [KbqFlag, FlagSrcPipe],
+    imports: [KbqFlag, FlagSvgPipe],
     template: `
         @for (country of countries; track country.name) {
             <span>
                 <kbq-flag decorative [isEmpty]="isEmpty(country)" [shadow]="country.shadow ?? 'inset'">
                     @if (hasFlag(country.code)) {
-                        <img alt="" [src]="country.code | flagSrc" />
+                        <span class="layout-fill layout-row" [innerHTML]="country.code | flagSvg"></span>
                     } @else if (country.custom) {
                         <span class="layout-fill layout-row layout-align-center-center">
                             {{ country.custom }}

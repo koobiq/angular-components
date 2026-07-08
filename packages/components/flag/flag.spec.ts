@@ -1,6 +1,6 @@
-import { Component, Type } from '@angular/core';
+import { Component, inject, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { By, DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from './flag';
 
 const createComponent = <T>(component: Type<T>): ComponentFixture<T> => {
@@ -29,6 +29,23 @@ describe(KbqFlag.name, () => {
 
         expect(flag.classList).toContain('kbq-flag');
         expect(flag.querySelector('img')).toBeTruthy();
+    });
+
+    it('should render an inline svg projected via innerHTML as a direct child', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag [innerHTML]="svg" />
+            `
+        })
+        class TestComponent {
+            private readonly sanitizer = inject(DomSanitizer);
+            readonly svg = this.sanitizer.bypassSecurityTrustHtml('<svg data-testid="flag-svg"></svg>');
+        }
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        expect(flag.querySelector(':scope > svg')).toBeTruthy();
     });
 
     it('should apply the inset shadow by default', () => {

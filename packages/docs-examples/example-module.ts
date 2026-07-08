@@ -2265,18 +2265,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "flag-overview-example.ts",
     "importPath": "components/flag"
   },
-  "flag-shadow": {
-    "packagePath": "components/flag/flag-shadow",
-    "title": "Flag inset shadow",
-    "componentName": "FlagShadowExample",
-    "files": [
-      "flag-shadow-example.ts"
-    ],
-    "selector": "flag-shadow-example",
-    "additionalComponents": [],
-    "primaryFile": "flag-shadow-example.ts",
-    "importPath": "components/flag"
-  },
   "flag-sizes": {
     "packagePath": "components/flag/flag-sizes",
     "title": "Integer flag sizes",
@@ -6993,8 +6981,6 @@ return import('@koobiq/docs-examples/components/flag');
   case 'flag-language':
 return import('@koobiq/docs-examples/components/flag');
   case 'flag-overview':
-return import('@koobiq/docs-examples/components/flag');
-  case 'flag-shadow':
 return import('@koobiq/docs-examples/components/flag');
   case 'flag-sizes':
 return import('@koobiq/docs-examples/components/flag');

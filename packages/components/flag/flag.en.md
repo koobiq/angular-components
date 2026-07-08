@@ -30,9 +30,8 @@ Flags get a thin inset shadow (an inset outline) along the edge. Without it a fl
 background: lots of white blends with a light page, black or dark areas blend with a dark theme.
 
 The shadow color adapts to the theme: dark in the light theme, lighter in the dark one. The shadow is
-on by default (`shadow="inset"`); disable it with `shadow="none"`.
-
-<!-- example(flag-shadow) -->
+on by default (`shadow="inset"`); disable it with `shadow="none"`. The overview above shows it on a
+mix of flags that would otherwise blend into the background.
 
 ## A flag is not a language
 
