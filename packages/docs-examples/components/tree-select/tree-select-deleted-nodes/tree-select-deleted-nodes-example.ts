@@ -99,11 +99,11 @@ export const DATA_OBJECT = {
                     >
                         {{ option.viewValue }}
                         <!-- error (deleted) tags stay removable even when the node is disabled -->
-                        @if (!select.disabled && !option.disabled) {
+                        @if (!select.disabled && (deletedIds.has(option.value) || !option.disabled)) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
-                                [color]="deletedIds.has(option.value) ? 'error' : ''"
+                                [color]="deletedIds.has(option.value) && !option.disabled ? 'error' : ''"
                                 (click)="select.onRemoveSelectedOption(option, $event)"
                             ></i>
                         }
@@ -133,7 +133,7 @@ export const DATA_OBJECT = {
                 </kbq-tree-selection>
             </kbq-tree-select>
 
-            <!-- Visible textual reason for the invalid state: shown even if a red tag was collapsed into the overflow counter -->
+            <!-- Visible textual reason for the error state: shown even if a red tag was collapsed into the overflow counter -->
             @if (deletedCount > 0) {
                 <kbq-hint>Удалено элементов: {{ deletedCount }} — удалите их из выбора</kbq-hint>
             }
@@ -156,8 +156,10 @@ export class TreeSelectDeletedNodesExample {
     // Single source of truth for "deleted", rebuilt from the backend list on every (re)load.
     deletedIds = new Set<string>();
 
-    // The field is invalid while any deleted node is selected. It ORs the default matcher so real
-    // Validators (required/pattern/server) are not masked; it is keyed by id and clears reactively.
+    // Forces the field into an error (visual) state while any deleted node is selected — this only
+    // drives the displayed error, it does not change FormControl validity (no validator is added).
+    // It ORs the default matcher so real Validators (required/pattern/server) are not masked; it is
+    // keyed by id and clears reactively.
     deletedNodesErrorStateMatcher: ErrorStateMatcher = {
         isErrorState: (control, form): boolean =>
             this.defaultErrorStateMatcher.isErrorState(control as any, form) ||
