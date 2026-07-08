@@ -81,8 +81,10 @@
                     width: var(--kbq-filter-bar-date-field-width);
 
                     & .kbq-form-field__container {
-                        border-top-right-radius: unset;
-                        border-bottom-right-radius: unset;
+                        // Square off the seam (inline-end) — logical so it follows the inline-start overlap
+                        // below under RTL (was border-top/bottom-right-radius).
+                        border-start-end-radius: unset;
+                        border-end-end-radius: unset;
                     }
                 }
 
@@ -92,8 +94,10 @@
                     width: unset;
 
                     & .kbq-form-field__container {
-                        border-top-left-radius: unset;
-                        border-bottom-left-radius: unset;
+                        // Square off the seam (inline-start) — logical counterpart of the date field above
+                        // (was border-top/bottom-left-radius).
+                        border-start-start-radius: unset;
+                        border-end-start-radius: unset;
                     }
                 }
             }

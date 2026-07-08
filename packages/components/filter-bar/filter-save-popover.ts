@@ -175,6 +175,8 @@ export class KbqFilterSavePopover implements AfterViewInit {
         const name = this.filterName.value || '';
 
         // @todo default filter
+        // Deep-clones the current filter; pipe `value` payloads must be structured-cloneable (see
+        // `KbqFilterBar.saveFilterState`). All built-in pipes produce cloneable values.
         const filter = structuredClone<KbqFilter>(this.filterBar().filter() as KbqFilter) || { pipes: [] };
 
         filter.name = name;

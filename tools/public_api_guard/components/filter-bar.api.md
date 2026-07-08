@@ -32,6 +32,7 @@ import { KbqTreeFlatDataSource } from '@koobiq/components/tree';
 import { KbqTreeFlattener } from '@koobiq/components/tree';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
+import { KbqTreeSelection } from '@koobiq/components/tree';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -780,6 +781,43 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeMultiSelectComponent, "kbq-pipe-multi-select", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeMultiSelectComponent, never>;
+}
+
+// @public (undocumented)
+export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectValue[]> implements OnInit {
+    constructor();
+    get allOptionsSelected(): boolean;
+    get allVisibleOptionsSelected(): boolean;
+    get isEmpty(): boolean;
+    // (undocumented)
+    isNodeSelectAll(_: number, nodeData: KbqTreeSelectFlatNode): boolean;
+    // (undocumented)
+    ngOnInit(): void;
+    // (undocumented)
+    get numberOfSelectedLeaves(): number;
+    // (undocumented)
+    onClear(): void;
+    onClose(): void;
+    // (undocumented)
+    onSelect(input: {
+        value: any;
+    }): void;
+    // (undocumented)
+    searchKeydownHandler(): void;
+    // (undocumented)
+    get selectAllCheckboxState(): KbqPseudoCheckboxState;
+    selectAllHandler: (event: KeyboardEvent) => void;
+    get selected(): KbqSelectValue[] | null;
+    // (undocumented)
+    get selectedAllEqualsSelectedNothing(): boolean;
+    // (undocumented)
+    toggleSelectAllNode(emitEvent?: boolean): void;
+    readonly tree: _angular_core.Signal<KbqTreeSelection>;
+    updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeMultiTreeSelectComponent, "kbq-pipe-multi-tree-select", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeMultiTreeSelectComponent, never>;
 }
 
 // @public (undocumented)

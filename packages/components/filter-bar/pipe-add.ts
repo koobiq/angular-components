@@ -121,9 +121,13 @@ export class KbqPipeAdd {
 
             this.onAddPipe.emit(option.value);
 
-            this.announcement.set(
-                this.filterBar.configuration.add.addedAnnouncement.replace('{{ name }}', option.value.name)
-            );
+            const message = this.filterBar.configuration.add.addedAnnouncement.replace('{{ name }}', option.value.name);
+
+            // Empty then re-fill on the next tick so an identical consecutive message still changes the
+            // live-region text node and is re-announced (a same-string `set` would be an `Object.is` no-op
+            // that assistive tech never picks up).
+            this.announcement.set('');
+            setTimeout(() => this.announcement.set(message));
         }
 
         this.select().close();

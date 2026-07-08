@@ -385,6 +385,31 @@ describe('KbqPipeAdd', () => {
             expect(liveRegion.nativeElement.textContent.trim()).toBe('Фильтр PipeA добавлен');
         }));
 
+        it('should clear the live region before re-announcing so identical messages re-trigger AT', fakeAsync(() => {
+            const pipeAdd = getPipeAdd();
+            const liveText = () =>
+                fixture.debugElement
+                    .query(By.directive(KbqPipeAdd))
+                    .query(By.css('[aria-live="polite"]'))
+                    .nativeElement.textContent.trim();
+
+            pipeAdd.select().open();
+            flush();
+            fixture.detectChanges();
+
+            (document.querySelectorAll('.kbq-option')[0] as HTMLElement).click();
+
+            // The region is cleared synchronously on add ...
+            fixture.detectChanges();
+            expect(liveText()).toBe('');
+
+            // ... then re-filled on the next macrotask, so even an identical consecutive message changes the
+            // text node and is re-announced (a plain same-string signal `set` would be a no-op AT never sees).
+            flush();
+            fixture.detectChanges();
+            expect(liveText()).toBe('Фильтр PipeA добавлен');
+        }));
+
         it('should call filterBar.openPipe.next when option is already selected', fakeAsync(() => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();

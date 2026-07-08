@@ -111,7 +111,14 @@ export class KbqFilters implements OnInit {
 
     /** Event that is generated whenever the user selects a filter. */
     readonly onSelectFilter = output<KbqFilter>();
-    /** Event that is generated whenever the user save a filter. */
+    /**
+     * Event that is generated whenever the user save a filter.
+     *
+     * The emitted `filter` shares its pipe objects with the live filter by design (so the rendered pipes keep
+     * their identity across a save instead of being destroyed and recreated). Consumers that persist
+     * `event.filter` as an immutable record should snapshot it first (e.g. via `KbqFilterBar.saveFilterState`
+     * or a structural copy) — otherwise later in-place pipe edits will mutate the stored reference.
+     */
     readonly onSave = output<KbqSaveFilterEvent>();
     /** Event that is generated whenever the user change a filter. */
     readonly onChangeFilter = output<KbqSaveFilterEvent>();
@@ -274,9 +281,12 @@ export class KbqFilters implements OnInit {
 
     /** Shows an error. Use this method in the onSave or onChangeFilter events if saving data failed. */
     filterSavedUnsuccessfully(error?: KbqSaveFilterError) {
-        this.showError(error);
-
+        // Re-enable the name control FIRST: `enable()` re-runs the control's validators and would wipe a
+        // custom `filterNameAlreadyExist` error set beforehand, so apply the error AFTER re-enabling —
+        // otherwise the inline "name already exists" message never renders.
         this.savePopover().savedUnsuccessfully();
+
+        this.showError(error);
 
         this.changeDetectorRef.markForCheck();
     }

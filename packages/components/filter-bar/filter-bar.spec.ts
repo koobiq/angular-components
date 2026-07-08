@@ -121,41 +121,44 @@ describe('KbqFilterBar', () => {
             fixture.detectChanges();
         });
 
-        it('should recompute derived state when a new filter reference is set', () => {
+        it('should recompute a derived computed (isChanged) when the underlying flag changes', () => {
             const filterBar = getFilterBar();
             let computeCount = 0;
-            // `filter` is signal-backed, so a `computed()` reading it recomputes on every new reference.
+            // Probe a REAL derived computed so this guards the derived-state reactivity itself, not merely
+            // that `filter` is signal-backed (reverting isChanged to a plain getter would fail this).
             const probe = computed(() => {
                 computeCount++;
 
-                return filterBar.filter();
+                return filterBar.isChanged();
             });
 
+            filterBar.filter.set(createFilter([], { changed: false }));
             probe();
             const before = computeCount;
 
-            filterBar.filter.set(createFilter([]));
+            filterBar.filter.set(createFilter([], { changed: true }));
             probe();
 
             expect(computeCount).toBe(before + 1);
+            expect(filterBar.isChanged()).toBe(true);
         });
 
-        it('should not recompute derived state when the same filter reference is set again', () => {
+        it('should NOT recompute a derived computed (isChanged) when its value is unchanged', () => {
             const filterBar = getFilterBar();
-            const filter = createFilter([]);
             let computeCount = 0;
             const probe = computed(() => {
                 computeCount++;
 
-                return filterBar.filter();
+                return filterBar.isChanged();
             });
 
-            filterBar.filter.set(filter);
+            filterBar.filter.set(createFilter([], { changed: true }));
             probe();
             const before = computeCount;
 
-            // Setting the identical reference is deduped by the signal — no recompute.
-            filterBar.filter.set(filter);
+            // A new filter reference whose `changed` is still true — `isChanged()` yields the same value,
+            // so the `computed()` chain dedupes and a consumer reading only `isChanged()` is not re-run.
+            filterBar.filter.set(createFilter([], { changed: true }));
             probe();
 
             expect(computeCount).toBe(before);
@@ -381,6 +384,25 @@ describe('KbqFilterBar', () => {
             expect(filterBar.filter()).not.toBe(before);
             expect(filterBar.filter()!.pipes).toEqual([]);
         });
+
+        it('should emit filterChange exactly once, carrying changed=true, on remove', () => {
+            const pipe = createPipe({ name: 'removable' });
+            const filterBar = getFilterBar();
+
+            // Saved, unmodified filter: a stale first emission (changed=false) would be observable here.
+            filterBar.filter.set(createFilter([pipe], { saved: true, changed: false }));
+
+            const spy = jest.fn();
+
+            filterBar.filter.subscribe(spy);
+            spy.mockClear();
+
+            filterBar.removePipe(pipe);
+
+            // A single `set` folds in `changed: true`; onRemovePipe no longer triggers a second emission.
+            expect(spy).toHaveBeenCalledTimes(1);
+            expect(spy).toHaveBeenCalledWith(expect.objectContaining({ changed: true, pipes: [] }));
+        });
     });
 
     describe('saveFilterState / restoreFilterState', () => {
@@ -531,8 +553,37 @@ describe('KbqFilterBar', () => {
             fixture.detectChanges();
         });
 
-        it('should default to true', () => {
+        it('should reflect the bound value', () => {
             const filterBar = getFilterBar();
+
+            expect(filterBar.selectedAllEqualsSelectedNothing()).toBe(true);
+        });
+    });
+
+    describe('selectedAllEqualsSelectedNothing default', () => {
+        @Component({
+            selector: 'test-app-default-select-all',
+            imports: [KbqFilterBarModule],
+            template: `
+                <kbq-filter-bar />
+            `
+        })
+        class TestComponentDefaultSelectAll {}
+
+        it('should default to true when the input is left unbound', () => {
+            // Render <kbq-filter-bar> WITHOUT binding the input, so this exercises the declared `input(true)`
+            // default rather than a round-tripped binding.
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponentDefaultSelectAll]
+            });
+
+            const defaultFixture = TestBed.createComponent(TestComponentDefaultSelectAll);
+
+            defaultFixture.detectChanges();
+
+            const filterBar: KbqFilterBar = defaultFixture.debugElement.query(
+                By.directive(KbqFilterBar)
+            ).componentInstance;
 
             expect(filterBar.selectedAllEqualsSelectedNothing()).toBe(true);
         });

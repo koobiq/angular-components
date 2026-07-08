@@ -252,7 +252,11 @@ describe('KbqFilters', () => {
         });
 
         it('should push an isolated shallow copy (not a deep structuredClone) to internalFilterChanges', () => {
-            const filter = createFilter([createPipe({ name: 'original', value: 'A' })], { name: 'Selected' });
+            // A non-cloneable payload (a function) is what actually distinguishes a shallow copy from a deep
+            // clone: `structuredClone` (or the suite's JSON-based stub) would drop/alter it, the shallow copy
+            // preserves it by reference. This is the exact guarantee that lets us drop the per-selection clone.
+            const valueFn = () => 'A';
+            const filter = createFilter([createPipe({ name: 'original', value: valueFn })], { name: 'Selected' });
 
             initFixture(createFilter([]), [filter]);
 
@@ -269,13 +273,16 @@ describe('KbqFilters', () => {
             expect(activeFilter!.pipes[0]).not.toBe(filter.pipes[0]);
             expect(activeFilter!.name).toBe('Selected');
 
+            // The non-cloneable `value` survives by reference — a deep clone would have dropped/altered it.
+            expect(activeFilter!.pipes[0].value).toBe(valueFn);
+
             // Pipes write their `value` by reassignment, so editing the active copy never leaks to the
             // saved source (the guarantee that lets us drop the per-selection `structuredClone`).
             activeFilter!.pipes[0].name = 'mutated';
             activeFilter!.pipes[0].value = 'B';
 
             expect(filter.pipes[0].name).toBe('original');
-            expect(filter.pipes[0].value).toBe('A');
+            expect(filter.pipes[0].value).toBe(valueFn);
         });
     });
 
@@ -688,6 +695,25 @@ describe('KbqFilters', () => {
 
             expect(component.filterName.enabled).toBe(true);
         }));
+
+        it('should keep the inline "name already exists" error after re-enabling the control', fakeAsync(() => {
+            const filter = createFilter([], { name: 'Test' });
+
+            initFixture(filter);
+
+            const component = getFiltersComponent();
+
+            component.openSaveAsNewFilterPopover();
+            fixture.detectChanges();
+            flush();
+
+            component.filterName.setValue('Existing');
+            component.filterSavedUnsuccessfully({ nameAlreadyExists: true });
+
+            // `enable()` re-runs the validators, so the custom error must be applied AFTER it — otherwise the
+            // inline `<kbq-error>` never renders. Reverting the showError/enable order fails this.
+            expect(component.filterName.hasError('filterNameAlreadyExist')).toBe(true);
+        }));
     });
 
     describe('saveAsNew round-trip after a failed save (P2-26)', () => {
@@ -725,6 +751,7 @@ describe('KbqFilters', () => {
             // The inline error is shown, the saving state is released and the field is editable again.
             expect(component.showFilterSavingError).toBe(true);
             expect(component.filterSavingErrorText).toBe(component.localeData.errorHint);
+            expect(component.filterName.hasError('filterNameAlreadyExist')).toBe(true);
             expect(component.isSaving).toBe(false);
             expect(component.filterName.enabled).toBe(true);
 

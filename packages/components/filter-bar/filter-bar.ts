@@ -16,7 +16,7 @@ import {
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { BehaviorSubject, merge } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import {
     KBQ_FILTER_BAR_CONFIGURATION,
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
@@ -142,10 +142,11 @@ export class KbqFilterBar implements KbqFilterBarHost {
             this.initDefaultParams();
         }
 
-        // A pipe value change or removal marks the current filter as "changed". Produce a new filter
-        // reference (not an in-place mutation) so the `filter` model — and every `computed()`/`effect()`
-        // reading it — reacts. `model.set(...)` auto-emits `filterChange` for the two-way binding.
-        merge(outputToObservable(this.onChangePipe), outputToObservable(this.onRemovePipe))
+        // A pipe value change marks the current filter as "changed". Produce a new filter reference (not an
+        // in-place mutation) so the `filter` model — and every `computed()`/`effect()` reading it — reacts.
+        // `removePipe` owns its own `changed` flag in a single `set` (one `filterChange` emission), so only
+        // `onChangePipe` feeds this subscriber. `model.set(...)` auto-emits `filterChange` for the binding.
+        outputToObservable(this.onChangePipe)
             .pipe(takeUntilDestroyed())
             .subscribe(() => {
                 const current = this.filter();
@@ -162,19 +163,31 @@ export class KbqFilterBar implements KbqFilterBarHost {
 
         if (!current?.pipes.includes(pipe)) return;
 
-        // Replace the filter (and its `pipes` array) with new references instead of mutating in place, so
-        // the `filter` signal reacts; unknown pipes are left untouched. `onRemovePipe` then flags "changed".
-        this.filter.set({ ...current, pipes: current.pipes.filter((item) => item !== pipe) });
+        // Replace the filter (and its `pipes` array) with new references instead of mutating in place, so the
+        // `filter` signal reacts; unknown pipes are left untouched. Fold in `changed: true` here — the removal
+        // IS the change — so it happens in a single `set` (one `filterChange` emission) rather than relying on
+        // `onRemovePipe` to trigger a second update.
+        this.filter.set({ ...current, changed: true, pipes: current.pipes.filter((item) => item !== pipe) });
 
         this.onRemovePipe.emit(pipe);
     }
 
-    /** Save current state of filter */
+    /**
+     * Save current state of filter.
+     *
+     * Deep-clones the filter via `structuredClone`, so any pipe `value` payload handed to save/restore must be
+     * structured-cloneable (plain data — no functions, DOM nodes, class instances or `TemplateRef`s), otherwise
+     * `structuredClone` throws `DataCloneError`. All built-in pipes produce cloneable values.
+     */
     saveFilterState(filter?: KbqFilter) {
         this.savedFilter = structuredClone(filter ?? this.filter());
     }
 
-    /** Restore previously saved filter state */
+    /**
+     * Restore previously saved filter state.
+     *
+     * @see `saveFilterState` — pipe `value` payloads must be structured-cloneable.
+     */
     restoreFilterState(filter?: KbqFilter) {
         const state = filter ?? this.savedFilter;
 
