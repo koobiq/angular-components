@@ -11,8 +11,8 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBasePipe } from './base-pipe';
-import { KbqPipeDateBaseComponent } from './pipe-date-base';
 import { KbqPipeButton } from './pipe-button';
+import { KbqPipeDateBaseComponent } from './pipe-date-base';
 import { KbqPipeState } from './pipe-state';
 
 @Component({

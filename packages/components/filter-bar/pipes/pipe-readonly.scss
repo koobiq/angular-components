@@ -1,18 +1,9 @@
+@use '../filter-bar-theme' as *;
+
 .kbq-pipe.kbq-pipe__readonly {
     & .kbq-button {
         cursor: default;
     }
-
-    &:not(.kbq-pipe_cleanable) {
-        & .kbq-button-icon.kbq-button_filled:not(:hover),
-        & .kbq-button.kbq-button_filled,
-        & .kbq-button.kbq-button_filled:hover {
-            background: var(--kbq-states-background-disabled);
-        }
-
-        & .kbq-pipe__name,
-        & .kbq-pipe__value {
-            color: var(--kbq-states-foreground-disabled);
-        }
-    }
 }
+
+@include kbq-filter-bar-readonly-theme();

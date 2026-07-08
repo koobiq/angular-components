@@ -1,3 +1,5 @@
+@use '../filter-bar-theme' as *;
+
 .kbq-pipe__multiselect {
     .kbq-pipe__value {
         margin-inline-start: var(--kbq-size-xxs);
@@ -11,5 +13,5 @@
 }
 
 .kbq-pipe-multiselect__panel .kbq-select__content {
-    max-height: 404px;
+    @include kbq-filter-bar-panel-content-max-height();
 }
