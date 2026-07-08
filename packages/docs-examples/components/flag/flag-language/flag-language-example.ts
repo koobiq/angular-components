@@ -1,53 +1,38 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFlag } from '@koobiq/components/flag';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { FlagSrcPipe } from '../flag-string.pipe';
 
 /**
- * @title Flag is not a language (anti-pattern)
+ * @title Flag is not a language
  */
 @Component({
     selector: 'flag-language-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqFlag, FlagSrcPipe],
+    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqSelectModule, KbqIconModule],
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Select your language" [(value)]="selected">
-                @for (language of languages; track language.code) {
-                    <kbq-option [value]="language.code">
-                        <kbq-flag decorative>
-                            <img alt="" [src]="language.code | flagSrc" />
-                        </kbq-flag>
-                        {{ language.name }}
-                    </kbq-option>
+            <i kbqPrefix color="contrast-fade" kbq-icon="kbq-globe_16"></i>
+            <kbq-select placeholder="Select your language" [formControl]="control">
+                @for (language of languages; track language) {
+                    <kbq-option [value]="language">{{ language }}</kbq-option>
                 }
             </kbq-select>
         </kbq-form-field>
     `,
     styles: `
-        :host {
-            display: flex;
-            justify-content: center;
-            padding: var(--kbq-size-l);
-        }
-
         .kbq-form-field {
             width: 320px;
         }
-
-        kbq-option .kbq-flag {
-            margin-right: var(--kbq-size-xs);
-        }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-row layout-align-center-center layout-padding-l'
+    }
 })
 export class FlagLanguageExample {
-    // Demonstrates why flags should NOT be used to pick an interface language.
-    protected readonly languages = [
-        { code: 'GB', name: 'English (UK)' },
-        { code: 'US', name: 'English (US)' },
-        { code: 'ES', name: 'Español' }
-    ];
+    // Languages are picked with a neutral icon, not a flag: one language spans several countries.
+    protected readonly languages = ['English (UK)', 'English (US)', 'Español', 'Français', 'Русский', 'हिन्दी', '中文'];
 
-    protected selected = this.languages[0].code;
+    protected readonly control = new FormControl(this.languages[0]);
 }

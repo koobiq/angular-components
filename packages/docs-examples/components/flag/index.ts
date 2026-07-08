@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FlagAccessibilityExample } from './flag-accessibility/flag-accessibility-example';
+import { FlagAspectRatioExample } from './flag-aspect-ratio/flag-aspect-ratio-example';
 import { FlagCircleExample } from './flag-circle/flag-circle-example';
 import { FlagFallbackExample } from './flag-fallback/flag-fallback-example';
 import { FlagLanguageExample } from './flag-language/flag-language-example';
@@ -10,7 +10,7 @@ import { FlagSquareExample } from './flag-square/flag-square-example';
 import { FlagStylizedExample } from './flag-stylized/flag-stylized-example';
 
 export {
-    FlagAccessibilityExample,
+    FlagAspectRatioExample,
     FlagCircleExample,
     FlagFallbackExample,
     FlagLanguageExample,
@@ -23,11 +23,11 @@ export {
 
 const EXAMPLES = [
     FlagOverviewExample,
+    FlagAspectRatioExample,
     FlagSquareExample,
     FlagShadowExample,
     FlagLanguageExample,
     FlagFallbackExample,
-    FlagAccessibilityExample,
     FlagStylizedExample,
     FlagCircleExample,
     FlagSizesExample

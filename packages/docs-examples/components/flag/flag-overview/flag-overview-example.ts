@@ -9,7 +9,7 @@ import { FlagSrcPipe } from '../flag-string.pipe';
     selector: 'flag-overview-example',
     imports: [KbqFlag, FlagSrcPipe],
     template: `
-        <div class="example-flag-list">
+        <div class="layout-column layout-gap-s">
             @for (country of countries; track country.code) {
                 <span>
                     <kbq-flag decorative>
@@ -19,13 +19,6 @@ import { FlagSrcPipe } from '../flag-string.pipe';
                 </span>
             }
         </div>
-    `,
-    styles: `
-        .example-flag-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--kbq-size-s);
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

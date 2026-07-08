@@ -74,18 +74,32 @@ describe(KbqFlag.name, () => {
         expect(flag.classList).not.toContain('kbq-flag_square');
     });
 
-    it('should apply the size modifier class', () => {
+    it('should apply the stylized modifier class', () => {
         @Component({
             imports: [KbqFlag],
             template: `
-                <kbq-flag size="24x16" />
+                <kbq-flag stylized />
             `
         })
         class TestComponent {}
 
         const flag = getFlag(createComponent(TestComponent));
 
-        expect(flag.classList).toContain('kbq-flag_size-24x16');
+        expect(flag.classList).toContain('kbq-flag_stylized');
+    });
+
+    it('should apply the empty placeholder class', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag isEmpty />
+            `
+        })
+        class TestComponent {}
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        expect(flag.classList).toContain('kbq-flag_empty');
     });
 
     describe('accessibility', () => {

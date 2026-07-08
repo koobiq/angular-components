@@ -1,10 +1,15 @@
-@use './flag-theme' as *;
-
 .kbq-flag {
+    // Theme tokens. The faded contrast line resolves to a dark hairline in the light theme and a
+    // light one in the dark theme, so the flag stays separated from the background in both.
+    --kbq-flag-shadow-color: var(--kbq-line-contrast-fade);
+    --kbq-flag-empty-background: var(--kbq-states-background-disabled);
+    --kbq-flag-border-radius: 0;
+
     display: inline-block;
     position: relative;
     box-sizing: border-box;
-    // Default sizing follows the surrounding text; 3:2 gives width = 1.5 × line height.
+    // Sizing follows the surrounding text; 3:2 gives width = 1.5 × line height. Override via
+    // font-size / width / height to resize.
     height: 1em;
     aspect-ratio: 3 / 2;
     vertical-align: middle;
@@ -38,35 +43,32 @@
         border-radius: 50%;
     }
 
-    // Integer sizes keep the flag edges crisp. Explicit dimensions override the aspect-ratio sizing.
-    &.kbq-flag_size-24x16 {
-        width: var(--kbq-flag-size-24x16-width);
-        height: var(--kbq-flag-size-24x16-height);
-        aspect-ratio: auto;
-    }
+    // Volumetric look: rounded corners, a soft drop shadow and a gradient imitating folds blended
+    // over the flag.
+    &.kbq-flag_stylized {
+        border-radius: var(--kbq-size-xs);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
-    &.kbq-flag_size-21x14 {
-        width: var(--kbq-flag-size-21x14-width);
-        height: var(--kbq-flag-size-21x14-height);
-        aspect-ratio: auto;
-    }
-
-    &.kbq-flag_size-18x12 {
-        width: var(--kbq-flag-size-18x12-width);
-        height: var(--kbq-flag-size-18x12-height);
-        aspect-ratio: auto;
-    }
-
-    &.kbq-flag_size-15x10 {
-        width: var(--kbq-flag-size-15x10-width);
-        height: var(--kbq-flag-size-15x10-height);
-        aspect-ratio: auto;
-    }
-
-    &.kbq-flag_size-12x8 {
-        width: var(--kbq-flag-size-12x8-width);
-        height: var(--kbq-flag-size-12x8-height);
-        aspect-ratio: auto;
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border-radius: inherit;
+            background: linear-gradient(
+                240.64deg,
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(0, 0, 0, 0.27) 26.27%,
+                rgba(255, 255, 255, 0.26) 37%,
+                rgba(0, 0, 0, 0.55) 48.7%,
+                rgba(0, 0, 0, 0.24) 59.44%,
+                rgba(255, 255, 255, 0.3) 73.64%,
+                rgba(39, 39, 39, 0.22) 90.15%,
+                rgba(0, 0, 0, 0.2) 100%
+            );
+            background-blend-mode: overlay;
+            pointer-events: none;
+        }
     }
 
     // Neutral placeholder when no flag is projected (unknown / invalid country code).
@@ -74,5 +76,3 @@
         background: var(--kbq-flag-empty-background);
     }
 }
-
-@include kbq-flag-theme();

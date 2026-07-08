@@ -9,23 +9,21 @@ import { FlagSrcPipe } from '../flag-string.pipe';
     selector: 'flag-circle-example',
     imports: [KbqFlag, FlagSrcPipe],
     template: `
-        <div class="example-flag-row">
-            @for (country of countries; track country.code) {
-                <kbq-flag shape="circle" [label]="country.name">
-                    <img alt="" [src]="country.code | flagSrc: 'circle'" />
-                </kbq-flag>
-            }
-        </div>
+        @for (country of countries; track country.code) {
+            <kbq-flag shape="circle" [label]="country.name">
+                <img alt="" [src]="country.code | flagSrc: 'circle'" />
+            </kbq-flag>
+        }
     `,
     styles: `
-        .example-flag-row {
-            display: flex;
-            align-items: center;
-            gap: var(--kbq-size-m);
+        :host {
             font-size: 32px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-row layout-align-center-center layout-gap-m'
+    }
 })
 export class FlagCircleExample {
     protected readonly countries = [

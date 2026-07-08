@@ -8,8 +8,19 @@ import { FlagSrcPipe } from '../flag-string.pipe';
 @Component({
     selector: 'flag-stylized-example',
     imports: [KbqFlag, FlagSrcPipe],
-    templateUrl: 'flag-stylized-example.html',
-    styleUrls: ['flag-stylized-example.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    template: `
+        <kbq-flag class="example-stylized-flag" stylized shadow="none" label="Brazil">
+            <img alt="" [src]="'BR' | flagSrc" />
+        </kbq-flag>
+    `,
+    styles: `
+        :host {
+            font-size: 64px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-row layout-align-center-center layout-padding-xxl'
+    }
 })
 export class FlagStylizedExample {}

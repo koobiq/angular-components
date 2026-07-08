@@ -9,13 +9,13 @@ import * as _angular_core from '@angular/core';
 // @public
 export class KbqFlag {
     readonly decorative: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly isEmpty: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly label: _angular_core.InputSignal<string | undefined>;
     readonly shadow: _angular_core.InputSignal<KbqFlagShadow>;
     readonly shape: _angular_core.InputSignal<KbqFlagShape>;
-    readonly size: _angular_core.InputSignal<KbqFlagSize | undefined>;
-    protected readonly sizeClass: _angular_core.Signal<string | null>;
+    readonly stylized: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFlag, "kbq-flag", ["kbqFlag"], { "shape": { "alias": "shape"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFlag, "kbq-flag", ["kbqFlag"], { "shape": { "alias": "shape"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; "stylized": { "alias": "stylized"; "required": false; "isSignal": true; }; "isEmpty": { "alias": "isEmpty"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFlag, never>;
 }
@@ -35,9 +35,6 @@ export type KbqFlagShadow = 'inset' | 'none';
 
 // @public
 export type KbqFlagShape = 'rectangle' | 'square' | 'circle';
-
-// @public
-export type KbqFlagSize = '24x16' | '21x14' | '18x12' | '15x10' | '12x8';
 
 // (No @packageDocumentation comment for this package)
 

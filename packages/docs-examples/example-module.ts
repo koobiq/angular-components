@@ -2205,16 +2205,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-uniq-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
-  "flag-accessibility": {
-    "packagePath": "components/flag/flag-accessibility",
-    "title": "Accessible and decorative flags",
-    "componentName": "FlagAccessibilityExample",
+  "flag-aspect-ratio": {
+    "packagePath": "components/flag/flag-aspect-ratio",
+    "title": "Flags in a select",
+    "componentName": "FlagAspectRatioExample",
     "files": [
-      "flag-accessibility-example.ts"
+      "flag-aspect-ratio-example.ts"
     ],
-    "selector": "flag-accessibility-example",
+    "selector": "flag-aspect-ratio-example",
     "additionalComponents": [],
-    "primaryFile": "flag-accessibility-example.ts",
+    "primaryFile": "flag-aspect-ratio-example.ts",
     "importPath": "components/flag"
   },
   "flag-circle": {
@@ -2243,7 +2243,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "flag-language": {
     "packagePath": "components/flag/flag-language",
-    "title": "Flag is not a language (anti-pattern)",
+    "title": "Flag is not a language",
     "componentName": "FlagLanguageExample",
     "files": [
       "flag-language-example.ts"
@@ -2306,9 +2306,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Stylized flag",
     "componentName": "FlagStylizedExample",
     "files": [
-      "flag-stylized-example.ts",
-      "flag-stylized-example.html",
-      "flag-stylized-example.css"
+      "flag-stylized-example.ts"
     ],
     "selector": "flag-stylized-example",
     "additionalComponents": [],
@@ -6986,7 +6984,7 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
-  case 'flag-accessibility':
+  case 'flag-aspect-ratio':
 return import('@koobiq/docs-examples/components/flag');
   case 'flag-circle':
 return import('@koobiq/docs-examples/components/flag');

@@ -9,7 +9,7 @@ import { FlagSrcPipe } from '../flag-string.pipe';
     selector: 'flag-shadow-example',
     imports: [KbqFlag, FlagSrcPipe],
     template: `
-        <div class="example-flag-grid">
+        <div class="layout-row layout-wrap layout-align-center-center layout-gap-m example-flag-grid">
             @for (country of countries; track country.code) {
                 <kbq-flag shadow="inset" [label]="country.name">
                     <img alt="" [src]="country.code | flagSrc" />
@@ -19,14 +19,14 @@ import { FlagSrcPipe } from '../flag-string.pipe';
     `,
     styles: `
         .example-flag-grid {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: var(--kbq-size-m);
             font-size: 32px;
+            max-width: 320px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-column layout-align-center-center layout-gap-m'
+    }
 })
 export class FlagShadowExample {
     // A mix of flags that are prone to blending into light or dark backgrounds.

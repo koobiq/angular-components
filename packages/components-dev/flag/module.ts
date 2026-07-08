@@ -7,11 +7,11 @@ import { DevThemeToggle } from '../theme-toggle';
     imports: [FlagExamplesModule],
     template: `
         <flag-overview-example />
+        <flag-aspect-ratio-example />
         <flag-square-example />
         <flag-shadow-example />
         <flag-language-example />
         <flag-fallback-example />
-        <flag-accessibility-example />
         <flag-stylized-example />
         <flag-circle-example />
         <flag-sizes-example />

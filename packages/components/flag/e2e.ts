@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFlagModule, KbqFlagShape } from '@koobiq/components/flag';
 
-// A minimal inline SVG (Norway-like) is enough to exercise shape/shadow/size decoration without
+// A minimal inline SVG (Norway-like) is enough to exercise shape/shadow decoration without
 // depending on a flag data package in the e2e app.
 const sampleFlag = `<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
     <rect width="22" height="16" fill="#ef2b2d" />
@@ -21,13 +21,9 @@ const sampleFlag = `<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
             }
         </div>
         <div>
-            @for (size of sizes; track size) {
-                <kbq-flag [size]="size" [innerHTML]="flag" />
-            }
-        </div>
-        <div>
             <kbq-flag shadow="none" [innerHTML]="flag" />
             <kbq-flag shadow="inset" [innerHTML]="flag" />
+            <kbq-flag stylized [innerHTML]="flag" />
             <kbq-flag class="kbq-flag_empty" />
         </div>
     `,
@@ -37,6 +33,7 @@ const sampleFlag = `<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
             flex-direction: column;
             gap: var(--kbq-size-l);
             padding: var(--kbq-size-l);
+            font-size: 48px;
         }
 
         :host > div {
@@ -53,5 +50,4 @@ const sampleFlag = `<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
 export class E2eFlagStyles {
     protected readonly flag = sampleFlag;
     protected readonly shapes: KbqFlagShape[] = ['rectangle', 'square', 'circle'];
-    protected readonly sizes = ['24x16', '21x14', '18x12', '15x10', '12x8'] as const;
 }

@@ -15,6 +15,8 @@ Flag images can be taken from the [country-flag-icons](https://www.npmjs.com/pac
 By default flags use a 3:2 ratio. This is the primary format — use it in most scenarios: inline with
 text, lists, selects.
 
+<!-- example(flag-aspect-ratio) -->
+
 Square flags (`shape="square"`) are for cases where 3:2 does not fit: avatar-like selectors, compact
 circles, dense grids. Provide the square image variant (the `1x1` subpackage) for them. Most 1:1
 versions are a center crop of the 3:2 flag; for flags that lose meaning when cropped, the package
@@ -69,13 +71,24 @@ a caption via `label`: the component gets `role="img"` and an accessible name. I
 adjacent text (inline, option, block), the flag is decorative — mark it `decorative` so it is hidden
 from screen readers and does not duplicate the caption.
 
-<!-- example(flag-accessibility) -->
+```html
+<!-- Meaningful flag with no adjacent text: expose an accessible name via label -->
+<kbq-flag label="Germany">
+    <img src="…/DE.svg" alt="" />
+</kbq-flag>
+
+<!-- Flag next to visible text: mark it decorative so it is hidden from screen readers -->
+<kbq-flag decorative>
+    <img src="…/DE.svg" alt="" />
+</kbq-flag>
+Germany
+```
 
 ## Examples
 
 ### With shadow and volume
 
-A gradient imitating folds is layered over the image; the flag is rounded and casts a shadow.
+The `stylized` attribute adds volume: a gradient imitating folds is layered over the image, the flag is rounded and casts a shadow.
 
 <!-- example(flag-stylized) -->
 
@@ -87,7 +100,8 @@ Use `shape="circle"` together with a square (1:1) image.
 
 ### Integer sizes
 
-Choose a flag size whose dimensions are multiples of a pixel — otherwise the image edges will be
-blurry.
+The flag size follows the text size (`height: 1em`); set it explicitly via `font-size`, `width` or
+`height` when needed. Choose dimensions that are multiples of a pixel — otherwise the image edges
+will be blurry.
 
 <!-- example(flag-sizes) -->

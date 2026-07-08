@@ -9,7 +9,7 @@ import { FlagSrcPipe } from '../flag-string.pipe';
     selector: 'flag-square-example',
     imports: [KbqFlag, FlagSrcPipe],
     template: `
-        <div class="example-flag-row">
+        <div class="layout-row layout-align-start-center layout-gap-m example-flag-row">
             @for (country of countries; track country.code) {
                 <kbq-flag shape="square" [label]="country.name">
                     <img alt="" [src]="country.code | flagSrc: 'square'" />
@@ -19,13 +19,13 @@ import { FlagSrcPipe } from '../flag-string.pipe';
     `,
     styles: `
         .example-flag-row {
-            display: flex;
-            align-items: center;
-            gap: var(--kbq-size-m);
-            font-size: 24px;
+            font-size: 64px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-row layout-align-center-center layout-gap-l'
+    }
 })
 export class FlagSquareExample {
     protected readonly countries = [
