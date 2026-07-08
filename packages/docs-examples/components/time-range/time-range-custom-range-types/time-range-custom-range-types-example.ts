@@ -11,6 +11,7 @@ import {
     KbqCustomTimeRangeType,
     KbqTimeRangeModule,
     KbqTimeRangeTranslationType,
+    KbqTimeRangeType,
     KbqTimeRangeUnits
 } from '@koobiq/components/time-range';
 import { of } from 'rxjs';
@@ -21,7 +22,7 @@ const customTypes: KbqCustomTimeRangeType[] = [
     { type: 'last3Years', units: { years: -3 }, translationType: 'months' }
 ];
 
-const customDefaultTypes = customTypes.map(({ type }) => type);
+const customDefaultTypes = [...customTypes.map(({ type }) => type), 'range'] as KbqTimeRangeType[];
 
 const customTypeUnits: Record<string, KbqTimeRangeUnits> = Object.fromEntries(
     customTypes.map(({ type, units }) => [type, units])
