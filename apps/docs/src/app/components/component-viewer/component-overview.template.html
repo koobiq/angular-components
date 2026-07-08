@@ -9,20 +9,18 @@
 
     <div class="kbq-callout kbq-callout_contrast">
         <div class="kbq-callout__header">
-            {{ isRuLocale() ? 'Вопросы и предложения по документации' : 'Docs Feedback' }}
+            {{ isRuLocale() ? 'Предложения по улучшению' : 'Suggestions for improvement' }}
         </div>
 
         <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
             @if (isRuLocale()) {
-                Если у вас есть вопросы или вы хотите внести свой вклад в написание документации, пожалуйста,
-                <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>создайте issue</a>
-                в нашем репозитории на GitHub.
+                Если вы нашли ошибку или хотите доработать статью,
+                <!-- prettier-ignore -->
+                <span><a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>создайте запрос на&nbsp;GitHub</a>.</span>
             } @else {
-                If you have any questions or would like to contribute to writing the documentation, please
-                <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>
-                    create an issue
-                </a>
-                in our GitHub repository.
+                If you found a mistake or want to improve the article,
+                <!-- prettier-ignore -->
+                <span><a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>create an issue on GitHub</a>.</span>
             }
         </div>
     </div>
