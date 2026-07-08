@@ -215,7 +215,12 @@ export class KbqFilterBar {
 
     /** Restore previously saved filter state */
     restoreFilterState(filter?: KbqFilter) {
-        this.filter = structuredClone(filter ?? this.savedFilter);
+        const state = filter ?? this.savedFilter;
+
+        // Nothing to restore — bail out instead of wiping the current filter with `structuredClone(null)`.
+        if (!state) return;
+
+        this.filter = structuredClone(state);
     }
 
     /** Set the filter state "changed" to false */

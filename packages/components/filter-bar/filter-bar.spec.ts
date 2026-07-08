@@ -427,6 +427,18 @@ describe('KbqFilterBar', () => {
 
             expect(filterBar.filter!.pipes[0].name).toBe('restored');
         });
+
+        it('should not wipe the current filter when there is nothing to restore', () => {
+            const filterBar = getFilterBar();
+
+            filterBar.filter = createFilter([createPipe({ name: 'current', value: 'v' })]);
+
+            // Nothing saved and no explicit arg → must be a no-op, not a silent `structuredClone(null)` wipe.
+            filterBar.restoreFilterState();
+
+            expect(filterBar.filter).not.toBeNull();
+            expect(filterBar.filter!.pipes[0].name).toBe('current');
+        });
     });
 
     describe('resetFilterChangedState', () => {
