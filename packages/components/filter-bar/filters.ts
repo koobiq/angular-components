@@ -177,7 +177,12 @@ export class KbqFilters implements OnInit {
     }
 
     selectFilter(filter: KbqFilter) {
-        this.filterBar.internalFilterChanges.next(structuredClone(filter));
+        // Isolate the active filter from the saved source with a shallow structural copy (new filter object
+        // + new pipes array + per-pipe shallow copy) instead of a deep `structuredClone`. Every pipe writes
+        // its `value` by reassignment (never in-place mutation), so this fully isolates subsequent edits
+        // while preserving any non-cloneable payload inside `value`. `structuredClone` (P2-20) is reserved
+        // for the explicit save/restore boundary (`KbqFilterBar.saveFilterState`/`restoreFilterState`).
+        this.filterBar.internalFilterChanges.next({ ...filter, pipes: filter.pipes.map((pipe) => ({ ...pipe })) });
 
         this.onSelectFilter.emit(filter);
     }

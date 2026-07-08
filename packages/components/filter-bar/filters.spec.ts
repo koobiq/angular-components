@@ -251,8 +251,8 @@ describe('KbqFilters', () => {
             expect(fixture.componentInstance.onSelectFilterSpy).toHaveBeenCalledWith(filter);
         });
 
-        it('should push structuredClone to filterBar.internalFilterChanges', () => {
-            const filter = createFilter([createPipe({ name: 'original' })], { name: 'Selected' });
+        it('should push an isolated shallow copy (not a deep structuredClone) to internalFilterChanges', () => {
+            const filter = createFilter([createPipe({ name: 'original', value: 'A' })], { name: 'Selected' });
 
             initFixture(createFilter([]), [filter]);
 
@@ -261,16 +261,21 @@ describe('KbqFilters', () => {
             getFiltersComponent().selectFilter(filter);
 
             expect(spy).toHaveBeenCalled();
-            const clonedFilter = spy.mock.calls[0][0];
+            const activeFilter = spy.mock.calls[0][0];
 
-            expect(clonedFilter).not.toBe(filter);
-            expect(clonedFilter!.name).toBe('Selected');
+            // Isolation without a deep clone: a new filter + new pipes array + per-pipe shallow copy.
+            expect(activeFilter).not.toBe(filter);
+            expect(activeFilter!.pipes).not.toBe(filter.pipes);
+            expect(activeFilter!.pipes[0]).not.toBe(filter.pipes[0]);
+            expect(activeFilter!.name).toBe('Selected');
 
-            // Deep isolation: the pushed value is a structuredClone, so nested references must not be
-            // shared with the original. Mutating the clone must never leak back to the source filter.
-            expect(clonedFilter!.pipes).not.toBe(filter.pipes);
-            clonedFilter!.pipes[0].name = 'mutated';
+            // Pipes write their `value` by reassignment, so editing the active copy never leaks to the
+            // saved source (the guarantee that lets us drop the per-selection `structuredClone`).
+            activeFilter!.pipes[0].name = 'mutated';
+            activeFilter!.pipes[0].value = 'B';
+
             expect(filter.pipes[0].name).toBe('original');
+            expect(filter.pipes[0].value).toBe('A');
         });
     });
 
