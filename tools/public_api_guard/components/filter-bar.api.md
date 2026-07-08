@@ -427,8 +427,7 @@ export class KbqFilterReset {
 // @public (undocumented)
 export class KbqFilters implements OnInit {
     constructor();
-    // (undocumented)
-    closePopover: (restoreFocus?: boolean) => void;
+    closePopover(restoreFocus?: boolean): void;
     protected readonly colors: typeof KbqComponentColors;
     protected readonly destroyRef: DestroyRef;
     protected readonly dropdown: i0.Signal<KbqDropdownTrigger>;
@@ -439,19 +438,18 @@ export class KbqFilters implements OnInit {
     get filterActionsOpened(): boolean;
     protected readonly filterBar: KbqFilterBar;
     filteredOptions: Observable<KbqFilter[]>;
-    filterName: FormControl<string | null>;
+    get filterName(): FormControl<string | null>;
     // (undocumented)
     readonly filters: i0.InputSignal<KbqFilter[]>;
     filterSavedSuccessfully(): void;
     filterSavedUnsuccessfully(error?: KbqSaveFilterError): void;
-    // (undocumented)
-    filterSavingErrorText: string;
+    get filterSavingErrorText(): string;
     focusedElementBeforeIs(button: KbqButton): boolean;
     protected readonly focusMonitor: FocusMonitor;
     get focusOrigin(): FocusOrigin;
     get isEmpty(): boolean;
-    // (undocumented)
-    isSaving: boolean;
+    get isSaving(): boolean;
+    set isSaving(value: boolean);
     get localeData(): {
         defaultName: string;
         saveNewFilterTooltip: string;
@@ -478,11 +476,10 @@ export class KbqFilters implements OnInit {
     readonly onRemoveFilter: i0.OutputEmitterRef<KbqFilter>;
     readonly onResetFilterChanges: i0.OutputEmitterRef<KbqFilter | null>;
     readonly onSave: i0.OutputEmitterRef<KbqSaveFilterEvent>;
+    onSavePopoverClosed(restoreFocus: boolean): void;
     readonly onSelectFilter: i0.OutputEmitterRef<KbqFilter>;
-    // (undocumented)
     openChangeFilterNamePopover(): void;
     get opened(): boolean;
-    // (undocumented)
     openSaveAsNewFilterPopover(): void;
     protected readonly placements: typeof PopUpPlacements;
     protected readonly popover: i0.Signal<KbqPopoverTrigger>;
@@ -490,34 +487,88 @@ export class KbqFilters implements OnInit {
     protected readonly popoverOffset: number;
     protected readonly popoverSize = PopUpSizes.Medium;
     // (undocumented)
-    preparePopover(): void;
-    // (undocumented)
     removeFilter(): void;
     // (undocumented)
     resetFilterChanges(): void;
     // (undocumented)
     restoreFocus(): void;
-    // (undocumented)
     saveAsNew(event?: Event): void;
     // (undocumented)
     saveChanges(): void;
     saveFocusedElement(button?: KbqButton): void;
-    saveNewFilter: boolean;
+    get saveNewFilter(): boolean;
+    set saveNewFilter(value: boolean);
     protected readonly saveNewFilterButton: i0.Signal<KbqButton>;
+    protected readonly savePopover: i0.Signal<KbqFilterSavePopover>;
     readonly searchControl: FormControl<string | null>;
     searchKeydownHandler(event: KeyboardEvent): void;
     // (undocumented)
     selectFilter(filter: KbqFilter): void;
-    // (undocumented)
     showError(error?: KbqSaveFilterError): void;
-    // (undocumented)
-    showFilterSavingError: boolean;
+    get showFilterSavingError(): boolean;
+    set showFilterSavingError(value: boolean);
     stopEventPropagation(event: Event): void;
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": true; "isSignal": true; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilters, never>;
+}
+
+// @public
+export class KbqFilterSavePopover implements AfterViewInit {
+    // (undocumented)
+    close: (restoreFocus?: boolean) => void;
+    readonly closed: i0.OutputEmitterRef<boolean>;
+    readonly contentTemplate: i0.Signal<TemplateRef<unknown>>;
+    readonly filterBar: i0.InputSignal<KbqFilterBar>;
+    filterName: FormControl<string | null>;
+    // (undocumented)
+    filterSavingErrorText: string;
+    readonly footerTemplate: i0.Signal<TemplateRef<unknown>>;
+    readonly headerTemplate: i0.Signal<TemplateRef<unknown>>;
+    // (undocumented)
+    isSaving: boolean;
+    get localeData(): {
+        defaultName: string;
+        saveNewFilterTooltip: string;
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        saveAsNewFilter: string;
+        saveChanges: string;
+        saveAsNew: string;
+        change: string;
+        resetChanges: string;
+        remove: string;
+        name: string;
+        error: string;
+        errorHint: string;
+        saveButton: string;
+        cancelButton: string;
+        actionsTooltip: string;
+    };
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    openChangeFilterNamePopover(): void;
+    // (undocumented)
+    openSaveAsNewFilterPopover(): void;
+    get popoverHeader(): string;
+    readonly popoverTrigger: i0.InputSignal<KbqPopoverTrigger>;
+    readonly save: i0.OutputEmitterRef<KbqSaveFilterEvent>;
+    // (undocumented)
+    saveAsNew(event?: Event): void;
+    savedSuccessfully(): void;
+    savedUnsuccessfully(): void;
+    saveNewFilter: boolean;
+    // (undocumented)
+    showError(error?: KbqSaveFilterError): void;
+    // (undocumented)
+    showFilterSavingError: boolean;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterSavePopover, "kbq-filter-save-popover", never, { "popoverTrigger": { "alias": "popoverTrigger"; "required": true; "isSignal": true; }; "filterBar": { "alias": "filterBar"; "required": true; "isSignal": true; }; }, { "save": "save"; "closed": "closed"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterSavePopover, never>;
 }
 
 // @public (undocumented)

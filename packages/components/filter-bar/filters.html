@@ -1,5 +1,6 @@
 <button
     #mainButton
+    #popoverRef="kbqPopover"
     kbq-button
     kbq-title
     kbqFilterBarButton
@@ -8,14 +9,11 @@
     [kbqPopoverArrow]="false"
     [kbqPopoverOffset]="popoverOffset"
     [kbqPopoverClass]="'kbq-filters__save-as-new-filter-popover'"
-    [kbqPopoverContent]="saveAsNewPopoverContent"
-    [kbqPopoverFooter]="saveAsNewPopoverFooter"
-    [kbqPopoverHeader]="saveAsNewPopoverHeader"
     [kbqPopoverPlacement]="placements.BottomLeft"
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
     [kbqPopoverSize]="popoverSize"
     [kbqTrigger]="'manual'"
-    [disabled]="isSaving"
+    [disabled]="savePopover.isSaving"
     [class.kbq-active]="focusedElementBeforeIs(mainButton) && opened"
     (dropdownClosed)="searchControl.setValue('')"
     (dropdownOpened)="onDropdownOpen()"
@@ -42,8 +40,8 @@
         [attr.aria-label]="localeData.saveNewFilterTooltip"
         [class.kbq-active]="focusedElementBeforeIs(saveNewFilterButton) && opened"
         [color]="colors.Empty"
-        [disabled]="isSaving"
-        (click)="openSaveAsNewFilterPopover()"
+        [disabled]="savePopover.isSaving"
+        (click)="savePopover.openSaveAsNewFilterPopover()"
     >
         <i kbq-icon="kbq-floppy-disk_16" aria-hidden="true"></i>
     </button>
@@ -58,7 +56,7 @@
         [attr.aria-label]="localeData.actionsTooltip"
         [color]="colors.Empty"
         [kbqDropdownTriggerFor]="filterActions"
-        [disabled]="isSaving"
+        [disabled]="savePopover.isSaving"
         [class.kbq-active]="focusedElementBeforeIs(filterActionsButton) && filterActionsOpened"
         [class]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
     >
@@ -108,7 +106,7 @@
         <kbq-divider />
     </div>
 
-    <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
+    <button kbq-dropdown-item (click)="savePopover.openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
         {{ localeData.saveAsNewFilter }}
     </button>
@@ -128,13 +126,13 @@
             }
         </button>
     }
-    <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
+    <button kbq-dropdown-item (click)="savePopover.openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
         {{ localeData.saveAsNew }}
     </button>
 
     @if (!filterBar.isReadOnly) {
-        <button kbq-dropdown-item (click)="openChangeFilterNamePopover()">
+        <button kbq-dropdown-item (click)="savePopover.openChangeFilterNamePopover()">
             <i kbq-icon="kbq-pencil_16"></i>
             {{ localeData.change }}
         </button>
@@ -158,62 +156,10 @@
     }
 </kbq-dropdown>
 
-<ng-template #saveAsNewPopoverHeader>{{ popoverHeader }}</ng-template>
-
-<ng-template #saveAsNewPopoverContent>
-    @if (showFilterSavingError) {
-        <kbq-alert
-            class="layout-margin-bottom-m"
-            role="alert"
-            [alertColor]="'error'"
-            [alertStyle]="'colored'"
-            [compact]="true"
-        >
-            {{ filterSavingErrorText }}
-        </kbq-alert>
-    }
-    <div class="kbq-form-vertical">
-        <div class="kbq-form__row">
-            <label class="kbq-form__label">{{ localeData.name }}</label>
-
-            <kbq-form-field class="kbq-form__control">
-                <input
-                    #newFilterName
-                    kbqInput
-                    type="text"
-                    [attr.aria-label]="localeData.name"
-                    [formControl]="filterName"
-                    (keydown.enter)="saveAsNew($event)"
-                />
-
-                @if (filterName.hasError('filterNameAlreadyExist')) {
-                    <kbq-error>{{ localeData.error }}</kbq-error>
-                }
-            </kbq-form-field>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #saveAsNewPopoverFooter>
-    <button
-        #saveFilterButton
-        kbq-button
-        class="layout-margin-right-l"
-        [class.kbq-progress]="isSaving"
-        [disabled]="isSaving"
-        [color]="'contrast'"
-        [kbqStyle]="'filled'"
-        (click)="saveAsNew()"
-    >
-        {{ localeData.saveButton }}
-    </button>
-    <button
-        kbq-button
-        [color]="'contrast-fade'"
-        [kbqStyle]="'filled'"
-        [disabled]="isSaving"
-        (click)="closePopover(true)"
-    >
-        {{ localeData.cancelButton }}
-    </button>
-</ng-template>
+<kbq-filter-save-popover
+    #savePopover
+    [popoverTrigger]="popoverRef"
+    [filterBar]="filterBar"
+    (save)="onSave.emit($event)"
+    (closed)="onSavePopoverClosed($event)"
+/>

@@ -14,8 +14,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { KbqAlertModule } from '@koobiq/components/alert';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormsModule, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -26,10 +25,11 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Observable, of } from 'rxjs';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
 import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuses } from './filter-bar.types';
+import { KbqFilterSavePopover } from './filter-save-popover';
 
 @Component({
     selector: 'kbq-filters',
@@ -47,7 +47,7 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
         KbqPopoverModule,
         FormsModule,
         KbqFormsModule,
-        KbqAlertModule
+        KbqFilterSavePopover
     ],
     templateUrl: 'filters.html',
     styleUrls: ['filters.scss'],
@@ -92,9 +92,10 @@ export class KbqFilters implements OnInit {
     /** @docs-private */
     protected readonly filterActionsDropdown = viewChild<KbqDropdownTrigger>('filterActionsButton');
 
+    /** @docs-private */
+    protected readonly savePopover = viewChild.required(KbqFilterSavePopover);
+
     private readonly search = viewChild.required<ElementRef>('search');
-    private readonly newFilterName = viewChild.required<ElementRef>('newFilterName');
-    private readonly saveFilterButton = viewChild.required<KbqButton>('saveFilterButton');
 
     /** control for search filter */
     readonly searchControl = new FormControl<string | null>(null);
@@ -105,17 +106,6 @@ export class KbqFilters implements OnInit {
     protected readonly popoverSize = PopUpSizes.Medium;
     /** @docs-private */
     protected readonly popoverOffset: number = 4;
-
-    /** new filter name for saving */
-    filterName: FormControl<string | null>;
-
-    /** true if saving a new filter, false if saving changes in filter */
-    saveNewFilter: boolean;
-
-    showFilterSavingError: boolean = false;
-    filterSavingErrorText: string = '';
-
-    isSaving: boolean = false;
 
     readonly filters = input.required<KbqFilter[]>();
 
@@ -129,11 +119,6 @@ export class KbqFilters implements OnInit {
     readonly onRemoveFilter = output<KbqFilter>();
     /** Event that is generated whenever the user reset a filter changes. */
     readonly onResetFilterChanges = output<KbqFilter | null>();
-
-    /** header of popover. Depends on the mode */
-    get popoverHeader(): string {
-        return this.saveNewFilter ? this.localeData.saveAsNew : this.localeData.saveChanges;
-    }
 
     /** Component state. true if opened dropdown or popup */
     get opened(): boolean {
@@ -216,41 +201,6 @@ export class KbqFilters implements OnInit {
         });
     }
 
-    saveAsNew(event?: Event) {
-        if (this.filterName.invalid) return;
-
-        const name = this.filterName.value || '';
-
-        // @todo default filter
-        const filter = structuredClone<KbqFilter>(this.filter as KbqFilter) || { pipes: [] };
-
-        filter.name = name;
-        filter.saved = true;
-        filter.changed = false;
-
-        this.isSaving = true;
-        this.popover().preventClose = true;
-        this.filterName.disable();
-
-        if (this.saveNewFilter) {
-            this.onSave.emit({ filter, filterBar: this.filterBar, status: KbqSaveFilterStatuses.NewFilter });
-        } else {
-            this.onSave.emit({ filter, filterBar: this.filterBar, status: KbqSaveFilterStatuses.NewName });
-        }
-
-        event?.preventDefault();
-    }
-
-    showError(error?: KbqSaveFilterError) {
-        if (error?.nameAlreadyExists) {
-            this.filterName.setErrors({ filterNameAlreadyExist: true });
-        }
-
-        this.showFilterSavingError = true;
-
-        this.filterSavingErrorText = error?.text ?? this.filterBar.configuration.filters.errorHint;
-    }
-
     restoreFocus() {
         // The popover can be opened from the dropdown item or programmatically, paths that never
         // capture a trigger via `saveFocusedElement`. Fall back to the main button so focus returns
@@ -264,61 +214,17 @@ export class KbqFilters implements OnInit {
         this.focusedElementBeforeOpen = null;
     }
 
-    preparePopover() {
-        this.filterName = new FormControl<string>(this.filter?.name || '', Validators.required);
-
-        this.filterName.valueChanges
-            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => (this.showFilterSavingError = false));
-
-        this.popover().show();
-
-        merge(...this.popover().defaultClosingActions())
-            .pipe(
-                filter(() => !this.isSaving),
-                takeUntilDestroyed(this.popover().instanceDestroyRef)
-            )
-            .subscribe(() => this.closePopover(false));
-
-        this.popover()
-            .visibleChange.pipe(
-                filter((state) => !state),
-                takeUntilDestroyed(this.popover().instanceDestroyRef)
-            )
-            .subscribe(this.closePopover);
-
-        setTimeout(() => {
-            this.newFilterName().nativeElement.focus();
-            this.filterName.setErrors(null);
-        });
-    }
-
-    openSaveAsNewFilterPopover() {
-        this.saveNewFilter = true;
-
-        this.preparePopover();
-    }
-
-    openChangeFilterNamePopover() {
-        this.saveNewFilter = false;
-
-        this.preparePopover();
-    }
-
     /** @docs-private */
     saveFocusedElement(button?: KbqButton) {
         this.focusedElementBeforeOpen = button || null;
     }
 
-    closePopover = (restoreFocus: boolean = true) => {
-        this.popover().hide();
-
+    /** Restore focus when the save popover reports it closed. @docs-private */
+    onSavePopoverClosed(restoreFocus: boolean) {
         if (restoreFocus) this.restoreFocus();
 
-        setTimeout(() => this.changeDetectorRef.detectChanges());
-
-        this.showFilterSavingError = false;
-    };
+        this.changeDetectorRef.markForCheck();
+    }
 
     /** @docs-private */
     stopEventPropagation(event: Event) {
@@ -355,12 +261,8 @@ export class KbqFilters implements OnInit {
     /** Hide the popup and restore focus.
      * Use this method in the onSave or onChangeFilter events after the data has been successfully saved. */
     filterSavedSuccessfully() {
-        const popover = this.popover();
+        this.savePopover().savedSuccessfully();
 
-        this.isSaving = false;
-        popover.preventClose = false;
-
-        popover.hide();
         setTimeout(() => this.restoreFocus(), 0);
 
         this.changeDetectorRef.markForCheck();
@@ -368,14 +270,85 @@ export class KbqFilters implements OnInit {
 
     /** Shows an error. Use this method in the onSave or onChangeFilter events if saving data failed. */
     filterSavedUnsuccessfully(error?: KbqSaveFilterError) {
-        this.isSaving = false;
-        this.popover().preventClose = false;
-
         this.showError(error);
-        this.filterName.enable();
-        setTimeout(() => this.saveFilterButton().focus());
+
+        this.savePopover().savedUnsuccessfully();
 
         this.changeDetectorRef.markForCheck();
+    }
+
+    // Delegating facade to the extracted `KbqFilterSavePopover`: the save-popover state, templates and
+    // logic live in that child; these members keep `KbqFilters`' public surface for callers and the template.
+
+    /** @docs-private */
+    get filterName(): FormControl<string | null> {
+        return this.savePopover().filterName;
+    }
+
+    /** @docs-private */
+    get saveNewFilter(): boolean {
+        return this.savePopover().saveNewFilter;
+    }
+
+    /** @docs-private */
+    set saveNewFilter(value: boolean) {
+        this.savePopover().saveNewFilter = value;
+    }
+
+    /** @docs-private */
+    get isSaving(): boolean {
+        return this.savePopover().isSaving;
+    }
+
+    /** @docs-private */
+    set isSaving(value: boolean) {
+        this.savePopover().isSaving = value;
+    }
+
+    /** @docs-private */
+    get showFilterSavingError(): boolean {
+        return this.savePopover().showFilterSavingError;
+    }
+
+    /** @docs-private */
+    set showFilterSavingError(value: boolean) {
+        this.savePopover().showFilterSavingError = value;
+    }
+
+    /** @docs-private */
+    get filterSavingErrorText(): string {
+        return this.savePopover().filterSavingErrorText;
+    }
+
+    /** header of popover. Depends on the mode
+     * @docs-private */
+    get popoverHeader(): string {
+        return this.savePopover().popoverHeader;
+    }
+
+    /** @docs-private */
+    openSaveAsNewFilterPopover() {
+        this.savePopover().openSaveAsNewFilterPopover();
+    }
+
+    /** @docs-private */
+    openChangeFilterNamePopover() {
+        this.savePopover().openChangeFilterNamePopover();
+    }
+
+    /** @docs-private */
+    saveAsNew(event?: Event) {
+        this.savePopover().saveAsNew(event);
+    }
+
+    /** @docs-private */
+    showError(error?: KbqSaveFilterError) {
+        this.savePopover().showError(error);
+    }
+
+    /** @docs-private */
+    closePopover(restoreFocus: boolean = true) {
+        this.savePopover().close(restoreFocus);
     }
 
     private getFilteredOptions(value: string | null): KbqFilter[] {

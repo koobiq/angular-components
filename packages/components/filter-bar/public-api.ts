@@ -4,6 +4,7 @@ export * from './filter-bar.module';
 export * from './filter-bar.types';
 export * from './filter-refresher';
 export * from './filter-reset';
+export * from './filter-save-popover';
 export * from './filters';
 export * from './pipe-add';
 export * from './pipe.directive';
