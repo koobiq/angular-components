@@ -3,6 +3,7 @@ import { TreeSelectChildSelectionOverviewExample } from './tree-select-child-sel
 import { TreeSelectCustomMatcherWithInputExample } from './tree-select-custom-matcher-with-input/tree-select-custom-matcher-with-input-example';
 import { TreeSelectCustomMatcherExample } from './tree-select-custom-matcher/tree-select-custom-matcher-example';
 import { TreeSelectCustomTriggerExample } from './tree-select-custom-trigger/tree-select-custom-trigger-example';
+import { TreeSelectDeletedNodesExample } from './tree-select-deleted-nodes/tree-select-deleted-nodes-example';
 import { TreeSelectFooterOverviewExample } from './tree-select-footer-overview/tree-select-footer-overview-example';
 import { TreeSelectLazyloadExample } from './tree-select-lazyload/tree-select-lazyload-example';
 import { TreeSelectMultipleOverviewExample } from './tree-select-multiple-overview/tree-select-multiple-overview-example';
@@ -16,6 +17,7 @@ export {
     TreeSelectCustomMatcherExample,
     TreeSelectCustomMatcherWithInputExample,
     TreeSelectCustomTriggerExample,
+    TreeSelectDeletedNodesExample,
     TreeSelectFooterOverviewExample,
     TreeSelectLazyloadExample,
     TreeSelectMultipleOverviewExample,
@@ -36,7 +38,8 @@ const EXAMPLES = [
     TreeSelectCustomMatcherExample,
     TreeSelectWithMultilineMatcherExample,
     TreeSelectCustomMatcherWithInputExample,
-    TreeSelectTwoLineOptionExample
+    TreeSelectTwoLineOptionExample,
+    TreeSelectDeletedNodesExample
 ];
 
 @NgModule({

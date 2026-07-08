@@ -38,6 +38,9 @@ import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from 
 
         <tree-select-with-multiline-matcher-example />
         <hr />
+
+        <tree-select-deleted-nodes-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

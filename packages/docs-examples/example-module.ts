@@ -195,6 +195,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "actions-panel-with-dropdown-and-popover-example.ts",
     "importPath": "components/actions-panel"
   },
+  "ag-grid-column-menu": {
+    "packagePath": "components/ag-grid/ag-grid-column-menu",
+    "title": "AG Grid with column menu",
+    "componentName": "AgGridColumnMenuExample",
+    "files": [
+      "ag-grid-column-menu-example.ts"
+    ],
+    "selector": "ag-grid-column-menu-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-column-menu-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-column-state": {
     "packagePath": "components/ag-grid/ag-grid-column-state",
     "title": "AG Grid with `KbqAgGridColumnState` directive",
@@ -689,8 +701,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ButtonToggleAlignmentOverviewExample",
     "files": [
       "button-toggle-alignment-overview-example.ts",
-      "button-toggle-alignment-overview-example.html",
-      "button-toggle-alignment-overview-example.css"
+      "button-toggle-alignment-overview-example.html"
     ],
     "selector": "button-toggle-alignment-overview-example",
     "additionalComponents": [],
@@ -741,8 +752,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button toggle tooltip",
     "componentName": "ButtonToggleTooltipOverviewExample",
     "files": [
-      "button-toggle-tooltip-overview-example.ts",
-      "button-toggle-tooltip-overview-example.css"
+      "button-toggle-tooltip-overview-example.ts"
     ],
     "selector": "button-toggle-tooltip-overview-example",
     "additionalComponents": [],
@@ -4671,6 +4681,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "splitter-vertical-example.ts",
     "importPath": "components/splitter"
   },
+  "table-disable-hover": {
+    "packagePath": "components/table/table-disable-hover",
+    "title": "Table without hover",
+    "componentName": "TableDisableHoverExample",
+    "files": [
+      "table-disable-hover-example.ts"
+    ],
+    "selector": "table-disable-hover-example",
+    "additionalComponents": [],
+    "primaryFile": "table-disable-hover-example.ts",
+    "importPath": "components/table"
+  },
   "table-full-width": {
     "packagePath": "components/table/table-full-width",
     "title": "Table full width",
@@ -5980,6 +6002,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-custom-trigger-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-deleted-nodes": {
+    "packagePath": "components/tree-select/tree-select-deleted-nodes",
+    "title": "tree-select-deleted-nodes",
+    "componentName": "TreeSelectDeletedNodesExample",
+    "files": [
+      "tree-select-deleted-nodes-example.ts"
+    ],
+    "selector": "tree-select-deleted-nodes-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-deleted-nodes-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-footer-overview": {
     "packagePath": "components/tree-select/tree-select-footer-overview",
     "title": "Tree-select footer",
@@ -6256,6 +6290,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "username-custom-example.ts",
     "importPath": "components/username"
   },
+  "username-filter-bar-option": {
+    "packagePath": "components/username/username-filter-bar-option",
+    "title": "Username filter bar option",
+    "componentName": "UsernameFilterBarOptionExample",
+    "files": [
+      "username-filter-bar-option-example.ts"
+    ],
+    "selector": "username-filter-bar-option-example",
+    "additionalComponents": [],
+    "primaryFile": "username-filter-bar-option-example.ts",
+    "importPath": "components/username"
+  },
   "username-overview": {
     "packagePath": "components/username/username-overview",
     "title": "Username overview",
@@ -6278,6 +6324,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "username-playground-example",
     "additionalComponents": [],
     "primaryFile": "username-playground-example.ts",
+    "importPath": "components/username"
+  },
+  "username-search": {
+    "packagePath": "components/username/username-search",
+    "title": "Username search",
+    "componentName": "UsernameSearchExample",
+    "files": [
+      "username-search-example.ts"
+    ],
+    "selector": "username-search-example",
+    "additionalComponents": [],
+    "primaryFile": "username-search-example.ts",
     "importPath": "components/username"
   },
   "validation-basic-multiple-validators": {
@@ -6492,6 +6550,8 @@ return import('@koobiq/docs-examples/components/actions-panel');
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-with-dropdown-and-popover':
 return import('@koobiq/docs-examples/components/actions-panel');
+  case 'ag-grid-column-menu':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-column-state':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-copy-selected':
@@ -7218,6 +7278,8 @@ return import('@koobiq/docs-examples/components/splitter');
 return import('@koobiq/docs-examples/components/splitter');
   case 'splitter-vertical':
 return import('@koobiq/docs-examples/components/splitter');
+  case 'table-disable-hover':
+return import('@koobiq/docs-examples/components/table');
   case 'table-full-width':
 return import('@koobiq/docs-examples/components/table');
   case 'table-overview':
@@ -7432,6 +7494,8 @@ return import('@koobiq/docs-examples/components/tree-select');
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-custom-trigger':
 return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-deleted-nodes':
+return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-footer-overview':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-lazyload':
@@ -7478,9 +7542,13 @@ return import('@koobiq/docs-examples/components/tree');
 return import('@koobiq/docs-examples/components/username');
   case 'username-custom':
 return import('@koobiq/docs-examples/components/username');
+  case 'username-filter-bar-option':
+return import('@koobiq/docs-examples/components/username');
   case 'username-overview':
 return import('@koobiq/docs-examples/components/username');
   case 'username-playground':
+return import('@koobiq/docs-examples/components/username');
+  case 'username-search':
 return import('@koobiq/docs-examples/components/username');
   case 'validation-basic-multiple-validators':
 return import('@koobiq/docs-examples/components/validation');
