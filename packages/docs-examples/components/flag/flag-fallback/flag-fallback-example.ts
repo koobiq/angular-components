@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag, KbqFlagShadow } from '@koobiq/components/flag';
 import { hasFlag } from 'country-flag-icons';
-import { FlagSvgPipe } from '../flag-string.pipe';
+import * as flags3x2 from 'country-flag-icons/string/3x2';
 
 type FallbackCountry = { code: string; name: string; custom?: string; shadow?: KbqFlagShadow };
 
@@ -10,13 +11,13 @@ type FallbackCountry = { code: string; name: string; custom?: string; shadow?: K
  */
 @Component({
     selector: 'flag-fallback-example',
-    imports: [KbqFlag, FlagSvgPipe],
+    imports: [KbqFlag],
     template: `
         @for (country of countries; track country.name) {
             <span>
-                <kbq-flag decorative [isEmpty]="isEmpty(country)" [shadow]="country.shadow ?? 'inset'">
-                    @if (hasFlag(country.code)) {
-                        <span class="layout-fill layout-row" [innerHTML]="country.code | flagSvg"></span>
+                <kbq-flag decorative [isEmpty]="!country.svg && !country.custom" [shadow]="country.shadow ?? 'inset'">
+                    @if (country.svg) {
+                        <span class="layout-fill layout-row" [innerHTML]="country.svg"></span>
                     } @else if (country.custom) {
                         <span class="layout-fill layout-row layout-align-center-center">
                             {{ country.custom }}
@@ -38,20 +39,20 @@ type FallbackCountry = { code: string; name: string; custom?: string; shadow?: K
     }
 })
 export class FlagFallbackExample {
-    // `hasFlag` from country-flag-icons tells whether a flag exists for the given code.
-    protected readonly hasFlag = hasFlag;
+    private readonly sanitizer = inject(DomSanitizer);
 
-    // "GND", "KRK" and "WA" are not real ISO codes. Gondor projects a custom glyph, the rest render
-    // a neutral placeholder.
-    protected readonly countries: FallbackCountry[] = [
-        { code: 'AL', name: 'Albania' },
-        { code: 'GND', name: 'Gondor', custom: '🏇', shadow: 'none' },
-        { code: 'KRK', name: 'Krakozhia' },
-        { code: 'PE', name: 'Peru' },
-        { code: 'WA', name: 'Wakanda' }
-    ];
-
-    protected isEmpty(country: FallbackCountry): boolean {
-        return !hasFlag(country.code) && !country.custom;
-    }
+    // "GND", "KRK" and "WA" are not real ISO codes. `hasFlag` guards the lookup — Gondor projects a
+    // custom glyph, the rest render a neutral placeholder.
+    protected readonly countries = (
+        [
+            { code: 'AL', name: 'Albania' },
+            { code: 'GND', name: 'Gondor', custom: '🏇', shadow: 'none' },
+            { code: 'KRK', name: 'Krakozhia' },
+            { code: 'PE', name: 'Peru' },
+            { code: 'WA', name: 'Wakanda' }
+        ] satisfies FallbackCountry[]
+    ).map((country) => ({
+        ...country,
+        svg: hasFlag(country.code) ? this.sanitizer.bypassSecurityTrustHtml(flags3x2[country.code]) : null
+    }));
 }

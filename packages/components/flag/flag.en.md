@@ -1,43 +1,35 @@
-The `kbq-flag` component displays a small country flag. The flag itself (an SVG or an image) is
-supplied via content projection, while the component only handles presentation: shape, size, shadow
-and accessibility.
+Use the [country-flag-icons](https://www.npmjs.com/package/country-flag-icons) package to show a small country flag in your product:
 
-Flag images can be taken from the [country-flag-icons](https://www.npmjs.com/package/country-flag-icons) package:
-
-- Full ISO 3166-1 coverage. Every country is identified by a two-letter code (RU, DE, FR).
-- Flags are redrawn for small sizes: details are simplified so flags stay recognizable even at icon size.
+- **Full ISO 3166-1 coverage**. Every existing country is identified by a two-letter code (RU, DE, FR).
+- **Flags are redrawn for small sizes**. Most sets take detailed SVGs from Wikimedia Commons, and at interface sizes (16—24 px) the small coats of arms, inscriptions and emblems on them become illegible. In country-flag-icons the details are simplified, so flags stay recognizable even at icon size.
 - Actively maintained, MIT licensed.
-
-<!-- example(flag-overview) -->
 
 ## Aspect ratio
 
-By default flags use a 3:2 ratio. This is the primary format — use it in most scenarios: inline with
-text, lists, selects.
+By default flags use a 3:2 ratio. This is the primary format — use it in most scenarios: inline with text, lists, selects.
 
 <!-- example(flag-aspect-ratio) -->
 
-Square flags (`shape="square"`) are for cases where 3:2 does not fit: avatar-like selectors, compact
-circles, dense grids. Provide the square image variant (the `1x1` subpackage) for them. Most 1:1
-versions are a center crop of the 3:2 flag; for flags that lose meaning when cropped, the package
-ships dedicated square variants (e.g. EU and KR).
+Square flags live in a separate subpackage and are needed where the 3:2 format does not fit: avatar selectors, compact circles, dense grids.
+
+Most 1:1 versions are a center crop of the 3:2 flag. For flags that lose meaning when cropped this way, the package ships dedicated square variants (e.g. EU and KR) — they are substituted automatically from the same subpackage.
 
 <!-- example(flag-square) -->
 
 ## Inset shadow: separating from the background
 
-Flags get a thin inset shadow (an inset outline) along the edge. Without it a flag blends into the
-background: lots of white blends with a light page, black or dark areas blend with a dark theme.
+Flags get a thin inset shadow (an inset outline) along the edge. Without it a flag blends into the background:
 
-The shadow color adapts to the theme: dark in the light theme, lighter in the dark one. The shadow is
-on by default (`shadow="inset"`); disable it with `shadow="none"`. The overview above shows it on a
-mix of flags that would otherwise blend into the background.
+- lots of white: the flag blends into the light page background.
+- some flags contain black or dark colors: they blend into the background in the dark theme.
+
+That is why the shadow color depends on the theme: in the light theme the shadow is dark, in the dark theme it lightens or is removed. The shadow is implemented as an inset box-shadow on a pseudo-element over the flag, and its color comes from a CSS variable that switches together with the theme.
+
+<!-- example(flag-overview) -->
 
 ## A flag is not a language
 
-A flag denotes a country or region, not a language. Do not use a flag to pick an interface language:
-one language is spoken in several countries (Spanish is not only Spain), and one country may have
-several languages.
+A flag denotes a country or region, not a language. Do not use a flag to pick an interface language: one language is spoken in several countries (Spanish is not only Spain), and one country may have several languages.
 
 <!-- example(flag-language) -->
 
@@ -52,55 +44,53 @@ hasFlag('RU'); // true
 hasFlag('ZZ'); // false
 ```
 
-For an unknown or invalid code show a neutral placeholder — add the `kbq-flag_empty` class and do not
-project an image.
+Then it depends on the situation.
+
+**Unknown or invalid code.** Show a neutral placeholder (a gray rectangle, square, circle or a globe icon). Empty space is acceptable only if it does not break the layout.
 
 <!-- example(flag-fallback) -->
 
-If you need a non-country flag (organization, historical or disputed territory, federal subject), do
-not add it to country-flag-icons — project your own image into the same `kbq-flag` so usage stays the
-same. For supranational flags (other than the EU) create your own images in the project. To show a
-flag at a large size, use original, detailed flags from a third-party package — in country-flag-icons
-they are simplified for small sizes.
+**You need a non-country flag** (organization, historical or disputed territory, federal subject). Do not add it to the country-flag-icons package. Add it to your internal set so that the way it is used does not change.
+
+**Supranational flags.** The EU flag is available as a separate 1:1 version; for the rest (ASEAN, UN, etc.) create your own images in the project.
+
+**It is a real country, but the flag really is missing.** This is unlikely — the ISO 3166-1 standard is fully covered — but first update the package version. If the flag is outdated or missing, open an issue or PR in the package repository, and temporarily use your own image in your project.
+
+**You need to show the flag at a large size.** In the package the flags are redrawn and simplified for small sizes. To show them at a large size you need flags in their original detail — use a third-party package. In most sources flags are provided without redrawing.
 
 ## Accessibility
 
-A flag must always have a text alternative. If the flag carries meaning and has no adjacent text, pass
-a caption via `label`: the component gets `role="img"` and an accessible name. If there is already
-adjacent text (inline, option, block), the flag is decorative — mark it `decorative` so it is hidden
-from screen readers and does not duplicate the caption.
+If the flag carries meaning (for example, it is the only indicator of the selected country), pass a text caption:
 
 ```html
-<!-- Meaningful flag with no adjacent text: expose an accessible name via label -->
-<kbq-flag label="Germany">
-    <img src="…/DE.svg" alt="" />
-</kbq-flag>
+<kbq-flag label="Germany"><img src="…/DE.svg" alt="" /></kbq-flag>
+```
 
-<!-- Flag next to visible text: mark it decorative so it is hidden from screen readers -->
-<kbq-flag decorative>
-    <img src="…/DE.svg" alt="" />
-</kbq-flag>
+If there is already adjacent text (inline, option, block), the flag is decorative — mark it `decorative` so it is hidden from screen readers and does not duplicate the caption.
+
+```html
+<kbq-flag decorative><img src="…/DE.svg" alt="" /></kbq-flag>
 Germany
 ```
+
+In short: a flag must always have a text alternative — either visible text next to it (then the flag is `decorative`), or a `label` caption for the screen reader (when there is no visible text). Only the third case is not allowed — when there is neither.
 
 ## Examples
 
 ### With shadow and volume
 
-The `stylized` attribute adds volume: a gradient imitating folds is layered over the image, the flag is rounded and casts a shadow.
+A gradient imitating folds is layered over the image; the flag is rounded and casts a shadow.
 
 <!-- example(flag-stylized) -->
 
 ### Circular flag
 
-Use `shape="circle"` together with a square (1:1) image.
+Use the 1:1 aspect ratio version.
 
 <!-- example(flag-circle) -->
 
 ### Integer sizes
 
-The flag size follows the text size (`height: 1em`); set it explicitly via `font-size`, `width` or
-`height` when needed. Choose dimensions that are multiples of a pixel — otherwise the image edges
-will be blurry.
+Choose a flag size whose dimensions are multiples of a pixel — otherwise the image edges will be blurry.
 
 <!-- example(flag-sizes) -->

@@ -1,12 +1,13 @@
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { KbqVirtualOption } from '@koobiq/components/core';
 import { KbqFlag } from '@koobiq/components/flag';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { countries } from 'country-flag-icons';
-import { FlagSvgPipe } from '../flag-string.pipe';
+import * as flags3x2 from 'country-flag-icons/string/3x2';
 
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
@@ -19,21 +20,21 @@ const getCountryName = (code: string): string => {
     }
 };
 
-type Country = { code: string; name: string };
+type Country = { code: string; name: string; svg: SafeHtml };
 
 /**
  * @title Flags in a select
  */
 @Component({
     selector: 'flag-aspect-ratio-example',
-    imports: [ReactiveFormsModule, ScrollingModule, KbqFormFieldModule, KbqSelectModule, KbqFlag, FlagSvgPipe],
+    imports: [ReactiveFormsModule, ScrollingModule, KbqFormFieldModule, KbqSelectModule, KbqFlag],
     template: `
         <kbq-form-field>
             <kbq-flag
                 kbqPrefix
                 decorative
                 class="example-flag-prefix layout-margin-left-s layout-margin-right-s"
-                [innerHTML]="control.value?.code ?? '' | flagSvg"
+                [innerHTML]="control.value?.svg"
             />
             <kbq-select
                 placeholder="Select a country"
@@ -44,7 +45,7 @@ type Country = { code: string; name: string };
             >
                 <cdk-virtual-scroll-viewport itemSize="32" minBufferPx="300" maxBufferPx="300">
                     <kbq-option *cdkVirtualFor="let country of countries" [value]="country">
-                        <kbq-flag decorative class="example-flag-option" [innerHTML]="country.code | flagSvg" />
+                        <kbq-flag decorative class="example-flag-option" [innerHTML]="country.svg" />
                         {{ country.name }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
@@ -73,9 +74,16 @@ type Country = { code: string; name: string };
     }
 })
 export class FlagAspectRatioExample {
+    private readonly sanitizer = inject(DomSanitizer);
+
     // Every flag exported from country-flag-icons, resolved to a country name for display.
+    // Subdivision codes are exported with underscores (GB-ENG → GB_ENG).
     protected readonly countries: Country[] = countries
-        .map((code) => ({ code, name: getCountryName(code) }))
+        .map((code) => ({
+            code,
+            name: getCountryName(code),
+            svg: this.sanitizer.bypassSecurityTrustHtml(flags3x2[code.replace(/-/g, '_')])
+        }))
         .sort((a, b) => a.name.localeCompare(b.name));
 
     protected readonly control = new FormControl<Country | null>(this.countries[0] ?? null);

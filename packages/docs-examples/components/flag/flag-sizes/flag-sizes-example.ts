@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from '@koobiq/components/flag';
-import { FlagSvgPipe } from '../flag-string.pipe';
+import { AD } from 'country-flag-icons/string/3x2';
 
 type FlagSizeItem = {
     width: number;
@@ -15,16 +16,11 @@ type FlagSizeItem = {
  */
 @Component({
     selector: 'flag-sizes-example',
-    imports: [KbqFlag, FlagSvgPipe],
+    imports: [KbqFlag],
     template: `
         @for (item of sizes; track $index) {
             <div class="layout-row layout-align-start-center layout-gap-s" style="width: 200px">
-                <kbq-flag
-                    decorative
-                    [style.width.px]="item.width"
-                    [style.height.px]="item.height"
-                    [innerHTML]="'AD' | flagSvg"
-                />
+                <kbq-flag decorative [style.width.px]="item.width" [style.height.px]="item.height" [innerHTML]="flag" />
                 <span [class]="item.typography">{{ item.label }} {{ item.width }}×{{ item.height }}</span>
             </div>
         }
@@ -35,6 +31,8 @@ type FlagSizeItem = {
     }
 })
 export class FlagSizesExample {
+    protected readonly flag = inject(DomSanitizer).bypassSecurityTrustHtml(AD);
+
     // Dimensions are multiples of a pixel so the flag edges stay crisp, and match the typography
     // level each size is meant to sit next to.
     protected readonly sizes: FlagSizeItem[] = [
