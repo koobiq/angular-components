@@ -61,9 +61,9 @@ export class TimeRangeOverviewExample {
         'last30Days',
         'last3Months',
         'last12Months',
-        'allTime',
         'currentQuarter',
         'currentYear',
+        'allTime',
         'range'
     ];
 }
