@@ -22,6 +22,7 @@ import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
+import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 
@@ -68,20 +69,12 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** selected value */
     get selected() {
-        if (this.selectedAllEqualsSelectedNothing) {
-            return this.internalSelected;
-        }
-
-        return this.data.value;
+        return this.multiSelect.selected;
     }
 
     /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
-        return (
-            super.isEmpty ||
-            (Array.isArray(this.data.value) && !this.data.value.length) ||
-            (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected)
-        );
+        return this.multiSelect.isEmpty(super.isEmpty);
     }
 
     /** state for checkbox 'select all'. */
@@ -116,7 +109,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     get selectedAllEqualsSelectedNothing(): boolean {
-        return this.data.selectedAllEqualsSelectedNothing ?? this.filterBar!.selectedAllEqualsSelectedNothing();
+        return this.multiSelect.selectedAllEqualsSelectedNothing;
     }
 
     private get visibleOptions(): KbqOption[] {
@@ -124,11 +117,15 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     private selectionAllInProgress = false;
-    private internalSelected: KbqSelectValue[] | null;
+    private readonly multiSelect = new KbqMultiSelectPipeState({
+        data: this.data,
+        filterBar: this.filterBar,
+        allOptionsSelected: () => this.allOptionsSelected
+    });
 
     /** @docs-private */
     ngOnInit(): void {
-        this.updateInternalSelected();
+        this.multiSelect.updateInternalSelected();
 
         this.filteredOptions = merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
             map(this.getFilteredOptions),
@@ -154,7 +151,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
             this.data.value = item;
         }
 
-        this.emitChangePipeEvent();
+        this.multiSelect.emitChangePipeEvent();
 
         this.stateChanges.next();
     }
@@ -163,7 +160,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     onClear() {
         this.data.value = [];
 
-        this.updateInternalSelected();
+        this.multiSelect.updateInternalSelected();
 
         this.filterBar?.onClearPipe.emit(this.data);
         this.filterBar?.onChangePipe.emit(this.data);
@@ -196,7 +193,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         }
 
         if (emitEvent) {
-            this.emitChangePipeEvent();
+            this.multiSelect.emitChangePipeEvent();
         }
 
         this.stateChanges.next();
@@ -216,7 +213,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     /** @docs-private */
     onClose() {
         if (this.allOptionsSelected) {
-            this.updateInternalSelected();
+            this.multiSelect.updateInternalSelected();
         }
 
         setTimeout(() => this.restoreTriggerFocus());
@@ -225,20 +222,6 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     /** opens select */
     override open() {
         this.select().open();
-    }
-
-    private updateInternalSelected() {
-        if (this.selectedAllEqualsSelectedNothing) {
-            this.internalSelected = this.data.value?.slice() || [];
-        }
-    }
-
-    private emitChangePipeEvent() {
-        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
-            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
-        } else {
-            this.filterBar?.onChangePipe.emit(this.data);
-        }
     }
 
     private getFilteredOptions = (): KbqSelectValue[] => {

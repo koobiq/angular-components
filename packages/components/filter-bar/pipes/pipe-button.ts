@@ -12,7 +12,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge } from 'rxjs';
-import { KbqFilterBar } from '../filter-bar';
+import { KBQ_FILTER_BAR_HOST } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeState } from './pipe-state';
 
@@ -49,7 +49,7 @@ export class KbqPipeButton {
     /** KbqPipe instance */
     protected readonly pipe = inject(KbqBasePipe);
     /** KbqFilterBar instance */
-    protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 

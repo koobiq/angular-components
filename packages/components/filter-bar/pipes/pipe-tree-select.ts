@@ -1,24 +1,19 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
-import {
-    FlatTreeControl,
-    KbqTreeFlatDataSource,
-    KbqTreeFlattener,
-    KbqTreeModule,
-    KbqTreeOption
-} from '@koobiq/components/tree';
-import { KbqTreeSelect, KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
+import { KbqTreeModule, KbqTreeOption } from '@koobiq/components/tree';
+import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectNode } from '../filter-bar.types';
 import { getId, KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
+import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
 
 @Component({
     selector: 'kbq-pipe-tree-select',
@@ -48,18 +43,7 @@ import { KbqPipeState } from './pipe-state';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit, AfterViewInit {
-    /** control for search options */
-    readonly searchControl = new FormControl<string | null>(null);
-
-    treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
-    treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-
-    /** @docs-private */
-    readonly select = viewChild.required(KbqTreeSelect);
-
+export class KbqPipeTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectValue> {
     /** selected value */
     get selected() {
         return this.data.value;
@@ -73,36 +57,9 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     constructor() {
         super();
 
-        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
-
-        this.treeControl = new FlatTreeControl<KbqTreeSelectFlatNode>(
-            this.getLevel,
-            this.isExpandable,
-            this.getValue,
-            this.getViewValue
-        );
-
-        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
+        // See the field-init note in `KbqTreeSelectPipeBase`: subscribing here (after this class's
+        // `updateTemplates` initializer) ensures the initial replay writes `dataSource.data`.
         this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
-    }
-
-    ngOnInit(): void {
-        this.searchControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => this.treeControl.filterNodes(value));
-    }
-
-    override ngAfterViewInit() {
-        super.ngAfterViewInit();
-
-        this.select()
-            .closedStream.pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
-    }
-
-    hasChild(_: number, nodeData: KbqTreeSelectFlatNode) {
-        return nodeData.expandable;
     }
 
     onSelect(item: KbqTreeOption) {
@@ -124,46 +81,5 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
         if (template?.values) {
             this.dataSource.data = template.values as KbqTreeSelectNode[];
         }
-    };
-
-    /** opens select */
-    override open() {
-        setTimeout(() => this.select().open());
-    }
-
-    onOpen() {
-        this.treeControl.expandAll();
-    }
-
-    private transformer = (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => {
-        const flatNode = new KbqTreeSelectFlatNode();
-
-        flatNode.name = node.name;
-        flatNode.value = node.value;
-        flatNode.parent = parent ?? undefined;
-        flatNode.level = level;
-        flatNode.expandable = !!node.children;
-
-        return flatNode;
-    };
-
-    private getLevel = (node: KbqTreeSelectFlatNode) => {
-        return node.level;
-    };
-
-    private isExpandable = (node: KbqTreeSelectFlatNode) => {
-        return node.expandable;
-    };
-
-    private getChildren = (node: KbqTreeSelectNode): KbqTreeSelectNode[] | null => {
-        return node.children;
-    };
-
-    private getValue = (node: KbqTreeSelectFlatNode): unknown => {
-        return node.value;
-    };
-
-    private getViewValue = (node: KbqTreeSelectFlatNode): string => {
-        return `${node.name}`;
     };
 }

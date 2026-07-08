@@ -18,3 +18,4 @@ export * from './pipes/pipe-select';
 export * from './pipes/pipe-state';
 export * from './pipes/pipe-text';
 export * from './pipes/pipe-tree-select';
+export * from './pipes/tree-select-pipe-base';

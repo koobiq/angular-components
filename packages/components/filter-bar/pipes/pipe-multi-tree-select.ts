@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
@@ -8,19 +8,14 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
-import {
-    FlatTreeControl,
-    KbqTreeFlatDataSource,
-    KbqTreeFlattener,
-    KbqTreeModule,
-    kbqTreeSelectAllValue,
-    KbqTreeSelection
-} from '@koobiq/components/tree';
-import { KbqTreeSelect, KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { KbqTreeModule, kbqTreeSelectAllValue, KbqTreeSelection } from '@koobiq/components/tree';
+import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
 import { getId, KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
+import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
+import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
 
 @Component({
     selector: 'kbq-pipe-multi-tree-select',
@@ -52,37 +47,18 @@ import { KbqPipeState } from './pipe-state';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit, AfterViewInit {
-    /** control for search options */
-    readonly searchControl = new FormControl<string | null>(null);
-
-    treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
-    treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-
-    /** @docs-private */
-    readonly select = viewChild.required(KbqTreeSelect);
-
+export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectValue[]> implements OnInit {
     /** @docs-private */
     readonly tree = viewChild.required(KbqTreeSelection);
 
     /** selected value */
     get selected() {
-        if (this.selectedAllEqualsSelectedNothing) {
-            return this.internalSelected;
-        }
-
-        return this.data.value;
+        return this.multiSelect.selected;
     }
 
     /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
-        return (
-            super.isEmpty ||
-            (Array.isArray(this.data.value) && !this.data.value.length) ||
-            (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected)
-        );
+        return this.multiSelect.isEmpty(super.isEmpty);
     }
 
     get selectAllCheckboxState(): KbqPseudoCheckboxState {
@@ -112,7 +88,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     get selectedAllEqualsSelectedNothing(): boolean {
-        return this.data.selectedAllEqualsSelectedNothing ?? this.filterBar!.selectedAllEqualsSelectedNothing();
+        return this.multiSelect.selectedAllEqualsSelectedNothing;
     }
 
     /** true if all visible options selected */
@@ -122,43 +98,24 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             .every((option) => option.selected);
     }
 
-    private internalSelected: KbqSelectValue[] | null;
+    private readonly multiSelect = new KbqMultiSelectPipeState({
+        data: this.data,
+        filterBar: this.filterBar,
+        allOptionsSelected: () => this.allOptionsSelected
+    });
 
     constructor() {
         super();
 
-        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
-
-        this.treeControl = new FlatTreeControl<KbqTreeSelectFlatNode>(
-            this.getLevel,
-            this.isExpandable,
-            this.getValue,
-            this.getViewValue
-        );
-
-        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
+        // See the field-init note in `KbqTreeSelectPipeBase`: subscribing here (after this class's
+        // `updateTemplates` initializer) ensures the initial replay writes `dataSource.data`.
         this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
     }
 
-    ngOnInit(): void {
-        this.updateInternalSelected();
+    override ngOnInit(): void {
+        super.ngOnInit();
 
-        this.searchControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => this.treeControl.filterNodes(value));
-    }
-
-    override ngAfterViewInit() {
-        super.ngAfterViewInit();
-
-        this.select()
-            .closedStream.pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
-    }
-
-    isNodeHasChild(_: number, nodeData: KbqTreeSelectFlatNode) {
-        return nodeData.expandable;
+        this.multiSelect.updateInternalSelected();
     }
 
     isNodeSelectAll(_: number, nodeData: KbqTreeSelectFlatNode) {
@@ -185,7 +142,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
                 this.data.value = this.select().selectedValues;
             }
 
-            this.emitChangePipeEvent();
+            this.multiSelect.emitChangePipeEvent();
 
             this.stateChanges.next();
         });
@@ -227,7 +184,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             }
 
             if (emitEvent) {
-                this.emitChangePipeEvent();
+                this.multiSelect.emitChangePipeEvent();
             }
 
             this.stateChanges.next();
@@ -257,26 +214,16 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         }
     };
 
-    /** opens select */
-    override open() {
-        setTimeout(() => this.select().open());
-    }
-
     override onClear() {
         super.onClear();
 
-        this.updateInternalSelected();
-    }
-
-    /** @docs-private */
-    onOpen() {
-        this.treeControl.expandAll();
+        this.multiSelect.updateInternalSelected();
     }
 
     /** @docs-private */
     onClose() {
         if (this.allOptionsSelected) {
-            this.updateInternalSelected();
+            this.multiSelect.updateInternalSelected();
         }
 
         setTimeout(() => this.restoreTriggerFocus());
@@ -288,20 +235,6 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
         this.toggleSelectAllNode();
     };
-
-    private updateInternalSelected() {
-        if (this.selectedAllEqualsSelectedNothing) {
-            this.internalSelected = this.data.value?.slice() || [];
-        }
-    }
-
-    private emitChangePipeEvent() {
-        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
-            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
-        } else {
-            this.filterBar?.onChangePipe.emit(this.data);
-        }
-    }
 
     private toggleParents(parent: KbqTreeSelectFlatNode | undefined) {
         if (!parent) {
@@ -322,36 +255,4 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
             this.toggleParents(parent.parent);
         }
     }
-
-    private transformer = (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => {
-        const flatNode = new KbqTreeSelectFlatNode();
-
-        flatNode.name = node.name;
-        flatNode.value = node.value;
-        flatNode.parent = parent ?? undefined;
-        flatNode.level = level;
-        flatNode.expandable = !!node.children;
-
-        return flatNode;
-    };
-
-    private getLevel = (node: KbqTreeSelectFlatNode) => {
-        return node.level;
-    };
-
-    private isExpandable = (node: KbqTreeSelectFlatNode) => {
-        return node.expandable;
-    };
-
-    private getChildren = (node: KbqTreeSelectNode): KbqTreeSelectNode[] | null => {
-        return node.children;
-    };
-
-    private getValue = (node: KbqTreeSelectFlatNode): unknown => {
-        return node.value;
-    };
-
-    private getViewValue = (node: KbqTreeSelectFlatNode): string => {
-        return `${node.name}`;
-    };
 }

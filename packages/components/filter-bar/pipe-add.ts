@@ -6,8 +6,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqFilterBar } from './filter-bar';
-import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
+import { KBQ_FILTER_BAR_HOST, KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 import { getId } from './pipes/base-pipe';
 
 @Component({
@@ -58,7 +57,7 @@ import { getId } from './pipes/base-pipe';
 })
 export class KbqPipeAdd {
     /** KbqFilterBar instance */
-    protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);

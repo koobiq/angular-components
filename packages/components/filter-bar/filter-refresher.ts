@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqFilterBar } from './filter-bar';
-import { KBQ_FILTER_BAR_DEFAULT_CONFIGURATION } from './filter-bar.types';
+import { KBQ_FILTER_BAR_DEFAULT_CONFIGURATION, KBQ_FILTER_BAR_HOST } from './filter-bar.types';
 
 @Component({
     selector: 'kbq-filter-refresher, [kbq-filter-refresher]',
@@ -36,8 +35,8 @@ import { KBQ_FILTER_BAR_DEFAULT_CONFIGURATION } from './filter-bar.types';
     }
 })
 export class KbqFilterRefresher {
-    /** KbqFilterBar instance */
-    private readonly filterBar = inject(KbqFilterBar, { optional: true });
+    /** KbqFilterBar host seam */
+    private readonly filterBar = inject(KBQ_FILTER_BAR_HOST, { optional: true });
 
     /** localized data
      * @docs-private */

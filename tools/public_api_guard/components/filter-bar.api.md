@@ -35,8 +35,10 @@ import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
@@ -148,6 +150,9 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
 };
 
 // @public
+export const KBQ_FILTER_BAR_HOST: InjectionToken<KbqFilterBarHost>;
+
+// @public
 export const KBQ_FILTER_BAR_PIPES: InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>;
 
 // @public
@@ -162,7 +167,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected destroyed: boolean;
     protected readonly destroyRef: DestroyRef;
     protected readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly filterBar: KbqFilterBar | null;
+    protected readonly filterBar: KbqFilterBarHost | null;
     protected readonly focusMonitor: FocusMonitor;
     get isEmpty(): boolean;
     isMac: boolean;
@@ -215,7 +220,7 @@ export interface KbqFilter {
 }
 
 // @public (undocumented)
-export class KbqFilterBar {
+export class KbqFilterBar implements KbqFilterBarHost {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     readonly changes: BehaviorSubject<void>;
@@ -314,6 +319,29 @@ export class KbqFilterBarButton {
 
 // @public
 export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
+
+// @public
+export interface KbqFilterBarHost {
+    readonly changes: BehaviorSubject<void>;
+    configuration: KbqFilterBarConfiguration;
+    filter: KbqFilter | null;
+    readonly filterChange: OutputEmitterRef<KbqFilter | null>;
+    readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
+    readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
+    readonly isChanged: boolean;
+    readonly isReadOnly: boolean;
+    readonly isSaved: boolean;
+    readonly isSavedAndChanged: boolean;
+    readonly onChangePipe: OutputEmitterRef<KbqPipe>;
+    readonly onClearPipe: OutputEmitterRef<KbqPipe>;
+    readonly onClosePipe: OutputEmitterRef<KbqPipe>;
+    readonly onResetFilter: BehaviorSubject<boolean>;
+    readonly openPipe: BehaviorSubject<string | number | null>;
+    pipeTemplates: KbqPipeTemplate[];
+    removePipe(pipe: KbqPipe): void;
+    resetFilterChangedState(): void;
+    readonly selectedAllEqualsSelectedNothing: Signal<boolean>;
+}
 
 // @public (undocumented)
 export class KbqFilterBarModule {
@@ -528,7 +556,7 @@ export class KbqPipeAdd {
     // (undocumented)
     addPipeFromTemplate(option: KbqOption): void;
     compareWith(o1: KbqPipe, o2: string): boolean;
-    protected readonly filterBar: KbqFilterBar;
+    protected readonly filterBar: KbqFilterBarHost;
     readonly filterTemplate: i0.InputSignal<KbqFilter>;
     readonly onAddPipe: i0.OutputEmitterRef<KbqPipeTemplate>;
     readonly select: i0.Signal<KbqSelect>;
@@ -542,7 +570,7 @@ export class KbqPipeAdd {
 export class KbqPipeButton {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    protected readonly filterBar: KbqFilterBar;
+    protected readonly filterBar: KbqFilterBarHost;
     get localeData(): {
         clearButtonTooltip: string;
         removeButtonTooltip: string;
@@ -663,7 +691,7 @@ export class KbqPipeMinWidth {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly filterBar: KbqFilterBar | null;
+    protected readonly filterBar: KbqFilterBarHost | null;
     maxSymbolsForFitContent: number;
     protected minWidth: string;
     get textLength(): number;
@@ -778,29 +806,12 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
 }
 
 // @public (undocumented)
-export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit, AfterViewInit {
+export class KbqPipeTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectValue> {
     constructor();
-    // (undocumented)
-    dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-    // (undocumented)
-    hasChild(_: number, nodeData: KbqTreeSelectFlatNode): boolean;
     get isEmpty(): boolean;
     // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    onOpen(): void;
-    // (undocumented)
     onSelect(item: KbqTreeOption): void;
-    open(): void;
-    readonly searchControl: FormControl<string | null>;
-    readonly select: i0.Signal<KbqTreeSelect>;
     get selected(): KbqSelectValue | null;
-    // (undocumented)
-    treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
-    // (undocumented)
-    treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
     updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeTreeSelectComponent, "kbq-pipe-tree-select", never, {}, {}, never, never, true, never>;
@@ -890,6 +901,42 @@ export interface KbqTreeSelectNode {
     name: string;
     // (undocumented)
     value: unknown;
+}
+
+// @public
+export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements OnInit, AfterViewInit {
+    constructor();
+    // (undocumented)
+    dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
+    // (undocumented)
+    protected getChildren: (node: KbqTreeSelectNode) => KbqTreeSelectNode[] | null;
+    // (undocumented)
+    protected getLevel: (node: KbqTreeSelectFlatNode) => number;
+    // (undocumented)
+    protected getValue: (node: KbqTreeSelectFlatNode) => unknown;
+    // (undocumented)
+    protected getViewValue: (node: KbqTreeSelectFlatNode) => string;
+    hasChild(_: number, nodeData: KbqTreeSelectFlatNode): boolean;
+    // (undocumented)
+    protected isExpandable: (node: KbqTreeSelectFlatNode) => boolean;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnInit(): void;
+    onOpen(): void;
+    open(): void;
+    readonly searchControl: FormControl<string | null>;
+    readonly select: i0.Signal<KbqTreeSelect>;
+    // (undocumented)
+    protected transformer: (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => KbqTreeSelectFlatNode;
+    // (undocumented)
+    treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
+    // (undocumented)
+    treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeSelectPipeBase<any>, never, never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelectPipeBase<any>, never>;
 }
 
 // (No @packageDocumentation comment for this package)

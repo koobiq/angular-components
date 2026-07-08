@@ -15,9 +15,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isMac } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { delay, filter } from 'rxjs/operators';
-import { KbqFilterBar } from '../filter-bar';
 import {
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+    KBQ_FILTER_BAR_HOST,
     KbqFilterBarConfiguration,
     KbqPipeData,
     KbqPipeTemplate,
@@ -50,7 +50,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
     /** KbqFilterBar instance
      * @docs-private */
-    protected readonly filterBar = inject(KbqFilterBar, { optional: true });
+    protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST, { optional: true });
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
@@ -232,7 +232,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 })
 export class KbqPipeMinWidth {
     /** KbqFilterBar instance */
-    protected readonly filterBar = inject(KbqFilterBar, { optional: true });
+    protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST, { optional: true });
 
     /** @docs-private */
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

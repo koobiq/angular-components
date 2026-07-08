@@ -4,6 +4,7 @@ import {
     ChangeDetectorRef,
     Component,
     contentChild,
+    forwardRef,
     inject,
     Input,
     input,
@@ -17,8 +18,10 @@ import { BehaviorSubject, merge } from 'rxjs';
 import {
     KBQ_FILTER_BAR_CONFIGURATION,
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+    KBQ_FILTER_BAR_HOST,
     KbqFilter,
     KbqFilterBarConfiguration,
+    KbqFilterBarHost,
     KbqPipe,
     KbqPipeTemplate
 } from './filter-bar.types';
@@ -46,13 +49,14 @@ import { KbqFilters } from './filters';
         </div>
     `,
     styleUrls: ['filter-bar-tokens.scss', 'filter-bar.scss'],
+    providers: [{ provide: KBQ_FILTER_BAR_HOST, useExisting: forwardRef(() => KbqFilterBar) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-filter-bar'
     }
 })
-export class KbqFilterBar {
+export class KbqFilterBar implements KbqFilterBarHost {
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */

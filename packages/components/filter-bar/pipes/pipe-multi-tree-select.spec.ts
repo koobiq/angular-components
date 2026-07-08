@@ -570,7 +570,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         }));
     });
 
-    describe('isNodeHasChild / isNodeSelectAll', () => {
+    describe('hasChild / isNodeSelectAll', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
@@ -584,14 +584,14 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             const component = getPipeComponent();
             const expandableNode = { expandable: true, name: 'parent', value: 'v', level: 0 };
 
-            expect(component.isNodeHasChild(0, expandableNode)).toBe(true);
+            expect(component.hasChild(0, expandableNode)).toBe(true);
         });
 
         it('should return false for leaf nodes', () => {
             const component = getPipeComponent();
             const leafNode = { expandable: false, name: 'leaf', value: 'v', level: 1 };
 
-            expect(component.isNodeHasChild(0, leafNode)).toBe(false);
+            expect(component.hasChild(0, leafNode)).toBe(false);
         });
 
         it('should return true for selectAll node', () => {

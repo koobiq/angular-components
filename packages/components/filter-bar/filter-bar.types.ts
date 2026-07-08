@@ -1,5 +1,6 @@
-import { InjectionToken, Provider, TemplateRef, Type } from '@angular/core';
+import { InjectionToken, OutputEmitterRef, Provider, Signal, TemplateRef, Type } from '@angular/core';
 import { ruRULocaleData } from '@koobiq/components/core';
+import { BehaviorSubject } from 'rxjs';
 import { KbqFilterBar } from './filter-bar';
 import type { KbqBasePipe } from './pipes/base-pipe';
 import { KbqPipeDateComponent } from './pipes/pipe-date';
@@ -24,6 +25,67 @@ export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURAT
 
 /** Injection Token for providing configuration of filter-bar */
 export const KBQ_FILTER_BAR_CONFIGURATION = new InjectionToken<KbqFilterBarConfiguration>('KbqFilterBarConfiguration');
+
+/**
+ * Contract a pipe (or filter-bar sub-component) depends on instead of the concrete `KbqFilterBar`.
+ * `KbqFilterBar` provides itself as {@link KBQ_FILTER_BAR_HOST}, so a pipe can be unit-tested against a
+ * lightweight mock of this seam rather than a full bar. Members mirror the current `KbqFilterBar` surface;
+ * they are expected to slim down once the state model moves to signals.
+ */
+export interface KbqFilterBarHost {
+    /** Localized strings and configuration for the filter-bar and its pipes. */
+    configuration: KbqFilterBarConfiguration;
+
+    /** Currently selected filter. */
+    filter: KbqFilter | null;
+
+    /** Templates used when adding a pipe (also hold the option lists). */
+    pipeTemplates: KbqPipeTemplate[];
+
+    /** Whether selecting all options counts as selecting nothing. */
+    readonly selectedAllEqualsSelectedNothing: Signal<boolean>;
+
+    /** Whether the current filter is saved. */
+    readonly isSaved: boolean;
+    /** Whether the current filter is changed. */
+    readonly isChanged: boolean;
+    /** Whether the current filter is both saved and changed. */
+    readonly isSavedAndChanged: boolean;
+    /** Whether the current filter is readonly. */
+    readonly isReadOnly: boolean;
+
+    /** Emits the two-way-bound `filter` value. */
+    readonly filterChange: OutputEmitterRef<KbqFilter | null>;
+    /** Emits whenever a pipe value changes. */
+    readonly onChangePipe: OutputEmitterRef<KbqPipe>;
+    /** Emits whenever a pipe is cleared. */
+    readonly onClearPipe: OutputEmitterRef<KbqPipe>;
+    /** Emits whenever a select/multiselect pipe closes. */
+    readonly onClosePipe: OutputEmitterRef<KbqPipe>;
+
+    /** State-change bus. */
+    readonly changes: BehaviorSubject<void>;
+    /** Internal filter changes. */
+    readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
+    /** Internal pipe-template changes. */
+    readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
+    /** Requests opening a pipe after it is added. */
+    readonly openPipe: BehaviorSubject<string | number | null>;
+    /** Emits when the filter is reset. */
+    readonly onResetFilter: BehaviorSubject<boolean>;
+
+    /** Removes a pipe from the current filter and emits the change. */
+    removePipe(pipe: KbqPipe): void;
+
+    /** Clears the current filter's "changed" flag. */
+    resetFilterChangedState(): void;
+}
+
+/**
+ * Injection token exposing the {@link KbqFilterBarHost} seam. `KbqFilterBar` provides itself via
+ * `useExisting`, so pipes `inject(KBQ_FILTER_BAR_HOST)` instead of depending on the concrete bar.
+ */
+export const KBQ_FILTER_BAR_HOST = new InjectionToken<KbqFilterBarHost>('KBQ_FILTER_BAR_HOST');
 
 /** Injection Token for providing pipes in filter-bar */
 export const KBQ_FILTER_BAR_PIPES = new InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>(

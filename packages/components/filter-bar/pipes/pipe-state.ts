@@ -2,7 +2,7 @@ import { DestroyRef, Directive, inject, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFilterBar } from '../filter-bar';
+import { KBQ_FILTER_BAR_HOST } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 
 @Directive({
@@ -17,7 +17,7 @@ export class KbqPipeState<T> implements OnInit {
     private readonly pipe = inject(KbqBasePipe);
     /** KbqFilterBar instance
      * @docs-private */
-    private readonly filterBar = inject(KbqFilterBar);
+    private readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
 
     /** calculates and updates styles of button from pipe state */
     // TODO: Skipped for migration because:
