@@ -135,10 +135,13 @@ export const tkTMLocaleData = {
             to: 'şuňa',
             apply: 'Ulanmak',
             cancel: 'Ýatyrmak',
-            rangeLabel: 'şu döwürde',
+            rangeLabel: 'Döwür',
             allTime: 'hemme döwür üçin',
             currentQuarter: 'şu çärýek üçin',
-            currentYear: 'şu ýyl üçin'
+            currentYear: 'şu ýyl üçin',
+            allTimeOption: 'Hemme döwür',
+            currentQuarterOption: 'Şu çärýek',
+            currentYearOption: 'Şu ýyl'
         },
         durationTemplate: {
             title: {
@@ -183,27 +186,27 @@ export const tkTMLocaleData = {
                 other {# ýyl}
             }`,
                 MONTHS: `{months, plural,
-                one {aý}
+                one {Aý}
                 other {# aý}
             }`,
                 WEEKS: `{weeks, plural,
-                one {hepde}
+                one {Hepde}
                 other {# hepde}
             }`,
                 DAYS: `{days, plural,
-                one {gün}
+                one {Gün}
                 other {# gün}
             }`,
                 HOURS: `{hours, plural,
-                one {sagat}
+                one {Sagat}
                 other {# sagat}
             }`,
                 MINUTES: `{minutes, plural,
-                one {minut}
+                one {Minut}
                 other {# minut}
             }`,
                 SECONDS: `{seconds, plural,
-                one {sekunt}
+                one {Sekunt}
                 other {# sekunt}
             }`,
                 YEARS_FRACTION: `{years} ýyl`,
