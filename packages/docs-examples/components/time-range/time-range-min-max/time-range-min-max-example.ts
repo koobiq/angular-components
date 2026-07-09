@@ -64,8 +64,8 @@ export class TimeRangeMinMaxExample {
     protected readonly dateAdapter = inject<DateAdapter<DateTime>>(DateAdapter);
     protected readonly dateFormatter = inject(DateFormatter);
 
-    protected readonly minDate = this.dateAdapter.createDate(2017, 0, 1);
-    protected readonly maxDate = this.dateAdapter.today();
+    protected readonly minDate = this.dateAdapter.createDate(2015, 0, 1);
+    protected readonly maxDate = this.dateAdapter.createDate(2017, 11, 31);
 
     private readonly data = inject(ExampleLocalizedData);
     private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
