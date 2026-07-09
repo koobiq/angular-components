@@ -264,10 +264,10 @@ describe('KbqPipeDateComponent', () => {
             const component = getPipeComponent();
             const internal = asInternal(component);
             const updatePosition = jest.fn();
-            const focus = jest.fn();
+            const focusViaKeyboard = jest.fn();
 
             internal.popover = () => ({ updatePosition });
-            internal.returnButton = () => ({ focus });
+            internal.returnButton = () => ({ focusViaKeyboard });
             internal.showStartCalendar = true;
             internal.showEndCalendar = true;
 
@@ -283,7 +283,7 @@ describe('KbqPipeDateComponent', () => {
             flush();
 
             expect(updatePosition).toHaveBeenCalledWith(true);
-            expect(focus).toHaveBeenCalled();
+            expect(focusViaKeyboard).toHaveBeenCalled();
         }));
     });
 

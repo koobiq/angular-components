@@ -3,6 +3,8 @@ export * from './filter-bar-button';
 export * from './filter-bar.module';
 export * from './filter-bar.types';
 export * from './filter-refresher';
+/** @deprecated Use `KbqFilterRefresher` instead. Backward-compatible alias; will be removed in the next major. */
+export { KbqFilterRefresher as KbqFilterBarRefresher } from './filter-refresher';
 export * from './filter-reset';
 export * from './filter-save-popover';
 export * from './filters';

@@ -219,7 +219,7 @@ describe('KbqFilters', () => {
             it('should return false when neither popover nor dropdown is open', () => {
                 initFixture();
 
-                expect(getFiltersComponent().opened).toBeFalsy();
+                expect(getFiltersComponent().opened).toBe(false);
             });
         });
 
@@ -227,7 +227,7 @@ describe('KbqFilters', () => {
             it('should return false by default', () => {
                 initFixture();
 
-                expect(getFiltersComponent().filterActionsOpened).toBeFalsy();
+                expect(getFiltersComponent().filterActionsOpened).toBe(false);
             });
         });
 

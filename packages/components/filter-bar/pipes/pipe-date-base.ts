@@ -166,8 +166,12 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         this.initFormGroup();
 
         setTimeout(() => {
+            if (this.destroyed) return;
+
             this.popover().updatePosition(true);
-            this.returnButton().focus();
+            // Focus via FocusMonitor (keyboard origin) so the focus ring is preserved; a native
+            // `.focus()` bypasses FocusMonitor and drops the `.cdk-keyboard-focused` ring.
+            this.returnButton().focusViaKeyboard();
         });
     }
 

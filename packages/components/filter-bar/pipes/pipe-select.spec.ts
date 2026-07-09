@@ -366,10 +366,14 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
+            let lastFiltered: any[] = [];
 
             component.filteredOptions.subscribe((filtered) => {
-                expect(filtered.length).toBe(SELECT_VALUES.length);
+                lastFiltered = filtered;
             });
+            flush();
+
+            expect(lastFiltered.length).toBe(SELECT_VALUES.length);
         }));
 
         it('should filter options by search text', fakeAsync(() => {

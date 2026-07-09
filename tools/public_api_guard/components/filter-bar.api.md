@@ -356,7 +356,7 @@ export class KbqFilterBarModule {
 export const kbqFilterBarPipesProvider: () => Provider;
 
 // @public (undocumented)
-export class KbqFilterRefresher {
+class KbqFilterRefresher {
     protected get localeData(): {
         reset: {
             buttonName: string;
@@ -411,6 +411,8 @@ export class KbqFilterRefresher {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterRefresher, never>;
 }
+export { KbqFilterRefresher as KbqFilterBarRefresher }
+export { KbqFilterRefresher }
 
 // @public (undocumented)
 export class KbqFilterReset {

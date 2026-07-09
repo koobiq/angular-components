@@ -175,9 +175,13 @@ export class KbqFilterSavePopover implements AfterViewInit {
         const name = this.filterName.value || '';
 
         // @todo default filter
-        // Deep-clones the current filter; pipe `value` payloads must be structured-cloneable (see
-        // `KbqFilterBar.saveFilterState`). All built-in pipes produce cloneable values.
-        const filter = structuredClone<KbqFilter>(this.filterBar().filter() as KbqFilter) || { pipes: [] };
+        // Shallow structural copy (new filter + new pipes array + per-pipe shallow copy), mirroring
+        // `KbqFilters.selectFilter`. Avoids `structuredClone` so non-cloneable custom pipe `value`
+        // payloads survive a save; every pipe writes `value` by reassignment, never in place.
+        const current = this.filterBar().filter();
+        const filter: KbqFilter = current
+            ? { ...current, pipes: current.pipes.map((pipe) => ({ ...pipe })) }
+            : ({ pipes: [] } as unknown as KbqFilter);
 
         filter.name = name;
         filter.saved = true;
@@ -232,7 +236,8 @@ export class KbqFilterSavePopover implements AfterViewInit {
         this.popoverTrigger().preventClose = false;
 
         this.filterName.enable();
-        setTimeout(() => this.saveFilterButton().focus());
+        // Focus via FocusMonitor (keyboard origin) so the focus ring is preserved on the retry path.
+        setTimeout(() => this.saveFilterButton().focusViaKeyboard());
 
         this.changeDetectorRef.markForCheck();
     }

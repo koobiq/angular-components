@@ -129,7 +129,7 @@ export class KbqFilters implements OnInit {
 
     /** Component state. true if opened dropdown or popup */
     get opened(): boolean {
-        return this.popover()?.isOpen || this.dropdown()?.opened;
+        return !!(this.popover()?.isOpen || this.dropdown()?.opened);
     }
 
     /** Component state. true if opened dropdown or popup of filterActions */
