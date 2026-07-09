@@ -19,7 +19,7 @@ import { of } from 'rxjs';
 const customTypes: KbqCustomTimeRangeType[] = [
     { type: 'last3Minutes', units: { minutes: -3 }, translationType: 'minutes' },
     { type: 'last3Weeks', units: { weeks: -3 }, translationType: 'weeks' },
-    { type: 'last3Years', units: { years: -3 }, translationType: 'months' }
+    { type: 'last3Years', units: { years: -3 }, translationType: 'years' }
 ];
 
 const customDefaultTypes = [...customTypes.map(({ type }) => type), 'range'] as KbqTimeRangeType[];

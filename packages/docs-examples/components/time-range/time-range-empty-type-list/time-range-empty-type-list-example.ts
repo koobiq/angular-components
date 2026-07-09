@@ -22,12 +22,16 @@ import { KbqTimeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
         <ng-template #titleTemplate let-context>
             <a kbq-link pseudo>
                 <span class="kbq-link__text">
-                    {{
-                        dateFormatter.rangeLongDate(
-                            dateAdapter.deserialize(context.startDateTime),
-                            dateAdapter.deserialize(context.endDateTime)
-                        )
-                    }}
+                    @if (context.startDateTime && context.endDateTime) {
+                        {{
+                            dateFormatter.rangeLongDate(
+                                dateAdapter.deserialize(context.startDateTime),
+                                dateAdapter.deserialize(context.endDateTime)
+                            )
+                        }}
+                    } @else {
+                        {{ context.formattedDate }}
+                    }
                 </span>
 
                 <i kbq-icon="kbq-calendar-o_16"></i>
