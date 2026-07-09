@@ -65,13 +65,11 @@ export class KbqPipeButton {
     constructor() {
         this.pipe.stateChanges.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
 
-        // The pipe template renders plain `data` (not signals), so mark it for check when the filter
-        // changes. Passing the `filterBar.filter` read into the handler subscribes this effect, replacing
-        // the retired `changes` bus.
-        effect(() => this.markForCheckOnFilterChange(this.filterBar.filter()));
-    }
-
-    private markForCheckOnFilterChange(_filter: unknown): void {
-        this.changeDetectorRef.markForCheck();
+        // Reading the filter signal subscribes this effect; the pipe template renders plain `data`
+        // (not signals), so mark it for check whenever the filter changes — replaces the retired `changes` bus.
+        effect(() => {
+            this.filterBar.filter();
+            this.changeDetectorRef.markForCheck();
+        });
     }
 }

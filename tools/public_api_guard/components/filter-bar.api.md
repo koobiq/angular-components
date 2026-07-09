@@ -227,6 +227,8 @@ export interface KbqFilter {
 export class KbqFilterBar implements KbqFilterBarHost {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
+    // @deprecated
+    readonly changes: BehaviorSubject<void>;
     configuration: KbqFilterBarConfiguration;
     // (undocumented)
     readonly externalConfiguration: {

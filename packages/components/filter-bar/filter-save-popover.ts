@@ -3,7 +3,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    DestroyRef,
     ElementRef,
     inject,
     input,
@@ -103,7 +102,6 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
     encapsulation: ViewEncapsulation.None
 })
 export class KbqFilterSavePopover implements AfterViewInit {
-    private readonly destroyRef = inject(DestroyRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /** Popover trigger owned by the parent (`KbqFilters` main button). */
@@ -245,13 +243,15 @@ export class KbqFilterSavePopover implements AfterViewInit {
     private preparePopover() {
         this.filterName = new FormControl<string>(this.filterBar().filter()?.name || '', Validators.required);
 
-        this.filterName.valueChanges
-            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => (this.showFilterSavingError = false));
-
         const trigger = this.popoverTrigger();
 
         trigger.show();
+
+        // Tie to the popover instance (recreated each open) so this per-open control's subscription
+        // doesn't accumulate across open/close cycles.
+        this.filterName.valueChanges
+            .pipe(distinctUntilChanged(), takeUntilDestroyed(trigger.instanceDestroyRef))
+            .subscribe(() => (this.showFilterSavingError = false));
 
         merge(...trigger.defaultClosingActions())
             .pipe(

@@ -23,7 +23,9 @@ export class KbqMultiSelectPipeState {
     /** Whether selecting every option is treated as selecting nothing. */
     get selectedAllEqualsSelectedNothing(): boolean {
         return (
-            this.host.data.selectedAllEqualsSelectedNothing ?? this.host.filterBar!.selectedAllEqualsSelectedNothing()
+            this.host.data.selectedAllEqualsSelectedNothing ??
+            this.host.filterBar?.selectedAllEqualsSelectedNothing() ??
+            true
         );
     }
 

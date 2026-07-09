@@ -64,7 +64,11 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
 
     /** opens the tree-select panel */
     override open() {
-        setTimeout(() => this.select().open());
+        setTimeout(() => {
+            if (this.destroyed) return;
+
+            this.select().open();
+        });
     }
 
     /** @docs-private */
@@ -92,5 +96,5 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
 
     protected getValue = (node: KbqTreeSelectFlatNode): unknown => node.value;
 
-    protected getViewValue = (node: KbqTreeSelectFlatNode): string => `${node.name}`;
+    protected getViewValue = (node: KbqTreeSelectFlatNode): string => node.name;
 }

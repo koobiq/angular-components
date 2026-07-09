@@ -116,6 +116,13 @@ export class KbqFilterBar implements KbqFilterBarHost {
 
     private savedFilter: KbqFilter | null = null;
 
+    /**
+     * All changes.
+     * @deprecated noop. Reactivity is driven by the `filter` signal now; this never emits and will be
+     * removed in the next major.
+     */
+    readonly changes = new BehaviorSubject<void>(undefined);
+
     /** Event that emits whenever the filter is reset. */
     readonly onResetFilter = new BehaviorSubject<boolean>(false);
     /** internal filter changes */
