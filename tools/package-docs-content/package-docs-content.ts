@@ -11,6 +11,8 @@ if (require.main === module) {
     // eslint-disable-next-line @angular-eslint/no-experimental
     cpSync(execPath, outDir, {
         recursive: true,
-        filter: (path) => path.endsWith('.json')
+        // Copy the example sources (.ts/.html/.css) for the live example viewer; skip json (e.g.
+        // ng-package.json). The filter must return true for directories so cpSync recurses.
+        filter: (path) => !path.endsWith('.json')
     });
 }
