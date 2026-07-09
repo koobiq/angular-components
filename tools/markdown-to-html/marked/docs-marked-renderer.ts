@@ -77,13 +77,13 @@ export class DocsMarkdownRenderer extends Renderer {
 
     /**
      * Transforms a Markdown heading into the corresponding HTML output. In our case, we
-     * want to create a header-link for each H2, H3, and H4 heading. This allows users to jump to
+     * want to create a header-link for each H2, H3, H4 and H5 heading. This allows users to jump to
      * specific parts of the docs.
      */
     heading({ tokens, depth }: Tokens.Heading): string {
         const text = this.parser.parseInline(tokens);
 
-        if ([3, 4, 5].includes(depth)) {
+        if ([2, 3, 4, 5].includes(depth)) {
             const escapedText = text.toLowerCase().replace(/\s/g, '-');
 
             return `
