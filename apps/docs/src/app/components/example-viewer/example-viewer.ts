@@ -7,13 +7,12 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    EventEmitter,
     inject,
     Injector,
     Input,
     NgZone,
     OnDestroy,
-    Output,
+    output,
     PLATFORM_ID,
     signal,
     Type,
@@ -66,8 +65,8 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
         this.getDocument(url);
     }
 
-    @Output() readonly contentRendered = new EventEmitter<HTMLElement>();
-    @Output() readonly contentRenderFailed = new EventEmitter<HTMLElement>();
+    readonly contentRendered = output<HTMLElement>();
+    readonly contentRenderFailed = output<HTMLElement>();
 
     /** The document text. It should not be HTML encoded. */
     textContent: string | null = '';

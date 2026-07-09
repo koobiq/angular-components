@@ -9,7 +9,7 @@ import {
     NgZone,
     signal,
     Type,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -63,8 +63,6 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     files: KbqCodeBlockFile[] = [];
 
-    @Input() fileOrder = ['HTML', 'TS', 'CSS'];
-
     /** Data for the currently selected example. */
     exampleData: LiveExample;
 
@@ -98,7 +96,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     private _example: string | null;
 
-    @ViewChild('exampleElement') exampleElement: ElementRef<HTMLElement>;
+    readonly exampleElement = viewChild<ElementRef<HTMLElement>>('exampleElement');
 
     private readonly documentLoader = inject(DocsDocumentLoader);
     private readonly cdr = inject(ChangeDetectorRef);
@@ -115,13 +113,17 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     protected reload(): void {
         const previous = this.example;
 
-        const style = this.window.getComputedStyle(this.exampleElement.nativeElement);
-        const height =
-            this.exampleElement.nativeElement.clientHeight -
-            parseFloat(style.paddingTop) -
-            parseFloat(style.paddingBottom);
+        const exampleElement = this.exampleElement();
 
-        this.exampleHeight.set(height);
+        if (exampleElement) {
+            const style = this.window.getComputedStyle(exampleElement.nativeElement);
+            const height =
+                exampleElement.nativeElement.clientHeight -
+                parseFloat(style.paddingTop) -
+                parseFloat(style.paddingBottom);
+
+            this.exampleHeight.set(height);
+        }
 
         this._example = '';
         this.exampleComponentType = null;

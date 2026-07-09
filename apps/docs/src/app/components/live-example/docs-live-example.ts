@@ -7,17 +7,16 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    EventEmitter,
     inject,
     Injector,
     Input,
     NgZone,
     OnDestroy,
-    Output,
+    output,
     PLATFORM_ID,
     signal,
     Type,
-    ViewChild,
+    viewChild,
     ViewContainerRef
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -63,8 +62,8 @@ import { docsBuildDocumentErrorHtml, docsRewriteFragmentUrls } from './markdown-
     }
 })
 export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestroy {
-    @ViewChild(CdkPortal) private readonly codeTemplate: CdkPortal;
-    @ViewChild('codeSnippet', { read: CdkPortal }) private readonly codeSnippetTemplate: CdkPortal;
+    private readonly codeTemplate = viewChild.required(CdkPortal);
+    private readonly codeSnippetTemplate = viewChild.required('codeSnippet', { read: CdkPortal });
     /** The URL of the document to display. */
     @Input()
     set documentUrl(url: string) {
@@ -76,8 +75,8 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
         this.getDocument(url);
     }
 
-    @Output() readonly contentRendered = new EventEmitter<void>();
-    @Output() readonly contentRenderFailed = new EventEmitter<void>();
+    readonly contentRendered = output<void>();
+    readonly contentRenderFailed = output<void>();
 
     get nativeElement(): HTMLElement {
         return this.elementRef.nativeElement;
@@ -178,7 +177,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
             const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
 
-            this.codeTemplate.attach(portalHost, {
+            this.codeTemplate().attach(portalHost, {
                 $implicit: outerHTML,
                 textContent,
                 language: element.getAttribute('data-docs-code-language')
@@ -200,7 +199,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
             const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
 
-            this.codeSnippetTemplate.attach(portalHost, { $implicit: innerHTML, textContent });
+            this.codeSnippetTemplate().attach(portalHost, { $implicit: innerHTML, textContent });
             this.portalHosts.push(portalHost);
         });
     }

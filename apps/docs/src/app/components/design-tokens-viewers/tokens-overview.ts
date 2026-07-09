@@ -5,6 +5,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     inject,
+    Injector,
     input,
     signal,
     viewChild
@@ -204,6 +205,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected readonly window = inject(KBQ_WINDOW);
     protected readonly document = inject(DOCUMENT);
     protected readonly activatedRoute = inject(ActivatedRoute);
+    private readonly injector = inject(Injector);
 
     protected readonly tokensInfo = signal<DocsTokensInfo[]>([]);
     protected readonly activatedTab = toSignal(
@@ -240,7 +242,8 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     }
 
     ngAfterViewInit() {
-        setTimeout(() => this.wrapper().scrollToSelectedContentSection());
+        // Defer to the next render so the wrapper view exists and its content has laid out.
+        afterNextRender(() => this.wrapper().scrollToSelectedContentSection(), { injector: this.injector });
     }
 
     getClassName(text: string): string {

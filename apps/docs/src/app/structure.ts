@@ -156,13 +156,15 @@ const makeStructure = (structure: DocsStructure): DocsStructure => {
 const isNewExpiryDates: string[] = [];
 
 const expiresAt = (expiresAt: string): boolean => {
+    isNewExpiryDates.push(expiresAt);
+
     const createdDate = DateTime.fromISO(expiresAt);
 
+    // Degrade gracefully instead of crashing the whole structure module at import time on a typo;
+    // `structure.spec` asserts every registered date is valid, so a bad date is caught in CI.
     if (!createdDate.isValid) {
-        throw new Error(createdDate.invalidReason);
+        return false;
     }
-
-    isNewExpiryDates.push(expiresAt);
 
     return createdDate.diffNow('days').days > 0;
 };
