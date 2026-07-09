@@ -12,6 +12,7 @@
 
 .example-tab-link {
     display: inline-block;
+    text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;
 }
