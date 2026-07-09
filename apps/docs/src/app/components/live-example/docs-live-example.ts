@@ -32,7 +32,7 @@ import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocumentLoader } from '../../services/document-loader';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
-import { docsBuildDocumentErrorHtml, docsRewriteFragmentUrls } from './markdown-content';
+import { DOCS_MARKDOWN_PRE_CLASS, docsBuildDocumentErrorHtml, docsRewriteFragmentUrls } from './markdown-content';
 
 @Component({
     selector: 'docs-live-example',
@@ -177,7 +177,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     }
 
     private initCodeBlocks() {
-        const markDownClass = 'kbq-markdown__pre';
+        const markDownClass = DOCS_MARKDOWN_PRE_CLASS;
 
         this.nativeElement.querySelectorAll(`.${markDownClass}`).forEach((element: Element) => {
             const { outerHTML, textContent } = element;

@@ -17,6 +17,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { filter, fromEvent, Subscription, timer } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+import { DOCS_MARKDOWN_HEADING_CLASSES } from '../live-example/markdown-content';
 
 interface KbqDocsAnchor {
     href: string;
@@ -26,12 +27,6 @@ interface KbqDocsAnchor {
     level: number;
     element: HTMLElement;
 }
-
-/**
- * Heading classes emitted by the markdown renderer (`tools/markdown-to-html`), ordered by depth.
- * The anchor level is the index of the heading's class within this list.
- */
-const DOCS_MARKDOWN_HEADING_CLASSES = ['kbq-markdown__h2', 'kbq-markdown__h3', 'kbq-markdown__h4', 'kbq-markdown__h5'];
 
 @Component({
     selector: 'docs-anchors',
@@ -68,8 +63,11 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     private fragmentScrollSubscription: Subscription | undefined;
     private fragmentScrollTimer: ReturnType<typeof setTimeout> | undefined;
 
-    private get scrollContainer(): HTMLElement {
-        return this.document.querySelector('docs-component-viewer')!;
+    // The scroll container lives outside this component's view, so it can be absent (e.g. on a page
+    // that renders `docs-anchors` without a `docs-component-viewer` host). Return `null` and let
+    // callers no-op rather than dereferencing a non-null assertion that can lie.
+    private get scrollContainer(): HTMLElement | null {
+        return this.document.querySelector('docs-component-viewer');
     }
 
     private get firstAnchor(): KbqDocsAnchor {
@@ -81,7 +79,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private get scrollOffset(): number {
-        return this.scrollContainer.scrollTop + this.headerHeight;
+        return (this.scrollContainer?.scrollTop ?? 0) + this.headerHeight;
     }
 
     private readonly destroyRef = inject(DestroyRef);
@@ -128,20 +126,28 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
         this.updateActiveAnchor();
 
+        const container = this.scrollContainer;
+
+        if (!container) {
+            this.ref.detectChanges();
+
+            return;
+        }
+
         const target = this.document.getElementById(this.fragment);
 
         if (target) {
             this.scrollToFragment(target);
         } else {
             // For SSR compatibility
-            if (typeof this.scrollContainer.scroll === 'function') this.scrollContainer.scroll(0, 0);
+            if (typeof container.scroll === 'function') container.scroll(0, 0);
         }
 
         this.scrollSubscription?.unsubscribe();
 
         // For SSR compatibility
-        if (typeof this.scrollContainer.scroll === 'function') {
-            this.scrollSubscription = fromEvent(this.scrollContainer, 'scroll')
+        if (typeof container.scroll === 'function') {
+            this.scrollSubscription = fromEvent(container, 'scroll')
                 .pipe(debounceTime(this.debounceTime), takeUntilDestroyed(this.destroyRef))
                 .subscribe(this.onScroll);
         }
@@ -160,14 +166,19 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         this.fragmentScrollTimer = setTimeout(() => {
             target.scrollIntoView({ behavior: 'instant' });
 
+            const container = this.scrollContainer;
+
+            if (!container) {
+                return;
+            }
+
             // Guard against layout shifts caused by lazily-loaded example components:
             // re-scroll to target whenever the scroll container grows, for up to 2s.
             this.fragmentScrollSubscription = this.resizeObserver
-                .observe(this.scrollContainer)
+                .observe(container)
                 .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(timer(2000)))
                 .subscribe(() => {
-                    const distanceFromTop =
-                        target.getBoundingClientRect().top - this.scrollContainer.getBoundingClientRect().top;
+                    const distanceFromTop = target.getBoundingClientRect().top - container.getBoundingClientRect().top;
 
                     if (distanceFromTop > 10) {
                         target.scrollIntoView({ behavior: 'instant' });
@@ -191,10 +202,16 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private isScrolledToEnd(): boolean {
-        const scrollHeight = Math.ceil(this.scrollContainer.scrollTop + this.scrollContainer.clientHeight);
+        const container = this.scrollContainer;
+
+        if (!container) {
+            return false;
+        }
+
+        const scrollHeight = Math.ceil(container.scrollTop + container.clientHeight);
 
         // scrollHeight should be strictly equal to documentHeight, but in Edge it is slightly larger
-        return scrollHeight >= this.scrollContainer.scrollHeight;
+        return scrollHeight >= container.scrollHeight;
     }
 
     private createAnchors(): KbqDocsAnchor[] {
@@ -211,14 +228,12 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
     /** Returns the element's absolute scroll position within the scroll container. */
     private getHeaderTopOffset(header: HTMLElement): number {
-        // For SSR compatibility
-        if (typeof this.scrollContainer.getBoundingClientRect !== 'function') return 0;
+        const container = this.scrollContainer;
 
-        return (
-            this.scrollContainer.scrollTop +
-            header.getBoundingClientRect().top -
-            this.scrollContainer.getBoundingClientRect().top
-        );
+        // For SSR compatibility / missing container
+        if (!container || typeof container.getBoundingClientRect !== 'function') return 0;
+
+        return container.scrollTop + header.getBoundingClientRect().top - container.getBoundingClientRect().top;
     }
 
     private getLevel(classList: DOMTokenList): number {
