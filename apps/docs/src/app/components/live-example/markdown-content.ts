@@ -47,9 +47,11 @@ export function docsBuildDocumentErrorHtml(url: string, statusText: string, isRu
  * path, so they do not redirect to `/#fragment`.
  */
 export function docsRewriteFragmentUrls(rawDocument: string, sanitizer: DomSanitizer, pathname: string): string {
-    return rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
+    return rawDocument.replace(/href="#([^"]*)"/g, (match: string, fragmentUrl: string) => {
         const absoluteUrl = `${pathname}#${fragmentUrl}`;
+        const safeUrl = sanitizer.sanitize(SecurityContext.URL, absoluteUrl);
 
-        return `href="${sanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
+        // If sanitization strips the URL (null), keep the original relative link instead of href="null".
+        return safeUrl ? `href="${safeUrl}"` : match;
     });
 }

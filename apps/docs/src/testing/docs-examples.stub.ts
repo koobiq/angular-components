@@ -22,7 +22,7 @@ export interface LiveExample {
 export const EXAMPLE_COMPONENTS: { [id: string]: LiveExample } = {};
 
 export function loadExample(_id: string): Promise<any> {
-    return Promise.resolve(undefined);
+    return Promise.resolve({});
 }
 
 export class ExampleData {
