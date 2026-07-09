@@ -4,20 +4,20 @@ import { By } from '@angular/platform-browser';
 import { KbqFilter, KbqPipe } from '@koobiq/components/filter-bar';
 
 /** Minimal host contract shared by every pipe spec's `TestComponent`. */
-export interface KbqPipeStatesHost {
+export interface PipeStatesHost {
     activeFilter: KbqFilter | null;
 }
 
 /** Live, per-test context created by each spec inside the shared `beforeEach`. */
-export interface KbqPipeStatesContext {
+export interface PipeStatesContext {
     /** Freshly created fixture whose host exposes `activeFilter`. */
-    fixture: ComponentFixture<KbqPipeStatesHost>;
+    fixture: ComponentFixture<PipeStatesHost>;
     /** Debug element of the `KbqFilterBar` rendered by the host. */
     filterBar: DebugElement;
 }
 
 /** Configuration passed by a pipe spec to register the shared "Pipe states" suite. */
-export interface KbqPipeStatesConfig {
+export interface PipeStatesConfig {
     /** Human-readable pipe label, used only in the "should render all X pipes" test name. */
     label: string;
     /** Type modifier class every rendered pipe of this kind carries, e.g. `'kbq-pipe__text'`. */
@@ -35,7 +35,7 @@ export interface KbqPipeStatesConfig {
      * Creates the fixture and resolves the filter-bar debug element. Invoked inside the shared
      * `beforeEach`, i.e. after the spec's own `TestBed.configureTestingModule` has run.
      */
-    createContext: () => KbqPipeStatesContext;
+    createContext: () => PipeStatesContext;
 }
 
 /**
@@ -57,7 +57,7 @@ type PipeStateName = (typeof PIPE_STATE_DESCRIPTORS)[number]['name'];
  * same five state fixtures and asserts the CSS modifier classes `KbqBasePipe` applies to the host
  * `.kbq-pipe` element, so the block is identical modulo the per-type value and modifier class.
  */
-export const registerPipeStatesTests = (config: KbqPipeStatesConfig): void => {
+export const registerPipeStatesTests = (config: PipeStatesConfig): void => {
     describe('Pipe states', () => {
         let filterBar: DebugElement;
 
