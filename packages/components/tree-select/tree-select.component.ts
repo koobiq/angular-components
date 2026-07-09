@@ -762,6 +762,10 @@ export class KbqTreeSelect
         this.options = tree.renderedOptions;
         tree.autoSelect = this.autoSelect;
 
+        // Tree lives inside the select panel: enable hover-to-focus on options even without a
+        // wrapping form-field (e.g. filter-bar pipes render the tree-select bare).
+        tree.inSelect = true;
+
         if (tree.multipleMode === null) {
             // setTimeout need for prevent an error "NG0100: ExpressionChangedAfterItHasBeenCheckedError"
             setTimeout(() => (this.tree()!.multipleMode = this.multiSelection ? MultipleMode.CHECKBOX : null));

@@ -69,7 +69,8 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption
+    KbqTreeOption,
+    KbqTreeSelection
 } from '@koobiq/components/tree';
 import { Observable, Subject, map, of, timer } from 'rxjs';
 import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectPanelWidth } from './tree-select.component';
@@ -355,6 +356,40 @@ class BasicTreeSelect {
 
     hasChild(_: number, nodeData: FileFlatNode) {
         return nodeData.expandable;
+    }
+}
+
+/**
+ * Tree-select rendered WITHOUT a wrapping `kbq-form-field` — mirrors how the filter-bar tree-select
+ * pipes render the control bare. Used to guard option hover-to-focus in that setup (#DS-5302).
+ */
+@Component({
+    selector: 'tree-select-without-form-field',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule
+    ],
+    template: `
+        <kbq-tree-select placeholder="Food">
+            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                    {{ treeControl.getViewValue(node) }}
+                </kbq-tree-option>
+            </kbq-tree-selection>
+        </kbq-tree-select>
+    `
+})
+class TreeSelectWithoutFormField {
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    readonly select = viewChild.required(KbqTreeSelect);
+    readonly treeSelection = viewChild(KbqTreeSelection);
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(TREE_DATA, 0);
     }
 }
 
@@ -4706,5 +4741,37 @@ describe('KbqTreeSelect', () => {
 
             expect(pane.style.width).toBe('344px');
         });
+    });
+
+    describe('option hover without a wrapping form-field (#DS-5302)', () => {
+        beforeEach(() => {
+            configureKbqTreeSelectTestingModule([TreeSelectWithoutFormField]);
+        });
+
+        it('highlights the hovered option even though the tree-select has no form-field ancestor', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TreeSelectWithoutFormField);
+
+            fixture.detectChanges();
+
+            const trigger = fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement;
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            // Hover-to-focus on tree-select options is gated by `KbqTreeSelection.inSelect`. It used to
+            // be derived solely from a wrapping `kbq-form-field`, so a bare tree-select (like the
+            // filter-bar pipes) left it false and hover did nothing. The host `KbqTreeSelect` now
+            // forces it true.
+            expect(fixture.componentInstance.treeSelection()?.inSelect).toBe(true);
+
+            const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
+            dispatchFakeEvent(option, 'mouseenter');
+            flush();
+            fixture.detectChanges();
+
+            expect(option.classList).toContain('kbq-focused');
+        }));
     });
 });
