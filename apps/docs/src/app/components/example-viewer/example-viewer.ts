@@ -6,10 +6,11 @@ import {
     ApplicationRef,
     ChangeDetectionStrategy,
     Component,
+    effect,
     ElementRef,
     inject,
     Injector,
-    Input,
+    input,
     NgZone,
     OnDestroy,
     output,
@@ -55,15 +56,7 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
     private readonly window = inject(KBQ_WINDOW);
 
     /** The URL of the document to display. */
-    @Input()
-    set documentUrl(url: string) {
-        if (!url) {
-            return;
-        }
-
-        this.clearLiveExamples();
-        this.getDocument(url);
-    }
+    readonly documentUrl = input<string>();
 
     readonly contentRendered = output<HTMLElement>();
     readonly contentRenderFailed = output<HTMLElement>();
@@ -79,6 +72,22 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
 
     private readonly documentLoader = inject(DocsDocumentLoader);
     private readonly platformId = inject(PLATFORM_ID);
+
+    constructor() {
+        super();
+
+        // Re-fetch whenever the URL input changes (replaces a side-effecting `@Input` setter).
+        effect(() => {
+            const url = this.documentUrl();
+
+            if (!url) {
+                return;
+            }
+
+            this.clearLiveExamples();
+            this.getDocument(url);
+        });
+    }
 
     ngOnDestroy() {
         this.clearLiveExamples();

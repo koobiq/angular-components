@@ -6,10 +6,11 @@ import {
     ApplicationRef,
     ChangeDetectionStrategy,
     Component,
+    effect,
     ElementRef,
     inject,
     Injector,
-    Input,
+    input,
     NgZone,
     OnDestroy,
     output,
@@ -65,15 +66,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     private readonly codeTemplate = viewChild.required(CdkPortal);
     private readonly codeSnippetTemplate = viewChild.required('codeSnippet', { read: CdkPortal });
     /** The URL of the document to display. */
-    @Input()
-    set documentUrl(url: string) {
-        if (!url) {
-            return;
-        }
-
-        this.clearLiveExamples();
-        this.getDocument(url);
-    }
+    readonly documentUrl = input<string>();
 
     readonly contentRendered = output<void>();
     readonly contentRenderFailed = output<void>();
@@ -99,6 +92,22 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly window = inject(KBQ_WINDOW);
     private readonly documentLoader = inject(DocsDocumentLoader);
+
+    constructor() {
+        super();
+
+        // Re-fetch whenever the URL input changes (replaces a side-effecting `@Input` setter).
+        effect(() => {
+            const url = this.documentUrl();
+
+            if (!url) {
+                return;
+            }
+
+            this.clearLiveExamples();
+            this.getDocument(url);
+        });
+    }
 
     ngOnDestroy() {
         this.clearLiveExamples();
