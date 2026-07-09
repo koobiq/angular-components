@@ -1,4 +1,15 @@
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
 Use the [country-flag-icons](https://www.npmjs.com/package/country-flag-icons) package to show a small country flag in your product:
+
+```bash
+npm install country-flag-icons
+```
+
+</div>
+</div>
 
 - **Full ISO 3166-1 coverage**. Every existing country is identified by a two-letter code (RU, DE, FR).
 - **Flags are redrawn for small sizes**. Most sets take detailed SVGs from Wikimedia Commons, and at interface sizes (16—24 px) the small coats of arms, inscriptions and emblems on them become illegible. In country-flag-icons the details are simplified, so flags stay recognizable even at icon size.
@@ -35,7 +46,7 @@ A flag denotes a country or region, not a language. Do not use a flag to pick an
 
 ## When the flag is missing
 
-First check availability via `hasFlag(code)` and do not render nothing:
+First check availability via `hasFlag(code)` and do not render an empty gap:
 
 ```ts
 import { hasFlag } from 'country-flag-icons';

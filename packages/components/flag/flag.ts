@@ -28,7 +28,7 @@ import { KbqFlagShadow, KbqFlagShape } from './flag.types';
         '[class.kbq-flag_circle]': "shape() === 'circle'",
         '[class.kbq-flag_shadow-inset]': "shadow() === 'inset'",
         '[class.kbq-flag_stylized]': 'stylized()',
-        '[class.kbq-flag_empty]': 'isEmpty()',
+        '[class.kbq-flag_empty]': 'empty()',
         '[attr.role]': "decorative() ? null : (label() ? 'img' : null)",
         '[attr.aria-label]': 'decorative() ? null : (label() || null)',
         '[attr.aria-hidden]': "decorative() ? 'true' : null"
@@ -49,7 +49,7 @@ export class KbqFlag {
     /** Adds rounded corners, a drop shadow and a gradient imitating folds for a volumetric look. */
     readonly stylized = input(false, { transform: booleanAttribute });
     /** Renders a neutral placeholder — use when no flag can be shown (unknown / invalid country code). */
-    readonly isEmpty = input(false, { transform: booleanAttribute });
+    readonly empty = input(false, { transform: booleanAttribute });
     /** Marks the flag as decorative — hidden from screen readers (use when adjacent text is present). */
     readonly decorative = input(false, { transform: booleanAttribute });
     /** Accessible name for the flag. Use when the flag carries meaning and has no adjacent text. */

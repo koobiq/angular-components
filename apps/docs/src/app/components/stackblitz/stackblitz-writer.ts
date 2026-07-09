@@ -22,6 +22,9 @@ const TEMPLATE_PATH = 'assets/stackblitz/';
  * These are only included when the example actually uses them.
  */
 const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
+    'country-flag-icons': {
+        'country-flag-icons': '^1.6.20'
+    },
     '@koobiq/components/markdown': {
         marked: '^17.0.3'
     },

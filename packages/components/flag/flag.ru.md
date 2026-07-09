@@ -1,4 +1,15 @@
-Используйте пакет [country-flag-icons](https://www.npmjs.com/package/country-flag-icons), чтобы показать небольшой флаг страны в продукте:
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+Используйте пакет [`country-flag-icons`](https://www.npmjs.com/package/country-flag-icons), чтобы показать небольшой флаг страны в продукте:
+
+```bash
+npm install country-flag-icons
+```
+
+</div>
+</div>
 
 - **Полное покрытие ISO 3166-1**. Все существующие страны обозначаются двухбуквенным кодом (RU, DE, FR).
 - **Флаги перерисованы под мелкий размер**. Большинство наборов берут детализированные SVG с вики склада, и в интерфейсных размерах (16—24 px) мелкие гербы, надписи и эмблемы на них становятся неразборчивыми. В country-flag-icons детали упрощены, поэтому флаги остаются узнаваемыми даже в размере иконки.

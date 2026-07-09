@@ -602,7 +602,7 @@ const structure: DocsStructure = makeStructure({
                         en: 'Flag'
                     },
                     svgPreview: '',
-                    hasApi: false,
+                    hasApi: true,
                     apiId: 'flag',
                     hasExamples: false,
                     isNew: expiresAt('2026-10-07')

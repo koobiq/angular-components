@@ -25,7 +25,7 @@ const sampleFlag = `<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
             <kbq-flag shadow="none" [innerHTML]="flag" />
             <kbq-flag shadow="inset" [innerHTML]="flag" />
             <kbq-flag stylized [innerHTML]="flag" />
-            <kbq-flag isEmpty />
+            <kbq-flag empty />
         </div>
     `,
     styles: `

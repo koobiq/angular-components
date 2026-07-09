@@ -15,7 +15,7 @@ type FallbackCountry = { code: string; name: string; custom?: string; shadow?: K
     template: `
         @for (country of countries; track country.name) {
             <span>
-                <kbq-flag decorative [isEmpty]="!country.svg && !country.custom" [shadow]="country.shadow ?? 'inset'">
+                <kbq-flag decorative [empty]="!country.svg && !country.custom" [shadow]="country.shadow ?? 'inset'">
                     @if (country.svg) {
                         <span class="layout-fill layout-row" [innerHTML]="country.svg"></span>
                     } @else if (country.custom) {

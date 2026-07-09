@@ -109,7 +109,7 @@ describe(KbqFlag.name, () => {
         @Component({
             imports: [KbqFlag],
             template: `
-                <kbq-flag isEmpty />
+                <kbq-flag empty />
             `
         })
         class TestComponent {}
