@@ -48,18 +48,13 @@ import { docsBuildDocumentErrorHtml, docsRewriteFragmentUrls } from './markdown-
         @if (documentContent()) {
             <div [innerHTML]="documentContent()"></div>
         } @else {
-            {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
+            {{ t('loadingDocument') }}
         }
         <ng-template let-htmlContent let-contentToCopy="textContent" let-language="language" cdkPortal>
             <kbq-code-block filled [files]="[{ content: contentToCopy, language }]" />
         </ng-template>
         <ng-template #codeSnippet let-htmlContent cdkPortal>
-            <span
-                class="kbq-mono-normal"
-                docsCodeSnippet
-                [innerHTML]="htmlContent"
-                [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'"
-            ></span>
+            <span class="kbq-mono-normal" docsCodeSnippet [innerHTML]="htmlContent" [kbqTooltip]="t('copy')"></span>
         </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

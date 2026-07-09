@@ -18,6 +18,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map, Observable } from 'rxjs';
 import { DocsLocale } from 'src/app/constants/locale';
+import { DOCS_TRANSLATIONS } from 'src/app/services/i18n';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocStates, DocsNavbarState } from '../../services/doc-states';
 import { DocsDocsearchDirective } from '../docsearch/docsearch.directive';
@@ -61,28 +62,19 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
             name: 'system',
             className: this.colorAutomaticTheme.matches ? KbqThemeSelector.Default : KbqThemeSelector.Dark,
             selected: false,
-            title: {
-                ru: 'Как в системе',
-                en: 'Same as system'
-            }
+            title: DOCS_TRANSLATIONS.themeSystem
         },
         {
             name: 'light',
             className: KbqThemeSelector.Default,
             selected: false,
-            title: {
-                ru: 'Светлая',
-                en: 'Light'
-            }
+            title: DOCS_TRANSLATIONS.themeLight
         },
         {
             name: 'dark',
             className: KbqThemeSelector.Dark,
             selected: false,
-            title: {
-                ru: 'Тёмная',
-                en: 'Dark'
-            }
+            title: DOCS_TRANSLATIONS.themeDark
         }
     ];
 

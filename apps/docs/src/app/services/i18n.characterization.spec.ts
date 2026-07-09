@@ -3,10 +3,13 @@ import { Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { KbqToastService } from '@koobiq/components/toast';
+import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { BehaviorSubject, map } from 'rxjs';
 import { DocsCopyButtonComponent } from '../components/copy-button/copy-button';
+import { DocsTokensTable } from '../components/design-tokens-viewers/tokens-overview';
 import { DocsPageNotFoundComponent } from '../components/page-not-found/page-not-found.component';
 import { DocsLocale } from '../constants/locale';
+import { DocsStructureTokensTab } from '../structure';
 import { DocsClipboardService } from './clipboard';
 import { DocsLocaleService } from './locale';
 
@@ -75,6 +78,39 @@ describe('docs i18n strings (characterization)', () => {
         it('labels the copy control per locale', () => {
             expect(ariaLabel(DocsLocale.Ru)).toBe('Скопировать');
             expect(ariaLabel(DocsLocale.En)).toBe('Copy');
+        });
+    });
+
+    describe(DocsTokensTable.name, () => {
+        const headerText = (locale: DocsLocale): string => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [DocsTokensTable],
+                providers: [provideDocsLocale(locale), provideRouter([]), KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER]
+            });
+
+            const fixture = TestBed.createComponent(DocsTokensTable);
+
+            fixture.componentRef.setInput('tab', DocsStructureTokensTab.Colors);
+            fixture.componentRef.setInput('section', {
+                type: 'Section',
+                tokens: [{ token: '--kbq-x', value: '1px' }]
+            });
+            fixture.detectChanges();
+
+            return fixture.nativeElement.textContent;
+        };
+
+        it('renders token/value column headers per locale', () => {
+            const ru = headerText(DocsLocale.Ru);
+
+            expect(ru).toContain('Токен');
+            expect(ru).toContain('Значение');
+
+            const en = headerText(DocsLocale.En);
+
+            expect(en).toContain('Token');
+            expect(en).toContain('Value');
         });
     });
 

@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { DocsLocale } from 'src/app/constants/locale';
+import { DOCS_TRANSLATIONS } from 'src/app/services/i18n';
 import { DocsStructureTokensTab } from '../../structure';
 import { DocsComponentViewerComponent } from '../component-viewer/component-viewer.component';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
@@ -19,7 +20,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     template: `
         <div class="docs-component-header">
             <div class="docs-component-name" docsRegisterHeader>
-                {{ isRuLocale() ? 'Дизайн-токены' : 'Design tokens' }}
+                {{ t('designTokens') }}
             </div>
             <div class="docs-component-navbar layout-padding-top-s">
                 <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
@@ -51,54 +52,12 @@ export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
     }
 
     readonly links: Array<{ title: Record<DocsLocale, string>; value: string }> = [
-        {
-            title: {
-                ru: 'Цвета',
-                en: 'Colors'
-            },
-            value: DocsStructureTokensTab.Colors
-        },
-        {
-            title: {
-                ru: 'Типографика',
-                en: 'Typography'
-            },
-            value: DocsStructureTokensTab.Typography
-        },
-        {
-            title: {
-                ru: 'Тени',
-                en: 'Shadows'
-            },
-            value: DocsStructureTokensTab.Shadows
-        },
-        {
-            title: {
-                ru: 'Скругления',
-                en: 'Border radius'
-            },
-            value: DocsStructureTokensTab.BorderRadius
-        },
-        {
-            title: {
-                ru: 'Размеры',
-                en: 'Sizes'
-            },
-            value: DocsStructureTokensTab.Sizes
-        },
-        {
-            title: {
-                ru: 'Инженерная палитра',
-                en: 'Engineer palette'
-            },
-            value: DocsStructureTokensTab.Palette
-        },
-        {
-            title: {
-                ru: 'Семантическая палитра',
-                en: 'Semantic palette'
-            },
-            value: DocsStructureTokensTab.Semantic
-        }
+        { title: DOCS_TRANSLATIONS.tokensTabColors, value: DocsStructureTokensTab.Colors },
+        { title: DOCS_TRANSLATIONS.tokensTabTypography, value: DocsStructureTokensTab.Typography },
+        { title: DOCS_TRANSLATIONS.tokensTabShadows, value: DocsStructureTokensTab.Shadows },
+        { title: DOCS_TRANSLATIONS.tokensTabBorderRadius, value: DocsStructureTokensTab.BorderRadius },
+        { title: DOCS_TRANSLATIONS.tokensTabSizes, value: DocsStructureTokensTab.Sizes },
+        { title: DOCS_TRANSLATIONS.tokensTabPalette, value: DocsStructureTokensTab.Palette },
+        { title: DOCS_TRANSLATIONS.tokensTabSemantic, value: DocsStructureTokensTab.Semantic }
     ];
 }

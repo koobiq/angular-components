@@ -11,7 +11,7 @@
     </div>
     <div class="docs-icon-preview-modal__content">
         <kbq-form-field>
-            <kbq-select [placeholder]="isRuLocale() ? 'Цвет' : 'Color'" [(value)]="color">
+            <kbq-select [placeholder]="t('iconColor')" [(value)]="color">
                 <kbq-select-trigger>
                     <i kbq-icon="kbq-circle-xs_16" class="docs-icon-preview-modal__palette-icon" [color]="color()"></i>
                     {{ color() | titlecase }}
@@ -33,27 +33,27 @@
         <div class="docs-icon-preview-modal__buttons">
             <button kbq-button (click)="downloadSVG()">
                 <i kbq-icon="kbq-arrow-down-to-line_16"></i>
-                {{ isRuLocale() ? 'Скачать SVG' : 'Download SVG' }}
+                {{ t('downloadSvg') }}
             </button>
 
             <button kbq-button (click)="copySVG()">
                 <i kbq-icon="kbq-file-multiple-o_16"></i>
-                {{ isRuLocale() ? 'Скопировать SVG' : 'Copy SVG' }}
+                {{ t('copySvg') }}
             </button>
         </div>
 
         <kbq-dl class="docs-icon-preview-modal__description" [vertical]="true">
-            <kbq-dt>{{ isRuLocale() ? 'Размер' : 'Size' }}</kbq-dt>
+            <kbq-dt>{{ t('iconSize') }}</kbq-dt>
             <kbq-dd>{{ iconItem.size }}px</kbq-dd>
 
             <kbq-dt>Angular</kbq-dt>
             <kbq-dd>
-                <code docsCodeSnippet [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'">{{ iconExample() }}</code>
+                <code docsCodeSnippet [kbqTooltip]="t('copy')">{{ iconExample() }}</code>
             </kbq-dd>
 
-            <kbq-dt>{{ isRuLocale() ? 'Для MS Word' : 'For MS Word' }}</kbq-dt>
+            <kbq-dt>{{ t('forMsWord') }}</kbq-dt>
             <kbq-dd>
-                <span docsCodeSnippet [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'">
+                <span docsCodeSnippet [kbqTooltip]="t('copy')">
                     @if (getHexColor(); as hex) {
                         <span>[{{ hex }}]</span>
                     }
@@ -62,11 +62,11 @@
             </kbq-dd>
 
             @if (iconItem.description) {
-                <kbq-dt>{{ isRuLocale() ? 'Описание' : 'Description' }}</kbq-dt>
+                <kbq-dt>{{ t('iconDescription') }}</kbq-dt>
                 <kbq-dd>{{ iconItem.description }}</kbq-dd>
             }
 
-            <kbq-dt>{{ isRuLocale() ? 'Ключевые слова' : 'Key words' }}</kbq-dt>
+            <kbq-dt>{{ t('iconKeywords') }}</kbq-dt>
             <kbq-dd class="docs-icon-preview-modal__key-words">
                 @for (tag of iconItem.tags; track $index) {
                     <kbq-badge

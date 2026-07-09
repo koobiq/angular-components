@@ -22,15 +22,7 @@
             (keydown.enter)="toggleSourceView()"
             (keydown.space)="$event.preventDefault(); toggleSourceView()"
         >
-            {{
-                isSourceShown()
-                    ? isRuLocale()
-                        ? 'Скрыть пример кода'
-                        : 'Hide example code'
-                    : isRuLocale()
-                      ? 'Показать пример кода'
-                      : 'Show example code'
-            }}
+            {{ isSourceShown() ? t('hideExampleCode') : t('showExampleCode') }}
         </span>
 
         <div class="layout-row layout-align-center-center">
@@ -39,7 +31,7 @@
                 color="theme"
                 kbqStyle="transparent"
                 kbqPlacement="bottom"
-                [kbqTooltip]="isRuLocale() ? 'Сбросить состояние' : 'Reset state'"
+                [kbqTooltip]="t('resetState')"
                 (click)="reload()"
             >
                 <i kbq-icon="kbq-arrow-rotate-left_16"></i>

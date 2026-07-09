@@ -19,7 +19,7 @@ import { DocsOverviewComponentBase } from './component-viewer.component';
 
             <div class="kbq-callout kbq-callout_contrast">
                 <div class="kbq-callout__header">
-                    {{ isRuLocale() ? 'Предложения по улучшению' : 'Suggestions for improvement' }}
+                    {{ t('improvementSuggestions') }}
                 </div>
 
                 <!-- prettier-ignore -->

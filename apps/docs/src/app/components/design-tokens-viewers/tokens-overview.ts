@@ -66,8 +66,8 @@ interface DocsTokensInfoRaw {
                 <thead>
                     <tr class="kbq-caps-compact">
                         <th align="left"></th>
-                        <th align="left">{{ localeData.token[locale()] }}</th>
-                        <th align="left">{{ localeData.value[locale()] }}</th>
+                        <th align="left">{{ t('token') }}</th>
+                        <th align="left">{{ t('value') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,7 +81,7 @@ interface DocsTokensInfoRaw {
                                     <span
                                         docsCodeSnippet
                                         class="kbq-markdown__code"
-                                        [kbqTooltip]="localeData.codeSnippet[locale()]"
+                                        [kbqTooltip]="t('copy')"
                                         [kbqTooltipArrow]="false"
                                     >
                                         {{ token.token }}
@@ -131,21 +131,6 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Semantic]: 'background-color',
         [DocsStructureTokensTab.Sizes]: 'width',
         [DocsStructureTokensTab.Shadows]: 'box-shadow'
-    };
-
-    protected readonly localeData = {
-        token: {
-            ru: 'Токен',
-            en: 'Token'
-        },
-        value: {
-            ru: 'Значение',
-            en: 'Value'
-        },
-        codeSnippet: {
-            ru: 'Скопировать',
-            en: 'Copy'
-        }
     };
 
     constructor() {
@@ -228,21 +213,6 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         ),
         { initialValue: DocsStructureTokensTab.Colors }
     );
-
-    protected readonly localeData = {
-        token: {
-            ru: 'Токен',
-            en: 'Token'
-        },
-        value: {
-            ru: 'Значение',
-            en: 'Value'
-        },
-        codeSnippet: {
-            ru: 'Скопировать',
-            en: 'Copy'
-        }
-    };
 
     protected tokenDataMap: Record<
         Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,

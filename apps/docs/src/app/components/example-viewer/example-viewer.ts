@@ -35,7 +35,7 @@ import { docsBuildDocumentErrorHtml, docsRewriteFragmentUrls } from '../live-exa
         @if (documentContent()) {
             <div [innerHTML]="documentContent()"></div>
         } @else {
-            {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
+            {{ t('loadingDocument') }}
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

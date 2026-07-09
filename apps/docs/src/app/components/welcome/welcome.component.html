@@ -1,13 +1,9 @@
 <header docsRegisterHeader class="docs-welcome__header">
-    {{ isRuLocale() ? 'Дизайн-система Koobiq' : 'Koobiq design system' }}
+    {{ t('welcomeTitle') }}
 </header>
 
 <div class="docs-welcome__description">
-    {{
-        isRuLocale()
-            ? 'Набор принципов и инструментов для создания веб-приложений. Дизайн-система упрощает создание продуктов и обеспечивает единообразие их интерфейсов.'
-            : 'A set of principles and tools for creating web applications. The design system simplifies product development and ensures consistency across their interfaces.'
-    }}
+    {{ t('welcomeDescription') }}
 </div>
 
 @for (category of structureCategories; track category) {
