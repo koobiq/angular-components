@@ -149,7 +149,7 @@ export const ruRULocaleData = {
                 LAST_PART_SEPARATOR: 'и',
                 YEARS: `{years, plural,
                 one {# год}
-                few {последние # лет}
+                few {последние # года}
                 other {последние # лет}
             }`,
                 MONTHS: `{months, plural,
@@ -190,7 +190,7 @@ export const ruRULocaleData = {
                 LAST_PART_SEPARATOR: 'и',
                 YEARS: `{years, plural,
                 one {Последний год}
-                few {Последние # лет}
+                few {Последние # года}
                 other {Последние # лет}
             }`,
                 MONTHS: `{months, plural,
