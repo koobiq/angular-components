@@ -2,10 +2,13 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+
+const restSymbolsRegex = /[^0-9]+/g;
 
 /**
  * @title Validation message global with links
@@ -20,6 +23,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         KbqButtonModule,
         KbqFormsModule,
         KbqLinkModule,
+        KbqToolTipModule,
         FormsModule
     ],
     templateUrl: 'validation-message-global-with-links-example.html',
@@ -43,6 +47,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
     }
 })
 export class ValidationMessageGlobalWithLinksExample {
+    protected readonly popUpPlacements = PopUpPlacements;
+
     protected readonly inProgress = signal(false);
     protected readonly showError = signal(false);
     protected readonly form = new FormGroup({
@@ -52,6 +58,18 @@ export class ValidationMessageGlobalWithLinksExample {
         firstName: new FormControl(''),
         patronymic: new FormControl('')
     });
+
+    onInput(event: Event, tooltip: KbqTooltipTrigger, control: FormControl): void {
+        if (event.target instanceof HTMLInputElement && event.target.value && /\D/.test(event.target.value)) {
+            control.setValue(event.target.value.replace(restSymbolsRegex, ''));
+
+            if (!tooltip.isOpen) {
+                tooltip.show();
+
+                setTimeout(() => tooltip.hide(), 3000);
+            }
+        }
+    }
 
     submitForm() {
         this.inProgress.set(true);
