@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { DocsLocale } from '../constants/locale';
@@ -26,12 +26,16 @@ export class DocsTitleStrategy extends TitleStrategy {
     private readonly title = inject(Title);
     private readonly meta = inject(Meta);
     private readonly document = inject(DOCUMENT);
-    private readonly localeService = inject(DocsLocaleService);
+    // Resolve DocsLocaleService lazily: it injects Router, and the Router eagerly resolves
+    // TitleStrategy, so injecting it here directly would form a Router → TitleStrategy →
+    // DocsLocaleService → Router cycle (NG0200). By the time updateTitle runs, Router is constructed.
+    private readonly injector = inject(Injector);
 
     override updateTitle(snapshot: RouterStateSnapshot): void {
-        const locale = this.localeService.locale;
+        const localeService = this.injector.get(DocsLocaleService);
+        const locale = localeService.locale;
         const path = snapshot.url.split(/[?#]/)[0];
-        const pageTitle = this.resolvePageTitle(path, locale);
+        const pageTitle = this.resolvePageTitle(path, locale, localeService);
         const fullTitle = pageTitle ? `${pageTitle} ${TITLE_SEPARATOR} ${SITE_NAME}` : SITE_NAME;
 
         this.title.setTitle(fullTitle);
@@ -39,11 +43,11 @@ export class DocsTitleStrategy extends TitleStrategy {
     }
 
     /** Resolves the human-readable page name from the URL using the structure registry. */
-    private resolvePageTitle(path: string, locale: DocsLocale): string | null {
+    private resolvePageTitle(path: string, locale: DocsLocale, localeService: DocsLocaleService): string | null {
         const segments = path.split('/').filter(Boolean);
 
         // segments[0] is the locale (or an out-of-locale route such as `404`).
-        if (!segments.length || !this.localeService.isSupportedLocale(segments[0])) {
+        if (!segments.length || !localeService.isSupportedLocale(segments[0])) {
             return null;
         }
 
