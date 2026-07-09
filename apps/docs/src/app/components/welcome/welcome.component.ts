@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '@koobiq/components/core';
@@ -23,6 +23,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     ],
     templateUrl: './welcome.component.html',
     styleUrls: ['./welcome.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-welcome kbq-scrollbar'

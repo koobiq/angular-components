@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { KbqHighlightModule, ThemePalette } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -59,7 +58,6 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly activeRoute = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly location = inject(Location);
-    private readonly titleService = inject(Title);
     private readonly docStates = inject(DocsDocStates);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -73,25 +71,31 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     availableSizes: number[];
 
     private iconItems: DocsIconItems;
-    private queryParamMap: Params;
+    private queryParamMap: Params = {};
 
     constructor() {
         super();
 
-        this.http.get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' }).subscribe((data) => {
-            this.iconItems = new DocsIconItems(
-                data as Record<string, { codepoint: string; tags: string[]; description: string }>
-            );
+        this.http
+            .get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((data) => {
+                this.iconItems = new DocsIconItems(
+                    data as Record<string, { codepoint: string; tags: string[]; description: string }>
+                );
 
-            this.availableSizes = Array.from(this.iconItems.sizes).sort((a, b) => a - b);
+                this.availableSizes = Array.from(this.iconItems.sizes).sort((a, b) => a - b);
 
-            this.init();
-            this.refreshTitle(undefined);
+                this.init();
 
-            this.changeDetectorRef.markForCheck();
-        });
+                this.changeDetectorRef.markForCheck();
+            });
 
-        this.location.subscribe(() => this.modalService.closeAll());
+        // `Location` is a root/app-scoped service, so this popstate handler outlives the
+        // component unless it is torn down explicitly.
+        const locationSubscription = this.location.subscribe(() => this.modalService.closeAll());
+
+        this.destroyRef.onDestroy(() => locationSubscription.unsubscribe());
 
         this.activeRoute.queryParamMap.pipe(takeUntilDestroyed()).subscribe(({ params }: Params) => {
             this.searchControl.setValue(params.s);
@@ -131,7 +135,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
             )
             .subscribe((filteredItems) => this.filteredIcons.next(filteredItems!));
 
-        this.activeRoute.queryParams.subscribe((params) => {
+        this.activeRoute.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
             if (params.id) {
                 const iconItem = this.iconItems.getItemById(params.id);
 
@@ -160,8 +164,6 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
                 s: this.searchControl.value ? this.searchControl.value : undefined
             }
         });
-
-        this.refreshTitle(iconItem);
     }
 
     openIconPreview(iconItem: DocsIconItem): void {
@@ -192,9 +194,5 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
             queryParams: { s: value || undefined },
             queryParamsHandling: 'merge'
         });
-    }
-
-    private refreshTitle(activeIcon: DocsIconItem | undefined): void {
-        this.titleService.setTitle(`${activeIcon ? `${activeIcon.name} \u00B7 ` : ''} Icon \u00B7 Mosaic`);
     }
 }

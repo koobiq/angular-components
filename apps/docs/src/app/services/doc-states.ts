@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
+import { BehaviorSubject, fromEvent, Observable, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 export enum DocsNavbarState {
@@ -12,9 +12,9 @@ export class DocsDocStates {
     readonly viewerTopOverflown = new BehaviorSubject<boolean>(false);
     readonly navbarTopOverflown = new BehaviorSubject<boolean>(false);
 
-    currentHeader: HTMLElement;
-    currentHeaderScrollContainer: HTMLElement;
-    navbarScrollContainer: HTMLElement;
+    currentHeader?: HTMLElement;
+    currentHeaderScrollContainer?: HTMLElement;
+    navbarScrollContainer?: HTMLElement;
 
     isHeaderOverflown: boolean = false;
 
@@ -23,6 +23,15 @@ export class DocsDocStates {
     }
 
     private _navbarMenu = new BehaviorSubject<DocsNavbarState>(DocsNavbarState.Closed);
+
+    /**
+     * Only the most recently registered scroll container is tracked. `register*` is a
+     * `providedIn: 'root'` singleton method that viewers call again on every client-side
+     * navigation, so the previous subscription must be torn down first — otherwise one live
+     * `scroll` listener leaks per navigation and keeps firing against a detached element.
+     */
+    private headerScrollSubscription?: Subscription;
+    private navbarScrollSubscription?: Subscription;
 
     openNavbarMenu() {
         this._navbarMenu.next(DocsNavbarState.Opened);
@@ -41,7 +50,7 @@ export class DocsDocStates {
     }
 
     scrollUp() {
-        this.currentHeaderScrollContainer.scroll(0, 0);
+        this.currentHeaderScrollContainer?.scroll(0, 0);
     }
 
     registerHeader(element: HTMLElement) {
@@ -51,7 +60,8 @@ export class DocsDocStates {
     registerHeaderScrollContainer(element: HTMLElement) {
         this.currentHeaderScrollContainer = element;
 
-        fromEvent(this.currentHeaderScrollContainer, 'scroll')
+        this.headerScrollSubscription?.unsubscribe();
+        this.headerScrollSubscription = fromEvent(element, 'scroll')
             .pipe(debounceTime(10))
             .subscribe(this.checkHeaderOverflow);
 
@@ -59,6 +69,10 @@ export class DocsDocStates {
     }
 
     checkHeaderOverflow = () => {
+        if (!this.currentHeaderScrollContainer || !this.currentHeader) {
+            return;
+        }
+
         this.isHeaderOverflown = this.currentHeaderScrollContainer.scrollTop > this.currentHeader.offsetHeight;
         this.viewerTopOverflown.next(this.currentHeaderScrollContainer.scrollTop > 0);
     };
@@ -66,10 +80,17 @@ export class DocsDocStates {
     registerNavbarScrollContainer(element: HTMLElement) {
         this.navbarScrollContainer = element;
 
-        fromEvent(this.navbarScrollContainer, 'scroll').pipe(debounceTime(10)).subscribe(this.checkNavbarOverflow);
+        this.navbarScrollSubscription?.unsubscribe();
+        this.navbarScrollSubscription = fromEvent(element, 'scroll')
+            .pipe(debounceTime(10))
+            .subscribe(this.checkNavbarOverflow);
     }
 
     checkNavbarOverflow = () => {
+        if (!this.navbarScrollContainer) {
+            return;
+        }
+
         this.navbarTopOverflown.next(this.navbarScrollContainer.scrollTop > 0);
     };
 }

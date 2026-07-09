@@ -1,4 +1,4 @@
-import { Component, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DocsLocaleState } from '../../services/locale';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
@@ -49,6 +49,7 @@ import { docsData } from './data/typography';
         </docs-component-viewer-wrapper>
     `,
     styleUrls: ['design-tokens.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-markdown'
     }

@@ -10,7 +10,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -84,9 +83,11 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
 
                 if (!docItem) {
                     this.router.navigate(['/404']);
+
+                    return;
                 }
 
-                this.structureItem = docItem!;
+                this.structureItem = docItem;
                 this.structureCategoryId = docsGetCategoryById(this.structureItem.categoryId!)!.id;
             });
 
@@ -98,7 +99,6 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
 export class DocsOverviewComponentBase extends DocsLocaleState {
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly titleService = inject(Title);
 
     componentDocItem: DocsStructureItem | null = null;
 
@@ -136,15 +136,8 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
     }
 
     private showView() {
-        const documentName = this.componentDocItem?.id;
-        let title = 'Koobiq';
-
-        if (documentName) {
-            title = `${documentName.charAt(0).toUpperCase()}${documentName.slice(1)} \u00B7 ${title}`;
-        }
-
-        this.titleService.setTitle(title);
-
+        // The page title/meta are owned centrally by `DocsTitleStrategy`; here we only flush the
+        // view once the document content has rendered.
         this.changeDetectorRef.detectChanges();
     }
 }

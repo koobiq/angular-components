@@ -10,10 +10,10 @@ import { DocsLocaleState } from 'src/app/services/locale';
         RouterLink
     ],
     template: `
-        <div class="kbq-display-compact">{{ isRuLocale() ? 'Страница не найдена' : 'Page not found' }}</div>
+        <div class="kbq-display-compact">{{ t('pageNotFound') }}</div>
 
         <a class="layout-margin-top-s" kbq-link routerLink="/">
-            {{ isRuLocale() ? 'Перейти на главную страницу' : 'Go to main page' }}
+            {{ t('goToMainPage') }}
         </a>
     `,
     styleUrls: ['page-not-found.scss'],

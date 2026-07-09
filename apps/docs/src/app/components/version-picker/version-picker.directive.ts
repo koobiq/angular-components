@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Directive, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW } from '@koobiq/components/core';
+import { catchError, of } from 'rxjs';
 
 type DocsVersion = {
     version: string;
@@ -27,6 +29,12 @@ export class DocsVersionPickerDirective {
     constructor() {
         this.httpClient
             .get('https://next.koobiq.io/assets/versions.json', { responseType: 'json' })
+            .pipe(
+                // A failed version fetch must not throw an unhandled error; degrade gracefully to
+                // an empty version list (the picker simply shows no alternative versions).
+                catchError(() => of({})),
+                takeUntilDestroyed()
+            )
             .subscribe((data) => {
                 Object.entries(data)
                     .reverse()

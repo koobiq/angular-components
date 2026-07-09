@@ -1,19 +1,5 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Route, Routes, UrlSegment } from '@angular/router';
-import {
-    DocsComponentApiComponent,
-    DocsComponentExamplesComponent,
-    DocsComponentOverviewComponent,
-    DocsComponentViewerComponent
-} from './components/component-viewer/component-viewer.component';
-import { DocsDesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
-import { DocsTokensOverview } from './components/design-tokens-viewers/tokens-overview';
-import { DocsTypographyTable } from './components/design-tokens-viewers/typography-overview';
-import { DocsIconsViewerComponent } from './components/icons-viewer/icons-viewer.component';
-import { DocsPageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { DocsPopoverExample } from './components/popover-example/popover-example.component';
-import { DocsSelectExample } from './components/select-example/select-example.component';
-import { DocsWelcomeComponent } from './components/welcome/welcome.component';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
 import {
@@ -34,6 +20,25 @@ const canMatchLocaleRoutes: CanMatchFn = (_route: Route, segments: UrlSegment[])
     return docsLocaleService.isSupportedLocale(path);
 };
 
+/**
+ * Lazy loaders. Route components are code-split with `loadComponent` so the heavy page graph
+ * (icons viewer, token tables, example viewers) is fetched on demand instead of being eagerly
+ * bundled into the initial SSR/hydration chunk. Loaders that resolve from the same module share
+ * a single chunk.
+ */
+const loadComponentViewer = () =>
+    import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentViewerComponent);
+const loadComponentOverview = () =>
+    import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentOverviewComponent);
+const loadComponentApi = () =>
+    import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentApiComponent);
+const loadComponentExamples = () =>
+    import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentExamplesComponent);
+const loadTokensOverview = () =>
+    import('./components/design-tokens-viewers/tokens-overview').then((m) => m.DocsTokensOverview);
+const loadTypographyTable = () =>
+    import('./components/design-tokens-viewers/typography-overview').then((m) => m.DocsTypographyTable);
+
 export const DOCS_ROUTES: Routes = [
     { path: '', redirectTo: DOCS_DEFAULT_LOCALE, pathMatch: 'full' },
     {
@@ -42,7 +47,8 @@ export const DOCS_ROUTES: Routes = [
         children: [
             {
                 path: '',
-                component: DocsWelcomeComponent,
+                loadComponent: () =>
+                    import('./components/welcome/welcome.component').then((m) => m.DocsWelcomeComponent),
                 pathMatch: 'full'
             },
 
@@ -56,25 +62,28 @@ export const DOCS_ROUTES: Routes = [
             },
             {
                 path: `${DocsStructureCategoryId.Main}/${DocsStructureItemId.DesignTokens}`,
-                component: DocsDesignTokensViewer,
+                loadComponent: () =>
+                    import('./components/design-tokens-viewers/design-tokens-viewer').then(
+                        (m) => m.DocsDesignTokensViewer
+                    ),
                 children: [
                     { path: '', redirectTo: DocsStructureTokensTab.Colors, pathMatch: 'full' },
-                    { path: DocsStructureTokensTab.Colors, component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: DocsStructureTokensTab.Typography, component: DocsTypographyTable, pathMatch: 'full' },
-                    { path: DocsStructureTokensTab.Shadows, component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: DocsStructureTokensTab.BorderRadius, component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: DocsStructureTokensTab.Sizes, component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: DocsStructureTokensTab.Semantic, component: DocsTokensOverview, pathMatch: 'full' },
-                    { path: DocsStructureTokensTab.Palette, component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Colors, loadComponent: loadTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Typography, loadComponent: loadTypographyTable, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Shadows, loadComponent: loadTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.BorderRadius, loadComponent: loadTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Sizes, loadComponent: loadTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Semantic, loadComponent: loadTokensOverview, pathMatch: 'full' },
+                    { path: DocsStructureTokensTab.Palette, loadComponent: loadTokensOverview, pathMatch: 'full' },
                     { path: '**', redirectTo: DocsStructureTokensTab.Colors }
                 ]
             },
             {
                 path: `${DocsStructureCategoryId.Main}/:id`,
-                component: DocsComponentViewerComponent,
+                loadComponent: loadComponentViewer,
                 children: [
                     { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
-                    { path: DocsStructureItemTab.Overview, component: DocsComponentOverviewComponent },
+                    { path: DocsStructureItemTab.Overview, loadComponent: loadComponentOverview },
                     { path: '**', redirectTo: DocsStructureItemTab.Overview }
                 ]
             },
@@ -89,22 +98,22 @@ export const DOCS_ROUTES: Routes = [
             },
             {
                 path: `${DocsStructureCategoryId.Components}/:id`,
-                component: DocsComponentViewerComponent,
+                loadComponent: loadComponentViewer,
                 children: [
                     { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
                     {
                         path: DocsStructureItemTab.Overview,
-                        component: DocsComponentOverviewComponent,
+                        loadComponent: loadComponentOverview,
                         pathMatch: 'full'
                     },
                     {
                         path: DocsStructureItemTab.Api,
-                        component: DocsComponentApiComponent,
+                        loadComponent: loadComponentApi,
                         pathMatch: 'full'
                     },
                     {
                         path: DocsStructureItemTab.Examples,
-                        component: DocsComponentExamplesComponent,
+                        loadComponent: loadComponentExamples,
                         pathMatch: 'full'
                     },
                     { path: '**', redirectTo: DocsStructureItemTab.Overview }
@@ -121,22 +130,22 @@ export const DOCS_ROUTES: Routes = [
             },
             {
                 path: `${DocsStructureCategoryId.Other}/:id`,
-                component: DocsComponentViewerComponent,
+                loadComponent: loadComponentViewer,
                 children: [
                     { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
                     {
                         path: DocsStructureItemTab.Overview,
-                        component: DocsComponentOverviewComponent,
+                        loadComponent: loadComponentOverview,
                         pathMatch: 'full'
                     },
                     {
                         path: DocsStructureItemTab.Api,
-                        component: DocsComponentApiComponent,
+                        loadComponent: loadComponentApi,
                         pathMatch: 'full'
                     },
                     {
                         path: DocsStructureItemTab.Examples,
-                        component: DocsComponentExamplesComponent,
+                        loadComponent: loadComponentExamples,
                         pathMatch: 'full'
                     },
                     { path: '**', redirectTo: DocsStructureItemTab.Overview }
@@ -146,16 +155,32 @@ export const DOCS_ROUTES: Routes = [
             /**
              * Icons section routes
              */
-            { path: DocsStructureCategoryId.Icons, component: DocsIconsViewerComponent }
+            {
+                path: DocsStructureCategoryId.Icons,
+                loadComponent: () =>
+                    import('./components/icons-viewer/icons-viewer.component').then((m) => m.DocsIconsViewerComponent)
+            }
         ]
     },
 
     // todo DS-4873
-    { path: 'examples/popover', component: DocsPopoverExample },
-    { path: 'examples/select', component: DocsSelectExample },
+    {
+        path: 'examples/popover',
+        loadComponent: () =>
+            import('./components/popover-example/popover-example.component').then((m) => m.DocsPopoverExample)
+    },
+    {
+        path: 'examples/select',
+        loadComponent: () =>
+            import('./components/select-example/select-example.component').then((m) => m.DocsSelectExample)
+    },
     /**
      * Error routes
      */
-    { path: http404Redirect, component: DocsPageNotFoundComponent },
+    {
+        path: http404Redirect,
+        loadComponent: () =>
+            import('./components/page-not-found/page-not-found.component').then((m) => m.DocsPageNotFoundComponent)
+    },
     { path: '**', redirectTo: http404Redirect }
 ];

@@ -20,9 +20,12 @@
                         @for (icon of filterBySize(icons, size); track icon) {
                             <div
                                 class="docs-icons-viewer__table-cell docs-icons-viewer__table-cell_{{ size }}"
+                                role="button"
                                 tabindex="0"
+                                [attr.aria-label]="icon.name"
                                 (click)="setActiveIcon(icon)"
-                                (keyup.enter)="setActiveIcon(icon)"
+                                (keydown.enter)="setActiveIcon(icon)"
+                                (keydown.space)="$event.preventDefault(); setActiveIcon(icon)"
                             >
                                 <i [kbq-icon]="icon.cssClass"></i>
                                 <span

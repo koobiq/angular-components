@@ -1,5 +1,6 @@
 import { NgComponentOutlet } from '@angular/common';
 import {
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
@@ -51,6 +52,7 @@ interface ExampleFileData {
     ],
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-live-example-viewer kbq-markdown'
@@ -164,6 +166,8 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
                         preferredExampleFileOrder.indexOf(a.language) - preferredExampleFileOrder.indexOf(b.language)
                 );
                 this.files.push(...this.prepareCodeFiles(results));
+                // Files arrive from async HTTP; under OnPush the code panel needs an explicit check.
+                this.cdr.markForCheck();
             },
             error: (error) => {
                 console.error('Error fetching the files', error);

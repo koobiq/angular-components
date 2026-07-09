@@ -12,7 +12,16 @@
     }
 
     <div class="docs-live-example__footer">
-        <span kbq-link pseudo (click)="toggleSourceView()" (keydown.enter)="toggleSourceView()">
+        <span
+            kbq-link
+            pseudo
+            role="button"
+            tabindex="0"
+            [attr.aria-expanded]="isSourceShown()"
+            (click)="toggleSourceView()"
+            (keydown.enter)="toggleSourceView()"
+            (keydown.space)="$event.preventDefault(); toggleSourceView()"
+        >
             {{
                 isSourceShown()
                     ? isRuLocale()

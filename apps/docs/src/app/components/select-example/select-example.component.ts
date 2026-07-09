@@ -107,7 +107,4 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsSelectExample {
-    readonly popoverContent =
-        'Think of a popover as a lightweight, floating window that is directly tethered to the element that summoned it. Unlike a modal dialog, it doesn\'t usually block interaction with the rest of the page entirely, allowing for a faster, more "in-context" workflow. It\'s often activated by clicking a button, icon, or link, and it disappears when the user moves their focus away.';
-}
+export class DocsSelectExample {}

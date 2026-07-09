@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation, inject } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
@@ -11,6 +11,7 @@ import { DocsStackblitzWriter } from './stackblitz-writer';
         <span class="kbq-link__text">StackBlitz</span>
         <i kbq-icon="kbq-north-east_16"></i>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-stackblitz-button kbq-link_external',

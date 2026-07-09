@@ -1,5 +1,14 @@
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
-import { afterNextRender, AfterViewInit, Component, inject, input, signal, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    input,
+    signal,
+    viewChild
+} from '@angular/core';
 import { KBQ_WINDOW, ThemeService } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -93,7 +102,8 @@ interface DocsTokensInfoRaw {
             </table>
         }
     `,
-    styleUrls: ['design-tokens.scss']
+    styleUrls: ['design-tokens.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsTokensTable extends DocsLocaleState {
     readonly section = input<DocsTokensSectionInfo>();
@@ -196,6 +206,7 @@ export class DocsTokensTable extends DocsLocaleState {
             <docs-anchors [headerSelectors]="'.docs-header-link'" />
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-markdown'
     }

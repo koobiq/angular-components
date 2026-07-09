@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
@@ -39,6 +39,7 @@ import { DocsOverviewComponentBase } from './component-viewer.component';
             <docs-anchors [headerSelectors]="'.docs-header-link'" />
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-component-overview'
     }

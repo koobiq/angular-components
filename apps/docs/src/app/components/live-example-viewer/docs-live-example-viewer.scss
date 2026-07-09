@@ -6,7 +6,9 @@
     border-radius: inherit;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    background: var(--docs-live-example-example-background);
+    // `--docs-live-example-example-background` is only assigned by a few example modifier classes
+    // (see styles/_examples.scss); everything else falls back to a transparent canvas explicitly.
+    background: var(--docs-live-example-example-background, transparent);
 }
 
 .docs-live-example-viewer {

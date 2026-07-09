@@ -1,4 +1,3 @@
-import { Clipboard } from '@angular/cdk/clipboard';
 import { DOCUMENT, TitleCasePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -18,8 +17,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef } from '@koobiq/components/modal';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { DocsClipboardService } from 'src/app/services/clipboard';
 import { DocsIconItem } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsCodeSnippetDirective } from '../../code-snippet/code-snippet';
@@ -50,8 +49,7 @@ export type DocsIconPreviewModalData = {
 export class DocsIconPreviewModalComponent extends DocsLocaleState {
     private readonly icon = viewChild.required('iconPreview', { read: KbqIcon });
 
-    private readonly clipboard = inject(Clipboard);
-    private readonly toastService = inject(KbqToastService);
+    private readonly clipboard = inject(DocsClipboardService);
     private readonly httpClient = inject(HttpClient);
     protected readonly modal = inject(KbqModalRef);
     private readonly window = inject(KBQ_WINDOW);
@@ -82,12 +80,7 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState {
 
     protected copySVG(): void {
         this.httpClient.get(this.svgLink, { responseType: 'text' }).subscribe((data) => {
-            if (this.clipboard.copy(this.setSvgFillColor(data, this.getComputedIconColor() || 'currentColor'))) {
-                this.toastService.show({
-                    style: 'success',
-                    title: this.isRuLocale() ? 'Скопировано' : 'Copied'
-                });
-            }
+            this.clipboard.copyWithToast(this.setSvgFillColor(data, this.getComputedIconColor() || 'currentColor'));
         });
     }
 

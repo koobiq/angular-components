@@ -1,6 +1,7 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { DOCUMENT, NgClass } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     DestroyRef,
@@ -26,15 +27,21 @@ interface KbqDocsAnchor {
     element: HTMLElement;
 }
 
+/**
+ * Heading classes emitted by the markdown renderer (`tools/markdown-to-html`), ordered by depth.
+ * The anchor level is the index of the heading's class within this list.
+ */
+const DOCS_MARKDOWN_HEADING_CLASSES = ['kbq-markdown__h2', 'kbq-markdown__h3', 'kbq-markdown__h4', 'kbq-markdown__h5'];
+
 @Component({
     selector: 'docs-anchors',
     imports: [
         RouterLink,
-        NgClass,
         KbqTitleModule
     ],
     templateUrl: './anchors.component.html',
     styleUrls: ['./anchors.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-anchors'
@@ -217,12 +224,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     private getLevel(classList: DOMTokenList): number {
         const className = Array.from<string>(classList).find((name) => name.startsWith('kbq-markdown__')) || '';
 
-        return [
-            'kbq-markdown__h2',
-            'kbq-markdown__h3',
-            'kbq-markdown__h4',
-            'kbq-markdown__h5'
-        ].indexOf(className);
+        return DOCS_MARKDOWN_HEADING_CLASSES.indexOf(className);
     }
 
     private onScroll = () => {

@@ -1,5 +1,13 @@
 import { AsyncPipe } from '@angular/common';
-import { afterNextRender, ChangeDetectorRef, Component, inject, OnDestroy, ViewEncapsulation } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    OnDestroy,
+    ViewEncapsulation
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_WINDOW, KbqTheme, KbqThemeSelector, ThemeService } from '@koobiq/components/core';
@@ -30,6 +38,7 @@ import { DocsNavbarProperty } from './navbar-property';
     ],
     templateUrl: 'navbar.template.html',
     styleUrls: ['navbar.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-navbar'
@@ -114,9 +123,8 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
     }
 
     ngOnDestroy() {
-        // eslint-disable-next-line @angular-eslint/no-lifecycle-call
-        this.themeService.ngOnDestroy();
-
+        // NOTE: `ThemeService` is a root singleton and owns its own lifecycle — the navbar must not
+        // tear it down. Only this component's own media-query listener is removed here.
         try {
             this.colorAutomaticTheme.removeEventListener('change', this.setAutoTheme);
         } catch (err) {
@@ -134,7 +142,7 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
         this.themeService.setTheme(i);
     }
 
-    private setAutoTheme = (e) => {
+    private setAutoTheme = (e: MediaQueryListEvent) => {
         if (!this.themeService.themes[0]) return;
 
         this.themeService.themes[0] = {
@@ -145,5 +153,9 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
         if (this.themeService.themes[0].selected) {
             this.setTheme(0);
         }
+
+        // The media-query listener runs outside Angular's event bindings, so trigger a check
+        // explicitly for the OnPush theme dropdown.
+        this.cdr.markForCheck();
     };
 }

@@ -1,7 +1,5 @@
-import { Clipboard } from '@angular/cdk/clipboard';
 import { Directive, ElementRef, inject } from '@angular/core';
-import { KbqToastService } from '@koobiq/components/toast';
-import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsClipboardService } from 'src/app/services/clipboard';
 
 @Directive({
     selector: '[docsCodeSnippet]',
@@ -10,19 +8,11 @@ import { DocsLocaleState } from 'src/app/services/locale';
         '(click)': 'copy()'
     }
 })
-export class DocsCodeSnippetDirective extends DocsLocaleState {
-    private readonly clipboard = inject(Clipboard);
-    private readonly toastService = inject(KbqToastService);
+export class DocsCodeSnippetDirective {
+    private readonly clipboard = inject(DocsClipboardService);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     copy() {
-        if (!this.clipboard.copy(this.elementRef.nativeElement.textContent || '')) {
-            return;
-        }
-
-        this.toastService.show({
-            style: 'success',
-            title: this.isRuLocale() ? 'Скопировано' : 'Copied'
-        });
+        this.clipboard.copyWithToast(this.elementRef.nativeElement.textContent || '');
     }
 }
