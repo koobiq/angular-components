@@ -1,0 +1,20 @@
+:host {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-l);
+    --tab-nav-selected: var(--kbq-tabs-tab-item-filled-on-background-states-selected-background);
+}
+
+.example-tab-nav-bar {
+    overflow: hidden;
+}
+
+.example-tab-close {
+    position: absolute;
+    right: calc(var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width));
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to left, transparent 0%, var(--tab-nav-selected) 70%);
+}

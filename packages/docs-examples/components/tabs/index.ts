@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { TabsActionbarExample } from './tabs-actionbar/tabs-actionbar-example';
 import { TabsActiveTabIdExample } from './tabs-active-tab-id/tabs-active-tab-id-example';
 import { TabsActiveTabIndexExample } from './tabs-active-tab-index/tabs-active-tab-index-example';
+import { TabsAddTabVerticalExample } from './tabs-add-tab-vertical/tabs-add-tab-vertical-example';
+import { TabsAddTabExample } from './tabs-add-tab/tabs-add-tab-example';
 import { TabsCustomLabelExample } from './tabs-custom-label/tabs-custom-label-example';
 import { TabsDisabledExample } from './tabs-disabled/tabs-disabled-example';
 import { TabsEmptyLabelExample } from './tabs-empty-label/tabs-empty-label-example';
@@ -18,6 +20,8 @@ export {
     TabsActionbarExample,
     TabsActiveTabIdExample,
     TabsActiveTabIndexExample,
+    TabsAddTabExample,
+    TabsAddTabVerticalExample,
     TabsCustomLabelExample,
     TabsDisabledExample,
     TabsEmptyLabelExample,
@@ -35,6 +39,8 @@ const EXAMPLES = [
     TabsActiveTabIdExample,
     TabsActiveTabIndexExample,
     TabsActionbarExample,
+    TabsAddTabExample,
+    TabsAddTabVerticalExample,
     TabsCustomLabelExample,
     TabsDisabledExample,
     TabsEmptyLabelExample,
