@@ -1,4 +1,4 @@
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
     AfterViewInit,
@@ -107,7 +107,9 @@ interface DocsTokensInfoRaw {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsTokensTable extends DocsLocaleState {
-    readonly section = input<DocsTokensSectionInfo>();
+    // Accepts both a top-level `DocsTokensInfo` and a nested `DocsTokensSectionInfo`; only `.tokens`
+    // is read (guarded), and `DocsTokensSectionInfo` is assignable to `DocsTokensInfo`.
+    readonly section = input<DocsTokensInfo>();
     readonly tab = input.required<DocsStructureTokensTab>();
 
     readonly mapTabToType: Record<
@@ -160,33 +162,30 @@ export class DocsTokensTable extends DocsLocaleState {
     imports: [
         DocsComponentViewerWrapperComponent,
         DocsTokensTable,
-        NgTemplateOutlet,
         DocsAnchorsComponent
     ],
     template: `
         <docs-component-viewer-wrapper>
             <div docs-article>
                 @for (section of tokensInfo(); track section.type) {
-                    <ng-container *ngTemplateOutlet="sectionTemplate; context: { $implicit: section, level: 3 }" />
+                    @if (section.type && section.type !== 'No-header') {
+                        <div [class]="getClassName(3)" [id]="section.type">
+                            {{ section.type }}
+                        </div>
+                    }
+                    <docs-tokens-table [tab]="activatedTab()" [section]="section" />
+
+                    @for (innerSection of section.sections ?? []; track innerSection.type) {
+                        @if (innerSection.type && innerSection.type !== 'No-header') {
+                            <div [class]="getClassName(4)" [id]="innerSection.type">
+                                {{ innerSection.type }}
+                            </div>
+                        }
+                        <docs-tokens-table [tab]="activatedTab()" [section]="innerSection" />
+                    }
                 }
             </div>
         </docs-component-viewer-wrapper>
-
-        <ng-template #sectionTemplate let-section let-level="level">
-            @if (section.type && section.type !== 'No-header') {
-                <div [class]="getClassName(level)" [id]="section.type">
-                    {{ section.type }}
-                </div>
-            }
-            <docs-tokens-table [tab]="activatedTab()" [section]="section" />
-            @if (section.sections && section.sections.length > 0) {
-                @for (innerSection of section.sections; track innerSection.type) {
-                    <ng-container
-                        *ngTemplateOutlet="sectionTemplate; context: { $implicit: innerSection, level: level + 1 }"
-                    />
-                }
-            }
-        </ng-template>
 
         <div class="docs-component-viewer__sticky-wrapper">
             <docs-anchors [headerSelectors]="'.docs-header-link'" />
@@ -246,8 +245,8 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         afterNextRender(() => this.wrapper().scrollToSelectedContentSection(), { injector: this.injector });
     }
 
-    getClassName(text: string): string {
-        return `docs-header-link kbq-markdown__h${text}`;
+    getClassName(level: number): string {
+        return `docs-header-link kbq-markdown__h${level}`;
     }
 
     protected calculateViewData(): DocsTokensInfo[] {
