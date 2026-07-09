@@ -14,7 +14,10 @@
     right: calc(var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width));
     top: 0;
     bottom: 0;
+    width: 32px;
     display: flex;
     align-items: center;
-    background: linear-gradient(to left, transparent 0%, var(--tab-nav-selected) 70%);
+    justify-content: flex-end;
+    background: linear-gradient(var(--tab-nav-selected), var(--tab-nav-selected)), var(--kbq-background-bg);
+    mask-image: linear-gradient(to right, transparent 0%, black 50%);
 }

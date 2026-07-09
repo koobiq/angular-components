@@ -2,7 +2,7 @@
     display: flex;
     width: 100%;
     max-width: 100%;
-    height: 300px;
+    height: 250px;
     --tab-nav-selected: var(--kbq-tabs-tab-item-filled-on-background-states-selected-background);
 }
 
@@ -10,30 +10,23 @@
     width: 240px;
 }
 
+.example-tab-link {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .example-tab-close {
     position: absolute;
     right: calc(var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width));
     top: 0;
     bottom: 0;
+    width: 32px;
     display: flex;
     align-items: center;
-}
-
-.example-tab-close .kbq-icon-button {
-    display: flex;
+    justify-content: flex-end;
     background: linear-gradient(var(--tab-nav-selected), var(--tab-nav-selected)), var(--kbq-background-bg);
-}
-
-.example-tab-close__gradient {
-    width: var(--kbq-size-3xl);
-    height: 100%;
-    margin-right: calc(var(--kbq-size-xs) * -1);
-    background: var(--kbq-background-bg);
-    mask-image: linear-gradient(to right, transparent, black);
-}
-
-.kbq-tab-nav-bar .example-tab-close__gradient {
-    background: linear-gradient(var(--tab-nav-selected), var(--tab-nav-selected)), var(--kbq-background-bg);
+    mask-image: linear-gradient(to right, transparent 0%, black 50%);
 }
 
 .example-tabs-add-tab-vertical__content {

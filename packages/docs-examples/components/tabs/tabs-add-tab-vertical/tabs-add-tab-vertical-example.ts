@@ -12,11 +12,10 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     template: `
         <nav kbqTabNavBar vertical class="example-tab-nav-bar" [tabNavPanel]="tabNavPanel">
             @for (tab of tabs; track tab) {
-                <a kbqTabLink [active]="activeTab === tab" (click)="activeTab = tab">
+                <a kbqTabLink class="example-tab-link" [active]="activeTab === tab" (click)="activeTab = tab">
                     {{ tab }}
                     @if (activeTab === tab) {
                         <div class="example-tab-close">
-                            <div class="example-tab-close__gradient"></div>
                             <i
                                 kbq-icon-button="kbq-xmark-s_16"
                                 color="contrast-fade"
