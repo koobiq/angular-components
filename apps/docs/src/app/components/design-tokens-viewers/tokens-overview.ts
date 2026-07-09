@@ -227,6 +227,14 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         [DocsStructureTokensTab.Semantic]: sematic
     };
 
+    /**
+     * Resolved token values cached by theme class name. Reading a CSS custom property via
+     * `getComputedStyle` can force a style recalculation, and `calculateViewData` re-runs on every
+     * theme change; caching per (theme, token) means switching themes back and forth never re-reads
+     * a token whose value cannot have changed (token values depend only on the active theme).
+     */
+    private readonly tokenValueCache = new Map<string, Map<string, string>>();
+
     constructor() {
         super();
         this.themeService.current.pipe(skip(1), takeUntilDestroyed()).subscribe(() => {
@@ -252,7 +260,24 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected calculateViewData(): DocsTokensInfo[] {
         const styles = this.window.getComputedStyle(this.document.body);
 
-        const getTokenValue = (token: string) => styles.getPropertyValue(token);
+        const themeKey = this.themeService.getTheme()?.className ?? 'default';
+        const themeCache = this.tokenValueCache.get(themeKey) ?? new Map<string, string>();
+
+        this.tokenValueCache.set(themeKey, themeCache);
+
+        const getTokenValue = (token: string): string => {
+            const cached = themeCache.get(token);
+
+            if (cached !== undefined) {
+                return cached;
+            }
+
+            const value = styles.getPropertyValue(token);
+
+            themeCache.set(token, value);
+
+            return value;
+        };
 
         return this.tokenDataMap[this.activatedTab()].map(({ tokens, type, sections }: DocsTokensInfoRaw) => {
             if (tokens && tokens.length > 0) {
