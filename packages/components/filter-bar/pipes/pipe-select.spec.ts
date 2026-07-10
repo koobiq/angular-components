@@ -375,9 +375,11 @@ describe('KbqPipeSelectComponent', () => {
 
         it('should match the selected value in the panel using the custom comparator', fakeAsync(() => {
             setTemplateWithComparator();
-            // A distinct object equal to SELECT_VALUES[1] only by `value` (the options carry no `id`).
-            // With the default id-based comparator every id-less option would match; the custom
-            // comparator must single out exactly one option.
+            // The selected value is a distinct object equal to SELECT_VALUES[1] only by `value`; the
+            // options carry no `id`. `getCorrespondOption` uses `.find`, so exactly one option is
+            // selected either way — under the default id comparator every id-less option compares equal
+            // and the first ('Option 1') wins, so asserting the selected option is 'Option 2' is what
+            // proves the custom `value` comparator is applied.
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: { name: 'Option 2', value: 'value2' } })
             ]);
@@ -387,10 +389,11 @@ describe('KbqPipeSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            const selectedOptions = document.querySelectorAll('.kbq-option.kbq-selected');
+            const selectedText = Array.from(document.querySelectorAll('.kbq-option.kbq-selected')).map((el) =>
+                el.textContent?.trim()
+            );
 
-            expect(selectedOptions.length).toBe(1);
-            expect(selectedOptions[0].textContent).toContain('Option 2');
+            expect(selectedText).toEqual(['Option 2']);
         }));
     });
 

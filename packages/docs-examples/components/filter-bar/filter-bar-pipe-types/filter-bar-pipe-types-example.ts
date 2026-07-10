@@ -105,19 +105,18 @@ export class FilterBarPipeTypesExample {
             name: 'Select',
             type: KbqPipeTypes.Select,
             values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' },
-                { name: 'Option 4', id: '4' },
-                { name: 'Option 5', id: '5' },
-                { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' }
+                { name: 'Option 1', value: 'value1' },
+                { name: 'Option 2', value: 'value2' },
+                { name: 'Option 3', value: 'value3' },
+                { name: 'Option 4', value: 'value4' },
+                { name: 'Option 5', value: 'value5' },
+                { name: 'Option 6', value: 'value6' },
+                { name: 'Option 7', value: 'value7' }
             ],
-            // `compareWith` controls how the selected value is matched against the option list.
-            // Override it to compare by a business key (here `id`) — useful when the selected value
-            // is a distinct object (e.g. restored from a saved filter) rather than the same reference.
-            compareWith: (o1, o2) => o1?.id === o2?.id,
-
+            // These options are identified by their business `value` rather than a synthetic `id`, so a
+            // selected value restored from a saved filter is a distinct object. Override `compareWith`
+            // to match by `value` instead of the default id-based comparator.
+            compareWith: (o1, o2) => o1?.value === o2?.value,
             cleanable: false,
             removable: false,
             disabled: false
