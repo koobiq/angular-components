@@ -1240,6 +1240,7 @@ type ExampleTableItem = unknown;
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
             [columnDefs]="columnDefs"
@@ -1322,7 +1323,6 @@ export class ExampleGrid {
     }
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
-        api.setFocusedCell(0, 'column0');
         api.forEachNode((node) => {
             if (node.rowIndex === 3 || node.rowIndex === 4) {
                 node.setSelected(true);
@@ -1581,28 +1581,71 @@ Directives save and restore grid state across page reloads.
 
 `LocalStorageStore` is used by default. Switch to `QueryParamsStore` if needed.
 
-| Directive                      | Saves                                     |
-| ------------------------------ | ----------------------------------------- |
-| `kbqAgGridColumnState`         | Sort, column order, visibility, and width |
-| `kbqAgGridFilterState`         | Column filter models                      |
-| `kbqAgGridQuickFilterState`    | Quick filter value                        |
-| `kbqAgGridExternalFilterState` | External filter value                     |
-
 #### Columns
+
+The `kbqAgGridColumnState` directive saves sort order, column order, visibility, and width. Add it with a unique key and connect the store provider via `kbqAgGridColumnStateStoreProvider`.
 
 <!-- example(ag-grid-column-state) -->
 
 #### Filters
 
+The `kbqAgGridFilterState` directive saves column filter models. Add it with a unique key and connect the store provider via `kbqAgGridFilterStateStoreProvider`.
+
 <!-- example(ag-grid-filter-state) -->
 
 #### Quick filter
+
+The `kbqAgGridQuickFilterState` directive saves the quick filter value. Add it with a unique key, connect the store provider via `kbqAgGridQuickFilterStateStoreProvider`, and bind the input value via `[(kbqAgGridQuickFilterStateValue)]`.
 
 <!-- example(ag-grid-quick-filter-state) -->
 
 #### External filter
 
+The `kbqAgGridExternalFilterState` directive saves the external filter value. Add it with a unique key, connect the store provider via `kbqAgGridExternalFilterStateStoreProvider`, bind the value via `[(kbqAgGridExternalFilterStateValue)]`, and pass the row check function via `kbqAgGridExternalFilterStatePass`.
+
 <!-- example(ag-grid-external-filter-state) -->
+
+### Column menu
+
+The `kbqAgGridColumnMenu` directive adds a button in the top-right corner of the grid that opens a column management menu. The menu allows showing and hiding columns, reordering them via drag-and-drop, pinning them to the left or right, and searching for a column by name. The reset button restores columns to their initial state.
+
+Constraints are configured via `ColDef`:
+
+- `lockVisible: true` prevents hiding a column. The last visible column can never be hidden regardless.
+- `lockPinned: true` prevents pinning and unpinning a column.
+
+Russian labels are used by default. To switch the language, provide a labels provider:
+
+```ts
+providers: [kbqAgGridColumnMenuLabelsProvider(KBQ_AG_GRID_COLUMN_MENU_LABELS_EN)];
+```
+
+<!-- example(ag-grid-column-menu) -->
+
+### Loading overlay
+
+The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when the value is `true`, a skeleton overlay is shown on top of the rows. The number of skeleton rows and columns is configured via `kbqAgGridLoadingOverlayConfigProvider`.
+
+<!-- example(ag-grid-loading-overlay) -->
+
+### Skeleton cell renderer
+
+`KbqAgGridSkeletonCellRenderer` is used together with the infinite row model (`rowModelType="infinite"`). While a data block is not yet loaded (`params.data === undefined`), cells display skeleton placeholders.
+
+<!-- example(ag-grid-skeleton-cell-renderer) -->
+
+### Row selection with infinite scrolling
+
+With infinite scrolling, data is loaded in blocks, so it is not possible to select all rows using a regular list — most of them are not yet loaded. The `kbqAgGridInfiniteSelection` directive inverts the selection: instead of a list of selected rows, it stores an "all selected" flag and a list of exceptions.
+
+This state mirrors the condition "all except the specified IDs", so it can be passed to the server without loading all rows.
+
+The directive requires two parameters:
+
+- `kbqAgGridInfiniteSelectionDatasource` accepts a data source. When all rows are selected, newly loaded blocks are automatically added to the selection.
+- `getRowId` returns a stable unique row identifier.
+
+<!-- example(ag-grid-infinite-selection) -->
 
 ### Custom keyboard shortcuts
 
@@ -1615,6 +1658,7 @@ You can add custom keyboard shortcuts by adding the appropriate directives to yo
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span>  | Select a row           | `kbqAgGridSelectRowsByCtrlClick`  |
 | <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">C</span>      | Copy selected rows     | `kbqAgGridCopyByCtrlC`            |
 | <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">click</span> | Select a range of rows | `kbqAgGridSelectRowsByShiftClick` |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>      | Select all rows        | `kbqAgGridInfiniteSelection`      |
 
 More information about keyboard shortcuts can be found in the [ag-grid-angular documentation](https://www.ag-grid.com/angular-data-grid/keyboard-navigation/).
 
@@ -1682,6 +1726,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
             kbqAgGridToNextRowByTab
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
+            [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
             [style.height.px]="300"
@@ -1770,8 +1815,6 @@ export class AgGridOverviewExample {
     }));
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
-        api.setFocusedCell(0, 'column0');
-
         api.forEachNode((node) => {
             if (node.rowIndex === 3 || node.rowIndex === 4) {
                 node.setSelected(true);
@@ -3145,7 +3188,7 @@ export class KbqBreadcrumbs {
     readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
     readonly wrapMode: _angular_core.InputSignal<KbqBreadcrumbsWrapMode>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["items", "separator"], ["*"], true, [{ directive: typeof RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrapMode": { "alias": "wrapMode"; "required": false; "isSignal": true; }; }, {}, ["items", "separator"], never, true, [{ directive: typeof RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
@@ -3922,6 +3965,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     get selected(): any;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
+    readonly stretched: _angular_core.InputSignalWithTransform<boolean, unknown>;
     syncButtonToggle(toggle: KbqButtonToggle, select: boolean, isUserInput?: boolean): void;
     get value(): any;
     set value(newValue: any);
@@ -3930,7 +3974,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set vertical(value: boolean);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }
@@ -5273,6 +5317,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -5289,6 +5334,7 @@ import { Type } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public (undocumented)
 export const A = 65;
@@ -5681,9 +5727,15 @@ export const enUSLocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;
@@ -5741,6 +5793,9 @@ export const enUSLocaleData: {
             allTime: string;
             currentQuarter: string;
             currentYear: string;
+            allTimeOption: string;
+            currentQuarterOption: string;
+            currentYearOption: string;
         };
         durationTemplate: {
             title: {
@@ -5779,6 +5834,7 @@ export const enUSLocaleData: {
         noNotifications: string;
         failedToLoadNotifications: string;
         repeat: string;
+        loadingMore: string;
     };
 };
 
@@ -5918,9 +5974,15 @@ export const esLALocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;
@@ -5978,6 +6040,9 @@ export const esLALocaleData: {
             allTime: string;
             currentQuarter: string;
             currentYear: string;
+            allTimeOption: string;
+            currentQuarterOption: string;
+            currentYearOption: string;
         };
         durationTemplate: {
             title: {
@@ -6016,6 +6081,7 @@ export const esLALocaleData: {
         noNotifications: string;
         failedToLoadNotifications: string;
         repeat: string;
+        loadingMore: string;
     };
 };
 
@@ -6378,9 +6444,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -6438,6 +6510,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
+                allTimeOption: string;
+                currentQuarterOption: string;
+                currentYearOption: string;
             };
             durationTemplate: {
                 title: {
@@ -6476,6 +6551,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             noNotifications: string;
             failedToLoadNotifications: string;
             repeat: string;
+            loadingMore: string;
         };
     };
     'es-LA': {
@@ -6590,9 +6666,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -6650,6 +6732,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
+                allTimeOption: string;
+                currentQuarterOption: string;
+                currentYearOption: string;
             };
             durationTemplate: {
                 title: {
@@ -6688,6 +6773,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             noNotifications: string;
             failedToLoadNotifications: string;
             repeat: string;
+            loadingMore: string;
         };
     };
     'pt-BR': {
@@ -6798,9 +6884,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -6858,6 +6950,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
+                allTimeOption: string;
+                currentQuarterOption: string;
+                currentYearOption: string;
             };
             durationTemplate: {
                 title: {
@@ -6896,6 +6991,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             noNotifications: string;
             failedToLoadNotifications: string;
             repeat: string;
+            loadingMore: string;
         };
     };
     'ru-RU': {
@@ -7012,9 +7108,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -7072,6 +7174,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
+                allTimeOption: string;
+                currentQuarterOption: string;
+                currentYearOption: string;
             };
             durationTemplate: {
                 title: {
@@ -7110,6 +7215,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             noNotifications: string;
             failedToLoadNotifications: string;
             repeat: string;
+            loadingMore: string;
         };
     };
     'tk-TM': {
@@ -7222,9 +7328,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -7282,6 +7394,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
+                allTimeOption: string;
+                currentQuarterOption: string;
+                currentYearOption: string;
             };
             durationTemplate: {
                 title: {
@@ -7320,6 +7435,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             noNotifications: string;
             failedToLoadNotifications: string;
             repeat: string;
+            loadingMore: string;
         };
     };
 };
@@ -7383,6 +7499,9 @@ export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
 
 // @public
 export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
+
+// @public
+export const KBQ_SHADOW_DOM_OVERLAY_HOST: InjectionToken<KbqShadowDomOverlayHost>;
 
 // @public
 export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
@@ -8200,141 +8319,81 @@ export type KbqPopUpPlacementValues = KbqEnumValues<PopUpPlacements>;
 // @public (undocumented)
 export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 
-// @public (undocumented)
+// @public
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
-    // (undocumented)
     abstract arrow: boolean;
-    // (undocumented)
     protected readonly availablePositions: {
         [key: string]: ConnectionPositionPair;
     };
-    // (undocumented)
     protected clearListeners(): void;
-    // (undocumented)
     abstract closingActions(): Observable<any>;
-    // (undocumented)
     protected closingActionsSubscription: Subscription;
-    // (undocumented)
     container: HTMLElement;
-    // (undocumented)
     abstract content: string | TemplateRef<any>;
-    // (undocumented)
     protected _content: string | TemplateRef<any>;
     createOverlay(): OverlayRef;
-    // (undocumented)
     abstract customClass: string;
-    // (undocumented)
     protected _customClass: string;
-    // (undocumented)
     protected readonly destroyRef: DestroyRef;
-    // (undocumented)
     detach: () => void;
-    // (undocumented)
     protected readonly direction: Directionality | null;
-    // (undocumented)
     abstract disabled: boolean;
-    // (undocumented)
     protected _disabled: boolean;
-    // (undocumented)
     protected readonly elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
     enterDelay: number;
     protected externalNativeElement: HTMLElement;
-    // (undocumented)
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
-    // (undocumented)
     getMouseLeaveListener(): (delay?: number) => void;
     getNativeElement(): HTMLElement;
-    // (undocumented)
     abstract getOverlayHandleComponentType(): Type<T>;
-    // (undocumented)
     protected getPrioritizedPositions(): ConnectionPositionPair[];
-    // (undocumented)
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[];
-    // (undocumented)
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
-    // (undocumented)
     protected readonly hostView: ViewContainerRef;
     readonly hovered: BehaviorSubject<boolean>;
-    // (undocumented)
     initListeners(): void;
-    // (undocumented)
     protected instance: any | null;
-    // (undocumented)
     get isOpen(): boolean;
     set isOpen(value: boolean);
-    // (undocumented)
     keydownHandler(event: KeyboardEvent): void;
-    // (undocumented)
     leaveDelay: number;
-    // (undocumented)
     protected listeners: Map<string, EventListener>;
-    // (undocumented)
     protected mouseEvent?: MouseEvent;
-    // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
     protected readonly ngZone: NgZone;
-    // (undocumented)
     onPositionChange: ($event: ConnectedOverlayPositionChange) => void;
-    // (undocumented)
     protected abstract originSelector: string;
-    // (undocumented)
     protected readonly overlay: Overlay;
-    // (undocumented)
     protected abstract overlayConfig: OverlayConfig;
-    // (undocumented)
     overlayRef: OverlayRef | null;
-    // (undocumented)
     protected placement: KbqPopUpPlacementValues;
-    // (undocumented)
     abstract placementChange: EventEmitter<string>;
-    // (undocumented)
     protected placementPriority: string | string[] | null;
-    // (undocumented)
     protected portal: ComponentPortal<T>;
     protected preventClose: boolean;
-    // (undocumented)
     resetOrigin(): void;
-    // (undocumented)
     protected readonly scheduler: AsyncScheduler | undefined;
-    // (undocumented)
     protected readonly scrollable: CdkScrollable | null;
-    // (undocumented)
     protected readonly scrollDispatcher: ScrollDispatcher;
-    // (undocumented)
     protected abstract scrollStrategy: () => ScrollStrategy;
     setExternalNativeElement(value: HTMLElement): void;
-    // (undocumented)
     show(delay?: number): void;
-    // (undocumented)
     stickToWindow: KbqStickToWindowPlacementValues;
-    // (undocumented)
     protected strategy: FlexibleConnectedPositionStrategy;
-    // (undocumented)
     touchendHandler(): void;
-    // (undocumented)
     abstract trigger: string;
-    // (undocumented)
     triggerName: string;
-    // (undocumented)
     abstract updateClassMap(newPlacement?: string): void;
-    // (undocumented)
     abstract updateData(): void;
-    // (undocumented)
     updatePlacement(value: KbqPopUpPlacementValues): void;
-    // (undocumented)
     updatePlacementPriority(value: any): void;
     updatePosition(reapplyPosition?: boolean): void;
-    // (undocumented)
     updateVisible(externalValue: boolean): void;
-    // (undocumented)
+    protected readonly viewportRuler: ViewportRuler;
     protected visible: boolean;
-    // (undocumented)
     abstract visibleChange: EventEmitter<boolean>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopUpTrigger<any>, never, never, {}, {}, never, never, true, never>;
@@ -8532,6 +8591,25 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 }
 
 // @public
+export interface KbqSelectAllAdapter<T> {
+    isSelectable: (item: T) => boolean;
+    isSelected: (item: T) => boolean;
+    items: readonly T[];
+    setSelected: (item: T, selected: boolean) => void;
+}
+
+// @public
+export class KbqSelectAllEvent<T, S = unknown> {
+    constructor(
+    source: S,
+    options: T[],
+    selected: boolean);
+    readonly options: T[];
+    readonly selected: boolean;
+    readonly source: S;
+}
+
+// @public
 export const kbqSelectAnimations: {
     readonly transformPanel: AnimationTriggerMetadata;
     readonly fadeInContent: AnimationTriggerMetadata;
@@ -8608,6 +8686,22 @@ export class KbqSelectTrigger {
 }
 
 // @public
+export class KbqShadowDomOverlayContainer extends OverlayContainer {
+    // @internal
+    protected _createContainer(): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqShadowDomOverlayContainer, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqShadowDomOverlayContainer>;
+}
+
+// @public
+export type KbqShadowDomOverlayHost = HTMLElement | ElementRef<HTMLElement> | (() => Element | null | undefined);
+
+// @public
+export const kbqShadowDomOverlayProvider: (host?: KbqShadowDomOverlayHost) => Provider[];
+
+// @public
 export interface KbqSizeUnitsConfig {
     defaultPrecision: number;
     defaultUnitSystem: KbqMeasurementSystemType;
@@ -8665,6 +8759,9 @@ export type KbqTimeRangeLocaleConfig = {
         allTime: string;
         currentQuarter: string;
         currentYear: string;
+        allTimeOption?: string;
+        currentQuarterOption?: string;
+        currentYearOption?: string;
     };
     durationTemplate: {
         title: FormatterDurationTemplate;
@@ -8678,6 +8775,11 @@ export interface KbqTitleTextRef {
     parentTextElement?: ElementRef;
     // (undocumented)
     textElement?: ElementRef;
+}
+
+// @public
+export interface KbqToggleSelectAllOptions {
+    allowDeselect?: boolean;
 }
 
 // @public (undocumented)
@@ -9163,9 +9265,15 @@ export const ptBRLocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;
@@ -9223,6 +9331,9 @@ export const ptBRLocaleData: {
             allTime: string;
             currentQuarter: string;
             currentYear: string;
+            allTimeOption: string;
+            currentQuarterOption: string;
+            currentYearOption: string;
         };
         durationTemplate: {
             title: {
@@ -9261,6 +9372,7 @@ export const ptBRLocaleData: {
         noNotifications: string;
         failedToLoadNotifications: string;
         repeat: string;
+        loadingMore: string;
     };
 };
 
@@ -9587,9 +9699,15 @@ export const ruRULocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;
@@ -9647,6 +9765,9 @@ export const ruRULocaleData: {
             allTime: string;
             currentQuarter: string;
             currentYear: string;
+            allTimeOption: string;
+            currentQuarterOption: string;
+            currentYearOption: string;
         };
         durationTemplate: {
             title: {
@@ -9685,6 +9806,7 @@ export const ruRULocaleData: {
         noNotifications: string;
         failedToLoadNotifications: string;
         repeat: string;
+        loadingMore: string;
     };
 };
 
@@ -9708,6 +9830,9 @@ export const SEVEN = 55;
 
 // @public (undocumented)
 export const SHIFT = 16;
+
+// @public
+export function shouldSelectSearchText(input: HTMLInputElement | null | undefined): boolean;
 
 // @public
 export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {
@@ -9929,9 +10054,15 @@ export const tkTMLocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;
@@ -9989,6 +10120,9 @@ export const tkTMLocaleData: {
             allTime: string;
             currentQuarter: string;
             currentYear: string;
+            allTimeOption: string;
+            currentQuarterOption: string;
+            currentYearOption: string;
         };
         durationTemplate: {
             title: {
@@ -10027,8 +10161,12 @@ export const tkTMLocaleData: {
         noNotifications: string;
         failedToLoadNotifications: string;
         repeat: string;
+        loadingMore: string;
     };
 };
+
+// @public
+export function toggleSelectAll<T>(adapter: KbqSelectAllAdapter<T>, options?: KbqToggleSelectAllOptions): T[];
 
 // @public (undocumented)
 export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
@@ -12046,6 +12184,8 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
     protected readonly fileLoader: _angular_core.Signal<KbqFileLoader | undefined>;
+    // @deprecated (undocumented)
+    readonly fileQueueChanged: _angular_core.OutputEmitterRef<KbqFileItem[]>;
     readonly fileRemoved: _angular_core.OutputEmitterRef<[KbqFileItem, number]>;
     // (undocumented)
     get files(): KbqFileItem[];
@@ -12081,7 +12221,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     readonly size: _angular_core.InputSignal<"compact" | "default">;
     writeValue(files: FileList | KbqFileItem[] | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, [{ directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: { "listChange": "filesChange"; "itemsAdded": "itemsAdded"; "itemRemoved": "itemRemoved"; }; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "filesChange"; "fileQueueChanged": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, [{ directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: { "itemsAdded": "itemsAdded"; "itemRemoved": "itemRemoved"; }; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqMultipleFileUploadComponent, never>;
 }
@@ -12102,6 +12242,8 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     set file(currentFile: KbqFileItem | null);
     readonly fileChange: _angular_core.OutputEmitterRef<KbqFileItem | null>;
     protected readonly fileLoader: _angular_core.Signal<KbqFileLoader>;
+    // @deprecated (undocumented)
+    readonly fileQueueChange: _angular_core.OutputEmitterRef<KbqFileItem | null>;
     fullScreenDropZone: _angular_core.InputSignal<boolean | Partial<{
         caption: string;
         size: _koobiq_components_core.KbqDefaultSizes;
@@ -12129,7 +12271,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     readonly showFileSize: _angular_core.InputSignalWithTransform<boolean, unknown>;
     writeValue(file: File | KbqFileItem | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; "showFileSize": { "alias": "showFileSize"; "required": false; "isSignal": true; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "fileChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], true, [{ directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; "multiple": "multiple"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: { "listChange": "fileChange"; }; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; "showFileSize": { "alias": "showFileSize"; "required": false; "isSignal": true; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "fileChange": "fileChange"; "fileQueueChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], true, [{ directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; "multiple": "multiple"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSingleFileUploadComponent, never>;
 }
@@ -12252,17 +12394,18 @@ The user can quickly get search results by selecting a saved filter, without re-
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { DateAdapter } from '@koobiq/components/core';
+import { DateFormatter } from '@koobiq/components/core';
 import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FlatTreeControl } from '@koobiq/components/tree';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
@@ -12273,30 +12416,79 @@ import { KbqOption } from '@koobiq/components/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTreeFlatDataSource } from '@koobiq/components/tree';
 import { KbqTreeFlattener } from '@koobiq/components/tree';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
+import { KbqTreeSelection } from '@koobiq/components/tree';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { ModelSignal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { PopUpSizes } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { Type } from '@angular/core';
 
 // @public
-export const defaultFilterBarPipes: [string, unknown][];
+export const defaultFilterBarPipes: [KbqPipeType, Type<KbqBasePipe<unknown>>][];
 
 // @public
 export function getId(item: KbqPipeTemplate): KbqPipeType | string | number;
 
 // @public
-export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<unknown>;
+export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<{
+    reset: {
+        buttonName: string;
+    };
+    search: {
+        tooltip: string;
+        placeholder: string;
+    };
+    filters: {
+        defaultName: string;
+        saveNewFilterTooltip: string;
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        saveAsNewFilter: string;
+        saveChanges: string;
+        saveAsNew: string;
+        change: string;
+        resetChanges: string;
+        remove: string;
+        name: string;
+        error: string;
+        errorHint: string;
+        saveButton: string;
+        cancelButton: string;
+        actionsTooltip: string;
+    };
+    add: {
+        tooltip: string;
+        addedAnnouncement: string;
+    };
+    refresher: {
+        refresh: string;
+        settings: string;
+    };
+    pipe: {
+        clearButtonTooltip: string;
+        removeButtonTooltip: string;
+        applyButton: string;
+        emptySearchResult: string;
+        selectAll: string;
+    };
+    datePipe: {
+        customPeriod: string;
+        customPeriodFrom: string;
+        customPeriodTo: string;
+        customPeriodErrorHint: string;
+        backToPeriodSelection: string;
+    };
+}>;
 
 // @public
 export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
@@ -12323,9 +12515,15 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
         errorHint: string;
         saveButton: string;
         cancelButton: string;
+        actionsTooltip: string;
     };
     add: {
         tooltip: string;
+        addedAnnouncement: string;
+    };
+    refresher: {
+        refresh: string;
+        settings: string;
     };
     pipe: {
         clearButtonTooltip: string;
@@ -12344,7 +12542,10 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
 };
 
 // @public
-export const KBQ_FILTER_BAR_PIPES: InjectionToken<any>;
+export const KBQ_FILTER_BAR_HOST: InjectionToken<KbqFilterBarHost>;
+
+// @public
+export const KBQ_FILTER_BAR_PIPES: InjectionToken<Map<KbqPipeType, Type<KbqBasePipe<unknown>>>>;
 
 // @public
 export const KBQ_PIPE_DATA: InjectionToken<unknown>;
@@ -12355,30 +12556,34 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     readonly data: KbqPipeData<V>;
+    protected destroyed: boolean;
     protected readonly destroyRef: DestroyRef;
-    protected readonly filterBar: KbqFilterBar | null;
+    protected readonly elementRef: ElementRef<HTMLElement>;
+    protected readonly filterBar: KbqFilterBarHost | null;
+    protected readonly focusMonitor: FocusMonitor;
     get isEmpty(): boolean;
     isMac: boolean;
     isTemplateRef(value: unknown): boolean;
-    get localeData(): any;
+    get localeData(): KbqFilterBarConfiguration;
     // (undocumented)
     ngAfterViewInit(): void;
     onClear(): void;
     onRemove(): void;
     abstract open(): void;
+    protected restoreTriggerFocus(): void;
     get showRemoveButton(): boolean;
     readonly stateChanges: Subject<void>;
     updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
     protected values: any;
     protected valueTemplate?: TemplateRef<any> | string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBasePipe<any>, never, never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqBasePipe<any>, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBasePipe<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqBasePipe<any>, never>;
 }
 
 // @public
-export function kbqBuildTree<T extends KbqTreeSelectNode>(value: any, level: number): T[];
+export function kbqBuildTree<T extends KbqTreeSelectNode>(value: Record<string, unknown>, level: number): T[];
 
 // @public (undocumented)
 export interface KbqDateTimeValue {
@@ -12407,44 +12612,89 @@ export interface KbqFilter {
 }
 
 // @public (undocumented)
-export class KbqFilterBar {
+export class KbqFilterBar implements KbqFilterBarHost {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
+    // @deprecated
     readonly changes: BehaviorSubject<void>;
+    configuration: KbqFilterBarConfiguration;
     // (undocumented)
-    configuration: any;
-    // (undocumented)
-    readonly externalConfiguration: unknown;
-    get filter(): KbqFilter | null;
-    set filter(value: KbqFilter | null);
-    readonly filterChange: i0.OutputEmitterRef<KbqFilter | null>;
-    readonly filterReset: i0.Signal<KbqFilterReset | undefined>;
-    readonly filters: i0.Signal<KbqFilters | undefined>;
+    readonly externalConfiguration: {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+            actionsTooltip: string;
+        };
+        add: {
+            tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+            selectAll: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
+    } | null;
+    readonly filter: _angular_core.ModelSignal<KbqFilter | null>;
+    readonly filterReset: _angular_core.Signal<KbqFilterReset | undefined>;
+    readonly filters: _angular_core.Signal<KbqFilters | undefined>;
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
-    get isChanged(): boolean;
-    get isDisabled(): boolean;
-    get isReadOnly(): boolean;
-    get isSaved(): boolean;
-    get isSavedAndChanged(): boolean;
+    readonly isChanged: _angular_core.Signal<boolean>;
+    readonly isDisabled: _angular_core.Signal<boolean>;
+    readonly isReadOnly: _angular_core.Signal<boolean>;
+    readonly isSaved: _angular_core.Signal<boolean>;
+    readonly isSavedAndChanged: _angular_core.Signal<boolean>;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
-    readonly onChangePipe: EventEmitter<KbqPipe>;
-    readonly onClearPipe: i0.OutputEmitterRef<KbqPipe>;
-    readonly onClosePipe: i0.OutputEmitterRef<KbqPipe>;
-    readonly onRemovePipe: i0.OutputEmitterRef<KbqPipe>;
+    readonly onChangePipe: _angular_core.OutputEmitterRef<KbqPipe>;
+    readonly onClearPipe: _angular_core.OutputEmitterRef<KbqPipe>;
+    readonly onClosePipe: _angular_core.OutputEmitterRef<KbqPipe>;
+    readonly onRemovePipe: _angular_core.OutputEmitterRef<KbqPipe>;
     readonly onResetFilter: BehaviorSubject<boolean>;
     readonly openPipe: BehaviorSubject<string | number | null>;
-    get pipeTemplates(): KbqPipeTemplate[];
-    set pipeTemplates(value: KbqPipeTemplate[]);
+    readonly pipeTemplates: _angular_core.InputSignal<KbqPipeTemplate[]>;
     removePipe(pipe: KbqPipe): void;
     resetFilterChangedState(): void;
     restoreFilterState(filter?: KbqFilter): void;
     saveFilterState(filter?: KbqFilter): void;
-    readonly selectedAllEqualsSelectedNothing: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly selectedAllEqualsSelectedNothing: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBar, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
 
 // @public (undocumented)
@@ -12453,121 +12703,263 @@ export class KbqFilterBarButton {
     protected readonly filters: KbqFilters;
     saveFocusedElement(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFilterBarButton, "[kbqFilterBarButton]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqFilterBarButton, "[kbqFilterBarButton]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarButton, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterBarButton, never>;
+}
+
+// @public
+export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
+
+// @public
+export interface KbqFilterBarHost {
+    configuration: KbqFilterBarConfiguration;
+    readonly filter: ModelSignal<KbqFilter | null>;
+    readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
+    readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
+    readonly isChanged: Signal<boolean>;
+    readonly isReadOnly: Signal<boolean>;
+    readonly isSaved: Signal<boolean>;
+    readonly isSavedAndChanged: Signal<boolean>;
+    readonly onChangePipe: OutputEmitterRef<KbqPipe>;
+    readonly onClearPipe: OutputEmitterRef<KbqPipe>;
+    readonly onClosePipe: OutputEmitterRef<KbqPipe>;
+    readonly onResetFilter: BehaviorSubject<boolean>;
+    readonly openPipe: BehaviorSubject<string | number | null>;
+    readonly pipeTemplates: Signal<KbqPipeTemplate[]>;
+    removePipe(pipe: KbqPipe): void;
+    resetFilterChangedState(): void;
+    readonly selectedAllEqualsSelectedNothing: Signal<boolean>;
 }
 
 // @public (undocumented)
 export class KbqFilterBarModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterBarModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqFilterBarModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqFilterBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeTitleDirective, typeof KbqPipeState], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterBarRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeTitleDirective, typeof KbqPipeState]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState], [typeof KbqFilterBar, typeof KbqFilters, typeof KbqFilterRefresher, typeof KbqFilterBarButton, typeof KbqFilterReset, typeof KbqPipeAdd, typeof KbqPipeDirective, typeof KbqPipeButton, typeof KbqPipeState]>;
 }
 
 // @public
 export const kbqFilterBarPipesProvider: () => Provider;
 
 // @public (undocumented)
-export class KbqFilterBarRefresher {
+class KbqFilterRefresher {
+    protected get localeData(): {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+            actionsTooltip: string;
+        };
+        add: {
+            tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+            selectAll: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
+    };
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarRefresher, "kbq-filter-refresher, [kbq-filter-refresher]", never, {}, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterRefresher, "kbq-filter-refresher, [kbq-filter-refresher]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarRefresher, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterRefresher, never>;
 }
+export { KbqFilterRefresher as KbqFilterBarRefresher }
+export { KbqFilterRefresher }
 
 // @public (undocumented)
 export class KbqFilterReset {
-    get localeData(): any;
-    readonly onResetFilter: i0.OutputEmitterRef<KbqFilter | null>;
+    get localeData(): string;
+    readonly onResetFilter: _angular_core.OutputEmitterRef<KbqFilter | null>;
     // (undocumented)
     protected resetFilter(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterReset, "kbq-filter-reset", never, {}, { "onResetFilter": "onResetFilter"; }, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterReset, "kbq-filter-reset", never, {}, { "onResetFilter": "onResetFilter"; }, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterReset, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterReset, never>;
 }
 
 // @public (undocumented)
 export class KbqFilters implements OnInit {
-    constructor();
-    // (undocumented)
-    closePopover: (restoreFocus?: boolean) => void;
+    closePopover(restoreFocus?: boolean): void;
     protected readonly colors: typeof KbqComponentColors;
     protected readonly destroyRef: DestroyRef;
-    protected readonly dropdown: i0.Signal<KbqDropdownTrigger>;
+    protected readonly dropdown: _angular_core.Signal<KbqDropdownTrigger>;
     protected readonly elementRef: ElementRef<any>;
     get filter(): KbqFilter | null;
-    protected readonly filterActionsButton: i0.Signal<KbqButton>;
-    protected readonly filterActionsDropdown: i0.Signal<KbqDropdownTrigger | undefined>;
+    protected readonly filterActionsButton: _angular_core.Signal<KbqButton>;
+    protected readonly filterActionsDropdown: _angular_core.Signal<KbqDropdownTrigger | undefined>;
     get filterActionsOpened(): boolean;
     protected readonly filterBar: KbqFilterBar;
     filteredOptions: Observable<KbqFilter[]>;
-    filterName: FormControl<string | null>;
+    get filterName(): FormControl<string | null>;
     // (undocumented)
-    readonly filters: i0.InputSignal<KbqFilter[]>;
+    readonly filters: _angular_core.InputSignal<KbqFilter[]>;
     filterSavedSuccessfully(): void;
     filterSavedUnsuccessfully(error?: KbqSaveFilterError): void;
-    // (undocumented)
-    filterSavingErrorText: string;
+    get filterSavingErrorText(): string;
     focusedElementBeforeIs(button: KbqButton): boolean;
     protected readonly focusMonitor: FocusMonitor;
     get focusOrigin(): FocusOrigin;
     get isEmpty(): boolean;
-    // (undocumented)
-    isSaving: boolean;
-    get localeData(): any;
-    protected readonly mainButton: i0.Signal<KbqButton>;
+    get isSaving(): boolean;
+    set isSaving(value: boolean);
+    get localeData(): {
+        defaultName: string;
+        saveNewFilterTooltip: string;
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        saveAsNewFilter: string;
+        saveChanges: string;
+        saveAsNew: string;
+        change: string;
+        resetChanges: string;
+        remove: string;
+        name: string;
+        error: string;
+        errorHint: string;
+        saveButton: string;
+        cancelButton: string;
+        actionsTooltip: string;
+    };
+    protected readonly mainButton: _angular_core.Signal<KbqButton>;
     // (undocumented)
     ngOnInit(): void;
-    readonly onChangeFilter: i0.OutputEmitterRef<KbqSaveFilterEvent>;
+    readonly onChangeFilter: _angular_core.OutputEmitterRef<KbqSaveFilterEvent>;
     onDropdownOpen(): void;
-    readonly onRemoveFilter: i0.OutputEmitterRef<KbqFilter>;
-    readonly onResetFilterChanges: i0.OutputEmitterRef<KbqFilter | null>;
-    readonly onSave: i0.OutputEmitterRef<KbqSaveFilterEvent>;
-    readonly onSelectFilter: i0.OutputEmitterRef<KbqFilter>;
-    // (undocumented)
+    readonly onRemoveFilter: _angular_core.OutputEmitterRef<KbqFilter>;
+    readonly onResetFilterChanges: _angular_core.OutputEmitterRef<KbqFilter | null>;
+    readonly onSave: _angular_core.OutputEmitterRef<KbqSaveFilterEvent>;
+    onSavePopoverClosed(restoreFocus: boolean): void;
+    readonly onSelectFilter: _angular_core.OutputEmitterRef<KbqFilter>;
     openChangeFilterNamePopover(): void;
     get opened(): boolean;
-    // (undocumented)
     openSaveAsNewFilterPopover(): void;
     protected readonly placements: typeof PopUpPlacements;
-    protected readonly popover: i0.Signal<KbqPopoverTrigger>;
+    protected readonly popover: _angular_core.Signal<KbqPopoverTrigger>;
     get popoverHeader(): string;
-    popoverOffset: number;
-    popoverSize: PopUpSizes;
-    // (undocumented)
-    preparePopover(): void;
+    protected readonly popoverOffset: number;
+    protected readonly popoverSize = PopUpSizes.Medium;
     // (undocumented)
     removeFilter(): void;
     // (undocumented)
     resetFilterChanges(): void;
     // (undocumented)
     restoreFocus(): void;
-    // (undocumented)
     saveAsNew(event?: Event): void;
     // (undocumented)
     saveChanges(): void;
     saveFocusedElement(button?: KbqButton): void;
-    saveNewFilter: boolean;
-    protected readonly saveNewFilterButton: i0.Signal<KbqButton>;
-    searchControl: UntypedFormControl;
+    get saveNewFilter(): boolean;
+    set saveNewFilter(value: boolean);
+    protected readonly saveNewFilterButton: _angular_core.Signal<KbqButton>;
+    protected readonly savePopover: _angular_core.Signal<KbqFilterSavePopover>;
+    readonly searchControl: FormControl<string | null>;
     searchKeydownHandler(event: KeyboardEvent): void;
     // (undocumented)
     selectFilter(filter: KbqFilter): void;
+    showError(error?: KbqSaveFilterError): void;
+    get showFilterSavingError(): boolean;
+    set showFilterSavingError(value: boolean);
+    stopEventPropagation(event: Event): void;
+    protected readonly styles: typeof KbqButtonStyles;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": true; "isSignal": true; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilters, never>;
+}
+
+// @public
+export class KbqFilterSavePopover implements AfterViewInit {
+    // (undocumented)
+    close: (restoreFocus?: boolean) => void;
+    readonly closed: _angular_core.OutputEmitterRef<boolean>;
+    readonly contentTemplate: _angular_core.Signal<TemplateRef<unknown>>;
+    readonly filterBar: _angular_core.InputSignal<KbqFilterBar>;
+    filterName: FormControl<string | null>;
+    // (undocumented)
+    filterSavingErrorText: string;
+    readonly footerTemplate: _angular_core.Signal<TemplateRef<unknown>>;
+    readonly headerTemplate: _angular_core.Signal<TemplateRef<unknown>>;
+    // (undocumented)
+    isSaving: boolean;
+    get localeData(): {
+        defaultName: string;
+        saveNewFilterTooltip: string;
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        saveAsNewFilter: string;
+        saveChanges: string;
+        saveAsNew: string;
+        change: string;
+        resetChanges: string;
+        remove: string;
+        name: string;
+        error: string;
+        errorHint: string;
+        saveButton: string;
+        cancelButton: string;
+        actionsTooltip: string;
+    };
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    openChangeFilterNamePopover(): void;
+    // (undocumented)
+    openSaveAsNewFilterPopover(): void;
+    get popoverHeader(): string;
+    readonly popoverTrigger: _angular_core.InputSignal<KbqPopoverTrigger>;
+    readonly save: _angular_core.OutputEmitterRef<KbqSaveFilterEvent>;
+    // (undocumented)
+    saveAsNew(event?: Event): void;
+    savedSuccessfully(): void;
+    savedUnsuccessfully(): void;
+    saveNewFilter: boolean;
     // (undocumented)
     showError(error?: KbqSaveFilterError): void;
     // (undocumented)
     showFilterSavingError: boolean;
-    stopEventPropagation(event: Event): void;
-    protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": false; "isSignal": true; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterSavePopover, "kbq-filter-save-popover", never, { "popoverTrigger": { "alias": "popoverTrigger"; "required": true; "isSignal": true; }; "filterBar": { "alias": "filterBar"; "required": true; "isSignal": true; }; }, { "save": "save"; "closed": "closed"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilters, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterSavePopover, never>;
 }
 
 // @public (undocumented)
@@ -12601,33 +12993,39 @@ export interface KbqPipe {
 
 // @public (undocumented)
 export class KbqPipeAdd {
-    constructor();
-    addedPipes: (string | number)[];
+    readonly addedPipes: _angular_core.Signal<(string | number | (string & {}))[]>;
     // (undocumented)
     addPipeFromTemplate(option: KbqOption): void;
+    protected readonly announcement: _angular_core.WritableSignal<string>;
     compareWith(o1: KbqPipe, o2: string): boolean;
-    protected readonly filterBar: KbqFilterBar;
-    readonly filterTemplate: i0.InputSignal<KbqFilter>;
-    readonly onAddPipe: i0.OutputEmitterRef<KbqPipeTemplate>;
-    readonly select: i0.Signal<KbqSelect>;
+    protected readonly filterBar: KbqFilterBarHost;
+    readonly filterTemplate: _angular_core.InputSignal<KbqFilter>;
+    readonly onAddPipe: _angular_core.OutputEmitterRef<KbqPipeTemplate>;
+    readonly select: _angular_core.Signal<KbqSelect>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; "isSignal": true; }; }, { "onAddPipe": "onAddPipe"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; "isSignal": true; }; }, { "onAddPipe": "onAddPipe"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeAdd, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeAdd, never>;
 }
 
 // @public (undocumented)
 export class KbqPipeButton {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    protected readonly filterBar: KbqFilterBar;
-    get localeData(): any;
+    protected readonly filterBar: KbqFilterBarHost;
+    get localeData(): {
+        clearButtonTooltip: string;
+        removeButtonTooltip: string;
+        applyButton: string;
+        emptySearchResult: string;
+        selectAll: string;
+    };
     protected readonly pipe: KbqBasePipe<any>;
-    readonly readonly: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeButton, "kbq-pipe-button", never, { "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeButton, "kbq-pipe-button", never, { "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeButton, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeButton, never>;
 }
 
 // @public (undocumented)
@@ -12636,20 +13034,27 @@ export interface KbqPipeData<V> extends KbqPipe {
     value: V | null;
 }
 
-// @public (undocumented)
-export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
+// @public
+export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
+    // (undocumented)
+    protected readonly adapter: DateAdapter<any>;
     protected readonly colors: typeof KbqComponentColors;
     get defaultEnd(): D;
     get defaultStart(): D;
     get disabled(): boolean;
     get end(): D;
+    protected abstract formatRange(start: D, end: D): string;
     get formattedValue(): string;
+    // (undocumented)
+    protected readonly formatter: DateFormatter<any>;
     protected formGroup: FormGroup;
+    protected abstract getDefaultEnd(): D;
+    protected abstract getDefaultStart(): D;
     // (undocumented)
     hideCalendars(): void;
     get isEmpty(): boolean;
     protected isListMode: boolean;
-    listSelection: i0.Signal<KbqListSelection>;
+    readonly listSelection: _angular_core.Signal<KbqListSelection | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -12667,8 +13072,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     onSelectStartDate(value: D): void;
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
-    readonly popover: i0.Signal<KbqPopoverTrigger>;
-    returnButton: i0.Signal<KbqButton>;
+    readonly popover: _angular_core.Signal<KbqPopoverTrigger>;
+    readonly returnButton: _angular_core.Signal<KbqButton>;
     protected showEndCalendar: boolean;
     // (undocumented)
     showList(): void;
@@ -12678,55 +13083,37 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     get start(): D;
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeDateComponent<any>, "kbq-pipe-date", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeDateBaseComponent<any>, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDateComponent<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeDateBaseComponent<any>, never>;
 }
 
 // @public (undocumented)
-export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
-    protected readonly colors: typeof KbqComponentColors;
-    get defaultEnd(): D;
-    get defaultStart(): D;
-    get disabled(): boolean;
-    get end(): D;
-    get formattedValue(): string;
-    protected formGroup: FormGroup;
+export class KbqPipeDateComponent<D> extends KbqPipeDateBaseComponent<D> {
     // (undocumented)
-    hideCalendars(): void;
-    get isEmpty(): boolean;
-    protected isListMode: boolean;
-    listSelection: i0.Signal<KbqListSelection>;
+    protected formatRange(start: D, end: D): string;
     // (undocumented)
-    ngAfterViewInit(): void;
-    onApplyPeriod(): void;
+    protected getDefaultEnd(): D;
     // (undocumented)
-    onFocusEndInput(): void;
+    protected getDefaultStart(): D;
     // (undocumented)
-    onFocusStartInput(): void;
-    onKeydown($event: KeyboardEvent): void;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeDateComponent<any>, "kbq-pipe-date", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    onSelect(item: KbqDateTimeValue): void;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeDateComponent<any>, never>;
+}
+
+// @public (undocumented)
+export class KbqPipeDatetimeComponent<D> extends KbqPipeDateBaseComponent<D> {
     // (undocumented)
-    onSelectEndDate(value: D): void;
+    protected formatRange(start: D, end: D): string;
     // (undocumented)
-    onSelectStartDate(value: D): void;
-    open(): void;
-    protected readonly placements: typeof PopUpPlacements;
-    readonly popover: i0.Signal<KbqPopoverTrigger>;
-    returnButton: i0.Signal<KbqButton>;
-    protected showEndCalendar: boolean;
+    protected getDefaultEnd(): D;
     // (undocumented)
-    showList(): void;
+    protected getDefaultStart(): D;
     // (undocumented)
-    showPeriod(): void;
-    protected showStartCalendar: boolean;
-    get start(): D;
-    protected readonly styles: typeof KbqButtonStyles;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeDatetimeComponent<any>, "kbq-pipe-datetime", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeDatetimeComponent<any>, "kbq-pipe-datetime", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDatetimeComponent<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeDatetimeComponent<any>, never>;
 }
 
 // @public (undocumented)
@@ -12734,11 +13121,11 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    readonly pipe: i0.InputSignal<T>;
+    readonly pipe: _angular_core.InputSignal<T>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeDirective<any>, "[kbqPipe]", never, { "pipe": { "alias": "kbqPipe"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeDirective<any>, "[kbqPipe]", never, { "pipe": { "alias": "kbqPipe"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDirective<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeDirective<any>, never>;
 }
 
 // @public (undocumented)
@@ -12746,16 +13133,16 @@ export class KbqPipeMinWidth {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly filterBar: KbqFilterBar | null;
+    protected readonly filterBar: KbqFilterBarHost | null;
     maxSymbolsForFitContent: number;
     protected minWidth: string;
     get textLength(): number;
     // (undocumented)
     update: () => void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeMinWidth, "[kbqPipeMinWidth]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeMinWidth, "[kbqPipeMinWidth]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeMinWidth, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeMinWidth, never>;
 }
 
 // @public (undocumented)
@@ -12763,8 +13150,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     get allOptionsSelected(): boolean;
     get allVisibleOptionsSelected(): boolean;
     get checkboxState(): KbqPseudoCheckboxState;
-    compareByValue: (o1: any, o2: any) => boolean;
-    filteredOptions: Observable<any[]>;
+    compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
+    filteredOptions: Observable<KbqSelectValue[]>;
     get isEmpty(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -12773,9 +13160,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     onClose(): void;
     onSelect(item: KbqSelectValue[]): void;
     open(): void;
-    readonly options: i0.Signal<readonly KbqOption[]>;
-    searchControl: UntypedFormControl;
-    readonly select: i0.Signal<KbqSelect>;
+    readonly options: _angular_core.Signal<readonly KbqOption[]>;
+    readonly searchControl: FormControl<string | null>;
+    readonly select: _angular_core.Signal<KbqSelect>;
     selectAllHandler: (event: KeyboardEvent) => void;
     get selected(): KbqSelectValue[] | null;
     // (undocumented)
@@ -12783,9 +13170,46 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     toggleSelectionAll(emitEvent?: boolean): void;
     toggleSelectionAllByEnterKey(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeMultiSelectComponent, "kbq-pipe-multi-select", never, {}, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeMultiSelectComponent, "kbq-pipe-multi-select", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeMultiSelectComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeMultiSelectComponent, never>;
+}
+
+// @public (undocumented)
+export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectValue[]> implements OnInit {
+    constructor();
+    get allOptionsSelected(): boolean;
+    get allVisibleOptionsSelected(): boolean;
+    get isEmpty(): boolean;
+    // (undocumented)
+    isNodeSelectAll(_: number, nodeData: KbqTreeSelectFlatNode): boolean;
+    // (undocumented)
+    ngOnInit(): void;
+    // (undocumented)
+    get numberOfSelectedLeaves(): number;
+    // (undocumented)
+    onClear(): void;
+    onClose(): void;
+    // (undocumented)
+    onSelect(input: {
+        value: any;
+    }): void;
+    // (undocumented)
+    searchKeydownHandler(): void;
+    // (undocumented)
+    get selectAllCheckboxState(): KbqPseudoCheckboxState;
+    selectAllHandler: (event: KeyboardEvent) => void;
+    get selected(): KbqSelectValue[] | null;
+    // (undocumented)
+    get selectedAllEqualsSelectedNothing(): boolean;
+    // (undocumented)
+    toggleSelectAllNode(emitEvent?: boolean): void;
+    readonly tree: _angular_core.Signal<KbqTreeSelection>;
+    updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeMultiTreeSelectComponent, "kbq-pipe-multi-tree-select", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeMultiTreeSelectComponent, never>;
 }
 
 // @public (undocumented)
@@ -12793,15 +13217,15 @@ export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {
     // (undocumented)
     open(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeReadonlyComponent, "kbq-pipe-readonly", never, {}, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeReadonlyComponent, "kbq-pipe-readonly", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeReadonlyComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeReadonlyComponent, never>;
 }
 
 // @public (undocumented)
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {
-    compareByValue: (o1: any, o2: any) => boolean;
-    filteredOptions: Observable<any[]>;
+    compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
+    filteredOptions: Observable<KbqSelectValue[]>;
     get isEmpty(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -12809,25 +13233,23 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     // (undocumented)
     onSelect(item: KbqSelectValue): void;
     open(): void;
-    searchControl: UntypedFormControl;
-    readonly select: i0.Signal<KbqSelect>;
+    readonly searchControl: FormControl<string | null>;
+    readonly select: _angular_core.Signal<KbqSelect>;
     get selected(): KbqSelectValue | null;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeSelectComponent, "kbq-pipe-select", never, {}, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeSelectComponent, "kbq-pipe-select", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeSelectComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeSelectComponent, never>;
 }
 
 // @public (undocumented)
-export class KbqPipeState<T> implements OnInit {
+export class KbqPipeState<T> {
+    constructor();
+    readonly state: _angular_core.InputSignal<T | null>;
     // (undocumented)
-    ngOnInit(): void;
-    get state(): T | null;
-    set state(pipe: T | null);
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeState<any>, "[kbqPipeState]", never, { "state": { "alias": "kbqPipeState"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeState<any>, "[kbqPipeState]", never, { "state": { "alias": "kbqPipeState"; "required": false; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeState<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeState<any>, never>;
 }
 
 // @public (undocumented)
@@ -12853,76 +13275,29 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
     open(): void;
     // (undocumented)
     readonly placements: typeof PopUpPlacements;
-    readonly popover: i0.Signal<KbqPopoverTrigger>;
+    readonly popover: _angular_core.Signal<KbqPopoverTrigger>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeTextComponent, "kbq-pipe-text", never, {}, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeTextComponent, "kbq-pipe-text", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTextComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeTextComponent, never>;
 }
 
 // @public (undocumented)
-export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+export class KbqPipeTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectValue> {
     constructor();
-    // (undocumented)
-    get child(): HTMLElement;
-    // (undocumented)
-    handleElementEnter(): void;
-    // (undocumented)
-    hideTooltip(): void;
-    // (undocumented)
-    get isOverflown(): boolean;
-    // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    get parent(): HTMLElement;
-    // (undocumented)
-    readonly resizeStream: Subject<Event>;
-    // (undocumented)
-    readonly viewValue: i0.InputSignal<TemplateRef<any>>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeTitleDirective, "[kbqPipeTitle]", ["kbqPipeTitle"], { "viewValue": { "alias": "kbqPipeTitle"; "required": false; "isSignal": true; }; }, {}, ["parentContainer", "childContainer"], never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTitleDirective, never>;
-}
-
-// @public (undocumented)
-export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit, AfterViewInit {
-    constructor();
-    // (undocumented)
-    dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
-    filteredOptions: Observable<any[]>;
-    // (undocumented)
-    hasChild(_: number, nodeData: any): any;
     get isEmpty(): boolean;
     // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    onOpen(): void;
-    // (undocumented)
     onSelect(item: KbqTreeOption): void;
-    open(): void;
-    searchControl: UntypedFormControl;
-    readonly select: i0.Signal<KbqTreeSelect>;
     get selected(): KbqSelectValue | null;
-    // (undocumented)
-    template: any;
-    // (undocumented)
-    treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
-    // (undocumented)
-    treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
     updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeTreeSelectComponent, "kbq-pipe-tree-select", never, {}, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeTreeSelectComponent, "kbq-pipe-tree-select", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTreeSelectComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeTreeSelectComponent, never>;
 }
 
 // @public (undocumented)
-export type KbqPipeType = `${KbqPipeTypes}` | string;
+export type KbqPipeType = `${KbqPipeTypes}` | (string & {});
 
 // @public
 export enum KbqPipeTypes {
@@ -12974,6 +13349,7 @@ export enum KbqSaveFilterStatuses {
 
 // @public (undocumented)
 export interface KbqSelectValue {
+    id?: string | number;
     // (undocumented)
     name: string;
     // (undocumented)
@@ -13002,6 +13378,42 @@ export interface KbqTreeSelectNode {
     name: string;
     // (undocumented)
     value: unknown;
+}
+
+// @public
+export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements OnInit, AfterViewInit {
+    constructor();
+    // (undocumented)
+    dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
+    // (undocumented)
+    protected getChildren: (node: KbqTreeSelectNode) => KbqTreeSelectNode[] | null;
+    // (undocumented)
+    protected getLevel: (node: KbqTreeSelectFlatNode) => number;
+    // (undocumented)
+    protected getValue: (node: KbqTreeSelectFlatNode) => unknown;
+    // (undocumented)
+    protected getViewValue: (node: KbqTreeSelectFlatNode) => string;
+    hasChild(_: number, nodeData: KbqTreeSelectFlatNode): boolean;
+    // (undocumented)
+    protected isExpandable: (node: KbqTreeSelectFlatNode) => boolean;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnInit(): void;
+    onOpen(): void;
+    open(): void;
+    readonly searchControl: FormControl<string | null>;
+    readonly select: _angular_core.Signal<KbqTreeSelect>;
+    // (undocumented)
+    protected transformer: (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => KbqTreeSelectFlatNode;
+    // (undocumented)
+    treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
+    // (undocumented)
+    treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeSelectPipeBase<any>, never, never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelectPipeBase<any>, never>;
 }
 
 // (No @packageDocumentation comment for this package)
@@ -13338,9 +13750,9 @@ export class FilterBarOverviewExample {
 
     saveCurrentFilterWithNewName(filter: KbqFilter, filterBar: KbqFilterBar) {
         // This logic simulates the behavior of the backend
-        if (filterBar.filter?.name !== filter.name) {
+        if (filterBar.filter()?.name !== filter.name) {
             this.filters.splice(
-                this.filters.findIndex(({ name }) => name === filterBar.filter?.name),
+                this.filters.findIndex(({ name }) => name === filterBar.filter()?.name),
                 1,
                 filter!
             );
@@ -13392,6 +13804,217 @@ export class FilterBarOverviewExample {
             ]
         };
     }
+}
+
+```
+
+### flag
+
+#### overview
+
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+Use the [country-flag-icons](https://www.npmjs.com/package/country-flag-icons) package to show a small country flag in your product:
+
+```bash
+npm install country-flag-icons
+```
+
+</div>
+</div>
+
+- **Full ISO 3166-1 coverage**. Every existing country is identified by a two-letter code (RU, DE, FR).
+- **Flags are redrawn for small sizes**. Most sets take detailed SVGs from Wikimedia Commons, and at interface sizes (16—24 px) the small coats of arms, inscriptions and emblems on them become illegible. In country-flag-icons the details are simplified, so flags stay recognizable even at icon size.
+- Actively maintained, MIT licensed.
+
+## Aspect ratio
+
+By default flags use a 3:2 ratio. This is the primary format — use it in most scenarios: inline with text, lists, selects. Flags with a different ratio (e.g. 4:3) or from other sources are supported by overriding the `--kbq-flag-aspect-ratio` CSS variable.
+
+<!-- example(flag-aspect-ratio) -->
+
+Square flags live in a separate subpackage and are needed where the 3:2 format does not fit: avatar selectors, compact circles, dense grids.
+
+Most 1:1 versions are a center crop of the 3:2 flag. For flags that lose meaning when cropped this way, the package ships dedicated square variants (e.g. EU and KR) — they are substituted automatically from the same subpackage.
+
+<!-- example(flag-square) -->
+
+## Inset shadow: separating from the background
+
+Flags get a thin inset shadow (an inset outline) along the edge. Without it a flag blends into the background:
+
+- lots of white: the flag blends into the light page background.
+- some flags contain black or dark colors: they blend into the background in the dark theme.
+
+That is why the shadow color depends on the theme: in the light theme the shadow is dark, in the dark theme it lightens or is removed. The shadow is implemented as an inset box-shadow on a pseudo-element over the flag, and its color comes from a CSS variable that switches together with the theme.
+
+<!-- example(flag-overview) -->
+
+## A flag is not a language
+
+A flag denotes a country or region, not a language. Do not use a flag to pick an interface language: one language is spoken in several countries (Spanish is not only Spain), and one country may have several languages.
+
+<!-- example(flag-language) -->
+
+## When the flag is missing
+
+First check availability via `hasFlag(code)` and do not render an empty gap:
+
+```ts
+import { hasFlag } from 'country-flag-icons';
+
+hasFlag('RU'); // true
+hasFlag('ZZ'); // false
+```
+
+Then it depends on the situation.
+
+**Unknown or invalid code.** Show a neutral placeholder (a gray rectangle, square, circle or a globe icon). Empty space is acceptable only if it does not break the layout.
+
+<!-- example(flag-fallback) -->
+
+**You need a non-country flag** (organization, historical or disputed territory, federal subject). Do not add it to the country-flag-icons package. Add it to your internal set so that the way it is used does not change.
+
+**Supranational flags.** The EU flag is available as a separate 1:1 version; for the rest (ASEAN, UN, etc.) create your own images in the project.
+
+**It is a real country, but the flag really is missing.** This is unlikely — the ISO 3166-1 standard is fully covered — but first update the package version. If the flag is outdated or missing, open an issue or PR in the package repository, and temporarily use your own image in your project.
+
+**You need to show the flag at a large size.** In the package the flags are redrawn and simplified for small sizes. To show them at a large size you need flags in their original detail — use a third-party package. In most sources flags are provided without redrawing.
+
+## Accessibility
+
+If the flag carries meaning (for example, it is the only indicator of the selected country), pass a text caption:
+
+```html
+<kbq-flag label="Germany"><img src="…/DE.svg" alt="" /></kbq-flag>
+```
+
+If there is already adjacent text (inline, option, block), the flag is decorative — mark it `decorative` so it is hidden from screen readers and does not duplicate the caption.
+
+```html
+<kbq-flag decorative><img src="…/DE.svg" alt="" /></kbq-flag>
+Germany
+```
+
+In short: a flag must always have a text alternative — either visible text next to it (then the flag is `decorative`), or a `label` caption for the screen reader (when there is no visible text). Only the third case is not allowed — when there is neither.
+
+## Examples
+
+### With shadow and volume
+
+A gradient imitating folds is layered over the image; the flag is rounded and casts a shadow.
+
+<!-- example(flag-stylized) -->
+
+### Circular flag
+
+Use the 1:1 aspect ratio version.
+
+<!-- example(flag-circle) -->
+
+### Integer sizes
+
+Choose a flag size whose dimensions are multiples of a pixel — otherwise the image edges will be blurry.
+
+<!-- example(flag-sizes) -->
+
+#### api
+
+## API Report File for "koobiq"
+
+> Do not edit this file. It is a report generated by [API Extractor](https://api-extractor.com/).
+
+```ts
+
+import * as _angular_core from '@angular/core';
+
+// @public
+export class KbqFlag {
+    readonly decorative: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly empty: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly label: _angular_core.InputSignal<string | undefined>;
+    readonly shadow: _angular_core.InputSignal<KbqFlagShadow>;
+    readonly shape: _angular_core.InputSignal<KbqFlagShape>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFlag, "kbq-flag", ["kbqFlag"], { "shape": { "alias": "shape"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFlag, never>;
+}
+
+// @public (undocumented)
+export class KbqFlagModule {
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFlagModule, never>;
+    // (undocumented)
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqFlagModule>;
+    // (undocumented)
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqFlagModule, never, [typeof KbqFlag], [typeof KbqFlag]>;
+}
+
+// @public
+export type KbqFlagShadow = 'inset' | 'none';
+
+// @public
+export type KbqFlagShape = 'rectangle' | 'square' | 'circle';
+
+// (No @packageDocumentation comment for this package)
+
+```
+
+#### example
+
+```typescript
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { KbqFlag } from '@koobiq/components/flag';
+import * as flags3x2 from 'country-flag-icons/string/3x2';
+
+/**
+ * @title Flag overview
+ */
+@Component({
+    selector: 'flag-overview-example',
+    imports: [KbqFlag],
+    template: `
+        <div class="layout-row layout-wrap layout-align-center-center layout-gap-m example-flag-grid">
+            @for (country of countries; track country.name) {
+                <kbq-flag [label]="country.name" [innerHTML]="country.svg" />
+            }
+        </div>
+    `,
+    styles: `
+        .example-flag-grid {
+            font-size: 32px;
+            max-width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-column layout-align-center-center layout-gap-m'
+    }
+})
+export class FlagOverviewExample {
+    private readonly sanitizer = inject(DomSanitizer);
+
+    // A mix of flags, including several that are prone to blending into light or dark backgrounds.
+    // Subdivision codes are exported with underscores (GB-ENG → GB_ENG).
+    protected readonly countries = [
+        { code: 'BR', name: 'Brazil' },
+        { code: 'BG', name: 'Bulgaria' },
+        { code: 'ID', name: 'Indonesia' },
+        { code: 'MF', name: 'Saint Martin' },
+        { code: 'UY', name: 'Uruguay' },
+        { code: 'YT', name: 'Mayotte' },
+        { code: 'PK', name: 'Pakistan' },
+        { code: 'IL', name: 'Israel' },
+        { code: 'GB_ENG', name: 'England' },
+        { code: 'FI', name: 'Finland' },
+        { code: 'BE', name: 'Belgium' },
+        { code: 'CW', name: 'Curaçao' },
+        { code: 'KR', name: 'South Korea' }
+    ].map((country) => ({ ...country, svg: this.sanitizer.bypassSecurityTrustHtml(flags3x2[country.code]) }));
 }
 
 ```
@@ -14761,6 +15384,7 @@ export class KbqFocusRegionItem {
 // @public
 export class KbqInlineEdit {
     constructor();
+    protected readonly anchorFocused: _angular_core.WritableSignal<boolean>;
     protected cancel(): void;
     protected readonly canceled: _angular_core.OutputEmitterRef<void>;
     readonly canSaveOnEnter: _angular_core.InputSignal<(event: KeyboardEvent) => boolean>;
@@ -14773,6 +15397,7 @@ export class KbqInlineEdit {
     protected readonly formFieldRef: _angular_core.Signal<KbqFormField | undefined>;
     protected readonly formFieldRefList: _angular_core.Signal<readonly KbqFormField[]>;
     readonly getValueHandler: _angular_core.InputSignal<(() => unknown) | undefined>;
+    protected readonly hasInteractiveContent: _angular_core.WritableSignal<boolean>;
     readonly interactiveSelectors: _angular_core.InputSignal<string[]>;
     protected readonly isEditMode: _angular_core.Signal<boolean>;
     protected readonly label: _angular_core.Signal<KbqLabel | undefined>;
@@ -15932,6 +16557,9 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     selectActiveOptions(): void;
     // (undocumented)
     selectAll(): void;
+    get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection) => void;
+    set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection) => void);
+    readonly selectAllToggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: i0.OutputEmitterRef<KbqListSelectionChange>;
     // (undocumented)
@@ -15960,7 +16588,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     // (undocumented)
     writeValue(values: string[]): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListSelection, never>;
 }
@@ -16207,6 +16835,12 @@ Many of these parts may be absent. The body and the ability to close the dialog 
 Resembles a browser alert. Use when the system asks a single question or delivers a short message, to avoid redundant text duplication in the title and body of the modal window. Such dialogs do not have a close × icon in the top right corner.
 
 <!-- example(modal-overview) -->
+
+#### Dialog with a title and caption
+
+Use a caption to provide additional context below the dialog title — for example, a brief description of the action or its scope. The caption is limited to two lines and truncates with an ellipsis if the text is longer.
+
+<!-- example(modal-caption) -->
 
 ### How it works
 
@@ -16473,6 +17107,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     kbqCancelText: string;
     // (undocumented)
+    kbqCaption: string | TemplateRef<{}>;
+    // (undocumented)
     kbqClassName: string;
     // (undocumented)
     get kbqClosable(): boolean;
@@ -16562,7 +17198,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     triggerOk(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalComponent<any, any>, "kbq-modal", never, { "kbqModalType": { "alias": "kbqModalType"; "required": false; }; "kbqComponent": { "alias": "kbqComponent"; "required": false; }; "kbqContent": { "alias": "kbqContent"; "required": false; }; "kbqFooter": { "alias": "kbqFooter"; "required": false; }; "kbqVisible": { "alias": "kbqVisible"; "required": false; }; "kbqWidth": { "alias": "kbqWidth"; "required": false; }; "kbqSize": { "alias": "kbqSize"; "required": false; }; "kbqWrapClassName": { "alias": "kbqWrapClassName"; "required": false; }; "kbqClassName": { "alias": "kbqClassName"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "kbqTitle": { "alias": "kbqTitle"; "required": false; }; "kbqCloseByESC": { "alias": "kbqCloseByESC"; "required": false; }; "kbqClosable": { "alias": "kbqClosable"; "required": false; }; "kbqMask": { "alias": "kbqMask"; "required": false; }; "kbqMaskClosable": { "alias": "kbqMaskClosable"; "required": false; }; "kbqMaskStyle": { "alias": "kbqMaskStyle"; "required": false; }; "kbqBodyStyle": { "alias": "kbqBodyStyle"; "required": false; }; "kbqOkText": { "alias": "kbqOkText"; "required": false; }; "kbqOkType": { "alias": "kbqOkType"; "required": false; }; "kbqRestoreFocus": { "alias": "kbqRestoreFocus"; "required": false; }; "kbqOkLoading": { "alias": "kbqOkLoading"; "required": false; }; "kbqOnOk": { "alias": "kbqOnOk"; "required": false; }; "kbqCancelText": { "alias": "kbqCancelText"; "required": false; }; "kbqCancelLoading": { "alias": "kbqCancelLoading"; "required": false; }; "kbqOnCancel": { "alias": "kbqOnCancel"; "required": false; }; "kbqGetContainer": { "alias": "kbqGetContainer"; "required": false; }; }, { "kbqVisibleChange": "kbqVisibleChange"; "kbqAfterOpen": "kbqAfterOpen"; "kbqAfterClose": "kbqAfterClose"; "kbqBeforeClose": "kbqBeforeClose"; "kbqOnOk": "kbqOnOk"; "kbqOnCancel": "kbqOnCancel"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalComponent<any, any>, "kbq-modal", never, { "kbqModalType": { "alias": "kbqModalType"; "required": false; }; "kbqComponent": { "alias": "kbqComponent"; "required": false; }; "kbqContent": { "alias": "kbqContent"; "required": false; }; "kbqFooter": { "alias": "kbqFooter"; "required": false; }; "kbqVisible": { "alias": "kbqVisible"; "required": false; }; "kbqWidth": { "alias": "kbqWidth"; "required": false; }; "kbqSize": { "alias": "kbqSize"; "required": false; }; "kbqWrapClassName": { "alias": "kbqWrapClassName"; "required": false; }; "kbqClassName": { "alias": "kbqClassName"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "kbqTitle": { "alias": "kbqTitle"; "required": false; }; "kbqCaption": { "alias": "kbqCaption"; "required": false; }; "kbqCloseByESC": { "alias": "kbqCloseByESC"; "required": false; }; "kbqClosable": { "alias": "kbqClosable"; "required": false; }; "kbqMask": { "alias": "kbqMask"; "required": false; }; "kbqMaskClosable": { "alias": "kbqMaskClosable"; "required": false; }; "kbqMaskStyle": { "alias": "kbqMaskStyle"; "required": false; }; "kbqBodyStyle": { "alias": "kbqBodyStyle"; "required": false; }; "kbqOkText": { "alias": "kbqOkText"; "required": false; }; "kbqOkType": { "alias": "kbqOkType"; "required": false; }; "kbqRestoreFocus": { "alias": "kbqRestoreFocus"; "required": false; }; "kbqOkLoading": { "alias": "kbqOkLoading"; "required": false; }; "kbqOnOk": { "alias": "kbqOnOk"; "required": false; }; "kbqCancelText": { "alias": "kbqCancelText"; "required": false; }; "kbqCancelLoading": { "alias": "kbqCancelLoading"; "required": false; }; "kbqOnCancel": { "alias": "kbqOnCancel"; "required": false; }; "kbqGetContainer": { "alias": "kbqGetContainer"; "required": false; }; }, { "kbqVisibleChange": "kbqVisibleChange"; "kbqAfterOpen": "kbqAfterOpen"; "kbqAfterClose": "kbqAfterClose"; "kbqBeforeClose": "kbqBeforeClose"; "kbqOnOk": "kbqOnOk"; "kbqOnCancel": "kbqOnCancel"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalComponent<any, any>, never>;
 }
@@ -16679,6 +17315,8 @@ export interface ModalOptions<C = any, R = any> {
     kbqCancelLoading?: boolean;
     // (undocumented)
     kbqCancelText?: string;
+    // (undocumented)
+    kbqCaption?: string | TemplateRef<{}>;
     // (undocumented)
     kbqClassName?: string;
     // (undocumented)
@@ -17323,9 +17961,19 @@ In the empty state, a "No notifications" message is displayed and the "Delete al
 
 ### Error
 
-The panel supports scrolling with a sticky header and lazy loading of records. In the empty state, a "No notifications" message is displayed and the "Delete all" button is hidden.
+If notifications fail to load, a "Failed to load notifications" message and a "Repeat" button are shown instead of the list. Enable this state with `setErrorMode`, and subscribe to `KbqNotificationCenterService.onReload` to retry loading when the button is pressed.
 
 <!-- example(notification-center-error) -->
+
+### Infinite scroll
+
+The list can load notifications page by page as the user scrolls to the bottom. Subscribe to `KbqNotificationCenterService.onNextPage` to fetch the next page, append the result to `items`, and control the flow with `setLoadingMore`, `setHasMore` and `setLoadMoreErrorMode`. The threshold at which loading starts is configured with the `scrolledToBottomOffset` input.
+
+<!-- example(notification-center-infinite-scroll) -->
+
+### Deletion
+
+Notifications can be removed one by one, by date group, or all at once. Subscribe to `KbqNotificationCenterService.onDelete` to react to a removal — for example, to delete the items on the server. The event fires for all three cases and carries `type` (`'item'`, `'group'` or `'all'`) and `items` — the notifications that were removed.
 
 ### Dropdown window
 
@@ -17381,6 +18029,7 @@ export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: {
     noNotifications: string;
     failedToLoadNotifications: string;
     repeat: string;
+    loadingMore: string;
 };
 
 // @public
@@ -17413,11 +18062,14 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     // (undocumented)
     ngAfterViewInit(): void;
+    protected onContainerScroll(): void;
     // (undocumented)
     get popoverHeight(): string;
     set popoverHeight(value: string);
     protected popoverMode: boolean;
     prefix: string;
+    protected retryLoadMore(): void;
+    protected scrolledToBottomOffset: number;
     protected readonly service: KbqNotificationCenterService;
     // (undocumented)
     readonly switcher: i0.Signal<KbqButton>;
@@ -17450,10 +18102,16 @@ export class KbqNotificationCenterService {
     readonly errorMode: BehaviorSubject<boolean>;
     // Warning: (ae-forgotten-export) The symbol "KbqNotificationsGroup" needs to be exported by the entry point index.d.ts
     readonly groupedItems: Observable<KbqNotificationsGroup[]>;
+    readonly hasMore: BehaviorSubject<boolean>;
+    hideToast(item: KbqNotificationItem): void;
     get isEmpty(): boolean;
     get items(): KbqNotificationItem[];
     set items(values: KbqNotificationItem[]);
     readonly loadingMode: BehaviorSubject<boolean>;
+    readonly loadingMore: BehaviorSubject<boolean>;
+    readonly loadMoreErrorMode: BehaviorSubject<boolean>;
+    readonly onDelete: EventEmitter<KbqNotificationDeleteEvent>;
+    readonly onNextPage: EventEmitter<void>;
     readonly onRead: BehaviorSubject<KbqNotificationItem | null>;
     readonly onReload: EventEmitter<void>;
     push(item: KbqNotificationItem): void;
@@ -17461,7 +18119,10 @@ export class KbqNotificationCenterService {
     removeAll(): void;
     removeGroup(group: KbqNotificationsGroup): void;
     setErrorMode(value: boolean): void;
+    setHasMore(value: boolean): void;
     setLoadingMode(value: boolean): void;
+    setLoadingMore(value: boolean): void;
+    setLoadMoreErrorMode(value: boolean): void;
     setSilentMode(value: boolean): void;
     readonly silentMode: BehaviorSubject<boolean>;
     get unreadItemsCounter(): Observable<string>;
@@ -17493,6 +18154,8 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     // (undocumented)
     static ngAcceptInputType_popoverMode: unknown;
     // (undocumented)
+    static ngAcceptInputType_scrolledToBottomOffset: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     offset: number | null;
     protected originSelector: string;
@@ -17505,6 +18168,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     get popoverMode(): boolean;
     set popoverMode(value: boolean);
     protected preventClosingByInnerScrollSubscription: Subscription;
+    scrolledToBottomOffset: number;
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
     stickToWindow: KbqStickToWindowPlacementValues;
@@ -17515,10 +18179,16 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     updatePosition(reapplyPosition?: boolean): void;
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "stickToWindow": { "alias": "stickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNotificationCenterTrigger, "[kbqNotificationCenterTrigger]", ["kbqNotificationCenterTrigger"], { "placement": { "alias": "kbqNotificationCenterPlacement"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelClass": { "alias": "kbqNotificationCenterPanelClass"; "required": false; }; "offset": { "alias": "offset"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; }; "popoverMode": { "alias": "popoverMode"; "required": false; }; "popoverHeight": { "alias": "popoverHeight"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "stickToWindow": { "alias": "stickToWindow"; "required": false; }; "container": { "alias": "container"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterTrigger, never>;
 }
+
+// @public
+export type KbqNotificationDeleteEvent = {
+    type: 'item' | 'group' | 'all';
+    items: KbqNotificationItem[];
+};
 
 // @public (undocumented)
 export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
@@ -17542,6 +18212,7 @@ export interface KbqNotificationItem extends Omit<KbqToastData, 'closeButton'> {
     style?: string | KbqToastStyle;
     // (undocumented)
     title?: string | TemplateRef<unknown>;
+    toastId?: number;
 }
 
 // @public (undocumented)
@@ -20060,6 +20731,7 @@ import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionBase } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
+import { KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
 import { KbqSelectSearchEmptyResult } from '@koobiq/components/core';
@@ -20196,6 +20868,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     onContainerClick(): void;
     onFocus(): void;
     onRemoveMatcherItem(option: KbqOptionBase, $event: any): void;
+    readonly onSelectAll: _angular_core.OutputEmitterRef<KbqSelectAllEvent<KbqOption, KbqSelect>>;
     onTouched: () => void;
     open(): void;
     readonly openedChange: EventEmitter<boolean>;
@@ -20240,6 +20913,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get searchMinOptionsThreshold(): number | undefined;
     get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void);
+    readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selected(): KbqOptionBase | KbqOptionBase[];
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqSelectChange>;
     selectionModel: SelectionModel<KbqOptionBase>;
@@ -20269,7 +20943,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     withVirtualScroll: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelect, never>;
 }
@@ -21508,6 +22182,12 @@ Borders are also useful in tables with complex structures — for example, when 
 
 <!-- example(table-with-borders) -->
 
+### Disable hover
+
+Use `disableHover` to remove the background color change on row hover. This is useful when rows are not interactive and the hover highlight would be misleading.
+
+<!-- example(table-disable-hover) -->
+
 #### api
 
 ## API Report File for "koobiq"
@@ -21524,9 +22204,11 @@ import { KbqButton } from '@koobiq/components/button';
 // @public (undocumented)
 export class KbqTable {
     // (undocumented)
-    readonly border: i0.InputSignal<boolean>;
+    readonly border: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    readonly disableHover: i0.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; "isSignal": true; }; "disableHover": { "alias": "disableHover"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTable, never>;
 }
@@ -23216,7 +23898,18 @@ import {
     KbqTagsModule
 } from '@koobiq/components/tags';
 
-const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag ${i}`);
+const getAutocompleteOptions = () => [
+    'BruteForce',
+    'Complex Attack',
+    'DDoS',
+    'HIPS alert',
+    'IDS/IPS Alert',
+    'Zero-Day Exploit',
+    'XSS',
+    'Malware',
+    'Ransomware',
+    'Phishing'
+];
 
 /**
  * @title Tag autocomplete overview
@@ -23299,7 +23992,7 @@ export class TagAutocompleteOverviewExample {
     }
 
     protected selected({ option }: KbqAutocompleteSelectedEvent, input: HTMLInputElement): void {
-        this.tags.update((tags) => [...tags, option.value()]);
+        this.tags.update((tags) => [...tags, option.value]);
         input.value = '';
         this.tagInputModel.set('');
         option.deselect();
@@ -24639,31 +25332,31 @@ export class TextareaOverviewExample {}
 
 #### overview
 
-Time range selection menu. The user can choose one of the preset values or specify the range manually.
+Time range selection menu. The user can choose one of the preset values or specify the time range manually.
 
 <!-- example(time-range-overview) -->
 
 ### Trigger element
 
-The menu can drop down from different trigger elements, and the window can have a pointer.
+The component allows you to customize the trigger element. For example, it can be a button, a field, or a pseudo-link.
 
 <!-- example(time-range-custom-trigger) -->
 
 ### Custom presets
 
-When there are no preset values, only the From and To fields remain in the dialog:
+When there are no preset values, only the start and end of the period remain in the window.
 
 <!-- example(time-range-empty-type-list) -->
 
 ### Selection restriction
 
-It is possible to configure the minimum and maximum date:
+You can configure the minimum and maximum date. For example, a range from 2015 to 2017.
 
 <!-- example(time-range-min-max) -->
 
 ### Custom time ranges
 
-The option to configure interval selection is available:
+The component allows you to set custom time range options.
 
 <!-- example(time-range-custom-range-types) -->
 
@@ -24937,11 +25630,20 @@ export const rangeValidator: <T>(timeRangeService: KbqTimeRangeService<T>) => Va
 #### example
 
 ```typescript
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
+import { of } from 'rxjs';
+
+const ExampleLocalizedData = new InjectionToken<Record<string | 'default', string>>('ExampleLocalizedData', {
+    factory: () => ({
+        'ru-RU': 'События',
+        default: 'Events'
+    })
+});
 
 /**
  * @title Time range overview
@@ -24954,6 +25656,7 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/compo
         LuxonDateModule
     ],
     template: `
+        <span>{{ caption() }}</span>
         <kbq-time-range [formControl]="control" [availableTimeRangeTypes]="availableTimeRangeTypes" />
     `,
     providers: [
@@ -24961,10 +25664,15 @@ import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/compo
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
+        class: 'layout-flex layout-row layout-align-center-center layout-gap-xxs'
     }
 })
 export class TimeRangeOverviewExample {
+    private readonly data = inject(ExampleLocalizedData);
+    private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
+
+    protected readonly caption = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+
     protected readonly control = new FormControl<KbqTimeRangeRange>(
         {
             type: 'last5Minutes'
@@ -24985,9 +25693,9 @@ export class TimeRangeOverviewExample {
         'last30Days',
         'last3Months',
         'last12Months',
-        'allTime',
         'currentQuarter',
         'currentYear',
+        'allTime',
         'range'
     ];
 }
@@ -25579,7 +26287,60 @@ export class TimezoneOverviewExample {
 
 #### overview
 
+The `kbq-title` directive shows a [tooltip](/en/components/tooltip) with the full text when the element's content does not fit and is truncated with an ellipsis. The tooltip appears only on actual overflow — on hover or keyboard focus — and stays out of the way when the text is fully visible.
+
 <!-- example(title-overview) -->
+
+### Key features
+
+- The tooltip appears only when the text overflows — horizontally or vertically (when clamped to a number of lines). If the text fits, no tooltip is shown.
+- Works both with plain text and with complex nested markup via the `#kbqTitleContainer` (measured container) and `#kbqTitleText` (text element) template references.
+- Supports multiple `#kbqTitleText` elements: the tooltip is shown if any of them overflows.
+- Lets you provide custom tooltip content — a string or a template — through the `[kbq-title]` attribute.
+- Automatically tracks content and window-size changes and recalculates overflow.
+- Accessibility: the tooltip opens on keyboard focus and hides when focus is lost.
+
+### Container and text
+
+To detect overflow correctly in nested markup, mark the measured container with `#kbqTitleContainer` and the text element with `#kbqTitleText`. The directive compares the container and text sizes and shows the tooltip when the text does not fit.
+
+```html
+<div kbq-title>
+    <div #kbqTitleContainer>
+        <div #kbqTitleText>{{ value }}</div>
+    </div>
+</div>
+```
+
+### Multiple text elements
+
+When the container holds several text elements (for example, a name and a value in a [filter-bar](/en/components/filter-bar) pipe), mark each of them with `#kbqTitleText`. The tooltip appears if at least one element overflows.
+
+<!-- example(title-multiple-text) -->
+
+### Multiline text
+
+The directive accounts for vertical overflow as well as horizontal. This is useful when the text is clamped to several lines (`-webkit-line-clamp`).
+
+<!-- example(title-vertical-overflow) -->
+
+### Custom tooltip content
+
+By default the truncated text of the element is used as the tooltip content. To provide custom content, pass a string or a template reference (`TemplateRef`) to the `[kbq-title]` attribute. This is handy when you need formatted text or extra information.
+
+<!-- example(title-custom-content) -->
+
+### Two-line list options
+
+In two-line [list](/en/components/list) options a single `kbq-title` directive can cover the whole option. Mark both lines (name and description) with `#kbqTitleText` and the shared container with `#kbqTitleContainer`. The tooltip appears when at least one of the lines overflows and shows the full text of the option.
+
+<!-- example(title-list-option) -->
+
+### Recommendations
+
+- Use `kbq-title` for text that can be truncated: headings, table cells, values in filters and lists.
+- If the tooltip must always be shown (not only on overflow) or contain interactive elements, use [Tooltip](/en/components/tooltip) or [Popover](/en/components/popover).
+- Keep the tooltip content short and clear.
 
 #### api
 
@@ -25595,38 +26356,27 @@ import * as i1 from '@koobiq/components/tooltip';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
+import { TemplateRef } from '@angular/core';
 
-// @public (undocumented)
+// @public
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    // (undocumented)
     get child(): HTMLElement;
-    // (undocumented)
     handleElementEnter(): void;
-    // (undocumented)
     get hasOnlyText(): boolean;
-    // (undocumented)
     hideTooltip(): void;
-    // (undocumented)
     get isHorizontalOverflown(): boolean;
-    // (undocumented)
     get isOverflown(): boolean;
-    // (undocumented)
     get isVerticalOverflown(): boolean;
-    // (undocumented)
     ngAfterViewInit(): void;
-    // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     get parent(): HTMLElement;
-    // (undocumented)
     readonly resizeStream: Subject<Event>;
+    readonly titleContent: i0.InputSignal<string | TemplateRef<any>>;
     set trigger(value: string);
-    // (undocumented)
     get trigger(): string;
-    // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTitleDirective, "[kbq-title]", ["kbqTitle"], {}, {}, ["childContainer", "parentContainer"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTitleDirective, "[kbq-title]", ["kbqTitle"], { "titleContent": { "alias": "kbq-title"; "required": false; "isSignal": true; }; }, {}, ["parentContainer", "childContainer"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTitleDirective, never>;
 }
@@ -25663,28 +26413,9 @@ import { KbqTitleModule } from '@koobiq/components/title';
     ],
     template: `
         <div class="example-title-overview-container example-title-overview-container-responsive">
-            <div class="kbq-subheading">Responsive text with tooltip</div>
-            <br />
             <div class="example-title-overview-child wide kbq-text-big" kbq-title>
                 {{ longValue }}
             </div>
-        </div>
-
-        <div class="example-title-overview-container">
-            <div class="kbq-subheading">Tooltip tracking for parent & child as parameters</div>
-            <br />
-
-            <div kbq-title style="max-width: 50%">
-                <div #kbqTitleContainer class="example-title-overview-parent">
-                    <div #kbqTitleText class="example-title-overview-child kbq-text-normal">
-                        {{ field }}
-                    </div>
-                </div>
-            </div>
-            <br />
-            <button kbq-button (click)="onAddText()">Add text</button>
-            <br />
-            <button kbq-button (click)="field = defaultValue">Set Default text</button>
         </div>
     `,
     styleUrls: ['./title-overview-example.css'],
@@ -25832,6 +26563,59 @@ The toast appears from the left horizontally. As it slides in, the new element b
 ##### Disappearance
 
 The toast slides horizontally to the right beyond the screen edge. The toast window height does not change. As it slides, the element becomes transparent. Messages below it smoothly rise to fill the freed space in the stack.
+
+### Module Federation and Shadow DOM
+
+Toasts are rendered through the CDK overlay, which by default appends its container to `document.body`. When the application is mounted inside a **Shadow DOM** — a common setup for Module Federation micro-frontends that isolate their styles — the toast escapes the shadow root into the light DOM. There it loses the styles and theme tokens scoped to the shadow root (Koobiq theme tokens are defined on the `.kbq-light` / `.kbq-dark` ancestor), so the toast appears unstyled.
+
+Use `kbqShadowDomOverlayProvider` to route all CDK overlays (toast, modal, dropdown, tooltip, etc.) into the shadow root:
+
+```ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
+
+bootstrapApplication(AppComponent, {
+    providers: [
+        // Pass the micro-frontend root element (or any element inside its shadow tree).
+        ...kbqShadowDomOverlayProvider(() => document.querySelector('my-mfe-root')!)
+    ]
+});
+```
+
+When called without arguments, the application root component element is used to resolve the shadow root. If the host is not inside an **open** shadow root, the container stays on `document.body`, so the provider is safe to add unconditionally.
+
+> The provider replaces the global `OverlayContainer`, so it cannot be combined with another custom `OverlayContainer` (such as CDK's `FullscreenOverlayContainer`) — the last provider wins.
+>
+> Besides relocating the container, the provider automatically delivers the CDK **structural** overlay styles (position, `z-index`, backdrop) into the shadow root. The micro-frontend is still responsible for delivering the **Koobiq component/theme styles** (the `.kbq-light` / `.kbq-dark` tokens and component CSS) into its shadow root, because global `document.head` stylesheets do not cross a shadow boundary.
+
+#### One shared overlay container across micro-frontends
+
+By default each micro-frontend that adds `kbqShadowDomOverlayProvider` gets **its own** `OverlayContainer`, so its overlays render inside **its own** shadow root and theme. That is the right default when every micro-frontend should keep its own theme.
+
+If instead you want **all** micro-frontends to share a **single** overlay container — one stacking context, so overlays opened in different micro-frontends stack by open order — let the host create the container and pass that one instance to every remote:
+
+```ts
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { createApplication } from '@angular/platform-browser';
+import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
+
+// Host: create the single shared container in the host's shadow root.
+const hostApp = await createApplication({
+    providers: [...kbqShadowDomOverlayProvider(() => hostElement)]
+});
+const sharedOverlayContainer = hostApp.injector.get(OverlayContainer);
+
+// Each remote micro-frontend reuses that same instance instead of creating its own.
+const remoteApp = await createApplication({
+    providers: [{ provide: OverlayContainer, useValue: sharedOverlayContainer }]
+});
+```
+
+Trade-offs:
+
+- All overlays (modal, sidepanel, select, dropdown, tooltip, toast, …) render in the **host's theme**, not each remote's own theme.
+- The **host must outlive every remote** — it owns the container element, and its `ngOnDestroy` removes it.
+- This unifies only the overlay **container**. A single toast **stack** additionally needs a single `KbqToastService` (each service keeps its own stack), so route toasts through one shared service.
 
 #### api
 
@@ -26475,41 +27259,29 @@ export class KbqToolTipModule {
 // @public
 export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
-// @public (undocumented)
+// @public
 export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnChanges, OnDestroy {
     constructor();
-    // (undocumented)
     protected applyRelativeToPointer(): void;
-    // (undocumented)
     arrow: boolean;
-    // (undocumented)
     closingActions(): rxjs.Observable<void | MouseEvent>;
-    // (undocumented)
     get color(): string;
     set color(value: KbqComponentColors | string);
-    // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
-    // (undocumented)
     get context(): any;
     set context(ctx: any);
-    // (undocumented)
     get customClass(): string;
     set customClass(value: string);
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
-    // (undocumented)
     enterDelay: number;
-    // (undocumented)
     protected focusMonitor: FocusMonitor;
     readonly forDisabledComponent: i0.InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
-    // (undocumented)
     getOverlayHandleComponentType(): Type<KbqTooltipComponent>;
     header: string | TemplateRef<any>;
     hideWithTimeout: boolean;
     readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
-    // (undocumented)
     leaveDelay: number;
     modifier: TooltipModifier | `${TooltipModifier}`;
     // (undocumented)
@@ -26520,48 +27292,31 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     static ngAcceptInputType_offset: unknown;
     // (undocumented)
     static ngAcceptInputType_relativeToPointer: unknown;
-    // (undocumented)
     ngAfterViewInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
-    // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     offset: number | null;
-    // (undocumented)
     protected originSelector: string;
-    // (undocumented)
     protected overlayConfig: OverlayConfig;
-    // (undocumented)
     protected parentPopup: KbqParentPopup | null;
-    // (undocumented)
     readonly placementChange: EventEmitter<any>;
     relativeToPointer: boolean;
     protected renderer: Renderer2;
-    // (undocumented)
     protected scrollStrategy: () => ScrollStrategy;
-    // (undocumented)
     show(delay?: number): void;
     showForElement(element: HTMLElement): void;
     showForMouseEvent(event: MouseEvent): void;
-    // (undocumented)
     get tooltipPlacement(): KbqPopUpPlacementValues;
     set tooltipPlacement(value: KbqPopUpPlacementValues);
-    // (undocumented)
     get tooltipPlacementPriority(): string | string[] | null;
     set tooltipPlacementPriority(value: string | string[] | null);
-    // (undocumented)
     get tooltipVisible(): boolean;
     set tooltipVisible(value: boolean);
-    // (undocumented)
     get trigger(): string;
     set trigger(value: string);
-    // (undocumented)
     protected _trigger: string;
-    // (undocumented)
     updateClassMap(newPlacement?: string): void;
-    // (undocumented)
     updateData(): void;
-    // (undocumented)
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTooltipTrigger, "[kbqTooltip]", ["kbqTooltip"], { "forDisabledComponent": { "alias": "forDisabledComponent"; "required": false; "isSignal": true; }; "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; "hideWithTimeout": { "alias": "hideWithTimeout"; "required": false; }; "tooltipVisible": { "alias": "kbqVisible"; "required": false; }; "tooltipPlacement": { "alias": "kbqPlacement"; "required": false; }; "relativeToPointer": { "alias": "kbqRelativeToPointer"; "required": false; }; "tooltipPlacementPriority": { "alias": "kbqPlacementPriority"; "required": false; }; "content": { "alias": "kbqTooltip"; "required": false; }; "disabled": { "alias": "kbqTooltipDisabled"; "required": false; }; "enterDelay": { "alias": "kbqEnterDelay"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "customClass": { "alias": "kbqTooltipClass"; "required": false; }; "context": { "alias": "kbqTooltipContext"; "required": false; }; "color": { "alias": "kbqTooltipColor"; "required": false; }; "arrow": { "alias": "kbqTooltipArrow"; "required": false; }; "offset": { "alias": "kbqTooltipOffset"; "required": false; }; "modifier": { "alias": "kbqTooltipModifier"; "required": false; }; "header": { "alias": "kbqTooltipHeader"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
@@ -27538,7 +28293,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     getSelectedValues(): any[];
     // (undocumented)
     highlightSelectedOption(): void;
-    protected readonly inSelect: boolean;
+    inSelect: boolean;
     // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)
@@ -27586,8 +28341,11 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     resetFocusedItemOnBlur: boolean;
     // (undocumented)
     selectActiveOptions(): void;
+    get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection) => void;
+    set selectAllHandler(fn: (event: KeyboardEvent, tree: KbqTreeSelection) => void);
     // (undocumented)
-    selectAllOptions(): void;
+    selectAllOptions(allowDeselect?: boolean): void;
+    readonly selectAllToggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>;
     // Warning: (ae-forgotten-export) The symbol "SelectionModelOption" needs to be exported by the entry point index.d.ts
@@ -27623,7 +28381,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelection, never>;
 }
@@ -27957,6 +28715,7 @@ import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
 import { KbqSelectTrigger } from '@koobiq/components/core';
@@ -28078,6 +28837,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     onFocus(): void;
     onRemoveSelectedOption(selectedOption: any, $event: any): void;
+    readonly onSelectAll: _angular_core.OutputEmitterRef<KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect>>;
     onTouched: () => void;
     // (undocumented)
     open(): void;
@@ -28124,6 +28884,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     get searchMinOptionsThreshold(): number | undefined;
     get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, select: KbqTreeSelect) => void);
+    readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get selected(): any;
     // (undocumented)
@@ -28161,7 +28922,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly valueChange: _angular_core.OutputEmitterRef<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelect, never>;
 }
@@ -28433,6 +29194,22 @@ The component can be conveniently used inside links. To visually match the link 
 
 <!-- example(username-as-link) -->
 
+### Search and highlight
+
+To filter a list of users by the displayed name, inject `KbqUsernamePipe` as a service and call its `transform` method — it returns the same string the component renders by default.
+
+The matched fragment is easy to highlight in a custom template with the `kbqHighlightBackground` pipe.
+
+<!-- example(username-search) -->
+
+#### Search in Filter bar
+
+The same approach works in the filter bar, inside `kbq-pipe-select`. The look of an option is defined by `valueTemplate`, so you can render the username component as its label. The entered search text comes from the template context: the `$implicit` variable holds the pipe component itself, and its `searchControl.value` property keeps the current string.
+
+Put the formatted name in the `name` property — it is used as the trigger display value. Add the login and site to `searchKey` so the built-in filter covers every visible field.
+
+<!-- example(username-filter-bar-option) -->
+
 #### api
 
 ## API Report File for "koobiq"
@@ -28447,6 +29224,11 @@ import { PipeTransform } from '@angular/core';
 
 // @public
 export const KBQ_PROFILE_MAPPING: InjectionToken<KbqFormatKeyToProfileMapping | KbqFormatKeyToProfileMappingExtended>;
+
+// @public
+export function kbqBuildUsernameText(data: {
+    name: string;
+} & Partial<Pick<KbqUserInfo, 'login' | 'site'>>, options?: KbqUsernameTextOptions): string;
 
 // @public
 export const kbqDefaultFullNameFormat = "lf.m.";
@@ -28573,6 +29355,12 @@ export class KbqUsernameSecondaryHint {
 
 // @public
 export type KbqUsernameStyle = 'default' | 'error' | 'accented' | 'inherit';
+
+// @public (undocumented)
+export interface KbqUsernameTextOptions {
+    formatLogin?: (login: string) => string;
+    formatSite?: (site: string) => string;
+}
 
 // (No @packageDocumentation comment for this package)
 

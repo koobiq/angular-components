@@ -163,6 +163,12 @@
 - [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.0.0/tools/public_api_guard/components/filter-bar.api.md)
 - [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.0.0/packages/docs-examples/components/filter-bar/filter-bar-overview/filter-bar-overview-example.ts)
 
+### flag
+
+- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.0.0/packages/components/flag/flag.en.md)
+- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.0.0/tools/public_api_guard/components/flag.api.md)
+- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.0.0/packages/docs-examples/components/flag/flag-overview/flag-overview-example.ts)
+
 ### form-field
 
 - [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.0.0/packages/components/form-field/form-field.en.md)
@@ -170,6 +176,7 @@
 - [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.0.0/packages/docs-examples/components/form-field/form-field-overview/form-field-overview-example.ts)
 
 ### highlight
+
 
 ### icon
 

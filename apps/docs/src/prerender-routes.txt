@@ -67,6 +67,8 @@
 /en/components/filter-bar/overview
 /en/components/filter-bar/api
 /en/components/filter-bar/examples
+/en/components/flag/overview
+/en/components/flag/api
 /en/components/form-field/overview
 /en/components/form-field/api
 /en/components/highlight/overview
@@ -257,6 +259,8 @@
 /ru/components/filter-bar/overview
 /ru/components/filter-bar/api
 /ru/components/filter-bar/examples
+/ru/components/flag/overview
+/ru/components/flag/api
 /ru/components/form-field/overview
 /ru/components/form-field/api
 /ru/components/highlight/overview
