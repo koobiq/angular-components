@@ -169,7 +169,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
             const examplePortal = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
 
-            // TODO: verify what is read from the attribute.
+            // The attribute value is the example's key, used by the viewer to resolve and render the example component.
             exampleViewer.instance.example = element.getAttribute(componentName);
 
             this.portalHosts.push(portalHost);

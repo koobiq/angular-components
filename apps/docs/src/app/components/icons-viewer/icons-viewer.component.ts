@@ -19,6 +19,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import type { KbqIconsMetadata } from '@koobiq/icons/types/icons';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { DocsIconItem, DocsIconItems } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
@@ -77,12 +78,10 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
         super();
 
         this.http
-            .get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' })
+            .get<KbqIconsMetadata>('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((data) => {
-                this.iconItems = new DocsIconItems(
-                    data as Record<string, { codepoint: string; tags: string[]; description: string }>
-                );
+                this.iconItems = new DocsIconItems(data);
 
                 this.availableSizes = Array.from(this.iconItems.sizes).sort((a, b) => a - b);
 
