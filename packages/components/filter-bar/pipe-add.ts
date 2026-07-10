@@ -1,13 +1,21 @@
-import { ChangeDetectionStrategy, Component, inject, input, output, viewChild, ViewEncapsulation } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    input,
+    output,
+    signal,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqFilterBar } from './filter-bar';
-import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
+import { KBQ_FILTER_BAR_HOST, KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 import { getId } from './pipes/base-pipe';
 
 @Component({
@@ -21,19 +29,20 @@ import { getId } from './pipes/base-pipe';
         KbqSelectModule
     ],
     template: `
-        <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">
+        <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes()" [compareWith]="compareWith">
             <button
                 kbqTooltip="{{ filterBar.configuration.add.tooltip }}"
                 kbq-button
                 kbq-select-matcher
+                [attr.aria-label]="filterBar.configuration.add.tooltip"
                 [color]="'contrast-fade'"
                 [kbqStyle]="'outline'"
                 [class]="{ 'kbq-active': select.panelOpen }"
             >
-                <i kbq-icon="kbq-plus_16"></i>
+                <i kbq-icon="kbq-plus_16" aria-hidden="true"></i>
             </button>
 
-            @for (template of filterBar.pipeTemplates; track template) {
+            @for (template of filterBar.pipeTemplates(); track template) {
                 <kbq-option
                     #option
                     [userSelect]="true"
@@ -47,6 +56,9 @@ import { getId } from './pipes/base-pipe';
                 </kbq-option>
             }
         </kbq-select>
+
+        <!-- Announces a newly-added pipe to assistive tech (WCAG 4.1.3). -->
+        <div class="cdk-visually-hidden" aria-live="polite" aria-atomic="true">{{ announcement() }}</div>
     `,
     styleUrl: 'pipe-add.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,7 +69,7 @@ import { getId } from './pipes/base-pipe';
 })
 export class KbqPipeAdd {
     /** KbqFilterBar instance */
-    protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);
@@ -75,16 +87,17 @@ export class KbqPipeAdd {
         saved: false
     });
 
-    /** already added pipes. Used to open an already added pipe. */
-    addedPipes: (string | number)[] = [];
+    /**
+     * Ids of the pipes already added to the current filter. Used to open an already-added pipe.
+     * Derived from the `filter` signal so it stays in sync without the retired `changes` bus.
+     */
+    readonly addedPipes = computed(() => this.filterBar.filter()?.pipes.map((pipe: KbqPipe) => getId(pipe)) ?? []);
 
-    constructor() {
-        this.filterBar.changes.pipe(takeUntilDestroyed()).subscribe(() => {
-            if (this.filterBar?.filter) {
-                this.addedPipes = this.filterBar.filter.pipes.map((pipe: KbqPipe) => getId(pipe));
-            }
-        });
-    }
+    /**
+     * Visually-hidden live-region text announcing a newly-added pipe to assistive tech (WCAG 4.1.3).
+     * @docs-private
+     */
+    protected readonly announcement = signal('');
 
     addPipeFromTemplate(option: KbqOption) {
         if (option.selected) {
@@ -92,17 +105,29 @@ export class KbqPipeAdd {
         } else {
             option.select();
 
-            if (!this.filterBar.filter) {
-                this.filterBar.filter = structuredClone(this.filterTemplate());
-            }
+            const current = this.filterBar.filter() ?? structuredClone(this.filterTemplate());
 
-            this.filterBar.filter.changed = true;
-            this.filterBar.filter.pipes.push(
-                Object.assign({}, option.value, { values: undefined, valueTemplate: undefined, openOnAdd: true })
-            );
+            // Build a new filter reference (immutable add) so the `filter` model reacts; keep `pipes` on a
+            // new-reference-on-change model instead of an in-place push. `model.set(...)` auto-emits
+            // `filterChange` for the two-way binding.
+            this.filterBar.filter.set({
+                ...current,
+                changed: true,
+                pipes: [
+                    ...current.pipes,
+                    Object.assign({}, option.value, { values: undefined, valueTemplate: undefined, openOnAdd: true })
+                ]
+            });
 
             this.onAddPipe.emit(option.value);
-            this.filterBar.filterChange.emit(this.filterBar.filter);
+
+            const message = this.filterBar.configuration.add.addedAnnouncement.replace('{{ name }}', option.value.name);
+
+            // Empty then re-fill on the next tick so an identical consecutive message still changes the
+            // live-region text node and is re-announced (a same-string `set` would be an `Object.is` no-op
+            // that assistive tech never picks up).
+            this.announcement.set('');
+            setTimeout(() => this.announcement.set(message));
         }
 
         this.select().close();

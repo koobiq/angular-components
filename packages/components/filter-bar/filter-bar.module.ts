@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
 import { kbqFilterBarPipesProvider } from './filter-bar.types';
-import { KbqFilterBarRefresher } from './filter-refresher';
+import { KbqFilterRefresher } from './filter-refresher';
 import { KbqFilterReset } from './filter-reset';
 import { KbqFilters } from './filters';
 import { KbqPipeAdd } from './pipe-add';
@@ -13,7 +13,7 @@ import { KbqPipeState } from './pipes/pipe-state';
 const COMPONENTS = [
     KbqFilterBar,
     KbqFilters,
-    KbqFilterBarRefresher,
+    KbqFilterRefresher,
     KbqFilterBarButton,
     KbqFilterReset,
     KbqPipeAdd,

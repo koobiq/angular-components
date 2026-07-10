@@ -563,7 +563,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     getSelectedValues(): any[];
     // (undocumented)
     highlightSelectedOption(): void;
-    protected readonly inSelect: boolean;
+    inSelect: boolean;
     // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)

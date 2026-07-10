@@ -1,26 +1,18 @@
-﻿import { AfterViewInit, ChangeDetectionStrategy, Component, inject, viewChild, ViewEncapsulation } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import {
-    DateAdapter,
-    DateFormatter,
-    ENTER,
-    KbqComponentColors,
-    KbqFormattersModule,
-    PopUpPlacements
-} from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormattersModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqListModule, KbqListSelection } from '@koobiq/components/list';
-import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqListModule } from '@koobiq/components/list';
+import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqDateTimeValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
+import { KbqPipeDateBaseComponent } from './pipe-date-base';
 import { KbqPipeState } from './pipe-state';
 
 @Component({
@@ -52,201 +44,16 @@ import { KbqPipeState } from './pipe-state';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
-    private readonly adapter = inject(DateAdapter);
-    private readonly formatter = inject(DateFormatter);
-
-    /** @docs-private */
-    protected readonly placements = PopUpPlacements;
-    /** @docs-private */
-    protected readonly styles = KbqButtonStyles;
-    /** @docs-private */
-    protected readonly colors = KbqComponentColors;
-
-    /** Whether the current state is list of periods. When false will displayed control for set custom period */
-    protected isListMode = true;
-
-    /** @docs-private */
-    protected formGroup: FormGroup;
-
-    /** @docs-private */
-    protected showStartCalendar: boolean = false;
-    /** @docs-private */
-    protected showEndCalendar: boolean = false;
-
-    /** formatted value for period */
-    get formattedValue(): string {
-        if (this.start && this.end) {
-            return this.formatter.rangeShortDate(this.start, this.end);
-        }
-
-        return this.data.value?.name ?? '';
+export class KbqPipeDateComponent<D> extends KbqPipeDateBaseComponent<D> {
+    protected formatRange(start: D, end: D): string {
+        return this.formatter.rangeShortDate(start, end);
     }
 
-    /** Whether the current pipe is disabled. */
-    get disabled(): boolean {
-        return (
-            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
-            !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
-            this.formGroup.controls.start.invalid
-        );
-    }
-
-    /** parsed start */
-    get start(): D {
-        return this.adapter.parse(this.data.value?.start, '');
-    }
-
-    /** default object for start */
-    get defaultStart(): D {
-        if (this.data.value?.start) {
-            return this.adapter.today().plus(this.data.value?.start);
-        }
-
+    protected getDefaultStart(): D {
         return this.adapter.today();
     }
 
-    /** parsed end */
-    get end(): D {
-        return this.adapter.parse(this.data.value?.end, '');
-    }
-
-    /** default object for end */
-    get defaultEnd(): D {
-        if (this.data.value?.start) {
-            return this.adapter.today();
-        }
-
+    protected getDefaultEnd(): D {
         return this.adapter.today().plus({ days: 1 });
-    }
-
-    /** Whether the current pipe is empty. */
-    override get isEmpty(): boolean {
-        if (this.data.value === null) return true;
-
-        if (this.data.value?.name) return false;
-
-        return !this.adapter.isDateInstance(this.start) || !this.adapter.isDateInstance(this.end);
-    }
-
-    /** @docs-private */
-    readonly popover = viewChild.required<KbqPopoverTrigger>('popover');
-    /** @docs-private */
-    // Optional: the list only exists while the popover is open in list mode, and it is read
-    // in deferred callbacks that may fire after the popover has already closed.
-    listSelection = viewChild('listSelection', { read: KbqListSelection });
-    /** @docs-private */
-    returnButton = viewChild.required('returnButton', { read: KbqButton });
-
-    override ngAfterViewInit() {
-        super.ngAfterViewInit();
-
-        this.popover()
-            .visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((visible) => {
-                if (visible) {
-                    // Move keyboard focus onto the period list so Enter selects a preset
-                    // instead of the focus trap landing on the "custom period" row.
-                    if (this.isListMode) {
-                        setTimeout(() => this.listSelection()?.focus());
-                    }
-                } else {
-                    this.filterBar?.onClosePipe.emit(this.data);
-                }
-            });
-    }
-
-    /** keydown handler
-     * @docs-private */
-    onKeydown($event: KeyboardEvent) {
-        if (($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
-            this.onApplyPeriod();
-        }
-
-        if ($event.keyCode === ENTER) {
-            $event.preventDefault();
-        }
-    }
-
-    onApplyPeriod() {
-        this.data.value = {
-            start: this.formGroup.controls.start.value.toISO(),
-            end: this.formGroup.controls.end.value.toISO()
-        };
-        this.stateChanges.next();
-
-        this.filterBar?.onChangePipe.next(this.data);
-
-        this.popover().hide();
-
-        setTimeout(() => this.restoreTriggerFocus());
-    }
-
-    onSelect(item: KbqDateTimeValue) {
-        this.data.value = item;
-        this.stateChanges.next();
-
-        this.filterBar?.onChangePipe.next(this.data);
-
-        this.popover().hide();
-
-        setTimeout(() => this.restoreTriggerFocus());
-    }
-
-    showPeriod() {
-        this.isListMode = false;
-        this.showStartCalendar = false;
-        this.showEndCalendar = false;
-
-        this.initFormGroup();
-
-        setTimeout(() => {
-            this.popover().updatePosition(true);
-            this.returnButton().focus();
-        });
-    }
-
-    showList() {
-        this.isListMode = true;
-
-        setTimeout(() => this.listSelection()?.focus());
-        this.popover().updatePosition(true);
-    }
-
-    /** opens popover */
-    override open() {
-        this.popover().show();
-    }
-
-    onSelectStartDate(value: D) {
-        this.formGroup.controls.start.setValue(value);
-    }
-
-    onSelectEndDate(value: D) {
-        this.formGroup.controls.end.setValue(value);
-    }
-
-    onFocusStartInput() {
-        this.showStartCalendar = true;
-        this.showEndCalendar = false;
-
-        this.popover().updatePosition(true);
-    }
-
-    onFocusEndInput() {
-        this.showEndCalendar = true;
-        this.showStartCalendar = false;
-    }
-
-    hideCalendars() {
-        this.showStartCalendar = false;
-        this.showEndCalendar = false;
-    }
-
-    private initFormGroup() {
-        this.formGroup = new FormGroup({
-            start: new FormControl(this.start || this.defaultStart),
-            end: new FormControl(this.end || this.defaultEnd)
-        });
     }
 }

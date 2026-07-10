@@ -142,8 +142,13 @@ export class KbqTreeSelection
     private readonly platform = inject(Platform);
     protected readonly focusMonitor = inject(FocusMonitor);
 
-    /** Indicates whether this component is placed inside a KbqFormField component. */
-    protected readonly inSelect = !!inject(KBQ_FORM_FIELD_REF, { optional: true, host: true });
+    /**
+     * Whether this tree-selection is rendered inside a select panel (enables option
+     * hover-to-focus). Defaults to detecting a wrapping `KbqFormField`, and is forced to `true`
+     * by the host `KbqTreeSelect` so hover works even when the tree-select has no form-field
+     * wrapper (e.g. the filter-bar pipes render the tree-select bare).
+     */
+    inSelect = !!inject(KBQ_FORM_FIELD_REF, { optional: true, host: true });
 
     renderedOptions = new QueryList<KbqTreeOption>();
 

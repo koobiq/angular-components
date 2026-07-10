@@ -78,10 +78,16 @@ export const tkTMLocaleData = {
             error: 'Şeýle atly gözleg eýýäm bar',
             errorHint: 'Filtri ýazdyryp bolmady. Täzeden synanyň ýa-da administratora ýüz tutuň.',
             saveButton: 'Ýazdyr',
-            cancelButton: 'Ýatyr'
+            cancelButton: 'Ýatyr',
+            actionsTooltip: 'Filtr amallary'
         },
         add: {
-            tooltip: 'Filtr goş'
+            tooltip: 'Filtr goş',
+            addedAnnouncement: '{{ name }} filtri goşuldy'
+        },
+        refresher: {
+            refresh: 'Täzele',
+            settings: 'Täzeleme sazlamalary'
         },
         pipe: {
             clearButtonTooltip: 'Arassala',

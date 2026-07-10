@@ -1,7 +1,7 @@
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -44,9 +44,9 @@ import { KbqPipeState } from './pipe-state';
 })
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {
     /** control for search options */
-    searchControl: UntypedFormControl = new UntypedFormControl();
+    readonly searchControl = new FormControl<string | null>(null);
     /** filtered by search options */
-    filteredOptions: Observable<any[]>;
+    filteredOptions: Observable<KbqSelectValue[]>;
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);
@@ -86,16 +86,17 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     }
 
     /** Comparator of selected options */
-    compareByValue = (o1: any, o2: any): boolean => o1 && o2 && o1.id === o2.id;
+    compareByValue = (o1: Pick<KbqSelectValue, 'id'> | null, o2: Pick<KbqSelectValue, 'id'> | null): boolean =>
+        !!o1 && !!o2 && o1.id === o2.id;
 
     /** opens select */
     override open() {
         this.select().open();
     }
 
-    private getFilteredOptions(value: string): KbqSelectValue[] {
+    private getFilteredOptions(value: string | null): KbqSelectValue[] {
         return value
-            ? this.values.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
+            ? this.values.filter((item: KbqSelectValue) => item.name.toLowerCase().includes(value.toLowerCase()))
             : this.values;
     }
 }

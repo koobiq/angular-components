@@ -1,8 +1,7 @@
-import { Directive, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Directive, effect, inject } from '@angular/core';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFilterBar } from './filter-bar';
+import { KBQ_FILTER_BAR_HOST } from './filter-bar.types';
 import { KbqFilters } from './filters';
 
 @Directive({
@@ -14,17 +13,21 @@ import { KbqFilters } from './filters';
 })
 export class KbqFilterBarButton {
     private readonly button = inject(KbqButton);
-    /** KbqFilterBar instance */
-    private readonly filterBar = inject(KbqFilterBar);
+    /** KbqFilterBar host seam */
+    private readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
     /** KbqFilters instance */
     protected readonly filters = inject(KbqFilters);
 
     constructor() {
-        this.filterBar.changes.pipe(takeUntilDestroyed()).subscribe(() => {
+        // Reflect the current filter's saved/changed state in the button style. Reading `filterBar.filter`
+        // (a signal-backed accessor) subscribes this effect, replacing the retired `changes` bus.
+        effect(() => {
+            const filter = this.filterBar.filter();
+
             this.button.kbqStyle = KbqButtonStyles.Outline;
             this.button.color = KbqComponentColors.ContrastFade;
 
-            if (this.filterBar.filter?.changed || this.filterBar.filter?.saved) {
+            if (filter?.changed || filter?.saved) {
                 this.button.kbqStyle = 'changed-filter';
                 this.button.color = KbqComponentColors.Empty;
             }

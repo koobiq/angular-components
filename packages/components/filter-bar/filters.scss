@@ -5,7 +5,7 @@
     display: flex;
 
     > .kbq-button {
-        max-width: 320px;
+        max-width: var(--kbq-filter-bar-pipe-max-width, 320px);
 
         & .kbq-button-wrapper {
             width: 100%;
@@ -13,7 +13,7 @@
     }
 
     > .kbq-button .kbq-icon {
-        margin-right: var(--kbq-size-xxs);
+        margin-inline-end: var(--kbq-size-xxs);
     }
 
     & .kbq-filters__filter-name {
@@ -29,61 +29,63 @@
 
         height: var(--kbq-size-m) !important;
 
-        margin-left: calc(var(--kbq-size-s) + var(--kbq-size-xs)) !important;
-        margin-right: var(--kbq-size-xs) !important;
+        // `!important` is load-bearing: it overrides the divider's own higher-specificity
+        // `.kbq-divider_paddings` margin rule. Logical props keep the override RTL-safe.
+        margin-inline-start: calc(var(--kbq-size-s) + var(--kbq-size-xs)) !important;
+        margin-inline-end: var(--kbq-size-xs) !important;
     }
 
     & .kbq-filter-bar__arrow {
         align-self: center;
 
-        margin-left: var(--kbq-size-s);
+        margin-inline-start: var(--kbq-size-s);
     }
 
     .kbq-button.kbq-button_changed-filter {
-        border-bottom-right-radius: unset;
-        border-top-right-radius: unset;
+        border-end-end-radius: unset;
+        border-start-end-radius: unset;
     }
 
     .kbq-button-icon {
-        margin-left: -1px;
+        margin-inline-start: -1px;
 
-        border-bottom-left-radius: unset;
-        border-top-left-radius: unset;
+        border-end-start-radius: unset;
+        border-start-start-radius: unset;
     }
 
     .kbq-button_changed-saved-filter {
         &::before {
             content: '';
             position: absolute;
-            right: -4px;
+            inset-inline-end: -4px;
             top: -4px;
 
             width: var(--kbq-size-s);
             height: var(--kbq-size-s);
 
-            border: 2px solid var(--kbq-background-bg);
+            border-width: 2px;
+            border-style: solid;
             border-radius: var(--kbq-size-xs);
-
-            background: var(--kbq-icon-warning);
         }
     }
 
     .kbq-button:not(:hover, .kbq-active) + .kbq-button_action:not(:hover, .kbq-active)::after {
         content: '';
         position: absolute;
-        left: 0;
+        inset-inline-start: 0;
         top: 10px;
 
         width: 1px;
         height: var(--kbq-size-m);
-
-        background: var(--kbq-line-contrast-less);
     }
 }
 
 .kbq-filters__save-as-new-filter-popover {
+    // Token is declared on the overlay panel itself so it resolves outside `.kbq-filter-bar`.
+    --kbq-filter-bar-save-popover-width: 400px;
+
     & .kbq-popover__container {
-        width: 400px;
+        width: var(--kbq-filter-bar-save-popover-width);
     }
 
     & .kbq-popover__content {
@@ -92,5 +94,7 @@
 }
 
 .kbq-filters__dropdown .kbq-dropdown-item {
-    padding-right: var(--kbq-size-s);
+    padding-inline-end: var(--kbq-size-s);
 }
+
+@include kbq-filter-bar-filters-theme();

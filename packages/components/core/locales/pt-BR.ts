@@ -77,10 +77,16 @@ export const ptBRLocaleData = {
             error: 'A busca com esse nome já existe',
             errorHint: 'O filtro não pôde ser salvo. Tente de novo ou entre em contato com o administrador.',
             saveButton: 'Salvar',
-            cancelButton: 'Cancelar'
+            cancelButton: 'Cancelar',
+            actionsTooltip: 'Ações do filtro'
         },
         add: {
-            tooltip: 'Adicionar filtros'
+            tooltip: 'Adicionar filtros',
+            addedAnnouncement: 'Filtro {{ name }} adicionado'
+        },
+        refresher: {
+            refresh: 'Atualizar',
+            settings: 'Configurações de atualização'
         },
         pipe: {
             clearButtonTooltip: 'Apagar',

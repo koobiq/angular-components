@@ -1,15 +1,17 @@
+@use '../filter-bar-theme' as *;
+
 .kbq-pipe__multiselect {
     .kbq-pipe__value {
-        margin-left: var(--kbq-size-xxs);
+        margin-inline-start: var(--kbq-size-xxs);
     }
 
     .kbq-badge {
         align-self: center;
 
-        margin-left: var(--kbq-size-xs);
+        margin-inline-start: var(--kbq-size-xs);
     }
 }
 
 .kbq-pipe-multiselect__panel .kbq-select__content {
-    max-height: 404px;
+    @include kbq-filter-bar-panel-content-max-height();
 }

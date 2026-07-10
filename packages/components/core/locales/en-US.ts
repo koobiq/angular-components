@@ -78,10 +78,16 @@ export const enUSLocaleData = {
             error: 'The search with such name already exists',
             errorHint: 'Could not save the filter. Try again or contact the administrator.',
             saveButton: 'Save',
-            cancelButton: 'Cancel'
+            cancelButton: 'Cancel',
+            actionsTooltip: 'Filter actions'
         },
         add: {
-            tooltip: 'Add filter'
+            tooltip: 'Add filter',
+            addedAnnouncement: '{{ name }} filter added'
+        },
+        refresher: {
+            refresh: 'Refresh',
+            settings: 'Refresh settings'
         },
         pipe: {
             clearButtonTooltip: 'Clear',

@@ -1,12 +1,14 @@
+@use '../filter-bar-theme' as *;
+
 .kbq-pipe__multi-tree-select {
     .kbq-pipe__value {
-        margin-left: var(--kbq-size-xxs);
+        margin-inline-start: var(--kbq-size-xxs);
     }
 
     .kbq-badge {
         align-self: center;
 
-        margin-left: var(--kbq-size-xs);
+        margin-inline-start: var(--kbq-size-xs);
     }
 
     & .kbq-tree-select .kbq-select__trigger {
@@ -15,5 +17,5 @@
 }
 
 .kbq-pipe-multi-tree-select__panel .kbq-select__content {
-    max-height: 404px;
+    @include kbq-filter-bar-panel-content-max-height();
 }

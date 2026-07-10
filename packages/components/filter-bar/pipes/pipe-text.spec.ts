@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/cor
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ENTER, ESCAPE } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -12,6 +13,7 @@ import {
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
+import { registerPipeStatesTests } from './pipe-states.spec-helper';
 import { KbqPipeTextComponent } from './pipe-text';
 
 const PIPE_TEMPLATE_ID = 'TestText';
@@ -70,7 +72,15 @@ describe('KbqPipeTextComponent', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
 
-    window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    const originalStructuredClone = window.structuredClone;
+
+    beforeAll(() => {
+        window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    });
+
+    afterAll(() => {
+        window.structuredClone = originalStructuredClone;
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -94,81 +104,18 @@ describe('KbqPipeTextComponent', () => {
         return filterBarDebugElement.componentInstance;
     };
 
-    describe('Pipe states', () => {
-        beforeEach(() => {
+    registerPipeStatesTests({
+        label: 'Text',
+        pipeClass: 'kbq-pipe__text',
+        createPipe,
+        createFilter,
+        nonEmptyValue: () => 'some text',
+        createContext: () => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
-            fixture.componentInstance.activeFilter = createFilter([
-                createPipe({
-                    name: 'required',
-                    value: 'some text',
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({ name: 'empty', value: null, cleanable: true, removable: false, disabled: false }),
-                createPipe({
-                    name: 'cleanable',
-                    value: 'some text',
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({
-                    name: 'removable',
-                    value: 'some text',
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                }),
-                createPipe({ name: 'disabled', value: 'some text', cleanable: false, removable: false, disabled: true })
-            ]);
-            fixture.detectChanges();
-        });
 
-        it('should render all Text pipes', () => {
-            const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
-
-            expect(pipes.length).toBe(5);
-            pipes.forEach((pipe) => {
-                expect(pipe.nativeElement.classList).toContain('kbq-pipe__text');
-            });
-        });
-
-        it('should apply required state (no special classes)', () => {
-            const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
-
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
-        });
-
-        it('should apply empty state', () => {
-            const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[1];
-
-            expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
-        });
-
-        it('should apply cleanable state', () => {
-            const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
-
-            expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
-            expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
-        });
-
-        it('should apply removable state', () => {
-            const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
-
-            expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
-            expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-        });
-
-        it('should apply disabled state', () => {
-            const disabled = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
-
-            expect(disabled.nativeElement.classList).toContain('kbq-pipe_disabled');
-        });
+            return { fixture, filterBar: filterBarDebugElement };
+        }
     });
 
     describe('isEmpty', () => {
@@ -335,7 +282,7 @@ describe('KbqPipeTextComponent', () => {
 
             const component = getPipeComponent();
             const applySpy = jest.spyOn(component, 'onApply');
-            const event = new KeyboardEvent('keydown', { keyCode: 13, ctrlKey: true });
+            const event = new KeyboardEvent('keydown', { keyCode: ENTER, ctrlKey: true });
 
             component.onKeydown(event);
 
@@ -348,7 +295,7 @@ describe('KbqPipeTextComponent', () => {
 
             const component = getPipeComponent();
             const applySpy = jest.spyOn(component, 'onApply');
-            const event = new KeyboardEvent('keydown', { keyCode: 13, metaKey: true });
+            const event = new KeyboardEvent('keydown', { keyCode: ENTER, metaKey: true });
 
             component.onKeydown(event);
 
@@ -361,7 +308,7 @@ describe('KbqPipeTextComponent', () => {
 
             const component = getPipeComponent();
             const applySpy = jest.spyOn(component, 'onApply');
-            const event = new KeyboardEvent('keydown', { keyCode: 13, ctrlKey: true });
+            const event = new KeyboardEvent('keydown', { keyCode: ENTER, ctrlKey: true });
 
             component.onKeydown(event);
 
@@ -374,7 +321,7 @@ describe('KbqPipeTextComponent', () => {
 
             const component = getPipeComponent();
             const applySpy = jest.spyOn(component, 'onApply');
-            const event = new KeyboardEvent('keydown', { keyCode: 27, ctrlKey: true }); // Escape
+            const event = new KeyboardEvent('keydown', { keyCode: ESCAPE, ctrlKey: true });
 
             component.onKeydown(event);
 
@@ -387,7 +334,7 @@ describe('KbqPipeTextComponent', () => {
 
             const component = getPipeComponent();
             const applySpy = jest.spyOn(component, 'onApply');
-            const event = new KeyboardEvent('keydown', { keyCode: 13 });
+            const event = new KeyboardEvent('keydown', { keyCode: ENTER });
 
             component.onKeydown(event);
 

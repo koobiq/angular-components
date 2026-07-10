@@ -4,6 +4,10 @@
 @use '../../datepicker/datepicker-tokens' as *;
 
 .kbq-pipe-date__popover {
+    // Tokens are declared on the overlay panel itself so they resolve outside `.kbq-filter-bar`.
+    --kbq-filter-bar-date-period-width: 320px;
+    --kbq-filter-bar-date-field-width: 136px;
+
     & .kbq-popover__container {
         max-height: unset;
     }
@@ -16,8 +20,7 @@
         margin: var(--kbq-size-xxs) 0;
 
         & .kbq-list-option {
-            margin-left: var(--kbq-size-xxs);
-            margin-right: var(--kbq-size-xxs);
+            margin-inline: var(--kbq-size-xxs);
 
             & .kbq-list-text {
                 display: flex;
@@ -25,7 +28,7 @@
             }
 
             & .kbq-icon {
-                margin-left: var(--kbq-size-s);
+                margin-inline-start: var(--kbq-size-s);
                 align-self: center;
 
                 color: var(--kbq-icon-fade-contrast-color);
@@ -34,7 +37,7 @@
     }
 
     & .kbq-date-period {
-        width: 320px;
+        width: var(--kbq-filter-bar-date-period-width);
 
         & .kbq-date-period__header {
             padding: var(--kbq-size-xs) var(--kbq-size-xxs) var(--kbq-size-s);
@@ -59,11 +62,11 @@
             gap: var(--kbq-size-s);
 
             & .kbq-form__label {
-                padding-left: var(--kbq-size-l);
+                padding-inline-start: var(--kbq-size-l);
             }
 
             & .kbq-form__control {
-                padding-right: var(--kbq-size-l);
+                padding-inline-end: var(--kbq-size-l);
             }
 
             & .kbq-date-period__date,
@@ -75,22 +78,26 @@
                 display: flex;
 
                 & .kbq-date-period__date {
-                    width: 136px;
+                    width: var(--kbq-filter-bar-date-field-width);
 
                     & .kbq-form-field__container {
-                        border-top-right-radius: unset;
-                        border-bottom-right-radius: unset;
+                        // Square off the seam (inline-end) — logical so it follows the inline-start overlap
+                        // below under RTL (was border-top/bottom-right-radius).
+                        border-start-end-radius: unset;
+                        border-end-end-radius: unset;
                     }
                 }
 
                 & .kbq-date-period__time.kbq-form-field-type-timepicker {
                     flex: 1;
-                    margin-left: -1px;
+                    margin-inline-start: -1px;
                     width: unset;
 
                     & .kbq-form-field__container {
-                        border-top-left-radius: unset;
-                        border-bottom-left-radius: unset;
+                        // Square off the seam (inline-start) — logical counterpart of the date field above
+                        // (was border-top/bottom-left-radius).
+                        border-start-start-radius: unset;
+                        border-end-start-radius: unset;
                     }
                 }
             }
@@ -109,8 +116,7 @@
             & .kbq-hint {
                 grid-column: 2 span;
 
-                padding-left: var(--kbq-size-m);
-                padding-right: var(--kbq-size-m);
+                padding-inline: var(--kbq-size-m);
             }
         }
 

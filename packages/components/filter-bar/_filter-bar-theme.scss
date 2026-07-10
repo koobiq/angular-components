@@ -6,6 +6,92 @@
     }
 }
 
+// Shared scroll height for the select/tree overlay panels rendered outside the bar.
+// Keeps the single magic value in one place (used by every select-family pipe panel).
+@mixin kbq-filter-bar-panel-content-max-height() {
+    max-height: 404px;
+}
+
+// Themable colour surfaces of a pipe. Kept out of the layout SCSS so every colour
+// lives behind a theme hook (they still resolve through the global semantic tokens).
+@mixin kbq-filter-bar-pipe-theme() {
+    .kbq-pipe {
+        .kbq-pipe__name {
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+
+        .kbq-pipe__separator {
+            color: var(--kbq-line-contrast-less);
+        }
+
+        .kbq-select:not(:hover, .kbq-active),
+        .kbq-tree-select:not(:hover, .kbq-active),
+        .kbq-button:not(:hover, .kbq-active, [disabled]) {
+            & + .kbq-pipe-button:not(:hover, .kbq-active)::after {
+                background: var(--kbq-line-contrast-less);
+            }
+        }
+
+        &.kbq-pipe_disabled {
+            .kbq-pipe__name,
+            .kbq-pipe__value {
+                color: var(--kbq-states-foreground-disabled);
+            }
+        }
+    }
+
+    .kbq-pipe.kbq-pipe_removable,
+    .kbq-pipe.kbq-pipe_cleanable:not(.kbq-pipe_empty) {
+        .kbq-button.cdk-keyboard-focused::after {
+            background: var(--kbq-states-line-focus-theme);
+        }
+
+        .kbq-button-icon.cdk-keyboard-focused::after {
+            background: var(--kbq-states-line-focus-theme);
+        }
+    }
+
+    .kbq-pipe-tooltip__name {
+        color: var(--kbq-foreground-white-secondary);
+    }
+
+    .kbq-pipe-tooltip__value {
+        color: var(--kbq-foreground-white);
+    }
+}
+
+// Themable colour surfaces of a read-only pipe.
+@mixin kbq-filter-bar-readonly-theme() {
+    .kbq-pipe.kbq-pipe__readonly:not(.kbq-pipe_cleanable) {
+        & .kbq-button-icon.kbq-button_filled:not(:hover),
+        & .kbq-button.kbq-button_filled,
+        & .kbq-button.kbq-button_filled:hover {
+            background: var(--kbq-states-background-disabled);
+        }
+
+        & .kbq-pipe__name,
+        & .kbq-pipe__value {
+            color: var(--kbq-states-foreground-disabled);
+        }
+    }
+}
+
+// Themable colour surfaces of the filters list (the changed-and-saved warning dot and the
+// separator drawn between the trigger and its action button).
+@mixin kbq-filter-bar-filters-theme() {
+    .kbq-filters {
+        .kbq-button_changed-saved-filter::before {
+            border-color: var(--kbq-background-bg);
+
+            background: var(--kbq-icon-warning);
+        }
+
+        .kbq-button:not(:hover, .kbq-active) + .kbq-button_action:not(:hover, .kbq-active)::after {
+            background: var(--kbq-line-contrast-less);
+        }
+    }
+}
+
 @mixin _icon($left-icon, $right-icon) {
     .kbq-icon.kbq-empty {
         color: $left-icon;

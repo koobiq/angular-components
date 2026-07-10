@@ -9,7 +9,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
@@ -22,6 +22,7 @@ import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
+import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 
@@ -56,9 +57,9 @@ import { KbqPipeState } from './pipe-state';
 })
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
     /** control for search options */
-    searchControl: UntypedFormControl = new UntypedFormControl();
+    readonly searchControl = new FormControl<string | null>(null);
     /** filtered by search options */
-    filteredOptions: Observable<any[]>;
+    filteredOptions: Observable<KbqSelectValue[]>;
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);
@@ -68,20 +69,12 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** selected value */
     get selected() {
-        if (this.selectedAllEqualsSelectedNothing) {
-            return this.internalSelected;
-        }
-
-        return this.data.value;
+        return this.multiSelect.selected;
     }
 
     /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
-        return (
-            super.isEmpty ||
-            (Array.isArray(this.data.value) && !this.data.value.length) ||
-            (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected)
-        );
+        return this.multiSelect.isEmpty(super.isEmpty);
     }
 
     /** state for checkbox 'select all'. */
@@ -116,7 +109,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     get selectedAllEqualsSelectedNothing(): boolean {
-        return this.data.selectedAllEqualsSelectedNothing ?? this.filterBar!.selectedAllEqualsSelectedNothing();
+        return this.multiSelect.selectedAllEqualsSelectedNothing;
     }
 
     private get visibleOptions(): KbqOption[] {
@@ -124,11 +117,15 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     private selectionAllInProgress = false;
-    private internalSelected: KbqSelectValue[] | null;
+    private readonly multiSelect = new KbqMultiSelectPipeState({
+        data: this.data,
+        filterBar: this.filterBar,
+        allOptionsSelected: () => this.allOptionsSelected
+    });
 
     /** @docs-private */
     ngOnInit(): void {
-        this.updateInternalSelected();
+        this.multiSelect.updateInternalSelected();
 
         this.filteredOptions = merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
             map(this.getFilteredOptions),
@@ -154,7 +151,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
             this.data.value = item;
         }
 
-        this.emitChangePipeEvent();
+        this.multiSelect.emitChangePipeEvent();
 
         this.stateChanges.next();
     }
@@ -163,7 +160,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     onClear() {
         this.data.value = [];
 
-        this.updateInternalSelected();
+        this.multiSelect.updateInternalSelected();
 
         this.filterBar?.onClearPipe.emit(this.data);
         this.filterBar?.onChangePipe.emit(this.data);
@@ -196,14 +193,15 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         }
 
         if (emitEvent) {
-            this.emitChangePipeEvent();
+            this.multiSelect.emitChangePipeEvent();
         }
 
         this.stateChanges.next();
     }
 
-    /** Comparator of selected options */
-    compareByValue = (o1: any, o2: any): boolean => o1?.id === o2?.id;
+    /** Comparator of selected options. Two null/absent values never match (aligned with the select pipe). */
+    compareByValue = (o1: Pick<KbqSelectValue, 'id'> | null, o2: Pick<KbqSelectValue, 'id'> | null): boolean =>
+        !!o1 && !!o2 && o1.id === o2.id;
 
     /** handler for select all options in select */
     selectAllHandler = (event: KeyboardEvent) => {
@@ -215,7 +213,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     /** @docs-private */
     onClose() {
         if (this.allOptionsSelected) {
-            this.updateInternalSelected();
+            this.multiSelect.updateInternalSelected();
         }
 
         setTimeout(() => this.restoreTriggerFocus());
@@ -226,23 +224,11 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.select().open();
     }
 
-    private updateInternalSelected() {
-        if (this.selectedAllEqualsSelectedNothing) {
-            this.internalSelected = this.data.value?.slice() || [];
-        }
-    }
-
-    private emitChangePipeEvent() {
-        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
-            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
-        } else {
-            this.filterBar?.onChangePipe.emit(this.data);
-        }
-    }
-
     private getFilteredOptions = (): KbqSelectValue[] => {
-        return this.searchControl.value
-            ? this.values.filter((item) => item.name.toLowerCase().includes(this.searchControl.value.toLowerCase()))
+        const search = this.searchControl.value;
+
+        return search
+            ? this.values.filter((item: KbqSelectValue) => item.name.toLowerCase().includes(search.toLowerCase()))
             : this.values;
     };
 }

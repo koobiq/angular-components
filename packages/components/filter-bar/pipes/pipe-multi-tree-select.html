@@ -13,19 +13,21 @@
     (opened)="onOpen()"
     (selectionChange)="onSelect($event)"
 >
-    <!-- eslint-disable-next-line @angular-eslint/template/prefer-control-flow -->
-    <kbq-form-field *ngIf="data.search" noBorders kbqSelectSearch>
-        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-        <input
-            placeholder="{{ localeData.search.placeholder }}"
-            autocomplete="off"
-            kbqInput
-            type="text"
-            [formControl]="searchControl"
-            (keydown.enter)="searchKeydownHandler()"
-        />
-        <kbq-cleaner />
-    </kbq-form-field>
+    @if (data.search) {
+        <kbq-form-field noBorders kbqSelectSearch>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+            <input
+                placeholder="{{ localeData.search.placeholder }}"
+                autocomplete="off"
+                kbqInput
+                type="text"
+                [attr.aria-label]="localeData.search.placeholder"
+                [formControl]="searchControl"
+                (keydown.enter)="searchKeydownHandler()"
+            />
+            <kbq-cleaner />
+        </kbq-form-field>
+    }
 
     <div kbq-select-search-empty-result>{{ localeData.pipe.emptySearchResult }}</div>
 
@@ -70,11 +72,7 @@
             <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
         </kbq-tree-option>
 
-        <kbq-tree-option
-            *kbqTreeNodeDef="let node; when: isNodeHasChild"
-            kbqTreeNodePadding
-            [checkboxThirdState]="true"
-        >
+        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
             <kbq-tree-node-toggle [node]="node" />
             <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
         </kbq-tree-option>

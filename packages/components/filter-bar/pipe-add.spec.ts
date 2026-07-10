@@ -85,7 +85,15 @@ describe('KbqPipeAdd', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
 
-    window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    const originalStructuredClone = window.structuredClone;
+
+    beforeAll(() => {
+        window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    });
+
+    afterAll(() => {
+        window.structuredClone = originalStructuredClone;
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -148,29 +156,31 @@ describe('KbqPipeAdd', () => {
         });
 
         it('should be empty initially when no filter is set', () => {
-            expect(getPipeAdd().addedPipes).toEqual([]);
+            expect(getPipeAdd().addedPipes()).toEqual([]);
         });
 
         it('should update addedPipes when filter with pipes is set', () => {
             const filterBar = getFilterBar();
 
-            filterBar.filter = createFilter([
-                createPipe({ id: PIPE_TEMPLATE_ID_1 }),
-                createPipe({ id: PIPE_TEMPLATE_ID_2 })
-            ]);
+            filterBar.filter.set(
+                createFilter([
+                    createPipe({ id: PIPE_TEMPLATE_ID_1 }),
+                    createPipe({ id: PIPE_TEMPLATE_ID_2 })
+                ])
+            );
             fixture.detectChanges();
 
-            expect(getPipeAdd().addedPipes).toEqual([PIPE_TEMPLATE_ID_1, PIPE_TEMPLATE_ID_2]);
+            expect(getPipeAdd().addedPipes()).toEqual([PIPE_TEMPLATE_ID_1, PIPE_TEMPLATE_ID_2]);
         });
 
         it('should not update addedPipes when filter is null', () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
-            filterBar.filter = null;
+            filterBar.filter.set(null);
             fixture.detectChanges();
 
-            expect(pipeAdd.addedPipes).toEqual([]);
+            expect(pipeAdd.addedPipes()).toEqual([]);
         });
     });
 
@@ -185,7 +195,7 @@ describe('KbqPipeAdd', () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
-            expect(filterBar.filter).toBeNull();
+            expect(filterBar.filter()).toBeNull();
 
             pipeAdd.select().open();
             flush();
@@ -197,8 +207,8 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter).not.toBeNull();
-            expect(filterBar.filter!.name).toBe('DefaultFilter');
+            expect(filterBar.filter()).not.toBeNull();
+            expect(filterBar.filter()!.name).toBe('DefaultFilter');
         }));
 
         it('should push pipe into filter.pipes', fakeAsync(() => {
@@ -215,8 +225,8 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter!.pipes.length).toBe(1);
-            expect(filterBar.filter!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
+            expect(filterBar.filter()!.pipes.length).toBe(1);
+            expect(filterBar.filter()!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
         }));
 
         it('should set filter.changed to true', fakeAsync(() => {
@@ -233,7 +243,7 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter!.changed).toBe(true);
+            expect(filterBar.filter()!.changed).toBe(true);
         }));
 
         it('should strip values and valueTemplate from added pipe', fakeAsync(() => {
@@ -250,7 +260,7 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            const addedPipe = filterBar.filter!.pipes[0];
+            const addedPipe = filterBar.filter()!.pipes[0];
 
             expect((addedPipe as any).values).toBeUndefined();
             expect((addedPipe as any).valueTemplate).toBeUndefined();
@@ -270,7 +280,7 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter!.pipes[0].openOnAdd).toBe(true);
+            expect(filterBar.filter()!.pipes[0].openOnAdd).toBe(true);
         }));
 
         it('should emit onAddPipe event with the template value', fakeAsync(() => {
@@ -297,7 +307,7 @@ describe('KbqPipeAdd', () => {
             const pipeAdd = getPipeAdd();
             const spy = jest.fn();
 
-            filterBar.filterChange.subscribe(spy);
+            filterBar.filter.subscribe(spy);
 
             pipeAdd.select().open();
             flush();
@@ -329,12 +339,12 @@ describe('KbqPipeAdd', () => {
             expect(closeSpy).toHaveBeenCalled();
         }));
 
-        it('should reuse existing filter when filter is already set', fakeAsync(() => {
+        it('should derive from the existing filter when one is already set', fakeAsync(() => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
             const existingFilter = createFilter([]);
 
-            filterBar.filter = existingFilter;
+            filterBar.filter.set(existingFilter);
             fixture.detectChanges();
 
             pipeAdd.select().open();
@@ -347,8 +357,57 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter).toBe(existingFilter);
-            expect(filterBar.filter.pipes.length).toBe(1);
+            // Immutable add: a new filter reference derived from the existing one — its data is reused
+            // (name kept, not the empty pipe-add default template) with the new pipe appended.
+            expect(filterBar.filter()).not.toBe(existingFilter);
+            expect(filterBar.filter()!.name).toBe(existingFilter.name);
+            expect(filterBar.filter()!.pipes.length).toBe(1);
+        }));
+
+        it('should announce the added pipe in the visually-hidden live region (WCAG 4.1.3)', fakeAsync(() => {
+            const pipeAdd = getPipeAdd();
+
+            pipeAdd.select().open();
+            flush();
+            fixture.detectChanges();
+
+            const options = document.querySelectorAll('.kbq-option');
+
+            (options[0] as HTMLElement).click();
+            flush();
+            fixture.detectChanges();
+
+            const liveRegion = fixture.debugElement
+                .query(By.directive(KbqPipeAdd))
+                .query(By.css('[aria-live="polite"]'));
+
+            // Default (ru-RU) locale message with the added template's name interpolated.
+            expect(liveRegion.nativeElement.textContent.trim()).toBe('Фильтр PipeA добавлен');
+        }));
+
+        it('should clear the live region before re-announcing so identical messages re-trigger AT', fakeAsync(() => {
+            const pipeAdd = getPipeAdd();
+            const liveText = () =>
+                fixture.debugElement
+                    .query(By.directive(KbqPipeAdd))
+                    .query(By.css('[aria-live="polite"]'))
+                    .nativeElement.textContent.trim();
+
+            pipeAdd.select().open();
+            flush();
+            fixture.detectChanges();
+
+            (document.querySelectorAll('.kbq-option')[0] as HTMLElement).click();
+
+            // The region is cleared synchronously on add ...
+            fixture.detectChanges();
+            expect(liveText()).toBe('');
+
+            // ... then re-filled on the next macrotask, so even an identical consecutive message changes the
+            // text node and is re-announced (a plain same-string signal `set` would be a no-op AT never sees).
+            flush();
+            fixture.detectChanges();
+            expect(liveText()).toBe('Фильтр PipeA добавлен');
         }));
 
         it('should call filterBar.openPipe.next when option is already selected', fakeAsync(() => {
@@ -397,7 +456,7 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter!.pipes.length).toBe(1);
+            expect(filterBar.filter()!.pipes.length).toBe(1);
 
             // Second click — should NOT add another pipe
             pipeAdd.select().open();
@@ -410,7 +469,7 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter!.pipes.length).toBe(1);
+            expect(filterBar.filter()!.pipes.length).toBe(1);
         }));
     });
 
@@ -445,8 +504,8 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter!.pipes.length).toBe(1);
-            expect(filterBar.filter!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
+            expect(filterBar.filter()!.pipes.length).toBe(1);
+            expect(filterBar.filter()!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
         }));
 
         it('should add a pipe when Space is pressed on a template option', fakeAsync(() => {
@@ -461,8 +520,8 @@ describe('KbqPipeAdd', () => {
             flush();
             fixture.detectChanges();
 
-            expect(filterBar.filter!.pipes.length).toBe(1);
-            expect(filterBar.filter!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
+            expect(filterBar.filter()!.pipes.length).toBe(1);
+            expect(filterBar.filter()!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
         }));
 
         it('should emit onAddPipe when Enter is pressed on a template option', fakeAsync(() => {

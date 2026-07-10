@@ -16,6 +16,7 @@ import {
 import { kbqTreeSelectAllValue } from '@koobiq/components/tree';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiTreeSelectComponent } from './pipe-multi-tree-select';
+import { registerPipeStatesTests } from './pipe-states.spec-helper';
 
 const DEV_DATA_OBJECT = {
     'No roles': 'value 0',
@@ -37,19 +38,6 @@ const DEV_DATA_OBJECT = {
 };
 
 const TREE_DATA: KbqTreeSelectNode[] = kbqBuildTree(DEV_DATA_OBJECT, 0);
-
-const ALL_LEAF_VALUES = [
-    'value 0',
-    'value 1',
-    'value 2',
-    'value 3',
-    'value 4',
-    'value 5',
-    'value 6',
-    'value 7',
-    'value 8',
-    'value 9'
-];
 
 const PIPE_TEMPLATE_ID = 'TestMultiTreeSelect';
 
@@ -115,7 +103,15 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
 
-    window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    const originalStructuredClone = window.structuredClone;
+
+    beforeAll(() => {
+        window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    });
+
+    afterAll(() => {
+        window.structuredClone = originalStructuredClone;
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -146,81 +142,18 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         fixture.detectChanges();
     };
 
-    describe('Pipe states', () => {
-        beforeEach(() => {
+    registerPipeStatesTests({
+        label: 'MultiTreeSelect',
+        pipeClass: 'kbq-pipe__multi-tree-select',
+        createPipe,
+        createFilter,
+        nonEmptyValue: () => ['value 0'],
+        createContext: () => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
-            fixture.componentInstance.activeFilter = createFilter([
-                createPipe({
-                    name: 'required',
-                    value: ['value 0'],
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({ name: 'empty', value: null, cleanable: true, removable: false, disabled: false }),
-                createPipe({
-                    name: 'cleanable',
-                    value: ['value 2'],
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({
-                    name: 'removable',
-                    value: ['value 2'],
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                }),
-                createPipe({ name: 'disabled', value: ['value 2'], cleanable: false, removable: false, disabled: true })
-            ]);
-            fixture.detectChanges();
-        });
 
-        it('should render all MultiTreeSelect pipes', () => {
-            const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
-
-            expect(pipes.length).toBe(5);
-            pipes.forEach((pipe) => {
-                expect(pipe.nativeElement.classList).toContain('kbq-pipe__multi-tree-select');
-            });
-        });
-
-        it('should apply required state (no special classes)', () => {
-            const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
-
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
-        });
-
-        it('should apply empty state', () => {
-            const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[1];
-
-            expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
-        });
-
-        it('should apply cleanable state', () => {
-            const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
-
-            expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
-            expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
-        });
-
-        it('should apply removable state', () => {
-            const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
-
-            expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
-            expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-        });
-
-        it('should apply disabled state', () => {
-            const disabled = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
-
-            expect(disabled.nativeElement.classList).toContain('kbq-pipe_disabled');
-        });
+            return { fixture, filterBar: filterBarDebugElement };
+        }
     });
 
     describe('isEmpty', () => {
@@ -370,29 +303,6 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             expect(spy).toHaveBeenCalled();
-        }));
-
-        it('should set data.value to empty array when all selected and selectedAllEqualsSelectedNothing', fakeAsync(() => {
-            fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
-            fixture.componentInstance.activeFilter = createFilter([
-                createPipe({ name: 'test', value: [], selectAll: true })
-            ]);
-            fixture.detectChanges();
-
-            openSelect();
-            flush();
-            fixture.detectChanges();
-
-            const component = getPipeComponent();
-
-            component.toggleSelectAllNode();
-            flush();
-            fixture.detectChanges();
-
-            expect(component.allOptionsSelected).toBe(true);
-            expect(component.selectedAllEqualsSelectedNothing).toBe(true);
-
-            expect(component.data.value).toEqual([]);
         }));
     });
 
@@ -586,7 +496,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         it('should update internalSelected on close when all options selected', fakeAsync(() => {
             fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
             fixture.componentInstance.activeFilter = createFilter([
-                createPipe({ name: 'test', value: ALL_LEAF_VALUES, selectAll: true })
+                createPipe({ name: 'test', value: ['value 0'], selectAll: true })
             ]);
             fixture.detectChanges();
 
@@ -596,12 +506,22 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            // call onClose directly
+            // Select every option. Under selectedAllEqualsSelectedNothing this collapses data.value
+            // to [], while internalSelected still holds the previously committed value (stale).
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.allOptionsSelected).toBe(true);
+            expect(component.data.value).toEqual([]);
+            // internalSelected is not refreshed during selection, so `selected` is still the old value.
+            expect(component.selected).toEqual(['value 0']);
+
+            // onClose refreshes internalSelected from the current data.value.
             component.onClose();
             flush();
 
-            // after close with all selected, internalSelected should be updated
-            expect(component.selected).toBeDefined();
+            expect(component.selected).toEqual([]);
         }));
 
         it('should restore focus to the trigger button on close', fakeAsync(() => {
@@ -650,7 +570,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         }));
     });
 
-    describe('isNodeHasChild / isNodeSelectAll', () => {
+    describe('hasChild / isNodeSelectAll', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
@@ -664,14 +584,14 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             const component = getPipeComponent();
             const expandableNode = { expandable: true, name: 'parent', value: 'v', level: 0 };
 
-            expect(component.isNodeHasChild(0, expandableNode)).toBe(true);
+            expect(component.hasChild(0, expandableNode)).toBe(true);
         });
 
         it('should return false for leaf nodes', () => {
             const component = getPipeComponent();
             const leafNode = { expandable: false, name: 'leaf', value: 'v', level: 1 };
 
-            expect(component.isNodeHasChild(0, leafNode)).toBe(false);
+            expect(component.hasChild(0, leafNode)).toBe(false);
         });
 
         it('should return true for selectAll node', () => {

@@ -16,6 +16,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqBasePipe } from './base-pipe';
+import { registerPipeStatesTests } from './pipe-states.spec-helper';
 import { KbqPipeTreeSelectComponent } from './pipe-tree-select';
 
 const DEV_DATA_OBJECT = {
@@ -99,7 +100,15 @@ describe('KbqPipeTreeSelectComponent', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
 
-    window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    const originalStructuredClone = window.structuredClone;
+
+    beforeAll(() => {
+        window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    });
+
+    afterAll(() => {
+        window.structuredClone = originalStructuredClone;
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -123,87 +132,18 @@ describe('KbqPipeTreeSelectComponent', () => {
         return filterBarDebugElement.componentInstance;
     };
 
-    describe('Pipe states', () => {
-        beforeEach(() => {
+    registerPipeStatesTests({
+        label: 'TreeSelect',
+        pipeClass: 'kbq-pipe__tree-select',
+        createPipe,
+        createFilter,
+        nonEmptyValue: () => SINGLE_VALUE,
+        createContext: () => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
-            fixture.componentInstance.activeFilter = createFilter([
-                createPipe({
-                    name: 'required',
-                    value: SINGLE_VALUE,
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({ name: 'empty', value: null, cleanable: true, removable: false, disabled: false }),
-                createPipe({
-                    name: 'cleanable',
-                    value: SINGLE_VALUE,
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                }),
-                createPipe({
-                    name: 'removable',
-                    value: SINGLE_VALUE,
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                }),
-                createPipe({
-                    name: 'disabled',
-                    value: SINGLE_VALUE,
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                })
-            ]);
-            fixture.detectChanges();
-        });
 
-        it('should render all TreeSelect pipes', () => {
-            const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
-
-            expect(pipes.length).toBe(5);
-            pipes.forEach((pipe) => {
-                expect(pipe.nativeElement.classList).toContain('kbq-pipe__tree-select');
-            });
-        });
-
-        it('should apply required state (no special classes)', () => {
-            const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
-
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
-            expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
-        });
-
-        it('should apply empty state', () => {
-            const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[1];
-
-            expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
-        });
-
-        it('should apply cleanable state', () => {
-            const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
-
-            expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
-            expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
-        });
-
-        it('should apply removable state', () => {
-            const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
-
-            expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
-            expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
-        });
-
-        it('should apply disabled state', () => {
-            const disabled = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
-
-            expect(disabled.nativeElement.classList).toContain('kbq-pipe_disabled');
-        });
+            return { fixture, filterBar: filterBarDebugElement };
+        }
     });
 
     describe('isEmpty', () => {
@@ -434,13 +374,13 @@ describe('KbqPipeTreeSelectComponent', () => {
         it('should return true for expandable nodes', () => {
             const component = getPipeComponent();
 
-            expect(component.hasChild(0, { expandable: true })).toBe(true);
+            expect(component.hasChild(0, { name: 'node', value: null, level: 0, expandable: true })).toBe(true);
         });
 
         it('should return false for leaf nodes', () => {
             const component = getPipeComponent();
 
-            expect(component.hasChild(0, { expandable: false })).toBe(false);
+            expect(component.hasChild(0, { name: 'node', value: null, level: 0, expandable: false })).toBe(false);
         });
     });
 

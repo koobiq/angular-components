@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFilterBar } from './filter-bar';
-import { KbqFilter } from './filter-bar.types';
+import { KBQ_FILTER_BAR_HOST, KbqFilter } from './filter-bar.types';
 
 @Component({
     selector: 'kbq-filter-reset',
@@ -17,8 +16,8 @@ import { KbqFilter } from './filter-bar.types';
     }
 })
 export class KbqFilterReset {
-    /** KbqFilterBar instance */
-    private readonly filterBar = inject(KbqFilterBar);
+    /** KbqFilterBar host seam */
+    private readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
 
     /** Event that is generated whenever the user reset a filter. */
     readonly onResetFilter = output<KbqFilter | null>();
@@ -30,9 +29,8 @@ export class KbqFilterReset {
     }
 
     protected resetFilter() {
-        this.onResetFilter.emit(this.filterBar.filter!);
+        this.onResetFilter.emit(this.filterBar.filter()!);
 
-        this.filterBar.changes.next();
         this.filterBar.onResetFilter.next(true);
     }
 }

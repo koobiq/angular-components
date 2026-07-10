@@ -78,10 +78,16 @@ export const ruRULocaleData = {
             error: 'Поиск с таким названием уже существует',
             errorHint: 'Не удалось сохранить фильтр. Попробуйте снова или сообщите администратору.',
             saveButton: 'Сохранить',
-            cancelButton: 'Отмена'
+            cancelButton: 'Отмена',
+            actionsTooltip: 'Действия с фильтром'
         },
         add: {
-            tooltip: 'Добавить фильтр'
+            tooltip: 'Добавить фильтр',
+            addedAnnouncement: 'Фильтр {{ name }} добавлен'
+        },
+        refresher: {
+            refresh: 'Обновить',
+            settings: 'Настройки обновления'
         },
         pipe: {
             clearButtonTooltip: 'Очистить',

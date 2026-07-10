@@ -452,9 +452,15 @@ export const enUSLocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;
@@ -690,9 +696,15 @@ export const esLALocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;
@@ -1151,9 +1163,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -1364,9 +1382,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -1573,9 +1597,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -1788,9 +1818,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -1999,9 +2035,15 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
+                actionsTooltip: string;
             };
             add: {
                 tooltip: string;
+                addedAnnouncement: string;
+            };
+            refresher: {
+                refresh: string;
+                settings: string;
             };
             pipe: {
                 clearButtonTooltip: string;
@@ -3924,9 +3966,15 @@ export const ptBRLocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;
@@ -4349,9 +4397,15 @@ export const ruRULocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;
@@ -4695,9 +4749,15 @@ export const tkTMLocaleData: {
             errorHint: string;
             saveButton: string;
             cancelButton: string;
+            actionsTooltip: string;
         };
         add: {
             tooltip: string;
+            addedAnnouncement: string;
+        };
+        refresher: {
+            refresh: string;
+            settings: string;
         };
         pipe: {
             clearButtonTooltip: string;

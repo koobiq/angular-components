@@ -15,7 +15,7 @@
         gap: var(--kbq-size-s);
 
         .kbq-button > .kbq-icon {
-            margin-right: var(--kbq-size-xxs);
+            margin-inline-end: var(--kbq-size-xxs);
         }
 
         & > .kbq-icon {
@@ -27,17 +27,23 @@
         display: flex;
         flex-direction: row;
 
-        margin-left: var(--kbq-size-3xl);
+        margin-inline-start: var(--kbq-size-3xl);
     }
 }
 
 .kbq-pipe__popover {
+    // Token is declared on the overlay panel itself so it resolves outside `.kbq-filter-bar`.
+    --kbq-filter-bar-popover-width: 320px;
+
     .kbq-popover__container {
-        min-width: 320px;
-        max-width: 320px;
+        min-width: var(--kbq-filter-bar-popover-width);
+        max-width: var(--kbq-filter-bar-popover-width);
     }
 
     .kbq-popover__content {
+        // Load-bearing `!important`: the text pipe sets `[defaultPaddings]="false"` (no base
+        // `_default-paddings` padding), but the custom-pipe docs example reuses this panel class with
+        // default paddings, where the base rule ties this one — `!important` keeps this padding winning.
         padding: var(--kbq-size-m) var(--kbq-size-m) 1px !important;
     }
 

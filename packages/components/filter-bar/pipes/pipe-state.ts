@@ -1,45 +1,32 @@
-import { DestroyRef, Directive, inject, Input, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Directive, effect, inject, input } from '@angular/core';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFilterBar } from '../filter-bar';
+import { KBQ_FILTER_BAR_HOST } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 
 @Directive({
     selector: '[kbqPipeState]'
 })
-export class KbqPipeState<T> implements OnInit {
-    /** @docs-private */
-    private readonly destroyRef = inject(DestroyRef);
+export class KbqPipeState<T> {
     /** @docs-private */
     private readonly button = inject(KbqButton);
     /** @docs-private */
     private readonly pipe = inject(KbqBasePipe);
     /** KbqFilterBar instance
      * @docs-private */
-    private readonly filterBar = inject(KbqFilterBar);
+    private readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
 
-    /** calculates and updates styles of button from pipe state */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ alias: 'kbqPipeState' })
-    get state(): T | null {
-        return this._state;
+    /** Pipe state used to calculate/update the button style. */
+    readonly state = input<T | null>(null, { alias: 'kbqPipeState' });
+
+    constructor() {
+        // Re-derive the button style whenever the filter OR the pipe state changes (a pipe's emptiness may
+        // change with either). Passing both reads into `updateState` subscribes this effect to both signals;
+        // the style itself derives from `pipe.isEmpty`.
+        effect(() => this.updateState(this.filterBar.filter(), this.state()));
     }
 
-    set state(pipe: T | null) {
-        this._state = pipe;
-
-        this.updateState();
-    }
-
-    private _state: T | null = null;
-
-    ngOnInit(): void {
-        this.filterBar.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
-    }
-
-    private updateState = () => {
+    private updateState = (_filter?: unknown, _state?: unknown) => {
         this.button.kbqStyle = KbqButtonStyles.Outline;
         this.button.color = KbqComponentColors.ContrastFade;
 

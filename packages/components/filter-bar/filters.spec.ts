@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, DebugElement, inject, viewChild } from '@
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqButton } from '@koobiq/components/button';
 import {
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
     KbqFilter,
@@ -13,6 +14,7 @@ import {
     KbqPipeTypes,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
+import { KbqPopoverTrigger } from '@koobiq/components/popover';
 
 const PIPE_TEMPLATE_ID = 'TestText';
 
@@ -89,7 +91,15 @@ describe('KbqFilters', () => {
     let filterBarDebugElement: DebugElement;
     let filtersDebugElement: DebugElement;
 
-    window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    const originalStructuredClone = window.structuredClone;
+
+    beforeAll(() => {
+        window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+    });
+
+    afterAll(() => {
+        window.structuredClone = originalStructuredClone;
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -105,6 +115,21 @@ describe('KbqFilters', () => {
         return filterBarDebugElement.componentInstance;
     };
 
+    const getPopoverTrigger = (): KbqPopoverTrigger => {
+        // The popover trigger directive is declared on the main button host element.
+        return filtersDebugElement.query(By.directive(KbqPopoverTrigger)).injector.get(KbqPopoverTrigger);
+    };
+
+    const getMainButton = (): KbqButton => {
+        // The main button is the first kbq-button rendered in the filters template.
+        return filtersDebugElement.query(By.directive(KbqButton)).injector.get(KbqButton);
+    };
+
+    const getFilterActionsButton = (): KbqButton => {
+        // The actions button is the only kbq-button_action rendered for a saved (unchanged) filter.
+        return filtersDebugElement.query(By.css('.kbq-button_action')).injector.get(KbqButton);
+    };
+
     const initFixture = (activeFilter: KbqFilter | null = null, filters: KbqFilter[] = []) => {
         fixture = TestBed.createComponent(TestComponent);
         fixture.componentInstance.activeFilter = activeFilter;
@@ -113,6 +138,23 @@ describe('KbqFilters', () => {
         filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         filtersDebugElement = fixture.debugElement.query(By.directive(KbqFilters));
     };
+
+    describe('filter-bar button style (effect-driven)', () => {
+        it('should switch the main button to the changed-filter style when the filter becomes saved', () => {
+            initFixture(createFilter([]));
+
+            const mainButton = getMainButton();
+
+            // Unsaved & unchanged → default outline style.
+            expect(mainButton.kbqStyle).not.toBe('kbq-button_changed-filter');
+
+            // `KbqFilterBarButton` reacts to the signal-backed `filter` via an effect (was the `changes` bus).
+            fixture.componentInstance.activeFilter = createFilter([], { saved: true });
+            fixture.detectChanges();
+
+            expect(mainButton.kbqStyle).toBe('kbq-button_changed-filter');
+        });
+    });
 
     describe('Getters', () => {
         describe('isEmpty', () => {
@@ -135,7 +177,7 @@ describe('KbqFilters', () => {
 
                 initFixture(filter);
 
-                expect(getFiltersComponent().filter).toBe(getFilterBar().filter);
+                expect(getFiltersComponent().filter).toBe(getFilterBar().filter());
             });
 
             it('should return null when filterBar has no filter', () => {
@@ -177,7 +219,7 @@ describe('KbqFilters', () => {
             it('should return false when neither popover nor dropdown is open', () => {
                 initFixture();
 
-                expect(getFiltersComponent().opened).toBeFalsy();
+                expect(getFiltersComponent().opened).toBe(false);
             });
         });
 
@@ -185,7 +227,7 @@ describe('KbqFilters', () => {
             it('should return false by default', () => {
                 initFixture();
 
-                expect(getFiltersComponent().filterActionsOpened).toBeFalsy();
+                expect(getFiltersComponent().filterActionsOpened).toBe(false);
             });
         });
 
@@ -209,8 +251,12 @@ describe('KbqFilters', () => {
             expect(fixture.componentInstance.onSelectFilterSpy).toHaveBeenCalledWith(filter);
         });
 
-        it('should push structuredClone to filterBar.internalFilterChanges', () => {
-            const filter = createFilter([], { name: 'Selected' });
+        it('should push an isolated shallow copy (not a deep structuredClone) to internalFilterChanges', () => {
+            // A non-cloneable payload (a function) is what actually distinguishes a shallow copy from a deep
+            // clone: `structuredClone` (or the suite's JSON-based stub) would drop/alter it, the shallow copy
+            // preserves it by reference. This is the exact guarantee that lets us drop the per-selection clone.
+            const valueFn = () => 'A';
+            const filter = createFilter([createPipe({ name: 'original', value: valueFn })], { name: 'Selected' });
 
             initFixture(createFilter([]), [filter]);
 
@@ -219,10 +265,24 @@ describe('KbqFilters', () => {
             getFiltersComponent().selectFilter(filter);
 
             expect(spy).toHaveBeenCalled();
-            const clonedFilter = spy.mock.calls[0][0];
+            const activeFilter = spy.mock.calls[0][0];
 
-            expect(clonedFilter).not.toBe(filter);
-            expect(clonedFilter!.name).toBe('Selected');
+            // Isolation without a deep clone: a new filter + new pipes array + per-pipe shallow copy.
+            expect(activeFilter).not.toBe(filter);
+            expect(activeFilter!.pipes).not.toBe(filter.pipes);
+            expect(activeFilter!.pipes[0]).not.toBe(filter.pipes[0]);
+            expect(activeFilter!.name).toBe('Selected');
+
+            // The non-cloneable `value` survives by reference — a deep clone would have dropped/altered it.
+            expect(activeFilter!.pipes[0].value).toBe(valueFn);
+
+            // Pipes write their `value` by reassignment, so editing the active copy never leaks to the
+            // saved source (the guarantee that lets us drop the per-selection `structuredClone`).
+            activeFilter!.pipes[0].name = 'mutated';
+            activeFilter!.pipes[0].value = 'B';
+
+            expect(filter.pipes[0].name).toBe('original');
+            expect(filter.pipes[0].value).toBe(valueFn);
         });
     });
 
@@ -234,8 +294,8 @@ describe('KbqFilters', () => {
 
             getFiltersComponent().saveChanges();
 
-            expect(getFilterBar().filter!.saved).toBe(true);
-            expect(getFilterBar().filter!.changed).toBe(false);
+            expect(getFilterBar().filter()!.saved).toBe(true);
+            expect(getFilterBar().filter()!.changed).toBe(false);
         });
 
         it('should emit onSave with status OnlyChanges', () => {
@@ -283,7 +343,8 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            Object.defineProperty(component.filterName, 'invalid', { get: () => true });
+            // Empty value fails the real Validators.required guard built in preparePopover.
+            component.filterName.setValue('');
             component.saveAsNew();
 
             expect(fixture.componentInstance.onSaveSpy).not.toHaveBeenCalled();
@@ -523,10 +584,43 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            (component as any).popover().preventClose = true;
+            const popoverTrigger = getPopoverTrigger();
+
+            popoverTrigger.preventClose = true;
             component.filterSavedSuccessfully();
 
-            expect((component as any).popover().preventClose).toBe(false);
+            expect(popoverTrigger.preventClose).toBe(false);
+        }));
+
+        it('should restore focus after the deferred timeout', fakeAsync(() => {
+            const filter = createFilter([], { name: 'Test' });
+
+            initFixture(filter);
+
+            const component = getFiltersComponent();
+
+            component.openSaveAsNewFilterPopover();
+            fixture.detectChanges();
+            flush();
+
+            // Capture a real trigger as the element that had focus before the popover opened.
+            const mainButton = getMainButton();
+
+            component.saveFocusedElement(mainButton);
+            expect(component.focusedElementBeforeIs(mainButton)).toBe(true);
+
+            const restoreSpy = jest.spyOn(component, 'restoreFocus');
+
+            component.filterSavedSuccessfully();
+
+            // restoreFocus is scheduled via setTimeout, so it must NOT run synchronously.
+            expect(restoreSpy).not.toHaveBeenCalled();
+
+            flush();
+
+            // After the timer fires focus is restored and the captured reference is consumed (nulled).
+            expect(restoreSpy).toHaveBeenCalled();
+            expect(component.focusedElementBeforeIs(mainButton)).toBe(false);
         }));
     });
 
@@ -559,10 +653,12 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            (component as any).popover().preventClose = true;
+            const popoverTrigger = getPopoverTrigger();
+
+            popoverTrigger.preventClose = true;
             component.filterSavedUnsuccessfully();
 
-            expect((component as any).popover().preventClose).toBe(false);
+            expect(popoverTrigger.preventClose).toBe(false);
         }));
 
         it('should show error with provided error', fakeAsync(() => {
@@ -598,6 +694,83 @@ describe('KbqFilters', () => {
             component.filterSavedUnsuccessfully();
 
             expect(component.filterName.enabled).toBe(true);
+        }));
+
+        it('should keep the inline "name already exists" error after re-enabling the control', fakeAsync(() => {
+            const filter = createFilter([], { name: 'Test' });
+
+            initFixture(filter);
+
+            const component = getFiltersComponent();
+
+            component.openSaveAsNewFilterPopover();
+            fixture.detectChanges();
+            flush();
+
+            component.filterName.setValue('Existing');
+            component.filterSavedUnsuccessfully({ nameAlreadyExists: true });
+
+            // `enable()` re-runs the validators, so the custom error must be applied AFTER it — otherwise the
+            // inline `<kbq-error>` never renders. Reverting the showError/enable order fails this.
+            expect(component.filterName.hasError('filterNameAlreadyExist')).toBe(true);
+        }));
+    });
+
+    describe('saveAsNew round-trip after a failed save (P2-26)', () => {
+        it('should surface a save error, clear it on edit, then emit onSave twice across the retry', fakeAsync(() => {
+            const filter = createFilter([], { name: 'Existing', saved: true });
+
+            initFixture(filter);
+
+            const component = getFiltersComponent();
+            const onSaveSpy = fixture.componentInstance.onSaveSpy;
+
+            // Open the "save as new" popover and let the async popover setup settle.
+            component.openSaveAsNewFilterPopover();
+            fixture.detectChanges();
+            flush();
+
+            // 1. User types a name and triggers the first save.
+            component.filterName.setValue('First Attempt');
+            component.saveAsNew();
+
+            // saveAsNew emits onSave once and locks the form while the host persists the filter.
+            expect(onSaveSpy).toHaveBeenCalledTimes(1);
+            expect(onSaveSpy).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    status: KbqSaveFilterStatuses.NewFilter,
+                    filter: expect.objectContaining({ name: 'First Attempt' })
+                })
+            );
+            expect(component.isSaving).toBe(true);
+            expect(component.filterName.disabled).toBe(true);
+
+            // 2. Host reports the save failed because the name already exists.
+            component.filterSavedUnsuccessfully({ nameAlreadyExists: true });
+
+            // The inline error is shown, the saving state is released and the field is editable again.
+            expect(component.showFilterSavingError).toBe(true);
+            expect(component.filterSavingErrorText).toBe(component.localeData.errorHint);
+            expect(component.filterName.hasError('filterNameAlreadyExist')).toBe(true);
+            expect(component.isSaving).toBe(false);
+            expect(component.filterName.enabled).toBe(true);
+
+            // 3. User edits the name; changing the value clears the lingering error (preparePopover subscription).
+            component.filterName.setValue('Second Attempt');
+
+            expect(component.showFilterSavingError).toBe(false);
+
+            // 4. Retry succeeds: onSave fires a second time with the corrected name and no lingering error.
+            component.saveAsNew();
+
+            expect(onSaveSpy).toHaveBeenCalledTimes(2);
+            expect(onSaveSpy).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    status: KbqSaveFilterStatuses.NewFilter,
+                    filter: expect.objectContaining({ name: 'Second Attempt' })
+                })
+            );
+            expect(component.showFilterSavingError).toBe(false);
         }));
     });
 
@@ -700,7 +873,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
 
             const component = getFiltersComponent();
-            const button = (component as any).mainButton;
+            const button = getMainButton();
 
             component.saveFocusedElement(button);
 
@@ -712,8 +885,8 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
 
             const component = getFiltersComponent();
-            const mainButton = (component as any).mainButton;
-            const filterActionsButton = (component as any).filterActionsButton;
+            const mainButton = getMainButton();
+            const filterActionsButton = getFilterActionsButton();
 
             component.saveFocusedElement(mainButton);
 
@@ -725,7 +898,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
 
             const component = getFiltersComponent();
-            const button = (component as any).mainButton;
+            const button = getMainButton();
 
             component.saveFocusedElement(button);
             component.saveFocusedElement();
@@ -746,7 +919,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            const hideSpy = jest.spyOn((component as any).popover(), 'hide');
+            const hideSpy = jest.spyOn(getPopoverTrigger(), 'hide');
 
             component.closePopover(false);
             flush();
@@ -891,7 +1064,7 @@ describe('KbqFilters', () => {
             initFixture(filter);
 
             const component = getFiltersComponent();
-            const showSpy = jest.spyOn((component as any).popover(), 'show');
+            const showSpy = jest.spyOn(getPopoverTrigger(), 'show');
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();

@@ -1,6 +1,6 @@
 #### Example of adding a custom pipe
 
-<!-- example(filter-bar-complete-functions) -->
+<!-- example(filter-bar-custom-pipe) -->
 
 #### Example of multiple pipes with the same type
 

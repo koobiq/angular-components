@@ -77,10 +77,16 @@ export const esLALocaleData = {
             error: 'Ya existe una búsqueda con ese nombre',
             errorHint: 'No se pudo guardar el filtro. Intente de nuevo o comuníquese con el administrador.',
             saveButton: 'Guardar',
-            cancelButton: 'Cancelar'
+            cancelButton: 'Cancelar',
+            actionsTooltip: 'Acciones de filtro'
         },
         add: {
-            tooltip: 'Agregar filtro'
+            tooltip: 'Agregar filtro',
+            addedAnnouncement: 'Filtro {{ name }} agregado'
+        },
+        refresher: {
+            refresh: 'Actualizar',
+            settings: 'Configuración de actualización'
         },
         pipe: {
             clearButtonTooltip: 'Borrar',
