@@ -140,10 +140,13 @@ export const esLALocaleData = {
             to: 'a',
             apply: 'Aplicar',
             cancel: 'Cancelar',
-            rangeLabel: 'para el período',
+            rangeLabel: 'Período',
             allTime: 'por todo el tiempo',
             currentQuarter: 'por el trimestre actual',
-            currentYear: 'por el año actual'
+            currentYear: 'por el año actual',
+            allTimeOption: 'Todo el tiempo',
+            currentQuarterOption: 'Trimestre actual',
+            currentYearOption: 'Año actual'
         },
         durationTemplate: {
             title: {
@@ -185,31 +188,31 @@ export const esLALocaleData = {
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
                 one {# año}
-                other {últimos # años}
+                other {Últimos # años}
             }`,
                 MONTHS: `{months, plural,
-                one {último mes}
-                other {últimos # meses}
+                one {Último mes}
+                other {Últimos # meses}
             }`,
                 WEEKS: `{weeks, plural,
-                one {última semana}
-                other {últimas # semanas}
+                one {Última semana}
+                other {Últimas # semanas}
             }`,
                 DAYS: `{days, plural,
-                one {último día}
-                other {últimos # días}
+                one {Último día}
+                other {Últimos # días}
             }`,
                 HOURS: `{hours, plural,
-                one {última hora}
-                other {últimas # horas}
+                one {Última hora}
+                other {Últimas # horas}
             }`,
                 MINUTES: `{minutes, plural,
-                one {último minuto}
-                other {últimos # minutos}
+                one {Último minuto}
+                other {Últimos # minutos}
             }`,
                 SECONDS: `{seconds, plural,
-                one {último segundo}
-                other {últimos # segundos}
+                one {Último segundo}
+                other {Últimos # segundos}
             }`,
                 YEARS_FRACTION: `{years} años`,
                 MONTHS_FRACTION: `{months} meses`

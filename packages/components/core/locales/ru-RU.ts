@@ -141,10 +141,13 @@ export const ruRULocaleData = {
             to: 'по',
             apply: 'Применить',
             cancel: 'Отмена',
-            rangeLabel: 'за период',
+            rangeLabel: 'Период',
             allTime: 'за все время',
             currentQuarter: 'за текущий квартал',
-            currentYear: 'за текущий год'
+            currentYear: 'за текущий год',
+            allTimeOption: 'Все время',
+            currentQuarterOption: 'Текущий квартал',
+            currentYearOption: 'Текущий год'
         },
         durationTemplate: {
             title: {
@@ -152,7 +155,7 @@ export const ruRULocaleData = {
                 LAST_PART_SEPARATOR: 'и',
                 YEARS: `{years, plural,
                 one {# год}
-                few {последние # лет}
+                few {последние # года}
                 other {последние # лет}
             }`,
                 MONTHS: `{months, plural,
@@ -192,39 +195,39 @@ export const ruRULocaleData = {
                 SEPARATOR: ' ',
                 LAST_PART_SEPARATOR: 'и',
                 YEARS: `{years, plural,
-                one {последний год}
-                few {последние # лет}
-                other {последние # лет}
+                one {Последний год}
+                few {Последние # года}
+                other {Последние # лет}
             }`,
                 MONTHS: `{months, plural,
-                one {последний месяц}
-                few {последние # месяца}
-                other {последние # месяцев}
+                one {Последний месяц}
+                few {Последние # месяца}
+                other {Последние # месяцев}
             }`,
                 WEEKS: `{weeks, plural,
-                one {последняя неделя}
-                few {последние # недели}
-                other {последние # недель}
+                one {Последняя неделя}
+                few {Последние # недели}
+                other {Последние # недель}
             }`,
                 DAYS: `{days, plural,
-                one {последний день}
-                few {последние # дня}
-                other {последние # дней}
+                one {Последний день}
+                few {Последние # дня}
+                other {Последние # дней}
             }`,
                 HOURS: `{hours, plural,
-                one {последний час}
-                few {последние # часа}
-                other {последние # часов}
+                one {Последний час}
+                few {Последние # часа}
+                other {Последние # часов}
             }`,
                 MINUTES: `{minutes, plural,
-                one {последняя минута}
-                few {последние # минуты}
-                other {последние # минут}
+                one {Последняя минута}
+                few {Последние # минуты}
+                other {Последние # минут}
             }`,
                 SECONDS: `{seconds, plural,
-                one {последняя секунда}
-                few {последние # секунды}
-                other {последние # секунд}
+                one {Последняя секунда}
+                few {Последние # секунды}
+                other {Последние # секунд}
             }`,
                 YEARS_FRACTION: `{years} лет`,
                 MONTHS_FRACTION: `{months} месяцев`

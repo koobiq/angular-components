@@ -1,8 +1,9 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -11,6 +12,14 @@ import {
     KbqCustomTimeRangeType,
     KbqTimeRangeModule
 } from '@koobiq/components/time-range';
+import { of } from 'rxjs';
+
+const ExampleLocalizedData = new InjectionToken<Record<string | 'default', string>>('ExampleLocalizedData', {
+    factory: () => ({
+        'ru-RU': 'Период',
+        default: 'Period'
+    })
+});
 
 export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRangeType[] {
     const currentYear = adapter.startOf(adapter.today(), 'year');
@@ -77,7 +86,7 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
             <kbq-form-field>
                 <kbq-time-range-title-as-control>
                     @if (!context.type) {
-                        <span kbqTimeRangeTitlePlaceholder>{{ context.formattedDate }}</span>
+                        <span kbqTimeRangeTitlePlaceholder>{{ placeholder() }}</span>
                     } @else {
                         {{ context.type | titlecase }}
                     }
@@ -107,4 +116,9 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
-export class TimeRangeCustomOptionExample {}
+export class TimeRangeCustomOptionExample {
+    private readonly data = inject(ExampleLocalizedData);
+    private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
+
+    protected readonly placeholder = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+}
