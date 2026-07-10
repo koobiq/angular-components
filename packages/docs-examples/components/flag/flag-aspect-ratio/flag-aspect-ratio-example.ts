@@ -1,8 +1,7 @@
-import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { KbqVirtualOption } from '@koobiq/components/core';
 import { KbqFlag } from '@koobiq/components/flag';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -41,8 +40,6 @@ type Country = { code: string; name: string; svg: SafeHtml };
                 panelWidth="auto"
                 [formControl]="control"
                 [compareWith]="compareWith"
-                [virtualOptionFactory]="virtualOptionFactory"
-                (openedChange)="openedChange($event)"
             >
                 @for (country of countries; track country) {
                     <kbq-option [value]="country">
@@ -88,18 +85,6 @@ export class FlagAspectRatioExample {
         .sort((a, b) => a.name.localeCompare(b.name));
 
     protected readonly control = new FormControl<Country | null>(this.countries[0] ?? null);
-    protected readonly viewport = viewChild.required(CdkVirtualScrollViewport);
 
     protected readonly compareWith = (a: Country | null, b: Country | null) => a?.code === b?.code;
-    protected readonly virtualOptionFactory = (value: Country) => new KbqVirtualOption(value, false, value.name);
-
-    protected openedChange(isOpened: boolean): void {
-        if (!isOpened) return;
-
-        const index = this.countries.findIndex((country) => country.code === this.control.value?.code);
-
-        if (index >= 0) {
-            this.viewport().scrollToIndex(index);
-        }
-    }
 }
