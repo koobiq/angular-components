@@ -41,6 +41,11 @@
             "description": "Migrates deprecated API removed in @koobiq/components v20.0.0",
             "factory": "./migrations/v20-upgrade/index",
             "schema": "./migrations/v20-upgrade/schema.json"
+        },
+        "filter-bar-signals": {
+            "description": "Migrates KbqFilterBar consumers to the signal-based API (filter/pipeTemplates/isChanged/... reads become calls)",
+            "factory": "./migrations/filter-bar-signals/index",
+            "schema": "./migrations/filter-bar-signals/schema.json"
         }
     }
 }
