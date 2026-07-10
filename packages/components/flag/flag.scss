@@ -1,0 +1,53 @@
+.kbq-flag {
+    // Theme tokens. The faded contrast line resolves to a dark hairline in the light theme and a
+    // light one in the dark theme, so the flag stays separated from the background in both.
+    --kbq-flag-shadow-color: var(--kbq-line-contrast-fade);
+    --kbq-flag-empty-background: var(--kbq-states-background-disabled);
+    --kbq-flag-border-radius: 0;
+    --kbq-flag-aspect-ratio: 3 / 2;
+
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    // Sizing follows the surrounding text; 3:2 gives width = 1.5 × line height. Override via
+    // font-size / width / height to resize.
+    height: 1em;
+    aspect-ratio: var(--kbq-flag-aspect-ratio);
+    vertical-align: middle;
+    overflow: hidden;
+    border-radius: var(--kbq-flag-border-radius);
+
+    // Size the flag image whether it is projected directly or bound via [innerHTML]
+    // (the injected svg may sit inside a wrapper element).
+    svg,
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    // Inset hairline drawn on top of the flag, gated by the shadow input.
+    &.kbq-flag_shadow-inset::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 1px var(--kbq-flag-shadow-color);
+        pointer-events: none;
+    }
+
+    &.kbq-flag_square,
+    &.kbq-flag_circle {
+        --kbq-flag-aspect-ratio: 1 / 1;
+    }
+
+    &.kbq-flag_circle {
+        border-radius: 50%;
+    }
+
+    // Neutral placeholder when no flag is projected (unknown / invalid country code).
+    &.kbq-flag_empty {
+        background: var(--kbq-flag-empty-background);
+    }
+}

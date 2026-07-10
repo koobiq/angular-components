@@ -41,6 +41,7 @@ export enum DocsStructureItemId {
     Input = 'input',
     FileUpload = 'file-upload',
     FilterBar = 'filter-bar',
+    Flag = 'flag',
     FormField = 'form-field',
     Highlight = 'highlight',
     LayoutFlex = 'layout-flex',
@@ -603,6 +604,18 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'filter-bar',
                     hasExamples: true
+                },
+                {
+                    id: DocsStructureItemId.Flag,
+                    name: {
+                        ru: 'Flag',
+                        en: 'Flag'
+                    },
+                    svgPreview: '',
+                    hasApi: true,
+                    apiId: 'flag',
+                    hasExamples: false,
+                    isNew: expiresAt('2026-10-07')
                 },
                 {
                     id: DocsStructureItemId.FormField,

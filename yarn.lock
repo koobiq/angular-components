@@ -12454,6 +12454,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"country-flag-icons@npm:^1.6.20":
+  version: 1.6.20
+  resolution: "country-flag-icons@npm:1.6.20"
+  checksum: 10c0/e270cbf3f31d8f57a7f6da56c15733897f4dcc9c7fd50f88c7d295d16cb9fd97dcae96c054b2d840916bec3f27472335201938dc569961d935da4c4d341f9d32
+  languageName: node
+  linkType: hard
+
 "crc-32@npm:^1.2.0":
   version: 1.2.2
   resolution: "crc-32@npm:1.2.2"
@@ -18432,6 +18439,7 @@ __metadata:
     conventional-changelog: "npm:^3.1.10"
     conventional-changelog-angular: "npm:5.0.13"
     conventional-changelog-writer: "npm:5.0.1"
+    country-flag-icons: "npm:^1.6.20"
     cspell: "npm:^8.19.4"
     dotenv: "npm:^16.6.1"
     eslint: "npm:^9.0.0"
