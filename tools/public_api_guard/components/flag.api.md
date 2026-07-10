@@ -13,9 +13,8 @@ export class KbqFlag {
     readonly label: _angular_core.InputSignal<string | undefined>;
     readonly shadow: _angular_core.InputSignal<KbqFlagShadow>;
     readonly shape: _angular_core.InputSignal<KbqFlagShape>;
-    readonly stylized: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFlag, "kbq-flag", ["kbqFlag"], { "shape": { "alias": "shape"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; "stylized": { "alias": "stylized"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFlag, "kbq-flag", ["kbqFlag"], { "shape": { "alias": "shape"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFlag, never>;
 }

@@ -17,7 +17,7 @@ npm install country-flag-icons
 
 ## Aspect ratio
 
-By default flags use a 3:2 ratio. This is the primary format — use it in most scenarios: inline with text, lists, selects.
+By default flags use a 3:2 ratio. This is the primary format — use it in most scenarios: inline with text, lists, selects. Flags with a different ratio (e.g. 4:3) or from other sources are supported by overriding the `--kbq-flag-aspect-ratio` CSS variable.
 
 <!-- example(flag-aspect-ratio) -->
 
@@ -90,7 +90,7 @@ In short: a flag must always have a text alternative — either visible text nex
 
 ### With shadow and volume
 
-A gradient imitating folds is layered over the image; the flag is rounded and casts a shadow.
+This volumetric look is produced with custom CSS on the flag — rounded corners (via the `--kbq-flag-border-radius` variable), a drop shadow, and a gradient overlay blended over the image. There is no built-in attribute for it.
 
 <!-- example(flag-stylized) -->
 

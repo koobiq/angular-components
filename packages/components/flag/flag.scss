@@ -4,6 +4,7 @@
     --kbq-flag-shadow-color: var(--kbq-line-contrast-fade);
     --kbq-flag-empty-background: var(--kbq-states-background-disabled);
     --kbq-flag-border-radius: 0;
+    --kbq-flag-aspect-ratio: 3 / 2;
 
     display: inline-block;
     position: relative;
@@ -11,7 +12,7 @@
     // Sizing follows the surrounding text; 3:2 gives width = 1.5 × line height. Override via
     // font-size / width / height to resize.
     height: 1em;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: var(--kbq-flag-aspect-ratio);
     vertical-align: middle;
     overflow: hidden;
     border-radius: var(--kbq-flag-border-radius);
@@ -38,39 +39,11 @@
 
     &.kbq-flag_square,
     &.kbq-flag_circle {
-        aspect-ratio: 1 / 1;
+        --kbq-flag-aspect-ratio: 1 / 1;
     }
 
     &.kbq-flag_circle {
         border-radius: 50%;
-    }
-
-    // Volumetric look: rounded corners, a soft drop shadow and a gradient imitating folds blended
-    // over the flag.
-    &.kbq-flag_stylized {
-        border-radius: var(--kbq-size-xs);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
-        &::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            border-radius: inherit;
-            background: linear-gradient(
-                240.64deg,
-                rgba(255, 255, 255, 0.3) 0%,
-                rgba(0, 0, 0, 0.27) 26.27%,
-                rgba(255, 255, 255, 0.26) 37%,
-                rgba(0, 0, 0, 0.55) 48.7%,
-                rgba(0, 0, 0, 0.24) 59.44%,
-                rgba(255, 255, 255, 0.3) 73.64%,
-                rgba(39, 39, 39, 0.22) 90.15%,
-                rgba(0, 0, 0, 0.2) 100%
-            );
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
     }
 
     // Neutral placeholder when no flag is projected (unknown / invalid country code).

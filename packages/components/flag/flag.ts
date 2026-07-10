@@ -2,19 +2,12 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, input, ViewEncaps
 import { KbqFlagShadow, KbqFlagShape } from './flag.types';
 
 /**
- * Presentational wrapper for a country flag.
- *
- * `KbqFlag` does not know how to resolve a country code — it only decorates the projected
- * content (an inline `<svg>` or an `<img>`) with shape, shadow and an optional stylized look, and
- * applies the accessibility contract. The flag image itself is provided by the consumer, e.g.
- * from the `country-flag-icons` package or any custom source:
+ * Presentational wrapper for a consumer-provided country flag (inline `<svg>` or `<img>`).
+ * Decorates it with shape and shadow and applies the accessibility contract.
  *
  * ```html
  * <kbq-flag><img src="…/AL.svg" alt="" /></kbq-flag> Albania
  * ```
- *
- * The rendered size follows the font size (`height: 1em`); set an explicit `font-size`, `width`
- * or `height` to resize it.
  */
 @Component({
     selector: 'kbq-flag',
@@ -27,7 +20,6 @@ import { KbqFlagShadow, KbqFlagShape } from './flag.types';
         '[class.kbq-flag_square]': "shape() === 'square'",
         '[class.kbq-flag_circle]': "shape() === 'circle'",
         '[class.kbq-flag_shadow-inset]': "shadow() === 'inset'",
-        '[class.kbq-flag_stylized]': 'stylized()',
         '[class.kbq-flag_empty]': 'empty()',
         '[attr.role]': "decorative() ? null : (label() ? 'img' : null)",
         '[attr.aria-label]': 'decorative() ? null : (label() || null)',
@@ -46,8 +38,6 @@ export class KbqFlag {
      * @default inset
      */
     readonly shadow = input<KbqFlagShadow>('inset');
-    /** Adds rounded corners, a drop shadow and a gradient imitating folds for a volumetric look. */
-    readonly stylized = input(false, { transform: booleanAttribute });
     /** Renders a neutral placeholder — use when no flag can be shown (unknown / invalid country code). */
     readonly empty = input(false, { transform: booleanAttribute });
     /** Marks the flag as decorative — hidden from screen readers (use when adjacent text is present). */

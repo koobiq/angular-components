@@ -38,17 +38,18 @@ type Country = { code: string; name: string; svg: SafeHtml };
             />
             <kbq-select
                 placeholder="Select a country"
+                panelWidth="auto"
                 [formControl]="control"
                 [compareWith]="compareWith"
                 [virtualOptionFactory]="virtualOptionFactory"
                 (openedChange)="openedChange($event)"
             >
-                <cdk-virtual-scroll-viewport itemSize="32" minBufferPx="300" maxBufferPx="300">
-                    <kbq-option *cdkVirtualFor="let country of countries" [value]="country">
+                @for (country of countries; track country) {
+                    <kbq-option [value]="country">
                         <kbq-flag decorative class="example-flag-option" [innerHTML]="country.svg" />
                         {{ country.name }}
                     </kbq-option>
-                </cdk-virtual-scroll-viewport>
+                }
             </kbq-select>
         </kbq-form-field>
     `,
