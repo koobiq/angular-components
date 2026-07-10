@@ -1,6 +1,6 @@
 <div class="docs-footer__item">
     <div class="docs-footer__label">
-        {{ isRuLocale() ? 'Язык интерфейса и примеров' : 'Interface and examples language' }}
+        {{ t('footerLanguageLabel') }}
     </div>
     <div>
         <div
@@ -15,16 +15,16 @@
 
         <kbq-dropdown #languageDropdown="kbqDropdown" [class]="'docs-dropdown'">
             <div class="kbq-dropdown__group-header">
-                <span class="kbq-caps-compact-strong">{{ isRuLocale() ? 'ЯЗЫК' : 'LANGUAGE' }}</span>
+                <span class="kbq-caps-compact-strong">{{ t('footerLanguageGroupHeader') }}</span>
             </div>
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="docsLanguageDropdown">
-                {{ isRuLocale() ? 'Интерфейс' : 'Interface' }}
+                {{ t('footerInterface') }}
                 <div class="kbq-dropdown-item__caption">{{ docsLanguageSwitch.currentValue.value }}</div>
             </button>
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="examplesLanguageDropdown">
-                {{ isRuLocale() ? 'Примеры' : 'Examples' }}
+                {{ t('footerExamples') }}
                 <div class="kbq-dropdown-item__caption">{{ examplesLanguageSwitch.currentValue.value }}</div>
             </button>
         </kbq-dropdown>
@@ -58,7 +58,7 @@
 
 <div class="docs-footer__item">
     <div class="docs-footer__label">
-        {{ isRuLocale() ? 'Версия' : 'Version' }}
+        {{ t('footerVersionLabel') }}
     </div>
     <div>
         <div
@@ -78,7 +78,7 @@
             <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <div class="kbq-dropdown__group-header">
                     <div class="kbq-caps-compact-strong">
-                        {{ isRuLocale() ? 'ВЕРСИЯ' : 'VERSION' }}
+                        {{ t('footerVersionGroupHeader') }}
                     </div>
                 </div>
 
@@ -92,7 +92,7 @@
                             {{ version.name }}
 
                             @if (version.latest) {
-                                <span>{{ isRuLocale() ? ' (последняя)' : ' (latest)' }}</span>
+                                <span>{{ t('footerVersionLatest') }}</span>
                             }
                         </div>
                     </button>

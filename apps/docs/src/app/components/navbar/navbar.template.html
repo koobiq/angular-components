@@ -15,7 +15,7 @@
                 [kbqStyle]="'transparent'"
                 (click)="docStates.scrollUp()"
             >
-                {{ docStates.currentHeader.textContent }}
+                {{ docStates.currentHeader?.textContent }}
             </button>
         }
     </div>
@@ -78,7 +78,7 @@
 
 <kbq-dropdown #themeDropdown="kbqDropdown" [class]="'docs-dropdown'">
     <div class="kbq-dropdown__group-header">
-        <span class="kbq-caps-compact-strong">{{ isRuLocale() ? 'ТЕМА' : 'THEME' }}</span>
+        <span class="kbq-caps-compact-strong">{{ t('themeGroupHeader') }}</span>
     </div>
 
     @for (theme of themeSwitch.data; track theme) {

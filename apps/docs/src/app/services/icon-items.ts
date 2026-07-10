@@ -1,3 +1,5 @@
+import type { KbqIconsMetadata } from '@koobiq/icons/types/icons';
+
 export interface DocsIconItem {
     id: string;
     name: string;
@@ -12,7 +14,7 @@ export class DocsIconItems {
     allIcons: DocsIconItem[] = [];
     sizes: Set<number> = new Set();
 
-    constructor(ICONS: Record<string, { codepoint: string; tags: string[]; description: string }>) {
+    constructor(ICONS: KbqIconsMetadata) {
         this.allIcons = Object.keys(ICONS).map((id) => {
             const { codepoint, tags, description } = ICONS[id];
 

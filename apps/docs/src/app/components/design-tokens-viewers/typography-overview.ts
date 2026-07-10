@@ -1,4 +1,4 @@
-import { Component, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DocsLocaleState } from '../../services/locale';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
@@ -22,8 +22,8 @@ import { docsData } from './data/typography';
             <table kbq-table class="docs-font-classes-table" docs-article [border]="true">
                 <thead>
                     <tr class="kbq-caps-compact">
-                        <th>{{ localeData.typographyExample[locale()] }}</th>
-                        <th>{{ localeData.cssClassName[locale()] }}</th>
+                        <th>{{ t('typographyExample') }}</th>
+                        <th>{{ t('cssClassName') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,7 +36,7 @@ import { docsData } from './data/typography';
                                 <span
                                     docsCodeSnippet
                                     class="kbq-markdown__code"
-                                    [kbqTooltip]="localeData.codeSnippet[locale()]"
+                                    [kbqTooltip]="t('copy')"
                                     [kbqTooltipArrow]="false"
                                 >
                                     kbq-{{ token }}
@@ -49,6 +49,7 @@ import { docsData } from './data/typography';
         </docs-component-viewer-wrapper>
     `,
     styleUrls: ['design-tokens.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-markdown'
     }
@@ -57,29 +58,6 @@ export class DocsTypographyTable extends DocsLocaleState {
     protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
 
     protected readonly tokensInfo = signal(docsData);
-
-    protected readonly localeData = {
-        typographyExample: {
-            ru: 'Пример типографики',
-            en: 'Typography Example'
-        },
-        cssClassName: {
-            ru: 'Имя CSS-класса',
-            en: 'CSS Class Name'
-        },
-        token: {
-            ru: 'Токен',
-            en: 'Token'
-        },
-        value: {
-            ru: 'Значение',
-            en: 'Value'
-        },
-        codeSnippet: {
-            ru: 'Скопировать',
-            en: 'Copy'
-        }
-    };
 
     getClassName(text: string): string {
         return `kbq-${text}`;

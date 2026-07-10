@@ -1,9 +1,10 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Directive, inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { PRIMARY_OUTLET, Router } from '@angular/router';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
+import { docsTranslate, DocsTranslationKey } from './i18n';
 
 export const docsIsRuLocale = (locale: DocsLocale): boolean => locale === DocsLocale.Ru;
 
@@ -49,13 +50,21 @@ export class DocsLocaleService {
         // should update only URL which contain locale
         // e.g. - /ru/icons -> /en/icons
         // but not /404 -> /en
-        if (this.getLocaleFromURL(this.router.url)) {
-            const path = this.router.url.split('/');
-
-            // replace language in path
-            path[1] = locale;
-            this.router.navigate(path);
+        if (!this.getLocaleFromURL(this.router.url)) {
+            return;
         }
+
+        // Rebuild the command list from the parsed URL tree so the leading locale segment is
+        // replaced cleanly and any query params / fragment are preserved rather than smuggled
+        // inside the last raw segment.
+        const urlTree = this.router.parseUrl(this.router.url);
+        const primarySegments = urlTree.root.children[PRIMARY_OUTLET]?.segments ?? [];
+        const commands = primarySegments.map((segment, index) => (index === 0 ? locale : segment.path));
+
+        this.router.navigate(['/', ...commands], {
+            queryParams: urlTree.queryParams,
+            fragment: urlTree.fragment ?? undefined
+        });
     }
 
     /** Checks if a given locale code is supported. */
@@ -76,4 +85,12 @@ export class DocsLocaleState {
     readonly docsLocaleService = inject(DocsLocaleService);
     readonly isRuLocale = toSignal(this.docsLocaleService.isRuLocale, { initialValue: true });
     readonly locale = toSignal(this.docsLocaleService.changes, { initialValue: this.docsLocaleService.locale });
+
+    /**
+     * Resolves a UI string from the central dictionary for the current locale. Reading the `locale`
+     * signal keeps template usages reactive under OnPush.
+     */
+    t(key: DocsTranslationKey): string {
+        return docsTranslate(key, this.locale());
+    }
 }

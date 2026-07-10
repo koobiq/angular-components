@@ -1,15 +1,18 @@
 import { Location, ViewportScroller } from '@angular/common';
 import {
+    afterNextRender,
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     inject,
+    Injector,
     model,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -21,6 +24,7 @@ import {
     KbqTreeModule,
     KbqTreeSelection
 } from '@koobiq/components/tree';
+import { filter } from 'rxjs/operators';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
 import {
@@ -101,15 +105,11 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
     private readonly viewportScroller = inject(ViewportScroller);
     private readonly router = inject(Router);
     private readonly location = inject(Location);
+    private readonly injector = inject(Injector);
     protected readonly docStates = inject(DocsDocStates);
     protected readonly treeControl: FlatTreeControl<TreeFlatNode>;
     protected readonly dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
-    protected readonly selectedNodeId = model(
-        Object.values(DocsStructureItemTab).reduce(
-            (resUrl, currentValue) => resUrl.replace(new RegExp(`\\/${currentValue}.*`), ''),
-            this.location.path().replace(`/${this.locale()}/`, '')
-        )
-    );
+    protected readonly selectedNodeId = model(this.getSelectedNodeIdFromUrl());
 
     constructor() {
         super();
@@ -129,12 +129,40 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, treeFlattener);
         this.dataSource.data = buildTree(docsGetCategories());
+
+        // The sidenav is mounted once for the whole session, so a one-time field initializer would
+        // drift from the actual route after client-side navigation (DOCS-BUG-08). Track the router.
+        this.router.events
+            .pipe(
+                filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+                takeUntilDestroyed()
+            )
+            .subscribe(() => {
+                this.selectedNodeId.set(this.getSelectedNodeIdFromUrl());
+                this.highlightSelectedOption();
+            });
     }
 
     ngAfterViewInit() {
         this.treeControl.expandAll();
         this.docStates.registerNavbarScrollContainer(this.scrollbar().contentElement().nativeElement);
-        setTimeout(() => this.tree().highlightSelectedOption());
+        this.highlightSelectedOption();
+    }
+
+    /** Derives the selected tree node id from the current URL: strips the locale prefix and tab. */
+    private getSelectedNodeIdFromUrl(): string {
+        return Object.values(DocsStructureItemTab).reduce(
+            (resUrl, tab) => resUrl.replace(new RegExp(`\\/${tab}.*`), ''),
+            this.location.path().replace(`/${this.locale()}/`, '')
+        );
+    }
+
+    /**
+     * Re-applies the visual highlight after the next render, so the tree view exists and the
+     * `ngModel` selection change has been flushed (replaces an untracked `setTimeout`).
+     */
+    private highlightSelectedOption(): void {
+        afterNextRender(() => this.tree().highlightSelectedOption(), { injector: this.injector });
     }
 
     protected handleItemClick(_event: Event, node: TreeFlatNode): void {

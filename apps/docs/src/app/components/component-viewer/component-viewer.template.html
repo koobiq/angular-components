@@ -6,14 +6,14 @@
         <div class="docs-component-navbar layout-row layout-padding-top-s">
             <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
                 <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Overview">
-                    {{ isRuLocale() ? 'Обзор' : 'Overview' }}
+                    {{ t('overviewTab') }}
                 </a>
                 @if (structureItem.hasApi) {
                     <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Api">API</a>
                 }
                 @if (structureItem.hasExamples) {
                     <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Examples">
-                        {{ isRuLocale() ? 'Примеры' : 'Examples' }}
+                        {{ t('examplesTab') }}
                     </a>
                 }
             </nav>

@@ -1,5 +1,15 @@
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
-import { afterNextRender, AfterViewInit, Component, inject, input, signal, viewChild } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import {
+    afterNextRender,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Injector,
+    input,
+    signal,
+    viewChild
+} from '@angular/core';
 import { KBQ_WINDOW, ThemeService } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -57,8 +67,8 @@ interface DocsTokensInfoRaw {
                 <thead>
                     <tr class="kbq-caps-compact">
                         <th align="left"></th>
-                        <th align="left">{{ localeData.token[locale()] }}</th>
-                        <th align="left">{{ localeData.value[locale()] }}</th>
+                        <th align="left">{{ t('token') }}</th>
+                        <th align="left">{{ t('value') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,7 +82,7 @@ interface DocsTokensInfoRaw {
                                     <span
                                         docsCodeSnippet
                                         class="kbq-markdown__code"
-                                        [kbqTooltip]="localeData.codeSnippet[locale()]"
+                                        [kbqTooltip]="t('copy')"
                                         [kbqTooltipArrow]="false"
                                     >
                                         {{ token.token }}
@@ -93,10 +103,13 @@ interface DocsTokensInfoRaw {
             </table>
         }
     `,
-    styleUrls: ['design-tokens.scss']
+    styleUrls: ['design-tokens.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsTokensTable extends DocsLocaleState {
-    readonly section = input<DocsTokensSectionInfo>();
+    // Accepts both a top-level `DocsTokensInfo` and a nested `DocsTokensSectionInfo`; only `.tokens`
+    // is read (guarded), and `DocsTokensSectionInfo` is assignable to `DocsTokensInfo`.
+    readonly section = input<DocsTokensInfo>();
     readonly tab = input.required<DocsStructureTokensTab>();
 
     readonly mapTabToType: Record<
@@ -121,21 +134,6 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Semantic]: 'background-color',
         [DocsStructureTokensTab.Sizes]: 'width',
         [DocsStructureTokensTab.Shadows]: 'box-shadow'
-    };
-
-    protected readonly localeData = {
-        token: {
-            ru: 'Токен',
-            en: 'Token'
-        },
-        value: {
-            ru: 'Значение',
-            en: 'Value'
-        },
-        codeSnippet: {
-            ru: 'Скопировать',
-            en: 'Copy'
-        }
     };
 
     constructor() {
@@ -164,38 +162,36 @@ export class DocsTokensTable extends DocsLocaleState {
     imports: [
         DocsComponentViewerWrapperComponent,
         DocsTokensTable,
-        NgTemplateOutlet,
         DocsAnchorsComponent
     ],
     template: `
         <docs-component-viewer-wrapper>
             <div docs-article>
                 @for (section of tokensInfo(); track section.type) {
-                    <ng-container *ngTemplateOutlet="sectionTemplate; context: { $implicit: section, level: 3 }" />
+                    @if (section.type && section.type !== 'No-header') {
+                        <div [class]="getClassName(3)" [id]="section.type">
+                            {{ section.type }}
+                        </div>
+                    }
+                    <docs-tokens-table [tab]="activatedTab()" [section]="section" />
+
+                    @for (innerSection of section.sections ?? []; track innerSection.type) {
+                        @if (innerSection.type && innerSection.type !== 'No-header') {
+                            <div [class]="getClassName(4)" [id]="innerSection.type">
+                                {{ innerSection.type }}
+                            </div>
+                        }
+                        <docs-tokens-table [tab]="activatedTab()" [section]="innerSection" />
+                    }
                 }
             </div>
         </docs-component-viewer-wrapper>
-
-        <ng-template #sectionTemplate let-section let-level="level">
-            @if (section.type && section.type !== 'No-header') {
-                <div [class]="getClassName(level)" [id]="section.type">
-                    {{ section.type }}
-                </div>
-            }
-            <docs-tokens-table [tab]="activatedTab()" [section]="section" />
-            @if (section.sections && section.sections.length > 0) {
-                @for (innerSection of section.sections; track innerSection.type) {
-                    <ng-container
-                        *ngTemplateOutlet="sectionTemplate; context: { $implicit: innerSection, level: level + 1 }"
-                    />
-                }
-            }
-        </ng-template>
 
         <div class="docs-component-viewer__sticky-wrapper">
             <docs-anchors [headerSelectors]="'.docs-header-link'" />
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-markdown'
     }
@@ -208,6 +204,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected readonly window = inject(KBQ_WINDOW);
     protected readonly document = inject(DOCUMENT);
     protected readonly activatedRoute = inject(ActivatedRoute);
+    private readonly injector = inject(Injector);
 
     protected readonly tokensInfo = signal<DocsTokensInfo[]>([]);
     protected readonly activatedTab = toSignal(
@@ -217,21 +214,6 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         ),
         { initialValue: DocsStructureTokensTab.Colors }
     );
-
-    protected readonly localeData = {
-        token: {
-            ru: 'Токен',
-            en: 'Token'
-        },
-        value: {
-            ru: 'Значение',
-            en: 'Value'
-        },
-        codeSnippet: {
-            ru: 'Скопировать',
-            en: 'Copy'
-        }
-    };
 
     protected tokenDataMap: Record<
         Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
@@ -244,6 +226,14 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
         [DocsStructureTokensTab.Palette]: palette,
         [DocsStructureTokensTab.Semantic]: sematic
     };
+
+    /**
+     * Resolved token values cached by theme class name. Reading a CSS custom property via
+     * `getComputedStyle` can force a style recalculation, and `calculateViewData` re-runs on every
+     * theme change; caching per (theme, token) means switching themes back and forth never re-reads
+     * a token whose value cannot have changed (token values depend only on the active theme).
+     */
+    private readonly tokenValueCache = new Map<string, Map<string, string>>();
 
     constructor() {
         super();
@@ -259,17 +249,35 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     }
 
     ngAfterViewInit() {
-        setTimeout(() => this.wrapper().scrollToSelectedContentSection());
+        // Defer to the next render so the wrapper view exists and its content has laid out.
+        afterNextRender(() => this.wrapper().scrollToSelectedContentSection(), { injector: this.injector });
     }
 
-    getClassName(text: string): string {
-        return `docs-header-link kbq-markdown__h${text}`;
+    getClassName(level: number): string {
+        return `docs-header-link kbq-markdown__h${level}`;
     }
 
     protected calculateViewData(): DocsTokensInfo[] {
         const styles = this.window.getComputedStyle(this.document.body);
 
-        const getTokenValue = (token: string) => styles.getPropertyValue(token);
+        const themeKey = this.themeService.getTheme()?.className ?? 'default';
+        const themeCache = this.tokenValueCache.get(themeKey) ?? new Map<string, string>();
+
+        this.tokenValueCache.set(themeKey, themeCache);
+
+        const getTokenValue = (token: string): string => {
+            const cached = themeCache.get(token);
+
+            if (cached !== undefined) {
+                return cached;
+            }
+
+            const value = styles.getPropertyValue(token);
+
+            themeCache.set(token, value);
+
+            return value;
+        };
 
         return this.tokenDataMap[this.activatedTab()].map(({ tokens, type, sections }: DocsTokensInfoRaw) => {
             if (tokens && tokens.length > 0) {

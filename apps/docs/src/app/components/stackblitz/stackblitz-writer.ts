@@ -69,9 +69,8 @@ export class DocsStackblitzWriter {
      */
     createStackBlitzForExample(exampleId: string, data: ExampleData): Promise<() => void> {
         if (!this.cache.has(exampleId)) {
-            this.cache.set(
-                exampleId,
-                this.buildInMemoryProject(data, exampleId).then(({ files, dependencies }) => () => {
+            const project = this.buildInMemoryProject(data, exampleId)
+                .then(({ files, dependencies }) => () => {
                     StackBlitzSDK.openProject(
                         {
                             title: `Angular Components - ${data.description}`,
@@ -84,7 +83,15 @@ export class DocsStackblitzWriter {
                         { openFile: `src/example/${data.indexFilename}` }
                     );
                 })
-            );
+                .catch((error) => {
+                    // Evict the rejected promise so a failed file fetch does not permanently
+                    // poison the cache — the next click on this example re-fetches.
+                    this.cache.delete(exampleId);
+
+                    throw error;
+                });
+
+            this.cache.set(exampleId, project);
         }
 
         return this.cache.get(exampleId)!;

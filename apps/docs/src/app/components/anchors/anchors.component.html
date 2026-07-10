@@ -1,7 +1,7 @@
 @for (anchor of anchors; track anchor) {
     <div
         class="docs-anchors__element docs-anchors__element_{{ anchor.level }}"
-        [ngClass]="{ 'docs-anchors__element_active': anchor.active }"
+        [class.docs-anchors__element_active]="anchor.active"
     >
         <a
             kbq-title

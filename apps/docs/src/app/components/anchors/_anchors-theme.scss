@@ -21,23 +21,16 @@
 
     .docs-anchors__element {
         &:first-child {
-            padding: 0 0 0 16px;
+            padding: 0 0 0 var(--kbq-size-l);
             margin: 0;
 
             & .docs-anchors__link {
-                padding: 6px 16px 6px 0;
+                padding: var(--kbq-size-xs) var(--kbq-size-l) var(--kbq-size-xs) 0;
             }
         }
 
         &.docs-anchors__element_active {
-            @include box-shadow(inset 3px 0 0 #363949);
+            box-shadow: inset 3px 0 0 $shadow;
         }
     }
-}
-
-@mixin box-shadow($shadow) {
-    -webkit-box-shadow: $shadow;
-    -moz-box-shadow: $shadow;
-    -o-box-shadow: $shadow;
-    box-shadow: $shadow;
 }

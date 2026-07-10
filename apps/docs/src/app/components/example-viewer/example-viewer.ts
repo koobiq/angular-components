@@ -4,18 +4,19 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
     afterNextRender,
     ApplicationRef,
+    ChangeDetectionStrategy,
     Component,
+    effect,
     ElementRef,
-    EventEmitter,
     inject,
     Injector,
-    Input,
+    input,
     NgZone,
     OnDestroy,
-    Output,
+    output,
     PLATFORM_ID,
-    SecurityContext,
     signal,
+    Type,
     ViewContainerRef
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -25,6 +26,7 @@ import { take } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocumentLoader } from '../../services/document-loader';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
+import { docsBuildDocumentErrorHtml, docsRewriteFragmentUrls } from '../live-example/markdown-content';
 
 @Component({
     selector: 'docs-example-viewer',
@@ -33,9 +35,10 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
         @if (documentContent()) {
             <div [innerHTML]="documentContent()"></div>
         } @else {
-            {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
+            {{ t('loadingDocument') }}
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-live-example kbq-markdown'
     }
@@ -53,18 +56,10 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
     private readonly window = inject(KBQ_WINDOW);
 
     /** The URL of the document to display. */
-    @Input()
-    set documentUrl(url: string) {
-        if (!url) {
-            return;
-        }
+    readonly documentUrl = input<string>();
 
-        this.clearLiveExamples();
-        this.getDocument(url);
-    }
-
-    @Output() readonly contentRendered = new EventEmitter<HTMLElement>();
-    @Output() readonly contentRenderFailed = new EventEmitter<HTMLElement>();
+    readonly contentRendered = output<HTMLElement>();
+    readonly contentRenderFailed = output<HTMLElement>();
 
     /** The document text. It should not be HTML encoded. */
     textContent: string | null = '';
@@ -78,6 +73,22 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
     private readonly documentLoader = inject(DocsDocumentLoader);
     private readonly platformId = inject(PLATFORM_ID);
 
+    constructor() {
+        super();
+
+        // Re-fetch whenever the URL input changes (replaces a side-effecting `@Input` setter).
+        effect(() => {
+            const url = this.documentUrl();
+
+            if (!url) {
+                return;
+            }
+
+            this.clearLiveExamples();
+            this.getDocument(url);
+        });
+    }
+
     ngOnDestroy() {
         this.clearLiveExamples();
         this.documentFetchSubscription?.unsubscribe();
@@ -87,10 +98,10 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
     private getDocument(url: string) {
         this.documentFetchSubscription?.unsubscribe();
 
-        this.documentFetchSubscription = this.documentLoader.get(url).subscribe(
-            (document) => this.updateDocument(document),
-            (error) => this.showError(url, error)
-        );
+        this.documentFetchSubscription = this.documentLoader.get(url).subscribe({
+            next: (document) => this.updateDocument(document),
+            error: (error) => this.showError(url, error)
+        });
     }
 
     /**
@@ -101,11 +112,7 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
         // Replace all relative fragment URLs with absolute fragment URLs. e.g. "#my-section" becomes
         // "/components/button/api#my-section". This is necessary because otherwise these fragment
         // links would redirect to "/#my-section".
-        rawDocument = rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
-            const absoluteUrl = `${this.window.location.pathname}#${fragmentUrl}`;
-
-            return `href="${this.domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
-        });
+        rawDocument = docsRewriteFragmentUrls(rawDocument, this.domSanitizer, this.window.location.pathname);
 
         this.documentContent.set(this.domSanitizer.bypassSecurityTrustHtml(rawDocument));
 
@@ -127,9 +134,8 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
     /** Show an error that occurred when fetching a document. */
     private showError(url: string, error: HttpErrorResponse) {
         console.error(error);
-        const errorHtml = this.isRuLocale()
-            ? `Не удалось загрузить документ: ${url}. Ошибка: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Создать issue</a>`
-            : `Failed to load document: ${url}. Error: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Create issue</a>`;
+
+        const errorHtml = docsBuildDocumentErrorHtml(url, error.statusText, this.isRuLocale());
 
         this.documentContent.set(this.domSanitizer.bypassSecurityTrustHtml(errorHtml));
 
@@ -139,7 +145,7 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
     }
 
     /** Instantiate a ExampleViewer for each example. */
-    private loadComponents(componentName: string, componentClass: any) {
+    private loadComponents(componentName: string, componentClass: Type<DocsLiveExampleViewerComponent>) {
         const exampleElements = this.elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
 
         exampleElements.forEach((element: Element) => {

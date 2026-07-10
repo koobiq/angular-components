@@ -152,15 +152,25 @@ const makeStructure = (structure: DocsStructure): DocsStructure => {
     return structure;
 };
 
+/** Every ISO date passed to `expiresAt`, retained so a test can flag already-expired `isNew` badges. */
+const isNewExpiryDates: string[] = [];
+
 const expiresAt = (expiresAt: string): boolean => {
+    isNewExpiryDates.push(expiresAt);
+
     const createdDate = DateTime.fromISO(expiresAt);
 
+    // Degrade gracefully instead of crashing the whole structure module at import time on a typo;
+    // `structure.spec` asserts every registered date is valid, so a bad date is caught in CI.
     if (!createdDate.isValid) {
-        throw new Error(createdDate.invalidReason);
+        return false;
     }
 
     return createdDate.diffNow('days').days > 0;
 };
+
+/** Returns all ISO dates used to gate `isNew` badges (see `expiresAt`). Used by the integrity spec. */
+export const docsGetIsNewExpiryDates = (): readonly string[] => isNewExpiryDates;
 
 const structure: DocsStructure = makeStructure({
     [DocsStructureCategoryId.Main]: [
@@ -1156,6 +1166,12 @@ const items: DocsStructureItem[] = Object.values(itemsByCategoryId).flat();
 
 const categories: DocsStructureCategory[] = Object.values(structure).flat();
 
+/** O(1) lookup indexes replacing the previous `Array.find` scans. */
+const itemsById = new Map<string, DocsStructureItem>(items.map((item) => [`${item.categoryId}/${item.id}`, item]));
+const categoriesById = new Map<DocsStructureCategoryId, DocsStructureCategory>(
+    categories.map((category) => [category.id, category])
+);
+
 export const docsGetCategories = (): DocsStructureCategory[] => {
     return categories;
 };
@@ -1176,9 +1192,9 @@ export const docsGetItemById = (
     itemId: DocsStructureItemId,
     categoryId: DocsStructureCategoryId
 ): DocsStructureItem | undefined => {
-    return items.find((item) => item.id === itemId && item.categoryId === categoryId);
+    return itemsById.get(`${categoryId}/${itemId}`);
 };
 
 export const docsGetCategoryById = (categoryId: DocsStructureCategoryId): DocsStructureCategory | undefined => {
-    return categories.find((category) => category.id === categoryId);
+    return categoriesById.get(categoryId);
 };

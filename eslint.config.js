@@ -323,6 +323,19 @@ module.exports = tseslint.config(
         }
     },
 
+    // Re-enable the template accessibility guardrail for the docs app (disabled repo-wide above).
+    // The docs site MUST pass AXE / WCAG AA per AGENTS.md, so these are treated as errors here.
+    {
+        files: ['apps/docs/**/*.html'],
+        rules: {
+            '@angular-eslint/template/no-autofocus': 2,
+            '@angular-eslint/template/elements-content': 2,
+            '@angular-eslint/template/click-events-have-key-events': 2,
+            '@angular-eslint/template/interactive-supports-focus': 2,
+            '@angular-eslint/template/label-has-associated-control': 2
+        }
+    },
+
     // Override rules for apps/docs
     {
         files: ['apps/docs/**/*.ts'],

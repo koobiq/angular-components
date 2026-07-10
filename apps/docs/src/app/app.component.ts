@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -20,6 +20,7 @@ import { DocsDocStates, DocsNavbarState } from './services/doc-states';
     ],
     templateUrl: 'app.component.html',
     styleUrl: 'app.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-app'
@@ -63,7 +64,7 @@ export class DocsAppComponent {
         map((state) => state === DocsNavbarState.Opened)
     );
 
-    isExamplesPage = toSignal(
+    readonly isExamplesPage = toSignal(
         this.router.events.pipe(
             filter((event): event is NavigationEnd => event instanceof NavigationEnd),
             map((event) => event.urlAfterRedirects.startsWith('/examples'))

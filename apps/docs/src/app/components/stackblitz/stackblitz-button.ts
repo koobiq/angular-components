@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
@@ -11,6 +11,7 @@ import { DocsStackblitzWriter } from './stackblitz-writer';
         <span class="kbq-link__text">StackBlitz</span>
         <i kbq-icon="kbq-north-east_16"></i>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-stackblitz-button kbq-link_external',
@@ -21,28 +22,24 @@ import { DocsStackblitzWriter } from './stackblitz-writer';
 export class DocsStackblitzButtonComponent extends KbqLink {
     private stackBlitzWriter = inject(DocsStackblitzWriter);
 
-    @Input()
-    set exampleId(value: string | undefined) {
-        if (value) {
-            this._exampleId = value;
-            this.exampleData = new ExampleData(value);
-        } else {
-            this._exampleId = undefined;
-            this.exampleData = undefined;
-        }
-    }
+    readonly exampleId = input<string>();
 
-    private _exampleId: string | undefined;
+    private readonly exampleData = computed(() => {
+        const id = this.exampleId();
+
+        return id ? new ExampleData(id) : undefined;
+    });
 
     get hasIcon() {
         return true;
     }
 
-    private exampleData: ExampleData | undefined;
-
     protected openStackBlitz(): void {
-        if (!this._exampleId || !this.exampleData) return;
+        const id = this.exampleId();
+        const data = this.exampleData();
 
-        this.stackBlitzWriter.createStackBlitzForExample(this._exampleId, this.exampleData).then((open) => open());
+        if (!id || !data) return;
+
+        this.stackBlitzWriter.createStackBlitzForExample(id, data).then((open) => open());
     }
 }

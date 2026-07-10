@@ -41,7 +41,13 @@ const provideServerWindow = (): Provider => {
                     reload: () => {},
                     replace: () => {}
                 },
-                removeEventListener: () => {}
+                // No-op / passthrough stubs for members a `KBQ_WINDOW` consumer might touch during
+                // server render. Without these, reaching one would hit `undefined` and crash SSR.
+                addEventListener: () => {},
+                removeEventListener: () => {},
+                getComputedStyle: () => ({ getPropertyValue: () => '' }) as unknown as CSSStyleDeclaration,
+                setTimeout: ((handler: TimerHandler, timeout?: number) =>
+                    globalThis.setTimeout(handler, timeout)) as unknown as Window['setTimeout']
             } satisfies Partial<Window>;
         }
     };

@@ -2,9 +2,11 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
+import { provideRouter, TitleStrategy } from '@angular/router';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService, kbqLocaleServiceLangAttrNameProvider } from '@koobiq/components/core';
 import { DOCS_ROUTES } from './routes';
+import { docsProvideAnalytics } from './services/analytics';
+import { DocsTitleStrategy } from './services/title-strategy';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const appConfig: ApplicationConfig = {
@@ -15,6 +17,8 @@ export const appConfig: ApplicationConfig = {
         provideRouter(DOCS_ROUTES),
         provideHttpClient(withFetch()),
         provideClientHydration(withEventReplay()),
-        provideAnimations()
+        provideAnimations(),
+        { provide: TitleStrategy, useClass: DocsTitleStrategy },
+        docsProvideAnalytics()
     ]
 };

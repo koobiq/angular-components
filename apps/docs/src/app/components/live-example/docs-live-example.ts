@@ -4,19 +4,20 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
     afterNextRender,
     ApplicationRef,
+    ChangeDetectionStrategy,
     Component,
+    effect,
     ElementRef,
-    EventEmitter,
     inject,
     Injector,
-    Input,
+    input,
     NgZone,
     OnDestroy,
-    Output,
+    output,
     PLATFORM_ID,
-    SecurityContext,
     signal,
-    ViewChild,
+    Type,
+    viewChild,
     ViewContainerRef
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -31,6 +32,7 @@ import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocumentLoader } from '../../services/document-loader';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
+import { DOCS_MARKDOWN_PRE_CLASS, docsBuildDocumentErrorHtml, docsRewriteFragmentUrls } from './markdown-content';
 
 @Component({
     selector: 'docs-live-example',
@@ -46,40 +48,28 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
         @if (documentContent()) {
             <div [innerHTML]="documentContent()"></div>
         } @else {
-            {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
+            {{ t('loadingDocument') }}
         }
         <ng-template let-htmlContent let-contentToCopy="textContent" let-language="language" cdkPortal>
             <kbq-code-block filled [files]="[{ content: contentToCopy, language }]" />
         </ng-template>
         <ng-template #codeSnippet let-htmlContent cdkPortal>
-            <span
-                class="kbq-mono-normal"
-                docsCodeSnippet
-                [innerHTML]="htmlContent"
-                [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'"
-            ></span>
+            <span class="kbq-mono-normal" docsCodeSnippet [innerHTML]="htmlContent" [kbqTooltip]="t('copy')"></span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'docs-live-example kbq-markdown'
     }
 })
 export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestroy {
-    @ViewChild(CdkPortal) private readonly codeTemplate: CdkPortal;
-    @ViewChild('codeSnippet', { read: CdkPortal }) private readonly codeSnippetTemplate: CdkPortal;
+    private readonly codeTemplate = viewChild.required(CdkPortal);
+    private readonly codeSnippetTemplate = viewChild.required('codeSnippet', { read: CdkPortal });
     /** The URL of the document to display. */
-    @Input()
-    set documentUrl(url: string) {
-        if (!url) {
-            return;
-        }
+    readonly documentUrl = input<string>();
 
-        this.clearLiveExamples();
-        this.getDocument(url);
-    }
-
-    @Output() readonly contentRendered = new EventEmitter<void>();
-    @Output() readonly contentRenderFailed = new EventEmitter<void>();
+    readonly contentRendered = output<void>();
+    readonly contentRenderFailed = output<void>();
 
     get nativeElement(): HTMLElement {
         return this.elementRef.nativeElement;
@@ -103,6 +93,22 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     private readonly window = inject(KBQ_WINDOW);
     private readonly documentLoader = inject(DocsDocumentLoader);
 
+    constructor() {
+        super();
+
+        // Re-fetch whenever the URL input changes (replaces a side-effecting `@Input` setter).
+        effect(() => {
+            const url = this.documentUrl();
+
+            if (!url) {
+                return;
+            }
+
+            this.clearLiveExamples();
+            this.getDocument(url);
+        });
+    }
+
     ngOnDestroy() {
         this.clearLiveExamples();
         this.documentFetchSubscription?.unsubscribe();
@@ -123,14 +129,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
      * @param rawDocument The raw document content to show.
      */
     private updateDocument(rawDocument: string) {
-        // Replace all relative fragment URLs with absolute fragment URLs. e.g. "#my-section" becomes
-        // "/components/button/api#my-section". This is necessary because otherwise these fragment
-        // links would redirect to "/#my-section".
-        rawDocument = rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
-            const absoluteUrl = `${this.window.location.pathname}#${fragmentUrl}`;
-
-            return `href="${this.domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
-        });
+        rawDocument = docsRewriteFragmentUrls(rawDocument, this.domSanitizer, this.window.location.pathname);
 
         this.documentContent.set(this.domSanitizer.bypassSecurityTrustHtml(rawDocument));
 
@@ -155,9 +154,8 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     /** Show an error that occurred when fetching a document. */
     private showError(url: string, error: HttpErrorResponse) {
         console.error(error);
-        const errorHtml = this.isRuLocale()
-            ? `Не удалось загрузить документ: ${url}. Ошибка: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Создать issue</a>`
-            : `Failed to load document: ${url}. Error: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Create issue</a>`;
+
+        const errorHtml = docsBuildDocumentErrorHtml(url, error.statusText, this.isRuLocale());
 
         this.documentContent.set(this.domSanitizer.bypassSecurityTrustHtml(errorHtml));
 
@@ -165,30 +163,30 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     }
 
     /** Instantiate a ExampleViewer for each example. */
-    private loadComponents(componentName: string, componentClass: any) {
+    private loadComponents(componentName: string, componentClass: Type<DocsLiveExampleViewerComponent>) {
         this.nativeElement.querySelectorAll(`[${componentName}]`).forEach((element: Element) => {
             const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
-            const examplePortal: ComponentPortal<any> = new ComponentPortal(componentClass, this.viewContainerRef);
+            const examplePortal = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
 
-            // todo проверить, что достается из атрибута ?
-            (exampleViewer.instance as DocsLiveExampleViewerComponent).example = element.getAttribute(componentName);
+            // The attribute value is the example's key, used by the viewer to resolve and render the example component.
+            exampleViewer.instance.example = element.getAttribute(componentName);
 
             this.portalHosts.push(portalHost);
         });
     }
 
     private initCodeBlocks() {
-        const markDownClass = 'kbq-markdown__pre';
+        const markDownClass = DOCS_MARKDOWN_PRE_CLASS;
 
         this.nativeElement.querySelectorAll(`.${markDownClass}`).forEach((element: Element) => {
             const { outerHTML, textContent } = element;
 
-            element.innerHTML = '';
+            element.replaceChildren();
 
             const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
 
-            this.codeTemplate.attach(portalHost, {
+            this.codeTemplate().attach(portalHost, {
                 $implicit: outerHTML,
                 textContent,
                 language: element.getAttribute('data-docs-code-language')
@@ -206,11 +204,11 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
         this.nativeElement.querySelectorAll(`[${selector}]`).forEach((element: Element) => {
             const { innerHTML, textContent } = element;
 
-            element.innerHTML = '';
+            element.replaceChildren();
 
             const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
 
-            this.codeSnippetTemplate.attach(portalHost, { $implicit: innerHTML, textContent });
+            this.codeSnippetTemplate().attach(portalHost, { $implicit: innerHTML, textContent });
             this.portalHosts.push(portalHost);
         });
     }

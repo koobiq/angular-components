@@ -1,11 +1,11 @@
 <div class="docs-icons-viewer__header">
     <span docsRegisterHeader class="docs-icons-viewer__header-text docs-component-name">
-        {{ isRuLocale() ? 'Иконки' : 'Icons' }}
+        {{ t('iconsTitle') }}
     </span>
 
     <kbq-form-field>
         <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [color]="themePalette.Secondary"></i>
-        <input kbqInput [formControl]="searchControl" [placeholder]="isRuLocale() ? 'Название иконки' : 'Icon name'" />
+        <input kbqInput [formControl]="searchControl" [placeholder]="t('iconNamePlaceholder')" />
         <kbq-cleaner />
     </kbq-form-field>
 </div>
@@ -20,9 +20,12 @@
                         @for (icon of filterBySize(icons, size); track icon) {
                             <div
                                 class="docs-icons-viewer__table-cell docs-icons-viewer__table-cell_{{ size }}"
+                                role="button"
                                 tabindex="0"
+                                [attr.aria-label]="icon.name"
                                 (click)="setActiveIcon(icon)"
-                                (keyup.enter)="setActiveIcon(icon)"
+                                (keydown.enter)="setActiveIcon(icon)"
+                                (keydown.space)="$event.preventDefault(); setActiveIcon(icon)"
                             >
                                 <i [kbq-icon]="icon.cssClass"></i>
                                 <span
@@ -41,7 +44,7 @@
     @if (searchControl.value && !filteredIcons.value) {
         <div class="docs-icons-viewer__table-empty-results">
             <kbq-empty-state size="big">
-                <div kbq-empty-state-title>{{ isRuLocale() ? 'Ничего не найдено' : 'Nothing found' }}</div>
+                <div kbq-empty-state-title>{{ t('nothingFound') }}</div>
             </kbq-empty-state>
         </div>
     }

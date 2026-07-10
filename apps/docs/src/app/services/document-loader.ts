@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, shareReplay } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class DocsDocumentLoader {
@@ -16,7 +16,19 @@ export class DocsDocumentLoader {
      */
     get(url: string): Observable<string> {
         if (!this.cache.has(url)) {
-            this.cache.set(url, this.httpClient.get(url, { responseType: 'text' }).pipe(shareReplay(1)));
+            this.cache.set(
+                url,
+                this.httpClient.get(url, { responseType: 'text' }).pipe(
+                    // Evict the cache entry on error so a transient failure does not stick; combined
+                    // with `shareReplay`'s default `resetOnError`, the next subscriber re-fetches.
+                    catchError((error) => {
+                        this.cache.delete(url);
+
+                        return throwError(() => error);
+                    }),
+                    shareReplay(1)
+                )
+            );
         }
 
         return this.cache.get(url)!;
