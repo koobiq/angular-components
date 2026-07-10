@@ -90,7 +90,7 @@ In short: a flag must always have a text alternative — either visible text nex
 
 ### With shadow and volume
 
-This volumetric look is produced with custom CSS on the flag — rounded corners (via the `--kbq-flag-border-radius` variable), a drop shadow, and a gradient overlay blended over the image. There is no built-in attribute for it.
+A gradient imitating folds is layered over the image; the flag is rounded and casts a shadow.
 
 <!-- example(flag-stylized) -->
 
