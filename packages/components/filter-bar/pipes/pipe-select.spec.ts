@@ -373,6 +373,33 @@ describe('KbqPipeSelectComponent', () => {
             expect(component.select().compareWith).toBe(component.compareByValue);
         });
 
+        it('should clear a previously set compareWith when a later template update omits it', () => {
+            setTemplateWithComparator();
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+
+            // A follow-up pipeTemplates update for the same pipe id that omits compareWith (e.g. new
+            // id-based values) must fall back to the default comparator, not keep forwarding the stale one.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            expect(component.select().compareWith).toBe(component.compareByValue);
+        });
+
         it('should match the selected value in the panel using the custom comparator', fakeAsync(() => {
             setTemplateWithComparator();
             // The selected value is a distinct object equal to SELECT_VALUES[1] only by `value`; the

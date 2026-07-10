@@ -611,8 +611,8 @@ describe('KbqPipeMultiSelectComponent', () => {
         const customCompare = (o1: KbqSelectValue | null, o2: KbqSelectValue | null): boolean =>
             o1?.value === o2?.value;
 
-        // Options without `id`, so the default id-based comparator can't distinguish them and the
-        // custom `value`-based comparator is what makes matching work.
+        // Options without `id`, used to force reliance on the custom `value`-based comparator (see the
+        // 'should match selected values' test below for why).
         const idlessValues: KbqSelectValue[] = [
             { name: 'Option 1', value: 'value1' },
             { name: 'Option 2', value: 'value2' },
@@ -656,15 +656,49 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(component.select().compareWith).toBe(component.compareByValue);
         });
 
+        it('should clear a previously set compareWith when a later template update omits it', () => {
+            setTemplate(SELECT_VALUES);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+
+            // A follow-up pipeTemplates update for the same pipe id that omits compareWith (e.g. new
+            // id-based values) must fall back to the default comparator, not keep forwarding the stale one.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: SELECT_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            expect(component.select().compareWith).toBe(component.compareByValue);
+        });
+
         it('should match selected values in the panel using the custom comparator', fakeAsync(() => {
             setTemplate(idlessValues);
-            // The selected value is a distinct object equal to the second option only by `value`; the
-            // options carry no `id`. `getCorrespondOption` uses `.find`, so exactly one option is
-            // selected either way — under the default id comparator every id-less option compares equal
-            // and the first ('Option 1') wins, so asserting the selected option is 'Option 2' is what
-            // proves the custom `value` comparator is applied.
+            // The two selected values are distinct objects equal to the second and third options only by
+            // `value`. Each selected item is resolved independently via `getCorrespondOption`/`.find`, so
+            // selecting more than one id-less item catches misattribution between items — under the
+            // default id comparator every id-less option compares equal and only the first ('Option 1')
+            // would ever be picked, so asserting both 'Option 2' and 'Option 3' are highlighted is what
+            // proves the custom `value` comparator is applied per item.
             fixture.componentInstance.activeFilter = createFilter([
-                createPipe({ name: 'test', value: [{ name: 'Option 2', value: 'value2' }] })
+                createPipe({
+                    name: 'test',
+                    value: [
+                        { name: 'Option 2', value: 'value2' },
+                        { name: 'Option 3', value: 'value3' }
+                    ]
+                })
             ]);
             fixture.detectChanges();
 
@@ -676,7 +710,7 @@ describe('KbqPipeMultiSelectComponent', () => {
                 el.textContent?.trim()
             );
 
-            expect(selectedText).toEqual(['Option 2']);
+            expect(selectedText).toEqual(['Option 2', 'Option 3']);
         }));
     });
 

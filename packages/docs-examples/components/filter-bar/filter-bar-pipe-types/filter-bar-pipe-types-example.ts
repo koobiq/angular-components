@@ -89,14 +89,17 @@ export class FilterBarPipeTypesExample {
             name: 'MultiSelect',
             type: KbqPipeTypes.MultiSelect,
             values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' },
-                { name: 'Option 4', id: '4' },
-                { name: 'Option 5', id: '5' },
-                { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' }
+                { name: 'Option 1', value: 'value1' },
+                { name: 'Option 2', value: 'value2' },
+                { name: 'Option 3', value: 'value3' },
+                { name: 'Option 4', value: 'value4' },
+                { name: 'Option 5', value: 'value5' },
+                { name: 'Option 6', value: 'value6' },
+                { name: 'Option 7', value: 'value7' }
             ],
+            // Same rationale as the Select template below: options are identified by `value` rather than
+            // a synthetic `id`, so a custom `compareWith` is needed instead of the default id-based one.
+            compareWith: (o1, o2) => !!o1 && !!o2 && o1.value === o2.value,
             cleanable: false,
             removable: false,
             disabled: false
@@ -113,10 +116,11 @@ export class FilterBarPipeTypesExample {
                 { name: 'Option 6', value: 'value6' },
                 { name: 'Option 7', value: 'value7' }
             ],
-            // These options are identified by their business `value` rather than a synthetic `id`, so a
-            // selected value restored from a saved filter is a distinct object. Override `compareWith`
-            // to match by `value` instead of the default id-based comparator.
-            compareWith: (o1, o2) => o1?.value === o2?.value,
+            // Options are identified by their business `value` rather than a synthetic `id`. Override
+            // `compareWith` whenever a selected value can be a distinct object equal only by that key
+            // (e.g. one restored from a saved filter) instead of the same reference. A custom comparator
+            // is responsible for its own null handling — unlike the default, which never matches null.
+            compareWith: (o1, o2) => !!o1 && !!o2 && o1.value === o2.value,
             cleanable: false,
             removable: false,
             disabled: false
