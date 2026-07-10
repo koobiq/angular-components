@@ -41,6 +41,8 @@ Clicking on a pseudo-link in the list of parameters will add a new value to the 
 
 <!-- example(filter-bar-pipe-types) -->
 
+For the `select` and `multiselect` types, the pipe template accepts an optional `compareWith` — a comparator forwarded to the underlying select that controls how the selected value is matched against the option list. Override it when options are compared by a business key, or when the selected value is a distinct object (e.g. restored from a saved filter) rather than the same reference. When omitted, options are matched by their `id`.
+
 ### Search in pipes
 
 If the filter has many values, it is useful to enable search in the drop-down menu.

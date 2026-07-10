@@ -9,7 +9,8 @@ import {
     KbqFilterBarModule,
     KbqPipe,
     KbqPipeTemplate,
-    KbqPipeTypes
+    KbqPipeTypes,
+    KbqSelectValue
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiSelectComponent } from './pipe-multi-select';
@@ -604,6 +605,74 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             expect(component.compareByValue(null, null)).toBe(false);
         });
+    });
+
+    describe('compareWith forwarding', () => {
+        const customCompare = (o1: KbqSelectValue | null, o2: KbqSelectValue | null): boolean =>
+            o1?.value === o2?.value;
+
+        // Options without `id`, so the default id-based comparator can't distinguish them and the
+        // custom `value`-based comparator is what makes matching work.
+        const idlessValues: KbqSelectValue[] = [
+            { name: 'Option 1', value: 'value1' },
+            { name: 'Option 2', value: 'value2' },
+            { name: 'Option 3', value: 'value3' }
+        ];
+
+        const setTemplate = (values: KbqSelectValue[]) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values,
+                    compareWith: customCompare,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should forward a custom compareWith from the pipe template to the inner select', () => {
+            setTemplate(SELECT_VALUES);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+        });
+
+        it('should use the default id comparator when the template omits compareWith', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            expect(component.select().compareWith).toBe(component.compareByValue);
+        });
+
+        it('should match selected values in the panel using the custom comparator', fakeAsync(() => {
+            setTemplate(idlessValues);
+            // A distinct object equal to the second option only by `value`.
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [{ name: 'Option 2', value: 'value2' }] })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const selectedOptions = document.querySelectorAll('.kbq-option.kbq-selected');
+
+            expect(selectedOptions.length).toBe(1);
+            expect(selectedOptions[0].textContent).toContain('Option 2');
+        }));
     });
 
     describe('selectAllHandler', () => {

@@ -22,7 +22,8 @@ import {
     KbqFilterBarConfiguration,
     KbqPipeData,
     KbqPipeTemplate,
-    KbqPipeType
+    KbqPipeType,
+    KbqSelectValue
 } from '../filter-bar.types';
 
 /** Injection Token for providing configuration of filter-bar */
@@ -77,6 +78,12 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected values;
     /** TemplateRef for selecting an option */
     protected valueTemplate?: TemplateRef<any> | string;
+    /**
+     * Optional equality comparator forwarded from the pipe template to the underlying `kbq-select`.
+     * Only consumed by the select / multi-select pipe templates; when unset they fall back to their
+     * own id-based `compareByValue`.
+     */
+    protected optionCompareWith?: (o1: KbqSelectValue | null, o2: KbqSelectValue | null) => boolean;
 
     /**
      * Whether the current platform is a Mac.
@@ -166,6 +173,10 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         if (template?.values) {
             this.values = template.values;
             this.valueTemplate = template.valueTemplate;
+        }
+
+        if (template?.compareWith) {
+            this.optionCompareWith = template.compareWith;
         }
     };
 

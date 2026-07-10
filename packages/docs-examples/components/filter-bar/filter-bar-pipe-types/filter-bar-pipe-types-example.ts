@@ -113,6 +113,10 @@ export class FilterBarPipeTypesExample {
                 { name: 'Option 6', id: '6' },
                 { name: 'Option 7', id: '7' }
             ],
+            // `compareWith` controls how the selected value is matched against the option list.
+            // Override it to compare by a business key (here `id`) — useful when the selected value
+            // is a distinct object (e.g. restored from a saved filter) rather than the same reference.
+            compareWith: (o1, o2) => o1?.id === o2?.id,
 
             cleanable: false,
             removable: false,

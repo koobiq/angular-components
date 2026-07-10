@@ -332,6 +332,68 @@ describe('KbqPipeSelectComponent', () => {
         });
     });
 
+    describe('compareWith forwarding', () => {
+        const customCompare = (o1: KbqSelectValue | null, o2: KbqSelectValue | null): boolean =>
+            o1?.value === o2?.value;
+
+        const setTemplateWithComparator = () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    compareWith: customCompare,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should forward a custom compareWith from the pipe template to the inner select', () => {
+            setTemplateWithComparator();
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+        });
+
+        it('should use the default id comparator when the template omits compareWith', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            expect(component.select().compareWith).toBe(component.compareByValue);
+        });
+
+        it('should match the selected value in the panel using the custom comparator', fakeAsync(() => {
+            setTemplateWithComparator();
+            // A distinct object equal to SELECT_VALUES[1] only by `value` (the options carry no `id`).
+            // With the default id-based comparator every id-less option would match; the custom
+            // comparator must single out exactly one option.
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: { name: 'Option 2', value: 'value2' } })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const selectedOptions = document.querySelectorAll('.kbq-option.kbq-selected');
+
+            expect(selectedOptions.length).toBe(1);
+            expect(selectedOptions[0].textContent).toContain('Option 2');
+        }));
+    });
+
     describe('open', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);

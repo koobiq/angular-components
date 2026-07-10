@@ -1,7 +1,7 @@
 <kbq-select
     #select="kbqSelect"
     multiple
-    [compareWith]="compareByValue"
+    [compareWith]="optionCompareWith ?? compareByValue"
     [disabled]="data.disabled"
     [kbq-title]="pipeTooltip"
     [class]="{ 'kbq-active': select.panelOpen }"
