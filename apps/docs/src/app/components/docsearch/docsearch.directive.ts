@@ -4,13 +4,16 @@ import docsearch, { DocSearchInstance, DocSearchProps } from '@docsearch/js';
 import { KBQ_WINDOW, ThemeService } from '@koobiq/components/core';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { docsIsRuLocale, DocsLocaleState } from '../../services/locale';
+import { DocsLocale } from '../../constants/locale';
+import { DocsLocaleState } from '../../services/locale';
 
 const SELECTOR = 'docs-docsearch';
 const HOST = 'koobiq.io';
 const PROTOCOL = 'https:';
 
-type AnyFunction = (...args: unknown[]) => unknown;
+// `any` here is intentional: `unknown` fails the `extends AnyFunction` check below for
+// concrete function types (contravariant parameter checking rejects `unknown` params).
+type AnyFunction = (...args: any[]) => any;
 
 /**
  * Forces every non-function translation leaf to be provided so a newly added key
@@ -111,6 +114,11 @@ const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> 
     }
 };
 
+const TRANSLATIONS: Record<DocsLocale, DocSearchProps['translations']> = {
+    [DocsLocale.Ru]: TRANSLATION_RU,
+    [DocsLocale.En]: {}
+};
+
 /** Algolia DocSearch component implementation */
 @Directive({
     selector: SELECTOR,
@@ -145,9 +153,9 @@ export class DocsDocsearchDirective extends DocsLocaleState {
                     (theme) =>
                         (theme?.className.replace('kbq-', '') === 'dark'
                             ? 'dark'
-                            : 'light') satisfies DocSearchProps['theme'],
-                    distinctUntilChanged()
-                )
+                            : 'light') satisfies DocSearchProps['theme']
+                ),
+                distinctUntilChanged()
             ),
             this.docsLocaleService.changes.pipe(distinctUntilChanged())
         ])
@@ -166,7 +174,7 @@ export class DocsDocsearchDirective extends DocsLocaleState {
                         { name: 'koobiq', searchParameters: { hitsPerPage: 40, facetFilters: [`lang:${locale}`] } }
                     ],
                     transformItems: this.transformItems,
-                    translations: docsIsRuLocale(locale) ? TRANSLATION_RU : {},
+                    translations: TRANSLATIONS[locale],
                     askAi: {
                         assistantId: 'f6ddad78-2e0d-4f11-8cf0-d7e34c354d0e',
                         agentStudio: true
