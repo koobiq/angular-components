@@ -10,7 +10,7 @@ const SELECTOR = 'docs-docsearch';
 const HOST = 'koobiq.io';
 const PROTOCOL = 'https:';
 
-type AnyFunction = (...args: any[]) => any;
+type AnyFunction = (...args: unknown[]) => unknown;
 
 /**
  * Forces every non-function translation leaf to be provided so a newly added key
@@ -140,7 +140,15 @@ export class DocsDocsearchDirective extends DocsLocaleState {
 
     private init(): void {
         combineLatest([
-            this.theme.current.pipe(map((t) => t?.className.replace('kbq-', ''))).pipe(distinctUntilChanged()),
+            this.theme.current.pipe(
+                map(
+                    (theme) =>
+                        (theme?.className.replace('kbq-', '') === 'dark'
+                            ? 'dark'
+                            : 'light') satisfies DocSearchProps['theme'],
+                    distinctUntilChanged()
+                )
+            ),
             this.docsLocaleService.changes.pipe(distinctUntilChanged())
         ])
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -153,7 +161,7 @@ export class DocsDocsearchDirective extends DocsLocaleState {
                     appId: '7N2W9AKEM6',
                     apiKey: '0f0df042e7b349df5cb381e72f268b4d',
                     maxResultsPerGroup: 20,
-                    theme: !theme || theme === 'light' ? 'light' : 'dark',
+                    theme,
                     indices: [
                         { name: 'koobiq', searchParameters: { hitsPerPage: 40, facetFilters: [`lang:${locale}`] } }
                     ],
