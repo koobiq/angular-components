@@ -183,6 +183,12 @@ export interface KbqPipeData<V> extends KbqPipe {
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     values?: unknown[];
     valueTemplate?: TemplateRef<any> | string;
+    /**
+     * Custom equality comparator forwarded to the underlying `kbq-select` of the `select` /
+     * `multiselect` pipes. When omitted, the pipe's default id-based comparator (`compareByValue`)
+     * is used. Ignored by other pipe types.
+     */
+    compareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
 }
 
 export interface KbqSaveFilterError {

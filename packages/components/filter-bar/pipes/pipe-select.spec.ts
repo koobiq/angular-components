@@ -332,6 +332,134 @@ describe('KbqPipeSelectComponent', () => {
         });
     });
 
+    describe('compareWith forwarding', () => {
+        const customCompare = (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined): boolean =>
+            o1?.value === o2?.value;
+
+        const setTemplateWithComparator = () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    compareWith: customCompare,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should forward a custom compareWith from the pipe template to the inner select', () => {
+            setTemplateWithComparator();
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+        });
+
+        it('should use the default id comparator when the template omits compareWith', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            expect(component.select().compareWith).toBe(component.compareByValue);
+        });
+
+        it('should clear a previously set compareWith when a later template update omits it', () => {
+            setTemplateWithComparator();
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+
+            // A follow-up pipeTemplates update for the same pipe id that omits compareWith (e.g. new
+            // id-based values) must fall back to the default comparator, not keep forwarding the stale one.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            expect(component.select().compareWith).toBe(component.compareByValue);
+        });
+
+        it('should forward compareWith from a later template update even when it omits values', () => {
+            // First render with an id-based template (no compareWith) → default comparator.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(getPipeComponent().compareByValue);
+
+            // A follow-up update for the same pipe id that supplies `compareWith` without re-sending
+            // `values` must still forward the comparator — it is synced independently of `values`.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    compareWith: customCompare,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+        });
+
+        it('should match the selected value in the panel using the custom comparator', fakeAsync(() => {
+            setTemplateWithComparator();
+            // The selected value is a distinct object equal to SELECT_VALUES[1] only by `value`; the
+            // options carry no `id`. `getCorrespondOption` uses `.find`, so exactly one option is
+            // selected either way — under the default id comparator every id-less option compares equal
+            // and the first ('Option 1') wins, so asserting the selected option is 'Option 2' is what
+            // proves the custom `value` comparator is applied.
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: { name: 'Option 2', value: 'value2' } })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const selectedText = Array.from(document.querySelectorAll('.kbq-option.kbq-selected')).map((el) =>
+                el.textContent?.trim()
+            );
+
+            expect(selectedText).toEqual(['Option 2']);
+        }));
+    });
+
     describe('open', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
