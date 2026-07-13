@@ -94,6 +94,9 @@ const DEV_DATA_OBJECT = {
         <filter-bar-search-example />
         <br />
         <br />
+        <filter-bar-search-placement-example />
+        <br />
+        <br />
         <filter-bar-saved-filters-example />
         <br />
         <br />

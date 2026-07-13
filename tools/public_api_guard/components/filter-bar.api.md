@@ -303,9 +303,10 @@ export class KbqFilterBar implements KbqFilterBarHost {
     resetFilterChangedState(): void;
     restoreFilterState(filter?: KbqFilter): void;
     saveFilterState(filter?: KbqFilter): void;
+    readonly searchPlacement: _angular_core.InputSignal<"start" | "end">;
     readonly selectedAllEqualsSelectedNothing: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; "isSignal": true; }; "searchPlacement": { "alias": "searchPlacement"; "required": false; "isSignal": true; }; "filter": { "alias": "filter"; "required": false; "isSignal": true; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; "isSignal": true; }; }, { "filter": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClearPipe": "onClearPipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-search-expandable", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }

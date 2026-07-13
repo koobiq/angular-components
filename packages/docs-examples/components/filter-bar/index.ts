@@ -12,6 +12,7 @@ import { FilterBarRemovableExample } from './filter-bar-removable/filter-bar-rem
 import { FilterBarRequiredExample } from './filter-bar-required/filter-bar-required-example';
 import { FilterBarSavedFiltersExample } from './filter-bar-saved-filters/filter-bar-saved-filters-example';
 import { FilterBarSearchInPipesExample } from './filter-bar-search-in-pipes/filter-bar-search-in-pipes-example';
+import { FilterBarSearchPlacementExample } from './filter-bar-search-placement/filter-bar-search-placement-example';
 import { FilterBarSearchExample } from './filter-bar-search/filter-bar-search-example';
 import { FilterBarUniqPipesExample } from './filter-bar-uniq-pipes/filter-bar-uniq-pipes-example';
 
@@ -30,6 +31,7 @@ export {
     FilterBarSavedFiltersExample,
     FilterBarSearchExample,
     FilterBarSearchInPipesExample,
+    FilterBarSearchPlacementExample,
     FilterBarUniqPipesExample
 };
 
@@ -40,6 +42,7 @@ const EXAMPLES = [
     FilterBarCleanableExample,
     FilterBarRequiredExample,
     FilterBarSearchExample,
+    FilterBarSearchPlacementExample,
     FilterBarCompleteFunctionsExample,
     FilterBarSavedFiltersExample,
     FilterBarCustomPipeExample,

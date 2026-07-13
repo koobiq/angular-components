@@ -67,6 +67,10 @@ Text search allows you to search for information based on any data, even if ther
 
 <!-- example(filter-bar-search) -->
 
+By default the search sits on the trailing side (right in LTR). Set `searchPlacement="start"` to move it to the leading side (left in LTR).
+
+<!-- example(filter-bar-search-placement) -->
+
 ### Saving filters
 
 The user can quickly get search results by selecting a saved filter, without re-configuring the parameters. It is also possible to create a new set of filters and use them in the future.

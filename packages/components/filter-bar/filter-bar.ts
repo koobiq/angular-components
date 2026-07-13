@@ -44,9 +44,11 @@ import { KbqFilters } from './filters';
             <ng-content select="kbq-filter-reset" />
         </div>
 
-        <div class="kbq-filter-bar__right">
+        <div class="kbq-filter-bar__search">
             <ng-content select="kbq-search-expandable" />
+        </div>
 
+        <div class="kbq-filter-bar__right">
             <ng-content select="kbq-filter-refresher, [kbq-filter-refresher]" />
         </div>
     `,
@@ -55,7 +57,9 @@ import { KbqFilters } from './filters';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-filter-bar'
+        class: 'kbq-filter-bar',
+        '[class.kbq-filter-bar_search-start]': 'searchPlacement() === "start"',
+        '[class.kbq-filter-bar_search-end]': 'searchPlacement() === "end"'
     }
 })
 export class KbqFilterBar implements KbqFilterBarHost {
@@ -79,6 +83,13 @@ export class KbqFilterBar implements KbqFilterBarHost {
      * Default is true
      * */
     readonly selectedAllEqualsSelectedNothing = input<boolean, unknown>(true, { transform: booleanAttribute });
+
+    /**
+     * Placement of the projected `kbq-search-expandable` relative to the bar.
+     * `'end'` (default) keeps it trailing (right in LTR) — the previous behavior;
+     * `'start'` moves it leading (left in LTR). RTL-aware.
+     */
+    readonly searchPlacement = input<'start' | 'end'>('end');
 
     /**
      * Filter that is currently selected. A two-way-bindable `model()`: derived state (`isSaved`/`isChanged`/…)

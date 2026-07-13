@@ -3,7 +3,6 @@
 .kbq-filter-bar {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
 
     width: 100%;
 
@@ -23,11 +22,33 @@
         }
     }
 
+    .kbq-filter-bar__search,
     .kbq-filter-bar__right {
         display: flex;
         flex-direction: row;
+    }
 
-        margin-inline-start: var(--kbq-size-3xl);
+    // Default — search trailing. The auto margin pushes the search + refresher group to the far
+    // end, reproducing the previous `justify-content: space-between` + `margin-inline-start: 3xl`.
+    &.kbq-filter-bar_search-end .kbq-filter-bar__search {
+        margin-inline-start: auto;
+    }
+
+    // Search leading; the refresher stays pinned to the far end.
+    &.kbq-filter-bar_search-start {
+        .kbq-filter-bar__search {
+            order: -1;
+        }
+
+        // Trailing gap only when the search is actually projected — avoids a phantom gap
+        // when `searchPlacement="start"` is set without a `kbq-search-expandable`.
+        .kbq-filter-bar__search:has(kbq-search-expandable) {
+            margin-inline-end: var(--kbq-size-3xl);
+        }
+
+        .kbq-filter-bar__right {
+            margin-inline-start: auto;
+        }
     }
 }
 

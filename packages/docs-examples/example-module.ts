@@ -2181,6 +2181,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-search-in-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-search-placement": {
+    "packagePath": "components/filter-bar/filter-bar-search-placement",
+    "title": "filter-bar-search-placement",
+    "componentName": "FilterBarSearchPlacementExample",
+    "files": [
+      "filter-bar-search-placement-example.ts"
+    ],
+    "selector": "filter-bar-search-placement-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-search-placement-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-search": {
     "packagePath": "components/filter-bar/filter-bar-search",
     "title": "filter-bar-search",
@@ -6967,6 +6979,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-saved-filters':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search-in-pipes':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-search-placement':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search':
 return import('@koobiq/docs-examples/components/filter-bar');
