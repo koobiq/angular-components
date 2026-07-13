@@ -188,7 +188,7 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * `multiselect` pipes. When omitted, the pipe's default id-based comparator (`compareByValue`)
      * is used. Ignored by other pipe types.
      */
-    compareWith?: (o1: KbqSelectValue | null, o2: KbqSelectValue | null) => boolean;
+    compareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
 }
 
 export interface KbqSaveFilterError {

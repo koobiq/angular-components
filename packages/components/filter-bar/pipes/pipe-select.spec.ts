@@ -333,7 +333,7 @@ describe('KbqPipeSelectComponent', () => {
     });
 
     describe('compareWith forwarding', () => {
-        const customCompare = (o1: KbqSelectValue | null, o2: KbqSelectValue | null): boolean =>
+        const customCompare = (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined): boolean =>
             o1?.value === o2?.value;
 
         const setTemplateWithComparator = () => {
@@ -398,6 +398,42 @@ describe('KbqPipeSelectComponent', () => {
             const component = getPipeComponent();
 
             expect(component.select().compareWith).toBe(component.compareByValue);
+        });
+
+        it('should forward compareWith from a later template update even when it omits values', () => {
+            // First render with an id-based template (no compareWith) → default comparator.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(getPipeComponent().compareByValue);
+
+            // A follow-up update for the same pipe id that supplies `compareWith` without re-sending
+            // `values` must still forward the comparator — it is synced independently of `values`.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    compareWith: customCompare,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            expect(getPipeComponent().select().compareWith).toBe(customCompare);
         });
 
         it('should match the selected value in the panel using the custom comparator', fakeAsync(() => {

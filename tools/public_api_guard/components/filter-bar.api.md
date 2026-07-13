@@ -182,7 +182,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     onClear(): void;
     onRemove(): void;
     abstract open(): void;
-    protected optionCompareWith?: (o1: KbqSelectValue | null, o2: KbqSelectValue | null) => boolean;
+    protected optionCompareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
     protected restoreTriggerFocus(): void;
     get showRemoveButton(): boolean;
     readonly stateChanges: Subject<void>;
@@ -867,7 +867,7 @@ export class KbqPipeState<T> {
 
 // @public (undocumented)
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
-    compareWith?: (o1: KbqSelectValue | null, o2: KbqSelectValue | null) => boolean;
+    compareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
     // (undocumented)
     values?: unknown[];
     // (undocumented)
