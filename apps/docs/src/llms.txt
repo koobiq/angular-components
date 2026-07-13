@@ -177,7 +177,6 @@
 
 ### highlight
 
-
 ### icon
 
 - [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.0.0/packages/components/icon/icon.en.md)
