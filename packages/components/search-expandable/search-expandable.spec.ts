@@ -406,6 +406,134 @@ describe('KbqSearchExpandable', () => {
 
             expect(document.activeElement).not.toBe(inputEl);
         }));
+
+        it('should emit isOpenedChange when auto-opening from a model value', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.detectChanges();
+
+            const component = local.debugElement.query(By.directive(KbqSearchExpandable))
+                .componentInstance as KbqSearchExpandable;
+            const spy = jest.fn();
+
+            component.isOpenedChange.subscribe(spy);
+
+            local.componentInstance.searchControl.setValue('seed');
+            tick();
+            local.detectChanges();
+
+            expect(spy).toHaveBeenCalledWith(true);
+        }));
+
+        it('should not auto-open when the control is disabled', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+            const component = debug.componentInstance as KbqSearchExpandable;
+
+            local.componentInstance.searchControl.disable();
+            local.componentInstance.searchControl.setValue('seed');
+            tick();
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(false);
+            expect((debug.nativeElement as HTMLElement).querySelectorAll('.kbq-search-expandable__search').length).toBe(
+                0
+            );
+        }));
+
+        it('should not leave suppressInputFocus stuck after a close races the auto-open', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+            const component = debug.componentInstance as KbqSearchExpandable;
+
+            // Auto-open (which sets suppressInputFocus) immediately followed by a close, before
+            // change detection ever renders the transient opened state.
+            local.componentInstance.searchControl.setValue('seed');
+            component.toggle();
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(false);
+
+            // A later, genuine user-initiated open must still focus the input as usual.
+            debug.query(By.css('.kbq-search-expandable__button')).nativeElement.click();
+            local.detectChanges();
+
+            const inputEl = debug.query(By.css('input')).nativeElement;
+
+            expect(document.activeElement).toBe(inputEl);
+
+            flush();
+        }));
+
+        it('should move focus into the input when the toggle button was focused at auto-open time', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+            const component = debug.componentInstance as KbqSearchExpandable;
+
+            // Simulate focus already being inside the component (e.g. on the collapsed toggle
+            // button) at the moment an external value pushes an auto-open.
+            (component as unknown as { lastFocusOrigin: string }).lastFocusOrigin = 'keyboard';
+
+            local.componentInstance.searchControl.setValue('seed');
+            tick();
+            local.detectChanges();
+
+            const inputEl = debug.query(By.css('input')).nativeElement;
+
+            expect(document.activeElement).toBe(inputEl);
+
+            flush();
+        }));
+
+        it('should not steal focus when nothing was focused inside the component at auto-open time', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            local.componentInstance.searchControl.setValue('seed');
+            tick();
+            local.detectChanges();
+
+            const inputEl = debug.query(By.css('input')).nativeElement;
+
+            expect(document.activeElement).not.toBe(inputEl);
+
+            flush();
+        }));
+
+        it('should force-emit the reset value on close even mid-debounce', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+            const component = debug.componentInstance as KbqSearchExpandable;
+
+            local.componentInstance.searchControl.setValue('alpha');
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(true);
+
+            // Close well within the 200ms debounce window — the reset must reach the control
+            // synchronously, not depend on the (now-superseded) debounced 'alpha' emission.
+            component.toggle();
+
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+
+            tick(300);
+            local.detectChanges();
+        }));
     });
 
     describe('escape key', () => {

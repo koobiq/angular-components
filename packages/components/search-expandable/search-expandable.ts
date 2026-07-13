@@ -82,7 +82,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** Current value in input. */
     value = new BehaviorSubject(defaultValue);
 
-    protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
+    protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null = null;
 
     /** Suppress the automatic input focus once — set when the component auto-opens from a model value. */
     private suppressInputFocus = false;
@@ -261,11 +261,12 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     writeValue(value: string): void {
         this.value.next(value || defaultValue);
 
-        // Expand automatically when the model already holds a value, without stealing focus.
-        if (value && !this.isOpened) {
-            this.suppressInputFocus = true;
-            this.isOpened = true;
-            this.changeDetectorRef.markForCheck();
+        // Expand automatically when the model already holds a value, without stealing focus —
+        // unless focus is already inside the component (e.g. on the collapsed toggle button
+        // that's about to be removed from the DOM), in which case let it move to the input.
+        if (value && !this.isOpened && !this.disabled) {
+            this.suppressInputFocus = this.lastFocusOrigin === null;
+            this.setOpened(true);
         }
     }
 
@@ -277,22 +278,31 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     toggle(): void {
         if (this.disabled) return;
 
-        this.isOpened = !this.isOpened;
-
-        if (!this.isOpened) {
-            this.value.next(defaultValue);
-
-            if (this.isEmitValueByEnterEnabled()) {
-                this.emitValue(defaultValue, true);
-            }
-        }
-
         this.tooltip()?.hide();
+
+        this.setOpened(!this.isOpened);
+    }
+
+    private setOpened(open: boolean): void {
+        if (this.disabled || this.isOpened === open) return;
+
+        this.isOpened = open;
+
+        if (!open) {
+            // Never let a stale suppress-flag survive a close.
+            this.suppressInputFocus = false;
+            this.value.next(defaultValue);
+            // Force the emit — closing must always synchronize the bound control to the reset
+            // value, rather than relying on the debounce to eventually settle (it can be raced
+            // by a value pushed just before close, silently leaving the control at a stale value).
+            this.emitValue(defaultValue, true);
+        }
 
         this.isOpenedChange.emit(this.isOpened);
 
-        // Ensure the OnPush view re-renders when toggle() is invoked by an external caller
-        // (e.g. a parent-owned button), whose click marks the parent — not this component — dirty.
+        // Ensure the OnPush view re-renders for callers that mutate isOpened from outside this
+        // component's own template (e.g. a parent-owned button), whose click marks the parent —
+        // not this component — dirty.
         this.changeDetectorRef.markForCheck();
     }
 

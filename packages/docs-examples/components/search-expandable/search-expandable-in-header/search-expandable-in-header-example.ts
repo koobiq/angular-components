@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 
 /**
@@ -10,8 +9,7 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     selector: 'search-expandable-in-header-example',
     imports: [
         KbqSearchExpandableModule,
-        FormsModule,
-        KbqButtonModule
+        FormsModule
     ],
     template: `
         <div class="example-search-expandable-in-header-example__panel">
