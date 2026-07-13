@@ -84,6 +84,9 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
 
+    /** Suppress the automatic input focus once — set when the component auto-opens from a model value. */
+    private suppressInputFocus = false;
+
     /** state of component. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
@@ -218,7 +221,20 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
                 map((queryList) => queryList.first),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe((input: KbqInput) => input.focus());
+            .subscribe((input: KbqInput) => {
+                if (this.suppressInputFocus) {
+                    this.suppressInputFocus = false;
+                } else {
+                    input.focus();
+                }
+            });
+
+        // When the component starts opened (e.g. a seeded formControl value), the input is present on
+        // first render and `input.changes` never fires to consume the flag — clear it so later
+        // user-initiated opens focus the input as usual.
+        if (this.input.length) {
+            this.suppressInputFocus = false;
+        }
     }
 
     ngOnDestroy() {
@@ -244,6 +260,13 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** Implemented as part of ControlValueAccessor. */
     writeValue(value: string): void {
         this.value.next(value || defaultValue);
+
+        // Expand automatically when the model already holds a value, without stealing focus.
+        if (value && !this.isOpened) {
+            this.suppressInputFocus = true;
+            this.isOpened = true;
+            this.changeDetectorRef.markForCheck();
+        }
     }
 
     /** Implemented as part of ControlValueAccessor. */
@@ -267,6 +290,10 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         this.tooltip()?.hide();
 
         this.isOpenedChange.emit(this.isOpened);
+
+        // Ensure the OnPush view re-renders when toggle() is invoked by an external caller
+        // (e.g. a parent-owned button), whose click marks the parent — not this component — dirty.
+        this.changeDetectorRef.markForCheck();
     }
 
     private updateLocaleParams = () => {

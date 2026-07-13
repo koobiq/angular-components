@@ -19,6 +19,7 @@ describe('KbqSearchExpandable', () => {
                 NoopAnimationsModule,
                 KbqSearchExpandableModule,
                 TestSearchExpandable,
+                TestSearchExpandableExternalToggle,
                 TestSearchExpandableWithFormControl,
                 TestSearchExpandableWithPlaceholder,
                 TestSearchExpandableWithTooltip
@@ -119,6 +120,29 @@ describe('KbqSearchExpandable', () => {
             fixture.detectChanges();
 
             expect(spy).toHaveBeenCalledWith(false);
+        });
+
+        it('should update the view when toggled from an external control', () => {
+            const local = TestBed.createComponent(TestSearchExpandableExternalToggle);
+
+            local.detectChanges();
+
+            const host = local.debugElement.query(By.directive(KbqSearchExpandable)).nativeElement as HTMLElement;
+            const externalButton = local.debugElement.query(By.css('button.external-toggle')).nativeElement;
+
+            expect(host.classList.contains('kbq-search-expandable_opened')).toBe(false);
+
+            externalButton.click();
+            local.detectChanges();
+
+            expect(host.classList.contains('kbq-search-expandable_opened')).toBe(true);
+            expect(host.querySelectorAll('.kbq-search-expandable__search').length).toBe(1);
+
+            externalButton.click();
+            local.detectChanges();
+
+            expect(host.classList.contains('kbq-search-expandable_opened')).toBe(false);
+            expect(host.querySelectorAll('.kbq-search-expandable__button').length).toBe(1);
         });
     });
 
@@ -303,6 +327,87 @@ describe('KbqSearchExpandable', () => {
         }));
     });
 
+    describe('auto-open when model has value', () => {
+        it('should open when ngModel has an initial value', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandable);
+
+            local.componentInstance.search = 'seed';
+            local.detectChanges();
+            flush();
+            local.detectChanges();
+
+            const host = local.debugElement.query(By.directive(KbqSearchExpandable)).nativeElement as HTMLElement;
+
+            expect(host.classList.contains('kbq-search-expandable_opened')).toBe(true);
+            expect(host.querySelectorAll('.kbq-search-expandable__search').length).toBe(1);
+            expect(host.querySelectorAll('.kbq-search-expandable__button').length).toBe(0);
+        }));
+
+        it('should open when formControl has an initial value', () => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.componentInstance.searchControl.setValue('seed');
+            local.detectChanges();
+            local.detectChanges();
+
+            const host = local.debugElement.query(By.directive(KbqSearchExpandable)).nativeElement as HTMLElement;
+
+            expect(host.classList.contains('kbq-search-expandable_opened')).toBe(true);
+            expect(host.querySelectorAll('.kbq-search-expandable__search').length).toBe(1);
+        });
+
+        it('should open when a value is set programmatically while collapsed', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+            const component = debug.componentInstance as KbqSearchExpandable;
+
+            expect(component.isOpened).toBe(false);
+
+            local.componentInstance.searchControl.setValue('later');
+            tick();
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(true);
+            expect((debug.nativeElement as HTMLElement).querySelectorAll('.kbq-search-expandable__search').length).toBe(
+                1
+            );
+        }));
+
+        it('should not collapse when the value is cleared', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.componentInstance.searchControl.setValue('seed');
+            local.detectChanges();
+
+            const component = local.debugElement.query(By.directive(KbqSearchExpandable))
+                .componentInstance as KbqSearchExpandable;
+
+            expect(component.isOpened).toBe(true);
+
+            local.componentInstance.searchControl.setValue('');
+            tick();
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(true);
+        }));
+
+        it('should not focus the input when opened from an initial value', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandable);
+
+            local.componentInstance.search = 'seed';
+            local.detectChanges();
+            flush();
+            local.detectChanges();
+
+            const inputEl = local.debugElement.query(By.css('input')).nativeElement;
+
+            expect(document.activeElement).not.toBe(inputEl);
+        }));
+    });
+
     describe('escape key', () => {
         it('should close on escape keyup', () => {
             fixture.componentInstance.openedState = true;
@@ -331,6 +436,18 @@ describe('KbqSearchExpandable', () => {
 class TestSearchExpandable {
     openedState: boolean = false;
     disabled: boolean = false;
+    search: string;
+}
+
+@Component({
+    selector: 'test-app-search-expandable-external-toggle',
+    imports: [KbqSearchExpandableModule, FormsModule],
+    template: `
+        <kbq-search-expandable #ref [(ngModel)]="search" />
+        <button type="button" class="external-toggle" (click)="ref.toggle()">Toggle</button>
+    `
+})
+class TestSearchExpandableExternalToggle {
     search: string;
 }
 

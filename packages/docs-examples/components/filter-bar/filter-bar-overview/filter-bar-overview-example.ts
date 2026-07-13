@@ -36,6 +36,8 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
                 (onRemoveFilter)="onDeleteFilter($event)"
             />
 
+            <kbq-search-expandable [formControl]="searchControl" />
+
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
@@ -45,8 +47,6 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
             @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
-
-            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
