@@ -8,6 +8,7 @@
 
 .example-tab-nav-bar {
     width: 240px;
+    min-height: 0;
 }
 
 .example-tab-link {
@@ -34,4 +35,18 @@
     flex: 1;
     padding: var(--kbq-size-m);
     overflow: auto;
+}
+
+.example-tab-nav-bar__wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.example-tab-add-button-container {
+    padding: var(--kbq-size-s) var(--kbq-size-s) 0;
+}
+
+.example-tab-add-button-container button {
+    width: 100%;
 }

@@ -1,7 +1,6 @@
 :host {
     display: flex;
     align-items: center;
-    gap: var(--kbq-size-l);
     --tab-nav-selected: var(--kbq-tabs-tab-item-filled-on-background-states-selected-background);
 }
 

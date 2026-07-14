@@ -2,21 +2,30 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
  * @title Tabs add tab
  */
 @Component({
     selector: 'tabs-add-tab-example',
-    imports: [KbqTabsModule, KbqButtonModule, KbqIconModule],
+    imports: [KbqTabsModule, KbqButtonModule, KbqIconModule, KbqToolTipModule],
     template: `
         <nav kbqTabNavBar class="example-tab-nav-bar">
             @for (tab of tabs; track tab) {
-                <a kbqTabLink [active]="activeTab === tab" (click)="activeTab = tab">
+                <a
+                    kbqTabLink
+                    [active]="activeTab === tab"
+                    (click)="activeTab = tab"
+                    (keydown.enter)="activeTab = tab"
+                    (keydown.space)="activeTab = tab; $event.preventDefault()"
+                >
                     {{ tab }}
                     @if (activeTab === tab) {
                         <div class="example-tab-close">
                             <i
+                                kbqTooltip="Remove tab"
+                                tabindex="-1"
                                 kbq-icon-button="kbq-xmark-s_16"
                                 color="contrast-fade"
                                 (click)="removeTab(tab, $event)"
@@ -26,7 +35,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                 </a>
             }
         </nav>
-        <button color="contrast" kbqStyle="transparent" kbq-button (click)="addTab()">
+        <button color="contrast" kbqStyle="transparent" kbq-button kbqTooltip="Add tab" (click)="addTab()">
             <i kbq-icon="kbq-plus_16"></i>
         </button>
     `,
