@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { kbqAgGridLoadingOverlayConfigProvider, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 
@@ -12,9 +12,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
  */
 @Component({
     selector: 'ag-grid-loading-overlay-example',
-    imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqCheckboxModule],
+    imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqToggleModule],
     template: `
-        <kbq-checkbox [(ngModel)]="loading">Show loading overlay</kbq-checkbox>
+        <kbq-toggle [(ngModel)]="loading">Show loading overlay</kbq-toggle>
 
         <ag-grid-angular
             kbqAgGridTheme

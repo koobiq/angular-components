@@ -13,4 +13,12 @@
     &.docs-live-example__example_actions-panel-overview {
         padding: 0;
     }
+
+    // @koobiq/ag-grid-angular-theme doesn't set `position: relative` on `ag-grid-angular`, so AG Grid's
+    // visually-hidden `.ag-aria-description-container` (rendered as a sibling of `.ag-root-wrapper`,
+    // positioned absolute with no explicit top/left) resolves its containing block up to `<body>`,
+    // inflating the document's scroll height and exposing blank space past the docs app's own scroll area.
+    ag-grid-angular {
+        position: relative;
+    }
 }
