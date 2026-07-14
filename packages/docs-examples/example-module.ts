@@ -2073,6 +2073,23 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-inactive-filter-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-localization": {
+    "packagePath": "components/filter-bar/filter-bar-localization",
+    "title": "filter-bar-localization",
+    "componentName": "FilterBarLocalizationExample",
+    "files": [
+      "filter-bar-localization-example.ts"
+    ],
+    "selector": "filter-bar-localization-example",
+    "additionalComponents": [
+      "LocalizationDemoBar",
+      "LocalizationDefaultLocale",
+      "LocalizationStaticLocale",
+      "LocalizationRuntimeLocale"
+    ],
+    "primaryFile": "filter-bar-localization-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-master-checkbox": {
     "packagePath": "components/filter-bar/filter-bar-master-checkbox",
     "title": "filter-bar-master-checkbox",
@@ -6949,6 +6966,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-custom-pipe':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-inactive-filter':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-localization':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-master-checkbox':
 return import('@koobiq/docs-examples/components/filter-bar');

@@ -230,7 +230,8 @@ export class KbqFilterBar implements KbqFilterBarHost {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // @deprecated
     readonly changes: BehaviorSubject<void>;
-    configuration: KbqFilterBarConfiguration;
+    get configuration(): KbqFilterBarConfiguration;
+    set configuration(value: KbqFilterBarConfiguration);
     // (undocumented)
     readonly externalConfiguration: {
         reset: {

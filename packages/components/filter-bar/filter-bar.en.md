@@ -72,3 +72,14 @@ Text search allows you to search for information based on any data, even if ther
 The user can quickly get search results by selecting a saved filter, without re-configuring the parameters. It is also possible to create a new set of filters and use them in the future.
 
 <!-- example(filter-bar-saved-filters) -->
+
+### Localization
+
+The filter bar takes its own strings — the filters menu, the reset button, pipe tooltips and the date pipe's custom-period flow — from `KbqLocaleService`. The data you pass in `pipeTemplates` and `filter` is never translated, so in the example below the option names stay in English while the surrounding controls change.
+
+There are three ways to control the locale. `KBQ_DEFAULT_LOCALE_ID` is the fallback (`ru-RU`) used when nothing else is provided — it is a plain constant, not an injection token, so it cannot be provided. `KBQ_LOCALE_ID` fixes the locale once, when `KbqLocaleService` is constructed; it has to be provided alongside the service itself, because the service reads the token from the injector that created it. `KbqLocaleService.setLocale()` changes the locale at runtime.
+
+Each bar below provides its own `KbqLocaleService`, so they are isolated from each other and from the language selector in the footer of this site.
+
+<!-- example(filter-bar-localization) -->
+

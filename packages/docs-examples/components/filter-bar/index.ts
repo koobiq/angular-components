@@ -3,6 +3,7 @@ import { FilterBarCleanableExample } from './filter-bar-cleanable/filter-bar-cle
 import { FilterBarCompleteFunctionsExample } from './filter-bar-complete-functions/filter-bar-complete-functions-example';
 import { FilterBarCustomPipeExample } from './filter-bar-custom-pipe/filter-bar-custom-pipe-example';
 import { FilterBarInactiveFilterExample } from './filter-bar-inactive-filter/filter-bar-inactive-filter-example';
+import { FilterBarLocalizationExample } from './filter-bar-localization/filter-bar-localization-example';
 import { FilterBarMasterCheckboxExample } from './filter-bar-master-checkbox/filter-bar-master-checkbox-example';
 import { FilterBarOverviewExample } from './filter-bar-overview/filter-bar-overview-example';
 import { FilterBarPipeTypesExample } from './filter-bar-pipe-types/filter-bar-pipe-types-example';
@@ -20,6 +21,7 @@ export {
     FilterBarCompleteFunctionsExample,
     FilterBarCustomPipeExample,
     FilterBarInactiveFilterExample,
+    FilterBarLocalizationExample,
     FilterBarMasterCheckboxExample,
     FilterBarOverviewExample,
     FilterBarPipeTypesExample,
@@ -48,7 +50,8 @@ const EXAMPLES = [
     FilterBarReadonlyPipesExample,
     FilterBarMasterCheckboxExample,
     FilterBarInactiveFilterExample,
-    FilterBarSearchInPipesExample
+    FilterBarSearchInPipesExample,
+    FilterBarLocalizationExample
 ];
 
 @NgModule({
