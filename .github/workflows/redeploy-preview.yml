@@ -1,4 +1,8 @@
 # Triggered workflow by PR comment: /redeploy-preview
+#
+# ⚠️ This job checks out and builds PR-controlled code with a Firebase deployment secret.
+# Only comment /redeploy-preview after reviewing the PR's contents — the author_association
+# check below only verifies the commenter, not the safety of the code being built.
 name: Redeploy documentation preview
 
 on:
@@ -12,7 +16,7 @@ permissions:
 
 jobs:
   redeploy:
-    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/redeploy-preview') && contains(fromJSON('["OWNER", "MEMBER", "CONTRIBUTOR"]'), github.event.comment.author_association) }}
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/redeploy-preview') && contains(fromJSON('["OWNER", "MEMBER"]'), github.event.comment.author_association) }}
     runs-on: ubuntu-latest
     steps:
       - uses: xt0rted/pull-request-comment-branch@e8b8daa837e8ea7331c0003c9c316a64c6d8b0b1 # v3.0.0
