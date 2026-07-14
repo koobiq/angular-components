@@ -125,7 +125,7 @@ export const ruRUFormattersData = {
                 groupSeparator: ',',
                 thousand: 'К',
                 million: 'М',
-                billion: 'М',
+                billion: 'B',
                 trillion: 'Т'
             },
             decimal: {
