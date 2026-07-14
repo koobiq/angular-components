@@ -62,5 +62,5 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchExpandableInHeaderExample {
-    search: string;
+    search: string = 'report';
 }

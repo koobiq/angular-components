@@ -9,7 +9,7 @@ import { KbqSearchExpandableModule } from './search-expandable.module';
         <div data-testid="e2eScreenshotTarget" style="width: 400px">
             <kbq-search-expandable [(ngModel)]="search" />
             <br />
-            <kbq-search-expandable [isOpened]="true" [(ngModel)]="search" />
+            <kbq-search-expandable [isOpened]="true" [(ngModel)]="searchOpened" />
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,4 +19,5 @@ import { KbqSearchExpandableModule } from './search-expandable.module';
 })
 export class E2eSearchExpandableStates {
     search: string;
+    searchOpened: string;
 }
