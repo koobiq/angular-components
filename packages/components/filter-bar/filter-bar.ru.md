@@ -67,7 +67,7 @@
 
 <!-- example(filter-bar-search) -->
 
-По умолчанию поиск располагается в конце строки (справа в LTR). Задайте `searchPlacement="start"`, чтобы переместить его в начало (слева в LTR).
+По умолчанию поиск располагается в конце строки (справа в LTR). Задайте `searchPlacement="start"`, чтобы перенести его в строку пайпов — сразу после `kbq-filters`.
 
 <!-- example(filter-bar-search-placement) -->
 

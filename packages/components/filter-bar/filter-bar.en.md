@@ -67,7 +67,7 @@ Text search allows you to search for information based on any data, even if ther
 
 <!-- example(filter-bar-search) -->
 
-By default the search sits on the trailing side (right in LTR). Set `searchPlacement="start"` to move it to the leading side (left in LTR).
+By default the search sits on the trailing side (right in LTR). Set `searchPlacement="start"` to move it into the pipe row instead — directly after `kbq-filters`.
 
 <!-- example(filter-bar-search-placement) -->
 

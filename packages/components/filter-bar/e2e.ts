@@ -858,6 +858,8 @@ const crowdedSearchPlacementFilter: KbqFilter = {
         <div data-testid="e2eScreenshotTarget">
             <!-- Default (unbound) searchPlacement -> "end": search + refresher trail, floor gap. -->
             <kbq-filter-bar [filter]="sparseFilter">
+                <kbq-filters [filters]="savedFilters" />
+
                 @for (pipe of sparseFilter.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -870,8 +872,11 @@ const crowdedSearchPlacementFilter: KbqFilter = {
             </kbq-filter-bar>
             <br />
 
-            <!-- searchPlacement="start": search leads, refresher still trails. -->
+            <!-- searchPlacement="start": search sits between kbq-filters and the pipes as the first
+                 pipe; refresher still trails. -->
             <kbq-filter-bar [filter]="sparseFilter" [searchPlacement]="'start'">
+                <kbq-filters [filters]="savedFilters" />
+
                 @for (pipe of sparseFilter.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
@@ -889,6 +894,8 @@ const crowdedSearchPlacementFilter: KbqFilter = {
                  group must still sit at least var(--kbq-size-3xl) clear of the last pipe. -->
             <div style="width: 480px">
                 <kbq-filter-bar [filter]="crowdedFilter">
+                    <kbq-filters [filters]="savedFilters" />
+
                     @for (pipe of crowdedFilter.pipes; track pipe) {
                         <ng-container *kbqPipe="pipe" />
                     }
@@ -903,9 +910,12 @@ const crowdedSearchPlacementFilter: KbqFilter = {
             <br />
 
             <!-- Crowded row, searchPlacement="start" — same regression guard for the
-                 _search-start static margin on .kbq-filter-bar__right. -->
+                 _search-start static margin on .kbq-filter-bar__right, plus coverage for the search
+                 wrapping along with the pipes now that it shares their row. -->
             <div style="width: 480px">
                 <kbq-filter-bar [filter]="crowdedFilter" [searchPlacement]="'start'">
+                    <kbq-filters [filters]="savedFilters" />
+
                     @for (pipe of crowdedFilter.pipes; track pipe) {
                         <ng-container *kbqPipe="pipe" />
                     }

@@ -39,22 +39,12 @@
         margin-inline-start: var(--kbq-size-3xl);
     }
 
-    // Search leading; the refresher stays pinned to the far end.
-    &.kbq-filter-bar_search-start {
-        .kbq-filter-bar__search {
-            order: -1;
-        }
-
-        // Trailing gap only when the search is actually projected — avoids a phantom gap
-        // when `searchPlacement="start"` is set without a `kbq-search-expandable`.
-        .kbq-filter-bar__search:has(kbq-search-expandable) {
-            margin-inline-end: var(--kbq-size-s);
-        }
-
-        // Same guaranteed-floor reasoning as the `_search-end` branch above.
-        .kbq-filter-bar__right {
-            margin-inline-start: var(--kbq-size-3xl);
-        }
+    // Search leads the pipe row: it is projected straight into `.kbq-filter-bar__left` right after
+    // `kbq-filters`, so that row's `gap` already spaces it and it wraps along with the pipes — no
+    // `order` or margin needed here, and no `.kbq-filter-bar__search` wrapper exists in this mode.
+    // The refresher stays pinned to the far end; same guaranteed-floor reasoning as `_search-end`.
+    &.kbq-filter-bar_search-start .kbq-filter-bar__right {
+        margin-inline-start: var(--kbq-size-3xl);
     }
 }
 

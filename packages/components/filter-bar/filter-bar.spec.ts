@@ -591,20 +591,31 @@ describe('KbqFilterBar', () => {
 
     // Replacement for the projection coverage that used to live in filter-search.spec.ts
     // (removed in v20.0.0 when KbqFilterBarSearch was deleted in favor of kbq-search-expandable).
-    // Placement is CSS-driven off `searchPlacement`: the search stays projected into the single
-    // `.kbq-filter-bar__search` slot in both modes; only the host modifier class changes.
+    // `searchPlacement` relocates the search in the DOM rather than restyling it in place: `end`
+    // outlets it into a trailing `.kbq-filter-bar__search` sibling, `start` outlets it into
+    // `.kbq-filter-bar__left` right after `kbq-filters` and ahead of the pipes, where it lays out as
+    // the first pipe. Both branches outlet one shared `<ng-content>`, since content can only be
+    // projected once.
     describe('search-expandable placement', () => {
         @Component({
             selector: 'test-app-with-search',
             imports: [KbqFilterBarModule, KbqSearchExpandableModule, ReactiveFormsModule],
             template: `
                 <kbq-filter-bar [searchPlacement]="placement">
+                    <kbq-filters [filters]="savedFilters" />
+
+                    <!-- Stands in for a pipe: the kbqPipe directive renders into this same catch-all
+                         ng-content slot, so projection order is identical, while a real pipe component
+                         would drag popover/overlay providers into the fixture for no added coverage. -->
+                    <span class="pipe-stub"></span>
+
                     <kbq-search-expandable [formControl]="searchControl" />
                 </kbq-filter-bar>
             `
         })
         class TestComponentWithSearch {
             placement: 'start' | 'end' = 'end';
+            readonly savedFilters: KbqFilter[] = [];
             readonly searchControl = new FormControl('');
         }
 
@@ -619,38 +630,81 @@ describe('KbqFilterBar', () => {
                 ]
             });
 
-            const fixture = TestBed.createComponent(TestComponentWithSearch);
+            const searchFixture = TestBed.createComponent(TestComponentWithSearch);
 
             if (placement) {
-                fixture.componentInstance.placement = placement;
+                searchFixture.componentInstance.placement = placement;
             }
 
-            fixture.detectChanges();
+            searchFixture.detectChanges();
 
-            return fixture.debugElement.query(By.directive(KbqFilterBar));
+            return searchFixture;
         };
 
-        it('should project <kbq-search-expandable> once into the dedicated __search slot', () => {
-            const host = render().nativeElement as HTMLElement;
+        const getHost = (searchFixture: ComponentFixture<TestComponentWithSearch>): HTMLElement =>
+            searchFixture.debugElement.query(By.directive(KbqFilterBar)).nativeElement;
+
+        /** Tag names of the pipe row's children, in DOM order. */
+        const getLeftRowOrder = (host: HTMLElement): string[] =>
+            Array.from(host.querySelector('.kbq-filter-bar__left')!.children).map((child) =>
+                child.tagName.toLowerCase()
+            );
+
+        it('should project <kbq-search-expandable> once into the trailing __search slot by default', () => {
+            const host = getHost(render());
 
             expect(host.querySelectorAll('kbq-search-expandable')).toHaveLength(1);
             expect(host.querySelector('.kbq-filter-bar__search kbq-search-expandable')).not.toBeNull();
+            // It stays clear of the pipe row.
+            expect(getLeftRowOrder(host)).toEqual(['kbq-filters', 'span']);
         });
 
         it('should apply the "end" modifier class by default', () => {
-            const host = render().nativeElement as HTMLElement;
+            const host = getHost(render());
 
             expect(host.classList.contains('kbq-filter-bar_search-end')).toBe(true);
             expect(host.classList.contains('kbq-filter-bar_search-start')).toBe(false);
         });
 
         it('should apply the "start" modifier class when searchPlacement="start"', () => {
-            const host = render('start').nativeElement as HTMLElement;
+            const host = getHost(render('start'));
 
             expect(host.classList.contains('kbq-filter-bar_search-start')).toBe(true);
             expect(host.classList.contains('kbq-filter-bar_search-end')).toBe(false);
-            // The search is still projected into the same slot — only the host class differs.
-            expect(host.querySelector('.kbq-filter-bar__search kbq-search-expandable')).not.toBeNull();
+        });
+
+        it('should render the search as the first pipe when searchPlacement="start"', () => {
+            const host = getHost(render('start'));
+
+            expect(host.querySelectorAll('kbq-search-expandable')).toHaveLength(1);
+            // Sits after `kbq-filters` and ahead of the pipes, with no wrapper of its own.
+            expect(getLeftRowOrder(host)).toEqual(['kbq-filters', 'kbq-search-expandable', 'span']);
+            expect(host.querySelector('.kbq-filter-bar__search')).toBeNull();
+        });
+
+        it('should relocate the same search element when the placement changes at runtime', () => {
+            // The two branches outlet a single <ng-content>, so a toggle must move the projected node
+            // rather than duplicate, drop, or re-create it — the FormControl state rides along.
+            const searchFixture = render();
+            const host = getHost(searchFixture);
+            const search = host.querySelector('kbq-search-expandable');
+
+            searchFixture.componentInstance.searchControl.setValue('typed');
+
+            searchFixture.componentInstance.placement = 'start';
+            searchFixture.detectChanges();
+
+            expect(host.querySelectorAll('kbq-search-expandable')).toHaveLength(1);
+            expect(host.querySelector('kbq-search-expandable')).toBe(search);
+            expect(getLeftRowOrder(host)).toEqual(['kbq-filters', 'kbq-search-expandable', 'span']);
+
+            searchFixture.componentInstance.placement = 'end';
+            searchFixture.detectChanges();
+
+            expect(host.querySelectorAll('kbq-search-expandable')).toHaveLength(1);
+            expect(host.querySelector('kbq-search-expandable')).toBe(search);
+            expect(host.querySelector('.kbq-filter-bar__search kbq-search-expandable')).toBe(search);
+            expect(searchFixture.componentInstance.searchControl.value).toBe('typed');
         });
     });
 

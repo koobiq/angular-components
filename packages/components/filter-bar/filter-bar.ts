@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -32,10 +33,20 @@ import { KbqFilters } from './filters';
 
 @Component({
     selector: 'kbq-filter-bar, [kbq-filter-bar]',
-    imports: [KbqDividerModule],
+    imports: [KbqDividerModule, NgTemplateOutlet],
     template: `
+        <!-- Compatible: the <ng-content> can appear only once, so the search is projected here and
+             outlet into exactly one of the two mutually exclusive branches below. -->
+        <ng-template #searchOutlet>
+            <ng-content select="kbq-search-expandable" />
+        </ng-template>
+
         <div class="kbq-filter-bar__left">
             <ng-content select="kbq-filters" />
+
+            @if (searchPlacement() === 'start') {
+                <ng-container [ngTemplateOutlet]="searchOutlet" />
+            }
 
             <ng-content />
 
@@ -44,9 +55,11 @@ import { KbqFilters } from './filters';
             <ng-content select="kbq-filter-reset" />
         </div>
 
-        <div class="kbq-filter-bar__search">
-            <ng-content select="kbq-search-expandable" />
-        </div>
+        @if (searchPlacement() !== 'start') {
+            <div class="kbq-filter-bar__search">
+                <ng-container [ngTemplateOutlet]="searchOutlet" />
+            </div>
+        }
 
         <div class="kbq-filter-bar__right">
             <ng-content select="kbq-filter-refresher, [kbq-filter-refresher]" />
@@ -85,9 +98,10 @@ export class KbqFilterBar implements KbqFilterBarHost {
     readonly selectedAllEqualsSelectedNothing = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /**
-     * Placement of the projected `kbq-search-expandable` relative to the bar.
-     * `'end'` (default) keeps it trailing (right in LTR) — the previous behavior;
-     * `'start'` moves it leading (left in LTR). RTL-aware.
+     * Placement of the projected `kbq-search-expandable` within the bar.
+     * `'end'` (default) keeps it trailing (right in LTR), clear of the pipes — the previous behavior.
+     * `'start'` moves it into the pipe row — directly after `kbq-filters` and ahead of the pipes,
+     * where it lays out as the first pipe. RTL-aware.
      */
     readonly searchPlacement = input<'start' | 'end'>('end');
 
