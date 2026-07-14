@@ -3,4 +3,6 @@
     --kbq-filter-bar-pipe-max-width: 320px;
     /* Minimum width reserved for the refresher control. */
     --kbq-filter-bar-refresher-min-width: 64px;
+    /* Fixed width for the projected search-expandable, so it doesn't fill leftover row space. */
+    --kbq-search-expandable-width: 240px;
 }

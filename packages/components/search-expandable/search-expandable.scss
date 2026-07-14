@@ -9,7 +9,7 @@
 }
 
 .kbq-search-expandable__search {
-    width: var(--kbq-search-expandable-width, 240px);
+    width: var(--kbq-search-expandable-width, 100%);
 
     & .kbq-icon-button.kbq-suffix {
         display: flex;

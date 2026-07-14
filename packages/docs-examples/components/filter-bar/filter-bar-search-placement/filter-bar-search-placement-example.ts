@@ -48,7 +48,7 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
 
             <kbq-pipe-add />
 
-            <kbq-search-expandable isOpened="true" [formControl]="searchControl" />
+            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -57,7 +57,7 @@ export class FilterBarSearchPlacementExample {
     /** Controls where the search sits inside the bar. */
     readonly searchPlacement = signal<'start' | 'end'>('end');
 
-    readonly searchControl = new FormControl('');
+    readonly searchControl = new FormControl('report');
 
     /** Filter currently shown in the bar. Two-way bound so `kbq-pipe-add` can add pipes to it. */
     activeFilter: KbqFilter | null = null;

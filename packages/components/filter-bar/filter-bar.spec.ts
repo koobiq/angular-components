@@ -673,6 +673,17 @@ describe('KbqFilterBar', () => {
             expect(host.classList.contains('kbq-filter-bar_search-end')).toBe(false);
         });
 
+        it('should apply the "end" modifier class for any out-of-contract runtime value, not just "end"', () => {
+            // `searchPlacement` isn't runtime-validated (no `transform`) — only TS's literal union guards it,
+            // which doesn't protect a caller binding a loosely-typed `string` (e.g. `[searchPlacement]="cfg.placement"`).
+            // Content routing already treats anything other than "start" as trailing (`!== 'start'`); the host
+            // class must match that negation rather than an independent `=== "end"` check.
+            const host = getHost(render('bogus' as unknown as 'start' | 'end'));
+
+            expect(host.classList.contains('kbq-filter-bar_search-end')).toBe(true);
+            expect(host.classList.contains('kbq-filter-bar_search-start')).toBe(false);
+        });
+
         it('should render the search as the first pipe when searchPlacement="start"', () => {
             const host = getHost(render('start'));
 

@@ -1,5 +1,6 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
+    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -9,6 +10,7 @@ import {
     effect,
     forwardRef,
     inject,
+    Injector,
     input,
     model,
     output,
@@ -72,7 +74,8 @@ import { KbqFilters } from './filters';
     host: {
         class: 'kbq-filter-bar',
         '[class.kbq-filter-bar_search-start]': 'searchPlacement() === "start"',
-        '[class.kbq-filter-bar_search-end]': 'searchPlacement() === "end"'
+        '[class.kbq-filter-bar_search-end]': 'searchPlacement() !== "start"',
+        '(focusin)': 'onSearchFocusIn($event)'
     }
 })
 export class KbqFilterBar implements KbqFilterBarHost {
@@ -80,6 +83,16 @@ export class KbqFilterBar implements KbqFilterBarHost {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    private readonly document = inject<Document>(DOCUMENT);
+    private readonly injector = inject(Injector);
+
+    /**
+     * Tracks the last element focused inside the projected `kbq-search-expandable`, so focus can be
+     * restored after a `searchPlacement()` change: toggling it destroys and recreates the outlet branch
+     * that holds the projected content, physically detaching/reattaching the DOM node, which blurs a
+     * focused descendant (removeChild-triggered focus loss, per the DOM spec).
+     */
+    private lastFocusedSearchElement: HTMLElement | null = null;
 
     readonly externalConfiguration = inject(KBQ_FILTER_BAR_CONFIGURATION, { optional: true });
 
@@ -163,6 +176,35 @@ export class KbqFilterBar implements KbqFilterBarHost {
         // setter side effect now that `pipeTemplates` is a signal `input()`.
         effect(() => this.internalTemplatesChanges.next(this.pipeTemplates()));
 
+        let isFirstSearchPlacementRun = true;
+
+        // Restore focus after a `searchPlacement()` change relocates the projected search element (see
+        // `lastFocusedSearchElement`). Skip the initial run — there's nothing to restore on mount.
+        effect(() => {
+            this.searchPlacement();
+
+            if (isFirstSearchPlacementRun) {
+                isFirstSearchPlacementRun = false;
+
+                return;
+            }
+
+            const elementToRefocus = this.lastFocusedSearchElement;
+
+            if (!elementToRefocus?.isConnected) return;
+
+            afterNextRender(
+                () => {
+                    // Only steal focus back if the relocation blurred it to nothing (`body`) — if the
+                    // user or app intentionally focused something else in the meantime, leave it alone.
+                    if (this.document.activeElement === this.document.body) {
+                        elementToRefocus.focus();
+                    }
+                },
+                { injector: this.injector }
+            );
+        });
+
         this.internalFilterChanges.pipe(takeUntilDestroyed()).subscribe((filter) => {
             // `model.set(...)` auto-emits `filterChange` for the two-way binding.
             this.filter.set(filter);
@@ -187,6 +229,15 @@ export class KbqFilterBar implements KbqFilterBarHost {
                     this.filter.set({ ...current, changed: true });
                 }
             });
+    }
+
+    /** @docs-private */
+    protected onSearchFocusIn(event: FocusEvent) {
+        const target = event.target as HTMLElement;
+
+        if (target.closest('kbq-search-expandable')) {
+            this.lastFocusedSearchElement = target;
+        }
     }
 
     /** Remove pipe from current filter and emit event */

@@ -866,7 +866,7 @@ const crowdedSearchPlacementFilter: KbqFilter = {
 
                 <kbq-pipe-add />
 
-                <kbq-search-expandable [formControl]="searchControl" />
+                <kbq-search-expandable [formControl]="sparseDefaultSearchControl" />
 
                 <kbq-filter-refresher />
             </kbq-filter-bar>
@@ -883,7 +883,7 @@ const crowdedSearchPlacementFilter: KbqFilter = {
 
                 <kbq-pipe-add />
 
-                <kbq-search-expandable [formControl]="searchControl" />
+                <kbq-search-expandable [formControl]="sparseStartSearchControl" />
 
                 <kbq-filter-refresher />
             </kbq-filter-bar>
@@ -902,7 +902,7 @@ const crowdedSearchPlacementFilter: KbqFilter = {
 
                     <kbq-pipe-add />
 
-                    <kbq-search-expandable [formControl]="searchControl" />
+                    <kbq-search-expandable [formControl]="crowdedDefaultSearchControl" />
 
                     <kbq-filter-refresher />
                 </kbq-filter-bar>
@@ -922,7 +922,7 @@ const crowdedSearchPlacementFilter: KbqFilter = {
 
                     <kbq-pipe-add />
 
-                    <kbq-search-expandable [formControl]="searchControl" />
+                    <kbq-search-expandable [formControl]="crowdedStartSearchControl" />
 
                     <kbq-filter-refresher />
                 </kbq-filter-bar>
@@ -937,5 +937,13 @@ const crowdedSearchPlacementFilter: KbqFilter = {
 export class E2eFilterBarSearchPlacement {
     protected readonly sparseFilter = sparseSearchPlacementFilter;
     protected readonly crowdedFilter = crowdedSearchPlacementFilter;
-    protected readonly searchControl = new FormControl('');
+    // No saved-filter presets needed for this fixture — only `kbq-filters`' trigger is exercised.
+    protected readonly savedFilters: KbqFilter[] = [];
+
+    // Each panel gets its own control — sharing one `FormControl` across multiple
+    // `kbq-search-expandable` instances fans a single value/writeValue out to all of them.
+    protected readonly sparseDefaultSearchControl = new FormControl('');
+    protected readonly sparseStartSearchControl = new FormControl('');
+    protected readonly crowdedDefaultSearchControl = new FormControl('');
+    protected readonly crowdedStartSearchControl = new FormControl('');
 }

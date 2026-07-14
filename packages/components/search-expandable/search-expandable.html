@@ -29,14 +29,12 @@
             (keyup.escape)="toggle()"
         />
 
-        @if (input?.first?.value) {
-            <i
-                kbqSuffix
-                kbq-icon-button="kbq-circle-xmark_16"
-                [disabled]="disabled"
-                (click)="toggle()"
-                (keyup.enter)="toggle()"
-            ></i>
-        }
+        <i
+            kbqSuffix
+            kbq-icon-button="kbq-circle-xmark_16"
+            [disabled]="disabled"
+            (click)="toggle()"
+            (keyup.enter)="toggle()"
+        ></i>
     </kbq-form-field>
 }
