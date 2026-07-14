@@ -82,10 +82,11 @@ const createFilter = (): KbqFilter => ({
 });
 
 /**
- * The date pipe resolves `DateAdapter` and `DateFormatter` through the element injector, so they must be
- * provided next to the locale service. `imports: [LuxonDateModule]` would place them in the environment
- * injector instead, where they resolve the application-wide locale service and format dates — calendar
- * month names included — in a different locale than the rest of the bar.
+ * The date pipe resolves `DateAdapter` and `DateFormatter` through the element injector, so both must be
+ * provided next to the locale service. `imports: [LuxonDateModule]` would provide `DateAdapter` in the
+ * environment injector instead, where it resolves the application-wide locale service and formats dates —
+ * calendar month names included — in a different locale than the rest of the bar. `DateFormatter` is not
+ * part of that module at all, so it has to be listed here in either case.
  */
 const scopedDateProviders: Provider[] = [{ provide: DateAdapter, useClass: LuxonDateAdapter }, DateFormatter];
 

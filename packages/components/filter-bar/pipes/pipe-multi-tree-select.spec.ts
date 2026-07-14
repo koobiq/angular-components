@@ -1,12 +1,16 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import {
+    KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
     kbqBuildTree,
     KbqFilter,
     KbqFilterBar,
+    KbqFilterBarConfiguration,
     KbqFilterBarModule,
     KbqPipe,
     KbqPipeTemplate,
@@ -14,6 +18,7 @@ import {
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { kbqTreeSelectAllValue } from '@koobiq/components/tree';
+import { BehaviorSubject } from 'rxjs';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiTreeSelectComponent } from './pipe-multi-tree-select';
 import { registerPipeStatesTests } from './pipe-states.spec-helper';
@@ -657,5 +662,65 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(preventSpy).toHaveBeenCalled();
             expect(toggleSpy).toHaveBeenCalled();
         }));
+    });
+
+    // The select-all node is synthesized by `updateTemplates`, which only re-runs when `pipeTemplates`
+    // change — so its label must be resolved on read (via `getViewValue`) rather than baked into the node,
+    // otherwise it alone stays in the old locale while every other string in the panel follows along.
+    describe('select-all label localization', () => {
+        class MockLocaleService {
+            readonly changes = new BehaviorSubject<string>('locale-a');
+
+            private readonly params: Record<string, KbqFilterBarConfiguration> = {
+                'locale-a': {
+                    ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+                    pipe: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.pipe, selectAll: 'Select all A' }
+                },
+                'locale-b': {
+                    ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+                    pipe: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.pipe, selectAll: 'Select all B' }
+                }
+            };
+
+            getParams(): KbqFilterBarConfiguration {
+                return this.params[this.changes.value];
+            }
+
+            setLocale(id: string): void {
+                this.changes.next(id);
+            }
+        }
+
+        it('should re-render the select-all node when the locale service emits a change', async () => {
+            const localeService = new MockLocaleService();
+
+            TestBed.configureTestingModule({
+                providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: localeService }]
+            });
+
+            const overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+
+            fixture = TestBed.createComponent(TestComponent);
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true })
+            ]);
+
+            // `autoDetectChanges` only — a manual `detectChanges()` after `setLocale` below would force a
+            // check regardless of whether the label is resolved live, which is the thing under test.
+            fixture.autoDetectChanges();
+            await fixture.whenStable();
+
+            getPipeComponent().select().open();
+            await fixture.whenStable();
+
+            const getSelectAllOption = () => overlayContainerElement.querySelector('kbq-tree-option');
+
+            expect(getSelectAllOption()?.textContent?.trim()).toBe('Select all A');
+
+            localeService.setLocale('locale-b');
+            await fixture.whenStable();
+
+            expect(getSelectAllOption()?.textContent?.trim()).toBe('Select all B');
+        });
     });
 });

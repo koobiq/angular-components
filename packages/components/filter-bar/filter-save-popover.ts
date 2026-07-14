@@ -131,7 +131,9 @@ export class KbqFilterSavePopover implements AfterViewInit {
     saveNewFilter: boolean = false;
 
     showFilterSavingError: boolean = false;
-    filterSavingErrorText: string = '';
+
+    /** Custom error text passed to `showError()`; `null` when the locale-derived default should be used. */
+    private customErrorText: string | null = null;
 
     isSaving: boolean = false;
 
@@ -139,6 +141,12 @@ export class KbqFilterSavePopover implements AfterViewInit {
      * @docs-private */
     get localeData() {
         return this.filterBar().configuration.filters;
+    }
+
+    /** localized data
+     * @docs-private */
+    get filterSavingErrorText(): string {
+        return this.customErrorText ?? this.localeData.errorHint;
     }
 
     /** header of popover. Depends on the mode */
@@ -205,7 +213,7 @@ export class KbqFilterSavePopover implements AfterViewInit {
 
         this.showFilterSavingError = true;
 
-        this.filterSavingErrorText = error?.text ?? this.filterBar().configuration.filters.errorHint;
+        this.customErrorText = error?.text ?? null;
     }
 
     close = (restoreFocus: boolean = true) => {

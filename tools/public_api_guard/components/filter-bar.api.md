@@ -528,8 +528,7 @@ export class KbqFilterSavePopover implements AfterViewInit {
     readonly contentTemplate: _angular_core.Signal<TemplateRef<unknown>>;
     readonly filterBar: _angular_core.InputSignal<KbqFilterBar>;
     filterName: FormControl<string | null>;
-    // (undocumented)
-    filterSavingErrorText: string;
+    get filterSavingErrorText(): string;
     readonly footerTemplate: _angular_core.Signal<TemplateRef<unknown>>;
     readonly headerTemplate: _angular_core.Signal<TemplateRef<unknown>>;
     // (undocumented)

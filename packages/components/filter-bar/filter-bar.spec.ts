@@ -643,11 +643,13 @@ describe('KbqFilterBar', () => {
             private readonly params: Record<string, KbqFilterBarConfiguration> = {
                 'locale-a': {
                     ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
-                    filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'Locale A name' }
+                    filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'Locale A name' },
+                    reset: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.reset, buttonName: 'Locale A reset' }
                 },
                 'locale-b': {
                     ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
-                    filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'Locale B name' }
+                    filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, defaultName: 'Locale B name' },
+                    reset: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.reset, buttonName: 'Locale B reset' }
                 }
             };
 
@@ -715,6 +717,34 @@ describe('KbqFilterBar', () => {
             localeService.setLocale('locale-b');
 
             expect(filterBar.configuration.filters.defaultName).toBe('External name');
+        });
+
+        it('should re-render a projected sub-component when the locale service emits a change', async () => {
+            const localeService = new MockLocaleService();
+
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: localeService }]
+            });
+
+            const localFixture = TestBed.createComponent(TestComponent);
+
+            // `autoDetectChanges` only — a manual `detectChanges()` after `setLocale` below would force a
+            // check regardless of whether `configuration`'s signal marks the projected OnPush view dirty,
+            // which is the very thing under test.
+            localFixture.autoDetectChanges();
+
+            await localFixture.whenStable();
+
+            const filterResetElement: HTMLElement = localFixture.nativeElement.querySelector('.kbq-filter-reset');
+
+            expect(filterResetElement.textContent?.trim()).toBe('Locale A reset');
+
+            localeService.setLocale('locale-b');
+
+            await localFixture.whenStable();
+
+            expect(filterResetElement.textContent?.trim()).toBe('Locale B reset');
         });
     });
 });
