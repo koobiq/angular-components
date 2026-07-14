@@ -29,6 +29,28 @@ export type KbqNumberFormatOptions = {
     viewGroupSeparator?: string;
 };
 
+/**
+ * Locale configuration for number rounding used by `KbqRoundDecimalPipe`.
+ *
+ * Maps each rounding unit to its localized label and carries the surrounding
+ * formatting options.
+ * @docs-private
+ */
+export type KbqNumberRoundingLocaleConfig = {
+    /** Separator placed between the number and its rounding unit label. */
+    separator: string;
+    /** Separator placed between the integer and fractional parts. */
+    groupSeparator: string;
+    /** Label for the thousand unit. */
+    thousand: string;
+    /** Label for the million unit. */
+    million: string;
+    /** Label for the billion unit. */
+    billion: string;
+    /** Label for the trillion unit (always provided). */
+    trillion: string;
+};
+
 /** Locale configuration for `KbqNumberInput`. */
 export type KbqNumberInputLocaleConfig = {
     /** Characters recognized as group (thousands) separators. */

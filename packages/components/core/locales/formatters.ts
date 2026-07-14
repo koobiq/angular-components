@@ -1,5 +1,5 @@
 import { KbqSizeUnitsConfig } from '../formatters';
-import { KbqNumberFormatOptions, KbqNumberInputLocaleConfig } from './types';
+import { KbqNumberFormatOptions, KbqNumberInputLocaleConfig, KbqNumberRoundingLocaleConfig } from './types';
 
 export const enUSFormattersData = {
     formatters: {
@@ -11,7 +11,7 @@ export const enUSFormattersData = {
                 million: 'M',
                 billion: 'B',
                 trillion: 'T'
-            }
+            } satisfies KbqNumberRoundingLocaleConfig
         }
     },
     input: {
@@ -48,7 +48,7 @@ export const esLAFormattersData = {
                 million: 'M',
                 billion: 'MRD',
                 trillion: 'B'
-            },
+            } satisfies KbqNumberRoundingLocaleConfig,
             decimal: {
                 viewGroupSeparator: '\u2009'
             } satisfies KbqNumberFormatOptions
@@ -90,7 +90,7 @@ export const ptBRFormattersData = {
                 million: 'mi',
                 billion: 'bi',
                 trillion: 'tri'
-            }
+            } satisfies KbqNumberRoundingLocaleConfig
         }
     },
     input: {
@@ -128,7 +128,7 @@ export const ruRUFormattersData = {
                 // Latin `B` (U+0042) according to UX Guidelines.
                 billion: 'B',
                 trillion: 'Т'
-            },
+            } satisfies KbqNumberRoundingLocaleConfig,
             decimal: {
                 viewGroupSeparator: '\u2009'
             } satisfies KbqNumberFormatOptions
@@ -171,7 +171,7 @@ export const tkTMFormattersData = {
                 million: 'Mn',
                 billion: 'Mr',
                 trillion: 'Tn'
-            }
+            } satisfies KbqNumberRoundingLocaleConfig
         }
     },
     input: {

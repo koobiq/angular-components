@@ -5,7 +5,8 @@ import {
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
-    KbqNumberFormatOptions
+    KbqNumberFormatOptions,
+    KbqNumberRoundingLocaleConfig
 } from '../../locales';
 
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>('KbqNumberFormatterOptions');
@@ -67,18 +68,6 @@ const minFractionGroupPosition = 3;
 const maxFractionGroupPosition = 5;
 const useGroupingPosition = 7;
 
-interface RoundDecimalOptions {
-    separator: string;
-    groupSeparator: string;
-    thousands?: string;
-    tenThousand?: string;
-    million?: string;
-    oneHundredMillions?: string;
-    billion?: string;
-    trillion: string;
-    rtl?: boolean;
-}
-
 const ROUNDING_UNITS = {
     thousand: 1e3,
     tenThousand: 10 * 1e3,
@@ -87,6 +76,9 @@ const ROUNDING_UNITS = {
     billion: 1e9,
     trillion: 1e12
 };
+
+/** Rounding units that carry a localized label in `KbqNumberRoundingLocaleConfig`. */
+type RoundingUnit = keyof KbqNumberRoundingLocaleConfig & keyof typeof ROUNDING_UNITS;
 
 const intervalsConfig = {
     supportedLanguages: ['ru-RU', 'en-US', 'es-LA', 'pt-BR'],
@@ -289,12 +281,13 @@ export function isWithin(startRange: number, endRange: number, valueToCheck: num
 export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-    roundingOptions: RoundDecimalOptions;
+    roundingOptions: KbqNumberRoundingLocaleConfig;
 
     constructor() {
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
     }
 
+    // @TODO: update returned type to string | null. Breaking change
     transform(value: any, locale?: string): any {
         if (isEmpty(value)) {
             return null;
@@ -309,7 +302,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
             const unit = this.calculateUnit(num);
 
             if (!unit) {
-                return Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(num);
+                return new Intl.NumberFormat(currentLocale, { useGrouping: false }).format(num);
             }
 
             let parts: { num?: number; fraction?: number } = {};
@@ -343,7 +336,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
                       fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
                   };
             Object.keys(parts).forEach((key) => {
-                parts[key] = Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(parts[key]);
+                parts[key] = new Intl.NumberFormat(currentLocale, { useGrouping: false }).format(parts[key]);
             });
 
             const calculatedValue = parts.fraction
@@ -375,11 +368,11 @@ export class KbqRoundDecimalPipe implements PipeTransform {
             : { num: Math.round(dividedValue) };
     }
 
-    private calculateUnit(num: number): string | undefined {
-        let currentUnit: string | undefined;
+    private calculateUnit(num: number): RoundingUnit | undefined {
+        let currentUnit: RoundingUnit | undefined;
         const localizedOptions = Object.keys(this.roundingOptions);
 
-        Object.keys(ROUNDING_UNITS).every((key) => {
+        (Object.keys(ROUNDING_UNITS) as RoundingUnit[]).every((key) => {
             if (!localizedOptions.includes(key)) {
                 return true;
             }
