@@ -137,7 +137,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
         LuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [filter]="filter" [pipeTemplates]="pipeTemplates">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="filter">
             @for (pipe of filter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }

@@ -12,7 +12,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
         LuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
