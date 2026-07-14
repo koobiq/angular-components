@@ -628,7 +628,14 @@ export class KbqAutocompleteTrigger
         this.zone.onStable
             .asObservable()
             .pipe(take(1))
-            .subscribe(() => this.resetActiveItem());
+            .subscribe(() => {
+                this.resetActiveItem();
+
+                // Overlay width can be not final at first open, so re-measure when layout is stable.
+                if (this.panelOpen && this.overlayRef) {
+                    this.overlayRef.updateSize(this.getOverlaySize());
+                }
+            });
     }
 
     private getOverlayConfig(): OverlayConfig {
