@@ -630,12 +630,6 @@ describe('KbqFilterBar', () => {
             return fixture.debugElement.query(By.directive(KbqFilterBar));
         };
 
-        it('should default searchPlacement to "end"', () => {
-            const filterBar = render().componentInstance as KbqFilterBar;
-
-            expect(filterBar.searchPlacement()).toBe('end');
-        });
-
         it('should project <kbq-search-expandable> once into the dedicated __search slot', () => {
             const host = render().nativeElement as HTMLElement;
 
@@ -657,6 +651,35 @@ describe('KbqFilterBar', () => {
             expect(host.classList.contains('kbq-filter-bar_search-end')).toBe(false);
             // The search is still projected into the same slot — only the host class differs.
             expect(host.querySelector('.kbq-filter-bar__search kbq-search-expandable')).not.toBeNull();
+        });
+    });
+
+    describe('searchPlacement default', () => {
+        @Component({
+            selector: 'test-app-default-search-placement',
+            imports: [KbqFilterBarModule],
+            template: `
+                <kbq-filter-bar />
+            `
+        })
+        class TestComponentDefaultSearchPlacement {}
+
+        it('should default to "end" when the input is left unbound', () => {
+            // Render <kbq-filter-bar> WITHOUT binding the input, so this exercises the declared
+            // `input<'start' | 'end'>('end')` default rather than a round-tripped binding.
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponentDefaultSearchPlacement]
+            });
+
+            const defaultFixture = TestBed.createComponent(TestComponentDefaultSearchPlacement);
+
+            defaultFixture.detectChanges();
+
+            const filterBar: KbqFilterBar = defaultFixture.debugElement.query(
+                By.directive(KbqFilterBar)
+            ).componentInstance;
+
+            expect(filterBar.searchPlacement()).toBe('end');
         });
     });
 

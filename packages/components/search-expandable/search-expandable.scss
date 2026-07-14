@@ -9,6 +9,8 @@
 }
 
 .kbq-search-expandable__search {
+    width: var(--kbq-search-expandable-width, 240px);
+
     & .kbq-icon-button.kbq-suffix {
         display: flex;
         align-items: center;

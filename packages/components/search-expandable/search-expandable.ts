@@ -73,8 +73,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     readonly externalConfiguration = inject(KBQ_SEARCH_EXPANDABLE_CONFIGURATION, { optional: true });
 
-    @ViewChildren(KbqInput) private input: QueryList<KbqInput>;
-    @ViewChildren(KbqButton) private button: QueryList<KbqButton>;
+    @ViewChildren(KbqInput) protected input: QueryList<KbqInput>;
+    @ViewChildren(KbqButton) protected button: QueryList<KbqButton>;
     private readonly tooltip = viewChild(KbqTooltipTrigger);
 
     configuration;

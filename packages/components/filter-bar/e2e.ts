@@ -1,7 +1,9 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 import { DateTime } from 'luxon';
 import { KbqFilterBarModule } from './filter-bar.module';
 import { kbqBuildTree, KbqFilter, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
@@ -779,4 +781,151 @@ export class E2eFilterBarStates implements AfterViewInit {
             }
         ];
     }
+}
+
+const sparseSearchPlacementFilter: KbqFilter = {
+    name: 'sparse',
+    readonly: false,
+    disabled: false,
+    changed: false,
+    saved: false,
+    pipes: [
+        {
+            name: 'status',
+            value: 'active',
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ]
+};
+
+const crowdedSearchPlacementFilter: KbqFilter = {
+    name: 'crowded',
+    readonly: false,
+    disabled: false,
+    changed: false,
+    saved: false,
+    pipes: [
+        {
+            name: 'status',
+            value: 'active',
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'owner',
+            value: 'jane.doe@example.com',
+            type: KbqPipeTypes.Text,
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'priority',
+            value: 'high',
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: true,
+            disabled: false
+        },
+        {
+            name: 'environment',
+            value: 'production',
+            type: KbqPipeTypes.Text,
+            cleanable: true,
+            removable: true,
+            disabled: false
+        },
+        {
+            name: 'region',
+            value: 'eu-central-1',
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ]
+};
+
+@Component({
+    selector: 'e2e-filter-bar-search-placement',
+    imports: [KbqFilterBarModule, KbqSearchExpandableModule, ReactiveFormsModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            <!-- Default (unbound) searchPlacement -> "end": search + refresher trail, floor gap. -->
+            <kbq-filter-bar [filter]="sparseFilter">
+                @for (pipe of sparseFilter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+
+                <kbq-pipe-add />
+
+                <kbq-search-expandable [formControl]="searchControl" />
+
+                <kbq-filter-refresher />
+            </kbq-filter-bar>
+            <br />
+
+            <!-- searchPlacement="start": search leads, refresher still trails. -->
+            <kbq-filter-bar [filter]="sparseFilter" [searchPlacement]="'start'">
+                @for (pipe of sparseFilter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+
+                <kbq-pipe-add />
+
+                <kbq-search-expandable [formControl]="searchControl" />
+
+                <kbq-filter-refresher />
+            </kbq-filter-bar>
+            <br />
+
+            <!-- Crowded row, default placement — regression guard for the DS-5189 gap-collapse
+                 bug: constrained width forces near-zero leftover space; the search + refresher
+                 group must still sit at least var(--kbq-size-3xl) clear of the last pipe. -->
+            <div style="width: 480px">
+                <kbq-filter-bar [filter]="crowdedFilter">
+                    @for (pipe of crowdedFilter.pipes; track pipe) {
+                        <ng-container *kbqPipe="pipe" />
+                    }
+
+                    <kbq-pipe-add />
+
+                    <kbq-search-expandable [formControl]="searchControl" />
+
+                    <kbq-filter-refresher />
+                </kbq-filter-bar>
+            </div>
+            <br />
+
+            <!-- Crowded row, searchPlacement="start" — same regression guard for the
+                 _search-start static margin on .kbq-filter-bar__right. -->
+            <div style="width: 480px">
+                <kbq-filter-bar [filter]="crowdedFilter" [searchPlacement]="'start'">
+                    @for (pipe of crowdedFilter.pipes; track pipe) {
+                        <ng-container *kbqPipe="pipe" />
+                    }
+
+                    <kbq-pipe-add />
+
+                    <kbq-search-expandable [formControl]="searchControl" />
+
+                    <kbq-filter-refresher />
+                </kbq-filter-bar>
+            </div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarSearchPlacement'
+    }
+})
+export class E2eFilterBarSearchPlacement {
+    protected readonly sparseFilter = sparseSearchPlacementFilter;
+    protected readonly crowdedFilter = crowdedSearchPlacementFilter;
+    protected readonly searchControl = new FormControl('');
 }
