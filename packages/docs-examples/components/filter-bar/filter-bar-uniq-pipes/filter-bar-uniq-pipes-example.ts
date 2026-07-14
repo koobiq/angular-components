@@ -24,7 +24,11 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
         ReactiveFormsModule
     ],
     template: `
-        <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates" (filterChange)="onFilterChange($event)">
+        <kbq-filter-bar
+            [pipeTemplates]="pipeTemplates"
+            [(filter)]="activeFilter"
+            (filterChange)="onFilterChange($event)"
+        >
             <kbq-filters
                 [filters]="filters"
                 (onSave)="onSaveFilter($event)"

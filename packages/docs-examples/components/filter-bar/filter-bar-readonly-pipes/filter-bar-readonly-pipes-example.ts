@@ -20,7 +20,7 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
         ReactiveFormsModule
     ],
     template: `
-        <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
