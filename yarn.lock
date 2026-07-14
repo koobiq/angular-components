@@ -24,61 +24,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/autocomplete-core@npm:1.17.9":
-  version: 1.17.9
-  resolution: "@algolia/autocomplete-core@npm:1.17.9"
-  dependencies:
-    "@algolia/autocomplete-plugin-algolia-insights": "npm:1.17.9"
-    "@algolia/autocomplete-shared": "npm:1.17.9"
-  checksum: 10c0/e1111769a8723b9dd45fc38cd7edc535c86c1f908b84b5fdc5de06ba6b8c7aca14e5f52ebce84fa5f7adf857332e396b93b7e7933b157b2c9aefc0a19d9574ab
-  languageName: node
-  linkType: hard
-
-"@algolia/autocomplete-plugin-algolia-insights@npm:1.17.9":
-  version: 1.17.9
-  resolution: "@algolia/autocomplete-plugin-algolia-insights@npm:1.17.9"
-  dependencies:
-    "@algolia/autocomplete-shared": "npm:1.17.9"
-  peerDependencies:
-    search-insights: ">= 1 < 3"
-  checksum: 10c0/05c21502631643abdcd6e9f70b5814a60d34bad59bca501e26e030fd72e689be5cecfb6e8939a0a1bdcb2394591e55e26a42a82c7247528eafeff714db0819a4
-  languageName: node
-  linkType: hard
-
-"@algolia/autocomplete-preset-algolia@npm:1.17.9":
-  version: 1.17.9
-  resolution: "@algolia/autocomplete-preset-algolia@npm:1.17.9"
-  dependencies:
-    "@algolia/autocomplete-shared": "npm:1.17.9"
-  peerDependencies:
-    "@algolia/client-search": ">= 4.9.1 < 6"
-    algoliasearch: ">= 4.9.1 < 6"
-  checksum: 10c0/99159c7e02a927d0d96717cb4cfd2f8dbc4da73267a8eae4f83af5bf74087089f6e7dbffd316512e713a4cc534e936b6a7ccb5c4a5ff84b4bf73f2d3cc050e79
-  languageName: node
-  linkType: hard
-
-"@algolia/autocomplete-shared@npm:1.17.9":
-  version: 1.17.9
-  resolution: "@algolia/autocomplete-shared@npm:1.17.9"
-  peerDependencies:
-    "@algolia/client-search": ">= 4.9.1 < 6"
-    algoliasearch: ">= 4.9.1 < 6"
-  checksum: 10c0/b318281aecdaae09171b47ee4f7bc66b613852cad4506e9d6278fff35ba68a12dd9cce2d90b5f4c3ba0e3d7d780583cbe46b22275260e41bbf09fb01e4a18f49
-  languageName: node
-  linkType: hard
-
-"@algolia/client-abtesting@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/client-abtesting@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/614044c066e34cbc41b74a2242c3b0a08e952e96f90e0f2afbcd04711cf29fa88dea211f15bcef162bfd15b3f27555641bff229618cdf45bb83fe7c48100a7bf
-  languageName: node
-  linkType: hard
-
 "@algolia/client-abtesting@npm:5.35.0":
   version: 5.35.0
   resolution: "@algolia/client-abtesting@npm:5.35.0"
@@ -88,18 +33,6 @@ __metadata:
     "@algolia/requester-fetch": "npm:5.35.0"
     "@algolia/requester-node-http": "npm:5.35.0"
   checksum: 10c0/3f06a1c2433602355c4463a14a961ae3bef9e7baeeb72d8deea9d19059c08d4c639e24c0450de508a5a82d3904835a178925058a16675e671512f03e2d0d7625
-  languageName: node
-  linkType: hard
-
-"@algolia/client-analytics@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/client-analytics@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/76068a9558df85c469c77a8facd10927800c347363b1b73e43fbecc3e2de9d1404e0c3769c1e2d7e4670f0b435c819f239f5399d81728a9d735b72f9a1a9df53
   languageName: node
   linkType: hard
 
@@ -115,29 +48,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/client-common@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/client-common@npm:5.25.0"
-  checksum: 10c0/e75370c9e5353badcd322db3b573a1f1cad1dbe5e576552e940c3db848778cd0849a028894da3f08dc551e3a53d1613239bc8cb06eef6dd4734e93ce5f49a895
-  languageName: node
-  linkType: hard
-
 "@algolia/client-common@npm:5.35.0":
   version: 5.35.0
   resolution: "@algolia/client-common@npm:5.35.0"
   checksum: 10c0/c2d614260e5961e96f7de428b748af8ea3041c8530064b1926f35063c4c88e3ee0769537c35f130ff94eb701927cc72f3ccfdd8a5a8513a87ed528fec7fdb79c
-  languageName: node
-  linkType: hard
-
-"@algolia/client-insights@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/client-insights@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/8bbabcf7a86a649932b56525843d2b431c89077576e939832152859be398e9bf31a54b6c1565086b9e66deef045216d85adac8edcf538ebc9bcefc80f1a9711d
   languageName: node
   linkType: hard
 
@@ -153,18 +67,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/client-personalization@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/client-personalization@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/0d937519adbf0231e985718e32e7b0e54d15d30a01bd0491c357eb937a4ebb44a6b8024de736cb1da5919ca23e10a6dbb1bdda06ed46848e15d1bb3a9533f0fc
-  languageName: node
-  linkType: hard
-
 "@algolia/client-personalization@npm:5.35.0":
   version: 5.35.0
   resolution: "@algolia/client-personalization@npm:5.35.0"
@@ -174,18 +76,6 @@ __metadata:
     "@algolia/requester-fetch": "npm:5.35.0"
     "@algolia/requester-node-http": "npm:5.35.0"
   checksum: 10c0/0cecdca5bec6bf059c4569c66b6ecec3d556825b6767d54254b46333a6e8a2aeacff49a08aefc9490d3f5cc4fefb54200f3945117964a23f7a7bbfd2c7993fac
-  languageName: node
-  linkType: hard
-
-"@algolia/client-query-suggestions@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/client-query-suggestions@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/84f327d0bd98c2da8b37d3c51712baa794d44e78fd7e60f372899b882ac4d02e1836df27ed397dcb3deede820c7a8f20d1c043378166baaf1f855c89551cc5fd
   languageName: node
   linkType: hard
 
@@ -201,18 +91,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/client-search@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/client-search@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/5a09f4e66aa802ec7a292595f8d08dcd7de12683d0ddde1feb640062011dbd8bd8b521627f7c904e27e0f3e80ad8a451e58e0bc790b0f2e4faf4e55dfe2df297
-  languageName: node
-  linkType: hard
-
 "@algolia/client-search@npm:5.35.0":
   version: 5.35.0
   resolution: "@algolia/client-search@npm:5.35.0"
@@ -222,18 +100,6 @@ __metadata:
     "@algolia/requester-fetch": "npm:5.35.0"
     "@algolia/requester-node-http": "npm:5.35.0"
   checksum: 10c0/a9e52b4f21822f723fad21647056439737d956eb9bd70f541fcbdf96ad5ef60ac0782ed1801af9d3671444bfef95dd74133f3d8846a600bcb387dc8f1b910da6
-  languageName: node
-  linkType: hard
-
-"@algolia/ingestion@npm:1.25.0":
-  version: 1.25.0
-  resolution: "@algolia/ingestion@npm:1.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/6c2ffddaabfa62a87c45917ddd311d12adca1263de22be4c9023e7d526cc43c2a6fe1a5ea28f46a118762bd8a143bba903aded9ba3c70953e6f6af67e6b9e12f
   languageName: node
   linkType: hard
 
@@ -249,18 +115,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/monitoring@npm:1.25.0":
-  version: 1.25.0
-  resolution: "@algolia/monitoring@npm:1.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/d28b0af9ff0e864ad8ada43e735d763052b605410813c26ea595c21b9a3bcc323ebf3b04e810bc23cc8c28840952dbda7d111d583b8884e91e5692a14ad427e8
-  languageName: node
-  linkType: hard
-
 "@algolia/monitoring@npm:1.35.0":
   version: 1.35.0
   resolution: "@algolia/monitoring@npm:1.35.0"
@@ -270,18 +124,6 @@ __metadata:
     "@algolia/requester-fetch": "npm:5.35.0"
     "@algolia/requester-node-http": "npm:5.35.0"
   checksum: 10c0/2bbad1df73421c7bb77efcaab82c83a2bec919e8d843b638640a6c6294fb8b35ad617ec79cc422636125f8365268bd8071e0dbd15455130fec15c9d920de02db
-  languageName: node
-  linkType: hard
-
-"@algolia/recommend@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/recommend@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/cfab69aec97096ac4db3fb7a20af3e6263362ad65100e33f1523ddfdb37a3bd1ca8d4002e83f8b52009ca5650cb9486e9e38410fb0f0b49336cd8c2bed58cd0e
   languageName: node
   linkType: hard
 
@@ -297,15 +139,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/requester-browser-xhr@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/requester-browser-xhr@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-  checksum: 10c0/c190525b68d7d255568d20e6024094bb8b273f3234f698e4da52edb97697cddb5df99038f5dc780a54da9c89837c8e6d81e2e230ab2f819b6ec689ebbabd049a
-  languageName: node
-  linkType: hard
-
 "@algolia/requester-browser-xhr@npm:5.35.0":
   version: 5.35.0
   resolution: "@algolia/requester-browser-xhr@npm:5.35.0"
@@ -315,30 +148,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/requester-fetch@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/requester-fetch@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-  checksum: 10c0/126ed1c1cd6033a979da071018a5a1ada00df87e7ef5196385b6f241ca8f41f77c40827461a1aa04612a75ba651786c50b8e7a9f7636ba58b723c8bf8fd039a1
-  languageName: node
-  linkType: hard
-
 "@algolia/requester-fetch@npm:5.35.0":
   version: 5.35.0
   resolution: "@algolia/requester-fetch@npm:5.35.0"
   dependencies:
     "@algolia/client-common": "npm:5.35.0"
   checksum: 10c0/45c654f1b5746503b268cf5b1959c81943aea2d0fd78e7a028bfa134bbc2b7e2264ab25fa7429eef1ffa4e347030314577d3b5e92e405326d06ae44813786d4d
-  languageName: node
-  linkType: hard
-
-"@algolia/requester-node-http@npm:5.25.0":
-  version: 5.25.0
-  resolution: "@algolia/requester-node-http@npm:5.25.0"
-  dependencies:
-    "@algolia/client-common": "npm:5.25.0"
-  checksum: 10c0/310ecc88d6769b67d1959dfb11554699759ad358ce88b20edbe82cc007511efda3777451b3194ff26a600dc41bfe49588a74168c3f122302b945fe4e2e8b2063
   languageName: node
   linkType: hard
 
@@ -4227,46 +4042,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docsearch/css@npm:3.9.0, @docsearch/css@npm:^3.9.0":
-  version: 3.9.0
-  resolution: "@docsearch/css@npm:3.9.0"
-  checksum: 10c0/6300551e1cab7a5487063ec3581ae78ddaee3d93ec799556b451054448559b3ba849751b825fbd8b678367ef944bd82b3f11bc1d9e74e08e3cc48db40487b396
+"@docsearch/css@npm:^4.6.3":
+  version: 4.6.3
+  resolution: "@docsearch/css@npm:4.6.3"
+  checksum: 10c0/10c1282f102332915eaced15b16422d6aeb6b845311483e73d0f789fdc9c0913278adfa9f6ab29c856d769eafd1598d3271d6ef7059d74bec9d3f3c53a29f132
   languageName: node
   linkType: hard
 
-"@docsearch/js@npm:^3.9.0":
-  version: 3.9.0
-  resolution: "@docsearch/js@npm:3.9.0"
-  dependencies:
-    "@docsearch/react": "npm:3.9.0"
-    preact: "npm:^10.0.0"
-  checksum: 10c0/f96b9d452c87ada7ff368138442da96b8daa33f4edd956ed14209d284e267eb546ad20a85fa6f70352fc4bf530293635978329ca12a40aacf4e2d0595e91d61e
-  languageName: node
-  linkType: hard
-
-"@docsearch/react@npm:3.9.0":
-  version: 3.9.0
-  resolution: "@docsearch/react@npm:3.9.0"
-  dependencies:
-    "@algolia/autocomplete-core": "npm:1.17.9"
-    "@algolia/autocomplete-preset-algolia": "npm:1.17.9"
-    "@docsearch/css": "npm:3.9.0"
-    algoliasearch: "npm:^5.14.2"
-  peerDependencies:
-    "@types/react": ">= 16.8.0 < 20.0.0"
-    react: ">= 16.8.0 < 20.0.0"
-    react-dom: ">= 16.8.0 < 20.0.0"
-    search-insights: ">= 1 < 3"
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    react:
-      optional: true
-    react-dom:
-      optional: true
-    search-insights:
-      optional: true
-  checksum: 10c0/5e737a5d9ef1daae1cd93e89870214c1ab0c36a3a2193e898db044bcc5d9de59f85228b2360ec0e8f10cdac7fd2fe3c6ec8a05d943ee7e17d6c1cef2e6e9ff2d
+"@docsearch/js@npm:^4.6.3":
+  version: 4.6.3
+  resolution: "@docsearch/js@npm:4.6.3"
+  checksum: 10c0/90aecad104a4a14a2a6607f3ab4015dfb40ad0e2dfa85c49b924683f6493e7beae1575fcd3e880f1fa1f448c883a7e573800aee195edfba93d921f3a96f5bc4f
   languageName: node
   linkType: hard
 
@@ -10272,27 +10058,6 @@ __metadata:
     "@algolia/requester-fetch": "npm:5.35.0"
     "@algolia/requester-node-http": "npm:5.35.0"
   checksum: 10c0/3b6593dc285e7dadda08dea3998391b9439b4e1144e8da767311e470e69e33067f2396e628cdf24767d52bdc0c08c063991cf76ac787ce5aec36864fcc1e3f9a
-  languageName: node
-  linkType: hard
-
-"algoliasearch@npm:^5.14.2":
-  version: 5.25.0
-  resolution: "algoliasearch@npm:5.25.0"
-  dependencies:
-    "@algolia/client-abtesting": "npm:5.25.0"
-    "@algolia/client-analytics": "npm:5.25.0"
-    "@algolia/client-common": "npm:5.25.0"
-    "@algolia/client-insights": "npm:5.25.0"
-    "@algolia/client-personalization": "npm:5.25.0"
-    "@algolia/client-query-suggestions": "npm:5.25.0"
-    "@algolia/client-search": "npm:5.25.0"
-    "@algolia/ingestion": "npm:1.25.0"
-    "@algolia/monitoring": "npm:1.25.0"
-    "@algolia/recommend": "npm:5.25.0"
-    "@algolia/requester-browser-xhr": "npm:5.25.0"
-    "@algolia/requester-fetch": "npm:5.25.0"
-    "@algolia/requester-node-http": "npm:5.25.0"
-  checksum: 10c0/fdf2b03c48415a7f284697bbe316bba41d4d6b0c5c76e886aa9841e69b8bc79305b0679d29dece71a347eef8ef3715980ed6a736febaca8f869b6551e470decf
   languageName: node
   linkType: hard
 
@@ -18385,8 +18150,8 @@ __metadata:
     "@commitlint/config-conventional": "npm:^19.8.1"
     "@cspell/dict-markdown": "npm:^2.0.17"
     "@cspell/dict-ru_ru": "npm:^2.3.2"
-    "@docsearch/css": "npm:^3.9.0"
-    "@docsearch/js": "npm:^3.9.0"
+    "@docsearch/css": "npm:^4.6.3"
+    "@docsearch/js": "npm:^4.6.3"
     "@eslint-community/eslint-plugin-eslint-comments": "npm:^4.5.0"
     "@eslint/js": "npm:^9.0.0"
     "@fontsource/inter": "npm:^5.2.8"
@@ -21764,13 +21529,6 @@ __metadata:
   dependencies:
     xtend: "npm:^4.0.0"
   checksum: 10c0/c1734c3cb79e7f22579af0b268a463b1fa1d084e742a02a7a290c4f041e349456f3bee3b4ee0bb3f226828597f7b76deb615c1b857db9a742c45520100456272
-  languageName: node
-  linkType: hard
-
-"preact@npm:^10.0.0":
-  version: 10.22.0
-  resolution: "preact@npm:10.22.0"
-  checksum: 10c0/dc5466c5968c56997e917580c00983cec2f6486a89ea9ba29f1bb88dcfd2f9ff67c8d561a69a1b3acdab17f2bb36b311fef0c348b62e89c332d00c674f7871f0
   languageName: node
   linkType: hard
 
