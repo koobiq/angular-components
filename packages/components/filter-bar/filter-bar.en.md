@@ -82,4 +82,3 @@ There are three ways to control the locale. `KBQ_DEFAULT_LOCALE_ID` is the fallb
 Each bar below provides its own `KbqLocaleService`, so they are isolated from each other and from the language selector in the footer of this site.
 
 <!-- example(filter-bar-localization) -->
-

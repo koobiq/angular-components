@@ -116,7 +116,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         // the inherited `getViewValue` field, which the tree would never see.
         this.treeControl.getViewValue = (node: KbqTreeSelectFlatNode): string => {
             return node.value === kbqTreeSelectAllValue ? this.localeData.pipe.selectAll : node.name;
-        }
+        };
 
         // See the field-init note in `KbqTreeSelectPipeBase`: subscribing here (after this class's
         // `updateTemplates` initializer) ensures the initial replay writes `dataSource.data`.
