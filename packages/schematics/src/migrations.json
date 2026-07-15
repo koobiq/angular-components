@@ -7,7 +7,7 @@
             "factory": "./migrations/v20-upgrade/index"
         },
         "filter-bar-signals": {
-            "version": "21.0.0-0",
+            "version": "20.1.0-0",
             "description": "Migrates KbqFilterBar consumers to the signal-based API. Rewrites programmatic reads of the now-signal members (filter, pipeTemplates, isChanged, isDisabled, isReadOnly, isSaved, isSavedAndChanged) to calls and `filter = v` writes to `filter.set(v)` on receivers typed KbqFilterBar, including reads via template reference variables on <kbq-filter-bar>. Renames KbqFilterBarRefresher → KbqFilterRefresher and warns on changes/preparePopover/view-query cases that need manual migration.",
             "factory": "./migrations/filter-bar-signals/index"
         }

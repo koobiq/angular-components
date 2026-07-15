@@ -8,6 +8,7 @@
 2. **18.6**: обновление токенов.
 3. **18.22**: изменение атрибутов компонентов.
 4. **20.0.0**: переход на Angular 20: удаление устаревших API и переименование пакетов.
+5. **20.1.0**: переход API filter-bar на сигналы.
 
 ### 1. Обновление до 18.5.3
 
@@ -145,6 +146,72 @@ ng g @koobiq/components:v20-upgrade --project <your project>
 **Модалки**: ModalOptions.kbqComponentParams → поле data + inject(KBQ_MODAL_DATA).
 
 **Code block**: устаревшие input `canLoad` / `codeFiles` переименованы в `canDownload` / `files`. Привязки в шаблонах схематик переписывает автоматически; программное обращение (`.canLoad`, `.codeFiles`) нужно поправить вручную.
+
+### 5. Обновление filter-bar (20.1.0)
+
+В версии 20.1.0 публичный API `KbqFilterBar` переведён на сигналы. Привязки в шаблонах (`[filter]`, `[(filter)]`, `[pipeTemplates]`) и вывод `(filterChange)` продолжают работать — ломается только программное чтение: теперь оно требует вызова.
+
+| Параметр                                                                    | Было                    | Стало                                                       |
+| --------------------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------- |
+| `filter`                                                                    | accessor                | `ModelSignal<KbqFilter \| null>` — запись через `.set(...)` |
+| `pipeTemplates`                                                             | accessor                | `InputSignal<KbqPipeTemplate[]>`                            |
+| `isChanged` / `isDisabled` / `isReadOnly` / `isSaved` / `isSavedAndChanged` | getter                  | `Signal<boolean>`                                           |
+| `onChangePipe`                                                              | `EventEmitter<KbqPipe>` | `OutputEmitterRef<KbqPipe>`                                 |
+
+#### Запуск миграции
+
+Изменения применяет схематик `filter-bar-signals` (запускается автоматически):
+
+```bash
+ng update @koobiq/components@20
+```
+
+Или вручную — например, если вы уже обновились на 20.1.0. С предпросмотром без записи — `--fix=false`:
+
+```bash
+ng g @koobiq/components:filter-bar-signals --project <your project>
+```
+
+#### Что исправляется автоматически
+
+**Чтение и запись в TypeScript** (для получателей с аннотацией типа `KbqFilterBar` / `KbqFilterBarHost`):
+
+- filterBar.filter → filterBar.filter(),
+- filterBar.filter = next → filterBar.filter.set(next),
+- filterBar.filter?.name → filterBar.filter()?.name,
+- this.filterBar.isChanged → this.filterBar.isChanged()
+
+**Чтение через ссылку в шаблоне** (`#ref` на `<kbq-filter-bar>`, во внешних `.html` и в inline-шаблонах):
+
+- ref.isChanged → ref.isChanged()
+
+**Переименования:**
+
+- KbqFilterBarRefresher → KbqFilterRefresher (старое имя пока ре-экспортируется как алиас, поэтому сборку не ломает)
+
+Все замены идемпотентны — повторный запуск не удваивает вызов.
+
+#### Что нужно поправить вручную
+
+Схематик подсветит предупреждениями то, что нельзя переписать безопасно:
+
+**KbqFilterBar.changes**: устарело → читайте `filterBar.filter()` внутри `effect(...)` или слушайте `(filterChange)`.
+
+**KbqFilters.preparePopover()**: удалён → `openSaveAsNewFilterPopover()` / `openChangeFilterNamePopover()`.
+
+**Запросы viewChild(KbqFilterBar)**: возвращают экземпляр компонента, поэтому чтение становится двойным вызовом — `this.filterBar().filter()`.
+
+**KBQ_FILTER_BAR_PIPES**: теперь `Map<KbqPipeType, Type<KbqBasePipe>>` (был массив кортежей) → оберните записи в `new Map([...])`.
+
+Схематик не покрывает следующие изменения — проверьте их самостоятельно:
+
+**[filters] у kbq-filters**: input стал обязательным.
+
+**KbqPipeState.state**: accessor → `InputSignal<T | null>` (важно для кастомных pipe).
+
+**KbqPipeTreeSelectComponent**: удалены `template` и `filteredOptions`. У **KbqFilters** поля `popoverOffset` и `popoverSize` стали `protected`.
+
+Получатели схематик определяет только по явной аннотации типа, поэтому алиасы (`const fb = this.filterBar; fb.filter`) остаются нетронутыми — их нужно поправить вручную.
 
 ### После миграции
 

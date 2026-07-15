@@ -1,6 +1,6 @@
 # filter-bar-signals
 
-Migration schematic invoked automatically by `ng update @koobiq/components@21`.
+Migration schematic invoked automatically by `ng update @koobiq/components@20`.
 Migrates consumers of `KbqFilterBar` to its signal-based public API.
 
 ## Why

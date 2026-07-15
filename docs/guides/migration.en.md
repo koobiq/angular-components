@@ -8,6 +8,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 2. **18.6**: token update.
 3. **18.22**: component attribute changes.
 4. **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
+5. **20.1.0**: the move of the filter-bar API to signals.
 
 ### 1. Upgrade to 18.5.3
 
@@ -145,6 +146,72 @@ The schematic emits warnings for what cannot be rewritten safely:
 **Modals**: ModalOptions.kbqComponentParams → the data field + inject(KBQ_MODAL_DATA).
 
 **Code block**: the deprecated `canLoad` / `codeFiles` inputs are renamed to `canDownload` / `files`. Template bindings are migrated automatically; programmatic access (`.canLoad`, `.codeFiles`) must be updated by hand.
+
+### 5. Filter-bar upgrade (20.1.0)
+
+In version 20.1.0 the public API of `KbqFilterBar` moved to signals. Template bindings (`[filter]`, `[(filter)]`, `[pipeTemplates]`) and the `(filterChange)` output keep working — only programmatic reads break: they now require a call.
+
+| Member                                                                      | Before                  | After                                                    |
+| --------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------- |
+| `filter`                                                                    | accessor                | `ModelSignal<KbqFilter \| null>` — write via `.set(...)` |
+| `pipeTemplates`                                                             | accessor                | `InputSignal<KbqPipeTemplate[]>`                         |
+| `isChanged` / `isDisabled` / `isReadOnly` / `isSaved` / `isSavedAndChanged` | getter                  | `Signal<boolean>`                                        |
+| `onChangePipe`                                                              | `EventEmitter<KbqPipe>` | `OutputEmitterRef<KbqPipe>`                              |
+
+#### Running the migration
+
+The changes are applied by the `filter-bar-signals` schematic (runs automatically):
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually — for example, if you have already upgraded to 20.1.0. To preview without writing — `--fix=false`:
+
+```bash
+ng g @koobiq/components:filter-bar-signals --project <your project>
+```
+
+#### What is fixed automatically
+
+**Reads and writes in TypeScript** (for receivers annotated `KbqFilterBar` / `KbqFilterBarHost`):
+
+- filterBar.filter → filterBar.filter(),
+- filterBar.filter = next → filterBar.filter.set(next),
+- filterBar.filter?.name → filterBar.filter()?.name,
+- this.filterBar.isChanged → this.filterBar.isChanged()
+
+**Reads through a template reference variable** (`#ref` on `<kbq-filter-bar>`, in external `.html` files and inline templates):
+
+- ref.isChanged → ref.isChanged()
+
+**Renames:**
+
+- KbqFilterBarRefresher → KbqFilterRefresher (the old name is still re-exported as an alias, so it does not break the build)
+
+All replacements are idempotent — running the schematic twice does not double the call.
+
+#### What you need to fix manually
+
+The schematic emits warnings for what cannot be rewritten safely:
+
+**KbqFilterBar.changes**: deprecated and no longer emits → read `filterBar.filter()` inside an `effect(...)`, or listen to `(filterChange)`.
+
+**KbqFilters.preparePopover()**: removed → `openSaveAsNewFilterPopover()` / `openChangeFilterNamePopover()`.
+
+**viewChild(KbqFilterBar) queries**: return the component instance, so a read becomes a double call — `this.filterBar().filter()`.
+
+**KBQ_FILTER_BAR_PIPES**: now typed `Map<KbqPipeType, Type<KbqBasePipe>>` (was an array of tuples) → wrap the entries in `new Map([...])`.
+
+The schematic does not cover the following changes — check them yourself:
+
+**[filters] on kbq-filters**: the input became required.
+
+**KbqPipeState.state**: accessor → `InputSignal<T | null>` (relevant for custom pipes).
+
+**KbqPipeTreeSelectComponent**: `template` and `filteredOptions` were removed. On **KbqFilters** the `popoverOffset` and `popoverSize` fields became `protected`.
+
+The schematic matches receivers by explicit type annotation only, so aliases (`const fb = this.filterBar; fb.filter`) are left untouched — fix them by hand.
 
 ### After the migration
 
