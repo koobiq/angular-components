@@ -3,6 +3,24 @@ description: Build all koobiq packages
 runs:
   using: composite
   steps:
-    - name: Build packages
+    - name: Build @koobiq/components
       shell: bash
-      run: .github/workflows/actions/build-packages/entrypoint.sh
+      run: yarn run build:components
+    - name: Build @koobiq/components-experimental
+      shell: bash
+      run: yarn run build:components-experimental
+    - name: Build @koobiq/angular-luxon-adapter
+      shell: bash
+      run: yarn run build:angular-luxon-adapter
+    - name: Build @koobiq/angular-moment-adapter
+      shell: bash
+      run: yarn run build:angular-moment-adapter
+    - name: Build SCSS Styles
+      shell: bash
+      run: yarn run styles:build-all
+    - name: Build @koobiq/cli
+      shell: bash
+      run: yarn run build:cli
+    - name: Build @koobiq/schematics
+      shell: bash
+      run: yarn run build:schematics

@@ -1,13 +1,27 @@
-name: Build Documentation
-description: Common setup steps used by our workflows
+name: Build documentation
+description: Build documentation application
 runs:
   using: composite
   steps:
-    - name: Build Documentation
+    - name: Build docs examples module
       shell: bash
-      run: |
-        yarn run build:docs-examples-module
-        yarn run build:docs-examples
-        yarn run build:docs-content
-        yarn run build:package-docs-content
-        yarn run docs:build
+      run: yarn run build:docs-examples-module
+    - name: Build docs examples
+      shell: bash
+      run: yarn run build:docs-examples
+    - name: Build docs content
+      shell: bash
+      run: yarn run build:docs-content
+    - name: Build package docs content
+      shell: bash
+      run: yarn run build:package-docs-content
+    - name: Build docs
+      shell: bash
+      env:
+        # Prerendering renders routes concurrently in worker threads (default cap: 4) with a
+        # hardcoded 30s-per-route timeout. With 300+ routes on shared CI runners, occasional
+        # CPU contention between workers can push a route over that timeout, which tears down
+        # the whole worker pool and fails every route still in flight. Rendering routes one at
+        # a time removes that contention.
+        NG_BUILD_MAX_WORKERS: 1
+      run: yarn run docs:build
