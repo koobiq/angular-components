@@ -83,7 +83,7 @@ describe('KbqRoundDecimalPipe', () => {
 
             expect(!units.includes(pipe.transform(betweenMillionAndAndTenMillion)[1])).toBeTruthy();
 
-            expect(units.includes(pipe.transform(betweenTenMillionsAndBillion)![2])).toBeTruthy();
+            expect(units.includes(pipe.transform(betweenTenMillionsAndBillion)[2])).toBeTruthy();
         });
     }));
 
