@@ -1,4 +1,6 @@
 ﻿import { ENTER, SPACE } from '@angular/cdk/keycodes';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { Component, DebugElement, Directive, model, Provider, signal, TemplateRef, Type } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,6 +22,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { Subject } from 'rxjs';
 import { KbqInlineEdit } from './inline-edit';
 import { KbqInlineEditModule } from './module';
 
@@ -344,6 +347,27 @@ describe('KbqInlineEdit', () => {
         saveButtonHTMLElement?.click();
 
         expect(spyFn).not.toHaveBeenCalled();
+    });
+
+    it('should reposition the edit mode overlay when the surrounding layout resizes', () => {
+        const resize$ = new Subject<void>();
+        const fixture = setup(TestComponent, [
+            { provide: SharedResizeObserver, useValue: { observe: () => resize$ } }
+        ]);
+        const { debugElement } = fixture;
+        const inlineEdit = getInlineEditDebugElement(debugElement).componentInstance as KbqInlineEdit;
+
+        // Enter edit mode so the overlay attaches and starts observing the layout.
+        getInlineEditDebugElement(debugElement).nativeElement.click();
+        fixture.detectChanges();
+
+        const overlayRef = (inlineEdit as unknown as { overlayDir: () => CdkConnectedOverlay }).overlayDir().overlayRef;
+        const updatePositionSpy = jest.spyOn(overlayRef, 'updatePosition');
+
+        resize$.next();
+        fixture.detectChanges();
+
+        expect(updatePositionSpy).toHaveBeenCalled();
     });
 
     describe('interactiveSelectors', () => {

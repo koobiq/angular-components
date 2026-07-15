@@ -521,11 +521,14 @@ export class KbqInlineEdit {
             : this.elementRef.nativeElement;
 
         if (element) {
+            const overlayRef = this.overlayDir().overlayRef;
+
             this.resizeObserver
                 .observe(element)
-                .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
+                .pipe(takeUntil(overlayRef.detachments()))
                 .subscribe(() => {
                     this.overlayWidth.set(element.offsetWidth);
+                    overlayRef.updatePosition();
                 });
         }
 
