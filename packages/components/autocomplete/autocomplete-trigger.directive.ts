@@ -631,7 +631,7 @@ export class KbqAutocompleteTrigger
             .subscribe(() => {
                 this.resetActiveItem();
 
-                // Overlay width can be not final at first open, so re-measure when layout is stable.
+                // Overlay width may not be final on first open, so re-measure when the layout is stable.
                 if (this.panelOpen && this.overlayRef) {
                     this.overlayRef.updateSize(this.getOverlaySize());
                 }
