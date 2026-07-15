@@ -68,6 +68,14 @@ const minFractionGroupPosition = 3;
 const maxFractionGroupPosition = 5;
 const useGroupingPosition = 7;
 
+type RoundDecimalOptions = KbqNumberRoundingLocaleConfig & {
+    /** Label for the ten-thousand unit. */
+    tenThousand?: string;
+    /** Label for the one-hundred-millions unit. */
+    oneHundredMillions?: string;
+    rtl?: string;
+};
+
 const ROUNDING_UNITS = {
     thousand: 1e3,
     tenThousand: 10 * 1e3,
@@ -78,7 +86,7 @@ const ROUNDING_UNITS = {
 };
 
 /** Rounding units that carry a localized label in `KbqNumberRoundingLocaleConfig`. */
-type RoundingUnit = keyof KbqNumberRoundingLocaleConfig & keyof typeof ROUNDING_UNITS;
+type RoundingUnit = keyof RoundDecimalOptions & keyof typeof ROUNDING_UNITS;
 
 const intervalsConfig = {
     supportedLanguages: ['ru-RU', 'en-US', 'es-LA', 'pt-BR'],
@@ -281,7 +289,7 @@ export function isWithin(startRange: number, endRange: number, valueToCheck: num
 export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-    roundingOptions: KbqNumberRoundingLocaleConfig;
+    roundingOptions: RoundDecimalOptions;
 
     constructor() {
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));

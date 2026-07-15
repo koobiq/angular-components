@@ -74,14 +74,14 @@ describe('KbqRoundDecimalPipe', () => {
             expect(pipe.transform(betweenOneAndThousand)).toEqual(betweenOneAndThousand.toLocaleString(locale));
 
             const isNumberWithFraction =
-                !units.includes(pipe.transform(betweenThousandAndTenThousandRounded)![1]) &&
-                Number.isNaN(+pipe.transform(betweenThousandAndTenThousandRounded)![1]);
+                !units.includes(pipe.transform(betweenThousandAndTenThousandRounded)[1]) &&
+                Number.isNaN(+pipe.transform(betweenThousandAndTenThousandRounded)[1]);
 
             expect(isNumberWithFraction).toBeTruthy();
 
-            expect(units.includes(pipe.transform(betweenTenThousandAndMillion)![3])).toBeTruthy();
+            expect(units.includes(pipe.transform(betweenTenThousandAndMillion)[3])).toBeTruthy();
 
-            expect(!units.includes(pipe.transform(betweenMillionAndAndTenMillion)![1])).toBeTruthy();
+            expect(!units.includes(pipe.transform(betweenMillionAndAndTenMillion)[1])).toBeTruthy();
 
             expect(units.includes(pipe.transform(betweenTenMillionsAndBillion)![2])).toBeTruthy();
         });
