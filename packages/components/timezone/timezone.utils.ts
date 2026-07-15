@@ -79,7 +79,7 @@ export function offset(value) {
 }
 
 export function offsetFormatter(value: string): string {
-    return `UTC${offset(value)}`;
+    return `UTC ${offset(value)}`;
 }
 
 export function offsetFormatterAsObject(value: string): { [UTC: string]: string } {
