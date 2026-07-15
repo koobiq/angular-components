@@ -55,17 +55,19 @@
         &.kbq-navbar-bento .kbq-navbar-item__title {
             margin-left: -8px;
             opacity: 0;
+
+            transition:
+                opacity 150ms ease-out,
+                margin-left 150ms ease-out;
         }
 
         &.kbq-navbar-bento:hover,
-        &.kbq-navbar-bento.cdk-keyboard-focused {
+        &.kbq-navbar-bento.cdk-keyboard-focused,
+        &.kbq-navbar-bento.kbq-active,
+        &.kbq-navbar-bento.kbq-pressed {
             & .kbq-navbar-item__title {
                 margin-left: 0;
                 opacity: 1;
-
-                transition:
-                    opacity 150ms ease-out,
-                    margin-left 150ms ease-out;
             }
         }
     }
