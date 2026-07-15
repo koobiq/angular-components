@@ -310,7 +310,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
             const unit = this.calculateUnit(num);
 
             if (!unit) {
-                return new Intl.NumberFormat(currentLocale, { useGrouping: false }).format(num);
+                return Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(num);
             }
 
             let parts: { num?: number; fraction?: number } = {};
@@ -344,7 +344,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
                       fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
                   };
             Object.keys(parts).forEach((key) => {
-                parts[key] = new Intl.NumberFormat(currentLocale, { useGrouping: false }).format(parts[key]);
+                parts[key] = Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(parts[key]);
             });
 
             const calculatedValue = parts.fraction
