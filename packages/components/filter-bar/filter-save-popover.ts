@@ -143,7 +143,7 @@ export class KbqFilterSavePopover implements AfterViewInit {
         return this.filterBar().configuration.filters;
     }
 
-    /** localized data
+    /** Filter saving error text (custom or locale-derived).
      * @docs-private */
     get filterSavingErrorText(): string {
         return this.customErrorText ?? this.localeData.errorHint;
