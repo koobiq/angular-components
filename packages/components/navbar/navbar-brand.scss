@@ -29,6 +29,15 @@
 
 a.kbq-navbar-brand {
     text-decoration: none;
+
+    &.kbq-navbar-brand_long-title .kbq-navbar-title {
+        display: -webkit-box;
+
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        white-space: normal;
+    }
 }
 
 .kbq-navbar-brand.kbq-horizontal {
@@ -46,6 +55,8 @@ a.kbq-navbar-brand {
     }
 
     & .kbq-navbar-title {
+        max-width: 154px;
+
         padding-right: var(--kbq-size-m);
     }
 }
@@ -84,14 +95,6 @@ a.kbq-navbar-brand {
         & .kbq-navbar-title {
             display: none !important;
         }
-    }
-
-    &.kbq-navbar-brand_long-title .kbq-navbar-title {
-        display: -webkit-box;
-
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        white-space: normal;
     }
 }
 
@@ -145,8 +148,11 @@ a.kbq-navbar-brand {
             @include kbq-typography-level-to-styles-css-variables(typography, navbar-title);
         }
 
+        // Both orientations: two lines of the 18px/28px default would grow the navbar (48px -> 72px
+        // horizontally), which is what the compact type exists to prevent.
         &.kbq-navbar-brand_long-title .kbq-navbar-title {
             @include kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
+            line-height: 16px;
         }
     }
 }

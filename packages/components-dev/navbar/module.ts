@@ -20,11 +20,17 @@ import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
     selector: 'dev-examples',
     imports: [NavbarExamplesModule],
     template: `
-        <navbar-overview-example />
+        <navbar-app-long-name-example />
         <br />
-        <navbar-vertical-example />
         <br />
-        <navbar-vertical-open-over-example />
+        <navbar-vertical-app-long-name-example />
+        <br />
+        <br />
+        <!--        <navbar-overview-example />-->
+        <!--        <br />-->
+        <!--        <navbar-vertical-example />-->
+        <!--        <br />-->
+        <!--        <navbar-vertical-open-over-example />-->
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

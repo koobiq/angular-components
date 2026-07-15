@@ -19,3 +19,13 @@ The vertical menu is convenient for long pages. When unfolded, it takes more pla
 You can also make the vertical menu overlay page content.
 
 <!-- example(navbar-vertical-open-over) -->
+
+### Long application name
+
+When the name does not fit on one line, the header switches to a small two-line title on its own — there is nothing to configure. A name that fits keeps the default style, and one too long even for two lines is truncated and shown in full in a tooltip.
+
+<!-- example(navbar-vertical-app-long-name) -->
+
+The same is available in the horizontal menu.
+
+<!-- example(navbar-app-long-name) -->

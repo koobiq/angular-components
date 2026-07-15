@@ -132,7 +132,9 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     get hasCroppedText(): boolean;
     // (undocumented)
     get isLink(): boolean;
-    readonly longTitle: i0.InputSignal<boolean>;
+    // @deprecated
+    readonly longTitle: i0.InputSignal<boolean | undefined>;
+    protected readonly longTitleEnabled: i0.Signal<boolean>;
     protected readonly nativeElement: HTMLElement;
     protected readonly navbarFocusableItem: KbqNavbarFocusableItem;
     // (undocumented)
@@ -323,17 +325,13 @@ export class KbqNavbarRectangleElement {
 // @public (undocumented)
 export class KbqNavbarTitle implements AfterViewInit {
     // (undocumented)
-    checkTextOverflown(): void;
-    // (undocumented)
     getOuterElementWidth(): number;
     // (undocumented)
     readonly hovered: Subject<boolean>;
     // (undocumented)
     protected readonly isBrowser: boolean;
-    // (undocumented)
+    get isClamped(): boolean;
     get isOverflown(): boolean;
-    // (undocumented)
-    isTextOverflown: boolean;
     // (undocumented)
     protected readonly nativeElement: HTMLElement;
     // (undocumented)

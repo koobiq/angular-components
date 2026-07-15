@@ -51,232 +51,232 @@
     <button kbq-dropdown-item>Point 2</button>
 </kbq-dropdown>
 
-<kbq-navbar>
-    <kbq-navbar-container>
-        <kbq-navbar-item
-            #horizontalNavbarDropdownAppsDropdownTrigger="kbqDropdownTrigger"
-            bento
-            [class.kbq-active]="horizontalNavbarDropdownAppsDropdownTrigger.opened"
-            [kbqDropdownTriggerFor]="horizontalNavbarDropdownApps"
-            [kbqPlacement]="popUpPlacements.BottomLeft"
-            [kbqTooltip]="'Приложения'"
-            [kbqTrigger]="'hover'"
-        >
-            <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
-        </kbq-navbar-item>
+<!--<kbq-navbar>-->
+<!--    <kbq-navbar-container>-->
+<!--        <kbq-navbar-item-->
+<!--            #horizontalNavbarDropdownAppsDropdownTrigger="kbqDropdownTrigger"-->
+<!--            bento-->
+<!--            [class.kbq-active]="horizontalNavbarDropdownAppsDropdownTrigger.opened"-->
+<!--            [kbqDropdownTriggerFor]="horizontalNavbarDropdownApps"-->
+<!--            [kbqPlacement]="popUpPlacements.BottomLeft"-->
+<!--            [kbqTooltip]="'Приложения'"-->
+<!--            [kbqTrigger]="'hover'"-->
+<!--        >-->
+<!--            <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>-->
+<!--        </kbq-navbar-item>-->
 
-        <a href="#" kbq-navbar-brand>
-            <kbq-navbar-logo>
-                <!-- prettier-ignore -->
-                <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
-            </kbq-navbar-logo>
-            <kbq-navbar-title>App name</kbq-navbar-title>
-        </a>
+<!--        <a href="#" kbq-navbar-brand>-->
+<!--            <kbq-navbar-logo>-->
+<!--                &lt;!&ndash; prettier-ignore &ndash;&gt;-->
+<!--                <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>-->
+<!--            </kbq-navbar-logo>-->
+<!--            <kbq-navbar-title>App name</kbq-navbar-title>-->
+<!--        </a>-->
 
-        <button kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Панели мониторинга'">
-            <i kbq-icon="kbq-folder_16" color="contrast"></i>
-        </button>
+<!--        <button kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Панели мониторинга'">-->
+<!--            <i kbq-icon="kbq-folder_16" color="contrast"></i>-->
+<!--        </button>-->
 
-        <kbq-navbar-item
-            #horizontalNavbarTasksDropdownTrigger="kbqDropdownTrigger"
-            [class.kbq-active]="horizontalNavbarTasksDropdownTrigger.opened"
-            [collapsable]="false"
-            [kbqDropdownTriggerFor]="horizontalNavbarTasks"
-        >
-            <kbq-navbar-title>Задачи</kbq-navbar-title>
-        </kbq-navbar-item>
+<!--        <kbq-navbar-item-->
+<!--            #horizontalNavbarTasksDropdownTrigger="kbqDropdownTrigger"-->
+<!--            [class.kbq-active]="horizontalNavbarTasksDropdownTrigger.opened"-->
+<!--            [collapsable]="false"-->
+<!--            [kbqDropdownTriggerFor]="horizontalNavbarTasks"-->
+<!--        >-->
+<!--            <kbq-navbar-title>Задачи</kbq-navbar-title>-->
+<!--        </kbq-navbar-item>-->
 
-        <kbq-navbar-item
-            #horizontalNavbarProjectsDropdownTrigger="kbqDropdownTrigger"
-            [class.kbq-active]="horizontalNavbarProjectsDropdownTrigger.opened"
-            [collapsable]="false"
-            [kbqDropdownTriggerFor]="horizontalNavbarProjects"
-        >
-            <kbq-navbar-title>Проекты</kbq-navbar-title>
-        </kbq-navbar-item>
+<!--        <kbq-navbar-item-->
+<!--            #horizontalNavbarProjectsDropdownTrigger="kbqDropdownTrigger"-->
+<!--            [class.kbq-active]="horizontalNavbarProjectsDropdownTrigger.opened"-->
+<!--            [collapsable]="false"-->
+<!--            [kbqDropdownTriggerFor]="horizontalNavbarProjects"-->
+<!--        >-->
+<!--            <kbq-navbar-title>Проекты</kbq-navbar-title>-->
+<!--        </kbq-navbar-item>-->
 
-        <kbq-navbar-item
-            #horizontalNavbarOneMoreDropdownTrigger="kbqDropdownTrigger"
-            [class.kbq-active]="horizontalNavbarOneMoreDropdownTrigger.opened"
-            [collapsable]="false"
-            [kbqDropdownTriggerFor]="horizontalNavbarOneMore"
-        >
-            <kbq-navbar-title>Еще</kbq-navbar-title>
-        </kbq-navbar-item>
+<!--        <kbq-navbar-item-->
+<!--            #horizontalNavbarOneMoreDropdownTrigger="kbqDropdownTrigger"-->
+<!--            [class.kbq-active]="horizontalNavbarOneMoreDropdownTrigger.opened"-->
+<!--            [collapsable]="false"-->
+<!--            [kbqDropdownTriggerFor]="horizontalNavbarOneMore"-->
+<!--        >-->
+<!--            <kbq-navbar-title>Еще</kbq-navbar-title>-->
+<!--        </kbq-navbar-item>-->
 
-        <kbq-navbar-item>
-            <button kbq-button [color]="'contrast'">
-                <span>Новая задача</span>
-            </button>
-        </kbq-navbar-item>
-    </kbq-navbar-container>
+<!--        <kbq-navbar-item>-->
+<!--            <button kbq-button [color]="'contrast'">-->
+<!--                <span>Новая задача</span>-->
+<!--            </button>-->
+<!--        </kbq-navbar-item>-->
+<!--    </kbq-navbar-container>-->
 
-    <kbq-navbar-container>
-        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Уведомления'">
-            <i kbq-icon="kbq-bell_16" color="contrast"></i>
-            <kbq-badge [badgeColor]="'error'" [compact]="true">5</kbq-badge>
-        </kbq-navbar-item>
+<!--    <kbq-navbar-container>-->
+<!--        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Уведомления'">-->
+<!--            <i kbq-icon="kbq-bell_16" color="contrast"></i>-->
+<!--            <kbq-badge [badgeColor]="'error'" [compact]="true">5</kbq-badge>-->
+<!--        </kbq-navbar-item>-->
 
-        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Администрирование'">
-            <i kbq-icon="kbq-gear_16" color="contrast"></i>
-        </kbq-navbar-item>
+<!--        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Администрирование'">-->
+<!--            <i kbq-icon="kbq-gear_16" color="contrast"></i>-->
+<!--        </kbq-navbar-item>-->
 
-        <kbq-navbar-divider />
+<!--        <kbq-navbar-divider />-->
 
-        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Справка'">
-            <i kbq-icon="kbq-magnifying-glass_16" color="contrast"></i>
-        </kbq-navbar-item>
+<!--        <kbq-navbar-item [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Справка'">-->
+<!--            <i kbq-icon="kbq-magnifying-glass_16" color="contrast"></i>-->
+<!--        </kbq-navbar-item>-->
 
-        <kbq-navbar-item
-            #horizontalNavbarProfileDropdownTrigger="kbqDropdownTrigger"
-            [class.kbq-active]="horizontalNavbarProfileDropdownTrigger.opened"
-            [kbqDropdownTriggerFor]="horizontalNavbarProfile"
-            [kbqPlacement]="popUpPlacements.BottomRight"
-            [kbqTooltip]="'Профиль'"
-            [kbqTrigger]="'hover'"
-        >
-            <i kbq-icon="kbq-user_16" color="contrast"></i>
-        </kbq-navbar-item>
-    </kbq-navbar-container>
-</kbq-navbar>
+<!--        <kbq-navbar-item-->
+<!--            #horizontalNavbarProfileDropdownTrigger="kbqDropdownTrigger"-->
+<!--            [class.kbq-active]="horizontalNavbarProfileDropdownTrigger.opened"-->
+<!--            [kbqDropdownTriggerFor]="horizontalNavbarProfile"-->
+<!--            [kbqPlacement]="popUpPlacements.BottomRight"-->
+<!--            [kbqTooltip]="'Профиль'"-->
+<!--            [kbqTrigger]="'hover'"-->
+<!--        >-->
+<!--            <i kbq-icon="kbq-user_16" color="contrast"></i>-->
+<!--        </kbq-navbar-item>-->
+<!--    </kbq-navbar-container>-->
+<!--</kbq-navbar>-->
 
 <!--<br />-->
 <!--<br />-->
 
-<div class="dev-vertical-navbar-container">
-    <kbq-vertical-navbar #verticalNavbar>
-        <kbq-navbar-container>
-            <div
-                #verticalNavbarDropdownTrigger_1="kbqDropdownTrigger"
-                bento
-                kbq-navbar-item
-                [class.kbq-active]="verticalNavbarDropdownTrigger_1.opened"
-                [kbqDropdownTriggerFor]="verticalNavbarDropdown_1"
-            >
-                <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
+<!--<div class="dev-vertical-navbar-container">-->
+<!--    <kbq-vertical-navbar #verticalNavbar>-->
+<!--        <kbq-navbar-container>-->
+<!--            <div-->
+<!--                #verticalNavbarDropdownTrigger_1="kbqDropdownTrigger"-->
+<!--                bento-->
+<!--                kbq-navbar-item-->
+<!--                [class.kbq-active]="verticalNavbarDropdownTrigger_1.opened"-->
+<!--                [kbqDropdownTriggerFor]="verticalNavbarDropdown_1"-->
+<!--            >-->
+<!--                <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>-->
 
-                <span kbq-navbar-title>
-                    App NameApp NameApp NameApp NameApp NameApp NameApp NameApp NameApp NameApp Name
-                </span>
-            </div>
+<!--                <span kbq-navbar-title>-->
+<!--                    App NameApp NameApp NameApp NameApp NameApp NameApp NameApp NameApp NameApp Name-->
+<!--                </span>-->
+<!--            </div>-->
 
-            <a href="#" kbq-navbar-brand [longTitle]="true">
-                <div kbq-navbar-logo>
-                    <!-- prettier-ignore -->
-                    <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
-                </div>
+<!--            <a href="#" kbq-navbar-brand [longTitle]="true">-->
+<!--                <div kbq-navbar-logo>-->
+<!--                    &lt;!&ndash; prettier-ignore &ndash;&gt;-->
+<!--                    <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>-->
+<!--                </div>-->
 
-                <div kbq-navbar-title>App NameA</div>
-            </a>
+<!--                <div kbq-navbar-title>App NameA</div>-->
+<!--            </a>-->
 
-            <div kbq-navbar-brand [longTitle]="true">
-                <div kbq-navbar-logo>
-                    <!-- prettier-ignore -->
-                    <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
-                </div>
+<!--            <div kbq-navbar-brand [longTitle]="true">-->
+<!--                <div kbq-navbar-logo>-->
+<!--                    &lt;!&ndash; prettier-ignore &ndash;&gt;-->
+<!--                    <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>-->
+<!--                </div>-->
 
-                <div kbq-navbar-title>App NameA</div>
-            </div>
+<!--                <div kbq-navbar-title>App NameA</div>-->
+<!--            </div>-->
 
-            <a href="#" kbq-navbar-item>
-                <i kbq-icon="kbq-folder-open_16" color="contrast"></i>
-                <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
-            </a>
+<!--            <a href="#" kbq-navbar-item>-->
+<!--                <i kbq-icon="kbq-folder-open_16" color="contrast"></i>-->
+<!--                <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>-->
+<!--            </a>-->
 
-            <button kbq-navbar-item>
-                <i kbq-icon="kbq-folder-open_16" color="contrast"></i>
-                <span kbq-navbar-title>Задачи</span>
-            </button>
+<!--            <button kbq-navbar-item>-->
+<!--                <i kbq-icon="kbq-folder-open_16" color="contrast"></i>-->
+<!--                <span kbq-navbar-title>Задачи</span>-->
+<!--            </button>-->
 
-            <kbq-navbar-item
-                #verticalNavbarDropdownTrigger_3="kbqDropdownTrigger"
-                [class.kbq-active]="verticalNavbarDropdownTrigger_3.opened"
-                [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"
-            >
-                <i kbq-icon="kbq-ellipsis-vertical_16" color="contrast"></i>
-                <kbq-navbar-title>Еще</kbq-navbar-title>
-            </kbq-navbar-item>
+<!--            <kbq-navbar-item-->
+<!--                #verticalNavbarDropdownTrigger_3="kbqDropdownTrigger"-->
+<!--                [class.kbq-active]="verticalNavbarDropdownTrigger_3.opened"-->
+<!--                [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"-->
+<!--            >-->
+<!--                <i kbq-icon="kbq-ellipsis-vertical_16" color="contrast"></i>-->
+<!--                <kbq-navbar-title>Еще</kbq-navbar-title>-->
+<!--            </kbq-navbar-item>-->
 
-            <kbq-navbar-item>
-                <button
-                    kbq-button
-                    [class.kbq-button-icon]="!verticalNavbar.expanded"
-                    [color]="'contrast'"
-                    [kbqPlacement]="popUpPlacements.Right"
-                    [kbqStyle]="'filled'"
-                    [kbqTooltip]="'Новый инцидент'"
-                    [kbqTooltipArrow]="false"
-                    [kbqTooltipDisabled]="verticalNavbar.expanded"
-                >
-                    <i kbq-icon="kbq-circle-info_16" color="contrast"></i>
-                    @if (verticalNavbar.expanded) {
-                        <span>Новый инцидент</span>
-                    }
-                </button>
-            </kbq-navbar-item>
+<!--            <kbq-navbar-item>-->
+<!--                <button-->
+<!--                    kbq-button-->
+<!--                    [class.kbq-button-icon]="!verticalNavbar.expanded"-->
+<!--                    [color]="'contrast'"-->
+<!--                    [kbqPlacement]="popUpPlacements.Right"-->
+<!--                    [kbqStyle]="'filled'"-->
+<!--                    [kbqTooltip]="'Новый инцидент'"-->
+<!--                    [kbqTooltipArrow]="false"-->
+<!--                    [kbqTooltipDisabled]="verticalNavbar.expanded"-->
+<!--                >-->
+<!--                    <i kbq-icon="kbq-circle-info_16" color="contrast"></i>-->
+<!--                    @if (verticalNavbar.expanded) {-->
+<!--                        <span>Новый инцидент</span>-->
+<!--                    }-->
+<!--                </button>-->
+<!--            </kbq-navbar-item>-->
 
-            <!-- Asynchronous navbar-item -->
-            @if (permission$ | async) {
-                <button kbq-navbar-item>
-                    <i kbq-icon="kbq-bsd_16" color="contrast"></i>
-                    <span kbq-navbar-title>Настройки</span>
-                </button>
-            }
-        </kbq-navbar-container>
+<!--            &lt;!&ndash; Asynchronous navbar-item &ndash;&gt;-->
+<!--            @if (permission$ | async) {-->
+<!--                <button kbq-navbar-item>-->
+<!--                    <i kbq-icon="kbq-bsd_16" color="contrast"></i>-->
+<!--                    <span kbq-navbar-title>Настройки</span>-->
+<!--                </button>-->
+<!--            }-->
+<!--        </kbq-navbar-container>-->
 
-        <kbq-navbar-container>
-            <!-- Second asynchronous navbar-item -->
-            @if (permission$ | async) {
-                <button kbq-navbar-item>
-                    <i kbq-icon="kbq-bsd_16" color="contrast"></i>
-                    <span kbq-navbar-title>Настройки</span>
-                </button>
-            }
+<!--        <kbq-navbar-container>-->
+<!--            &lt;!&ndash; Second asynchronous navbar-item &ndash;&gt;-->
+<!--            @if (permission$ | async) {-->
+<!--                <button kbq-navbar-item>-->
+<!--                    <i kbq-icon="kbq-bsd_16" color="contrast"></i>-->
+<!--                    <span kbq-navbar-title>Настройки</span>-->
+<!--                </button>-->
+<!--            }-->
 
-            <kbq-navbar-item
-                #verticalPopover="kbqPopover"
-                kbqPopover
-                [class.kbq-active]="verticalPopover.isOpen"
-                [kbqPopoverContent]="'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '"
-                [kbqPopoverHeader]="'Центр уведомлений'"
-                [kbqPopoverPlacement]="popUpPlacements.Right"
-            >
-                <i kbq-icon="kbq-bell_16" color="contrast"></i>
-                <kbq-navbar-title>Уведомления</kbq-navbar-title>
-                <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
-            </kbq-navbar-item>
+<!--            <kbq-navbar-item-->
+<!--                #verticalPopover="kbqPopover"-->
+<!--                kbqPopover-->
+<!--                [class.kbq-active]="verticalPopover.isOpen"-->
+<!--                [kbqPopoverContent]="'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '"-->
+<!--                [kbqPopoverHeader]="'Центр уведомлений'"-->
+<!--                [kbqPopoverPlacement]="popUpPlacements.Right"-->
+<!--            >-->
+<!--                <i kbq-icon="kbq-bell_16" color="contrast"></i>-->
+<!--                <kbq-navbar-title>Уведомления</kbq-navbar-title>-->
+<!--                <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>-->
+<!--            </kbq-navbar-item>-->
 
-            <kbq-navbar-divider />
+<!--            <kbq-navbar-divider />-->
 
-            <kbq-navbar-item>
-                <i kbq-icon="kbq-gear_16" color="contrast"></i>
-                <kbq-navbar-title>Настройки</kbq-navbar-title>
-            </kbq-navbar-item>
-        </kbq-navbar-container>
-        <button kbq-navbar-toggle></button>
-    </kbq-vertical-navbar>
+<!--            <kbq-navbar-item>-->
+<!--                <i kbq-icon="kbq-gear_16" color="contrast"></i>-->
+<!--                <kbq-navbar-title>Настройки</kbq-navbar-title>-->
+<!--            </kbq-navbar-item>-->
+<!--        </kbq-navbar-container>-->
+<!--        <button kbq-navbar-toggle></button>-->
+<!--    </kbq-vertical-navbar>-->
 
-    <div class="dev-vertical-navbar-content kbq-text-normal">
-        <p>
-            Целое число в принципе поддерживает скачок функции. Полином отражает экспериментальный разрыв функции,
-            что неудивительно. Интеграл от функции, имеющий конечный разрыв расточительно специфицирует предел функции,
-            таким образом сбылась мечта идиота — утверждение полностью доказано. Интеграл Пуассона развивает интеграл
-            Фурье. Неопределенный интеграл категорически соответствует расходящийся ряд. Не факт, что функция многих
-            переменных по‑прежнему востребована.
-        </p>
-        <p>
-            К тому же график функции усиливает тригонометрический интеграл по поверхности. Правда, некоторые специалисты
-            отмечают, что неравенство Бернулли обуславливает действительный расходящийся ряд. Тем не менее,
-            неопределенный интеграл раскручивает разрыв функции.
-        </p>
-        <p>
-            Эпсилон окрестность привлекает интеграл по бесконечной области. Пустое подмножество, общеизвестно, допускает
-            ряд Тейлора. Наибольшее и наименьшее значения функции недоказуемо. Вектор, не вдаваясь в подробности,
-            осмысленно транслирует постулат. Ортогональный определитель упорядочивает линейно зависимый минимум.
-            Интеграл от функции, обращающейся в бесконечность вдоль линии позитивно уравновешивает график функции.
-        </p>
-    </div>
-</div>
+<!--    <div class="dev-vertical-navbar-content kbq-text-normal">-->
+<!--        <p>-->
+<!--            Целое число в принципе поддерживает скачок функции. Полином отражает экспериментальный разрыв функции,-->
+<!--            что неудивительно. Интеграл от функции, имеющий конечный разрыв расточительно специфицирует предел функции,-->
+<!--            таким образом сбылась мечта идиота — утверждение полностью доказано. Интеграл Пуассона развивает интеграл-->
+<!--            Фурье. Неопределенный интеграл категорически соответствует расходящийся ряд. Не факт, что функция многих-->
+<!--            переменных по‑прежнему востребована.-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            К тому же график функции усиливает тригонометрический интеграл по поверхности. Правда, некоторые специалисты-->
+<!--            отмечают, что неравенство Бернулли обуславливает действительный расходящийся ряд. Тем не менее,-->
+<!--            неопределенный интеграл раскручивает разрыв функции.-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            Эпсилон окрестность привлекает интеграл по бесконечной области. Пустое подмножество, общеизвестно, допускает-->
+<!--            ряд Тейлора. Наибольшее и наименьшее значения функции недоказуемо. Вектор, не вдаваясь в подробности,-->
+<!--            осмысленно транслирует постулат. Ортогональный определитель упорядочивает линейно зависимый минимум.-->
+<!--            Интеграл от функции, обращающейся в бесконечность вдоль линии позитивно уравновешивает график функции.-->
+<!--        </p>-->
+<!--    </div>-->
+<!--</div>-->
 
 <!--<h3>Collapse example</h3>-->
 <!--<div style="margin-bottom: 20px;">-->

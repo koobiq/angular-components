@@ -465,3 +465,89 @@ export class E2eHorizontalNavbarStates {}
     }
 })
 export class E2eVerticalNavbarStates {}
+
+/**
+ * Covers the brand's automatic two-line title detection, which only a real browser can exercise: it depends on
+ * flexbox resolving the title's width and on the TT-Positive web font's metrics.
+ *
+ * The titles are chosen to hit each branch, including the oscillation band - lengths that overflow at the
+ * default 18px but would fit on one line at the 14px the mode itself switches to. Measuring those in the
+ * applied state would toggle the mode forever, so they are the regression this fixture exists for.
+ *
+ * The horizontal navbars at the bottom pin the other half of it: there the title is capped at 154px, and the
+ * compact type is what keeps the navbar at its usual 48px instead of stretching it to 72px.
+ */
+@Component({
+    selector: 'e2e-vertical-navbar-brand-auto-long-title',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="width: 1120px; display: flex; flex-direction: column; gap: 20px">
+            <div style="height: 220px; display: flex; flex-direction: row; gap: 20px">
+                @for (brand of brands; track brand.testId) {
+                    <kbq-vertical-navbar [expanded]="true">
+                        <kbq-navbar-container>
+                            <a href="#" kbq-navbar-brand [longTitle]="brand.longTitle">
+                                <div kbq-navbar-logo>
+                                    <!-- prettier-ignore -->
+                                    <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><rect fill="#FF0000" height="32" rx="6" width="32"/></svg>
+                                </div>
+
+                                <div kbq-navbar-title [attr.data-testid]="brand.testId">{{ brand.title }}</div>
+                            </a>
+
+                            <a href="#" kbq-navbar-item class="kbq-active">
+                                <i kbq-icon="kbq-stop_16"></i>
+                                <kbq-navbar-title>{{ brand.testId }}</kbq-navbar-title>
+                            </a>
+                        </kbq-navbar-container>
+                    </kbq-vertical-navbar>
+                }
+            </div>
+
+            @for (brand of horizontalBrands; track brand.testId) {
+                <kbq-navbar>
+                    <kbq-navbar-container>
+                        <a href="#" kbq-navbar-brand>
+                            <kbq-navbar-logo>
+                                <!-- prettier-ignore -->
+                                <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><rect fill="#FF0000" height="32" rx="6" width="32"/></svg>
+                            </kbq-navbar-logo>
+
+                            <kbq-navbar-title [attr.data-testid]="brand.testId">{{ brand.title }}</kbq-navbar-title>
+                        </a>
+
+                        <kbq-navbar-item>
+                            <kbq-navbar-title>Проекты</kbq-navbar-title>
+                        </kbq-navbar-item>
+                    </kbq-navbar-container>
+                </kbq-navbar>
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eVerticalNavbarBrandAutoLongTitle'
+    }
+})
+export class E2eVerticalNavbarBrandAutoLongTitle {
+    readonly brands: readonly { title: string; testId: string; longTitle?: boolean }[] = [
+        // Fits on one line at 18px: stays in the default presentation.
+        { title: 'Secret Notes', testId: 'short' },
+        // Overflows at 18px, wraps to two lines at 14px.
+        { title: 'User Management and Access Control', testId: 'wraps' },
+        // Overflows even at 14px over two lines: clamped with an ellipsis, and must get a tooltip.
+        {
+            title: 'User Management, Access Control, Audit Trail and Compliance Reporting Suite',
+            testId: 'clamped'
+        },
+        // The oscillation band: too wide at 18px, but would fit one line at 14px.
+        { title: 'Knowledge Hub Portal', testId: 'band' },
+        // The deprecated override still wins over the measurement.
+        { title: 'User Management and Access Control', testId: 'forced-off', longTitle: false }
+    ];
+
+    readonly horizontalBrands: readonly { title: string; testId: string }[] = [
+        { title: 'Super Long Menu Title with Line Wrap and Ellipsis Truncation', testId: 'horizontal-long' },
+        { title: 'Secret Notes', testId: 'horizontal-short' }
+    ];
+}

@@ -46,7 +46,11 @@ import { E2eListStates } from '../components/list/e2e';
 import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eModalStates } from '../components/modal/e2e';
-import { E2eHorizontalNavbarStates, E2eVerticalNavbarStates } from '../components/navbar/e2e';
+import {
+    E2eHorizontalNavbarStates,
+    E2eVerticalNavbarBrandAutoLongTitle,
+    E2eVerticalNavbarStates
+} from '../components/navbar/e2e';
 import { E2eNotificationCenterStates } from '../components/notification-center/e2e';
 import {
     E2eOverflowItemsAdditionalTargets,
@@ -189,6 +193,7 @@ const components = [
     E2eSidepanelStateAndStyle,
     E2eHorizontalNavbarStates,
     E2eVerticalNavbarStates,
+    E2eVerticalNavbarBrandAutoLongTitle,
     E2eUsernameStateAndStyle,
     E2eToastStates,
     E2eNotificationCenterStates,

@@ -3588,6 +3588,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "modal-template-example.ts",
     "importPath": "components/modal"
   },
+  "navbar-app-long-name": {
+    "packagePath": "components/navbar/navbar-app-long-name",
+    "title": "Navbar app long name",
+    "componentName": "NavbarAppLongNameExample",
+    "files": [
+      "navbar-app-long-name-example.ts",
+      "navbar-app-long-name-example.html"
+    ],
+    "selector": "navbar-app-long-name-example",
+    "additionalComponents": [],
+    "primaryFile": "navbar-app-long-name-example.ts",
+    "importPath": "components/navbar"
+  },
   "navbar-overview": {
     "packagePath": "components/navbar/navbar-overview",
     "title": "Navbar",
@@ -3599,6 +3612,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "navbar-overview-example",
     "additionalComponents": [],
     "primaryFile": "navbar-overview-example.ts",
+    "importPath": "components/navbar"
+  },
+  "navbar-vertical-app-long-name": {
+    "packagePath": "components/navbar/navbar-vertical-app-long-name",
+    "title": "Navbar vertical app long name",
+    "componentName": "NavbarVerticalAppLongNameExample",
+    "files": [
+      "navbar-vertical-app-long-name-example.ts",
+      "navbar-vertical-app-long-name-example.html"
+    ],
+    "selector": "navbar-vertical-app-long-name-example",
+    "additionalComponents": [],
+    "primaryFile": "navbar-vertical-app-long-name-example.ts",
     "importPath": "components/navbar"
   },
   "navbar-vertical-open-over": {
@@ -7213,7 +7239,11 @@ return import('@koobiq/docs-examples/components/modal');
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-template':
 return import('@koobiq/docs-examples/components/modal');
+  case 'navbar-app-long-name':
+return import('@koobiq/docs-examples/components/navbar');
   case 'navbar-overview':
+return import('@koobiq/docs-examples/components/navbar');
+  case 'navbar-vertical-app-long-name':
 return import('@koobiq/docs-examples/components/navbar');
   case 'navbar-vertical-open-over':
 return import('@koobiq/docs-examples/components/navbar');
