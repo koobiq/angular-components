@@ -1851,6 +1851,35 @@ describe('KbqAutocomplete', () => {
         expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(500);
     });
 
+    it('should re-measure the panel min-width once the layout is stable after opening', () => {
+        const widthFixture = createComponent(SimpleAutocomplete);
+
+        widthFixture.componentInstance.width = 300;
+        widthFixture.detectChanges();
+
+        const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+        // Simulate the host being narrower when the panel first opens, e.g. when the trigger lives
+        // inside another overlay (inline-edit) that hasn't reached its final width yet.
+        const rectSpy = jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+
+        widthFixture.componentInstance.trigger.open();
+        widthFixture.detectChanges();
+
+        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        // The create-time measurement is applied before the layout settles.
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(300);
+
+        // The host reaches its final width after the layout settles.
+        rectSpy.mockReturnValue({ width: 500 } as DOMRect);
+
+        // The `zone.onStable` callback re-measures the panel once the layout is stable.
+        zone.simulateZoneExit();
+        widthFixture.detectChanges();
+
+        expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(500);
+    });
+
     it('should update the panel min-width if the window is resized', fakeAsync(() => {
         const widthFixture = createComponent(SimpleAutocomplete);
 
