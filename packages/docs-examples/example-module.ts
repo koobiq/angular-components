@@ -3705,17 +3705,40 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "notification-center-push-example.ts",
     "importPath": "components/notification-center"
   },
+  "number-formatter-locale": {
+    "packagePath": "components/number-formatter/number-formatter-locale",
+    "title": "Number-formatter forced locale",
+    "componentName": "NumberFormatterLocaleExample",
+    "files": [
+      "number-formatter-locale-example.ts"
+    ],
+    "selector": "number-formatter-locale-example",
+    "additionalComponents": [],
+    "primaryFile": "number-formatter-locale-example.ts",
+    "importPath": "components/number-formatter"
+  },
   "number-formatter-overview": {
     "packagePath": "components/number-formatter/number-formatter-overview",
     "title": "Number-formatter",
     "componentName": "NumberFormatterOverviewExample",
     "files": [
-      "number-formatter-overview-example.ts",
-      "number-formatter-overview-example.html"
+      "number-formatter-overview-example.ts"
     ],
     "selector": "number-formatter-overview-example",
     "additionalComponents": [],
     "primaryFile": "number-formatter-overview-example.ts",
+    "importPath": "components/number-formatter"
+  },
+  "number-formatter-rounding": {
+    "packagePath": "components/number-formatter/number-formatter-rounding",
+    "title": "Number-formatter rounding",
+    "componentName": "NumberFormatterRoundingExample",
+    "files": [
+      "number-formatter-rounding-example.ts"
+    ],
+    "selector": "number-formatter-rounding-example",
+    "additionalComponents": [],
+    "primaryFile": "number-formatter-rounding-example.ts",
     "importPath": "components/number-formatter"
   },
   "overflow-items-as-clamped-list": {
@@ -7231,7 +7254,11 @@ return import('@koobiq/docs-examples/components/notification-center');
 return import('@koobiq/docs-examples/components/notification-center');
   case 'notification-center-push':
 return import('@koobiq/docs-examples/components/notification-center');
+  case 'number-formatter-locale':
+return import('@koobiq/docs-examples/components/number-formatter');
   case 'number-formatter-overview':
+return import('@koobiq/docs-examples/components/number-formatter');
+  case 'number-formatter-rounding':
 return import('@koobiq/docs-examples/components/number-formatter');
   case 'overflow-items-as-clamped-list':
 return import('@koobiq/docs-examples/components/overflow-items');
