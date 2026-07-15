@@ -58,6 +58,9 @@ const DEV_DATA_OBJECT = {
         <filter-bar-overview-example />
         <br />
         <br />
+        <filter-bar-localization-example />
+        <br />
+        <br />
         <filter-bar-search-in-pipes-example />
         <br />
         <br />

@@ -11,6 +11,7 @@ import {
     input,
     model,
     output,
+    signal,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -67,7 +68,15 @@ export class KbqFilterBar implements KbqFilterBarHost {
     readonly externalConfiguration = inject(KBQ_FILTER_BAR_CONFIGURATION, { optional: true });
 
     /** Localized strings and configuration for the filter-bar and its pipes. */
-    configuration: KbqFilterBarConfiguration = KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
+    get configuration(): KbqFilterBarConfiguration {
+        return this._configuration();
+    }
+
+    set configuration(value: KbqFilterBarConfiguration) {
+        this._configuration.set(value);
+    }
+
+    private readonly _configuration = signal(KBQ_FILTER_BAR_DEFAULT_CONFIGURATION);
 
     /** @docs-private */
     readonly filters = contentChild(KbqFilters);

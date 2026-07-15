@@ -513,6 +513,43 @@ describe('KbqFilters', () => {
 
             expect(component.filterSavingErrorText).toBe(component.localeData.errorHint);
         });
+
+        it('should re-derive filterSavingErrorText from live configuration, not a one-time snapshot', () => {
+            initFixture();
+
+            const component = getFiltersComponent();
+            const filterBar = getFilterBar();
+
+            component.showError();
+
+            expect(component.filterSavingErrorText).toBe(KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters.errorHint);
+
+            // Equivalent to a runtime locale switch: `updateLocaleParams` ends by assigning `configuration`
+            // through this same setter. The text must follow the new locale, not stay frozen at the value
+            // `showError` happened to see.
+            filterBar.configuration = {
+                ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+                filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, errorHint: 'Locale B error hint' }
+            };
+
+            expect(component.filterSavingErrorText).toBe('Locale B error hint');
+        });
+
+        it('should keep a custom error text across a locale change', () => {
+            initFixture();
+
+            const component = getFiltersComponent();
+            const filterBar = getFilterBar();
+
+            component.showError({ text: 'Custom error' });
+
+            filterBar.configuration = {
+                ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+                filters: { ...KBQ_FILTER_BAR_DEFAULT_CONFIGURATION.filters, errorHint: 'Locale B error hint' }
+            };
+
+            expect(component.filterSavingErrorText).toBe('Custom error');
+        });
     });
 
     describe('resetFilterChanges', () => {

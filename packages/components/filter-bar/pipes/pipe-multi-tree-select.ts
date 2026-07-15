@@ -107,6 +107,17 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     constructor() {
         super();
 
+        // Resolve the select-all node's label on every read instead of the value baked into `name` by
+        // `updateTemplates`, which only re-runs on `pipeTemplates` changes and so goes stale on a locale
+        // change. The template calls `treeControl.getViewValue(node)` directly, so reading `localeData`
+        // here registers this view as a consumer of the filter-bar's `configuration` signal.
+        // `FlatTreeControl` captures the accessor by reference in `KbqTreeSelectPipeBase`'s constructor,
+        // before this subclass's field initializers run — hence patching the instance, not overriding
+        // the inherited `getViewValue` field, which the tree would never see.
+        this.treeControl.getViewValue = (node: KbqTreeSelectFlatNode): string => {
+            return node.value === kbqTreeSelectAllValue ? this.localeData.pipe.selectAll : node.name;
+        };
+
         // See the field-init note in `KbqTreeSelectPipeBase`: subscribing here (after this class's
         // `updateTemplates` initializer) ensures the initial replay writes `dataSource.data`.
         this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
