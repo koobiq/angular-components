@@ -29,5 +29,5 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 export class NavbarVerticalAppLongNameExample {
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
-    readonly appName = 'Super Long Menu Title with Line Wrap and Ellipsis Trancation';
+    readonly appName = 'Super Long Menu Title with Line Wrap and Ellipsis Truncation';
 }

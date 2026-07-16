@@ -42,7 +42,7 @@ const setTextMetrics = (
 };
 
 /** Minimal `SharedResizeObserver` stand-in: the real one never emits in jsdom (ResizeObserver is a no-op stub). */
-class MockSharedResizeObserver {
+class MockNavbarBrandResizeObserver {
     private readonly subjects = new Map<Element, Subject<ResizeObserverEntry[]>>();
 
     observe(target: Element): Observable<ResizeObserverEntry[]> {
@@ -375,11 +375,11 @@ describe('KbqNavbar', () => {
     });
 
     describe('KbqNavbarBrand automatic long title', () => {
-        let resizeObserver: MockSharedResizeObserver;
+        let resizeObserver: MockNavbarBrandResizeObserver;
         let contentObserverSubject: Subject<MutationRecord[]>;
 
         beforeEach(() => {
-            resizeObserver = new MockSharedResizeObserver();
+            resizeObserver = new MockNavbarBrandResizeObserver();
             contentObserverSubject = new Subject<MutationRecord[]>();
 
             TestBed.overrideProvider(SharedResizeObserver, { useValue: resizeObserver });
@@ -471,13 +471,16 @@ describe('KbqNavbar', () => {
             expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
 
             // Re-measure while the class is applied. A changed width is required to get past distinctUntilChanged.
+            // Only the dedicated measurement in `measureNeedsLongTitle()` needs to read the unbiased
+            // (class-removed) state, and it always runs first inside `updateAutoLongTitle()` - before the
+            // tooltip-content refresh, which correctly reads the settled (class-applied) state afterwards.
+            classWhenMeasured.length = 0;
             brandWidth = 300;
             resizeObserver.emit(brandEl);
             tick(LONG_TITLE_DEBOUNCE_MS);
             fixture.detectChanges();
 
-            expect(classWhenMeasured.length).toBeGreaterThanOrEqual(2);
-            expect(classWhenMeasured).not.toContain(true);
+            expect(classWhenMeasured[0]).toBe(false);
             expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
         }));
 

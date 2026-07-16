@@ -22,7 +22,7 @@ import { distinctUntilChanged, EMPTY, from, map, merge, Observable } from 'rxjs'
 import { debounceTime } from 'rxjs/operators';
 import { KbqNavbarFocusableItem, KbqNavbarRectangleElement, KbqNavbarTitle } from './navbar-item.component';
 
-/** Switches the brand title to the compact two-line presentation. Mirrored in the host binding below. */
+/** Switches the brand title to the compact two-line presentation. */
 const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
 
 @Component({
@@ -35,7 +35,7 @@ const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
     ],
     host: {
         class: 'kbq-navbar-brand',
-        '[class.kbq-navbar-brand_long-title]': 'longTitleEnabled()',
+        [`[class.${LONG_TITLE_CLASS}]`]: 'longTitleEnabled()',
         '[class.kbq-navbar-brand_link]': 'isLink'
     },
     exportAs: 'kbqNavbarBrand'
@@ -160,7 +160,13 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
 
         this.navbarFocusableItem.disabled = !this.isLink;
 
-        afterNextRender(() => this.observeLongTitle());
+        afterNextRender(() => {
+            // Deferred a microtask: the ambient `KbqNavbar` flips this item's rectangle element to
+            // horizontal via its own `Promise.resolve().then()` (see `KbqNavbar.setItemsState`), which
+            // runs after this callback. Without the extra hop, the first measurement below can run while
+            // the rectangle element still reports its default vertical/expanded state.
+            Promise.resolve().then(() => this.observeLongTitle());
+        });
     }
 
     ngAfterContentInit(): void {
@@ -206,8 +212,11 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     }
 
     private updateAutoLongTitle(): void {
-        // Setting the signal is enough: the host binding reads it, which marks this view dirty on its own.
         this.autoLongTitle.set(this.measureNeedsLongTitle());
+
+        // The clamp state feeds into `hasCroppedText`, which the tooltip's content depends on - refresh it
+        // so a title that becomes clamped after the initial render doesn't show stale/empty tooltip content.
+        this.updateTooltip();
     }
 
     /**

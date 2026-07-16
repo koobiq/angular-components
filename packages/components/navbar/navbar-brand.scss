@@ -25,10 +25,6 @@
     & .kbq-navbar-title {
         cursor: pointer;
     }
-}
-
-a.kbq-navbar-brand {
-    text-decoration: none;
 
     &.kbq-navbar-brand_long-title .kbq-navbar-title {
         display: -webkit-box;
@@ -38,6 +34,10 @@ a.kbq-navbar-brand {
         line-clamp: 2;
         white-space: normal;
     }
+}
+
+a.kbq-navbar-brand {
+    text-decoration: none;
 }
 
 .kbq-navbar-brand.kbq-horizontal {
