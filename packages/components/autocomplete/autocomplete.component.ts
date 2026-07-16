@@ -23,8 +23,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     ActiveDescendantKeyManager,
     KBQ_OPTION_PARENT_COMPONENT,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqOptgroup,
-    KbqOption
+    KbqOption,
+    KbqPanelWidth
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { delay, filter } from 'rxjs/operators';
@@ -114,12 +116,14 @@ export class KbqAutocomplete implements AfterContentInit {
     @Input() displayWith: ((value: any) => string) | null = null;
 
     /**
-     * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
-     * match the width of its host.
+     * Specify the width of the autocomplete panel. If set to `auto`, the panel will match the width of
+     * its host, but will never be narrower than `panelMinWidth`. Any other CSS sizing value is used as an
+     * exact width, and `panelMinWidth` is not applied. When not set, the panel sizes to its content and is
+     * at least as wide as its host.
      */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
-    @Input() panelWidth: string | number;
+    @Input() panelWidth: KbqPanelWidth | string;
 
     /**
      * Minimum width of the panel in pixels.
@@ -127,7 +131,7 @@ export class KbqAutocomplete implements AfterContentInit {
      */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: numberAttribute }) panelMinWidth: number = 200;
+    @Input({ transform: numberAttribute }) panelMinWidth: number = KBQ_PANEL_DEFAULT_MIN_WIDTH;
 
     /** Event that is emitted whenever an option from the list is selected. */
     readonly optionSelected = output<KbqAutocompleteSelectedEvent>();

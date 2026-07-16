@@ -1,8 +1,24 @@
 ﻿import { CdkConnectedOverlay } from '@angular/cdk/overlay';
-import { AfterContentInit, booleanAttribute, Directive, EventEmitter, inject, input, OnDestroy } from '@angular/core';
+import {
+    AfterContentInit,
+    booleanAttribute,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    inject,
+    input,
+    OnDestroy
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
 import { END, ESCAPE, HOME, SPACE } from '../keycodes';
+import {
+    kbqGetPanelWidthOrigin,
+    KbqPanelMinWidth,
+    KbqPanelWidth,
+    KbqPanelWidthOrigin,
+    kbqResolvePanelWidth
+} from '../overlay/panel-width';
 import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({
@@ -125,6 +141,41 @@ export abstract class KbqAbstractSelect {
 
     /** Overlay panel class. */
     protected readonly overlayPanelClass = 'kbq-select-overlay';
+
+    /** Width of the overlay panel. */
+    protected overlayWidth: string | number = '';
+
+    /** Minimum width of the overlay panel. */
+    protected overlayMinWidth: string | number = '';
+
+    /**
+     * Resolves the overlay panel size for the current trigger geometry and stores it for the
+     * `cdkConnectedOverlay` width bindings.
+     */
+    protected updateOverlayWidth(
+        panelWidth: KbqPanelWidth,
+        panelMinWidth: KbqPanelMinWidth,
+        origin: KbqPanelWidthOrigin
+    ): void {
+        const { width, minWidth } = kbqResolvePanelWidth(panelWidth, panelMinWidth, kbqGetPanelWidthOrigin(origin));
+
+        this.overlayWidth = width;
+        this.overlayMinWidth = minWidth;
+    }
+
+    /**
+     * Freezes the panel at its rendered width so that filtering the options does not reflow it.
+     * Does nothing when the width is already pinned.
+     */
+    protected lockOverlayWidthForSearch(panel: ElementRef<HTMLElement> | undefined): void {
+        if (this.overlayWidth) return;
+
+        const measuredPanelWidth = panel?.nativeElement.getBoundingClientRect().width;
+
+        if (measuredPanelWidth) {
+            this.overlayWidth = measuredPanelWidth;
+        }
+    }
 
     protected setOverlayPosition() {
         if (!this.overlayDir.overlayRef) return;

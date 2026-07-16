@@ -230,6 +230,59 @@ describe('KbqTimezoneSelect', () => {
 
     afterEach(() => overlayContainer.ngOnDestroy());
 
+    describe('panel width', () => {
+        /**
+         * Opens the panel with the form field measuring the given width and returns the rendered pane.
+         * JSDOM does not lay out, so the connection container has to be mocked.
+         */
+        function openPanelWithFieldWidth(fieldWidth: number, setup?: (select: KbqTimezoneSelect) => void): HTMLElement {
+            configureTestingModule([BasicTimezoneSelect]);
+
+            const fixture = TestBed.createComponent(BasicTimezoneSelect);
+
+            fixture.detectChanges();
+            setup?.(fixture.componentInstance.select());
+
+            const connectionContainer = fixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
+                width: fieldWidth,
+                height: 32,
+                top: 0,
+                left: 0,
+                right: fieldWidth,
+                bottom: 32,
+                x: 0,
+                y: 0,
+                toJSON: () => {}
+            } as DOMRect);
+
+            fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+            fixture.detectChanges();
+
+            return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        }
+
+        it('should honour the default 640px minimum when the field is narrower', () => {
+            expect(openPanelWithFieldWidth(300).style.width).toBe('640px');
+        });
+
+        it('should grow to match the field when it is wider than the minimum', () => {
+            expect(openPanelWithFieldWidth(800).style.width).toBe('800px');
+        });
+
+        it('should match the field exactly when panelMinWidth is removed', () => {
+            expect(openPanelWithFieldWidth(300, (select) => (select.panelMinWidth = 0)).style.width).toBe('300px');
+        });
+
+        it('should use an explicit panelWidth and ignore panelMinWidth', () => {
+            const pane = openPanelWithFieldWidth(300, (select) => (select.panelWidth = 400));
+
+            expect(pane.style.width).toBe('400px');
+            expect(pane.style.minWidth).toBe('');
+        });
+    });
+
     describe('keyboard navigation and tabindex', () => {
         describe('disabled behavior', () => {
             it('should not open the panel when the control is disabled and reopen when re-enabled', fakeAsync(() => {

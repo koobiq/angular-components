@@ -32,6 +32,11 @@
             "factory": "./migrations/loader-overlay-size-attr/index",
             "schema": "./migrations/loader-overlay-size-attr/schema.json"
         },
+        "autocomplete-panel-width-auto": {
+            "description": "Replaces kbq-autocomplete panelWidth=\"auto\" with panelWidth=\"fit-content\" in ts and html",
+            "factory": "./migrations/autocomplete-panel-width-auto/index",
+            "schema": "./migrations/autocomplete-panel-width-auto/schema.json"
+        },
         "icons-replacement": {
             "description": "Updates names of icons in dedicated files",
             "factory": "./migrations/icons-replacement/index",

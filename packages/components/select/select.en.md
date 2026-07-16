@@ -80,11 +80,11 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 
 #### Additional options
 
-If needed, the select width can be set to match the select width exactly. To do this, use the `panelWidth` attribute with the value `auto`.
+If needed, the select width can be set to match the select width exactly. To do this, use the `panelWidth` attribute with the value `auto`. The panel still never gets narrower than `panelMinWidth` — set `panelMinWidth` to `0` if you want the panel to follow a narrow select exactly.
 
 <!-- example(select-with-panel-width-auto) -->
 
-To set a fixed width of 400px for the select, use the `panelWidth` attribute with the value `400`.
+To set a fixed width of 400px for the select, use the `panelWidth` attribute with the value `400`. A fixed width is used exactly as given, so `panelMinWidth` is not applied to it.
 
 <!-- example(select-with-panel-width-fixed) -->
 

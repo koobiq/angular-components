@@ -6679,6 +6679,45 @@ describe('KbqSelect', () => {
             expect(parseInt(pane.style.minWidth, 10)).toBeGreaterThanOrEqual(412);
         });
 
+        it('should not let panelWidth auto go below panelMinWidth', () => {
+            const fixture = createPanelWidthComponent(SelectWithPanelWidth, [
+                kbqSelectOptionsProvider({ panelMinWidth: 200 })
+            ]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.panelWidth = 'auto';
+            fixture.detectChanges();
+
+            const connectionContainer = debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 150 } as DOMRect);
+
+            getSelectDebugElement(debugElement).nativeElement.click();
+            fixture.detectChanges();
+
+            expect((panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width).toBe(
+                '200px'
+            );
+        });
+
+        it('should keep the trigger floor when panelMinWidth is null', () => {
+            const fixture = createPanelWidthComponent(BaseSelect, [
+                kbqSelectOptionsProvider({ panelWidth: null, panelMinWidth: null })
+            ]);
+            const { debugElement } = fixture;
+            const connectionContainer = debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+
+            getSelectDebugElement(debugElement).nativeElement.click();
+            fixture.detectChanges();
+
+            // `numberAttribute` coerces a null binding to NaN, which used to reach the DOM as `NaNpx`.
+            expect(
+                (panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.minWidth
+            ).toBe('300px');
+        });
+
         describe('with search', () => {
             function mockPanelBoundingRect(width: number) {
                 return jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (

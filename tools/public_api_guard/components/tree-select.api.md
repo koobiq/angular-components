@@ -32,6 +32,8 @@ import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqPanelMinWidth } from '@koobiq/components/core';
+import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
@@ -52,8 +54,8 @@ import { TemplateRef } from '@angular/core';
 
 // @public
 export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
-    panelWidth: KbqTreeSelectPanelWidth;
-    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, "auto">;
+    panelWidth: KbqPanelWidth;
+    panelMinWidth: KbqPanelMinWidth;
     searchMinOptionsThreshold: "auto" | number;
 }>>;
 
@@ -165,9 +167,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange>;
     // (undocumented)
     overlayDir: CdkConnectedOverlay;
-    protected overlayMinWidth: string | number;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-    protected overlayWidth: string | number;
     // (undocumented)
     readonly panel: _angular_core.Signal<ElementRef<any>>;
     readonly panelClass: _angular_core.InputSignal<string | string[] | Set<string> | {
@@ -176,10 +176,10 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     panelDoneAnimatingStream: Subject<string>;
     // (undocumented)
     panelKeydownHandler(event: KeyboardEvent): any;
-    readonly panelMinWidth: _angular_core.InputSignalWithTransform<number | null, unknown>;
+    readonly panelMinWidth: _angular_core.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
     // (undocumented)
     get panelOpen(): boolean;
-    readonly panelWidth: _angular_core.InputSignal<KbqTreeSelectPanelWidth>;
+    readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth>;
     // (undocumented)
     parentForm: NgForm | null;
     // (undocumented)
@@ -269,16 +269,16 @@ export class KbqTreeSelectModule {
 
 // @public
 export type KbqTreeSelectOptions = Partial<{
-    panelWidth: KbqTreeSelectPanelWidth;
-    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'>;
+    panelWidth: KbqPanelWidth;
+    panelMinWidth: KbqPanelMinWidth;
     searchMinOptionsThreshold: 'auto' | number;
 }>;
 
 // @public
 export const kbqTreeSelectOptionsProvider: (options: KbqTreeSelectOptions) => Provider;
 
-// @public
-export type KbqTreeSelectPanelWidth = 'auto' | number | null;
+// @public @deprecated
+export type KbqTreeSelectPanelWidth = KbqPanelWidth;
 
 // @public
 export type KbqTreeSelectTriggerValue = {

@@ -48,12 +48,15 @@ import {
     ErrorStateMatcher,
     HOME,
     KBQ_LOCALE_SERVICE,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
     KbqLocaleService,
+    KbqPanelMinWidth,
+    KbqPanelWidth,
     KbqSelectAllEvent,
     KbqSelectMatcher,
     KbqSelectSearch,
@@ -93,8 +96,11 @@ export type KbqTreeSelectTriggerValue = {
     viewValue: string;
 };
 
-/** Tree select panel width type. */
-export type KbqTreeSelectPanelWidth = 'auto' | number | null;
+/**
+ * Tree select panel width type.
+ * @deprecated Use `KbqPanelWidth` from `@koobiq/components/core` instead.
+ */
+export type KbqTreeSelectPanelWidth = KbqPanelWidth;
 
 /** Options for the `kbq-tree-select` that can be configured using the `KBQ_TREE_SELECT_OPTIONS` injection token. */
 export type KbqTreeSelectOptions = Partial<{
@@ -102,11 +108,11 @@ export type KbqTreeSelectOptions = Partial<{
      * Width of the panel. If set to `auto`, the panel will match the trigger width.
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
-    panelWidth: KbqTreeSelectPanelWidth;
+    panelWidth: KbqPanelWidth;
     /**
      * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
      */
-    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'>;
+    panelMinWidth: KbqPanelMinWidth;
     /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
@@ -588,18 +594,12 @@ export class KbqTreeSelect
 
     private _focused = false;
 
-    /** Width of the overlay panel. */
-    protected overlayWidth: string | number;
-
-    /** Min width of the overlay panel. */
-    protected overlayMinWidth: string | number;
-
     /**
      * Minimum width of the panel.
      * If minWidth is larger than window width, it will be ignored.
      */
-    readonly panelMinWidth = input<Exclude<KbqTreeSelectPanelWidth, 'auto'>, unknown>(
-        this.defaultOptions?.panelMinWidth ?? 200,
+    readonly panelMinWidth = input<KbqPanelMinWidth, unknown>(
+        this.defaultOptions?.panelMinWidth ?? KBQ_PANEL_DEFAULT_MIN_WIDTH,
         { transform: numberAttribute }
     );
 
@@ -607,10 +607,11 @@ export class KbqTreeSelect
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
     /**
-     * Width of the panel. If set to `auto`, the panel will match the trigger width.
-     * If set to null or an empty string, the panel will grow to match the longest option's text.
+     * Width of the panel. If set to `auto`, the panel will match the trigger width, but will never be
+     * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
+     * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
      */
-    readonly panelWidth = input<KbqTreeSelectPanelWidth>(this.defaultOptions?.panelWidth || null);
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth || null);
     /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
@@ -905,14 +906,7 @@ export class KbqTreeSelect
             this.overlayOrigin = this.parentFormField.getConnectedOverlayOrigin();
         }
 
-        this.overlayWidth = this.getOverlayWidth(this.overlayOrigin);
-        // set overlayMinWidth to the largest of `panelMinWidth` and `triggerRect.width`
-        // only if `overlayWidth` falsy and `panelMinWidth` not provided.
-        // This ensures panel isn't narrow.
-        const panelMinWidth = this.panelMinWidth();
-
-        this.overlayMinWidth =
-            panelMinWidth !== null && !this.overlayWidth ? Math.max(panelMinWidth, this.triggerRect.width) : '';
+        this.updateOverlayWidth(this.panelWidth(), this.panelMinWidth(), this.overlayOrigin ?? this.elementRef);
 
         this._panelOpen = true;
 
@@ -925,6 +919,12 @@ export class KbqTreeSelect
             .subscribe(() => {
                 if (this.triggerFontSize && this.overlayDir.overlayRef && this.overlayDir.overlayRef.overlayElement) {
                     this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this.triggerFontSize}px`;
+                }
+
+                // `panel` is a required query over a template that only exists while the overlay is
+                // attached, so reading it before then throws NG0951.
+                if (this.search() && this.overlayDir.overlayRef?.hasAttached()) {
+                    this.lockOverlayWidthForSearch(this.panel());
                 }
             });
     }
@@ -1349,19 +1349,6 @@ export class KbqTreeSelect
         triggerClone.remove();
 
         return [totalVisibleItemsWidth, visibleItemsCount];
-    }
-
-    /** Gets how wide the overlay panel should be. */
-    private getOverlayWidth(origin?: ElementRef | CdkOverlayOrigin): string | number {
-        const panelWidth = this.panelWidth();
-
-        if (panelWidth === 'auto') {
-            const elementRef = origin instanceof CdkOverlayOrigin ? origin.elementRef : origin || this.elementRef;
-
-            return elementRef.nativeElement.getBoundingClientRect().width;
-        }
-
-        return panelWidth ?? '';
     }
 
     private buildTriggerClone(): HTMLDivElement {

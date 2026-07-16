@@ -1763,25 +1763,67 @@ describe('KbqDropdown', () => {
     });
 
     describe('panel min-width', () => {
+        /** JSDOM does not lay out, so the trigger's border-box width has to be mocked. */
+        const mockTriggerWidth = (fixture: ComponentFixture<SimpleDropdown>, width: number) =>
+            jest
+                .spyOn(fixture.componentInstance.triggerEl().nativeElement, 'getBoundingClientRect')
+                .mockReturnValue({ width } as DOMRect);
+
         it('should set minWidth on the overlay pane for a top-level panel', () => {
             const fixture = createComponent(SimpleDropdown);
 
             fixture.detectChanges();
-
-            jest.spyOn(window, 'getComputedStyle').mockReturnValue({
-                width: '300px',
-                borderRightWidth: '1px',
-                borderLeftWidth: '1px'
-            } as CSSStyleDeclaration);
+            mockTriggerWidth(fixture, 300);
 
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
 
             const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-            expect(overlayPane.style.minWidth).toBe('298px');
+            expect(overlayPane.style.minWidth).toBe('300px');
+        });
 
-            jest.restoreAllMocks();
+        it('should re-measure the trigger on every open', fakeAsync(() => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+
+            const spy = mockTriggerWidth(fixture, 300);
+            const { trigger } = fixture.componentInstance;
+
+            trigger().open();
+            fixture.detectChanges();
+            trigger().close();
+            fixture.detectChanges();
+            tick(500);
+
+            spy.mockReturnValue({ width: 500 } as DOMRect);
+
+            trigger().open();
+            fixture.detectChanges();
+
+            const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+            expect(overlayPane.style.minWidth).toBe('500px');
+        }));
+
+        it('should match the panel width to widthOrigin when it is set', () => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+            mockTriggerWidth(fixture, 300);
+
+            const widthOrigin = document.createElement('div');
+
+            jest.spyOn(widthOrigin, 'getBoundingClientRect').mockReturnValue({ width: 500 } as DOMRect);
+            fixture.componentInstance.trigger().widthOrigin = widthOrigin;
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+            expect(overlayPane.style.minWidth).toBe('500px');
         });
 
         it('should not set minWidth on the overlay pane for nested panels', () => {

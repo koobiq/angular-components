@@ -37,10 +37,13 @@ import {
     KBQ_WINDOW,
     KbqOption,
     KbqOptionSelectionChange,
+    KbqResolvedPanelWidth,
     KeyboardNavigationHandler,
     TAB,
     UP_ARROW,
-    defaultOffsetY
+    defaultOffsetY,
+    kbqGetPanelWidthOrigin,
+    kbqResolvePanelWidth
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, defer, fromEvent, merge, of as observableOf } from 'rxjs';
@@ -683,18 +686,14 @@ export class KbqAutocompleteTrigger
         return this.formField ? this.formField.getConnectedOverlayOrigin() : this.elementRef;
     }
 
-    private getPanelMinWidth(): number {
-        return Math.max(this.autocomplete().panelMinWidth, this.getHostWidth());
-    }
+    private getOverlaySize(): KbqResolvedPanelWidth {
+        const autocomplete = this.autocomplete();
 
-    private getOverlaySize(): { width: number | string } | { minWidth: number } {
-        const panelWidth = this.autocomplete().panelWidth;
-
-        return panelWidth ? { width: panelWidth } : { minWidth: this.getPanelMinWidth() };
+        return kbqResolvePanelWidth(autocomplete.panelWidth, autocomplete.panelMinWidth, this.getHostWidth());
     }
 
     private getHostWidth(): number {
-        return this.getConnectedElement().nativeElement.getBoundingClientRect().width;
+        return kbqGetPanelWidthOrigin(this.getConnectedElement());
     }
 
     /**

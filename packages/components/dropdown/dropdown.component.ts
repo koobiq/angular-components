@@ -178,6 +178,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     private _overlapTriggerY: boolean = this.defaultOptions.overlapTriggerY;
     private _hasBackdrop: boolean = this.defaultOptions.hasBackdrop;
 
+    /**
+     * @deprecated Has no effect. Use `KbqDropdownTrigger.widthOrigin` to make the panel match
+     * an element other than the trigger. Will be removed in v21.
+     */
     triggerWidth: string;
     /** Config object to be passed into the dropdown panel's `[class]` binding */
     classList: { [key: string]: boolean } = {};

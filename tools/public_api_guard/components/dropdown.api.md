@@ -19,6 +19,7 @@ import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqPanelWidthOrigin } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -108,7 +109,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     startAnimation(): void;
     templateRef: TemplateRef<any>;
-    // (undocumented)
+    // @deprecated (undocumented)
     triggerWidth: string;
     get xPosition(): KbqDropdownPositionX;
     set xPosition(value: KbqDropdownPositionX);
@@ -227,7 +228,7 @@ export interface KbqDropdownPanel {
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
     // (undocumented)
     templateRef: TemplateRef<any>;
-    // (undocumented)
+    // @deprecated (undocumented)
     triggerWidth?: string;
     // (undocumented)
     xPosition: KbqDropdownPositionX;
@@ -289,6 +290,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
     restoreFocus: boolean;
     toggle(): void;
+    widthOrigin?: KbqPanelWidthOrigin;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; }; "offsetY": { "alias": "offsetY"; "required": false; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; }; "demoteOverlay": { "alias": "demoteOverlay"; "required": false; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; }; }, { "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
     // (undocumented)

@@ -29,7 +29,16 @@ import {
     Renderer2,
     ViewContainerRef
 } from '@angular/core';
-import { defaultOffsetY, DOWN_ARROW, ENTER, KBQ_WINDOW, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/components/core';
+import {
+    defaultOffsetY,
+    DOWN_ARROW,
+    ENTER,
+    kbqGetPanelWidthOrigin,
+    KbqPanelWidthOrigin,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE
+} from '@koobiq/components/core';
 import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
@@ -129,9 +138,15 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private readonly renderer = inject(Renderer2);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
-    private readonly window = inject(KBQ_WINDOW);
     private readonly host = inject(KBQ_DROPDOWN_HOST, { optional: true });
     lastDestroyReason: DropdownCloseReason;
+
+    /**
+     * Element whose width the panel should match. Defaults to the trigger itself.
+     * Useful when the trigger is only a part of a larger control, e.g. `kbq-split-button`.
+     * @docs-private
+     */
+    widthOrigin?: KbqPanelWidthOrigin;
 
     /** Position offset of the dropdown in the X axis. */
     // TODO: Skipped for migration because:
@@ -295,6 +310,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         this.setPosition(overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy);
 
         overlayConfig.hasBackdrop = this.dropdown.hasBackdrop ? !this.isNested() : this.dropdown.hasBackdrop;
+
+        // The overlay is created once and reused, so the trigger has to be re-measured on every open
+        // to keep up with layout changes between them.
+        if (this.shouldMatchTriggerWidth) {
+            overlayRef.updateSize({ minWidth: this.getWidth() });
+        }
 
         overlayRef.attach(this.getPortal());
 
@@ -521,9 +542,14 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      * This method builds the configuration object needed to create the overlay, the OverlayState.
      * @returns OverlayConfig
      */
-    private getOverlayConfig(): OverlayConfig {
+    /** Whether the panel should be at least as wide as its trigger. */
+    private get shouldMatchTriggerWidth(): boolean {
         const isVerticalTrigger = this.dropdown.overlapTriggerY && !this.dropdown.overlapTriggerX;
 
+        return !this.isNested() && !isVerticalTrigger;
+    }
+
+    private getOverlayConfig(): OverlayConfig {
         return new OverlayConfig({
             positionStrategy: this.overlay
                 .position()
@@ -533,7 +559,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             backdropClass: this.dropdown.backdropClass || 'cdk-overlay-transparent-backdrop',
             scrollStrategy: this.scrollStrategy(),
             direction: this.dir,
-            ...(!this.isNested() && !isVerticalTrigger && { minWidth: this.getWidth() })
+            ...(this.shouldMatchTriggerWidth && { minWidth: this.getWidth() })
         });
     }
 
@@ -702,11 +728,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private getWidth(): string {
         if (!this.isBrowser) return '';
 
-        const nativeElement = this.elementRef.nativeElement;
-
-        const { width, borderRightWidth, borderLeftWidth } = this.window.getComputedStyle(nativeElement);
-
-        return `${parseInt(width) - parseInt(borderRightWidth) - parseInt(borderLeftWidth)}px`;
+        return `${kbqGetPanelWidthOrigin(this.widthOrigin ?? this.elementRef)}px`;
     }
 
     private addClassToOverlayContainer() {

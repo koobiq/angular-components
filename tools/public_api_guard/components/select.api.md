@@ -40,6 +40,8 @@ import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionBase } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
+import { KbqPanelMinWidth } from '@koobiq/components/core';
+import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
@@ -64,8 +66,8 @@ export const delayBeforeDisplayingResultWithoutOptions = 101;
 
 // @public
 export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
-    panelWidth: KbqSelectPanelWidth;
-    panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
+    panelWidth: KbqPanelWidth;
+    panelMinWidth: KbqPanelMinWidth;
     searchMinOptionsThreshold: "auto" | number;
 }>>;
 
@@ -113,8 +115,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     defaultErrorStateMatcher: ErrorStateMatcher;
     // (undocumented)
     protected readonly defaultOptions: Partial<{
-        panelWidth: KbqSelectPanelWidth;
-        panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
+        panelWidth: KbqPanelWidth;
+        panelMinWidth: KbqPanelMinWidth;
         searchMinOptionsThreshold: "auto" | number;
     }> | null;
     protected readonly destroyRef: DestroyRef;
@@ -188,17 +190,15 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly optionsContainer: _angular_core.Signal<ElementRef<any>>;
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange>;
     overlayDir: CdkConnectedOverlay;
-    protected overlayMinWidth: string | number;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-    protected overlayWidth: string | number;
     readonly panel: _angular_core.Signal<ElementRef<any> | undefined>;
     readonly panelClass: _angular_core.InputSignal<string | string[] | Set<string> | {
         [key: string]: any;
     }>;
     panelDoneAnimatingStream: Subject<string>;
-    panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
+    panelMinWidth: KbqPanelMinWidth;
     panelOpen: boolean;
-    panelWidth: KbqSelectPanelWidth;
+    panelWidth: KbqPanelWidth;
     // (undocumented)
     parentForm: NgForm | null;
     // (undocumented)
@@ -311,16 +311,16 @@ export class KbqSelectNoOptions {
 
 // @public
 export type KbqSelectOptions = Partial<{
-    panelWidth: KbqSelectPanelWidth;
-    panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
+    panelWidth: KbqPanelWidth;
+    panelMinWidth: KbqPanelMinWidth;
     searchMinOptionsThreshold: 'auto' | number;
 }>;
 
 // @public
 export const kbqSelectOptionsProvider: (options: KbqSelectOptions) => Provider;
 
-// @public
-export type KbqSelectPanelWidth = 'auto' | number | null;
+// @public @deprecated
+export type KbqSelectPanelWidth = KbqPanelWidth;
 
 // @public
 export const minimumTimeToDisplayLoading = 300;

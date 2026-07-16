@@ -37,3 +37,16 @@ Recursive rendering of an array or object, allowing the creation of nested dropd
 Use the `xPosition` property to control horizontal alignment of the dropdown panel relative to the trigger. Supported values: `'after'` (default), `'before'`, and `'center'`.
 
 <!-- example(dropdown-x-position) -->
+
+## Panel width
+
+The panel is never narrower than its trigger, and grows with its content between the bounds set by two design tokens:
+
+| Token                                     | Default |
+| ----------------------------------------- | ------- |
+| `--kbq-dropdown-size-container-width-min` | `200px` |
+| `--kbq-dropdown-size-container-width-max` | `640px` |
+
+Nested panels and panels that overlap the trigger vertically are not matched to the trigger — they follow the tokens only.
+
+When the trigger is only a part of a larger control, set `KbqDropdownTrigger.widthOrigin` to the element the panel should match instead. [Split button](en/components/split-button) does this through its `panelAutoWidth` input.
