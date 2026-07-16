@@ -37,6 +37,6 @@ describe('KbqTimezoneOption', () => {
             By.directive(KbqTimezoneOption)
         ).componentInstance;
 
-        expect(optionInstance.viewValue).toBe('UTC +03:00 city3, city1, city2');
+        expect(optionInstance.viewValue).toBe('UTC+03:00 city3, city1, city2');
     });
 });
