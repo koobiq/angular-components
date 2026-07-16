@@ -75,6 +75,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     iconName: string;
+    protected readonly isCompact: i0.Signal<boolean>;
     // (undocumented)
     name: string;
     // (undocumented)
@@ -83,16 +84,20 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
+    readonly size: i0.InputSignal<KbqIconButtonSize>;
+    // @deprecated (undocumented)
     readonly small: i0.InputSignal<boolean>;
     // (undocumented)
     get tabindex(): any;
     set tabindex(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "small": { "alias": "small"; "required": false; "isSignal": true; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "size": { "alias": "size"; "required": false; "isSignal": true; }; "small": { "alias": "small"; "required": false; "isSignal": true; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconButton, never>;
 }
+
+// @public
+export type KbqIconButtonSize = 'compact' | 'medium';
 
 // @public (undocumented)
 export class KbqIconItem extends KbqIcon {
