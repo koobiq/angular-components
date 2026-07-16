@@ -1,20 +1,24 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
-import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
+import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+
+/** Text search is the first pipe in every filter: always present, never removable. */
+const createSearchPipe = (): KbqPipe => ({
+    name: 'Search',
+    type: KbqPipeTypes.Input,
+    value: null,
+
+    cleanable: true,
+    removable: false,
+    disabled: false
+});
 
 /**
  * @title filter-bar-search
  */
 @Component({
     selector: 'filter-bar-search-example',
-    imports: [
-        KbqFilterBarModule,
-        KbqSearchExpandableModule,
-        LuxonDateModule,
-        ReactiveFormsModule
-    ],
+    imports: [KbqFilterBarModule, LuxonDateModule],
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             @for (pipe of activeFilter?.pipes; track pipe) {
@@ -26,15 +30,11 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
             @if (activeFilter?.changed) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
-
-            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarSearchExample {
-    readonly searchControl = new FormControl('');
-
     activeFilter: KbqFilter = {
         name: '',
         readonly: false,
@@ -42,6 +42,7 @@ export class FilterBarSearchExample {
         changed: true,
         saved: false,
         pipes: [
+            createSearchPipe(),
             {
                 name: 'Select',
                 type: KbqPipeTypes.Select,
@@ -142,7 +143,7 @@ export class FilterBarSearchExample {
             disabled: false,
             changed: false,
             saved: false,
-            pipes: []
+            pipes: [createSearchPipe()]
         };
     }
 }

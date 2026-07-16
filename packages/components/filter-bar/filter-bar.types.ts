@@ -5,6 +5,7 @@ import { KbqFilterBar } from './filter-bar';
 import type { KbqBasePipe } from './pipes/base-pipe';
 import { KbqPipeDateComponent } from './pipes/pipe-date';
 import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';
+import { KbqPipeInputComponent } from './pipes/pipe-input';
 import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
 import { KbqPipeMultiTreeSelectComponent } from './pipes/pipe-multi-tree-select';
 import { KbqPipeReadonlyComponent } from './pipes/pipe-readonly';
@@ -103,6 +104,8 @@ export const kbqFilterBarPipesProvider = (): Provider => {
 export enum KbqPipeTypes {
     ReadOnly = 'readonly',
     Text = 'text',
+    /** Renders a bare input: no popover, never opens. Commits on Enter and on blur. */
+    Input = 'input',
     Select = 'select',
     TreeSelect = 'tree-select',
     MultiSelect = 'multiselect',
@@ -118,6 +121,7 @@ export type KbqPipeType = `${KbqPipeTypes}` | (string & {});
 export const defaultFilterBarPipes: [KbqPipeType, Type<KbqBasePipe<unknown>>][] = [
     [KbqPipeTypes.ReadOnly, KbqPipeReadonlyComponent],
     [KbqPipeTypes.Text, KbqPipeTextComponent],
+    [KbqPipeTypes.Input, KbqPipeInputComponent],
     [KbqPipeTypes.Select, KbqPipeSelectComponent],
     [KbqPipeTypes.TreeSelect, KbqPipeTreeSelectComponent],
     [KbqPipeTypes.MultiSelect, KbqPipeMultiSelectComponent],

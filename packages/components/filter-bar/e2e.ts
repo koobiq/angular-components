@@ -103,6 +103,16 @@ const DEV_DATA_OBJECT = {
 
                 <kbq-filter-reset />
             </kbq-filter-bar>
+            <br />
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[7]">
+                @for (pipe of filters[7]?.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+
+                <kbq-pipe-add />
+
+                <kbq-filter-reset />
+            </kbq-filter-bar>
         </div>
 
         <ng-template #optionTemplate let-option="option">
@@ -708,6 +718,79 @@ export class E2eFilterBarStates implements AfterViewInit {
                     disabled: true
                 }
             ]
+        },
+        {
+            name: 'input',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'long-name,long-name,long-name,long-name,long-name,long-name,long-name,long-name,long-name',
+                    value: 'value',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'name',
+                    value: 'long-value,long-value,long-value,long-value,long-value,long-value,long-value,long-value,',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    value: 'value,',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable empty',
+                    value: null,
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    // `removable` is not surfaced by this pipe — it renders the same as the plain state.
+                    name: 'removable',
+                    value: 'value',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'disabled',
+                    value: 'value',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: true
+                },
+                {
+                    name: 'disabled empty',
+                    value: null,
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: true
+                }
+            ]
         }
     ];
 
@@ -774,6 +857,15 @@ export class E2eFilterBarStates implements AfterViewInit {
                 values: kbqBuildTree(DEV_DATA_OBJECT, 0),
 
                 cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Input',
+                id: 'E2EInput',
+                type: KbqPipeTypes.Input,
+
+                cleanable: true,
                 removable: false,
                 disabled: false
             }

@@ -43,6 +43,8 @@ Clicking on a pseudo-link in the list of parameters will add a new value to the 
 
 For the `select` and `multiselect` types, the pipe template accepts an optional `compareWith` — a comparator forwarded to the underlying select that controls how the selected value is matched against the option list. Override it when options are compared by a business key, or when the selected value is a distinct object (e.g. restored from a saved filter) rather than the same reference. When omitted, options are matched by their `id`. A custom comparator is responsible for its own null handling — unlike the default, which never matches a `null`/`undefined` value.
 
+The `input` type is the only one without a popover: it renders a bare input that is typed into directly in the bar, using the pipe's `name` as its placeholder. The value is applied on `Enter` and on blur, rather than through an Apply button. Its only clear affordance is the built-in cleaner inside the input, so `removable` has no effect — an `input` pipe can only be removed programmatically. Values are trimmed, and a blank value is applied as `null`. Set its width with the `--kbq-filter-bar-pipe-input-width` CSS variable.
+
 ### Search in pipes
 
 If the filter has many values, it is useful to enable search in the drop-down menu.

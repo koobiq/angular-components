@@ -1,28 +1,33 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
-import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
+
+/** Text search is the first pipe in every filter: always present, never removable. */
+const createSearchPipe = (): KbqPipe => ({
+    name: 'Search',
+    type: KbqPipeTypes.Input,
+    value: null,
+
+    cleanable: true,
+    removable: false,
+    disabled: false
+});
 
 /**
  * @title filter bar
  */
 @Component({
     selector: 'filter-bar-uniq-pipes-example',
-    imports: [
-        KbqFilterBarModule,
-        KbqSearchExpandableModule,
-        LuxonDateModule,
-        ReactiveFormsModule
-    ],
+    imports: [KbqFilterBarModule, LuxonDateModule],
     template: `
         <kbq-filter-bar
             [pipeTemplates]="pipeTemplates"
@@ -45,15 +50,11 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
             @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
-
-            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarUniqPipesExample {
-    readonly searchControl = new FormControl('');
-
     filters: KbqFilter[] = [
         {
             name: 'Saved Filter 1',
@@ -62,6 +63,7 @@ export class FilterBarUniqPipesExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -102,6 +104,7 @@ export class FilterBarUniqPipesExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -150,6 +153,7 @@ export class FilterBarUniqPipesExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -429,6 +433,7 @@ export class FilterBarUniqPipesExample {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: { name: 'Последние 24 часа', end: null, start: { hours: -24 } },

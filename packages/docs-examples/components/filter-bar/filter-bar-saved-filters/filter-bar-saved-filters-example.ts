@@ -1,22 +1,32 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 interface ExampleFilter extends KbqFilter {
     id?: number;
 }
+
+/** Text search is the first pipe in every filter: always present, never removable. */
+const createSearchPipe = (): KbqPipe => ({
+    name: 'Search',
+    type: KbqPipeTypes.Input,
+    value: null,
+
+    cleanable: true,
+    removable: false,
+    disabled: false
+});
 
 /**
  * @title filter-bar-saved-filters
@@ -25,10 +35,8 @@ interface ExampleFilter extends KbqFilter {
     selector: 'filter-bar-saved-filters-example',
     imports: [
         KbqFilterBarModule,
-        KbqSearchExpandableModule,
         LuxonDateModule,
-        KbqLinkModule,
-        ReactiveFormsModule
+        KbqLinkModule
     ],
     template: `
         <kbq-filter-bar
@@ -52,8 +60,6 @@ interface ExampleFilter extends KbqFilter {
             @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
-
-            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
 
         <ng-template #toastErrorTitleTemplate let-toast>
@@ -69,7 +75,6 @@ interface ExampleFilter extends KbqFilter {
 })
 export class FilterBarSavedFiltersExample {
     readonly toastService = inject(KbqToastService);
-    readonly searchControl = new FormControl('');
 
     @ViewChild(KbqFilterBar) filterBar: KbqFilterBar;
     @ViewChild('errorToastActions') errorToastActionsTemplate: TemplateRef<any>;
@@ -84,6 +89,7 @@ export class FilterBarSavedFiltersExample {
             changed: true,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -125,6 +131,7 @@ export class FilterBarSavedFiltersExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -174,6 +181,7 @@ export class FilterBarSavedFiltersExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -220,6 +228,7 @@ export class FilterBarSavedFiltersExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -452,6 +461,7 @@ export class FilterBarSavedFiltersExample {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Date',
                     value: {

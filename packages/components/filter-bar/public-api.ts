@@ -15,6 +15,7 @@ export * from './pipes/pipe-button';
 export * from './pipes/pipe-date';
 export * from './pipes/pipe-date-base';
 export * from './pipes/pipe-datetime';
+export * from './pipes/pipe-input';
 export * from './pipes/pipe-multi-select';
 export * from './pipes/pipe-multi-tree-select';
 export * from './pipes/pipe-readonly';
