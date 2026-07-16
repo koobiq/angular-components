@@ -8,34 +8,41 @@
     }
 }
 
+// Renders the striped "loading" shimmer used by .kbq-progress. Extracted into a mixin so
+// components whose `::before`/`::after` pseudo-elements are already spoken for (e.g. kbq-dropdown-item's
+// hit-area extension) can apply the same overlay to a real element instead.
+@mixin kbq-progress-overlay() {
+    content: '';
+    position: absolute;
+    border-radius: inherit;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    $lighter: rgba(255, 255, 255, 0.1);
+    $darker: rgba(0, 0, 0, 0.04);
+
+    background: linear-gradient(
+            135deg,
+            $darker 12px,
+            $lighter 12px,
+            $lighter 22px,
+            $darker 22px,
+            $darker 34px,
+            $lighter 34px
+        )
+        repeat;
+    background-size: 32px 32px;
+    animation: kbq-progress 1s linear infinite;
+}
+
 .kbq-progress {
     position: relative;
 
     &:after {
-        content: '';
-        position: absolute;
-        border-radius: inherit;
-
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-
-        $lighter: rgba(255, 255, 255, 0.1);
-        $darker: rgba(0, 0, 0, 0.04);
-
-        background: linear-gradient(
-                135deg,
-                $darker 12px,
-                $lighter 12px,
-                $lighter 22px,
-                $darker 22px,
-                $darker 34px,
-                $lighter 34px
-            )
-            repeat;
-        background-size: 32px 32px;
-        animation: kbq-progress 1s linear infinite;
+        @include kbq-progress-overlay();
 
         @media (prefers-reduced-motion: reduce) {
             animation: none;

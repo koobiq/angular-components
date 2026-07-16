@@ -66,6 +66,12 @@
             top: calc(-1 * var(--kbq-size-3xs));
             bottom: calc(-1 * var(--kbq-size-3xs));
         }
+
+        // The hit-area's own ::after must yield so it doesn't clip the .kbq-progress overlay,
+        // which is rendered on .kbq-dropdown-item-overlay instead (see dropdown-item.scss).
+        &.kbq-progress:after {
+            content: none;
+        }
     }
 
     .kbq-divider {
