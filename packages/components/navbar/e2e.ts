@@ -481,7 +481,7 @@ export class E2eVerticalNavbarStates {}
     selector: 'e2e-vertical-navbar-brand-auto-long-title',
     imports: [KbqNavbarModule, KbqIconModule],
     template: `
-        <div data-testid="e2eScreenshotTarget" style="width: 1120px; display: flex; flex-direction: column; gap: 20px">
+        <div data-testid="e2eScreenshotTarget" style="width: 1300px; display: flex; flex-direction: column; gap: 20px">
             <div style="height: 220px; display: flex; flex-direction: row; gap: 20px">
                 @for (brand of brands; track brand.testId) {
                     <kbq-vertical-navbar [expanded]="true">
