@@ -2736,6 +2736,16 @@ export type KbqNumberInputLocaleConfig = {
 } & KbqNumberFormatOptions;
 
 // @public
+export type KbqNumberRoundingLocaleConfig = {
+    separator: string;
+    groupSeparator: string;
+    thousand: string;
+    million: string;
+    billion: string;
+    trillion: string;
+};
+
+// @public
 export interface KbqNumericPipe {
     // (undocumented)
     transform(value: unknown, digitsInfo?: string, locale?: string): string | null;

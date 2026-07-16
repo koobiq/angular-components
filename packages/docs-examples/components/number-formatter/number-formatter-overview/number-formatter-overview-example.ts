@@ -7,6 +7,7 @@ import {
     KbqNormalizeWhitespace
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTableModule } from '@koobiq/components/table';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
@@ -19,20 +20,32 @@ import { distinctUntilChanged } from 'rxjs/operators';
         FormsModule,
         KbqFormattersModule,
         KbqInputModule,
-        KbqNormalizeWhitespace
+        KbqNormalizeWhitespace,
+        KbqTableModule
     ],
-    templateUrl: 'number-formatter-overview-example.html',
-    styles: `
-        :host {
-            .light-text-secondary {
-                color: var(--kbq-foreground-contrast-secondary);
-            }
+    template: `
+        <kbq-form-field style="margin-bottom: 16px; max-width: 200px">
+            <input kbqNormalizeWhitespace kbqNumberInput placeholder="Number" [(ngModel)]="value" />
+        </kbq-form-field>
 
-            .row-border {
-                padding: var(--kbq-size-s);
-                border-bottom: 1px solid var(--kbq-line-contrast-less);
-            }
-        }
+        <table kbq-table disableHover>
+            <thead>
+                <tr>
+                    <th>digitsInfo</th>
+                    <th>kbqNumber</th>
+                    <th>kbqTableNumber</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (digitsInfo of digitsInfoList; track digitsInfo) {
+                    <tr>
+                        <td>{{ digitsInfo || '—' }}</td>
+                        <td>{{ value | kbqNumber: digitsInfo }}</td>
+                        <td>{{ value | kbqTableNumber: digitsInfo }}</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -40,7 +53,8 @@ export class NumberFormatterOverviewExample {
     protected localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
     protected changeDetectorRef = inject(ChangeDetectorRef);
 
-    value = 1000.123;
+    protected value = 1000.123;
+    protected readonly digitsInfoList = ['', '5.5-5', '4.5-5', '4.0-2', '4.0-2-false', '4.0-0'];
 
     constructor() {
         this.localeService.changes

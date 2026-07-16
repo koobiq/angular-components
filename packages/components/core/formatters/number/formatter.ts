@@ -5,7 +5,8 @@ import {
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
-    KbqNumberFormatOptions
+    KbqNumberFormatOptions,
+    KbqNumberRoundingLocaleConfig
 } from '../../locales';
 
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>('KbqNumberFormatterOptions');
@@ -67,17 +68,13 @@ const minFractionGroupPosition = 3;
 const maxFractionGroupPosition = 5;
 const useGroupingPosition = 7;
 
-interface RoundDecimalOptions {
-    separator: string;
-    groupSeparator: string;
-    thousands?: string;
+type RoundDecimalOptions = KbqNumberRoundingLocaleConfig & {
+    /** Label for the ten-thousand unit. */
     tenThousand?: string;
-    million?: string;
+    /** Label for the one-hundred-millions unit. */
     oneHundredMillions?: string;
-    billion?: string;
-    trillion: string;
     rtl?: boolean;
-}
+};
 
 const ROUNDING_UNITS = {
     thousand: 1e3,
@@ -87,6 +84,9 @@ const ROUNDING_UNITS = {
     billion: 1e9,
     trillion: 1e12
 };
+
+/** Rounding units that carry a localized label in `KbqNumberRoundingLocaleConfig`. */
+type RoundingUnit = keyof RoundDecimalOptions & keyof typeof ROUNDING_UNITS;
 
 const intervalsConfig = {
     supportedLanguages: ['ru-RU', 'en-US', 'es-LA', 'pt-BR'],
@@ -295,6 +295,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
     }
 
+    // @TODO: update returned type to string | null. Breaking change
     transform(value: any, locale?: string): any {
         if (isEmpty(value)) {
             return null;
@@ -375,11 +376,11 @@ export class KbqRoundDecimalPipe implements PipeTransform {
             : { num: Math.round(dividedValue) };
     }
 
-    private calculateUnit(num: number): string | undefined {
-        let currentUnit: string | undefined;
+    private calculateUnit(num: number): RoundingUnit | undefined {
+        let currentUnit: RoundingUnit | undefined;
         const localizedOptions = Object.keys(this.roundingOptions);
 
-        Object.keys(ROUNDING_UNITS).every((key) => {
+        (Object.keys(ROUNDING_UNITS) as RoundingUnit[]).every((key) => {
             if (!localizedOptions.includes(key)) {
                 return true;
             }
