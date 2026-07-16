@@ -689,7 +689,7 @@ export class KbqAutocompleteTrigger
     private getOverlaySize(): KbqResolvedPanelWidth {
         const autocomplete = this.autocomplete();
 
-        return kbqResolvePanelWidth(autocomplete.panelWidth, autocomplete.panelMinWidth, this.getHostWidth());
+        return kbqResolvePanelWidth(autocomplete.panelWidth(), autocomplete.panelMinWidth(), this.getHostWidth());
     }
 
     private getHostWidth(): number {

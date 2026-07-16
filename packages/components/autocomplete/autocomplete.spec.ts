@@ -22,9 +22,12 @@ import {
     DOWN_ARROW,
     ENTER,
     ESCAPE,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqLocaleServiceModule,
     KbqOption,
     KbqOptionSelectionChange,
+    KbqPanelMaxWidth,
+    KbqPanelWidth,
     MockNgZone,
     SPACE,
     TAB,
@@ -1620,7 +1623,8 @@ describe('KbqAutocomplete', () => {
 
         jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
 
-        widthFixture.componentInstance.trigger().autocomplete().panelWidth = 'auto';
+        widthFixture.componentInstance.panelWidth = 'auto';
+        widthFixture.detectChanges();
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
 
@@ -1635,7 +1639,8 @@ describe('KbqAutocomplete', () => {
         widthFixture.componentInstance.width = 300;
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger().autocomplete().panelWidth = 'fit-content';
+        widthFixture.componentInstance.panelWidth = 'fit-content';
+        widthFixture.detectChanges();
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
 
@@ -1650,7 +1655,8 @@ describe('KbqAutocomplete', () => {
         widthFixture.componentInstance.width = 300;
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger().autocomplete().panelWidth = 400;
+        widthFixture.componentInstance.panelWidth = 400;
+        widthFixture.detectChanges();
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
 
@@ -1989,7 +1995,8 @@ describe('KbqAutocomplete', () => {
 
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger().autocomplete().panelMinWidth = 350;
+        widthFixture.componentInstance.panelMinWidth = 350;
+        widthFixture.detectChanges();
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
@@ -2008,7 +2015,8 @@ describe('KbqAutocomplete', () => {
 
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger().autocomplete().panelWidth = 250;
+        widthFixture.componentInstance.panelWidth = 250;
+        widthFixture.detectChanges();
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
@@ -2033,7 +2041,8 @@ describe('KbqAutocomplete', () => {
 
         jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
 
-        trigger().autocomplete().panelWidth = 300;
+        widthFixture.componentInstance.panelWidth = 300;
+        widthFixture.detectChanges();
         trigger().open();
         widthFixture.detectChanges();
         trigger().closePanel();
@@ -2041,7 +2050,8 @@ describe('KbqAutocomplete', () => {
 
         // `OverlayRef.updateSize()` merges shallowly, so the resolver has to emit both keys or the
         // stale `width` stays applied to the pane.
-        trigger().autocomplete().panelWidth = null;
+        widthFixture.componentInstance.panelWidth = null;
+        widthFixture.detectChanges();
         trigger().open();
         widthFixture.detectChanges();
 
@@ -2191,6 +2201,9 @@ describe('KbqAutocomplete', () => {
             #auto="kbqAutocomplete"
             class="class-one class-two"
             [displayWith]="displayFn"
+            [panelMaxWidth]="panelMaxWidth"
+            [panelMinWidth]="panelMinWidth"
+            [panelWidth]="panelWidth"
             (opened)="openedSpy()"
             (closed)="closedSpy()"
         >
@@ -2207,6 +2220,9 @@ class SimpleAutocomplete implements OnDestroy {
     filteredStates: any[];
     valueSub: Subscription;
     width: number;
+    panelWidth: KbqPanelWidth | string | undefined;
+    panelMinWidth: number = KBQ_PANEL_DEFAULT_MIN_WIDTH;
+    panelMaxWidth: KbqPanelMaxWidth = null;
     kbqOptionWidth: number;
     autocompleteDisabled = false;
     openedSpy = jest.fn();

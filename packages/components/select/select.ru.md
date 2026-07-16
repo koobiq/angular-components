@@ -107,6 +107,8 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 
 <!-- example(select-with-panel-width-fixed) -->
 
+Список, растущий из-за длинного текста опций, останавливается на 640px. Потолок мягкий — он никогда не делает список уже селекта и не обрезает явный `panelWidth`. Изменить его для одного селекта можно атрибутом `panelMaxWidth`, а для всего приложения — задав токен `--kbq-panel-size-width-max` на `:root` (он общий с tree-select, autocomplete и dropdown).
+
 Для настройки ширины выпадающих списков всех селектов внутри модуля, имеющих единые правила отображения, можно использовать провайдер `kbqSelectOptionsProvider`.
 
 ```ts

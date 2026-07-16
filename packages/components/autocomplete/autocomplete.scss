@@ -14,7 +14,8 @@
     box-sizing: border-box;
     min-width: 100%;
     width: 100%;
-    max-width: none;
+    // See `%kbq-select-panel` — same soft cap, same token.
+    max-width: var(--kbq-panel-size-width-max, 640px);
 
     border-radius: var(--kbq-autocomplete-size-panel-border-radius, var(--kbq-size-border-radius));
     max-height: var(--kbq-autocomplete-size-panel-max-height);

@@ -299,8 +299,9 @@ describe('KbqSplitButton', () => {
         });
 
         /**
-         * Opens the dropdown with the split-button host measuring 200 and the chevron trigger — which is
+         * Opens the dropdown with the split-button host measuring 600 and the chevron trigger — which is
          * what the dropdown would measure on its own — measuring 50, then returns the rendered pane.
+         * The two straddle the 200px default `panelMinWidth`, so the measured origin is observable.
          */
         const openPanelWithMockedWidths = (panelAutoWidth: boolean): HTMLElement => {
             const fixture = TestBed.createComponent(TestAppDropdownAutoWidth);
@@ -310,7 +311,7 @@ describe('KbqSplitButton', () => {
             const hostEl = fixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
             const triggerDebugEl = fixture.debugElement.query(By.directive(KbqDropdownTrigger));
 
-            jest.spyOn(hostEl, 'getBoundingClientRect').mockReturnValue({ width: 200 } as DOMRect);
+            jest.spyOn(hostEl, 'getBoundingClientRect').mockReturnValue({ width: 600 } as DOMRect);
             jest.spyOn(triggerDebugEl.nativeElement, 'getBoundingClientRect').mockReturnValue({ width: 50 } as DOMRect);
 
             fixture.detectChanges();
@@ -322,11 +323,12 @@ describe('KbqSplitButton', () => {
         };
 
         it('should match the panel width to the split-button when panelAutoWidth is true', () => {
-            expect(openPanelWithMockedWidths(true).style.minWidth).toBe('200px');
+            expect(openPanelWithMockedWidths(true).style.minWidth).toBe('600px');
         });
 
-        it('should match the panel width to the trigger when panelAutoWidth is false', () => {
-            expect(openPanelWithMockedWidths(false).style.minWidth).toBe('50px');
+        it('should fall back to the default minimum when panelAutoWidth is false', () => {
+            // The chevron alone is 50px, so the 200px default `panelMinWidth` floor applies instead.
+            expect(openPanelWithMockedWidths(false).style.minWidth).toBe('200px');
         });
     });
 });

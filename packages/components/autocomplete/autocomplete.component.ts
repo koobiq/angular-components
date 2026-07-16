@@ -12,6 +12,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    input,
     numberAttribute,
     output,
     QueryList,
@@ -26,6 +27,7 @@ import {
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqOptgroup,
     KbqOption,
+    KbqPanelMaxWidth,
     KbqPanelWidth
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
@@ -121,17 +123,20 @@ export class KbqAutocomplete implements AfterContentInit {
      * exact width, and `panelMinWidth` is not applied. When not set, the panel sizes to its content and is
      * at least as wide as its host.
      */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() panelWidth: KbqPanelWidth | string;
+    readonly panelWidth = input<KbqPanelWidth | string | undefined>(undefined);
 
     /**
      * Minimum width of the panel in pixels.
      * When panelWidth is not set, the panel will be at least as wide as its host and no less than panelMinWidth.
      */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: numberAttribute }) panelMinWidth: number = KBQ_PANEL_DEFAULT_MIN_WIDTH;
+    readonly panelMinWidth = input<number, unknown>(KBQ_PANEL_DEFAULT_MIN_WIDTH, { transform: numberAttribute });
+
+    /**
+     * Maximum width of the panel in pixels. Caps how far the panel grows with its content — it never makes
+     * the panel narrower than its host, and never clamps an explicit `panelWidth`.
+     * When null, the `--kbq-panel-size-width-max` token applies.
+     */
+    readonly panelMaxWidth = input<KbqPanelMaxWidth, unknown>(null, { transform: numberAttribute });
 
     /** Event that is emitted whenever an option from the list is selected. */
     readonly optionSelected = output<KbqAutocompleteSelectedEvent>();

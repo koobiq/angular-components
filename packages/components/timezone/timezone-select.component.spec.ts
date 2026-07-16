@@ -1,6 +1,6 @@
 ﻿import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, getDebugNode, viewChild, viewChildren } from '@angular/core';
+import { Component, OnInit, Type, getDebugNode, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -10,6 +10,8 @@ import {
     ESCAPE,
     KbqOptionModule,
     KbqOptionSelectionChange,
+    KbqPanelMinWidth,
+    KbqPanelWidth,
     KbqSelectSearch,
     LEFT_ARROW,
     RIGHT_ARROW,
@@ -131,6 +133,28 @@ class BasicTimezoneSelect {
 }
 
 @Component({
+    selector: 'timezone-select-with-panel-width',
+    imports: [
+        KbqTimezoneModule,
+        KbqOptionModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select [panelMinWidth]="panelMinWidth" [panelWidth]="panelWidth">
+                @for (zone of zones; track zone) {
+                    <kbq-timezone-option [value]="zone.id" [timezone]="zone" />
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `
+})
+class TimezoneSelectWithPanelWidth {
+    zones = groupedZones[0].zones;
+    panelWidth: KbqPanelWidth = 'auto';
+    panelMinWidth: KbqPanelMinWidth = 640;
+}
+
+@Component({
     selector: 'select-with-search',
     imports: [
         KbqInputModule,
@@ -235,13 +259,13 @@ describe('KbqTimezoneSelect', () => {
          * Opens the panel with the form field measuring the given width and returns the rendered pane.
          * JSDOM does not lay out, so the connection container has to be mocked.
          */
-        function openPanelWithFieldWidth(fieldWidth: number, setup?: (select: KbqTimezoneSelect) => void): HTMLElement {
-            configureTestingModule([BasicTimezoneSelect]);
+        function openPanelWithFieldWidth<T>(host: Type<T>, fieldWidth: number, setup?: (instance: T) => void) {
+            configureTestingModule([host]);
 
-            const fixture = TestBed.createComponent(BasicTimezoneSelect);
+            const fixture = TestBed.createComponent(host);
 
+            setup?.(fixture.componentInstance);
             fixture.detectChanges();
-            setup?.(fixture.componentInstance.select());
 
             const connectionContainer = fixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
@@ -263,20 +287,23 @@ describe('KbqTimezoneSelect', () => {
             return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         }
 
+        // Deliberately uses the host without width bindings, so these exercise the real defaults.
         it('should honour the default 640px minimum when the field is narrower', () => {
-            expect(openPanelWithFieldWidth(300).style.width).toBe('640px');
+            expect(openPanelWithFieldWidth(BasicTimezoneSelect, 300).style.width).toBe('640px');
         });
 
         it('should grow to match the field when it is wider than the minimum', () => {
-            expect(openPanelWithFieldWidth(800).style.width).toBe('800px');
+            expect(openPanelWithFieldWidth(BasicTimezoneSelect, 800).style.width).toBe('800px');
         });
 
         it('should match the field exactly when panelMinWidth is removed', () => {
-            expect(openPanelWithFieldWidth(300, (select) => (select.panelMinWidth = 0)).style.width).toBe('300px');
+            const pane = openPanelWithFieldWidth(TimezoneSelectWithPanelWidth, 300, (host) => (host.panelMinWidth = 0));
+
+            expect(pane.style.width).toBe('300px');
         });
 
         it('should use an explicit panelWidth and ignore panelMinWidth', () => {
-            const pane = openPanelWithFieldWidth(300, (select) => (select.panelWidth = 400));
+            const pane = openPanelWithFieldWidth(TimezoneSelectWithPanelWidth, 300, (host) => (host.panelWidth = 400));
 
             expect(pane.style.width).toBe('400px');
             expect(pane.style.minWidth).toBe('');

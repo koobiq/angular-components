@@ -216,13 +216,15 @@ The schematic matches receivers by explicit type annotation only, so aliases (`c
 
 ### 6. Panel width unification (21.0.0)
 
-In version 21.0.0 `autocomplete`, `select`, `tree-select` and `timezone` started resolving the width of their dropdown panel through one shared mechanism, so `panelWidth` now means the same thing everywhere:
+In version 21.0.0 `autocomplete`, `select`, `tree-select`, `timezone` and `dropdown` started resolving the width of their dropdown panel through one shared mechanism. They now all expose the same three inputs — `panelWidth`, `panelMinWidth` and `panelMaxWidth` — with the same meaning:
 
 | `panelWidth`           | Panel width                                                              |
 | ---------------------- | ------------------------------------------------------------------------ |
 | not set (default)      | sizes to its content, never narrower than the trigger or `panelMinWidth` |
 | `'auto'`               | matches the trigger, never narrower than `panelMinWidth`                 |
 | a number or CSS string | exactly that width; `panelMinWidth` is not applied                       |
+
+Panels are now also capped at **640px** through the `--kbq-panel-size-width-max` token. The cap is soft: it limits how far a panel grows with its content, but it never makes a panel narrower than its trigger and never clamps an explicit `panelWidth`. Change it globally by setting the token on `:root`, per component through the component's own token (`--kbq-dropdown-size-container-width-max` still works), or per instance through `panelMaxWidth`.
 
 #### Running the migration
 
@@ -245,6 +247,24 @@ ng g @koobiq/components:autocomplete-panel-width-auto --project <your project>
 `auto` still type-checks and still renders, the panel is just laid out differently — it isn't the only silent change in this release though, see the `panelWidth={{0}}` note below.
 
 #### What you need to fix manually
+
+**`panelWidth`, `panelMinWidth` and `panelMaxWidth` are signal inputs.** Reads now require a call, and writes are no longer possible — this is the one change in this release without an automated path, because there is no runtime equivalent of writing to a signal input from outside.
+
+```ts
+// Before
+@ViewChild(KbqSelect) select: KbqSelect;
+this.select.panelWidth = 'auto';
+const w = this.select.panelWidth;
+
+// After — bind from the template instead
+// <kbq-select [panelWidth]="panelWidth">
+panelWidth: KbqPanelWidth = 'auto';
+const w = this.select.panelWidth();
+```
+
+`kbq-tree-select` already exposed these as signals, so it is unaffected. `KbqDropdownPanel.panelWidth` / `panelMinWidth` / `panelMaxWidth` are typed `Signal<...>` for the same reason.
+
+**Panels no longer grow past 640px with their content.** `kbq-select`, `kbq-tree-select` and `kbq-autocomplete` previously had no cap at all, so a panel with long option text could grow arbitrarily wide; it now stops at 640px. Panels whose width comes from the trigger or from an explicit `panelWidth` are unaffected. To restore the old behaviour set `--kbq-panel-size-width-max: none` on `:root`, or raise the cap for one instance with `panelMaxWidth`.
 
 **`panelWidth="auto"` on `kbq-select` and `kbq-tree-select`** no longer goes below `panelMinWidth` (200 by default). A trigger narrower than 200px used to produce a panel of exactly the trigger's width; it now produces a 200px panel. If you relied on that, set `panelMinWidth="0"`. This cannot be migrated automatically — whether it affects you depends on the rendered width of the trigger.
 

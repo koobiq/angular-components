@@ -18,6 +18,7 @@ import * as i6 from '@koobiq/components/tooltip';
 import * as i7 from '@angular/common';
 import * as i8 from '@angular/cdk/a11y';
 import { KbqOption } from '@koobiq/components/core';
+import { KbqPanelMinWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -102,11 +103,10 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    panelMinWidth: number;
+    readonly panelMinWidth: i0.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
+    readonly panelWidth: i0.InputSignal<KbqPanelWidth>;
     // (undocumented)
-    panelWidth: KbqPanelWidth;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], { "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; }, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneSelect, never>;
 }

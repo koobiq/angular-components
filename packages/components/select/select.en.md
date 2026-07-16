@@ -88,6 +88,8 @@ To set a fixed width of 400px for the select, use the `panelWidth` attribute wit
 
 <!-- example(select-with-panel-width-fixed) -->
 
+A panel growing with long option text stops at 640px. The cap is soft — it never makes the panel narrower than the select, and never clamps an explicit `panelWidth`. Raise or lower it for one select with `panelMaxWidth`, or for the whole application by setting the `--kbq-panel-size-width-max` token on `:root` (it is shared with tree-select, autocomplete and dropdown).
+
 To configure the select width for all selects within a module according to unified display rules, use the `kbqSelectOptionsProvider`.
 
 ```ts

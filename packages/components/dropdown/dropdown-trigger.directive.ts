@@ -35,6 +35,8 @@ import {
     ENTER,
     kbqGetPanelWidthOrigin,
     KbqPanelWidthOrigin,
+    KbqResolvedPanelWidth,
+    kbqResolvePanelWidth,
     LEFT_ARROW,
     RIGHT_ARROW,
     SPACE
@@ -314,7 +316,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         // The overlay is created once and reused, so the trigger has to be re-measured on every open
         // to keep up with layout changes between them.
         if (this.shouldMatchTriggerWidth) {
-            overlayRef.updateSize({ minWidth: this.getWidth() });
+            overlayRef.updateSize(this.getOverlaySize());
         }
 
         overlayRef.attach(this.getPortal());
@@ -559,7 +561,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             backdropClass: this.dropdown.backdropClass || 'cdk-overlay-transparent-backdrop',
             scrollStrategy: this.scrollStrategy(),
             direction: this.dir,
-            ...(this.shouldMatchTriggerWidth && { minWidth: this.getWidth() })
+            ...(this.shouldMatchTriggerWidth && this.getOverlaySize())
         });
     }
 
@@ -725,10 +727,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         return this.portal;
     }
 
-    private getWidth(): string {
-        if (!this.isBrowser) return '';
-
-        return `${kbqGetPanelWidthOrigin(this.widthOrigin ?? this.elementRef)}px`;
+    private getOverlaySize(): KbqResolvedPanelWidth {
+        return kbqResolvePanelWidth(
+            this.dropdown.panelWidth?.(),
+            this.dropdown.panelMinWidth?.(),
+            this.isBrowser ? kbqGetPanelWidthOrigin(this.widthOrigin ?? this.elementRef) : 0
+        );
     }
 
     private addClassToOverlayContainer() {

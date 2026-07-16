@@ -23,9 +23,19 @@ import {
     ViewEncapsulation,
     contentChild,
     inject,
-    input
+    input,
+    numberAttribute
 } from '@angular/core';
-import { ESCAPE, FocusKeyManager, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
+import {
+    ESCAPE,
+    FocusKeyManager,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
+    KbqPanelMaxWidth,
+    KbqPanelMinWidth,
+    KbqPanelWidth,
+    LEFT_ARROW,
+    RIGHT_ARROW
+} from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
 import { startWith, switchMap, take } from 'rxjs/operators';
@@ -206,6 +216,33 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     //  This input overrides a field from a superclass, while the superclass field
     //  is not migrated.
     @Input() backdropClass: string = this.defaultOptions.backdropClass;
+
+    /**
+     * Width of the panel. If set to `auto`, the panel will match the trigger width, but will never be
+     * narrower than `panelMinWidth`. If set to null, the panel will grow to match its content.
+     * Any other value is used as an exact width, and `panelMinWidth` is not applied.
+     */
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions.panelWidth ?? null);
+
+    /**
+     * Minimum width of the panel in pixels. The panel is never narrower than this, nor than its trigger.
+     */
+    readonly panelMinWidth = input<KbqPanelMinWidth, unknown>(
+        this.defaultOptions.panelMinWidth === undefined
+            ? KBQ_PANEL_DEFAULT_MIN_WIDTH
+            : this.defaultOptions.panelMinWidth,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * Maximum width of the panel in pixels. Caps how far the panel grows with its content — it never makes
+     * the panel narrower than the trigger, and never clamps an explicit `panelWidth`.
+     * When null, the `--kbq-dropdown-size-container-width-max` token applies.
+     */
+    readonly panelMaxWidth = input<KbqPanelMaxWidth, unknown>(
+        this.defaultOptions.panelMaxWidth === undefined ? null : this.defaultOptions.panelMaxWidth,
+        { transform: numberAttribute }
+    );
 
     /** @docs-private */
     @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;

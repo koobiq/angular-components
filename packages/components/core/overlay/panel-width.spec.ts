@@ -100,6 +100,23 @@ describe('kbqResolvePanelWidth', () => {
     });
 });
 
+describe('the soft cap', () => {
+    // The cap lives in CSS (`max-width` on the panel, beaten by `min-width: 100%`), never in the
+    // resolved pane size — putting it on the pane would let it override `width` and make it hard.
+    it('should never be emitted into the resolved size', () => {
+        expect(Object.keys(kbqResolvePanelWidth('auto', 200, 300)).sort()).toEqual(['minWidth', 'width']);
+        expect(Object.keys(kbqResolvePanelWidth(null, 200, 300)).sort()).toEqual(['minWidth', 'width']);
+    });
+
+    it('should leave a trigger wider than the cap untouched', () => {
+        expect(kbqResolvePanelWidth('auto', 200, 900)).toEqual({ width: 900, minWidth: '' });
+    });
+
+    it('should leave an explicit width wider than the cap untouched', () => {
+        expect(kbqResolvePanelWidth(900, 200, 300)).toEqual({ width: 900, minWidth: '' });
+    });
+});
+
 describe('kbqGetPanelWidthOrigin', () => {
     it('should measure a native element', () => {
         expect(kbqGetPanelWidthOrigin(elementOfWidth(300))).toBe(300);

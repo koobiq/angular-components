@@ -35,6 +35,8 @@ By default, the dropdown width equals the select width and grows when the list c
 
 The dropdown never gets narrower than `panelMinWidth`, which is 200px by default. Set `panelMinWidth` to `0` to remove that limit.
 
+Growth by content stops at 640px. The cap is soft — it never makes the dropdown narrower than the select, and never clamps an explicit `panelWidth`. Change it with `panelMaxWidth`, or globally through the `--kbq-panel-size-width-max` token.
+
 For a specific dropdown:
 
 ```ts

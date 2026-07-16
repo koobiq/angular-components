@@ -1,6 +1,12 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
-import { EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
+import { EventEmitter, InjectionToken, QueryList, Signal, TemplateRef } from '@angular/core';
+import {
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
+    KbqPanelMaxWidth,
+    KbqPanelMinWidth,
+    KbqPanelWidth
+} from '@koobiq/components/core';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { KbqDropdownItem } from './dropdown-item.component';
 
@@ -40,6 +46,9 @@ export interface KbqDropdownPanel {
      * an element other than the trigger. Will be removed in v21.
      */
     triggerWidth?: string;
+    panelWidth?: Signal<KbqPanelWidth>;
+    panelMinWidth?: Signal<KbqPanelMinWidth>;
+    panelMaxWidth?: Signal<KbqPanelMaxWidth>;
     direction?: Direction;
     lazyContent?: KbqDropdownContent;
     backdropClass?: string;
@@ -69,6 +78,21 @@ export interface KbqDropdownDefaultOptions {
 
     /** Whether the dropdown has a backdrop. */
     hasBackdrop: boolean;
+
+    /**
+     * Width of the panel. If set to `auto`, the panel will match the trigger width.
+     * If set to null, the panel will grow to match its content.
+     */
+    panelWidth?: KbqPanelWidth;
+
+    /** Minimum width of the panel. If set to null, only the trigger width applies. */
+    panelMinWidth?: KbqPanelMinWidth;
+
+    /**
+     * Maximum width of the panel. Caps growth by content only — it never overrides the trigger width or an
+     * explicit `panelWidth`. If null, the `--kbq-dropdown-size-container-width-max` token applies.
+     */
+    panelMaxWidth?: KbqPanelMaxWidth;
 }
 
 /**
@@ -94,6 +118,11 @@ export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOption
         xPosition: 'after',
         yPosition: 'below',
         backdropClass: 'cdk-overlay-transparent-backdrop',
-        hasBackdrop: false
+        hasBackdrop: false,
+        // Reproduces the pre-existing CSS-driven sizing: grow with content, never narrower than the
+        // trigger or `--kbq-dropdown-size-container-width-min`, capped by the token.
+        panelWidth: null,
+        panelMinWidth: KBQ_PANEL_DEFAULT_MIN_WIDTH,
+        panelMaxWidth: null
     };
 }

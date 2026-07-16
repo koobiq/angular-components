@@ -66,6 +66,7 @@ import {
     KbqOption,
     KbqOptionBase,
     KbqOptionSelectionChange,
+    KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
     KbqSelectAllEvent,
@@ -140,6 +141,11 @@ export type KbqSelectOptions = Partial<{
      * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
      */
     panelMinWidth: KbqPanelMinWidth;
+    /**
+     * Maximum width of the panel. Caps growth by content only — it never overrides the trigger width or an
+     * explicit `panelWidth`. If null, the `--kbq-panel-size-width-max` token applies.
+     */
+    panelMaxWidth: KbqPanelMaxWidth;
     /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
@@ -646,20 +652,28 @@ export class KbqSelect
      * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
      * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
      */
-    // TODO: Skipped for migration because:
-    //  The input cannot be migrated because the field is overridden by a subclass.
-    @Input() panelWidth: KbqPanelWidth = this.defaultOptions?.panelWidth || null;
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth || null);
 
     /**
      * Minimum width of the panel in pixels.
      * If minWidth is larger than window width, it will be ignored.
      */
-    // TODO: Skipped for migration because:
-    //  The input cannot be migrated because the field is overridden by a subclass.
-    @Input({ transform: numberAttribute }) panelMinWidth: KbqPanelMinWidth =
+    readonly panelMinWidth = input<KbqPanelMinWidth, unknown>(
         this.defaultOptions?.panelMinWidth === undefined
             ? KBQ_PANEL_DEFAULT_MIN_WIDTH
-            : this.defaultOptions.panelMinWidth;
+            : this.defaultOptions.panelMinWidth,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * Maximum width of the panel in pixels. Caps how far the panel grows with its content — it never makes
+     * the panel narrower than the trigger, and never clamps an explicit `panelWidth`.
+     * When null, the `--kbq-panel-size-width-max` token applies.
+     */
+    readonly panelMaxWidth = input<KbqPanelMaxWidth, unknown>(
+        this.defaultOptions?.panelMaxWidth === undefined ? null : this.defaultOptions.panelMaxWidth,
+        { transform: numberAttribute }
+    );
 
     /** Value of the select control. Can be a single value or array of values for multiple selection. */
     // TODO: Skipped for migration because:
@@ -1091,7 +1105,7 @@ export class KbqSelect
             this.overlayOrigin = this.parentFormField.getConnectedOverlayOrigin();
         }
 
-        this.updateOverlayWidth(this.panelWidth, this.panelMinWidth, this.overlayOrigin ?? this.elementRef);
+        this.updateOverlayWidth(this.panelWidth(), this.panelMinWidth(), this.overlayOrigin ?? this.elementRef);
 
         this.panelOpen = true;
 

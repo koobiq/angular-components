@@ -2,7 +2,8 @@
 
 .kbq-dropdown__panel {
     --kbq-dropdown-size-container-width-min: 200px;
-    --kbq-dropdown-size-container-width-max: 640px;
+    // Kept as a dropdown-specific override point; defaults to the shared panel cap.
+    --kbq-dropdown-size-container-width-max: var(--kbq-panel-size-width-max, 640px);
     --kbq-dropdown-size-container-padding-vertical: var(--kbq-size-xxs);
     --kbq-dropdown-size-container-border-radius: var(--kbq-size-s);
     /* THEME TOKENS */
