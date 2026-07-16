@@ -60,7 +60,10 @@ export class DevButtonStressBenchmark {
     private readonly window = inject(KBQ_WINDOW);
 
     protected onCountInput(event: Event): void {
-        this.count.set(Math.max(0, +(event.target as HTMLInputElement).value || 0));
+        const input = event.currentTarget as HTMLInputElement;
+        const next = Number.parseInt(input.value, 10);
+
+        this.count.set(Number.isFinite(next) ? Math.min(100_000, Math.max(0, next)) : 0);
     }
 
     protected run(): void {
