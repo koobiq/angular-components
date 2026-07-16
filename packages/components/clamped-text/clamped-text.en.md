@@ -17,3 +17,9 @@ By default, text is truncated after 5 lines. The `rows` attribute controls how m
 ### A single hidden line is always shown
 
 If the hidden portion contains only one line, the component displays it immediately. The "Expand" button does not appear because the text already takes up the same height as the collapsed state with the button.
+
+### External state control
+
+The `isCollapsed` input lets you control the component's state from outside — for example, from route query params. The `isCollapsedChange` output allows you to sync the state back, forming a two-way binding.
+
+<!-- example(clamped-text-external-state) -->

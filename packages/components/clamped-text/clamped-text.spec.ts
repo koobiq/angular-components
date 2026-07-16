@@ -1,5 +1,5 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { ChangeDetectionStrategy, Component, Injectable, signal, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injectable, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { KbqClampedText } from './clamped-text';
@@ -48,6 +48,22 @@ class TestClampedTextDefault {
     }
 }
 
+@Component({
+    selector: 'test-clamped-text-with-initial-state',
+    imports: [KbqClampedText],
+    template: `
+        <kbq-clamped-text #clamped [isCollapsed]="isCollapsed()">
+            {{ text }}
+        </kbq-clamped-text>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestClampedTextWithInitialState {
+    readonly clampedText = viewChild.required<KbqClampedText>('clamped');
+    protected readonly text = Array.from({ length: 100 }, (_, i) => `Text ${i}`).join(' ');
+    readonly isCollapsed = signal<boolean | undefined>(false);
+}
+
 describe('KbqClampedText', () => {
     it('should emit collapsed change on init', async () => {
         const fixture = createComponent(TestClampedTextDefault);
@@ -70,6 +86,33 @@ describe('KbqClampedText', () => {
 
         expect(componentInstance.collapsed()).not.toEqual(previousCollapsedState);
         expect(componentInstance.collapsed()).toBe(false);
+    });
+
+    it('should set isToggleCollapsed from isCollapsed=false on ngOnInit', async () => {
+        const fixture = createComponent(TestClampedTextWithInitialState);
+
+        await fixture.whenStable();
+
+        const comp = fixture.componentInstance.clampedText();
+
+        expect(comp.isToggleCollapsed()).toBe(false);
+    });
+
+    it('should not collapse when isCollapsed=false and resize observer fires with visible toggle', async () => {
+        const fixture = createComponent(TestClampedTextWithInitialState);
+        const mockResizeObserver = TestBed.inject(SharedResizeObserver) as MockResizeObserver;
+
+        await fixture.whenStable();
+
+        const comp = fixture.componentInstance.clampedText();
+
+        // Simulate text long enough to need clamping (hasToggle=true)
+        comp.hasToggle.set(true);
+        mockResizeObserver.changes.next([]);
+
+        await fixture.whenStable();
+
+        expect(comp.collapsedState()).toBe(false);
     });
 
     it('should emit isCollapsedChange when isCollapsed input changes', async () => {
