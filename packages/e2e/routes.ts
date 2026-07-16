@@ -11,7 +11,7 @@ import {
     E2eAutocompleteScrollClose,
     E2eAutocompleteStates
 } from '../components/autocomplete/e2e';
-import { E2eBadgeStyles } from '../components/badge/e2e';
+import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
 import { E2eBreadcrumbsOverflowMax, E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
 import { E2eButtonToggleStates, E2eButtonToggleStatesStretched } from '../components/button-toggle/e2e';
 import { E2eButtonGroup, E2eButtonStateAndStyle } from '../components/button/e2e';
@@ -162,6 +162,7 @@ const components = [
     E2eIconStateAndStyle,
     E2eIconSvg,
     E2eBadgeStyles,
+    E2eBadgeAsyncIcon,
     E2eLinkStates,
     E2eLinkWithCaption,
     E2eTagInputStates,
