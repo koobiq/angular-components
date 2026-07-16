@@ -122,7 +122,7 @@
         overflow: hidden;
 
         & .kbq-select__match-hidden-text {
-            flex: 0 0 28px;
+            flex: 0 0 var(--kbq-form-field-size-addon-width);
             align-self: center;
             padding-left: var(--kbq-size-xxs);
             padding-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
