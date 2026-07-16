@@ -38,7 +38,7 @@ describe('KbqTimezone utils', () => {
     });
 
     describe('offsetFormatter', () => {
-        it('should format a positive offset as "UTC +HH:MM"', () => {
+        it('should format a positive offset as "UTC+HH:MM"', () => {
             expect(offsetFormatter('03:00:00')).toBe('UTC+03:00');
         });
 
