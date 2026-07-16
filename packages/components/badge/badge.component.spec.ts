@@ -45,7 +45,7 @@ describe(KbqBadge.name, () => {
         });
 
         it('should not render an icon before it is projected', () => {
-            const icon = badgeNativeElement.querySelector('[kbq-icon]')!;
+            const icon = badgeNativeElement.querySelector('[kbq-icon]');
 
             expect(icon).toBeNull();
             expect(badgeNativeElement.classList.contains(badgeRightIconClassName)).toBe(false);
