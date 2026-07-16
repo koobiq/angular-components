@@ -19,9 +19,9 @@ import { KbqIcon } from './icon.component';
 /**
  * Size options for `KbqIconButton`.
  * - `compact`: 16px icon with padding, 24×24px container.
- * - `medium`: 24px icon, no padding.
+ * - `normal`: 24px icon, no padding.
  */
-export type KbqIconButtonSize = 'compact' | 'medium';
+export type KbqIconButtonSize = 'compact' | 'normal';
 
 @Component({
     selector: `[kbq-icon-button]`,
@@ -42,7 +42,7 @@ export type KbqIconButtonSize = 'compact' | 'medium';
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     protected readonly focusMonitor = inject(FocusMonitor);
     /** Size of the icon button. */
-    readonly size = input<KbqIconButtonSize>('medium');
+    readonly size = input<KbqIconButtonSize>('normal');
     /**
      * @deprecated Use `size` input instead. Will be removed in the next major release (#DS-5338).
      */

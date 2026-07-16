@@ -97,7 +97,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 }
 
 // @public
-export type KbqIconButtonSize = 'compact' | 'medium';
+export type KbqIconButtonSize = 'compact' | 'normal';
 
 // @public (undocumented)
 export class KbqIconItem extends KbqIcon {

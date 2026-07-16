@@ -12,13 +12,13 @@ import { KbqIconButton } from '@koobiq/components/icon';
         <div>
             <div class="kbq-text-compact layout-margin-bottom-m icon-button-style-example__style-label">Compact</div>
 
-            <i kbq-icon-button="kbq-magnifying-glass_16" [color]="colors.Theme" [small]="true"></i>
+            <i kbq-icon-button="kbq-magnifying-glass_16" size="compact" [color]="colors.Theme"></i>
         </div>
 
         <div>
             <div class="kbq-text-compact layout-margin-bottom-m icon-button-style-example__style-label">Normal</div>
 
-            <i kbq-icon-button="kbq-magnifying-glass_24" [color]="colors.Theme"></i>
+            <i kbq-icon-button="kbq-magnifying-glass_24" size="normal" [color]="colors.Theme"></i>
         </div>
     `,
     styles: `
