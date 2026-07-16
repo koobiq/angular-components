@@ -657,7 +657,9 @@ export class KbqSelect
     // TODO: Skipped for migration because:
     //  The input cannot be migrated because the field is overridden by a subclass.
     @Input({ transform: numberAttribute }) panelMinWidth: KbqPanelMinWidth =
-        this.defaultOptions?.panelMinWidth ?? KBQ_PANEL_DEFAULT_MIN_WIDTH;
+        this.defaultOptions?.panelMinWidth === undefined
+            ? KBQ_PANEL_DEFAULT_MIN_WIDTH
+            : this.defaultOptions.panelMinWidth;
 
     /** Value of the select control. Can be a single value or array of values for multiple selection. */
     // TODO: Skipped for migration because:

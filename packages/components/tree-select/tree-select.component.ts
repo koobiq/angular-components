@@ -599,7 +599,9 @@ export class KbqTreeSelect
      * If minWidth is larger than window width, it will be ignored.
      */
     readonly panelMinWidth = input<KbqPanelMinWidth, unknown>(
-        this.defaultOptions?.panelMinWidth ?? KBQ_PANEL_DEFAULT_MIN_WIDTH,
+        this.defaultOptions?.panelMinWidth === undefined
+            ? KBQ_PANEL_DEFAULT_MIN_WIDTH
+            : this.defaultOptions.panelMinWidth,
         { transform: numberAttribute }
     );
 

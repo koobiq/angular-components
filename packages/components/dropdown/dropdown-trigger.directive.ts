@@ -538,10 +538,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         return this.overlayRef;
     }
 
-    /**
-     * This method builds the configuration object needed to create the overlay, the OverlayState.
-     * @returns OverlayConfig
-     */
     /** Whether the panel should be at least as wide as its trigger. */
     private get shouldMatchTriggerWidth(): boolean {
         const isVerticalTrigger = this.dropdown.overlapTriggerY && !this.dropdown.overlapTriggerX;
@@ -549,6 +545,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         return !this.isNested() && !isVerticalTrigger;
     }
 
+    /**
+     * This method builds the configuration object needed to create the overlay, the OverlayState.
+     * @returns OverlayConfig
+     */
     private getOverlayConfig(): OverlayConfig {
         return new OverlayConfig({
             positionStrategy: this.overlay

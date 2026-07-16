@@ -2985,7 +2985,7 @@ export class KbqOverflowShadowTop {
 export type KbqPanelMinWidth = number | null;
 
 // @public
-export type KbqPanelWidth = 'auto' | number | null;
+export type KbqPanelWidth = 'auto' | number | null | '';
 
 // @public
 export type KbqPanelWidthOrigin = ElementRef<HTMLElement> | CdkOverlayOrigin | HTMLElement;

@@ -6700,22 +6700,24 @@ describe('KbqSelect', () => {
             );
         });
 
-        it('should keep the trigger floor when panelMinWidth is null', () => {
+        it('should not coalesce an explicit null panelMinWidth from KBQ_SELECT_OPTIONS into the default floor', () => {
             const fixture = createPanelWidthComponent(BaseSelect, [
                 kbqSelectOptionsProvider({ panelWidth: null, panelMinWidth: null })
             ]);
             const { debugElement } = fixture;
             const connectionContainer = debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+            // Narrower than KBQ_PANEL_DEFAULT_MIN_WIDTH (200): if `defaultOptions.panelMinWidth: null`
+            // were wrongly coalesced into the 200px default (a `??` treats `null` and "absent" the
+            // same), the panel would floor at 200px instead of following the 100px trigger.
+            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
 
             getSelectDebugElement(debugElement).nativeElement.click();
             fixture.detectChanges();
 
-            // `numberAttribute` coerces a null binding to NaN, which used to reach the DOM as `NaNpx`.
             expect(
                 (panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.minWidth
-            ).toBe('300px');
+            ).toBe('100px');
         });
 
         describe('with search', () => {
@@ -6769,6 +6771,22 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
 
                 expect(getPane().style.width).toBe('344px');
+
+                spy.mockRestore();
+            });
+
+            it('should not override an explicit panelWidth of zero', () => {
+                const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth);
+
+                fixture.componentInstance.panelWidth = 0;
+                fixture.detectChanges();
+
+                const spy = mockPanelBoundingRect(412);
+
+                getSelectDebugElement(fixture.debugElement).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('0px');
 
                 spy.mockRestore();
             });

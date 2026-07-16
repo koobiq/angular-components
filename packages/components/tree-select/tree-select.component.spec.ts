@@ -74,7 +74,7 @@ import {
     KbqTreeSelection
 } from '@koobiq/components/tree';
 import { Observable, Subject, map, of, timer } from 'rxjs';
-import { KbqTreeSelect, KbqTreeSelectChange } from './tree-select.component';
+import { KbqTreeSelect, KbqTreeSelectChange, kbqTreeSelectOptionsProvider } from './tree-select.component';
 import { KbqTreeSelectModule } from './tree-select.module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
@@ -1732,7 +1732,7 @@ describe('KbqTreeSelect', () => {
      * overall test time.
      * @param declarations Components to declare for this block
      */
-    function configureKbqTreeSelectTestingModule(declarations: any[]) {
+    function configureKbqTreeSelectTestingModule(declarations: any[], providers: Provider[] = []) {
         TestBed.configureTestingModule({
             imports: [
                 KbqFormFieldModule,
@@ -1754,7 +1754,8 @@ describe('KbqTreeSelect', () => {
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable()
                     })
-                }
+                },
+                ...providers
             ]
         }).compileComponents();
 
@@ -4816,6 +4817,31 @@ describe('KbqTreeSelect', () => {
                 fixture.detectChanges();
 
                 expect(getPane().style.width).toBe('200px');
+            });
+        });
+
+        describe('with KBQ_TREE_SELECT_OPTIONS', () => {
+            beforeEach(() =>
+                configureKbqTreeSelectTestingModule(
+                    [TreeSelectWithPanelWidth],
+                    [kbqTreeSelectOptionsProvider({ panelMinWidth: null })]
+                )
+            );
+
+            it('should not coalesce an explicit null panelMinWidth into the default floor', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+
+                fixture.componentInstance.panelWidth = null;
+                fixture.detectChanges();
+                // Narrower than KBQ_PANEL_DEFAULT_MIN_WIDTH (200): if `defaultOptions.panelMinWidth: null`
+                // were wrongly coalesced into the 200px default, the panel would floor at 200px instead of
+                // following the 100px trigger.
+                mockFieldWidth(fixture, 100);
+
+                fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.minWidth).toBe('100px');
             });
         });
 
