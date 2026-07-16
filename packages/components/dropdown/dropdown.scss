@@ -67,10 +67,13 @@
             bottom: calc(-1 * var(--kbq-size-3xs));
         }
 
-        // The hit-area's own ::after must yield so it doesn't clip the .kbq-progress overlay,
-        // which is rendered on .kbq-dropdown-item-overlay instead (see dropdown-item.scss).
+        // The generic .kbq-progress::after rule (see _animation.scss) would otherwise paint the
+        // shimmer onto this hit-area pseudo-element. The shimmer is rendered on
+        // .kbq-dropdown-item-overlay instead (see dropdown-item.scss), so just neutralize it here
+        // without touching content/position/width/height/left, which the hit-area still needs.
         &.kbq-progress:after {
-            content: none;
+            background: none;
+            animation: none;
         }
     }
 
