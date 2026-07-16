@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { afterNextRender, ChangeDetectorRef, Directive, inject } from '@angular/core';
+import { afterNextRender, ChangeDetectorRef, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { catchError, of } from 'rxjs';
@@ -25,6 +25,7 @@ export class DocsVersionPickerDirective {
     private readonly httpClient = inject(HttpClient);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor() {
         // Fetches an external, non-local URL: must never run during SSR/prerendering, or a
@@ -40,7 +41,7 @@ export class DocsVersionPickerDirective {
                 // A failed version fetch must not throw an unhandled error; degrade gracefully to
                 // an empty version list (the picker simply shows no alternative versions).
                 catchError(() => of({})),
-                takeUntilDestroyed()
+                takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((data) => {
                 Object.entries(data)
