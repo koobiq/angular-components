@@ -62,6 +62,29 @@ test.describe('KbqNavbarModule', () => {
             await expect(getTitle(page, 'forced-off')).toHaveCSS('font-size', '18px');
         });
 
+        /**
+         * `-webkit-line-clamp` does nothing without `display: -webkit-box`, and the per-orientation rules set
+         * `display` on the title at the same specificity. Asserting the type alone would not notice: the font
+         * stays 14px while the title silently wraps to an unbounded number of lines with no ellipsis.
+         */
+        test('should clamp an over-long title to exactly two lines', async ({ page }) => {
+            await page.goto('/E2eVerticalNavbarBrandAutoLongTitle');
+
+            for (const testId of ['clamped', 'horizontal-long']) {
+                const title = getTitle(page, testId);
+
+                await expect(title).toHaveCSS('-webkit-line-clamp', '2');
+
+                const { lines, clipped } = await title.evaluate((el) => ({
+                    lines: Math.round(el.clientHeight / parseFloat(getComputedStyle(el).lineHeight)),
+                    clipped: el.scrollHeight > el.clientHeight
+                }));
+
+                expect(lines, `${testId} must render two lines`).toBe(2);
+                expect(clipped, `${testId} must be clipped, which is what shows the tooltip`).toBe(true);
+            }
+        });
+
         test('should switch to the compact presentation in a horizontal navbar too', async ({ page }) => {
             await page.goto('/E2eVerticalNavbarBrandAutoLongTitle');
 

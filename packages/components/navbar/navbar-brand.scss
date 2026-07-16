@@ -25,15 +25,6 @@
     & .kbq-navbar-title {
         cursor: pointer;
     }
-
-    &.kbq-navbar-brand_long-title .kbq-navbar-title {
-        display: -webkit-box;
-
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        white-space: normal;
-    }
 }
 
 a.kbq-navbar-brand {
@@ -96,6 +87,19 @@ a.kbq-navbar-brand {
             display: none !important;
         }
     }
+}
+
+// Must stay below the per-orientation rules: `.kbq-vertical` sets `display: block` on the title at the very
+// same specificity, so moving this up lets that win and silently kills the clamp - `-webkit-line-clamp` does
+// nothing without `-webkit-box`, and the title then wraps to an unbounded number of lines with no ellipsis.
+// `.kbq-collapsed` still wins over it via `!important`.
+.kbq-navbar-brand.kbq-navbar-brand_long-title .kbq-navbar-title {
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
 }
 
 @mixin kbq-navbar-brand-theme() {
