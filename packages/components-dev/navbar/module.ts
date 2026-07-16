@@ -26,11 +26,11 @@ import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
         <navbar-vertical-app-long-name-example />
         <br />
         <br />
-        <!--        <navbar-overview-example />-->
-        <!--        <br />-->
-        <!--        <navbar-vertical-example />-->
-        <!--        <br />-->
-        <!--        <navbar-vertical-open-over-example />-->
+        <navbar-overview-example />
+        <br />
+        <navbar-vertical-example />
+        <br />
+        <navbar-vertical-open-over-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
