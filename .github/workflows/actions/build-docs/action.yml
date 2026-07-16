@@ -17,11 +17,4 @@ runs:
       run: yarn run build:package-docs-content
     - name: Build docs
       shell: bash
-      env:
-        # Prerendering renders routes concurrently in worker threads (default cap: 4) with a
-        # hardcoded 30s-per-route timeout. With 300+ routes on shared CI runners, occasional
-        # CPU contention between workers can push a route over that timeout, which tears down
-        # the whole worker pool and fails every route still in flight. Rendering routes one at
-        # a time removes that contention.
-        NG_BUILD_MAX_WORKERS: 1
       run: yarn run docs:build
