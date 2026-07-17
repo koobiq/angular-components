@@ -29,7 +29,7 @@ type IconItemStates = IconStates & {
 };
 
 type IconButtonStates = IconStates & {
-    state: 'disabled' | 'small' | 'focused' | 'hover';
+    state: 'disabled' | 'compact' | 'focused' | 'hover';
 };
 
 @Component({
@@ -74,7 +74,7 @@ type IconButtonStates = IconStates & {
                                 <i
                                     kbq-icon-button="kbq-chevron-down-s_16"
                                     [color]="cell.color"
-                                    [small]="cell.state === 'small'"
+                                    [size]="cell.state === 'compact' ? 'compact' : 'normal'"
                                     [disabled]="cell.state === 'disabled'"
                                     [class.kbq-hovered]="cell.state === 'hover'"
                                     [class.cdk-keyboard-focused]="cell.state === 'focused'"
@@ -91,7 +91,7 @@ type IconButtonStates = IconStates & {
                                 <button
                                     kbq-icon-button="kbq-chevron-down-s_16"
                                     [color]="cell.color"
-                                    [small]="cell.state === 'small'"
+                                    [size]="cell.state === 'compact' ? 'compact' : 'normal'"
                                     [disabled]="cell.state === 'disabled'"
                                     [class.kbq-hovered]="cell.state === 'hover'"
                                     [class.cdk-keyboard-focused]="cell.state === 'focused'"
@@ -148,7 +148,7 @@ export class E2eIconStateAndStyle {
 
         this.colors.map((color) => ({
             color,
-            state: 'small'
+            state: 'compact'
         })),
 
         this.colors.map((color) => ({

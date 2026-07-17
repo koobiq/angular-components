@@ -4,6 +4,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     effect,
     inject,
     Input,
@@ -14,6 +15,13 @@ import {
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { KbqIcon } from './icon.component';
+
+/**
+ * Size options for `KbqIconButton`.
+ * - `compact`: 16px icon with padding, 24×24px container.
+ * - `normal`: 24px icon, no padding.
+ */
+export type KbqIconButtonSize = 'compact' | 'normal';
 
 @Component({
     selector: `[kbq-icon-button]`,
@@ -28,13 +36,22 @@ import { KbqIcon } from './icon.component';
         '[attr.disabled]': 'disabled || null',
 
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-icon-button_small]': 'small()'
+        '[class.kbq-icon-button_compact]': 'isCompact()',
+        // @deprcated Will be removed in the next major release (#DS-5338)
+        '[class.kbq-icon-button_small]': 'isCompact()'
     }
 })
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     protected readonly focusMonitor = inject(FocusMonitor);
-
+    /** Size of the icon button. */
+    readonly size = input<KbqIconButtonSize>('normal');
+    /**
+     * @deprecated Use `size` input instead. Will be removed in the next major release (#DS-5338).
+     */
     readonly small = input(false);
+
+    /** @docs-private */
+    protected readonly isCompact = computed(() => this.size() === 'compact' || this.small());
 
     /** Name of an icon within a @koobiq/icons. */
     // TODO: Skipped for migration because:

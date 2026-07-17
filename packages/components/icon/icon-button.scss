@@ -9,7 +9,9 @@
 
     padding: var(--kbq-icon-button-size-normal-vertical-padding) var(--kbq-icon-button-size-normal-horizontal-padding);
 
-    &.kbq-icon-button_small {
+    // @deprcated Will be removed in the next major release (#DS-5338)
+    &.kbq-icon-button_small,
+    &.kbq-icon-button_compact {
         padding: var(--kbq-icon-button-size-small-vertical-padding) var(--kbq-icon-button-size-small-horizontal-padding);
     }
 
