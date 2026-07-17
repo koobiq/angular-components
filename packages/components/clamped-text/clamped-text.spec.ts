@@ -1,5 +1,5 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { ChangeDetectionStrategy, Component, Injectable, signal, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injectable, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { KbqClampedText } from './clamped-text';
@@ -52,14 +52,13 @@ class TestClampedTextDefault {
     selector: 'test-clamped-text-with-initial-state',
     imports: [KbqClampedText],
     template: `
-        <kbq-clamped-text #clamped [isCollapsed]="isCollapsed()">
+        <kbq-clamped-text [isCollapsed]="isCollapsed()">
             {{ text }}
         </kbq-clamped-text>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestClampedTextWithInitialState {
-    readonly clampedText = viewChild.required<KbqClampedText>('clamped');
     protected readonly text = Array.from({ length: 100 }, (_, i) => `Text ${i}`).join(' ');
     readonly isCollapsed = signal<boolean | undefined>(false);
 }
@@ -88,31 +87,26 @@ describe('KbqClampedText', () => {
         expect(componentInstance.collapsed()).toBe(false);
     });
 
-    it('should set isToggleCollapsed from isCollapsed=false on ngOnInit', async () => {
-        const fixture = createComponent(TestClampedTextWithInitialState);
+    describe('when text is long enough to clamp', () => {
+        beforeEach(() => {
+            // Make getRowsCount() return 20 so hasToggle=true survives updateToggleVisibilityState()
+            const mockRects = Object.assign(
+                Array.from({ length: 20 }, (_, i) => ({ top: i * 20 })),
+                { item: () => null }
+            ) as unknown as DOMRectList;
 
-        await fixture.whenStable();
+            jest.spyOn(HTMLElement.prototype, 'getClientRects').mockReturnValue(mockRects);
+        });
 
-        const comp = fixture.componentInstance.clampedText();
+        afterEach(() => jest.restoreAllMocks());
 
-        expect(comp.isToggleCollapsed()).toBe(false);
-    });
+        it('should remain expanded when isCollapsed=false is set initially', async () => {
+            const fixture = createComponent(TestClampedTextWithInitialState);
 
-    it('should not collapse when isCollapsed=false and resize observer fires with visible toggle', async () => {
-        const fixture = createComponent(TestClampedTextWithInitialState);
-        const mockResizeObserver = TestBed.inject(SharedResizeObserver) as MockResizeObserver;
+            await fixture.whenStable();
 
-        await fixture.whenStable();
-
-        const comp = fixture.componentInstance.clampedText();
-
-        // Simulate text long enough to need clamping (hasToggle=true)
-        comp.hasToggle.set(true);
-        mockResizeObserver.changes.next([]);
-
-        await fixture.whenStable();
-
-        expect(comp.collapsedState()).toBe(false);
+            expect(fixture.nativeElement.querySelector('kbq-clamped-text').getAttribute('aria-expanded')).toBe('true');
+        });
     });
 
     it('should emit isCollapsedChange when isCollapsed input changes', async () => {
