@@ -5,8 +5,7 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import * as i1$1 from '@angular/cdk/a11y';
-import * as i1 from '@angular/cdk/observers';
+import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import { KbqIconItem } from '@koobiq/components/icon';
 
@@ -76,10 +75,9 @@ export class KbqBadgeCssStyler {
     isIconButton: boolean;
     // (undocumented)
     nativeElement: HTMLElement;
-    // (undocumented)
     updateClassModifierForIcons(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBadgeCssStyler, "kbq-badge", never, {}, {}, ["icons"], never, true, [{ directive: typeof i1.CdkObserveContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBadgeCssStyler, "kbq-badge", never, {}, {}, ["icons"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBadgeCssStyler, never>;
 }
@@ -91,7 +89,7 @@ export class KbqBadgeModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqBadgeModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBadgeModule, never, [typeof i1$1.A11yModule, typeof i2.PlatformModule, typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler], [typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBadgeModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler], [typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler]>;
 }
 
 // @public (undocumented)

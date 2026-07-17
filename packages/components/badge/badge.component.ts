@@ -1,4 +1,3 @@
-import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -13,10 +12,8 @@ import {
     Input,
     input,
     Renderer2,
-    untracked,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getNodesWithoutComments } from '@koobiq/components/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
@@ -50,13 +47,11 @@ export const badgeLeftIconClassName = 'kbq-badge-icon_left';
 export const badgeRightIconClassName = 'kbq-badge-icon_right';
 
 @Directive({
-    selector: 'kbq-badge',
-    hostDirectives: [CdkObserveContent]
+    selector: 'kbq-badge'
 })
 export class KbqBadgeCssStyler {
     private renderer = inject(Renderer2);
     private cdr = inject(ChangeDetectorRef, { skipSelf: true });
-    private observeContent = inject(CdkObserveContent);
 
     readonly icons = contentChildren(forwardRef(() => KbqIcon));
 
@@ -69,19 +64,12 @@ export class KbqBadgeCssStyler {
 
         this.nativeElement = elementRef.nativeElement;
 
-        // Icon placement depends on sibling text nodes that are invisible to the `icons` query,
-        // so a real content mutation observer drives most updates. The effect below only covers
-        // icon creation/removal (e.g. via `@if`) for the moment the observer is disabled because
-        // there were no icons to watch yet.
-        this.observeContent.event.pipe(takeUntilDestroyed()).subscribe(() => this.updateClassModifierForIcons());
-
-        effect(() => {
-            this.observeContent.disabled = !this.icons().length;
-
-            untracked(() => this.updateClassModifierForIcons());
-        });
+        // Icons projected asynchronously (e.g. behind an `@if`) update the `icons` signal
+        // after content init, so class assignment must react to the signal, not just run once.
+        effect(() => this.updateClassModifierForIcons());
     }
 
+    /** @docs-private */
     updateClassModifierForIcons() {
         this.renderer.removeClass(this.nativeElement, badgeLeftIconClassName);
         this.renderer.removeClass(this.nativeElement, badgeRightIconClassName);
