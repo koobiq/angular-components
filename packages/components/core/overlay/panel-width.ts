@@ -10,14 +10,6 @@ import { ElementRef } from '@angular/core';
 export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
 
 /**
- * Default maximum width of an overlay panel, in pixels.
- *
- * Kept in sync by hand with the `--kbq-panel-size-width-max` fallback in the panel styles, which is
- * where the cap is actually applied.
- */
-export const KBQ_PANEL_DEFAULT_MAX_WIDTH = 640;
-
-/**
  * Width of an overlay panel.
  *
  * - `'auto'` — matches the trigger width, but never narrower than `panelMinWidth`.

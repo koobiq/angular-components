@@ -170,8 +170,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     overlayDir: CdkConnectedOverlay;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-    // (undocumented)
-    readonly panel: _angular_core.Signal<ElementRef<any>>;
+    readonly panel: _angular_core.Signal<ElementRef<any> | undefined>;
     readonly panelClass: _angular_core.InputSignal<string | string[] | Set<string> | {
         [key: string]: any;
     }>;

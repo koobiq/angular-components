@@ -37,7 +37,7 @@ export type Range = {
 export type Replacement = { from: string; to: string };
 export type MigrationData = {
     elementName: string;
-    attrs: { key: Replacement; value: { replacements: Replacement[]; default: string } };
+    attrs: { key: Replacement; value: { replacements: Replacement[]; default?: string } };
 };
 
 export function forEachClass(sourceFile: ts.SourceFile, callback: (node: ts.ClassDeclaration) => void) {

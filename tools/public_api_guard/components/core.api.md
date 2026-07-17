@@ -2208,9 +2208,6 @@ export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponen
 export const KBQ_OVERFLOW_SHADOW_SOURCE: InjectionToken<KbqOverflowShadowSource>;
 
 // @public
-export const KBQ_PANEL_DEFAULT_MAX_WIDTH = 640;
-
-// @public
 export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
 
 // @public (undocumented)

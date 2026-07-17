@@ -97,5 +97,26 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(templateBeforeUpdate).toBe(updatedTree.read(templatePath)?.toString());
         expect(warnSpy.mock.calls.some(([msg]) => msg.includes(templatePath))).toBe(true);
+        expect(warnSpy.mock.calls.some(([msg]) => msg.includes('dynamic value'))).toBe(true);
+    });
+
+    it('should leave a static, non-matching panelWidth value untouched and warn without calling it dynamic', async () => {
+        const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+        const [firstProjectKey] = projects.keys();
+        const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
+
+        const template = '<div><kbq-autocomplete panelWidth="500px"></kbq-autocomplete></div>';
+
+        appTree.overwrite(templatePath, template);
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(updatedTree.read(templatePath)?.toString()).toBe(template);
+        expect(warnSpy.mock.calls.some(([msg]) => msg.includes('500px'))).toBe(true);
+        expect(warnSpy.mock.calls.some(([msg]) => msg.includes('dynamic value'))).toBe(false);
     });
 });

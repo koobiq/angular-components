@@ -15,8 +15,7 @@ export const migrationData: MigrationData = {
             to: 'panelWidth'
         },
         value: {
-            replacements: [{ from: 'auto', to: 'fit-content' }],
-            default: ''
+            replacements: [{ from: 'auto', to: 'fit-content' }]
         }
     }
 };

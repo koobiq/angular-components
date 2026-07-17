@@ -2570,7 +2570,7 @@ describe('KbqTreeSelect', () => {
                 } = options[options.length - 1].getBoundingClientRect();
                 const { top: containerTop, bottom: containerBottom } = fixture.componentInstance
                     .select()
-                    .panel()
+                    .panel()!
                     .nativeElement.getBoundingClientRect();
 
                 const isInView =

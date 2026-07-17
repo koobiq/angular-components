@@ -285,7 +285,8 @@ export class KbqTreeSelect
      */
     readonly trigger = viewChild.required<ElementRef>('trigger');
 
-    readonly panel = viewChild.required<ElementRef>('panel');
+    /** Reference to the overlay panel element. */
+    readonly panel = viewChild<ElementRef>('panel');
 
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
@@ -940,9 +941,7 @@ export class KbqTreeSelect
                     this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this.triggerFontSize}px`;
                 }
 
-                // `panel` is a required query over a template that only exists while the overlay is
-                // attached, so reading it before then throws NG0951.
-                if (this.search() && this.overlayDir.overlayRef?.hasAttached()) {
+                if (this.search()) {
                     this.lockOverlayWidthForSearch(this.panel());
                 }
             });
@@ -1094,7 +1093,8 @@ export class KbqTreeSelect
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this.changeDetectorRef.detectChanges();
             this.setOverlayPosition();
-            this.panel().nativeElement.scrollTop = this.scrollTop;
+            // `panel` is guaranteed to exist here: this callback only fires once the overlay has attached.
+            this.panel()!.nativeElement.scrollTop = this.scrollTop;
 
             this.tree()!.updateScrollSize();
         });
