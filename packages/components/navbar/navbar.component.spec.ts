@@ -1,10 +1,13 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { ContentObserver } from '@angular/cdk/observers';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Component, viewChild } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchKeyboardEvent, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { Observable, Subject } from 'rxjs';
 import { KbqIconModule } from './../icon/icon.module';
 import {
     KbqNavbar,
@@ -20,6 +23,44 @@ import {
 
 const FONT_RENDER_TIMEOUT_MS = 10;
 
+const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
+
+/** Matches `KbqNavbarBrand`'s own debounce window. */
+const LONG_TITLE_DEBOUNCE_MS = 100;
+
+/**
+ * jsdom performs no layout, so every geometry property reads as 0. These stubs stand in for the browser's
+ * answer to "does the text fit?". Defined as getters so a test can observe *when* they are read.
+ */
+const setTextMetrics = (
+    el: HTMLElement,
+    metrics: Partial<Record<'scrollWidth' | 'clientWidth' | 'scrollHeight' | 'clientHeight', number>>
+): void => {
+    Object.entries(metrics).forEach(([key, value]) => {
+        Object.defineProperty(el, key, { configurable: true, get: () => value });
+    });
+};
+
+/** Minimal `SharedResizeObserver` stand-in: the real one never emits in jsdom (ResizeObserver is a no-op stub). */
+class MockNavbarBrandResizeObserver {
+    private readonly subjects = new Map<Element, Subject<ResizeObserverEntry[]>>();
+
+    observe(target: Element): Observable<ResizeObserverEntry[]> {
+        let subject = this.subjects.get(target);
+
+        if (!subject) {
+            subject = new Subject<ResizeObserverEntry[]>();
+            this.subjects.set(target, subject);
+        }
+
+        return subject.asObservable();
+    }
+
+    emit(target: Element): void {
+        this.subjects.get(target)?.next([]);
+    }
+}
+
 describe('KbqNavbar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -31,7 +72,9 @@ describe('KbqNavbar', () => {
                 TestItemApp,
                 TestTitleApp,
                 TestVerticalApp,
-                TestBrandApp
+                TestBrandApp,
+                TestBrandLongTitleApp,
+                TestBrandHorizontalApp
             ]
         }).compileComponents();
     });
@@ -331,6 +374,210 @@ describe('KbqNavbar', () => {
         }));
     });
 
+    describe('KbqNavbarBrand automatic long title', () => {
+        let resizeObserver: MockNavbarBrandResizeObserver;
+        let contentObserverSubject: Subject<MutationRecord[]>;
+
+        beforeEach(() => {
+            resizeObserver = new MockNavbarBrandResizeObserver();
+            contentObserverSubject = new Subject<MutationRecord[]>();
+
+            TestBed.overrideProvider(SharedResizeObserver, { useValue: resizeObserver });
+            // Driven manually: jsdom delivers MutationObserver records outside the fakeAsync queue.
+            TestBed.overrideProvider(ContentObserver, {
+                useValue: { observe: () => contentObserverSubject.asObservable() }
+            });
+        });
+
+        /** Stubs the title's geometry before the first render, so the initial measurement already sees it. */
+        const render = (
+            metrics: Parameters<typeof setTextMetrics>[1],
+            setup?: (instance: TestBrandLongTitleApp) => void
+        ) => {
+            const fixture = TestBed.createComponent(TestBrandLongTitleApp);
+
+            setup?.(fixture.componentInstance);
+
+            const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
+
+            setTextMetrics(titleEl, metrics);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+
+            return { fixture, brandEl, titleEl };
+        };
+
+        it('should apply the long title class when the title does not fit into one line', fakeAsync(() => {
+            const { brandEl } = render({ scrollWidth: 300, clientWidth: 176 });
+
+            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
+        }));
+
+        it('should not apply the long title class when the title fits into one line', fakeAsync(() => {
+            const { brandEl } = render({ scrollWidth: 120, clientWidth: 176 });
+
+            expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
+        }));
+
+        it('longTitle=true should force the mode on for a title that fits', fakeAsync(() => {
+            const { brandEl } = render(
+                { scrollWidth: 120, clientWidth: 176 },
+                (instance) => (instance.longTitle = true)
+            );
+
+            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
+        }));
+
+        it('longTitle=false should force the mode off for a title that does not fit', fakeAsync(() => {
+            const { brandEl } = render(
+                { scrollWidth: 300, clientWidth: 176 },
+                (instance) => (instance.longTitle = false)
+            );
+
+            expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
+        }));
+
+        /**
+         * The load-bearing invariant: the mode changes the font, so measuring in the applied state would feed
+         * the result back into its own input and the mode would toggle forever. Every measurement must
+         * therefore read the reference state, with the class removed - and must put it back.
+         */
+        it('should always measure with the long title class removed, and restore it afterwards', fakeAsync(() => {
+            const classWhenMeasured: boolean[] = [];
+            const fixture = TestBed.createComponent(TestBrandLongTitleApp);
+            const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+            let brandWidth = 240;
+
+            setTextMetrics(titleEl, { clientWidth: 176 });
+            Object.defineProperty(brandEl, 'clientWidth', { configurable: true, get: () => brandWidth });
+            Object.defineProperty(titleEl, 'scrollWidth', {
+                configurable: true,
+                get: () => {
+                    classWhenMeasured.push(brandEl.classList.contains(LONG_TITLE_CLASS));
+
+                    return 300;
+                }
+            });
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
+
+            // Re-measure while the class is applied. A changed width is required to get past distinctUntilChanged.
+            // Only the dedicated measurement in `measureNeedsLongTitle()` needs to read the unbiased
+            // (class-removed) state, and it always runs first inside `updateAutoLongTitle()` - before the
+            // tooltip-content refresh, which correctly reads the settled (class-applied) state afterwards.
+            classWhenMeasured.length = 0;
+            brandWidth = 300;
+            resizeObserver.emit(brandEl);
+            tick(LONG_TITLE_DEBOUNCE_MS);
+            fixture.detectChanges();
+
+            expect(classWhenMeasured[0]).toBe(false);
+            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
+        }));
+
+        it('should re-measure when the title text changes', fakeAsync(() => {
+            const { fixture, brandEl, titleEl } = render({ scrollWidth: 120, clientWidth: 176 });
+
+            expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
+
+            // The navbar has a fixed width, so a longer title resizes nothing - only the content observer
+            // can notice it.
+            setTextMetrics(titleEl, { scrollWidth: 300, clientWidth: 176 });
+            fixture.componentInstance.titleText = 'A considerably longer application name';
+            fixture.detectChanges();
+            contentObserverSubject.next([]);
+            tick(LONG_TITLE_DEBOUNCE_MS);
+            fixture.detectChanges();
+
+            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
+        }));
+
+        /** The brand wraps its title in a horizontal navbar too, where the title is capped at 154px. */
+        it('should apply the long title class in a horizontal navbar', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestBrandHorizontalApp);
+            const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
+
+            setTextMetrics(titleEl, { scrollWidth: 300, clientWidth: 154 });
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+
+            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
+        }));
+
+        it('should not apply the long title class in a horizontal navbar when the title fits', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestBrandHorizontalApp);
+            const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
+
+            setTextMetrics(titleEl, { scrollWidth: 120, clientWidth: 154 });
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+
+            expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
+        }));
+
+        it('hasCroppedText should be true for a title clamped vertically to two lines', fakeAsync(() => {
+            // Wrapped text never exceeds its width, so only the height reveals the clamp.
+            const { fixture } = render({ scrollWidth: 176, clientWidth: 176, scrollHeight: 60, clientHeight: 40 });
+            const brand = fixture.debugElement.query(By.directive(KbqNavbarBrand)).componentInstance as KbqNavbarBrand;
+
+            expect(brand.hasCroppedText).toBe(true);
+        }));
+
+        /**
+         * A collapsed title is `display: none`, so it cannot be measured until the navbar expands - which makes
+         * the first expand the only chance to get the presentation right before the user sees it. Routing that
+         * event through the debounce paints the default 18px single line for the whole window and only then
+         * snaps to the compact two-line one, which reads as a flicker (#DS-4477).
+         *
+         * Hence the deliberate absence of `tick(LONG_TITLE_DEBOUNCE_MS)` before the assertion.
+         */
+        it('should apply the long title class on the first expand without waiting out the debounce', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestBrandLongTitleApp);
+
+            fixture.componentInstance.expanded = false;
+
+            const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
+
+            setTextMetrics(titleEl, { scrollWidth: 300, clientWidth: 176 });
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+
+            expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
+
+            fixture.componentInstance.expanded = true;
+            fixture.detectChanges();
+            // Drains microtasks only, which is what the render hooks run on - the browser paints no earlier
+            // than that. Virtual time does not advance, so the debounce window is still wide open here.
+            tick(0);
+            fixture.detectChanges();
+
+            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
+
+            flush();
+        }));
+    });
+
     describe('KbqNavbarRectangleElement', () => {
         it('setting horizontal=true should add kbq-horizontal and remove kbq-vertical', fakeAsync(() => {
             const fixture = TestBed.createComponent(TestItemApp);
@@ -408,6 +655,49 @@ describe('KbqNavbar', () => {
 
             expect(emitCount).toBe(0);
         });
+
+        /**
+         * `_collapsed` starts `undefined` so that this first assignment gets through the setter's guard: a
+         * vertical navbar that starts expanded assigns `collapsed = false` exactly once and never again, and
+         * `KbqNavbarItem.updateDropdown()` rides on that emission. Initializing the field to `false` would
+         * swallow it - and the test below would not notice, since it primes the first assignment before
+         * subscribing.
+         */
+        it('state Subject should emit on the first collapsed assignment, even for false', () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+
+            const rectDebugEl = fixture.debugElement.query(By.directive(KbqNavbarRectangleElement));
+            const rect = rectDebugEl.injector.get(KbqNavbarRectangleElement);
+
+            let emitCount = 0;
+
+            rect.state.subscribe(() => emitCount++);
+
+            rect.collapsed = false;
+
+            expect(emitCount).toBe(1);
+        });
+
+        it('state Subject should not emit when collapsed value is unchanged', () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+
+            const rectDebugEl = fixture.debugElement.query(By.directive(KbqNavbarRectangleElement));
+            const rect = rectDebugEl.injector.get(KbqNavbarRectangleElement);
+
+            rect.collapsed = true;
+
+            let emitCount = 0;
+
+            rect.state.subscribe(() => emitCount++);
+
+            rect.collapsed = true;
+
+            expect(emitCount).toBe(0);
+        });
     });
 
     describe('KbqNavbarTitle', () => {
@@ -420,38 +710,6 @@ describe('KbqNavbar', () => {
             const titleInstance = fixture.debugElement.query(By.directive(KbqNavbarTitle)).injector.get(KbqNavbarTitle);
 
             expect(titleInstance.text).toContain('titleText');
-        });
-
-        it('checkTextOverflown should set isTextOverflown=true for text longer than 18 chars', () => {
-            const fixture = TestBed.createComponent(TestTitleApp);
-
-            fixture.componentInstance.titleText = 'This is a very long title text';
-            fixture.detectChanges();
-
-            const titleDebugEl = fixture.debugElement.query(By.directive(KbqNavbarTitle));
-            const titleInstance = titleDebugEl.injector.get(KbqNavbarTitle);
-
-            titleInstance.checkTextOverflown();
-            fixture.detectChanges();
-
-            expect(titleInstance.isTextOverflown).toBe(true);
-            expect(titleDebugEl.nativeElement.classList).toContain('kbq-navbar-title_small');
-        });
-
-        it('checkTextOverflown should set isTextOverflown=false for text 18 chars or shorter', () => {
-            const fixture = TestBed.createComponent(TestTitleApp);
-
-            fixture.componentInstance.titleText = 'Short text';
-            fixture.detectChanges();
-
-            const titleDebugEl = fixture.debugElement.query(By.directive(KbqNavbarTitle));
-            const titleInstance = titleDebugEl.injector.get(KbqNavbarTitle);
-
-            titleInstance.checkTextOverflown();
-            fixture.detectChanges();
-
-            expect(titleInstance.isTextOverflown).toBe(false);
-            expect(titleDebugEl.nativeElement.classList).not.toContain('kbq-navbar-title_small');
         });
     });
 
@@ -760,6 +1018,40 @@ class TestTitleApp {
 class TestBrandApp {
     collapsedText: string = '';
 }
+
+@Component({
+    selector: 'test-brand-long-title-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-vertical-navbar [expanded]="expanded">
+            <kbq-navbar-container>
+                <a href="#" kbq-navbar-brand [longTitle]="longTitle">
+                    <div kbq-navbar-title>{{ titleText }}</div>
+                </a>
+            </kbq-navbar-container>
+        </kbq-vertical-navbar>
+    `
+})
+class TestBrandLongTitleApp {
+    titleText: string = 'App Name';
+    longTitle: boolean | undefined = undefined;
+    expanded: boolean = true;
+}
+
+@Component({
+    selector: 'test-brand-horizontal-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <a href="#" kbq-navbar-brand>
+                    <div kbq-navbar-title>App Name</div>
+                </a>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestBrandHorizontalApp {}
 
 @Component({
     selector: 'test-vertical-app',

@@ -63,8 +63,6 @@ export class KbqNavbarBento {}
     selector: 'kbq-navbar-title, [kbq-navbar-title]',
     host: {
         class: 'kbq-navbar-title',
-        '[class.kbq-navbar-title_small]': 'isTextOverflown',
-
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)'
     }
@@ -77,16 +75,30 @@ export class KbqNavbarTitle implements AfterViewInit {
     readonly hovered = new Subject<boolean>();
 
     outerElementWidth: number;
-    isTextOverflown: boolean = false;
 
     get text(): string {
         return this.nativeElement.textContent || '';
     }
 
+    /** Whether the text is clipped horizontally (e.g. by `text-overflow: ellipsis`). */
     get isOverflown() {
         if (!this.isBrowser) return false;
 
         return this.nativeElement.scrollWidth > this.nativeElement.clientWidth;
+    }
+
+    /**
+     * Whether the text is clipped vertically (e.g. by `-webkit-line-clamp`).
+     *
+     * Kept separate from `isOverflown` on purpose: wrapped text never exceeds its width, so only this
+     * check catches a clamped title. `isOverflown` is also read by `KbqNavbarItem`, whose titles are
+     * always `nowrap` — folding the two together would let sub-pixel line-height rounding enable
+     * tooltips on every navbar item.
+     */
+    get isClamped(): boolean {
+        if (!this.isBrowser) return false;
+
+        return this.nativeElement.scrollHeight > this.nativeElement.clientHeight;
     }
 
     getOuterElementWidth(): number {
@@ -95,10 +107,6 @@ export class KbqNavbarTitle implements AfterViewInit {
         const { width, marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
 
         return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item) || 0, 0);
-    }
-
-    checkTextOverflown() {
-        this.isTextOverflown = this.text.length > 18;
     }
 
     ngAfterViewInit(): void {
@@ -332,11 +340,16 @@ export class KbqNavbarRectangleElement {
     }
 
     set collapsed(value: boolean) {
+        if (this._collapsed === value) return;
+
         this._collapsed = value;
 
         this.state.next();
     }
 
+    // Deliberately left `undefined`: it is not equal to either boolean, so the guard above always lets the
+    // first assignment through. Initializing it to `false` would swallow the initial `collapsed = false` of a
+    // navbar that starts expanded, and with it the `updateDropdown()` that rides on that emission.
     private _collapsed: boolean;
 
     readonly button = contentChild(KbqButtonCssStyler);
