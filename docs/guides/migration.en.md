@@ -8,7 +8,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 2. **18.6**: token update.
 3. **18.22**: component attribute changes.
 4. **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
-5. **20.1.0**: the move of the filter-bar API to signals.
+5. **20.2.0**: the move of the filter-bar API to signals.
 
 ### 1. Upgrade to 18.5.3
 
@@ -147,9 +147,9 @@ The schematic emits warnings for what cannot be rewritten safely:
 
 **Code block**: the deprecated `canLoad` / `codeFiles` inputs are renamed to `canDownload` / `files`. Template bindings are migrated automatically; programmatic access (`.canLoad`, `.codeFiles`) must be updated by hand.
 
-### 5. Filter-bar upgrade (20.1.0)
+### 5. Filter-bar upgrade (20.2.0)
 
-In version 20.1.0 the public API of `KbqFilterBar` moved to signals. Template bindings (`[filter]`, `[(filter)]`, `[pipeTemplates]`) and the `(filterChange)` output keep working — only programmatic reads break: they now require a call.
+In version 20.2.0 the public API of `KbqFilterBar` moved to signals. Template bindings (`[filter]`, `[(filter)]`, `[pipeTemplates]`) and the `(filterChange)` output keep working — only programmatic reads break: they now require a call.
 
 | Member                                                                      | Before                  | After                                                    |
 | --------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------- |
@@ -166,7 +166,7 @@ The changes are applied by the `filter-bar-signals` schematic (runs automaticall
 ng update @koobiq/components@20
 ```
 
-Or manually — for example, if you have already upgraded to 20.1.0. To preview without writing — `--fix=false`:
+Or manually — for example, if you have already upgraded to 20.2.0. To preview without writing — `--fix=false`:
 
 ```bash
 ng g @koobiq/components:filter-bar-signals --project <your project>
