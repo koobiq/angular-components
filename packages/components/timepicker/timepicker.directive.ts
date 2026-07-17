@@ -8,12 +8,10 @@ import {
     forwardRef,
     inject,
     Inject,
-    Injectable,
     Input,
     OnDestroy,
     Optional,
     Output,
-    Provider,
     Renderer2
 } from '@angular/core';
 import {
@@ -51,6 +49,7 @@ import {
     DateAdapter,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
+    KBQ_VALIDATION,
     KbqErrorStateTracker,
     KbqLocaleService,
     validationTooltipHideDelay,
@@ -89,18 +88,6 @@ export const KBQ_TIMEPICKER_VALIDATORS: any = {
     multi: true
 };
 
-@Injectable()
-class KbqTimepickerErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: AbstractControl | null): boolean {
-        return !!control?.invalid;
-    }
-}
-
-const KBQ_TIMEPICKER_ERROR_STATE_MATCHER: Provider = {
-    provide: ErrorStateMatcher,
-    useClass: KbqTimepickerErrorStateMatcher
-};
-
 let uniqueComponentIdSuffix: number = 0;
 
 const shortFormatSize: number = 5;
@@ -130,7 +117,6 @@ const fullFormatSize: number = 8;
     providers: [
         KBQ_TIMEPICKER_VALIDATORS,
         KBQ_TIMEPICKER_VALUE_ACCESSOR,
-        KBQ_TIMEPICKER_ERROR_STATE_MATCHER,
         { provide: KbqFormFieldControl, useExisting: KbqTimepicker }]
 })
 export class KbqTimepicker<D>
@@ -378,6 +364,8 @@ export class KbqTimepicker<D>
 
     private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
 
+    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
+
     private readonly validator: ValidatorFn | null;
 
     private lastValueValid = false;
@@ -463,13 +451,18 @@ export class KbqTimepicker<D>
     onBlur() {
         this.focusChanged(false);
 
-        if (this.viewValue === this.getTimeStringFromDate(this.value, this.format)) {
-            return;
+        if (this.viewValue !== this.getTimeStringFromDate(this.value, this.format)) {
+            this.setViewValue(this.formatUserPaste(this.viewValue));
+
+            this.onInput();
         }
 
-        this.setViewValue(this.formatUserPaste(this.viewValue));
-
-        this.onInput();
+        // Re-run validation now that the field lost focus: while focused, KbqValidateDirective
+        // suppresses validation errors, so status has to be recomputed explicitly here.
+        if (this.useLegacyValidation && this.control) {
+            this.control.updateValueAndValidity({ emitEvent: false });
+            (this.control.statusChanges as EventEmitter<string>).emit(this.control.status);
+        }
     }
 
     onPaste($event) {
