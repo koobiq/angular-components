@@ -551,3 +551,43 @@ export class E2eVerticalNavbarBrandAutoLongTitle {
         { title: 'Secret Notes', testId: 'horizontal-short' }
     ];
 }
+
+/**
+ * Starts collapsed, which `E2eVerticalNavbarBrandAutoLongTitle` deliberately does not: a collapsed title is
+ * `display: none`, so it cannot be measured until the navbar expands, and the first expand is therefore the
+ * only chance to get the presentation right before the user sees it (#DS-4477).
+ *
+ * Kept a separate route rather than another brand in the fixture above, so it owns no screenshot baseline.
+ */
+@Component({
+    selector: 'e2e-vertical-navbar-brand-first-expand',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <div style="height: 320px; display: flex">
+            <kbq-vertical-navbar>
+                <kbq-navbar-container>
+                    <a href="#" kbq-navbar-brand>
+                        <div kbq-navbar-logo>
+                            <!-- prettier-ignore -->
+                            <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><rect fill="#FF0000" height="32" rx="6" width="32"/></svg>
+                        </div>
+
+                        <div kbq-navbar-title data-testid="first-expand">User Management and Access Control</div>
+                    </a>
+
+                    <a href="#" kbq-navbar-item class="kbq-active">
+                        <i kbq-icon="kbq-stop_16"></i>
+                        <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
+                    </a>
+                </kbq-navbar-container>
+
+                <button kbq-navbar-toggle data-testid="first-expand-toggle"></button>
+            </kbq-vertical-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eVerticalNavbarBrandFirstExpand'
+    }
+})
+export class E2eVerticalNavbarBrandFirstExpand {}

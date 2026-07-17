@@ -11,6 +11,7 @@ import {
     computed,
     contentChild,
     inject,
+    Injector,
     Input,
     input,
     signal
@@ -54,6 +55,7 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly contentObserver = inject(ContentObserver);
     private readonly document = inject(DOCUMENT);
+    private readonly injector = inject(Injector);
 
     private readonly debounceInterval = 100;
 
@@ -204,11 +206,20 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
         const fontSet: FontFaceSet | undefined = this.document.fonts;
         const fonts$: Observable<unknown> = fontSet ? from(fontSet.ready) : EMPTY;
 
-        const state$ = this.rectangleElement.state;
-
-        merge(resize$, content$, fonts$, state$)
+        // Continuous, noisy sources - coalesce them.
+        merge(resize$, content$, fonts$)
             .pipe(debounceTime(this.debounceInterval), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.updateAutoLongTitle());
+
+        // Expanding is a discrete event, and a collapsed title is `display: none` - so the first expand is the
+        // first chance to measure at all. Debouncing it paints the default presentation for the whole window
+        // first. Measuring synchronously here would be just as wrong: `.kbq-collapsed` and the container's
+        // width class are written by the change detection pass that *follows* this emission, so the read would
+        // still see a `display: none` title inside a collapsed container. The `read` phase runs after that
+        // write and before the browser paints, so the compact presentation lands on the very first frame.
+        this.rectangleElement.state
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => afterNextRender({ read: () => this.updateAutoLongTitle() }, { injector: this.injector }));
     }
 
     private updateAutoLongTitle(): void {

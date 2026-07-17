@@ -340,11 +340,16 @@ export class KbqNavbarRectangleElement {
     }
 
     set collapsed(value: boolean) {
+        if (this._collapsed === value) return;
+
         this._collapsed = value;
 
         this.state.next();
     }
 
+    // Deliberately left `undefined`: it is not equal to either boolean, so the guard above always lets the
+    // first assignment through. Initializing it to `false` would swallow the initial `collapsed = false` of a
+    // navbar that starts expanded, and with it the `updateDropdown()` that rides on that emission.
     private _collapsed: boolean;
 
     readonly button = contentChild(KbqButtonCssStyler);

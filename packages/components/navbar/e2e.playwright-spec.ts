@@ -129,4 +129,56 @@ test.describe('KbqNavbarModule', () => {
             expect(new Set(await sample()).size).toBe(1);
         });
     });
+
+    test.describe('E2eVerticalNavbarBrandFirstExpand', () => {
+        type BrandFrame = { expanded: boolean; compact: boolean; fontSize: string };
+
+        /**
+         * A collapsed title is `display: none` and cannot be measured, so the first expand is the first chance
+         * to measure at all - and the only chance to get it right before the user sees it. Routing that event
+         * through the brand's debounce painted the default 18px single line for the whole window and only then
+         * snapped to the compact two-line one (#DS-4477).
+         *
+         * Asserting the settled state cannot catch this: the flicker *is* an intermediate state, and every
+         * assertion Playwright offers auto-retries, i.e. waits the wrong frame out. So record the class changes
+         * instead and require that no observed state ever had the navbar expanded in the default presentation.
+         */
+        test('should not paint the default presentation on the first expand', async ({ page }) => {
+            await page.goto('/E2eVerticalNavbarBrandFirstExpand');
+
+            const brand = page.locator('.kbq-navbar-brand');
+
+            await brand.evaluate((el) => {
+                const title = el.querySelector('.kbq-navbar-title')!;
+                const frames: BrandFrame[] = [];
+
+                Object.assign(window, { kbqBrandFrames: frames });
+
+                new MutationObserver(() =>
+                    frames.push({
+                        expanded: el.classList.contains('kbq-expanded'),
+                        compact: el.classList.contains('kbq-navbar-brand_long-title'),
+                        fontSize: getComputedStyle(title).fontSize
+                    })
+                ).observe(el, { attributes: true, attributeFilter: ['class'] });
+            });
+
+            // The toggle is `display: none` until the navbar is hovered.
+            await page.locator('.kbq-vertical-navbar').hover();
+            await page.getByTestId('first-expand-toggle').click();
+
+            // Lets the expansion settle, so a regression gets to record its corrective second frame too.
+            await expect(page.getByTestId('first-expand')).toHaveCSS('font-size', '14px');
+
+            const frames = await page.evaluate(
+                () => (window as typeof window & { kbqBrandFrames: BrandFrame[] }).kbqBrandFrames
+            );
+
+            expect(frames.length, 'the observer must have recorded the expand at all').toBeGreaterThan(0);
+
+            const flickered = frames.filter(({ expanded, compact }) => expanded && !compact);
+
+            expect(flickered, `expanded in the default presentation: ${JSON.stringify(flickered)}`).toEqual([]);
+        });
+    });
 });

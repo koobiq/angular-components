@@ -539,6 +539,43 @@ describe('KbqNavbar', () => {
 
             expect(brand.hasCroppedText).toBe(true);
         }));
+
+        /**
+         * A collapsed title is `display: none`, so it cannot be measured until the navbar expands - which makes
+         * the first expand the only chance to get the presentation right before the user sees it. Routing that
+         * event through the debounce paints the default 18px single line for the whole window and only then
+         * snaps to the compact two-line one, which reads as a flicker (#DS-4477).
+         *
+         * Hence the deliberate absence of `tick(LONG_TITLE_DEBOUNCE_MS)` before the assertion.
+         */
+        it('should apply the long title class on the first expand without waiting out the debounce', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestBrandLongTitleApp);
+
+            fixture.componentInstance.expanded = false;
+
+            const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
+
+            setTextMetrics(titleEl, { scrollWidth: 300, clientWidth: 176 });
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+
+            expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
+
+            fixture.componentInstance.expanded = true;
+            fixture.detectChanges();
+            // Drains microtasks only, which is what the render hooks run on - the browser paints no earlier
+            // than that. Virtual time does not advance, so the debounce window is still wide open here.
+            tick(0);
+            fixture.detectChanges();
+
+            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
+
+            flush();
+        }));
     });
 
     describe('KbqNavbarRectangleElement', () => {
@@ -615,6 +652,25 @@ describe('KbqNavbar', () => {
             rect.state.subscribe(() => emitCount++);
 
             rect.horizontal = true;
+
+            expect(emitCount).toBe(0);
+        });
+
+        it('state Subject should not emit when collapsed value is unchanged', () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+
+            const rectDebugEl = fixture.debugElement.query(By.directive(KbqNavbarRectangleElement));
+            const rect = rectDebugEl.injector.get(KbqNavbarRectangleElement);
+
+            rect.collapsed = true;
+
+            let emitCount = 0;
+
+            rect.state.subscribe(() => emitCount++);
+
+            rect.collapsed = true;
 
             expect(emitCount).toBe(0);
         });
@@ -943,7 +999,7 @@ class TestBrandApp {
     selector: 'test-brand-long-title-app',
     imports: [KbqNavbarModule],
     template: `
-        <kbq-vertical-navbar [expanded]="true">
+        <kbq-vertical-navbar [expanded]="expanded">
             <kbq-navbar-container>
                 <a href="#" kbq-navbar-brand [longTitle]="longTitle">
                     <div kbq-navbar-title>{{ titleText }}</div>
@@ -955,6 +1011,7 @@ class TestBrandApp {
 class TestBrandLongTitleApp {
     titleText: string = 'App Name';
     longTitle: boolean | undefined = undefined;
+    expanded: boolean = true;
 }
 
 @Component({
