@@ -7,6 +7,7 @@ import {
     Directive,
     inject,
     Renderer2,
+    RendererStyleFlags2,
     signal
 } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
@@ -68,15 +69,13 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     ngAfterContentInit(): void {
         if (!this.platform.isBrowser) return;
 
-        const { height, width } = this.nativeElement.getBoundingClientRect();
+        const { height } = this.nativeElement.getBoundingClientRect();
 
-        this.renderer.setProperty(
+        this.renderer.setStyle(
             this.nativeElement,
-            'style',
-            `
-            --radix-accordion-content-height: ${height}px;
-            --radix-accordion-content-width: ${width}px;
-        `
+            '--kbq-accordion-content-height',
+            `${height}px`,
+            RendererStyleFlags2.DashCase
         );
     }
 

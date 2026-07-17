@@ -1,19 +1,42 @@
-﻿import { ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { Directionality } from '@angular/cdk/bidi';
+import { DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent } from '@koobiq/components/core';
+import { axe } from 'jest-axe';
+import { EMPTY } from 'rxjs';
 import {
+    KBQ_ACCORDION_STATE_STORE,
     KbqAccordion,
     KbqAccordionContent,
     KbqAccordionHeader,
     KbqAccordionItem,
+    KbqAccordionLocalStorageStateStore,
     KbqAccordionModule,
     KbqAccordionOrientation,
+    KbqAccordionState,
+    KbqAccordionStateStore,
     KbqAccordionTrigger,
     KbqAccordionType,
     KbqAccordionVariant
 } from './index';
+
+/** In-memory `KbqAccordionStateStore` used to make state-saving tests deterministic. */
+class InMemoryAccordionStateStore implements KbqAccordionStateStore {
+    readonly store = new Map<string, KbqAccordionState>();
+
+    getState(key: string): KbqAccordionState | null {
+        const state = this.store.get(key);
+
+        return state ? (JSON.parse(JSON.stringify(state)) as KbqAccordionState) : null;
+    }
+
+    setState(key: string, state: KbqAccordionState): void {
+        this.store.set(key, JSON.parse(JSON.stringify(state)) as KbqAccordionState);
+    }
+}
 
 describe('KbqAccordion', () => {
     let fixture: ComponentFixture<TestApp>;
@@ -37,7 +60,14 @@ describe('KbqAccordion', () => {
                 AccordionCollapsible,
                 AccordionOpenCloseAll,
                 AccordionEvents,
-                AccordionOrientation
+                AccordionOrientation,
+                AccordionHorizontal,
+                AccordionDisabledOverride,
+                AccordionExactValue,
+                AccordionValueMultiple,
+                AccordionMissingContent,
+                AccordionLevel,
+                AccordionStateSaving
             ]
         }).compileComponents();
     });
@@ -78,11 +108,11 @@ describe('KbqAccordion', () => {
 
             expect(accordionTriggerDebugElement.nativeElement.classList).toContain('kbq-accordion-trigger_hug');
 
-            component.selectedVariant = KbqAccordionVariant.fill;
+            component.selectedVariant = 'fill';
             fixture.detectChanges();
             expect(accordionTriggerDebugElement.nativeElement.classList).toContain('kbq-accordion-trigger_fill');
 
-            component.selectedVariant = KbqAccordionVariant.hugSpaceBetween;
+            component.selectedVariant = 'hugSpaceBetween';
             fixture.detectChanges();
             expect(accordionTriggerDebugElement.nativeElement.classList).toContain(
                 'kbq-accordion-trigger_hug-space-between'
@@ -373,25 +403,35 @@ describe('KbqAccordion', () => {
             expect(expandedChangeSpy).toHaveBeenCalledWith(false);
         });
 
-        it('should emit onValueChange when item state changes', () => {
+        it('should emit valueChange with the current value when item state changes', () => {
             fixture = TestBed.createComponent(AccordionEvents);
             fixture.detectChanges();
 
             const accordion = fixture.debugElement.query(By.directive(KbqAccordion)).componentInstance as KbqAccordion;
+            const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
             const trigger = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
 
-            const onValueChangeSpy = jest.fn();
+            const valueChangeSpy = jest.fn();
 
-            accordion.onValueChange.subscribe(onValueChangeSpy);
+            accordion.valueChange.subscribe(valueChangeSpy);
 
             trigger.nativeElement.click();
             fixture.detectChanges();
 
-            expect(onValueChangeSpy).toHaveBeenCalledTimes(1);
+            expect(valueChangeSpy).toHaveBeenCalledTimes(1);
+            // Single mode: emits the value of the expanded item.
+            expect(valueChangeSpy).toHaveBeenCalledWith(item.value());
         });
     });
 
     describe('keyboard navigation', () => {
+        // Attaching to the document is required for `document.activeElement` focus assertions to work.
+        afterEach(() => {
+            if (fixture?.nativeElement?.parentNode === document.body) {
+                document.body.removeChild(fixture.nativeElement);
+            }
+        });
+
         it('ENTER should toggle active item', () => {
             fixture = TestBed.createComponent(AccordionType);
             fixture.detectChanges();
@@ -430,46 +470,148 @@ describe('KbqAccordion', () => {
             expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
         });
 
-        it('TAB should move focus to the next item', () => {
+        it('Arrow Down should move the active header to the next one', () => {
+            fixture = TestBed.createComponent(AccordionType);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
+            const accordion = accordionEl.componentInstance as KbqAccordion;
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+
+            accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
+            expect(document.activeElement).toBe(triggers[0].nativeElement);
+
+            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(triggers[1].nativeElement);
+        });
+
+        it('Arrow Up should move the active header to the previous one', () => {
+            fixture = TestBed.createComponent(AccordionType);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
+            const accordion = accordionEl.componentInstance as KbqAccordion;
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+
+            accordion.setActiveItem(items[1].injector.get(KbqAccordionItem));
+            expect(document.activeElement).toBe(triggers[1].nativeElement);
+
+            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', UP_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(triggers[0].nativeElement);
+        });
+
+        it('HOME should move the active header to the first one, END to the last', () => {
+            fixture = TestBed.createComponent(AccordionType);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
+            const accordion = accordionEl.componentInstance as KbqAccordion;
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+
+            accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
+
+            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', END);
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(triggers[triggers.length - 1].nativeElement);
+
+            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', HOME);
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(triggers[0].nativeElement);
+        });
+
+        it('should NOT preventDefault on Tab, so native focus order is preserved (WAI-ARIA APG)', () => {
             fixture = TestBed.createComponent(AccordionType);
             fixture.detectChanges();
 
             const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
             const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
-
             const accordion = accordionEl.componentInstance as KbqAccordion;
 
             accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
-            expect(accordion['keyManager'].activeItemIndex).toBe(0);
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', TAB);
+            const event = dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', TAB);
+
             fixture.detectChanges();
 
-            expect(accordion['keyManager'].activeItemIndex).toBe(1);
+            expect(event.defaultPrevented).toBe(false);
         });
 
-        it('Shift+TAB should move focus to the previous item', () => {
-            fixture = TestBed.createComponent(AccordionType);
+        it('ENTER on an active disabled item should not toggle it', () => {
+            fixture = TestBed.createComponent(AccordionDisabledItem);
+            fixture.debugElement.componentInstance.disabledItem = true;
             fixture.detectChanges();
 
             const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
+            const accordion = accordionEl.componentInstance as KbqAccordion;
             const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
 
-            const accordion = accordionEl.componentInstance as KbqAccordion;
+            accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
 
-            accordion.setActiveItem(items[1].injector.get(KbqAccordionItem));
-            expect(accordion['keyManager'].activeItemIndex).toBe(1);
-
-            const event = new KeyboardEvent('keydown', {
-                keyCode: TAB,
-                shiftKey: true,
-                bubbles: true
-            } as KeyboardEventInit);
-
-            accordionEl.nativeElement.dispatchEvent(event);
+            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', ENTER);
             fixture.detectChanges();
 
-            expect(accordion['keyManager'].activeItemIndex).toBe(0);
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
+        });
+    });
+
+    describe('horizontal keyboard navigation', () => {
+        afterEach(() => {
+            if (fixture?.nativeElement?.parentNode === document.body) {
+                document.body.removeChild(fixture.nativeElement);
+            }
+        });
+
+        it('Right/Left arrows move the active header in LTR', () => {
+            fixture = TestBed.createComponent(AccordionHorizontal);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
+            const accordion = accordionEl.componentInstance as KbqAccordion;
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+
+            accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
+
+            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(triggers[1].nativeElement);
+
+            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(triggers[0].nativeElement);
+        });
+
+        it('Right/Left arrows are mirrored in RTL', () => {
+            TestBed.overrideProvider(Directionality, {
+                useValue: { value: 'rtl', change: EMPTY }
+            });
+
+            fixture = TestBed.createComponent(AccordionHorizontal);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
+            const accordion = accordionEl.componentInstance as KbqAccordion;
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+
+            accordion.setActiveItem(items[1].injector.get(KbqAccordionItem));
+
+            // In RTL, Right arrow moves to the previous item.
+            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(triggers[0].nativeElement);
         });
     });
 
@@ -803,6 +945,246 @@ describe('KbqAccordion', () => {
             expect(items[1].nativeElement.getAttribute('data-state')).toBe('open');
         });
     });
+
+    describe('disabled override (accordion vs item)', () => {
+        it('accordion [disabled]="false" must not override an item [disabled]="true"', () => {
+            fixture = TestBed.createComponent(AccordionDisabledOverride);
+            fixture.detectChanges();
+
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+
+            expect(items[0].nativeElement.getAttribute('data-disabled')).toBe('true');
+            expect(triggers[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
+
+            triggers[0].nativeElement.click();
+            fixture.detectChanges();
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
+        });
+    });
+
+    describe('controlled value', () => {
+        it('single mode matches values exactly (item-10 must not open item-1)', () => {
+            fixture = TestBed.createComponent(AccordionExactValue);
+            fixture.debugElement.componentInstance.value = 'item-10';
+            fixture.detectChanges();
+
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
+            expect(items[1].nativeElement.getAttribute('data-state')).toBe('open');
+        });
+
+        it('multiple mode closes items removed from the value array', () => {
+            fixture = TestBed.createComponent(AccordionValueMultiple);
+            const component = fixture.debugElement.componentInstance;
+
+            component.value = ['item-1'];
+            fixture.detectChanges();
+
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
+            expect(items[1].nativeElement.getAttribute('data-state')).toBe('closed');
+
+            component.value = ['item-2'];
+            fixture.detectChanges();
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
+            expect(items[1].nativeElement.getAttribute('data-state')).toBe('open');
+        });
+
+        it('multiple mode opens every member of the value array', () => {
+            fixture = TestBed.createComponent(AccordionValueMultiple);
+            fixture.debugElement.componentInstance.value = ['item-1', 'item-2'];
+            fixture.detectChanges();
+
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
+            expect(items[1].nativeElement.getAttribute('data-state')).toBe('open');
+        });
+    });
+
+    describe('missing content', () => {
+        it('toggling an item without content does not throw', () => {
+            fixture = TestBed.createComponent(AccordionMissingContent);
+            fixture.detectChanges();
+
+            const trigger = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
+
+            expect(() => {
+                trigger.nativeElement.click();
+                fixture.detectChanges();
+            }).not.toThrow();
+        });
+    });
+
+    describe('animations', () => {
+        it('disableAnimation forces the content transition to none, enableAnimation restores it', () => {
+            fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+
+            const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
+            const content = fixture.debugElement.query(By.directive(KbqAccordionContent)).nativeElement as HTMLElement;
+
+            content.style.transition = 'height 300ms ease-out';
+
+            item.disableAnimation();
+            expect(content.style.transition).toBe('none');
+
+            item.enableAnimation();
+            expect(content.style.transition).toBe('height 300ms ease-out');
+        });
+    });
+
+    describe('heading level', () => {
+        it('defaults aria-level to 2', () => {
+            fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+
+            const header = fixture.debugElement.query(By.directive(KbqAccordionHeader));
+
+            expect(header.nativeElement.getAttribute('aria-level')).toBe('2');
+        });
+
+        it('reflects the accordion [level] input on the header', () => {
+            fixture = TestBed.createComponent(AccordionLevel);
+            fixture.debugElement.componentInstance.level = 3;
+            fixture.detectChanges();
+
+            const header = fixture.debugElement.query(By.directive(KbqAccordionHeader));
+
+            expect(header.nativeElement.getAttribute('aria-level')).toBe('3');
+        });
+    });
+
+    describe('state saving', () => {
+        it('the localStorage store round-trips state', () => {
+            const store = TestBed.inject(KbqAccordionLocalStorageStateStore);
+            const key = 'kbq-accordion-test-roundtrip';
+            const state: KbqAccordionState = { 'item-x': { expanded: true, value: 'item-1' } };
+
+            store.setState(key, state);
+
+            expect(store.getState(key)).toEqual(state);
+        });
+
+        it('the localStorage store returns null for corrupt JSON without throwing', () => {
+            const store = TestBed.inject(KbqAccordionLocalStorageStateStore);
+            const key = 'kbq-accordion-test-corrupt';
+
+            window.localStorage.setItem(key, '{ not valid json');
+
+            expect(() => store.getState(key)).not.toThrow();
+            expect(store.getState(key)).toBeNull();
+        });
+
+        it('restores expanded items from the store on init', () => {
+            const store = new InMemoryAccordionStateStore();
+
+            store.setState('accordion-key', { seed: { expanded: true, value: 'item-1' } });
+            TestBed.overrideProvider(KBQ_ACCORDION_STATE_STORE, { useValue: store });
+
+            fixture = TestBed.createComponent(AccordionStateSaving);
+            fixture.detectChanges();
+
+            const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
+            expect(items[1].nativeElement.getAttribute('data-state')).toBe('closed');
+        });
+
+        it('persists state to the store when an item toggles', () => {
+            const store = new InMemoryAccordionStateStore();
+
+            TestBed.overrideProvider(KBQ_ACCORDION_STATE_STORE, { useValue: store });
+
+            fixture = TestBed.createComponent(AccordionStateSaving);
+            fixture.detectChanges();
+
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+
+            triggers[0].nativeElement.click();
+            fixture.detectChanges();
+
+            const saved = store.getState('accordion-key');
+
+            expect(saved).toBeTruthy();
+            expect(Object.values(saved!).some((snapshot) => snapshot.expanded && snapshot.value === 'item-1')).toBe(
+                true
+            );
+        });
+
+        it('does not write to the store when useStateSaving is disabled', () => {
+            const store = new InMemoryAccordionStateStore();
+
+            TestBed.overrideProvider(KBQ_ACCORDION_STATE_STORE, { useValue: store });
+
+            fixture = TestBed.createComponent(AccordionType);
+            fixture.detectChanges();
+
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+
+            triggers[0].nativeElement.click();
+            fixture.detectChanges();
+
+            expect(store.store.size).toBe(0);
+        });
+    });
+
+    describe('teardown', () => {
+        it('create then immediately destroy does not throw', () => {
+            fixture = TestBed.createComponent(AccordionType);
+            fixture.detectChanges();
+
+            expect(() => fixture.destroy()).not.toThrow();
+        });
+
+        it('stops focus monitoring and completes openCloseAllActions on destroy', () => {
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const stopMonitoringSpy = jest.spyOn(focusMonitor, 'stopMonitoring');
+
+            fixture = TestBed.createComponent(AccordionType);
+            fixture.detectChanges();
+
+            const accordion = fixture.debugElement.query(By.directive(KbqAccordion)).componentInstance as KbqAccordion;
+            const completeSpy = jest.spyOn(accordion.openCloseAllActions, 'complete');
+
+            fixture.destroy();
+
+            expect(stopMonitoringSpy).toHaveBeenCalled();
+            expect(completeSpy).toHaveBeenCalled();
+        });
+    });
+
+    describe('accessibility (axe)', () => {
+        afterEach(() => {
+            if (fixture?.nativeElement?.parentNode === document.body) {
+                document.body.removeChild(fixture.nativeElement);
+            }
+        });
+
+        it('has no axe violations in the collapsed state', async () => {
+            fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('has no axe violations when an item is expanded', async () => {
+            fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+    });
 });
 
 @Component({
@@ -836,7 +1218,7 @@ class TestApp {}
     `
 })
 class AccordionVariants {
-    selectedVariant: KbqAccordionVariant = KbqAccordionVariant.hug;
+    selectedVariant: KbqAccordionVariant = 'hug';
 }
 
 @Component({
@@ -1032,3 +1414,145 @@ class AccordionEvents {}
 class AccordionOrientation {
     orientation: KbqAccordionOrientation = 'vertical';
 }
+
+@Component({
+    selector: 'accordion-horizontal',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [orientation]="'horizontal'">
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 1</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 2</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 2</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionHorizontal {}
+
+@Component({
+    selector: 'accordion-disabled-override',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [disabled]="accordionDisabled">
+            <kbq-accordion-item [disabled]="itemDisabled">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionDisabledOverride {
+    accordionDisabled = false;
+    itemDisabled = true;
+}
+
+@Component({
+    selector: 'accordion-exact-value',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [value]="value">
+            <kbq-accordion-item [value]="'item-1'">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 1</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item [value]="'item-10'">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 10</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 10</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionExactValue {
+    value: string;
+}
+
+@Component({
+    selector: 'accordion-value-multiple',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [type]="'multiple'" [value]="value">
+            <kbq-accordion-item [value]="'item-1'">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 1</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item [value]="'item-2'">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 2</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 2</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionValueMultiple {
+    value: string[];
+}
+
+@Component({
+    selector: 'accordion-missing-content',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion>
+            <kbq-accordion-item>
+                <button kbq-accordion-trigger type="button">No content</button>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionMissingContent {}
+
+@Component({
+    selector: 'accordion-level',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [level]="level">
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionLevel {
+    level = 2;
+}
+
+@Component({
+    selector: 'accordion-state-saving',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion useStateSaving [stateSavingKey]="'accordion-key'">
+            <kbq-accordion-item [value]="'item-1'">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 1</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item [value]="'item-2'">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 2</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 2</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionStateSaving {}

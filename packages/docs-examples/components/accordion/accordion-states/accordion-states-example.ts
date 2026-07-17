@@ -12,5 +12,9 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionStatesExample {
-    accordionVariant = KbqAccordionVariant;
+    readonly accordionVariant: Record<'fill' | 'hug' | 'hugSpaceBetween', KbqAccordionVariant> = {
+        fill: 'fill',
+        hug: 'hug',
+        hugSpaceBetween: 'hugSpaceBetween'
+    };
 }
