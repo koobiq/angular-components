@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, model, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KBQ_WINDOW, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { combineLatest } from 'rxjs';
 
@@ -252,4 +252,108 @@ export class E2eButtonGroup {
 
     protected readonly color = KbqComponentColors.ContrastFade;
     protected readonly style = KbqButtonStyles.Filled;
+}
+
+/**
+ * Renders a configurable batch of icon buttons and reports how long the create + styling pass took.
+ * The original implementation recursed through a MutationObserver feedback loop and, at ~1200+ buttons,
+ * overflowed the call stack and left the last-rendered buttons unstyled.
+ * The Playwright test triggers `run()` and asserts the
+ * whole batch renders without an uncaught error and that the last button still gets `kbq-button-icon`.
+ */
+@Component({
+    selector: 'e2e-button-stress',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <div class="dev-options">
+            <label>
+                Count:
+                <input
+                    type="number"
+                    min="0"
+                    step="100"
+                    data-testid="e2eButtonStressCount"
+                    [value]="count()"
+                    (input)="onCountInput($event)"
+                />
+            </label>
+            <button kbq-button data-testid="e2eButtonStressRun" (click)="run()">Render</button>
+            <button kbq-button data-testid="e2eButtonStressClear" [kbqStyle]="styles.Outline" (click)="clear()">
+                Clear
+            </button>
+
+            @if (renderMs() !== null) {
+                <span data-testid="e2eButtonStressResult">
+                    Rendered
+                    <b>{{ rendered() }}</b>
+                    icon buttons in
+                    <b>{{ renderMs() }} ms</b>
+                </span>
+            }
+        </div>
+
+        <div data-testid="e2eButtonStressTarget">
+            @for (index of items(); track index) {
+                <button kbq-button aria-label="Play">
+                    <i kbq-icon="kbq-play_16"></i>
+                </button>
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eButtonStress'
+    }
+})
+export class E2eButtonStress {
+    private readonly injector = inject(Injector);
+    private readonly window = inject(KBQ_WINDOW);
+
+    protected readonly styles = KbqButtonStyles;
+
+    protected readonly count = signal(1500);
+    protected readonly items = signal<number[]>([]);
+    protected readonly rendered = signal(0);
+    protected readonly renderMs = signal<number | null>(null);
+
+    protected onCountInput(event: Event): void {
+        const next = Number.parseInt((event.currentTarget as HTMLInputElement).value, 10);
+
+        this.count.set(Number.isFinite(next) ? Math.min(100_000, Math.max(0, next)) : 0);
+    }
+
+    protected run(): void {
+        const count = this.count();
+
+        // Start from a clean slate so the measurement covers creating the buttons from scratch.
+        this.items.set([]);
+
+        // Use afterNextRender x2 to calculate rendering time of clear and repopulate properly.
+        // If you clear and repopulate in the same tick,
+        // Angular coalesces both into one change detection — the empty state never renders
+        afterNextRender(
+            () => {
+                const start = this.window.performance.now();
+
+                this.items.set(Array.from({ length: count }, (_, index) => index));
+
+                // Fires after Angular has created the buttons and run the synchronous styling
+                // (KbqButtonCssStyler effect) for this batch.
+                afterNextRender(
+                    () => {
+                        this.rendered.set(count);
+                        this.renderMs.set(+(this.window.performance.now() - start).toFixed(1));
+                    },
+                    { injector: this.injector }
+                );
+            },
+            { injector: this.injector }
+        );
+    }
+
+    protected clear(): void {
+        this.items.set([]);
+        this.rendered.set(0);
+        this.renderMs.set(null);
+    }
 }

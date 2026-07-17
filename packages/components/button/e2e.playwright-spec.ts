@@ -52,4 +52,29 @@ test.describe('KbqButtonModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-dark.png');
         });
     });
+
+    test.describe('E2eButtonStress', () => {
+        test('renders a large batch of icon buttons without overflowing the stack', async ({ page }) => {
+            const pageErrors: Error[] = [];
+
+            // The original bug threw "Maximum call stack size exceeded" from the styler's
+            // MutationObserver feedback loop; capture any uncaught error to assert it does not recur.
+            page.on('pageerror', (error) => pageErrors.push(error));
+
+            await page.goto('/E2eButtonStress');
+
+            // Render the default batch (1500 icon buttons).
+            await page.getByTestId('e2eButtonStressRun').click();
+
+            const buttons = page.getByTestId('e2eButtonStressTarget').locator('[kbq-button]');
+
+            // The whole batch renders...
+            await expect(buttons).toHaveCount(1500);
+
+            // ...and the styler ran for the last button too (it used to be left unstyled).
+            await expect(buttons.last()).toHaveClass(/kbq-button-icon/);
+
+            expect(pageErrors).toEqual([]);
+        });
+    });
 });

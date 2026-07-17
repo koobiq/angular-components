@@ -3,7 +3,8 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { ButtonExamplesModule } from 'packages/docs-examples/components/button';
+import { E2eButtonStress } from '../../components/button/e2e';
+import { ButtonExamplesModule } from '../../docs-examples/components/button';
 
 @Component({
     selector: 'dev-examples',
@@ -27,7 +28,7 @@ export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqButtonModule, KbqIconModule, DevDocsExamples, KbqTitleModule],
+    imports: [KbqButtonModule, KbqIconModule, DevDocsExamples, KbqTitleModule, E2eButtonStress],
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
