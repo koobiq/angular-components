@@ -3,8 +3,8 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { E2eButtonStress } from 'packages/components/button/e2e';
-import { ButtonExamplesModule } from 'packages/docs-examples/components/button';
+import { E2eButtonStress } from '../../components/button/e2e';
+import { ButtonExamplesModule } from '../../docs-examples/components/button';
 
 @Component({
     selector: 'dev-examples',

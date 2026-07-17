@@ -328,6 +328,9 @@ export class E2eButtonStress {
         // Start from a clean slate so the measurement covers creating the buttons from scratch.
         this.items.set([]);
 
+        // Use afterNextRender x2 to calculate rendering time of clear and repopulate properly.
+        // If you clear and repopulate in the same tick,
+        // Angular coalesces both into one change detection — the empty state never renders
         afterNextRender(
             () => {
                 const start = this.window.performance.now();
