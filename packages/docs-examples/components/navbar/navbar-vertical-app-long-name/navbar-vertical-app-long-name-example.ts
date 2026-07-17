@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -12,7 +11,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 @Component({
     selector: 'navbar-vertical-app-long-name-example',
     imports: [
-        KbqDropdownModule,
         KbqNavbarModule,
         KbqButtonModule,
         KbqToolTipModule,

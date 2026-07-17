@@ -656,6 +656,30 @@ describe('KbqNavbar', () => {
             expect(emitCount).toBe(0);
         });
 
+        /**
+         * `_collapsed` starts `undefined` so that this first assignment gets through the setter's guard: a
+         * vertical navbar that starts expanded assigns `collapsed = false` exactly once and never again, and
+         * `KbqNavbarItem.updateDropdown()` rides on that emission. Initializing the field to `false` would
+         * swallow it - and the test below would not notice, since it primes the first assignment before
+         * subscribing.
+         */
+        it('state Subject should emit on the first collapsed assignment, even for false', () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+
+            const rectDebugEl = fixture.debugElement.query(By.directive(KbqNavbarRectangleElement));
+            const rect = rectDebugEl.injector.get(KbqNavbarRectangleElement);
+
+            let emitCount = 0;
+
+            rect.state.subscribe(() => emitCount++);
+
+            rect.collapsed = false;
+
+            expect(emitCount).toBe(1);
+        });
+
         it('state Subject should not emit when collapsed value is unchanged', () => {
             const fixture = TestBed.createComponent(TestItemApp);
 

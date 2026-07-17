@@ -215,11 +215,17 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
         // first chance to measure at all. Debouncing it paints the default presentation for the whole window
         // first. Measuring synchronously here would be just as wrong: `.kbq-collapsed` and the container's
         // width class are written by the change detection pass that *follows* this emission, so the read would
-        // still see a `display: none` title inside a collapsed container. The `read` phase runs after that
-        // write and before the browser paints, so the compact presentation lands on the very first frame.
+        // still see a `display: none` title inside a collapsed container. Render hooks run after that write and
+        // before the browser paints, so the compact presentation lands on the very first frame.
+        //
+        // `mixedReadWrite` and not `read`: `measureNeedsLongTitle()` takes the class off around its read and
+        // puts it back, and `read` is the phase documented to never write. Splitting the two across `write` and
+        // `read` is not an option either - they are one indivisible measurement.
         this.rectangleElement.state
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => afterNextRender({ read: () => this.updateAutoLongTitle() }, { injector: this.injector }));
+            .subscribe(() =>
+                afterNextRender({ mixedReadWrite: () => this.updateAutoLongTitle() }, { injector: this.injector })
+            );
     }
 
     private updateAutoLongTitle(): void {
