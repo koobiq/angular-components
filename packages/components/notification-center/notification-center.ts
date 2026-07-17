@@ -59,6 +59,21 @@ const defaultOffsetX = 8;
 /** Rate-limit window (ms) for the scroll-to-bottom check that drives infinite scroll. */
 const SCROLLED_TO_BOTTOM_AUDIT_TIME = 100;
 
+/**
+ * Tolerance (px) applied when checking whether the list has reached its bottom.
+ *
+ * `scrollHeight` and `clientHeight` are CSSOM `long`s (rounded to the nearest integer) while
+ * `scrollTop` is an `unrestricted double`. At fractional browser zoom or a fractional
+ * `devicePixelRatio` the layout lands on fractional CSS pixels and the two roundings go
+ * independently, so at the true bottom `scrollHeight - scrollTop - clientHeight` lands anywhere in
+ * (-1, 1) rather than on 0 — an exact `<= 0` check then succeeds only about half the time. Below
+ * 100% zoom one device pixel is wider than one CSS pixel, which scales the residual by ~1/zoom and
+ * pushes it past 1. 2px covers zoom down to 50% and is imperceptible as a trigger threshold.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
+ */
+const SCROLLED_TO_BOTTOM_TOLERANCE = 2;
+
 /**default configuration of notification-center */
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION = ruRULocaleData.notificationCenter;
 
@@ -252,11 +267,12 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             .subscribe(() => this.requestNextPage());
     }
 
-    /** Whether the list is scrolled to within `scrolledToBottomOffset` pixels of the bottom. */
+    /** Whether the list is scrolled to within `scrolledToBottomOffset` pixels of the bottom.
+     * Sub-pixel measurement error is absorbed by `SCROLLED_TO_BOTTOM_TOLERANCE`. */
     private isScrolledToBottom(): boolean {
         const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer().contentElement().nativeElement;
 
-        return scrollHeight - scrollTop - clientHeight <= this.scrolledToBottomOffset;
+        return scrollHeight - scrollTop - clientHeight <= this.scrolledToBottomOffset + SCROLLED_TO_BOTTOM_TOLERANCE;
     }
 
     /** Emits `onNextPage` unless a load is already in flight, errored, or there is nothing more to load. */

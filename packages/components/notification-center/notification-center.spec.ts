@@ -123,17 +123,19 @@ describe('KbqNotificationCenter', () => {
                     }
                 ).instance;
 
-            // Fakes the container geometry so the list sits exactly at the bottom (distance 0 <= the
-            // default scrolledToBottomOffset of 0). Both `scrollContainer` and `contentElement` are
-            // signal queries, so they must be called to reach the native element.
-            const setAtBottomGeometry = () => {
+            // Fakes the container geometry. Both `scrollContainer` and `contentElement` are signal
+            // queries, so they must be called to reach the native element.
+            const setGeometry = (geometry: { scrollHeight: number; clientHeight: number; scrollTop: number }) => {
                 const element = getCenter().scrollContainer().contentElement().nativeElement;
 
-                Object.defineProperty(element, 'scrollHeight', { configurable: true, value: 1000 });
-                Object.defineProperty(element, 'clientHeight', { configurable: true, value: 500 });
-                Object.defineProperty(element, 'offsetHeight', { configurable: true, value: 500 });
-                Object.defineProperty(element, 'scrollTop', { configurable: true, value: 500 });
+                Object.defineProperty(element, 'scrollHeight', { configurable: true, value: geometry.scrollHeight });
+                Object.defineProperty(element, 'clientHeight', { configurable: true, value: geometry.clientHeight });
+                Object.defineProperty(element, 'offsetHeight', { configurable: true, value: geometry.clientHeight });
+                Object.defineProperty(element, 'scrollTop', { configurable: true, value: geometry.scrollTop });
             };
+
+            // Sits the list exactly at the bottom (distance 0 <= the default scrolledToBottomOffset of 0).
+            const setAtBottomGeometry = () => setGeometry({ scrollHeight: 1000, clientHeight: 500, scrollTop: 500 });
 
             // Sits the list at the bottom, then fires the container's scroll handler.
             const scrollToBottom = () => {
@@ -309,6 +311,65 @@ describe('KbqNotificationCenter', () => {
                 service.setLoadMoreErrorMode(true);
 
                 scrollToBottom();
+                tick(scrollAuditTime);
+
+                expect(emitSpy).not.toHaveBeenCalled();
+            }));
+
+            it('emits onNextPage at the bottom when fractional zoom leaves a sub-pixel gap', fakeAsync(() => {
+                const service = getService();
+                const emitSpy = jest.spyOn(service.onNextPage, 'emit');
+
+                openCenter();
+
+                // At fractional browser zoom `scrollHeight` / `clientHeight` are rounded to integers while
+                // `scrollTop` stays fractional, so the true bottom reports a residual distance instead of 0.
+                setGeometry({ scrollHeight: 1000, clientHeight: 500, scrollTop: 499.6 });
+                getCenter().onContainerScroll();
+                tick(scrollAuditTime);
+
+                expect(emitSpy).toHaveBeenCalled();
+            }));
+
+            it('does not emit onNextPage while the list is still a few pixels from the bottom', fakeAsync(() => {
+                const service = getService();
+                const emitSpy = jest.spyOn(service.onNextPage, 'emit');
+
+                openCenter();
+
+                // The sub-pixel tolerance must not stretch into a visible early trigger.
+                setGeometry({ scrollHeight: 1000, clientHeight: 500, scrollTop: 495 });
+                getCenter().onContainerScroll();
+                tick(scrollAuditTime);
+
+                expect(emitSpy).not.toHaveBeenCalled();
+            }));
+
+            it('emits onNextPage within scrolledToBottomOffset of the bottom', fakeAsync(() => {
+                const service = getService();
+                const emitSpy = jest.spyOn(service.onNextPage, 'emit');
+
+                componentInstance.trigger().scrolledToBottomOffset = 100;
+                openCenter();
+
+                // 50px from the actual bottom — within the 100px threshold
+                setGeometry({ scrollHeight: 1000, clientHeight: 500, scrollTop: 450 });
+                getCenter().onContainerScroll();
+                tick(scrollAuditTime);
+
+                expect(emitSpy).toHaveBeenCalled();
+            }));
+
+            it('does not emit onNextPage when the distance exceeds scrolledToBottomOffset', fakeAsync(() => {
+                const service = getService();
+                const emitSpy = jest.spyOn(service.onNextPage, 'emit');
+
+                componentInstance.trigger().scrolledToBottomOffset = 100;
+                openCenter();
+
+                // 150px from the actual bottom — outside the 100px threshold
+                setGeometry({ scrollHeight: 1000, clientHeight: 500, scrollTop: 350 });
+                getCenter().onContainerScroll();
                 tick(scrollAuditTime);
 
                 expect(emitSpy).not.toHaveBeenCalled();
