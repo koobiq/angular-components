@@ -36,7 +36,9 @@ export type KbqIconButtonSize = 'compact' | 'normal';
         '[attr.disabled]': 'disabled || null',
 
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-icon-button_compact]': 'isCompact()'
+        '[class.kbq-icon-button_compact]': 'isCompact()',
+        // @deprcated Will be removed in the next major release (#DS-5338)
+        '[class.kbq-icon-button_small]': 'isCompact()'
     }
 })
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {

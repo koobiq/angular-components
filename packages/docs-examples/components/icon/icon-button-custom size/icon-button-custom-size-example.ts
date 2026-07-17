@@ -10,20 +10,20 @@ import { KbqIconButton } from '@koobiq/components/icon';
     imports: [KbqIconButton],
     template: `
         <div>
+            <div class="kbq-text-compact layout-margin-bottom-m icon-button-style-example__style-label">Normal</div>
+
+            <i kbq-icon-button="kbq-magnifying-glass_24" class="custom-icon-button_normal" [color]="colors.Theme"></i>
+        </div>
+
+        <div>
             <div class="kbq-text-compact layout-margin-bottom-m icon-button-style-example__style-label">Compact</div>
 
             <i
                 kbq-icon-button="kbq-magnifying-glass_16"
                 class="custom-icon-button_compact"
+                size="compact"
                 [color]="colors.Theme"
-                [small]="true"
             ></i>
-        </div>
-
-        <div>
-            <div class="kbq-text-compact layout-margin-bottom-m icon-button-style-example__style-label">Normal</div>
-
-            <i kbq-icon-button="kbq-magnifying-glass_24" class="custom-icon-button_normal" [color]="colors.Theme"></i>
         </div>
     `,
     styles: `

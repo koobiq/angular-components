@@ -12,12 +12,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
     imports: [KbqIconButton, KbqCheckbox, FormsModule],
     template: `
         <div class="layout-margin-bottom-l">
-            <i
-                kbq-icon-button="kbq-magnifying-glass_16"
-                [color]="colors.Theme"
-                [disabled]="disabled()"
-                [small]="false"
-            ></i>
+            <i kbq-icon-button="kbq-magnifying-glass_16" [color]="colors.Theme" [disabled]="disabled()"></i>
         </div>
 
         <kbq-checkbox [(ngModel)]="disabled">disabled</kbq-checkbox>

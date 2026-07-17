@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
-import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
 
 describe('KbqIconButton', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, TestApp]
+            imports: [NoopAnimationsModule, TestApp, SizeTestApp]
         }).compileComponents();
     });
 
@@ -65,6 +65,40 @@ describe('KbqIconButton', () => {
         expect(buttonNativeElement.disabled).toBeTruthy();
         expect(buttonNativeElement.classList.contains('kbq-disabled')).toBe(true);
     });
+
+    describe('size input', () => {
+        let fixture: ComponentFixture<SizeTestApp>;
+        let buttonEl: HTMLElement;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SizeTestApp);
+            buttonEl = fixture.debugElement.query(By.css('i')).nativeElement;
+            fixture.detectChanges();
+        });
+
+        it('should not add compact class when size is normal (default)', () => {
+            expect(buttonEl.classList.contains('kbq-icon-button_compact')).toBe(false);
+        });
+
+        it('should add compact class when size is compact', () => {
+            fixture.componentInstance.size = 'compact';
+            fixture.detectChanges();
+            expect(buttonEl.classList.contains('kbq-icon-button_compact')).toBe(true);
+        });
+
+        it('should add compact class when deprecated small input is true', () => {
+            fixture.componentInstance.small = true;
+            fixture.detectChanges();
+            expect(buttonEl.classList.contains('kbq-icon-button_compact')).toBe(true);
+        });
+
+        it('should not add compact class when size is normal and small is false', () => {
+            fixture.componentInstance.size = 'normal';
+            fixture.componentInstance.small = false;
+            fixture.detectChanges();
+            expect(buttonEl.classList.contains('kbq-icon-button_compact')).toBe(false);
+        });
+    });
 });
 
 @Component({
@@ -86,4 +120,16 @@ class TestApp {
     color: ThemePalette;
 
     onClick() {}
+}
+
+@Component({
+    selector: 'size-test-app',
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon-button="kbq-chevron-down-s_16" [size]="size" [small]="small"></i>
+    `
+})
+class SizeTestApp {
+    size: KbqIconButtonSize = 'normal';
+    small = false;
 }
