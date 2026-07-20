@@ -114,7 +114,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             flex-direction: column;
             gap: var(--kbq-size-xxs);
             padding: var(--kbq-size-xxs);
-            width: 300px;
+            width: 700px;
             height: 500px;
         }
 
