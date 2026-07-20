@@ -12,6 +12,7 @@ import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -60,7 +61,7 @@ export class KbqClampedListTrigger {
 export const KbqClampedRoot: InjectionToken<KbqClamped>;
 
 // @public (undocumented)
-export class KbqClampedText implements KbqClamped, AfterViewInit {
+export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
     constructor();
     protected readonly collapsedState: WritableSignal<boolean | undefined>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
@@ -72,6 +73,8 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnInit(): void;
     readonly rows: InputSignal<number>;
     readonly text: Signal<ElementRef<HTMLSpanElement>>;
     readonly textContainer: Signal<ElementRef<HTMLDivElement>>;
