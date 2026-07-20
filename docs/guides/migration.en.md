@@ -9,7 +9,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 3. **18.22**: component attribute changes.
 4. **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
 5. **20.2.0**: the move of the filter-bar API to signals.
-6. **21.0.0**: one shared mechanism for dropdown panel width.
+6. **20.2.0**: one shared mechanism for dropdown panel width.
 
 ### 1. Upgrade to 18.5.3
 
@@ -214,9 +214,9 @@ The schematic does not cover the following changes — check them yourself:
 
 The schematic matches receivers by explicit type annotation only, so aliases (`const fb = this.filterBar; fb.filter`) are left untouched — fix them by hand.
 
-### 6. Panel width unification (21.0.0)
+### 6. Panel width unification (20.2.0)
 
-In version 21.0.0 `autocomplete`, `select`, `tree-select`, `timezone` and `dropdown` started resolving the width of their dropdown panel through one shared mechanism. They now all expose the same three inputs — `panelWidth`, `panelMinWidth` and `panelMaxWidth` — with the same meaning:
+In version 20.2.0 `autocomplete`, `select`, `tree-select`, `timezone` and `dropdown` started resolving the width of their dropdown panel through one shared mechanism. They now all expose the same three inputs — `panelWidth`, `panelMinWidth` and `panelMaxWidth` — with the same meaning:
 
 | `panelWidth`           | Panel width                                                              |
 | ---------------------- | ------------------------------------------------------------------------ |
@@ -231,7 +231,7 @@ Panels are now also capped at **640px** through the `--kbq-panel-size-width-max`
 The `autocomplete-panel-width-auto` schematic runs automatically:
 
 ```bash
-ng update @koobiq/components@21
+ng update @koobiq/components@20
 ```
 
 Or manually:

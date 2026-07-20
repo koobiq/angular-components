@@ -6,11 +6,6 @@
             "description": "Migrates code from deprecated APIs removed in @koobiq/components v20.0.0. Handles package moves (@koobiq/cdk/{a11y,keycodes,testing} → @koobiq/components/core, navbar-ic, risk-level, experimental form-field), TypeScript identifier renames, template selector renames (e.g. <kbq-filter-search> → <kbq-search-expandable>, <kbq-datepicker-toggle> → <kbq-datepicker-toggle-icon>), attribute renames (kbqFormFieldWithoutBorders → noBorders), tooltip modifier inputs, and emits warnings for structural changes that need manual migration (onSaveAsNew, file-upload customValidation/errors, app-switcher apps).",
             "factory": "./migrations/v20-upgrade/index"
         },
-        "autocomplete-panel-width-auto": {
-            "version": "21.0.0-0",
-            "description": "Replaces `panelWidth=\"auto\"` with `panelWidth=\"fit-content\"` on `<kbq-autocomplete>`. `auto` used to be passed to CSS verbatim, so the panel shrank to fit its content; it now means \"match the host width\", matching `kbq-select` and `kbq-tree-select`. The change is silent — `auto` still type-checks and still renders — so unmigrated templates only lay out differently.",
-            "factory": "./migrations/autocomplete-panel-width-auto/index"
-        },
         "filter-bar-signals": {
             "version": "20.2.0-0",
             "description": "Migrates KbqFilterBar consumers to the signal-based API. Rewrites programmatic reads of the now-signal members (filter, pipeTemplates, isChanged, isDisabled, isReadOnly, isSaved, isSavedAndChanged) to calls and `filter = v` writes to `filter.set(v)` on receivers typed KbqFilterBar, including reads via template reference variables on <kbq-filter-bar>. Renames KbqFilterBarRefresher → KbqFilterRefresher and warns on changes/preparePopover/view-query cases that need manual migration.",
@@ -20,6 +15,11 @@
             "version": "20.2.0-0",
             "description": "Migrates KbqAlert consumers to its finished signal-based API. Rewrites value-safe programmatic reads of the now-signal members (compact, alertStyle) to calls on receivers typed KbqAlert, including reads via template reference variables on <kbq-alert> (external and inline templates). Warns — without auto-fixing — on alertColor (now a read-only InputSignal whose getter returns the raw color instead of the `kbq-alert_<color>` class), the content-query members that became protected (icon/iconItem/button/title/control/closeButton/isColored), narrowed alertColor/alertStyle inputs, the compact booleanAttribute behavior change, descendants:false content projection, view/content queries returning the instance, and KbqAlertModule no longer re-exporting A11yModule/PlatformModule.",
             "factory": "./migrations/alert-signals/index"
+        },
+        "autocomplete-panel-width-auto": {
+            "version": "20.2.0-0",
+            "description": "Replaces `panelWidth=\"auto\"` with `panelWidth=\"fit-content\"` on `<kbq-autocomplete>`. `auto` used to be passed to CSS verbatim, so the panel shrank to fit its content; it now means \"match the host width\", matching `kbq-select` and `kbq-tree-select`. The change is silent — `auto` still type-checks and still renders — so unmigrated templates only lay out differently.",
+            "factory": "./migrations/autocomplete-panel-width-auto/index"
         }
     }
 }

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
 import { ErrorStateMatcher, KbqOptgroup, KbqSelectSearch } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -19,8 +20,157 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     }
 }
 
+/** Timezone data shared by the e2e components below. */
+class BaseTimezoneStates {
+    selected = 'Europe/Kaliningrad';
+
+    data: KbqTimezoneGroup[];
+
+    constructor() {
+        const zones: KbqTimezoneZone[] = timezones.map(({ associatedZones, ...zone }) => ({
+            ...zone,
+            cities: Array.isArray(associatedZones)
+                ? associatedZones
+                      .map(({ city }) => city)
+                      .sort()
+                      .join(', ')
+                : ''
+        }));
+
+        this.data = getZonesGroupedByCountry(zones, 'Другие страны');
+    }
+}
+
+/**
+ * Closed trigger states only. The panel is never opened here, so the host stays as narrow as the
+ * fields — panel-opening cases live in their own components below.
+ */
 @Component({
     selector: 'e2e-timezone-states',
+    imports: [
+        KbqFormFieldModule,
+        KbqOptgroup,
+        KbqTimezoneModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select [(value)]="selected">
+                @for (group of data; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option [timezone]="timezone" />
+                        }
+                    </kbq-optgroup>
+                }
+
+                <!-- KbqSelect.cleaner is queried by this template reference, not by type. -->
+                <kbq-cleaner #kbqSelectCleaner />
+            </kbq-timezone-select>
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-timezone-select [placeholder]="'Empty timezone'" />
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-timezone-select [disabled]="true" [(value)]="selected">
+                @for (group of data; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option [timezone]="timezone" />
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-timezone-select [errorStateMatcher]="errorStateMatcher()" [(ngModel)]="selected">
+                @for (group of data; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option [timezone]="timezone" />
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-xxs);
+            padding: var(--kbq-size-xxs);
+            width: 300px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTimezoneStates'
+    }
+})
+export class E2eTimezoneStates extends BaseTimezoneStates {
+    errorStateMatcher() {
+        return new CustomErrorStateMatcher();
+    }
+}
+
+/**
+ * Option states inside an open panel. The options are short, so the panel stays at the field width —
+ * the host only needs to be tall enough to keep the open panel inside the screenshot frame.
+ */
+@Component({
+    selector: 'e2e-timezone-panel-states',
+    imports: [
+        KbqFormFieldModule,
+        KbqOptgroup,
+        KbqTimezoneModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select data-testid="e2eTimezoneSelect" [panelClass]="'custom-select-panel'">
+                @for (group of data; track group) {
+                    <kbq-optgroup class="cdk-keyboard-focused" [label]="group.countryName">
+                        <kbq-timezone-option [timezone]="group.zones[0]" />
+
+                        <kbq-timezone-option class="kbq-active" [timezone]="group.zones[2]" />
+
+                        <kbq-timezone-option class="kbq-selected" [timezone]="group.zones[3]" />
+
+                        <kbq-timezone-option [disabled]="true" [timezone]="group.zones[4]" />
+
+                        <kbq-timezone-option class="kbq-active kbq-selected" [timezone]="group.zones[6]" />
+                    </kbq-optgroup>
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-xxs);
+            padding: var(--kbq-size-xxs);
+            width: 300px;
+            height: 280px;
+        }
+
+        ::ng-deep .custom-select-panel.kbq-select__panel .kbq-select__content {
+            --kbq-select-panel-size-max-height: 308px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTimezonePanelStates'
+    }
+})
+export class E2eTimezonePanelStates extends BaseTimezoneStates {}
+
+/** Search inside an open panel. Same wide host as the panel states, for the same reason. */
+@Component({
+    selector: 'e2e-timezone-with-search',
     imports: [
         KbqInputModule,
         KbqOptgroup,
@@ -61,52 +211,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 <kbq-cleaner />
             </kbq-timezone-select>
         </kbq-form-field>
-
-        <kbq-form-field>
-            <kbq-timezone-select [placeholder]="'Empty timezone'" />
-        </kbq-form-field>
-
-        <kbq-form-field>
-            <kbq-timezone-select [disabled]="true" [(value)]="selected">
-                @for (group of data; track group) {
-                    <kbq-optgroup [label]="group.countryName">
-                        @for (timezone of group.zones; track timezone) {
-                            <kbq-timezone-option [timezone]="timezone" />
-                        }
-                    </kbq-optgroup>
-                }
-            </kbq-timezone-select>
-        </kbq-form-field>
-
-        <kbq-form-field>
-            <kbq-timezone-select [errorStateMatcher]="errorStateMatcher()" [(ngModel)]="selected">
-                @for (group of data; track group) {
-                    <kbq-optgroup [label]="group.countryName">
-                        @for (timezone of group.zones; track timezone) {
-                            <kbq-timezone-option [timezone]="timezone" />
-                        }
-                    </kbq-optgroup>
-                }
-            </kbq-timezone-select>
-        </kbq-form-field>
-
-        <kbq-form-field>
-            <kbq-timezone-select data-testid="e2eTimezoneSelect" [panelClass]="'custom-select-panel'">
-                @for (group of data; track group) {
-                    <kbq-optgroup class="cdk-keyboard-focused" [label]="group.countryName">
-                        <kbq-timezone-option [timezone]="group.zones[0]" />
-
-                        <kbq-timezone-option class="kbq-active" [timezone]="group.zones[2]" />
-
-                        <kbq-timezone-option class="kbq-selected" [timezone]="group.zones[3]" />
-
-                        <kbq-timezone-option [disabled]="true" [timezone]="group.zones[4]" />
-
-                        <kbq-timezone-option class="kbq-active kbq-selected" [timezone]="group.zones[6]" />
-                    </kbq-optgroup>
-                }
-            </kbq-timezone-select>
-        </kbq-form-field>
     `,
     styles: `
         :host {
@@ -115,39 +219,18 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             gap: var(--kbq-size-xxs);
             padding: var(--kbq-size-xxs);
             width: 700px;
-            height: 500px;
-        }
+            height: 380px;
 
-        ::ng-deep .custom-select-panel.kbq-select__panel .kbq-select__content {
-            --kbq-select-panel-size-max-height: 308px;
+            & kbq-form-field {
+                width: 300px;
+            }
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'data-testid': 'e2eTimezoneStates'
+        'data-testid': 'e2eTimezoneWithSearch'
     }
 })
-export class E2eTimezoneStates {
+export class E2eTimezoneWithSearch extends BaseTimezoneStates {
     control = model('');
-    selected = 'Europe/Kaliningrad';
-
-    data: KbqTimezoneGroup[];
-
-    constructor() {
-        const zones: KbqTimezoneZone[] = timezones.map(({ associatedZones, ...zone }) => ({
-            ...zone,
-            cities: Array.isArray(associatedZones)
-                ? associatedZones
-                      .map(({ city }) => city)
-                      .sort()
-                      .join(', ')
-                : ''
-        }));
-
-        this.data = getZonesGroupedByCountry(zones, 'Другие страны');
-    }
-
-    errorStateMatcher() {
-        return new CustomErrorStateMatcher();
-    }
 }
