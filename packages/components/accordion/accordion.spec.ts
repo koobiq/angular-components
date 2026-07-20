@@ -171,6 +171,36 @@ describe('KbqAccordion', () => {
                 expect(items[1].nativeElement.getAttribute('data-state')).toBe('open');
                 expect(itemsContent[1].nativeElement.getAttribute('data-state')).toBe('open');
             });
+
+            it('should be reshaped by mode while unbound, falling back to defaultValue', () => {
+                fixture = TestBed.createComponent(AccordionType);
+                const component = fixture.debugElement.componentInstance;
+
+                component.type = 'single';
+                fixture.detectChanges();
+
+                const accordion = fixture.debugElement.query(By.directive(KbqAccordion)).injector.get(KbqAccordion);
+
+                // `defaultValue` is an empty array by default, but single mode must still expose a string.
+                expect(accordion.value()).toBe('');
+
+                component.type = 'multiple';
+                fixture.detectChanges();
+
+                expect(accordion.value()).toEqual([]);
+            });
+
+            it('should be an empty string in single mode when bound to an empty array', () => {
+                fixture = TestBed.createComponent(AccordionValue);
+                const component = fixture.debugElement.componentInstance;
+
+                component.value = [];
+                fixture.detectChanges();
+
+                const accordion = fixture.debugElement.query(By.directive(KbqAccordion)).injector.get(KbqAccordion);
+
+                expect(accordion.value()).toBe('');
+            });
         });
 
         describe('disabled', () => {
@@ -1036,6 +1066,41 @@ describe('KbqAccordion', () => {
 
             item.enableAnimation();
             expect(content.style.transition).toBe('height 300ms ease-out');
+        });
+    });
+
+    describe('content height', () => {
+        /** Stubs `scrollHeight`, which jsdom always reports as `0`. */
+        const stubNaturalHeight = (element: HTMLElement, height: () => number) =>
+            Object.defineProperty(element, 'scrollHeight', { configurable: true, get: height });
+
+        it('re-measures the content on every expand, so a resized container is not clipped', () => {
+            fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+
+            const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
+            const content = fixture.debugElement.query(By.directive(KbqAccordionContent)).nativeElement as HTMLElement;
+
+            let naturalHeight = 40;
+
+            stubNaturalHeight(content, () => naturalHeight);
+
+            item.expanded = true;
+            fixture.detectChanges();
+
+            expect(content.style.getPropertyValue('--kbq-accordion-content-height')).toBe('40px');
+
+            item.expanded = false;
+            fixture.detectChanges();
+
+            // The accordion is laid out at a narrower width than at first render (sidepanel, overlay,
+            // responsive container), so the same content now wraps onto more lines.
+            naturalHeight = 80;
+
+            item.expanded = true;
+            fixture.detectChanges();
+
+            expect(content.style.getPropertyValue('--kbq-accordion-content-height')).toBe('80px');
         });
     });
 

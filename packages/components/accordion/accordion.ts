@@ -122,15 +122,19 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     // `input()` (not `model()`): a `model()` would auto-create a colliding `valueChange` output.
     protected readonly valueInput = input<string[] | string | undefined>(undefined, { alias: 'value' });
 
-    /** The controlled value of the item(s) to expand, reshaped by mode. Supports `[(value)]`. */
+    /**
+     * The controlled value of the item(s) to expand, reshaped by mode. Supports `[(value)]`.
+     * Falls back to `defaultValue` while `value` is unbound.
+     *
+     * Always an array in `multiple` mode and always a string in `single` mode — an empty string
+     * when nothing is expanded, matching what `valueChange` emits.
+     */
     readonly value = computed<string[] | string>(() => {
-        const value = this.valueInput();
-
-        if (value === undefined) return this.defaultValue();
+        const value = this.valueInput() ?? this.defaultValue();
 
         const array = Array.isArray(value) ? value : [value];
 
-        return this.isMultiple ? array : array[0];
+        return this.isMultiple ? array : (array[0] ?? '');
     });
 
     /** Emits the current value whenever the expanded state of the accordion changes. */

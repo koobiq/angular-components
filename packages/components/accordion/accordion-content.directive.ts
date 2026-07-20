@@ -1,6 +1,4 @@
-import { Platform } from '@angular/cdk/platform';
 import {
-    AfterContentInit,
     afterNextRender,
     AfterRenderRef,
     AfterViewInit,
@@ -29,9 +27,8 @@ import { KbqAccordionItem } from './accordion-item';
     },
     exportAs: 'kbqAccordionContent'
 })
-export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
+export class KbqAccordionContentDirective implements AfterViewInit {
     private readonly renderer: Renderer2 = inject(Renderer2);
-    private readonly platform = inject(Platform);
 
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
@@ -54,8 +51,15 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     private savedTransition: string;
     private readonly afterRenderRef?: AfterRenderRef;
 
+    /** Whether the first browser render has happened, i.e. whether the content can be measured. */
+    private rendered = false;
+
     constructor() {
+        // `afterNextRender` never runs on the server, so no platform check is needed here.
         this.afterRenderRef = afterNextRender(() => {
+            this.rendered = true;
+
+            this.updateHeight();
             this.enableAnimation();
 
             this.afterRenderRef?.destroy();
@@ -66,20 +70,14 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
         this.disableAnimation();
     }
 
-    ngAfterContentInit(): void {
-        if (!this.platform.isBrowser) return;
-
-        const { height } = this.nativeElement.getBoundingClientRect();
-
-        this.renderer.setStyle(
-            this.nativeElement,
-            '--kbq-accordion-content-height',
-            `${height}px`,
-            RendererStyleFlags2.DashCase
-        );
-    }
-
     toggle() {
+        // Re-measure while the content is still collapsed. Its natural height depends on the width
+        // it is finally laid out at, and that width is not known at first render when the accordion
+        // lives in a container sized afterwards (sidepanel, overlay, responsive layout).
+        if (this.rendered && this.item.expanded && this.hidden()) {
+            this.updateHeight();
+        }
+
         this.hidden.set(!this.item.expanded);
     }
 
@@ -91,5 +89,22 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
 
     enableAnimation() {
         this.nativeElement.style.transition = this.savedTransition;
+    }
+
+    /**
+     * Publishes the natural height of the projected content as `--kbq-accordion-content-height`,
+     * which the open state animates towards.
+     *
+     * `scrollHeight` is used rather than `getBoundingClientRect()`: the host is `overflow: hidden`
+     * and collapsed to `height: 0` while closed, so its box reports `0`, whereas `scrollHeight`
+     * still reports the height of the content it clips.
+     */
+    private updateHeight(): void {
+        this.renderer.setStyle(
+            this.nativeElement,
+            '--kbq-accordion-content-height',
+            `${this.nativeElement.scrollHeight}px`,
+            RendererStyleFlags2.DashCase
+        );
     }
 }

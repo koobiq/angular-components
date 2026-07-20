@@ -74,7 +74,7 @@ export class KbqAccordionContent {
 }
 
 // @public (undocumented)
-export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
+export class KbqAccordionContentDirective implements AfterViewInit {
     constructor();
     get contentId(): string;
     // (undocumented)
@@ -84,8 +84,6 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     protected readonly hidden: _angular_core.WritableSignal<boolean>;
     protected readonly item: KbqAccordionItem;
     protected readonly nativeElement: HTMLElement;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
