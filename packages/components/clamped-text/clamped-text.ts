@@ -9,6 +9,7 @@ import {
     inject,
     input,
     numberAttribute,
+    OnInit,
     output,
     signal,
     viewChild,
@@ -74,7 +75,7 @@ import {
     },
     exportAs: 'kbqClampedText'
 })
-export class KbqClampedText implements KbqClamped, AfterViewInit {
+export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
     /**
      * Max rows before text is clamped.
      * @default kbqClampedTextDefaultMaxRows
@@ -142,6 +143,12 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
         toObservable(this.rows)
             .pipe(takeUntilDestroyed())
             .subscribe((rows) => this.lineClamp.set(rows));
+    }
+
+    ngOnInit(): void {
+        // pairwise() in the constructor needs 2 emissions before firing, so seed isToggleCollapsed
+        // here (after inputs are set) to prevent the resize observer from defaulting to collapsed.
+        this.isToggleCollapsed.set(this.isCollapsed());
     }
 
     ngAfterViewInit(): void {

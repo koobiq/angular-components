@@ -15,6 +15,7 @@ import { DevLocaleSelector } from '../locale-selector';
         <hr />
         <clamped-list-overview-example />
         <hr />
+        <clamped-text-external-state-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

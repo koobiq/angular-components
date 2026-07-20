@@ -48,6 +48,21 @@ class TestClampedTextDefault {
     }
 }
 
+@Component({
+    selector: 'test-clamped-text-with-initial-state',
+    imports: [KbqClampedText],
+    template: `
+        <kbq-clamped-text [isCollapsed]="isCollapsed()">
+            {{ text }}
+        </kbq-clamped-text>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestClampedTextWithInitialState {
+    protected readonly text = Array.from({ length: 100 }, (_, i) => `Text ${i}`).join(' ');
+    readonly isCollapsed = signal<boolean | undefined>(false);
+}
+
 describe('KbqClampedText', () => {
     it('should emit collapsed change on init', async () => {
         const fixture = createComponent(TestClampedTextDefault);
@@ -70,6 +85,28 @@ describe('KbqClampedText', () => {
 
         expect(componentInstance.collapsed()).not.toEqual(previousCollapsedState);
         expect(componentInstance.collapsed()).toBe(false);
+    });
+
+    describe('when text is long enough to clamp', () => {
+        beforeEach(() => {
+            // Make getRowsCount() return 20 so hasToggle=true survives updateToggleVisibilityState()
+            const mockRects = Object.assign(
+                Array.from({ length: 20 }, (_, i) => ({ top: i * 20 })),
+                { item: () => null }
+            ) as unknown as DOMRectList;
+
+            jest.spyOn(HTMLElement.prototype, 'getClientRects').mockReturnValue(mockRects);
+        });
+
+        afterEach(() => jest.restoreAllMocks());
+
+        it('should remain expanded when isCollapsed=false is set initially', async () => {
+            const fixture = createComponent(TestClampedTextWithInitialState);
+
+            await fixture.whenStable();
+
+            expect(fixture.nativeElement.querySelector('kbq-clamped-text').getAttribute('aria-expanded')).toBe('true');
+        });
     });
 
     it('should emit isCollapsedChange when isCollapsed input changes', async () => {
