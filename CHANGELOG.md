@@ -1,3 +1,14 @@
+## 19.8.4 (2026-07-20)
+
+### Koobiq
+
+ * bug fix  **badge:** async icon ([#DS-5272](https://github.com/koobiq/angular-components/issues/issue/DS-5272)) ([#1754](https://github.com/koobiq/angular-components/issues/1754)) ([6689933](https://github.com/koobiq/angular-components/commit/6689933e79cfb5cb87268e02b6a3391b92e11510))
+ * bug fix  **inline-edit,autocomplete:** apply reposition & size recalculation ([#DS-5327](https://github.com/koobiq/angular-components/issues/issue/DS-5327)) ([#1735](https://github.com/koobiq/angular-components/issues/1735)) ([12a8d46](https://github.com/koobiq/angular-components/commit/12a8d464486df085c96db75522b276ec209ab0d0))
+ * bug fix  **search-expandable:** re-render on toggle() invoked from an external control ([#DS-5313](https://github.com/koobiq/angular-components/issues/issue/DS-5313)) ([#1728](https://github.com/koobiq/angular-components/issues/1728)) ([c12bd27](https://github.com/koobiq/angular-components/commit/c12bd279e3a8317528dc2af5c7c08665e864efe8))
+ * bug fix  set proper ru-RU billion formatter key ([#DS-5286](https://github.com/koobiq/angular-components/issues/issue/DS-5286)) ([#1734](https://github.com/koobiq/angular-components/issues/1734)) ([dc2d000](https://github.com/koobiq/angular-components/commit/dc2d000a595e524f5bbdd1aa33338293b92197bd))
+ * bug fix  **timepicker:** incorrect status for async validators ([#DS-5268](https://github.com/koobiq/angular-components/issues/issue/DS-5268)) ([#1755](https://github.com/koobiq/angular-components/issues/1755)) ([b0dbfe7](https://github.com/koobiq/angular-components/commit/b0dbfe7156ff4554432468e6b1d12b1155f2d47c))
+ * bug fix  **timezone:** removed space from utc formatter ([#DS-2780](https://github.com/koobiq/angular-components/issues/issue/DS-2780)) ([#1744](https://github.com/koobiq/angular-components/issues/1744)) ([daeb2fc](https://github.com/koobiq/angular-components/commit/daeb2fcaf7cc2ed9e1ae9211f72e742086128a21))
+
 ## 19.8.3 (2026-07-06)
 
 ### Koobiq

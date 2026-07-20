@@ -2826,6 +2826,7 @@ import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqIconItem } from '@koobiq/components/icon';
+import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 
@@ -2887,7 +2888,7 @@ export enum KbqBadgeColors {
 }
 
 // @public (undocumented)
-export class KbqBadgeCssStyler implements AfterContentInit {
+export class KbqBadgeCssStyler implements AfterContentInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
     // (undocumented)
     icons: QueryList<KbqIcon>;
@@ -2897,6 +2898,8 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     nativeElement: HTMLElement;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     updateClassModifierForIcons(): void;
     // (undocumented)
@@ -19601,7 +19604,7 @@ A search field that expands from a compact icon button.
 
 <!-- example(search-expandable-overview) -->
 
-The expandable search can be used, for example, in an action panel:
+The expandable search can be used, for example, in an action panel. When the bound model already holds a value, the search renders expanded:
 
 <!-- example(search-expandable-in-header) -->
 
@@ -25470,7 +25473,7 @@ export enum TimeParts {
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
@@ -25483,6 +25486,7 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'timepicker-overview-example',
     imports: [KbqFormFieldModule, KbqToolTipModule, KbqIconModule, FormsModule, KbqTimepickerModule, LuxonDateModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <div class="docs-row">
             <kbq-form-field #tooltip="kbqWarningTooltip" [kbqWarningTooltip]="'Только цифры'">
