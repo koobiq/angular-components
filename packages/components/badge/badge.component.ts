@@ -1,14 +1,15 @@
 import {
+    AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
     Directive,
-    effect,
     ElementRef,
     forwardRef,
     Input,
+    OnDestroy,
     QueryList,
     Renderer2,
     SkipSelf,
@@ -16,6 +17,7 @@ import {
 } from '@angular/core';
 import { getNodesWithoutComments } from '@koobiq/components/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
+import { Subscription } from 'rxjs';
 
 export enum KbqBadgeColors {
     FadeContrast = 'fade-contrast',
@@ -49,12 +51,14 @@ export const badgeRightIconClassName = 'kbq-badge-icon_right';
 @Directive({
     selector: 'kbq-badge'
 })
-export class KbqBadgeCssStyler {
+export class KbqBadgeCssStyler implements AfterContentInit, OnDestroy {
     @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
 
     nativeElement: HTMLElement;
 
     isIconButton: boolean = false;
+
+    private iconsSubscription: Subscription;
 
     constructor(
         elementRef: ElementRef<HTMLElement>,
@@ -62,13 +66,20 @@ export class KbqBadgeCssStyler {
         @SkipSelf() private cdr: ChangeDetectorRef
     ) {
         this.nativeElement = elementRef.nativeElement;
-
-        // Icons projected asynchronously (e.g. behind an `@if`) update the `icons` signal
-        // after content init, so class assignment must react to the signal, not just run once.
-        effect(() => this.updateClassModifierForIcons());
     }
 
-    /** @docs-private */
+    ngAfterContentInit() {
+        this.updateClassModifierForIcons();
+
+        // Icons projected asynchronously (e.g. behind an `*ngIf`) update the QueryList after
+        // content init, so class assignment must also react to `changes`, not just run once.
+        this.iconsSubscription = this.icons.changes.subscribe(() => this.updateClassModifierForIcons());
+    }
+
+    ngOnDestroy() {
+        this.iconsSubscription?.unsubscribe();
+    }
+
     updateClassModifierForIcons() {
         this.renderer.removeClass(this.nativeElement, badgeLeftIconClassName);
         this.renderer.removeClass(this.nativeElement, badgeRightIconClassName);
