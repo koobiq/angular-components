@@ -14,7 +14,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
-import { KbqTooltipRegistry } from './tooltip-registry';
+import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
@@ -32,6 +32,25 @@ function openAndAssertTooltip<T>(componentFixture: ComponentFixture<T>, triggerE
     expect(tooltip).toBeTruthy();
 
     return tooltip;
+}
+
+/** Opens a tooltip by hover and settles the deferred show, the reposition timeout and change detection. */
+function showByHover<T>(componentFixture: ComponentFixture<T>, element: HTMLElement) {
+    dispatchMouseEvent(element, 'mouseenter');
+    componentFixture.detectChanges();
+    tick(tooltipDefaultEnterDelayWithDefer);
+    componentFixture.detectChanges();
+    tick();
+    componentFixture.detectChanges();
+}
+
+/** Opens a tooltip by keyboard focus — a non-keyboard focus origin is ignored by the trigger. */
+function showByKeyboardFocus<T>(componentFixture: ComponentFixture<T>, element: HTMLElement) {
+    dispatchKeyboardEvent(document, 'keydown', TAB);
+    dispatchFakeEvent(element, 'focus');
+    componentFixture.detectChanges();
+    flush();
+    componentFixture.detectChanges();
 }
 
 describe('KbqTooltip', () => {
@@ -419,36 +438,15 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        /** Opens a tooltip by hover and settles the deferred show, the reposition timeout and change detection. */
-        const showByHover = (element: HTMLElement) => {
-            dispatchMouseEvent(element, 'mouseenter');
-            fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-        };
-
-        /** Opens a tooltip by keyboard focus — a non-keyboard focus origin is ignored by the trigger. */
-        const showByKeyboardFocus = (element: HTMLElement) => {
-            dispatchKeyboardEvent(document, 'keydown', TAB);
-            dispatchFakeEvent(element, 'focus');
-            fixture.detectChanges();
-            flush();
-            fixture.detectChanges();
-        };
-
         it('should hide the previously visible tooltip when another one is shown', fakeAsync(() => {
-            showByHover(component.hoverTrigger()!.nativeElement);
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
 
-            showByKeyboardFocus(component.focusTrigger().nativeElement);
+            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('FOCUS-B');
             expect(overlayContainerElement.textContent).not.toContain('HOVER-A');
-
-            flush();
         }));
 
         it('should hide the previously visible tooltip opened by click', fakeAsync(() => {
@@ -461,16 +459,14 @@ describe('KbqTooltip', () => {
 
             expect(overlayContainerElement.textContent).toContain('CLICK-E');
 
-            showByHover(component.hoverTrigger()!.nativeElement);
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
             expect(overlayContainerElement.textContent).not.toContain('CLICK-E');
-
-            flush();
         }));
 
         it('should close the previous tooltip when shown via showForMouseEvent', fakeAsync(() => {
-            showByHover(component.hoverTrigger()!.nativeElement);
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
 
@@ -488,18 +484,39 @@ describe('KbqTooltip', () => {
 
             expect(overlayContainerElement.textContent).toContain('CLICK-E');
             expect(overlayContainerElement.textContent).not.toContain('HOVER-A');
+        }));
 
-            flush();
+        it('should force-close a tooltip via hideAsInactive even while its own overlay is hovered', fakeAsync(() => {
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+
+            const hoverDirective = component.hoverDirective()!;
+
+            // Reproduce the exact state `hide()` silently no-ops on: the last recorded trigger event is
+            // `mouseleave`, and the pop-up itself reports being hovered (mouse moved onto its own panel).
+            hoverDirective['instance'].hovered.next(true);
+            hoverDirective.triggerName = 'mouseleave';
+            hoverDirective.hide(0);
+            tick(defaultLeaveDelay);
+            fixture.detectChanges();
+
+            // Confirms the guard: an ordinary hide() attempt in this state is indeed a no-op.
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+
+            // hideAsInactive() (triggered by the registry below) is documented to bypass that guard.
+            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('FOCUS-B');
+            expect(overlayContainerElement.textContent).not.toContain('HOVER-A');
         }));
 
         it('should keep both tooltips visible when kbqTooltipSingleInstance is false', fakeAsync(() => {
-            showByHover(component.hoverTrigger()!.nativeElement);
-            showByHover(component.independentTrigger().nativeElement);
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+            showByHover(fixture, component.independentTrigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('INDEPENDENT-D');
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
-
-            flush();
         }));
 
         it('should not close a manually controlled tooltip', fakeAsync(() => {
@@ -510,16 +527,14 @@ describe('KbqTooltip', () => {
 
             expect(overlayContainerElement.textContent).toContain('MANUAL-C');
 
-            showByHover(component.hoverTrigger()!.nativeElement);
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
             expect(overlayContainerElement.textContent).toContain('MANUAL-C');
-
-            flush();
         }));
 
         it('should not be closed by a manually controlled tooltip', fakeAsync(() => {
-            showByHover(component.hoverTrigger()!.nativeElement);
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             component.manualDirective().show(0);
             fixture.detectChanges();
@@ -528,8 +543,6 @@ describe('KbqTooltip', () => {
 
             expect(overlayContainerElement.textContent).toContain('MANUAL-C');
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
-
-            flush();
         }));
 
         it('should emit kbqVisibleChange(false) for the automatically closed tooltip', fakeAsync(() => {
@@ -537,20 +550,18 @@ describe('KbqTooltip', () => {
 
             component.hoverDirective()!.visibleChange.subscribe(visibleChangeSpy);
 
-            showByHover(component.hoverTrigger()!.nativeElement);
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(visibleChangeSpy).toHaveBeenLastCalledWith(true);
 
-            showByKeyboardFocus(component.focusTrigger().nativeElement);
+            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
 
             expect(visibleChangeSpy).toHaveBeenLastCalledWith(false);
             expect(component.hoverDirective()!.isOpen).toBe(false);
-
-            flush();
         }));
 
         it('should release the destroyed trigger so it is not retained as the visible one', fakeAsync(() => {
-            showByHover(component.hoverTrigger()!.nativeElement);
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(registry['visibleTooltip']).toBe(component.hoverDirective());
 
@@ -559,6 +570,55 @@ describe('KbqTooltip', () => {
             flush();
 
             expect(registry['visibleTooltip']).toBeNull();
+        }));
+
+        it('should not retroactively exempt a tooltip that is toggled out of the group while still open', fakeAsync(() => {
+            showByHover(fixture, component.toggleableTrigger().nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('TOGGLE-F');
+
+            component.toggleableSingleInstance = false;
+            fixture.detectChanges();
+
+            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('FOCUS-B');
+            // Characterizes current behavior: `participatesInSingleInstance` is only read once, inside the
+            // `visibleChange` subscription set up in the constructor — flipping `kbqTooltipSingleInstance`
+            // while the tooltip is already open does not retroactively free its registry slot.
+            expect(overlayContainerElement.textContent).not.toContain('TOGGLE-F');
+        }));
+    });
+
+    describe('single visible tooltip / app-wide default disabled via DI', () => {
+        let fixture: ComponentFixture<KbqTooltipSingleInstanceComponent>;
+        let component: KbqTooltipSingleInstanceComponent;
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqToolTipModule, NoopAnimationsModule, KbqTooltipSingleInstanceComponent],
+                providers: [{ provide: KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, useValue: false }]
+            });
+            inject([OverlayContainer], (oc: OverlayContainer) => {
+                overlayContainer = oc;
+                overlayContainerElement = oc.getContainerElement();
+            })();
+
+            fixture = TestBed.createComponent(KbqTooltipSingleInstanceComponent);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should keep both tooltips visible when the app-wide default is provided as false', fakeAsync(() => {
+            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+
+            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('FOCUS-B');
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
         }));
     });
 });
@@ -575,6 +635,9 @@ describe('KbqTooltip', () => {
         <span #manualTrigger [kbqTrigger]="'manual'" [kbqTooltip]="'MANUAL-C'">C</span>
         <span #independentTrigger [kbqTooltip]="'INDEPENDENT-D'" [kbqTooltipSingleInstance]="false">D</span>
         <span #clickTrigger [kbqTrigger]="'click'" [kbqTooltip]="'CLICK-E'">E</span>
+        <span #toggleableTrigger [kbqTooltip]="'TOGGLE-F'" [kbqTooltipSingleInstance]="toggleableSingleInstance">
+            F
+        </span>
     `
 })
 class KbqTooltipSingleInstanceComponent {
@@ -585,6 +648,9 @@ class KbqTooltipSingleInstanceComponent {
     readonly independentTrigger = viewChild.required<ElementRef>('independentTrigger');
     readonly clickTrigger = viewChild.required<ElementRef>('clickTrigger');
     readonly clickDirective = viewChild.required('clickTrigger', { read: KbqTooltipTrigger });
+    readonly toggleableTrigger = viewChild.required<ElementRef>('toggleableTrigger');
+
+    toggleableSingleInstance = true;
 
     hoverTriggerRendered = true;
 }

@@ -448,10 +448,10 @@ export class KbqTooltipTrigger
      * makes the host focusable (so the tooltip can still be triggered) and enables the tooltip, otherwise disables it.
      *
      * Also joins the "only one tooltip is visible at a time" group. Both the subscription and the teardown live
-     * here rather than in `ngAfterViewInit`/`ngOnDestroy` because several subclasses (`KbqTitleDirective`,
-     * `KbqEllipsisCenterDirective`, `KbqNavbarItem`, `KbqPasswordToggle`) override those hooks without calling
-     * `super`, and `destroyRef` also covers a trigger destroyed while its tooltip is still visible — that path
-     * disposes the overlay without emitting `visibleChange(false)`.
+     * here rather than in `ngAfterViewInit`/`ngOnDestroy` because several subclasses override those hooks:
+     * `KbqTitleDirective` and `KbqEllipsisCenterDirective` skip `super.ngAfterViewInit()`, and `KbqPasswordToggle`
+     * skips `super` in both hooks entirely. `destroyRef` additionally covers a trigger destroyed while its
+     * tooltip is still visible — that path disposes the overlay without emitting `visibleChange(false)`.
      */
     constructor() {
         super();

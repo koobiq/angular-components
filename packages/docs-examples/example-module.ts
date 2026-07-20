@@ -1009,6 +1009,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "clamped-list-example.ts",
     "importPath": "components/clamped-text"
   },
+  "clamped-text-external-state": {
+    "packagePath": "components/clamped-text/clamped-text-external-state",
+    "title": "Clamped-text external state",
+    "componentName": "ClampedTextExternalStateExample",
+    "files": [
+      "clamped-text-external-state-example.ts"
+    ],
+    "selector": "clamped-text-external-state-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-text-external-state-example.ts",
+    "importPath": "components/clamped-text"
+  },
   "clamped-text-overview": {
     "packagePath": "components/clamped-text/clamped-text-overview",
     "title": "Clamped-text overview",
@@ -6841,6 +6853,8 @@ return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-list-overview':
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-list':
+return import('@koobiq/docs-examples/components/clamped-text');
+  case 'clamped-text-external-state':
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-text-overview':
 return import('@koobiq/docs-examples/components/clamped-text');
