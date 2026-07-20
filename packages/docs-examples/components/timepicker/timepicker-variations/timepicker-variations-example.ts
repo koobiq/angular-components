@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
@@ -23,7 +23,7 @@ import { DateTime } from 'luxon';
         KbqIconModule,
         LuxonDateModule
     ],
-    templateUrl: 'timepicker-variations-example.html',
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     styleUrls: ['timepicker-variations-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

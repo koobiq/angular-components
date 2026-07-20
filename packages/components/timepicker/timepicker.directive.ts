@@ -449,13 +449,18 @@ export class KbqTimepicker<D>
     onBlur() {
         this.focusChanged(false);
 
-        if (this.viewValue === this.getTimeStringFromDate(this.value, this.format)) {
-            return;
+        if (this.viewValue !== this.getTimeStringFromDate(this.value, this.format)) {
+            this.setViewValue(this.formatUserPaste(this.viewValue));
+
+            this.onInput();
         }
 
-        this.setViewValue(this.formatUserPaste(this.viewValue));
-
-        this.onInput();
+        // Re-run validation now that the field lost focus: while focused, KbqValidateDirective
+        // suppresses validation errors, so status has to be recomputed explicitly here.
+        if (this.useLegacyValidation && this.control) {
+            this.control.updateValueAndValidity({ emitEvent: false });
+            (this.control.statusChanges as EventEmitter<string>).emit(this.control.status);
+        }
     }
 
     onPaste($event) {
