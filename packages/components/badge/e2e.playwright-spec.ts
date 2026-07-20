@@ -12,4 +12,20 @@ test.describe('KbqBadgeModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
     });
+
+    test.describe('E2eBadgeAsyncIcon', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eBadgeAsyncIcon');
+
+        test('adds icon spacing when the icon is projected asynchronously', async ({ page }) => {
+            await page.goto('/E2eBadgeAsyncIcon');
+            const locator = getComponent(page);
+
+            await locator.getByTestId('e2eShowIcon').click();
+
+            const icon = locator.locator('[kbq-icon]');
+            const marginLeft = await icon.evaluate((element) => parseFloat(getComputedStyle(element).marginLeft));
+
+            expect(marginLeft).toBe(4);
+        });
+    });
 });

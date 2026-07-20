@@ -12,6 +12,7 @@ import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqIconItem } from '@koobiq/components/icon';
+import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 
@@ -73,7 +74,7 @@ export enum KbqBadgeColors {
 }
 
 // @public (undocumented)
-export class KbqBadgeCssStyler implements AfterContentInit {
+export class KbqBadgeCssStyler implements AfterContentInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
     // (undocumented)
     icons: QueryList<KbqIcon>;
@@ -83,6 +84,8 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     nativeElement: HTMLElement;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     updateClassModifierForIcons(): void;
     // (undocumented)

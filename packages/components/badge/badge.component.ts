@@ -9,6 +9,7 @@ import {
     ElementRef,
     forwardRef,
     Input,
+    OnDestroy,
     QueryList,
     Renderer2,
     SkipSelf,
@@ -16,6 +17,7 @@ import {
 } from '@angular/core';
 import { getNodesWithoutComments } from '@koobiq/components/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
+import { Subscription } from 'rxjs';
 
 export enum KbqBadgeColors {
     FadeContrast = 'fade-contrast',
@@ -49,12 +51,14 @@ export const badgeRightIconClassName = 'kbq-badge-icon_right';
 @Directive({
     selector: 'kbq-badge'
 })
-export class KbqBadgeCssStyler implements AfterContentInit {
+export class KbqBadgeCssStyler implements AfterContentInit, OnDestroy {
     @ContentChildren(forwardRef(() => KbqIcon)) icons: QueryList<KbqIcon>;
 
     nativeElement: HTMLElement;
 
     isIconButton: boolean = false;
+
+    private iconsSubscription: Subscription;
 
     constructor(
         elementRef: ElementRef<HTMLElement>,
@@ -66,6 +70,14 @@ export class KbqBadgeCssStyler implements AfterContentInit {
 
     ngAfterContentInit() {
         this.updateClassModifierForIcons();
+
+        // Icons projected asynchronously (e.g. behind an `*ngIf`) update the QueryList after
+        // content init, so class assignment must also react to `changes`, not just run once.
+        this.iconsSubscription = this.icons.changes.subscribe(() => this.updateClassModifierForIcons());
+    }
+
+    ngOnDestroy() {
+        this.iconsSubscription?.unsubscribe();
     }
 
     updateClassModifierForIcons() {
