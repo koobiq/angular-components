@@ -1,5 +1,5 @@
-import { Component, DebugElement, Inject, Type, viewChild, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { Component, DebugElement, Inject, Type, ViewChild, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
     FormControl,
@@ -20,40 +20,51 @@ import {
     DateAdapter,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
-    kbqDisableLegacyValidationDirectiveProvider,
-    kbqErrorStateMatcherProvider,
     KbqLocaleService,
     ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher
+    ShowOnFormSubmitErrorStateMatcher,
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
-import { map, Observable, timer } from 'rxjs';
+import { Observable, map, timer } from 'rxjs';
 import {
     DEFAULT_TIME_FORMAT,
     KbqTimepicker,
     KbqTimepickerModule,
     TIMEFORMAT_PLACEHOLDERS,
-    TimeFormats,
-    TimeFormatToLocaleKeys
+    TimeFormatToLocaleKeys,
+    TimeFormats
 } from './index';
 
-const getTimepickerInputElement = (fixture: ComponentFixture<unknown>): HTMLInputElement =>
-    fixture.debugElement.query(By.directive(KbqTimepicker)).nativeElement;
+const createStandaloneComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
+    const fixture = TestBed.createComponent<T>(component);
+
+    fixture.autoDetectChanges();
+
+    return fixture;
+};
 
 const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
     fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
 
-function createComponent<T>(component: Type<T>, imports: Type<any>[] = []): ComponentFixture<T> {
-    TestBed.configureTestingModule({ imports: [component, ...imports] });
-
-    return TestBed.createComponent(component);
-}
+const getTimepickerElement = (fixture: ComponentFixture<unknown>): HTMLInputElement =>
+    fixture.debugElement.query(By.directive(KbqTimepicker)).nativeElement;
 
 const customErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.untouched
 };
+
+const ASYNC_VALIDATOR_TIMER_DUE = 1000;
+
+const getAsyncValidator =
+    (valid: boolean = true): AsyncValidatorFn =>
+    (): Observable<ValidationErrors | null> =>
+        timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 @Component({
     imports: [KbqTimepickerModule, KbqFormFieldModule, ReactiveFormsModule, KbqLuxonDateModule],
@@ -497,6 +508,27 @@ describe('KbqTimepicker', () => {
             fixture.detectChanges();
             expect(inputElementDebug.nativeElement.classList.contains('ng-invalid')).toBe(true);
         });
+
+        it('Should invalidate time lower then min-time after typing while focused and blurring', () => {
+            testComponent.minTime = adapter.createDateTime(1970, 1, 11, 13, 59, 0);
+            fixture.detectChanges();
+
+            inputElementDebug.triggerEventHandler('focus', { target: inputElementDebug.nativeElement });
+            fixture.detectChanges();
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '10:00'
+                }
+            });
+            fixture.detectChanges();
+
+            inputElementDebug.triggerEventHandler('blur', { target: inputElementDebug.nativeElement });
+            fixture.detectChanges();
+
+            expect(inputElementDebug.nativeElement.classList.contains('ng-invalid')).toBe(true);
+        });
     });
 
     describe('Display time corresponding to timeformat', () => {
@@ -906,251 +938,518 @@ describe('KbqTimepicker', () => {
             expect(inputNativeElement.value).toBe('12:00:00');
         });
     });
-});
 
-@Component({
-    selector: 'test-app',
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqTimepickerModule,
-        KbqIconModule,
-        KbqLuxonDateModule
-    ],
-    template: `
-        <kbq-form-field>
-            <i kbqPrefix kbq-icon="kbq-clock_16"></i>
-            <input kbqTimepicker [format]="timeFormat" [formControl]="formControl" />
-        </kbq-form-field>
-    `
-})
-class TimePickerWithNullFormControlValue {
-    formControl: UntypedFormControl = new UntypedFormControl();
-    timeFormat: TimeFormats;
-}
+    @Component({
+        selector: 'test-app',
+        template: `
+            <kbq-form-field>
+                <i kbqPrefix kbq-icon="kbq-clock_16"></i>
+                <input kbqTimepicker [format]="timeFormat" [formControl]="formControl" />
+            </kbq-form-field>
+        `
+    })
+    class TimePickerWithNullFormControlValue {
+        formControl: UntypedFormControl = new UntypedFormControl();
+        timeFormat: string;
+    }
 
-describe('KbqTimepicker with null formControl value', () => {
-    let fixture: ComponentFixture<TimePickerWithNullFormControlValue>;
-    let testComponent: TimePickerWithNullFormControlValue;
-    let inputElementDebug;
+    describe('with null formControl value', () => {
+        let fixture: ComponentFixture<TimePickerWithNullFormControlValue>;
+        let testComponent: TimePickerWithNullFormControlValue;
+        let inputElementDebug;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                FormsModule,
-                ReactiveFormsModule,
-                KbqFormFieldModule,
-                KbqTimepickerModule,
-                KbqIconModule,
-                KbqLuxonDateModule,
-                TimePickerWithNullFormControlValue
-            ]
-        }).compileComponents();
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [
+                    FormsModule,
+                    ReactiveFormsModule,
+                    KbqFormFieldModule,
+                    KbqTimepickerModule,
+                    KbqIconModule,
+                    KbqLuxonDateModule
+                ],
+                declarations: [TimePickerWithNullFormControlValue]
+            }).compileComponents();
 
-        const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
+            const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
 
-        jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
-            mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
-        );
+            jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
+                mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
+            );
 
-        fixture = TestBed.createComponent(TimePickerWithNullFormControlValue);
-        testComponent = fixture.debugElement.componentInstance;
-        inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
+            fixture = TestBed.createComponent(TimePickerWithNullFormControlValue);
+            testComponent = fixture.debugElement.componentInstance;
+            inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
 
-        fixture.detectChanges();
-    });
-
-    // todo fix me after update angular
-    xit('Paste value from clipboard when formControl value is null', () => {
-        testComponent.timeFormat = TimeFormats.HHmmss;
-        fixture.detectChanges();
-
-        expect(testComponent.formControl.value).toBeNull();
-
-        inputElementDebug.triggerEventHandler('paste', {
-            preventDefault: () => null,
-            clipboardData: {
-                getData: () => '19:01:02'
-            }
+            fixture.detectChanges();
         });
-        fixture.detectChanges();
 
-        expect(testComponent.formControl.value.toString()).toContain('2020-01-01T19:01:02');
-    });
+        it('Paste value from clipboard when formControl value is null', () => {
+            testComponent.timeFormat = 'HH:mm:ss';
+            fixture.detectChanges();
 
-    // todo fix me after update angular
-    xit('Create time from input when formControl value is null', fakeAsync(() => {
-        testComponent.timeFormat = TimeFormats.HHmm;
-        fixture.detectChanges();
+            expect(testComponent.formControl.value).toBeNull();
 
-        expect(testComponent.formControl.value).toBeNull();
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '19:01:02'
+                }
+            });
+            fixture.detectChanges();
 
-        inputElementDebug.nativeElement.value = '18:09';
-        dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-        tick(1);
-
-        fixture.detectChanges();
-
-        expect(testComponent.formControl.value.toString()).toContain('2020-01-01T18:09');
-    }));
-});
-
-@Component({
-    selector: 'test-app',
-    imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule],
-    template: `
-        <kbq-form-field>
-            <i kbqPrefix kbq-icon="kbq-clock_16"></i>
-            <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
-        </kbq-form-field>
-    `
-})
-class TimePickerWithNullModelValue {
-    timeFormat: TimeFormats;
-    model: any = null;
-}
-
-describe('KbqTimepicker with null model value', () => {
-    let fixture: ComponentFixture<TimePickerWithNullModelValue>;
-    let testComponent: TimePickerWithNullModelValue;
-    let inputElementDebug;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                FormsModule,
-                KbqFormFieldModule,
-                KbqTimepickerModule,
-                KbqIconModule,
-                KbqLuxonDateModule,
-                TimePickerWithNullModelValue
-            ]
-        }).compileComponents();
-
-        const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
-
-        jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
-            mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
-        );
-
-        fixture = TestBed.createComponent(TimePickerWithNullModelValue);
-        testComponent = fixture.debugElement.componentInstance;
-        inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
-
-        fixture.detectChanges();
-    });
-
-    // todo fix me after update angular
-    xit('Paste value from clipboard when model value is null', () => {
-        testComponent.timeFormat = TimeFormats.HHmmss;
-        fixture.detectChanges();
-
-        expect(testComponent.model).toBeNull();
-
-        inputElementDebug.triggerEventHandler('paste', {
-            preventDefault: () => null,
-            clipboardData: {
-                getData: () => '19:01:02'
-            }
+            expect(testComponent.formControl.value.toString()).toContain('2020-01-01T19:01:02');
         });
-        fixture.detectChanges();
 
-        expect(testComponent.model.toString()).toContain('2020-01-01T19:01:02');
+        it('Create time from input when formControl value is null', fakeAsync(() => {
+            testComponent.timeFormat = 'HH:mm';
+            fixture.detectChanges();
+
+            expect(testComponent.formControl.value).toBeNull();
+
+            inputElementDebug.nativeElement.value = '18:09';
+            dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
+            tick(1);
+
+            fixture.detectChanges();
+
+            expect(testComponent.formControl.value.toString()).toContain('2020-01-01T18:09');
+        }));
     });
 
-    // todo fix me after update angular
-    xit('Create time from input when model value is null', fakeAsync(() => {
-        testComponent.timeFormat = TimeFormats.HHmm;
-        fixture.detectChanges();
+    @Component({
+        selector: 'test-app',
+        template: `
+            <kbq-form-field>
+                <i kbqPrefix kbq-icon="kbq-clock_16"></i>
+                <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
+            </kbq-form-field>
+        `
+    })
+    class TimePickerWithNullModelValue {
+        timeFormat: string;
+        model: any = null;
+    }
 
-        expect(testComponent.model).toBeNull();
+    describe('with null model value', () => {
+        let fixture: ComponentFixture<TimePickerWithNullModelValue>;
+        let testComponent: TimePickerWithNullModelValue;
+        let inputElementDebug;
 
-        inputElementDebug.nativeElement.value = '18:09';
-        dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-        tick(1);
-        flush();
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [
+                    FormsModule,
+                    KbqFormFieldModule,
+                    KbqTimepickerModule,
+                    KbqIconModule,
+                    KbqLuxonDateModule
+                ],
+                declarations: [TimePickerWithNullModelValue]
+            }).compileComponents();
 
-        fixture.detectChanges();
+            const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
 
-        expect(testComponent.model.toString()).toContain('2020-01-01T18:09');
-    }));
-});
+            jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
+                mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
+            );
 
-@Component({
-    selector: 'test-app',
-    imports: [FormsModule, KbqFormFieldModule, KbqTimepickerModule, KbqIconModule, KbqLuxonDateModule],
-    template: `
-        <kbq-form-field>
-            <i kbqPrefix kbq-icon="kbq-clock_16"></i>
-            <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
-        </kbq-form-field>
-    `
-})
-class TimepickerWithLocaleChange {
-    timeFormat: TimeFormats;
-    model: any = null;
+            fixture = TestBed.createComponent(TimePickerWithNullModelValue);
+            testComponent = fixture.debugElement.componentInstance;
+            inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
 
-    constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
-}
+            fixture.detectChanges();
+        });
 
-describe('with Locale change', () => {
-    let fixture: ComponentFixture<TimepickerWithLocaleChange>;
-    let testComponent: TimepickerWithLocaleChange;
-    let inputElementDebug: DebugElement;
+        it('Paste value from clipboard when model value is null', () => {
+            testComponent.timeFormat = 'HH:mm:ss';
+            fixture.detectChanges();
 
-    const getPlaceholderForCurrentLocale = (selectedFormat?: TimeFormats): string =>
-        testComponent.localeService.current.timepicker.placeholder[
-            TimeFormatToLocaleKeys[selectedFormat || DEFAULT_TIME_FORMAT]
-        ];
+            expect(testComponent.model).toBeNull();
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                FormsModule,
-                KbqFormFieldModule,
-                KbqTimepickerModule,
-                KbqIconModule,
-                KbqLuxonDateModule,
-                TimepickerWithLocaleChange
-            ]
-        }).compileComponents();
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '19:01:02'
+                }
+            });
+            fixture.detectChanges();
 
-        fixture = TestBed.createComponent(TimepickerWithLocaleChange);
-        testComponent = fixture.debugElement.componentInstance;
-        inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
+            expect(testComponent.model.toString()).toContain('2020-01-01T19:01:02');
+        });
 
-        fixture.detectChanges();
+        it('Create time from input when model value is null', fakeAsync(() => {
+            testComponent.timeFormat = 'HH:mm';
+            fixture.detectChanges();
+
+            expect(testComponent.model).toBeNull();
+
+            inputElementDebug.nativeElement.value = '18:09';
+            dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
+            tick(1);
+
+            fixture.detectChanges();
+
+            expect(testComponent.model.toString()).toContain('2020-01-01T18:09');
+        }));
     });
 
-    it('should get placeholder from localeService', () => {
-        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
-            TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]
-        );
-        expect(getPlaceholderForCurrentLocale()).toEqual(TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]);
+    @Component({
+        selector: 'test-app',
+        template: `
+            <kbq-form-field>
+                <i kbqPrefix kbq-icon="kbq-clock_16"></i>
+                <input kbqTimepicker [format]="timeFormat" [(ngModel)]="model" />
+            </kbq-form-field>
+        `
+    })
+    class TimepickerWithLocaleChange {
+        timeFormat: TimeFormats;
+        model: any = null;
+
+        constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
+    }
+
+    describe('with Locale change', () => {
+        let fixture: ComponentFixture<TimepickerWithLocaleChange>;
+        let testComponent: TimepickerWithLocaleChange;
+        let inputElementDebug: DebugElement;
+
+        const getPlaceholderForCurrentLocale = (selectedFormat?: TimeFormats): string =>
+            testComponent.localeService.current.timepicker.placeholder[
+                TimeFormatToLocaleKeys[selectedFormat || DEFAULT_TIME_FORMAT]
+            ];
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [
+                    FormsModule,
+                    KbqFormFieldModule,
+                    KbqTimepickerModule,
+                    KbqIconModule,
+                    KbqLuxonDateModule
+                ],
+                declarations: [TimepickerWithLocaleChange]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(TimepickerWithLocaleChange);
+            testComponent = fixture.debugElement.componentInstance;
+            inputElementDebug = fixture.debugElement.query(By.directive(KbqTimepicker));
+
+            fixture.detectChanges();
+        });
+
+        it('should get placeholder from localeService', () => {
+            expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
+                TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]
+            );
+            expect(getPlaceholderForCurrentLocale()).toEqual(TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT]);
+        });
+
+        it('should update placeholder of nativeElement on locale change', () => {
+            testComponent.localeService.setLocale('en-US');
+            fixture.detectChanges();
+            expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(getPlaceholderForCurrentLocale());
+        });
+
+        it('should apply localized format on format change', () => {
+            const selectedFormat = TimeFormats.HHmmss;
+
+            testComponent.timeFormat = selectedFormat;
+            fixture.detectChanges();
+
+            expect(getPlaceholderForCurrentLocale(selectedFormat)).toEqual(TIMEFORMAT_PLACEHOLDERS[selectedFormat]);
+            expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
+                getPlaceholderForCurrentLocale(selectedFormat)
+            );
+
+            testComponent.localeService.setLocale('en-US');
+            fixture.detectChanges();
+            expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
+                getPlaceholderForCurrentLocale(selectedFormat)
+            );
+        });
     });
 
-    it('should update placeholder of nativeElement on locale change', () => {
-        testComponent.localeService.setLocale('en-US');
-        fixture.detectChanges();
-        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(getPlaceholderForCurrentLocale());
+    @Component({
+        imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+        standalone: true,
+        template: `
+            <form [formGroup]="form">
+                <kbq-form-field>
+                    <input kbqTimepicker formControlName="input" [errorStateMatcher]="errorStateMatcher" />
+                </kbq-form-field>
+                <button type="submit">Submit</button>
+            </form>
+        `,
+        providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    })
+    class TimepickerWithErrorStateMatcher {
+        readonly timepicker = viewChild.required(KbqTimepicker);
+        readonly form = new FormGroup({ input: new FormControl<DateTime | null>(null, Validators.required) });
+        errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
+    }
+
+    @Component({
+        imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+        standalone: true,
+        template: `
+            <form [formGroup]="form">
+                <kbq-form-field>
+                    <input kbqTimepicker formControlName="input" />
+                </kbq-form-field>
+            </form>
+        `,
+        providers: [
+            kbqDisableLegacyValidationDirectiveProvider(),
+            kbqErrorStateMatcherProvider(customErrorStateMatcher)
+        ]
+    })
+    class TimepickerWithDIErrorStateMatcher {
+        readonly timepicker = viewChild.required(KbqTimepicker);
+        readonly form = new FormGroup({ input: new FormControl<DateTime | null>(null, Validators.required) });
+    }
+
+    describe('ErrorStateMatcher', () => {
+        describe(ErrorStateMatcher.name, () => {
+            it('should not be in error state initially when invalid but untouched', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+            });
+
+            it('should be in error state when invalid and touched', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                fixture.componentInstance.form.controls.input.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+            });
+
+            it('should be in error state when form is submitted and control is invalid', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                getSubmitButton(fixture).click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and update errorState on blur', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+
+                // KbqTimepicker is its own ControlValueAccessor and only marks the control
+                // touched on a focus -> blur transition, so focus has to happen first.
+                getTimepickerElement(fixture).dispatchEvent(new Event('focus'));
+                getTimepickerElement(fixture).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+            });
+        });
+
+        describe(ShowOnFormSubmitErrorStateMatcher.name, () => {
+            it('should not be in error state when invalid and touched but form not submitted', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.componentInstance.form.controls.input.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+            });
+
+            it('should be in error state after form is submitted when invalid', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.detectChanges();
+
+                getSubmitButton(fixture).click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and NOT update errorState on blur', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+                fixture.detectChanges();
+
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+
+                getTimepickerElement(fixture).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+            });
+        });
+
+        describe(ShowOnControlDirtyErrorStateMatcher.name, () => {
+            it('should not be in error state when invalid but pristine', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+            });
+
+            it('should be in error state when invalid and dirty', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.componentInstance.form.controls.input.markAsDirty();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+            });
+
+            it('should call errorStateMatcher and NOT update errorState on blur', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
+                fixture.detectChanges();
+
+                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+
+                getTimepickerElement(fixture).dispatchEvent(new Event('blur'));
+                fixture.detectChanges();
+
+                expect(spy).toHaveBeenCalled();
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+            });
+        });
+
+        describe('custom ErrorStateMatcher', () => {
+            it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
+                const fixture = createStandaloneComponent(TimepickerWithDIErrorStateMatcher);
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+
+                fixture.componentInstance.form.controls.input.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+            });
+
+            it('should use custom errorStateMatcher logic', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+
+                fixture.componentInstance.form.controls.input.markAsTouched();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+            });
+        });
     });
 
-    it('should apply localized format on format change', () => {
-        const selectedFormat = TimeFormats.HHmmss;
+    @Component({
+        imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+        standalone: true,
+        template: `
+            <kbq-form-field>
+                <input kbqTimepicker [formControl]="control" />
+            </kbq-form-field>
+        `
+    })
+    class LegacyTimepickerControlWithAsyncValidators {
+        readonly timepicker = viewChild.required(KbqTimepicker);
+        readonly control = new FormControl<DateTime | null>(null, {
+            asyncValidators: [getAsyncValidator()]
+        });
+    }
 
-        testComponent.timeFormat = selectedFormat;
-        fixture.detectChanges();
+    @Component({
+        imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+        standalone: true,
+        template: `
+            <kbq-form-field>
+                <input kbqTimepicker [formControl]="control" />
+            </kbq-form-field>
+        `,
+        providers: [kbqDisableLegacyValidationDirectiveProvider()]
+    })
+    class TimepickerControlWithAsyncValidators {
+        readonly timepicker = viewChild.required(KbqTimepicker);
+        readonly control = new FormControl<DateTime | null>(null, {
+            asyncValidators: [getAsyncValidator()]
+        });
+    }
 
-        expect(getPlaceholderForCurrentLocale(selectedFormat)).toEqual(TIMEFORMAT_PLACEHOLDERS[selectedFormat]);
-        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
-            getPlaceholderForCurrentLocale(selectedFormat)
-        );
+    describe('async validation', () => {
+        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
+            const fixture = createStandaloneComponent(LegacyTimepickerControlWithAsyncValidators);
+            const { control, timepicker } = fixture.componentInstance;
+            const statuses: FormControlStatus[] = [];
 
-        testComponent.localeService.setLocale('en-US');
-        fixture.detectChanges();
-        expect(inputElementDebug.nativeElement.getAttribute('placeholder')).toBe(
-            getPlaceholderForCurrentLocale(selectedFormat)
-        );
+            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
+
+            control.setValue(DateTime.fromObject({ hour: 10, minute: 0 }));
+
+            expect(control.status).toBe('PENDING');
+            expect(statuses).toEqual(['PENDING']);
+
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            timepicker().onBlur();
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
+
+            subscription.unsubscribe();
+        }));
+
+        it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+            const fixture = createStandaloneComponent(TimepickerControlWithAsyncValidators);
+            const { control, timepicker } = fixture.componentInstance;
+            const statuses: FormControlStatus[] = [];
+
+            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
+
+            control.setValue(DateTime.fromObject({ hour: 10, minute: 0 }));
+
+            expect(control.status).toBe('PENDING');
+            expect(statuses).toEqual(['PENDING']);
+
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            timepicker().onBlur();
+            tick(ASYNC_VALIDATOR_TIMER_DUE);
+
+            expect(control.status).toBe('VALID');
+            expect(statuses).toEqual(['PENDING', 'VALID']);
+
+            subscription.unsubscribe();
+        }));
     });
 });
