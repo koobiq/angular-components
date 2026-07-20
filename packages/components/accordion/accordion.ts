@@ -118,9 +118,13 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     /** Whether an expanded item can be collapsed by the user. Defaults to `true`. */
     readonly collapsible = input(true);
 
-    /** The raw controlled `value` input. @docs-private */
+    /**
+     * The raw controlled `value` input. Must stay `public`: a `protected` input cannot be bound from
+     * a consumer template (TS2445 under full AOT template type-checking).
+     * @docs-private
+     */
     // `input()` (not `model()`): a `model()` would auto-create a colliding `valueChange` output.
-    protected readonly valueInput = input<string[] | string | undefined>(undefined, { alias: 'value' });
+    readonly valueInput = input<string[] | string | undefined>(undefined, { alias: 'value' });
 
     /**
      * The controlled value of the item(s) to expand, reshaped by mode. Supports `[(value)]`.

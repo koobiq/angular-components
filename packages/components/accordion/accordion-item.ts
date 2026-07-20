@@ -105,8 +105,12 @@ export class KbqAccordionItem implements OnDestroy {
 
     private _expanded = false;
 
-    /** The item's own `value` input. @docs-private */
-    protected readonly valueInput = input<string>('', { alias: 'value' });
+    /**
+     * The item's own `value` input. Must stay `public`: a `protected` input cannot be bound from a
+     * consumer template (TS2445 under full AOT template type-checking).
+     * @docs-private
+     */
+    readonly valueInput = input<string>('', { alias: 'value' });
 
     /** The item's effective value — its own value, or the item id when none is provided. */
     readonly value = computed(() => this.valueInput() || this.id);

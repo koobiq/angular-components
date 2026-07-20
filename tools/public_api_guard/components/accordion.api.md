@@ -57,7 +57,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     readonly useStateSaving: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly value: _angular_core.Signal<string | string[]>;
     readonly valueChange: _angular_core.OutputEmitterRef<string | string[]>;
-    protected readonly valueInput: _angular_core.InputSignal<string | string[] | undefined>;
+    readonly valueInput: _angular_core.InputSignal<string | string[] | undefined>;
     readonly variant: _angular_core.InputSignal<KbqAccordionVariant>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "level": { "alias": "level"; "required": false; "isSignal": true; }; "defaultValue": { "alias": "defaultValue"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; }, ["items"], ["*"], true, never>;
@@ -138,7 +138,7 @@ export class KbqAccordionItem implements OnDestroy {
     readonly trigger: _angular_core.Signal<KbqAccordionTriggerDirective | undefined>;
     readonly triggerComponent: _angular_core.Signal<KbqAccordionTrigger | undefined>;
     readonly value: _angular_core.Signal<string>;
-    protected readonly valueInput: _angular_core.InputSignal<string>;
+    readonly valueInput: _angular_core.InputSignal<string>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAccordionItem, "kbq-accordion-item, [kbq-accordion-item]", never, { "expanded": { "alias": "expanded"; "required": false; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "closed": "closed"; "opened": "opened"; "expandedChange": "expandedChange"; }, ["trigger", "triggerComponent", "content"], never, true, never>;
     // (undocumented)
