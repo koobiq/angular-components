@@ -364,8 +364,6 @@ export class KbqTimepicker<D>
 
     private readonly uid = `kbq-timepicker-${uniqueComponentIdSuffix++}`;
 
-    private readonly useLegacyValidation = inject(KBQ_VALIDATION, { optional: true })?.useValidation ?? false;
-
     private readonly validator: ValidatorFn | null;
 
     private lastValueValid = false;
