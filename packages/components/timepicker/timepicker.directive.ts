@@ -462,13 +462,11 @@ export class KbqTimepicker<D>
     onBlur() {
         this.focusChanged(false);
 
-        if (this.viewValue === this.getTimeStringFromDate(this.value, this.format)) {
-            return;
+        if (this.viewValue !== this.getTimeStringFromDate(this.value, this.format)) {
+            this.setViewValue(this.formatUserPaste(this.viewValue));
+
+            this.onInput();
         }
-
-        this.setViewValue(this.formatUserPaste(this.viewValue));
-
-        this.onInput();
     }
 
     onPaste($event) {
