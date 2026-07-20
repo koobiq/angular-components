@@ -1,3 +1,7 @@
+# AGENTS.md
+
+> Context file for AI agents working in this repository.
+
 ## Getting Started
 
 Use the Node.js version specified in [.nvmrc](.nvmrc).
@@ -8,11 +12,18 @@ Use yarn as the package manager. Install dependencies with:
 yarn install
 ```
 
+Setup git hooks:
+
+```bash
+yarn husky
+```
+
 ## Package Structure
 
 ```
 packages/
-├── components/                # Main library - each subdirectory is a component (a11y, keycodes, testing utils now live in core)
+├── components/                # Main library - each subdirectory is a component
+├── components/core/           # Core utilities and services used by components (e.g., focus management, accessibility utils)
 ├── components-experimental/   # Experimental components (not production-ready)
 ├── docs-examples/             # Documentation examples and components usage
 ├── components-dev/            # Dev apps for each component (yarn run dev:<component-name>)
@@ -28,17 +39,17 @@ packages/
 Each component follows this structure, for example:
 
 ```
-packages/components/button/
-├── button.ts                  # Main component
-├── button.module.ts           # NgModule (for legacy support)
-├── button.spec.ts             # Unit tests (Jest)
-├── e2e.ts                     # E2E test component setup
-├── e2e.playwright-spec.ts     # Visual regression tests (Playwright)
-├── button.scss                # Base styles
-├── button-tokens.scss         # Design tokens (CSS variables)
-├── _button-theme.scss         # Theme mixins
-├── public-api.ts              # Public exports
-└── index.ts                   # Entry point
+packages/components/<component-name>/
+├── <component-name>.ts                  # Main component
+├── <component-name>.module.ts           # NgModule (for legacy support)
+├── <component-name>.spec.ts             # Unit tests (Jest)
+├── e2e.ts                               # E2E test component setup
+├── e2e.playwright-spec.ts               # Visual regression tests (Playwright)
+├── <component-name>.scss                # Base styles
+├── <component-name>-tokens.scss         # Design tokens (CSS variables)
+├── _<component-name>-theme.scss         # Theme mixins
+├── public-api.ts                        # Public exports
+└── index.ts                             # Entry point
 ```
 
 ## Common Commands
@@ -112,6 +123,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Avoid the `any` type; use `unknown` when type is uncertain
 - Prefer `readonly` where appropriate (e.g., signals, injections)
 - Use `protected` for template bindings
+- All `public` methods and properties MUST have a comment describing their purpose (JSDoc format is optional)
 
 ### Angular Best Practices
 
@@ -142,8 +154,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ### Form Validation
 
-- Always add `kbqDisableLegacyValidationDirectiveProvider()` to component `providers`
-- Use `ErrorStateMatcher` to control **when** errors are shown — validators on `FormControl` control **what** is invalid; `ErrorStateMatcher` only controls visibility
+- Use `ErrorStateMatcher` to control **when** errors are shown
 
 ### State Management
 
