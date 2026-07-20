@@ -1,10 +1,10 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqAlert, KbqAlertCloseButton, KbqAlertControl, KbqAlertTitle } from '@koobiq/components/alert';
+import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
+import { KbqLink } from '@koobiq/components/link';
 
 /**
  * @title Alert content
@@ -12,10 +12,16 @@ import { KbqLinkModule } from '@koobiq/components/link';
 @Component({
     selector: 'alert-content-example',
     imports: [
-        KbqAlertModule,
-        KbqButtonModule,
-        KbqLinkModule,
-        KbqIconModule
+        KbqAlert,
+        KbqAlertTitle,
+        KbqAlertControl,
+        KbqAlertCloseButton,
+        KbqButton,
+        KbqButtonCssStyler,
+        KbqLink,
+        KbqIcon,
+        KbqIconItem,
+        KbqIconButton
     ],
     templateUrl: 'alert-content-example.html',
     styleUrls: ['alert-content-example.css'],
@@ -31,8 +37,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
 })
 export class AlertContentExample {
     colors = KbqComponentColors;
-    style = KbqButtonStyles;
-    alertStyles = KbqAlertStyles;
-    alertColors = KbqAlertColors;
-    state = true;
+    firstState = true;
+    secondState = true;
 }

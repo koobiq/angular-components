@@ -10,6 +10,11 @@
             "version": "20.2.0-0",
             "description": "Migrates KbqFilterBar consumers to the signal-based API. Rewrites programmatic reads of the now-signal members (filter, pipeTemplates, isChanged, isDisabled, isReadOnly, isSaved, isSavedAndChanged) to calls and `filter = v` writes to `filter.set(v)` on receivers typed KbqFilterBar, including reads via template reference variables on <kbq-filter-bar>. Renames KbqFilterBarRefresher → KbqFilterRefresher and warns on changes/preparePopover/view-query cases that need manual migration.",
             "factory": "./migrations/filter-bar-signals/index"
+        },
+        "alert-signals": {
+            "version": "20.2.0-0",
+            "description": "Migrates KbqAlert consumers to its finished signal-based API. Rewrites value-safe programmatic reads of the now-signal members (compact, alertStyle) to calls on receivers typed KbqAlert, including reads via template reference variables on <kbq-alert> (external and inline templates). Warns — without auto-fixing — on alertColor (now a read-only InputSignal whose getter returns the raw color instead of the `kbq-alert_<color>` class), the content-query members that became protected (icon/iconItem/button/title/control/closeButton/isColored), narrowed alertColor/alertStyle inputs, the compact booleanAttribute behavior change, descendants:false content projection, view/content queries returning the instance, and KbqAlertModule no longer re-exporting A11yModule/PlatformModule.",
+            "factory": "./migrations/alert-signals/index"
         }
     }
 }

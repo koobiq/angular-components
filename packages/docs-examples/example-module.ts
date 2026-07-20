@@ -383,6 +383,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "alert-content-example.ts",
     "importPath": "components/alert"
   },
+  "alert-dynamic": {
+    "packagePath": "components/alert/alert-dynamic",
+    "title": "Alert dynamic",
+    "componentName": "AlertDynamicExample",
+    "files": [
+      "alert-dynamic-example.ts"
+    ],
+    "selector": "alert-dynamic-example",
+    "additionalComponents": [],
+    "primaryFile": "alert-dynamic-example.ts",
+    "importPath": "components/alert"
+  },
   "alert-overview": {
     "packagePath": "components/alert/alert-overview",
     "title": "Alert size",
@@ -6741,6 +6753,8 @@ return import('@koobiq/docs-examples/components/ag-grid');
   case 'alert-close':
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-content':
+return import('@koobiq/docs-examples/components/alert');
+  case 'alert-dynamic':
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-overview':
 return import('@koobiq/docs-examples/components/alert');

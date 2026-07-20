@@ -46,6 +46,11 @@
             "description": "Migrates KbqFilterBar consumers to the signal-based API (filter/pipeTemplates/isChanged/... reads become calls)",
             "factory": "./migrations/filter-bar-signals/index",
             "schema": "./migrations/filter-bar-signals/schema.json"
+        },
+        "alert-signals": {
+            "description": "Migrates KbqAlert consumers to the signal-based API (compact/alertStyle reads become calls; warns on alertColor value change, now-protected members, narrowed inputs)",
+            "factory": "./migrations/alert-signals/index",
+            "schema": "./migrations/alert-signals/schema.json"
         }
     }
 }

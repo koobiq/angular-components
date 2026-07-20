@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 
-describe('MсRadio', () => {
+describe('KbqRadio', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqRadioModule, FormsModule, ReactiveFormsModule, DisableableRadioButton, RadiosInsideRadioGroup]

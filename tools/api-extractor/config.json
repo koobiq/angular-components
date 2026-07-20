@@ -2,6 +2,7 @@
     "components": [
         "accordion",
         "actions-panel",
+        "alert",
         "app-switcher",
         "autocomplete",
         "button",

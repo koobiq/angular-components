@@ -1,4 +1,4 @@
-@if (iconItem() || icon()) {
+@if (projectedIcon()) {
     <div class="kbq-alert__icon" [class.kbq-alert__icon_title]="title()">
         <ng-content select="[kbq-icon-item],[kbq-icon]" />
     </div>
@@ -18,6 +18,8 @@
     }
 </div>
 
-<div class="kbq-alert__close-button" [hidden]="!closeButton()">
-    <ng-content select="[kbq-alert-close-button]" />
-</div>
+@if (closeButton()) {
+    <div class="kbq-alert__close-button" (click)="closed.emit()">
+        <ng-content select="[kbq-alert-close-button]" />
+    </div>
+}

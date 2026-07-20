@@ -4,54 +4,42 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
-import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
-import * as i2 from '@angular/cdk/platform';
+import * as _angular_core from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqIconItem } from '@koobiq/components/icon';
 
-// @public (undocumented)
-export class KbqAlert implements AfterContentInit {
+// @public
+export class KbqAlert {
+    constructor();
+    readonly alertColor: _angular_core.InputSignalWithTransform<"error" | "warning" | "success" | "info", "error" | "warning" | "success" | "info" | null | undefined>;
+    protected readonly alertColorClass: _angular_core.Signal<string>;
+    readonly alertStyle: _angular_core.InputSignal<"default" | "colored">;
+    protected readonly button: _angular_core.Signal<KbqButton | undefined>;
+    protected readonly closeButton: _angular_core.Signal<KbqAlertCloseButton | undefined>;
+    readonly closed: _angular_core.OutputEmitterRef<void>;
+    readonly compact: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly control: _angular_core.Signal<KbqAlertControl | undefined>;
+    protected readonly icon: _angular_core.Signal<KbqIcon | undefined>;
+    protected readonly iconItem: _angular_core.Signal<KbqIconItem | undefined>;
+    protected readonly isColored: _angular_core.Signal<boolean>;
+    protected readonly projectedIcon: _angular_core.Signal<KbqIcon | undefined>;
+    protected readonly title: _angular_core.Signal<KbqAlertTitle | undefined>;
     // (undocumented)
-    get alertColor(): string;
-    set alertColor(value: string | KbqAlertColors);
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAlert, "kbq-alert", ["kbqAlert"], { "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "alertStyle": { "alias": "alertStyle"; "required": false; "isSignal": true; }; "alertColor": { "alias": "alertColor"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["iconItem", "icon", "button", "title", "control", "closeButton"], ["[kbq-icon-item],[kbq-icon]", "[kbq-alert-title]", "*", "[kbq-alert-control]", "[kbq-alert-close-button]"], true, never>;
     // (undocumented)
-    alertStyle: KbqAlertStyles | string;
-    // (undocumented)
-    button: KbqButton;
-    // (undocumented)
-    closeButton: KbqAlertCloseButton;
-    // (undocumented)
-    compact: boolean;
-    // (undocumented)
-    control: KbqAlertControl;
-    // (undocumented)
-    icon: KbqIcon;
-    // (undocumented)
-    iconItem: KbqIconItem;
-    // (undocumented)
-    get isColored(): boolean;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    title: KbqAlertTitle;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAlert, "kbq-alert", never, { "compact": { "alias": "compact"; "required": false; }; "alertStyle": { "alias": "alertStyle"; "required": false; }; "alertColor": { "alias": "alertColor"; "required": false; }; }, {}, ["iconItem", "icon", "button", "title", "control", "closeButton"], ["[kbq-icon-item],[kbq-icon]", "[kbq-alert-title]", "*", "[kbq-alert-control]", "[kbq-alert-close-button]"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlert, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlert, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqAlertCloseButton {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAlertCloseButton, "[kbq-alert-close-button]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAlertCloseButton, "[kbq-alert-close-button]", ["kbqAlertCloseButton"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlertCloseButton, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlertCloseButton, never>;
 }
 
-// @public (undocumented)
+// @public
 export enum KbqAlertColors {
     // (undocumented)
     Error = "error",
@@ -63,40 +51,36 @@ export enum KbqAlertColors {
     Warning = "warning"
 }
 
-// @public (undocumented)
+// @public
 export class KbqAlertControl {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAlertControl, "[kbq-alert-control]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAlertControl, "[kbq-alert-control]", ["kbqAlertControl"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlertControl, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlertControl, never>;
 }
 
 // @public (undocumented)
 export class KbqAlertModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlertModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlertModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqAlertModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqAlertModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAlertModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqAlert, typeof i3.KbqAlertTitle, typeof i3.KbqAlertCloseButton, typeof i3.KbqAlertControl], [typeof i3.KbqAlert, typeof i3.KbqAlertTitle, typeof i3.KbqAlertCloseButton, typeof i3.KbqAlertControl]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAlertModule, never, [typeof KbqAlert, typeof KbqAlertTitle, typeof KbqAlertCloseButton, typeof KbqAlertControl], [typeof KbqAlert, typeof KbqAlertTitle, typeof KbqAlertCloseButton, typeof KbqAlertControl]>;
 }
 
-// @public (undocumented)
+// @public
 export enum KbqAlertStyles {
-    // (undocumented)
     Colored = "colored",
-    // (undocumented)
     Default = "default"
 }
 
-// @public (undocumented)
+// @public
 export class KbqAlertTitle {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAlertTitle, "[kbq-alert-title]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAlertTitle, "[kbq-alert-title]", ["kbqAlertTitle"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlertTitle, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlertTitle, never>;
 }
 
 // (No @packageDocumentation comment for this package)
