@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
@@ -68,7 +67,7 @@ export enum KbqBadgeColors {
 }
 
 // @public (undocumented)
-export class KbqBadgeCssStyler implements AfterContentInit {
+export class KbqBadgeCssStyler {
     constructor();
     // (undocumented)
     readonly icons: i0.Signal<readonly any[]>;
@@ -76,9 +75,6 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     isIconButton: boolean;
     // (undocumented)
     nativeElement: HTMLElement;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
     updateClassModifierForIcons(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBadgeCssStyler, "kbq-badge", never, {}, {}, ["icons"], never, true, never>;

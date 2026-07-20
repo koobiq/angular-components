@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
+import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
     selector: 'e2e-badge-styles',
@@ -53,4 +56,28 @@ export class E2eBadgeStyles {
         KbqBadgeColors.FadeError,
         KbqBadgeColors.Disabled
     ];
+}
+
+@Component({
+    selector: 'e2e-badge-async-icon',
+    imports: [KbqBadgeModule, KbqIconModule, KbqCheckboxModule, FormsModule],
+    template: `
+        <kbq-checkbox data-testid="e2eShowIcon" [(ngModel)]="showIcon">show icon</kbq-checkbox>
+
+        <kbq-badge [badgeColor]="colors.Success">
+            Normal
+            @if (showIcon()) {
+                <i kbq-icon="kbq-circle-question_16"></i>
+            }
+        </kbq-badge>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eBadgeAsyncIcon'
+    }
+})
+export class E2eBadgeAsyncIcon {
+    protected readonly colors = KbqBadgeColors;
+
+    readonly showIcon = model(false);
 }

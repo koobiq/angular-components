@@ -1,11 +1,11 @@
 import {
-    AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     contentChild,
     contentChildren,
     Directive,
+    effect,
     ElementRef,
     forwardRef,
     inject,
@@ -49,7 +49,7 @@ export const badgeRightIconClassName = 'kbq-badge-icon_right';
 @Directive({
     selector: 'kbq-badge'
 })
-export class KbqBadgeCssStyler implements AfterContentInit {
+export class KbqBadgeCssStyler {
     private renderer = inject(Renderer2);
     private cdr = inject(ChangeDetectorRef, { skipSelf: true });
 
@@ -63,12 +63,13 @@ export class KbqBadgeCssStyler implements AfterContentInit {
         const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
         this.nativeElement = elementRef.nativeElement;
+
+        // Icons projected asynchronously (e.g. behind an `@if`) update the `icons` signal
+        // after content init, so class assignment must react to the signal, not just run once.
+        effect(() => this.updateClassModifierForIcons());
     }
 
-    ngAfterContentInit() {
-        this.updateClassModifierForIcons();
-    }
-
+    /** @docs-private */
     updateClassModifierForIcons() {
         this.renderer.removeClass(this.nativeElement, badgeLeftIconClassName);
         this.renderer.removeClass(this.nativeElement, badgeRightIconClassName);
