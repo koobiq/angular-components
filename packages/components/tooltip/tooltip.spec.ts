@@ -14,6 +14,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
+import { KbqTooltipRegistry } from './tooltip-registry';
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
@@ -396,7 +397,197 @@ describe('KbqTooltip', () => {
             flush();
         }));
     });
+
+    describe('single visible tooltip', () => {
+        let fixture: ComponentFixture<KbqTooltipSingleInstanceComponent>;
+        let component: KbqTooltipSingleInstanceComponent;
+        let registry: KbqTooltipRegistry;
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqToolTipModule, NoopAnimationsModule, KbqTooltipSingleInstanceComponent]
+            });
+            inject([OverlayContainer], (oc: OverlayContainer) => {
+                overlayContainer = oc;
+                overlayContainerElement = oc.getContainerElement();
+            })();
+
+            registry = TestBed.inject(KbqTooltipRegistry);
+            fixture = TestBed.createComponent(KbqTooltipSingleInstanceComponent);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        /** Opens a tooltip by hover and settles the deferred show, the reposition timeout and change detection. */
+        const showByHover = (element: HTMLElement) => {
+            dispatchMouseEvent(element, 'mouseenter');
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+        };
+
+        /** Opens a tooltip by keyboard focus — a non-keyboard focus origin is ignored by the trigger. */
+        const showByKeyboardFocus = (element: HTMLElement) => {
+            dispatchKeyboardEvent(document, 'keydown', TAB);
+            dispatchFakeEvent(element, 'focus');
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        };
+
+        it('should hide the previously visible tooltip when another one is shown', fakeAsync(() => {
+            showByHover(component.hoverTrigger()!.nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+
+            showByKeyboardFocus(component.focusTrigger().nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('FOCUS-B');
+            expect(overlayContainerElement.textContent).not.toContain('HOVER-A');
+
+            flush();
+        }));
+
+        it('should hide the previously visible tooltip opened by click', fakeAsync(() => {
+            dispatchMouseEvent(component.clickTrigger().nativeElement, 'click');
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('CLICK-E');
+
+            showByHover(component.hoverTrigger()!.nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+            expect(overlayContainerElement.textContent).not.toContain('CLICK-E');
+
+            flush();
+        }));
+
+        it('should close the previous tooltip when shown via showForMouseEvent', fakeAsync(() => {
+            showByHover(component.hoverTrigger()!.nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+
+            // `showForMouseEvent` calls `KbqPopUpTrigger.show` directly, bypassing `KbqTooltipTrigger.show`.
+            const element: HTMLElement = component.clickTrigger().nativeElement;
+            const clickDirective = component.clickDirective();
+
+            element.addEventListener('mouseover', (event) => clickDirective.showForMouseEvent(event as MouseEvent));
+            dispatchMouseEvent(element, 'mouseover');
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('CLICK-E');
+            expect(overlayContainerElement.textContent).not.toContain('HOVER-A');
+
+            flush();
+        }));
+
+        it('should keep both tooltips visible when kbqTooltipSingleInstance is false', fakeAsync(() => {
+            showByHover(component.hoverTrigger()!.nativeElement);
+            showByHover(component.independentTrigger().nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('INDEPENDENT-D');
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+
+            flush();
+        }));
+
+        it('should not close a manually controlled tooltip', fakeAsync(() => {
+            component.manualDirective().show(0);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('MANUAL-C');
+
+            showByHover(component.hoverTrigger()!.nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+            expect(overlayContainerElement.textContent).toContain('MANUAL-C');
+
+            flush();
+        }));
+
+        it('should not be closed by a manually controlled tooltip', fakeAsync(() => {
+            showByHover(component.hoverTrigger()!.nativeElement);
+
+            component.manualDirective().show(0);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('MANUAL-C');
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+
+            flush();
+        }));
+
+        it('should emit kbqVisibleChange(false) for the automatically closed tooltip', fakeAsync(() => {
+            const visibleChangeSpy = jest.fn();
+
+            component.hoverDirective()!.visibleChange.subscribe(visibleChangeSpy);
+
+            showByHover(component.hoverTrigger()!.nativeElement);
+
+            expect(visibleChangeSpy).toHaveBeenLastCalledWith(true);
+
+            showByKeyboardFocus(component.focusTrigger().nativeElement);
+
+            expect(visibleChangeSpy).toHaveBeenLastCalledWith(false);
+            expect(component.hoverDirective()!.isOpen).toBe(false);
+
+            flush();
+        }));
+
+        it('should release the destroyed trigger so it is not retained as the visible one', fakeAsync(() => {
+            showByHover(component.hoverTrigger()!.nativeElement);
+
+            expect(registry['visibleTooltip']).toBe(component.hoverDirective());
+
+            component.hoverTriggerRendered = false;
+            fixture.detectChanges();
+            flush();
+
+            expect(registry['visibleTooltip']).toBeNull();
+        }));
+    });
 });
+
+@Component({
+    selector: 'kbq-tooltip-single-instance',
+    imports: [KbqToolTipModule],
+    template: `
+        @if (hoverTriggerRendered) {
+            <span #hoverTrigger [kbqTooltip]="'HOVER-A'">A</span>
+        }
+
+        <span #focusTrigger [kbqTrigger]="'focus'" [kbqTooltip]="'FOCUS-B'">B</span>
+        <span #manualTrigger [kbqTrigger]="'manual'" [kbqTooltip]="'MANUAL-C'">C</span>
+        <span #independentTrigger [kbqTooltip]="'INDEPENDENT-D'" [kbqTooltipSingleInstance]="false">D</span>
+        <span #clickTrigger [kbqTrigger]="'click'" [kbqTooltip]="'CLICK-E'">E</span>
+    `
+})
+class KbqTooltipSingleInstanceComponent {
+    readonly hoverTrigger = viewChild<ElementRef>('hoverTrigger');
+    readonly hoverDirective = viewChild('hoverTrigger', { read: KbqTooltipTrigger });
+    readonly focusTrigger = viewChild.required<ElementRef>('focusTrigger');
+    readonly manualDirective = viewChild.required('manualTrigger', { read: KbqTooltipTrigger });
+    readonly independentTrigger = viewChild.required<ElementRef>('independentTrigger');
+    readonly clickTrigger = viewChild.required<ElementRef>('clickTrigger');
+    readonly clickDirective = viewChild.required('clickTrigger', { read: KbqTooltipTrigger });
+
+    hoverTriggerRendered = true;
+}
 
 @Component({
     selector: 'kbq-tooltip-reactive-inputs',

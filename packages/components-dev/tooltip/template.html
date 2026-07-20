@@ -10,6 +10,32 @@
 
 <br />
 <br />
+
+<div class="dev-container layout-column layout-gap-m">
+    <h4 class="kbq-title">Single visible tooltip</h4>
+
+    <div class="layout-row layout-gap-m layout-align-start-center">
+        <button kbq-button kbqTooltip="Hover tooltip">hover</button>
+        <button kbq-button kbqTrigger="focus" kbqTooltip="Focus tooltip">focus (Tab)</button>
+        <button kbq-button kbqTrigger="click" kbqTooltip="Click tooltip">click</button>
+        <button kbq-button kbqTooltip="Opt-out tooltip" [kbqTooltipSingleInstance]="false">opt-out</button>
+        <button
+            #manualTooltip="kbqTooltip"
+            kbq-button
+            kbqTrigger="manual"
+            kbqTooltipColor="error"
+            kbqTooltip="Manual tooltip — stays pinned"
+        >
+            manual
+        </button>
+        <button kbq-button color="theme" (click)="manualTooltip.isOpen ? manualTooltip.hide() : manualTooltip.show()">
+            toggle manual
+        </button>
+    </div>
+</div>
+
+<br />
+<br />
 <dev-examples />
 <br />
 <br />

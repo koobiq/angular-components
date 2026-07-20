@@ -42,6 +42,7 @@ import {
     applyPopupMargins
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
+import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
 import { kbqTooltipAnimations } from './tooltip.animations';
 
 export enum TooltipModifier {
@@ -107,6 +108,20 @@ export class KbqTooltipComponent extends KbqPopUp {
     }
 }
 
+/**
+ * Triggers that make a tooltip part of the "only one tooltip is visible at a time" group.
+ *
+ * Values that match none of them (`manual`, `none`, …) bind no listeners at all — that is how the
+ * imperatively driven validation tooltips are configured, and they are expected to stay pinned while
+ * the user keeps interacting elsewhere.
+ */
+const INTERACTIVE_TRIGGERS = [
+    PopUpTriggers.Hover,
+    PopUpTriggers.Focus,
+    PopUpTriggers.Click,
+    PopUpTriggers.Keydown
+];
+
 export const KBQ_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy');
 
 /** @docs-private */
@@ -138,8 +153,11 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 })
 export class KbqTooltipTrigger
     extends KbqPopUpTrigger<KbqTooltipComponent>
-    implements AfterViewInit, OnChanges, OnDestroy
+    implements AfterViewInit, OnChanges, OnDestroy, KbqExclusiveTooltip
 {
+    /** Registry holding the single tooltip that is currently visible. */
+    private readonly tooltipRegistry = inject(KbqTooltipRegistry);
+
     /** @docs-private */
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
     /** @docs-private */
@@ -165,6 +183,21 @@ export class KbqTooltipTrigger
      * Defaults to `true`.
      */
     readonly ignoreTooltipPointerEvents = input<boolean>(true);
+
+    /**
+     * Whether the tooltip takes part in the "only one tooltip is visible at a time" group: showing it
+     * hides the previously visible tooltip, and it is hidden when another tooltip is shown.
+     *
+     * Defaults to `true`; the default can be changed application-wide with the
+     * `KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT` token.
+     *
+     * Tooltips without an interactive `kbqTrigger` (`manual`, `none`, …) never take part in the group,
+     * regardless of this input — they are shown imperatively and are expected to stay pinned.
+     */
+    readonly singleInstance = input<boolean, unknown>(inject(KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT), {
+        alias: 'kbqTooltipSingleInstance',
+        transform: booleanAttribute
+    });
 
     /**
      * Changes hiding behavior. By default, tooltip is hidden on mouseleave from trigger.
@@ -400,11 +433,40 @@ export class KbqTooltipTrigger
     }
 
     /**
+     * Whether this tooltip takes part in the "only one tooltip is visible at a time" group.
+     *
+     * Read through the `trigger` getter on purpose: `KbqTitleDirective` always reports `hover`, so title
+     * tooltips participate, while `kbqValidationTooltip` consumers (datepicker, timepicker, inline-edit)
+     * assign `trigger = 'manual'` and therefore stay out of the group.
+     */
+    private get participatesInSingleInstance(): boolean {
+        return this.singleInstance() && INTERACTIVE_TRIGGERS.some((name) => this.trigger.includes(name));
+    }
+
+    /**
      * Sets up an effect that mirrors a `forDisabledComponent`'s disabled signal: when that component is disabled it
      * makes the host focusable (so the tooltip can still be triggered) and enables the tooltip, otherwise disables it.
+     *
+     * Also joins the "only one tooltip is visible at a time" group. Both the subscription and the teardown live
+     * here rather than in `ngAfterViewInit`/`ngOnDestroy` because several subclasses (`KbqTitleDirective`,
+     * `KbqEllipsisCenterDirective`, `KbqNavbarItem`, `KbqPasswordToggle`) override those hooks without calling
+     * `super`, and `destroyRef` also covers a trigger destroyed while its tooltip is still visible — that path
+     * disposes the overlay without emitting `visibleChange(false)`.
      */
     constructor() {
         super();
+
+        this.visibleChange.pipe(takeUntilDestroyed()).subscribe((visible) => {
+            if (visible) {
+                if (this.participatesInSingleInstance) {
+                    this.tooltipRegistry.setVisible(this);
+                }
+            } else {
+                this.tooltipRegistry.clearVisible(this);
+            }
+        });
+
+        this.destroyRef.onDestroy(() => this.tooltipRegistry.clearVisible(this));
 
         effect(() => {
             if (!this.forDisabledComponent()) return;
@@ -457,6 +519,20 @@ export class KbqTooltipTrigger
         if (this.relativeToPointer) {
             this.applyRelativeToPointer();
         }
+    }
+
+    /**
+     * Hides the tooltip because another tooltip became visible.
+     *
+     * Goes straight to the pop-up instead of `hide()`: `hide()` silently no-ops when the last recorded
+     * `triggerName` is `mouseleave` and the pop-up itself is hovered. Hiding through the instance keeps
+     * `visibleChange(false)` firing, so `isOpen`, `kbqVisibleChange` and the `kbqVisible` input stay in sync.
+     * Does nothing when the tooltip is already detached or when closing is prevented.
+     * @docs-private */
+    hideAsInactive(): void {
+        if (this.preventClose) return;
+
+        this.ngZone.run(() => this.instance?.hide(0));
     }
 
     /** method allows to show the tooltip relative to the given mouse event.

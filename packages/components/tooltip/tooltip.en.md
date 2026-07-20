@@ -58,6 +58,18 @@ When switching focus or hovering over another element with a tooltip, the delay 
 
 <!-- example(tooltip-hide-with-timeout) -->
 
+### Only One Tooltip at a Time
+
+At most one tooltip is on screen: showing a new one closes the previously opened tooltip. The rule applies to tooltips opened by `hover`, `focus`, `click` or `keydown` — including the `kbq-title` and `kbqEllipsisCenter` hints.
+
+Tooltips driven programmatically (`kbqTrigger="manual"`) stay out of the rule: they neither close other tooltips nor get closed. Validation hints work this way.
+
+To opt a single tooltip out, use `[kbqTooltipSingleInstance]="false"`; to change the default for the whole application, provide the `KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT` token:
+
+```ts
+providers: [{ provide: KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, useValue: false }];
+```
+
 ### Usage Examples
 
 #### Tooltip for Disabled Button
