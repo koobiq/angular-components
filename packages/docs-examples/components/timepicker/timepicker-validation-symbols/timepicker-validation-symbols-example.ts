@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
@@ -16,6 +16,7 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'timepicker-validation-symbols-example',
     imports: [KbqFormFieldModule, KbqToolTipModule, KbqIconModule, FormsModule, KbqTimepickerModule, LuxonDateModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <div class="docs-row">
             <kbq-form-field #tooltip="kbqWarningTooltip" [kbqWarningTooltip]="'Только цифры'">
