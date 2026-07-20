@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -73,7 +72,7 @@ export enum KbqBadgeColors {
 }
 
 // @public (undocumented)
-export class KbqBadgeCssStyler implements AfterContentInit {
+export class KbqBadgeCssStyler {
     constructor(elementRef: ElementRef<HTMLElement>, renderer: Renderer2, cdr: ChangeDetectorRef);
     // (undocumented)
     icons: QueryList<KbqIcon>;
@@ -81,9 +80,6 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     isIconButton: boolean;
     // (undocumented)
     nativeElement: HTMLElement;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
     updateClassModifierForIcons(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBadgeCssStyler, "kbq-badge", never, {}, {}, ["icons"], never, true, never>;
