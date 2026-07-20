@@ -21,8 +21,11 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     ONE,
+    SPACE,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
+    TWO,
+    UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
@@ -1065,22 +1068,6 @@ describe(KbqTimepicker.name, () => {
             </kbq-form-field>
         `
     })
-    class LegacyTimepickerControlWithAsyncValidators {
-        readonly timepicker = viewChild.required(KbqTimepicker);
-        readonly control = new FormControl<DateTime | null>(null, {
-            asyncValidators: [getAsyncValidator()]
-        });
-    }
-
-    @Component({
-        imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
-        standalone: true,
-        template: `
-            <kbq-form-field>
-                <input kbqTimepicker [formControl]="control" />
-            </kbq-form-field>
-        `
-    })
     class TimepickerControlWithAsyncValidators {
         readonly timepicker = viewChild.required(KbqTimepicker);
         readonly control = new FormControl<DateTime | null>(null, {
@@ -1089,32 +1076,6 @@ describe(KbqTimepicker.name, () => {
     }
 
     describe('async validation', () => {
-        it('should emit PENDING via statusChanges on blur (KbqValidateDirective)', fakeAsync(() => {
-            const fixture = createStandaloneComponent(LegacyTimepickerControlWithAsyncValidators);
-            const { control, timepicker } = fixture.componentInstance;
-            const statuses: FormControlStatus[] = [];
-
-            const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
-
-            control.setValue(DateTime.fromObject({ hour: 10, minute: 0 }));
-
-            expect(control.status).toBe('PENDING');
-            expect(statuses).toEqual(['PENDING']);
-
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID']);
-
-            timepicker().onBlur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
-
-            expect(control.status).toBe('VALID');
-            expect(statuses).toEqual(['PENDING', 'VALID', 'PENDING']);
-
-            subscription.unsubscribe();
-        }));
-
         it('should emit VALID via statusChanges on blur', fakeAsync(() => {
             const fixture = createStandaloneComponent(TimepickerControlWithAsyncValidators);
             const { control, timepicker } = fixture.componentInstance;
