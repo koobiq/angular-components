@@ -46,9 +46,10 @@
         border-start-end-radius: unset;
     }
 
+    // The action button butts against the trigger — no negative margin to collapse borders (as the date pipe
+    // does), because `changed-filter` paints a translucent background under a transparent border: a 1px
+    // overlap would composite that fill twice and read as a darker hairline beside the separator below.
     .kbq-button-icon {
-        margin-inline-start: -1px;
-
         border-end-start-radius: unset;
         border-start-start-radius: unset;
     }

@@ -15,4 +15,18 @@ test.describe('KbqFilterBarModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
+
+    test.describe('E2eFilterBarFilters', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarFilters');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eFilterBarFilters');
+            const locator = getComponent(page);
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-filters-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-filters-dark.png');
+        });
+    });
 });

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -333,6 +333,177 @@ describe('KbqPipeInputComponent', () => {
             expect(spy).not.toHaveBeenCalled();
             expect(getFilterBar().filter()?.changed).toBe(false);
         });
+    });
+
+    describe('auto-apply while typing', () => {
+        /** `KbqPipeInputComponent.debounceTime` — kept local so the tests read as timings, not magic numbers. */
+        const DEBOUNCE = 200;
+
+        beforeEach(createFixture);
+
+        it('should apply the typed value once the debounce elapses', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const spy = jest.fn();
+
+            getFilterBar().onChangePipe.subscribe(spy);
+
+            typeInto('new text');
+            tick(DEBOUNCE);
+
+            expect(getPipeComponent().data.value).toBe('new text');
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should not apply the typed value before the debounce elapses', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            typeInto('new text');
+            tick(DEBOUNCE - 1);
+
+            expect(getPipeComponent().data.value).toBeNull();
+
+            flush();
+        }));
+
+        it('should restart the debounce on every keystroke', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const spy = jest.fn();
+
+            getFilterBar().onChangePipe.subscribe(spy);
+
+            typeInto('new');
+            tick(DEBOUNCE - 50);
+            typeInto('new text');
+            tick(DEBOUNCE - 50);
+
+            expect(getPipeComponent().data.value).toBeNull();
+
+            tick(50);
+
+            expect(getPipeComponent().data.value).toBe('new text');
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should not apply text shorter than minLength', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const spy = jest.fn();
+
+            getFilterBar().onChangePipe.subscribe(spy);
+
+            typeInto('ne');
+            tick(DEBOUNCE);
+
+            expect(getPipeComponent().data.value).toBeNull();
+            expect(spy).not.toHaveBeenCalled();
+        }));
+
+        // Otherwise the bar would keep filtering by text the user has already erased.
+        it('should reset an applied value when the text drops below minLength', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
+            fixture.detectChanges();
+
+            const spy = jest.fn();
+
+            getFilterBar().onChangePipe.subscribe(spy);
+
+            typeInto('so');
+            tick(DEBOUNCE);
+
+            expect(getPipeComponent().data.value).toBeNull();
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+
+        // The pending debounce would resolve to `null` (the text is below the threshold) and wipe what
+        // Enter has just applied.
+        it('should apply on Enter below minLength and cancel the pending debounce', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const spy = jest.fn();
+
+            getFilterBar().onChangePipe.subscribe(spy);
+
+            typeInto('ne');
+            pressEnter();
+
+            expect(getPipeComponent().data.value).toBe('ne');
+
+            tick(DEBOUNCE);
+
+            expect(getPipeComponent().data.value).toBe('ne');
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should apply on blur below minLength and cancel the pending debounce', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const spy = jest.fn();
+
+            getFilterBar().onChangePipe.subscribe(spy);
+
+            typeInto('ne');
+            blurInput();
+
+            tick(DEBOUNCE);
+
+            expect(getPipeComponent().data.value).toBe('ne');
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should not restore the text when the cleaner is clicked mid-debounce', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ value: 'some text', cleanable: true })
+            ]);
+            fixture.detectChanges();
+
+            typeInto('uncommitted');
+            blurInput(getCleanerElement());
+            getCleanerElement()!.click();
+            fixture.detectChanges();
+
+            tick(DEBOUNCE);
+
+            expect(getPipeComponent().data.value).toBeNull();
+        }));
+
+        // Seeding is `emitEvent: false`, so a stored value below the threshold survives rendering.
+        it('should not re-apply the seeded value on init', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'so' })]);
+            fixture.detectChanges();
+
+            const spy = jest.fn();
+
+            getFilterBar().onChangePipe.subscribe(spy);
+
+            tick(DEBOUNCE);
+
+            expect(getPipeComponent().data.value).toBe('so');
+            expect(spy).not.toHaveBeenCalled();
+        }));
+
+        // Both settings are read at emission time, so a subclass — or a test — can retune them.
+        it('should honour custom debounceTime and minLength', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.debounceTime = 50;
+            component.minLength = 1;
+
+            typeInto('n');
+            tick(50);
+
+            expect(component.data.value).toBe('n');
+        }));
     });
 
     describe('clearing', () => {

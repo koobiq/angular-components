@@ -104,7 +104,7 @@ export const kbqFilterBarPipesProvider = (): Provider => {
 export enum KbqPipeTypes {
     ReadOnly = 'readonly',
     Text = 'text',
-    /** Renders a bare input: no popover, never opens. Commits on Enter and on blur. */
+    /** Renders a bare input: no popover, never opens. Commits while typing (debounced), on Enter and on blur. */
     Input = 'input',
     Select = 'select',
     TreeSelect = 'tree-select',

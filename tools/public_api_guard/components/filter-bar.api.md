@@ -745,8 +745,10 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
 // @public (undocumented)
 export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements OnInit {
     readonly control: FormControl<string | null>;
+    debounceTime: number;
     protected readonly input: _angular_core.Signal<KbqInput>;
     get isEmpty(): boolean;
+    minLength: number;
     // (undocumented)
     ngOnInit(): void;
     protected onBlur(event: FocusEvent): void;

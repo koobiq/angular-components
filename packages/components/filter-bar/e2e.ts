@@ -26,6 +26,79 @@ const DEV_DATA_OBJECT = {
 };
 
 @Component({
+    selector: 'e2e-filter-bar-filters',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            @for (filter of filters; track $index) {
+                <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                    <kbq-filters [filters]="savedFilters" />
+
+                    @for (pipe of filter?.pipes; track pipe) {
+                        <ng-container *kbqPipe="pipe" />
+                    }
+
+                    <kbq-pipe-add />
+                </kbq-filter-bar>
+                <br />
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarFilters'
+    }
+})
+export class E2eFilterBarFilters {
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Text',
+            type: KbqPipeTypes.Text,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    /** Options of the saved-filters dropdown. Only the trigger is captured, so one entry is enough. */
+    readonly savedFilters: KbqFilter[] = [
+        { name: 'saved', readonly: false, disabled: false, changed: false, saved: true, pipes: [] }
+    ];
+
+    /**
+     * One bar per state of the `kbq-filters` trigger: no filter, then each combination that renders an
+     * adjacent action button (save-as-new / actions) next to the trigger.
+     */
+    readonly filters: (KbqFilter | null)[] = [
+        null,
+        this.buildFilter('changed', { changed: true, saved: false }),
+        this.buildFilter('saved', { changed: false, saved: true }),
+        this.buildFilter('saved and changed', { changed: true, saved: true })
+    ];
+
+    private buildFilter(name: string, state: Pick<KbqFilter, 'changed' | 'saved'>): KbqFilter {
+        return {
+            name,
+            readonly: false,
+            disabled: false,
+            ...state,
+            pipes: [
+                {
+                    name: 'pipe',
+                    value: 'value',
+                    type: KbqPipeTypes.Text,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ]
+        };
+    }
+}
+
+@Component({
     selector: 'e2e-filter-bar-states',
     imports: [KbqFilterBarModule, KbqIcon, KbqLuxonDateModule],
     template: `
