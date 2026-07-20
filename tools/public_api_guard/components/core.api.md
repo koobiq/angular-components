@@ -2988,7 +2988,7 @@ export type KbqPanelMaxWidth = number | null;
 export type KbqPanelMinWidth = number | null;
 
 // @public
-export type KbqPanelWidth = 'auto' | number | null | '';
+export type KbqPanelWidth = 'auto' | number | (string & {}) | null | '';
 
 // @public
 export type KbqPanelWidthOrigin = ElementRef<HTMLElement> | CdkOverlayOrigin | HTMLElement;
@@ -3340,7 +3340,7 @@ export interface KbqResolvedPanelWidth {
 }
 
 // @public
-export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | string | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;
+export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {

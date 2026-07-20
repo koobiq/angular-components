@@ -14,9 +14,11 @@ export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
  *
  * - `'auto'` — matches the trigger width, but never narrower than `panelMinWidth`.
  * - `number` — an explicit width in pixels. `panelMinWidth` is not applied.
+ * - `string` — an explicit CSS width (e.g. `fit-content`, `20rem`). `panelMinWidth` is not applied.
  * - `null`/`''` — the panel sizes to its content, but never narrower than the trigger or `panelMinWidth`.
  */
-export type KbqPanelWidth = 'auto' | number | null | '';
+// `string & {}` keeps the literal members visible to autocomplete while still allowing any CSS width.
+export type KbqPanelWidth = 'auto' | number | (string & {}) | null | '';
 
 /** Minimum width of an overlay panel, in pixels. `null` applies no additional minimum. */
 export type KbqPanelMinWidth = number | null;
@@ -74,7 +76,7 @@ export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number {
  * @docs-private
  */
 export function kbqResolvePanelWidth(
-    panelWidth: KbqPanelWidth | string | undefined,
+    panelWidth: KbqPanelWidth | undefined,
     panelMinWidth: KbqPanelMinWidth | undefined,
     triggerWidth: number
 ): KbqResolvedPanelWidth {

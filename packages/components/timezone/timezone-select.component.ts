@@ -6,12 +6,10 @@ import {
     Component,
     Directive,
     ViewEncapsulation,
-    contentChild,
-    input,
-    numberAttribute
+    contentChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_OPTION_PARENT_COMPONENT, KbqPanelMinWidth, KbqPanelWidth, ruRULocaleData } from '@koobiq/components/core';
+import { KBQ_OPTION_PARENT_COMPONENT, ruRULocaleData } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
@@ -48,11 +46,6 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
 })
 export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
-
-    /** The timezone panel matches the field, but never gets narrower than 640px. */
-    override readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth || 'auto');
-    // Unlike `panelWidth`, this deliberately ignores `KBQ_SELECT_OPTIONS` — 640 is the timezone contract.
-    override readonly panelMinWidth = input<KbqPanelMinWidth, unknown>(640, { transform: numberAttribute });
 
     ngAfterContentInit() {
         super.ngAfterContentInit();

@@ -270,7 +270,7 @@ const w = this.select.panelWidth();
 
 **`panelWidth={{0}}` on `<kbq-autocomplete>`** is now an explicit width instead of being treated as unset — the panel renders at literally `0px` instead of sizing to content. `getOverlaySize()` used to treat `panelWidth` as falsy-checked, so `0` fell back to content-sizing; `select`/`tree-select` already treated `0` as an explicit width before this release, and autocomplete is now consistent with them. This only matters if `panelWidth` is bound to an expression that can evaluate to `0` (a literal `panelWidth="0"` has no legitimate use); it can't be schematic-migrated since it depends on a runtime value, not a static template attribute.
 
-**`kbq-timezone-select`** now honours the 640px minimum its documentation has always described. Between 20.0.0 and 20.1.0 its `panelMinWidth: 640` default never reached the DOM, so the panel always matched the field. If you want the field width back, set `panelMinWidth="0"`.
+**`kbq-timezone-select` no longer has width defaults of its own.** It used to declare `panelWidth: 'auto'` and `panelMinWidth: 640`; both are gone, so it now inherits the select's defaults — the menu sizes to its content, never narrower than the field or 200px, and stops at 640px. In practice the panel used to match the field exactly (the `640` minimum never reached the DOM between 20.0.0 and 20.1.0), so the visible change is that the menu now grows with long timezone names. Set `panelWidth="auto"` to get the old field-matching behaviour back.
 
 **`[panelMinWidth]="null"`** now keeps the trigger-width floor. It previously produced an invalid `NaNpx`, which browsers dropped, removing every minimum.
 

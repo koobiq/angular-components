@@ -8,8 +8,10 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DOWN_ARROW,
     ESCAPE,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqOptionModule,
     KbqOptionSelectionChange,
+    KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
     KbqSelectSearch,
@@ -140,7 +142,11 @@ class BasicTimezoneSelect {
     ],
     template: `
         <kbq-form-field>
-            <kbq-timezone-select [panelMinWidth]="panelMinWidth" [panelWidth]="panelWidth">
+            <kbq-timezone-select
+                [panelMaxWidth]="panelMaxWidth"
+                [panelMinWidth]="panelMinWidth"
+                [panelWidth]="panelWidth"
+            >
                 @for (zone of zones; track zone) {
                     <kbq-timezone-option [value]="zone.id" [timezone]="zone" />
                 }
@@ -150,8 +156,9 @@ class BasicTimezoneSelect {
 })
 class TimezoneSelectWithPanelWidth {
     zones = groupedZones[0].zones;
-    panelWidth: KbqPanelWidth = 'auto';
-    panelMinWidth: KbqPanelMinWidth = 640;
+    panelWidth: KbqPanelWidth = null;
+    panelMinWidth: KbqPanelMinWidth = KBQ_PANEL_DEFAULT_MIN_WIDTH;
+    panelMaxWidth: KbqPanelMaxWidth = null;
 }
 
 @Component({
@@ -287,17 +294,28 @@ describe('KbqTimezoneSelect', () => {
             return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         }
 
-        // Deliberately uses the host without width bindings, so these exercise the real defaults.
-        it('should honour the default 640px minimum when the field is narrower', () => {
-            expect(openPanelWithFieldWidth(BasicTimezoneSelect, 300).style.width).toBe('640px');
+        // `KbqTimezoneSelect` declares no width members of its own — these pin the defaults it inherits
+        // from `KbqSelect`: size to the content, but never narrower than the field or `panelMinWidth`.
+        it('should size to the content rather than to the field by default', () => {
+            expect(openPanelWithFieldWidth(BasicTimezoneSelect, 300).style.width).toBe('');
         });
 
-        it('should grow to match the field when it is wider than the minimum', () => {
-            expect(openPanelWithFieldWidth(BasicTimezoneSelect, 800).style.width).toBe('800px');
+        it('should not get narrower than the field by default', () => {
+            expect(openPanelWithFieldWidth(BasicTimezoneSelect, 800).style.minWidth).toBe('800px');
         });
 
-        it('should match the field exactly when panelMinWidth is removed', () => {
-            const pane = openPanelWithFieldWidth(TimezoneSelectWithPanelWidth, 300, (host) => (host.panelMinWidth = 0));
+        it('should floor at the inherited panelMinWidth when the field is narrower', () => {
+            expect(openPanelWithFieldWidth(BasicTimezoneSelect, 100).style.minWidth).toBe(
+                `${KBQ_PANEL_DEFAULT_MIN_WIDTH}px`
+            );
+        });
+
+        it('should match the field when panelWidth is auto', () => {
+            const pane = openPanelWithFieldWidth(
+                TimezoneSelectWithPanelWidth,
+                300,
+                (host) => (host.panelWidth = 'auto')
+            );
 
             expect(pane.style.width).toBe('300px');
         });
@@ -307,6 +325,17 @@ describe('KbqTimezoneSelect', () => {
 
             expect(pane.style.width).toBe('400px');
             expect(pane.style.minWidth).toBe('');
+        });
+
+        it('should apply panelMaxWidth to the panel', () => {
+            const pane = openPanelWithFieldWidth(
+                TimezoneSelectWithPanelWidth,
+                300,
+                (host) => (host.panelMaxWidth = 500)
+            );
+            const panel = pane.querySelector<HTMLElement>('.kbq-timezone-select__panel')!;
+
+            expect(panel.style.maxWidth).toBe('500px');
         });
     });
 

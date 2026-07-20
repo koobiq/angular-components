@@ -2220,7 +2220,7 @@ class SimpleAutocomplete implements OnDestroy {
     filteredStates: any[];
     valueSub: Subscription;
     width: number;
-    panelWidth: KbqPanelWidth | string | undefined;
+    panelWidth: KbqPanelWidth | undefined;
     panelMinWidth: number = KBQ_PANEL_DEFAULT_MIN_WIDTH;
     panelMaxWidth: KbqPanelMaxWidth = null;
     kbqOptionWidth: number;

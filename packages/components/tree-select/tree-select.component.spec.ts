@@ -4793,6 +4793,19 @@ describe('KbqTreeSelect', () => {
                 expect(getPane().style.width).toBe('344px');
             });
 
+            // The docs offer "a number or a CSS value", so `KbqPanelWidth` has to keep accepting CSS widths.
+            it('should pass a CSS panelWidth through to the pane', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+
+                fixture.componentInstance.panelWidth = 'fit-content';
+                fixture.detectChanges();
+
+                fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('fit-content');
+            });
+
             it('should match the trigger when panelWidth is auto', () => {
                 const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
 

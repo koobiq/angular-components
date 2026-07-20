@@ -50,6 +50,6 @@ export default function migrate(options: Schema) {
             migrationData
         );
 
-        context.logger.warn('Warning! Run linter in updated files since line breaks or indents maybe be broken.');
+        context.logger.warn('Warning! Run linter in updated files since line breaks or indents may be broken.');
     };
 }

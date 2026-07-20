@@ -17,6 +17,7 @@ import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
 import { KbqPanelMaxWidth } from '@koobiq/components/core';
+import { KbqPanelWidth } from '@koobiq/components/core';
 import { KeyboardNavigationHandler } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -89,7 +90,7 @@ export class KbqAutocomplete implements AfterContentInit {
     readonly panel: _angular_core.Signal<ElementRef<any>>;
     readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
-    readonly panelWidth: _angular_core.InputSignal<string | number | null | undefined>;
+    readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth | undefined>;
     // (undocumented)
     setScrollTop(scrollTop: number): void;
     // (undocumented)

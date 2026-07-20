@@ -123,7 +123,7 @@ export class KbqAutocomplete implements AfterContentInit {
      * exact width, and `panelMinWidth` is not applied. When not set, the panel sizes to its content and is
      * at least as wide as its host.
      */
-    readonly panelWidth = input<KbqPanelWidth | string | undefined>(undefined);
+    readonly panelWidth = input<KbqPanelWidth | undefined>(undefined);
 
     /**
      * Minimum width of the panel in pixels.
