@@ -19,7 +19,7 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
         KbqIconButton
     ],
     template: `
-        <button #trigger kbq-button (click)="visible.set(true)">Показать оповещение</button>
+        <button #trigger kbq-button (click)="visible.set(true)">Show alert</button>
 
         @if (visible()) {
             <!-- role="alert" makes assistive technology announce the alert when it is inserted. -->
@@ -32,11 +32,11 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
                 (closed)="dismiss()"
             >
                 <i aria-hidden="true" kbq-icon="kbq-triangle-exclamation_16" [color]="colors.Error"></i>
-                Не удалось сохранить изменения. Попробуйте ещё раз.
+                Failed to save changes. Please try again.
                 <button
                     kbq-alert-close-button
                     kbq-icon-button="kbq-xmark-s_16"
-                    aria-label="Закрыть"
+                    aria-label="Close"
                     [color]="colors.ContrastFade"
                 ></button>
             </kbq-alert>

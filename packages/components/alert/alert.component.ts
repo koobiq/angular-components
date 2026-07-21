@@ -138,7 +138,7 @@ export class KbqAlert {
     /** The projected status icon, whichever slot it came from. @docs-private */
     protected readonly projectedIcon = computed(() => this.icon() || this.iconItem());
 
-    /** Last color this component auto-assigned to the icon; lets us re-tint on change without clobbering a consumer's color. */
+    /** Last color this component auto-assigned to the icon; lets us correct color on change without ignoring consumer's color. */
     private lastAutoColor: KbqComponentColors | null = null;
 
     constructor() {

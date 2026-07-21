@@ -18,11 +18,12 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
     template: `
         <kbq-alert class="flex-100" [@hideShowAnimator]="state" [compact]="true" (closed)="state = false">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            Блок скрывается по крестику в углу, не дублируйте эту возможность с помощью кнопки под текстом сообщения
+            The alert is dismissed with the close icon in the corner; do not duplicate this with a button below the
+            message text
             <button
                 kbq-alert-close-button
                 kbq-icon-button="kbq-xmark-s_16"
-                aria-label="Закрыть"
+                aria-label="Close"
                 [color]="colors.ContrastFade"
             ></button>
         </kbq-alert>

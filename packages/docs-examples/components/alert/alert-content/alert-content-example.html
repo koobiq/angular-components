@@ -2,31 +2,31 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            <div kbq-alert-title>Не удалось загрузить файл</div>
-            Когда гиперссылка расположена в конце предложения, то точка окрашена в цвет ссылки,
+            <div kbq-alert-title>Failed to upload the file</div>
+            When a hyperlink is at the end of a sentence, the period takes the link color,
             <a href="https://koobiq.io/en/components/link" kbq-link class="kbq-text-with-dot">
-                <span class="kbq-link__text">но не подчеркивается</span>
+                <span class="kbq-link__text">but is not underlined</span>
                 <span>.</span>
             </a>
             <button kbq-alert-control kbq-button class="example-overview__button" [color]="colors.Contrast">
-                Выбрать другой файл
+                Choose another file
             </button>
-            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">Заменить</button>
+            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">Replace</button>
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            <div kbq-alert-title>Не удалось загрузить файл</div>
-            Когда гиперссылка расположена в конце предложения, то точка окрашена в цвет ссылки,
+            <div kbq-alert-title>Failed to upload the file</div>
+            When a hyperlink is at the end of a sentence, the period takes the link color,
             <a href="https://koobiq.io/en/components/link" kbq-link class="kbq-text-with-dot">
-                <span class="kbq-link__text">но не подчеркивается</span>
+                <span class="kbq-link__text">but is not underlined</span>
                 <span>.</span>
             </a>
             <button kbq-alert-control kbq-button class="example-overview__button" [color]="colors.Contrast">
-                Выбрать другой файл
+                Choose another file
             </button>
-            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">Заменить</button>
+            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">Replace</button>
         </kbq-alert>
     </div>
 </div>
@@ -35,19 +35,19 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            Не удалось обновить агент
+            Failed to update the agent
             <span class="kbq-text-normal-strong">ekb-mail-server</span>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Повторить</button>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Установить другую версию</button>
+            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Retry</button>
+            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Install a different version</button>
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            Не удалось обновить агент
+            Failed to update the agent
             <span class="kbq-text-normal-strong">ekb-mail-server</span>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Повторить</button>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Установить другую версию</button>
+            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Retry</button>
+            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">Install a different version</button>
         </kbq-alert>
     </div>
 </div>
@@ -56,12 +56,12 @@
     <div class="layout-column example-column">
         <kbq-alert [@hideShowAnimator]="firstState" (closed)="firstState = false">
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            Модуль настраивается в политике
-            <a href="https://koobiq.io" kbq-link>Гипервизоры</a>
+            The module is configured in the policy
+            <a href="https://koobiq.io" kbq-link>Hypervisors</a>
             <button
                 kbq-alert-close-button
                 kbq-icon-button="kbq-xmark-s_16"
-                aria-label="Закрыть"
+                aria-label="Close"
                 [color]="colors.ContrastFade"
             ></button>
         </kbq-alert>
@@ -69,12 +69,12 @@
     <div class="layout-column example-column">
         <kbq-alert [@hideShowAnimator]="secondState" [compact]="true" (closed)="secondState = false">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            Модуль настраивается в политике
-            <a href="https://koobiq.io" kbq-link>Гипервизоры</a>
+            The module is configured in the policy
+            <a href="https://koobiq.io" kbq-link>Hypervisors</a>
             <button
                 kbq-alert-close-button
                 kbq-icon-button="kbq-xmark-s_16"
-                aria-label="Закрыть"
+                aria-label="Close"
                 [color]="colors.ContrastFade"
             ></button>
         </kbq-alert>
@@ -85,13 +85,13 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            После восстановления нужно проверить связи групп агентов с политиками
+            After recovery, check the agent groups' links to policies
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            После восстановления нужно проверить связи групп агентов с политиками
+            After recovery, check the agent groups' links to policies
         </kbq-alert>
     </div>
 </div>
@@ -100,13 +100,13 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            Короткий текст в алерте
+            Short text in the alert
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            Короткий текст в алерте
+            Short text in the alert
         </kbq-alert>
     </div>
 </div>
@@ -115,30 +115,30 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <p>
-                Абзац должен сообщать и развивать только одну мысль. Например, если смешать в одном абзаце и причины, и
-                суть проблемы, и варианты решения ситуации, которую описываете, читатель быстро устанет и, скорее всего,
-                не поймет, о чем он вообще только что прочитал.
+                A paragraph should convey and develop only one idea. For example, if you mix the causes, the essence of
+                the problem, and possible solutions to the situation you are describing in a single paragraph, the
+                reader will quickly get tired and most likely will not understand what they just read.
             </p>
             <p>
-                Постарайтесь сформулировать ключевую мысль в первом предложении абзаца, а затем раскрыть ее подробнее и
-                подкрепить примерами. Так читатель сможет сканировать текст по диагонали и сразу видеть, о чем говорится
-                в каждой части. Иногда первые предложения в абзаце выделяются жирным шрифтом — это называется
-                заголовками в подбор.
+                Try to state the key idea in the first sentence of the paragraph, then expand on it in more detail and
+                back it up with examples. That way the reader can skim the text diagonally and immediately see what each
+                part is about. Sometimes the first sentences of a paragraph are set in bold — these are called run-in
+                headings.
             </p>
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <p>
-                Абзац должен сообщать и развивать только одну мысль. Например, если смешать в одном абзаце и причины, и
-                суть проблемы, и варианты решения ситуации, которую описываете, читатель быстро устанет и, скорее всего,
-                не поймет, о чем он вообще только что прочитал.
+                A paragraph should convey and develop only one idea. For example, if you mix the causes, the essence of
+                the problem, and possible solutions to the situation you are describing in a single paragraph, the
+                reader will quickly get tired and most likely will not understand what they just read.
             </p>
             <p>
-                Постарайтесь сформулировать ключевую мысль в первом предложении абзаца, а затем раскрыть ее подробнее и
-                подкрепить примерами. Так читатель сможет сканировать текст по диагонали и сразу видеть, о чем говорится
-                в каждой части. Иногда первые предложения в абзаце выделяются жирным шрифтом — это называется
-                заголовками в подбор.
+                Try to state the key idea in the first sentence of the paragraph, then expand on it in more detail and
+                back it up with examples. That way the reader can skim the text diagonally and immediately see what each
+                part is about. Sometimes the first sentences of a paragraph are set in bold — these are called run-in
+                headings.
             </p>
         </kbq-alert>
     </div>
