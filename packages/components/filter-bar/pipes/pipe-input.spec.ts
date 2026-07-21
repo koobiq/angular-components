@@ -70,6 +70,9 @@ describe('KbqPipeInputComponent', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
 
+    /** `KbqPipeInputComponent.debounceTime` — named so the timing-based tests read as timings, not magic numbers. */
+    const DEBOUNCE = 200;
+
     const originalStructuredClone = window.structuredClone;
 
     beforeAll(() => {
@@ -118,16 +121,6 @@ describe('KbqPipeInputComponent', () => {
 
         input.value = value;
         input.dispatchEvent(new Event('input'));
-        fixture.detectChanges();
-    };
-
-    const blurInput = (relatedTarget: EventTarget | null = null, index: number = 0) => {
-        getInputElement(index).dispatchEvent(new FocusEvent('blur', { relatedTarget }));
-        fixture.detectChanges();
-    };
-
-    const pressEnter = (index: number = 0) => {
-        getInputElement(index).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         fixture.detectChanges();
     };
 
@@ -243,102 +236,7 @@ describe('KbqPipeInputComponent', () => {
         });
     });
 
-    describe('commit', () => {
-        beforeEach(createFixture);
-
-        it('should commit on Enter', () => {
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
-            fixture.detectChanges();
-
-            typeInto('new text');
-            pressEnter();
-
-            expect(getPipeComponent().data.value).toBe('new text');
-        });
-
-        it('should commit on blur', () => {
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
-            fixture.detectChanges();
-
-            typeInto('new text');
-            blurInput();
-
-            expect(getPipeComponent().data.value).toBe('new text');
-        });
-
-        it('should emit onChangePipe on commit', () => {
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
-            fixture.detectChanges();
-
-            const spy = jest.fn();
-
-            getFilterBar().onChangePipe.subscribe(spy);
-
-            typeInto('new text');
-            blurInput();
-
-            expect(spy).toHaveBeenCalledTimes(1);
-        });
-
-        it('should normalize an empty string to null', () => {
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
-            fixture.detectChanges();
-
-            typeInto('');
-            blurInput();
-
-            expect(getPipeComponent().data.value).toBeNull();
-        });
-
-        // `KbqTrim` auto-applies to `[kbqInput]`, so a whitespace-only value reaches the control as ''.
-        it('should commit a whitespace-only value as null', () => {
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
-            fixture.detectChanges();
-
-            typeInto('   ');
-            blurInput();
-
-            expect(getPipeComponent().data.value).toBeNull();
-        });
-
-        it('should not emit when blurring without a change', () => {
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
-            fixture.detectChanges();
-
-            const spy = jest.fn();
-
-            getFilterBar().onChangePipe.subscribe(spy);
-
-            blurInput();
-
-            expect(spy).not.toHaveBeenCalled();
-        });
-
-        // A pipe added from a template carries no `value` key at all, so `data.value` is `undefined`. A plain
-        // `===` against `null` would miss, and merely tabbing through a fresh pipe would mark the filter changed.
-        it('should not mark the filter changed when blurring an untouched freshly-added pipe', () => {
-            const pipe = createPipe({});
-
-            delete (pipe as Partial<KbqPipe>).value;
-
-            fixture.componentInstance.activeFilter = createFilter([pipe as KbqPipe]);
-            fixture.detectChanges();
-
-            const spy = jest.fn();
-
-            getFilterBar().onChangePipe.subscribe(spy);
-
-            blurInput();
-
-            expect(spy).not.toHaveBeenCalled();
-            expect(getFilterBar().filter()?.changed).toBe(false);
-        });
-    });
-
     describe('auto-apply while typing', () => {
-        /** `KbqPipeInputComponent.debounceTime` — kept local so the tests read as timings, not magic numbers. */
-        const DEBOUNCE = 200;
-
         beforeEach(createFixture);
 
         it('should apply the typed value once the debounce elapses', fakeAsync(() => {
@@ -393,6 +291,11 @@ describe('KbqPipeInputComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
+            const component = getPipeComponent();
+
+            // Raise the threshold above the typed length; the default of 1 would apply even a single character.
+            component.minLength = 3;
+
             const spy = jest.fn();
 
             getFilterBar().onChangePipe.subscribe(spy);
@@ -400,7 +303,7 @@ describe('KbqPipeInputComponent', () => {
             typeInto('ne');
             tick(DEBOUNCE);
 
-            expect(getPipeComponent().data.value).toBeNull();
+            expect(component.data.value).toBeNull();
             expect(spy).not.toHaveBeenCalled();
         }));
 
@@ -409,6 +312,10 @@ describe('KbqPipeInputComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
+            const component = getPipeComponent();
+
+            component.minLength = 3;
+
             const spy = jest.fn();
 
             getFilterBar().onChangePipe.subscribe(spy);
@@ -416,46 +323,29 @@ describe('KbqPipeInputComponent', () => {
             typeInto('so');
             tick(DEBOUNCE);
 
+            expect(component.data.value).toBeNull();
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+
+        it('should normalize an empty string to null', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
+            fixture.detectChanges();
+
+            typeInto('');
+            tick(DEBOUNCE);
+
             expect(getPipeComponent().data.value).toBeNull();
-            expect(spy).toHaveBeenCalledTimes(1);
         }));
 
-        // The pending debounce would resolve to `null` (the text is below the threshold) and wipe what
-        // Enter has just applied.
-        it('should apply on Enter below minLength and cancel the pending debounce', fakeAsync(() => {
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+        // `KbqTrim` auto-applies to `[kbqInput]`, so a whitespace-only value reaches the control as ''.
+        it('should commit a whitespace-only value as null', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
-            const spy = jest.fn();
-
-            getFilterBar().onChangePipe.subscribe(spy);
-
-            typeInto('ne');
-            pressEnter();
-
-            expect(getPipeComponent().data.value).toBe('ne');
-
+            typeInto('   ');
             tick(DEBOUNCE);
 
-            expect(getPipeComponent().data.value).toBe('ne');
-            expect(spy).toHaveBeenCalledTimes(1);
-        }));
-
-        it('should apply on blur below minLength and cancel the pending debounce', fakeAsync(() => {
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
-            fixture.detectChanges();
-
-            const spy = jest.fn();
-
-            getFilterBar().onChangePipe.subscribe(spy);
-
-            typeInto('ne');
-            blurInput();
-
-            tick(DEBOUNCE);
-
-            expect(getPipeComponent().data.value).toBe('ne');
-            expect(spy).toHaveBeenCalledTimes(1);
+            expect(getPipeComponent().data.value).toBeNull();
         }));
 
         it('should not restore the text when the cleaner is clicked mid-debounce', fakeAsync(() => {
@@ -465,7 +355,6 @@ describe('KbqPipeInputComponent', () => {
             fixture.detectChanges();
 
             typeInto('uncommitted');
-            blurInput(getCleanerElement());
             getCleanerElement()!.click();
             fixture.detectChanges();
 
@@ -474,9 +363,10 @@ describe('KbqPipeInputComponent', () => {
             expect(getPipeComponent().data.value).toBeNull();
         }));
 
-        // Seeding is `emitEvent: false`, so a stored value below the threshold survives rendering.
+        // Seeding is `emitEvent: false`, so rendering a stored value neither re-applies it nor marks the
+        // filter changed — a saved filter must open exactly as it was persisted.
         it('should not re-apply the seeded value on init', fakeAsync(() => {
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'so' })]);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
             const spy = jest.fn();
@@ -485,24 +375,23 @@ describe('KbqPipeInputComponent', () => {
 
             tick(DEBOUNCE);
 
-            expect(getPipeComponent().data.value).toBe('so');
+            expect(getPipeComponent().data.value).toBe('some text');
             expect(spy).not.toHaveBeenCalled();
         }));
 
-        // Both settings are read at emission time, so a subclass — or a test — can retune them.
-        it('should honour custom debounceTime and minLength', fakeAsync(() => {
+        // `debounceTime` is read at emission time (inside the timer), so a subclass — or a test — can retune it.
+        it('should honour a custom debounceTime', fakeAsync(() => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.debounceTime = 50;
-            component.minLength = 1;
 
-            typeInto('n');
+            typeInto('new text');
             tick(50);
 
-            expect(component.data.value).toBe('n');
+            expect(component.data.value).toBe('new text');
         }));
     });
 
@@ -557,9 +446,10 @@ describe('KbqPipeInputComponent', () => {
             expect(spy).toHaveBeenCalledTimes(1);
         });
 
-        // The cleaner is focusable, so clicking it blurs the input first. Committing on that blur would emit
-        // the text being discarded, then emit again on clear — two events, the first one stale.
-        it('should emit onChangePipe once with null when clearing uncommitted text', () => {
+        // Clearing must cancel any debounce still pending from the discarded text: otherwise onChangePipe
+        // fires once for that text when the timer resolves and again for the clear — two events, the first
+        // one stale. onClear cancels the pending apply, so only the null-clear emission survives.
+        it('should emit onChangePipe once with null when clearing uncommitted text', fakeAsync(() => {
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ value: 'some text', cleanable: true })
             ]);
@@ -570,13 +460,14 @@ describe('KbqPipeInputComponent', () => {
             getFilterBar().onChangePipe.subscribe(spy);
 
             typeInto('uncommitted');
-            blurInput(getCleanerElement());
             getCleanerElement()!.click();
             fixture.detectChanges();
 
+            tick(DEBOUNCE);
+
             expect(spy).toHaveBeenCalledTimes(1);
             expect(getPipeComponent().data.value).toBeNull();
-        });
+        }));
 
         it('should reset the control when cleared programmatically', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
