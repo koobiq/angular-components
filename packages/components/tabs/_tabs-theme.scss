@@ -16,6 +16,10 @@
 
     &:is(:hover, .kbq-hover):not(.kbq-disabled) {
         @include kbq-tab-item-state($type, $sub-type, states-hover);
+
+        &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):not(.kbq-tab-label_icon-only)::after {
+            background: var(--kbq-tabs-tab-item-#{$type}-#{$sub-type}-states-hover-underline-color);
+        }
     }
 
     &.kbq-tab-label_empty {
@@ -27,6 +31,10 @@
 
         &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
             background: none;
+
+            &:not(.kbq-tab-label_icon-only)::after {
+                background: transparent;
+            }
         }
 
         &:is(:hover, .kbq-hover) {

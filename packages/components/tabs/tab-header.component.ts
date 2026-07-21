@@ -23,8 +23,8 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
  */
 export type ScrollDirection = 'after' | 'before';
 
-/** Corresponds to `margin-inline: var(--kbq-size-xxs)` on `.kbq-tab-label_icon-only`. */
-const ICON_ONLY_TAB_MARGIN_INLINE = 4;
+/** Corresponds to `--kbq-tabs-size-tab-item-padding-horizontal` on text/icon+text tabs. */
+const TAB_PADDING = 12;
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group.
@@ -66,15 +66,17 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
         if (!this.isBrowser) return undefined;
 
         const item = this.items.get(this.selectedIndex);
-        const labelContent =
-            item?.elementRef?.nativeElement?.querySelector<HTMLElement>('.kbq-tab-label__content') ??
-            item?.elementRef?.nativeElement;
-        const width = labelContent?.offsetWidth;
+        const nativeElement = item?.elementRef?.nativeElement;
 
-        if (!width) return width;
+        if (item?.tab?.iconOnlyLabel) {
+            return nativeElement?.offsetWidth;
+        }
 
-        // TODO: align width for icon only tab - use full width of element instead of element content
-        return item!.tab?.iconOnlyLabel ? width + ICON_ONLY_TAB_MARGIN_INLINE * 2 : width;
+        const width =
+            nativeElement?.querySelector<HTMLElement>('.kbq-tab-label__content')?.offsetWidth ??
+            nativeElement?.offsetWidth;
+
+        return width;
     }
 
     /** Left offset of the active tab, adjusted for icon-only tab margins. */
@@ -86,7 +88,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
 
         if (!left) return left;
 
-        return item!.tab?.iconOnlyLabel ? left - ICON_ONLY_TAB_MARGIN_INLINE : left + 12;
+        return item?.tab?.iconOnlyLabel ? left : left + TAB_PADDING;
     }
 
     protected itemSelected(event: KeyboardEvent): void {
