@@ -31,17 +31,6 @@
         }
     }
 
-    .kbq-pipe__separator {
-        z-index: 1;
-
-        margin-inline-start: -1px;
-        margin-inline-end: 0;
-
-        height: var(--kbq-size-l);
-
-        align-self: center;
-    }
-
     .kbq-select:not(:hover, .kbq-active),
     .kbq-tree-select:not(:hover, .kbq-active),
     .kbq-button:not(:hover, .kbq-active, [disabled]) {

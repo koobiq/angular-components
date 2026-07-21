@@ -20,10 +20,6 @@
             color: var(--kbq-foreground-contrast-secondary);
         }
 
-        .kbq-pipe__separator {
-            color: var(--kbq-line-contrast-less);
-        }
-
         .kbq-select:not(:hover, .kbq-active),
         .kbq-tree-select:not(:hover, .kbq-active),
         .kbq-button:not(:hover, .kbq-active, [disabled]) {

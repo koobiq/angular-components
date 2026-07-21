@@ -58,9 +58,6 @@ const DEV_DATA_OBJECT = {
         <filter-bar-overview-example />
         <br />
         <br />
-        <filter-bar-localization-example />
-        <br />
-        <br />
         <filter-bar-search-in-pipes-example />
         <br />
         <br />
@@ -101,6 +98,9 @@ const DEV_DATA_OBJECT = {
         <br />
         <br />
         <filter-bar-complete-functions-example />
+        <br />
+        <br />
+        <filter-bar-localization-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -452,6 +452,61 @@ export class DevApp implements AfterViewInit {
                     type: KbqPipeTypes.Text,
 
                     cleanable: false,
+                    removable: false,
+                    disabled: true
+                }
+            ]
+        },
+        {
+            name: 'Input',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'requiredrequiredrequiredrequiredrequiredrequiredrequiredrequired',
+                    value: 'value',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'empty',
+                    value: null,
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    value: 'valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    // pipe-input does not surface `removable`: the cleaner is its only affordance.
+                    name: 'removable',
+                    value: 'value',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'disabled',
+                    value: 'value',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
                     removable: false,
                     disabled: true
                 }
@@ -873,6 +928,14 @@ export class DevApp implements AfterViewInit {
                 id: 'myText',
 
                 cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Input',
+                type: KbqPipeTypes.Input,
+
+                cleanable: true,
                 removable: false,
                 disabled: false
             },

@@ -1,26 +1,27 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    inject,
-    TemplateRef,
-    ViewChild
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
     KbqSaveFilterEvent
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 import { DateTime } from 'luxon';
+
+/** Text search is the first pipe in every filter: always present, never removable. */
+const createSearchPipe = (): KbqPipe => ({
+    name: 'Поиск',
+    type: KbqPipeTypes.Input,
+    value: null,
+
+    cleanable: true,
+    removable: false,
+    disabled: false
+});
 
 /**
  * @title filter-bar-complete-functions
@@ -29,10 +30,8 @@ import { DateTime } from 'luxon';
     selector: 'filter-bar-complete-functions-example',
     imports: [
         KbqFilterBarModule,
-        KbqSearchExpandableModule,
         LuxonDateModule,
-        KbqIcon,
-        ReactiveFormsModule
+        KbqIcon
     ],
     template: `
         <kbq-filter-bar
@@ -55,8 +54,6 @@ import { DateTime } from 'luxon';
             <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
 
             <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />
-
-            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
 
         <ng-template #optionTemplate let-option="option">
@@ -68,17 +65,8 @@ import { DateTime } from 'luxon';
 })
 export class FilterBarCompleteFunctionsExample implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
-    private readonly destroyRef = inject(DestroyRef);
 
     @ViewChild('optionTemplate') optionTemplate: TemplateRef<any>;
-
-    readonly searchControl = new FormControl('');
-
-    constructor() {
-        this.searchControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => this.onSearch(value ?? ''));
-    }
 
     filters: KbqFilter[] = [
         {
@@ -88,6 +76,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'required',
                     // required - не может быть пустым, всегда есть дефолтное значение
@@ -143,6 +132,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'required',
                     value: [
@@ -209,6 +199,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'required',
                     value: 'value',
@@ -263,6 +254,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'required',
                     value: {
@@ -323,6 +315,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'required',
                     value: {
@@ -383,6 +376,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'pipe 1',
                     value: '1',
@@ -419,6 +413,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
             changed: true,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'pipe 1',
                     value: '1',
@@ -455,6 +450,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
             changed: true,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'pipe 1',
                     value: '1',
@@ -491,6 +487,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'pipe 1',
                     value: '1',
@@ -666,9 +663,5 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
         this.filters.splice(currentFilterIndex, 1);
 
         this.activeFilter = null;
-    }
-
-    onSearch(value: string) {
-        console.log('onSearch: ', value);
     }
 }

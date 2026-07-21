@@ -1,22 +1,32 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 interface ExampleFilter extends KbqFilter {
     id?: number;
 }
+
+/** Text search is the first pipe in every filter: always present, never removable. */
+const createSearchPipe = (): KbqPipe => ({
+    name: 'Поиск',
+    type: KbqPipeTypes.Input,
+    value: null,
+
+    cleanable: true,
+    removable: false,
+    disabled: false
+});
 
 /**
  * @title filter-bar-saved-filters
@@ -25,17 +35,11 @@ interface ExampleFilter extends KbqFilter {
     selector: 'filter-bar-saved-filters-example',
     imports: [
         KbqFilterBarModule,
-        KbqSearchExpandableModule,
         LuxonDateModule,
-        KbqLinkModule,
-        ReactiveFormsModule
+        KbqLinkModule
     ],
     template: `
-        <kbq-filter-bar
-            [pipeTemplates]="pipeTemplates"
-            [(filter)]="activeFilter"
-            (filterChange)="onFilterChange($event)"
-        >
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
             <kbq-filters
                 [filters]="filters"
                 (onSave)="onSaveFilter($event)"
@@ -52,8 +56,6 @@ interface ExampleFilter extends KbqFilter {
             @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
-
-            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
 
         <ng-template #toastErrorTitleTemplate let-toast>
@@ -69,7 +71,6 @@ interface ExampleFilter extends KbqFilter {
 })
 export class FilterBarSavedFiltersExample {
     readonly toastService = inject(KbqToastService);
-    readonly searchControl = new FormControl('');
 
     @ViewChild(KbqFilterBar) filterBar: KbqFilterBar;
     @ViewChild('errorToastActions') errorToastActionsTemplate: TemplateRef<any>;
@@ -84,6 +85,7 @@ export class FilterBarSavedFiltersExample {
             changed: true,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -125,6 +127,7 @@ export class FilterBarSavedFiltersExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -174,6 +177,7 @@ export class FilterBarSavedFiltersExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -220,6 +224,7 @@ export class FilterBarSavedFiltersExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -337,7 +342,15 @@ export class FilterBarSavedFiltersExample {
     ];
 
     onFilterChange(filter: KbqFilter | null) {
-        console.log('onFilterChange: ', filter);
+        // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.
+        // Re-derive it by diffing the pipes against the filter's initial (saved/default) state,
+        // so reverting the pipes also clears `changed` and hides <kbq-filter-reset>.
+        const initialFilter = filter ? this.getInitialFilter(filter) : null;
+
+        this.activeFilter =
+            filter && initialFilter && this.arePipesEqual(filter.pipes, initialFilter.pipes)
+                ? { ...filter, changed: false }
+                : filter;
     }
 
     onResetFilter() {
@@ -444,6 +457,21 @@ export class FilterBarSavedFiltersExample {
         return structuredClone(this.savedFilters.find(({ name }) => name === filter?.name)!);
     }
 
+    /** Pristine (saved or default) version of a filter — the baseline for change detection. */
+    getInitialFilter(filter: KbqFilter): KbqFilter | null {
+        return filter.name === this.defaultFilter?.name
+            ? this.defaultFilter
+            : (this.savedFilters.find(({ name }) => name === filter.name) ?? null);
+    }
+
+    /** Whether two pipe lists are equivalent (same name/type/value) — detects a return to the initial state. */
+    arePipesEqual(a: KbqPipe[], b: KbqPipe[]): boolean {
+        const serialize = (pipes: KbqPipe[]): string =>
+            JSON.stringify(pipes.map(({ name, type, value }) => ({ name, type, value })));
+
+        return serialize(a) === serialize(b);
+    }
+
     getDefaultFilter(): KbqFilter {
         return {
             name: '',
@@ -452,6 +480,7 @@ export class FilterBarSavedFiltersExample {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Date',
                     value: {

@@ -1,34 +1,35 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
-import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
+
+/** Text search is the first pipe in every filter: always present, never removable. */
+const createSearchPipe = (): KbqPipe => ({
+    name: 'Поиск',
+    type: KbqPipeTypes.Input,
+    value: null,
+
+    cleanable: true,
+    removable: false,
+    disabled: false
+});
 
 /**
  * @title filter bar
  */
 @Component({
     selector: 'filter-bar-uniq-pipes-example',
-    imports: [
-        KbqFilterBarModule,
-        KbqSearchExpandableModule,
-        LuxonDateModule,
-        ReactiveFormsModule
-    ],
+    imports: [KbqFilterBarModule, LuxonDateModule],
     template: `
-        <kbq-filter-bar
-            [pipeTemplates]="pipeTemplates"
-            [(filter)]="activeFilter"
-            (filterChange)="onFilterChange($event)"
-        >
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
             <kbq-filters
                 [filters]="filters"
                 (onSave)="onSaveFilter($event)"
@@ -45,15 +46,11 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
             @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
-
-            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarUniqPipesExample {
-    readonly searchControl = new FormControl('');
-
     filters: KbqFilter[] = [
         {
             name: 'Saved Filter 1',
@@ -62,6 +59,7 @@ export class FilterBarUniqPipesExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -102,6 +100,7 @@ export class FilterBarUniqPipesExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -150,6 +149,7 @@ export class FilterBarUniqPipesExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -335,7 +335,15 @@ export class FilterBarUniqPipesExample {
     ];
 
     onFilterChange(filter: KbqFilter | null) {
-        console.log('onFilterChange: ', filter);
+        // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.
+        // Re-derive it by diffing the pipes against the filter's initial (saved/default) state,
+        // so reverting the pipes also clears `changed` and hides <kbq-filter-reset>.
+        const initialFilter = filter ? this.getInitialFilter(filter) : null;
+
+        this.activeFilter =
+            filter && initialFilter && this.arePipesEqual(filter.pipes, initialFilter.pipes)
+                ? { ...filter, changed: false }
+                : filter;
     }
 
     onResetFilter() {
@@ -421,6 +429,21 @@ export class FilterBarUniqPipesExample {
         return structuredClone(this.savedFilters.find(({ name }) => name === filter?.name)!);
     }
 
+    /** Pristine (saved or default) version of a filter — the baseline for change detection. */
+    getInitialFilter(filter: KbqFilter): KbqFilter | null {
+        return filter.name === this.defaultFilter?.name
+            ? this.defaultFilter
+            : (this.savedFilters.find(({ name }) => name === filter.name) ?? null);
+    }
+
+    /** Whether two pipe lists are equivalent (same name/type/value) — detects a return to the initial state. */
+    arePipesEqual(a: KbqPipe[], b: KbqPipe[]): boolean {
+        const serialize = (pipes: KbqPipe[]): string =>
+            JSON.stringify(pipes.map(({ name, type, value }) => ({ name, type, value })));
+
+        return serialize(a) === serialize(b);
+    }
+
     getDefaultFilter(): KbqFilter {
         return {
             name: '',
@@ -429,6 +452,7 @@ export class FilterBarUniqPipesExample {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: { name: 'Последние 24 часа', end: null, start: { hours: -24 } },

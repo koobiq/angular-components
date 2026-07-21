@@ -1,10 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqDlModule } from '@koobiq/components/dl';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
+
+/** Text search is the first pipe in every filter: always present, never removable. */
+const createSearchPipe = (): KbqPipe => ({
+    name: 'Поиск',
+    type: KbqPipeTypes.Input,
+    value: null,
+
+    cleanable: true,
+    removable: false,
+    disabled: false
+});
 
 /**
  * @title filter-bar-readonly-pipes
@@ -13,11 +22,9 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     selector: 'filter-bar-readonly-pipes-example',
     imports: [
         KbqFilterBarModule,
-        KbqSearchExpandableModule,
         LuxonDateModule,
         KbqDlModule,
-        KbqLinkModule,
-        ReactiveFormsModule
+        KbqLinkModule
     ],
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
@@ -30,8 +37,6 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
             @if (filterHasChanges()) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
-
-            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
 
         <br />
@@ -51,8 +56,6 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarReadonlyPipesExample {
-    readonly searchControl = new FormControl('');
-
     readonlyPipes = [
         { name: 'Домен', value: 'Управление системой' },
         { name: 'Тип объекта', value: 'PaxMatrol IEMS' },
@@ -143,9 +146,12 @@ export class FilterBarReadonlyPipesExample {
     }
 
     filterHasChanges(): boolean {
+        // `addPipe` only ever appends, so the default pipes stay index-aligned at the front.
+        const defaultPipes = this.getDefaultFilter().pipes;
+
         return (
-            this.activeFilter.pipes.length > 1 ||
-            this.activeFilter.pipes[0].value !== this.getDefaultFilter().pipes[0].value
+            this.activeFilter.pipes.length > defaultPipes.length ||
+            this.activeFilter.pipes.some((pipe, index) => pipe.value !== defaultPipes[index].value)
         );
     }
 
@@ -157,6 +163,7 @@ export class FilterBarReadonlyPipesExample {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Пользователь',
                     value: null,
