@@ -751,9 +751,7 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
     minLength: number;
     // (undocumented)
     ngOnInit(): void;
-    protected onBlur(event: FocusEvent): void;
     onClear(): void;
-    protected onEnter(event: Event): void;
     open(): void;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeInputComponent, "kbq-pipe-input", never, {}, {}, never, never, true, never>;

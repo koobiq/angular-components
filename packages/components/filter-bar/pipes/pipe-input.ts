@@ -18,8 +18,6 @@ import { KbqBasePipe } from './base-pipe';
                 [attr.aria-label]="data.name"
                 [formControl]="control"
                 [placeholder]="data.name"
-                (blur)="onBlur($event)"
-                (keydown.enter)="onEnter($event)"
             />
 
             <!-- Must stay a single root element: the compiler copies its tag name onto the block's template
@@ -65,7 +63,7 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
      * including an emptied field — is applied as `null`, so the filter never keeps text the user has
      * already erased. `Enter` and blur ignore the threshold. Set to `0` to apply every keystroke.
      */
-    minLength = 3;
+    minLength = 1;
 
     /** Cancels a pending debounced apply once the value has been applied (or cleared) through another path. */
     private readonly cancelPendingApply = new Subject<void>();
@@ -118,26 +116,6 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
             .subscribe((value) => this.commit(value.length >= this.minLength ? value : null));
     }
 
-    /** @docs-private */
-    // `Event`, not `KeyboardEvent`: Angular types the `keydown.enter` pseudo-event's `$event` as a plain
-    // `Event`, and a narrower parameter fails the AOT template check (TS2345).
-    protected onEnter(event: Event): void {
-        // The bar may live inside a <form>; committing must not submit it.
-        event.preventDefault();
-
-        this.applyNow();
-    }
-
-    /** @docs-private */
-    protected onBlur(event: FocusEvent): void {
-        // kbq-cleaner is focusable, so pressing it blurs the input before its click reaches clearValue.
-        // Committing here would emit onChangePipe with the very text the user is discarding — marking the
-        // filter changed — right before onClearPipe. The cleaner's click owns that transition.
-        if ((event.relatedTarget as HTMLElement | null)?.closest('.kbq-form-field__cleaner')) return;
-
-        this.applyNow();
-    }
-
     /** clears the pipe and triggers changes */
     override onClear(): void {
         // A debounce scheduled by the keystrokes that preceded the clear would put the discarded text
@@ -154,13 +132,6 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
     /** focuses the input */
     override open(): void {
         this.input().focus();
-    }
-
-    /** Applies the current text right away, bypassing both the debounce and the `minLength` threshold. */
-    private applyNow(): void {
-        this.cancelPendingApply.next();
-
-        this.commit(this.control.value);
     }
 
     /** Commits a value to `data` and notifies the filter-bar. */
