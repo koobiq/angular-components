@@ -21,7 +21,7 @@
             background: transparent;
 
             &:not(.kbq-selected)::after {
-                background: var(--kbq-tabs-tab-item-#{$type}-#{$sub-type}-states-hover-underline-color);
+                background: var(--kbq-line-contrast-fade);
             }
         }
     }
