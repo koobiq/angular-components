@@ -154,7 +154,16 @@
     }
 
     .kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content {
-        padding: 8px 0;
+        padding: var(--kbq-size-s) 0;
+
+        > .kbq-tab-label:first-child,
+        > .kbq-tab-link:first-child {
+            padding-left: 0;
+        }
+
+        > .kbq-tab-label_icon-only:first-child {
+            margin-left: 0;
+        }
     }
 
     .kbq-tab-header_underlined:not(.kbq-tab-header_vertical):after {
