@@ -33,25 +33,6 @@
 
     outline: none;
 
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
-        padding-left: 14px;
-        padding-right: 14px;
-    }
-
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-left {
-        padding-left: tokens.kbq-difference-series-css-variables(
-            [tabs-size-tab-item-padding-horizontal,
-            tabs-size-tab-item-focus-outline-width]
-        );
-    }
-
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-right {
-        padding-right: tokens.kbq-difference-series-css-variables(
-            [tabs-size-tab-item-padding-horizontal,
-            tabs-size-tab-item-focus-outline-width]
-        );
-    }
-
     &.kbq-selected {
         cursor: default;
     }
@@ -75,18 +56,47 @@
     &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):before {
         content: '';
         position: absolute;
-        left: 0;
-        right: 0;
-        top: -10px;
-        bottom: -10px;
+        //left: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+        //right: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+        //top: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+        //bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+        // -10px accounts for 8px content-area padding + 2px border to reach the header edges.
+        inset: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)))
+            calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+    }
+
+    // acts as a noop for now
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):not(.kbq-tab-label_icon-only):after {
+        content: '';
+        position: absolute;
+        // Extend by border-width to match offsetWidth (used by active-tab-underline div).
+        left: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+        right: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+        // -10px positions the underline at the separator (padding box bottom + 8px pad + 2px border).
+        bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+        height: 3px;
+        border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
+        background: transparent;
+        transition: background 0.2s ease-in-out;
+        pointer-events: none;
     }
 
     &.kbq-tab-label_icon-only {
         width: var(--kbq-size-3xl);
         height: var(--kbq-size-3xl);
         padding: 0 !important;
-        margin-inline: var(--kbq-size-xs);
+        margin-inline: var(--kbq-size-xxs);
         box-sizing: content-box;
+
+        &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
+            width: var(--kbq-tabs-size-tab-item-underlined-icon-only-size);
+            height: var(--kbq-tabs-size-tab-item-underlined-icon-only-size);
+
+            &:before {
+                left: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+                right: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            }
+        }
 
         // Keep the space between icon-only tabs clickable after adding margins.
         &:not(.kbq-tab-label_vertical):after {
@@ -97,8 +107,8 @@
             bottom: 0;
             // Absolute offsets are calculated from the padding box, so we add
             // focus outline width to fully cover the visual margin gap.
-            left: calc(-1 * (var(--kbq-size-xs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
-            right: calc(-1 * (var(--kbq-size-xs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            left: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            right: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
             background: transparent;
         }
     }
@@ -166,7 +176,7 @@
         position: absolute;
         bottom: 0;
         height: 3px;
-        border-radius: 2px 2px 0 0;
+        border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
         background: var(--kbq-line-contrast);
         transition: all 0.2s ease-in-out;
     }

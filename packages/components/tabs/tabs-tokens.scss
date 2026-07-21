@@ -7,6 +7,7 @@
     --kbq-tabs-size-tab-item-focus-outline-width: var(--kbq-size-3xs);
     --kbq-tabs-size-tab-stack-horizontal-border-radius: var(--kbq-size-border-radius);
     --kbq-tabs-size-tab-stack-vertical-content-gap-vertical: var(--kbq-size-s);
+    --kbq-tabs-size-tab-item-underlined-icon-only-size: calc(var(--kbq-size-3xl) - var(--kbq-size-xxs));
     /* THEME TOKENS */
     --kbq-tabs-tab-item-filled-on-background-default-background: transparent;
     --kbq-tabs-tab-item-filled-on-background-default-text-color: var(--kbq-foreground-contrast);

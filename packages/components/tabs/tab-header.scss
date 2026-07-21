@@ -9,6 +9,10 @@
     position: relative;
     flex-shrink: 0;
     border-radius: var(--kbq-tabs-size-tab-stack-horizontal-border-radius);
+
+    &.kbq-tab-header_underlined {
+        border-radius: 0;
+    }
 }
 
 .kbq-tab-list__content {
