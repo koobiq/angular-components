@@ -30,6 +30,9 @@ import { KbqPaginatedTabHeader } from './paginated-tab-header';
 // Increasing integer for generating unique ids for tab nav components.
 let nextUniqueId = 0;
 
+/** Corresponds to `--kbq-tabs-size-tab-item-padding-horizontal` on text tabs in underlined mode. */
+const TAB_PADDING = 12;
+
 /**
  * Navigation component matching the styles of the tab group header.
  */
@@ -88,13 +91,21 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     protected get activeTabOffsetWidth(): number | undefined {
         if (!this.isBrowser) return undefined;
 
-        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetWidth;
+        const width = this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetWidth;
+
+        if (!width) return width;
+
+        return width - TAB_PADDING * 2;
     }
 
     protected get activeTabOffsetLeft(): number | undefined {
         if (!this.isBrowser) return undefined;
 
-        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft;
+        const left = this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft;
+
+        if (!left) return left;
+
+        return left + TAB_PADDING;
     }
 
     override ngAfterContentInit() {

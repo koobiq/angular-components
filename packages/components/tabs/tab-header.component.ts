@@ -61,34 +61,26 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
 
     private readonly isBrowser = inject(Platform).isBrowser;
 
-    /** Width of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetWidth(): number | undefined {
         if (!this.isBrowser) return undefined;
 
         const item = this.items.get(this.selectedIndex);
-        const nativeElement = item?.elementRef?.nativeElement;
+        const width = item?.elementRef?.nativeElement?.offsetWidth;
 
-        if (item?.tab?.iconOnlyLabel) {
-            return nativeElement?.offsetWidth;
-        }
+        if (!width || item?.tab?.iconOnlyLabel) return width;
 
-        const width =
-            nativeElement?.querySelector<HTMLElement>('.kbq-tab-label__content')?.offsetWidth ??
-            nativeElement?.offsetWidth;
-
-        return width;
+        return width - TAB_PADDING * 2;
     }
 
-    /** Left offset of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetLeft(): number | undefined {
         if (!this.isBrowser) return undefined;
 
         const item = this.items.get(this.selectedIndex);
         const left = item?.elementRef?.nativeElement?.offsetLeft;
 
-        if (!left) return left;
+        if (!left || item?.tab?.iconOnlyLabel) return left;
 
-        return item?.tab?.iconOnlyLabel ? left : left + TAB_PADDING;
+        return left + TAB_PADDING;
     }
 
     protected itemSelected(event: KeyboardEvent): void {

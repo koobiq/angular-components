@@ -63,8 +63,12 @@
     &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):not(.kbq-tab-label_icon-only):after {
         content: '';
         position: absolute;
-        left: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
-        right: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+        left: calc(
+            var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width)
+        );
+        right: calc(
+            var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width)
+        );
         bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
         height: 3px;
         border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
@@ -87,6 +91,17 @@
             &:before {
                 left: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
                 right: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            }
+
+            &:after {
+                top: auto;
+                bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+                height: 3px;
+                left: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+                right: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+                border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
+                transition: background 0.2s ease-in-out;
+                pointer-events: none;
             }
         }
 
@@ -145,13 +160,15 @@
     .kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content {
         padding: var(--kbq-size-s) 0;
 
-        > .kbq-tab-label:first-child,
+        // Negative margin shifts the first tab left so the focus frame can extend beyond the
+        // container edge (instead of padding-left:0 which would clip it under overflow:hidden).
+        > .kbq-tab-label:first-child:not(.kbq-tab-label_icon-only),
         > .kbq-tab-link:first-child {
-            padding-left: 0;
+            margin-inline-start: calc(-1 * var(--kbq-tabs-size-tab-item-padding-horizontal));
         }
 
         > .kbq-tab-label_icon-only:first-child {
-            margin-left: 0;
+            margin-inline-start: 0;
         }
     }
 
