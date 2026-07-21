@@ -24,6 +24,7 @@ import { DateTime } from 'luxon';
         LuxonDateModule
     ],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    templateUrl: 'timepicker-variations-example.html',
     styleUrls: ['timepicker-variations-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
