@@ -4,14 +4,16 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
 import { TabsVerticalExample } from 'packages/docs-examples/components/tabs';
+import { TabsUnderlinedExample } from '../../../dist/docs-examples/components/tabs';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [TabsVerticalExample],
+    imports: [TabsVerticalExample, TabsUnderlinedExample],
     template: `
         <tabs-vertical-example />
         <hr />
+        <tabs-underlined-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
