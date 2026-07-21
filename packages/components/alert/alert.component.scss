@@ -54,6 +54,11 @@
     }
 
     & .kbq-alert__button-stack {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kbq-size-m);
+
         padding-top: var(--kbq-alert-size-normal-button-stack-padding-top);
         padding-bottom: var(--kbq-alert-size-normal-button-stack-padding-bottom);
     }
@@ -102,6 +107,11 @@
     }
 
     & .kbq-alert__button-stack {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kbq-size-m);
+
         padding-top: var(--kbq-alert-size-compact-button-stack-padding-top);
         padding-bottom: var(--kbq-alert-size-compact-button-stack-padding-bottom);
     }

@@ -28,43 +28,36 @@ import {
     template: `
         <div>
             <table data-testid="e2eAlertTable">
-                <!-- Text-only alerts: every color, normal size -->
+                <!-- Default alerts without a status icon: color is inert, so each state is shown once -->
                 <tr>
-                    @for (alertColor of alertDefaultStyleRows; track $index) {
-                        <td>
-                            <kbq-alert [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
-                                Alert text
-                            </kbq-alert>
-                        </td>
-                    }
-                </tr>
-
-                <!-- Text-only alerts: every color, compact size -->
-                <tr>
-                    @for (alertColor of alertDefaultStyleRows; track $index) {
-                        <td>
-                            <kbq-alert [compact]="true" [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
-                                Alert text
-                            </kbq-alert>
-                        </td>
-                    }
-                </tr>
-
-                <!-- Alerts with a close button (native button, accessible name) -->
-                <tr>
-                    @for (alertColor of alertDefaultStyleRows; track $index) {
-                        <td>
-                            <kbq-alert [compact]="$last" [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
-                                Alert text
-                                <button
-                                    kbq-alert-close-button
-                                    kbq-icon-button="kbq-xmark-s_16"
-                                    aria-label="Close"
-                                    [color]="colors.ContrastFade"
-                                ></button>
-                            </kbq-alert>
-                        </td>
-                    }
+                    <td>
+                        <kbq-alert [alertStyle]="alertStyle.Default">Alert text</kbq-alert>
+                    </td>
+                    <td>
+                        <kbq-alert [compact]="true" [alertStyle]="alertStyle.Default">Alert text</kbq-alert>
+                    </td>
+                    <td>
+                        <kbq-alert [alertStyle]="alertStyle.Default">
+                            Alert text
+                            <button
+                                kbq-alert-close-button
+                                kbq-icon-button="kbq-xmark-s_16"
+                                aria-label="Close"
+                                [color]="colors.ContrastFade"
+                            ></button>
+                        </kbq-alert>
+                    </td>
+                    <td>
+                        <kbq-alert [compact]="true" [alertStyle]="alertStyle.Default">
+                            Alert text
+                            <button
+                                kbq-alert-close-button
+                                kbq-icon-button="kbq-xmark-s_16"
+                                aria-label="Close"
+                                [color]="colors.ContrastFade"
+                            ></button>
+                        </kbq-alert>
+                    </td>
                 </tr>
 
                 <!-- Icon WITHOUT a title (exercises the no-title icon padding branch) -->
