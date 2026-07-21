@@ -107,6 +107,57 @@ describe(KbqTabNavBar.name, () => {
 
         expect(tabLink.tabIndex).toBe(3);
     });
+
+    describe('activeTabOffset', () => {
+        let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
+        let navBar: KbqTabNavBar;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+            fixture.detectChanges();
+            navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance;
+        });
+
+        describe('activeTabOffsetWidth', () => {
+            it('subtracts TAB_PADDING * 2 from offsetWidth', () => {
+                const item = navBar.items.get(0)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetWidth', { configurable: true, value: 120 });
+
+                expect((navBar as any).activeTabOffsetWidth).toBe(96);
+            });
+
+            it('returns undefined when no item at selectedIndex', () => {
+                (navBar as any).selectedIndex = 99;
+
+                expect((navBar as any).activeTabOffsetWidth).toBeUndefined();
+            });
+        });
+
+        describe('activeTabOffsetLeft', () => {
+            it('adds TAB_PADDING to offsetLeft', () => {
+                const item = navBar.items.get(0)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetLeft', { configurable: true, value: 100 });
+
+                expect((navBar as any).activeTabOffsetLeft).toBe(112);
+            });
+
+            it('handles negative offsetLeft for the first tab shifted by negative margin-inline-start', () => {
+                const item = navBar.items.get(0)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetLeft', { configurable: true, value: -12 });
+
+                expect((navBar as any).activeTabOffsetLeft).toBe(0);
+            });
+
+            it('returns undefined when no item at selectedIndex', () => {
+                (navBar as any).selectedIndex = 99;
+
+                expect((navBar as any).activeTabOffsetLeft).toBeUndefined();
+            });
+        });
+    });
 });
 
 @Component({

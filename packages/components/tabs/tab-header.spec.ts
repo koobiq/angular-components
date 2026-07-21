@@ -307,6 +307,81 @@ describe('KbqTabHeader', () => {
             discardPeriodicTasks();
         }));
     });
+
+    describe('activeTabOffset', () => {
+        let header: KbqTabHeader;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SimpleTabHeaderApp);
+            fixture.detectChanges();
+
+            appComponent = fixture.componentInstance;
+            header = appComponent.tabHeader();
+        });
+
+        describe('activeTabOffsetWidth', () => {
+            it('subtracts TAB_PADDING * 2 from offsetWidth for text tabs', () => {
+                const item = header.items.get(0)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetWidth', { configurable: true, value: 120 });
+
+                expect((header as any).activeTabOffsetWidth).toBe(96);
+            });
+
+            it('returns raw offsetWidth for icon-only tabs', () => {
+                const item = header.items.get(0)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetWidth', { configurable: true, value: 36 });
+                (item as any).tab = { iconOnlyLabel: true };
+
+                expect((header as any).activeTabOffsetWidth).toBe(36);
+            });
+
+            it('returns undefined when no item at selectedIndex', () => {
+                appComponent.selectedIndex = 99;
+                fixture.detectChanges();
+
+                expect((header as any).activeTabOffsetWidth).toBeUndefined();
+            });
+        });
+
+        describe('activeTabOffsetLeft', () => {
+            it('adds TAB_PADDING to offsetLeft for text tabs', () => {
+                appComponent.selectedIndex = 2;
+                fixture.detectChanges();
+
+                const item = header.items.get(2)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetLeft', { configurable: true, value: 100 });
+
+                expect((header as any).activeTabOffsetLeft).toBe(112);
+            });
+
+            it('handles negative offsetLeft for the first tab shifted by negative margin-inline-start', () => {
+                const item = header.items.get(0)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetLeft', { configurable: true, value: -12 });
+
+                expect((header as any).activeTabOffsetLeft).toBe(0);
+            });
+
+            it('returns raw offsetLeft for icon-only tabs', () => {
+                const item = header.items.get(0)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetLeft', { configurable: true, value: -4 });
+                (item as any).tab = { iconOnlyLabel: true };
+
+                expect((header as any).activeTabOffsetLeft).toBe(-4);
+            });
+
+            it('returns undefined when no item at selectedIndex', () => {
+                appComponent.selectedIndex = 99;
+                fixture.detectChanges();
+
+                expect((header as any).activeTabOffsetLeft).toBeUndefined();
+            });
+        });
+    });
 });
 
 interface ITab {
