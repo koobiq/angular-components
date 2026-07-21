@@ -161,6 +161,15 @@ export class FilterBarPipeTypesExample {
             saved: false,
             pipes: [
                 {
+                    name: 'Input',
+                    type: KbqPipeTypes.Input,
+                    value: null,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
                     name: 'Select',
                     type: KbqPipeTypes.Select,
                     value: null,
