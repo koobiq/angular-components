@@ -20,6 +20,9 @@ import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
     selector: 'dev-examples',
     imports: [NavbarExamplesModule],
     template: `
+        <navbar-template-outlet-example />
+        <br />
+        <br />
         <navbar-app-long-name-example />
         <br />
         <br />

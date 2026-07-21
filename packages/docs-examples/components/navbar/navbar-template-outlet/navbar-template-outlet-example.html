@@ -1,0 +1,127 @@
+<kbq-dropdown #verticalNavbarDropdown_1="kbqDropdown" [overlapTriggerX]="false" [overlapTriggerY]="true">
+    @for (app of apps; track app) {
+        <button kbq-dropdown-item (click)="selectedApp.set(app)">{{ app }}</button>
+    }
+</kbq-dropdown>
+
+<kbq-dropdown #verticalNavbarDropdown_3="kbqDropdown" [overlapTriggerX]="false" [overlapTriggerY]="true">
+    <button kbq-dropdown-item>Point 1</button>
+    <button kbq-dropdown-item>Point 2</button>
+</kbq-dropdown>
+
+<div style="margin: -20px; height: 480px" class="layout-row">
+    <kbq-vertical-navbar #verticalNavbar>
+        <!--
+            Declare every <ng-template> right where its item appears. The navbar derives its
+            keyboard-focus order from @ContentChildren(KbqNavbarFocusableItem), and that query lists
+            matches in TEMPLATE DECLARATION order — NOT in *ngTemplateOutlet insertion order. Keeping
+            each template next to its outlet, and NOT sharing one template across the two containers,
+            keeps focus order aligned with visual order. Templates must also stay INSIDE the navbar so
+            its content queries keep managing the items (keyboard navigation, layout, collapsing).
+        -->
+        <kbq-navbar-container>
+            <ng-template #bentoTrigger>
+                <div
+                    #bentoDropdownTrigger="kbqDropdownTrigger"
+                    bento
+                    kbq-navbar-item
+                    [class.kbq-active]="bentoDropdownTrigger.opened"
+                    [kbqDropdownTriggerFor]="verticalNavbarDropdown_1"
+                >
+                    <i kbq-icon="kbq-bento-menu_16" color="contrast"></i>
+                    <div kbq-navbar-title>Все приложения</div>
+                </div>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="bentoTrigger" />
+
+            <a href="#" kbq-navbar-brand [collapsedText]="selectedApp()">
+                <div kbq-navbar-logo>
+                    <!-- prettier-ignore -->
+                    <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
+                </div>
+
+                <div kbq-navbar-title>{{ selectedApp() }}</div>
+            </a>
+
+            <ng-template #navbarItem let-item>
+                <kbq-navbar-item [class.kbq-active]="item.active">
+                    <i color="contrast" [kbq-icon]="item.icon"></i>
+                    <kbq-navbar-title>{{ item.label }}</kbq-navbar-title>
+                </kbq-navbar-item>
+            </ng-template>
+            @for (item of items; track item.label) {
+                <ng-container *ngTemplateOutlet="navbarItem; context: { $implicit: item }" />
+            }
+
+            <ng-template #moreTrigger>
+                <kbq-navbar-item
+                    #moreDropdownTrigger="kbqDropdownTrigger"
+                    [class.kbq-active]="moreDropdownTrigger.opened"
+                    [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"
+                >
+                    <i kbq-icon="kbq-ellipsis-vertical_16" color="contrast"></i>
+                    <kbq-navbar-title>Еще</kbq-navbar-title>
+                </kbq-navbar-item>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="moreTrigger" />
+
+            <ng-template #actionButton>
+                <kbq-navbar-item>
+                    <button
+                        kbq-button
+                        [class.kbq-button-icon]="!verticalNavbar.expanded"
+                        [color]="colors.Contrast"
+                        [kbqPlacement]="popUpPlacements.Right"
+                        [kbqStyle]="'filled'"
+                        [kbqTooltip]="'Новый инцидент'"
+                        [kbqTooltipDisabled]="verticalNavbar.expanded"
+                    >
+                        <i kbq-icon="kbq-plus_16" [color]="'empty'"></i>
+                        @if (verticalNavbar.expanded) {
+                            <span>Новая задача</span>
+                        }
+                    </button>
+                </kbq-navbar-item>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="actionButton" />
+        </kbq-navbar-container>
+
+        <kbq-navbar-container>
+            <!--
+                Single bottom item, rendered inline: it lives in a different container from the list
+                above, so it must not reuse that container's template (a shared <ng-template> would
+                fold this item into the group above in the focus order).
+            -->
+            <kbq-navbar-item>
+                <i color="contrast" [kbq-icon]="profile.icon"></i>
+                <kbq-navbar-title>{{ profile.label }}</kbq-navbar-title>
+            </kbq-navbar-item>
+        </kbq-navbar-container>
+
+        <button kbq-navbar-toggle></button>
+    </kbq-vertical-navbar>
+
+    <div style="overflow: auto; padding-left: 20px; padding-right: 20px" class="flex kbq-text-normal">
+        <div>
+            <p>
+                Целое число в принципе поддерживает скачок функции. Полином отражает экспериментальный разрыв функции,
+                что неудивительно. Интеграл от функции, имеющий конечный разрыв расточительно специфицирует предел
+                функции, таким образом сбылась мечта идиота — утверждение полностью доказано. Интеграл Пуассона
+                развивает интеграл Фурье. Неопределенный интеграл категорически соответствует расходящийся ряд. Не факт,
+                что функция многих переменных по‑прежнему востребована.
+            </p>
+            <p>
+                К тому же график функции усиливает тригонометрический интеграл по поверхности. Правда, некоторые
+                специалисты отмечают, что неравенство Бернулли обуславливает действительный расходящийся ряд. Тем не
+                менее, неопределенный интеграл раскручивает разрыв функции.
+            </p>
+            <p>
+                Эпсилон окрестность привлекает интеграл по бесконечной области. Пустое подмножество, общеизвестно,
+                допускает ряд Тейлора. Наибольшее и наименьшее значения функции недоказуемо. Вектор, не вдаваясь в
+                подробности, осмысленно транслирует постулат. Ортогональный определитель упорядочивает линейно зависимый
+                минимум. Интеграл от функции, обращающейся в бесконечность вдоль линии позитивно уравновешивает график
+                функции.
+            </p>
+        </div>
+    </div>
+</div>
