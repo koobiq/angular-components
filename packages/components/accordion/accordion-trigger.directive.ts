@@ -1,7 +1,7 @@
 import { Directive, inject } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
+import { KbqAccordion } from './accordion';
 import { KbqAccordionItem } from './accordion-item';
-import { KbqAccordion } from './accordion.component';
 
 @Directive({
     selector: '[kbqAccordionTrigger]',
@@ -14,7 +14,8 @@ import { KbqAccordion } from './accordion.component';
         '[attr.data-state]': 'item.dataState',
         '[attr.data-disabled]': 'item.disabled',
         '[attr.data-orientation]': 'item.orientation',
-        '(click)': 'onClick()'
+        '(click)': 'onClick()',
+        '(focus)': 'onFocus()'
     }
 })
 export class KbqAccordionTriggerDirective {
@@ -41,6 +42,15 @@ export class KbqAccordionTriggerDirective {
 
         this.item.toggle();
 
+        this.accordion.setActiveItem(this.item);
+    }
+
+    /**
+     * Keeps the accordion's key manager in sync with native focus so that arrow-key navigation
+     * continues from the header the user has just tabbed/focused into.
+     * @docs-private
+     */
+    onFocus(): void {
         this.accordion.setActiveItem(this.item);
     }
 

@@ -4,13 +4,14 @@ import {
     AfterViewInit,
     Component,
     inject,
+    OnDestroy,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqAccordion } from './accordion';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
-import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
 
 @Component({
     selector: 'kbq-accordion-trigger, [kbq-accordion-trigger]',
@@ -23,7 +24,7 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
 
         <ng-content />
     `,
-    styleUrls: ['accordion-trigger.component.scss', 'accordion-tokens.scss'],
+    styleUrls: ['accordion-trigger.scss', 'accordion-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion-trigger',
@@ -33,7 +34,7 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
     },
     hostDirectives: [KbqAccordionTriggerDirective]
 })
-export class KbqAccordionTrigger implements AfterViewInit {
+export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
     /** @docs-private */
@@ -44,22 +45,23 @@ export class KbqAccordionTrigger implements AfterViewInit {
 
     private savedTransition: string;
     private readonly afterRenderRef?: AfterRenderRef;
+    private animationTimerId?: ReturnType<typeof setTimeout>;
 
     get isFill(): boolean {
-        return this.accordion.variant() === KbqAccordionVariant.fill;
+        return this.accordion.variant() === 'fill';
     }
 
     get isHug(): boolean {
-        return this.accordion.variant() === KbqAccordionVariant.hug;
+        return this.accordion.variant() === 'hug';
     }
 
     get isHugSpaceBetween(): boolean {
-        return this.accordion.variant() === KbqAccordionVariant.hugSpaceBetween;
+        return this.accordion.variant() === 'hugSpaceBetween';
     }
 
     constructor() {
         this.afterRenderRef = afterNextRender(() => {
-            setTimeout(() => this.enableAnimation());
+            this.animationTimerId = setTimeout(() => this.enableAnimation());
 
             this.afterRenderRef?.destroy();
         });
@@ -67,6 +69,10 @@ export class KbqAccordionTrigger implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.disableAnimation();
+    }
+
+    ngOnDestroy(): void {
+        clearTimeout(this.animationTimerId);
     }
 
     disableAnimation() {

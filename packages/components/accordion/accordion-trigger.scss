@@ -11,6 +11,10 @@
         padding: var(--kbq-size-xxs);
 
         transition: transform 300ms ease-out;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
     }
 
     & .kbq-accordion-trigger__badge,

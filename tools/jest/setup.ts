@@ -5,7 +5,10 @@ if (!('Zone' in global)) {
     require('jest-preset-angular/setup-env/zone').setupZoneTestEnv();
 }
 
+import { toHaveNoViolations } from 'jest-axe';
 import failOnConsole from 'jest-fail-on-console';
+
+expect.extend(toHaveNoViolations);
 
 failOnConsole({
     silenceMessage: (message) => {

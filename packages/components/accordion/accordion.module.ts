@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqAccordion } from './accordion';
 import { KbqAccordionContent } from './accordion-content';
 import { KbqAccordionHeader } from './accordion-header';
 import { KbqAccordionItem } from './accordion-item';
-import { KbqAccordionTrigger } from './accordion-trigger.component';
-import { KbqAccordion } from './accordion.component';
+import { KbqAccordionTrigger } from './accordion-trigger';
 
 @NgModule({
     imports: [

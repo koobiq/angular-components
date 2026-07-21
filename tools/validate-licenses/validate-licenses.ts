@@ -27,6 +27,11 @@ const licensesWhitelist: License[] = [
     'LGPL-3.0-only',
     'Python-2.0',
 
+    // File-level (weak) copyleft: obligations stay within the MPL-licensed files themselves and
+    // do not extend to the larger work. Reaches the tree only through `axe-core`, a transitive
+    // devDependency of `jest-axe`, so it is never bundled into the published packages.
+    'MPL-2.0',
+
     // Have a full copyright grant. Validated by opensource team.
     'Unlicense',
     '0BSD',

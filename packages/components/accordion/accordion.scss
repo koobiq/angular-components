@@ -8,7 +8,7 @@
     box-sizing: border-box;
     display: block;
 
-    border-width: 2px;
+    border-width: var(--kbq-accordion-size-item-border-width);
     border-style: solid;
     border-color: transparent;
 }
@@ -23,14 +23,14 @@
     display: block;
     overflow: hidden;
 
-    & > p {
+    & > .kbq-accordion-content__body {
         margin: unset;
         padding: var(--kbq-accordion-size-item-content-padding);
     }
 
     &[data-state='open'] {
         transition: height 300ms ease-out;
-        height: var(--radix-accordion-content-height);
+        height: var(--kbq-accordion-content-height);
     }
 
     &[data-state='closed'] {
