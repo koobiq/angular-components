@@ -4,7 +4,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes }
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (): KbqPipe => ({
-    name: 'Search',
+    name: 'Поиск',
     type: KbqPipeTypes.Input,
     value: null,
 
