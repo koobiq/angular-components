@@ -20,7 +20,7 @@ const createSearchPipe = (): KbqPipe => ({
     selector: 'filter-bar-search-example',
     imports: [KbqFilterBarModule, LuxonDateModule],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
@@ -131,9 +131,30 @@ export class FilterBarSearchExample {
         }
     ];
 
+    onFilterChange(filter: KbqFilter | null) {
+        if (!filter) {
+            return;
+        }
+
+        // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.
+        // Re-derive it by diffing the pipes against the default state, so reverting the pipes
+        // also clears `changed` and hides <kbq-filter-reset>.
+        this.activeFilter = this.arePipesEqual(filter.pipes, this.getDefaultFilter().pipes)
+            ? { ...filter, changed: false }
+            : filter;
+    }
+
     onResetFilter() {
         console.log('onResetFilter: ');
         this.activeFilter = this.getDefaultFilter();
+    }
+
+    /** Whether two pipe lists are equivalent (same name/type/value) — detects a return to the initial state. */
+    arePipesEqual(a: KbqPipe[], b: KbqPipe[]): boolean {
+        const serialize = (pipes: KbqPipe[]): string =>
+            JSON.stringify(pipes.map(({ name, type, value }) => ({ name, type, value })));
+
+        return serialize(a) === serialize(b);
     }
 
     getDefaultFilter(): KbqFilter {

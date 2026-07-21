@@ -39,11 +39,7 @@ const createSearchPipe = (): KbqPipe => ({
         KbqLinkModule
     ],
     template: `
-        <kbq-filter-bar
-            [pipeTemplates]="pipeTemplates"
-            [(filter)]="activeFilter"
-            (filterChange)="onFilterChange($event)"
-        >
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
             <kbq-filters
                 [filters]="filters"
                 (onSave)="onSaveFilter($event)"
@@ -346,7 +342,15 @@ export class FilterBarSavedFiltersExample {
     ];
 
     onFilterChange(filter: KbqFilter | null) {
-        console.log('onFilterChange: ', filter);
+        // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.
+        // Re-derive it by diffing the pipes against the filter's initial (saved/default) state,
+        // so reverting the pipes also clears `changed` and hides <kbq-filter-reset>.
+        const initialFilter = filter ? this.getInitialFilter(filter) : null;
+
+        this.activeFilter =
+            filter && initialFilter && this.arePipesEqual(filter.pipes, initialFilter.pipes)
+                ? { ...filter, changed: false }
+                : filter;
     }
 
     onResetFilter() {
@@ -451,6 +455,21 @@ export class FilterBarSavedFiltersExample {
 
     getSavedFilter(filter: KbqFilter | null): KbqFilter {
         return structuredClone(this.savedFilters.find(({ name }) => name === filter?.name)!);
+    }
+
+    /** Pristine (saved or default) version of a filter — the baseline for change detection. */
+    getInitialFilter(filter: KbqFilter): KbqFilter | null {
+        return filter.name === this.defaultFilter?.name
+            ? this.defaultFilter
+            : (this.savedFilters.find(({ name }) => name === filter.name) ?? null);
+    }
+
+    /** Whether two pipe lists are equivalent (same name/type/value) — detects a return to the initial state. */
+    arePipesEqual(a: KbqPipe[], b: KbqPipe[]): boolean {
+        const serialize = (pipes: KbqPipe[]): string =>
+            JSON.stringify(pipes.map(({ name, type, value }) => ({ name, type, value })));
+
+        return serialize(a) === serialize(b);
     }
 
     getDefaultFilter(): KbqFilter {
