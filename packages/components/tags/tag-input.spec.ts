@@ -1,12 +1,17 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import { DASH } from '@angular/cdk/keycodes';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
 import { Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
-import { COMMA, createKeyboardEvent, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
+import {
+    KbqAutocompleteModule,
+    KbqAutocompleteSelectedEvent,
+    KbqAutocompleteTrigger
+} from '@koobiq/components/autocomplete';
+import { COMMA, createKeyboardEvent, dispatchFakeEvent, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KbqTagsModule } from './index';
@@ -118,6 +123,48 @@ class TestTagInputSeparators {
     readonly separatorKeyCodes = signal<number[]>([ENTER]);
     readonly addOnPaste = signal(true);
     readonly add = jest.fn();
+}
+
+@Component({
+    imports: [KbqTagsModule, KbqFormFieldModule, KbqAutocompleteModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList>
+                @for (tag of tags; track tag) {
+                    <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
+                }
+                <input
+                    [kbqTagInputFor]="tagList"
+                    [kbqAutocomplete]="autocomplete"
+                    [kbqTagInputAddOnBlur]="true"
+                    (kbqTagInputTokenEnd)="add($event)"
+                />
+            </kbq-tag-list>
+
+            <kbq-autocomplete #autocomplete="kbqAutocomplete" (optionSelected)="select($event)">
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-autocomplete>
+        </kbq-form-field>
+    `
+})
+class TestTagInputWithAutocomplete {
+    readonly tagInput = viewChild.required(KbqTagInput);
+    readonly options = ['HIPS alert', 'Phishing'];
+    readonly tags: string[] = [];
+
+    add({ input, value }: KbqTagInputEvent) {
+        if (value) {
+            this.tags.push(value);
+            input.value = '';
+        }
+    }
+
+    select({ option }: KbqAutocompleteSelectedEvent) {
+        this.tags.push(option.value);
+        option.deselect();
+    }
 }
 
 describe(KbqTagInput.name, () => {
@@ -423,6 +470,105 @@ describe(KbqTagInput.name, () => {
             directive.onKeydown(createKeyboardEvent('keydown', COMMA, inputElement, ','));
 
             expect(componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'some text' }));
+        });
+
+        it('should NOT emit tagEnd on blur when the autocomplete reports focus moved to an option', () => {
+            const fixture = createComponent(TestTagInputDefaultSeparators);
+            const directive = fixture.componentInstance.tagInput();
+            const inputElement = getInputElement(fixture);
+
+            inputElement.value = 'some text';
+            directive.autocompleteTrigger = {
+                onInputBlur: () => () => false
+            } as unknown as KbqAutocompleteTrigger;
+
+            directive.addOnBlur = true;
+            directive.blur({} as FocusEvent);
+
+            expect(fixture.componentInstance.add).not.toHaveBeenCalled();
+        });
+
+        it('should emit tagEnd on blur when the autocomplete reports focus did NOT move to an option', () => {
+            const fixture = createComponent(TestTagInputDefaultSeparators);
+            const directive = fixture.componentInstance.tagInput();
+            const inputElement = getInputElement(fixture);
+
+            inputElement.value = 'some text';
+            directive.autocompleteTrigger = {
+                onInputBlur: () => () => true
+            } as unknown as KbqAutocompleteTrigger;
+
+            directive.addOnBlur = true;
+            directive.blur({} as FocusEvent);
+
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'some text' }));
+        });
+
+        // Regression test for DS-5279-like bug: selecting an option from the autocomplete panel
+        // while [kbqTagInputAddOnBlur]="true" was adding both the raw typed text AND the selected
+        // option as separate tags, because the mousedown on the (focusable) kbq-option blurs the
+        // input first, and that blur unconditionally called emitTagEnd() regardless of what
+        // onInputBlur() reported.
+        describe('[kbqTagInputAddOnBlur] with a real autocomplete panel', () => {
+            let fixture: ComponentFixture<TestTagInputWithAutocomplete>;
+            let componentInstance: TestTagInputWithAutocomplete;
+            let inputElement: HTMLInputElement;
+            let overlayContainer: OverlayContainer;
+            let overlayContainerElement: HTMLElement;
+
+            beforeEach(() => {
+                fixture = createComponent(TestTagInputWithAutocomplete);
+                componentInstance = fixture.componentInstance;
+                inputElement = getInputElement(fixture);
+
+                inject([OverlayContainer], (oc: OverlayContainer) => {
+                    overlayContainer = oc;
+                    overlayContainerElement = oc.getContainerElement();
+                })();
+            });
+
+            afterEach(() => {
+                overlayContainer.ngOnDestroy();
+            });
+
+            it('adds only the selected option, not the typed text, when an option is picked from the panel', fakeAsync(() => {
+                dispatchFakeEvent(inputElement, 'focusin');
+                fixture.detectChanges();
+                tick();
+
+                inputElement.value = 'hi';
+                dispatchFakeEvent(inputElement, 'input');
+                fixture.detectChanges();
+                tick();
+
+                const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
+                // Real browsers blur the input on mousedown (kbq-option is focusable),
+                // before the option's own click handler runs.
+                inputElement.dispatchEvent(new FocusEvent('blur', { relatedTarget: option }));
+                option.click();
+                fixture.detectChanges();
+                tick();
+
+                expect(componentInstance.tags).toEqual(['HIPS alert']);
+            }));
+
+            it('still converts typed text into a tag on blur when focus does not move to an option', fakeAsync(() => {
+                dispatchFakeEvent(inputElement, 'focusin');
+                fixture.detectChanges();
+                tick();
+
+                inputElement.value = 'custom text';
+                dispatchFakeEvent(inputElement, 'input');
+                fixture.detectChanges();
+                tick();
+
+                inputElement.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+                fixture.detectChanges();
+                tick();
+
+                expect(componentInstance.tags).toEqual(['custom text']);
+            }));
         });
     });
 });

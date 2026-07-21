@@ -49,7 +49,7 @@ const getAutocompleteOptions = () => [
                     [kbqTagInputFor]="tagList"
                     [kbqAutocomplete]="autocomplete"
                     [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [kbqTagInputAddOnBlur]="false"
+                    [kbqTagInputAddOnBlur]="true"
                     [(ngModel)]="tagInputModel"
                     (kbqTagInputTokenEnd)="create($event)"
                 />
