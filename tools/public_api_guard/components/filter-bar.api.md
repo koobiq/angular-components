@@ -24,6 +24,7 @@ import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
@@ -549,6 +550,23 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
 }
 
 // @public (undocumented)
+export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements OnInit {
+    readonly control: FormControl<string | null>;
+    debounceTime: number;
+    protected readonly input: Signal<KbqInput>;
+    get isEmpty(): boolean;
+    minLength: number;
+    // (undocumented)
+    ngOnInit(): void;
+    onClear(): void;
+    open(): void;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeInputComponent, "kbq-pipe-input", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeInputComponent, never>;
+}
+
+// @public (undocumented)
 export class KbqPipeMinWidth {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -737,6 +755,7 @@ export enum KbqPipeTypes {
     Date = "date",
     // (undocumented)
     Datetime = "datetime",
+    Input = "input",
     // (undocumented)
     MultiSelect = "multiselect",
     // (undocumented)

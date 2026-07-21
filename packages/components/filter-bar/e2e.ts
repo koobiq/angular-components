@@ -26,6 +26,79 @@ const DEV_DATA_OBJECT = {
 };
 
 @Component({
+    selector: 'e2e-filter-bar-filters',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            @for (filter of filters; track $index) {
+                <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                    <kbq-filters [filters]="savedFilters" />
+
+                    @for (pipe of filter?.pipes; track pipe) {
+                        <ng-container *kbqPipe="pipe" />
+                    }
+
+                    <kbq-pipe-add />
+                </kbq-filter-bar>
+                <br />
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarFilters'
+    }
+})
+export class E2eFilterBarFilters {
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Text',
+            type: KbqPipeTypes.Text,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    /** Options of the saved-filters dropdown. Only the trigger is captured, so one entry is enough. */
+    readonly savedFilters: KbqFilter[] = [
+        { name: 'saved', readonly: false, disabled: false, changed: false, saved: true, pipes: [] }
+    ];
+
+    /**
+     * One bar per state of the `kbq-filters` trigger: no filter, then each combination that renders an
+     * adjacent action button (save-as-new / actions) next to the trigger.
+     */
+    readonly filters: (KbqFilter | null)[] = [
+        null,
+        this.buildFilter('changed', { changed: true, saved: false }),
+        this.buildFilter('saved', { changed: false, saved: true }),
+        this.buildFilter('saved and changed', { changed: true, saved: true })
+    ];
+
+    private buildFilter(name: string, state: Pick<KbqFilter, 'changed' | 'saved'>): KbqFilter {
+        return {
+            name,
+            readonly: false,
+            disabled: false,
+            ...state,
+            pipes: [
+                {
+                    name: 'pipe',
+                    value: 'value',
+                    type: KbqPipeTypes.Text,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ]
+        };
+    }
+}
+
+@Component({
     selector: 'e2e-filter-bar-states',
     imports: [KbqFilterBarModule, KbqIcon, KbqLuxonDateModule],
     template: `
@@ -96,6 +169,16 @@ const DEV_DATA_OBJECT = {
             <br />
             <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[6]">
                 @for (pipe of filters[6]?.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+
+                <kbq-pipe-add />
+
+                <kbq-filter-reset />
+            </kbq-filter-bar>
+            <br />
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filters[7]">
+                @for (pipe of filters[7]?.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
 
@@ -708,6 +791,79 @@ export class E2eFilterBarStates implements AfterViewInit {
                     disabled: true
                 }
             ]
+        },
+        {
+            name: 'input',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'long-name,long-name,long-name,long-name,long-name,long-name,long-name,long-name,long-name',
+                    value: 'value',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'name',
+                    value: 'long-value,long-value,long-value,long-value,long-value,long-value,long-value,long-value,',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    value: 'value,',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable empty',
+                    value: null,
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    // `removable` is not surfaced by this pipe — it renders the same as the plain state.
+                    name: 'removable',
+                    value: 'value',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'disabled',
+                    value: 'value',
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: true
+                },
+                {
+                    name: 'disabled empty',
+                    value: null,
+                    type: KbqPipeTypes.Input,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: true
+                }
+            ]
         }
     ];
 
@@ -774,6 +930,15 @@ export class E2eFilterBarStates implements AfterViewInit {
                 values: kbqBuildTree(DEV_DATA_OBJECT, 0),
 
                 cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Input',
+                id: 'E2EInput',
+                type: KbqPipeTypes.Input,
+
+                cleanable: true,
                 removable: false,
                 disabled: false
             }

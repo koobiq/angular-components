@@ -3,6 +3,7 @@ import { ruRULocaleData } from '@koobiq/components/core';
 import { KbqFilterBar } from './filter-bar';
 import { KbqPipeDateComponent } from './pipes/pipe-date';
 import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';
+import { KbqPipeInputComponent } from './pipes/pipe-input';
 import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
 import { KbqPipeMultiTreeSelectComponent } from './pipes/pipe-multi-tree-select';
 import { KbqPipeReadonlyComponent } from './pipes/pipe-readonly';
@@ -31,6 +32,8 @@ export const kbqFilterBarPipesProvider = (): Provider => {
 export enum KbqPipeTypes {
     ReadOnly = 'readonly',
     Text = 'text',
+    /** Renders a bare input: no popover, never opens. Commits while typing (debounced), on Enter and on blur. */
+    Input = 'input',
     Select = 'select',
     TreeSelect = 'tree-select',
     MultiSelect = 'multiselect',
@@ -45,6 +48,7 @@ export type KbqPipeType = `${KbqPipeTypes}` | string;
 export const defaultFilterBarPipes: [string, unknown][] = [
     [KbqPipeTypes.ReadOnly, KbqPipeReadonlyComponent],
     [KbqPipeTypes.Text, KbqPipeTextComponent],
+    [KbqPipeTypes.Input, KbqPipeInputComponent],
     [KbqPipeTypes.Select, KbqPipeSelectComponent],
     [KbqPipeTypes.TreeSelect, KbqPipeTreeSelectComponent],
     [KbqPipeTypes.MultiSelect, KbqPipeMultiSelectComponent],

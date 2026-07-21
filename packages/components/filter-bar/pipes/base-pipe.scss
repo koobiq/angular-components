@@ -33,19 +33,6 @@
         }
     }
 
-    .kbq-pipe__separator {
-        z-index: 1;
-
-        margin-left: -1px;
-        margin-right: 0;
-
-        height: var(--kbq-size-l);
-
-        align-self: center;
-
-        color: var(--kbq-line-contrast-less);
-    }
-
     .kbq-select:not(:hover, .kbq-active),
     .kbq-tree-select:not(:hover, .kbq-active),
     .kbq-button:not(:hover, .kbq-active, [disabled]) {
