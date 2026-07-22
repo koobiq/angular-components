@@ -40,12 +40,12 @@
 
     .docs-navbar__links {
         gap: var(--kbq-size-xxs);
-    }
 
-    a.kbq-button-icon,
-    button.kbq-button-icon {
-        width: var(--kbq-size-5xl);
-        height: var(--kbq-size-5xl);
+        a.kbq-button-icon,
+        button.kbq-button-icon {
+            width: var(--kbq-size-5xl);
+            height: var(--kbq-size-5xl);
+        }
     }
 
     .docs-navbar__anchor.kbq-button {
