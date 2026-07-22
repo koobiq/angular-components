@@ -1,20 +1,20 @@
 <div class="layout-row example-row layout-gap-l flex-100">
     <div class="layout-column example-column">
         <kbq-alert>
-            <i kbq-icon-item="kbq-circle-info_16"></i>
-            <div kbq-alert-title>Заголовок</div>
+            <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
+            <div kbq-alert-title>Heading</div>
             {{ text }}
-            <a kbq-alert-control kbq-link [pseudo]="true">Псевдоссылка</a>
-            <a kbq-alert-control kbq-link [pseudo]="true">Псевдоссылка</a>
+            <button kbq-alert-control kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Action</button>
+            <button kbq-alert-control kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Another action</button>
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
-            <i kbq-icon="kbq-circle-info_16"></i>
-            <div kbq-alert-title>Заголовок</div>
+            <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
+            <div kbq-alert-title>Heading</div>
             {{ text }}
-            <a kbq-alert-control kbq-link [pseudo]="true">Псевдоссылка</a>
-            <a kbq-alert-control kbq-link [pseudo]="true">Псевдоссылка</a>
+            <button kbq-alert-control kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Action</button>
+            <button kbq-alert-control kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Another action</button>
         </kbq-alert>
     </div>
 </div>

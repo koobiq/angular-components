@@ -29,6 +29,20 @@
         &.kbq-alert_info {
             @include kbq-alert-style(default, info);
         }
+
+        // The status icon is the only thing distinguishing default-style alerts, so it must clear the
+        // WCAG 1.4.11 3:1 non-text minimum. The `--kbq-icon-*` palette is tuned for the page background
+        // and does not clear it against the neutral container in the light scheme (warning 2.59:1,
+        // success 2.79:1); the darker `--kbq-foreground-*` values do (4.00:1 / 4.65:1). In the dark
+        // scheme both palettes resolve to the same value, so this override is inert there.
+        // The token has to be redeclared on the icon element itself: icon-tokens.scss declares
+        // `--kbq-icon-warning-color` on `.kbq-icon`, so a value inherited from `.kbq-alert` never wins.
+        // `:not()` excludes icon-item and icon-button, which inherit `.kbq-icon` from KbqIcon but paint
+        // their own filled backgrounds.
+        .kbq-alert__icon > .kbq-icon:not(.kbq-icon-item, .kbq-icon-button) {
+            --kbq-icon-warning-color: var(--kbq-foreground-warning);
+            --kbq-icon-success-color: var(--kbq-foreground-success);
+        }
     }
 
     .kbq-alert.kbq-alert_colored {

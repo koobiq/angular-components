@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
+import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
+import { KbqLink } from '@koobiq/components/link';
 import {
     KbqAlert,
     KbqAlertCloseButton,
@@ -16,6 +17,8 @@ import {
     imports: [
         KbqIconButton,
         KbqIconItem,
+        KbqIcon,
+        KbqLink,
         KbqAlert,
         KbqAlertTitle,
         KbqAlertCloseButton,
@@ -26,28 +29,57 @@ import {
     template: `
         <div>
             <table data-testid="e2eAlertTable">
-                <!-- Basic alerts: compact and non-compact variations -->
+                <!-- Default alerts without a status icon: color is inert, so each state is shown once -->
                 <tr>
-                    @for (alertColor of alertDefaultStyleRows.slice(0, 2); track $index) {
+                    <td>
+                        <kbq-alert [alertStyle]="alertStyle.Default">Alert text</kbq-alert>
+                    </td>
+                    <td>
+                        <kbq-alert [compact]="true" [alertStyle]="alertStyle.Default">Alert text</kbq-alert>
+                    </td>
+                    <td>
+                        <kbq-alert [alertStyle]="alertStyle.Default">
+                            Alert text
+                            <button
+                                kbq-alert-close-button
+                                kbq-icon-button="kbq-xmark-s_16"
+                                aria-label="Close"
+                                [color]="colors.ContrastFade"
+                            ></button>
+                        </kbq-alert>
+                    </td>
+                    <td>
+                        <kbq-alert [compact]="true" [alertStyle]="alertStyle.Default">
+                            Alert text
+                            <button
+                                kbq-alert-close-button
+                                kbq-icon-button="kbq-xmark-s_16"
+                                aria-label="Close"
+                                [color]="colors.ContrastFade"
+                            ></button>
+                        </kbq-alert>
+                    </td>
+                </tr>
+
+                <!-- Icon WITHOUT a title (exercises the no-title icon padding branch) -->
+                <tr>
+                    @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
-                            <kbq-alert [compact]="$last" [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
-                                Alert text
+                            <kbq-alert [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
+                                <i kbq-icon-item="kbq-circle-info_16"></i>
+                                Alert text without a title
                             </kbq-alert>
                         </td>
                     }
                 </tr>
 
-                <!-- Basic alerts with close button -->
+                <!-- Icon WITHOUT a title, compact -->
                 <tr>
-                    @for (alertColor of alertDefaultStyleRows.slice(0, 2); track $index) {
+                    @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
-                            <kbq-alert [compact]="$last" [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
-                                Alert text
-                                <i
-                                    kbq-alert-close-button
-                                    kbq-icon-button="kbq-xmark-s_16"
-                                    [color]="colors.ContrastFade"
-                                ></i>
+                            <kbq-alert [compact]="true" [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
+                                <i kbq-icon="kbq-circle-info_16"></i>
+                                Alert text without a title
                             </kbq-alert>
                         </td>
                     }
@@ -63,11 +95,12 @@ import {
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis risus ac varius
                                 ultricies. Aenean maximus ex at ornare tempus. Pellentesque habitant morbi tristique
                                 senectus et netus et malesuada fames ac turpis egestas.
-                                <i
+                                <button
                                     kbq-alert-close-button
                                     kbq-icon-button="kbq-xmark-s_16"
+                                    aria-label="Close"
                                     [color]="colors.ContrastFade"
-                                ></i>
+                                ></button>
                             </kbq-alert>
                         </td>
                     }
@@ -81,17 +114,18 @@ import {
                                 <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
-                                <i
+                                <button
                                     kbq-alert-close-button
                                     kbq-icon-button="kbq-xmark-s_16"
+                                    aria-label="Close"
                                     [color]="colors.ContrastFade"
-                                ></i>
+                                ></button>
                             </kbq-alert>
                         </td>
                     }
                 </tr>
 
-                <!-- Alerts with icon, header, and short content text  -->
+                <!-- Default-style alerts with action buttons (verifies the default-style button stack) -->
                 <tr>
                     @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
@@ -99,11 +133,30 @@ import {
                                 <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
-                                <i
-                                    kbq-alert-close-button
-                                    kbq-icon-button="kbq-xmark-s_16"
-                                    [color]="colors.ContrastFade"
-                                ></i>
+                                <button kbq-alert-control kbq-button [color]="colors.Contrast">Button1</button>
+                                <button
+                                    kbq-alert-control
+                                    kbq-button
+                                    [color]="colors.Contrast"
+                                    [kbqStyle]="'transparent'"
+                                >
+                                    Button2
+                                </button>
+                            </kbq-alert>
+                        </td>
+                    }
+                </tr>
+
+                <!-- Default-style alerts with pseudo-link controls (verifies the link button stack padding) -->
+                <tr>
+                    @for (alertColor of alertDefaultStyleRows; track $index) {
+                        <td>
+                            <kbq-alert [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
+                                <i kbq-icon-item="kbq-circle-info_16"></i>
+                                <div kbq-alert-title>Header</div>
+                                Alert text
+                                <a kbq-alert-control kbq-link [pseudo]="true">Link1</a>
+                                <a kbq-alert-control kbq-link [pseudo]="true">Link2</a>
                             </kbq-alert>
                         </td>
                     }
@@ -117,11 +170,12 @@ import {
                                 <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
-                                <i
+                                <button
                                     kbq-alert-close-button
                                     kbq-icon-button="kbq-xmark-s_16"
+                                    aria-label="Close"
                                     [color]="colors.ContrastFade"
-                                ></i>
+                                ></button>
                             </kbq-alert>
                         </td>
                     }
@@ -135,11 +189,12 @@ import {
                                 <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
-                                <i
+                                <button
                                     kbq-alert-close-button
                                     kbq-icon-button="kbq-xmark-s_16"
+                                    aria-label="Close"
                                     [color]="colors.ContrastFade"
-                                ></i>
+                                ></button>
 
                                 <!-- Action buttons: standard and transparent styles -->
                                 <button kbq-alert-control kbq-button [color]="colors.Contrast">Button1</button>
@@ -164,11 +219,12 @@ import {
                                 <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
-                                <i
+                                <button
                                     kbq-alert-close-button
                                     kbq-icon-button="kbq-xmark-s_16"
+                                    aria-label="Close"
                                     [color]="colors.ContrastFade"
-                                ></i>
+                                ></button>
 
                                 <!-- Action buttons: standard and transparent styles -->
                                 <button kbq-alert-control kbq-button [color]="colors.Contrast">Button1</button>

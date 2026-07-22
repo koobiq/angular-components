@@ -1,9 +1,8 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAlertModule } from '@koobiq/components/alert';
-import { KbqButtonStyles } from '@koobiq/components/button';
+import { KbqAlert, KbqAlertCloseButton } from '@koobiq/components/alert';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 
 /**
  * @title Alert close
@@ -11,19 +10,22 @@ import { KbqIconModule } from '@koobiq/components/icon';
 @Component({
     selector: 'alert-close-example',
     imports: [
-        KbqAlertModule,
-        KbqIconModule
+        KbqAlert,
+        KbqAlertCloseButton,
+        KbqIcon,
+        KbqIconButton
     ],
     template: `
-        <kbq-alert class="flex-100" [@hideShowAnimator]="state" [compact]="true">
-            <i kbq-icon="kbq-circle-info_16"></i>
-            Блок скрывается по крестику в углу, не дублируйте эту возможность с помощью кнопки под текстом сообщения
-            <i
+        <kbq-alert class="flex-100" [@hideShowAnimator]="state" [compact]="true" (closed)="state = false">
+            <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
+            The alert is dismissed with the close icon in the corner; do not duplicate this with a button below the
+            message text
+            <button
                 kbq-alert-close-button
                 kbq-icon-button="kbq-xmark-s_16"
+                aria-label="Close"
                 [color]="colors.ContrastFade"
-                (click)="state = !state"
-            ></i>
+            ></button>
         </kbq-alert>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,6 +40,5 @@ import { KbqIconModule } from '@koobiq/components/icon';
 })
 export class AlertCloseExample {
     colors = KbqComponentColors;
-    style = KbqButtonStyles;
     state = true;
 }
