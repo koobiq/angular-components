@@ -52,8 +52,8 @@
                                 @for (alias of app.aliases; track alias) {
                                     <a
                                         href="{{ alias.link }}"
-                                        [class]="nestedAliasClass"
                                         kbq-app-switcher-list-item
+                                        [class]="nestedAliasClass"
                                         [class.kbq-selected]="alias.id === trigger.selectedApp?.id"
                                         [app]="alias"
                                     ></a>
@@ -78,9 +78,9 @@
                         @for (site of trigger.sites; track site) {
                             @if (site.id !== trigger.selectedSite?.id) {
                                 <div
+                                    #siteFlyoutTrigger="kbqDropdownTrigger"
                                     [kbq-app-switcher-dropdown-site]="site"
                                     [kbqDropdownTriggerFor]="dropdownWithSelectedSite"
-                                    #siteFlyoutTrigger="kbqDropdownTrigger"
                                     [offsetX]="0"
                                     [attr.aria-expanded]="siteFlyoutTrigger.opened"
                                     (mouseenter)="activeSite = site"
