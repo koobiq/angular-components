@@ -7,13 +7,12 @@ import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/cor
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { COMMA, ENTER, SEMICOLON, SPACE, TAB } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent } from '@koobiq/cdk/testing';
+import { createKeyboardEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import {
     KbqAutocompleteModule,
     KbqAutocompleteSelectedEvent,
     KbqAutocompleteTrigger
 } from '@koobiq/components/autocomplete';
-import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KbqTagsModule } from './index';
@@ -539,7 +538,7 @@ describe(KbqTagInput.name, () => {
 
             inputElement.value = 'some text';
             directive.autocompleteTrigger = {
-                onInputBlur: () => () => false
+                onInputBlur: () => false
             } as unknown as KbqAutocompleteTrigger;
 
             directive.addOnBlur = true;
@@ -555,7 +554,7 @@ describe(KbqTagInput.name, () => {
 
             inputElement.value = 'some text';
             directive.autocompleteTrigger = {
-                onInputBlur: () => () => true
+                onInputBlur: () => true
             } as unknown as KbqAutocompleteTrigger;
 
             directive.addOnBlur = true;

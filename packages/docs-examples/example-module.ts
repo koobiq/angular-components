@@ -4932,6 +4932,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-editable-example.ts",
     "importPath": "components/tags"
   },
+  "tag-autocomplete-onpaste-off": {
+    "packagePath": "components/tags/tag-autocomplete-onpaste-off",
+    "title": "Tag autocomplete onpaste off",
+    "componentName": "TagAutocompleteOnpasteOffExample",
+    "files": [
+      "tag-autocomplete-onpaste-off-example.ts",
+      "tag-autocomplete-onpaste-off-example.html"
+    ],
+    "selector": "tag-autocomplete-onpaste-off-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-autocomplete-onpaste-off-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-autocomplete-option-operations": {
     "packagePath": "components/tags/tag-autocomplete-option-operations",
     "title": "Tag autocomplete option operations",
@@ -5038,6 +5051,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-editable-example.ts",
+    "importPath": "components/tags"
+  },
+  "tag-input-onpaste-off": {
+    "packagePath": "components/tags/tag-input-onpaste-off",
+    "title": "Tag input onpaste off",
+    "componentName": "TagInputOnpasteOffExample",
+    "files": [
+      "tag-input-onpaste-off-example.ts",
+      "tag-input-onpaste-off-example.html"
+    ],
+    "selector": "tag-input-onpaste-off-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-onpaste-off-example.ts",
     "importPath": "components/tags"
   },
   "tag-input-overview": {
@@ -5182,32 +5208,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-with-icon-example",
     "additionalComponents": [],
     "primaryFile": "tag-with-icon-example.ts",
-    "importPath": "components/tags"
-  },
-  "tags-autocomplete-onpaste-off": {
-    "packagePath": "components/tags/tags-autocomplete-onpaste-off",
-    "title": "Tags autocomplete onpaste off",
-    "componentName": "TagsAutocompleteOnpasteOffExample",
-    "files": [
-      "tags-autocomplete-onpaste-off-example.ts",
-      "tags-autocomplete-onpaste-off-example.html"
-    ],
-    "selector": "tags-autocomplete-onpaste-off-example",
-    "additionalComponents": [],
-    "primaryFile": "tags-autocomplete-onpaste-off-example.ts",
-    "importPath": "components/tags"
-  },
-  "tags-input-onpaste-off": {
-    "packagePath": "components/tags/tags-input-onpaste-off",
-    "title": "Tags input onpaste off",
-    "componentName": "TagsInputOnpasteOffExample",
-    "files": [
-      "tags-input-onpaste-off-example.ts",
-      "tags-input-onpaste-off-example.html"
-    ],
-    "selector": "tags-input-onpaste-off-example",
-    "additionalComponents": [],
-    "primaryFile": "tags-input-onpaste-off-example.ts",
     "importPath": "components/tags"
   },
   "textarea-can-grow": {
@@ -7234,6 +7234,8 @@ return import('@koobiq/docs-examples/components/tabs');
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-editable':
 return import('@koobiq/docs-examples/components/tags');
+  case 'tag-autocomplete-onpaste-off':
+return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-option-operations':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-autocomplete-overview':
@@ -7251,6 +7253,8 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-draggable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-editable':
+return import('@koobiq/docs-examples/components/tags');
+  case 'tag-input-onpaste-off':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-input-overview':
 return import('@koobiq/docs-examples/components/tags');
@@ -7275,10 +7279,6 @@ return import('@koobiq/docs-examples/components/tags');
   case 'tag-selectable':
 return import('@koobiq/docs-examples/components/tags');
   case 'tag-with-icon':
-return import('@koobiq/docs-examples/components/tags');
-  case 'tags-autocomplete-onpaste-off':
-return import('@koobiq/docs-examples/components/tags');
-  case 'tags-input-onpaste-off':
 return import('@koobiq/docs-examples/components/tags');
   case 'textarea-can-grow':
 return import('@koobiq/docs-examples/components/textarea');
