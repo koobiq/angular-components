@@ -237,7 +237,9 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 //
 // @public
 export class KbqTabHeader extends KbqPaginatedTabHeader {
+    // (undocumented)
     protected get activeTabOffsetLeft(): number | undefined;
+    // (undocumented)
     protected get activeTabOffsetWidth(): number | undefined;
     // (undocumented)
     readonly items: QueryList<KbqTabLabelWrapper>;
