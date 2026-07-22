@@ -713,7 +713,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'navbar',
                     hasApi: true,
                     apiId: 'navbar',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.NotificationCenter,

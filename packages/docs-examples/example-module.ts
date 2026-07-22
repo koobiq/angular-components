@@ -1009,6 +1009,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "clamped-list-example.ts",
     "importPath": "components/clamped-text"
   },
+  "clamped-text-external-state": {
+    "packagePath": "components/clamped-text/clamped-text-external-state",
+    "title": "Clamped-text external state",
+    "componentName": "ClampedTextExternalStateExample",
+    "files": [
+      "clamped-text-external-state-example.ts"
+    ],
+    "selector": "clamped-text-external-state-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-text-external-state-example.ts",
+    "importPath": "components/clamped-text"
+  },
   "clamped-text-overview": {
     "packagePath": "components/clamped-text/clamped-text-overview",
     "title": "Clamped-text overview",
@@ -3612,6 +3624,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "navbar-overview-example",
     "additionalComponents": [],
     "primaryFile": "navbar-overview-example.ts",
+    "importPath": "components/navbar"
+  },
+  "navbar-template-outlet": {
+    "packagePath": "components/navbar/navbar-template-outlet",
+    "title": "Navbar items from a template",
+    "componentName": "NavbarTemplateOutletExample",
+    "files": [
+      "navbar-template-outlet-example.ts",
+      "navbar-template-outlet-example.html"
+    ],
+    "selector": "navbar-template-outlet-example",
+    "additionalComponents": [],
+    "primaryFile": "navbar-template-outlet-example.ts",
     "importPath": "components/navbar"
   },
   "navbar-vertical-app-long-name": {
@@ -6842,6 +6867,8 @@ return import('@koobiq/docs-examples/components/clamped-text');
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-list':
 return import('@koobiq/docs-examples/components/clamped-text');
+  case 'clamped-text-external-state':
+return import('@koobiq/docs-examples/components/clamped-text');
   case 'clamped-text-overview':
 return import('@koobiq/docs-examples/components/clamped-text');
   case 'code-block-header-pinned':
@@ -7265,6 +7292,8 @@ return import('@koobiq/docs-examples/components/modal');
   case 'navbar-app-long-name':
 return import('@koobiq/docs-examples/components/navbar');
   case 'navbar-overview':
+return import('@koobiq/docs-examples/components/navbar');
+  case 'navbar-template-outlet':
 return import('@koobiq/docs-examples/components/navbar');
   case 'navbar-vertical-app-long-name':
 return import('@koobiq/docs-examples/components/navbar');

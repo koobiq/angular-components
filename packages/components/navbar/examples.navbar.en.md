@@ -1,5 +1,5 @@
-🚧 **Documentation in progress** 🚧
+### Adding items from a template
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+You can declare `kbq-navbar-item` elements inside an `<ng-template>` and insert them with `*ngTemplateOutlet` — for example, to render the items from a data array. Declare the template inside `<kbq-navbar>` so the navbar keeps managing keyboard navigation, layout, and responsive collapsing of the items.
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(navbar-template-outlet) -->
