@@ -365,6 +365,14 @@ describe('KbqTabHeader', () => {
                 expect((header as any).activeTabOffsetLeft).toBe(0);
             });
 
+            it('treats offsetLeft === 0 as a valid position and still adds TAB_PADDING', () => {
+                const item = header.items.get(0)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetLeft', { configurable: true, value: 0 });
+
+                expect((header as any).activeTabOffsetLeft).toBe(12);
+            });
+
             it('returns raw offsetLeft for icon-only tabs', () => {
                 const item = header.items.get(0)!;
 

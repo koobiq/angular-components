@@ -151,6 +151,14 @@ describe(KbqTabNavBar.name, () => {
                 expect((navBar as any).activeTabOffsetLeft).toBe(0);
             });
 
+            it('treats offsetLeft === 0 as a valid position and still adds TAB_PADDING', () => {
+                const item = navBar.items.get(0)!;
+
+                Object.defineProperty(item.elementRef.nativeElement, 'offsetLeft', { configurable: true, value: 0 });
+
+                expect((navBar as any).activeTabOffsetLeft).toBe(12);
+            });
+
             it('returns undefined when no item at selectedIndex', () => {
                 (navBar as any).selectedIndex = 99;
 

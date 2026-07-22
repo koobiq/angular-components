@@ -23,6 +23,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isUndefined } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { startWith } from 'rxjs/operators';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
@@ -103,7 +104,7 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
 
         const left = this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft;
 
-        if (!left) return left;
+        if (isUndefined(left)) return left;
 
         return left + TAB_PADDING;
     }

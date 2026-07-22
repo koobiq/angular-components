@@ -3,8 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
-import { TabsVerticalExample } from 'packages/docs-examples/components/tabs';
-import { TabsUnderlinedExample } from '../../../dist/docs-examples/components/tabs';
+import { TabsUnderlinedExample, TabsVerticalExample } from 'packages/docs-examples/components/tabs';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
