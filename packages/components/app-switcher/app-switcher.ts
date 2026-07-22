@@ -249,6 +249,14 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     ngAfterViewInit() {
         const input = this.input();
 
+        this.keyManager = new FocusKeyManager<KbqDropdownItem>(this.menuItems)
+            .withVerticalOrientation()
+            .withHomeAndEnd()
+            .withTypeAhead();
+
+        // Focus the first item only once, and only after it is actually rendered (see below).
+        let initialItemFocused = false;
+
         // Build the roving menu from the inline (static-content) items: the flat app rows, expanded
         // aliases and search results (`KbqAppSwitcherListItem`) plus the other-site rows
         // (`KbqAppSwitcherDropdownSite`). The apps inside the site flyouts (`KbqAppSwitcherDropdownApp`)
@@ -260,17 +268,19 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
                 )
             );
             this.menuItems.notifyOnChanges();
-        });
 
-        this.keyManager = new FocusKeyManager<KbqDropdownItem>(this.menuItems)
-            .withVerticalOrientation()
-            .withHomeAndEnd()
-            .withTypeAhead();
+            // When there is no search field, focus the first item on open. The static-content rows live
+            // inside a `kbq-dropdown` that only materialises after this component's `ngAfterViewInit`, so
+            // focusing eagerly there races the render and silently no-ops in production builds — wait for
+            // the items to appear in the query instead.
+            if (!input && !initialItemFocused && this.menuItems.length) {
+                initialItemFocused = true;
+                this.keyManager.setFirstItemActive();
+            }
+        });
 
         if (input) {
             input.focus();
-        } else {
-            this.keyManager.setFirstItemActive();
         }
 
         this.visibleChange.subscribe((state) => {

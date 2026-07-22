@@ -31,12 +31,18 @@ test.describe('KbqAppSwitcherModule', () => {
     });
 
     test.describe('keyboard navigation', () => {
-        const focusedItem = (page: Page) => page.locator('.kbq-app-switcher-list-item.cdk-keyboard-focused').first();
+        // The e2e host always renders one <kbq-app-switcher> inline (used by the screenshot tests);
+        // clicking the trigger opens a second instance in the CDK overlay. Scope every locator to the
+        // overlay panel so it never ambiguously matches the always-present inline instance.
+        const overlay = (page: Page) => page.locator('.kbq-app-switcher__panel');
+        const listItem = (page: Page) => overlay(page).locator('.kbq-app-switcher-list-item');
+        const focusedItem = (page: Page) =>
+            overlay(page).locator('.kbq-app-switcher-list-item.cdk-keyboard-focused').first();
 
         const openStates = async (page: Page) => {
             await page.goto('/E2eAppSwitcherStates');
             await page.getByTestId('e2eAppSwitcherStates').getByRole('button').click();
-            await expect(page.locator('.kbq-app-switcher')).toBeVisible();
+            await expect(overlay(page)).toBeVisible();
         };
 
         test('ArrowDown then ArrowUp returns focus to the same item', async ({ page }) => {
@@ -67,12 +73,12 @@ test.describe('KbqAppSwitcherModule', () => {
             await openStates(page);
 
             await page.keyboard.press('End');
-            const lastText = await page.locator('.kbq-app-switcher-list-item').last().textContent();
+            const lastText = await listItem(page).last().textContent();
 
             expect(await focusedItem(page).textContent()).toBe(lastText);
 
             await page.keyboard.press('Home');
-            const firstText = await page.locator('.kbq-app-switcher-list-item').first().textContent();
+            const firstText = await listItem(page).first().textContent();
 
             expect(await focusedItem(page).textContent()).toBe(firstText);
         });
@@ -82,17 +88,17 @@ test.describe('KbqAppSwitcherModule', () => {
 
             await page.keyboard.press('Escape');
 
-            await expect(page.locator('.kbq-app-switcher')).toBeHidden();
+            await expect(overlay(page)).toBeHidden();
         });
 
         test('ArrowLeft collapses an app group', async ({ page }) => {
             await page.goto('/E2eAppSwitcherWithSitesStates');
             await page.getByTestId('e2eAppSwitcherWithSitesStates').getByRole('button').click();
-            await expect(page.locator('.kbq-app-switcher')).toBeVisible();
+            await expect(overlay(page)).toBeVisible();
 
             // The search field is focused first; ArrowDown moves onto the first group header.
             await page.keyboard.press('ArrowDown');
-            const header = page.locator('.kbq-app-switcher-list-item[aria-expanded]').first();
+            const header = overlay(page).locator('.kbq-app-switcher-list-item[aria-expanded]').first();
 
             await expect(header).toHaveAttribute('aria-expanded', 'true');
 
