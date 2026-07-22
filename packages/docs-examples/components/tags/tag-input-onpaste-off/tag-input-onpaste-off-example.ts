@@ -12,27 +12,27 @@ import {
 } from '@koobiq/components/tags';
 
 /**
- * @title Tags input onpaste off
+ * @title Tag input onpaste off
  */
 @Component({
-    selector: 'tags-input-onpaste-off-example',
+    selector: 'tag-input-onpaste-off-example',
     imports: [
         KbqTagsModule,
         ReactiveFormsModule,
         KbqIconModule,
         KbqFormFieldModule
     ],
-    templateUrl: 'tags-input-onpaste-off-example.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: 'tag-input-onpaste-off-example.html',
     // turn off tag add on paste with InjectionToken
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
             useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagsInputOnpasteOffExample {
+export class TagInputOnpasteOffExample {
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     control = new FormControl();

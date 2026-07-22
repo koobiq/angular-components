@@ -1,3 +1,3 @@
 ### Отключено создания тега по событию paste
 
-<!-- example(tags-autocomplete-onpaste-off) -->
+<!-- example(tag-autocomplete-onpaste-off) -->

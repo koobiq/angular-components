@@ -20,10 +20,10 @@ import { map } from 'rxjs/operators';
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
 
 /**
- * @title Tags autocomplete onpaste off
+ * @title Tag autocomplete onpaste off
  */
 @Component({
-    selector: 'tags-autocomplete-onpaste-off-example',
+    selector: 'tag-autocomplete-onpaste-off-example',
     imports: [
         KbqTagsModule,
         KbqFormFieldModule,
@@ -32,17 +32,26 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
         KbqAutocompleteModule,
         AsyncPipe
     ],
-    templateUrl: 'tags-autocomplete-onpaste-off-example.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: 'tag-autocomplete-onpaste-off-example.html',
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--kbq-size-m);
+            margin: var(--kbq-size-5xl);
+        }
+    `,
     // turn off tag add on paste with InjectionToken
     providers: [
         {
             provide: KBQ_TAGS_DEFAULT_OPTIONS,
             useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
+export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
     @ViewChild('tagList', { static: false }) tagList: KbqTagList;
     @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
     @ViewChild('tagInput', { read: KbqTagInput, static: false }) tagInputDirective: KbqTagInput;

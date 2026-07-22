@@ -218,7 +218,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             this._tagList.blur();
         }
 
-        if (this.addOnBlur && (this.autocompleteTrigger?.onInputBlur(event) || true)) {
+        if (this.addOnBlur && (this.autocompleteTrigger?.onInputBlur?.(event) ?? true)) {
             this.emitTagEnd();
         }
 

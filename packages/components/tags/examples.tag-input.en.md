@@ -1,6 +1,6 @@
 ### Disable tag creation on the "paste" event
 
-<!-- example(tags-input-onpaste-off) -->
+<!-- example(tag-input-onpaste-off) -->
 
 ### Tag input with validators
 

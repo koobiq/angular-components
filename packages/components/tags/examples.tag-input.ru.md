@@ -1,6 +1,6 @@
 ### Отключение создания тега по событию "paste"
 
-<!-- example(tags-input-onpaste-off) -->
+<!-- example(tag-input-onpaste-off) -->
 
 ### Ввод тегов с валидаторами
 
