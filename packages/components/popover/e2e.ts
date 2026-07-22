@@ -135,3 +135,51 @@ export class E2ePopoverStates implements AfterViewInit {
         popoverFooterTemplate.show(0);
     }
 }
+
+@Component({
+    selector: 'e2e-popover-positioning',
+    imports: [KbqPopoverModule, KbqButton, KbqButtonCssStyler],
+    template: `
+        <div data-testid="e2eFormField" class="pin">
+            <button
+                data-testid="e2ePopoverTrigger"
+                kbq-button
+                kbqPopover
+                kbqPopoverPlacement="bottom"
+                kbqTrigger="click"
+                kbqPopoverContent="Popover content for the trigger↔panel gap e2e."
+            >
+                Open (click)
+            </button>
+        </div>
+
+        <div data-testid="e2eFormFieldHover" class="pin">
+            <button
+                data-testid="e2ePopoverTriggerHover"
+                kbq-button
+                kbqPopover
+                kbqPopoverPlacement="bottom"
+                kbqTrigger="hover"
+                kbqPopoverContent="Popover content for the trigger↔panel gap e2e."
+            >
+                Open (hover)
+            </button>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .pin {
+            display: inline-block;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2ePopoverPositioning'
+    }
+})
+export class E2ePopoverPositioning {}

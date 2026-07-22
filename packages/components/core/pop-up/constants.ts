@@ -63,6 +63,23 @@ export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 export const defaultOffsetY: number = 4;
 
 /**
+ * Pane class applied to a connected overlay whose panel is positioned BELOW its trigger.
+ *
+ * Used instead of a physical `offsetY` gap: the pane sits flush with the trigger and the visual gap is
+ * recreated as transparent `padding-top` inside the pane (see the `kbq-connected-overlay-gap` styles), so the
+ * gap is covered by the pane (`pointer-events: auto`) and can no longer be clicked/hovered through.
+ */
+export const KBQ_CONNECTED_OVERLAY_BELOW_CLASS = 'kbq-connected-overlay_below';
+
+/**
+ * Pane class applied to a connected overlay whose panel is positioned ABOVE its trigger (flipped).
+ *
+ * Mirror of {@link KBQ_CONNECTED_OVERLAY_BELOW_CLASS}: the visual gap is recreated as transparent
+ * `padding-bottom` inside the pane so the flipped gap is not click/hover-through.
+ */
+export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = 'kbq-connected-overlay_above';
+
+/**
  * Variable used for offsetY(X) calculations when applying Angular Overlay
  *
  * @docs-private

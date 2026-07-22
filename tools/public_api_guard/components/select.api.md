@@ -170,6 +170,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     ngOnDestroy(): void;
     ngOnInit(): void;
     get noOptions(): boolean;
+    // @deprecated
     offsetY: number;
     onAttached(): void;
     onBlur(): void;
@@ -247,6 +248,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get value(): any;
     set value(newValue: any);
     readonly valueChange: _angular_core.OutputEmitterRef<any>;
+    protected readonly viewportMargin: number;
     readonly virtualOptionFactory: _angular_core.InputSignal<((value: any) => KbqVirtualOption) | undefined>;
     readonly virtualScrollViewport: _angular_core.Signal<CdkVirtualScrollViewport | undefined>;
     withVirtualScroll: boolean;

@@ -1038,6 +1038,12 @@ export const J = 74;
 // @public (undocumented)
 export const K = 75;
 
+// @public
+export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";
+
+// @public
+export const KBQ_CONNECTED_OVERLAY_BELOW_CLASS = "kbq-connected-overlay_below";
+
 // @public (undocumented)
 export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER: <T>(token: InjectionToken<T>, factory: (overlay: Overlay) => () => ScrollStrategy) => {
     provide: InjectionToken<T>;

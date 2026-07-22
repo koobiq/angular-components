@@ -1,8 +1,10 @@
 @use 'common/overlay' as *;
+@use 'common/connected-overlay' as *;
 @use 'common/visually-hidden' as *;
 
 // Mixin that renders all of the core styles that are not theme-dependent.
 @mixin kbq-core() {
     @include a11y-visually-hidden();
     @include overlay();
+    @include kbq-connected-overlay-gap();
 }

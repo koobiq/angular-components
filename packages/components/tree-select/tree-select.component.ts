@@ -47,6 +47,8 @@ import {
     ESCAPE,
     ErrorStateMatcher,
     HOME,
+    KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
+    KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_LOCALE_SERVICE,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
@@ -237,11 +239,21 @@ export class KbqTreeSelect
     scrollStrategy = this.scrollStrategyFactory();
 
     /**
-     * The y-offset of the overlay panel in relation to the trigger's top start corner.
-     * This must be adjusted to align the selected option text over the trigger text.
-     * when the panel opens. Will change based on the y-position of the selected option.
+     * The y-offset of the overlay panel in relation to the trigger.
+     *
+     * @deprecated noop. The trigger↔panel gap is now controlled by the `--kbq-connected-overlay-gap` CSS
+     * variable (transparent padding inside the pane via the `kbq-connected-overlay_below/_above` panel
+     * classes), not by a physical overlay offset — so setting this has no effect. Will be removed in 21.0.0.
      */
-    offsetY = defaultOffsetY;
+    offsetY = 0;
+
+    /**
+     * Minimum space to keep between the overlay and the viewport edge.
+     * At least `defaultOffsetY` so CDK's fit check — which runs before the `kbq-connected-overlay_below/_above`
+     * gap padding is applied to the pane — stays conservative enough to absorb that padding instead of
+     * letting the panel overflow the viewport by the size of the gap.
+     */
+    protected readonly viewportMargin = defaultOffsetY;
 
     /**
      * This position config ensures that the top "start" corner of the overlay
@@ -255,14 +267,14 @@ export class KbqTreeSelect
             originY: 'bottom',
             overlayX: 'start',
             overlayY: 'top',
-            offsetY: this.offsetY
+            panelClass: KBQ_CONNECTED_OVERLAY_BELOW_CLASS
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
             overlayY: 'bottom',
-            offsetY: -this.offsetY
+            panelClass: KBQ_CONNECTED_OVERLAY_ABOVE_CLASS
         }
     ];
 

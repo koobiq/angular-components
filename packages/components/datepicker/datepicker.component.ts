@@ -21,7 +21,11 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { DateAdapter, defaultOffsetY } from '@koobiq/components/core';
+import {
+    DateAdapter,
+    KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
+    KBQ_CONNECTED_OVERLAY_BELOW_CLASS
+} from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -472,40 +476,45 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     /** Create the popup PositionStrategy. */
     private createPopupPositionStrategy(): PositionStrategy {
-        return this.overlay
-            .position()
-            .flexibleConnectedTo(this.datepickerInput.getOrigin())
-            .withTransformOriginOn('.kbq-datepicker__content')
-            .withFlexibleDimensions(false)
-            .withViewportMargin(8)
-            .withLockedPosition()
-            .withPositions([
-                {
-                    originX: 'start',
-                    originY: 'bottom',
-                    overlayX: 'start',
-                    overlayY: 'top',
-                    offsetY: defaultOffsetY
-                },
-                {
-                    originX: 'start',
-                    originY: 'top',
-                    overlayX: 'start',
-                    overlayY: 'bottom',
-                    offsetY: -defaultOffsetY
-                },
-                {
-                    originX: 'end',
-                    originY: 'bottom',
-                    overlayX: 'end',
-                    overlayY: 'top'
-                },
-                {
-                    originX: 'end',
-                    originY: 'top',
-                    overlayX: 'end',
-                    overlayY: 'bottom'
-                }
-            ]);
+        return (
+            this.overlay
+                .position()
+                .flexibleConnectedTo(this.datepickerInput.getOrigin())
+                .withTransformOriginOn('.kbq-datepicker__content')
+                .withFlexibleDimensions(false)
+                // Also large enough to absorb the trigger↔panel gap padding (kbq-connected-overlay-gap,
+                // defaultOffsetY = 4) that CDK's viewport-fit check can't see, since that padding is applied
+                // via panelClass after the fit decision is made.
+                .withViewportMargin(8)
+                .withLockedPosition()
+                .withPositions([
+                    {
+                        originX: 'start',
+                        originY: 'bottom',
+                        overlayX: 'start',
+                        overlayY: 'top',
+                        panelClass: KBQ_CONNECTED_OVERLAY_BELOW_CLASS
+                    },
+                    {
+                        originX: 'start',
+                        originY: 'top',
+                        overlayX: 'start',
+                        overlayY: 'bottom',
+                        panelClass: KBQ_CONNECTED_OVERLAY_ABOVE_CLASS
+                    },
+                    {
+                        originX: 'end',
+                        originY: 'bottom',
+                        overlayX: 'end',
+                        overlayY: 'top'
+                    },
+                    {
+                        originX: 'end',
+                        originY: 'top',
+                        overlayX: 'end',
+                        overlayY: 'bottom'
+                    }
+                ])
+        );
     }
 }

@@ -27,3 +27,24 @@ export class E2eDatepickerStates {
 
     date = this.adapter.createDate(2025, 10, 9);
 }
+
+@Component({
+    selector: 'e2e-datepicker-positioning',
+    imports: [KbqDatepickerModule, FormsModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field data-testid="e2eFormField">
+            <input [kbqDatepicker]="myDatepicker" [(ngModel)]="date" />
+            <kbq-datepicker-toggle-icon kbqSuffix data-testid="e2eDatepickerToggle" [for]="myDatepicker" />
+            <kbq-datepicker #myDatepicker [startAt]="date" />
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDatepickerPositioning'
+    }
+})
+export class E2eDatepickerPositioning {
+    adapter = inject(DateAdapter<DateTime>);
+
+    date = this.adapter.createDate(2025, 10, 9);
+}

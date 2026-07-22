@@ -19,7 +19,7 @@ import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../comp
 import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
 import { E2eContentPanelScrollOverflow, E2eContentPanelState } from '../components/content-panel/e2e';
-import { E2eDatepickerStates } from '../components/datepicker/e2e';
+import { E2eDatepickerPositioning, E2eDatepickerStates } from '../components/datepicker/e2e';
 import { E2eDividerStateAndStyle } from '../components/divider/e2e';
 import { E2eDlStates } from '../components/dl/e2e';
 import {
@@ -60,7 +60,7 @@ import {
     E2eOverflowItemsOrdered,
     E2eOverflowItemsVertical
 } from '../components/overflow-items/e2e';
-import { E2ePopoverStates } from '../components/popover/e2e';
+import { E2ePopoverPositioning, E2ePopoverStates } from '../components/popover/e2e';
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
@@ -156,6 +156,7 @@ const components = [
     E2eTextareaGrowMaxRows,
     E2eTextareaScrollOnFocus,
     E2eDatepickerStates,
+    E2eDatepickerPositioning,
     E2eTableStates,
     E2eAppSwitcherStates,
     E2eContentPanelState,
@@ -203,6 +204,7 @@ const components = [
     E2eToastStates,
     E2eNotificationCenterStates,
     E2ePopoverStates,
+    E2ePopoverPositioning,
     E2eTooltipStates,
     E2eTooltipArrowOffset,
     E2eTagListStates,
