@@ -4966,6 +4966,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tabs-active-tab-index-example.ts",
     "importPath": "components/tabs"
   },
+  "tabs-add-tab-vertical": {
+    "packagePath": "components/tabs/tabs-add-tab-vertical",
+    "title": "Tabs add tab vertical",
+    "componentName": "TabsAddTabVerticalExample",
+    "files": [
+      "tabs-add-tab-vertical-example.ts",
+      "./tabs-add-tab-vertical-example.css"
+    ],
+    "selector": "tabs-add-tab-vertical-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-add-tab-vertical-example.ts",
+    "importPath": "components/tabs"
+  },
+  "tabs-add-tab": {
+    "packagePath": "components/tabs/tabs-add-tab",
+    "title": "Tabs add tab",
+    "componentName": "TabsAddTabExample",
+    "files": [
+      "tabs-add-tab-example.ts",
+      "./tabs-add-tab-example.css"
+    ],
+    "selector": "tabs-add-tab-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-add-tab-example.ts",
+    "importPath": "components/tabs"
+  },
   "tabs-custom-label": {
     "packagePath": "components/tabs/tabs-custom-label",
     "title": "Tabs custom label",
@@ -7522,6 +7548,10 @@ return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-active-tab-id':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-active-tab-index':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-add-tab-vertical':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-add-tab':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-custom-label':
 return import('@koobiq/docs-examples/components/tabs');

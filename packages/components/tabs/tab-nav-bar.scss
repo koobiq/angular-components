@@ -29,7 +29,7 @@
 
     &.kbq-tab-group_vertical {
         .kbq-tab-link__container {
-            overflow-y: scroll;
+            overflow-y: auto;
         }
 
         .kbq-tab-list__content {
