@@ -35,13 +35,9 @@ type NavbarLink = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarTemplateOutletExample {
-    /** Placement of the action-button tooltip. */
     readonly popUpPlacements = PopUpPlacements;
-    /** Color palette used by the action button. */
     readonly colors = KbqComponentColors;
-    /** Applications shown in the "Все приложения" dropdown. */
     readonly apps: readonly string[] = ['User Management', 'Knowledge Hub', 'Secret Notes'];
-    /** Currently selected application (drives the navbar brand title). */
     readonly selectedApp = signal<string>(this.apps[0]);
 
     /** Uniform navbar links rendered from a single reusable template. */
