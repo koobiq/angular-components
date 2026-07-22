@@ -30,17 +30,15 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     </a>
                 }
             </nav>
-            <div class="example-tab-add-button-container">
-                <button
-                    color="contrast-fade"
-                    kbq-button
-                    kbqTooltip="Add tab"
-                    (click)="addTab()"
-                    (keydown)="$event.stopPropagation()"
-                >
-                    <i kbq-icon="kbq-plus_16"></i>
-                </button>
-            </div>
+            <button
+                color="contrast-fade"
+                kbq-button
+                kbqTooltip="Add tab"
+                (click)="addTab()"
+                (keydown)="$event.stopPropagation()"
+            >
+                <i kbq-icon="kbq-plus_16"></i>
+            </button>
         </div>
 
         <div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel class="example-tabs-add-tab-vertical__content">

@@ -41,10 +41,7 @@
     flex-direction: column;
     height: 100%;
     width: 240px;
-}
-
-.example-tab-add-button-container {
-    padding: var(--kbq-size-s) var(--kbq-size-s) 0;
+    gap: var(--kbq-size-s);
 }
 
 .example-tab-add-button-container button {
