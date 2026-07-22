@@ -41,6 +41,8 @@ Clicking on a pseudo-link in the list of parameters will add a new value to the 
 
 <!-- example(filter-bar-pipe-types) -->
 
+The `input` type is the only one without a popover: it renders a bare input that is typed into directly in the bar, using the pipe's `name` as its placeholder. The value is applied as you type — 200 ms after the last keystroke (`debounceTime`) and only from 3 characters on (`minLength`) — rather than through an Apply button. Text shorter than the threshold, including an emptied field, is applied as `null`, so the bar never keeps filtering by text that is no longer in the input. `Enter` and blur apply the value immediately and ignore the threshold: an explicit action is always applied as typed. Its only clear affordance is the built-in cleaner inside the input, so `removable` has no effect — an `input` pipe can only be removed programmatically. Values are trimmed, and a blank value is applied as `null`. Set its width with the `--kbq-filter-bar-pipe-input-width` CSS variable.
+
 ### Search in pipes
 
 If the filter has many values, it is useful to enable search in the drop-down menu.
