@@ -4,7 +4,7 @@ Tags Autocomplete используется для выбора одного ил
 
 <!-- example(tag-autocomplete-overview) -->
 
-Меню принадлежит [autocomplete](ru/components/autocomplete) — его ширина настраивается там, атрибутами `panelWidth` и `panelMinWidth` у `<kbq-autocomplete>`, и считается по всему полю, а не по инпуту.
+Меню относится к [Autocomplete](ru/components/autocomplete): его ширина настраивается атрибутами `panelWidth` и `panelMinWidth` у `<kbq-autocomplete>` и считается по всему полю, а не по полю ввода внутри него.
 
 ### Добавление в справочник
 
