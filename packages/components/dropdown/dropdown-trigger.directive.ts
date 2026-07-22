@@ -22,6 +22,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    NgZone,
     numberAttribute,
     OnDestroy,
     Output,
@@ -138,6 +139,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     private readonly overlayContainer = inject(OverlayContainer);
     private readonly renderer = inject(Renderer2);
+    private readonly ngZone = inject(NgZone);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
     private readonly host = inject(KBQ_DROPDOWN_HOST, { optional: true });
@@ -251,6 +253,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     private hoverSubscription = Subscription.EMPTY;
 
+    private widthLockSubscription = Subscription.EMPTY;
+
     private classAddedToOverlayContainer: boolean = false;
 
     constructor() {
@@ -336,6 +340,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         }
 
         this.addClassToOverlayContainer();
+
+        this.lockOverlayWidthForSearch();
     }
 
     /** Closes the dropdown. */
@@ -430,6 +436,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         this.dropdown.resetActiveItem();
 
         this.closeSubscription.unsubscribe();
+        this.widthLockSubscription.unsubscribe();
         this.overlayRef.detach();
 
         if (this.restoreFocus && (reason === 'keydown' || !this.openedBy || !this.isNested())) {
@@ -656,6 +663,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private cleanUpSubscriptions(): void {
         this.closeSubscription.unsubscribe();
         this.hoverSubscription.unsubscribe();
+        this.widthLockSubscription.unsubscribe();
     }
 
     /** Returns a stream that emits whenever an action that should close the dropdown occurs. */
@@ -733,6 +741,44 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             this.dropdown.panelMinWidth?.(),
             this.isBrowser ? kbqGetPanelWidthOrigin(this.widthOrigin ?? this.elementRef) : 0
         );
+    }
+
+    /**
+     * When the panel hosts a search field, its content-sized width would jump as the field's cleaner
+     * appears or options are filtered. Freeze the width at the opened (empty) state so it stays stable
+     * — mirrors `KbqAbstractSelect.lockOverlayWidthForSearch`.
+     */
+    private lockOverlayWidthForSearch(): void {
+        if (
+            !this.isBrowser ||
+            !this.shouldMatchTriggerWidth ||
+            !(this.dropdown instanceof KbqDropdown) ||
+            !this.dropdown.hasSearch()
+        ) {
+            return;
+        }
+
+        this.widthLockSubscription = this.ngZone.onStable
+            .asObservable()
+            .pipe(take(1))
+            .subscribe(() => this.pinOverlayWidth());
+    }
+
+    /** Freezes the overlay pane at its rendered width. */
+    private pinOverlayWidth(): void {
+        if (!this._opened || !this.overlayRef) return;
+
+        // An explicit or `'auto'` panelWidth already fixes the pane; only pin content-sized panels.
+        if (this.getOverlaySize().width !== '') return;
+
+        // Measure the pane, not `.kbq-dropdown__panel`: the panel scales in via `@transformDropdown`,
+        // so its `getBoundingClientRect()` can read a mid-animation (scaled) width. The pane is
+        // transform-immune and the panel fills it.
+        const width = this.overlayRef.overlayElement.getBoundingClientRect().width;
+
+        if (width) {
+            this.overlayRef.updateSize({ width });
+        }
     }
 
     private addClassToOverlayContainer() {

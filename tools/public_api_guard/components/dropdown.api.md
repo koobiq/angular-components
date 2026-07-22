@@ -86,6 +86,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     handleKeydown(event: KeyboardEvent): void;
     get hasBackdrop(): boolean;
     set hasBackdrop(value: boolean);
+    readonly hasSearch: i0.Signal<boolean>;
     hovered(): Observable<KbqDropdownItem>;
     isAnimating: boolean;
     items: QueryList<KbqDropdownItem>;

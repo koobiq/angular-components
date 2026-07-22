@@ -82,6 +82,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     private readonly search = contentChild(KbqFormField);
 
+    /** Whether the dropdown projects a search form-field. @docs-private */
+    readonly hasSearch = computed(() => !!this.search());
+
     readonly navigationWithWrap = input<boolean>(false);
 
     /** Position of the dropdown in the X axis. */
