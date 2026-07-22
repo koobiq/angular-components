@@ -26,6 +26,17 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             }
         </kbq-tab-group>
 
+        <!-- underlined with icons only -->
+        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedIconsOnly">
+            @for (tab of tabs.slice(0, 5); track tab) {
+                <kbq-tab>
+                    <ng-template kbqTabLabel iconOnly>
+                        <i kbq-icon="kbq-bug_16"></i>
+                    </ng-template>
+                </kbq-tab>
+            }
+        </kbq-tab-group>
+
         <!-- underlined -->
         <kbq-tab-group underlined data-testid="e2eTabsUnderlined">
             @for (tab of tabs; track tab) {
@@ -39,21 +50,23 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             }
         </kbq-tab-group>
 
-        <!-- underlined with icons only -->
-        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedIconsOnly">
-            @for (tab of tabs.slice(0, 5); track tab) {
-                <kbq-tab>
-                    <ng-template kbqTabLabel iconOnly>
-                        <i kbq-icon="kbq-bug_16"></i>
-                    </ng-template>
-                </kbq-tab>
-            }
-        </kbq-tab-group>
-
         <!-- stretched -->
         <kbq-tab-group kbq-stretch-tabs [activeTab]="tabs[2]">
             @for (tab of tabs.slice(0, 2); track tab) {
                 <kbq-tab [disabled]="$first" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- underlined with text and icon states -->
+        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedTextIcon">
+            @for (tab of tabs.slice(0, 4); track tab) {
+                <kbq-tab [tabId]="tab" [disabled]="$index === 3">
+                    <ng-template kbq-tab-label>
+                        <i kbq-icon="kbq-bug_16"></i>
+                        Text {{ $index }}
+                    </ng-template>
+                    Active tab is {{ tab }}
+                </kbq-tab>
             }
         </kbq-tab-group>
 
@@ -77,6 +90,19 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
                         {{ tab }}
+                    </ng-template>
+                    Active tab is {{ tab }}
+                </kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- underlined with text and icon disabled -->
+        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedTextIconDisabled" [onSurface]="true">
+            @for (tab of tabs.slice(0, 1); track tab) {
+                <kbq-tab [tabId]="tab" [disabled]="$first">
+                    <ng-template kbq-tab-label>
+                        <i kbq-icon="kbq-bug_16"></i>
+                        Text {{ $index }}
                     </ng-template>
                     Active tab is {{ tab }}
                 </kbq-tab>
@@ -185,12 +211,27 @@ export class E2eTabsStates {
     constructor() {
         afterNextRender(() => {
             this.setupTabsUnderlinedIconsOnlyStates();
+            this.setupTabsUnderlinedTextIconStates();
             this.setupTabsVerticalIconsOnlyStates();
         });
     }
 
     private setupTabsUnderlinedIconsOnlyStates(): void {
         const labels = document.querySelectorAll('[data-testid="e2eTabsUnderlinedIconsOnly"] .kbq-tab-label');
+
+        labels[0].classList.add('kbq-hover');
+        labels[0].classList.add('cdk-keyboard-focused');
+
+        labels[1].classList.add('kbq-hover');
+
+        labels[2].classList.add('kbq-hover');
+        labels[2].classList.add('cdk-keyboard-focused');
+
+        labels[4].classList.add('cdk-keyboard-focused');
+    }
+
+    private setupTabsUnderlinedTextIconStates(): void {
+        const labels = document.querySelectorAll('[data-testid="e2eTabsUnderlinedTextIcon"] .kbq-tab-label');
 
         labels[0].classList.add('kbq-hover');
         labels[0].classList.add('cdk-keyboard-focused');

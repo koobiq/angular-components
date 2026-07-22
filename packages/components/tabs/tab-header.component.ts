@@ -84,6 +84,10 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
         return left + TAB_PADDING;
     }
 
+    protected get activeTabDisabled(): boolean {
+        return !!this.items.get(this.selectedIndex)?.disabled;
+    }
+
     protected itemSelected(event: KeyboardEvent): void {
         event.preventDefault();
     }

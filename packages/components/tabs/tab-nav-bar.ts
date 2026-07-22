@@ -109,6 +109,10 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
         return left + TAB_PADDING;
     }
 
+    protected get activeTabDisabled(): boolean {
+        return !!this.items.get(this.selectedIndex)?.disabled;
+    }
+
     override ngAfterContentInit() {
         // We need this to run before the `changes` subscription in parent to ensure that the `selectedIndex` is
         // up-to-date by the time the `KbqPaginatedTabHeader` starts looking for it.

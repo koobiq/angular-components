@@ -194,5 +194,9 @@
         border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
         background: var(--kbq-line-contrast);
         transition: all 0.2s ease-in-out;
+
+        &.kbq-disabled {
+            background: var(--kbq-states-icon-disabled);
+        }
     }
 }

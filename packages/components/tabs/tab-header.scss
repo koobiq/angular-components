@@ -11,7 +11,9 @@
     border-radius: var(--kbq-tabs-size-tab-stack-horizontal-border-radius);
 
     &.kbq-tab-header_underlined {
-        border-radius: 0;
+        .kbq-tab-group:not(.kbq-tab-group_on-surface) & {
+            border-radius: 0;
+        }
     }
 }
 
