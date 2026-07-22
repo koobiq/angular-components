@@ -4,6 +4,12 @@
 
 <!-- example(dropdown-disabled) -->
 
+### Состояние загрузки
+
+Добавьте атрибут `progress` к `kbq-dropdown-item`, чтобы отобразить анимацию загрузки на элементе. Его можно совмещать с `disabled`, чтобы дополнительно запретить взаимодействие с элементом во время загрузки.
+
+<!-- example(dropdown-item-progress) -->
+
 ### Открытие по стрелке вниз ↓
 
 <!-- example(dropdown-open-by-arrow-down) -->

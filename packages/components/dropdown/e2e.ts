@@ -69,7 +69,8 @@ import { KbqDropdownModule } from './dropdown.module';
                 Disabled with icon
             </button>
 
-            <button kbq-dropdown-item class="kbq-progress" data-testid="e2eDropdownItemLoading">Loading item</button>
+            <button kbq-dropdown-item progress>In progress</button>
+            <button kbq-dropdown-item progress disabled>In progress and disabled</button>
         </kbq-dropdown>
 
         <kbq-dropdown #submenu="kbqDropdown">

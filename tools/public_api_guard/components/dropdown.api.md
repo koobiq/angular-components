@@ -179,12 +179,13 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     ngOnDestroy(): void;
     // (undocumented)
     parentDropdownPanel?: KbqDropdownPanel | null | undefined;
+    readonly progress: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     resetStyles(): void;
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, never>;
 }

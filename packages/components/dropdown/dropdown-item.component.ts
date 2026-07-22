@@ -7,6 +7,7 @@ import {
     ContentChild,
     ElementRef,
     inject,
+    input,
     Input,
     OnDestroy,
     ViewChild,
@@ -38,6 +39,7 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
         '[class.kbq-dropdown-item_with-icon]': 'icon',
         '[class.kbq-dropdown-item_highlighted]': 'highlighted',
         '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-progress]': 'progress()',
 
         '[attr.disabled]': 'disabled || null',
         '[attr.tabindex]': 'getTabIndex()',
@@ -69,6 +71,9 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     }
 
     private _disabled: boolean = false;
+
+    /** Whether the dropdown item is in a loading state. */
+    readonly progress = input(false, { transform: booleanAttribute });
 
     /** Stream that emits when the dropdown item is hovered. */
     readonly hovered = new Subject<KbqDropdownItem>();
