@@ -238,6 +238,8 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 // @public
 export class KbqTabHeader extends KbqPaginatedTabHeader {
     // (undocumented)
+    protected get activeTabDisabled(): boolean;
+    // (undocumented)
     protected get activeTabOffsetLeft(): number | undefined;
     // (undocumented)
     protected get activeTabOffsetWidth(): number | undefined;
@@ -343,6 +345,8 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
 
 // @public
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
+    // (undocumented)
+    protected get activeTabDisabled(): boolean;
     // (undocumented)
     protected get activeTabOffsetLeft(): number | undefined;
     // (undocumented)
