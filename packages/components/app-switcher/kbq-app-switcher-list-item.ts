@@ -52,7 +52,10 @@ import { KbqAppSwitcherApp } from './app-switcher';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-app-switcher-list-item',
+        role: 'menuitem',
         '[class.kbq-dropdown-item]': 'false',
+        '[attr.tabindex]': 'getTabIndex()',
+        '[attr.aria-expanded]': 'toggle() ? !collapsed : null',
         '(click)': 'clickHandler($event)'
     },
     exportAs: 'kbqAppSwitcherApp'

@@ -161,7 +161,10 @@
 
         &.cdk-keyboard-focused {
             outline: none;
-            border-color: var(--kbq-list-states-focused-focus-outline-color);
+            // Inset ring instead of `border-color`: the list item has no base border to colour, and adding
+            // one would shift the nested-alias connector line (`:after`). This renders the same visual ring
+            // without touching layout or the connector geometry.
+            box-shadow: inset 0 0 0 var(--kbq-size-3xs) var(--kbq-list-states-focused-focus-outline-color);
         }
     }
 }

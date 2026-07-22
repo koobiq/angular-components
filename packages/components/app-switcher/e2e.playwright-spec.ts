@@ -29,4 +29,75 @@ test.describe('KbqAppSwitcherModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-dark.png');
         });
     });
+
+    test.describe('keyboard navigation', () => {
+        const focusedItem = (page: Page) => page.locator('.kbq-app-switcher-list-item.cdk-keyboard-focused').first();
+
+        const openStates = async (page: Page) => {
+            await page.goto('/E2eAppSwitcherStates');
+            await page.getByTestId('e2eAppSwitcherStates').getByRole('button').click();
+            await expect(page.locator('.kbq-app-switcher')).toBeVisible();
+        };
+
+        test('ArrowDown then ArrowUp returns focus to the same item', async ({ page }) => {
+            await openStates(page);
+
+            await page.keyboard.press('ArrowDown');
+            const afterDown = await focusedItem(page).textContent();
+
+            await page.keyboard.press('ArrowDown');
+            await page.keyboard.press('ArrowUp');
+
+            expect(await focusedItem(page).textContent()).toBe(afterDown);
+        });
+
+        test('the keyboard-focused item renders a visible focus ring', async ({ page }) => {
+            await openStates(page);
+
+            await page.keyboard.press('ArrowDown');
+
+            // The list item has no base border, so the ring is drawn with an inset box-shadow.
+            const ring = await focusedItem(page).evaluate((el) => getComputedStyle(el).boxShadow);
+
+            expect(ring).not.toBe('none');
+            expect(ring).toContain('inset');
+        });
+
+        test('End and Home move to the last and first item', async ({ page }) => {
+            await openStates(page);
+
+            await page.keyboard.press('End');
+            const lastText = await page.locator('.kbq-app-switcher-list-item').last().textContent();
+
+            expect(await focusedItem(page).textContent()).toBe(lastText);
+
+            await page.keyboard.press('Home');
+            const firstText = await page.locator('.kbq-app-switcher-list-item').first().textContent();
+
+            expect(await focusedItem(page).textContent()).toBe(firstText);
+        });
+
+        test('Escape closes the switcher', async ({ page }) => {
+            await openStates(page);
+
+            await page.keyboard.press('Escape');
+
+            await expect(page.locator('.kbq-app-switcher')).toBeHidden();
+        });
+
+        test('ArrowLeft collapses an app group', async ({ page }) => {
+            await page.goto('/E2eAppSwitcherWithSitesStates');
+            await page.getByTestId('e2eAppSwitcherWithSitesStates').getByRole('button').click();
+            await expect(page.locator('.kbq-app-switcher')).toBeVisible();
+
+            // The search field is focused first; ArrowDown moves onto the first group header.
+            await page.keyboard.press('ArrowDown');
+            const header = page.locator('.kbq-app-switcher-list-item[aria-expanded]').first();
+
+            await expect(header).toHaveAttribute('aria-expanded', 'true');
+
+            await page.keyboard.press('ArrowLeft');
+            await expect(header).toHaveAttribute('aria-expanded', 'false');
+        });
+    });
 });

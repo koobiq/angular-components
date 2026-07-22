@@ -10,6 +10,7 @@ import * as _angular_platform_browser from '@angular/platform-browser';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { EventEmitter } from '@angular/core';
+import { FocusKeyManager } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -21,9 +22,11 @@ import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { QueryList } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
@@ -83,22 +86,28 @@ export interface KbqAppSwitcherApp {
 }
 
 // @public
-export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
+export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
     constructor();
     protected activeApp: KbqAppSwitcherApp;
     protected activeSite: KbqAppSwitcherSite;
+    protected allItems: QueryList<KbqDropdownItem>;
     // (undocumented)
     configuration: any;
     escapeHandler(): void;
     // (undocumented)
     readonly externalConfiguration: unknown;
     filteredSites: KbqAppSwitcherSite[];
+    protected focusinHandler(event: FocusEvent): void;
     readonly input: i0.Signal<KbqInput | undefined>;
     isTrapFocus: boolean;
+    protected keydownHandler(event: KeyboardEvent): void;
+    protected keyManager: FocusKeyManager<KbqDropdownItem>;
     get localeData(): any;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
+    protected readonly nestedAliasClass = "kbq-app-switcher-site_nested";
     // (undocumented)
     ngAfterViewInit(): void;
+    ngOnDestroy(): void;
     readonly otherSites: i0.Signal<KbqDropdownTrigger>;
     prefix: string;
     readonly searchControl: FormControl<string | null>;

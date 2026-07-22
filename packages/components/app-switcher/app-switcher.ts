@@ -1,3 +1,4 @@
+import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     CdkScrollable,
@@ -16,10 +17,13 @@ import {
     EventEmitter,
     InjectionToken,
     Input,
+    OnDestroy,
     OnInit,
     Output,
+    QueryList,
     TemplateRef,
     Type,
+    ViewChildren,
     ViewEncapsulation,
     booleanAttribute,
     inject,
@@ -31,26 +35,35 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
+    DOWN_ARROW,
+    ENTER,
+    ESCAPE,
+    FocusKeyManager,
     KBQ_LOCALE_SERVICE,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpPlacementValues,
     KbqPopUpSizeValues,
     KbqPopUpTrigger,
+    LEFT_ARROW,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
+    RIGHT_ARROW,
+    SPACE,
+    UP_ARROW,
     applyPopupMargins,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { Subscription, merge } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
@@ -155,12 +168,14 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-app-switcher'
+        class: 'kbq-app-switcher',
+        '(keydown)': 'keydownHandler($event)',
+        '(focusin)': 'focusinHandler($event)'
     },
     animations: [kbqAppSwitcherAnimations.state],
     preserveWhitespaces: false
 })
-export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
+export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
@@ -202,6 +217,25 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
     readonly otherSites = viewChild.required<KbqDropdownTrigger>('otherSites');
 
+    /** @docs-private */
+    @ViewChildren(KbqDropdownItem) protected allItems: QueryList<KbqDropdownItem>;
+
+    /** Roving-focus manager over the inline menu items (flat app rows and other-site rows). */
+    protected keyManager: FocusKeyManager<KbqDropdownItem>;
+
+    /** @docs-private */
+    private readonly menuItems = new QueryList<KbqDropdownItem>();
+
+    /** @docs-private */
+    private readonly dir = inject(Directionality, { optional: true });
+
+    /**
+     * CSS class marking a nested alias row, bound in the template (see app-switcher.html). Kept as a
+     * single named constant, rather than a literal repeated in both places, so handleGroupHorizontal's
+     * classList check can't silently drift from the template's class binding if the class is renamed.
+     */
+    protected readonly nestedAliasClass = 'kbq-app-switcher-site_nested';
+
     constructor() {
         super();
 
@@ -215,8 +249,28 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     ngAfterViewInit() {
         const input = this.input();
 
+        // Build the roving menu from the inline (static-content) items: the flat app rows, expanded
+        // aliases and search results (`KbqAppSwitcherListItem`) plus the other-site rows
+        // (`KbqAppSwitcherDropdownSite`). The apps inside the site flyouts (`KbqAppSwitcherDropdownApp`)
+        // live in their own overlay dropdowns, which drive their own key manager, so they are excluded.
+        this.allItems.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.menuItems.reset(
+                this.allItems.filter(
+                    (item) => item instanceof KbqAppSwitcherListItem || item instanceof KbqAppSwitcherDropdownSite
+                )
+            );
+            this.menuItems.notifyOnChanges();
+        });
+
+        this.keyManager = new FocusKeyManager<KbqDropdownItem>(this.menuItems)
+            .withVerticalOrientation()
+            .withHomeAndEnd()
+            .withTypeAhead();
+
         if (input) {
             input.focus();
+        } else {
+            this.keyManager.setFirstItemActive();
         }
 
         this.visibleChange.subscribe((state) => {
@@ -230,7 +284,19 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
             }
         });
 
-        this.searchControl.valueChanges.subscribe((value) => (this.filteredSites = this.filterSites(value)));
+        this.searchControl.valueChanges.subscribe((value) => {
+            this.filteredSites = this.filterSites(value);
+            // Switching between the flat list and the search results swaps the rendered items;
+            // drop any stale active item so navigation restarts from the top.
+            this.keyManager?.setActiveItem(-1);
+        });
+    }
+
+    /** Releases the internal roving-focus menu QueryList. */
+    ngOnDestroy(): void {
+        this.menuItems.destroy();
+
+        super.ngOnDestroy();
     }
 
     /** @docs-private */
@@ -246,6 +312,131 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
     escapeHandler() {
         this.hide(0);
+    }
+
+    /** Handles keyboard navigation across the app-switcher menu items.
+     * @docs-private */
+    protected keydownHandler(event: KeyboardEvent): void {
+        const keyCode = event.keyCode;
+
+        if (keyCode === ESCAPE) {
+            this.escapeHandler();
+
+            return;
+        }
+
+        // Keep the search field's native typing/caret behaviour; only ArrowDown moves into the list.
+        if (this.eventFromInput(event)) {
+            if (keyCode === DOWN_ARROW) {
+                event.preventDefault();
+                this.keyManager.setFocusOrigin('keyboard').setFirstItemActive();
+            }
+
+            return;
+        }
+
+        // Any key past this point is a keyboard interaction on a menu item, so show the focus ring.
+        this.keyManager.setFocusOrigin('keyboard');
+
+        const activeItem = this.keyManager.activeItem;
+
+        if ((keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) && this.handleGroupHorizontal(keyCode, activeItem)) {
+            event.preventDefault();
+
+            return;
+        }
+
+        if ((keyCode === ENTER || keyCode === SPACE) && activeItem && !this.keyManager.isTyping()) {
+            event.preventDefault();
+
+            // A group header toggles its aliases; any other item activates its underlying link.
+            if (activeItem instanceof KbqAppSwitcherListItem && activeItem.toggle()) {
+                activeItem.collapsed = !activeItem.collapsed;
+                this.markForCheck();
+            } else {
+                activeItem.getHostElement().click();
+            }
+
+            return;
+        }
+
+        // ArrowUp on the first item returns focus to the search field (no wrap-around).
+        if (keyCode === UP_ARROW && this.keyManager.activeItemIndex === 0 && this.input()) {
+            event.preventDefault();
+            this.keyManager.setActiveItem(-1);
+            this.input()!.focus();
+
+            return;
+        }
+
+        this.keyManager.onKeydown(event);
+    }
+
+    /**
+     * Expands/collapses an app group (or steps from an alias back to its header) on Left/Right,
+     * honouring the current text direction. Returns whether the key was consumed.
+     */
+    private handleGroupHorizontal(keyCode: number, activeItem: KbqDropdownItem | null): boolean {
+        if (!(activeItem instanceof KbqAppSwitcherListItem)) {
+            return false;
+        }
+
+        const rtl = this.dir?.value === 'rtl';
+        const expandKey = rtl ? LEFT_ARROW : RIGHT_ARROW;
+        const collapseKey = rtl ? RIGHT_ARROW : LEFT_ARROW;
+
+        if (activeItem.toggle()) {
+            if (keyCode === expandKey && activeItem.collapsed) {
+                activeItem.collapsed = false;
+                this.markForCheck();
+
+                return true;
+            }
+
+            if (keyCode === collapseKey && !activeItem.collapsed) {
+                activeItem.collapsed = true;
+                this.markForCheck();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        // Collapse key on a nested alias row moves focus back to its parent group header.
+        if (keyCode === collapseKey && activeItem.getHostElement().classList.contains(this.nestedAliasClass)) {
+            const items = this.menuItems.toArray();
+
+            for (let index = this.keyManager.activeItemIndex - 1; index >= 0; index--) {
+                const candidate = items[index];
+
+                if (candidate instanceof KbqAppSwitcherListItem && candidate.toggle()) {
+                    this.keyManager.setActiveItem(index);
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /** Whether the keyboard event originated from the search input. */
+    private eventFromInput(event: KeyboardEvent): boolean {
+        return !!(event.target as HTMLElement)?.attributes.getNamedItem('kbqinput');
+    }
+
+    /** Syncs the key manager's active item with focus that arrives via Tab, click or a closing flyout.
+     * Clears the active item (index -1) when focus lands on a focusable element that isn't one of
+     * `menuItems` (e.g. the search field's clear button) - otherwise a stale `activeItem` from before
+     * the focus move would keep receiving Enter/Space/arrow-key actions meant for the new target.
+     * @docs-private */
+    protected focusinHandler(event: FocusEvent): void {
+        if (!this.keyManager) return;
+
+        const index = this.menuItems.toArray().findIndex((item) => item.getHostElement() === event.target);
+
+        this.keyManager.updateActiveItem(index);
     }
 
     /** @docs-private */

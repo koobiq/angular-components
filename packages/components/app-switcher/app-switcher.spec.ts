@@ -1,9 +1,24 @@
+import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
 import { Component, Provider, Type } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    UP_ARROW,
+    createKeyboardEvent,
+    dispatchKeyboardEvent
+} from '@koobiq/components/core';
+import { of } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -14,6 +29,7 @@ import {
     KbqAppSwitcherTrigger,
     defaultGroupBy
 } from './app-switcher';
+import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 import { KbqAppSwitcherModule } from './app-switcher.module';
 import { KbqAppSwitcherListItem } from './kbq-app-switcher-list-item';
@@ -32,6 +48,16 @@ const BIG_SITE: KbqAppSwitcherSite = {
     name: 'Big Site',
     apps: Array.from({ length: 8 }, (_, i) => ({ id: i, name: `App ${i}`, link: `/app/${i}` }))
 };
+
+// A type needs MORE than KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING (3) apps to become a collapsible group.
+const GROUP_APPS: KbqAppSwitcherApp[] = Array.from({ length: 4 }, (_, i) => ({
+    id: `g${i}`,
+    name: `Grouped ${i}`,
+    type: 'Group',
+    link: `/g/${i}`
+}));
+
+const GROUP_SITE: KbqAppSwitcherSite = { id: 'grp', name: 'Group Site', apps: [...GROUP_APPS, APP_UNTYPED] };
 
 describe('KbqAppSwitcher', () => {
     let testScheduler: TestScheduler;
@@ -733,6 +759,427 @@ describe('KbqAppSwitcher', () => {
             expect(searchResult).toBeTruthy();
         }));
     });
+
+    describe('Keyboard navigation', () => {
+        let overlayContainer: OverlayContainer;
+        let overlayContainerElement: HTMLElement;
+
+        beforeEach(() => {
+            testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
+        });
+
+        afterEach(() => overlayContainer?.ngOnDestroy());
+
+        const open = <T>(
+            component: Type<T>,
+            providers: Provider[] = []
+        ): { fixture: ComponentFixture<T>; popup: KbqAppSwitcherComponent } => {
+            const fixture = createComponent(component, providers);
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            overlayContainerElement = overlayContainer.getContainerElement();
+
+            const trigger = getTrigger(fixture);
+
+            trigger.show();
+            tick();
+            fixture.detectChanges();
+
+            return { fixture, popup: trigger['instance'] as KbqAppSwitcherComponent };
+        };
+
+        const getHost = () => overlayContainerElement.querySelector('.kbq-app-switcher') as HTMLElement;
+        const keyManagerOf = (popup: KbqAppSwitcherComponent) => popup['keyManager'];
+        const menuItemsOf = (popup: KbqAppSwitcherComponent) => popup['menuItems'];
+
+        describe('roving focus (flat list + other sites)', () => {
+            it('focuses the first menu item when the popup opens without a search field', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+
+                expect(keyManagerOf(popup).activeItemIndex).toBe(0);
+            }));
+
+            it('marks the keyboard-focused item with the cdk-keyboard-focused class (drives the focus ring)', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+
+                dispatchKeyboardEvent(getHost(), 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+
+                const active = keyManagerOf(popup).activeItem!.getHostElement();
+
+                expect(active.classList.contains('cdk-keyboard-focused')).toBe(true);
+            }));
+
+            it('moves to the next/previous item on ArrowDown/ArrowUp', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const manager = keyManagerOf(popup);
+                const items = () => overlayContainerElement.querySelectorAll('.kbq-app-switcher-list-item');
+
+                dispatchKeyboardEvent(getHost(), 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+                expect(manager.activeItemIndex).toBe(1);
+                expect(document.activeElement).toBe(items()[1]);
+
+                dispatchKeyboardEvent(getHost(), 'keydown', UP_ARROW);
+                fixture.detectChanges();
+                expect(manager.activeItemIndex).toBe(0);
+                expect(document.activeElement).toBe(items()[0]);
+            }));
+
+            it('steps from the last flat app onto the first other-site row', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const manager = keyManagerOf(popup);
+
+                // SITE_A contributes 3 flat items; the next item down is the SITE_B row.
+                manager.setActiveItem(2);
+                dispatchKeyboardEvent(getHost(), 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+
+                expect(manager.activeItemIndex).toBe(3);
+                expect(manager.activeItem).toBeInstanceOf(KbqAppSwitcherDropdownSite);
+            }));
+
+            it('does not wrap past the last item', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const manager = keyManagerOf(popup);
+                const last = menuItemsOf(popup).length - 1;
+
+                manager.setActiveItem(last);
+                dispatchKeyboardEvent(getHost(), 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+
+                expect(manager.activeItemIndex).toBe(last);
+            }));
+
+            it('does not wrap before the first item', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const manager = keyManagerOf(popup);
+
+                manager.setActiveItem(0);
+                dispatchKeyboardEvent(getHost(), 'keydown', UP_ARROW);
+                fixture.detectChanges();
+
+                expect(manager.activeItemIndex).toBe(0);
+            }));
+
+            it('jumps to the last/first item on End/Home', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const manager = keyManagerOf(popup);
+                const last = menuItemsOf(popup).length - 1;
+
+                dispatchKeyboardEvent(getHost(), 'keydown', END);
+                fixture.detectChanges();
+                expect(manager.activeItemIndex).toBe(last);
+
+                dispatchKeyboardEvent(getHost(), 'keydown', HOME);
+                fixture.detectChanges();
+                expect(manager.activeItemIndex).toBe(0);
+            }));
+        });
+
+        describe('activation', () => {
+            it('activates the focused link on Enter', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const manager = keyManagerOf(popup);
+
+                manager.setActiveItem(0);
+                const clickSpy = jest.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
+                const event = createKeyboardEvent('keydown', ENTER, getHost());
+                const preventSpy = jest.spyOn(event, 'preventDefault');
+
+                getHost().dispatchEvent(event);
+                fixture.detectChanges();
+
+                expect(clickSpy).toHaveBeenCalled();
+                expect(preventSpy).toHaveBeenCalled();
+            }));
+
+            it('treats Space as a typeahead character instead of activation while a search sequence is in progress', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const manager = keyManagerOf(popup);
+
+                manager.setActiveItem(0);
+                const clickSpy = jest.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
+
+                jest.spyOn(manager, 'isTyping').mockReturnValue(true);
+
+                dispatchKeyboardEvent(getHost(), 'keydown', SPACE);
+                fixture.detectChanges();
+
+                expect(clickSpy).not.toHaveBeenCalled();
+            }));
+
+            it('activates the focused link on Space', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const manager = keyManagerOf(popup);
+
+                manager.setActiveItem(1);
+                const clickSpy = jest.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
+
+                dispatchKeyboardEvent(getHost(), 'keydown', SPACE);
+                fixture.detectChanges();
+
+                expect(clickSpy).toHaveBeenCalled();
+            }));
+
+            it('closes the popup on Escape from a focused item', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const hideSpy = jest.spyOn(popup, 'hide');
+
+                keyManagerOf(popup).setActiveItem(0);
+                dispatchKeyboardEvent(getHost(), 'keydown', ESCAPE);
+                fixture.detectChanges();
+
+                expect(hideSpy).toHaveBeenCalledWith(0);
+            }));
+        });
+
+        describe('app groups', () => {
+            it('collapses an expanded group header on the collapse key (Left in LTR)', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherGrouped);
+                const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
+
+                expect(header.toggle()).toBe(true);
+                expect(header.collapsed).toBe(false);
+                const expandedLength = menuItemsOf(popup).length;
+
+                dispatchKeyboardEvent(getHost(), 'keydown', LEFT_ARROW);
+                fixture.detectChanges();
+
+                expect(header.collapsed).toBe(true);
+                expect(menuItemsOf(popup).length).toBeLessThan(expandedLength);
+            }));
+
+            it('expands a collapsed group header on the expand key (Right in LTR)', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherGrouped);
+                const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
+
+                // Collapse first via the keyboard so the OnPush overlay actually re-renders.
+                dispatchKeyboardEvent(getHost(), 'keydown', LEFT_ARROW);
+                fixture.detectChanges();
+                expect(header.collapsed).toBe(true);
+                const collapsedLength = menuItemsOf(popup).length;
+
+                dispatchKeyboardEvent(getHost(), 'keydown', RIGHT_ARROW);
+                fixture.detectChanges();
+
+                expect(header.collapsed).toBe(false);
+                expect(menuItemsOf(popup).length).toBeGreaterThan(collapsedLength);
+            }));
+
+            it('toggles the group header on Enter', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherGrouped);
+                const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
+
+                expect(header.collapsed).toBe(false);
+
+                dispatchKeyboardEvent(getHost(), 'keydown', ENTER);
+                fixture.detectChanges();
+
+                expect(header.collapsed).toBe(true);
+            }));
+
+            it('moves focus from a nested alias back to its group header on the collapse key', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherGrouped);
+                const manager = keyManagerOf(popup);
+
+                // index 0 = group header, indices 1..N = its aliases.
+                manager.setActiveItem(2);
+                expect(manager.activeItem).toBeInstanceOf(KbqAppSwitcherListItem);
+
+                dispatchKeyboardEvent(getHost(), 'keydown', LEFT_ARROW);
+                fixture.detectChanges();
+
+                expect(manager.activeItemIndex).toBe(0);
+            }));
+
+            it('inverts the expand/collapse keys in RTL', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherGrouped, [
+                    { provide: Directionality, useValue: { value: 'rtl', change: of() } }
+                ]);
+                const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
+
+                expect(header.collapsed).toBe(false);
+
+                // In RTL, Right collapses and Left expands.
+                dispatchKeyboardEvent(getHost(), 'keydown', RIGHT_ARROW);
+                fixture.detectChanges();
+                expect(header.collapsed).toBe(true);
+
+                dispatchKeyboardEvent(getHost(), 'keydown', LEFT_ARROW);
+                fixture.detectChanges();
+                expect(header.collapsed).toBe(false);
+            }));
+        });
+
+        describe('search field handoff', () => {
+            const getSearchInput = () => overlayContainerElement.querySelector('input[kbqinput]') as HTMLInputElement;
+
+            it('moves focus from the search field into the list on ArrowDown', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherWithSearch);
+
+                dispatchKeyboardEvent(getSearchInput(), 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+
+                expect(keyManagerOf(popup).activeItemIndex).toBe(0);
+            }));
+
+            it('returns focus to the search field on ArrowUp from the first item', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherWithSearch);
+                const input = getSearchInput();
+
+                keyManagerOf(popup).setActiveItem(0);
+                dispatchKeyboardEvent(getHost(), 'keydown', UP_ARROW);
+                fixture.detectChanges();
+
+                expect(keyManagerOf(popup).activeItemIndex).toBe(-1);
+                expect(document.activeElement).toBe(input);
+            }));
+
+            it('does nothing when a non-ArrowDown key is pressed in the search field', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherWithSearch);
+                const input = getSearchInput();
+
+                dispatchKeyboardEvent(input, 'keydown', LEFT_ARROW);
+                fixture.detectChanges();
+
+                expect(keyManagerOf(popup).activeItemIndex).toBe(-1);
+                expect(document.activeElement).toBe(input);
+            }));
+        });
+
+        describe('focus tracking for elements outside the roving menu', () => {
+            it('syncs the active item when focus moves to a tracked menu item via Tab or click', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const manager = keyManagerOf(popup);
+                const secondItem = overlayContainerElement.querySelectorAll(
+                    '.kbq-app-switcher-list-item'
+                )[1] as HTMLElement;
+
+                expect(manager.activeItemIndex).toBe(0);
+
+                secondItem.focus();
+                fixture.detectChanges();
+
+                expect(manager.activeItemIndex).toBe(1);
+            }));
+
+            it('clears the active item when focus moves to a focusable element outside menuItems, so Space does not act on a stale item afterwards', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherWithSearch);
+                const manager = keyManagerOf(popup);
+                const input = overlayContainerElement.querySelector('input[kbqinput]') as HTMLInputElement;
+
+                // A typed query is required for the cleaner button to render.
+                popup.searchControl.setValue('App 0');
+                tick();
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
+                fixture.detectChanges();
+                expect(manager.activeItemIndex).toBe(0);
+
+                const clickSpy = jest.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
+                const cleaner = overlayContainerElement.querySelector('.kbq-cleaner') as HTMLElement;
+
+                expect(cleaner).toBeTruthy();
+                cleaner.focus();
+                fixture.detectChanges();
+
+                expect(manager.activeItemIndex).toBe(-1);
+
+                dispatchKeyboardEvent(cleaner, 'keydown', SPACE);
+                fixture.detectChanges();
+
+                expect(clickSpy).not.toHaveBeenCalled();
+            }));
+        });
+
+        describe('ARIA roles', () => {
+            it('exposes the item list as a vertical menu', fakeAsync(() => {
+                open(AppSwitcherMultiSite);
+                const menu = overlayContainerElement.querySelector('[role="menu"]') as HTMLElement;
+
+                expect(menu).toBeTruthy();
+                expect(menu.getAttribute('aria-orientation')).toBe('vertical');
+            }));
+
+            it('does not expose the search field as a descendant of the menu role (invalid for role="menu")', fakeAsync(() => {
+                open(AppSwitcherWithSearch);
+                const menu = overlayContainerElement.querySelector('[role="menu"]') as HTMLElement;
+                const input = overlayContainerElement.querySelector('input[kbqinput]') as HTMLElement;
+
+                expect(menu).toBeTruthy();
+                expect(input).toBeTruthy();
+                expect(menu.contains(input)).toBe(false);
+            }));
+
+            it('exposes list items as focusable menuitems', fakeAsync(() => {
+                open(AppSwitcherMultiSite);
+                const item = overlayContainerElement.querySelector('.kbq-app-switcher-list-item') as HTMLElement;
+
+                expect(item.getAttribute('role')).toBe('menuitem');
+                expect(item.getAttribute('tabindex')).toBe('0');
+            }));
+
+            it('exposes other-site rows as focusable menuitems with a collapsed popup', fakeAsync(() => {
+                open(AppSwitcherMultiSite);
+                const row = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
+
+                expect(row.getAttribute('role')).toBe('menuitem');
+                expect(row.getAttribute('tabindex')).toBe('0');
+                expect(row.getAttribute('aria-haspopup')).toBe('menu');
+                expect(row.getAttribute('aria-expanded')).toBe('false');
+            }));
+
+            it('exposes flyout app rows as focusable menuitems', fakeAsync(() => {
+                const { fixture } = open(AppSwitcherMultiSite);
+                const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
+
+                // Focusing the row first (as real keyboard use would) populates `activeSite`, which the
+                // flyout's content is bound to - without it the panel would open with no apps to show.
+                siteRow.focus();
+                fixture.detectChanges();
+                dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
+                tick();
+                fixture.detectChanges();
+
+                const appRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-app') as HTMLElement;
+
+                expect(appRow).toBeTruthy();
+                expect(appRow.getAttribute('role')).toBe('menuitem');
+                expect(appRow.getAttribute('tabindex')).toBe('0');
+            }));
+        });
+
+        describe('roving menu composition', () => {
+            it('only contains flat list items and other-site rows', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+                const items = menuItemsOf(popup).toArray();
+
+                expect(items).toHaveLength(4);
+                expect(
+                    items.every(
+                        (item) => item instanceof KbqAppSwitcherListItem || item instanceof KbqAppSwitcherDropdownSite
+                    )
+                ).toBe(true);
+                expect(items.some((item) => item instanceof KbqAppSwitcherDropdownApp)).toBe(false);
+            }));
+
+            it('opens the site flyout without growing the roving menu', fakeAsync(() => {
+                const { fixture, popup } = open(AppSwitcherMultiSite);
+                const before = menuItemsOf(popup).length;
+                const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
+
+                dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
+                tick();
+                fixture.detectChanges();
+
+                // Confirms the flyout actually opened (not just that the roving-menu length is unaffected).
+                expect(siteRow.getAttribute('aria-expanded')).toBe('true');
+                expect(menuItemsOf(popup).length).toBe(before);
+            }));
+        });
+    });
 });
 
 @Component({
@@ -791,6 +1238,17 @@ class AppSwitcherMultiSite {
 })
 class AppSwitcherWithSearch {
     bigSite: KbqAppSwitcherSite = { ...BIG_SITE, apps: [...BIG_SITE.apps] };
+}
+
+@Component({
+    selector: 'app-switcher-grouped',
+    imports: [KbqAppSwitcherModule],
+    template: `
+        <button kbqAppSwitcher [sites]="[site]" [selectedSite]="site">Trigger</button>
+    `
+})
+class AppSwitcherGrouped {
+    site: KbqAppSwitcherSite = { ...GROUP_SITE, apps: [...GROUP_SITE.apps] };
 }
 
 @Component({

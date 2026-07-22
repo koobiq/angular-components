@@ -7,7 +7,6 @@
                 autocomplete="off"
                 kbqInput
                 [formControl]="searchControl"
-                (keydown.escape)="escapeHandler()"
             />
             <kbq-cleaner />
         </kbq-form-field>
@@ -16,7 +15,7 @@
     <kbq-divider />
 }
 
-<div kbq-scrollbar>
+<div kbq-scrollbar role="menu" aria-orientation="vertical">
     @if (!searchControl.getRawValue()) {
         <div class="kbq-app-switcher__app-container" (mouseenter)="otherSites()?.close()">
             @if (trigger.sitesMode) {
@@ -53,7 +52,7 @@
                                 @for (alias of app.aliases; track alias) {
                                     <a
                                         href="{{ alias.link }}"
-                                        class="kbq-app-switcher-site_nested"
+                                        [class]="nestedAliasClass"
                                         kbq-app-switcher-list-item
                                         [class.kbq-selected]="alias.id === trigger.selectedApp?.id"
                                         [app]="alias"
@@ -81,8 +80,11 @@
                                 <div
                                     [kbq-app-switcher-dropdown-site]="site"
                                     [kbqDropdownTriggerFor]="dropdownWithSelectedSite"
+                                    #siteFlyoutTrigger="kbqDropdownTrigger"
                                     [offsetX]="0"
+                                    [attr.aria-expanded]="siteFlyoutTrigger.opened"
                                     (mouseenter)="activeSite = site"
+                                    (focus)="activeSite = site"
                                 ></div>
                             }
                         }
@@ -99,7 +101,9 @@
                             [kbqDropdownTriggerFor]="dropdownWithGroupedApps"
                             [offsetX]="0"
                             [class.kbq-pressed]="dropdownWithGroupedAppsTrigger.opened"
+                            [attr.aria-expanded]="dropdownWithGroupedAppsTrigger.opened"
                             (mouseenter)="activeApp = app"
+                            (focus)="activeApp = app"
                         ></div>
                     } @else {
                         <a
