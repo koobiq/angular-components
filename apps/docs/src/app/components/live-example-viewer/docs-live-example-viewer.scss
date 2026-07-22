@@ -25,13 +25,9 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 
-    padding: var(--kbq-size-m) var(--kbq-size-xl);
-
-    .docs-live-example-footer__reload-button {
-        --kbq-button-size-height: var(--kbq-size-xxl);
-        width: var(--kbq-size-xxl);
-    }
+    padding: var(--kbq-size-xs) var(--kbq-size-xl);
 
     .docs-live-example-footer__divider.kbq-divider {
         height: var(--kbq-size-s);
