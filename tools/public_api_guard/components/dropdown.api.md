@@ -109,6 +109,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     set panelClass(classes: string);
     readonly panelMaxWidth: i0.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: i0.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
+    protected readonly panelMinWidthToken: i0.Signal<string | null>;
     readonly panelWidth: i0.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;

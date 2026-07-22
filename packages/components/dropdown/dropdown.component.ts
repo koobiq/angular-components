@@ -21,6 +21,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewEncapsulation,
+    computed,
     contentChild,
     inject,
     input,
@@ -243,6 +244,18 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         this.defaultOptions.panelMaxWidth === undefined ? null : this.defaultOptions.panelMaxWidth,
         { transform: numberAttribute }
     );
+
+    /**
+     * `panelMinWidth` rendered as a CSS length for the `--kbq-dropdown-size-container-width-min`
+     * token, so the panel's CSS `min-width` floor tracks the input — mirroring how `panelMaxWidth`
+     * drives `max-width`. Non-finite input (e.g. `null`) leaves the token's static default in place.
+     * @docs-private
+     */
+    protected readonly panelMinWidthToken = computed(() => {
+        const minWidth = this.panelMinWidth();
+
+        return Number.isFinite(minWidth) ? `${minWidth}px` : null;
+    });
 
     /** @docs-private */
     @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;

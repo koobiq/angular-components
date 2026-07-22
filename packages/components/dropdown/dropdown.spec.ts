@@ -1857,6 +1857,34 @@ describe('KbqDropdown', () => {
 
             expect(overlayPane.style.minWidth).toBe('');
         });
+
+        it('should drive the panel CSS min-width token from panelMinWidth', () => {
+            const fixture = createComponent(PanelMinWidthDropdown);
+
+            fixture.componentInstance.panelMinWidth = 0;
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-dropdown__panel') as HTMLElement;
+
+            // `0px` collapses the CSS floor `max(var(--…-width-min), 100%)` down to the trigger width.
+            expect(panel.style.getPropertyValue('--kbq-dropdown-size-container-width-min')).toBe('0px');
+        });
+
+        it('should keep the default min-width token so unconfigured panels stay floored', () => {
+            const fixture = createComponent(PanelMinWidthDropdown);
+
+            fixture.detectChanges(); // panelMinWidth defaults to 200
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-dropdown__panel') as HTMLElement;
+
+            expect(panel.style.getPropertyValue('--kbq-dropdown-size-container-width-min')).toBe('200px');
+        });
     });
 });
 
@@ -1959,6 +1987,20 @@ class SimpleDropdown {
     extraItems: string[] = [];
     closeCallback = jest.fn((name: string | undefined) => name);
     backdropClass: string;
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown" [panelMinWidth]="panelMinWidth">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class PanelMinWidthDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    panelMinWidth: number | null = 200;
 }
 
 @Component({

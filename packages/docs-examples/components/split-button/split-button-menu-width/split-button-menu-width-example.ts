@@ -23,7 +23,7 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
             </button>
         </kbq-split-button>
 
-        <kbq-dropdown #dropdown="kbqDropdown">
+        <kbq-dropdown #dropdown="kbqDropdown" [panelWidth]="'auto'" [panelMinWidth]="0">
             <button kbq-dropdown-item>Extra Action 1</button>
             <button kbq-dropdown-item>Extra Action 2</button>
             <button kbq-dropdown-item>Extra Action 3</button>
