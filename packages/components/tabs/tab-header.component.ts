@@ -12,6 +12,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { isUndefined } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
