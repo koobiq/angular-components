@@ -31,6 +31,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 }
             </nav>
             <button
+                class="example-tab-add-button"
                 color="contrast-fade"
                 kbq-button
                 kbqTooltip="Add tab"
@@ -54,7 +55,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         </div>
     `,
     styleUrls: ['./tabs-add-tab-vertical-example.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'kbq-scrollbar'
+    }
 })
 export class TabsAddTabVerticalExample {
     private readonly injector = inject(Injector);

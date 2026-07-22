@@ -44,6 +44,6 @@
     gap: var(--kbq-size-s);
 }
 
-.example-tab-add-button-container button {
-    width: 100%;
+.example-tab-add-button {
+    margin-right: var(--kbq-size-l);
 }
