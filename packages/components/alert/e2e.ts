@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
+import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import {
     KbqAlert,
@@ -17,6 +17,7 @@ import {
     imports: [
         KbqIconButton,
         KbqIconItem,
+        KbqIcon,
         KbqLink,
         KbqAlert,
         KbqAlertTitle,
@@ -77,7 +78,7 @@ import {
                     @for (alertColor of alertDefaultStyleRows; track $index) {
                         <td>
                             <kbq-alert [compact]="true" [alertColor]="alertColor" [alertStyle]="alertStyle.Default">
-                                <i kbq-icon-item="kbq-circle-info_16"></i>
+                                <i kbq-icon="kbq-circle-info_16"></i>
                                 Alert text without a title
                             </kbq-alert>
                         </td>
