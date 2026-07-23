@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqHighlightPipe } from '@koobiq/components/core';
+import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -109,7 +109,7 @@ export class SelectFacade {
         KbqInputModule,
         ReactiveFormsModule,
         AsyncPipe,
-        KbqHighlightPipe,
+        KbqHighlightBackgroundPipe,
         KbqButtonModule
     ],
     template: `
@@ -158,7 +158,9 @@ export class SelectFacade {
                             @case ('success') {
                                 @for (option of state.data; track option) {
                                     <kbq-option [value]="option.id">
-                                        <span [innerHTML]="option.label | mcHighlight: searchControl.value"></span>
+                                        <span
+                                            [innerHTML]="option.label | kbqHighlightBackground: searchControl.value"
+                                        ></span>
                                     </kbq-option>
                                 }
                             }

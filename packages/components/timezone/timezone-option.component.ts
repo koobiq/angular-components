@@ -9,7 +9,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqHighlightPipe, KbqOption } from '@koobiq/components/core';
+import { KbqHighlightBackgroundPipe, KbqOption } from '@koobiq/components/core';
 import { CitiesByFilterPipe } from './cities-by-filter.pipe';
 import { KbqTimezoneZone } from './timezone.models';
 import { offsetFormatter } from './timezone.utils';
@@ -20,7 +20,7 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
     imports: [
         UtcOffsetPipe,
         KeyValuePipe,
-        KbqHighlightPipe,
+        KbqHighlightBackgroundPipe,
         CitiesByFilterPipe
     ],
     templateUrl: 'timezone-option.component.html',
