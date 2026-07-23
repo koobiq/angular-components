@@ -24,11 +24,21 @@
             @include kbq-option(states-hover);
         }
 
+        &:active:not(.kbq-disabled),
+        &.kbq-pressed:not(.kbq-disabled) {
+            @include kbq-option(states-active);
+        }
+
         &.kbq-selected:not(.kbq-disabled) {
             @include kbq-option(states-selected);
 
             &.kbq-active {
                 @include kbq-option(states-selected-hover);
+            }
+
+            &:active,
+            &.kbq-pressed {
+                @include kbq-option(states-selected-active);
             }
         }
 
@@ -53,6 +63,11 @@
 
             &.kbq-active {
                 @include kbq-option(multiple-states-selected-hover);
+            }
+
+            &:active,
+            &.kbq-pressed {
+                @include kbq-option(multiple-states-selected-active);
             }
         }
     }

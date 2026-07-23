@@ -27,11 +27,21 @@
             @include _kbq-dropdown-item-state(states-hover);
         }
 
+        &:active:not(.kbq-disabled),
+        &.kbq-active:not(.kbq-disabled) {
+            @include _kbq-dropdown-item-state(states-active);
+        }
+
         &.kbq-selected {
             @include _kbq-dropdown-item-state(states-selected);
 
             &.cdk-focused:not(.kbq-disabled) {
                 @include _kbq-dropdown-item-state(states-selected-hover);
+            }
+
+            &:active:not(.kbq-disabled),
+            &.kbq-active:not(.kbq-disabled) {
+                @include _kbq-dropdown-item-state(states-selected-active);
             }
         }
 

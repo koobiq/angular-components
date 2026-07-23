@@ -45,6 +45,13 @@
                 @include tree-theme.kbq-tree-option(states-hover);
             }
 
+            &:active,
+            &.kbq-active {
+                --kbq-option-background: var(--kbq-tree-states-active-container-background);
+
+                background: var(--kbq-tree-states-active-container-background);
+            }
+
             &.kbq-selected {
                 &:hover:not(.kbq-focused),
                 &.kbq-hovered:not(.kbq-focused) {
@@ -53,6 +60,13 @@
 
                 &.kbq-focused {
                     @include tree-theme.kbq-tree-option(states-selected-hover);
+                }
+
+                &:active,
+                &.kbq-active {
+                    --kbq-option-background: var(--kbq-tree-states-selected-active-container-background);
+
+                    background: var(--kbq-tree-states-selected-active-container-background);
                 }
             }
 
@@ -65,6 +79,13 @@
 
                 &.kbq-focused {
                     background: var(--kbq-tree-multiple-states-selected-hover-container-background);
+                }
+
+                &:active,
+                &.kbq-active {
+                    --kbq-option-background: var(--kbq-tree-multiple-states-selected-active-container-background);
+
+                    background: var(--kbq-tree-multiple-states-selected-active-container-background);
                 }
             }
 
