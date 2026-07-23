@@ -7,15 +7,17 @@
 import { ActiveDescendantKeyManager } from '@koobiq/components/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
+import { KbqPanelMaxWidth } from '@koobiq/components/core';
+import { KbqPanelWidth } from '@koobiq/components/core';
 import { KeyboardNavigationHandler } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -60,7 +62,7 @@ export class KbqAutocomplete implements AfterContentInit {
     set autoActiveFirstOption(value: boolean);
     get classList(): string;
     set classList(value: string);
-    readonly closed: i0.OutputEmitterRef<void>;
+    readonly closed: _angular_core.OutputEmitterRef<void>;
     displayWith: ((value: any) => string) | null;
     // (undocumented)
     emitSelectEvent(option: KbqOption): void;
@@ -72,35 +74,34 @@ export class KbqAutocomplete implements AfterContentInit {
     set isOpen(value: boolean);
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
-    static ngAcceptInputType_panelMinWidth: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     onKeydown(event: KeyboardEvent): any;
-    readonly opened: i0.OutputEmitterRef<void>;
+    readonly opened: _angular_core.OutputEmitterRef<void>;
     // (undocumented)
     get openOnFocus(): boolean;
     set openOnFocus(value: boolean);
     // (undocumented)
-    readonly optionGroups: i0.Signal<readonly KbqOptgroup[]>;
+    readonly optionGroups: _angular_core.Signal<readonly KbqOptgroup[]>;
     // (undocumented)
     options: QueryList<KbqOption>;
-    readonly optionSelected: i0.OutputEmitterRef<KbqAutocompleteSelectedEvent>;
+    readonly optionSelected: _angular_core.OutputEmitterRef<KbqAutocompleteSelectedEvent>;
     // (undocumented)
-    readonly panel: i0.Signal<ElementRef<any>>;
-    panelMinWidth: number;
-    panelWidth: string | number;
+    readonly panel: _angular_core.Signal<ElementRef<any>>;
+    readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
+    readonly panelMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth | undefined>;
     // (undocumented)
     setScrollTop(scrollTop: number): void;
     // (undocumented)
     setVisibility(): void;
     showPanel: boolean;
     // (undocumented)
-    readonly template: i0.Signal<TemplateRef<any>>;
+    readonly template: _angular_core.Signal<TemplateRef<any>>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["optionGroups", "options"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["optionGroups", "options"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocomplete, never>;
 }
 
 // @public
@@ -111,19 +112,19 @@ export interface KbqAutocompleteDefaultOptions {
 // @public
 export class KbqAutocompleteFooter {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteFooter, "[kbqAutocompleteFooter], kbq-autocomplete-footer", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAutocompleteFooter, "[kbqAutocompleteFooter], kbq-autocomplete-footer", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteFooter, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteFooter, never>;
 }
 
 // @public (undocumented)
 export class KbqAutocompleteModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqAutocompleteModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqAutocompleteModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof KbqAutocomplete, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter], [typeof KbqAutocomplete, typeof i1.KbqOptionModule, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof KbqAutocomplete, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter], [typeof KbqAutocomplete, typeof i1.KbqOptionModule, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter]>;
 }
 
 // @public
@@ -131,9 +132,9 @@ export class KbqAutocompleteOrigin {
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteOrigin, "[kbqAutocompleteOrigin]", ["kbqAutocompleteOrigin"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAutocompleteOrigin, "[kbqAutocompleteOrigin]", ["kbqAutocompleteOrigin"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteOrigin, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteOrigin, never>;
 }
 
 // @public (undocumented)
@@ -149,13 +150,13 @@ export class KbqAutocompleteSelectedEvent {
 export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler {
     constructor();
     get activeOption(): KbqOption | null;
-    readonly autocomplete: i0.InputSignal<KbqAutocomplete>;
-    readonly autocompleteAttribute: i0.InputSignal<string>;
+    readonly autocomplete: _angular_core.InputSignal<KbqAutocomplete>;
+    readonly autocompleteAttribute: _angular_core.InputSignal<string>;
     get autocompleteDisabled(): boolean;
     set autocompleteDisabled(value: boolean);
     // (undocumented)
     closePanel(): void;
-    readonly connectedTo: i0.InputSignal<KbqAutocompleteOrigin>;
+    readonly connectedTo: _angular_core.InputSignal<KbqAutocompleteOrigin>;
     // (undocumented)
     protected readonly document: Document;
     // (undocumented)
@@ -171,7 +172,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     ngOnDestroy(): void;
     onChange: (value: any) => void;
-    readonly onInputBlur: i0.InputSignal<(event: FocusEvent) => boolean>;
+    readonly onInputBlur: _angular_core.InputSignal<(event: FocusEvent) => boolean>;
     onTouched: () => void;
     open(): void;
     // (undocumented)
@@ -191,9 +192,9 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; "isSignal": true; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; "isSignal": true; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; "isSignal": true; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; "isSignal": true; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, never>;
 }
 
 // (No @packageDocumentation comment for this package)

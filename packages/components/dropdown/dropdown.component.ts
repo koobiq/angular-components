@@ -21,11 +21,22 @@ import {
     TemplateRef,
     ViewChild,
     ViewEncapsulation,
+    computed,
     contentChild,
     inject,
-    input
+    input,
+    numberAttribute
 } from '@angular/core';
-import { ESCAPE, FocusKeyManager, LEFT_ARROW, RIGHT_ARROW } from '@koobiq/components/core';
+import {
+    ESCAPE,
+    FocusKeyManager,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
+    KbqPanelMaxWidth,
+    KbqPanelMinWidth,
+    KbqPanelWidth,
+    LEFT_ARROW,
+    RIGHT_ARROW
+} from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
 import { startWith, switchMap, take } from 'rxjs/operators';
@@ -70,6 +81,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     private defaultOptions = inject<KbqDropdownDefaultOptions>(KBQ_DROPDOWN_DEFAULT_OPTIONS);
 
     private readonly search = contentChild(KbqFormField);
+
+    /** Whether the dropdown projects a search form-field. @docs-private */
+    readonly hasSearch = computed(() => !!this.search());
 
     readonly navigationWithWrap = input<boolean>(false);
 
@@ -178,6 +192,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     private _overlapTriggerY: boolean = this.defaultOptions.overlapTriggerY;
     private _hasBackdrop: boolean = this.defaultOptions.hasBackdrop;
 
+    /**
+     * @deprecated Has no effect. Use `KbqDropdownTrigger.widthOrigin` to make the panel match
+     * an element other than the trigger. Will be removed in v21.
+     */
     triggerWidth: string;
     /** Config object to be passed into the dropdown panel's `[class]` binding */
     classList: { [key: string]: boolean } = {};
@@ -202,6 +220,45 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     //  This input overrides a field from a superclass, while the superclass field
     //  is not migrated.
     @Input() backdropClass: string = this.defaultOptions.backdropClass;
+
+    /**
+     * Width of the panel. If set to `auto`, the panel will match the trigger width, but will never be
+     * narrower than `panelMinWidth`. If set to null, the panel will grow to match its content.
+     * Any other value is used as an exact width, and `panelMinWidth` is not applied.
+     */
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions.panelWidth ?? null);
+
+    /**
+     * Minimum width of the panel in pixels. The panel is never narrower than this, nor than its trigger.
+     */
+    readonly panelMinWidth = input<KbqPanelMinWidth, unknown>(
+        this.defaultOptions.panelMinWidth === undefined
+            ? KBQ_PANEL_DEFAULT_MIN_WIDTH
+            : this.defaultOptions.panelMinWidth,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * Maximum width of the panel in pixels. Caps how far the panel grows with its content — it never makes
+     * the panel narrower than the trigger, and never clamps an explicit `panelWidth`.
+     * When null, the `--kbq-dropdown-size-container-width-max` token applies.
+     */
+    readonly panelMaxWidth = input<KbqPanelMaxWidth, unknown>(
+        this.defaultOptions.panelMaxWidth === undefined ? null : this.defaultOptions.panelMaxWidth,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * `panelMinWidth` rendered as a CSS length for the `--kbq-dropdown-size-container-width-min`
+     * token, so the panel's CSS `min-width` floor tracks the input — mirroring how `panelMaxWidth`
+     * drives `max-width`. Non-finite input (e.g. `null`) leaves the token's static default in place.
+     * @docs-private
+     */
+    protected readonly panelMinWidthToken = computed(() => {
+        const minWidth = this.panelMinWidth();
+
+        return Number.isFinite(minWidth) ? `${minWidth}px` : null;
+    });
 
     /** @docs-private */
     @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;

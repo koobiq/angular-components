@@ -4,6 +4,8 @@ When focusing on the field, the dictionary menu opens. Autocomplete changes as y
 
 <!-- example(tag-autocomplete-overview) -->
 
+The menu belongs to [autocomplete](en/components/autocomplete) — its width is configured there, through the `panelWidth` and `panelMinWidth` attributes of `<kbq-autocomplete>`, and is measured against the whole field rather than the input.
+
 ### Adding to dictionary
 
 The option to create a new tag is placed first in the autocomplete menu. It creates a new token from the entered text if it doesn't exist in the dictionary.

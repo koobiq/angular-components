@@ -100,7 +100,7 @@ import {
     E2eTextareaStates
 } from '../components/textarea/e2e';
 import { E2eTimepickerStates } from '../components/timepicker/e2e';
-import { E2eTimezoneStates } from '../components/timezone/e2e';
+import { E2eTimezonePanelStates, E2eTimezoneStates, E2eTimezoneWithSearch } from '../components/timezone/e2e';
 import { E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
 import { E2eTooltipArrowOffset, E2eTooltipStates } from '../components/tooltip/e2e';
@@ -208,6 +208,8 @@ const components = [
     E2eTagListStates,
     E2eTopBarStates,
     E2eTimezoneStates,
+    E2eTimezonePanelStates,
+    E2eTimezoneWithSearch,
     E2eSelectStates,
     E2eMultiSelectStates,
     E2eMultilineSelectStates,

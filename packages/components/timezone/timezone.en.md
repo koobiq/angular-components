@@ -6,7 +6,18 @@
 
 ### Dropdown menu size
 
-The menu is 640 pixels wide and grows to match the field size if the field is larger than this minimum. Configurable via the `panelMinWidth` and `panelWidth` attributes.
+The menu width is configured exactly as on the [select](/en/components/select), with the same attributes: by default the menu grows with its content, never gets narrower than the field or than 200 pixels, and stops at 640 pixels.
+
+```html
+<!-- Match the field exactly -->
+<kbq-timezone-select panelWidth="auto" />
+
+<!-- A fixed width; panelMinWidth is not applied to it -->
+<kbq-timezone-select [panelWidth]="800" />
+
+<!-- Let the menu grow further with its content -->
+<kbq-timezone-select [panelMaxWidth]="800" />
+```
 
 ### Search
 

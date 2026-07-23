@@ -15,6 +15,11 @@
             "version": "20.2.0-0",
             "description": "Migrates KbqAlert consumers to its finished signal-based API. Rewrites value-safe programmatic reads of the now-signal members (compact, alertStyle) to calls on receivers typed KbqAlert, including reads via template reference variables on <kbq-alert> (external and inline templates). Warns — without auto-fixing — on alertColor (now a read-only InputSignal whose getter returns the raw color instead of the `kbq-alert_<color>` class), the content-query members that became protected (icon/iconItem/button/title/control/closeButton/isColored), narrowed alertColor/alertStyle inputs, the compact booleanAttribute behavior change, descendants:false content projection, view/content queries returning the instance, and KbqAlertModule no longer re-exporting A11yModule/PlatformModule.",
             "factory": "./migrations/alert-signals/index"
+        },
+        "autocomplete-panel-width-auto": {
+            "version": "20.2.0-0",
+            "description": "Replaces `panelWidth=\"auto\"` with `panelWidth=\"fit-content\"` on `<kbq-autocomplete>`. `auto` used to be passed to CSS verbatim, so the panel shrank to fit its content; it now means \"match the host width\", matching `kbq-select` and `kbq-tree-select`. The change is silent — `auto` still type-checks and still renders — so unmigrated templates only lay out differently.",
+            "factory": "./migrations/autocomplete-panel-width-auto/index"
         }
     }
 }

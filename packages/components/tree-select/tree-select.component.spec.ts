@@ -40,6 +40,7 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
+    KbqPanelWidth,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxModule,
     KbqPseudoCheckboxState,
@@ -73,7 +74,7 @@ import {
     KbqTreeSelection
 } from '@koobiq/components/tree';
 import { Observable, Subject, map, of, timer } from 'rxjs';
-import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectPanelWidth } from './tree-select.component';
+import { KbqTreeSelect, KbqTreeSelectChange, kbqTreeSelectOptionsProvider } from './tree-select.component';
 import { KbqTreeSelectModule } from './tree-select.module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
@@ -1668,7 +1669,46 @@ class NgIfTreeSelect {
     changeDetection: ChangeDetectionStrategy.Default
 })
 class TreeSelectWithPanelWidth {
-    panelWidth: KbqTreeSelectPanelWidth;
+    panelWidth: KbqPanelWidth;
+
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(TREE_DATA, 0);
+    }
+}
+
+@Component({
+    selector: 'tree-select-with-search-and-panel-width',
+    imports: [
+        KbqTreeModule,
+        KbqInputModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field style="width: 300px">
+            <kbq-tree-select [panelWidth]="panelWidth">
+                <kbq-form-field noBorders kbqSelectSearch>
+                    <input class="search-input" kbqInput type="text" [formControl]="searchControl" />
+                </kbq-form-field>
+
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class TreeSelectWithSearchAndPanelWidth {
+    panelWidth: KbqPanelWidth;
+    searchControl: UntypedFormControl = new UntypedFormControl();
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -1692,7 +1732,7 @@ describe('KbqTreeSelect', () => {
      * overall test time.
      * @param declarations Components to declare for this block
      */
-    function configureKbqTreeSelectTestingModule(declarations: any[]) {
+    function configureKbqTreeSelectTestingModule(declarations: any[], providers: Provider[] = []) {
         TestBed.configureTestingModule({
             imports: [
                 KbqFormFieldModule,
@@ -1714,7 +1754,8 @@ describe('KbqTreeSelect', () => {
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable()
                     })
-                }
+                },
+                ...providers
             ]
         }).compileComponents();
 
@@ -2529,7 +2570,7 @@ describe('KbqTreeSelect', () => {
                 } = options[options.length - 1].getBoundingClientRect();
                 const { top: containerTop, bottom: containerBottom } = fixture.componentInstance
                     .select()
-                    .panel()
+                    .panel()!
                     .nativeElement.getBoundingClientRect();
 
                 const isInView =
@@ -4726,20 +4767,145 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('panelWidth', () => {
-        beforeEach(() => configureKbqTreeSelectTestingModule([TreeSelectWithPanelWidth]));
+        /** JSDOM does not lay out, so the form field's connection container has to be mocked. */
+        function mockFieldWidth(fixture: ComponentFixture<unknown>, width: number) {
+            const connectionContainer = fixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-        it('should set custom panel width by panelWidth attribute', () => {
-            const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+            return jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width } as DOMRect);
+        }
 
-            fixture.componentInstance.panelWidth = 344;
-            fixture.detectChanges();
+        function getPane(): HTMLElement {
+            return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        }
 
-            fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
-            fixture.detectChanges();
+        describe('without search', () => {
+            beforeEach(() => configureKbqTreeSelectTestingModule([TreeSelectWithPanelWidth]));
 
-            const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+            it('should set custom panel width by panelWidth attribute', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
 
-            expect(pane.style.width).toBe('344px');
+                fixture.componentInstance.panelWidth = 344;
+                fixture.detectChanges();
+
+                fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('344px');
+            });
+
+            // The docs offer "a number or a CSS value", so `KbqPanelWidth` has to keep accepting CSS widths.
+            it('should pass a CSS panelWidth through to the pane', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+
+                fixture.componentInstance.panelWidth = 'fit-content';
+                fixture.detectChanges();
+
+                fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('fit-content');
+            });
+
+            it('should match the trigger when panelWidth is auto', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+
+                fixture.componentInstance.panelWidth = 'auto';
+                fixture.detectChanges();
+                mockFieldWidth(fixture, 300);
+
+                fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('300px');
+            });
+
+            it('should not let panelWidth auto go below panelMinWidth', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+
+                fixture.componentInstance.panelWidth = 'auto';
+                fixture.detectChanges();
+                mockFieldWidth(fixture, 150);
+
+                fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('200px');
+            });
+        });
+
+        describe('with KBQ_TREE_SELECT_OPTIONS', () => {
+            beforeEach(() =>
+                configureKbqTreeSelectTestingModule(
+                    [TreeSelectWithPanelWidth],
+                    [kbqTreeSelectOptionsProvider({ panelMinWidth: null })]
+                )
+            );
+
+            it('should not coalesce an explicit null panelMinWidth into the default floor', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+
+                fixture.componentInstance.panelWidth = null;
+                fixture.detectChanges();
+                // Narrower than KBQ_PANEL_DEFAULT_MIN_WIDTH (200): if `defaultOptions.panelMinWidth: null`
+                // were wrongly coalesced into the 200px default, the panel would floor at 200px instead of
+                // following the 100px trigger.
+                mockFieldWidth(fixture, 100);
+
+                fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.minWidth).toBe('100px');
+            });
+        });
+
+        describe('with search', () => {
+            beforeEach(() => configureKbqTreeSelectTestingModule([TreeSelectWithSearchAndPanelWidth]));
+
+            /** Reports the given width for the panel only, so that the lock has something to measure. */
+            function mockPanelBoundingRect(width: number) {
+                return jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+                    this: Element
+                ): DOMRect {
+                    const w = this.classList?.contains('kbq-tree-select__panel') ? width : 0;
+
+                    return { width: w, right: w } as DOMRect;
+                });
+            }
+
+            it('should lock panel width to the measured panel width when panelWidth is null', fakeAsync(() => {
+                const fixture = TestBed.createComponent(TreeSelectWithSearchAndPanelWidth);
+
+                fixture.detectChanges();
+
+                const spy = mockPanelBoundingRect(412);
+
+                fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('412px');
+
+                spy.mockRestore();
+            }));
+
+            it('should not override an explicitly provided numeric panelWidth', fakeAsync(() => {
+                const fixture = TestBed.createComponent(TreeSelectWithSearchAndPanelWidth);
+
+                fixture.componentInstance.panelWidth = 344;
+                fixture.detectChanges();
+
+                const spy = mockPanelBoundingRect(412);
+
+                fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('344px');
+
+                spy.mockRestore();
+            }));
         });
     });
 

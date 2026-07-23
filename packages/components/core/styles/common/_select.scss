@@ -167,6 +167,11 @@
 %kbq-select-panel {
     min-width: 100%; // prevents some animation twitching and test inconsistencies in IE11
 
+    // Caps how far the panel grows with its content. `min-width` above intentionally wins over this,
+    // so the panel is never narrower than its trigger and an explicit `panelWidth` is never clamped.
+    // The token is deliberately left undeclared so that a `:root` override reaches every panel.
+    max-width: var(--kbq-panel-size-width-max, 640px);
+
     overflow: hidden;
 
     border-radius: var(--kbq-select-panel-size-border-radius, var(--kbq-size-border-radius));

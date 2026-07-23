@@ -177,6 +177,8 @@ async function transformTemplateAttributes(
 
         visitAll(visitor, parsed.tree.rootNodes);
 
+        let didReplace = false;
+
         for (const el of visitor.elementsToMigrate) {
             const migrationAttr = el.attrs.find(
                 (attr) => getSimpleAttributeName(attr.name) === migrationData.attrs.key.from
@@ -190,10 +192,21 @@ async function transformTemplateAttributes(
                 if (replacement) {
                     updatedAttrValue = replacement.to;
                 } else {
+                    // A bound attribute (`[panelWidth]="..."`) whose value isn't a quoted string
+                    // literal is a genuine runtime expression and can't be resolved statically. A
+                    // plain attribute, or a bound attribute holding a quoted literal, has a known
+                    // value at migration time — it's just one the replacement table doesn't cover.
+                    const isDynamicExpression =
+                        migrationAttr.name.startsWith('[') && !/^\s*['"].*['"]\s*$/.test(migrationAttr.value);
+
                     console.warn(
-                        `Element is using dynamic value. Check the code and change value on your own.${
-                            (fileName && ' File: ' + fileName) || ''
-                        }`
+                        isDynamicExpression
+                            ? `Element is using a dynamic value. Check the code and change value on your own.${
+                                  (fileName && ' File: ' + fileName) || ''
+                              }`
+                            : `Element has value "${cleanAttrValue}" with no matching replacement. Check the code and change value on your own.${
+                                  (fileName && ' File: ' + fileName) || ''
+                              }`
                     );
                     continue;
                 }
@@ -205,10 +218,11 @@ async function transformTemplateAttributes(
 
                 offset += migrationAttr.name.length - migrationData.attrs.key.to.length;
                 offset += migrationAttr.value.length - updatedAttrValue.length;
+                didReplace = true;
             }
         }
 
-        return { fileContent: updatedTemplate, changed: visitor.elementsToMigrate.length > 0, errors: parsed.errors };
+        return { fileContent: updatedTemplate, changed: didReplace, errors: parsed.errors };
     }
 
     return { fileContent: updatedTemplate, changed: undefined, errors: parsed.errors };

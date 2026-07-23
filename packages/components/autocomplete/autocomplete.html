@@ -1,5 +1,5 @@
 <ng-template>
-    <div class="kbq-autocomplete-panel" [id]="id" [class]="classList">
+    <div class="kbq-autocomplete-panel" [id]="id" [class]="classList" [style.max-width.px]="panelMaxWidth()">
         <div #panel role="listbox" class="kbq-autocomplete-panel__content kbq-scrollbar">
             <ng-content />
         </div>

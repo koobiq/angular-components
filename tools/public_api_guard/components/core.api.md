@@ -13,6 +13,7 @@ import { AnimationTriggerMetadata } from '@angular/animations';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -2206,6 +2207,9 @@ export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponen
 // @public
 export const KBQ_OVERFLOW_SHADOW_SOURCE: InjectionToken<KbqOverflowShadowSource>;
 
+// @public
+export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
+
 // @public (undocumented)
 export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 
@@ -2294,9 +2298,12 @@ export abstract class KbqAbstractSelect {
     protected calculateOverlayOffsetX(baseOffsetX: number): number[];
     // (undocumented)
     protected getOverlayRect(): DOMRect;
+    protected lockOverlayWidthForSearch(panel: ElementRef<HTMLElement> | undefined): void;
     // (undocumented)
     protected overlayDir: CdkConnectedOverlay;
+    protected overlayMinWidth: string | number;
     protected readonly overlayPanelClass = "kbq-select-overlay";
+    protected overlayWidth: string | number;
     // (undocumented)
     protected resetOverlay(): void;
     // (undocumented)
@@ -2305,6 +2312,7 @@ export abstract class KbqAbstractSelect {
     protected setOverlayPosition(): void;
     // (undocumented)
     protected triggerRect: DOMRect;
+    protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAbstractSelect, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -2579,6 +2587,9 @@ export class KbqFormsModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormsModule, never, [typeof KbqForm, typeof KbqFormElement], [typeof KbqForm, typeof KbqFormElement]>;
 }
+
+// @public
+export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
@@ -2970,6 +2981,18 @@ export class KbqOverflowShadowTop {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowShadowTop, never>;
 }
 
+// @public
+export type KbqPanelMaxWidth = number | null;
+
+// @public
+export type KbqPanelMinWidth = number | null;
+
+// @public
+export type KbqPanelWidth = 'auto' | number | (string & {}) | null | '';
+
+// @public
+export type KbqPanelWidthOrigin = ElementRef<HTMLElement> | CdkOverlayOrigin | HTMLElement;
+
 // @public (undocumented)
 export interface KbqParentPopup {
     // (undocumented)
@@ -3307,6 +3330,17 @@ export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPip
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeShortDateTimePipe<any>, "kbqRelativeShortDateTime", true>;
 }
+
+// @public
+export interface KbqResolvedPanelWidth {
+    // (undocumented)
+    minWidth: number | string;
+    // (undocumented)
+    width: number | string;
+}
+
+// @public
+export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {

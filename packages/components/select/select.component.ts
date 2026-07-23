@@ -55,6 +55,7 @@ import {
     HOME,
     KBQ_LOCALE_SERVICE,
     KBQ_OPTION_PARENT_COMPONENT,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
     KBQ_WINDOW,
@@ -65,6 +66,9 @@ import {
     KbqOption,
     KbqOptionBase,
     KbqOptionSelectionChange,
+    KbqPanelMaxWidth,
+    KbqPanelMinWidth,
+    KbqPanelWidth,
     KbqSelectAllEvent,
     KbqSelectFooter,
     KbqSelectMatcher,
@@ -120,8 +124,11 @@ export class KbqSelectChange {
     ) {}
 }
 
-/** Select panel width type. */
-export type KbqSelectPanelWidth = 'auto' | number | null;
+/**
+ * Select panel width type.
+ * @deprecated Use `KbqPanelWidth` from `@koobiq/components/core` instead.
+ */
+export type KbqSelectPanelWidth = KbqPanelWidth;
 
 /** Options for the `kbq-select` that can be configured using the `KBQ_SELECT_OPTIONS` injection token. */
 export type KbqSelectOptions = Partial<{
@@ -129,11 +136,16 @@ export type KbqSelectOptions = Partial<{
      * Width of the panel. If set to `auto`, the panel will match the trigger width.
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
-    panelWidth: KbqSelectPanelWidth;
+    panelWidth: KbqPanelWidth;
     /**
      * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
      */
-    panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
+    panelMinWidth: KbqPanelMinWidth;
+    /**
+     * Maximum width of the panel. Caps growth by content only — it never overrides the trigger width or an
+     * explicit `panelWidth`. If null, the `--kbq-panel-size-width-max` token applies.
+     */
+    panelMaxWidth: KbqPanelMaxWidth;
     /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
@@ -636,21 +648,32 @@ export class KbqSelect
     }
 
     /**
-     * Width of the panel. If set to `auto`, the panel will match the trigger width.
-     * If set to null or an empty string, the panel will grow to match the longest option's text.
+     * Width of the panel. If set to `auto`, the panel will match the trigger width, but will never be
+     * narrower than `panelMinWidth`. If set to null or an empty string, the panel will grow to match the
+     * longest option's text. Any other value is used as an exact width, and `panelMinWidth` is not applied.
      */
-    // TODO: Skipped for migration because:
-    //  The input cannot be migrated because the field is overridden by a subclass.
-    @Input() panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || null;
+    readonly panelWidth = input<KbqPanelWidth>(this.defaultOptions?.panelWidth || null);
 
     /**
      * Minimum width of the panel in pixels.
      * If minWidth is larger than window width, it will be ignored.
      */
-    // TODO: Skipped for migration because:
-    //  The input cannot be migrated because the field is overridden by a subclass.
-    @Input({ transform: numberAttribute }) panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'> =
-        this.defaultOptions?.panelMinWidth ?? 200;
+    readonly panelMinWidth = input<KbqPanelMinWidth, unknown>(
+        this.defaultOptions?.panelMinWidth === undefined
+            ? KBQ_PANEL_DEFAULT_MIN_WIDTH
+            : this.defaultOptions.panelMinWidth,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * Maximum width of the panel in pixels. Caps how far the panel grows with its content — it never makes
+     * the panel narrower than the trigger, and never clamps an explicit `panelWidth`.
+     * When null, the `--kbq-panel-size-width-max` token applies.
+     */
+    readonly panelMaxWidth = input<KbqPanelMaxWidth, unknown>(
+        this.defaultOptions?.panelMaxWidth === undefined ? null : this.defaultOptions.panelMaxWidth,
+        { transform: numberAttribute }
+    );
 
     /** Value of the select control. Can be a single value or array of values for multiple selection. */
     // TODO: Skipped for migration because:
@@ -844,12 +867,6 @@ export class KbqSelect
 
     /** Subject that emits when the component visibility changes. */
     private visibleChanges: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-    /** Width of the overlay panel in pixels or as a string. */
-    protected overlayWidth: string | number;
-
-    /** Minimum width of the overlay panel in pixels. */
-    protected overlayMinWidth: string | number;
 
     /** Origin element for the overlay panel positioning. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
@@ -1088,15 +1105,7 @@ export class KbqSelect
             this.overlayOrigin = this.parentFormField.getConnectedOverlayOrigin();
         }
 
-        this.overlayWidth = this.getOverlayWidth(this.overlayOrigin);
-
-        // set overlayMinWidth to the largest of `panelMinWidth` and `triggerRect.width`
-        // only if `overlayWidth` falsy and `panelMinWidth` not provided.
-        // This ensures panel isn't narrow.
-        this.overlayMinWidth =
-            this.panelMinWidth !== null && !this.overlayWidth
-                ? Math.max(this.panelMinWidth, this.triggerRect.width)
-                : '';
+        this.updateOverlayWidth(this.panelWidth(), this.panelMinWidth(), this.overlayOrigin ?? this.elementRef);
 
         this.panelOpen = true;
 
@@ -1117,12 +1126,8 @@ export class KbqSelect
 
                 this.addClassToOverlayContainer();
 
-                if (this.search() && !this.overlayWidth) {
-                    const measuredPanelWidth = this.panel()?.nativeElement.getBoundingClientRect().width;
-
-                    if (measuredPanelWidth) {
-                        this.overlayWidth = measuredPanelWidth;
-                    }
+                if (this.search()) {
+                    this.lockOverlayWidthForSearch(this.panel());
                 }
             });
     }
@@ -1859,17 +1864,6 @@ export class KbqSelect
     /** Scrolls the active option into view. */
     private scrollActiveOptionIntoView(): void {
         this.keyManager.activeItem?.focus();
-    }
-
-    /** Gets how wide the overlay panel should be. */
-    private getOverlayWidth(origin?: ElementRef | CdkOverlayOrigin): string | number {
-        if (this.panelWidth === 'auto') {
-            const elementRef = origin instanceof CdkOverlayOrigin ? origin.elementRef : origin || this.elementRef;
-
-            return elementRef.nativeElement.getBoundingClientRect().width;
-        }
-
-        return this.panelWidth ?? '';
     }
 
     /** Comparison function to specify which option is displayed. Defaults to object equality. */

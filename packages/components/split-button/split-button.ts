@@ -158,17 +158,8 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
 
         dropdownTrigger.dropdown.xPosition = 'before';
 
-        if (this.panelAutoWidth()) {
-            // we need to use a timeout of about 50ms to wait for the styles to apply
-            setTimeout(() => {
-                const { width } = this.nativeElement.getClientRects()[0];
-
-                const dropdownTrigger = this.dropdownTrigger();
-
-                if (dropdownTrigger) {
-                    dropdownTrigger.dropdown.triggerWidth = `${Math.round(width)}px`;
-                }
-            }, 50);
-        }
+        // The trigger is only the chevron button, so the whole control has to be named explicitly.
+        // It is measured lazily on open, which is why no wait for styles to apply is needed here.
+        dropdownTrigger.widthOrigin = this.panelAutoWidth() ? this.nativeElement : undefined;
     };
 }

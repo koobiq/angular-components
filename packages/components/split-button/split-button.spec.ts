@@ -1,5 +1,6 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -297,21 +298,38 @@ describe('KbqSplitButton', () => {
             expect(dropdownTrigger.dropdown.xPosition).toBe('before');
         });
 
-        it('should set triggerWidth when panelAutoWidth is true', fakeAsync(() => {
+        /**
+         * Opens the dropdown with the split-button host measuring 600 and the chevron trigger — which is
+         * what the dropdown would measure on its own — measuring 50, then returns the rendered pane.
+         * The two straddle the 200px default `panelMinWidth`, so the measured origin is observable.
+         */
+        const openPanelWithMockedWidths = (panelAutoWidth: boolean): HTMLElement => {
             const fixture = TestBed.createComponent(TestAppDropdownAutoWidth);
-            const hostEl = fixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
 
-            jest.spyOn(hostEl, 'getClientRects').mockReturnValue([{ width: 200 }] as unknown as DOMRectList);
+            fixture.componentInstance.panelAutoWidth = panelAutoWidth;
+
+            const hostEl = fixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
+            const triggerDebugEl = fixture.debugElement.query(By.directive(KbqDropdownTrigger));
+
+            jest.spyOn(hostEl, 'getBoundingClientRect').mockReturnValue({ width: 600 } as DOMRect);
+            jest.spyOn(triggerDebugEl.nativeElement, 'getBoundingClientRect').mockReturnValue({ width: 50 } as DOMRect);
 
             fixture.detectChanges();
-            tick(50);
 
-            const dropdownTrigger = fixture.debugElement
-                .query(By.directive(KbqDropdownTrigger))
-                .injector.get(KbqDropdownTrigger);
+            triggerDebugEl.injector.get(KbqDropdownTrigger).open();
+            fixture.detectChanges();
 
-            expect(dropdownTrigger.dropdown.triggerWidth).toBe('200px');
-        }));
+            return TestBed.inject(OverlayContainer).getContainerElement().querySelector('.cdk-overlay-pane')!;
+        };
+
+        it('should match the panel width to the split-button when panelAutoWidth is true', () => {
+            expect(openPanelWithMockedWidths(true).style.minWidth).toBe('600px');
+        });
+
+        it('should fall back to the default minimum when panelAutoWidth is false', () => {
+            // The chevron alone is 50px, so the 200px default `panelMinWidth` floor applies instead.
+            expect(openPanelWithMockedWidths(false).style.minWidth).toBe('200px');
+        });
     });
 });
 
@@ -412,7 +430,7 @@ class TestAppDropdown {}
     selector: 'test-app-dropdown-auto-width',
     imports: [KbqSplitButtonModule, KbqButtonModule, KbqDropdownModule, KbqIconModule],
     template: `
-        <kbq-split-button [panelAutoWidth]="true">
+        <kbq-split-button [panelAutoWidth]="panelAutoWidth">
             <button kbq-button>Action</button>
             <button kbq-button [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -423,4 +441,6 @@ class TestAppDropdown {}
         </kbq-dropdown>
     `
 })
-class TestAppDropdownAutoWidth {}
+class TestAppDropdownAutoWidth {
+    panelAutoWidth = true;
+}

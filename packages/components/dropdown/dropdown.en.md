@@ -37,3 +37,33 @@ Recursive rendering of an array or object, allowing the creation of nested dropd
 Use the `xPosition` property to control horizontal alignment of the dropdown panel relative to the trigger. Supported values: `'after'` (default), `'before'`, and `'center'`.
 
 <!-- example(dropdown-x-position) -->
+
+## Panel width
+
+By default the panel grows with its content, is never narrower than its trigger or than 200px, and stops at 640px. This is configured with the same `panelWidth`, `panelMinWidth` and `panelMaxWidth` attributes as [select](en/components/select) and [autocomplete](en/components/autocomplete):
+
+```html
+<!-- Match the trigger exactly -->
+<kbq-dropdown panelWidth="auto" />
+
+<!-- An exact width; panelMinWidth is not applied -->
+<kbq-dropdown [panelWidth]="400" />
+
+<!-- Let the panel grow further with its content -->
+<kbq-dropdown [panelMaxWidth]="800" />
+```
+
+The 640px cap is soft: it limits growth by content only, so a trigger wider than 640px still gets a panel as wide as itself, and an explicit `panelWidth` is never clamped.
+
+The defaults come from design tokens, which can be overridden by a theme:
+
+| Token                                     | Default                                  |
+| ----------------------------------------- | ---------------------------------------- |
+| `--kbq-dropdown-size-container-width-min` | `200px`                                  |
+| `--kbq-dropdown-size-container-width-max` | `var(--kbq-panel-size-width-max, 640px)` |
+
+`--kbq-panel-size-width-max` is shared by every dropdown panel in the library, so setting it once on `:root` caps select, tree-select, autocomplete and dropdown together.
+
+Nested panels and panels that overlap the trigger vertically are not matched to the trigger — they follow the tokens only.
+
+When the trigger is only a part of a larger control, set `KbqDropdownTrigger.widthOrigin` to the element the panel should match instead. [Split button](en/components/split-button) does this through its `panelAutoWidth` input.

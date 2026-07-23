@@ -108,6 +108,7 @@
         cdkMonitorSubtreeFocus
         [class]="getPanelClasses()"
         [style.font-size.px]="triggerFontSize"
+        [style.max-width.px]="panelMaxWidth()"
         [style.transformOrigin]="transformOrigin"
         (keydown)="panelKeydownHandler($event)"
     >

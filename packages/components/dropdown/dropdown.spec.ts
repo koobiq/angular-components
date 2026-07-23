@@ -19,6 +19,7 @@ import {
     viewChildren
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -38,6 +39,8 @@ import {
     dispatchMouseEvent,
     patchElementFocus
 } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
@@ -1763,25 +1766,69 @@ describe('KbqDropdown', () => {
     });
 
     describe('panel min-width', () => {
+        /** JSDOM does not lay out, so the trigger's border-box width has to be mocked. */
+        const mockTriggerWidth = (fixture: ComponentFixture<SimpleDropdown>, width: number) =>
+            jest
+                .spyOn(fixture.componentInstance.triggerEl().nativeElement, 'getBoundingClientRect')
+                .mockReturnValue({ width } as DOMRect);
+
+        const getPane = () => overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
         it('should set minWidth on the overlay pane for a top-level panel', () => {
             const fixture = createComponent(SimpleDropdown);
 
             fixture.detectChanges();
-
-            jest.spyOn(window, 'getComputedStyle').mockReturnValue({
-                width: '300px',
-                borderRightWidth: '1px',
-                borderLeftWidth: '1px'
-            } as CSSStyleDeclaration);
+            mockTriggerWidth(fixture, 300);
 
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
 
             const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-            expect(overlayPane.style.minWidth).toBe('298px');
+            expect(overlayPane.style.minWidth).toBe('300px');
+        });
 
-            jest.restoreAllMocks();
+        it('should re-measure the trigger on every open', fakeAsync(() => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+
+            const spy = mockTriggerWidth(fixture, 300);
+            const { trigger } = fixture.componentInstance;
+
+            trigger().open();
+            fixture.detectChanges();
+            trigger().close();
+            fixture.detectChanges();
+            tick(500);
+
+            spy.mockReturnValue({ width: 500 } as DOMRect);
+
+            trigger().open();
+            fixture.detectChanges();
+
+            const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+            expect(overlayPane.style.minWidth).toBe('500px');
+        }));
+
+        it('should match the panel width to widthOrigin when it is set', () => {
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.detectChanges();
+            mockTriggerWidth(fixture, 300);
+
+            const widthOrigin = document.createElement('div');
+
+            jest.spyOn(widthOrigin, 'getBoundingClientRect').mockReturnValue({ width: 500 } as DOMRect);
+            fixture.componentInstance.trigger().widthOrigin = widthOrigin;
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+            expect(overlayPane.style.minWidth).toBe('500px');
         });
 
         it('should not set minWidth on the overlay pane for nested panels', () => {
@@ -1814,6 +1861,108 @@ describe('KbqDropdown', () => {
             const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
             expect(overlayPane.style.minWidth).toBe('');
+        });
+
+        it('should drive the panel CSS min-width token from panelMinWidth', () => {
+            const fixture = createComponent(PanelMinWidthDropdown);
+
+            fixture.componentInstance.panelMinWidth = 0;
+            fixture.detectChanges();
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-dropdown__panel') as HTMLElement;
+
+            // `0px` collapses the CSS floor `max(var(--…-width-min), 100%)` down to the trigger width.
+            expect(panel.style.getPropertyValue('--kbq-dropdown-size-container-width-min')).toBe('0px');
+        });
+
+        it('should keep the default min-width token so unconfigured panels stay floored', () => {
+            const fixture = createComponent(PanelMinWidthDropdown);
+
+            fixture.detectChanges(); // panelMinWidth defaults to 200
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-dropdown__panel') as HTMLElement;
+
+            expect(panel.style.getPropertyValue('--kbq-dropdown-size-container-width-min')).toBe('200px');
+        });
+
+        // The width lock runs on `ngZone.onStable`; `MockNgZone.simulateZoneExit()` fires it deterministically.
+        const provideMockZone = (): [Provider, () => MockNgZone] => {
+            let zone: MockNgZone;
+
+            return [{ provide: NgZone, useFactory: () => (zone = new MockNgZone()) }, () => zone];
+        };
+
+        it('should pin a search panel to its opened width so the cleaner cannot reflow it', () => {
+            const [provider, getZone] = provideMockZone();
+            const fixture = createComponent(SearchDropdown, [provider]);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const pane = getPane();
+
+            jest.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
+            getZone().simulateZoneExit(); // fires ngZone.onStable -> the width lock measures the pane and freezes it
+
+            expect(pane.style.width).toBe('412px');
+        });
+
+        it('should not pin a dropdown without a search field', () => {
+            const [provider, getZone] = provideMockZone();
+            const fixture = createComponent(SimpleDropdown, [provider]);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const pane = getPane();
+
+            jest.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
+            getZone().simulateZoneExit();
+
+            expect(pane.style.width).toBe('');
+        });
+
+        it('should not override an explicit panelWidth on a search panel', () => {
+            const [provider, getZone] = provideMockZone();
+            const fixture = createComponent(SearchDropdown, [provider]);
+
+            fixture.componentInstance.panelWidth = 344;
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const pane = getPane();
+
+            jest.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
+            getZone().simulateZoneExit();
+
+            expect(pane.style.width).toBe('344px');
+        });
+
+        it("should not override panelWidth='auto' on a search panel", () => {
+            const [provider, getZone] = provideMockZone();
+            const fixture = createComponent(SearchDropdown, [provider]);
+
+            fixture.componentInstance.panelWidth = 'auto';
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const pane = getPane();
+
+            jest.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
+            getZone().simulateZoneExit();
+
+            // 'auto' resolves to the trigger floor (200 min against a 0-width jsdom trigger), never the 412 pane.
+            expect(pane.style.width).toBe('200px');
         });
     });
 });
@@ -1917,6 +2066,39 @@ class SimpleDropdown {
     extraItems: string[] = [];
     closeCallback = jest.fn((name: string | undefined) => name);
     backdropClass: string;
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown" [panelMinWidth]="panelMinWidth">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class PanelMinWidthDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    panelMinWidth: number | null = 200;
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown" [panelWidth]="panelWidth">
+            <kbq-form-field>
+                <input kbqInput placeholder="Search" [formControl]="control" />
+                <kbq-cleaner />
+            </kbq-form-field>
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class SearchDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly control = new FormControl('');
+    panelWidth: 'auto' | number | null = null;
 }
 
 @Component({

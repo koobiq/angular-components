@@ -22,9 +22,12 @@ import {
     DOWN_ARROW,
     ENTER,
     ESCAPE,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqLocaleServiceModule,
     KbqOption,
     KbqOptionSelectionChange,
+    KbqPanelMaxWidth,
+    KbqPanelWidth,
     MockNgZone,
     SPACE,
     TAB,
@@ -1610,19 +1613,40 @@ describe('KbqAutocomplete', () => {
         expect(trigger.panelOpen).toBe(false);
     });
 
-    it('should have panel width set to string value', () => {
+    it('should match the panel width to the host when panelWidth is auto', () => {
         const widthFixture = createComponent(SimpleAutocomplete);
 
         widthFixture.componentInstance.width = 300;
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger().autocomplete().panelWidth = 'auto';
+        const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+
+        widthFixture.componentInstance.panelWidth = 'auto';
+        widthFixture.detectChanges();
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        expect(overlayPane.style.width).toBe('auto');
+        expect(overlayPane.style.width).toBe('300px');
+    });
+
+    it('should have panel width set to a CSS string value', () => {
+        const widthFixture = createComponent(SimpleAutocomplete);
+
+        widthFixture.componentInstance.width = 300;
+        widthFixture.detectChanges();
+
+        widthFixture.componentInstance.panelWidth = 'fit-content';
+        widthFixture.detectChanges();
+        widthFixture.componentInstance.trigger().open();
+        widthFixture.detectChanges();
+
+        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        expect(overlayPane.style.width).toBe('fit-content');
     });
 
     it('should have panel width set to number value', () => {
@@ -1631,7 +1655,8 @@ describe('KbqAutocomplete', () => {
         widthFixture.componentInstance.width = 300;
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger().autocomplete().panelWidth = 400;
+        widthFixture.componentInstance.panelWidth = 400;
+        widthFixture.detectChanges();
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
 
@@ -1970,7 +1995,8 @@ describe('KbqAutocomplete', () => {
 
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger().autocomplete().panelMinWidth = 350;
+        widthFixture.componentInstance.panelMinWidth = 350;
+        widthFixture.detectChanges();
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
@@ -1989,7 +2015,8 @@ describe('KbqAutocomplete', () => {
 
         widthFixture.detectChanges();
 
-        widthFixture.componentInstance.trigger().autocomplete().panelWidth = 250;
+        widthFixture.componentInstance.panelWidth = 250;
+        widthFixture.detectChanges();
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
@@ -2002,6 +2029,36 @@ describe('KbqAutocomplete', () => {
 
         expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(250);
         expect(overlayPane.style.minWidth).toBe('');
+    });
+
+    it('should drop a previously set panelWidth when it is unset at runtime', () => {
+        const widthFixture = createComponent(SimpleAutocomplete);
+
+        widthFixture.detectChanges();
+
+        const { trigger } = widthFixture.componentInstance;
+        const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+
+        widthFixture.componentInstance.panelWidth = 300;
+        widthFixture.detectChanges();
+        trigger().open();
+        widthFixture.detectChanges();
+        trigger().closePanel();
+        widthFixture.detectChanges();
+
+        // `OverlayRef.updateSize()` merges shallowly, so the resolver has to emit both keys or the
+        // stale `width` stays applied to the pane.
+        widthFixture.componentInstance.panelWidth = null;
+        widthFixture.detectChanges();
+        trigger().open();
+        widthFixture.detectChanges();
+
+        const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        expect(overlayPane.style.width).toBe('');
+        expect(overlayPane.style.minWidth).toBe('200px');
     });
 
     describe('Option selection with disabled items', () => {
@@ -2144,6 +2201,9 @@ describe('KbqAutocomplete', () => {
             #auto="kbqAutocomplete"
             class="class-one class-two"
             [displayWith]="displayFn"
+            [panelMaxWidth]="panelMaxWidth"
+            [panelMinWidth]="panelMinWidth"
+            [panelWidth]="panelWidth"
             (opened)="openedSpy()"
             (closed)="closedSpy()"
         >
@@ -2160,6 +2220,9 @@ class SimpleAutocomplete implements OnDestroy {
     filteredStates: any[];
     valueSub: Subscription;
     width: number;
+    panelWidth: KbqPanelWidth | undefined;
+    panelMinWidth: number = KBQ_PANEL_DEFAULT_MIN_WIDTH;
+    panelMaxWidth: KbqPanelMaxWidth = null;
     kbqOptionWidth: number;
     autocompleteDisabled = false;
     openedSpy = jest.fn();

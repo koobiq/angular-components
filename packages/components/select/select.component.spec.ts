@@ -6679,6 +6679,47 @@ describe('KbqSelect', () => {
             expect(parseInt(pane.style.minWidth, 10)).toBeGreaterThanOrEqual(412);
         });
 
+        it('should not let panelWidth auto go below panelMinWidth', () => {
+            const fixture = createPanelWidthComponent(SelectWithPanelWidth, [
+                kbqSelectOptionsProvider({ panelMinWidth: 200 })
+            ]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.panelWidth = 'auto';
+            fixture.detectChanges();
+
+            const connectionContainer = debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 150 } as DOMRect);
+
+            getSelectDebugElement(debugElement).nativeElement.click();
+            fixture.detectChanges();
+
+            expect((panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width).toBe(
+                '200px'
+            );
+        });
+
+        it('should not coalesce an explicit null panelMinWidth from KBQ_SELECT_OPTIONS into the default floor', () => {
+            const fixture = createPanelWidthComponent(BaseSelect, [
+                kbqSelectOptionsProvider({ panelWidth: null, panelMinWidth: null })
+            ]);
+            const { debugElement } = fixture;
+            const connectionContainer = debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
+
+            // Narrower than KBQ_PANEL_DEFAULT_MIN_WIDTH (200): if `defaultOptions.panelMinWidth: null`
+            // were wrongly coalesced into the 200px default (a `??` treats `null` and "absent" the
+            // same), the panel would floor at 200px instead of following the 100px trigger.
+            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+
+            getSelectDebugElement(debugElement).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(
+                (panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.minWidth
+            ).toBe('100px');
+        });
+
         describe('with search', () => {
             function mockPanelBoundingRect(width: number) {
                 return jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
@@ -6730,6 +6771,22 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
 
                 expect(getPane().style.width).toBe('344px');
+
+                spy.mockRestore();
+            });
+
+            it('should not override an explicit panelWidth of zero', () => {
+                const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth);
+
+                fixture.componentInstance.panelWidth = 0;
+                fixture.detectChanges();
+
+                const spy = mockPanelBoundingRect(412);
+
+                getSelectDebugElement(fixture.debugElement).nativeElement.click();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('0px');
 
                 spy.mockRestore();
             });
