@@ -161,7 +161,5 @@ export class AgGridStatusBarExample {
                 node.setSelected(true);
             }
         });
-
-        api.setColumnWidths([{ key: 'ag-Grid-SelectionColumn', newWidth: 36 }]);
     }
 }
