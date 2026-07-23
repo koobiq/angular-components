@@ -130,29 +130,29 @@
 
         &:hover,
         &.kbq-hover {
-            background: var(--kbq-states-background-transparent-hover);
+            background: var(--kbq-list-states-hover-container-background);
 
             & .kbq-app-switcher-list-item__toggle {
-                background: var(--kbq-states-background-transparent-hover);
+                background: var(--kbq-list-states-hover-container-background);
             }
         }
 
         &:active,
         &.kbq-active {
-            background: var(--kbq-states-background-transparent-active);
+            background: var(--kbq-list-states-active-container-background);
         }
 
         &.kbq-selected {
-            background: var(--kbq-background-theme-less);
+            background: var(--kbq-list-states-selected-container-background);
 
             &:hover,
             &.kbq-hover {
-                background: var(--kbq-states-background-theme-less-hover);
+                background: var(--kbq-list-states-selected-hover-container-background);
             }
 
             &:active,
             &.kbq-active {
-                background: var(--kbq-states-background-theme-less-active);
+                background: var(--kbq-list-states-selected-active-container-background);
             }
         }
 
