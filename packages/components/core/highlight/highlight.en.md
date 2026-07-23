@@ -1,16 +1,16 @@
-mcHighlight is a pipe for highlighting text matches. Highlighting matches helps users quickly understand why a result is relevant and speeds up navigation through lists. Depending on the context, two styles are used.
+Koobiq provides two pipes for highlighting text matches — `mcHighlight` and `kbqHighlightBackground`. Highlighting matches helps users quickly understand why a result is relevant and speeds up navigation through lists. Depending on the context, one of two styles is used.
 
-The pipe takes a string and a search argument, wrapping the found matches in a <mark class="kbq-highlight"> tag.
+Both pipes take a string and a search argument, wrapping the found matches in a `<mark>` tag — `kbq-highlight` for the bold style, `kbq-highlight-background` for the background-color style.
 
 #### Bold
 
-Used in selects with search and homogeneous lists (for example, choosing a department or a name). This style is unobtrusive and ideal for quickly scanning familiar data: the user immediately sees that the searched word is in the row but is not distracted from the main choice.
-
-<!-- example(highlight-select) -->
+Used in homogeneous lists rendered inline on the page, without a dropdown or overlay (for example, filtering a tree list). This style is unobtrusive and ideal for quickly scanning familiar data: the user immediately sees that the searched word is in the row but is not distracted from the main choice.
 
 #### Background color
 
-Used in search results over complex content — descriptions, messages, articles. Highlighting also draws attention even inside long texts.
+Used in selects and other dropdown pickers with search (for example, choosing a department or a name), and in search results over complex content — descriptions, messages, articles. The solid background stays legible over hover and active row states inside overlay panels, and also draws attention even inside long texts.
+
+<!-- example(highlight-select) -->
 
 <!-- example(highlight-background) -->
 
