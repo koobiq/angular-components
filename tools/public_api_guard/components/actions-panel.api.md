@@ -106,6 +106,7 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
     constructor(dialogRef: DialogRef<R, I>, containerInstance: KbqActionsPanelContainer);
     get afterClosed(): Observable<R | undefined>;
     get afterOpened(): Observable<void>;
+    get beforeClosed(): Observable<R | undefined>;
     close(result?: R): void;
     containerInstance: KbqActionsPanelContainer;
     get id(): string;
