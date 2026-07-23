@@ -48,7 +48,7 @@ export class E2eAutocompleteStates {
     imports: [KbqInputModule, KbqAutocompleteModule],
     template: `
         <div class="bottom-anchored">
-            <kbq-form-field>
+            <kbq-form-field data-testid="e2eFormField">
                 <input
                     data-testid="e2eAutocompleteInput"
                     kbqInput
@@ -91,7 +91,7 @@ export class E2eAutocompleteFallbackPosition {
     selector: 'e2e-autocomplete-expand-on-results',
     imports: [FormsModule, KbqInputModule, KbqAutocompleteModule],
     template: `
-        <kbq-form-field>
+        <kbq-form-field data-testid="e2eFormField">
             <input
                 data-testid="e2eAutocompleteInput"
                 kbqInput

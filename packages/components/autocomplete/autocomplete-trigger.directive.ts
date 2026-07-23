@@ -34,6 +34,8 @@ import {
     DOWN_ARROW,
     ENTER,
     ESCAPE,
+    KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
+    KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_WINDOW,
     KbqOption,
     KbqOptionSelectionChange,
@@ -656,20 +658,25 @@ export class KbqAutocompleteTrigger
             .flexibleConnectedTo(this.getConnectedElement())
             .withFlexibleDimensions(false)
             .withPush(false)
+            // CDK measures the pane before the trigger↔panel gap padding (kbq-connected-overlay-gap) is
+            // applied, so a position can be judged "fits" without accounting for that extra space. Giving
+            // it a margin at least as big as the gap (defaultOffsetY) keeps the fit check conservative
+            // enough to absorb the padding that lands afterwards.
+            .withViewportMargin(defaultOffsetY)
             .withPositions([
                 {
                     originX: 'start',
                     originY: 'bottom',
                     overlayX: 'start',
                     overlayY: 'top',
-                    offsetY: defaultOffsetY
+                    panelClass: KBQ_CONNECTED_OVERLAY_BELOW_CLASS
                 },
                 {
                     originX: 'start',
                     originY: 'top',
                     overlayX: 'start',
                     overlayY: 'bottom',
-                    offsetY: -defaultOffsetY
+                    panelClass: KBQ_CONNECTED_OVERLAY_ABOVE_CLASS
                 }
             ] as ConnectedPosition[]);
 

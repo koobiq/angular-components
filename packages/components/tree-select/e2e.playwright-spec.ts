@@ -42,6 +42,39 @@ async function box(locator: Locator) {
     return b;
 }
 
+/**
+ * Point-probes the trigger↔panel gap (2px past the trigger's edge, on the side the panel opens toward) and
+ * reports whether it resolves to the overlay pane (gap covered by transparent padding, not click-through)
+ * and, separately, whether it lands inside real panel content — a probe that only hits the pane and NOT
+ * panel content proves the gap is genuinely padding, not just a coincidentally-zero physical gap.
+ */
+async function probeTriggerPanelGap(
+    page: Page,
+    triggerTestId: string,
+    panelSelector: string,
+    edge: 'bottom' | 'top'
+): Promise<{ hitsPane: boolean; hitsPanelContent: boolean }> {
+    return page.evaluate(
+        ({ triggerTestId, panelSelector, edge }) => {
+            const trigger = document
+                .querySelector<HTMLElement>(`[data-testid="${triggerTestId}"]`)!
+                .getBoundingClientRect();
+            // Near the trigger's start edge, not its horizontal center: the panel is left-aligned to the
+            // trigger (originX/overlayX: 'start') and can be much narrower than the trigger itself when the
+            // field has no explicit width (e.g. E2eTreeSelectPositioning), so a center probe can miss it entirely.
+            const x = Math.round(trigger.left + 8);
+            const y = edge === 'bottom' ? Math.round(trigger.bottom + 2) : Math.round(trigger.top - 2);
+            const el = document.elementFromPoint(x, y);
+
+            return {
+                hitsPane: !!el?.closest('.cdk-overlay-pane'),
+                hitsPanelContent: !!el?.closest(panelSelector)
+            };
+        },
+        { triggerTestId, panelSelector, edge }
+    );
+}
+
 test.describe('KbqTreeSelectModule', () => {
     test.describe('E2eTreeSelectStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eTreeSelectStates');
@@ -222,6 +255,57 @@ test.describe('KbqTreeSelectModule', () => {
             const panelBox = await box(panel);
 
             expect(panelBox.x).toBeGreaterThan(0);
+        });
+    });
+
+    test.describe('trigger↔panel gap is not click-through', () => {
+        test('below: the gap is covered by the pane, not real panel content', async ({ page }) => {
+            await page.goto('/E2eTreeSelectPositioning');
+            // Pin near the top so a fresh (unselected) tree-select opens straight below the trigger.
+            await pinFormField(page, { top: 60, left: 20 });
+
+            await page.getByTestId('e2eTreeSelect').click();
+            await page.locator('.cdk-overlay-pane .kbq-tree-select__panel').waitFor();
+
+            const { hitsPane, hitsPanelContent } = await probeTriggerPanelGap(
+                page,
+                'e2eTreeSelect',
+                '.kbq-tree-select__panel',
+                'bottom'
+            );
+
+            // A point 2px below the trigger's bottom edge — the former physical dead gap.
+            // It must now resolve to the overlay pane (which covers it via transparent padding) but NOT to
+            // real panel content, so it can no longer be clicked through onto the content beneath the panel
+            // AND this can't pass merely because offsetY:0 collapsed the gap to nothing (no padding at all).
+            expect(hitsPane).toBe(true);
+            expect(hitsPanelContent).toBe(false);
+        });
+
+        test('above (flipped): the gap is covered by the pane, not real panel content', async ({ page }) => {
+            await page.goto('/E2eTreeSelectPositioning');
+            // Same pin used by the "should fall back to above" positioning test below in this file —
+            // not enough room below the trigger to fit the panel, so it flips above.
+            await pinFormField(page, { bottom: 30, left: 20 });
+
+            await page.getByTestId('e2eTreeSelect').click();
+            await page.locator('.cdk-overlay-pane .kbq-tree-select__panel').waitFor();
+
+            // Sanity check the flip actually happened, otherwise this would silently re-test "below".
+            const triggerBox = await box(page.getByTestId('e2eTreeSelect'));
+            const overlayBox = await box(page.locator('.cdk-overlay-pane'));
+
+            expect(overlayBox.y).toBeLessThan(triggerBox.y + triggerBox.height);
+
+            const { hitsPane, hitsPanelContent } = await probeTriggerPanelGap(
+                page,
+                'e2eTreeSelect',
+                '.kbq-tree-select__panel',
+                'top'
+            );
+
+            expect(hitsPane).toBe(true);
+            expect(hitsPanelContent).toBe(false);
         });
     });
 

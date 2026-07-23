@@ -431,6 +431,11 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     protected originSelector = '.kbq-popover';
 
+    // NB: the trigger↔popover gap is a CSS `margin` on `.kbq-popover` (see `applyPopupMargins`), which sits inside
+    // this `pointer-events: auto` pane, so the gap band is already covered and not click/hover-through. This is why
+    // the connected-overlay `offsetY`→in-pane-padding fix (KBQ_CONNECTED_OVERLAY_* / --kbq-connected-overlay-gap,
+    // used by select/tree-select/autocomplete/datepicker) intentionally does NOT apply here — do not "port" it.
+    // Guarded by the "trigger↔panel gap is not click-through" e2e tests in e2e.playwright-spec.ts.
     protected get overlayConfig(): OverlayConfig {
         return {
             panelClass: 'kbq-popover__panel',

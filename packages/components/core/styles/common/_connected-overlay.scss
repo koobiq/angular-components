@@ -1,0 +1,36 @@
+/// Recreates the trigger↔panel gap for connected dropdown panels as transparent padding
+/// INSIDE the `.cdk-overlay-pane`, instead of a physical overlay `offsetY`.
+
+// Previously the gap was produced by the CDK overlay `offsetY` (`defaultOffsetY`,
+// packages/components/core/pop-up/constants.ts), which shifted the whole pane away from the trigger and
+// left a dead band that was not covered by any overlay element — so the cursor/clicks passed through it
+// onto the content underneath. Now the pane is flush with the trigger (`offsetY: 0`) and the gap is padded
+// inside the pane. Because the pane has `pointer-events: auto`, the band is covered and no longer
+// click/hover-through, while the visible panel keeps the exact same on-screen position.
+
+// The class names must match KBQ_CONNECTED_OVERLAY_BELOW_CLASS / KBQ_CONNECTED_OVERLAY_ABOVE_CLASS
+// (packages/components/core/pop-up/constants.ts), applied per-position via `ConnectedPosition.panelClass`.
+// The compound `.cdk-overlay-pane.<class>` selector (specificity 0,2,0) deterministically overrides the
+// `.cdk-overlay-pane { padding: 0 }` reset from `overlay()`.
+
+// The gap size is the `--kbq-connected-overlay-gap` custom property, falling back to the `--kbq-size-xxs`
+// token (4px) when unset — so the default is unchanged. The pane is portaled to <body>, so the variable
+// must be set on `:root` or on the pane itself, never on the component that opens it:
+//   * globally:          :root { --kbq-connected-overlay-gap: 8px; }
+//   * per overlay type:  .cdk-overlay-pane.kbq-select-overlay { --kbq-connected-overlay-gap: 8px; }
+
+// Caveat: the `--kbq-size-xxs`/4px default is kept in sync with `defaultOffsetY`
+// (packages/components/core/pop-up/constants.ts), off which components size their viewport-fit compensation
+// (`withViewportMargin`). Enlarging the gap past that can let the pane overflow the viewport edge by
+// `gap - margin`px, so bump the corresponding margin to match.
+@mixin kbq-connected-overlay-gap() {
+    // Panel is below the trigger: the gap sits at the top of the pane.
+    .cdk-overlay-pane.kbq-connected-overlay_below {
+        padding-top: var(--kbq-connected-overlay-gap, var(--kbq-size-xxs, 4px));
+    }
+
+    // Panel is flipped above the trigger: the gap sits at the bottom of the pane.
+    .cdk-overlay-pane.kbq-connected-overlay_above {
+        padding-bottom: var(--kbq-connected-overlay-gap, var(--kbq-size-xxs, 4px));
+    }
+}
