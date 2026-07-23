@@ -98,6 +98,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     readonly externalConfiguration: unknown;
     filteredSites: KbqAppSwitcherSite[];
     protected focusinHandler(event: FocusEvent): void;
+    protected focusoutHandler(event: FocusEvent): void;
     readonly input: i0.Signal<KbqInput | undefined>;
     isTrapFocus: boolean;
     protected keydownHandler(event: KeyboardEvent): void;

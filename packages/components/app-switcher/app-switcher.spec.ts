@@ -14,6 +14,7 @@ import {
     LEFT_ARROW,
     RIGHT_ARROW,
     SPACE,
+    TAB,
     UP_ARROW,
     createKeyboardEvent,
     dispatchKeyboardEvent
@@ -791,6 +792,108 @@ describe('KbqAppSwitcher', () => {
         const getHost = () => overlayContainerElement.querySelector('.kbq-app-switcher') as HTMLElement;
         const keyManagerOf = (popup: KbqAppSwitcherComponent) => popup['keyManager'];
         const menuItemsOf = (popup: KbqAppSwitcherComponent) => popup['menuItems'];
+
+        describe('close on focus-out', () => {
+            it('hides when focus leaves the popup entirely', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+                const hideSpy = jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const outside = document.createElement('button');
+
+                document.body.appendChild(outside);
+                getHost().dispatchEvent(new FocusEvent('focusout', { relatedTarget: outside, bubbles: true }));
+
+                expect(hideSpy).toHaveBeenCalledWith(0);
+                outside.remove();
+            }));
+
+            it('returns focus to the trigger when focus leaves', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+
+                jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const focusSpy = jest.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
+                const outside = document.createElement('button');
+
+                document.body.appendChild(outside);
+                getHost().dispatchEvent(new FocusEvent('focusout', { relatedTarget: outside, bubbles: true }));
+
+                expect(focusSpy).toHaveBeenCalled();
+                outside.remove();
+            }));
+
+            it('closes and focuses the trigger on Tab, preventing the native focus move into browser chrome', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+
+                jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const focusSpy = jest.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
+                const event = createKeyboardEvent('keydown', TAB, getHost());
+                const preventSpy = jest.spyOn(event, 'preventDefault');
+
+                popup['keydownHandler'](event);
+
+                expect(preventSpy).toHaveBeenCalled();
+                expect(focusSpy).toHaveBeenCalled();
+            }));
+
+            it('stops Escape from bubbling into overlays opened earlier', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+
+                jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const event = createKeyboardEvent('keydown', ESCAPE, getHost());
+                const preventSpy = jest.spyOn(event, 'preventDefault');
+                const stopSpy = jest.spyOn(event, 'stopPropagation');
+
+                popup['keydownHandler'](event);
+
+                expect(preventSpy).toHaveBeenCalled();
+                expect(stopSpy).toHaveBeenCalled();
+            }));
+
+            it('ignores keys safely before the key manager is initialized', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+
+                // The host `(keydown)` binding is live before `ngAfterViewInit` builds the key manager.
+                (popup as any).keyManager = undefined;
+
+                expect(() =>
+                    popup['keydownHandler'](createKeyboardEvent('keydown', DOWN_ARROW, getHost()))
+                ).not.toThrow();
+            }));
+
+            it('hides when focus is lost with no related target', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+                const hideSpy = jest.spyOn(popup, 'hide').mockImplementation(() => {});
+
+                getHost().dispatchEvent(new FocusEvent('focusout', { relatedTarget: null, bubbles: true }));
+
+                expect(hideSpy).toHaveBeenCalledWith(0);
+            }));
+
+            it('stays open while focus moves between menu items', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+                const hideSpy = jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const item = getHost().querySelector('.kbq-app-switcher-list-item') as HTMLElement;
+
+                getHost().dispatchEvent(new FocusEvent('focusout', { relatedTarget: item, bubbles: true }));
+
+                expect(hideSpy).not.toHaveBeenCalled();
+            }));
+
+            it('stays open while focus moves into a site flyout overlay', fakeAsync(() => {
+                const { popup } = open(AppSwitcherMultiSite);
+                const hideSpy = jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const flyoutPane = document.createElement('div');
+                const flyoutItem = document.createElement('a');
+
+                // Flyouts open in a separate overlay whose pane carries the `.kbq-app-switcher-sites` class.
+                flyoutPane.className = 'kbq-app-switcher-sites';
+                flyoutPane.appendChild(flyoutItem);
+                document.body.appendChild(flyoutPane);
+                getHost().dispatchEvent(new FocusEvent('focusout', { relatedTarget: flyoutItem, bubbles: true }));
+
+                expect(hideSpy).not.toHaveBeenCalled();
+                flyoutPane.remove();
+            }));
+        });
 
         describe('roving focus (flat list + other sites)', () => {
             it('focuses the first menu item when the popup opens without a search field', fakeAsync(() => {

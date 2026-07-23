@@ -57,16 +57,22 @@ test.describe('KbqAppSwitcherModule', () => {
             expect(await focusedItem(page).textContent()).toBe(afterDown);
         });
 
-        test('the keyboard-focused item renders a visible focus ring', async ({ page }) => {
+        test('the keyboard-focused item looks like hover with no ring', async ({ page }) => {
             await openStates(page);
 
             await page.keyboard.press('ArrowDown');
+            const focused = focusedItem(page);
 
-            // The list item has no base border, so the ring is drawn with an inset box-shadow.
-            const ring = await focusedItem(page).evaluate((el) => getComputedStyle(el).boxShadow);
+            // Focus is a background fill only — no ring/border/box-shadow, like the dropdown.
+            expect(await focused.evaluate((el) => getComputedStyle(el).boxShadow)).toBe('none');
 
-            expect(ring).not.toBe('none');
-            expect(ring).toContain('inset');
+            // The focus background matches a hovered sibling's background.
+            const focusBackground = await focused.evaluate((el) => getComputedStyle(el).backgroundColor);
+            const sibling = listItem(page).nth(2);
+
+            await sibling.hover();
+
+            expect(await sibling.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(focusBackground);
         });
 
         test('End and Home move to the last and first item', async ({ page }) => {
@@ -89,6 +95,29 @@ test.describe('KbqAppSwitcherModule', () => {
             await page.keyboard.press('Escape');
 
             await expect(overlay(page)).toBeHidden();
+        });
+
+        test('closes and returns focus to the trigger when focus leaves the menu', async ({ page }) => {
+            await openStates(page);
+            await page.keyboard.press('End'); // focus the last item
+            await page.keyboard.press('Tab'); // Tab out of the menu
+
+            await expect(overlay(page)).toBeHidden();
+            await expect(page.getByTestId('e2eAppSwitcherStates').getByRole('button')).toBeFocused();
+        });
+
+        test('opening a site flyout keeps the menu open', async ({ page }) => {
+            await page.goto('/E2eAppSwitcherWithSitesStates');
+            await page.getByTestId('e2eAppSwitcherWithSitesStates').getByRole('button').click();
+            await expect(overlay(page)).toBeVisible();
+
+            await page.keyboard.press('ArrowDown'); // from the search field into the list
+            await page.keyboard.press('End'); // the last menu item is an other-site row
+            await page.keyboard.press('ArrowRight'); // open that site's flyout
+
+            // The flyout opened and the main popup stayed open — focus into a flyout must not close it.
+            await expect(page.locator('.kbq-app-switcher-dropdown-app').first()).toBeVisible();
+            await expect(overlay(page)).toBeVisible();
         });
 
         test('ArrowLeft collapses an app group', async ({ page }) => {

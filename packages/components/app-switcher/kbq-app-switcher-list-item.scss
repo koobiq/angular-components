@@ -118,7 +118,8 @@
     .kbq-app-switcher-list-item {
         &:hover,
         &.kbq-hover,
-        &.kbq-focused {
+        &.kbq-focused,
+        &.cdk-keyboard-focused {
             &:has(.kbq-app-switcher-list-item__toggle) .kbq-app-switcher-list-item__icon {
                 visibility: hidden;
             }
@@ -129,7 +130,8 @@
         }
 
         &:hover,
-        &.kbq-hover {
+        &.kbq-hover,
+        &.cdk-keyboard-focused {
             background: var(--kbq-states-background-transparent-hover);
 
             & .kbq-app-switcher-list-item__toggle {
@@ -146,7 +148,8 @@
             background: var(--kbq-background-theme-less);
 
             &:hover,
-            &.kbq-hover {
+            &.kbq-hover,
+            &.cdk-keyboard-focused {
                 background: var(--kbq-states-background-theme-less-hover);
             }
 
@@ -158,14 +161,6 @@
 
         background: var(--kbq-list-default-container-background);
         color: var(--kbq-list-default-text-color);
-
-        &.cdk-keyboard-focused {
-            outline: none;
-            // Inset ring instead of `border-color`: the list item has no base border to colour, and adding
-            // one would shift the nested-alias connector line (`:after`). This renders the same visual ring
-            // without touching layout or the connector geometry.
-            box-shadow: inset 0 0 0 var(--kbq-size-3xs) var(--kbq-list-states-focused-focus-outline-color);
-        }
     }
 }
 

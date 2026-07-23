@@ -52,6 +52,7 @@ import {
     PopUpTriggers,
     RIGHT_ARROW,
     SPACE,
+    TAB,
     UP_ARROW,
     applyPopupMargins,
     ruRULocaleData
@@ -170,7 +171,8 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
     host: {
         class: 'kbq-app-switcher',
         '(keydown)': 'keydownHandler($event)',
-        '(focusin)': 'focusinHandler($event)'
+        '(focusin)': 'focusinHandler($event)',
+        '(focusout)': 'focusoutHandler($event)'
     },
     animations: [kbqAppSwitcherAnimations.state],
     preserveWhitespaces: false
@@ -330,8 +332,18 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
         const keyCode = event.keyCode;
 
         if (keyCode === ESCAPE) {
+            // Stop here so Escape closes only this popup instead of bubbling into overlays opened
+            // earlier (mirrors KbqDropdown.handleKeydown).
+            event.preventDefault();
+            event.stopPropagation();
             this.escapeHandler();
 
+            return;
+        }
+
+        // The host `(keydown)` binding is live before `ngAfterViewInit` builds the key manager; until
+        // then there is nothing to navigate, so ignore the key (mirrors `focusinHandler`).
+        if (!this.keyManager) {
             return;
         }
 
@@ -341,6 +353,17 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
                 event.preventDefault();
                 this.keyManager.setFocusOrigin('keyboard').setFirstItemActive();
             }
+
+            return;
+        }
+
+        // Tab leaves the menu (WAI-ARIA menu pattern): close and move focus to the trigger ourselves.
+        // Preventing the default stops the browser from first shifting focus into its own chrome, which
+        // would leave the real focus out of sync with the ring shown on the trigger.
+        if (keyCode === TAB) {
+            event.preventDefault();
+            this.hide(0);
+            this.trigger.focus();
 
             return;
         }
@@ -447,6 +470,21 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
         const index = this.menuItems.toArray().findIndex((item) => item.getHostElement() === event.target);
 
         this.keyManager.updateActiveItem(index);
+    }
+
+    /** Closes the popup once focus leaves the menu and its site flyouts, mirroring the dropdown.
+     * @docs-private */
+    protected focusoutHandler(event: FocusEvent): void {
+        const next = event.relatedTarget as HTMLElement | null;
+
+        // Keep open while focus stays inside the popup or moves into a site flyout overlay
+        // (flyouts are separate overlays whose panes carry the `.kbq-app-switcher-sites` class).
+        if (!next || !next.closest('.kbq-app-switcher, .kbq-app-switcher-sites')) {
+            this.hide(0);
+            // Return focus to the trigger (the same landing spot as Shift+Tab), instead of
+            // leaving it wherever it was heading.
+            this.trigger.focus();
+        }
     }
 
     /** @docs-private */

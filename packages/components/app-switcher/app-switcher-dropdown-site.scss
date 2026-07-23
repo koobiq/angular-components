@@ -33,12 +33,9 @@
         color: var(--kbq-list-default-text-color);
 
         &.kbq-dropdown-item_highlighted,
-        &:hover {
-            background: var(--kbq-states-background-transparent-active);
-        }
-
+        &:hover,
         &.cdk-keyboard-focused {
-            border-color: var(--kbq-list-states-focused-focus-outline-color);
+            background: var(--kbq-states-background-transparent-active);
         }
     }
 }
