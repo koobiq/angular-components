@@ -54,11 +54,25 @@ import { AgGridModule } from 'ag-grid-angular';
 
 <!-- example(ag-grid-row-actions) -->
 
+### Группировка строк
+
+Директива `kbqAgGridRowGroup` реализует группировку строк на стороне клиента. Подключите её к `ag-grid-angular`, передайте исходные данные через `[kbqAgGridRowGroupRowData]` вместо `[rowData]` и укажите колонки группировки через `[(kbqAgGridRowGroupCols)]`.
+
+Состояние свёрнутых/развёрнутых групп и выделение строк можно сохранять независимо друг от друга: укажите уникальный ключ в `kbqAgGridRowGroupCollapsedState` и `kbqAgGridRowGroupSelectionState`, подключив провайдеры хранилища через `kbqAgGridRowGroupCollapsedStateStoreProvider` и `kbqAgGridRowGroupSelectionStateStoreProvider`.
+
+<!-- example(ag-grid-row-group) -->
+
 ### Копирование выделенных строк
 
 Директива `kbqAgGridCopyByCtrlC` позволяет копировать выделенные строки в буфер обмена при помощи комбинации клавиш `Ctrl+C`.
 
 <!-- example(ag-grid-copy-selected) -->
+
+### Экспорт
+
+Для экспорта отображаемых данных (с учётом активных фильтров, сортировки и форматирования) можно использовать собственный API таблицы. Метод `api.exportDataAsCsv()` позволяет скачать CSV-файл без дополнительных зависимостей. Другие форматы можно получить на основе значений ячеек таблицы с помощью сторонних библиотек — например, XLSX с помощью [`xlsx`](https://www.npmjs.com/package/xlsx), а PDF — с помощью [`jspdf`](https://www.npmjs.com/package/jspdf) и [`jspdf-autotable`](https://www.npmjs.com/package/jspdf-autotable).
+
+<!-- example(ag-grid-export) -->
 
 ### Панель статуса
 
@@ -95,6 +109,18 @@ import { AgGridModule } from 'ag-grid-angular';
 Директива `kbqAgGridExternalFilterState` сохраняет значение внешнего фильтра. Добавьте её с уникальным ключом, подключите провайдер хранилища через `kbqAgGridExternalFilterStateStoreProvider`, привяжите значение через `[(kbqAgGridExternalFilterStateValue)]` и передайте функцию проверки строк через `kbqAgGridExternalFilterStatePass`.
 
 <!-- example(ag-grid-external-filter-state) -->
+
+#### Строки
+
+Директива `kbqAgGridRowSelectionState` сохраняет выделение строк. Добавьте её с уникальным ключом, подключите провайдер хранилища через `kbqAgGridRowSelectionStateStoreProvider` и укажите `getRowId`.
+
+<!-- example(ag-grid-row-selection-state) -->
+
+#### Фокус
+
+Директива `kbqAgGridRowFocusState` сохраняет сфокусированную ячейку. Добавьте её с уникальным ключом, подключите провайдер хранилища через `kbqAgGridRowFocusStateStoreProvider` и укажите `getRowId`.
+
+<!-- example(ag-grid-row-focus-state) -->
 
 ### Меню колонок
 

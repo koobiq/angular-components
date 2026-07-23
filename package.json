@@ -29,7 +29,7 @@
         "@docsearch/js": "^4.6.3",
         "@fontsource/inter": "^5.2.8",
         "@fontsource/jetbrains-mono": "^5.2.6",
-        "@koobiq/ag-grid-angular-theme": "^34.4.0",
+        "@koobiq/ag-grid-angular-theme": "^34.5.1",
         "@koobiq/date-adapter": "^3.5.1",
         "@koobiq/date-formatter": "^3.5.1",
         "@koobiq/icons": "^11.7.1",
@@ -39,10 +39,13 @@
         "ag-grid-angular": "^34.3.1",
         "ag-grid-community": "^34.3.1",
         "highlight.js": "^11.11.1",
+        "jspdf": "^4.2.1",
+        "jspdf-autotable": "^5.0.8",
         "marked": "^17.0.3",
         "overlayscrollbars": "2.7.3",
         "rxjs": "^7.8.2",
         "tslib": "^2.8.1",
+        "xlsx": "^0.18.5",
         "zone.js": "~0.16.2"
     },
     "devDependencies": {

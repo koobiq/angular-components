@@ -28,7 +28,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             #quickFilterState="kbqAgGridQuickFilterState"
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
-            kbqAgGridQuickFilterState="dev-ag-grid-quick-filter-state"
+            kbqAgGridQuickFilterState="example-ag-grid-quick-filter-state"
             [alwaysMultiSort]="true"
             [rowData]="rowData"
             [columnDefs]="columnDefs"
