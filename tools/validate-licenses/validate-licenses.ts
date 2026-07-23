@@ -19,6 +19,10 @@ const licensesWhitelist: License[] = [
     'BSD-3-Clause',
     'BSD-4-Clause',
 
+    // OSI-approved, permissive (same tier as MIT/BSD). Reaches the tree via
+    // jspdf -> fast-png -> pako, a transitive dependency of jspdf (used by the ag-grid PDF export docs example).
+    'Zlib',
+
     // All CC-BY licenses have a full copyright grant and attribution section.
     'CC-BY-3.0',
     'CC-BY-4.0',
