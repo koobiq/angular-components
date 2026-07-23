@@ -66,6 +66,15 @@
             top: calc(-1 * var(--kbq-size-3xs));
             bottom: calc(-1 * var(--kbq-size-3xs));
         }
+
+        // The generic .kbq-progress::after rule (see _animation.scss) would otherwise paint the
+        // shimmer onto this hit-area pseudo-element. The shimmer is rendered on
+        // .kbq-dropdown-item-overlay instead (see dropdown-item.scss), so just neutralize it here
+        // without touching content/position/width/height/left, which the hit-area still needs.
+        &.kbq-progress:after {
+            background: none;
+            animation: none;
+        }
     }
 
     .kbq-divider {
