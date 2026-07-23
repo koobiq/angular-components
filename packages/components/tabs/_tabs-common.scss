@@ -33,25 +33,6 @@
 
     outline: none;
 
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
-        padding-left: 14px;
-        padding-right: 14px;
-    }
-
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-left {
-        padding-left: tokens.kbq-difference-series-css-variables(
-            [tabs-size-tab-item-padding-horizontal,
-            tabs-size-tab-item-focus-outline-width]
-        );
-    }
-
-    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-right {
-        padding-right: tokens.kbq-difference-series-css-variables(
-            [tabs-size-tab-item-padding-horizontal,
-            tabs-size-tab-item-focus-outline-width]
-        );
-    }
-
     &.kbq-selected {
         cursor: default;
     }
@@ -75,30 +56,63 @@
     &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):before {
         content: '';
         position: absolute;
-        left: 0;
-        right: 0;
-        top: -10px;
-        bottom: -10px;
+        inset: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)))
+            calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+    }
+
+    &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical):not(.kbq-tab-label_icon-only):after {
+        content: '';
+        position: absolute;
+        left: calc(
+            var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width)
+        );
+        right: calc(
+            var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width)
+        );
+        bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+        height: 3px;
+        border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
+        background: transparent;
+        transition: background 0.2s ease-in-out;
+        pointer-events: none;
     }
 
     &.kbq-tab-label_icon-only {
         width: var(--kbq-size-3xl);
         height: var(--kbq-size-3xl);
         padding: 0 !important;
-        margin-inline: var(--kbq-size-xs);
+        margin-inline: var(--kbq-size-xxs);
         box-sizing: content-box;
 
-        // Keep the space between icon-only tabs clickable after adding margins.
+        &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
+            width: var(--kbq-tabs-size-tab-item-underlined-icon-only-size);
+            height: var(--kbq-tabs-size-tab-item-underlined-icon-only-size);
+
+            &:before {
+                left: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+                right: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            }
+
+            &:after {
+                top: auto;
+                bottom: calc(-1 * (var(--kbq-size-s) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+                height: 3px;
+                left: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+                right: calc(-1 * var(--kbq-tabs-size-tab-item-focus-outline-width));
+                border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
+                transition: background 0.2s ease-in-out;
+                pointer-events: none;
+            }
+        }
+
         &:not(.kbq-tab-label_vertical):after {
             content: '';
             display: block;
             position: absolute;
             top: 0;
             bottom: 0;
-            // Absolute offsets are calculated from the padding box, so we add
-            // focus outline width to fully cover the visual margin gap.
-            left: calc(-1 * (var(--kbq-size-xs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
-            right: calc(-1 * (var(--kbq-size-xs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            left: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
+            right: calc(-1 * (var(--kbq-size-xxs) + var(--kbq-tabs-size-tab-item-focus-outline-width)));
             background: transparent;
         }
     }
@@ -144,7 +158,18 @@
     }
 
     .kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content {
-        padding: 8px 0;
+        padding: var(--kbq-size-s) 0;
+
+        // Negative margin shifts the first tab left so the focus frame can extend beyond the
+        // container edge (instead of padding-left:0 which would clip it under overflow:hidden).
+        > .kbq-tab-label:first-child:not(.kbq-tab-label_icon-only),
+        > .kbq-tab-link:first-child {
+            margin-inline-start: calc(-1 * var(--kbq-tabs-size-tab-item-padding-horizontal));
+        }
+
+        > .kbq-tab-label_icon-only:first-child {
+            margin-inline-start: 0;
+        }
     }
 
     .kbq-tab-header_underlined:not(.kbq-tab-header_vertical):after {
@@ -166,8 +191,12 @@
         position: absolute;
         bottom: 0;
         height: 3px;
-        border-radius: 2px 2px 0 0;
+        border-radius: var(--kbq-size-3xs) var(--kbq-size-3xs) 0 0;
         background: var(--kbq-line-contrast);
         transition: all 0.2s ease-in-out;
+
+        &.kbq-disabled {
+            background: var(--kbq-states-icon-disabled);
+        }
     }
 }

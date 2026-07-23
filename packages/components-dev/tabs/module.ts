@@ -3,15 +3,22 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
-import { TabsVerticalExample } from 'packages/docs-examples/components/tabs';
+import {
+    TabsActionbarExample,
+    TabsUnderlinedExample,
+    TabsVerticalExample
+} from 'packages/docs-examples/components/tabs';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [TabsVerticalExample],
+    imports: [TabsVerticalExample, TabsUnderlinedExample, TabsActionbarExample],
     template: `
         <tabs-vertical-example />
         <hr />
+        <tabs-underlined-example />
+        <hr />
+        <tabs-actionbar-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

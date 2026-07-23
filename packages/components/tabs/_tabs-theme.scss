@@ -16,6 +16,14 @@
 
     &:is(:hover, .kbq-hover):not(.kbq-disabled) {
         @include kbq-tab-item-state($type, $sub-type, states-hover);
+
+        &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
+            background: transparent;
+
+            &:not(.kbq-selected)::after {
+                background: var(--kbq-line-contrast-fade);
+            }
+        }
     }
 
     &.kbq-tab-label_empty {
@@ -27,6 +35,10 @@
 
         &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical) {
             background: none;
+
+            &::after {
+                background: transparent;
+            }
         }
 
         &:is(:hover, .kbq-hover) {

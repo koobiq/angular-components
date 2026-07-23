@@ -13,6 +13,10 @@
         overflow: hidden;
     }
 
+    &.kbq-tab-header_underlined:not(.kbq-tab-header__pagination-controls_enabled) .kbq-tab-link__container {
+        overflow: visible;
+    }
+
     .kbq-tab-list {
         position: relative;
         width: 100%;

@@ -12,6 +12,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { isUndefined } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
@@ -23,8 +24,8 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
  */
 export type ScrollDirection = 'after' | 'before';
 
-/** Corresponds to `margin-inline: var(--kbq-size-xs)` on `.kbq-tab-label_icon-only`. */
-const ICON_ONLY_TAB_MARGIN_INLINE = 6;
+/** Corresponds to `--kbq-tabs-size-tab-item-padding-horizontal` on text/icon+text tabs. */
+const TAB_PADDING = 12;
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group.
@@ -61,28 +62,30 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
 
     private readonly isBrowser = inject(Platform).isBrowser;
 
-    /** Width of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetWidth(): number | undefined {
         if (!this.isBrowser) return undefined;
 
         const item = this.items.get(this.selectedIndex);
         const width = item?.elementRef?.nativeElement?.offsetWidth;
 
-        if (!width) return width;
+        if (!width || item?.tab?.iconOnlyLabel) return width;
 
-        return item!.tab?.iconOnlyLabel ? width + ICON_ONLY_TAB_MARGIN_INLINE * 2 : width;
+        return width - TAB_PADDING * 2;
     }
 
-    /** Left offset of the active tab, adjusted for icon-only tab margins. */
     protected get activeTabOffsetLeft(): number | undefined {
         if (!this.isBrowser) return undefined;
 
         const item = this.items.get(this.selectedIndex);
         const left = item?.elementRef?.nativeElement?.offsetLeft;
 
-        if (!left) return left;
+        if (isUndefined(left) || item?.tab?.iconOnlyLabel) return left;
 
-        return item!.tab?.iconOnlyLabel ? left - ICON_ONLY_TAB_MARGIN_INLINE : left;
+        return left + TAB_PADDING;
+    }
+
+    protected get activeTabDisabled(): boolean {
+        return !!this.items.get(this.selectedIndex)?.disabled;
     }
 
     protected itemSelected(event: KeyboardEvent): void {
