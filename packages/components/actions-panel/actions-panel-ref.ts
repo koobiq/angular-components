@@ -19,6 +19,11 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
         return this.dialogRef.closed;
     }
 
+    /** Gets an observable that is notified when the actions panel starts closing, before its exit animation plays. */
+    get beforeClosed(): Observable<R | undefined> {
+        return this._beforeClosed;
+    }
+
     /** Gets an observable that emits when keydown events are targeted on the overlay. */
     get keydownEvents(): Observable<KeyboardEvent> {
         return this.dialogRef.keydownEvents;
@@ -48,6 +53,7 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
     }
 
     private readonly _afterOpened = new Subject<void>();
+    private readonly _beforeClosed = new Subject<R | undefined>();
 
     /** Result to be passed down to the `afterClosed` stream. */
     private result: R | undefined;
@@ -83,6 +89,8 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
             });
 
         this.result = result;
+        this._beforeClosed.next(result);
+        this._beforeClosed.complete();
         this.containerInstance.startCloseAnimation();
         this.containerInstance = null!;
     }

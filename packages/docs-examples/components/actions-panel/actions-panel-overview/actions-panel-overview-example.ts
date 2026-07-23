@@ -4,6 +4,7 @@ import {
     DestroyRef,
     ElementRef,
     inject,
+    input,
     output,
     Signal,
     signal,
@@ -73,15 +74,34 @@ type ExampleTableItem = unknown;
             width: 100%;
         }
 
-        /** Adding extra space for actions panel */
+        /*
+         * Reserve space for the actions panel only while it's open, animating in sync with its
+         * own slide transition instead of a permanent gap that's still there once the panel is
+         * closed. Duration/curve values below are copied from KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION
+         * (packages/components/actions-panel/actions-panel-container.ts) — not importable here since
+         * that trigger is defined for the panel's own 'state' animation, not exposed as CSS. Keep in
+         * sync if that trigger's durations/curve ever change.
+         */
         :host ::ng-deep .ag-body-viewport,
         :host ::ng-deep .ag-body-vertical-scroll {
-            padding-bottom: 80px;
+            padding-bottom: 0;
+            transition: padding-bottom 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        :host(.example-grid_actions-panel-opened) ::ng-deep .ag-body-viewport,
+        :host(.example-grid_actions-panel-opened) ::ng-deep .ag-body-vertical-scroll {
+            // Actions panel height with margins
+            padding-bottom: 72px;
+            transition: padding-bottom 125ms cubic-bezier(0.4, 0, 0.2, 1);
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[class.example-grid_actions-panel-opened]': 'panelOpened()'
+    }
 })
 export class ExampleGrid {
+    readonly panelOpened = input(false);
     private api: GridApi<ExampleTableItem> | null = null;
     protected readonly defaultColDef: ColDef = {
         sortable: true,
@@ -98,27 +118,11 @@ export class ExampleGrid {
         hideDisabledCheckboxes: false
     };
     protected readonly columnDefs: ColDef[] = [
-        {
-            field: 'column0',
-            headerName: 'Project name',
-            pinned: true
-        },
-        {
-            field: 'column1',
-            headerName: 'Text'
-        },
-        {
-            field: 'column2',
-            headerName: 'Text'
-        },
-        {
-            field: 'column3',
-            headerName: 'Text'
-        },
-        {
-            field: 'column4',
-            headerName: 'Text'
-        }
+        { field: 'column0', headerName: 'Project name', pinned: true },
+        { field: 'column1', headerName: 'Text' },
+        { field: 'column2', headerName: 'Text' },
+        { field: 'column3', headerName: 'Text' },
+        { field: 'column4', headerName: 'Text' }
     ];
     protected readonly rowData = Array.from({ length: 33 }, (_, index) => ({
         column0: 'Project name ' + index,
@@ -268,7 +272,7 @@ export class ExampleActionsPanel {
     selector: 'actions-panel-overview-example',
     imports: [ExampleGrid],
     template: `
-        <example-grid (selectedItems)="toggleActionsPanel($event)" />
+        <example-grid [panelOpened]="panelOpened()" (selectedItems)="toggleActionsPanel($event)" />
     `,
     styles: `
         :host {
@@ -283,9 +287,10 @@ export class ActionsPanelOverviewExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly container = viewChild.required(ExampleGrid, { read: ElementRef });
     private readonly grid = viewChild.required(ExampleGrid);
-    private actionsPanelRef: KbqActionsPanelRef<ExampleActionsPanel> | null;
+    private actionsPanelRef!: KbqActionsPanelRef<ExampleActionsPanel> | null;
     private readonly data = signal<ExampleTableItem[]>([]);
     private readonly destroyRef = inject(DestroyRef);
+    protected readonly panelOpened = signal(false);
 
     protected toggleActionsPanel(selectedItems: ExampleTableItem[]): void {
         if (selectedItems.length === 0) return this.actionsPanel.close();
@@ -298,9 +303,16 @@ export class ActionsPanelOverviewExample {
             data: this.data,
             overlayContainer: this.container()
         });
+        this.panelOpened.set(true);
 
         this.actionsPanelRef.afterOpened.subscribe(() => {
             console.log('ActionsPanel opened');
+        });
+
+        // Fires as soon as close() is called, before the exit animation plays — so the grid's
+        // padding starts collapsing in sync with the panel's own slide-down instead of ~150ms late.
+        this.actionsPanelRef.beforeClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.panelOpened.set(false);
         });
 
         this.actionsPanelRef.afterClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {

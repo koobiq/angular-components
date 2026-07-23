@@ -299,6 +299,52 @@ describe(KbqActionsPanelModule.name, () => {
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
+    it('should emit beforeClosed synchronously on close, before afterClosed', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const { componentInstance } = fixture;
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const emitted: string[] = [];
+
+        actionsPanelRef.beforeClosed.subscribe(() => emitted.push('beforeClosed'));
+        actionsPanelRef.afterClosed.subscribe(() => emitted.push('afterClosed'));
+
+        componentInstance.close();
+        expect(emitted).toEqual(['beforeClosed']);
+
+        await fixture.whenStable();
+        expect(emitted).toEqual(['beforeClosed', 'afterClosed']);
+    });
+
+    it('should emit beforeClosed with result', async () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const beforeClosed = lastValueFrom(actionsPanelRef.beforeClosed);
+
+        componentInstance.close('customResult');
+        expect(await beforeClosed).toBe('customResult');
+    });
+
+    it('should complete beforeClosed after it emits', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const completeSpy = jest.fn();
+
+        actionsPanelRef.beforeClosed.subscribe({ complete: completeSpy });
+        componentInstance.close();
+        expect(completeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not emit beforeClosed again when close is called a second time', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const spy = jest.fn();
+
+        actionsPanelRef.beforeClosed.subscribe(spy);
+        componentInstance.close();
+        actionsPanelRef.close();
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
     it('should emit afterOpened on open', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
