@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
@@ -61,7 +61,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class TabsAddTabVerticalExample {
-    private readonly injector = inject(Injector);
     private readonly tabLinks = viewChildren(KbqTabLink);
 
     protected tabs = ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert'];
@@ -73,8 +72,7 @@ export class TabsAddTabVerticalExample {
         this.tabs = [...this.tabs, newTab];
         this.activeTab = newTab;
 
-        // Focus triggers the browser's native scroll-into-view for the nav bar's scrollable container.
-        afterNextRender(() => this.tabLinks().at(-1)?.focus(), { injector: this.injector });
+        setTimeout(() => this.tabLinks().at(-1)?.focus(), 100);
     }
 
     protected removeTab(tab: string, event: MouseEvent): void {

@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTabsModule } from '@koobiq/components/tabs';
+import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
@@ -43,6 +43,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsAddTabExample {
+    // private readonly injector = inject(Injector);
+    private readonly tabLinks = viewChildren(KbqTabLink);
     protected tabs = ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert'];
     protected activeTab = this.tabs[0];
 
@@ -51,6 +53,8 @@ export class TabsAddTabExample {
 
         this.tabs = [...this.tabs, newTab];
         this.activeTab = newTab;
+
+        setTimeout(() => this.tabLinks().at(-1)?.focus(), 100);
     }
 
     protected removeTab(tab: string, event: MouseEvent): void {
