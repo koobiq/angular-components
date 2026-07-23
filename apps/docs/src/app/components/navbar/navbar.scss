@@ -28,9 +28,11 @@
 }
 
 @media (width <= 768px) {
-    .kbq-top-bar {
-        --kbq-top-bar-padding-vertical: var(--kbq-size-s);
-        --kbq-top-bar-padding-horizontal: var(--kbq-size-l);
+    .docs-navbar {
+        .kbq-top-bar {
+            --kbq-top-bar-padding-vertical: var(--kbq-size-s);
+            --kbq-top-bar-padding-horizontal: var(--kbq-size-l);
+        }
     }
 
     .docs-navbar__mobile-logo,
@@ -40,12 +42,12 @@
 
     .docs-navbar__links {
         gap: var(--kbq-size-xxs);
-    }
 
-    a.kbq-button-icon,
-    button.kbq-button-icon {
-        width: var(--kbq-size-5xl);
-        height: var(--kbq-size-5xl);
+        a.kbq-button-icon,
+        button.kbq-button-icon {
+            width: var(--kbq-size-5xl);
+            height: var(--kbq-size-5xl);
+        }
     }
 
     .docs-navbar__anchor.kbq-button {
@@ -54,9 +56,11 @@
 }
 
 // Remove extra outline-offset within Google Chrome on MacOS
-a {
-    &.kbq-button,
-    &.kbq-button-icon {
-        outline-offset: 0;
+.docs-navbar {
+    a {
+        &.kbq-button,
+        &.kbq-button-icon {
+            outline-offset: 0;
+        }
     }
 }
