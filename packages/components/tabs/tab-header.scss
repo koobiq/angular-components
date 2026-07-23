@@ -14,6 +14,10 @@
         .kbq-tab-group:not(.kbq-tab-group_on-surface) & {
             border-radius: 0;
         }
+
+        &:not(.kbq-tab-header__pagination-controls_enabled) {
+            overflow: visible;
+        }
     }
 }
 
@@ -38,6 +42,10 @@
     flex-grow: 1;
     z-index: 1;
     overflow: hidden;
+
+    .kbq-tab-header_underlined:not(.kbq-tab-header__pagination-controls_enabled) & {
+        overflow: visible;
+    }
 }
 
 .kbq-tab-list {
