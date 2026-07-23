@@ -90,7 +90,7 @@ type ExampleTableItem = unknown;
 
         :host(.example-grid_actions-panel-opened) ::ng-deep .ag-body-viewport,
         :host(.example-grid_actions-panel-opened) ::ng-deep .ag-body-vertical-scroll {
-            // Actions panel height with margins
+            /* Actions panel height with margins */
             padding-bottom: 72px;
             transition: padding-bottom 125ms cubic-bezier(0.4, 0, 0.2, 1);
         }
