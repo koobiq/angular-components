@@ -5,6 +5,7 @@ import { PopoverCloseExample } from './popover-close/popover-close-example';
 import { PopoverContentExample } from './popover-content/popover-content-example';
 import { PopoverHeaderExample } from './popover-header/popover-header-example';
 import { PopoverHeightExample } from './popover-height/popover-height-example';
+import { PopoverHideOnScrollExample } from './popover-hide-on-scroll/popover-hide-on-scroll-example';
 import { PopoverHoverExample } from './popover-hover/popover-hover-example';
 import { PopoverOverviewExample } from './popover-overview/popover-overview-example';
 import { PopoverPaddingsExample } from './popover-paddings/popover-paddings-example';
@@ -22,6 +23,7 @@ export {
     PopoverContentExample,
     PopoverHeaderExample,
     PopoverHeightExample,
+    PopoverHideOnScrollExample,
     PopoverHoverExample,
     PopoverOverviewExample,
     PopoverPaddingsExample,
@@ -43,6 +45,7 @@ const EXAMPLES = [
     PopoverHeaderExample,
     PopoverContentExample,
     PopoverScrollExample,
+    PopoverHideOnScrollExample,
     PopoverPlacementCenterExample,
     PopoverPlacementEdgesExample,
     PopoverHoverExample,
