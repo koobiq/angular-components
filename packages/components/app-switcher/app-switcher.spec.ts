@@ -1,12 +1,15 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
-import { Component, Provider, Type } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
+import { Component, Provider, Type, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqHideOnScrollStrategy } from '@koobiq/components/core';
+import { Subject } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
+    KBQ_APP_SWITCHER_SCROLL_STRATEGY,
     KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH,
     KbqAppSwitcherApp,
     KbqAppSwitcherComponent,
@@ -816,3 +819,120 @@ class ListItemHost {
 class DropdownSiteHost {
     site: KbqAppSwitcherSite = { ...SITE_A };
 }
+
+// ---------------------------------------------------------------------------
+// hide-on-scroll tests
+// ---------------------------------------------------------------------------
+
+class TestAppSwitcherHideOnScrollStrategy extends KbqHideOnScrollStrategy {
+    readonly trigger$ = new Subject<void>();
+    override readonly hide$ = this.trigger$.asObservable();
+
+    constructor() {
+        super(null as any, null as any, null as any);
+    }
+
+    override attach = jest.fn();
+    override enable = jest.fn();
+    override disable = jest.fn();
+    override detach = jest.fn();
+}
+
+@Component({
+    imports: [KbqAppSwitcherModule],
+    template: `
+        <button kbqAppSwitcher [sites]="sites" [selectedSite]="sites[0]" [selectedApp]="sites[0].apps[0]">
+            Trigger
+        </button>
+    `
+})
+class AppSwitcherHideOnScrollDefault {
+    readonly trigger = viewChild.required(KbqAppSwitcherTrigger);
+    sites: KbqAppSwitcherSite[] = [{ ...SITE_A, apps: [...SITE_A.apps] }];
+}
+
+@Component({
+    imports: [KbqAppSwitcherModule],
+    template: `
+        <button
+            kbqAppSwitcher
+            [sites]="sites"
+            [selectedSite]="sites[0]"
+            [selectedApp]="sites[0].apps[0]"
+            [shouldHideOnScrollOut]="true"
+        >
+            Trigger
+        </button>
+    `
+})
+class AppSwitcherHideOnScrollEnabled {
+    readonly trigger = viewChild.required(KbqAppSwitcherTrigger);
+    sites: KbqAppSwitcherSite[] = [{ ...SITE_A, apps: [...SITE_A.apps] }];
+}
+
+describe('KbqAppSwitcherTrigger hide-on-scroll', () => {
+    it('does not hide when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
+        const strategy = new TestAppSwitcherHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [AppSwitcherHideOnScrollDefault, NoopAnimationsModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_APP_SWITCHER_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(AppSwitcherHideOnScrollDefault);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger().show();
+        fixture.detectChanges();
+        tick();
+
+        const hideSpy = jest.spyOn(fixture.componentInstance.trigger(), 'hide');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(hideSpy).not.toHaveBeenCalled();
+    }));
+
+    it('hides when shouldHideOnScrollOut=true and hide$ emits', fakeAsync(() => {
+        const strategy = new TestAppSwitcherHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [AppSwitcherHideOnScrollEnabled, NoopAnimationsModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_APP_SWITCHER_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(AppSwitcherHideOnScrollEnabled);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger().show();
+        fixture.detectChanges();
+        tick();
+
+        const hideSpy = jest.spyOn(fixture.componentInstance.trigger(), 'hide');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(hideSpy).toHaveBeenCalled();
+    }));
+
+    it('does not crash with a non-KbqHideOnScrollStrategy scroll strategy', fakeAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [AppSwitcherHideOnScrollEnabled, NoopAnimationsModule]
+        }).compileComponents();
+
+        const fixture = TestBed.createComponent(AppSwitcherHideOnScrollEnabled);
+
+        fixture.detectChanges();
+
+        expect(() => {
+            fixture.componentInstance.trigger().show();
+            fixture.detectChanges();
+            tick();
+            flush();
+        }).not.toThrow();
+    }));
+});

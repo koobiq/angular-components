@@ -32,6 +32,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
     KBQ_LOCALE_SERVICE,
+    KbqHideOnScrollOverlay,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpPlacementValues,
@@ -298,7 +299,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
 })
 export class KbqAppSwitcherTrigger
     extends KbqPopUpTrigger<KbqAppSwitcherComponent>
-    implements AfterContentInit, OnInit
+    implements AfterContentInit, KbqHideOnScrollOverlay, OnInit
 {
     /** @docs-private */
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_APP_SWITCHER_SCROLL_STRATEGY);

@@ -1,6 +1,21 @@
 ﻿import { coerceElement } from '@angular/cdk/coercion';
-import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, ElementRef, Provider, Type, inject as inject_1, viewChild } from '@angular/core';
+import {
+    CdkScrollable,
+    FlexibleConnectedPositionStrategy,
+    OverlayContainer,
+    ScrollDispatcher
+} from '@angular/cdk/overlay';
+import { ViewportRuler } from '@angular/cdk/scrolling';
+import {
+    Component,
+    DebugElement,
+    ElementRef,
+    NgZone,
+    Provider,
+    Type,
+    inject as inject_1,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,15 +23,17 @@ import {
     ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
     ENTER,
     ESCAPE,
+    KbqHideOnScrollStrategy,
     SPACE,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/components/core';
+import { Subject } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
-import { KbqPopoverTrigger } from './popover.component';
+import { KBQ_POPOVER_SCROLL_STRATEGY, KbqPopoverTrigger } from './popover.component';
 import { KbqPopoverModule } from './popover.module';
 
 function openAndAssertPopover<T>(componentFixture: ComponentFixture<T>, triggerElement: ElementRef) {
@@ -402,6 +419,103 @@ describe('KbqPopover', () => {
             expect(footer).toEqual(componentInstance.context.footer);
         }));
     });
+
+    describe('shouldHideOnScrollOut / hideIfNotInViewPort', () => {
+        let capturedStrategy: KbqHideOnScrollStrategy | null;
+
+        // configureTestingModule + overrideProvider ensures our strategy beats the module-level provider
+        const createHideOnScrollFixture = <T>(component: Type<T>) => {
+            capturedStrategy = null;
+            testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
+
+            TestBed.configureTestingModule({
+                imports: [component, NoopAnimationsModule],
+                providers: [{ provide: AsyncScheduler, useValue: testScheduler }]
+            });
+
+            TestBed.overrideProvider(KBQ_POPOVER_SCROLL_STRATEGY, {
+                useFactory: (sd: ScrollDispatcher, vr: ViewportRuler, ngZone: NgZone) => {
+                    return () => {
+                        capturedStrategy = new KbqHideOnScrollStrategy(sd, vr, ngZone, {});
+
+                        return capturedStrategy!;
+                    };
+                },
+                deps: [ScrollDispatcher, ViewportRuler, NgZone]
+            });
+
+            const fixture = TestBed.createComponent<T>(component);
+
+            fixture.autoDetectChanges();
+
+            return fixture;
+        };
+
+        it('hides popover when hide$ emits (default hideIfNotInViewPort=true)', fakeAsync(() => {
+            const fixture = createHideOnScrollFixture(PopoverSimple);
+            const trigger = fixture.componentInstance.popoverTrigger();
+
+            openAndAssertPopover(fixture, fixture.componentInstance.triggerElementRef());
+            expect(capturedStrategy).toBeTruthy();
+
+            (capturedStrategy as any)._hideSubject.next();
+            tick();
+            fixture.detectChanges();
+
+            expect(trigger.isOpen).toBe(false);
+        }));
+
+        it('does NOT hide popover when hide$ emits and [hideIfNotInViewPort]="false"', fakeAsync(() => {
+            const fixture = createHideOnScrollFixture(PopoverHideOnScrollDisabled);
+            const trigger = fixture.componentInstance.popoverTrigger();
+
+            openAndAssertPopover(fixture, fixture.componentInstance.triggerElementRef());
+            expect(capturedStrategy).toBeTruthy();
+
+            (capturedStrategy as any)._hideSubject.next();
+            tick();
+            fixture.detectChanges();
+
+            expect(trigger.isOpen).toBe(true);
+        }));
+
+        it('does not crash when scroll strategy is not KbqHideOnScrollStrategy', fakeAsync(() => {
+            testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
+
+            const fixture = createComponent(PopoverSimple);
+            const trigger = fixture.componentInstance.popoverTrigger();
+
+            expect(() => openAndAssertPopover(fixture, fixture.componentInstance.triggerElementRef())).not.toThrow();
+            expect(trigger.isOpen).toBe(true);
+        }));
+
+        it('closeOnScroll=true closes on a scroll event independently of shouldHideOnScrollOut', fakeAsync(() => {
+            testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
+
+            TestBed.configureTestingModule({
+                imports: [PopoverCloseOnScrollHideDisabled, NoopAnimationsModule],
+                providers: [{ provide: AsyncScheduler, useValue: testScheduler }]
+            });
+
+            const scrollSubject = new Subject<CdkScrollable | void>();
+
+            jest.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrollSubject.asObservable());
+
+            const fixture = TestBed.createComponent(PopoverCloseOnScrollHideDisabled);
+
+            fixture.autoDetectChanges();
+
+            const trigger = fixture.componentInstance.popoverTrigger();
+
+            openAndAssertPopover(fixture, fixture.componentInstance.triggerElementRef());
+
+            scrollSubject.next();
+            tick(0); // flush delay(0) in closingActionsSubscription
+            fixture.detectChanges();
+
+            expect(trigger.isOpen).toBe(false);
+        }));
+    });
 });
 
 @Component({
@@ -491,6 +605,32 @@ class KbqPopoverConfirmTestComponent {
 })
 class KbqPopoverConfirmWithProvidersTestComponent {
     readonly test12 = viewChild.required<ElementRef>('test12');
+}
+
+@Component({
+    selector: 'popover-hide-on-scroll-disabled',
+    imports: [KbqPopoverModule],
+    template: `
+        <button kbqPopover [kbqPopoverContent]="'test'" [hideIfNotInViewPort]="false">Popover Trigger</button>
+    `
+})
+class PopoverHideOnScrollDisabled {
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+    readonly triggerElementRef = viewChild.required(KbqPopoverTrigger, { read: ElementRef });
+}
+
+@Component({
+    selector: 'popover-close-on-scroll-hide-disabled',
+    imports: [KbqPopoverModule],
+    template: `
+        <button kbqPopover [kbqPopoverContent]="'test'" [hideIfNotInViewPort]="false" [closeOnScroll]="true">
+            Popover Trigger
+        </button>
+    `
+})
+class PopoverCloseOnScrollHideDisabled {
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+    readonly triggerElementRef = viewChild.required(KbqPopoverTrigger, { read: ElementRef });
 }
 
 @Component({

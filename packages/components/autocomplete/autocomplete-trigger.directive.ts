@@ -16,6 +16,7 @@ import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectorRef,
+    DestroyRef,
     Directive,
     ElementRef,
     InjectionToken,
@@ -25,6 +26,7 @@ import {
     Provider,
     ViewContainerRef,
     afterNextRender,
+    booleanAttribute,
     forwardRef,
     inject,
     input
@@ -35,6 +37,7 @@ import {
     ENTER,
     ESCAPE,
     KBQ_WINDOW,
+    KbqHideOnScrollOverlay,
     KbqOption,
     KbqOptionSelectionChange,
     KbqResolvedPanelWidth,
@@ -43,7 +46,8 @@ import {
     UP_ARROW,
     defaultOffsetY,
     kbqGetPanelWidthOrigin,
-    kbqResolvePanelWidth
+    kbqResolvePanelWidth,
+    wireHideOnScroll
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, defer, fromEvent, merge, of as observableOf } from 'rxjs';
@@ -114,7 +118,7 @@ export function getKbqAutocompleteMissingPanelError(): Error {
     exportAs: 'kbqAutocompleteTrigger'
 })
 export class KbqAutocompleteTrigger
-    implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler
+    implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler, KbqHideOnScrollOverlay
 {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private viewContainerRef = inject(ViewContainerRef);
@@ -122,6 +126,7 @@ export class KbqAutocompleteTrigger
     private overlay = inject(Overlay);
     private zone = inject(NgZone);
     private dir = inject(Directionality, { optional: true })!;
+    private readonly destroyRef = inject(DestroyRef);
     private formField = inject(KbqFormField, { optional: true, host: true });
     private viewportRuler = inject(ViewportRuler);
 
@@ -150,6 +155,9 @@ export class KbqAutocompleteTrigger
     get panelOpen(): boolean {
         return this.overlayAttached && this.autocomplete().showPanel;
     }
+
+    /** Whether to hide the autocomplete panel when its trigger scrolls out of its scroll container boundary. */
+    readonly shouldHideOnScrollOut = input(false, { transform: booleanAttribute });
 
     /** The autocomplete panel to be attached to this trigger. */
     readonly autocomplete = input<KbqAutocomplete>(undefined!, { alias: 'kbqAutocomplete' });
@@ -582,8 +590,14 @@ export class KbqAutocompleteTrigger
 
         if (!overlayRef) {
             this.portal = new TemplatePortal(autocomplete.template(), this.viewContainerRef);
-            overlayRef = this.overlay.create(this.getOverlayConfig());
+            const scrollStrategy = this.scrollStrategy();
+
+            overlayRef = this.overlay.create(this.getOverlayConfig(scrollStrategy));
             this.overlayRef = overlayRef;
+
+            if (this.shouldHideOnScrollOut()) {
+                wireHideOnScroll(scrollStrategy, this.destroyRef, () => this.closePanel());
+            }
 
             // Use the `keydownEvents` in order to take advantage of
             // the overlay event targeting provided by the CDK overlay.
@@ -641,10 +655,10 @@ export class KbqAutocompleteTrigger
             });
     }
 
-    private getOverlayConfig(): OverlayConfig {
+    private getOverlayConfig(scrollStrategy: ScrollStrategy): OverlayConfig {
         return new OverlayConfig({
             positionStrategy: this.getOverlayPosition(),
-            scrollStrategy: this.scrollStrategy(),
+            scrollStrategy,
             direction: this.dir,
             ...this.getOverlaySize()
         });

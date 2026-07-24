@@ -14,12 +14,14 @@ import {
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import {
+    booleanAttribute,
     ChangeDetectorRef,
     DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
     inject,
+    input,
     NgZone,
     OnDestroy,
     OnInit,
@@ -32,6 +34,7 @@ import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { distinctUntilChanged, filter, delay as rxDelay } from 'rxjs/operators';
 import { ENTER, ESCAPE, SPACE } from '../keycodes';
+import { wireHideOnScroll } from '../overlay/hide-on-scroll.strategy';
 import {
     EXTENDED_OVERLAY_POSITIONS,
     POSITION_MAP,
@@ -103,6 +106,9 @@ const getOffset = (
     }
 })
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
+    /** Whether to close the pop-up when its trigger scrolls out of its scroll container boundary. */
+    readonly shouldHideOnScrollOut = input(false, { transform: booleanAttribute });
+
     /** Stream that emits when the popupTrigger is hovered.
      * @docs-private */
     readonly hovered = new BehaviorSubject<boolean>(false);
@@ -443,12 +449,18 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.strategy.positionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.onPositionChange);
 
+        const scrollStrategy = this.scrollStrategy();
+
         this.overlayRef = this.overlay.create({
             ...this.overlayConfig,
             direction: this.direction || undefined,
             positionStrategy: this.strategy,
-            scrollStrategy: this.scrollStrategy()
+            scrollStrategy
         });
+
+        if (this.shouldHideOnScrollOut()) {
+            wireHideOnScroll(scrollStrategy, this.destroyRef, () => this.hide());
+        }
 
         this.subscribeOnClosingActions();
 
