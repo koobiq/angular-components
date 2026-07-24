@@ -6,8 +6,11 @@ import {
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConfig,
+    OverlayContainer,
+    ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
@@ -35,8 +38,9 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KBQ_HIDE_ON_SCROLL_STRATEGY,
     KbqComponentColors,
+    KbqHideOnScrollStrategy,
+    KbqHideOnScrollStrategyConfig,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
@@ -133,7 +137,9 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected readonly componentColors = KbqComponentColors;
 }
 
-export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy');
+export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<
+    (config?: KbqHideOnScrollStrategyConfig) => ScrollStrategy
+>('kbq-popover-scroll-strategy');
 
 /** @docs-private */
 export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
@@ -143,8 +149,8 @@ export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollS
 /** @docs-private */
 export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_POPOVER_SCROLL_STRATEGY,
-    deps: [Overlay],
-    useFactory: kbqPopoverScrollStrategyFactory
+    deps: [ScrollDispatcher, ViewportRuler, NgZone],
+    useFactory: kbqHideOnScrollStrategyFactory
 };
 
 /** Creates an error to be thrown if the user supplied an invalid popover position. */
