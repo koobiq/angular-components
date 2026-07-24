@@ -38,10 +38,19 @@ const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
     '@koobiq/ag-grid-angular-theme': {
         '@koobiq/ag-grid-angular-theme': '^34',
         'ag-grid-angular': '^34',
-        'ag-grid-community': '^34',
-        jspdf: '^4',
-        'jspdf-autotable': '^5',
-        xlsx: '^0'
+        'ag-grid-community': '^34'
+    },
+    // Used by packages/docs-examples/components/ag-grid/ag-grid-export/ag-grid-export-example.ts
+    jspdf: {
+        jspdf: '^4'
+    },
+    // Used by packages/docs-examples/components/ag-grid/ag-grid-export/ag-grid-export-example.ts
+    'jspdf-autotable': {
+        'jspdf-autotable': '^5'
+    },
+    // Used by packages/docs-examples/components/ag-grid/ag-grid-export/ag-grid-export-example.ts
+    xlsx: {
+        xlsx: '^0.18'
     }
 } as const;
 
