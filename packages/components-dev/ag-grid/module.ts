@@ -3,6 +3,7 @@ import {
     AgGridColumnMenuExample,
     AgGridColumnStateExample,
     AgGridCopySelectedExample,
+    AgGridExportExample,
     AgGridExternalFilterStateExample,
     AgGridFilterStateExample,
     AgGridInfiniteSelectionExample,
@@ -11,6 +12,9 @@ import {
     AgGridQuickFilterStateExample,
     AgGridRowActionsExample,
     AgGridRowDraggingExample,
+    AgGridRowFocusStateExample,
+    AgGridRowGroupExample,
+    AgGridRowSelectionStateExample,
     AgGridSkeletonCellRendererExample,
     AgGridStatusBarExample
 } from 'packages/docs-examples/components/ag-grid';
@@ -22,13 +26,17 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridColumnMenuExample,
         AgGridOverviewExample,
         AgGridRowDraggingExample,
+        AgGridRowGroupExample,
         AgGridCopySelectedExample,
+        AgGridExportExample,
         AgGridStatusBarExample,
         AgGridRowActionsExample,
         AgGridColumnStateExample,
         AgGridFilterStateExample,
         AgGridQuickFilterStateExample,
         AgGridExternalFilterStateExample,
+        AgGridRowSelectionStateExample,
+        AgGridRowFocusStateExample,
         AgGridLoadingOverlayExample,
         AgGridSkeletonCellRendererExample,
         AgGridInfiniteSelectionExample
@@ -50,11 +58,19 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <ag-grid-column-state-example />
         <hr />
+        <ag-grid-row-selection-state-example />
+        <hr />
+        <ag-grid-row-focus-state-example />
+        <hr />
         <ag-grid-overview-example />
         <hr />
         <ag-grid-row-dragging-example />
         <hr />
+        <ag-grid-row-group-example />
+        <hr />
         <ag-grid-copy-selected-example />
+        <hr />
+        <ag-grid-export-example />
         <hr />
         <ag-grid-status-bar-example />
         <hr />

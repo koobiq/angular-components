@@ -31,7 +31,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
         <ag-grid-angular
             #externalFilterState="kbqAgGridExternalFilterState"
             kbqAgGridTheme
-            kbqAgGridExternalFilterState="dev-ag-grid-external-filter-state"
+            kbqAgGridExternalFilterState="example-ag-grid-external-filter-state"
             [alwaysMultiSort]="true"
             [rowData]="rowData"
             [columnDefs]="columnDefs"
