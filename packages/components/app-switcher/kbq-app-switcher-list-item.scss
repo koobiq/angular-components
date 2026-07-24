@@ -118,7 +118,8 @@
     .kbq-app-switcher-list-item {
         &:hover,
         &.kbq-hover,
-        &.kbq-focused {
+        &.kbq-focused,
+        &.cdk-keyboard-focused {
             &:has(.kbq-app-switcher-list-item__toggle) .kbq-app-switcher-list-item__icon {
                 visibility: hidden;
             }
@@ -129,7 +130,8 @@
         }
 
         &:hover,
-        &.kbq-hover {
+        &.kbq-hover,
+        &.cdk-keyboard-focused {
             background: var(--kbq-states-background-transparent-hover);
 
             & .kbq-app-switcher-list-item__toggle {
@@ -146,7 +148,8 @@
             background: var(--kbq-background-theme-less);
 
             &:hover,
-            &.kbq-hover {
+            &.kbq-hover,
+            &.cdk-keyboard-focused {
                 background: var(--kbq-states-background-theme-less-hover);
             }
 
@@ -158,11 +161,6 @@
 
         background: var(--kbq-list-default-container-background);
         color: var(--kbq-list-default-text-color);
-
-        &.cdk-keyboard-focused {
-            outline: none;
-            border-color: var(--kbq-list-states-focused-focus-outline-color);
-        }
     }
 }
 

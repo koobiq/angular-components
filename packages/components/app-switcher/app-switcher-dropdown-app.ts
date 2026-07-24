@@ -46,7 +46,10 @@ import { KbqAppSwitcherApp } from './app-switcher';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-app-switcher-dropdown-app',
-        '[class.kbq-dropdown-item]': 'false'
+        role: 'menuitem',
+        '[class.kbq-dropdown-item]': 'false',
+        '[attr.tabindex]': 'getTabIndex()',
+        '[attr.aria-haspopup]': "isNested ? 'menu' : null"
     },
     exportAs: 'kbqAppSwitcherDropdownApp'
 })
