@@ -5,7 +5,7 @@ import {
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { DestroyRef, ElementRef, InputSignal, NgZone } from '@angular/core';
+import { DestroyRef, ElementRef, NgZone, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -17,7 +17,7 @@ import { filter } from 'rxjs/operators';
  */
 export interface KbqHideOnScrollOverlay {
     /** Whether the overlay closes when its trigger scrolls out of its scroll container boundary. */
-    readonly shouldHideOnScrollOut: InputSignal<boolean>;
+    readonly shouldHideOnScrollOut: Signal<boolean>;
 }
 
 /**
