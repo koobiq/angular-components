@@ -9,7 +9,7 @@
     min-height: 50px;
 
     border-radius: var(--kbq-size-xs);
-    // base transparent border so the .cdk-keyboard-focused border-color renders a focus ring (matches list-item-base)
+    // transparent border to keep the box model aligned with the other list rows (matches kbq-list-item-base)
     border: var(--kbq-size-3xs) solid transparent;
 
     @include common.user-select(none);
@@ -59,12 +59,9 @@
         color: var(--kbq-list-default-text-color);
 
         &.kbq-dropdown-item_highlighted,
-        &:hover {
-            background: var(--kbq-states-background-transparent-active);
-        }
-
+        &:hover,
         &.cdk-keyboard-focused {
-            border-color: var(--kbq-list-states-focused-focus-outline-color);
+            background: var(--kbq-states-background-transparent-active);
         }
 
         .kbq-app-switcher-dropdown-app__caption {

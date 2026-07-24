@@ -22,3 +22,18 @@ When the system has multiple platforms, the applications of the selected platfor
 Search appears when more than 7 applications are available. Results are displayed as a flat list.
 
 <!-- example(app-switcher-sites) -->
+
+### Keyboard navigation
+
+The list of applications can be operated entirely from the keyboard.
+
+| <div style="min-width: 270px;">Key</div>                                                        | Action                                                                         |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| <span class="docs-hot-key-button">↑</span> / <span class="docs-hot-key-button">↓</span>         | Move focus to the previous/next item.                                          |
+| <span class="docs-hot-key-button">Home</span> / <span class="docs-hot-key-button">End</span>    | Move focus to the first/last item.                                             |
+| <span class="docs-hot-key-button">→</span>                                                      | Expand an application group, or open the flyout of another platform.           |
+| <span class="docs-hot-key-button">←</span>                                                      | Collapse a group, move from an alias to its group, or close a platform flyout. |
+| <span class="docs-hot-key-button">Enter</span> / <span class="docs-hot-key-button">Space</span> | Open the focused application, or expand/collapse a group.                      |
+| <span class="docs-hot-key-button">Esc</span>                                                    | Close the switcher.                                                            |
+
+Typing the first letters of an item jumps to it. When search is available, <span class="docs-hot-key-button">↓</span> moves focus from the search field into the list, and <span class="docs-hot-key-button">↑</span> on the first item returns focus to the search field.
