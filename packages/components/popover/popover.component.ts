@@ -37,7 +37,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqComponentColors,
-    KbqHideOnScrollStrategyConfig,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
@@ -130,9 +129,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected readonly componentColors = KbqComponentColors;
 }
 
-export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<
-    (config?: KbqHideOnScrollStrategyConfig) => ScrollStrategy
->('kbq-popover-scroll-strategy');
+export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy');
 
 /** @docs-private */
 export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
@@ -165,8 +162,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
     private overlayContainer = inject(OverlayContainer);
     private renderer = inject(Renderer2);
 
-    protected scrollStrategy = (): ScrollStrategy =>
-        inject(KBQ_POPOVER_SCROLL_STRATEGY)({ originElement: this.elementRef.nativeElement });
+    protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
 
     /** Controls whether the component should be hidden when it scrolls out of its container boundary. */
     @Input({ alias: 'hideIfNotInViewPort', transform: booleanAttribute })
