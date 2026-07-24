@@ -71,6 +71,8 @@ import { KbqDropdownModule } from './dropdown.module';
 
             <button kbq-dropdown-item progress>In progress</button>
             <button kbq-dropdown-item progress disabled>In progress and disabled</button>
+
+            <kbq-dropdown-footer>Dropdown footer</kbq-dropdown-footer>
         </kbq-dropdown>
 
         <kbq-dropdown #submenu="kbqDropdown">
@@ -89,6 +91,7 @@ import { KbqDropdownModule } from './dropdown.module';
                 Disabled item
                 <div class="kbq-dropdown-item__caption">Caption</div>
             </button>
+            <kbq-dropdown-footer>Dropdown footer</kbq-dropdown-footer>
         </kbq-dropdown>
 
         <kbq-dropdown #submenu2="kbqDropdown">
@@ -105,7 +108,7 @@ import { KbqDropdownModule } from './dropdown.module';
     styles: `
         :host {
             display: flex;
-            height: 500px;
+            height: 600px;
             width: 1020px;
             padding: var(--kbq-size-s);
         }
