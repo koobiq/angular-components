@@ -30,7 +30,6 @@ import {
     ViewEncapsulation,
     booleanAttribute,
     inject,
-    input,
     numberAttribute,
     viewChild
 } from '@angular/core';
@@ -38,7 +37,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqComponentColors,
-    KbqHideOnScrollStrategy,
     KbqHideOnScrollStrategyConfig,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
@@ -166,22 +164,13 @@ export function getKbqPopoverInvalidPositionError(position: string) {
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
     private overlayContainer = inject(OverlayContainer);
     private renderer = inject(Renderer2);
-    private scrollStrategyFactory = inject(KBQ_POPOVER_SCROLL_STRATEGY);
 
-    protected scrollStrategy = (): ScrollStrategy => {
-        const strategy = this.scrollStrategyFactory({
-            originElement: this.elementRef.nativeElement
-        });
+    protected scrollStrategy = (): ScrollStrategy =>
+        inject(KBQ_POPOVER_SCROLL_STRATEGY)({ originElement: this.elementRef.nativeElement });
 
-        if (this.closeOnScroll === null && this.hideIfNotInViewPort() && strategy instanceof KbqHideOnScrollStrategy) {
-            strategy.hide$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.hide());
-        }
-
-        return strategy;
-    };
-
-    /** Controls whether the component should be hidden when it is not visible in the viewport. */
-    readonly hideIfNotInViewPort = input(true, { transform: booleanAttribute });
+    /** Controls whether the component should be hidden when it scrolls out of its container boundary. */
+    @Input({ alias: 'hideIfNotInViewPort', transform: booleanAttribute })
+    override shouldHideOnScrollOut: boolean = true;
 
     /** prevents closure by any event */
     // TODO: Skipped for migration because:
