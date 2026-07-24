@@ -64,6 +64,16 @@ Unlike `KbqTabGroup`, `KbqTabNavBar` is used for navigation between application 
 
 <!-- example(tabs-nav-bar-overview) -->
 
+### Creating tabs
+
+Create and delete tabs like in a browser. The create button is located at the end of the list of tabs. When there is scrolling, the button moves to the right to remain visible.
+
+<!-- example(tabs-add-tab) -->
+
+Vertical tabs
+
+<!-- example(tabs-add-tab-vertical) -->
+
 ### Hot keys
 
 | <span style="min-width: 140px;">Key</span>                                                      | Action                             |

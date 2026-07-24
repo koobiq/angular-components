@@ -1,0 +1,22 @@
+:host {
+    display: flex;
+    align-items: center;
+    --tab-nav-selected: var(--kbq-tabs-tab-item-filled-on-background-states-selected-background);
+}
+
+.example-tab-nav-bar {
+    overflow: hidden;
+}
+
+.example-tab-close {
+    position: absolute;
+    right: calc(var(--kbq-tabs-size-tab-item-padding-horizontal) - var(--kbq-tabs-size-tab-item-focus-outline-width));
+    top: 0;
+    bottom: 0;
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background: linear-gradient(var(--tab-nav-selected), var(--tab-nav-selected)), var(--kbq-background-bg);
+    mask-image: linear-gradient(to right, transparent 0%, black 50%);
+}
