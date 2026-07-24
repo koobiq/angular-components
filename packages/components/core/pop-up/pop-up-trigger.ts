@@ -32,7 +32,6 @@ import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { distinctUntilChanged, filter, delay as rxDelay } from 'rxjs/operators';
 import { ENTER, ESCAPE, SPACE } from '../keycodes';
-import { KbqHideOnScrollStrategy } from '../overlay/hide-on-scroll.strategy';
 import {
     EXTENDED_OVERLAY_POSITIONS,
     POSITION_MAP,
@@ -141,9 +140,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     /** Factory returning the overlay scroll strategy; provided by the concrete subclass.
      * @docs-private */
     protected abstract scrollStrategy: () => ScrollStrategy;
-
-    /** Whether to hide the pop-up when it scrolls out of its scroll container boundary. */
-    shouldHideOnScrollOut: boolean = false;
 
     /** Optional element used to anchor and measure the pop-up instead of the host element.
      * @docs-private */
@@ -447,17 +443,11 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.strategy.positionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.onPositionChange);
 
-        const scrollStrategy = this.scrollStrategy();
-
-        if (scrollStrategy instanceof KbqHideOnScrollStrategy && this.shouldHideOnScrollOut) {
-            scrollStrategy.hide$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.hide());
-        }
-
         this.overlayRef = this.overlay.create({
             ...this.overlayConfig,
             direction: this.direction || undefined,
             positionStrategy: this.strategy,
-            scrollStrategy
+            scrollStrategy: this.scrollStrategy()
         });
 
         this.subscribeOnClosingActions();

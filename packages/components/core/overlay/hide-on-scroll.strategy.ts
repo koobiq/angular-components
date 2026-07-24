@@ -5,9 +5,30 @@ import {
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { ElementRef, NgZone } from '@angular/core';
+import { DestroyRef, ElementRef, InputSignal, NgZone } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+
+/**
+ * Implemented by overlay-opening components that support hide-on-scroll-out.
+ * Declare `readonly shouldHideOnScrollOut = input(false, { transform: booleanAttribute })` and
+ * call `wireHideOnScroll` after the overlay is created to activate the behavior.
+ */
+export interface KbqHideOnScrollOverlay {
+    /** Whether the overlay closes when its trigger scrolls out of its scroll container boundary. */
+    readonly shouldHideOnScrollOut: InputSignal<boolean>;
+}
+
+/**
+ * Subscribes to `strategy.hide$` when the strategy is a `KbqHideOnScrollStrategy`.
+ * Call this after creating the overlay in any component that implements `KbqHideOnScrollOverlay`.
+ */
+export function wireHideOnScroll(strategy: ScrollStrategy, destroyRef: DestroyRef, onHide: () => void): void {
+    if (strategy instanceof KbqHideOnScrollStrategy) {
+        strategy.hide$.pipe(takeUntilDestroyed(destroyRef)).subscribe(onHide);
+    }
+}
 
 export interface KbqHideOnScrollStrategyConfig {
     /**

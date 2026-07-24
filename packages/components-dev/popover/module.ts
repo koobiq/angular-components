@@ -26,10 +26,6 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [PopoverExamplesModule],
     template: `
-        <popover-hide-on-scroll-example />
-        <br />
-        <popover-scroll-strategy-example />
-        <br />
         <popover-scrolling-and-layering-example />
         <br />
         <popover-paddings-example />
