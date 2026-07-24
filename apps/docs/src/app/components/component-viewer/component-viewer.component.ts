@@ -12,6 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
 import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
@@ -28,19 +29,28 @@ import {
     DocsStructureItemTab
 } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
+import { docsDevVersionPlaceholder, docsKoobiqVersion } from '../../version';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { DocsExampleViewerComponent } from '../example-viewer/example-viewer';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
+// In local dev builds `docsKoobiqVersion` is the dev placeholder (no such git ref exists), so fall back to `main`.
+const GITHUB_REPO_REF = docsKoobiqVersion === docsDevVersionPlaceholder ? 'main' : docsKoobiqVersion;
+
+/** Base URL of the repository ref (release tag, or `main` in dev) used to link a doc item to its source directory. */
+const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/${GITHUB_REPO_REF}`;
+
 @Component({
     selector: 'docs-component-viewer',
     imports: [
         KbqTabsModule,
+        KbqLinkModule,
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
-        DocsRegisterHeaderDirective
+        DocsRegisterHeaderDirective,
+        KbqIcon
     ],
     templateUrl: './component-viewer.template.html',
     styleUrls: ['./component-viewer.scss'],
@@ -92,6 +102,11 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
             });
 
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
+    }
+
+    /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */
+    protected get githubSourceUrl(): string | null {
+        return this.structureItem.path ? `${GITHUB_REPO_TREE_URL}/${this.structureItem.path}` : null;
     }
 }
 

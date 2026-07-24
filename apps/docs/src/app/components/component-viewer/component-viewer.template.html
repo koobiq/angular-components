@@ -3,7 +3,7 @@
         {{ structureItem.name[locale()!] }}
     </div>
     @if (!structureItem.isGuide) {
-        <div class="docs-component-navbar layout-row layout-padding-top-s">
+        <div class="docs-component-navbar layout-row layout-align-space-between-center layout-padding-top-s">
             <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
                 <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Overview">
                     {{ t('overviewTab') }}
@@ -17,6 +17,19 @@
                     </a>
                 }
             </nav>
+
+            @if (githubSourceUrl) {
+                <a
+                    kbq-link
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="layout-margin-left-xl"
+                    [href]="githubSourceUrl"
+                >
+                    <i kbq-icon="kbq-code_16"></i>
+                    {{ t('viewSourceOnGitHub') }}
+                </a>
+            }
         </div>
     }
 </div>
