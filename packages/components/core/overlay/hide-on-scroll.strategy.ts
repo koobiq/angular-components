@@ -1,6 +1,6 @@
 import { OverlayRef, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { InjectionToken, NgZone } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -115,11 +115,19 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
     }
 }
 
-export const KBQ_HIDE_ON_SCROLL_STRATEGY = new InjectionToken<
-    (config: KbqHideOnScrollStrategyConfig) => KbqHideOnScrollStrategy
->('kbq-hide-on-scroll-strategy');
-
-/** @docs-private */
+/**
+ * Factory function for `KbqHideOnScrollStrategy`. Use it directly as a `useFactory` value
+ * when providing a component-level scroll strategy token (e.g. `KBQ_POPOVER_SCROLL_STRATEGY`).
+ *
+ * @example
+ * ```ts
+ * {
+ *   provide: KBQ_POPOVER_SCROLL_STRATEGY,
+ *   deps: [ScrollDispatcher, ViewportRuler, NgZone],
+ *   useFactory: kbqHideOnScrollStrategyFactory
+ * }
+ * ```
+ */
 export function kbqHideOnScrollStrategyFactory(
     scrollDispatcher: ScrollDispatcher,
     viewportRuler: ViewportRuler,
@@ -127,9 +135,3 @@ export function kbqHideOnScrollStrategyFactory(
 ): (config: KbqHideOnScrollStrategyConfig) => KbqHideOnScrollStrategy {
     return (config) => new KbqHideOnScrollStrategy(scrollDispatcher, viewportRuler, ngZone, config);
 }
-
-export const KBQ_HIDE_ON_SCROLL_STRATEGY_PROVIDER = {
-    provide: KBQ_HIDE_ON_SCROLL_STRATEGY,
-    deps: [ScrollDispatcher, ViewportRuler, NgZone],
-    useFactory: kbqHideOnScrollStrategyFactory
-};

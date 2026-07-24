@@ -11,6 +11,7 @@ import { PopoverOverviewExample } from './popover-overview/popover-overview-exam
 import { PopoverPaddingsExample } from './popover-paddings/popover-paddings-example';
 import { PopoverPlacementCenterExample } from './popover-placement-center/popover-placement-center-example';
 import { PopoverPlacementEdgesExample } from './popover-placement-edges/popover-placement-edges-example';
+import { PopoverScrollStrategyExample } from './popover-scroll-strategy/popover-scroll-strategy-example';
 import { PopoverScrollExample } from './popover-scroll/popover-scroll-example';
 import { PopoverScrollingAndLayeringExample } from './popover-scrolling-and-layering/popover-scrolling-and-layering-example';
 import { PopoverSmallExample } from './popover-small/popover-small-example';
@@ -31,6 +32,7 @@ export {
     PopoverPlacementEdgesExample,
     PopoverScrollExample,
     PopoverScrollingAndLayeringExample,
+    PopoverScrollStrategyExample,
     PopoverSmallExample,
     PopoverWidthExample
 };
@@ -46,6 +48,7 @@ const EXAMPLES = [
     PopoverContentExample,
     PopoverScrollExample,
     PopoverHideOnScrollExample,
+    PopoverScrollStrategyExample,
     PopoverPlacementCenterExample,
     PopoverPlacementEdgesExample,
     PopoverHoverExample,
