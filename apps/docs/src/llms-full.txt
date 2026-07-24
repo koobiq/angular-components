@@ -4246,6 +4246,7 @@ import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -4294,7 +4295,7 @@ export class KbqClampedListTrigger {
 export const KbqClampedRoot: InjectionToken<KbqClamped>;
 
 // @public (undocumented)
-export class KbqClampedText implements KbqClamped, AfterViewInit {
+export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
     constructor();
     protected readonly collapsedState: WritableSignal<boolean | undefined>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
@@ -4306,6 +4307,8 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnInit(): void;
     readonly rows: InputSignal<number>;
     readonly text: Signal<ElementRef<HTMLSpanElement>>;
     readonly textContainer: Signal<ElementRef<HTMLDivElement>>;
@@ -4544,6 +4547,7 @@ import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -4592,7 +4596,7 @@ export class KbqClampedListTrigger {
 export const KbqClampedRoot: InjectionToken<KbqClamped>;
 
 // @public (undocumented)
-export class KbqClampedText implements KbqClamped, AfterViewInit {
+export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
     constructor();
     protected readonly collapsedState: WritableSignal<boolean | undefined>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
@@ -4604,6 +4608,8 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnInit(): void;
     readonly rows: InputSignal<number>;
     readonly text: Signal<ElementRef<HTMLSpanElement>>;
     readonly textContainer: Signal<ElementRef<HTMLDivElement>>;
@@ -11787,6 +11793,8 @@ Clicking on a pseudo-link in the list of parameters will add a new value to the 
 
 <!-- example(filter-bar-pipe-types) -->
 
+The `input` type is the only one without a popover: it renders a bare input that is typed into directly in the bar, using the pipe's `name` as its placeholder. The value is applied as you type — 200 ms after the last keystroke (`debounceTime`) and only from 3 characters on (`minLength`) — rather than through an Apply button. Text shorter than the threshold, including an emptied field, is applied as `null`, so the bar never keeps filtering by text that is no longer in the input. `Enter` and blur apply the value immediately and ignore the threshold: an explicit action is always applied as typed. Its only clear affordance is the built-in cleaner inside the input, so `removable` has no effect — an `input` pipe can only be removed programmatically. Values are trimmed, and a blank value is applied as `null`. Set its width with the `--kbq-filter-bar-pipe-input-width` CSS variable.
+
 ### Search in pipes
 
 If the filter has many values, it is useful to enable search in the drop-down menu.
@@ -11845,6 +11853,7 @@ import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
@@ -12370,6 +12379,23 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
 }
 
 // @public (undocumented)
+export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements OnInit {
+    readonly control: FormControl<string | null>;
+    debounceTime: number;
+    protected readonly input: Signal<KbqInput>;
+    get isEmpty(): boolean;
+    minLength: number;
+    // (undocumented)
+    ngOnInit(): void;
+    onClear(): void;
+    open(): void;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeInputComponent, "kbq-pipe-input", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeInputComponent, never>;
+}
+
+// @public (undocumented)
 export class KbqPipeMinWidth {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -12558,6 +12584,7 @@ export enum KbqPipeTypes {
     Date = "date",
     // (undocumented)
     Datetime = "datetime",
+    Input = "input",
     // (undocumented)
     MultiSelect = "multiselect",
     // (undocumented)
@@ -23290,7 +23317,18 @@ import {
     KbqTagsModule
 } from '@koobiq/components/tags';
 
-const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag ${i}`);
+const getAutocompleteOptions = () => [
+    'BruteForce',
+    'Complex Attack',
+    'DDoS',
+    'HIPS alert',
+    'IDS/IPS Alert',
+    'Zero-Day Exploit',
+    'XSS',
+    'Malware',
+    'Ransomware',
+    'Phishing'
+];
 
 /**
  * @title Tag autocomplete overview
@@ -23316,7 +23354,7 @@ const getAutocompleteOptions = () => Array.from({ length: 10 }, (_, i) => `Tag $
                     [kbqTagInputFor]="tagList"
                     [kbqAutocomplete]="autocomplete"
                     [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [kbqTagInputAddOnBlur]="false"
+                    [kbqTagInputAddOnBlur]="true"
                     [(ngModel)]="tagInputModel"
                     (kbqTagInputTokenEnd)="create($event)"
                 />

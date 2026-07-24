@@ -1,3 +1,12 @@
+## 19.8.5 (2026-07-24)
+
+### Koobiq
+
+ * bug fix  **clamped-text:** proper external state control ([#DS-5279](https://github.com/koobiq/angular-components/issues/issue/DS-5279)) ([#1757](https://github.com/koobiq/angular-components/issues/1757)) ([1943d19](https://github.com/koobiq/angular-components/commit/1943d19926ce4fd224fa6914440899dbb587d7a4))
+ * bug fix  **docs:** live example reset button styles ([#DS-5213](https://github.com/koobiq/angular-components/issues/issue/DS-5213)) ([#1768](https://github.com/koobiq/angular-components/issues/1768)) ([9318ddf](https://github.com/koobiq/angular-components/commit/9318ddfc0c7af004ddbf1e704daa193ba6ba1fb4))
+ * bug fix  **tags:** autocomplete add tag on blur, create tag, examples ([#DS-5352](https://github.com/koobiq/angular-components/issues/issue/DS-5352),[#DS-5172](https://github.com/koobiq/angular-components/issues/issue/DS-5172)) ([#1767](https://github.com/koobiq/angular-components/issues/1767)) ([f5d755f](https://github.com/koobiq/angular-components/commit/f5d755f7667d6590bb18dae429a3afc94936483f))
+ * feature  **filter-bar:** add input pipe ([#DS-5189](https://github.com/koobiq/angular-components/issues/issue/DS-5189)) ([#1765](https://github.com/koobiq/angular-components/issues/1765)) ([563d222](https://github.com/koobiq/angular-components/commit/563d22256d6558ea3ca8103873e83b03a9767536))
+
 ## 19.8.4 (2026-07-20)
 
 ### Koobiq
