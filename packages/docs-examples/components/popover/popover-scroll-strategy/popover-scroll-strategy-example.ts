@@ -39,7 +39,7 @@ import { KBQ_POPOVER_SCROLL_STRATEGY, KbqPopoverModule } from '@koobiq/component
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 200px;
+            height: 250px;
             color: var(--kbq-foreground-contrast-secondary);
         }
 
