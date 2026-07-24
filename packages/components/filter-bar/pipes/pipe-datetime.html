@@ -67,7 +67,8 @@
                         <input
                             formControlName="start"
                             [kbqCalendar]="startDateCalendar"
-                            [max]="formGroup.controls.end.value"
+                            [min]="min"
+                            [max]="startMax"
                             (focusin)="onFocusStartInput()"
                             (keydown.tab)="hideCalendars()"
                         />
@@ -76,13 +77,21 @@
 
                     <kbq-form-field class="kbq-date-period__time">
                         <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                        <input formControlName="start" kbqTimepicker (focusin)="hideCalendars()" />
+                        <input
+                            formControlName="start"
+                            kbqTimepicker
+                            [min]="min"
+                            [max]="startMax"
+                            (focusin)="hideCalendars()"
+                        />
                     </kbq-form-field>
                 </div>
 
                 <kbq-calendar
                     #startDateCalendar
                     [class.kbq-calendar_hidden]="!showStartCalendar"
+                    [minDate]="min"
+                    [maxDate]="startMax"
                     (selectedChange)="onSelectStartDate($event)"
                 />
 
@@ -93,6 +102,8 @@
                         <input
                             formControlName="end"
                             [kbqCalendar]="endDateCalendar"
+                            [min]="min"
+                            [max]="max"
                             (focusin)="onFocusEndInput()"
                             (keydown.tab)="hideCalendars()"
                         />
@@ -101,19 +112,35 @@
 
                     <kbq-form-field class="kbq-date-period__time">
                         <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                        <input formControlName="end" kbqTimepicker (focusin)="hideCalendars()" />
+                        <input
+                            formControlName="end"
+                            kbqTimepicker
+                            [min]="min"
+                            [max]="max"
+                            (focusin)="hideCalendars()"
+                        />
                     </kbq-form-field>
                 </div>
 
-                @if (formGroup.controls.start.invalid) {
+                @if (formGroup.controls.start.invalid || formGroup.controls.end.invalid) {
                     <kbq-hint class="kbq-date-period__hint" [color]="'error'">
                         {{ localeData.datePipe.customPeriodErrorHint }}
+                    </kbq-hint>
+                } @else if (formGroup.errors?.kbqDateIntervalMin) {
+                    <kbq-hint class="kbq-date-period__hint" [color]="'error'">
+                        {{ minIntervalErrorHint }}
+                    </kbq-hint>
+                } @else if (formGroup.errors?.kbqDateIntervalMax) {
+                    <kbq-hint class="kbq-date-period__hint" [color]="'error'">
+                        {{ maxIntervalErrorHint }}
                     </kbq-hint>
                 }
 
                 <kbq-calendar
                     #endDateCalendar
                     [class.kbq-calendar_hidden]="!showEndCalendar"
+                    [minDate]="min"
+                    [maxDate]="max"
                     (selectedChange)="onSelectEndDate($event)"
                 />
             </form>

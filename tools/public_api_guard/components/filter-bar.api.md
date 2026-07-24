@@ -99,6 +99,8 @@ export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<{
         customPeriodFrom: string;
         customPeriodTo: string;
         customPeriodErrorHint: string;
+        customPeriodMinIntervalErrorHint: string;
+        customPeriodMaxIntervalErrorHint: string;
         backToPeriodSelection: string;
     };
 }>;
@@ -150,6 +152,8 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
         customPeriodFrom: string;
         customPeriodTo: string;
         customPeriodErrorHint: string;
+        customPeriodMinIntervalErrorHint: string;
+        customPeriodMaxIntervalErrorHint: string;
         backToPeriodSelection: string;
     };
 };
@@ -280,6 +284,8 @@ export class KbqFilterBar implements KbqFilterBarHost {
             customPeriodFrom: string;
             customPeriodTo: string;
             customPeriodErrorHint: string;
+            customPeriodMinIntervalErrorHint: string;
+            customPeriodMaxIntervalErrorHint: string;
             backToPeriodSelection: string;
         };
     } | null;
@@ -408,6 +414,8 @@ class KbqFilterRefresher {
             customPeriodFrom: string;
             customPeriodTo: string;
             customPeriodErrorHint: string;
+            customPeriodMinIntervalErrorHint: string;
+            customPeriodMaxIntervalErrorHint: string;
             backToPeriodSelection: string;
         };
     };
@@ -669,6 +677,10 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     get isEmpty(): boolean;
     protected isListMode: boolean;
     readonly listSelection: _angular_core.Signal<KbqListSelection | undefined>;
+    protected max: any;
+    get maxIntervalErrorHint(): string;
+    protected min: any;
+    get minIntervalErrorHint(): string;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -695,7 +707,9 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     showPeriod(): void;
     protected showStartCalendar: boolean;
     get start(): D;
+    get startMax(): any;
     protected readonly styles: typeof KbqButtonStyles;
+    protected abstract usesTime(): boolean;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeDateBaseComponent<any>, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -711,6 +725,8 @@ export class KbqPipeDateComponent<D> extends KbqPipeDateBaseComponent<D> {
     // (undocumented)
     protected getDefaultStart(): D;
     // (undocumented)
+    protected usesTime(): boolean;
+    // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeDateComponent<any>, "kbq-pipe-date", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeDateComponent<any>, never>;
@@ -724,6 +740,8 @@ export class KbqPipeDatetimeComponent<D> extends KbqPipeDateBaseComponent<D> {
     protected getDefaultEnd(): D;
     // (undocumented)
     protected getDefaultStart(): D;
+    // (undocumented)
+    protected usesTime(): boolean;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeDatetimeComponent<any>, "kbq-pipe-datetime", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -886,6 +904,10 @@ export class KbqPipeState<T> {
 // @public (undocumented)
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     compareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
+    maxDateTime?: unknown;
+    maxInterval?: unknown;
+    minDateTime?: unknown;
+    minInterval?: unknown;
     // (undocumented)
     values?: unknown[];
     // (undocumented)

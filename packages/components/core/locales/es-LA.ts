@@ -100,6 +100,8 @@ export const esLALocaleData = {
             customPeriodFrom: 'desde',
             customPeriodTo: 'hasta',
             customPeriodErrorHint: 'El inicio del período no puede estar después del fin',
+            customPeriodMinIntervalErrorHint: 'El período no puede ser más corto que {{ value }}',
+            customPeriodMaxIntervalErrorHint: 'El período no puede ser más largo que {{ value }}',
             backToPeriodSelection: 'Atrás'
         }
     },

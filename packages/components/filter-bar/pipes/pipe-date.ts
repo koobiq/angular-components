@@ -45,6 +45,10 @@ import { KbqPipeState } from './pipe-state';
     encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeDateComponent<D> extends KbqPipeDateBaseComponent<D> {
+    protected usesTime(): boolean {
+        return false;
+    }
+
     protected formatRange(start: D, end: D): string {
         return this.formatter.rangeShortDate(start, end);
     }

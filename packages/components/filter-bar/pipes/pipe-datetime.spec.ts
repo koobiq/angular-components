@@ -253,6 +253,32 @@ describe('KbqPipeDatetimeComponent', () => {
             expect(adapter.sameDate(component.defaultStart, today.plus(PRESET_VALUES[0].start as any))).toBe(true);
             expect(adapter.sameDate(component.defaultEnd, today)).toBe(true);
         });
+
+        it('should clamp defaultEnd when the configured max is earlier than the raw default', () => {
+            const max = adapter.today();
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: PRESET_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    maxDateTime: max.toISO()
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+            const internal = asInternal(component);
+
+            // raw default end is end of today, which is after max ('now') -> clamps down to max
+            expect(component.defaultStart.equals(adapter.today().startOf('day'))).toBe(true);
+            expect(adapter.compareDateTime(component.defaultEnd, internal.max)).toBe(0);
+        });
     });
 
     describe('showPeriod', () => {
@@ -431,6 +457,16 @@ describe('KbqPipeDatetimeComponent', () => {
 
             expect(component.disabled).toBe(true);
         });
+
+        it('should be true when end control is invalid', () => {
+            const component = getPipeComponent();
+            const internal = asInternal(component);
+
+            component.showPeriod();
+            internal.formGroup.controls.end.setErrors({ invalid: true });
+
+            expect(component.disabled).toBe(true);
+        });
     });
 
     describe('date selection handlers', () => {
@@ -598,6 +634,414 @@ describe('KbqPipeDatetimeComponent', () => {
             const icon = customPeriodOption.querySelector('i[kbq-icon]');
 
             expect(listText?.contains(icon)).toBe(true);
+        }));
+    });
+
+    describe('min / max bounds', () => {
+        const setupWithBounds = (bounds: Partial<KbqPipeTemplate>): KbqPipeDatetimeComponent<DateTime> => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: PRESET_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    ...bounds
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            return getPipeComponent();
+        };
+
+        it('should keep the full instant (single absolute window)', () => {
+            const min = adapter.today().minus({ days: 5 }).set({ hour: 9, minute: 30, second: 15, millisecond: 500 });
+            const max = adapter.today().plus({ days: 5 }).set({ hour: 18, minute: 45, second: 15, millisecond: 500 });
+
+            const internal = asInternal(setupWithBounds({ minDateTime: min.toISO(), maxDateTime: max.toISO() }));
+
+            expect(adapter.compareDateTime(internal.min, min)).toBe(0);
+            expect(adapter.compareDateTime(internal.max, max)).toBe(0);
+        });
+
+        it('should accept a DateTime object, not only an ISO string', () => {
+            const min = adapter.today().minus({ days: 2 }).set({ hour: 8, minute: 0, second: 0, millisecond: 0 });
+
+            const internal = asInternal(setupWithBounds({ minDateTime: min }));
+
+            expect(adapter.compareDateTime(internal.min, min)).toBe(0);
+        });
+
+        it('should leave bounds undefined when not configured', () => {
+            const internal = asInternal(setupWithBounds({}));
+
+            expect(internal.min).toBeUndefined();
+            expect(internal.max).toBeUndefined();
+        });
+
+        it('startMax should fall back to the end value when max is unset', () => {
+            const component = setupWithBounds({});
+
+            component.showPeriod();
+
+            const internal = asInternal(component);
+
+            expect(internal.startMax).toBe(internal.formGroup.controls.end.value);
+        });
+
+        it('startMax should clamp to max, and end itself is already clamped there', () => {
+            const max = adapter.today().minus({ days: 1 }).set({ hour: 12, minute: 0, second: 0, millisecond: 0 });
+            const component = setupWithBounds({ maxDateTime: max.toISO() });
+
+            component.showPeriod();
+
+            const internal = asInternal(component);
+
+            // default end (today end-of-day) is now clamped to max by defaultEnd, so both land on max.
+            expect(adapter.compareDateTime(internal.formGroup.controls.end.value, max)).toBe(0);
+            expect(adapter.compareDateTime(internal.startMax, max)).toBe(0);
+        });
+
+        it('should update bounds when pipeTemplates change while the pipe is already constructed', () => {
+            const component = setupWithBounds({});
+
+            expect(asInternal(component).min).toBeUndefined();
+
+            const newMin = adapter.today().minus({ days: 10 });
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: PRESET_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    minDateTime: newMin.toISO()
+                }
+            ];
+            fixture.detectChanges();
+
+            expect(adapter.compareDateTime(asInternal(component).min, newMin)).toBe(0);
+        });
+
+        it('should bind each pipe instance to its own template bounds', () => {
+            const OTHER_ID = 'OtherDatetime';
+            const minA = adapter.today().minus({ days: 5 });
+            const minB = adapter.today().minus({ days: 50 });
+
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: PRESET_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    minDateTime: minA.toISO()
+                },
+                {
+                    name: 'Other datetime',
+                    id: OTHER_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: PRESET_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    minDateTime: minB.toISO()
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ value: null }),
+                createPipe({ id: OTHER_ID, value: null })
+            ]);
+            fixture.detectChanges();
+
+            expect(adapter.compareDateTime(asInternal(getPipeComponent(0)).min, minA)).toBe(0);
+            expect(adapter.compareDateTime(asInternal(getPipeComponent(1)).min, minB)).toBe(0);
+        });
+
+        it('should treat an unparseable minDateTime/maxDateTime as no bound', () => {
+            const internal = asInternal(
+                setupWithBounds({ minDateTime: 'not-a-real-date', maxDateTime: 'also-not-a-real-date' })
+            );
+
+            expect(internal.min).toBeUndefined();
+            expect(internal.max).toBeUndefined();
+        });
+
+        it('should not source bounds from a same-id template of a different pipe type', () => {
+            const internal = asInternal(
+                setupWithBounds({
+                    type: KbqPipeTypes.Date,
+                    minDateTime: adapter.today().minus({ days: 1 }).toISO()
+                })
+            );
+
+            expect(internal.min).toBeUndefined();
+        });
+    });
+
+    describe('min / max interval', () => {
+        const setupWithInterval = (template: Partial<KbqPipeTemplate>): KbqPipeDatetimeComponent<DateTime> => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: PRESET_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    ...template
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            return getPipeComponent();
+        };
+
+        const setRange = (component: KbqPipeDatetimeComponent<DateTime>, start: DateTime, end: DateTime) => {
+            const internal = asInternal(component);
+
+            component.showPeriod();
+            internal.formGroup.controls.start.setValue(start);
+            internal.formGroup.controls.end.setValue(end);
+        };
+
+        it('should flag a period shorter than minInterval (sub-day) and disable Apply', () => {
+            const component = setupWithInterval({ minInterval: { hours: 2 } });
+            const start = adapter.today().set({ hour: 9, minute: 0, second: 0, millisecond: 0 });
+
+            setRange(component, start, start.plus({ hours: 1 }));
+
+            expect(asInternal(component).formGroup.errors?.kbqDateIntervalMin).toBeTruthy();
+            expect(component.disabled).toBe(true);
+        });
+
+        it('should flag a period longer than maxInterval (sub-day) and disable Apply', () => {
+            const component = setupWithInterval({ maxInterval: { hours: 12 } });
+            const start = adapter.today().set({ hour: 9, minute: 0, second: 0, millisecond: 0 });
+
+            setRange(component, start, start.plus({ hours: 13 }));
+
+            expect(asInternal(component).formGroup.errors?.kbqDateIntervalMax).toBeTruthy();
+            expect(component.disabled).toBe(true);
+        });
+
+        it('should accept a period within the interval bounds', () => {
+            const component = setupWithInterval({ minInterval: { hours: 1 }, maxInterval: { days: 7 } });
+            const start = adapter.today().set({ hour: 9, minute: 0, second: 0, millisecond: 0 });
+
+            setRange(component, start, start.plus({ hours: 5 }));
+
+            expect(asInternal(component).formGroup.errors).toBeNull();
+            expect(component.disabled).toBe(false);
+        });
+
+        it('should impose no interval constraint when unset', () => {
+            const component = setupWithInterval({});
+            const start = adapter.today().set({ hour: 9, minute: 0, second: 0, millisecond: 0 });
+
+            setRange(component, start, start.plus({ hours: 1 }));
+
+            expect(asInternal(component).formGroup.errors).toBeNull();
+            expect(component.disabled).toBe(false);
+        });
+
+        it('should extend the default end to satisfy minInterval when the pipe has no stored value', () => {
+            const component = setupWithInterval({ minInterval: { days: 2 } });
+
+            // Read both sides of the pair from the same showPeriod()-seeded FormGroup (a single
+            // computeDefaultRange() call), not from two independent defaultStart/defaultEnd getter reads,
+            // which each resolve their own `today()` and can differ by a stray millisecond under load.
+            component.showPeriod();
+            const { start, end } = asInternal(component).formGroup.controls;
+
+            expect(adapter.compareDateTime(end.value, start.value.plus({ days: 2 }))).toBe(0);
+        });
+
+        it('should shrink the default end to satisfy maxInterval when the pipe has no stored value', () => {
+            const component = setupWithInterval({ maxInterval: { hours: 12 } });
+
+            component.showPeriod();
+            const { start, end } = asInternal(component).formGroup.controls;
+
+            expect(adapter.compareDateTime(end.value, start.value.plus({ hours: 12 }))).toBe(0);
+        });
+
+        it('should pull the default start back when [min, max] alone cannot fit minInterval', () => {
+            // Fixed offset from midnight (not wall-clock "now") so the scenario is deterministic: this
+            // reproduces the shipped docs example (minDateTime/maxDateTime + minInterval on the same
+            // template), where `max` can land soon after local midnight.
+            const maxDateTime = adapter.today().startOf('day').plus({ minutes: 30 });
+            const component = setupWithInterval({
+                minDateTime: adapter.today().minus({ days: 7 }).toISO(),
+                maxDateTime: maxDateTime.toISO(),
+                minInterval: { hours: 1 }
+            });
+            const internal = asInternal(component);
+
+            component.showPeriod();
+            const { start, end } = internal.formGroup.controls;
+
+            expect(adapter.compareDateTime(end.value, internal.max)).toBe(0);
+            expect(adapter.compareDateTime(start.value, end.value.minus({ hours: 1 }))).toBe(0);
+        });
+
+        it('should treat a malformed minInterval/maxInterval object as no constraint instead of crashing', () => {
+            const component = setupWithInterval({ minInterval: { days: true } as any, maxInterval: 'P1D' as any });
+            const internal = asInternal(component);
+
+            expect(internal.minInterval).toBeUndefined();
+            expect(internal.maxInterval).toBeUndefined();
+            expect(() => component.defaultEnd).not.toThrow();
+        });
+
+        it('should treat a bare number as no constraint, not silently as milliseconds', () => {
+            const component = setupWithInterval({ minInterval: 5 as any });
+
+            expect(asInternal(component).minInterval).toBeUndefined();
+        });
+
+        it('should re-validate an already-open editor when minInterval changes live', () => {
+            const component = setupWithInterval({});
+            const internal = asInternal(component);
+
+            component.showPeriod();
+
+            const start = adapter.today().set({ hour: 9, minute: 0, second: 0, millisecond: 0 });
+
+            internal.formGroup.controls.start.setValue(start);
+            internal.formGroup.controls.end.setValue(start.plus({ hours: 3 }));
+
+            expect(internal.formGroup.errors).toBeNull();
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: PRESET_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    minInterval: { hours: 5 }
+                }
+            ];
+            fixture.detectChanges();
+
+            expect(internal.formGroup.errors?.kbqDateIntervalMin).toBeTruthy();
+        });
+
+        it('should interpolate the locale-formatted minInterval into the hint, passing the matching units', () => {
+            const component = setupWithInterval({ minInterval: { hours: 2 } });
+            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+
+            const hint = component.minIntervalErrorHint;
+
+            expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['hours']);
+            expect(hint).toContain('SENTINEL');
+            expect(hint).not.toContain('{{ value }}');
+        });
+
+        it('should interpolate the locale-formatted maxInterval into the hint, passing the matching units', () => {
+            const component = setupWithInterval({ maxInterval: { days: 7 } });
+            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+
+            const hint = component.maxIntervalErrorHint;
+
+            expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['days']);
+            expect(hint).toContain('SENTINEL');
+            expect(hint).not.toContain('{{ value }}');
+        });
+
+        it('should pass the "months" unit for a { months: N } interval, as used by the docs example', () => {
+            const component = setupWithInterval({ maxInterval: { months: 3 } });
+            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+
+            void component.maxIntervalErrorHint;
+
+            expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['months']);
+        });
+
+        it('should pass the "weeks" unit for a { weeks: N } interval', () => {
+            const component = setupWithInterval({ minInterval: { weeks: 2 } });
+            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+
+            void component.minIntervalErrorHint;
+
+            expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['weeks']);
+        });
+
+        it('should pass all matching units for a multi-unit interval', () => {
+            const component = setupWithInterval({ minInterval: { days: 1, hours: 12 } });
+            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+
+            void component.minIntervalErrorHint;
+
+            expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['days', 'hours']);
+        });
+    });
+
+    describe('interval hint rendering', () => {
+        it('should render the interpolated minInterval hint text in the popover', fakeAsync(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: PRESET_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    minInterval: { hours: 5 }
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+
+            component.open();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const internal = asInternal(component);
+
+            // showPeriod()'s deferred focus-restore isn't relevant to hint rendering; stub it out so the
+            // real (isListMode-driven) template swap below isn't gated on the returnButton view query.
+            internal.returnButton = () => ({ focusViaKeyboard: () => {} });
+
+            component.showPeriod();
+            fixture.detectChanges();
+            flush();
+
+            const start = adapter.today().set({ hour: 9, minute: 0, second: 0, millisecond: 0 });
+
+            internal.formGroup.controls.start.setValue(start);
+            internal.formGroup.controls.end.setValue(start.plus({ hours: 2 }));
+            fixture.detectChanges();
+
+            const hint = overlayContainer.querySelector('.kbq-date-period__hint');
+
+            expect(hint?.textContent?.trim()).toBe(component.minIntervalErrorHint);
         }));
     });
 });

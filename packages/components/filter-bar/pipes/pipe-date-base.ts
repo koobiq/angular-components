@@ -1,12 +1,12 @@
 import { AfterViewInit, Directive, inject, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { DateAdapter, DateFormatter, ENTER, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
-import { KbqDateTimeValue } from '../filter-bar.types';
-import { KbqBasePipe } from './base-pipe';
+import { KbqDateTimeValue, KbqPipeTemplate } from '../filter-bar.types';
+import { getId, KbqBasePipe } from './base-pipe';
 
 /**
  * Shared implementation for the `date` and `datetime` pipes. The two pipes differ only in how a range
@@ -39,6 +39,38 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     /** @docs-private */
     protected showEndCalendar: boolean = false;
 
+    // Loosely typed (`any`) so the values bind cleanly to the generic date directives: on a native
+    // `<input>`, `[min]`/`[max]` resolve to the DOM property (`string | number`), which a concrete `D`
+    // could not satisfy inside this generic component (matching the existing `any` date handling here).
+    // The runtime values are adapter-deserialized dates.
+    /**
+     * Lower bound instant applied to the calendars, date inputs and (datetime) timepickers.
+     * @docs-private
+     */
+    protected min: any;
+    /**
+     * Upper bound instant applied to the calendars, date inputs and (datetime) timepickers.
+     * @docs-private
+     */
+    protected max: any;
+
+    /** Minimum length of the custom period (`end − start`), resolved from the template as a duration-like object. */
+    private minInterval?: unknown;
+    /** Maximum length of the custom period (`end − start`), resolved from the template as a duration-like object. */
+    private maxInterval?: unknown;
+
+    /** Canonical duration units (largest-first) used to render an interval limit faithfully to its config. */
+    private static readonly INTERVAL_UNITS = [
+        'years',
+        'quarters',
+        'months',
+        'weeks',
+        'days',
+        'hours',
+        'minutes',
+        'seconds'
+    ] as const;
+
     /** @docs-private */
     readonly popover = viewChild.required<KbqPopoverTrigger>('popover');
     /** @docs-private */
@@ -47,6 +79,104 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     readonly listSelection = viewChild('listSelection', { read: KbqListSelection });
     /** @docs-private */
     readonly returnButton = viewChild.required('returnButton', { read: KbqButton });
+
+    /** Resolves the `minDateTime` / `maxDateTime` bounds from the pipe template matching this pipe. */
+    private updateDateBounds = (templates: KbqPipeTemplate[] | null) => {
+        const template = templates?.find((item) => getId(item) === getId(this.data) && item.type === this.data.type);
+
+        // Sticky, like the sibling KbqBasePipe.updateTemplates: an emission where this pipe's own
+        // template is momentarily absent must not blank out previously resolved bounds.
+        if (!template) return;
+
+        const min = template.minDateTime != null ? this.toValidDate(template.minDateTime) : undefined;
+        const max = template.maxDateTime != null ? this.toValidDate(template.maxDateTime) : undefined;
+
+        // The date pipe has no clock; pin bounds to day edges so a time in the bound can't strand the value
+        // invalid. The datetime pipe keeps the full instant (single absolute window). `.startOf`/`.endOf`
+        // mirror the DateTime API the concrete subclasses already use (`adapter.today().startOf('day')`).
+        this.min = this.usesTime() ? min : min?.startOf('day');
+        this.max = this.usesTime() ? max : max?.endOf('day');
+
+        this.minInterval = this.toValidInterval(template.minInterval);
+        this.maxInterval = this.toValidInterval(template.maxInterval);
+        // Re-validate an already open editor if the template (hence the interval limits) changes.
+        this.formGroup?.updateValueAndValidity();
+
+        this.changeDetectorRef.markForCheck();
+    };
+
+    /** Deserializes a `minDateTime` / `maxDateTime` template value, treating unparseable input as "no bound". */
+    private toValidDate(value: unknown): any {
+        const date = this.adapter.deserialize(value);
+
+        return date != null && this.adapter.isValid(date) ? date : undefined;
+    }
+
+    /**
+     * Validates a `minInterval` / `maxInterval` template value, treating anything that isn't a genuine
+     * duration-like object — or that resolves to an invalid or sub-second span — as "no constraint"
+     * instead of letting it crash `validateInterval`/`formatInterval` downstream (both call `.plus()` on
+     * it directly). A bare number is rejected too: Luxon would silently read it as milliseconds, which
+     * would otherwise disable the constraint without any error (e.g. a `{ days: 5 }` typo'd as `5`).
+     */
+    private toValidInterval(value: unknown): any {
+        if (value == null || typeof value !== 'object' || Array.isArray(value)) return undefined;
+
+        try {
+            const today = this.adapter.today();
+            const probe = today.plus(value);
+
+            if (!this.adapter.isValid(probe)) return undefined;
+
+            // DurationUnit has no sub-second granularity, so a shorter interval can't be rendered by
+            // `durationLong` and would misleadingly show up as "0 seconds" — treat it as unset instead.
+            const { seconds = 0 } = this.adapter.durationObjectFromDates(today, probe, ['seconds'], true);
+
+            return Math.abs(seconds) >= 1 ? value : undefined;
+        } catch {
+            return undefined;
+        }
+    }
+
+    /** Clamps `value` into the configured `[min, max]` bounds using full-instant comparison. */
+    private clampToBounds(value: D): D {
+        if (this.min && this.adapter.compareDateTime(value, this.min) < 0) return this.min;
+        if (this.max && this.adapter.compareDateTime(value, this.max) > 0) return this.max;
+
+        return value;
+    }
+
+    /**
+     * Cross-field validator flagging the custom period when its length (`end − start`) is outside the
+     * configured `[minInterval, maxInterval]`. Intervals are applied via `DateTime.plus`, so calendar units
+     * (months/years) are respected; unset intervals impose no constraint.
+     */
+    private validateInterval: ValidatorFn = (group) => {
+        const start = (group as FormGroup).controls.start?.value;
+        const end = (group as FormGroup).controls.end?.value;
+
+        if (!this.adapter.isDateInstance(start) || !this.adapter.isDateInstance(end)) return null;
+
+        if (this.minInterval && this.adapter.compareDateTime(end, start.plus(this.minInterval)) < 0) {
+            return { kbqDateIntervalMin: true };
+        }
+
+        if (this.maxInterval && this.adapter.compareDateTime(end, start.plus(this.maxInterval)) > 0) {
+            return { kbqDateIntervalMax: true };
+        }
+
+        return null;
+    };
+
+    /** Formats a duration-like interval as a locale-aware human string via the formatter, e.g. "7 дней". */
+    private formatInterval(interval: unknown): string {
+        const start = this.adapter.today();
+        const units = KbqPipeDateBaseComponent.INTERVAL_UNITS.filter(
+            (unit) => (interval as any)?.[unit] != null || (interval as any)?.[unit.slice(0, -1)] != null
+        );
+
+        return this.formatter.durationLong(start, start.plus(interval), units);
+    }
 
     /** formatted value for period */
     get formattedValue(): string {
@@ -62,7 +192,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         return (
             !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
             !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
-            this.formGroup.controls.start.invalid
+            this.formGroup.invalid
         );
     }
 
@@ -73,11 +203,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     /** default object for start */
     get defaultStart(): D {
-        if (this.data.value?.start) {
-            return this.adapter.today().plus(this.data.value?.start);
-        }
-
-        return this.getDefaultStart();
+        return this.computeDefaultRange().start;
     }
 
     /** parsed end */
@@ -87,11 +213,72 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     /** default object for end */
     get defaultEnd(): D {
-        if (this.data.value?.start) {
-            return this.adapter.today();
+        return this.computeDefaultRange().end;
+    }
+
+    /**
+     * Computes the default `start`/`end` pair used when the pipe has no stored value, clamped into
+     * `[min, max]` and, unlike a plain clamp, also reconciled against `[minInterval, maxInterval]`: `end`
+     * is extended or shrunk to fit, falling back to pulling `start` back when `[min, max]` doesn't leave
+     * enough room past `start` to satisfy `minInterval`. If `[min, max]` is itself narrower than
+     * `minInterval`, the result may still violate it — that's a contradictory host configuration (the
+     * same class of issue as `min` configured later than `max`), not something to further engineer around.
+     */
+    private computeDefaultRange(): { start: D; end: D } {
+        let start: any = this.clampToBounds(
+            this.data.value?.start ? this.adapter.today().plus(this.data.value.start) : this.getDefaultStart()
+        );
+        let end: any = this.clampToBounds(this.data.value?.start ? this.adapter.today() : this.getDefaultEnd());
+
+        if (this.minInterval && this.adapter.compareDateTime(end, start.plus(this.minInterval)) < 0) {
+            end = this.clampToBounds(start.plus(this.minInterval));
+
+            if (this.adapter.compareDateTime(end, start.plus(this.minInterval)) < 0) {
+                start = this.clampToBounds(end.minus(this.minInterval));
+            }
         }
 
-        return this.getDefaultEnd();
+        if (this.maxInterval && this.adapter.compareDateTime(end, start.plus(this.maxInterval)) > 0) {
+            end = this.clampToBounds(start.plus(this.maxInterval));
+        }
+
+        return { start, end };
+    }
+
+    /**
+     * Upper bound for the START date input: the earlier of the END value and the configured `max`.
+     * @docs-private
+     */
+    get startMax(): any {
+        const end = this.formGroup.controls.end.value;
+
+        if (this.max && this.adapter.isDateInstance(end)) {
+            return this.adapter.compareDateTime(this.max, end) <= 0 ? this.max : end;
+        }
+
+        return this.max ?? end;
+    }
+
+    /**
+     * Localized "period too short" hint with the `minInterval` limit interpolated and locale-formatted.
+     * @docs-private
+     */
+    get minIntervalErrorHint(): string {
+        return this.localeData.datePipe.customPeriodMinIntervalErrorHint.replace(
+            '{{ value }}',
+            this.formatInterval(this.minInterval)
+        );
+    }
+
+    /**
+     * Localized "period too long" hint with the `maxInterval` limit interpolated and locale-formatted.
+     * @docs-private
+     */
+    get maxIntervalErrorHint(): string {
+        return this.localeData.datePipe.customPeriodMaxIntervalErrorHint.replace(
+            '{{ value }}',
+            this.formatInterval(this.maxInterval)
+        );
     }
 
     /** Whether the current pipe is empty. */
@@ -104,6 +291,15 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     }
 
     override ngAfterViewInit() {
+        // Own subscription — NOT an extension of KbqBasePipe.updateTemplates: bound resolution needs
+        // `usesTime()`, which subclasses implement as an override of an abstract method, so it must be
+        // safe to call regardless of construction order. Subscribing here (rather than in the
+        // constructor) guarantees both this base class's and the leaf subclass's fields are fully
+        // initialized first, since ngAfterViewInit only runs once the whole component tree is built.
+        this.filterBar?.internalTemplatesChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(this.updateDateBounds);
+
         super.ngAfterViewInit();
 
         this.popover()
@@ -212,6 +408,12 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         this.showEndCalendar = false;
     }
 
+    /**
+     * Whether this pipe edits the time part (`datetime`) or only the date (`date`). Gates whether the
+     * `minDateTime` / `maxDateTime` bounds keep their time or are pinned to day edges.
+     */
+    protected abstract usesTime(): boolean;
+
     /** Formats the selected range for display. */
     protected abstract formatRange(start: D, end: D): string;
 
@@ -222,9 +424,17 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     protected abstract getDefaultEnd(): D;
 
     private initFormGroup() {
-        this.formGroup = new FormGroup({
-            start: new FormControl(this.start || this.defaultStart),
-            end: new FormControl(this.end || this.defaultEnd)
-        });
+        // Read the default pair from a single `computeDefaultRange()` call (not the independent
+        // `defaultStart`/`defaultEnd` getters) so `start` and `end` are reconciled against each other
+        // using the same `today()` snapshot, rather than two separately-computed instants.
+        const defaults = this.start && this.end ? null : this.computeDefaultRange();
+
+        this.formGroup = new FormGroup(
+            {
+                start: new FormControl(this.start || defaults!.start),
+                end: new FormControl(this.end || defaults!.end)
+            },
+            { validators: this.validateInterval }
+        );
     }
 }
