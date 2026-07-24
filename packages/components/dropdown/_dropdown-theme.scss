@@ -29,7 +29,8 @@
 
         &:active:not(.kbq-disabled),
         &.kbq-active:not(.kbq-disabled) {
-            @include _kbq-dropdown-item-state(states-active);
+            // the active state defines only a background token; the mixin would emit undefined text/icon color vars
+            background: var(--kbq-list-states-active-container-background);
         }
 
         &.kbq-selected {
@@ -41,7 +42,7 @@
 
             &:active:not(.kbq-disabled),
             &.kbq-active:not(.kbq-disabled) {
-                @include _kbq-dropdown-item-state(states-selected-active);
+                background: var(--kbq-list-states-selected-active-container-background);
             }
         }
 

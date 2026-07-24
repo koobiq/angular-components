@@ -26,6 +26,10 @@ import { KbqDropdownModule } from './dropdown.module';
         <kbq-dropdown #dropdown="kbqDropdown">
             <button kbq-dropdown-item>Item</button>
 
+            <button kbq-dropdown-item class="kbq-active">Pressed item</button>
+
+            <button kbq-dropdown-item class="kbq-active kbq-selected">Selected pressed item</button>
+
             <button kbq-dropdown-item>
                 <i kbq-icon="kbq-bug_16" [color]="'contrast'"></i>
                 Item with icon
