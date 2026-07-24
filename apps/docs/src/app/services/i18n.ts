@@ -37,6 +37,7 @@ export const DOCS_TRANSLATIONS = {
     improvementSuggestions: { ru: 'Предложения по улучшению', en: 'Suggestions for improvement' },
     overviewTab: { ru: 'Обзор', en: 'Overview' },
     examplesTab: { ru: 'Примеры', en: 'Examples' },
+    viewSourceOnGithub: { ru: 'Исходный код', en: 'Source code' },
 
     // welcome page
     welcomeTitle: { ru: 'Дизайн-система Koobiq', en: 'Koobiq design system' },
