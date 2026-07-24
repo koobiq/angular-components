@@ -1,6 +1,11 @@
-import { OverlayRef, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
+import {
+    FlexibleConnectedPositionStrategyOrigin,
+    OverlayRef,
+    ScrollDispatcher,
+    ScrollStrategy
+} from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { NgZone } from '@angular/core';
+import { ElementRef, NgZone } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -31,24 +36,33 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
 
     private _overlayRef: OverlayRef | null = null;
     private _scrollSubscription: Subscription | null = null;
+    private _originElement: HTMLElement | null = null;
 
     constructor(
         private readonly _scrollDispatcher: ScrollDispatcher,
         private readonly _viewportRuler: ViewportRuler,
         private readonly _ngZone: NgZone,
-        private readonly _config: KbqHideOnScrollStrategyConfig
-    ) {}
+        private readonly _config: KbqHideOnScrollStrategyConfig = {}
+    ) {
+        this._originElement = _config.originElement ?? null;
+    }
 
     /** @docs-private */
     attach(overlayRef: OverlayRef): void {
         this._overlayRef = overlayRef;
+
+        if (!this._originElement) {
+            // FlexibleConnectedPositionStrategy stores the origin as a private field.
+            // Reading it here avoids requiring callers to pass originElement explicitly.
+            this._originElement = this.coerceOriginElement((overlayRef.getConfig().positionStrategy as any)?._origin);
+        }
     }
 
     /** Subscribes to scroll events and starts repositioning / out-of-bounds detection. */
     enable(): void {
         if (this._scrollSubscription) return;
 
-        const { originElement, scrollThrottle = 20 } = this._config;
+        const { scrollThrottle = 20 } = this._config;
 
         this._scrollSubscription = this._scrollDispatcher
             .scrolled(scrollThrottle)
@@ -62,8 +76,8 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
             .subscribe(() => {
                 this._overlayRef!.updatePosition();
 
-                const isOutside = originElement
-                    ? this._isOriginOutsideAncestors(originElement)
+                const isOutside = this._originElement
+                    ? this._isOriginOutsideAncestors(this._originElement)
                     : this._isOverlayOutsideViewport();
 
                 if (isOutside) {
@@ -113,6 +127,16 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
             rect.left > containerRect.right
         );
     }
+
+    private coerceOriginElement(raw?: FlexibleConnectedPositionStrategyOrigin) {
+        if (raw instanceof HTMLElement) {
+            return raw;
+        } else if (raw instanceof ElementRef && raw?.nativeElement instanceof HTMLElement) {
+            return raw.nativeElement;
+        }
+
+        return null;
+    }
 }
 
 /**
@@ -132,6 +156,6 @@ export function kbqHideOnScrollStrategyFactory(
     scrollDispatcher: ScrollDispatcher,
     viewportRuler: ViewportRuler,
     ngZone: NgZone
-): (config: KbqHideOnScrollStrategyConfig) => KbqHideOnScrollStrategy {
-    return (config) => new KbqHideOnScrollStrategy(scrollDispatcher, viewportRuler, ngZone, config);
+): (config?: KbqHideOnScrollStrategyConfig) => KbqHideOnScrollStrategy {
+    return (config = {}) => new KbqHideOnScrollStrategy(scrollDispatcher, viewportRuler, ngZone, config);
 }
