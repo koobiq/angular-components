@@ -28,6 +28,8 @@ import { DevThemeToggle } from '../theme-toggle';
     template: `
         <popover-hide-on-scroll-example />
         <br />
+        <popover-scroll-strategy-example />
+        <br />
         <popover-scrolling-and-layering-example />
         <br />
         <popover-paddings-example />

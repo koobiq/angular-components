@@ -9,10 +9,14 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { EmptyFocusTrapStrategy, KBQ_HIDE_ON_SCROLL_STRATEGY_PROVIDER } from '@koobiq/components/core';
+import { EmptyFocusTrapStrategy } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverConfirmComponent, KbqPopoverConfirmTrigger } from './popover-confirm.component';
-import { KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
+import {
+    KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+    KbqPopoverComponent,
+    KbqPopoverTrigger
+} from './popover.component';
 
 @NgModule({
     imports: [
@@ -28,7 +32,7 @@ import { KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
         KbqPopoverConfirmTrigger
     ],
     providers: [
-        KBQ_HIDE_ON_SCROLL_STRATEGY_PROVIDER,
+        KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER,
         { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
         { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy }
     ],

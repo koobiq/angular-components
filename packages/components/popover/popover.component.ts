@@ -3,10 +3,13 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     FlexibleConnectedPositionStrategy,
+    Overlay,
     OverlayConfig,
     OverlayContainer,
+    ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -16,7 +19,9 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
+    InjectionToken,
     Input,
+    NgZone,
     Output,
     Renderer2,
     TemplateRef,
@@ -32,8 +37,9 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KBQ_HIDE_ON_SCROLL_STRATEGY,
     KbqComponentColors,
+    KbqHideOnScrollStrategy,
+    KbqHideOnScrollStrategyConfig,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
@@ -45,7 +51,8 @@ import {
     POSITION_TO_CSS_MAP,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins
+    applyPopupMargins,
+    kbqHideOnScrollStrategyFactory
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { NEVER, merge } from 'rxjs';
@@ -125,6 +132,22 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected readonly componentColors = KbqComponentColors;
 }
 
+export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<
+    (config?: KbqHideOnScrollStrategyConfig) => ScrollStrategy
+>('kbq-popover-scroll-strategy');
+
+/** @docs-private */
+export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
+    return () => overlay.scrollStrategies.reposition({ scrollThrottle: 20 });
+}
+
+/** @docs-private */
+export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
+    provide: KBQ_POPOVER_SCROLL_STRATEGY,
+    deps: [ScrollDispatcher, ViewportRuler, NgZone],
+    useFactory: kbqHideOnScrollStrategyFactory
+};
+
 /** Creates an error to be thrown if the user supplied an invalid popover position. */
 export function getKbqPopoverInvalidPositionError(position: string) {
     return Error(`KbqPopover position "${position}" is invalid.`);
@@ -143,18 +166,18 @@ export function getKbqPopoverInvalidPositionError(position: string) {
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
     private overlayContainer = inject(OverlayContainer);
     private renderer = inject(Renderer2);
-    private kbqHideOnScrollStrategy = inject(KBQ_HIDE_ON_SCROLL_STRATEGY);
+    private scrollStrategyFactory = inject(KBQ_POPOVER_SCROLL_STRATEGY);
 
     protected scrollStrategy = (): ScrollStrategy => {
-        if (this.closeOnScroll === null && this.hideIfNotInViewPort()) {
-            const strategy = this.kbqHideOnScrollStrategy({ originElement: this.elementRef.nativeElement });
+        const strategy = this.scrollStrategyFactory({
+            originElement: this.elementRef.nativeElement
+        });
 
+        if (this.closeOnScroll === null && this.hideIfNotInViewPort() && strategy instanceof KbqHideOnScrollStrategy) {
             strategy.hide$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.hide());
-
-            return strategy;
         }
 
-        return this.overlay.scrollStrategies.reposition({ scrollThrottle: 20 });
+        return strategy;
     };
 
     /** Controls whether the component should be hidden when it is not visible in the viewport. */
