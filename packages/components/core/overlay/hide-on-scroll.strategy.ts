@@ -50,29 +50,26 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
 
         const { originElement, scrollThrottle = 20 } = this._config;
 
-        const stream$ = originElement
-            ? this._scrollDispatcher.ancestorScrolled(originElement, scrollThrottle)
-            : this._scrollDispatcher
-                  .scrolled(scrollThrottle)
-                  .pipe(
-                      filter(
-                          (scrollable) =>
-                              !scrollable ||
-                              !this._overlayRef!.overlayElement.contains(scrollable.getElementRef().nativeElement)
-                      )
-                  );
+        this._scrollSubscription = this._scrollDispatcher
+            .scrolled(scrollThrottle)
+            .pipe(
+                filter(
+                    (scrollable) =>
+                        !scrollable ||
+                        !this._overlayRef!.overlayElement.contains(scrollable.getElementRef().nativeElement)
+                )
+            )
+            .subscribe(() => {
+                this._overlayRef!.updatePosition();
 
-        this._scrollSubscription = stream$.subscribe(() => {
-            this._overlayRef!.updatePosition();
+                const isOutside = originElement
+                    ? this._isOriginOutsideAncestors(originElement)
+                    : this._isOverlayOutsideViewport();
 
-            const isOutside = originElement
-                ? this._isOriginOutsideAncestors(originElement)
-                : this._isOverlayOutsideViewport();
-
-            if (isOutside) {
-                this._ngZone.run(() => this._hideSubject.next());
-            }
-        });
+                if (isOutside) {
+                    this._ngZone.run(() => this._hideSubject.next());
+                }
+            });
     }
 
     /** Unsubscribes from scroll events. */
