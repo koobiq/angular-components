@@ -2,16 +2,16 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
+    CdkScrollable,
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConfig,
     OverlayContainer,
-    ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
-import { ViewportRuler } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import {
+    AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
@@ -21,7 +21,7 @@ import {
     EventEmitter,
     InjectionToken,
     Input,
-    NgZone,
+    OnInit,
     Output,
     Renderer2,
     TemplateRef,
