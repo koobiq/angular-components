@@ -476,6 +476,8 @@ New versions include improvements but also contain **breaking changes**; they mu
 2. **18.6**: token update.
 3. **18.22**: component attribute changes.
 4. **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
+5. **20.2.0**: the move of the filter-bar API to signals.
+6. **20.2.0**: one shared mechanism for dropdown panel width.
 
 ### 1. Upgrade to 18.5.3
 
@@ -614,6 +616,136 @@ The schematic emits warnings for what cannot be rewritten safely:
 
 **Code block**: the deprecated `canLoad` / `codeFiles` inputs are renamed to `canDownload` / `files`. Template bindings are migrated automatically; programmatic access (`.canLoad`, `.codeFiles`) must be updated by hand.
 
+### 5. Filter-bar upgrade (20.2.0)
+
+In version 20.2.0 the public API of `KbqFilterBar` moved to signals. Template bindings (`[filter]`, `[(filter)]`, `[pipeTemplates]`) and the `(filterChange)` output keep working — only programmatic reads break: they now require a call.
+
+| Member                                                                      | Before                  | After                                                    |
+| --------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------- |
+| `filter`                                                                    | accessor                | `ModelSignal<KbqFilter \| null>` — write via `.set(...)` |
+| `pipeTemplates`                                                             | accessor                | `InputSignal<KbqPipeTemplate[]>`                         |
+| `isChanged` / `isDisabled` / `isReadOnly` / `isSaved` / `isSavedAndChanged` | getter                  | `Signal<boolean>`                                        |
+| `onChangePipe`                                                              | `EventEmitter<KbqPipe>` | `OutputEmitterRef<KbqPipe>`                              |
+
+#### Running the migration
+
+The changes are applied by the `filter-bar-signals` schematic (runs automatically):
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually — for example, if you have already upgraded to 20.2.0. To preview without writing — `--fix=false`:
+
+```bash
+ng g @koobiq/components:filter-bar-signals --project <your project>
+```
+
+#### What is fixed automatically
+
+**Reads and writes in TypeScript** (for receivers annotated `KbqFilterBar` / `KbqFilterBarHost`):
+
+- filterBar.filter → filterBar.filter(),
+- filterBar.filter = next → filterBar.filter.set(next),
+- filterBar.filter?.name → filterBar.filter()?.name,
+- this.filterBar.isChanged → this.filterBar.isChanged()
+
+**Reads through a template reference variable** (`#ref` on `<kbq-filter-bar>`, in external `.html` files and inline templates):
+
+- ref.isChanged → ref.isChanged()
+
+**Renames:**
+
+- KbqFilterBarRefresher → KbqFilterRefresher (the old name is still re-exported as an alias, so it does not break the build)
+
+All replacements are idempotent — running the schematic twice does not double the call.
+
+#### What you need to fix manually
+
+The schematic emits warnings for what cannot be rewritten safely:
+
+**KbqFilterBar.changes**: deprecated and no longer emits → read `filterBar.filter()` inside an `effect(...)`, or listen to `(filterChange)`.
+
+**KbqFilters.preparePopover()**: removed → `openSaveAsNewFilterPopover()` / `openChangeFilterNamePopover()`.
+
+**viewChild(KbqFilterBar) queries**: return the component instance, so a read becomes a double call — `this.filterBar().filter()`.
+
+**KBQ_FILTER_BAR_PIPES**: now typed `Map<KbqPipeType, Type<KbqBasePipe>>` (was an array of tuples) → wrap the entries in `new Map([...])`.
+
+The schematic does not cover the following changes — check them yourself:
+
+**[filters] on kbq-filters**: the input became required.
+
+**KbqPipeState.state**: accessor → `InputSignal<T | null>` (relevant for custom pipes).
+
+**KbqPipeTreeSelectComponent**: `template` and `filteredOptions` were removed. On **KbqFilters** the `popoverOffset` and `popoverSize` fields became `protected`.
+
+The schematic matches receivers by explicit type annotation only, so aliases (`const fb = this.filterBar; fb.filter`) are left untouched — fix them by hand.
+
+### 6. Panel width unification (20.2.0)
+
+In version 20.2.0 `autocomplete`, `select`, `tree-select`, `timezone` and `dropdown` started resolving the width of their dropdown panel through one shared mechanism. They now all expose the same three inputs — `panelWidth`, `panelMinWidth` and `panelMaxWidth` — with the same meaning:
+
+| `panelWidth`           | Panel width                                                              |
+| ---------------------- | ------------------------------------------------------------------------ |
+| not set (default)      | sizes to its content, never narrower than the trigger or `panelMinWidth` |
+| `'auto'`               | matches the trigger, never narrower than `panelMinWidth`                 |
+| a number or CSS string | exactly that width; `panelMinWidth` is not applied                       |
+
+Panels are now also capped at **640px** through the `--kbq-panel-size-width-max` token. The cap is soft: it limits how far a panel grows with its content, but it never makes a panel narrower than its trigger and never clamps an explicit `panelWidth`. Change it globally by setting the token on `:root`, per component through the component's own token (`--kbq-dropdown-size-container-width-max` still works), or per instance through `panelMaxWidth`.
+
+#### Running the migration
+
+The `autocomplete-panel-width-auto` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:autocomplete-panel-width-auto --project <your project>
+```
+
+#### What is fixed automatically
+
+**`panelWidth="auto"` on `<kbq-autocomplete>`** → `panelWidth="fit-content"`. On autocomplete, `auto` used to be passed to CSS verbatim, so the panel shrank to fit its content. It now means "match the host width", as it already did on `kbq-select`. `fit-content` preserves the old behaviour. Both the static (`panelWidth="auto"`) and bound (`[panelWidth]="'auto'"`) forms are rewritten; a dynamic value (`[panelWidth]="expr"`) is skipped with a warning.
+
+`auto` still type-checks and still renders, the panel is just laid out differently — it isn't the only silent change in this release though, see the `panelWidth={{0}}` note below.
+
+#### What you need to fix manually
+
+**`panelWidth`, `panelMinWidth` and `panelMaxWidth` are signal inputs.** Reads now require a call, and writes are no longer possible — this is the one change in this release without an automated path, because there is no runtime equivalent of writing to a signal input from outside.
+
+```ts
+// Before
+@ViewChild(KbqSelect) select: KbqSelect;
+this.select.panelWidth = 'auto';
+const w = this.select.panelWidth;
+
+// After — bind from the template instead
+// <kbq-select [panelWidth]="panelWidth">
+panelWidth: KbqPanelWidth = 'auto';
+const w = this.select.panelWidth();
+```
+
+`kbq-tree-select` already exposed these as signals, so it is unaffected. `KbqDropdownPanel.panelWidth` / `panelMinWidth` / `panelMaxWidth` are typed `Signal<...>` for the same reason.
+
+**Panels no longer grow past 640px with their content.** `kbq-select`, `kbq-tree-select` and `kbq-autocomplete` previously had no cap at all, so a panel with long option text could grow arbitrarily wide; it now stops at 640px. Panels whose width comes from the trigger or from an explicit `panelWidth` are unaffected. To restore the old behaviour set `--kbq-panel-size-width-max: none` on `:root`, or raise the cap for one instance with `panelMaxWidth`.
+
+**`panelWidth="auto"` on `kbq-select` and `kbq-tree-select`** no longer goes below `panelMinWidth` (200 by default). A trigger narrower than 200px used to produce a panel of exactly the trigger's width; it now produces a 200px panel. If you relied on that, set `panelMinWidth="0"`. This cannot be migrated automatically — whether it affects you depends on the rendered width of the trigger.
+
+**`panelWidth={{0}}` on `<kbq-autocomplete>`** is now an explicit width instead of being treated as unset — the panel renders at literally `0px` instead of sizing to content. `getOverlaySize()` used to treat `panelWidth` as falsy-checked, so `0` fell back to content-sizing; `select`/`tree-select` already treated `0` as an explicit width before this release, and autocomplete is now consistent with them. This only matters if `panelWidth` is bound to an expression that can evaluate to `0` (a literal `panelWidth="0"` has no legitimate use); it can't be schematic-migrated since it depends on a runtime value, not a static template attribute.
+
+**`kbq-timezone-select` no longer has width defaults of its own.** It used to declare `panelWidth: 'auto'` and `panelMinWidth: 640`; both are gone, so it now inherits the select's defaults — the menu sizes to its content, never narrower than the field or 200px, and stops at 640px. In practice the panel used to match the field exactly (the `640` minimum never reached the DOM between 20.0.0 and 20.1.0), so the visible change is that the menu now grows with long timezone names. Set `panelWidth="auto"` to get the old field-matching behaviour back.
+
+**`[panelMinWidth]="null"`** now keeps the trigger-width floor. It previously produced an invalid `NaNpx`, which browsers dropped, removing every minimum.
+
+**`KbqDropdown.triggerWidth`** is deprecated and has no effect (it has been unread since 20.0.0). To make a dropdown panel match an element other than its trigger, set `KbqDropdownTrigger.widthOrigin`. `kbq-split-button`'s `panelAutoWidth` does this for you and now works — previously it wrote to `triggerWidth` and did nothing.
+
+**`kbq-dropdown`'s minimum width is now measured with `getBoundingClientRect()`** (the trigger's full border-box) instead of `getComputedStyle().width` minus its borders (the old, incorrectly-computed content-box). A trigger with padding or a border renders a wider panel than before by that amount; a trigger with neither is unaffected.
+
 ### After the migration
 
 The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full list of breaking changes is on the [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) page.
@@ -690,115 +822,103 @@ This area can contain any type of content.
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/icon';
+import { InjectionToken } from '@angular/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
+
+// @public
+export const KBQ_ACCORDION_STATE_STORE: InjectionToken<KbqAccordionStateStore>;
 
 // @public (undocumented)
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     closeAll(): void;
-    // (undocumented)
-    readonly collapsible: i0.InputSignal<boolean>;
-    get defaultValue(): string[] | string;
-    set defaultValue(value: string[] | string);
+    readonly collapsible: _angular_core.InputSignal<boolean>;
+    readonly defaultValue: _angular_core.InputSignal<string | string[]>;
     protected readonly dir: Directionality | null;
-    readonly disabled: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly elementRef: ElementRef<any>;
     protected readonly focusMonitor: FocusMonitor;
-    // (undocumented)
     get hasSavedState(): boolean;
-    // (undocumented)
     get id(): string;
-    // (undocumented)
     get isMultiple(): boolean;
-    readonly items: i0.Signal<readonly any[]>;
+    readonly items: _angular_core.Signal<readonly any[]>;
     keydownHandler(event: KeyboardEvent): void;
     protected keyManager: FocusKeyManager<KbqAccordionItem>;
+    readonly level: _angular_core.InputSignalWithTransform<number, unknown>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    readonly onValueChange: i0.OutputEmitterRef<void>;
     openAll(): void;
     readonly openCloseAllActions: Subject<boolean>;
-    readonly orientation: i0.InputSignal<KbqAccordionOrientation>;
+    readonly orientation: _angular_core.InputSignal<KbqAccordionOrientation>;
     saveItemState(item: KbqAccordionItem, force?: boolean): void;
     protected readonly selectionDispatcher: UniqueSelectionDispatcher;
     setActiveItem(item: KbqAccordionItem): void;
-    readonly type: i0.InputSignal<KbqAccordionType>;
-    useStateSaving: boolean;
-    get value(): string[] | string;
-    set value(value: string[] | string);
+    readonly stateSavingKey: _angular_core.InputSignal<string>;
+    readonly type: _angular_core.InputSignal<KbqAccordionType>;
+    readonly useStateSaving: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly value: _angular_core.Signal<string | string[]>;
+    readonly valueChange: _angular_core.OutputEmitterRef<string | string[]>;
+    readonly valueInput: _angular_core.InputSignal<string | string[] | undefined>;
+    readonly variant: _angular_core.InputSignal<KbqAccordionVariant>;
     // (undocumented)
-    readonly variant: i0.InputSignal<string>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "level": { "alias": "level"; "required": false; "isSignal": true; }; "defaultValue": { "alias": "defaultValue"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; }, ["items"], ["*"], true, never>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "defaultValue": { "alias": "defaultValue"; "required": false; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; }, { "onValueChange": "onValueChange"; }, ["items"], ["*"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordion, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordion, never>;
 }
 
 // @public (undocumented)
 export class KbqAccordionContent {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAccordionContent, "kbq-accordion-content, [kbq-accordion-content]", never, {}, {}, never, ["*"], true, [{ directive: typeof KbqAccordionContentDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordionContent, "kbq-accordion-content, [kbq-accordion-content]", never, {}, {}, never, ["*"], true, [{ directive: typeof KbqAccordionContentDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionContent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionContent, never>;
 }
 
 // @public (undocumented)
-export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
+export class KbqAccordionContentDirective implements AfterViewInit {
     constructor();
     get contentId(): string;
     // (undocumented)
     disableAnimation(): void;
     // (undocumented)
     enableAnimation(): void;
-    protected readonly hidden: i0.WritableSignal<boolean>;
+    protected readonly hidden: _angular_core.WritableSignal<boolean>;
     protected readonly item: KbqAccordionItem;
     protected readonly nativeElement: HTMLElement;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     toggle(): void;
     get triggerId(): string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAccordionContentDirective, "[kbqAccordionContent]", ["kbqAccordionContent"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAccordionContentDirective, "[kbqAccordionContent]", ["kbqAccordionContent"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionContentDirective, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionContentDirective, never>;
 }
 
 // @public (undocumented)
 export class KbqAccordionHeader {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAccordionHeader, "kbq-accordion-header, [kbq-accordion-header]", never, {}, {}, never, never, true, [{ directive: typeof KbqAccordionHeaderDirective; inputs: {}; outputs: {}; }]>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionHeader, never>;
-}
-
-// @public (undocumented)
-export class KbqAccordionHeaderDirective {
-    // (undocumented)
+    protected readonly accordion: KbqAccordion;
     protected readonly item: KbqAccordionItem;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAccordionHeaderDirective, "[kbqAccordionHeader]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAccordionHeader, "kbq-accordion-header, [kbq-accordion-header]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionHeaderDirective, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionHeader, never>;
 }
 
 // @public (undocumented)
@@ -807,72 +927,95 @@ export class KbqAccordionItem implements OnDestroy {
     protected readonly accordion: KbqAccordion;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     close(): void;
-    readonly closed: i0.OutputEmitterRef<void>;
-    readonly content: i0.Signal<any>;
-    // (undocumented)
+    readonly closed: _angular_core.OutputEmitterRef<void>;
+    readonly content: _angular_core.Signal<any>;
     get dataState(): KbqAccordionItemState;
-    readonly destroyed: EventEmitter<void>;
-    // (undocumented)
     disableAnimation(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
-    // (undocumented)
     enableAnimation(): void;
     get expanded(): boolean;
     set expanded(expanded: boolean);
-    readonly expandedChange: i0.OutputEmitterRef<boolean>;
+    readonly expandedChange: _angular_core.OutputEmitterRef<boolean>;
     protected readonly expansionDispatcher: UniqueSelectionDispatcher;
-    // (undocumented)
     focus(): void;
-    // (undocumented)
-    getState(): any;
+    getState(): KbqAccordionItemSnapshot;
     get id(): string;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_expanded: unknown;
+    // (undocumented)
     ngOnDestroy(): void;
     open(): void;
-    readonly opened: i0.OutputEmitterRef<void>;
-    // (undocumented)
+    readonly opened: _angular_core.OutputEmitterRef<void>;
     get orientation(): KbqAccordionOrientation;
     toggle(): void;
-    readonly trigger: i0.Signal<KbqAccordionTriggerDirective | undefined>;
-    readonly triggerComponent: i0.Signal<KbqAccordionTrigger | undefined>;
-    set value(value: string);
+    readonly trigger: _angular_core.Signal<KbqAccordionTriggerDirective | undefined>;
+    readonly triggerComponent: _angular_core.Signal<KbqAccordionTrigger | undefined>;
+    readonly value: _angular_core.Signal<string>;
+    readonly valueInput: _angular_core.InputSignal<string>;
     // (undocumented)
-    get value(): string;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAccordionItem, "kbq-accordion-item, [kbq-accordion-item]", never, { "expanded": { "alias": "expanded"; "required": false; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "closed": "closed"; "opened": "opened"; "expandedChange": "expandedChange"; }, ["trigger", "triggerComponent", "content"], never, true, never>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAccordionItem, "kbq-accordion-item, [kbq-accordion-item]", never, { "expanded": { "alias": "expanded"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "closed": "closed"; "opened": "opened"; "expandedChange": "expandedChange"; }, ["trigger", "triggerComponent", "content"], never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionItem, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionItem, never>;
+}
+
+// @public
+export interface KbqAccordionItemSnapshot {
+    expanded: boolean;
+    value: string;
 }
 
 // @public (undocumented)
 export type KbqAccordionItemState = 'open' | 'closed';
 
-// @public (undocumented)
-export class KbqAccordionModule {
+// @public
+export class KbqAccordionLocalStorageStateStore implements KbqAccordionStateStore {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionModule, never>;
+    getState(key: string): KbqAccordionState | null;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqAccordionModule>;
+    setState(key: string, state: KbqAccordionState): void;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof i1.KbqIcon, typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger], [typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger]>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionLocalStorageStateStore, never>;
+    // (undocumented)
+    static ɵprov: _angular_core.ɵɵInjectableDeclaration<KbqAccordionLocalStorageStateStore>;
 }
 
 // @public (undocumented)
+export class KbqAccordionModule {
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionModule, never>;
+    // (undocumented)
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqAccordionModule>;
+    // (undocumented)
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAccordionModule, never, [typeof i1.KbqIcon, typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger], [typeof KbqAccordion, typeof KbqAccordionContent, typeof KbqAccordionHeader, typeof KbqAccordionItem, typeof KbqAccordionTrigger]>;
+}
+
+// @public
 export type KbqAccordionOrientation = 'horizontal' | 'vertical';
 
+// @public
+export interface KbqAccordionState {
+    // (undocumented)
+    [itemId: string]: KbqAccordionItemSnapshot;
+}
+
+// @public
+export interface KbqAccordionStateStore {
+    getState(key: string): KbqAccordionState | null;
+    setState(key: string, state: KbqAccordionState): void;
+}
+
 // @public (undocumented)
-export class KbqAccordionTrigger implements AfterViewInit {
+export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
     constructor();
     protected readonly accordion: KbqAccordion;
     // (undocumented)
     disableAnimation(): void;
     // (undocumented)
     enableAnimation(): void;
-    readonly icon: i0.Signal<KbqIcon>;
+    readonly icon: _angular_core.Signal<KbqIcon>;
     // (undocumented)
     get isFill(): boolean;
     // (undocumented)
@@ -883,9 +1026,11 @@ export class KbqAccordionTrigger implements AfterViewInit {
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAccordionTrigger, "kbq-accordion-trigger, [kbq-accordion-trigger]", never, {}, {}, never, ["*"], true, [{ directive: typeof KbqAccordionTriggerDirective; inputs: {}; outputs: {}; }]>;
+    ngOnDestroy(): void;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionTrigger, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordionTrigger, "kbq-accordion-trigger, [kbq-accordion-trigger]", never, {}, {}, never, ["*"], true, [{ directive: typeof KbqAccordionTriggerDirective; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionTrigger, never>;
 }
 
 // @public (undocumented)
@@ -896,25 +1041,19 @@ export class KbqAccordionTriggerDirective {
     protected readonly item: KbqAccordionItem;
     protected readonly nativeElement: HTMLElement;
     onClick(): void;
+    onFocus(): void;
     get triggerId(): string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAccordionTriggerDirective, "[kbqAccordionTrigger]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAccordionTriggerDirective, "[kbqAccordionTrigger]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAccordionTriggerDirective, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionTriggerDirective, never>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqAccordionType = 'single' | 'multiple';
 
-// @public (undocumented)
-export enum KbqAccordionVariant {
-    // (undocumented)
-    fill = "fill",
-    // (undocumented)
-    hug = "hug",
-    // (undocumented)
-    hugSpaceBetween = "hugSpaceBetween"
-}
+// @public
+export type KbqAccordionVariant = 'fill' | 'hug' | 'hugSpaceBetween';
 
 // (No @packageDocumentation comment for this package)
 
@@ -1835,6 +1974,8 @@ Shows important information on a page. Can contain a hint, signal a status chang
 
 ### Size
 
+Alerts come in two sizes. The normal size is the default; pass `[compact]="true"` for the denser compact size used in tight spaces such as popovers and forms.
+
 <!-- example(alert-overview) -->
 
 ### Variant
@@ -1845,11 +1986,13 @@ By default, alerts are styled conservatively and stand out only by the icon colo
 
 ### Status
 
+The `alertColor` input sets the status: `error`, `warning`, `success` or `info` (the default). It drives the background in the colored variant and auto-tints a projected status icon that has no explicit `[color]`: the icon is tinted to the matching status color, except `info`, which is tinted to `contrast`. Set `[color]` on the icon yourself to opt out of the auto-tint.
+
 <!-- example(alert-status) -->
 
 ### Hide
 
-The block can be hidden by clicking the icon button in the corner of the alert. If the system reports a problem, the alert is displayed permanently and the user cannot close it.
+The block can be hidden by clicking the icon button in the corner of the alert. The alert does not hide itself — listen to the `(closed)` output (emitted when the close control is activated) and remove or hide the alert in your own code. If the system reports a problem, the alert is displayed permanently and the user cannot close it.
 
 <!-- example(alert-close) -->
 
@@ -1859,6 +2002,14 @@ The alert can contain links and buttons; the icon and heading can be omitted. In
 
 <!-- example(alert-content) -->
 
+### Accessibility
+
+- **Static alerts.** The host applies only CSS classes and no ARIA role, which is correct for an alert rendered with the page: forcing `role="alert"` would make a screen reader announce page-load content unexpectedly.
+- **Dynamically shown alerts.** When an alert appears in response to a user action (a validation error, a status change), add `role="alert"` for urgent messages, or `aria-live="polite"` with `aria-atomic="true"` for non-urgent status, so assistive technology announces it. Alternatively, announce the message with `LiveAnnouncer` from `@angular/cdk/a11y`.
+- **Status by icon alone.** The status is conveyed by the icon color, which is not perceivable by every user. Repeat the severity in the title or body text (or add visually hidden text, e.g. `<span class="cdk-visually-hidden">Error:</span>`), and mark a decorative status icon `aria-hidden="true"`.
+- **Close control.** Put the close button on a native `<button>` with an accessible name (`aria-label="Close"`) so it is reachable and operable by keyboard.
+- **Focus on dismiss.** Dismissing an alert while focus is on its close control drops focus to `<body>`. Move focus to a logical target after removal — prefer `FocusMonitor.focusVia` from `@angular/cdk/a11y` so the focus ring is preserved.
+
 #### api
 
 ## API Report File for "koobiq"
@@ -1867,54 +2018,42 @@ The alert can contain links and buttons; the icon and heading can be omitted. In
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
-import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
-import * as i2 from '@angular/cdk/platform';
+import * as _angular_core from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqIconItem } from '@koobiq/components/icon';
 
-// @public (undocumented)
-export class KbqAlert implements AfterContentInit {
+// @public
+export class KbqAlert {
+    constructor();
+    readonly alertColor: _angular_core.InputSignalWithTransform<"error" | "warning" | "success" | "info", "error" | "warning" | "success" | "info" | null | undefined>;
+    protected readonly alertColorClass: _angular_core.Signal<string>;
+    readonly alertStyle: _angular_core.InputSignal<"default" | "colored">;
+    protected readonly button: _angular_core.Signal<KbqButton | undefined>;
+    protected readonly closeButton: _angular_core.Signal<KbqAlertCloseButton | undefined>;
+    readonly closed: _angular_core.OutputEmitterRef<void>;
+    readonly compact: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly control: _angular_core.Signal<KbqAlertControl | undefined>;
+    protected readonly icon: _angular_core.Signal<KbqIcon | undefined>;
+    protected readonly iconItem: _angular_core.Signal<KbqIconItem | undefined>;
+    protected readonly isColored: _angular_core.Signal<boolean>;
+    protected readonly projectedIcon: _angular_core.Signal<KbqIcon | undefined>;
+    protected readonly title: _angular_core.Signal<KbqAlertTitle | undefined>;
     // (undocumented)
-    get alertColor(): string;
-    set alertColor(value: string | KbqAlertColors);
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAlert, "kbq-alert", ["kbqAlert"], { "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "alertStyle": { "alias": "alertStyle"; "required": false; "isSignal": true; }; "alertColor": { "alias": "alertColor"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["iconItem", "icon", "button", "title", "control", "closeButton"], ["[kbq-icon-item],[kbq-icon]", "[kbq-alert-title]", "*", "[kbq-alert-control]", "[kbq-alert-close-button]"], true, never>;
     // (undocumented)
-    alertStyle: KbqAlertStyles | string;
-    // (undocumented)
-    button: KbqButton;
-    // (undocumented)
-    closeButton: KbqAlertCloseButton;
-    // (undocumented)
-    compact: boolean;
-    // (undocumented)
-    control: KbqAlertControl;
-    // (undocumented)
-    icon: KbqIcon;
-    // (undocumented)
-    iconItem: KbqIconItem;
-    // (undocumented)
-    get isColored(): boolean;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    title: KbqAlertTitle;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAlert, "kbq-alert", never, { "compact": { "alias": "compact"; "required": false; }; "alertStyle": { "alias": "alertStyle"; "required": false; }; "alertColor": { "alias": "alertColor"; "required": false; }; }, {}, ["iconItem", "icon", "button", "title", "control", "closeButton"], ["[kbq-icon-item],[kbq-icon]", "[kbq-alert-title]", "*", "[kbq-alert-control]", "[kbq-alert-close-button]"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlert, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlert, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqAlertCloseButton {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAlertCloseButton, "[kbq-alert-close-button]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAlertCloseButton, "[kbq-alert-close-button]", ["kbqAlertCloseButton"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlertCloseButton, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlertCloseButton, never>;
 }
 
-// @public (undocumented)
+// @public
 export enum KbqAlertColors {
     // (undocumented)
     Error = "error",
@@ -1926,40 +2065,36 @@ export enum KbqAlertColors {
     Warning = "warning"
 }
 
-// @public (undocumented)
+// @public
 export class KbqAlertControl {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAlertControl, "[kbq-alert-control]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAlertControl, "[kbq-alert-control]", ["kbqAlertControl"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlertControl, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlertControl, never>;
 }
 
 // @public (undocumented)
 export class KbqAlertModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlertModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlertModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqAlertModule>;
-    // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqAlertModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAlertModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof i3.KbqAlert, typeof i3.KbqAlertTitle, typeof i3.KbqAlertCloseButton, typeof i3.KbqAlertControl], [typeof i3.KbqAlert, typeof i3.KbqAlertTitle, typeof i3.KbqAlertCloseButton, typeof i3.KbqAlertControl]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAlertModule, never, [typeof KbqAlert, typeof KbqAlertTitle, typeof KbqAlertCloseButton, typeof KbqAlertControl], [typeof KbqAlert, typeof KbqAlertTitle, typeof KbqAlertCloseButton, typeof KbqAlertControl]>;
 }
 
-// @public (undocumented)
+// @public
 export enum KbqAlertStyles {
-    // (undocumented)
     Colored = "colored",
-    // (undocumented)
     Default = "default"
 }
 
-// @public (undocumented)
+// @public
 export class KbqAlertTitle {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAlertTitle, "[kbq-alert-title]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAlertTitle, "[kbq-alert-title]", ["kbqAlertTitle"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlertTitle, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlertTitle, never>;
 }
 
 // (No @packageDocumentation comment for this package)
@@ -1969,12 +2104,10 @@ export class KbqAlertTitle {
 #### example
 
 ```typescript
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAlertModule } from '@koobiq/components/alert';
-import { KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqAlert, KbqAlertControl, KbqAlertTitle } from '@koobiq/components/alert';
+import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
+import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
 /**
  * @title Alert size
@@ -1982,26 +2115,21 @@ import { KbqLinkModule } from '@koobiq/components/link';
 @Component({
     selector: 'alert-overview-example',
     imports: [
-        KbqAlertModule,
-        KbqLinkModule
+        KbqAlert,
+        KbqAlertTitle,
+        KbqAlertControl,
+        KbqButton,
+        KbqButtonCssStyler,
+        KbqIcon,
+        KbqIconItem
     ],
     templateUrl: 'alert-overview-example.html',
     styleUrls: ['alert-overview-example.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        trigger('hideShowAnimator', [
-            state('true', style({ opacity: 1, display: '' })),
-            state('false', style({ opacity: 0, display: 'none' })),
-            transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))
-        ])
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertOverviewExample {
-    colors = KbqComponentColors;
-    style = KbqButtonStyles;
     text =
-        'Если нет заголовка, не ставьте точку в конце последнего предложения. Если сообщение содержит основной текст и заголовок — ставьте точку в конце основного текста.';
+        'If there is no heading, do not put a period at the end of the last sentence. If the message contains both body text and a heading, put a period at the end of the body text.';
 }
 
 ```
@@ -2381,6 +2509,31 @@ You can place auxiliary elements in the footer: [buttons](en/components/button),
 
 <!-- example(autocomplete-with-footer) -->
 
+### Panel width
+
+By default the panel sizes to its content and is never narrower than the field or than `panelMinWidth`, which is 200px. This can be changed with the `panelWidth` and `panelMinWidth` attributes:
+
+```html
+<!-- Match the field, but never go below panelMinWidth -->
+<kbq-autocomplete panelWidth="auto" />
+
+<!-- An exact width; panelMinWidth is not applied -->
+<kbq-autocomplete [panelWidth]="400" />
+
+<!-- Any CSS value works, e.g. shrink to fit the options -->
+<kbq-autocomplete panelWidth="fit-content" />
+
+<!-- Widen the default lower bound -->
+<kbq-autocomplete [panelMinWidth]="350" />
+
+<!-- Let the panel grow further with its content; the default cap is 640px -->
+<kbq-autocomplete [panelMaxWidth]="800" />
+```
+
+Growth by content stops at 640px. The cap is soft — it never makes the panel narrower than the field, and never clamps an explicit `panelWidth`. Change it globally through the `--kbq-panel-size-width-max` token, which is shared with select, tree-select and dropdown.
+
+The same attributes apply when the autocomplete is attached to a [tag input](en/components/tags), where the panel is measured against the whole field rather than the input.
+
 #### api
 
 ## API Report File for "koobiq"
@@ -2392,15 +2545,17 @@ You can place auxiliary elements in the footer: [buttons](en/components/button),
 import { ActiveDescendantKeyManager } from '@koobiq/components/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
+import { KbqPanelMaxWidth } from '@koobiq/components/core';
+import { KbqPanelWidth } from '@koobiq/components/core';
 import { KeyboardNavigationHandler } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -2445,7 +2600,7 @@ export class KbqAutocomplete implements AfterContentInit {
     set autoActiveFirstOption(value: boolean);
     get classList(): string;
     set classList(value: string);
-    readonly closed: i0.OutputEmitterRef<void>;
+    readonly closed: _angular_core.OutputEmitterRef<void>;
     displayWith: ((value: any) => string) | null;
     // (undocumented)
     emitSelectEvent(option: KbqOption): void;
@@ -2457,35 +2612,34 @@ export class KbqAutocomplete implements AfterContentInit {
     set isOpen(value: boolean);
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
-    static ngAcceptInputType_panelMinWidth: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     onKeydown(event: KeyboardEvent): any;
-    readonly opened: i0.OutputEmitterRef<void>;
+    readonly opened: _angular_core.OutputEmitterRef<void>;
     // (undocumented)
     get openOnFocus(): boolean;
     set openOnFocus(value: boolean);
     // (undocumented)
-    readonly optionGroups: i0.Signal<readonly KbqOptgroup[]>;
+    readonly optionGroups: _angular_core.Signal<readonly KbqOptgroup[]>;
     // (undocumented)
     options: QueryList<KbqOption>;
-    readonly optionSelected: i0.OutputEmitterRef<KbqAutocompleteSelectedEvent>;
+    readonly optionSelected: _angular_core.OutputEmitterRef<KbqAutocompleteSelectedEvent>;
     // (undocumented)
-    readonly panel: i0.Signal<ElementRef<any>>;
-    panelMinWidth: number;
-    panelWidth: string | number;
+    readonly panel: _angular_core.Signal<ElementRef<any>>;
+    readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
+    readonly panelMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth | undefined>;
     // (undocumented)
     setScrollTop(scrollTop: number): void;
     // (undocumented)
     setVisibility(): void;
     showPanel: boolean;
     // (undocumented)
-    readonly template: i0.Signal<TemplateRef<any>>;
+    readonly template: _angular_core.Signal<TemplateRef<any>>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["optionGroups", "options"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["optionGroups", "options"], ["*", "[kbqAutocompleteFooter], kbq-autocomplete-footer"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocomplete, never>;
 }
 
 // @public
@@ -2496,19 +2650,19 @@ export interface KbqAutocompleteDefaultOptions {
 // @public
 export class KbqAutocompleteFooter {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteFooter, "[kbqAutocompleteFooter], kbq-autocomplete-footer", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAutocompleteFooter, "[kbqAutocompleteFooter], kbq-autocomplete-footer", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteFooter, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteFooter, never>;
 }
 
 // @public (undocumented)
 export class KbqAutocompleteModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqAutocompleteModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqAutocompleteModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof KbqAutocomplete, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter], [typeof KbqAutocomplete, typeof i1.KbqOptionModule, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqAutocompleteModule, never, [typeof i1.KbqOptionModule, typeof i2.OverlayModule, typeof KbqAutocomplete, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter], [typeof KbqAutocomplete, typeof i1.KbqOptionModule, typeof KbqAutocompleteTrigger, typeof KbqAutocompleteOrigin, typeof KbqAutocompleteFooter]>;
 }
 
 // @public
@@ -2516,9 +2670,9 @@ export class KbqAutocompleteOrigin {
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteOrigin, "[kbqAutocompleteOrigin]", ["kbqAutocompleteOrigin"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAutocompleteOrigin, "[kbqAutocompleteOrigin]", ["kbqAutocompleteOrigin"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteOrigin, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteOrigin, never>;
 }
 
 // @public (undocumented)
@@ -2534,13 +2688,13 @@ export class KbqAutocompleteSelectedEvent {
 export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler {
     constructor();
     get activeOption(): KbqOption | null;
-    readonly autocomplete: i0.InputSignal<KbqAutocomplete>;
-    readonly autocompleteAttribute: i0.InputSignal<string>;
+    readonly autocomplete: _angular_core.InputSignal<KbqAutocomplete>;
+    readonly autocompleteAttribute: _angular_core.InputSignal<string>;
     get autocompleteDisabled(): boolean;
     set autocompleteDisabled(value: boolean);
     // (undocumented)
     closePanel(): void;
-    readonly connectedTo: i0.InputSignal<KbqAutocompleteOrigin>;
+    readonly connectedTo: _angular_core.InputSignal<KbqAutocompleteOrigin>;
     // (undocumented)
     protected readonly document: Document;
     // (undocumented)
@@ -2556,7 +2710,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     ngOnDestroy(): void;
     onChange: (value: any) => void;
-    readonly onInputBlur: i0.InputSignal<(event: FocusEvent) => boolean>;
+    readonly onInputBlur: _angular_core.InputSignal<(event: FocusEvent) => boolean>;
     onTouched: () => void;
     open(): void;
     // (undocumented)
@@ -2576,9 +2730,9 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; "isSignal": true; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; "isSignal": true; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; "isSignal": true; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; "isSignal": true; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, never>;
 }
 
 // (No @packageDocumentation comment for this package)
@@ -2880,7 +3034,6 @@ The label inside the badge is aligned to the text baseline in a table.
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
@@ -2944,7 +3097,7 @@ export enum KbqBadgeColors {
 }
 
 // @public (undocumented)
-export class KbqBadgeCssStyler implements AfterContentInit {
+export class KbqBadgeCssStyler {
     constructor();
     // (undocumented)
     readonly icons: i0.Signal<readonly any[]>;
@@ -2952,9 +3105,6 @@ export class KbqBadgeCssStyler implements AfterContentInit {
     isIconButton: boolean;
     // (undocumented)
     nativeElement: HTMLElement;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
     updateClassModifierForIcons(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBadgeCssStyler, "kbq-badge", never, {}, {}, ["icons"], never, true, never>;
@@ -4237,6 +4387,7 @@ import { ElementRef } from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 
@@ -4283,7 +4434,7 @@ export class KbqClampedListTrigger {
 export const KbqClampedRoot: InjectionToken<KbqClamped>;
 
 // @public (undocumented)
-export class KbqClampedText implements KbqClamped, AfterViewInit {
+export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
     constructor();
     protected readonly collapsedState: _angular_core.WritableSignal<boolean | undefined>;
     readonly debounceTime: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -4295,6 +4446,8 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfig>;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnInit(): void;
     readonly rows: _angular_core.InputSignal<number>;
     readonly text: _angular_core.Signal<ElementRef<HTMLSpanElement>>;
     readonly textContainer: _angular_core.Signal<ElementRef<HTMLDivElement>>;
@@ -4514,6 +4667,12 @@ By default, text is truncated after 5 lines. The `rows` attribute controls how m
 
 If the hidden portion contains only one line, the component displays it immediately. The "Expand" button does not appear because the text already takes up the same height as the collapsed state with the button.
 
+### External state control
+
+The `isCollapsed` input lets you control the component's state from outside — for example, from route query params. The `isCollapsedChange` output allows you to sync the state back, forming a two-way binding.
+
+<!-- example(clamped-text-external-state) -->
+
 #### api
 
 ## API Report File for "koobiq"
@@ -4528,6 +4687,7 @@ import { ElementRef } from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 
@@ -4574,7 +4734,7 @@ export class KbqClampedListTrigger {
 export const KbqClampedRoot: InjectionToken<KbqClamped>;
 
 // @public (undocumented)
-export class KbqClampedText implements KbqClamped, AfterViewInit {
+export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
     constructor();
     protected readonly collapsedState: _angular_core.WritableSignal<boolean | undefined>;
     readonly debounceTime: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -4586,6 +4746,8 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfig>;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnInit(): void;
     readonly rows: _angular_core.InputSignal<number>;
     readonly text: _angular_core.Signal<ElementRef<HTMLSpanElement>>;
     readonly textContainer: _angular_core.Signal<ElementRef<HTMLDivElement>>;
@@ -4622,24 +4784,21 @@ export function kbqInjectKbqClampedLocaleConfiguration(): Signal<KbqClampedTextL
 #### example
 
 ```typescript
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqClampedText } from '@koobiq/components/clamped-text';
-import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
  * @title Clamped-text overview
  */
 @Component({
     selector: 'clamped-text-overview-example',
-    imports: [KbqClampedText, KbqToggleModule],
+    imports: [KbqClampedText],
     template: `
         <div class="layout-margin-bottom-l">
-            <kbq-clamped-text [isCollapsed]="collapsed()" (isCollapsedChange)="collapsed.set($event)">
+            <kbq-clamped-text>
                 {{ text }}
             </kbq-clamped-text>
         </div>
-
-        <kbq-toggle [checked]="collapsed()" (change)="collapsed.set($event.checked)">Collapsed</kbq-toggle>
     `,
     styles: `
         :host > div {
@@ -4653,7 +4812,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClampedTextOverviewExample {
-    protected readonly collapsed = signal(true);
     protected readonly text =
         'In a distributed denial-of-service attack (DDoS attack), the incoming traffic flooding the victim originates from many different sources. More sophisticated strategies are required to mitigate this type of attack; simply attempting to block a single source is insufficient as there are multiple sources. A DoS or DDoS attack is analogous to a group of people crowding the entry door of a shop, making it hard for legitimate customers to enter, thus disrupting trade and losing the business money. Criminal perpetrators of DoS attacks often target sites or services hosted on high-profile web servers such as banks or credit card payment gateways. Revenge and blackmail, as well as hacktivism, can motivate these attacks.';
 }
@@ -5288,6 +5446,7 @@ import { AnimationTriggerMetadata } from '@angular/animations';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -6312,6 +6471,12 @@ export const J = 74;
 
 // @public (undocumented)
 export const K = 75;
+
+// @public
+export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";
+
+// @public
+export const KBQ_CONNECTED_OVERLAY_BELOW_CLASS = "kbq-connected-overlay_below";
 
 // @public (undocumented)
 export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER: <T>(token: InjectionToken<T>, factory: (overlay: Overlay) => () => ScrollStrategy) => {
@@ -7481,6 +7646,9 @@ export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponen
 // @public
 export const KBQ_OVERFLOW_SHADOW_SOURCE: InjectionToken<KbqOverflowShadowSource>;
 
+// @public
+export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
+
 // @public (undocumented)
 export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 
@@ -7569,9 +7737,12 @@ export abstract class KbqAbstractSelect {
     protected calculateOverlayOffsetX(baseOffsetX: number): number[];
     // (undocumented)
     protected getOverlayRect(): DOMRect;
+    protected lockOverlayWidthForSearch(panel: ElementRef<HTMLElement> | undefined): void;
     // (undocumented)
     protected overlayDir: CdkConnectedOverlay;
+    protected overlayMinWidth: string | number;
     protected readonly overlayPanelClass = "kbq-select-overlay";
+    protected overlayWidth: string | number;
     // (undocumented)
     protected resetOverlay(): void;
     // (undocumented)
@@ -7580,6 +7751,7 @@ export abstract class KbqAbstractSelect {
     protected setOverlayPosition(): void;
     // (undocumented)
     protected triggerRect: DOMRect;
+    protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAbstractSelect, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -7856,6 +8028,9 @@ export class KbqFormsModule {
 }
 
 // @public
+export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
+
+// @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
 
 // @public (undocumented)
@@ -8009,6 +8184,16 @@ export type KbqNumberInputLocaleConfig = {
     fractionSeparator: string;
     startFormattingFrom?: number;
 } & KbqNumberFormatOptions;
+
+// @public
+export type KbqNumberRoundingLocaleConfig = {
+    separator: string;
+    groupSeparator: string;
+    thousand: string;
+    million: string;
+    billion: string;
+    trillion: string;
+};
 
 // @public
 export interface KbqNumericPipe {
@@ -8234,6 +8419,18 @@ export class KbqOverflowShadowTop {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowShadowTop, never>;
 }
+
+// @public
+export type KbqPanelMaxWidth = number | null;
+
+// @public
+export type KbqPanelMinWidth = number | null;
+
+// @public
+export type KbqPanelWidth = 'auto' | number | (string & {}) | null | '';
+
+// @public
+export type KbqPanelWidthOrigin = ElementRef<HTMLElement> | CdkOverlayOrigin | HTMLElement;
 
 // @public (undocumented)
 export interface KbqParentPopup {
@@ -8572,6 +8769,17 @@ export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPip
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeShortDateTimePipe<any>, "kbqRelativeShortDateTime", true>;
 }
+
+// @public
+export interface KbqResolvedPanelWidth {
+    // (undocumented)
+    minWidth: number | string;
+    // (undocumented)
+    width: number | string;
+}
+
+// @public
+export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
@@ -11081,6 +11289,12 @@ export class DividerOverviewExample {}
 
 <!-- example(dropdown-disabled) -->
 
+### Progress state
+
+Add the `progress` attribute to `kbq-dropdown-item` to show a loading shimmer on the item. It can be combined with `disabled` to also prevent interaction while loading.
+
+<!-- example(dropdown-item-progress) -->
+
 ### Open by Arrow Down ↓
 
 <!-- example(dropdown-open-by-arrow-down) -->
@@ -11115,6 +11329,36 @@ Use the `xPosition` property to control horizontal alignment of the dropdown pan
 
 <!-- example(dropdown-x-position) -->
 
+## Panel width
+
+By default the panel grows with its content, is never narrower than its trigger or than 200px, and stops at 640px. This is configured with the same `panelWidth`, `panelMinWidth` and `panelMaxWidth` attributes as [select](en/components/select) and [autocomplete](en/components/autocomplete):
+
+```html
+<!-- Match the trigger exactly -->
+<kbq-dropdown panelWidth="auto" />
+
+<!-- An exact width; panelMinWidth is not applied -->
+<kbq-dropdown [panelWidth]="400" />
+
+<!-- Let the panel grow further with its content -->
+<kbq-dropdown [panelMaxWidth]="800" />
+```
+
+The 640px cap is soft: it limits growth by content only, so a trigger wider than 640px still gets a panel as wide as itself, and an explicit `panelWidth` is never clamped.
+
+The defaults come from design tokens, which can be overridden by a theme:
+
+| Token                                     | Default                                  |
+| ----------------------------------------- | ---------------------------------------- |
+| `--kbq-dropdown-size-container-width-min` | `200px`                                  |
+| `--kbq-dropdown-size-container-width-max` | `var(--kbq-panel-size-width-max, 640px)` |
+
+`--kbq-panel-size-width-max` is shared by every dropdown panel in the library, so setting it once on `:root` caps select, tree-select, autocomplete and dropdown together.
+
+Nested panels and panels that overlap the trigger vertically are not matched to the trigger — they follow the tokens only.
+
+When the trigger is only a part of a larger control, set `KbqDropdownTrigger.widthOrigin` to the element the panel should match instead. [Split button](en/components/split-button) does this through its `panelAutoWidth` input.
+
 #### api
 
 ## API Report File for "koobiq"
@@ -11138,6 +11382,10 @@ import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqPanelMaxWidth } from '@koobiq/components/core';
+import { KbqPanelMinWidth } from '@koobiq/components/core';
+import { KbqPanelWidth } from '@koobiq/components/core';
+import { KbqPanelWidthOrigin } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -11145,6 +11393,7 @@ import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
@@ -11200,6 +11449,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     handleKeydown(event: KeyboardEvent): void;
     get hasBackdrop(): boolean;
     set hasBackdrop(value: boolean);
+    readonly hasSearch: i0.Signal<boolean>;
     hovered(): Observable<KbqDropdownItem>;
     isAnimating: boolean;
     items: QueryList<KbqDropdownItem>;
@@ -11221,20 +11471,24 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     set overlapTriggerY(value: boolean);
     panelAnimationState: 'void' | 'enter';
     set panelClass(classes: string);
+    readonly panelMaxWidth: i0.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
+    readonly panelMinWidth: i0.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
+    protected readonly panelMinWidthToken: i0.Signal<string | null>;
+    readonly panelWidth: i0.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
     resetAnimation(): void;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     startAnimation(): void;
     templateRef: TemplateRef<any>;
-    // (undocumented)
+    // @deprecated (undocumented)
     triggerWidth: string;
     get xPosition(): KbqDropdownPositionX;
     set xPosition(value: KbqDropdownPositionX);
     get yPosition(): KbqDropdownPositionY;
     set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
@@ -11266,6 +11520,9 @@ export interface KbqDropdownDefaultOptions {
     hasBackdrop: boolean;
     overlapTriggerX: boolean;
     overlapTriggerY: boolean;
+    panelMaxWidth?: KbqPanelMaxWidth;
+    panelMinWidth?: KbqPanelMinWidth;
+    panelWidth?: KbqPanelWidth;
     xPosition: KbqDropdownPositionX;
     yPosition: KbqDropdownPositionY;
 }
@@ -11298,12 +11555,13 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     ngOnDestroy(): void;
     // (undocumented)
     parentDropdownPanel?: KbqDropdownPanel | null | undefined;
+    readonly progress: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     resetStyles(): void;
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, never>;
 }
@@ -11339,6 +11597,12 @@ export interface KbqDropdownPanel {
     // (undocumented)
     overlapTriggerY: boolean;
     // (undocumented)
+    panelMaxWidth?: Signal<KbqPanelMaxWidth>;
+    // (undocumented)
+    panelMinWidth?: Signal<KbqPanelMinWidth>;
+    // (undocumented)
+    panelWidth?: Signal<KbqPanelWidth>;
+    // (undocumented)
     parent?: KbqDropdownPanel | undefined;
     // (undocumented)
     resetActiveItem(): void;
@@ -11346,7 +11610,7 @@ export interface KbqDropdownPanel {
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
     // (undocumented)
     templateRef: TemplateRef<any>;
-    // (undocumented)
+    // @deprecated (undocumented)
     triggerWidth?: string;
     // (undocumented)
     xPosition: KbqDropdownPositionX;
@@ -11408,6 +11672,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
     restoreFocus: boolean;
     toggle(): void;
+    widthOrigin?: KbqPanelWidthOrigin;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; }; "offsetY": { "alias": "offsetY"; "required": false; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; }; "demoteOverlay": { "alias": "demoteOverlay"; "required": false; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; }; }, { "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
     // (undocumented)
@@ -12354,6 +12619,10 @@ Clicking on a pseudo-link in the list of parameters will add a new value to the 
 
 <!-- example(filter-bar-pipe-types) -->
 
+For the `select` and `multiselect` types, the pipe template accepts an optional `compareWith` — a comparator forwarded to the underlying select that controls how the selected value is matched against the option list. Override it when options are compared by a business key, or when the selected value is a distinct object (e.g. restored from a saved filter) rather than the same reference. When omitted, options are matched by their `id`. A custom comparator is responsible for its own null handling — unlike the default, which never matches a `null`/`undefined` value.
+
+The `input` type is the only one without a popover: it renders a bare input that is typed into directly in the bar, using the pipe's `name` as its placeholder. The value is applied as you type — 200 ms after the last keystroke (`debounceTime`) and only from 3 characters on (`minLength`) — rather than through an Apply button. Text shorter than the threshold, including an emptied field, is applied as `null`, so the bar never keeps filtering by text that is no longer in the input. `Enter` and blur apply the value immediately and ignore the threshold: an explicit action is always applied as typed. Its only clear affordance is the built-in cleaner inside the input, so `removable` has no effect — an `input` pipe can only be removed programmatically. Values are trimmed, and a blank value is applied as `null`. Set its width with the `--kbq-filter-bar-pipe-input-width` CSS variable.
+
 ### Search in pipes
 
 If the filter has many values, it is useful to enable search in the drop-down menu.
@@ -12384,6 +12653,16 @@ The user can quickly get search results by selecting a saved filter, without re-
 
 <!-- example(filter-bar-saved-filters) -->
 
+### Localization
+
+The filter bar takes its own strings — the filters menu, the reset button, pipe tooltips and the date pipe's custom-period flow — from `KbqLocaleService`. The data you pass in `pipeTemplates` and `filter` is never translated, so in the example below the option names stay in English while the surrounding controls change.
+
+There are three ways to control the locale. `KBQ_DEFAULT_LOCALE_ID` is the fallback (`ru-RU`) used when nothing else is provided — it is a plain constant, not an injection token, so it cannot be provided. `KBQ_LOCALE_ID` fixes the locale once, when `KbqLocaleService` is constructed; it has to be provided alongside the service itself, because the service reads the token from the injector that created it. `KbqLocaleService.setLocale()` changes the locale at runtime.
+
+Each bar below provides its own `KbqLocaleService`, so they are isolated from each other and from the language selector in the footer of this site.
+
+<!-- example(filter-bar-localization) -->
+
 #### api
 
 ## API Report File for "koobiq"
@@ -12411,6 +12690,7 @@ import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
@@ -12570,6 +12850,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     onClear(): void;
     onRemove(): void;
     abstract open(): void;
+    protected optionCompareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
     protected restoreTriggerFocus(): void;
     get showRemoveButton(): boolean;
     readonly stateChanges: Subject<void>;
@@ -12617,7 +12898,8 @@ export class KbqFilterBar implements KbqFilterBarHost {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // @deprecated
     readonly changes: BehaviorSubject<void>;
-    configuration: KbqFilterBarConfiguration;
+    get configuration(): KbqFilterBarConfiguration;
+    set configuration(value: KbqFilterBarConfiguration);
     // (undocumented)
     readonly externalConfiguration: {
         reset: {
@@ -12914,8 +13196,7 @@ export class KbqFilterSavePopover implements AfterViewInit {
     readonly contentTemplate: _angular_core.Signal<TemplateRef<unknown>>;
     readonly filterBar: _angular_core.InputSignal<KbqFilterBar>;
     filterName: FormControl<string | null>;
-    // (undocumented)
-    filterSavingErrorText: string;
+    get filterSavingErrorText(): string;
     readonly footerTemplate: _angular_core.Signal<TemplateRef<unknown>>;
     readonly headerTemplate: _angular_core.Signal<TemplateRef<unknown>>;
     // (undocumented)
@@ -13129,6 +13410,23 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
 }
 
 // @public (undocumented)
+export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements OnInit {
+    readonly control: FormControl<string | null>;
+    debounceTime: number;
+    protected readonly input: _angular_core.Signal<KbqInput>;
+    get isEmpty(): boolean;
+    minLength: number;
+    // (undocumented)
+    ngOnInit(): void;
+    onClear(): void;
+    open(): void;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeInputComponent, "kbq-pipe-input", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeInputComponent, never>;
+}
+
+// @public (undocumented)
 export class KbqPipeMinWidth {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -13254,6 +13552,7 @@ export class KbqPipeState<T> {
 
 // @public (undocumented)
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
+    compareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
     // (undocumented)
     values?: unknown[];
     // (undocumented)
@@ -13305,6 +13604,7 @@ export enum KbqPipeTypes {
     Date = "date",
     // (undocumented)
     Datetime = "datetime",
+    Input = "input",
     // (undocumented)
     MultiSelect = "multiselect",
     // (undocumented)
@@ -13424,36 +13724,37 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
 
 ```typescript
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
-import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
+
+/** Text search is the first pipe in every filter: always present, never removable. */
+const createSearchPipe = (): KbqPipe => ({
+    name: 'Поиск',
+    type: KbqPipeTypes.Input,
+    value: null,
+
+    cleanable: true,
+    removable: false,
+    disabled: false
+});
 
 /**
  * @title filter bar
  */
 @Component({
     selector: 'filter-bar-overview-example',
-    imports: [
-        KbqFilterBarModule,
-        KbqSearchExpandableModule,
-        LuxonDateModule,
-        ReactiveFormsModule
-    ],
+    imports: [KbqFilterBarModule, LuxonDateModule],
     template: `
-        <kbq-filter-bar
-            [pipeTemplates]="pipeTemplates"
-            [(filter)]="activeFilter"
-            (filterChange)="onFilterChange($event)"
-        >
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
             <kbq-filters
                 [filters]="filters"
                 (onSave)="onSaveFilter($event)"
@@ -13470,15 +13771,11 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
             @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
-
-            <kbq-search-expandable [formControl]="searchControl" />
         </kbq-filter-bar>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarOverviewExample {
-    readonly searchControl = new FormControl('');
-
     filters: KbqFilter[] = [
         {
             name: 'Saved Filter 1',
@@ -13487,6 +13784,7 @@ export class FilterBarOverviewExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -13527,6 +13825,7 @@ export class FilterBarOverviewExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -13575,6 +13874,7 @@ export class FilterBarOverviewExample {
             changed: false,
             saved: true,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: {
@@ -13694,7 +13994,15 @@ export class FilterBarOverviewExample {
     ];
 
     onFilterChange(filter: KbqFilter | null) {
-        console.log('onFilterChange: ', filter);
+        // KbqFilterBar flips `changed` to true on any pipe edit but never back to false.
+        // Re-derive it by diffing the pipes against the filter's initial (saved/default) state,
+        // so reverting the pipes also clears `changed` and hides <kbq-filter-reset>.
+        const initialFilter = filter ? this.getInitialFilter(filter) : null;
+
+        this.activeFilter =
+            filter && initialFilter && this.arePipesEqual(filter.pipes, initialFilter.pipes)
+                ? { ...filter, changed: false }
+                : filter;
     }
 
     onResetFilter() {
@@ -13782,6 +14090,21 @@ export class FilterBarOverviewExample {
         return structuredClone(this.savedFilters.find(({ name }) => name === filter?.name)!);
     }
 
+    /** Pristine (saved or default) version of a filter — the baseline for change detection. */
+    getInitialFilter(filter: KbqFilter): KbqFilter | null {
+        return filter.name === this.defaultFilter?.name
+            ? this.defaultFilter
+            : (this.savedFilters.find(({ name }) => name === filter.name) ?? null);
+    }
+
+    /** Whether two pipe lists are equivalent (same name/type/value) — detects a return to the initial state. */
+    arePipesEqual(a: KbqPipe[], b: KbqPipe[]): boolean {
+        const serialize = (pipes: KbqPipe[]): string =>
+            JSON.stringify(pipes.map(({ name, type, value }) => ({ name, type, value })));
+
+        return serialize(a) === serialize(b);
+    }
+
     getDefaultFilter(): KbqFilter {
         return {
             name: '',
@@ -13790,6 +14113,7 @@ export class FilterBarOverviewExample {
             changed: false,
             saved: false,
             pipes: [
+                createSearchPipe(),
                 {
                     name: 'Datetime',
                     value: { name: 'Последние 24 часа', end: null, start: { hours: -24 } },
@@ -14713,6 +15037,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     iconName: string;
+    protected readonly isCompact: i0.Signal<boolean>;
     // (undocumented)
     name: string;
     // (undocumented)
@@ -14721,16 +15046,20 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
+    readonly size: i0.InputSignal<KbqIconButtonSize>;
+    // @deprecated (undocumented)
     readonly small: i0.InputSignal<boolean>;
     // (undocumented)
     get tabindex(): any;
     set tabindex(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "small": { "alias": "small"; "required": false; "isSignal": true; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "size": { "alias": "size"; "required": false; "isSignal": true; }; "small": { "alias": "small"; "required": false; "isSignal": true; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconButton, never>;
 }
+
+// @public
+export type KbqIconButtonSize = 'compact' | 'normal';
 
 // @public (undocumented)
 export class KbqIconItem extends KbqIcon {
@@ -14907,6 +15236,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     iconName: string;
+    protected readonly isCompact: i0.Signal<boolean>;
     // (undocumented)
     name: string;
     // (undocumented)
@@ -14915,16 +15245,20 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
+    readonly size: i0.InputSignal<KbqIconButtonSize>;
+    // @deprecated (undocumented)
     readonly small: i0.InputSignal<boolean>;
     // (undocumented)
     get tabindex(): any;
     set tabindex(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "small": { "alias": "small"; "required": false; "isSignal": true; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "size": { "alias": "size"; "required": false; "isSignal": true; }; "small": { "alias": "small"; "required": false; "isSignal": true; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconButton, never>;
 }
+
+// @public
+export type KbqIconButtonSize = 'compact' | 'normal';
 
 // @public (undocumented)
 export class KbqIconItem extends KbqIcon {
@@ -15014,12 +15348,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
     imports: [KbqIconButton, KbqCheckbox, FormsModule],
     template: `
         <div class="layout-margin-bottom-l">
-            <i
-                kbq-icon-button="kbq-magnifying-glass_16"
-                [color]="colors.Theme"
-                [disabled]="disabled()"
-                [small]="false"
-            ></i>
+            <i kbq-icon-button="kbq-magnifying-glass_16" [color]="colors.Theme" [disabled]="disabled()"></i>
         </div>
 
         <kbq-checkbox [(ngModel)]="disabled">disabled</kbq-checkbox>
@@ -15132,6 +15461,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     iconName: string;
+    protected readonly isCompact: i0.Signal<boolean>;
     // (undocumented)
     name: string;
     // (undocumented)
@@ -15140,16 +15470,20 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
+    readonly size: i0.InputSignal<KbqIconButtonSize>;
+    // @deprecated (undocumented)
     readonly small: i0.InputSignal<boolean>;
     // (undocumented)
     get tabindex(): any;
     set tabindex(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "small": { "alias": "small"; "required": false; "isSignal": true; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "size": { "alias": "size"; "required": false; "isSignal": true; }; "small": { "alias": "small"; "required": false; "isSignal": true; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconButton, never>;
 }
+
+// @public
+export type KbqIconButtonSize = 'compact' | 'normal';
 
 // @public (undocumented)
 export class KbqIconItem extends KbqIcon {
@@ -17485,6 +17819,16 @@ You can also make the vertical menu overlay page content.
 
 <!-- example(navbar-vertical-open-over) -->
 
+### Long application name
+
+When the name does not fit on one line, the header switches to a small two-line title on its own — there is nothing to configure. A name that fits keeps the default style, and one too long even for two lines is truncated and shown in full in a tooltip.
+
+<!-- example(navbar-vertical-app-long-name) -->
+
+The same is available in the horizontal menu.
+
+<!-- example(navbar-app-long-name) -->
+
 #### api
 
 ## API Report File for "koobiq"
@@ -17621,7 +17965,9 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     get hasCroppedText(): boolean;
     // (undocumented)
     get isLink(): boolean;
-    readonly longTitle: i0.InputSignal<boolean>;
+    // @deprecated
+    readonly longTitle: i0.InputSignal<boolean | undefined>;
+    protected readonly longTitleEnabled: i0.Signal<boolean>;
     protected readonly nativeElement: HTMLElement;
     protected readonly navbarFocusableItem: KbqNavbarFocusableItem;
     // (undocumented)
@@ -17812,17 +18158,13 @@ export class KbqNavbarRectangleElement {
 // @public (undocumented)
 export class KbqNavbarTitle implements AfterViewInit {
     // (undocumented)
-    checkTextOverflown(): void;
-    // (undocumented)
     getOuterElementWidth(): number;
     // (undocumented)
     readonly hovered: Subject<boolean>;
     // (undocumented)
     protected readonly isBrowser: boolean;
-    // (undocumented)
+    get isClamped(): boolean;
     get isOverflown(): boolean;
-    // (undocumented)
-    isTextOverflown: boolean;
     // (undocumented)
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
@@ -20385,7 +20727,7 @@ A search field that expands from a compact icon button.
 
 <!-- example(search-expandable-overview) -->
 
-The expandable search can be used, for example, in an action panel:
+The expandable search can be used, for example, in an action panel. When the bound model already holds a value, the search renders expanded:
 
 <!-- example(search-expandable-in-header) -->
 
@@ -20606,13 +20948,15 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 
 #### Additional options
 
-If needed, the select width can be set to match the select width exactly. To do this, use the `panelWidth` attribute with the value `auto`.
+If needed, the select width can be set to match the select width exactly. To do this, use the `panelWidth` attribute with the value `auto`. The panel still never gets narrower than `panelMinWidth` — set `panelMinWidth` to `0` if you want the panel to follow a narrow select exactly.
 
 <!-- example(select-with-panel-width-auto) -->
 
-To set a fixed width of 400px for the select, use the `panelWidth` attribute with the value `400`.
+To set a fixed width of 400px for the select, use the `panelWidth` attribute with the value `400`. A fixed width is used exactly as given, so `panelMinWidth` is not applied to it.
 
 <!-- example(select-with-panel-width-fixed) -->
+
+A panel growing with long option text stops at 640px. The cap is soft — it never makes the panel narrower than the select, and never clamps an explicit `panelWidth`. Raise or lower it for one select with `panelMaxWidth`, or for the whole application by setting the `--kbq-panel-size-width-max` token on `:root` (it is shared with tree-select, autocomplete and dropdown).
 
 To configure the select width for all selects within a module according to unified display rules, use the `kbqSelectOptionsProvider`.
 
@@ -20731,6 +21075,9 @@ import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionBase } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
+import { KbqPanelMaxWidth } from '@koobiq/components/core';
+import { KbqPanelMinWidth } from '@koobiq/components/core';
+import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
@@ -20755,8 +21102,9 @@ export const delayBeforeDisplayingResultWithoutOptions = 101;
 
 // @public
 export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
-    panelWidth: KbqSelectPanelWidth;
-    panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
+    panelWidth: KbqPanelWidth;
+    panelMinWidth: KbqPanelMinWidth;
+    panelMaxWidth: KbqPanelMaxWidth;
     searchMinOptionsThreshold: "auto" | number;
 }>>;
 
@@ -20804,8 +21152,9 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     defaultErrorStateMatcher: ErrorStateMatcher;
     // (undocumented)
     protected readonly defaultOptions: Partial<{
-        panelWidth: KbqSelectPanelWidth;
-        panelMinWidth: Exclude<KbqSelectPanelWidth, "auto">;
+        panelWidth: KbqPanelWidth;
+        panelMinWidth: KbqPanelMinWidth;
+        panelMaxWidth: KbqPanelMaxWidth;
         searchMinOptionsThreshold: "auto" | number;
     }> | null;
     protected readonly destroyRef: DestroyRef;
@@ -20851,8 +21200,6 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     // (undocumented)
     static ngAcceptInputType_multiple: unknown;
     // (undocumented)
-    static ngAcceptInputType_panelMinWidth: unknown;
-    // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
     ngAfterContentInit(): void;
     // (undocumented)
@@ -20861,6 +21208,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     ngOnDestroy(): void;
     ngOnInit(): void;
     get noOptions(): boolean;
+    // @deprecated
     offsetY: number;
     onAttached(): void;
     onBlur(): void;
@@ -20879,17 +21227,16 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly optionsContainer: _angular_core.Signal<ElementRef<any>>;
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange>;
     overlayDir: CdkConnectedOverlay;
-    protected overlayMinWidth: string | number;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-    protected overlayWidth: string | number;
     readonly panel: _angular_core.Signal<ElementRef<any> | undefined>;
     readonly panelClass: _angular_core.InputSignal<string | string[] | Set<string> | {
         [key: string]: any;
     }>;
     panelDoneAnimatingStream: Subject<string>;
-    panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
+    readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
+    readonly panelMinWidth: _angular_core.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
     panelOpen: boolean;
-    panelWidth: KbqSelectPanelWidth;
+    readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth>;
     // (undocumented)
     parentForm: NgForm | null;
     // (undocumented)
@@ -20938,12 +21285,13 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get value(): any;
     set value(newValue: any);
     readonly valueChange: _angular_core.OutputEmitterRef<any>;
+    protected readonly viewportMargin: number;
     readonly virtualOptionFactory: _angular_core.InputSignal<((value: any) => KbqVirtualOption) | undefined>;
     readonly virtualScrollViewport: _angular_core.Signal<CdkVirtualScrollViewport | undefined>;
     withVirtualScroll: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelect, never>;
 }
@@ -21002,16 +21350,17 @@ export class KbqSelectNoOptions {
 
 // @public
 export type KbqSelectOptions = Partial<{
-    panelWidth: KbqSelectPanelWidth;
-    panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
+    panelWidth: KbqPanelWidth;
+    panelMinWidth: KbqPanelMinWidth;
+    panelMaxWidth: KbqPanelMaxWidth;
     searchMinOptionsThreshold: 'auto' | number;
 }>;
 
 // @public
 export const kbqSelectOptionsProvider: (options: KbqSelectOptions) => Provider;
 
-// @public
-export type KbqSelectPanelWidth = 'auto' | number | null;
+// @public @deprecated
+export type KbqSelectPanelWidth = KbqPanelWidth;
 
 // @public
 export const minimumTimeToDisplayLoading = 300;
@@ -22373,6 +22722,16 @@ Unlike `KbqTabGroup`, `KbqTabNavBar` is used for navigation between application 
 
 <!-- example(tabs-nav-bar-overview) -->
 
+### Creating tabs
+
+Create and delete tabs like in a browser. The create button is located at the end of the list of tabs. When there is scrolling, the button moves to the right to remain visible.
+
+<!-- example(tabs-add-tab) -->
+
+Vertical tabs
+
+<!-- example(tabs-add-tab-vertical) -->
+
 ### Hot keys
 
 | <span style="min-width: 140px;">Key</span>                                                      | Action                             |
@@ -22641,7 +23000,11 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 //
 // @public
 export class KbqTabHeader extends KbqPaginatedTabHeader {
+    // (undocumented)
+    protected get activeTabDisabled(): boolean;
+    // (undocumented)
     protected get activeTabOffsetLeft(): number | undefined;
+    // (undocumented)
     protected get activeTabOffsetWidth(): number | undefined;
     // (undocumented)
     readonly items: QueryList<KbqTabLabelWrapper>;
@@ -22745,6 +23108,8 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
 
 // @public
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
+    // (undocumented)
+    protected get activeTabDisabled(): boolean;
     // (undocumented)
     protected get activeTabOffsetLeft(): number | undefined;
     // (undocumented)
@@ -23393,6 +23758,8 @@ When focusing on the field, the dictionary menu opens. Autocomplete changes as y
 
 <!-- example(tag-autocomplete-overview) -->
 
+The menu belongs to [autocomplete](en/components/autocomplete) — its width is configured there, through the `panelWidth` and `panelMinWidth` attributes of `<kbq-autocomplete>`, and is measured against the whole field rather than the input.
+
 ### Adding to dictionary
 
 The option to create a new tag is placed first in the autocomplete menu. It creates a new token from the entered text if it doesn't exist in the dictionary.
@@ -23934,7 +24301,7 @@ const getAutocompleteOptions = () => [
                     [kbqTagInputFor]="tagList"
                     [kbqAutocomplete]="autocomplete"
                     [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [kbqTagInputAddOnBlur]="false"
+                    [kbqTagInputAddOnBlur]="true"
                     [(ngModel)]="tagInputModel"
                     (kbqTagInputTokenEnd)="create($event)"
                 />
@@ -26050,7 +26417,18 @@ export class TimepickerOverviewExample {
 
 ### Dropdown menu size
 
-The menu is 640 pixels wide and grows to match the field size if the field is larger than this minimum. Configurable via the `panelMinWidth` and `panelWidth` attributes.
+The menu width is configured exactly as on the [select](/en/components/select), with the same attributes: by default the menu grows with its content, never gets narrower than the field or than 200 pixels, and stops at 640 pixels.
+
+```html
+<!-- Match the field exactly -->
+<kbq-timezone-select panelWidth="auto" />
+
+<!-- A fixed width; panelMinWidth is not applied to it -->
+<kbq-timezone-select [panelWidth]="800" />
+
+<!-- Let the menu grow further with its content -->
+<kbq-timezone-select [panelMaxWidth]="800" />
+```
 
 ### Search
 
@@ -26085,7 +26463,6 @@ import * as i7 from '@angular/common';
 import * as i8 from '@angular/cdk/a11y';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
-import { KbqSelectPanelWidth } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { PipeTransform } from '@angular/core';
@@ -26167,10 +26544,6 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    panelMinWidth: number;
-    // (undocumented)
-    panelWidth: KbqSelectPanelWidth;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], true, never>;
     // (undocumented)
@@ -27151,6 +27524,18 @@ When switching focus or hovering over another element with a tooltip, the delay 
 
 <!-- example(tooltip-hide-with-timeout) -->
 
+### Only One Tooltip at a Time
+
+At most one tooltip is on screen: showing a new one closes the previously opened tooltip. The rule applies to tooltips opened by `hover`, `focus`, `click` or `keydown` — including the `kbq-title` and `kbqEllipsisCenter` hints.
+
+Tooltips driven programmatically (`kbqTrigger="manual"`) stay out of the rule: they neither close other tooltips nor get closed. Validation hints work this way.
+
+To opt a single tooltip out, use `[kbqTooltipSingleInstance]="false"`; to change the default for the whole application, provide the `KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT` token:
+
+```ts
+providers: [{ provide: KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, useValue: false }];
+```
+
 ### Usage Examples
 
 #### Tooltip for Disabled Button
@@ -27228,6 +27613,14 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     useFactory: typeof kbqTooltipScrollStrategyFactory;
 };
 
+// @public
+export const KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT: InjectionToken<boolean>;
+
+// @public
+export interface KbqExclusiveTooltip {
+    hideAsInactive(): void;
+}
+
 // @public (undocumented)
 export class KbqTooltipComponent extends KbqPopUp {
     // (undocumented)
@@ -27257,10 +27650,20 @@ export class KbqToolTipModule {
 }
 
 // @public
+export class KbqTooltipRegistry {
+    clearVisible(tooltip: KbqExclusiveTooltip): void;
+    setVisible(tooltip: KbqExclusiveTooltip): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipRegistry, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqTooltipRegistry>;
+}
+
+// @public
 export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
 // @public
-export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnChanges, OnDestroy {
+export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnChanges, OnDestroy, KbqExclusiveTooltip {
     constructor();
     protected applyRelativeToPointer(): void;
     arrow: boolean;
@@ -27280,6 +27683,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     readonly forDisabledComponent: i0.InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
     getOverlayHandleComponentType(): Type<KbqTooltipComponent>;
     header: string | TemplateRef<any>;
+    hideAsInactive(): void;
     hideWithTimeout: boolean;
     readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
     leaveDelay: number;
@@ -27306,6 +27710,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     show(delay?: number): void;
     showForElement(element: HTMLElement): void;
     showForMouseEvent(event: MouseEvent): void;
+    readonly singleInstance: i0.InputSignalWithTransform<boolean, unknown>;
     get tooltipPlacement(): KbqPopUpPlacementValues;
     set tooltipPlacement(value: KbqPopUpPlacementValues);
     get tooltipPlacementPriority(): string | string[] | null;
@@ -27319,7 +27724,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     updateData(): void;
     readonly visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTooltipTrigger, "[kbqTooltip]", ["kbqTooltip"], { "forDisabledComponent": { "alias": "forDisabledComponent"; "required": false; "isSignal": true; }; "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; "hideWithTimeout": { "alias": "hideWithTimeout"; "required": false; }; "tooltipVisible": { "alias": "kbqVisible"; "required": false; }; "tooltipPlacement": { "alias": "kbqPlacement"; "required": false; }; "relativeToPointer": { "alias": "kbqRelativeToPointer"; "required": false; }; "tooltipPlacementPriority": { "alias": "kbqPlacementPriority"; "required": false; }; "content": { "alias": "kbqTooltip"; "required": false; }; "disabled": { "alias": "kbqTooltipDisabled"; "required": false; }; "enterDelay": { "alias": "kbqEnterDelay"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "customClass": { "alias": "kbqTooltipClass"; "required": false; }; "context": { "alias": "kbqTooltipContext"; "required": false; }; "color": { "alias": "kbqTooltipColor"; "required": false; }; "arrow": { "alias": "kbqTooltipArrow"; "required": false; }; "offset": { "alias": "kbqTooltipOffset"; "required": false; }; "modifier": { "alias": "kbqTooltipModifier"; "required": false; }; "header": { "alias": "kbqTooltipHeader"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTooltipTrigger, "[kbqTooltip]", ["kbqTooltip"], { "forDisabledComponent": { "alias": "forDisabledComponent"; "required": false; "isSignal": true; }; "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; "singleInstance": { "alias": "kbqTooltipSingleInstance"; "required": false; "isSignal": true; }; "hideWithTimeout": { "alias": "hideWithTimeout"; "required": false; }; "tooltipVisible": { "alias": "kbqVisible"; "required": false; }; "tooltipPlacement": { "alias": "kbqPlacement"; "required": false; }; "relativeToPointer": { "alias": "kbqRelativeToPointer"; "required": false; }; "tooltipPlacementPriority": { "alias": "kbqPlacementPriority"; "required": false; }; "content": { "alias": "kbqTooltip"; "required": false; }; "disabled": { "alias": "kbqTooltipDisabled"; "required": false; }; "enterDelay": { "alias": "kbqEnterDelay"; "required": false; }; "leaveDelay": { "alias": "kbqLeaveDelay"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; "customClass": { "alias": "kbqTooltipClass"; "required": false; }; "context": { "alias": "kbqTooltipContext"; "required": false; }; "color": { "alias": "kbqTooltipColor"; "required": false; }; "arrow": { "alias": "kbqTooltipArrow"; "required": false; }; "offset": { "alias": "kbqTooltipOffset"; "required": false; }; "modifier": { "alias": "kbqTooltipModifier"; "required": false; }; "header": { "alias": "kbqTooltipHeader"; "required": false; }; }, { "placementChange": "kbqPlacementChange"; "visibleChange": "kbqVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipTrigger, never>;
 }
@@ -28653,7 +29058,14 @@ export class TreeOverviewExample {
 
 ### Dropdown width
 
-By default, the dropdown width equals the select width and grows when the list contains long text. This behavior can be changed using the `panelWidth` attribute.
+By default, the dropdown width equals the select width and grows when the list contains long text. This behavior can be changed using the `panelWidth` attribute:
+
+- `auto` — the dropdown matches the select width, but never gets narrower than `panelMinWidth`.
+- a number or a CSS value — used as an exact width, so `panelMinWidth` is not applied to it.
+
+The dropdown never gets narrower than `panelMinWidth`, which is 200px by default. Set `panelMinWidth` to `0` to remove that limit.
+
+Growth by content stops at 640px. The cap is soft — it never makes the dropdown narrower than the select, and never clamps an explicit `panelWidth`. Change it with `panelMaxWidth`, or globally through the `--kbq-panel-size-width-max` token.
 
 For a specific dropdown:
 
@@ -28715,6 +29127,9 @@ import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqPanelMaxWidth } from '@koobiq/components/core';
+import { KbqPanelMinWidth } from '@koobiq/components/core';
+import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
@@ -28735,8 +29150,9 @@ import { TemplateRef } from '@angular/core';
 
 // @public
 export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
-    panelWidth: KbqTreeSelectPanelWidth;
-    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, "auto">;
+    panelWidth: KbqPanelWidth;
+    panelMinWidth: KbqPanelMinWidth;
+    panelMaxWidth: KbqPanelMaxWidth;
     searchMinOptionsThreshold: "auto" | number;
 }>>;
 
@@ -28829,6 +29245,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
+    // @deprecated
     offsetY: number;
     onAttached(): void;
     onBlur(): void;
@@ -28848,21 +29265,19 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange>;
     // (undocumented)
     overlayDir: CdkConnectedOverlay;
-    protected overlayMinWidth: string | number;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-    protected overlayWidth: string | number;
-    // (undocumented)
-    readonly panel: _angular_core.Signal<ElementRef<any>>;
+    readonly panel: _angular_core.Signal<ElementRef<any> | undefined>;
     readonly panelClass: _angular_core.InputSignal<string | string[] | Set<string> | {
         [key: string]: any;
     }>;
     panelDoneAnimatingStream: Subject<string>;
     // (undocumented)
     panelKeydownHandler(event: KeyboardEvent): any;
-    readonly panelMinWidth: _angular_core.InputSignalWithTransform<number | null, unknown>;
+    readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
+    readonly panelMinWidth: _angular_core.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
     // (undocumented)
     get panelOpen(): boolean;
-    readonly panelWidth: _angular_core.InputSignal<KbqTreeSelectPanelWidth>;
+    readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth>;
     // (undocumented)
     parentForm: NgForm | null;
     // (undocumented)
@@ -28920,9 +29335,10 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     get value(): any;
     readonly valueChange: _angular_core.OutputEmitterRef<any>;
+    protected readonly viewportMargin: number;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelect, never>;
 }
@@ -28952,16 +29368,17 @@ export class KbqTreeSelectModule {
 
 // @public
 export type KbqTreeSelectOptions = Partial<{
-    panelWidth: KbqTreeSelectPanelWidth;
-    panelMinWidth: Exclude<KbqTreeSelectPanelWidth, 'auto'>;
+    panelWidth: KbqPanelWidth;
+    panelMinWidth: KbqPanelMinWidth;
+    panelMaxWidth: KbqPanelMaxWidth;
     searchMinOptionsThreshold: 'auto' | number;
 }>;
 
 // @public
 export const kbqTreeSelectOptionsProvider: (options: KbqTreeSelectOptions) => Provider;
 
-// @public
-export type KbqTreeSelectPanelWidth = 'auto' | number | null;
+// @public @deprecated
+export type KbqTreeSelectPanelWidth = KbqPanelWidth;
 
 // @public
 export type KbqTreeSelectTriggerValue = {

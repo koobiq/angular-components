@@ -99,6 +99,7 @@
 /en/components/modal/examples
 /en/components/navbar/overview
 /en/components/navbar/api
+/en/components/navbar/examples
 /en/components/notification-center/overview
 /en/components/notification-center/api
 /en/components/notification-center/examples
@@ -291,6 +292,7 @@
 /ru/components/modal/examples
 /ru/components/navbar/overview
 /ru/components/navbar/api
+/ru/components/navbar/examples
 /ru/components/notification-center/overview
 /ru/components/notification-center/api
 /ru/components/notification-center/examples
