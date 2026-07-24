@@ -41,6 +41,10 @@ import { DevThemeToggle } from '../theme-toggle';
         <popover-arrowless-example />
         <br />
         <popover-arrow-and-offset-example />
+        <br />
+        <popover-hide-on-scroll-example />
+        <br />
+        <popover-scroll-strategy-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
