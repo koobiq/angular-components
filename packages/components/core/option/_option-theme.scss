@@ -26,7 +26,8 @@
 
         &:active:not(.kbq-disabled),
         &.kbq-pressed:not(.kbq-disabled) {
-            @include kbq-option(states-active);
+            // the active state defines only a background token; the mixin would emit undefined text/icon/caption color vars
+            background: var(--kbq-list-states-active-container-background);
         }
 
         &.kbq-selected:not(.kbq-disabled) {
@@ -38,7 +39,7 @@
 
             &:active,
             &.kbq-pressed {
-                @include kbq-option(states-selected-active);
+                background: var(--kbq-list-states-selected-active-container-background);
             }
         }
 
@@ -67,7 +68,7 @@
 
             &:active,
             &.kbq-pressed {
-                @include kbq-option(multiple-states-selected-active);
+                background: var(--kbq-list-multiple-states-selected-active-container-background);
             }
         }
     }
