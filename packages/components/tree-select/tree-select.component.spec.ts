@@ -38,6 +38,8 @@ import {
     ErrorStateMatcher,
     HOME,
     KBQ_LOCALE_SERVICE,
+    KBQ_SELECT_SCROLL_STRATEGY,
+    KbqHideOnScrollStrategy,
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqPanelWidth,
@@ -73,7 +75,7 @@ import {
     KbqTreeOption,
     KbqTreeSelection
 } from '@koobiq/components/tree';
-import { Observable, Subject, map, of, timer } from 'rxjs';
+import { Observable, Subject, map, of, timer } from 'rxjs'; // Subject used by hide-on-scroll tests
 import { KbqTreeSelect, KbqTreeSelectChange, kbqTreeSelectOptionsProvider } from './tree-select.component';
 import { KbqTreeSelectModule } from './tree-select.module';
 
@@ -4940,4 +4942,114 @@ describe('KbqTreeSelect', () => {
             expect(option.classList).toContain('kbq-focused');
         }));
     });
+});
+
+// ---------------------------------------------------------------------------
+// hide-on-scroll tests
+// ---------------------------------------------------------------------------
+
+class TestTreeSelectHideOnScrollStrategy extends KbqHideOnScrollStrategy {
+    readonly trigger$ = new Subject<void>();
+    override readonly hide$ = this.trigger$.asObservable();
+
+    constructor() {
+        super(null as any, null as any, null as any);
+    }
+
+    override attach = jest.fn();
+    override enable = jest.fn();
+    override disable = jest.fn();
+    override detach = jest.fn();
+}
+
+@Component({
+    imports: [KbqTreeSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [formControl]="control" />
+        </kbq-form-field>
+    `
+})
+class TreeSelectHideOnScrollDefault {
+    readonly treeSelect = viewChild.required(KbqTreeSelect);
+    readonly control = new FormControl('');
+}
+
+@Component({
+    imports: [KbqTreeSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [formControl]="control" [shouldHideOnScrollOut]="true" />
+        </kbq-form-field>
+    `
+})
+class TreeSelectHideOnScrollEnabled {
+    readonly treeSelect = viewChild.required(KbqTreeSelect);
+    readonly control = new FormControl('');
+}
+
+describe('KbqTreeSelect hide-on-scroll', () => {
+    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
+        const strategy = new TestTreeSelectHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [TreeSelectHideOnScrollDefault, NoopAnimationsModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(TreeSelectHideOnScrollDefault);
+
+        fixture.autoDetectChanges();
+        flush();
+
+        fixture.componentInstance.treeSelect().open();
+        fixture.detectChanges();
+        flush();
+
+        const closeSpy = jest.spyOn(fixture.componentInstance.treeSelect(), 'close');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(closeSpy).not.toHaveBeenCalled();
+    }));
+
+    it('closes when shouldHideOnScrollOut=true and hide$ emits', fakeAsync(() => {
+        const strategy = new TestTreeSelectHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [TreeSelectHideOnScrollEnabled, NoopAnimationsModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(TreeSelectHideOnScrollEnabled);
+
+        fixture.autoDetectChanges();
+        flush();
+
+        fixture.componentInstance.treeSelect().open();
+        fixture.detectChanges();
+        flush();
+
+        const closeSpy = jest.spyOn(fixture.componentInstance.treeSelect(), 'close');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(closeSpy).toHaveBeenCalled();
+    }));
+
+    it('does not crash with a non-KbqHideOnScrollStrategy scroll strategy', fakeAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [TreeSelectHideOnScrollEnabled, NoopAnimationsModule]
+        }).compileComponents();
+
+        const fixture = TestBed.createComponent(TreeSelectHideOnScrollEnabled);
+
+        fixture.autoDetectChanges();
+
+        expect(() => {
+            flush();
+        }).not.toThrow();
+    }));
 });

@@ -54,6 +54,7 @@ import {
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqHideOnScrollOverlay,
     KbqLocaleService,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
@@ -78,7 +79,8 @@ import {
     isSelectAll,
     isUndefined,
     kbqSelectAnimations,
-    shouldSelectSearchText
+    shouldSelectSearchText,
+    wireHideOnScroll
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -199,7 +201,8 @@ export class KbqTreeSelect
         DoCheck,
         ControlValueAccessor,
         KbqFormFieldControl<KbqTreeOption>,
-        CanUpdateErrorState
+        CanUpdateErrorState,
+        KbqHideOnScrollOverlay
 {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -247,6 +250,9 @@ export class KbqTreeSelect
 
     /** Strategy that will be used to handle scrolling while the select panel is open. */
     scrollStrategy = this.scrollStrategyFactory();
+
+    /** Whether to hide the tree-select panel when its trigger scrolls out of its scroll container boundary. */
+    readonly shouldHideOnScrollOut = input(false, { transform: booleanAttribute });
 
     /**
      * The y-offset of the overlay panel in relation to the trigger's top start corner.
@@ -718,6 +724,10 @@ export class KbqTreeSelect
 
     ngOnInit() {
         this.stateChanges.next();
+
+        if (this.shouldHideOnScrollOut()) {
+            wireHideOnScroll(this.scrollStrategy, this.destroyRef, () => this.close());
+        }
 
         // We need `distinctUntilChanged` here, because some browsers will
         // fire the animation end event twice for the same animation. See:

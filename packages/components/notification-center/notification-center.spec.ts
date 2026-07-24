@@ -1,11 +1,12 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement, ElementRef, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFormattersModule, dispatchFakeEvent } from '@koobiq/components/core';
+import { KbqFormattersModule, KbqHideOnScrollStrategy, dispatchFakeEvent } from '@koobiq/components/core';
 import {
+    KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY,
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
     KbqNotificationCenterTrigger,
@@ -13,6 +14,7 @@ import {
 } from '@koobiq/components/notification-center';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToastService } from '@koobiq/components/toast';
+import { Subject } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 
@@ -791,3 +793,108 @@ export class KbqNotificationCenterWithStickContainer {
     readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
     readonly container = viewChild.required<ElementRef<HTMLElement>>('containerRef');
 }
+
+// ---------------------------------------------------------------------------
+// hide-on-scroll tests
+// ---------------------------------------------------------------------------
+
+class TestNotificationCenterHideOnScrollStrategy extends KbqHideOnScrollStrategy {
+    readonly trigger$ = new Subject<void>();
+    override readonly hide$ = this.trigger$.asObservable();
+
+    constructor() {
+        super(null as any, null as any, null as any);
+    }
+
+    override attach = jest.fn();
+    override enable = jest.fn();
+    override disable = jest.fn();
+    override detach = jest.fn();
+}
+
+@Component({
+    imports: [KbqNotificationCenterModule, KbqLuxonDateModule, KbqFormattersModule],
+    template: `
+        <button kbqNotificationCenterTrigger>Trigger</button>
+    `
+})
+class NotificationCenterHideOnScrollDefault {
+    readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
+}
+
+@Component({
+    imports: [KbqNotificationCenterModule, KbqLuxonDateModule, KbqFormattersModule],
+    template: `
+        <button kbqNotificationCenterTrigger [shouldHideOnScrollOut]="true">Trigger</button>
+    `
+})
+class NotificationCenterHideOnScrollEnabled {
+    readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
+}
+
+describe('KbqNotificationCenterTrigger hide-on-scroll', () => {
+    it('does not hide when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
+        const strategy = new TestNotificationCenterHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [NotificationCenterHideOnScrollDefault, NoopAnimationsModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(NotificationCenterHideOnScrollDefault);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger().show();
+        fixture.detectChanges();
+        tick();
+
+        const hideSpy = jest.spyOn(fixture.componentInstance.trigger(), 'hide');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(hideSpy).not.toHaveBeenCalled();
+    }));
+
+    it('hides when shouldHideOnScrollOut=true and hide$ emits', fakeAsync(() => {
+        const strategy = new TestNotificationCenterHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [NotificationCenterHideOnScrollEnabled, NoopAnimationsModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(NotificationCenterHideOnScrollEnabled);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger().show();
+        fixture.detectChanges();
+        tick();
+
+        const hideSpy = jest.spyOn(fixture.componentInstance.trigger(), 'hide');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(hideSpy).toHaveBeenCalled();
+    }));
+
+    it('does not crash with a non-KbqHideOnScrollStrategy scroll strategy', fakeAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NotificationCenterHideOnScrollEnabled, NoopAnimationsModule]
+        }).compileComponents();
+
+        const fixture = TestBed.createComponent(NotificationCenterHideOnScrollEnabled);
+
+        fixture.detectChanges();
+
+        expect(() => {
+            fixture.componentInstance.trigger().show();
+            fixture.detectChanges();
+            tick();
+            flush();
+        }).not.toThrow();
+    }));
+});

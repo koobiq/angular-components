@@ -6,10 +6,12 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ComponentRef,
+    DestroyRef,
     inject,
     InjectionToken,
     Input,
@@ -21,7 +23,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { DateAdapter, defaultOffsetY } from '@koobiq/components/core';
+import { DateAdapter, defaultOffsetY, KbqHideOnScrollOverlay, wireHideOnScroll } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -126,12 +128,13 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     encapsulation: ViewEncapsulation.None,
     exportAs: 'kbqDatepicker'
 })
-export class KbqDatepicker<D> implements OnDestroy {
+export class KbqDatepicker<D> implements OnDestroy, KbqHideOnScrollOverlay {
     private overlay = inject(Overlay);
     private ngZone = inject(NgZone);
     private viewContainerRef = inject(ViewContainerRef);
     private readonly dateAdapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
     private dir = inject(Directionality, { optional: true })!;
+    private readonly destroyRef = inject(DestroyRef);
 
     protected readonly document = inject<Document>(DOCUMENT);
 
@@ -265,6 +268,9 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     /** The id for the datepicker calendar. */
     id: string = `kbq-datepicker-${datepickerUid++}`;
+
+    /** Whether to hide the datepicker when its trigger scrolls out of its scroll container boundary. */
+    readonly shouldHideOnScrollOut = input(false, { transform: booleanAttribute });
 
     /** A reference to the overlay when the calendar is opened as a popup. */
     popupRef: OverlayRef | null;
@@ -444,16 +450,21 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     /** Create the popup. */
     private createPopup(): void {
+        const scrollStrategy = this.scrollStrategy();
         const overlayConfig = new OverlayConfig({
             positionStrategy: this.createPopupPositionStrategy(),
             hasBackdrop: this.hasBackdrop,
             backdropClass: this.backdropClass(),
             direction: this.dir,
-            scrollStrategy: this.scrollStrategy(),
+            scrollStrategy,
             panelClass: 'kbq-datepicker__popup'
         });
 
         this.popupRef = this.overlay.create(overlayConfig);
+
+        if (this.shouldHideOnScrollOut()) {
+            wireHideOnScroll(scrollStrategy, this.destroyRef, () => this.close());
+        }
 
         this.closeSubscription = this.closingActions().subscribe(() => this.close(this.restoreFocus()));
     }

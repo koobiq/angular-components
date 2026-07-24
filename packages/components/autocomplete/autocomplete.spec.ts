@@ -23,6 +23,7 @@ import {
     ENTER,
     ESCAPE,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
+    KbqHideOnScrollStrategy,
     KbqLocaleServiceModule,
     KbqOption,
     KbqOptionSelectionChange,
@@ -44,6 +45,7 @@ import { map, startWith, take } from 'rxjs/operators';
 import { KbqInputModule } from '../input/index';
 import {
     KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS,
+    KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
     KbqAutocomplete,
     KbqAutocompleteModule,
     KbqAutocompleteOrigin,
@@ -2793,3 +2795,118 @@ class AutocompleteWithCustomOnBlur {
 
     customBlurSpy: jest.Mock<boolean, [FocusEvent]> = jest.fn().mockReturnValue(false);
 }
+
+// ---------------------------------------------------------------------------
+// hide-on-scroll tests
+// ---------------------------------------------------------------------------
+
+class TestAutocompleteHideOnScrollStrategy extends KbqHideOnScrollStrategy {
+    readonly trigger$ = new Subject<void>();
+    override readonly hide$ = this.trigger$.asObservable();
+
+    constructor() {
+        super(null as any, null as any, null as any);
+    }
+
+    override attach = jest.fn();
+    override enable = jest.fn();
+    override disable = jest.fn();
+    override detach = jest.fn();
+}
+
+@Component({
+    imports: [KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput [kbqAutocomplete]="auto" />
+        </kbq-form-field>
+        <kbq-autocomplete #auto="kbqAutocomplete">
+            <kbq-option value="one">one</kbq-option>
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteHideOnScrollDefault {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+}
+
+@Component({
+    imports: [KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput [kbqAutocomplete]="auto" [shouldHideOnScrollOut]="true" />
+        </kbq-form-field>
+        <kbq-autocomplete #auto="kbqAutocomplete">
+            <kbq-option value="one">one</kbq-option>
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteHideOnScrollEnabled {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+}
+
+describe('KbqAutocompleteTrigger hide-on-scroll', () => {
+    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
+        const strategy = new TestAutocompleteHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [AutocompleteHideOnScrollDefault, NoopAnimationsModule, KbqLocaleServiceModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(AutocompleteHideOnScrollDefault);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger().open();
+        fixture.detectChanges();
+        tick();
+
+        const closeSpy = jest.spyOn(fixture.componentInstance.trigger(), 'closePanel');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(closeSpy).not.toHaveBeenCalled();
+    }));
+
+    it('closes when shouldHideOnScrollOut=true and hide$ emits', fakeAsync(() => {
+        const strategy = new TestAutocompleteHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [AutocompleteHideOnScrollEnabled, NoopAnimationsModule, KbqLocaleServiceModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(AutocompleteHideOnScrollEnabled);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger().open();
+        fixture.detectChanges();
+        tick();
+
+        const closeSpy = jest.spyOn(fixture.componentInstance.trigger(), 'closePanel');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(closeSpy).toHaveBeenCalled();
+    }));
+
+    it('does not crash with a non-KbqHideOnScrollStrategy scroll strategy', fakeAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [AutocompleteHideOnScrollEnabled, NoopAnimationsModule, KbqLocaleServiceModule]
+        }).compileComponents();
+
+        const fixture = TestBed.createComponent(AutocompleteHideOnScrollEnabled);
+
+        fixture.detectChanges();
+
+        expect(() => {
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            tick();
+            flush();
+        }).not.toThrow();
+    }));
+});

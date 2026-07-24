@@ -16,11 +16,13 @@ import {
     AfterContentInit,
     booleanAttribute,
     ChangeDetectorRef,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
     inject,
     InjectionToken,
+    input,
     Input,
     NgZone,
     numberAttribute,
@@ -35,12 +37,14 @@ import {
     DOWN_ARROW,
     ENTER,
     kbqGetPanelWidthOrigin,
+    KbqHideOnScrollOverlay,
     KbqPanelWidthOrigin,
     KbqResolvedPanelWidth,
     kbqResolvePanelWidth,
     LEFT_ARROW,
     RIGHT_ARROW,
-    SPACE
+    SPACE,
+    wireHideOnScroll
 } from '@koobiq/components/core';
 import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
@@ -126,11 +130,12 @@ const positionMap = {
     },
     exportAs: 'kbqDropdownTrigger'
 })
-export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
+export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqHideOnScrollOverlay {
     private overlay = inject(Overlay);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private viewContainerRef = inject(ViewContainerRef);
     private scrollStrategy = inject(KBQ_DROPDOWN_SCROLL_STRATEGY);
+    private readonly destroyRef = inject(DestroyRef);
     private parent = inject(KbqDropdown, { optional: true })!;
     private dropdownItemInstance = inject(KbqDropdownItem, { optional: true, self: true })!;
     private _dir = inject(Directionality, { optional: true });
@@ -144,6 +149,9 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     protected readonly isBrowser = inject(Platform).isBrowser;
     private readonly host = inject(KBQ_DROPDOWN_HOST, { optional: true });
     lastDestroyReason: DropdownCloseReason;
+
+    /** Whether to hide the dropdown when its trigger scrolls out of its scroll container boundary. */
+    readonly shouldHideOnScrollOut = input(false, { transform: booleanAttribute });
 
     /**
      * Element whose width the panel should match. Defaults to the trigger itself.
@@ -533,10 +541,15 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      */
     private createOverlay(): OverlayRef {
         if (!this.overlayRef) {
-            const config = this.getOverlayConfig();
+            const scrollStrategy = this.scrollStrategy();
+            const config = this.getOverlayConfig(scrollStrategy);
 
             this.subscribeToPositions(config.positionStrategy as FlexibleConnectedPositionStrategy);
             this.overlayRef = this.overlay.create(config);
+
+            if (this.shouldHideOnScrollOut()) {
+                wireHideOnScroll(scrollStrategy, this.destroyRef, () => this.close());
+            }
 
             // Consume the `keydownEvents` in order to prevent them from going to another overlay.
             // Ideally we'd also have our keyboard event logic in here, however doing so will
@@ -558,7 +571,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      * This method builds the configuration object needed to create the overlay, the OverlayState.
      * @returns OverlayConfig
      */
-    private getOverlayConfig(): OverlayConfig {
+    private getOverlayConfig(scrollStrategy: ScrollStrategy): OverlayConfig {
         return new OverlayConfig({
             positionStrategy: this.overlay
                 .position()
@@ -566,7 +579,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
                 .withTransformOriginOn('.kbq-dropdown__panel')
                 .withPush(false),
             backdropClass: this.dropdown.backdropClass || 'cdk-overlay-transparent-backdrop',
-            scrollStrategy: this.scrollStrategy(),
+            scrollStrategy,
             direction: this.dir,
             ...(this.shouldMatchTriggerWidth && this.getOverlaySize())
         });

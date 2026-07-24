@@ -26,6 +26,7 @@ import {
     DOWN_ARROW,
     ENTER,
     ESCAPE,
+    KbqHideOnScrollStrategy,
     LEFT_ARROW,
     MockNgZone,
     RIGHT_ARROW,
@@ -2470,3 +2471,114 @@ class VerticalTriggerDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
 }
+
+// ---------------------------------------------------------------------------
+// hide-on-scroll tests
+// ---------------------------------------------------------------------------
+
+class TestDropdownHideOnScrollStrategy extends KbqHideOnScrollStrategy {
+    readonly trigger$ = new Subject<void>();
+    override readonly hide$ = this.trigger$.asObservable();
+
+    constructor() {
+        super(null as any, null as any, null as any);
+    }
+
+    override attach = jest.fn();
+    override enable = jest.fn();
+    override disable = jest.fn();
+    override detach = jest.fn();
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Open</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class DropdownHideOnScrollDefault {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown" [shouldHideOnScrollOut]="true">Open</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class DropdownHideOnScrollEnabled {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+}
+
+describe('KbqDropdownTrigger hide-on-scroll', () => {
+    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
+        const strategy = new TestDropdownHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [DropdownHideOnScrollDefault, NoopAnimationsModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_DROPDOWN_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(DropdownHideOnScrollDefault);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger().open();
+        fixture.detectChanges();
+        tick();
+
+        const closeSpy = jest.spyOn(fixture.componentInstance.trigger(), 'close');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(closeSpy).not.toHaveBeenCalled();
+    }));
+
+    it('closes when shouldHideOnScrollOut=true and hide$ emits', fakeAsync(() => {
+        const strategy = new TestDropdownHideOnScrollStrategy();
+
+        TestBed.configureTestingModule({
+            imports: [DropdownHideOnScrollEnabled, NoopAnimationsModule]
+        }).compileComponents();
+        TestBed.overrideProvider(KBQ_DROPDOWN_SCROLL_STRATEGY, { useValue: () => strategy });
+
+        const fixture = TestBed.createComponent(DropdownHideOnScrollEnabled);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger().open();
+        fixture.detectChanges();
+        tick();
+
+        const closeSpy = jest.spyOn(fixture.componentInstance.trigger(), 'close');
+
+        strategy.trigger$.next();
+        flush();
+
+        expect(closeSpy).toHaveBeenCalled();
+    }));
+
+    it('does not crash with a non-KbqHideOnScrollStrategy scroll strategy', fakeAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [DropdownHideOnScrollEnabled, NoopAnimationsModule]
+        }).compileComponents();
+
+        const fixture = TestBed.createComponent(DropdownHideOnScrollEnabled);
+
+        fixture.detectChanges();
+
+        expect(() => {
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            tick();
+            flush();
+        }).not.toThrow();
+    }));
+});
