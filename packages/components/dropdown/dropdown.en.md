@@ -10,6 +10,12 @@ Add the `progress` attribute to `kbq-dropdown-item` to show a loading shimmer on
 
 <!-- example(dropdown-item-progress) -->
 
+### Footer
+
+You can place auxiliary elements in the footer: [buttons](en/components/button), [links](en/components/link), hints.
+
+<!-- example(dropdown-with-footer) -->
+
 ### Open by Arrow Down ↓
 
 <!-- example(dropdown-open-by-arrow-down) -->

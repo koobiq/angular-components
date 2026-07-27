@@ -17,6 +17,7 @@ import {
     DropdownOverviewExample,
     DropdownRecursiveTemplateExample,
     DropdownWithFilterExample,
+    DropdownWithFooterExample,
     DropdownXPositionExample
 } from 'packages/docs-examples/components/dropdown';
 import { DevThemeToggle } from '../theme-toggle';
@@ -33,9 +34,13 @@ import { DevThemeToggle } from '../theme-toggle';
         DropdownOpenByArrowDownExample,
         DropdownRecursiveTemplateExample,
         DropdownWithFilterExample,
+        DropdownWithFooterExample,
         DropdownXPositionExample
     ],
     template: `
+        <dropdown-with-footer-example />
+        <hr />
+
         <dropdown-with-filter-example />
         <hr />
 

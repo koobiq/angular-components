@@ -45,7 +45,6 @@
     border-radius: var(--kbq-dropdown-size-container-border-radius);
 
     box-sizing: border-box;
-    padding: var(--kbq-size-xxs);
 
     // Prevent users from interacting with the panel while it's animating. Note that
     // people won't be able to click through it, because the overlay pane will catch the click.
@@ -86,6 +85,13 @@
 .kbq-dropdown__content {
     display: flex;
     flex-direction: column;
+
+    padding: var(--kbq-size-xxs);
+}
+
+.kbq-dropdown-footer {
+    @extend %kbq-select-footer;
+    border-color: var(--kbq-line-contrast-less);
 }
 
 @include theme.kbq-dropdown-theme();

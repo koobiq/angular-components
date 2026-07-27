@@ -1196,6 +1196,27 @@ describe('KbqDropdown', () => {
         });
     });
 
+    describe('footer', () => {
+        it('should project footer content into the panel, separate from the options content', () => {
+            const fixture = createComponent(FooterDropdown, [], []);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const content = overlayContainerElement.querySelector('.kbq-dropdown__content') as HTMLElement;
+            const footer = overlayContainerElement.querySelector('.kbq-dropdown-footer') as HTMLElement;
+
+            expect(content.textContent).toContain('Item');
+            expect(footer).toBeTruthy();
+            expect(footer.textContent!.trim()).toBe('Footer content');
+
+            // The footer must render outside the scrollable options content, not inside it.
+            expect(content.contains(footer)).toBe(false);
+            expect(content.textContent).not.toContain('Footer content');
+        });
+    });
+
     describe('nested dropdown', () => {
         let fixture: ComponentFixture<NestedDropdown>;
         let instance: NestedDropdown;
@@ -2066,6 +2087,20 @@ class SimpleDropdown {
     extraItems: string[] = [];
     closeCallback = jest.fn((name: string | undefined) => name);
     backdropClass: string;
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+            <kbq-dropdown-footer>Footer content</kbq-dropdown-footer>
+        </kbq-dropdown>
+    `
+})
+class FooterDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
 }
 
 @Component({
