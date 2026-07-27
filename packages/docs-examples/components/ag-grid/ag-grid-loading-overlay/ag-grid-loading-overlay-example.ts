@@ -42,7 +42,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             width: 100%;
         }
     `,
-    providers: [kbqAgGridLoadingOverlayConfigProvider({ rows: 6, cols: 4 })],
+    providers: [kbqAgGridLoadingOverlayConfigProvider({ rows: 6, cols: 3 })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadingOverlayExample {
