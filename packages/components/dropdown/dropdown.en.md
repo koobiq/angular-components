@@ -4,6 +4,12 @@
 
 <!-- example(dropdown-disabled) -->
 
+### Progress state
+
+Add the `progress` attribute to `kbq-dropdown-item` to show a loading shimmer on the item. It can be combined with `disabled` to also prevent interaction while loading.
+
+<!-- example(dropdown-item-progress) -->
+
 ### Open by Arrow Down ↓
 
 <!-- example(dropdown-open-by-arrow-down) -->

@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/common/list';
 @use '../core/styles/common/vendor-prefixes';
 
@@ -45,6 +46,21 @@
     bottom: -1px;
 
     border-radius: inherit;
+}
+
+// kbq-dropdown-item's :before/:after are already used for the hit-area extension (see
+// select.item-active-area() in dropdown.scss), so the .kbq-progress shimmer is rendered on the
+// existing overlay element instead of the usual ::after.
+.kbq-dropdown-item.kbq-progress .kbq-dropdown-item-overlay {
+    @include animation.kbq-progress-overlay();
+
+    // .kbq-dropdown-item-overlay's default inset (-1px) only bleeds past the padding box, leaving
+    // the item's own border uncovered. Flush the shimmer to the item's outer edge instead.
+    inset: calc(-1 * var(--kbq-size-3xs));
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
 }
 
 .kbq-dropdown__group-header {
