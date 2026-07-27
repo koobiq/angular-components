@@ -676,6 +676,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     hideCalendars(): void;
     get isEmpty(): boolean;
     protected isListMode: boolean;
+    protected get isPeriodInverted(): boolean;
     readonly listSelection: _angular_core.Signal<KbqListSelection | undefined>;
     protected max: any;
     get maxIntervalErrorHint(): string;

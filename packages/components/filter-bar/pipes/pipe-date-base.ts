@@ -88,8 +88,8 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         // template is momentarily absent must not blank out previously resolved bounds.
         if (!template) return;
 
-        const min = template.minDateTime != null ? this.toValidDate(template.minDateTime) : undefined;
-        const max = template.maxDateTime != null ? this.toValidDate(template.maxDateTime) : undefined;
+        const min = this.toValidDate(template.minDateTime);
+        const max = this.toValidDate(template.maxDateTime);
 
         // The date pipe has no clock; pin bounds to day edges so a time in the bound can't strand the value
         // invalid. The datetime pipe keeps the full instant (single absolute window). `.startOf`/`.endOf`
@@ -105,7 +105,10 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         this.changeDetectorRef.markForCheck();
     };
 
-    /** Deserializes a `minDateTime` / `maxDateTime` template value, treating unparseable input as "no bound". */
+    /**
+     * Deserializes a `minDateTime` / `maxDateTime` template value, treating an unset (`null`/`undefined`)
+     * value and an unparseable one alike as "no bound", so call sites need no own null-check.
+     */
     private toValidDate(value: unknown): any {
         const date = this.adapter.deserialize(value);
 
@@ -257,6 +260,28 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         }
 
         return this.max ?? end;
+    }
+
+    /**
+     * Whether the period is invalid specifically because it runs backwards (`start` later than `end`) —
+     * the one case `customPeriodErrorHint` actually describes. Deliberately compares the values rather
+     * than keying off the START control's `kbqDatepickerMax` error: `startMax` is `min(max, end)`, so that
+     * error fires both for a backwards period AND for a start beyond the configured `max`, and cannot
+     * tell them apart. Everything else that can invalidate a control here — a value outside
+     * `[min, max]` (`kbqDatepickerMin`/`kbqDatepickerMax`, `kbqTimepickerLowerThenMin`/
+     * `kbqTimepickerHigherThenMax`) or unparseable typed text (`kbqDatepickerParse`/`kbqTimepickerParse`)
+     * — is left to the field's own error styling instead of being mislabelled as an ordering problem.
+     * @docs-private
+     */
+    protected get isPeriodInverted(): boolean {
+        const start = this.formGroup.controls.start.value;
+        const end = this.formGroup.controls.end.value;
+
+        return (
+            this.adapter.isDateInstance(start) &&
+            this.adapter.isDateInstance(end) &&
+            this.adapter.compareDateTime(start, end) > 0
+        );
     }
 
     /**

@@ -469,6 +469,60 @@ describe('KbqPipeDatetimeComponent', () => {
         });
     });
 
+    describe('isPeriodInverted', () => {
+        beforeEach(() => {
+            setupSinglePipe({ value: null });
+        });
+
+        it('should be true when start is later than end', () => {
+            const component = getPipeComponent();
+            const internal = asInternal(component);
+            const start = adapter.today().set({ hour: 18, minute: 0, second: 0, millisecond: 0 });
+
+            component.showPeriod();
+            internal.formGroup.controls.start.setValue(start);
+            internal.formGroup.controls.end.setValue(start.minus({ hours: 3 }));
+
+            expect(internal.isPeriodInverted).toBe(true);
+        });
+
+        it('should be true for a same-day period inverted only by its time part', () => {
+            const component = getPipeComponent();
+            const internal = asInternal(component);
+            const day = adapter.today().startOf('day');
+
+            component.showPeriod();
+            internal.formGroup.controls.start.setValue(day.set({ hour: 18 }));
+            internal.formGroup.controls.end.setValue(day.set({ hour: 9 }));
+
+            expect(internal.isPeriodInverted).toBe(true);
+        });
+
+        it('should be false for out-of-bounds date/time values, which still disable Apply', () => {
+            const component = getPipeComponent();
+            const internal = asInternal(component);
+            const start = adapter.today().set({ hour: 9, minute: 0, second: 0, millisecond: 0 });
+            const end = start.plus({ hours: 3 });
+
+            component.showPeriod();
+            internal.formGroup.controls.start.setValue(start);
+            internal.formGroup.controls.end.setValue(end);
+
+            // what the datepicker / timepicker validators set for values outside the configured bounds
+            for (const errors of [
+                { kbqDatepickerMax: { max: start, actual: end } },
+                { kbqTimepickerHigherThenMax: { max: start, actual: end } },
+                { kbqTimepickerLowerThenMin: { min: end, actual: start } }
+            ]) {
+                internal.formGroup.controls.end.setErrors(errors);
+
+                // the period reads correctly (start before end), so the "start after end" hint stays hidden
+                expect(internal.isPeriodInverted).toBe(false);
+                expect(component.disabled).toBe(true);
+            }
+        });
+    });
+
     describe('date selection handlers', () => {
         beforeEach(() => {
             setupSinglePipe({ value: null });

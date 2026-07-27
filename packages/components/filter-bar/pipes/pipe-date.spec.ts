@@ -467,6 +467,42 @@ describe('KbqPipeDateComponent', () => {
         });
     });
 
+    describe('isPeriodInverted', () => {
+        beforeEach(() => {
+            setupSinglePipe({ value: null });
+        });
+
+        it('should be true when start is later than end', () => {
+            const component = getPipeComponent();
+            const internal = asInternal(component);
+            const today = adapter.today();
+
+            component.showPeriod();
+            internal.formGroup.controls.start.setValue(today.plus({ days: 2 }));
+            internal.formGroup.controls.end.setValue(today);
+
+            expect(internal.isPeriodInverted).toBe(true);
+        });
+
+        it('should be false for an out-of-bounds value, which still disables Apply', () => {
+            const component = getPipeComponent();
+            const internal = asInternal(component);
+            const today = adapter.today();
+
+            component.showPeriod();
+            internal.formGroup.controls.start.setValue(today);
+            internal.formGroup.controls.end.setValue(today.plus({ days: 1 }));
+            // what the datepicker's own max validator sets for a value past the configured `max`
+            internal.formGroup.controls.end.setErrors({
+                kbqDatepickerMax: { max: today, actual: today.plus({ days: 1 }) }
+            });
+
+            // the period reads correctly (start before end), so the "start after end" hint must stay hidden
+            expect(internal.isPeriodInverted).toBe(false);
+            expect(component.disabled).toBe(true);
+        });
+    });
+
     describe('date selection handlers', () => {
         beforeEach(() => {
             setupSinglePipe({ value: null });
@@ -1043,6 +1079,56 @@ describe('KbqPipeDateComponent', () => {
             const hint = overlayContainer.querySelector('.kbq-date-period__hint');
 
             expect(hint?.textContent?.trim()).toBe(component.minIntervalErrorHint);
+        }));
+
+        it('should not show the "start after end" hint for a value that is merely out of bounds', fakeAsync(() => {
+            const maxDateTime = adapter.today();
+
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Date',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Date,
+                    values: PRESET_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    maxDateTime: maxDateTime.toISO()
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+
+            component.open();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const internal = asInternal(component);
+
+            internal.returnButton = () => ({ focusViaKeyboard: () => {} });
+
+            component.showPeriod();
+            fixture.detectChanges();
+            flush();
+
+            // a correctly ordered period whose end is pushed past the configured `max` — the real
+            // datepicker max validator flags the control, but it is NOT an ordering problem
+            const start = maxDateTime.startOf('day');
+
+            internal.formGroup.controls.start.setValue(start);
+            internal.formGroup.controls.end.setValue(maxDateTime.plus({ days: 5 }));
+            fixture.detectChanges();
+
+            expect(internal.formGroup.controls.end.invalid).toBe(true);
+            expect(internal.isPeriodInverted).toBe(false);
+            expect(overlayContainer.querySelector('.kbq-date-period__hint')).toBeNull();
+            expect(component.disabled).toBe(true);
         }));
     });
 });
