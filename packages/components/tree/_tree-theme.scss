@@ -37,12 +37,26 @@
                 @include kbq-tree-option(states-hover);
             }
 
+            &:active,
+            &.kbq-active {
+                --kbq-option-background: var(--kbq-tree-states-active-container-background);
+
+                background: var(--kbq-tree-states-active-container-background);
+            }
+
             &.kbq-selected {
                 @include kbq-tree-option(states-selected);
 
                 &:hover,
                 &.kbq-hovered {
                     @include kbq-tree-option(states-selected-hover);
+                }
+
+                &:active,
+                &.kbq-active {
+                    --kbq-option-background: var(--kbq-tree-states-selected-active-container-background);
+
+                    background: var(--kbq-tree-states-selected-active-container-background);
                 }
             }
 
@@ -57,6 +71,13 @@
                     --kbq-option-background: var(--kbq-tree-multiple-states-selected-hover-container-background);
 
                     background: var(--kbq-tree-multiple-states-selected-hover-container-background);
+                }
+
+                &:active,
+                &.kbq-active {
+                    --kbq-option-background: var(--kbq-tree-multiple-states-selected-active-container-background);
+
+                    background: var(--kbq-tree-multiple-states-selected-active-container-background);
                 }
             }
         }

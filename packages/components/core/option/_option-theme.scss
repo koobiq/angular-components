@@ -24,11 +24,22 @@
             @include kbq-option(states-hover);
         }
 
+        &:active:not(.kbq-disabled),
+        &.kbq-pressed:not(.kbq-disabled) {
+            // the active state defines only a background token; the mixin would emit undefined text/icon/caption color vars
+            background: var(--kbq-list-states-active-container-background);
+        }
+
         &.kbq-selected:not(.kbq-disabled) {
             @include kbq-option(states-selected);
 
             &.kbq-active {
                 @include kbq-option(states-selected-hover);
+            }
+
+            &:active,
+            &.kbq-pressed {
+                background: var(--kbq-list-states-selected-active-container-background);
             }
         }
 
@@ -53,6 +64,11 @@
 
             &.kbq-active {
                 @include kbq-option(multiple-states-selected-hover);
+            }
+
+            &:active,
+            &.kbq-pressed {
+                background: var(--kbq-list-multiple-states-selected-active-container-background);
             }
         }
     }

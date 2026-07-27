@@ -27,11 +27,22 @@
             @include _kbq-dropdown-item-state(states-hover);
         }
 
+        &:active:not(.kbq-disabled),
+        &.kbq-active:not(.kbq-disabled) {
+            // the active state defines only a background token; the mixin would emit undefined text/icon color vars
+            background: var(--kbq-list-states-active-container-background);
+        }
+
         &.kbq-selected {
             @include _kbq-dropdown-item-state(states-selected);
 
             &.cdk-focused:not(.kbq-disabled) {
                 @include _kbq-dropdown-item-state(states-selected-hover);
+            }
+
+            &:active:not(.kbq-disabled),
+            &.kbq-active:not(.kbq-disabled) {
+                background: var(--kbq-list-states-selected-active-container-background);
             }
         }
 

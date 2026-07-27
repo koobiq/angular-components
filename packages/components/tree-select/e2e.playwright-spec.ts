@@ -91,6 +91,26 @@ test.describe('KbqTreeSelectModule', () => {
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
         });
+
+        test('pressed', async ({ page }) => {
+            await page.goto('/E2eTreeSelectStates');
+            const screenshotTarget = getComponent(page);
+            const select = getTreeSelect(screenshotTarget);
+
+            await select.click();
+
+            // Options are data-driven, so the pressed class is applied from the spec. Tree options only bind
+            // `.kbq-focused`/`.kbq-selected` (never `.kbq-active`), so the injected class is not stripped.
+            const options = page.locator('.cdk-overlay-pane kbq-tree-option');
+
+            await options.first().waitFor();
+            await options.nth(0).evaluate((el) => el.classList.add('kbq-active')); // selected + pressed
+            await options.nth(1).evaluate((el) => el.classList.add('kbq-active')); // pressed
+
+            await expect(getComponent(page)).toHaveScreenshot('01-pressed-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getComponent(page)).toHaveScreenshot('01-pressed-dark.png');
+        });
     });
 
     test.describe('E2eMultiTreeSelectStates', () => {
@@ -108,6 +128,27 @@ test.describe('KbqTreeSelectModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('02-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
+        });
+
+        test('pressed', async ({ page }) => {
+            await page.goto('/E2eMultiTreeSelectStates');
+            const screenshotTarget = getComponent(page);
+            const select = getTreeSelect(screenshotTarget);
+
+            await select.focus();
+            await page.keyboard.press('Enter');
+
+            // Options are data-driven, so the pressed class is applied from the spec. Tree options only bind
+            // `.kbq-focused`/`.kbq-selected` (never `.kbq-active`), so the injected class is not stripped.
+            const options = page.locator('.cdk-overlay-pane kbq-tree-option');
+
+            await options.first().waitFor();
+            await options.nth(0).evaluate((el) => el.classList.add('kbq-active')); // multiple selected + pressed
+            await options.nth(1).evaluate((el) => el.classList.add('kbq-active')); // pressed
+
+            await expect(getComponent(page)).toHaveScreenshot('02-pressed-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getComponent(page)).toHaveScreenshot('02-pressed-dark.png');
         });
     });
 

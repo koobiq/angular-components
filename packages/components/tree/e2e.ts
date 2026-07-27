@@ -31,8 +31,10 @@ const DATA_OBJECT = {
     States: {
         Normal: '',
         Hovered: '',
+        Active: '',
         Selected: '',
         SelectedHovered: '',
+        SelectedActive: '',
         Focused: '',
         Disabled: ''
     },
@@ -98,7 +100,10 @@ function buildFileTree(value: any, level: number): FileNode[] {
                 *kbqTreeNodeDef="let node"
                 kbqTreeNodePadding
                 [class.kbq-hovered]="node.name === 'Hovered' || node.name === 'SelectedHovered'"
-                [class.kbq-selected]="node.name === 'Selected' || node.name === 'SelectedHovered'"
+                [class.kbq-active]="node.name === 'Active' || node.name === 'SelectedActive'"
+                [class.kbq-selected]="
+                    node.name === 'Selected' || node.name === 'SelectedHovered' || node.name === 'SelectedActive'
+                "
                 [class.kbq-focused]="node.name === 'Focused'"
             >
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
@@ -129,7 +134,10 @@ function buildFileTree(value: any, level: number): FileNode[] {
                 *kbqTreeNodeDef="let node"
                 kbqTreeNodePadding
                 [class.kbq-hovered]="node.name === 'Hovered' || node.name === 'SelectedHovered'"
-                [class.kbq-selected]="node.name === 'Selected' || node.name === 'SelectedHovered'"
+                [class.kbq-active]="node.name === 'Active' || node.name === 'SelectedActive'"
+                [class.kbq-selected]="
+                    node.name === 'Selected' || node.name === 'SelectedHovered' || node.name === 'SelectedActive'
+                "
                 [class.kbq-focused]="node.name === 'Focused'"
             >
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
