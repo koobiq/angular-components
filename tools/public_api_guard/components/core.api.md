@@ -2318,11 +2318,11 @@ export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
 
 // @public
-export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
+export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<(hooks?: KbqScrollStrategyHooks) => ScrollStrategy>;
 
 // @public
 export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
+    provide: InjectionToken<(hooks?: KbqScrollStrategyHooks) => ScrollStrategy>;
     deps: (typeof Overlay)[];
     useFactory: typeof kbqSelectScrollStrategyProviderFactory;
 };
@@ -3315,8 +3315,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected readonly scheduler: AsyncScheduler | undefined;
     protected readonly scrollable: CdkScrollable | null;
     protected readonly scrollDispatcher: ScrollDispatcher;
-    protected abstract scrollStrategy: () => ScrollStrategy;
+    protected abstract scrollStrategy: (hooks?: KbqScrollStrategyHooks) => ScrollStrategy;
     setExternalNativeElement(value: HTMLElement): void;
+    readonly shouldHideOnScrollOut: i0.InputSignalWithTransform<boolean, unknown>;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues;
     protected strategy: FlexibleConnectedPositionStrategy;
@@ -3333,7 +3334,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected visible: boolean;
     abstract visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopUpTrigger<any>, never, never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopUpTrigger<any>, never, never, { "shouldHideOnScrollOut": { "alias": "shouldHideOnScrollOut"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopUpTrigger<any>, never>;
 }
@@ -3582,7 +3583,7 @@ export class KbqSelectMatcher {
 }
 
 // @public
-export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => RepositionScrollStrategy;
+export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): (hooks?: KbqScrollStrategyHooks) => RepositionScrollStrategy;
 
 // @public (undocumented)
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
