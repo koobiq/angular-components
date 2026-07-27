@@ -112,7 +112,7 @@ import { KbqDropdownModule } from './dropdown.module';
     styles: `
         :host {
             display: flex;
-            height: 600px;
+            height: 680px;
             width: 1020px;
             padding: var(--kbq-size-s);
         }
