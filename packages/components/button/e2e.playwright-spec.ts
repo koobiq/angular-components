@@ -105,7 +105,12 @@ test.describe('KbqButtonModule', () => {
             expect(box.width).toBeLessThanOrEqual(150);
         });
 
-        for (const testId of ['e2eButtonTruncationHug', 'e2eButtonTruncationFixed', 'e2eButtonTruncationFill']) {
+        for (const testId of [
+            'e2eButtonTruncationHug',
+            'e2eButtonTruncationFixed',
+            'e2eButtonTruncationFill',
+            'e2eButtonTruncationNestedIcon'
+        ]) {
             test(`clips the label of ${testId}`, async ({ page }) => {
                 await page.goto('/E2eButtonTruncation');
 
@@ -119,8 +124,15 @@ test.describe('KbqButtonModule', () => {
             await page.goto('/E2eButtonTruncation');
 
             // `text-overflow: ellipsis` is not painted on a flex box, so this must never be `flex`.
+            // The CSS specifies `inline-block`, but `.kbq-button-text` is always a flex item of
+            // `.kbq-button-wrapper`, so the CSS blockification spec turns the computed value into
+            // `block` (getComputedStyle, and therefore toHaveCSS, sees the computed value).
             await expect(getText(page.getByTestId('e2eButtonTruncationHug'))).toHaveCSS('display', 'block');
             await expect(getText(page.getByTestId('e2eButtonTruncationSlots'))).toHaveCSS('display', 'block');
+
+            // An icon nested inside a wrapper is a descendant but not a direct child of
+            // .kbq-button-text, so it must not trigger the legacy-markup flex fallback either.
+            await expect(getText(page.getByTestId('e2eButtonTruncationNestedIcon'))).toHaveCSS('display', 'block');
         });
 
         test('does not stretch a short label', async ({ page }) => {

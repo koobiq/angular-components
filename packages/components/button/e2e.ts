@@ -263,6 +263,8 @@ export class E2eButtonGroup {
  * instead of growing past it (`white-space: nowrap` makes the label's min-content contribution its
  * full width). Icons must keep their size and stay vertically centred in all three placements:
  * the `kbqButtonPrefix`/`kbqButtonSuffix` slots, the legacy default slot, and icon-only buttons.
+ * An icon nested deeper than a direct child (e.g. wrapped in a badge) must NOT trigger that same
+ * flex fallback, or it would silently lose its ellipsis too.
  */
 @Component({
     selector: 'e2e-button-truncation',
@@ -326,6 +328,16 @@ export class E2eButtonGroup {
                     {{ label }}
                 </button>
             </div>
+        </div>
+
+        <!-- an icon nested inside a wrapper (e.g. a badge) is a descendant but not a direct child of
+             .kbq-button-text — unlike the legacy case above, this must stay a block container. Kept
+             outside e2eScreenshotTarget so it doesn't perturb the 05-light/dark.png baseline above. -->
+        <div class="narrow">
+            <button kbq-button data-testid="e2eButtonTruncationNestedIcon" [color]="colors.Contrast">
+                <span class="marker"><i kbq-icon="kbq-plus_16"></i></span>
+                {{ label }}
+            </button>
         </div>
     `,
     styles: `

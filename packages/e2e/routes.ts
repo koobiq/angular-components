@@ -82,7 +82,7 @@ import {
     E2eVirtualScrollMultiSelectNarrow
 } from '../components/select/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
-import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
+import { E2eSplitButtonStateAndStyle, E2eSplitButtonTruncation } from '../components/split-button/e2e';
 import { E2eSplitterGhost } from '../components/splitter/e2e';
 import { E2eTableStates } from '../components/table/e2e';
 import { E2eTabNavBar, E2eTabsStates } from '../components/tabs/e2e';
@@ -128,6 +128,7 @@ const components = [
     E2eButtonStress,
     E2eButtonTruncation,
     E2eSplitButtonStateAndStyle,
+    E2eSplitButtonTruncation,
     E2eSplitterGhost,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,

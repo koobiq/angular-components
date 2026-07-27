@@ -65,11 +65,13 @@
 
         min-width: 0;
 
-        // legacy `<i kbq-icon> Text` markup projects the icon into the default slot, so it lands
-        // here. `vertical-align: middle` aligns it to the x-height, not the line box centre, which
-        // leaves it ~1px low — only a flex context centres it exactly. Truncation is unavailable in
-        // that case; use `kbqButtonPrefix`/`kbqButtonSuffix` to get centred icons AND an ellipsis.
-        &:has(.kbq-icon) {
+        // legacy `<i kbq-icon> Text` markup projects the icon into the default slot as a direct
+        // child, so it lands here. `vertical-align: middle` aligns it to the x-height, not the line
+        // box centre, which leaves it ~1px low — only a flex context centres it exactly. Truncation
+        // is unavailable in that case; use `kbqButtonPrefix`/`kbqButtonSuffix` to get centred icons
+        // AND an ellipsis. Scoped to a direct child so an icon nested deeper in the label (e.g. inside
+        // a projected badge) doesn't also fall back to flex and lose its ellipsis.
+        &:has(> .kbq-icon) {
             display: flex;
             align-items: center;
         }
