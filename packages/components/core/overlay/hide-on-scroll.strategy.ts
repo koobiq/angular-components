@@ -5,30 +5,9 @@ import {
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { DestroyRef, ElementRef, NgZone, Signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ElementRef, NgZone } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-
-/**
- * Implemented by overlay-opening components that support hide-on-scroll-out.
- * Declare `readonly shouldHideOnScrollOut = input(false, { transform: booleanAttribute })` and
- * call `wireHideOnScroll` after the overlay is created to activate the behavior.
- */
-export interface KbqHideOnScrollOverlay {
-    /** Whether the overlay closes when its trigger scrolls out of its scroll container boundary. */
-    readonly shouldHideOnScrollOut: Signal<boolean>;
-}
-
-/**
- * Subscribes to `strategy.hide$` when the strategy is a `KbqHideOnScrollStrategy`.
- * Call this after creating the overlay in any component that implements `KbqHideOnScrollOverlay`.
- */
-export function wireHideOnScroll(strategy: ScrollStrategy, destroyRef: DestroyRef, onHide: () => void): void {
-    if (strategy instanceof KbqHideOnScrollStrategy) {
-        strategy.hide$.pipe(takeUntilDestroyed(destroyRef)).subscribe(onHide);
-    }
-}
 
 export interface KbqHideOnScrollStrategyConfig {
     /**
@@ -40,14 +19,21 @@ export interface KbqHideOnScrollStrategyConfig {
     scrollThrottle?: number;
 }
 
+/** Lifecycle hooks passed to a scroll strategy factory. New hooks can be added without breaking existing providers. */
+export interface KbqScrollStrategyHooks {
+    /** Called (inside Angular zone) when the tracked element scrolls outside its scroll container boundary. */
+    onHide?: () => void;
+}
+
 /**
- * Scroll strategy that repositions the overlay on scroll and emits on `hide$`
+ * Scroll strategy that repositions the overlay on scroll and calls the optional `onHide` callback
  * when the tracked element moves outside its boundary:
  *
  * - With `originElement`: tracks the origin against each ancestor `CdkScrollable` container.
  * - Without `originElement`: tracks the overlay panel against the viewport.
  *
- * The caller is responsible for subscribing to `hide$` and hiding/closing the overlay.
+ * Pass `onHide` via the factory returned by `kbqHideOnScrollStrategyFactory` so the strategy
+ * calls it when the trigger scrolls out of bounds.
  */
 export class KbqHideOnScrollStrategy implements ScrollStrategy {
     private readonly _hideSubject = new Subject<void>();
@@ -63,7 +49,8 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
         private readonly _scrollDispatcher: ScrollDispatcher,
         private readonly _viewportRuler: ViewportRuler,
         private readonly _ngZone: NgZone,
-        private readonly _config: KbqHideOnScrollStrategyConfig = {}
+        private readonly _config: KbqHideOnScrollStrategyConfig = {},
+        private _hooks?: KbqScrollStrategyHooks
     ) {
         this._originElement = _config.originElement ?? null;
     }
@@ -102,7 +89,10 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
                     : this._isOverlayOutsideViewport();
 
                 if (isOutside) {
-                    this._ngZone.run(() => this._hideSubject.next());
+                    this._ngZone.run(() => {
+                        this._hideSubject.next();
+                        this._hooks?.onHide?.();
+                    });
                 }
             });
     }
@@ -117,6 +107,7 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
     detach(): void {
         this.disable();
         this._hideSubject.complete();
+        this._hooks = undefined;
         this._overlayRef = null;
     }
 
@@ -164,6 +155,10 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
  * Factory function for `KbqHideOnScrollStrategy`. Use it directly as a `useFactory` value
  * when providing a component-level scroll strategy token (e.g. `KBQ_POPOVER_SCROLL_STRATEGY`).
  *
+ * The returned factory accepts an optional `onHide` callback. When provided, the strategy calls
+ * it (instead of relying on external `hide$` subscriptions) whenever the trigger scrolls out of
+ * its scroll container.
+ *
  * @example
  * ```ts
  * {
@@ -177,6 +172,6 @@ export function kbqHideOnScrollStrategyFactory(
     scrollDispatcher: ScrollDispatcher,
     viewportRuler: ViewportRuler,
     ngZone: NgZone
-): (config?: KbqHideOnScrollStrategyConfig) => KbqHideOnScrollStrategy {
-    return (config = {}) => new KbqHideOnScrollStrategy(scrollDispatcher, viewportRuler, ngZone, config);
+): (hooks?: KbqScrollStrategyHooks) => KbqHideOnScrollStrategy {
+    return (hooks?) => new KbqHideOnScrollStrategy(scrollDispatcher, viewportRuler, ngZone, {}, hooks);
 }
