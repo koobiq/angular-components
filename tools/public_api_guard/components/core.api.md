@@ -475,6 +475,8 @@ export const enUSLocaleData: {
             customPeriodFrom: string;
             customPeriodTo: string;
             customPeriodErrorHint: string;
+            customPeriodMinIntervalErrorHint: string;
+            customPeriodMaxIntervalErrorHint: string;
             backToPeriodSelection: string;
         };
     };
@@ -722,6 +724,8 @@ export const esLALocaleData: {
             customPeriodFrom: string;
             customPeriodTo: string;
             customPeriodErrorHint: string;
+            customPeriodMinIntervalErrorHint: string;
+            customPeriodMaxIntervalErrorHint: string;
             backToPeriodSelection: string;
         };
     };
@@ -1198,6 +1202,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodFrom: string;
                 customPeriodTo: string;
                 customPeriodErrorHint: string;
+                customPeriodMinIntervalErrorHint: string;
+                customPeriodMaxIntervalErrorHint: string;
                 backToPeriodSelection: string;
             };
         };
@@ -1420,6 +1426,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodFrom: string;
                 customPeriodTo: string;
                 customPeriodErrorHint: string;
+                customPeriodMinIntervalErrorHint: string;
+                customPeriodMaxIntervalErrorHint: string;
                 backToPeriodSelection: string;
             };
         };
@@ -1638,6 +1646,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodFrom: string;
                 customPeriodTo: string;
                 customPeriodErrorHint: string;
+                customPeriodMinIntervalErrorHint: string;
+                customPeriodMaxIntervalErrorHint: string;
                 backToPeriodSelection: string;
             };
         };
@@ -1862,6 +1872,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodFrom: string;
                 customPeriodTo: string;
                 customPeriodErrorHint: string;
+                customPeriodMinIntervalErrorHint: string;
+                customPeriodMaxIntervalErrorHint: string;
                 backToPeriodSelection: string;
             };
         };
@@ -2082,6 +2094,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodFrom: string;
                 customPeriodTo: string;
                 customPeriodErrorHint: string;
+                customPeriodMinIntervalErrorHint: string;
+                customPeriodMaxIntervalErrorHint: string;
                 backToPeriodSelection: string;
             };
         };
@@ -4062,6 +4076,8 @@ export const ptBRLocaleData: {
             customPeriodFrom: string;
             customPeriodTo: string;
             customPeriodErrorHint: string;
+            customPeriodMinIntervalErrorHint: string;
+            customPeriodMaxIntervalErrorHint: string;
             backToPeriodSelection: string;
         };
     };
@@ -4496,6 +4512,8 @@ export const ruRULocaleData: {
             customPeriodFrom: string;
             customPeriodTo: string;
             customPeriodErrorHint: string;
+            customPeriodMinIntervalErrorHint: string;
+            customPeriodMaxIntervalErrorHint: string;
             backToPeriodSelection: string;
         };
     };
@@ -4851,6 +4869,8 @@ export const tkTMLocaleData: {
             customPeriodFrom: string;
             customPeriodTo: string;
             customPeriodErrorHint: string;
+            customPeriodMinIntervalErrorHint: string;
+            customPeriodMaxIntervalErrorHint: string;
             backToPeriodSelection: string;
         };
     };

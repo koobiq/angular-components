@@ -2085,6 +2085,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-custom-pipe-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-date-limits": {
+    "packagePath": "components/filter-bar/filter-bar-date-limits",
+    "title": "filter-bar-date-limits",
+    "componentName": "FilterBarDateLimitsExample",
+    "files": [
+      "filter-bar-date-limits-example.ts"
+    ],
+    "selector": "filter-bar-date-limits-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-date-limits-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-inactive-filter": {
     "packagePath": "components/filter-bar/filter-bar-inactive-filter",
     "title": "filter-bar-readonly-pipe",
@@ -7080,6 +7092,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-complete-functions':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-custom-pipe':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-date-limits':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-inactive-filter':
 return import('@koobiq/docs-examples/components/filter-bar');

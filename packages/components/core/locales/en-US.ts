@@ -101,6 +101,8 @@ export const enUSLocaleData = {
             customPeriodFrom: 'from',
             customPeriodTo: 'to',
             customPeriodErrorHint: 'The period cannot start later than it ends',
+            customPeriodMinIntervalErrorHint: 'The period cannot be shorter than {{ value }}',
+            customPeriodMaxIntervalErrorHint: 'The period cannot be longer than {{ value }}',
             backToPeriodSelection: 'Back'
         }
     },

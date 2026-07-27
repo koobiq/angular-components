@@ -101,6 +101,8 @@ export const tkTMLocaleData = {
             customPeriodFrom: 'başy',
             customPeriodTo: 'soňy',
             customPeriodErrorHint: 'Döwür gutarýan wagtyndan soň başlap bilmeýär',
+            customPeriodMinIntervalErrorHint: 'Döwür azyndan {{ value }} bolmaly',
+            customPeriodMaxIntervalErrorHint: 'Döwür köpi bilen {{ value }} bolmaly',
             backToPeriodSelection: 'Yzyna'
         }
     },

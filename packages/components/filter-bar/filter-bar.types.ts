@@ -193,6 +193,36 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * is used. Ignored by other pipe types.
      */
     compareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
+    /**
+     * Earliest selectable instant for the `date` / `datetime` pipe custom period. Accepts any value the
+     * configured `DateAdapter` can deserialize (with the default Luxon adapter: an ISO-8601 string, a
+     * `Date`, or a `DateTime`). The `date` pipe uses only its day (pinned to the start of day). Ignored by
+     * other pipe types.
+     */
+    minDateTime?: unknown;
+    /**
+     * Latest selectable instant for the `date` / `datetime` pipe custom period. See
+     * {@link KbqPipeTemplate.minDateTime}. The `date` pipe uses only its day (pinned to the end of day).
+     * Ignored by other pipe types.
+     */
+    maxDateTime?: unknown;
+    /**
+     * Minimum length of the `date` / `datetime` pipe custom period (`end − start`), as a Luxon
+     * duration-like object, e.g. `{ days: 1 }` or `{ hours: 2 }`. When the selected period is shorter, the
+     * editor shows an error and disables Apply. Ignored by other pipe types.
+     *
+     * Unlike {@link KbqPipeTemplate.minDateTime}, this value is NOT deserialized through the configured
+     * `DateAdapter` — it is applied directly via the date value's own `.plus()`, so this option currently
+     * assumes the default Luxon adapter and is not portable to other `DateAdapter` implementations (e.g.
+     * the Moment adapter).
+     */
+    minInterval?: unknown;
+    /**
+     * Maximum length of the `date` / `datetime` pipe custom period (`end − start`). See
+     * {@link KbqPipeTemplate.minInterval}. When the selected period is longer, the editor shows an error and
+     * disables Apply. Ignored by other pipe types.
+     */
+    maxInterval?: unknown;
 }
 
 export interface KbqSaveFilterError {
