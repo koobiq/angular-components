@@ -9,6 +9,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
     DropdownDisabledExample,
+    DropdownItemProgressExample,
     DropdownLazyloadDataExample,
     DropdownNavigationWrapExample,
     DropdownNestedExample,
@@ -27,6 +28,7 @@ import { DevThemeToggle } from '../theme-toggle';
         DropdownOverviewExample,
         DropdownNavigationWrapExample,
         DropdownDisabledExample,
+        DropdownItemProgressExample,
         DropdownLazyloadDataExample,
         DropdownOpenByArrowDownExample,
         DropdownRecursiveTemplateExample,
@@ -41,6 +43,9 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
 
         <dropdown-disabled-example />
+        <hr />
+
+        <dropdown-item-progress-example />
         <hr />
 
         <dropdown-lazyload-data-example />

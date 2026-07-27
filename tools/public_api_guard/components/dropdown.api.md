@@ -24,6 +24,7 @@ import * as i3 from '@angular/common';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleTextRef } from '@koobiq/components/core';
@@ -191,12 +192,13 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     ngOnDestroy(): void;
     // (undocumented)
     parentDropdownPanel?: KbqDropdownPanel | undefined;
+    readonly progress: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     resetStyles(): void;
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, [null, null, { optional: true; }]>;
 }
