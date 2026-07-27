@@ -100,6 +100,8 @@ export const ptBRLocaleData = {
             customPeriodFrom: 'de',
             customPeriodTo: 'até',
             customPeriodErrorHint: 'O período não pode começar depois de quando acaba',
+            customPeriodMinIntervalErrorHint: 'O período não pode ser menor que {{ value }}',
+            customPeriodMaxIntervalErrorHint: 'O período não pode ser maior que {{ value }}',
             backToPeriodSelection: 'Voltar'
         }
     },

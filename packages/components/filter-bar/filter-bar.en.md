@@ -45,6 +45,12 @@ For the `select` and `multiselect` types, the pipe template accepts an optional 
 
 The `input` type is the only one without a popover: it renders a bare input that is typed into directly in the bar, using the pipe's `name` as its placeholder. The value is applied as you type — 200 ms after the last keystroke (`debounceTime`) and only from 3 characters on (`minLength`) — rather than through an Apply button. Text shorter than the threshold, including an emptied field, is applied as `null`, so the bar never keeps filtering by text that is no longer in the input. `Enter` and blur apply the value immediately and ignore the threshold: an explicit action is always applied as typed. Its only clear affordance is the built-in cleaner inside the input, so `removable` has no effect — an `input` pipe can only be removed programmatically. Values are trimmed, and a blank value is applied as `null`. Set its width with the `--kbq-filter-bar-pipe-input-width` CSS variable.
 
+### Date and time limits
+
+The `date` and `datetime` pipe templates accept optional limits for the custom period. `minDateTime` and `maxDateTime` bound the selectable range — the `datetime` pipe uses the full instant (date and time), the `date` pipe only the day. `minInterval` and `maxInterval` constrain the length of the selected period (`end − start`) as a duration-like object (e.g. `{ days: 3 }`, `{ hours: 1 }`); a period outside these bounds shows an error and disables Apply, with the limit formatted for the current locale. All four are ignored by other pipe types.
+
+<!-- example(filter-bar-date-limits) -->
+
 ### Search in pipes
 
 If the filter has many values, it is useful to enable search in the drop-down menu.

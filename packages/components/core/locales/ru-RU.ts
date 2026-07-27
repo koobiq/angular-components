@@ -101,6 +101,8 @@ export const ruRULocaleData = {
             customPeriodFrom: 'с',
             customPeriodTo: 'по',
             customPeriodErrorHint: 'Начало периода не может быть позже окончания',
+            customPeriodMinIntervalErrorHint: 'Период не может быть короче {{ value }}',
+            customPeriodMaxIntervalErrorHint: 'Период не может быть длиннее {{ value }}',
             backToPeriodSelection: 'Назад'
         }
     },
