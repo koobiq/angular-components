@@ -23,7 +23,6 @@ import {
     ENTER,
     ESCAPE,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
-    KbqHideOnScrollStrategy,
     KbqLocaleServiceModule,
     KbqOption,
     KbqOptionSelectionChange,
@@ -2800,20 +2799,6 @@ class AutocompleteWithCustomOnBlur {
 // hide-on-scroll tests
 // ---------------------------------------------------------------------------
 
-class TestAutocompleteHideOnScrollStrategy extends KbqHideOnScrollStrategy {
-    readonly trigger$ = new Subject<void>();
-    override readonly hide$ = this.trigger$.asObservable();
-
-    constructor() {
-        super(null as any, null as any, null as any);
-    }
-
-    override attach = jest.fn();
-    override enable = jest.fn();
-    override disable = jest.fn();
-    override detach = jest.fn();
-}
-
 @Component({
     imports: [KbqInputModule, KbqAutocompleteModule],
     template: `
@@ -2845,13 +2830,19 @@ class AutocompleteHideOnScrollEnabled {
 }
 
 describe('KbqAutocompleteTrigger hide-on-scroll', () => {
-    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
-        const strategy = new TestAutocompleteHideOnScrollStrategy();
+    let capturedOnHide: (() => void) | undefined;
 
+    const testStrategyFactory = (onHide?: () => void) => {
+        capturedOnHide = onHide;
+
+        return { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() } as any;
+    };
+
+    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [AutocompleteHideOnScrollDefault, NoopAnimationsModule, KbqLocaleServiceModule]
         }).compileComponents();
-        TestBed.overrideProvider(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, { useValue: () => strategy });
+        TestBed.overrideProvider(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, { useValue: testStrategyFactory });
 
         const fixture = TestBed.createComponent(AutocompleteHideOnScrollDefault);
 
@@ -2863,19 +2854,17 @@ describe('KbqAutocompleteTrigger hide-on-scroll', () => {
 
         const closeSpy = jest.spyOn(fixture.componentInstance.trigger(), 'closePanel');
 
-        strategy.trigger$.next();
+        capturedOnHide?.();
         flush();
 
         expect(closeSpy).not.toHaveBeenCalled();
     }));
 
-    it('closes when shouldHideOnScrollOut=true and hide$ emits', fakeAsync(() => {
-        const strategy = new TestAutocompleteHideOnScrollStrategy();
-
+    it('closes when shouldHideOnScrollOut=true and onHide is invoked', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [AutocompleteHideOnScrollEnabled, NoopAnimationsModule, KbqLocaleServiceModule]
         }).compileComponents();
-        TestBed.overrideProvider(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, { useValue: () => strategy });
+        TestBed.overrideProvider(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, { useValue: testStrategyFactory });
 
         const fixture = TestBed.createComponent(AutocompleteHideOnScrollEnabled);
 
@@ -2887,13 +2876,13 @@ describe('KbqAutocompleteTrigger hide-on-scroll', () => {
 
         const closeSpy = jest.spyOn(fixture.componentInstance.trigger(), 'closePanel');
 
-        strategy.trigger$.next();
+        capturedOnHide!();
         flush();
 
         expect(closeSpy).toHaveBeenCalled();
     }));
 
-    it('does not crash with a non-KbqHideOnScrollStrategy scroll strategy', fakeAsync(() => {
+    it('does not crash when strategy factory ignores onHide', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [AutocompleteHideOnScrollEnabled, NoopAnimationsModule, KbqLocaleServiceModule]
         }).compileComponents();

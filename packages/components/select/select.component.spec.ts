@@ -41,7 +41,6 @@ import {
     ErrorStateMatcher,
     HOME,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KbqHideOnScrollStrategy,
     KbqOption,
     KbqOptionSelectionChange,
     KbqVirtualOption,
@@ -7443,20 +7442,6 @@ describe('KbqSelect', () => {
 // hide-on-scroll tests
 // ---------------------------------------------------------------------------
 
-class TestSelectHideOnScrollStrategy extends KbqHideOnScrollStrategy {
-    readonly trigger$ = new Subject<void>();
-    override readonly hide$ = this.trigger$.asObservable();
-
-    constructor() {
-        super(null as any, null as any, null as any);
-    }
-
-    override attach = jest.fn();
-    override enable = jest.fn();
-    override disable = jest.fn();
-    override detach = jest.fn();
-}
-
 @Component({
     imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
@@ -7488,13 +7473,19 @@ class SelectHideOnScrollEnabled {
 }
 
 describe('KbqSelect hide-on-scroll', () => {
-    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
-        const strategy = new TestSelectHideOnScrollStrategy();
+    let capturedOnHide: (() => void) | undefined;
 
+    const testStrategyFactory = (onHide?: () => void) => {
+        capturedOnHide = onHide;
+
+        return { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() } as any;
+    };
+
+    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [SelectHideOnScrollDefault, NoopAnimationsModule]
         }).compileComponents();
-        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: () => strategy });
+        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: testStrategyFactory });
 
         const fixture = TestBed.createComponent(SelectHideOnScrollDefault);
 
@@ -7507,19 +7498,17 @@ describe('KbqSelect hide-on-scroll', () => {
 
         const closeSpy = jest.spyOn(fixture.componentInstance.select(), 'close');
 
-        strategy.trigger$.next();
+        capturedOnHide?.();
         flush();
 
         expect(closeSpy).not.toHaveBeenCalled();
     }));
 
-    it('closes when shouldHideOnScrollOut=true and hide$ emits', fakeAsync(() => {
-        const strategy = new TestSelectHideOnScrollStrategy();
-
+    it('closes when shouldHideOnScrollOut=true and onHide is invoked', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [SelectHideOnScrollEnabled, NoopAnimationsModule]
         }).compileComponents();
-        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: () => strategy });
+        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: testStrategyFactory });
 
         const fixture = TestBed.createComponent(SelectHideOnScrollEnabled);
 
@@ -7532,13 +7521,13 @@ describe('KbqSelect hide-on-scroll', () => {
 
         const closeSpy = jest.spyOn(fixture.componentInstance.select(), 'close');
 
-        strategy.trigger$.next();
+        capturedOnHide!();
         flush();
 
         expect(closeSpy).toHaveBeenCalled();
     }));
 
-    it('does not crash with a non-KbqHideOnScrollStrategy scroll strategy', fakeAsync(() => {
+    it('does not crash when strategy factory ignores onHide', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [SelectHideOnScrollEnabled, NoopAnimationsModule]
         }).compileComponents();

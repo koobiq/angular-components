@@ -39,7 +39,6 @@ import {
     HOME,
     KBQ_LOCALE_SERVICE,
     KBQ_SELECT_SCROLL_STRATEGY,
-    KbqHideOnScrollStrategy,
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqPanelWidth,
@@ -75,7 +74,7 @@ import {
     KbqTreeOption,
     KbqTreeSelection
 } from '@koobiq/components/tree';
-import { Observable, Subject, map, of, timer } from 'rxjs'; // Subject used by hide-on-scroll tests
+import { Observable, Subject, map, of, timer } from 'rxjs';
 import { KbqTreeSelect, KbqTreeSelectChange, kbqTreeSelectOptionsProvider } from './tree-select.component';
 import { KbqTreeSelectModule } from './tree-select.module';
 
@@ -4966,20 +4965,6 @@ describe('KbqTreeSelect', () => {
 // hide-on-scroll tests
 // ---------------------------------------------------------------------------
 
-class TestTreeSelectHideOnScrollStrategy extends KbqHideOnScrollStrategy {
-    readonly trigger$ = new Subject<void>();
-    override readonly hide$ = this.trigger$.asObservable();
-
-    constructor() {
-        super(null as any, null as any, null as any);
-    }
-
-    override attach = jest.fn();
-    override enable = jest.fn();
-    override disable = jest.fn();
-    override detach = jest.fn();
-}
-
 @Component({
     imports: [KbqTreeSelectModule, ReactiveFormsModule],
     template: `
@@ -5007,13 +4992,19 @@ class TreeSelectHideOnScrollEnabled {
 }
 
 describe('KbqTreeSelect hide-on-scroll', () => {
-    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
-        const strategy = new TestTreeSelectHideOnScrollStrategy();
+    let capturedOnHide: (() => void) | undefined;
 
+    const testStrategyFactory = (onHide?: () => void) => {
+        capturedOnHide = onHide;
+
+        return { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() } as any;
+    };
+
+    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [TreeSelectHideOnScrollDefault, NoopAnimationsModule]
         }).compileComponents();
-        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: () => strategy });
+        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: testStrategyFactory });
 
         const fixture = TestBed.createComponent(TreeSelectHideOnScrollDefault);
 
@@ -5026,19 +5017,17 @@ describe('KbqTreeSelect hide-on-scroll', () => {
 
         const closeSpy = jest.spyOn(fixture.componentInstance.treeSelect(), 'close');
 
-        strategy.trigger$.next();
+        capturedOnHide?.();
         flush();
 
         expect(closeSpy).not.toHaveBeenCalled();
     }));
 
-    it('closes when shouldHideOnScrollOut=true and hide$ emits', fakeAsync(() => {
-        const strategy = new TestTreeSelectHideOnScrollStrategy();
-
+    it('closes when shouldHideOnScrollOut=true and onHide is invoked', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [TreeSelectHideOnScrollEnabled, NoopAnimationsModule]
         }).compileComponents();
-        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: () => strategy });
+        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: testStrategyFactory });
 
         const fixture = TestBed.createComponent(TreeSelectHideOnScrollEnabled);
 
@@ -5051,13 +5040,13 @@ describe('KbqTreeSelect hide-on-scroll', () => {
 
         const closeSpy = jest.spyOn(fixture.componentInstance.treeSelect(), 'close');
 
-        strategy.trigger$.next();
+        capturedOnHide!();
         flush();
 
         expect(closeSpy).toHaveBeenCalled();
     }));
 
-    it('does not crash with a non-KbqHideOnScrollStrategy scroll strategy', fakeAsync(() => {
+    it('does not crash when strategy factory ignores onHide', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [TreeSelectHideOnScrollEnabled, NoopAnimationsModule]
         }).compileComponents();

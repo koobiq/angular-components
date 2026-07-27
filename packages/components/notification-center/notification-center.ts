@@ -26,7 +26,6 @@ import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
     KBQ_LOCALE_SERVICE,
-    KbqHideOnScrollOverlay,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
@@ -361,10 +360,10 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 })
 export class KbqNotificationCenterTrigger
     extends KbqPopUpTrigger<KbqNotificationCenterComponent>
-    implements AfterContentInit, KbqHideOnScrollOverlay
+    implements AfterContentInit
 {
     /** @docs-private */
-    protected scrollStrategy: () => ScrollStrategy = inject(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY);
+    protected scrollStrategy: (onHide?: () => void) => ScrollStrategy = inject(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY);
     /** @docs-private */
     protected readonly service = inject(KbqNotificationCenterService);
 

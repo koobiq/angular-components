@@ -31,7 +31,6 @@ import {
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     kbqErrorStateMatcherProvider,
-    KbqHideOnScrollStrategy,
     ONE,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
@@ -40,7 +39,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { DateTime } from 'luxon';
-import { map, Observable, Subject, timer } from 'rxjs';
+import { map, Observable, timer } from 'rxjs';
 import { KbqInputModule } from '../input/index';
 import { KbqDatepickerInput, KbqDatepickerInputEvent } from './datepicker-input.directive';
 import { KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
@@ -1792,20 +1791,6 @@ class DelayedDatepicker {
 // hide-on-scroll tests
 // ---------------------------------------------------------------------------
 
-class TestDatepickerHideOnScrollStrategy extends KbqHideOnScrollStrategy {
-    readonly trigger$ = new Subject<void>();
-    override readonly hide$ = this.trigger$.asObservable();
-
-    constructor() {
-        super(null as any, null as any, null as any);
-    }
-
-    override attach = jest.fn();
-    override enable = jest.fn();
-    override disable = jest.fn();
-    override detach = jest.fn();
-}
-
 @Component({
     imports: [KbqDatepickerModule, KbqInputModule, KbqLuxonDateModule],
     template: `
@@ -1829,13 +1814,19 @@ class DatepickerHideOnScrollEnabled {
 }
 
 describe('KbqDatepicker hide-on-scroll', () => {
-    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
-        const strategy = new TestDatepickerHideOnScrollStrategy();
+    let capturedOnHide: (() => void) | undefined;
 
+    const testStrategyFactory = (onHide?: () => void) => {
+        capturedOnHide = onHide;
+
+        return { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() } as any;
+    };
+
+    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [DatepickerHideOnScrollDefault, NoopAnimationsModule]
         }).compileComponents();
-        TestBed.overrideProvider(KBQ_DATEPICKER_SCROLL_STRATEGY, { useValue: () => strategy });
+        TestBed.overrideProvider(KBQ_DATEPICKER_SCROLL_STRATEGY, { useValue: testStrategyFactory });
 
         const fixture = TestBed.createComponent(DatepickerHideOnScrollDefault);
 
@@ -1847,19 +1838,17 @@ describe('KbqDatepicker hide-on-scroll', () => {
 
         const closeSpy = jest.spyOn(fixture.componentInstance.datepicker(), 'close');
 
-        strategy.trigger$.next();
+        capturedOnHide?.();
         flush();
 
         expect(closeSpy).not.toHaveBeenCalled();
     }));
 
-    it('closes when shouldHideOnScrollOut=true and hide$ emits', fakeAsync(() => {
-        const strategy = new TestDatepickerHideOnScrollStrategy();
-
+    it('closes when shouldHideOnScrollOut=true and onHide is invoked', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [DatepickerHideOnScrollEnabled, NoopAnimationsModule]
         }).compileComponents();
-        TestBed.overrideProvider(KBQ_DATEPICKER_SCROLL_STRATEGY, { useValue: () => strategy });
+        TestBed.overrideProvider(KBQ_DATEPICKER_SCROLL_STRATEGY, { useValue: testStrategyFactory });
 
         const fixture = TestBed.createComponent(DatepickerHideOnScrollEnabled);
 
@@ -1871,13 +1860,13 @@ describe('KbqDatepicker hide-on-scroll', () => {
 
         const closeSpy = jest.spyOn(fixture.componentInstance.datepicker(), 'close');
 
-        strategy.trigger$.next();
+        capturedOnHide!();
         flush();
 
         expect(closeSpy).toHaveBeenCalled();
     }));
 
-    it('does not crash with a non-KbqHideOnScrollStrategy scroll strategy', fakeAsync(() => {
+    it('does not crash when strategy factory ignores onHide', fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [DatepickerHideOnScrollEnabled, NoopAnimationsModule]
         }).compileComponents();
