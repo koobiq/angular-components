@@ -1,6 +1,6 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { OverlayRef } from '@angular/cdk/overlay';
-import { filter, Observable, Subject, take } from 'rxjs';
+import { filter, Observable, ReplaySubject, Subject, take } from 'rxjs';
 import { KbqActionsPanelContainer } from './actions-panel-container';
 
 /**
@@ -14,52 +14,44 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
      */
     containerInstance: KbqActionsPanelContainer;
 
-    /** Gets an observable that is notified when the actions panel is finished closing. */
-    get afterClosed(): Observable<R | undefined> {
-        return this.dialogRef.closed;
-    }
+    private readonly afterOpenedSubject = new Subject<void>();
+    private readonly beforeOpenedSubject = new ReplaySubject<void>(1);
+    private readonly beforeClosedSubject = new Subject<R | undefined>();
 
-    /** Gets an observable that is notified when the actions panel starts closing, before its exit animation plays. */
-    get beforeClosed(): Observable<R | undefined> {
-        return this._beforeClosed;
-    }
+    /** Emits when keydown events are targeted on the overlay. */
+    readonly keydownEvents: Observable<KeyboardEvent> = this.dialogRef.keydownEvents;
 
-    /** Gets an observable that emits when keydown events are targeted on the overlay. */
-    get keydownEvents(): Observable<KeyboardEvent> {
-        return this.dialogRef.keydownEvents;
-    }
+    /** Emits when the actions panel starts opening, before its entrance animation plays. */
+    readonly beforeOpened: Observable<void> = this.beforeOpenedSubject;
 
-    /** Gets an observable that is notified when the actions panel has opened and appeared. */
-    get afterOpened(): Observable<void> {
-        return this._afterOpened;
-    }
+    /** Emits when the actions panel has opened and appeared. */
+    readonly afterOpened: Observable<void> = this.afterOpenedSubject;
+
+    /** Emits when the actions panel starts closing, before its exit animation plays. */
+    readonly beforeClosed: Observable<R | undefined> = this.beforeClosedSubject;
+
+    /** Emits when the actions panel is finished closing. */
+    readonly afterClosed: Observable<R | undefined> = this.dialogRef.closed;
 
     /**
-     * Gets the overlay reference for the actions panel.
+     * Overlay reference for the actions panel.
      *
      * @docs-private
      */
-    get overlayRef(): OverlayRef {
-        return this.dialogRef.overlayRef;
-    }
+    readonly overlayRef: OverlayRef = this.dialogRef.overlayRef;
 
     /**
-     * Gets the ID of the actions panel.
+     * ID of the actions panel.
      *
      * @docs-private
      */
-    get id(): string {
-        return this.dialogRef.id;
-    }
-
-    private readonly _afterOpened = new Subject<void>();
-    private readonly _beforeClosed = new Subject<R | undefined>();
+    readonly id: string = this.dialogRef.id;
 
     /** Result to be passed down to the `afterClosed` stream. */
     private result: R | undefined;
 
     /** Handle to the timeout that's running as a fallback in case the close animation doesn't fire. */
-    private closeAnimationFallbackTimeout: ReturnType<typeof setTimeout>;
+    private closeAnimationFallbackTimeout?: ReturnType<typeof setTimeout>;
 
     constructor(
         private readonly dialogRef: DialogRef<R, I>,
@@ -68,6 +60,21 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
         this.containerInstance = containerInstance;
         this.handleAnimation();
         this.handleOverlayDetachments();
+    }
+
+    /**
+     * Opens the actions panel, playing its entrance animation.
+     *
+     * @docs-private
+     */
+    open(): void {
+        if (!this.containerInstance) {
+            return;
+        }
+
+        this.beforeOpenedSubject.next();
+        this.beforeOpenedSubject.complete();
+        this.containerInstance.startOpenAnimation();
     }
 
     /** Closes the actions panel. */
@@ -89,8 +96,8 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
             });
 
         this.result = result;
-        this._beforeClosed.next(result);
-        this._beforeClosed.complete();
+        this.beforeClosedSubject.next(result);
+        this.beforeClosedSubject.complete();
         this.containerInstance.startCloseAnimation();
         this.containerInstance = null!;
     }
@@ -102,8 +109,8 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
                 take(1)
             )
             .subscribe(() => {
-                this._afterOpened.next();
-                this._afterOpened.complete();
+                this.afterOpenedSubject.next();
+                this.afterOpenedSubject.complete();
             });
 
         this.containerInstance.animationStateChanged

@@ -62,6 +62,12 @@ Collapsed/expanded group state and row selection can each be persisted independe
 
 <!-- example(ag-grid-row-group) -->
 
+### Actions panel for selected rows
+
+The [Actions panel](/en/components/actions-panel) component allows you to perform bulk actions on rows selected in the table. To prevent the panel from overlapping the last rows of the table, a `padding-bottom` is added to `.ag-body-viewport` when it opens.
+
+<!-- example(ag-grid-and-actions-panel) -->
+
 ### Copying selected rows
 
 The `kbqAgGridCopyByCtrlC` directive allows you to copy selected rows to the clipboard using the `Ctrl+C` keyboard shortcut.

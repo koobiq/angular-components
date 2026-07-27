@@ -62,6 +62,12 @@ import { AgGridModule } from 'ag-grid-angular';
 
 <!-- example(ag-grid-row-group) -->
 
+### Панель действий для выделенных строк
+
+Компонент [Actions panel](/ru/components/actions-panel) позволяет выполнять массовые действия над строками, выделенными в таблице. Чтобы панель не перекрывала последние строки таблицы, при её открытии добавляется `padding-bottom` для `.ag-body-viewport`.
+
+<!-- example(ag-grid-and-actions-panel) -->
+
 ### Копирование выделенных строк
 
 Директива `kbqAgGridCopyByCtrlC` позволяет копировать выделенные строки в буфер обмена при помощи комбинации клавиш `Ctrl+C`.
