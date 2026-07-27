@@ -45,6 +45,14 @@
                 @include tree-theme.kbq-tree-option(states-hover);
             }
 
+            // `:not(.kbq-disabled)` raises specificity so pressed wins over the heavier `:hover:not(.kbq-focused)` rule
+            &:active:not(.kbq-disabled),
+            &.kbq-active:not(.kbq-disabled) {
+                --kbq-option-background: var(--kbq-tree-states-active-container-background);
+
+                background: var(--kbq-tree-states-active-container-background);
+            }
+
             &.kbq-selected {
                 &:hover:not(.kbq-focused),
                 &.kbq-hovered:not(.kbq-focused) {
@@ -53,6 +61,13 @@
 
                 &.kbq-focused {
                     @include tree-theme.kbq-tree-option(states-selected-hover);
+                }
+
+                &:active:not(.kbq-disabled),
+                &.kbq-active:not(.kbq-disabled) {
+                    --kbq-option-background: var(--kbq-tree-states-selected-active-container-background);
+
+                    background: var(--kbq-tree-states-selected-active-container-background);
                 }
             }
 
@@ -65,6 +80,13 @@
 
                 &.kbq-focused {
                     background: var(--kbq-tree-multiple-states-selected-hover-container-background);
+                }
+
+                &:active:not(.kbq-disabled),
+                &.kbq-active:not(.kbq-disabled) {
+                    --kbq-option-background: var(--kbq-tree-multiple-states-selected-active-container-background);
+
+                    background: var(--kbq-tree-multiple-states-selected-active-container-background);
                 }
             }
 
