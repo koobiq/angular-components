@@ -2832,8 +2832,8 @@ class AutocompleteHideOnScrollEnabled {
 describe('KbqAutocompleteTrigger hide-on-scroll', () => {
     let capturedOnHide: (() => void) | undefined;
 
-    const testStrategyFactory = (onHide?: () => void) => {
-        capturedOnHide = onHide;
+    const testStrategyFactory = (hooks?: { onHide?: () => void }) => {
+        capturedOnHide = hooks?.onHide;
 
         return { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() } as any;
     };
