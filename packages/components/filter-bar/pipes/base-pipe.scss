@@ -15,6 +15,15 @@
         max-width: var(--kbq-filter-bar-pipe-max-width, 320px);
     }
 
+    // The button's default slot is an inline text box; a pipe puts its own flex row of two
+    // independently truncated parts (name + value) in there, so it opts back into flex.
+    // Qualified with `.kbq-button` on purpose: the base rule is `.kbq-button .kbq-button-text`, so a
+    // two-class selector would only win on source order, which differs between app bundles.
+    .kbq-button .kbq-button-text {
+        display: flex;
+        align-items: center;
+    }
+
     .kbq-pipe__name {
         @include common.kbq-truncate-line();
 

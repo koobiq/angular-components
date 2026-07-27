@@ -5,6 +5,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KBQ_WINDOW, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { combineLatest } from 'rxjs';
 
 type DevButtonState = Partial<{
@@ -252,6 +253,114 @@ export class E2eButtonGroup {
 
     protected readonly color = KbqComponentColors.ContrastFade;
     protected readonly style = KbqButtonStyles.Filled;
+}
+
+/**
+ * Label truncation scenarios.
+ *
+ * `.kbq-button-text` must stay a block container, because `text-overflow: ellipsis` is never painted
+ * on a flex box, and the host carries `max-width: 100%` so a hug-width button clamps to its container
+ * instead of growing past it (`white-space: nowrap` makes the label's min-content contribution its
+ * full width). Icons must keep their size and stay vertically centred in all three placements:
+ * the `kbqButtonPrefix`/`kbqButtonSuffix` slots, the legacy default slot, and icon-only buttons.
+ */
+@Component({
+    selector: 'e2e-button-truncation',
+    imports: [KbqButtonModule, KbqIconModule, KbqTitleModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            <!-- hug-width button in a narrow container, with no consumer CSS whatsoever -->
+            <div class="narrow">
+                <button kbq-button data-testid="e2eButtonTruncationHug" [color]="colors.Contrast">{{ label }}</button>
+            </div>
+
+            <!-- "fixed content": the flex column stretches the button to its own width -->
+            <div class="narrow column">
+                <button kbq-button data-testid="e2eButtonTruncationFixed" [color]="colors.Contrast">{{ label }}</button>
+            </div>
+
+            <!-- "fill content": the button takes the full width of a wider block -->
+            <div class="wide">
+                <button class="fill" kbq-button data-testid="e2eButtonTruncationFill" [color]="colors.Contrast">
+                    {{ label }}
+                </button>
+            </div>
+
+            <!-- a short label must still hug, not stretch to the container -->
+            <div class="wide">
+                <button kbq-button data-testid="e2eButtonTruncationShort" [color]="colors.Contrast">ОК</button>
+            </div>
+
+            <!-- marker slots: the icons sit outside the truncating box, so both survive -->
+            <div class="narrow">
+                <button kbq-button data-testid="e2eButtonTruncationSlots" [color]="colors.Contrast">
+                    <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
+                    {{ label }}
+                    <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+                </button>
+            </div>
+
+            <!-- legacy markup: the icon is projected into the default slot, i.e. inside .kbq-button-text -->
+            <div class="narrow">
+                <button kbq-button data-testid="e2eButtonTruncationLegacy" [color]="colors.Contrast">
+                    <i kbq-icon="kbq-plus_16"></i>
+                    {{ label }}
+                </button>
+            </div>
+
+            <!-- icon-only: the icon is the whole content of the default slot -->
+            <div class="narrow">
+                <button
+                    kbq-button
+                    aria-label="Plus"
+                    data-testid="e2eButtonTruncationIconOnly"
+                    [color]="colors.Contrast"
+                >
+                    <i kbq-icon="kbq-plus_16"></i>
+                </button>
+            </div>
+
+            <!-- kbq-title surfaces the full label once it is clipped -->
+            <div class="narrow">
+                <button kbq-button kbq-title data-testid="e2eButtonTruncationTitle" [color]="colors.Contrast">
+                    {{ label }}
+                </button>
+            </div>
+        </div>
+    `,
+    styles: `
+        [data-testid='e2eScreenshotTarget'] {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-m);
+            padding: var(--kbq-size-m);
+        }
+
+        .narrow {
+            width: 150px;
+        }
+
+        .wide {
+            width: 260px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fill {
+            width: 100%;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eButtonTruncation'
+    }
+})
+export class E2eButtonTruncation {
+    protected readonly colors = KbqComponentColors;
+    protected readonly label = 'Очень длинный текст кнопки, который не помещается';
 }
 
 /**

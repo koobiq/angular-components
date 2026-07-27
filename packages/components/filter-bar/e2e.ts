@@ -25,6 +25,64 @@ const DEV_DATA_OBJECT = {
     }
 };
 
+/**
+ * A saved-filter name and a pipe whose name and value are all longer than their max width.
+ *
+ * All three are projected into the default slot of a `kbq-button`, i.e. they land inside
+ * `.kbq-button-text`, and depend on being flex items to truncate on their own: as plain inline boxes
+ * `overflow` and `text-overflow` would not apply to them at all and the pipe value would spill out.
+ */
+@Component({
+    selector: 'e2e-filter-bar-pipe-truncation',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                <kbq-filters [filters]="[filter]" />
+
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarPipeTruncation'
+    }
+})
+export class E2eFilterBarPipeTruncation {
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Text',
+            type: KbqPipeTypes.Text,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    readonly filter: KbqFilter = {
+        name: 'Очень длинное название сохранённого фильтра',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: true,
+        pipes: [
+            {
+                name: 'Очень длинное название фильтра',
+                value: 'и не менее длинное значение фильтра',
+                type: KbqPipeTypes.Text,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+}
+
 @Component({
     selector: 'e2e-filter-bar-filters',
     imports: [KbqFilterBarModule],
