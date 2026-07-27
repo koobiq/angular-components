@@ -2742,6 +2742,30 @@ export class KbqFormsModule {
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
+export interface KbqHideOnScrollOverlay {
+    readonly shouldHideOnScrollOut: Signal<boolean>;
+}
+
+// @public
+export class KbqHideOnScrollStrategy implements ScrollStrategy {
+    constructor(_scrollDispatcher: ScrollDispatcher, _viewportRuler: ViewportRuler, _ngZone: NgZone, _config?: KbqHideOnScrollStrategyConfig);
+    attach(overlayRef: OverlayRef): void;
+    detach(): void;
+    disable(): void;
+    enable(): void;
+    readonly hide$: Observable<void>;
+}
+
+// @public (undocumented)
+export interface KbqHideOnScrollStrategyConfig {
+    originElement?: HTMLElement;
+    scrollThrottle?: number;
+}
+
+// @public
+export function kbqHideOnScrollStrategyFactory(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone): (config?: KbqHideOnScrollStrategyConfig) => KbqHideOnScrollStrategy;
+
+// @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
 
 // @public (undocumented)
@@ -5181,6 +5205,9 @@ export const VOLUME_UP = 175;
 
 // @public (undocumented)
 export const W = 87;
+
+// @public
+export function wireHideOnScroll(strategy: ScrollStrategy, destroyRef: DestroyRef, onHide: () => void): void;
 
 // @public (undocumented)
 export function wrappedErrorMessage(e: Error): RegExp;

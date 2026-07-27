@@ -1,8 +1,8 @@
-import { CdkScrollable, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
+import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { DestroyRef, ElementRef, NgZone } from '@angular/core';
+import { ElementRef, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
-import { KbqHideOnScrollStrategy, wireHideOnScroll } from './hide-on-scroll.strategy';
+import { KbqHideOnScrollStrategy } from './hide-on-scroll.strategy';
 
 function makeRect(top: number, left: number, bottom: number, right: number): DOMRect {
     return {
@@ -373,68 +373,5 @@ describe('KbqHideOnScrollStrategy', () => {
             expect(overlayRef.updatePosition).not.toHaveBeenCalled();
             expect(count).toBe(0);
         });
-    });
-});
-
-describe('wireHideOnScroll', () => {
-    function makeDestroyRef(): DestroyRef {
-        const callbacks: (() => void)[] = [];
-
-        return {
-            onDestroy: (cb: () => void) => {
-                callbacks.push(cb);
-
-                return () => {};
-            },
-            _destroy: () => callbacks.forEach((cb) => cb())
-        } as any;
-    }
-
-    it('subscribes to hide$ when strategy is KbqHideOnScrollStrategy', () => {
-        const scroll$ = new Subject<CdkScrollable | void>();
-        const scrollDispatcher = makeScrollDispatcher(scroll$);
-        const strategy = new KbqHideOnScrollStrategy(scrollDispatcher, makeViewportRuler(), makeNgZone(), {});
-        const overlayEl = document.createElement('div');
-
-        overlayEl.getBoundingClientRect = () => makeRect(-200, 0, -100, 100);
-        strategy.attach(makeOverlayRef(overlayEl));
-        strategy.enable();
-
-        const destroyRef = makeDestroyRef();
-        const onHide = jest.fn();
-
-        wireHideOnScroll(strategy, destroyRef, onHide);
-        scroll$.next();
-
-        expect(onHide).toHaveBeenCalledTimes(1);
-    });
-
-    it('does nothing when strategy is not KbqHideOnScrollStrategy', () => {
-        const noop: ScrollStrategy = { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() };
-        const destroyRef = makeDestroyRef();
-        const onHide = jest.fn();
-
-        expect(() => wireHideOnScroll(noop, destroyRef, onHide)).not.toThrow();
-        expect(onHide).not.toHaveBeenCalled();
-    });
-
-    it('unsubscribes when destroyRef fires', () => {
-        const scroll$ = new Subject<CdkScrollable | void>();
-        const scrollDispatcher = makeScrollDispatcher(scroll$);
-        const strategy = new KbqHideOnScrollStrategy(scrollDispatcher, makeViewportRuler(), makeNgZone(), {});
-        const overlayEl = document.createElement('div');
-
-        overlayEl.getBoundingClientRect = () => makeRect(-200, 0, -100, 100);
-        strategy.attach(makeOverlayRef(overlayEl));
-        strategy.enable();
-
-        const destroyRef = makeDestroyRef() as any;
-        const onHide = jest.fn();
-
-        wireHideOnScroll(strategy, destroyRef, onHide);
-        destroyRef._destroy();
-        scroll$.next();
-
-        expect(onHide).not.toHaveBeenCalled();
     });
 });
