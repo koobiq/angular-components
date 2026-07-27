@@ -1,0 +1,150 @@
+---
+// Renders the JSON produced by tools/api-gen-json/generate-accordion-api.ts, which reuses the
+// same Angular-compiler-based extraction (tools/api-gen/extraction + manifest) that today's
+// docs:api-gen uses — only the final render target changes, from Nunjucks/HTML to this component.
+interface ApiMember {
+	name: string;
+	memberType?: 'property' | 'method' | 'getter' | 'setter' | 'enum_item';
+	memberTags?: string[];
+	description?: string;
+	type?: string;
+	inputAlias?: string;
+	outputAlias?: string;
+	isRequiredInput?: boolean;
+	signatures?: { params?: { name: string; type: string; isOptional: boolean }[]; returnType?: string }[];
+}
+
+interface ApiEntry {
+	name: string;
+	entryType: string;
+	description?: string;
+	selector?: string;
+	members?: ApiMember[];
+}
+
+interface Props {
+	entries: ApiEntry[];
+}
+
+const { entries } = Astro.props;
+
+const isMethod = (member: ApiMember) => member.memberType === 'method' || Array.isArray(member.signatures);
+const isInput = (member: ApiMember) => member.memberTags?.includes('input');
+const isOutput = (member: ApiMember) => member.memberTags?.includes('output');
+
+const renderable = entries.filter((entry) => entry.entryType === 'component' || entry.entryType === 'directive');
+
+const methodSignature = (member: ApiMember) => {
+	const params = member.signatures?.[0]?.params ?? [];
+	const returnType = member.signatures?.[0]?.returnType ?? 'void';
+	const paramList = params.map((p) => `${p.name}${p.isOptional ? '?' : ''}: ${p.type}`).join(', ');
+
+	return `${member.name}(${paramList}): ${returnType}`;
+};
+---
+
+{
+	renderable.map((entry) => {
+		const members = entry.members ?? [];
+		const inputs = members.filter(isInput);
+		const outputs = members.filter(isOutput);
+		const methods = members.filter((m) => isMethod(m) && !isInput(m) && !isOutput(m));
+
+		return (
+			<section class="api-entry">
+				<h3>
+					<code>{entry.name}</code>
+				</h3>
+				{entry.selector && (
+					<p>
+						Selector: <code>{entry.selector}</code>
+					</p>
+				)}
+				{entry.description && <p>{entry.description}</p>}
+
+				{inputs.length > 0 && (
+					<>
+						<h4>Inputs</h4>
+						<table>
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								{inputs.map((member) => (
+									<tr>
+										<td>
+											<code>
+												{member.inputAlias ?? member.name}
+												{member.isRequiredInput ? '*' : ''}
+											</code>
+										</td>
+										<td>
+											<code>{member.type}</code>
+										</td>
+										<td>{member.description}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</>
+				)}
+
+				{outputs.length > 0 && (
+					<>
+						<h4>Outputs</h4>
+						<table>
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								{outputs.map((member) => (
+									<tr>
+										<td>
+											<code>{member.outputAlias ?? member.name}</code>
+										</td>
+										<td>
+											<code>{member.type}</code>
+										</td>
+										<td>{member.description}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</>
+				)}
+
+				{methods.length > 0 && (
+					<>
+						<h4>Methods</h4>
+						<table>
+							<thead>
+								<tr>
+									<th>Signature</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								{methods.map((member) => (
+									<tr>
+										<td>
+											<code>{methodSignature(member)}</code>
+										</td>
+										<td>{member.description}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</>
+				)}
+			</section>
+		);
+	})
+}

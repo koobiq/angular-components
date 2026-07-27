@@ -1,0 +1,34 @@
+@use '@koobiq/icons/fonts/kbq-icons';
+
+// Tokens
+@use '@koobiq/design-tokens/web/new/css-tokens';
+@use '@koobiq/design-tokens/web/new/css-tokens-light';
+@use '@koobiq/design-tokens/web/new/css-tokens-dark';
+
+@use '../../../../packages/components/core/styles/theming/prebuilt/theme';
+@use '../../../../packages/components/core/styles/visual/layout';
+@use '../../../../packages/components/core/styles/common/list';
+@use '../../../../packages/components/core/styles/common/tokens';
+
+// Inter
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/400-italic.css';
+@import '@fontsource/inter/500-italic.css';
+
+// JetBrains Mono
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/700.css';
+
+@include layout.layouts-for-breakpoint();
+
+// Starlight's own chrome (headings, sidebar, prose) defaults to --sl-font-system, entirely
+// independent of Koobiq's tokens, so only the live Angular islands were rendering in Inter while
+// everything else fell back to the system font. --sl-font/--sl-font-mono are Starlight's documented
+// override points for exactly this: https://starlight.astro.build/guides/css-and-tailwind/#custom-fonts
+:root {
+    --sl-font: var(--kbq-font-family-base);
+    --sl-font-mono: var(--kbq-font-family-mono);
+}

@@ -1,0 +1,86 @@
+---
+title: Accordion
+---
+
+import ExampleViewer from '~/components/ExampleViewer.astro';
+import {
+    AccordionOverviewExample,
+    AccordionStatesExample,
+    AccordionSectionsExample,
+    AccordionInactiveSectionExample,
+    AccordionHeaderExample,
+    AccordionContentExample,
+    AccordionInSectionExample,
+    AccordionInPanelExample
+} from '@koobiq/docs-examples/components/accordion';
+
+An accordion is an interactive UI element that allows users to expand and collapse individual blocks of information on demand, organizing them into compact sections.
+
+<ExampleViewer component="accordion" id="accordion-overview">
+    <AccordionOverviewExample client:visible />
+</ExampleViewer>
+
+### States
+
+#### Trigger Placement
+
+By default, the trigger is positioned on the left side. If needed, it can be placed in the left part of the section header after the title or on the right side of the section header.
+
+<ExampleViewer component="accordion" id="accordion-states">
+    <AccordionStatesExample client:visible />
+</ExampleViewer>
+
+#### Section Expansion
+
+By default, the accordion allows only one section to be expanded at a time. However, it is possible to enable the expansion of all sections simultaneously.
+
+<ExampleViewer component="accordion" id="accordion-sections">
+    <AccordionSectionsExample client:visible />
+</ExampleViewer>
+
+#### Inactive Section
+
+If necessary, a section can be disabled, preventing it from being expanded.
+
+<ExampleViewer component="accordion" id="accordion-inactive-section">
+    <AccordionInactiveSectionExample client:visible />
+</ExampleViewer>
+
+#### Content Placement
+
+The content inside a section can be placed within the section header or inside the content area.
+
+##### Inside the Section Header
+
+The section header can additionally include an icon, description, left and right badges, as well as extra actions (using an Icon Button).
+
+<ExampleViewer component="accordion" id="accordion-header">
+    <AccordionHeaderExample client:visible />
+</ExampleViewer>
+
+##### Inside the Content Area
+
+This area can contain any type of content.
+
+<ExampleViewer component="accordion" id="accordion-content">
+    <AccordionContentExample client:visible />
+</ExampleViewer>
+
+### Usage Examples
+
+#### Inside a Section
+
+<ExampleViewer component="accordion" id="accordion-in-section">
+    <AccordionInSectionExample client:visible />
+</ExampleViewer>
+
+#### Inside a Panel
+
+<ExampleViewer component="accordion" id="accordion-in-panel">
+    <AccordionInPanelExample client:visible />
+</ExampleViewer>
+
+### Recommendations
+
+- Each accordion section should have a clear and informative title that accurately reflects its content. This helps users quickly find the necessary information.
+- Accordion sections should be organized in a logical sequence, such as alphabetical order, hierarchical structure, or thematic grouping.

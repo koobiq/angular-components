@@ -1,0 +1,67 @@
+---
+import { existsSync, readFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+
+interface Props {
+	/** docs-examples component folder, e.g. "accordion" */
+	component: string;
+	/** example id, e.g. "accordion-overview" */
+	id: string;
+}
+
+const { component, id } = Astro.props;
+
+// Source of truth for "view source" tabs: the same files the live component below is compiled
+// from (packages/docs-examples/components/<component>/<id>/<id>-example.{ts,html,css}), read
+// directly at build time instead of fetched over HTTP at runtime.
+//
+// Deliberately anchored on `process.cwd()` (Astro/yarn always run from the `apps/docs-v2` project
+// root) rather than `import.meta.url`: this component's compiled output gets relocated by the
+// bundler into `dist/.prerender/chunks/` during `astro build`, one directory level deeper than its
+// source at `src/components/`, so a `new URL('../../relative/path', import.meta.url)` computed here
+// resolves correctly in dev but lands one level short of the repo root in a production build.
+const exampleDir = resolve(process.cwd(), '../../packages/docs-examples/components', component, id);
+
+const LANG_BY_EXT: Record<string, string> = { ts: 'typescript', html: 'html', css: 'css', scss: 'scss' };
+
+const sourceFiles = ['ts', 'html', 'scss', 'css']
+	.map((ext) => ({ ext, path: join(exampleDir, `${id}-example.${ext}`) }))
+	.filter(({ path }) => existsSync(path))
+	.map(({ ext, path }) => ({
+		filename: `${id}-example.${ext}`,
+		lang: LANG_BY_EXT[ext],
+		code: readFileSync(path, 'utf-8').trimEnd()
+	}));
+
+if (sourceFiles.length === 0) {
+	throw new Error(`ExampleViewer: no source files found for "${id}" under ${exampleDir}`);
+}
+---
+
+<Tabs syncKey="example-view">
+	<TabItem label="Preview">
+		<div class="example-viewer-preview not-content">
+			<slot />
+		</div>
+	</TabItem>
+	<TabItem label="Code">
+		{sourceFiles.map((file) => <Code code={file.code} lang={file.lang} meta={`title="${file.filename}"`} />)}
+	</TabItem>
+</Tabs>
+
+{/* Koobiq tokens (--kbq-*), not Starlight's own (--sl-*): this box should look like the live
+   example card on koobiq.io, not like generic Starlight chrome. Values match what's actually
+   rendered there (verified via computed styles): border color is --kbq-background-contrast-fade,
+   radius/padding are the --kbq-size-m / --kbq-size-xl spacing tokens reused for this card. */}
+<style>
+	.example-viewer-preview {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 4rem;
+		padding: var(--kbq-size-xl);
+		border: 1px solid var(--kbq-background-contrast-fade);
+		border-radius: var(--kbq-size-m);
+	}
+</style>

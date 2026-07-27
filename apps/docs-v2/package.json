@@ -1,0 +1,37 @@
+{
+    "name": "@koobiq/docs-v2",
+    "private": true,
+    "type": "module",
+    "version": "0.0.1",
+    "scripts": {
+        "dev": "astro dev",
+        "start": "astro dev",
+        "build": "astro build",
+        "preview": "astro preview",
+        "astro": "astro"
+    },
+    "dependencies": {
+        "@analogjs/astro-angular": "^2.6.4",
+        "@angular/animations": "20.3.24",
+        "@angular/common": "20.3.25",
+        "@angular/compiler": "20.3.25",
+        "@angular/core": "20.3.25",
+        "@angular/platform-browser": "20.3.25",
+        "@astrojs/mdx": "^7.0.3",
+        "@astrojs/starlight": "^0.41.4",
+        "@koobiq/design-tokens": "^3.17.2",
+        "@koobiq/icons": "^11.7.1",
+        "astro": "^7.0.2",
+        "rxjs": "^7.8.2",
+        "sharp": "^0.34.5",
+        "tslib": "^2.8.1"
+    },
+    "devDependencies": {
+        "@angular/build": "20.3.31",
+        "@angular/compiler-cli": "20.3.25",
+        "@angular/language-service": "20.3.25",
+        "@angular/platform-server": "20.3.25",
+        "sass": "^1.93.3",
+        "typescript": "5.8.3"
+    }
+}

@@ -1,0 +1,86 @@
+---
+title: Accordion
+---
+
+import ExampleViewer from '~/components/ExampleViewer.astro';
+import {
+    AccordionOverviewExample,
+    AccordionStatesExample,
+    AccordionSectionsExample,
+    AccordionInactiveSectionExample,
+    AccordionHeaderExample,
+    AccordionContentExample,
+    AccordionInSectionExample,
+    AccordionInPanelExample
+} from '@koobiq/docs-examples/components/accordion';
+
+Аккордеон (accordion) — это интерактивный элемент интерфейса, позволяющий пользователю раскрывать по требованию отдельные блоки информации, организованные в компактные секции.
+
+<ExampleViewer component="accordion" id="accordion-overview">
+    <AccordionOverviewExample client:visible />
+</ExampleViewer>
+
+### Состояния
+
+#### Расположение триггера
+
+По умолчанию триггер располагается с левой стороны. При необходимости триггер можно расположить в левой части шапки секции после заголовка, а также в правой части шапки секции.
+
+<ExampleViewer component="accordion" id="accordion-states">
+    <AccordionStatesExample client:visible />
+</ExampleViewer>
+
+#### Раскрытие секций
+
+По умолчанию аккордеон поддерживает раскрытие только одной секции за раз, но при необходимости можно включить раскрытие всех секции.
+
+<ExampleViewer component="accordion" id="accordion-sections">
+    <AccordionSectionsExample client:visible />
+</ExampleViewer>
+
+#### Неактивная секция
+
+При необходимости можно заблокировать раскрытие секции, используя ее неактивное состояние.
+
+<ExampleViewer component="accordion" id="accordion-inactive-section">
+    <AccordionInactiveSectionExample client:visible />
+</ExampleViewer>
+
+#### Содержимое
+
+Содержимое внутри секции можно расположить внутри шапки секции, а также внутри области контента.
+
+##### Внутри шапки секции
+
+Для шапки секции есть возможность дополнительно включать иконку, описание, левый и правый бейджи, а также дополнительные действия (с использованием Icon Button).
+
+<ExampleViewer component="accordion" id="accordion-header">
+    <AccordionHeaderExample client:visible />
+</ExampleViewer>
+
+##### Внутри области контента
+
+Наполнение этой области может быть любым.
+
+<ExampleViewer component="accordion" id="accordion-content">
+    <AccordionContentExample client:visible />
+</ExampleViewer>
+
+### Примеры использования
+
+#### Внутри секции
+
+<ExampleViewer component="accordion" id="accordion-in-section">
+    <AccordionInSectionExample client:visible />
+</ExampleViewer>
+
+#### Внутри панели
+
+<ExampleViewer component="accordion" id="accordion-in-panel">
+    <AccordionInPanelExample client:visible />
+</ExampleViewer>
+
+#### Рекомендации
+
+- Каждый раздел аккордеона должен иметь четкий и информативный заголовок, который точно отражает содержимое. Это поможет пользователям быстро найти нужную информацию.
+- Разделы аккордеона должны быть организованы в логической последовательности. Это может быть алфавитный порядок, иерархическая структура или группировка по темам.
