@@ -53,7 +53,6 @@ import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -2719,18 +2718,13 @@ export class KbqFormsModule {
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
-export interface KbqHideOnScrollOverlay {
-    readonly shouldHideOnScrollOut: Signal<boolean>;
-}
-
-// @public
 export class KbqHideOnScrollStrategy implements ScrollStrategy {
-    constructor(_scrollDispatcher: ScrollDispatcher, _viewportRuler: ViewportRuler, _ngZone: NgZone, _config?: KbqHideOnScrollStrategyConfig);
+    constructor(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone, config?: KbqHideOnScrollStrategyConfig, hooks?: KbqScrollStrategyHooks | undefined);
     attach(overlayRef: OverlayRef): void;
     detach(): void;
     disable(): void;
     enable(): void;
-    readonly hide$: Observable<void>;
+    readonly hide: Observable<void>;
 }
 
 // @public (undocumented)
@@ -2740,7 +2734,7 @@ export interface KbqHideOnScrollStrategyConfig {
 }
 
 // @public
-export function kbqHideOnScrollStrategyFactory(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone): (config?: KbqHideOnScrollStrategyConfig) => KbqHideOnScrollStrategy;
+export function kbqHideOnScrollStrategyFactory(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone): (hooks?: KbqScrollStrategyHooks) => KbqHideOnScrollStrategy;
 
 // @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
@@ -3513,6 +3507,11 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRoundDecimalPipe, "kbqRoundNumber", true>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqRoundDecimalPipe>;
+}
+
+// @public
+export interface KbqScrollStrategyHooks {
+    onHide?: () => void;
 }
 
 // @public
@@ -5182,9 +5181,6 @@ export const VOLUME_UP = 175;
 
 // @public (undocumented)
 export const W = 87;
-
-// @public
-export function wireHideOnScroll(strategy: ScrollStrategy, destroyRef: DestroyRef, onHide: () => void): void;
 
 // @public (undocumented)
 export function wrappedErrorMessage(e: Error): RegExp;

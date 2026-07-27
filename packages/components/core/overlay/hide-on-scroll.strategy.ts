@@ -36,62 +36,62 @@ export interface KbqScrollStrategyHooks {
  * calls it when the trigger scrolls out of bounds.
  */
 export class KbqHideOnScrollStrategy implements ScrollStrategy {
-    private readonly _hideSubject = new Subject<void>();
+    private readonly hideSubject = new Subject<void>();
 
     /** Emits when the tracked element scrolls outside its boundary. */
-    readonly hide$: Observable<void> = this._hideSubject.asObservable();
+    readonly hide: Observable<void> = this.hideSubject.asObservable();
 
-    private _overlayRef: OverlayRef | null = null;
-    private _scrollSubscription: Subscription | null = null;
-    private _originElement: HTMLElement | null = null;
+    private overlayRef: OverlayRef | null = null;
+    private scrollSubscription: Subscription | null = null;
+    private originElement: HTMLElement | null = null;
 
     constructor(
-        private readonly _scrollDispatcher: ScrollDispatcher,
-        private readonly _viewportRuler: ViewportRuler,
-        private readonly _ngZone: NgZone,
-        private readonly _config: KbqHideOnScrollStrategyConfig = {},
-        private _hooks?: KbqScrollStrategyHooks
+        private readonly scrollDispatcher: ScrollDispatcher,
+        private readonly viewportRuler: ViewportRuler,
+        private readonly ngZone: NgZone,
+        private readonly config: KbqHideOnScrollStrategyConfig = {},
+        private hooks?: KbqScrollStrategyHooks
     ) {
-        this._originElement = _config.originElement ?? null;
+        this.originElement = config.originElement ?? null;
     }
 
     /** @docs-private */
     attach(overlayRef: OverlayRef): void {
-        this._overlayRef = overlayRef;
+        this.overlayRef = overlayRef;
 
-        if (!this._originElement) {
+        if (!this.originElement) {
             // FlexibleConnectedPositionStrategy stores the origin as a private field.
             // Reading it here avoids requiring callers to pass originElement explicitly.
-            this._originElement = this.coerceOriginElement((overlayRef.getConfig().positionStrategy as any)?._origin);
+            this.originElement = this.coerceOriginElement((overlayRef.getConfig().positionStrategy as any)?._origin);
         }
     }
 
     /** Subscribes to scroll events and starts repositioning / out-of-bounds detection. */
     enable(): void {
-        if (this._scrollSubscription) return;
+        if (this.scrollSubscription) return;
 
-        const { scrollThrottle = 20 } = this._config;
+        const { scrollThrottle = 20 } = this.config;
 
-        this._scrollSubscription = this._scrollDispatcher
+        this.scrollSubscription = this.scrollDispatcher
             .scrolled(scrollThrottle)
             .pipe(
                 filter(
                     (scrollable) =>
                         !scrollable ||
-                        !this._overlayRef!.overlayElement.contains(scrollable.getElementRef().nativeElement)
+                        !this.overlayRef!.overlayElement.contains(scrollable.getElementRef().nativeElement)
                 )
             )
             .subscribe(() => {
-                this._overlayRef!.updatePosition();
+                this.overlayRef!.updatePosition();
 
-                const isOutside = this._originElement
-                    ? this._isOriginOutsideAncestors(this._originElement)
+                const isOutside = this.originElement
+                    ? this._isOriginOutsideAncestors(this.originElement)
                     : this._isOverlayOutsideViewport();
 
                 if (isOutside) {
-                    this._ngZone.run(() => {
-                        this._hideSubject.next();
-                        this._hooks?.onHide?.();
+                    this.ngZone.run(() => {
+                        this.hideSubject.next();
+                        this.hooks?.onHide?.();
                     });
                 }
             });
@@ -99,22 +99,22 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
 
     /** Unsubscribes from scroll events. */
     disable(): void {
-        this._scrollSubscription?.unsubscribe();
-        this._scrollSubscription = null;
+        this.scrollSubscription?.unsubscribe();
+        this.scrollSubscription = null;
     }
 
-    /** Disables the strategy and completes `hide$`. */
+    /** Disables the strategy and completes `hide`. */
     detach(): void {
         this.disable();
-        this._hideSubject.complete();
-        this._hooks = undefined;
-        this._overlayRef = null;
+        this.hideSubject.complete();
+        this.hooks = undefined;
+        this.overlayRef = null;
     }
 
     private _isOriginOutsideAncestors(originElement: HTMLElement): boolean {
         const originRect = originElement.getBoundingClientRect();
 
-        return this._scrollDispatcher
+        return this.scrollDispatcher
             .getAncestorScrollContainers(originElement)
             .some((scrollable) =>
                 this._isOutsideBounds(originRect, scrollable.getElementRef().nativeElement.getBoundingClientRect())
@@ -122,8 +122,8 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
     }
 
     private _isOverlayOutsideViewport(): boolean {
-        const overlayRect = this._overlayRef!.overlayElement.getBoundingClientRect();
-        const { width, height } = this._viewportRuler.getViewportSize();
+        const overlayRect = this.overlayRef!.overlayElement.getBoundingClientRect();
+        const { width, height } = this.viewportRuler.getViewportSize();
 
         return this._isOutsideBounds(overlayRect, { top: 0, left: 0, bottom: height, right: width } as DOMRect);
     }
@@ -156,7 +156,7 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
  * when providing a component-level scroll strategy token (e.g. `KBQ_POPOVER_SCROLL_STRATEGY`).
  *
  * The returned factory accepts an optional `onHide` callback. When provided, the strategy calls
- * it (instead of relying on external `hide$` subscriptions) whenever the trigger scrolls out of
+ * it (instead of relying on external `hide` subscriptions) whenever the trigger scrolls out of
  * its scroll container.
  *
  * @example

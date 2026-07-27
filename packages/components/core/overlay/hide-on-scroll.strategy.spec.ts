@@ -106,7 +106,7 @@ describe('KbqHideOnScrollStrategy', () => {
 
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
 
             expect(count).toBe(0);
@@ -121,7 +121,7 @@ describe('KbqHideOnScrollStrategy', () => {
 
             let completed = false;
 
-            strategy.hide$.subscribe({ complete: () => (completed = true) });
+            strategy.hide.subscribe({ complete: () => (completed = true) });
 
             strategy.detach();
             expect(completed).toBe(true);
@@ -145,7 +145,7 @@ describe('KbqHideOnScrollStrategy', () => {
 
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
 
             expect(count).toBe(1);
@@ -167,7 +167,7 @@ describe('KbqHideOnScrollStrategy', () => {
 
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
 
             expect(count).toBe(1);
@@ -188,7 +188,7 @@ describe('KbqHideOnScrollStrategy', () => {
 
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
 
             // overlay is inside viewport → no emit
@@ -213,7 +213,7 @@ describe('KbqHideOnScrollStrategy', () => {
 
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
 
             // configOrigin is outside → should still emit
@@ -246,7 +246,7 @@ describe('KbqHideOnScrollStrategy', () => {
             const { strategy, scroll$ } = buildWithOrigin(makeRect(-100, 0, -10, 100), containerRect);
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
             expect(count).toBe(1);
         });
@@ -255,7 +255,7 @@ describe('KbqHideOnScrollStrategy', () => {
             const { strategy, scroll$ } = buildWithOrigin(makeRect(510, 0, 600, 100), containerRect);
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
             expect(count).toBe(1);
         });
@@ -264,7 +264,7 @@ describe('KbqHideOnScrollStrategy', () => {
             const { strategy, scroll$ } = buildWithOrigin(makeRect(10, -200, 50, -10), containerRect);
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
             expect(count).toBe(1);
         });
@@ -273,7 +273,7 @@ describe('KbqHideOnScrollStrategy', () => {
             const { strategy, scroll$ } = buildWithOrigin(makeRect(10, 510, 50, 600), containerRect);
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
             expect(count).toBe(1);
         });
@@ -282,7 +282,7 @@ describe('KbqHideOnScrollStrategy', () => {
             const { strategy, scroll$ } = buildWithOrigin(makeRect(10, 10, 50, 100), containerRect);
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
             expect(count).toBe(0);
         });
@@ -329,7 +329,7 @@ describe('KbqHideOnScrollStrategy', () => {
             const { strategy, scroll$ } = buildViewportCase(makeRect(-200, 0, -100, 100));
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
             expect(count).toBe(1);
         });
@@ -338,7 +338,7 @@ describe('KbqHideOnScrollStrategy', () => {
             const { strategy, scroll$ } = buildViewportCase(makeRect(10, 10, 100, 200));
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
             scroll$.next();
             expect(count).toBe(0);
         });
@@ -365,7 +365,7 @@ describe('KbqHideOnScrollStrategy', () => {
 
             let count = 0;
 
-            strategy.hide$.subscribe(() => count++);
+            strategy.hide.subscribe(() => count++);
 
             // emit a scroll event that comes from inside the overlay panel
             scroll$.next(makeScrollable(innerScrollable));
