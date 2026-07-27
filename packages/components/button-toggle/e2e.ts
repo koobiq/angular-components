@@ -138,18 +138,6 @@ export class E2eButtonToggleStates {
     selector: 'e2e-button-toggle-states-stretched',
     imports: [KbqIconModule, FormsModule, KbqCheckboxModule, KbqButtonToggleModule],
     template: `
-        <div class="dev-options">
-            <kbq-checkbox data-testid="e2eShowPrefixIcon" [(ngModel)]="showPrefixIcon">show prefix icon</kbq-checkbox>
-            <kbq-checkbox
-                data-testid="e2eShowTitle"
-                [disabled]="!showPrefixIcon() && !showSuffixIcon()"
-                [(ngModel)]="showTitle"
-            >
-                show title
-            </kbq-checkbox>
-            <kbq-checkbox data-testid="e2eShowSuffixIcon" [(ngModel)]="showSuffixIcon">show suffix icon</kbq-checkbox>
-        </div>
-
         <div data-testid="e2eScreenshotTarget">
             @for (state of states; track state.title) {
                 <kbq-button-toggle-group stretched>
@@ -162,15 +150,9 @@ export class E2eButtonToggleStates {
                         [class.kbq-progress]="state.progress"
                         [disabled]="state.disabled!"
                     >
-                        @if (showPrefixIcon()) {
-                            <i kbq-icon="kbq-play_16"></i>
-                        }
-                        @if (showTitle()) {
-                            {{ state.title }}
-                        }
-                        @if (showSuffixIcon()) {
-                            <i kbq-icon="kbq-chevron-down-s_16"></i>
-                        }
+                        <i kbq-icon="kbq-play_16"></i>
+                        {{ state.title }}
+                        <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </kbq-button-toggle>
                     <kbq-button-toggle [value]="2">default 2</kbq-button-toggle>
                     <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
