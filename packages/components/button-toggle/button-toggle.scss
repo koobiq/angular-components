@@ -54,6 +54,7 @@
 
             .kbq-button-toggle-wrapper {
                 display: inline-flex;
+                justify-content: center;
 
                 text-overflow: ellipsis;
                 overflow: hidden;
@@ -78,6 +79,28 @@
                 max-width: 100%;
 
                 height: var(--kbq-button-toggle-size-item-height);
+            }
+        }
+    }
+
+    &.kbq-button-toggle-group_stretched {
+        width: 100%;
+
+        .kbq-button-toggle {
+            flex: 1;
+
+            > .kbq-button,
+            > .kbq-button-icon {
+                width: 100%;
+                flex: 1;
+
+                .kbq-button-wrapper {
+                    justify-content: center;
+                }
+
+                .kbq-button-toggle-wrapper {
+                    display: block;
+                }
             }
         }
     }
