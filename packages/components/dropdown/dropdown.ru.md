@@ -10,6 +10,12 @@
 
 <!-- example(dropdown-item-progress) -->
 
+### Футер
+
+В нижнем колонтитуле можно разместить вспомогательные элементы: [кнопки](ru/components/button), [ссылки](ru/components/link), подсказки.
+
+<!-- example(dropdown-with-footer) -->
+
 ### Открытие по стрелке вниз ↓
 
 <!-- example(dropdown-open-by-arrow-down) -->

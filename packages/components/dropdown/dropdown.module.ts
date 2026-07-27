@@ -4,7 +4,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER, KbqDropdownTrigger } from './dropdown-trigger.directive';
-import { KbqDropdown, KbqDropdownStaticContent } from './dropdown.component';
+import { KbqDropdown, KbqDropdownFooter, KbqDropdownStaticContent } from './dropdown.component';
 
 @NgModule({
     imports: [
@@ -14,7 +14,8 @@ import { KbqDropdown, KbqDropdownStaticContent } from './dropdown.component';
         KbqDropdown,
         KbqDropdownItem,
         KbqDropdownTrigger,
-        KbqDropdownContent
+        KbqDropdownContent,
+        KbqDropdownFooter
     ],
     providers: [KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER],
     exports: [
@@ -22,7 +23,8 @@ import { KbqDropdown, KbqDropdownStaticContent } from './dropdown.component';
         KbqDropdownItem,
         KbqDropdownTrigger,
         KbqDropdownContent,
-        KbqDropdownStaticContent
+        KbqDropdownStaticContent,
+        KbqDropdownFooter
     ]
 })
 export class KbqDropdownModule {}
