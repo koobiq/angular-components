@@ -19,16 +19,9 @@
             </nav>
 
             @if (githubSourceUrl) {
-                <a
-                    kbq-link
-                    big
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="layout-margin-left-xl"
-                    [href]="githubSourceUrl"
-                >
+                <a kbq-link big target="_blank" rel="noopener noreferrer" [href]="githubSourceUrl">
                     <i kbq-icon="kbq-code_16"></i>
-                    {{ t('viewSourceOnGitHub') }}
+                    <span class="kbq-link__text">{{ t('viewSourceOnGitHub') }}</span>
                 </a>
             }
         </div>
