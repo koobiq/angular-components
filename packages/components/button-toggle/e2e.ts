@@ -136,7 +136,7 @@ export class E2eButtonToggleStates {
 
 @Component({
     selector: 'e2e-button-toggle-states-stretched',
-    imports: [KbqIconModule, FormsModule, KbqCheckboxModule, KbqButtonToggleModule],
+    imports: [KbqIconModule, KbqButtonToggleModule],
     template: `
         <div data-testid="e2eScreenshotTarget">
             @for (state of states; track state.title) {
