@@ -199,13 +199,17 @@ abstract class TreeParams {
             (ngModelChange)="onModelValueChange($event)"
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
-                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+                <span
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                ></span>
             </kbq-tree-option>
 
             <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                 <kbq-tree-node-toggle [node]="node" />
 
-                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+                <span
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                ></span>
             </kbq-tree-option>
         </kbq-tree-selection>
     `,
