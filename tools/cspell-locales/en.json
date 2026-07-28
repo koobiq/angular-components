@@ -25,6 +25,7 @@
         "luxon",
         "Maskito",
         "messageformat",
+        "neutralising",
         "noborder",
         "opensource",
         "overlayed",
@@ -42,6 +43,7 @@
         "subfolders",
         "timepicker",
         "Topbar",
-        "unclickable"
+        "unclickable",
+        "unparseable"
     ]
 }
