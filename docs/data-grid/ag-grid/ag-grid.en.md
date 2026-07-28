@@ -54,11 +54,25 @@ The `kbqAgGridRowActions` directive adds an action panel that appears when hover
 
 <!-- example(ag-grid-row-actions) -->
 
+### Row grouping
+
+The `kbqAgGridRowGroup` directive implements client-side row grouping. Attach it to `ag-grid-angular`, supply raw data via `[kbqAgGridRowGroupRowData]` instead of `[rowData]`, and set the grouped columns via `[(kbqAgGridRowGroupCols)]`.
+
+Collapsed/expanded group state and row selection can each be persisted independently by setting `kbqAgGridRowGroupCollapsedState` and `kbqAgGridRowGroupSelectionState` to a unique key, connecting store providers via `kbqAgGridRowGroupCollapsedStateStoreProvider` and `kbqAgGridRowGroupSelectionStateStoreProvider`.
+
+<!-- example(ag-grid-row-group) -->
+
 ### Copying selected rows
 
 The `kbqAgGridCopyByCtrlC` directive allows you to copy selected rows to the clipboard using the `Ctrl+C` keyboard shortcut.
 
 <!-- example(ag-grid-copy-selected) -->
+
+### Export
+
+The grid's own API can be used to export the currently displayed data (respecting active filters, sorting, and formatters). `api.exportDataAsCsv()` downloads a CSV file with no additional dependencies. Other formats can be built on top of the grid's cell values using third-party libraries — for example, XLSX via [`xlsx`](https://www.npmjs.com/package/xlsx), and PDF via [`jspdf`](https://www.npmjs.com/package/jspdf) with [`jspdf-autotable`](https://www.npmjs.com/package/jspdf-autotable).
+
+<!-- example(ag-grid-export) -->
 
 ### Status bar
 
@@ -95,6 +109,18 @@ The `kbqAgGridQuickFilterState` directive saves the quick filter value. Add it w
 The `kbqAgGridExternalFilterState` directive saves the external filter value. Add it with a unique key, connect the store provider via `kbqAgGridExternalFilterStateStoreProvider`, bind the value via `[(kbqAgGridExternalFilterStateValue)]`, and pass the row check function via `kbqAgGridExternalFilterStatePass`.
 
 <!-- example(ag-grid-external-filter-state) -->
+
+#### Rows
+
+The `kbqAgGridRowSelectionState` directive saves row selection. Add it with a unique key, connect the store provider via `kbqAgGridRowSelectionStateStoreProvider`, and set `getRowId`.
+
+<!-- example(ag-grid-row-selection-state) -->
+
+#### Focus
+
+The `kbqAgGridRowFocusState` directive saves the focused cell. Add it with a unique key, connect the store provider via `kbqAgGridRowFocusStateStoreProvider`, and set `getRowId`.
+
+<!-- example(ag-grid-row-focus-state) -->
 
 ### Column menu
 

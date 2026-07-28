@@ -23,22 +23,34 @@ const TEMPLATE_PATH = 'assets/stackblitz/';
  */
 const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
     'country-flag-icons': {
-        'country-flag-icons': '^1.6.20'
+        'country-flag-icons': '^1'
     },
     '@koobiq/components/markdown': {
-        marked: '^17.0.3'
+        marked: '^17'
     },
     '@koobiq/components/input': {
-        '@maskito/angular': '^5.0.1',
-        '@maskito/kit': '^5.0.1'
+        '@maskito/angular': '^5',
+        '@maskito/kit': '^5'
     },
     '@koobiq/components/code-block': {
-        'highlight.js': '^11.11.1'
+        'highlight.js': '^11'
     },
     '@koobiq/ag-grid-angular-theme': {
         '@koobiq/ag-grid-angular-theme': '^34',
         'ag-grid-angular': '^34',
         'ag-grid-community': '^34'
+    },
+    // Used by packages/docs-examples/components/ag-grid/ag-grid-export/ag-grid-export-example.ts
+    jspdf: {
+        jspdf: '^4'
+    },
+    // Used by packages/docs-examples/components/ag-grid/ag-grid-export/ag-grid-export-example.ts
+    'jspdf-autotable': {
+        'jspdf-autotable': '^5'
+    },
+    // Used by packages/docs-examples/components/ag-grid/ag-grid-export/ag-grid-export-example.ts
+    xlsx: {
+        xlsx: '^0.18'
     }
 } as const;
 

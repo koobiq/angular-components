@@ -117,7 +117,5 @@ export class AgGridRowDraggingExample {
                 node.setSelected(true);
             }
         });
-
-        api.setColumnWidths([{ key: 'ag-Grid-SelectionColumn', newWidth: 36 }]);
     }
 }

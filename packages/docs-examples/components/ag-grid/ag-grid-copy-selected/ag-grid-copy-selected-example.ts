@@ -174,8 +174,6 @@ export class AgGridCopySelectedExample {
                 node.setSelected(true);
             }
         });
-
-        api.setColumnWidths([{ key: 'ag-Grid-SelectionColumn', newWidth: 36 }]);
     }
 
     protected onCopyDone({ success }: KbqAgGridCopyEvent): void {

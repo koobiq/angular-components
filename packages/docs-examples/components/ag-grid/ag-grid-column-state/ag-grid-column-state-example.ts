@@ -17,12 +17,12 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     selector: 'ag-grid-column-state-example',
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
-        <button type="button" kbq-button (click)="columnState.reset()">Reset state</button>
+        <button type="button" kbq-button (click)="columnState.reset()">Reset column state</button>
         <ag-grid-angular
             #columnState="kbqAgGridColumnState"
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
-            kbqAgGridColumnState="dev-ag-grid-column-state"
+            kbqAgGridColumnState="example-ag-grid-column-state"
             [alwaysMultiSort]="true"
             [rowData]="rowData"
             [columnDefs]="columnDefs"
