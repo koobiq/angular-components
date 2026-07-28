@@ -1,6 +1,6 @@
 import { Overlay, RepositionScrollStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
-import { KbqScrollStrategyHooks } from '../overlay/hide-on-scroll.strategy';
+import { KbqScrollStrategyHooks } from '../overlay/auto-hide-scroll-strategy';
 
 /**
  * Minimum option count threshold for displaying select search.
