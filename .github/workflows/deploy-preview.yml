@@ -1,0 +1,28 @@
+name: Deploy documentation preview
+
+on:
+  pull_request:
+
+permissions:
+  checks: write # for FirebaseExtended/action-hosting-deploy to create a check run
+  contents: read # for actions/checkout to read the repository
+  pull-requests: write # for FirebaseExtended/action-hosting-deploy to comment on PRs
+
+jobs:
+  deploy:
+    if: ${{ github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository && contains(fromJSON('["OWNER", "MEMBER", "CONTRIBUTOR"]'), github.event.pull_request.author_association) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/workflows/actions/setup-node
+      - uses: ./.github/workflows/actions/build-packages
+      - uses: ./.github/workflows/actions/build-docs
+      - uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0.11.0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KOOBIQ }}'
+          firebaseToolsVersion: '15.3.1'
+          expires: 3d
+          channelId: prs-${{ github.event.number }}
+          projectId: koobiq
+          target: next
