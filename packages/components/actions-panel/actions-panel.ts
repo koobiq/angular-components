@@ -116,11 +116,11 @@ export class KbqActionsPanel implements OnDestroy {
 
         if (this.openedActionsPanelRef) {
             this.openedActionsPanelRef.afterClosed.subscribe(() => {
-                actionsPanelRef.containerInstance?.startOpenAnimation();
+                actionsPanelRef.open();
             });
             this.openedActionsPanelRef.close();
         } else {
-            actionsPanelRef.containerInstance.startOpenAnimation();
+            actionsPanelRef.open();
         }
 
         this.openedActionsPanelRef = actionsPanelRef as KbqActionsPanelRef;

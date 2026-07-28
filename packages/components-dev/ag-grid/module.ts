@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
+    AgGridAndActionsPanelExample,
     AgGridColumnMenuExample,
     AgGridColumnStateExample,
     AgGridCopySelectedExample,
@@ -39,7 +40,8 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridRowFocusStateExample,
         AgGridLoadingOverlayExample,
         AgGridSkeletonCellRendererExample,
-        AgGridInfiniteSelectionExample
+        AgGridInfiniteSelectionExample,
+        AgGridAndActionsPanelExample
     ],
     template: `
         <ag-grid-column-menu-example />
@@ -75,6 +77,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <ag-grid-status-bar-example />
         <hr />
         <ag-grid-row-actions-example />
+        <hr />
+        <ag-grid-and-actions-panel-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -176,10 +176,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "actions-panel-overview-example.ts"
     ],
     "selector": "actions-panel-overview-example",
-    "additionalComponents": [
-      "ExampleGrid",
-      "ExampleActionsPanel"
-    ],
+    "additionalComponents": [],
     "primaryFile": "actions-panel-overview-example.ts",
     "importPath": "components/actions-panel"
   },
@@ -194,6 +191,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "actions-panel-with-dropdown-and-popover-example.ts",
     "importPath": "components/actions-panel"
+  },
+  "ag-grid-and-actions-panel": {
+    "packagePath": "components/ag-grid/ag-grid-and-actions-panel",
+    "title": "Ag-grid and actions-panel example",
+    "componentName": "AgGridAndActionsPanelExample",
+    "files": [
+      "ag-grid-and-actions-panel-example.ts"
+    ],
+    "selector": "ag-grid-and-actions-panel-example",
+    "additionalComponents": [
+      "ExampleGrid",
+      "ExampleActionsPanel"
+    ],
+    "primaryFile": "ag-grid-and-actions-panel-example.ts",
+    "importPath": "components/ag-grid"
   },
   "ag-grid-column-menu": {
     "packagePath": "components/ag-grid/ag-grid-column-menu",
@@ -6787,6 +6799,8 @@ return import('@koobiq/docs-examples/components/actions-panel');
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-with-dropdown-and-popover':
 return import('@koobiq/docs-examples/components/actions-panel');
+  case 'ag-grid-and-actions-panel':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-column-menu':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-column-state':

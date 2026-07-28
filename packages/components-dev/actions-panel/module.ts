@@ -1,18 +1,30 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { ActionsPanelExamplesModule } from 'packages/docs-examples/components/actions-panel';
+import {
+    ActionsPanelAdaptiveExample,
+    ActionsPanelCloseExample,
+    ActionsPanelCustomCounterExample,
+    ActionsPanelOverviewExample,
+    ActionsPanelWithDropdownAndPopoverExample
+} from 'packages/docs-examples/components/actions-panel';
 import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [ActionsPanelExamplesModule],
+    imports: [
+        ActionsPanelAdaptiveExample,
+        ActionsPanelCloseExample,
+        ActionsPanelCustomCounterExample,
+        ActionsPanelOverviewExample,
+        ActionsPanelWithDropdownAndPopoverExample
+    ],
     template: `
+        <actions-panel-overview-example />
+        <hr />
         <actions-panel-with-dropdown-and-popover-example />
         <hr />
         <actions-panel-custom-counter-example />
-        <hr />
-        <actions-panel-overview-example />
         <hr />
         <actions-panel-adaptive-example />
         <hr />

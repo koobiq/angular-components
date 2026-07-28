@@ -299,6 +299,86 @@ describe(KbqActionsPanelModule.name, () => {
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
+    it('should emit beforeClosed synchronously on close, before afterClosed', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const { componentInstance } = fixture;
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const emitted: string[] = [];
+
+        actionsPanelRef.beforeClosed.subscribe(() => emitted.push('beforeClosed'));
+        actionsPanelRef.afterClosed.subscribe(() => emitted.push('afterClosed'));
+
+        componentInstance.close();
+        expect(emitted).toEqual(['beforeClosed']);
+
+        await fixture.whenStable();
+        expect(emitted).toEqual(['beforeClosed', 'afterClosed']);
+    });
+
+    it('should emit beforeClosed with result', async () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const beforeClosed = lastValueFrom(actionsPanelRef.beforeClosed);
+
+        componentInstance.close('customResult');
+        expect(await beforeClosed).toBe('customResult');
+    });
+
+    it('should complete beforeClosed after it emits', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const completeSpy = jest.fn();
+
+        actionsPanelRef.beforeClosed.subscribe({ complete: completeSpy });
+        componentInstance.close();
+        expect(completeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not emit beforeClosed again when close is called a second time', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const spy = jest.fn();
+
+        actionsPanelRef.beforeClosed.subscribe(spy);
+        componentInstance.close();
+        actionsPanelRef.close();
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should emit beforeOpened synchronously on open, before afterOpened', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const { componentInstance } = fixture;
+        const emitted: string[] = [];
+        const actionsPanelRef = componentInstance.openFromTemplate();
+
+        actionsPanelRef.beforeOpened.subscribe(() => emitted.push('beforeOpened'));
+        actionsPanelRef.afterOpened.subscribe(() => emitted.push('afterOpened'));
+        expect(emitted).toEqual(['beforeOpened']);
+
+        await fixture.whenStable();
+        expect(emitted).toEqual(['beforeOpened', 'afterOpened']);
+    });
+
+    it('should replay beforeOpened to subscribers that missed the synchronous emission', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const spy = jest.fn();
+
+        // open() has already run by the time openFromTemplate() returns, so this subscription
+        // happens after the real emission — it should still receive the replayed value.
+        actionsPanelRef.beforeOpened.subscribe(spy);
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should complete beforeOpened after it emits', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        const actionsPanelRef = componentInstance.openFromTemplate();
+        const completeSpy = jest.fn();
+
+        actionsPanelRef.beforeOpened.subscribe({ complete: completeSpy });
+        expect(completeSpy).toHaveBeenCalledTimes(1);
+    });
+
     it('should emit afterOpened on open', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
