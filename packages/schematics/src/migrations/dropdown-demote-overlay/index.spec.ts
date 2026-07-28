@@ -7,6 +7,7 @@ import { createTestApp } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'dropdown-demote-overlay';
 
 describe(SCHEMATIC_NAME, () => {
@@ -96,6 +97,17 @@ describe(SCHEMATIC_NAME, () => {
             expect(updated).toBe('<button [kbqDropdownTriggerFor]="menu">Open</button>\n');
         });
 
+        it('removes the canonical bind- form', async () => {
+            const [first] = projects.keys();
+            const { html } = paths(projects.get(first)!);
+
+            appTree.overwrite(html, '<button [kbqDropdownTriggerFor]="menu" bind-demoteOverlay="v">Open</button>\n');
+
+            const updated = (await run(first)).readText(html);
+
+            expect(updated).toBe('<button [kbqDropdownTriggerFor]="menu">Open</button>\n');
+        });
+
         it('does not touch an attribute whose name merely starts with demoteOverlay', async () => {
             const [first] = projects.keys();
             const { html } = paths(projects.get(first)!);
@@ -104,6 +116,35 @@ describe(SCHEMATIC_NAME, () => {
             appTree.overwrite(html, original);
 
             expect((await run(first)).readText(html)).toBe(original);
+        });
+
+        // Everything below is an identifier or a word, not an attribute. A rule anchored on
+        // surrounding whitespace matches all of them and leaves the template unparseable.
+        it.each([
+            ['an interpolation', '<div>{{ demoteOverlay }}</div>\n'],
+            ['a binary expression', '<div [title]="prefix + demoteOverlay + suffix"></div>\n'],
+            ['a boolean expression', '<div [hidden]="a && demoteOverlay && b"></div>\n'],
+            ['a control-flow block condition', '@if (demoteOverlay) {\n    <span>x</span>\n}\n'],
+            ['plain text', '<p>set demoteOverlay to false</p>\n']
+        ])('leaves %s untouched', async (_name, original) => {
+            const [first] = projects.keys();
+            const { html } = paths(projects.get(first)!);
+
+            appTree.overwrite(html, original);
+
+            expect((await run(first)).readText(html)).toBe(original);
+        });
+
+        it('reports a template it could not parse instead of editing it blind', async () => {
+            const [first] = projects.keys();
+            const { html } = paths(projects.get(first)!);
+            const original = '<button [kbqDropdownTriggerFor]="menu" demoteOverlay>Open</section>\n';
+            const messages = collectLogs();
+
+            appTree.overwrite(html, original);
+
+            expect((await run(first)).readText(html)).toBe(original);
+            expect(messages.join('\n')).toContain('could not be parsed');
         });
 
         it('removes the binding from an inline template', async () => {
@@ -242,6 +283,74 @@ describe(SCHEMATIC_NAME, () => {
             );
             expect(updated).not.toContain('providers');
         });
+
+        it('keeps exactly one separator when the entry sits between two siblings', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import { KBQ_DROPDOWN_HOST } from '@koobiq/components/dropdown';\n" +
+                    '@Component({\n' +
+                    '    providers: [\n' +
+                    '        A,\n' +
+                    '        { provide: KBQ_DROPDOWN_HOST, useExisting: MyHeader },\n' +
+                    '        B\n' +
+                    '    ],\n' +
+                    '    template: ``\n' +
+                    '})\n' +
+                    'export class MyHeader {}\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            expect(updated).toContain('    providers: [\n        A,\n        B\n    ],\n');
+        });
+
+        it('does not reformat arrays it did not touch', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import { KBQ_DROPDOWN_HOST } from '@koobiq/components/dropdown';\n" +
+                    'const unrelated = [\n' +
+                    '    1,\n' +
+                    '    2,\n' +
+                    '];\n' +
+                    '@Component({\n' +
+                    '    providers: [{ provide: KBQ_DROPDOWN_HOST, useExisting: MyHeader }],\n' +
+                    '    template: ``\n' +
+                    '})\n' +
+                    'export class MyHeader {}\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            expect(updated).not.toContain('KBQ_DROPDOWN_HOST');
+            expect(updated).toContain('const unrelated = [\n    1,\n    2,\n];\n');
+        });
+
+        it('leaves an empty import clause of the same module alone', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import {} from '@koobiq/components/dropdown';\n" +
+                    "import { KBQ_DROPDOWN_HOST } from '@koobiq/components/dropdown';\n" +
+                    '@Component({\n' +
+                    '    providers: [{ provide: KBQ_DROPDOWN_HOST, useExisting: MyHeader }],\n' +
+                    '    template: ``\n' +
+                    '})\n' +
+                    'export class MyHeader {}\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            expect(updated).toContain("import {} from '@koobiq/components/dropdown';");
+            expect(updated).not.toContain('KBQ_DROPDOWN_HOST');
+        });
     });
 
     describe('warnings', () => {
@@ -299,6 +408,22 @@ describe(SCHEMATIC_NAME, () => {
             await run(first);
 
             expect(messages.join('\n')).toContain('Layering behaviour changed');
+        });
+    });
+
+    describe('ng update entry point', () => {
+        it('applies the fix when invoked without options', async () => {
+            const [first] = projects.keys();
+            const { html } = paths(projects.get(first)!);
+
+            appTree.overwrite(html, '<button [kbqDropdownTriggerFor]="menu" [demoteOverlay]="false">Open</button>\n');
+
+            // `ng update` passes no options, and migrations.json declares no schema, so the
+            // schema default never reaches the rule — it has to default `fix` itself.
+            const runnerFromMigrations = new SchematicTestRunner('migrations', migrationsPath);
+            const result = await runnerFromMigrations.runSchematic(SCHEMATIC_NAME, {}, appTree);
+
+            expect(result.readText(html)).toBe('<button [kbqDropdownTriggerFor]="menu">Open</button>\n');
         });
     });
 

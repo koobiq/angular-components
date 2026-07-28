@@ -1,15 +1,18 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { getSimpleAttributeName, visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { parseTemplate } from '../../utils/typescript';
 import {
     BEHAVIOUR_NOTE,
-    Replacement,
+    PROVIDER_ENTRY,
+    PROVIDER_IMPORT,
+    REMOVED_ATTRIBUTE,
     styleWarnPatterns,
-    templateReplacements,
     templateWarnPatterns,
-    tsReplacements,
     tsWarnPatterns,
+    UNPARSEABLE_TEMPLATE_MESSAGE,
     WarnPattern
 } from './data';
 import { Schema } from './schema';
@@ -21,53 +24,180 @@ const CSS_EXT = '.css';
 
 const LABEL = '[dropdown-demote-overlay]';
 
-interface ReplaceResult {
-    content: string;
-    changed: boolean;
-    importsToRemove: { symbol: string; from: string }[];
-    dropEmptyProviders: boolean;
+/** A half-open `[start, end)` range of the file content. */
+interface Span {
+    start: number;
+    end: number;
 }
 
 function escapeRegExp(value: string): string {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-/** Applies an ordered list of regex replacements, reporting the follow-up cleanups they require. */
-function applyReplacements(content: string, replacements: Replacement[]): ReplaceResult {
-    let result = content;
-    const importsToRemove: { symbol: string; from: string }[] = [];
-    let dropEmptyProviders = false;
+/** `demoteOverlay`, `[demoteOverlay]` and `bind-demoteOverlay` all name the same input. */
+function attributeName(name: string): string {
+    return getSimpleAttributeName(name).replace(/^bind-/, '');
+}
 
-    for (const replacement of replacements) {
-        const before = result;
+/** Collects the source span of every `demoteOverlay` attribute in a parsed template. */
+class RemovedAttributeCollector implements Visitor {
+    readonly spans: Span[] = [];
 
-        result = result.replace(new RegExp(replacement.from, 'g'), replacement.to);
+    visitElement(element: any): void {
+        for (const attr of element.attrs ?? []) {
+            if (typeof attr.name !== 'string' || attributeName(attr.name) !== REMOVED_ATTRIBUTE) continue;
 
-        if (before === result) continue;
-
-        // Tidy up the dangling commas an element deletion leaves behind, e.g.
-        // `providers: [a, {provide: KBQ_DROPDOWN_HOST, …}, b]` → `providers: [a, , b]`.
-        // The trailing-comma rules are split so a single-line array collapses
-        // tightly while a multi-line one keeps the indentation of its bracket.
-        if (replacement.to === '') {
-            result = result
-                .replace(/,\s*,/g, ',')
-                .replace(/\[[ \t]*,[ \t]*/g, '[')
-                .replace(/\[\s*,(\s*)/g, '[$1')
-                .replace(/,[ \t]*\]/g, ']')
-                .replace(/,(\s*)\]/g, (_match, gap: string) => `\n${gap.slice(gap.lastIndexOf('\n') + 1)}]`);
+            this.spans.push({ start: attr.sourceSpan.start.offset, end: attr.sourceSpan.end.offset });
         }
 
-        if (replacement.removeImport) {
-            importsToRemove.push(replacement.removeImport);
-        }
+        this.visitChildren(element);
+    }
 
-        if (replacement.dropEmptyProviders) {
-            dropEmptyProviders = true;
+    visitBlock(block: any): void {
+        this.visitChildren(block);
+    }
+
+    private visitChildren(node: any): void {
+        for (const child of node.children ?? []) {
+            child.visit(this);
         }
     }
 
-    return { content: result, changed: result !== content, importsToRemove, dropEmptyProviders };
+    visitAttribute(): void {}
+    visitText(): void {}
+    visitComment(): void {}
+    visitExpansion(): void {}
+    visitExpansionCase(): void {}
+    visitBlockParameter(): void {}
+    visitLetDeclaration(): void {}
+}
+
+/**
+ * Deletes the given spans, each together with the whitespace that separated it
+ * from the previous attribute: an inline attribute takes its leading spaces, one
+ * written on its own line takes the line break and the indent as well, so the tag
+ * is not left with a blank line.
+ */
+function removeSpans(content: string, spans: Span[]): string {
+    let result = content;
+
+    // Right-to-left, so earlier offsets stay valid.
+    for (const { start, end } of [...spans].sort((a, b) => b.start - a.start)) {
+        let from = start;
+
+        while (from > 0 && (result[from - 1] === ' ' || result[from - 1] === '\t')) from--;
+
+        if (result[from - 1] === '\n') {
+            from--;
+
+            if (result[from - 1] === '\r') from--;
+        }
+
+        result = result.slice(0, from) + result.slice(end);
+    }
+
+    return result;
+}
+
+/**
+ * Removes every `demoteOverlay` attribute from a template. Returns `null` when
+ * the template could not be parsed — editing it blind is how a regex-based
+ * migration corrupts binding expressions, so the caller warns instead.
+ */
+async function migrateTemplate(template: string): Promise<string | null> {
+    if (!template.includes(REMOVED_ATTRIBUTE)) return template;
+
+    const parsed = await parseTemplate(template);
+
+    if (!parsed.tree) return null;
+
+    const collector = new RemovedAttributeCollector();
+
+    visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
+
+    return removeSpans(template, collector.spans);
+}
+
+/**
+ * Interior `[start, end)` ranges of inline `template:` literals.
+ *
+ * Scoping matters: a wrapper component may legitimately declare its own
+ * `demoteOverlay` member (e.g. `@Input() demoteOverlay = false;`) that forwards
+ * to the trigger. Only the binding in its template is removed; the now-dead
+ * member is left for the compiler to flag.
+ */
+function collectInlineTemplateRanges(content: string): Span[] {
+    const opener = /template\s*:\s*(['"`])/g;
+    const ranges: Span[] = [];
+    let match: RegExpExecArray | null;
+
+    while ((match = opener.exec(content)) !== null) {
+        const quote = match[1];
+        const start = match.index + match[0].length;
+        let index = start;
+        let terminated = false;
+
+        while (index < content.length) {
+            const char = content[index];
+
+            if (char === '\\') {
+                index += 2;
+                continue;
+            }
+
+            if (char === quote) {
+                terminated = true;
+                break;
+            }
+
+            // A quoted (non-template) literal cannot span lines, so an unescaped
+            // line break means this was not a template after all.
+            if (quote !== '`' && char === '\n') break;
+
+            index++;
+        }
+
+        opener.lastIndex = Math.min(index + 1, content.length);
+
+        if (terminated) ranges.push({ start, end: index });
+    }
+
+    return ranges;
+}
+
+/** Applies the template migration to every inline `template:` literal of a `.ts` source. */
+async function migrateInlineTemplates(content: string, onParseError: () => void): Promise<string> {
+    let result = content;
+
+    // Splice right-to-left so earlier offsets stay valid.
+    for (const { start, end } of collectInlineTemplateRanges(content).reverse()) {
+        const migrated = await migrateTemplate(result.slice(start, end));
+
+        if (migrated === null) {
+            onParseError();
+            continue;
+        }
+
+        result = result.slice(0, start) + migrated + result.slice(end);
+    }
+
+    return result;
+}
+
+/**
+ * Removes the `KBQ_DROPDOWN_HOST` provider entry together with exactly one
+ * adjacent separator, so the array keeps its shape and nothing outside the entry
+ * is reformatted.
+ */
+function removeProviderEntry(content: string): string {
+    const separator = '(,[ \\t]*\\r?\\n?[ \\t]*)';
+    const pattern = new RegExp(`${separator}?(?:${PROVIDER_ENTRY})${separator}?`, 'g');
+
+    // With a neighbour on both sides one separator has to survive, otherwise the
+    // entry and whichever separator it had are dropped together.
+    return content.replace(pattern, (_match, before: string | undefined, after: string | undefined) =>
+        before && after ? after : ''
+    );
 }
 
 /**
@@ -90,7 +220,8 @@ function removeImport(content: string, symbol: string, from: string): string {
             .map((item) => item.trim())
             .filter(Boolean);
 
-        if (items.length === 0) return '';
+        // An already-empty clause is somebody else's import — leave it alone.
+        if (items.length === 0) return full;
 
         // Handle `<name> as <alias>` — match on the source name, not the alias.
         const kept = items.filter((spec) => spec.split(/\s+as\s+/)[0].trim() !== symbol);
@@ -110,57 +241,6 @@ function removeImport(content: string, symbol: string, from: string): string {
  */
 function dropEmptyProvidersProperty(content: string): string {
     return content.replace(/[ \t]*providers:\s*\[\s*\],?[ \t]*\r?\n/g, '').replace(/,?[ \t]*providers:\s*\[\s*\]/g, '');
-}
-
-/**
- * Applies template replacements to a `.ts` source, but only inside inline
- * `template: \`…\`` literals.
- *
- * Scoping matters: a wrapper component may legitimately declare its own
- * `demoteOverlay` member (e.g. `@Input() demoteOverlay = false;`) that forwards
- * to the trigger. Running the attribute regexes over the whole file would
- * mangle that declaration; running them over the template alone removes only
- * the binding and leaves the now-dead member for the compiler to flag.
- */
-function replaceInInlineTemplates(content: string, replacements: Replacement[]): string {
-    const opener = /template\s*:\s*`/g;
-    const segments: { start: number; end: number }[] = [];
-    let match: RegExpExecArray | null;
-
-    while ((match = opener.exec(content)) !== null) {
-        const start = match.index + match[0].length;
-        let index = start;
-
-        // Scan to the closing backtick, skipping escaped ones.
-        while (index < content.length) {
-            const char = content[index];
-
-            if (char === '\\') {
-                index += 2;
-                continue;
-            }
-
-            if (char === '`') break;
-
-            index++;
-        }
-
-        if (index >= content.length) break;
-
-        segments.push({ start, end: index });
-        opener.lastIndex = index + 1;
-    }
-
-    // Splice right-to-left so earlier offsets stay valid.
-    let result = content;
-
-    for (const { start, end } of segments.reverse()) {
-        const { content: replaced } = applyReplacements(result.slice(start, end), replacements);
-
-        result = result.slice(0, start) + replaced + result.slice(end);
-    }
-
-    return result;
 }
 
 function logWarnings(context: SchematicContext, filePath: string, content: string, patterns: WarnPattern[]) {
@@ -189,49 +269,49 @@ function isMigratableFile(filePath: string): boolean {
 
 export default function dropdownDemoteOverlay(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
-        const { project, fix } = options;
+        const { project } = options;
+        // `ng update` invokes migrations with no options at all, and migrations.json
+        // declares no schema, so the schema default never reaches us — applying the
+        // fix is the intended behaviour there.
+        const fix = options.fix ?? true;
         const projectDefinition = await setupOptions(project, tree);
         const root = projectDefinition?.root ?? '';
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
-        let touched = 0;
+        const filePaths: Path[] = [];
 
-        rootDir.visit((filePath: Path, entry) => {
+        rootDir.visit((filePath: Path) => {
             if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
             if (!isMigratableFile(filePath)) return;
 
-            const originalContent = entry?.content.toString();
+            filePaths.push(filePath);
+        });
 
-            if (!originalContent) return;
+        let touched = 0;
+
+        for (const filePath of filePaths) {
+            const originalContent = tree.read(filePath)?.toString();
+
+            if (!originalContent) continue;
 
             let content = originalContent;
+            let unparseable = false;
+            const reportParseError = () => (unparseable = true);
 
             if (filePath.endsWith(TS_EXT)) {
-                const {
-                    content: replaced,
-                    importsToRemove,
-                    dropEmptyProviders
-                } = applyReplacements(content, tsReplacements);
+                const withoutProvider = removeProviderEntry(content);
 
-                content = replaced;
-
-                const seen = new Set<string>();
-
-                for (const { symbol, from } of importsToRemove) {
-                    const key = `${symbol}|${from}`;
-
-                    if (seen.has(key)) continue;
-
-                    seen.add(key);
-                    content = removeImport(content, symbol, from);
+                if (withoutProvider !== content) {
+                    content = dropEmptyProvidersProperty(
+                        removeImport(withoutProvider, PROVIDER_IMPORT.symbol, PROVIDER_IMPORT.from)
+                    );
                 }
 
-                if (dropEmptyProviders) {
-                    content = dropEmptyProvidersProperty(content);
-                }
-
-                content = replaceInInlineTemplates(content, templateReplacements);
+                content = await migrateInlineTemplates(content, reportParseError);
             } else if (filePath.endsWith(HTML_EXT)) {
-                content = applyReplacements(content, templateReplacements).content;
+                const migrated = await migrateTemplate(content);
+
+                if (migrated === null) reportParseError();
+                else content = migrated;
             }
 
             // Warn on what is left over, so an auto-fixed usage does not also
@@ -239,7 +319,11 @@ export default function dropdownDemoteOverlay(options: Schema): Rule {
             // fix is not written, so report against the original content.
             logWarnings(context, filePath, fix ? content : originalContent, pickWarnPatterns(filePath));
 
-            if (content === originalContent) return;
+            if (unparseable) {
+                logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${UNPARSEABLE_TEMPLATE_MESSAGE}`]);
+            }
+
+            if (content === originalContent) continue;
 
             touched++;
 
@@ -248,7 +332,7 @@ export default function dropdownDemoteOverlay(options: Schema): Rule {
             } else {
                 logMessage(context.logger, [`${LABEL} would update ${filePath} (run with --fix to apply)`]);
             }
-        });
+        }
 
         logMessage(context.logger, [
             `${LABEL} processed tree under "${root || '<workspace root>'}", ` +

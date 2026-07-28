@@ -7,88 +7,32 @@
  * `999` while a dropdown / select / popover panel was open, so the panel slid
  * under a sticky `kbq-navbar` / `kbq-top-bar`. Panels now always render above
  * page content.
- *
- * Each entry uses a RegExp source string in `from` and a literal `to`. The
- * RegExp is compiled with the `g` flag inside the migration driver.
  */
-
-export interface Replacement {
-    from: string;
-    to: string;
-    /** Human-readable note shown in dry-run mode. */
-    note?: string;
-    /**
-     * When this replacement matches in a .ts file, strip `symbol` from any
-     * existing `import { … } from 'from'` named-import clause. The symbol no
-     * longer exists, so leaving the import would break compilation.
-     */
-    removeImport?: { symbol: string; from: string };
-    /**
-     * When this replacement matches in a .ts file, drop a `providers` property
-     * that the removal left empty (`providers: []`).
-     */
-    dropEmptyProviders?: boolean;
-}
 
 export interface WarnPattern {
     pattern: string;
     message: string;
 }
 
-/** A quoted attribute value: `="…"` or `='…'`. */
-const VALUE = '\\s*=\\s*(?:"[^"]*"|\'[^\']*\')';
-/** The attribute name, as a static attribute or a property binding. */
-const NAME = '\\[?demoteOverlay\\]?';
-/** The attribute must be followed by whitespace or the end of its tag. */
-const TAIL = '(?=[ \\t\\r\\n>/])';
+/**
+ * The input removed from templates. Matched against the parsed template AST, so
+ * every binding form (`demoteOverlay`, `demoteOverlay="…"`, `[demoteOverlay]="…"`,
+ * `bind-demoteOverlay="…"`) is covered, while an identifier of the same name in an
+ * interpolation, a binding expression or a text node is never touched.
+ */
+export const REMOVED_ATTRIBUTE = 'demoteOverlay';
 
 /**
- * Template replacements. Applied to `.html` files and — via the driver — only
- * inside inline `template: \`…\`` literals of `.ts` files, so a component's own
- * `demoteOverlay` class member is never mistaken for an attribute.
+ * A `{ provide: KBQ_DROPDOWN_HOST, useExisting: MyHeader }` entry and friends.
  *
- * Ordered: valued forms first, so a leftover bare match cannot swallow half of
- * an `demoteOverlay="…"` pair. Each rule comes in an own-line and an inline
- * variant; the own-line variant consumes the preceding newline and indent so
- * the tag is not left with a blank line.
+ * `[^{}]*` deliberately stops at a nested object literal — a `useFactory`
+ * returning one is left in place and surfaced by the leftover-token warning
+ * instead of being half-deleted.
  */
-export const templateReplacements: Replacement[] = [
-    {
-        from: `\\r?\\n[ \\t]*${NAME}${VALUE}${TAIL}`,
-        to: '',
-        note: 'demoteOverlay was removed from KbqDropdownTrigger'
-    },
-    {
-        from: `[ \\t]+${NAME}${VALUE}${TAIL}`,
-        to: '',
-        note: 'demoteOverlay was removed from KbqDropdownTrigger'
-    },
-    {
-        from: `\\r?\\n[ \\t]*${NAME}(?!\\s*=)${TAIL}`,
-        to: '',
-        note: 'demoteOverlay was removed from KbqDropdownTrigger'
-    },
-    {
-        from: `[ \\t]+${NAME}(?!\\s*=)${TAIL}`,
-        to: '',
-        note: 'demoteOverlay was removed from KbqDropdownTrigger'
-    }
-];
+export const PROVIDER_ENTRY = '\\{\\s*provide:\\s*KBQ_DROPDOWN_HOST\\s*,[^{}]*\\}';
 
-/** TypeScript-source replacements. */
-export const tsReplacements: Replacement[] = [
-    {
-        // `{ provide: KBQ_DROPDOWN_HOST, useExisting: MyHeader }` and friends.
-        // `[^{}]*` deliberately stops at a nested object literal — a
-        // `useFactory` returning one is left in place and surfaced by the
-        // leftover-token warning instead of being half-deleted.
-        from: '\\{\\s*provide:\\s*KBQ_DROPDOWN_HOST\\s*,[^{}]*\\}',
-        to: '',
-        removeImport: { symbol: 'KBQ_DROPDOWN_HOST', from: '@koobiq/components/dropdown' },
-        dropEmptyProviders: true,
-        note: 'KBQ_DROPDOWN_HOST was removed; hosts no longer opt out of overlay demotion'
-    }
-];
+/** The import specifier the provider removal makes invalid. */
+export const PROVIDER_IMPORT = { symbol: 'KBQ_DROPDOWN_HOST', from: '@koobiq/components/dropdown' };
 
 /**
  * Warnings for `.ts` files. Checked against the post-fix content, so they only
@@ -128,6 +72,11 @@ export const styleWarnPatterns: WarnPattern[] = [
             'this rule is dead — remove it. If it was an override neutralising the demotion, it is now redundant.'
     }
 ];
+
+/** Reported when a template mentions the input but cannot be parsed, so nothing was rewritten in it. */
+export const UNPARSEABLE_TEMPLATE_MESSAGE =
+    'This template mentions demoteOverlay but could not be parsed, so it was left untouched. ' +
+    'Remove the attribute by hand.';
 
 /**
  * Behaviour note printed once per run. The removal is not purely mechanical:
