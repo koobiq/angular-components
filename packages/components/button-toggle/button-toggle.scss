@@ -63,7 +63,17 @@
 
                 width: 100%;
 
-                gap: var(--kbq-button-toggle-size-item-content-gap-horizontal);
+                // Deliberately margins rather than `gap`: the stretched variant below has to stay a
+                // block container for its `text-overflow` to be painted, and `gap` is inert there.
+                // `KbqButtonToggle` marks which icon sits next to the label — physical properties on
+                // purpose, so they override the same ones from the button's base styles.
+                & .kbq-icon_left {
+                    margin-right: var(--kbq-button-toggle-size-item-content-gap-horizontal);
+                }
+
+                & .kbq-icon_right {
+                    margin-left: var(--kbq-button-toggle-size-item-content-gap-horizontal);
+                }
             }
 
             &.cdk-keyboard-focused {
@@ -99,10 +109,21 @@
                 }
 
                 .kbq-button-toggle-wrapper {
+                    // a block container on purpose: this is the only variant wide enough to clip its
+                    // label, and `text-overflow: ellipsis` is not painted on a flex box
                     display: block;
                 }
             }
         }
+    }
+
+    // A toggle with no label has nothing to clip, and a block container would put its icon on a line
+    // box, where `vertical-align: middle` aligns to the x-height and leaves it ~1px low. Keyed off
+    // the button's own class rather than `kbq-button-toggle-icon`, because that one is computed once
+    // in `ngAfterContentInit` and goes stale as soon as the content changes. Declared last so it also
+    // wins over the stretched variant above, which it ties with on specificity.
+    .kbq-button-toggle > :is(.kbq-button, .kbq-button-icon).kbq-button_no-label .kbq-button-toggle-wrapper {
+        display: flex;
     }
 }
 

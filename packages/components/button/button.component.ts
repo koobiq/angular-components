@@ -87,7 +87,8 @@ const maxIconsForIconButton = 2;
     selector: '[kbq-button]',
     host: {
         '[class.kbq-button]': '!isIconButton',
-        '[class.kbq-button-icon]': 'isIconButton'
+        '[class.kbq-button-icon]': 'isIconButton',
+        '[class.kbq-button_no-label]': 'hasNoLabel'
     }
 })
 export class KbqButtonCssStyler implements AfterContentInit {
@@ -102,7 +103,14 @@ export class KbqButtonCssStyler implements AfterContentInit {
         return this._isIconButton();
     }
 
+    /** Whether the projected label holds no text at all, e.g. an icon-only button. */
+    get hasNoLabel(): boolean {
+        return this._hasNoLabel();
+    }
+
     private readonly _isIconButton = signal(false);
+
+    private readonly _hasNoLabel = signal(false);
 
     private leftIcon: HTMLElement | null = null;
     private rightIcon: HTMLElement | null = null;
@@ -118,10 +126,11 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
         this.nativeElement = elementRef.nativeElement;
 
-        // The contentChildren query tracks only KbqIcon instances, while icon placement also
-        // depends on sibling text nodes that are invisible to the query — those are covered by
-        // the MutationObserver in the component template. This effect covers icon creation and
-        // removal (e.g. via @if) while the observer is disabled for icon-less buttons.
+        // The contentChildren query tracks only KbqIcon instances, and only direct ones, while icon
+        // placement and `hasNoLabel` also depend on text nodes and on content a consumer nested in
+        // its own element — all invisible to the query. Those are covered by the MutationObserver in
+        // the component template, which is why it stays enabled even for icon-less buttons. This
+        // effect covers icon creation and removal (e.g. via @if) without waiting for the observer.
         effect(() => {
             this.icons();
 
@@ -147,6 +156,12 @@ export class KbqButtonCssStyler implements AfterContentInit {
 
         const icons = this.icons();
         const textElement = wrapper.querySelector('.kbq-button-text');
+
+        // CSS cannot see text nodes, so it can never tell an icon-only label from a text label that
+        // happens to contain an icon — the label box has to be told. `textContent` walks nested
+        // elements, which also covers content a consumer wrapped in its own element before
+        // projecting it (e.g. KbqButtonToggle), where the icon is not a direct child at all.
+        this._hasNoLabel.set(!textElement?.textContent?.trim());
 
         // Build an ordered list of "effective" content nodes: the left-slot content, then the
         // default-slot content flattened out of `.kbq-button-text`, then the right-slot content.

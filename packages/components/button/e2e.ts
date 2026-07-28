@@ -339,6 +339,45 @@ export class E2eButtonGroup {
                 {{ label }}
             </button>
         </div>
+
+        <!-- the same nesting, but with no text alongside it — the shape KbqButtonToggle projects.
+             No selector can match this without also matching the case above, so the label box is
+             told by KbqButtonCssStyler rather than by CSS. -->
+        <div class="narrow">
+            <button
+                kbq-button
+                aria-label="Plus"
+                data-testid="e2eButtonTruncationWrappedIconOnly"
+                [color]="colors.Contrast"
+            >
+                <span class="wrapper"><i kbq-icon="kbq-plus_16"></i></span>
+            </button>
+        </div>
+
+        <!-- a marker directive on a lone icon must be a no-op: it has no label to space itself from -->
+        <div class="narrow">
+            <button
+                kbq-button
+                aria-label="Plus"
+                data-testid="e2eButtonTruncationIconOnlyWithMarker"
+                [color]="colors.Contrast"
+            >
+                <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
+            </button>
+        </div>
+
+        <!-- an icon button has no label to truncate, so a container narrower than the button must not
+             shrink it and clip the icon -->
+        <div class="squeezed">
+            <button
+                kbq-button
+                aria-label="Plus"
+                data-testid="e2eButtonTruncationIconOnlySqueezed"
+                [color]="colors.Contrast"
+            >
+                <i kbq-icon="kbq-plus_16"></i>
+            </button>
+        </div>
     `,
     styles: `
         [data-testid='e2eScreenshotTarget'] {
@@ -350,6 +389,18 @@ export class E2eButtonGroup {
 
         .narrow {
             width: 150px;
+        }
+
+        /* narrower than the 32px an icon button occupies */
+        .squeezed {
+            width: 20px;
+        }
+
+        /* a component that wraps content before projecting it centres inside its own box, exactly
+           as KbqButtonToggle does — the button can only centre the wrapper itself */
+        .wrapper {
+            display: flex;
+            align-items: center;
         }
 
         .wide {

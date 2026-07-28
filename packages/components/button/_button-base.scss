@@ -14,11 +14,6 @@
     align-items: center;
     justify-content: center;
 
-    // hug the content by default, but never grow past the container: `white-space: nowrap` makes
-    // the text's min-content contribution its full width, so without this the button would overflow
-    // instead of letting `.kbq-button-text` truncate
-    max-width: 100%;
-
     margin: 0; /* Safari */
 
     height: var(--kbq-button-size-height);
@@ -75,6 +70,16 @@
             display: flex;
             align-items: center;
         }
+    }
+
+    // A label with no text has nothing to truncate, and non-text content is only centred exactly by
+    // a flex context. `:has()` cannot decide this on its own: it would have to tell an icon-only
+    // label from a text label containing an icon, and selectors cannot see text nodes — so the class
+    // is computed by `KbqButtonCssStyler`. Covers content nested in a consumer's own wrapper element,
+    // which no descendant-based selector could match without breaking truncation elsewhere.
+    &.kbq-button_no-label .kbq-button-text {
+        display: flex;
+        align-items: center;
     }
 
     /* Logical properties so the leading/trailing icon gap mirrors under `dir="rtl"`. */

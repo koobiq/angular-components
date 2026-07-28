@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -10,6 +11,7 @@ import {
     Component,
     contentChildren,
     Directive,
+    effect,
     ElementRef,
     forwardRef,
     inject,
@@ -18,12 +20,14 @@ import {
     OnDestroy,
     OnInit,
     output,
+    Renderer2,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
-import { getNodesWithoutComments } from '@koobiq/components/core';
+import { getNodesWithoutComments, leftIconClassName, rightIconClassName } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 
@@ -306,6 +310,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 @Component({
     selector: 'kbq-button-toggle',
     imports: [
+        CdkObserveContent,
         KbqTitleDirective,
         KbqButtonModule
     ],
@@ -320,7 +325,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
             [tabIndex]="tabIndex() || 0"
             (click)="onToggleClick()"
         >
-            <div #kbqTitleText class="kbq-button-toggle-wrapper">
+            <div #kbqTitleText class="kbq-button-toggle-wrapper" (cdkObserveContent)="updateContentPlacement()">
                 <ng-content />
             </div>
         </button>
@@ -393,9 +398,26 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     /** Event emitted when the group value changes. */
     readonly change = output<KbqButtonToggleChange>();
 
+    private readonly renderer = inject(Renderer2);
+
     private isSingleSelector = false;
     private _checked = false;
     private _disabled: boolean = false;
+
+    private leadingIcon: HTMLElement | null = null;
+    private trailingIcon: HTMLElement | null = null;
+
+    constructor() {
+        // The content query only tracks KbqIcon instances, while placement also depends on the text
+        // nodes beside them, which the query cannot see — those are covered by the MutationObserver
+        // in the template. This effect covers icons appearing or disappearing (e.g. via @if) without
+        // waiting for the observer.
+        effect(() => {
+            this.icons();
+
+            untracked(() => this.updateContentPlacement());
+        });
+    }
 
     ngOnInit() {
         this.isSingleSelector = this.buttonToggleGroup && !this.buttonToggleGroup.multiple;
@@ -407,14 +429,55 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     }
 
     ngAfterContentInit(): void {
-        const icons = this.icons();
+        this.updateContentPlacement();
+    }
 
-        if (icons.length) {
-            const nodesWithoutComments = getNodesWithoutComments(
-                this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper')!.childNodes as NodeList
-            ).length;
+    /**
+     * Marks the outermost icons so they can space themselves from the label, and refreshes
+     * `iconType`.
+     *
+     * The spacing cannot come from `gap`: a stretched toggle needs a block container for its
+     * `text-overflow` to be painted at all, and `gap` has no effect on one. So the icons carry it as
+     * a margin — and only their position among the projected nodes tells which side the label is on,
+     * which no selector can work out, because text nodes are invisible to CSS.
+     *
+     * @docs-private
+     */
+    updateContentPlacement(): void {
+        const wrapper: HTMLElement | null = this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper');
 
-            this.iconType = nodesWithoutComments === icons.length ? '-icon' : '-icon-text';
+        if (!wrapper) return;
+
+        const iconElements = this.icons().map((icon) => icon.getHostElement());
+        const nodes = getNodesWithoutComments(wrapper.childNodes);
+
+        this.iconType = iconElements.length ? (nodes.length === iconElements.length ? '-icon' : '-icon-text') : '';
+
+        // with a single node there is no label to space the icon from
+        const outermost = (node: Node | undefined): HTMLElement | null =>
+            nodes.length > 1 && node && iconElements.includes(node as HTMLElement) ? (node as HTMLElement) : null;
+
+        const leading = outermost(nodes[0]);
+        const trailing = outermost(nodes[nodes.length - 1]);
+
+        this.updateIconClass(this.leadingIcon, leading, leftIconClassName);
+        this.updateIconClass(this.trailingIcon, trailing, rightIconClassName);
+
+        this.leadingIcon = leading;
+        this.trailingIcon = trailing;
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private updateIconClass(previous: HTMLElement | null, current: HTMLElement | null, className: string): void {
+        if (previous === current) return;
+
+        if (previous) {
+            this.renderer.removeClass(previous, className);
+        }
+
+        if (current) {
+            this.renderer.addClass(current, className);
         }
     }
 

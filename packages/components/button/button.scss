@@ -7,8 +7,17 @@
 // `.kbq-button-icon_left` / `.kbq-button-icon_right` are set by `KbqButtonCssStyler` and styled by
 // `dropdown.scss` — they have no rules here on purpose.
 
+// hug the content by default, but never grow past the container: `white-space: nowrap` makes the
+// label's min-content contribution its full width, so without this the button would overflow instead
+// of letting `.kbq-button-text` truncate. Deliberately not on `.kbq-button-icon`: an icon button has
+// no label to truncate, so clamping it would only shrink `.kbq-button-text` and clip the icon.
+%kbq-button-clamped-to-container {
+    max-width: 100%;
+}
+
 .kbq-button {
     @extend %kbq-button-base;
+    @extend %kbq-button-clamped-to-container;
 
     // base padding - border-width
     padding-left: kbq-difference-series-css-variables([button-size-horizontal-padding, button-size-border-width]);
@@ -17,6 +26,7 @@
 
 .kbq-light-button {
     @extend %kbq-button-base;
+    @extend %kbq-button-clamped-to-container;
 }
 
 .kbq-button-icon {
@@ -24,6 +34,23 @@
 
     padding-left: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
     padding-right: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
+
+    // an icon button has no label for the slots to space themselves from, so a marker directive on
+    // a lone icon must not push it off centre
+    & .kbq-icon_left,
+    & .kbq-button-prefix {
+        margin-right: 0;
+    }
+
+    & .kbq-icon_right,
+    & .kbq-button-suffix {
+        margin-left: 0;
+    }
+
+    // a pair of icons is spaced by the icon-button token rather than by two facing margins
+    &.kbq-button-icon_left.kbq-button-icon_right .kbq-icon_left {
+        margin-right: var(--kbq-button-icon-size-content-padding);
+    }
 }
 
 @include kbq-button-theme();
