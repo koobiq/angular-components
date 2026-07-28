@@ -25,4 +25,4 @@ jobs:
           expires: 3d
           channelId: prs-${{ github.event.number }}
           projectId: koobiq
-          target: next
+          target: v19
