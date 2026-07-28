@@ -9,7 +9,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqAppSwitcherApp } from './app-switcher';
@@ -19,7 +19,8 @@ import { KbqAppSwitcherApp } from './app-switcher';
     selector: '[kbq-app-switcher-list-item]',
     imports: [
         KbqIconModule,
-        NgOptimizedImage
+        NgOptimizedImage,
+        KbqHighlightBackgroundPipe
     ],
     template: `
         @if (app.icon) {
@@ -31,7 +32,10 @@ import { KbqAppSwitcherApp } from './app-switcher';
         }
 
         <div class="kbq-app-switcher-list-item__container">
-            <div class="kbq-app-switcher-list-item__name">{{ app.name }}</div>
+            <div
+                class="kbq-app-switcher-list-item__name"
+                [innerHTML]="app.name | kbqHighlightBackground: highlightText()"
+            ></div>
             @if (app.caption) {
                 <div class="kbq-app-switcher-list-item__caption">{{ app.caption }}</div>
             }
@@ -68,6 +72,8 @@ export class KbqAppSwitcherListItem extends KbqDropdownItem {
     //  and migrating would break narrowing currently.
     @Input() app: KbqAppSwitcherApp;
     readonly toggle = input(false, { transform: booleanAttribute });
+    /** Search query to highlight within the app name. */
+    readonly highlightText = input<string>('');
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input({ transform: booleanAttribute }) collapsed: boolean = false;

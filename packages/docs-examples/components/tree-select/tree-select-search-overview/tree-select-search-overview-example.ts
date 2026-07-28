@@ -126,7 +126,9 @@ export const DATA_OBJECT = {
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         <span
-                            [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                            [innerHTML]="
+                                treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
+                            "
                         ></span>
                     </kbq-tree-option>
 
@@ -137,7 +139,9 @@ export const DATA_OBJECT = {
                             [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                         ></i>
                         <span
-                            [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                            [innerHTML]="
+                                treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
+                            "
                         ></span>
                     </kbq-tree-option>
                 </kbq-tree-selection>

@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqHighlightPipe } from '@koobiq/components/core';
+import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -18,7 +18,7 @@ import { map, startWith } from 'rxjs/operators';
         KbqInputModule,
         AsyncPipe,
         ReactiveFormsModule,
-        KbqHighlightPipe
+        KbqHighlightBackgroundPipe
     ],
     template: `
         <kbq-form-field>
@@ -33,7 +33,7 @@ import { map, startWith } from 'rxjs/operators';
 
                 @for (option of filteredOptions | async; track option) {
                     <kbq-option [value]="option">
-                        <span [innerHTML]="option | mcHighlight: searchControl.value"></span>
+                        <span [innerHTML]="option | kbqHighlightBackground: searchControl.value"></span>
                     </kbq-option>
                 }
             </kbq-select>

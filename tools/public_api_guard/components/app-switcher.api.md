@@ -154,12 +154,13 @@ export class KbqAppSwitcherListItem extends KbqDropdownItem {
     collapsed: boolean;
     // (undocumented)
     getIcon(icon: string | null): _angular_platform_browser.SafeHtml;
+    readonly highlightText: i0.InputSignal<string>;
     // (undocumented)
     static ngAcceptInputType_collapsed: unknown;
     // (undocumented)
     readonly toggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherListItem, "[kbq-app-switcher-list-item]", ["kbqAppSwitcherApp"], { "app": { "alias": "app"; "required": false; }; "toggle": { "alias": "toggle"; "required": false; "isSignal": true; }; "collapsed": { "alias": "collapsed"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqAppSwitcherListItem, "[kbq-app-switcher-list-item]", ["kbqAppSwitcherApp"], { "app": { "alias": "app"; "required": false; }; "toggle": { "alias": "toggle"; "required": false; "isSignal": true; }; "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "collapsed": { "alias": "collapsed"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherListItem, never>;
 }

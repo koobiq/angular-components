@@ -33,7 +33,7 @@ import { map, startWith } from 'rxjs/operators';
 
                 @for (option of filteredOptions | async; track option) {
                     <kbq-option [value]="option">
-                        <span [innerHTML]="option | mcHighlight: searchControl.value"></span>
+                        <span [innerHTML]="option | kbqHighlightBackground: searchControl.value"></span>
                     </kbq-option>
                 }
             </kbq-select>

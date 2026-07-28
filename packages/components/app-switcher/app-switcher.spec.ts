@@ -759,6 +759,34 @@ describe('KbqAppSwitcher', () => {
 
             expect(searchResult).toBeTruthy();
         }));
+
+        it('highlights only the matched fragment of the app name in search results', fakeAsync(() => {
+            trigger.show();
+            tick();
+            fixture.detectChanges();
+
+            const popup = trigger['instance'] as KbqAppSwitcherComponent;
+
+            popup.searchControl.setValue('pp 1');
+            tick();
+            fixture.detectChanges();
+
+            const marks = overlayContainerElement.querySelectorAll<HTMLElement>(
+                '.kbq-app-switcher__search-result mark.kbq-highlight-background'
+            );
+
+            expect(marks).toHaveLength(1);
+            expect(marks[0].textContent).toBe('pp 1');
+            expect(marks[0].closest('.kbq-app-switcher-list-item__name')!.textContent).toBe('App 1');
+        }));
+
+        it('does not highlight anything while the search query is empty', fakeAsync(() => {
+            trigger.show();
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelectorAll('mark.kbq-highlight-background')).toHaveLength(0);
+        }));
     });
 
     describe('Keyboard navigation', () => {

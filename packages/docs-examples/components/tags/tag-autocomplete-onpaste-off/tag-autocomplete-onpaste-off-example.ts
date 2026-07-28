@@ -2,7 +2,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
-import { ENTER } from '@koobiq/components/core';
+import { ENTER, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -29,7 +29,8 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
         KbqIconModule,
         ReactiveFormsModule,
         KbqAutocompleteModule,
-        AsyncPipe
+        AsyncPipe,
+        KbqHighlightBackgroundPipe
     ],
     templateUrl: 'tag-autocomplete-onpaste-off-example.html',
     styles: `

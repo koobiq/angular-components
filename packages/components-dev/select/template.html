@@ -15,7 +15,7 @@
 
 <!--            @for (option of filteredOptions | async; track option) {-->
 <!--                <kbq-option [value]="option">-->
-<!--                    <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>-->
+<!--                    <span [innerHTML]="option | kbqHighlightBackground: searchCtrl.value"></span>-->
 <!--                </kbq-option>-->
 <!--            }-->
 
@@ -59,7 +59,7 @@
 
 <!--            @for (option of filteredOptions | async; track option) {-->
 <!--                <kbq-option [value]="option">-->
-<!--                    <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>-->
+<!--                    <span [innerHTML]="option | kbqHighlightBackground: searchCtrl.value"></span>-->
 <!--                </kbq-option>-->
 <!--            }-->
 <!--        </kbq-select>-->
@@ -72,7 +72,7 @@
 <!--                    *cdkVirtualFor="let option of filteredOptions | async; templateCacheSize: 0"-->
 <!--                    [value]="option"-->
 <!--                >-->
-<!--                    <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>-->
+<!--                    <span [innerHTML]="option | kbqHighlightBackground: searchCtrl.value"></span>-->
 <!--                </kbq-option>-->
 <!--            </cdk-virtual-scroll-viewport>-->
 
@@ -140,7 +140,7 @@
 
 <!--            @for (option of filteredOptions | async; track option) {-->
 <!--                <kbq-option [value]="option">-->
-<!--                    <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>-->
+<!--                    <span [innerHTML]="option | kbqHighlightBackground: searchCtrl.value"></span>-->
 <!--                </kbq-option>-->
 <!--            }-->
 <!--        </kbq-select>-->
@@ -166,7 +166,7 @@
 
 <!--            @for (option of filteredMultipleOptions | async; track option) {-->
 <!--                <kbq-option [showCheckbox]="false" [value]="option">-->
-<!--                    <span [innerHTML]="option | mcHighlight: multipleSearchCtrl.value"></span>-->
+<!--                    <span [innerHTML]="option | kbqHighlightBackground: multipleSearchCtrl.value"></span>-->
 <!--                </kbq-option>-->
 <!--            }-->
 <!--        </kbq-select>-->

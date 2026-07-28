@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqHighlightPipe, KbqOptgroup } from '@koobiq/components/core';
+import { KbqHighlightBackgroundPipe, KbqOptgroup } from '@koobiq/components/core';
 import { KbqDivider } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqCleaner, KbqFormField, KbqPrefix } from '@koobiq/components/form-field';
@@ -27,7 +27,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
         KbqCleaner,
         KbqInput,
         ReactiveFormsModule,
-        KbqHighlightPipe
+        KbqHighlightBackgroundPipe
     ],
     template: `
         <button
@@ -59,7 +59,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
             @for (item of filtered[0]; track item) {
                 <button kbq-dropdown-item>
-                    <span [innerHTML]="item | mcHighlight: control.value"></span>
+                    <span [innerHTML]="item | kbqHighlightBackground: control.value"></span>
                 </button>
             }
 
@@ -73,7 +73,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
             @for (item of filtered[1]; track item) {
                 <button kbq-dropdown-item>
-                    <span [innerHTML]="item | mcHighlight: control.value"></span>
+                    <span [innerHTML]="item | kbqHighlightBackground: control.value"></span>
                 </button>
             }
 
