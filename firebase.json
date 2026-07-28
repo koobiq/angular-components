@@ -121,7 +121,7 @@
             "ignore": ["firebase.json", "**/node_modules/**"]
         },
         {
-            "target": "next-v19",
+            "target": "next",
             "public": "dist/releases/koobiq-docs/browser",
             "cleanUrls": true,
             "rewrites": [
