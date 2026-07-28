@@ -104,13 +104,16 @@ export class KbqActionsPanelModule {
 // @public
 export class KbqActionsPanelRef<I = unknown, R = unknown> {
     constructor(dialogRef: DialogRef<R, I>, containerInstance: KbqActionsPanelContainer);
-    get afterClosed(): Observable<R | undefined>;
-    get afterOpened(): Observable<void>;
+    readonly afterClosed: Observable<R | undefined>;
+    readonly afterOpened: Observable<void>;
+    readonly beforeClosed: Observable<R | undefined>;
+    readonly beforeOpened: Observable<void>;
     close(result?: R): void;
     containerInstance: KbqActionsPanelContainer;
-    get id(): string;
-    get keydownEvents(): Observable<KeyboardEvent>;
-    get overlayRef(): OverlayRef;
+    readonly id: string;
+    readonly keydownEvents: Observable<KeyboardEvent>;
+    open(): void;
+    readonly overlayRef: OverlayRef;
 }
 
 // @public
