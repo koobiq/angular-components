@@ -139,7 +139,6 @@ export class ExampleGrid {
                 node.setSelected(true);
             }
         });
-        api.setColumnWidths([{ key: 'ag-Grid-SelectionColumn', newWidth: 36 }]);
 
         this.api = api;
     }
