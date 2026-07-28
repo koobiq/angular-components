@@ -1244,6 +1244,12 @@ export class KbqTreeSelect
         if ((isArrowKey && event.altKey) || keyCode === ESCAPE || keyCode === TAB) {
             // Close the select on ALT + arrow key to match the native <select>
             event.preventDefault();
+
+            // Prevent ESCAPE from bubbling to ancestor (when inside overlay)
+            if (keyCode === ESCAPE) {
+                event.stopPropagation();
+            }
+
             this.close();
             this.focus();
         } else if (keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
