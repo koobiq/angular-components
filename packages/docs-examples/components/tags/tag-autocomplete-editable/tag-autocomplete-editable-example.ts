@@ -2,7 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqComponentColors, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -32,7 +32,8 @@ const getAutocompleteOptions = () => [
         KbqAutocompleteModule,
         KbqIconModule,
         KbqInputModule,
-        KbqTitleModule
+        KbqTitleModule,
+        KbqHighlightBackgroundPipe
     ],
     template: `
         <kbq-form-field>
@@ -72,7 +73,9 @@ const getAutocompleteOptions = () => [
 
             <kbq-autocomplete #autocomplete="kbqAutocomplete" (optionSelected)="selected($event, input)">
                 @for (option of filteredOptions(); track option) {
-                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                    <kbq-option [value]="option">
+                        <span [innerHTML]="option | kbqHighlightBackground: tagInputModel().trim()"></span>
+                    </kbq-option>
                 }
             </kbq-autocomplete>
         </kbq-form-field>

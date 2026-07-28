@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
@@ -34,7 +35,8 @@ const getAutocompleteOptions = () => [
         KbqAutocompleteModule,
         KbqIconModule,
         AsyncPipe,
-        KbqInputModule
+        KbqInputModule,
+        KbqHighlightBackgroundPipe
     ],
     template: `
         <kbq-form-field>
@@ -70,7 +72,9 @@ const getAutocompleteOptions = () => [
                     <kbq-option [disabled]="true">Nothing found</kbq-option>
                 }
                 @for (tag of filteredTags | async; track tag) {
-                    <kbq-option [value]="tag">{{ tag }}</kbq-option>
+                    <kbq-option [value]="tag">
+                        <span [innerHTML]="tag | kbqHighlightBackground: tagInput.value"></span>
+                    </kbq-option>
                 }
             </kbq-autocomplete>
         </kbq-form-field>

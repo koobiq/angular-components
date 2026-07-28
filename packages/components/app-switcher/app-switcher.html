@@ -135,7 +135,12 @@
                         }
 
                         @for (app of site.apps; track app) {
-                            <a href="{{ app.link }}" kbq-app-switcher-list-item [app]="app"></a>
+                            <a
+                                href="{{ app.link }}"
+                                kbq-app-switcher-list-item
+                                [app]="app"
+                                [highlightText]="searchControl.getRawValue() ?? ''"
+                            ></a>
                         }
                     } @empty {
                         <div class="kbq-app-switcher__empty-search-result">{{ localeData.searchEmptyResult }}</div>

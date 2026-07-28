@@ -49,12 +49,16 @@
 
     <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
         <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
-            <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            <span
+                [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+            ></span>
         </kbq-tree-option>
 
         <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [selectable]="false">
             <kbq-tree-node-toggle [node]="node" />
-            <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            <span
+                [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+            ></span>
         </kbq-tree-option>
     </kbq-tree-selection>
 </kbq-tree-select>

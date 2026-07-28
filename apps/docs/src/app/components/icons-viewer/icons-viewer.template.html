@@ -30,7 +30,7 @@
                                 <i [kbq-icon]="icon.cssClass"></i>
                                 <span
                                     class="docs-icons-viewer__table-cell-name"
-                                    [innerHtml]="icon.name | mcHighlight: searchControl.value"
+                                    [innerHtml]="icon.name | kbqHighlightBackground: searchControl.value"
                                     [kbqTooltip]="icon.name"
                                 ></span>
                             </div>

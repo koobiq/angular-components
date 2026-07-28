@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqFormsModule, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -17,7 +17,8 @@ import { map, startWith } from 'rxjs/operators';
         KbqInputModule,
         ReactiveFormsModule,
         AsyncPipe,
-        KbqFormsModule
+        KbqFormsModule,
+        KbqHighlightBackgroundPipe
     ],
     template: `
         <div class="kbq-form kbq-form-vertical">
@@ -29,7 +30,7 @@ import { map, startWith } from 'rxjs/operators';
                     <kbq-autocomplete #auto="kbqAutocomplete">
                         @for (option of filteredOptions | async; track option) {
                             <kbq-option [value]="option">
-                                {{ option }}
+                                <span [innerHTML]="option | kbqHighlightBackground: control.value"></span>
                             </kbq-option>
                         }
                     </kbq-autocomplete>

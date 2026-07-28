@@ -34,7 +34,7 @@
         }
         @for (tag of filteredTags | async; track $index) {
             <kbq-option [value]="tag">
-                {{ tag }}
+                <span [innerHTML]="tag | kbqHighlightBackground: tagInput.value"></span>
             </kbq-option>
         }
     </kbq-autocomplete>

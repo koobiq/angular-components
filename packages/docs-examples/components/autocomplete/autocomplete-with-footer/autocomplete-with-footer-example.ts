@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
+import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -17,7 +18,8 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
         KbqInputModule,
         ReactiveFormsModule,
         KbqLinkModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqHighlightBackgroundPipe
     ],
     template: `
         <kbq-form-field>
@@ -31,7 +33,9 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
             />
             <kbq-autocomplete #autocomplete="kbqAutocomplete">
                 @for (option of filteredOptions(); track option) {
-                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                    <kbq-option [value]="option">
+                        <span [innerHTML]="option | kbqHighlightBackground: control.value"></span>
+                    </kbq-option>
                 }
                 <kbq-autocomplete-footer>
                     <a class="kbq-link_external" kbq-link (click)="trigger.closePanel()">

@@ -172,13 +172,17 @@ abstract class TreeParams {
             (selectionChange)="onSelectionChange($event)"
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
-                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+                <span
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                ></span>
             </kbq-tree-option>
 
             <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
                 <kbq-tree-node-toggle [node]="node" />
 
-                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+                <span
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                ></span>
             </kbq-tree-option>
         </kbq-tree-selection>
     `,
