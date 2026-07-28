@@ -856,6 +856,8 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 9', id: '9', type: 'success' },
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
+                // 'Option 1' can never be deselected — not by the user, not by "select all", not by clear.
+                lockedValues: [{ name: 'Option 1', id: '1', type: 'error' }],
                 valueTemplate: this.optionTemplate(),
 
                 cleanable: false,
@@ -875,6 +877,8 @@ export class DevApp implements AfterViewInit {
                 name: 'MultiTreeSelect',
                 type: KbqPipeTypes.MultiTreeSelect,
                 values: kbqBuildTree(DEV_DATA_OBJECT, 0),
+                // Raw node values; locking a branch value would lock its whole subtree.
+                lockedValues: ['value 0'],
 
                 cleanable: false,
                 removable: false,

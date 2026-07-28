@@ -64,7 +64,7 @@
     }
 
     @for (item of filteredOptions | async; track item) {
-        <kbq-option [value]="item">
+        <kbq-option [value]="item" [disabled]="isLocked(item)">
             @if (isTemplateRef(valueTemplate)) {
                 <ng-container
                     [ngTemplateOutlet]="$any(valueTemplate)"

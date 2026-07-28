@@ -903,4 +903,222 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(component.allOptionsSelected).toBe(false);
         }));
     });
+
+    describe('lockedValues', () => {
+        const LOCKED = SELECT_VALUES[0];
+
+        const setLockedTemplate = (lockedValues: unknown[]) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: SELECT_VALUES,
+                    lockedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            setLockedTemplate([LOCKED]);
+        });
+
+        it('should render the locked option as disabled and selected', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [LOCKED] })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const locked = getPipeComponent()
+                .options()
+                .find((option) => option.value?.id === LOCKED.id)!;
+
+            expect(locked.disabled).toBe(true);
+            expect(locked.selected).toBe(true);
+        }));
+
+        it('should not change the value when the locked option is clicked', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [LOCKED] })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component
+                .options()
+                .find((option) => option.value?.id === LOCKED.id)!
+                .selectViaInteraction();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.data.value).toEqual([LOCKED]);
+        }));
+
+        it('should append the missing locked values without emitting a change', () => {
+            const changeSpy = jest.fn();
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            getFilterBar().onChangePipe.subscribe(changeSpy);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().data.value).toEqual([LOCKED]);
+            expect(changeSpy).not.toHaveBeenCalled();
+        });
+
+        it('should append the missing locked values to a null value', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().data.value).toEqual([LOCKED]);
+        });
+
+        it('should keep the locked options selected when all options are deselected', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.toggleSelectionAll();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.select().selectionModel.selected.map(({ value }) => value)).toEqual([LOCKED]);
+            expect(component.data.value).toEqual([LOCKED]);
+        }));
+
+        it('should leave only the locked values on clear', () => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [SELECT_VALUES[0], SELECT_VALUES[1]] })
+            ]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.onClear();
+
+            expect(component.data.value).toEqual([LOCKED]);
+        });
+
+        it('should emit the cleared value carrying the locked values', () => {
+            const clearSpy = jest.fn();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [SELECT_VALUES[0], SELECT_VALUES[1]] })
+            ]);
+            fixture.detectChanges();
+
+            getFilterBar().onClearPipe.subscribe(clearSpy);
+
+            getPipeComponent().onClear();
+
+            expect(clearSpy).toHaveBeenCalledWith(expect.objectContaining({ value: [LOCKED] }));
+        });
+
+        it('should read as empty when only the locked values are selected', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [LOCKED] })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            expect(component.isEmpty).toBe(true);
+            expect(component.showRemoveButton).toBe(false);
+        });
+
+        it('should read as not empty once an unlocked value is selected', () => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [LOCKED, SELECT_VALUES[1]] })
+            ]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().isEmpty).toBe(false);
+        });
+
+        it('should keep the master checkbox unchecked when only the locked values are selected', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [LOCKED], selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(getPipeComponent().checkboxState).toBe('unchecked');
+        }));
+
+        it('should check the master checkbox once every unlocked option is selected', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(getPipeComponent().checkboxState).toBe('checked');
+        }));
+
+        it('should keep the "all selected" sentinel across a later template update', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.toggleSelectionAll();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.data.value).toEqual([]);
+
+            // A fresh `pipeTemplates` reference re-emits `internalTemplatesChanges`. The locked values must
+            // not be folded into `[]` here — under "all selected = nothing selected" it stands for a full
+            // selection, so merging would silently downgrade it to "only the locked values selected".
+            setLockedTemplate([LOCKED]);
+            fixture.detectChanges();
+
+            expect(component.data.value).toEqual([]);
+        }));
+
+        it('should lift the lock without touching the committed value when a later template omits it', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().data.value).toEqual([LOCKED]);
+
+            setLockedTemplate([]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            // The already committed value is left alone — only the lock is lifted.
+            component.onClear();
+
+            expect(component.data.value).toEqual([]);
+        });
+    });
 });

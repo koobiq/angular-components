@@ -723,4 +723,239 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(getSelectAllOption()?.textContent?.trim()).toBe('Select all B');
         });
     });
+
+    describe('lockedValues', () => {
+        // `kbqBuildTree` keeps a leaf's raw value and gives a branch the nested object it was built from,
+        // so a branch is locked by passing that object.
+        const LOCKED_LEAF = 'value 0';
+        const LOCKED_BRANCH = DEV_DATA_OBJECT['MP 10'];
+        const BRANCH_LEAVES = ['value 4', 'value 5', 'value 6'];
+
+        const setLockedTemplate = (lockedValues: unknown[]) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiTreeSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiTreeSelect,
+                    values: TREE_DATA,
+                    lockedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            setLockedTemplate([LOCKED_LEAF]);
+        });
+
+        it('should report the locked node as disabled through the tree control', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            const { treeControl } = getPipeComponent();
+            const isDisabled = (value: unknown) =>
+                treeControl.isDisabled(treeControl.dataNodes.find((node) => node.value === value)!);
+
+            expect(isDisabled(LOCKED_LEAF)).toBe(true);
+            expect(isDisabled('value 2')).toBe(false);
+        });
+
+        it('should render the locked option as disabled and selected', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const locked = getPipeComponent()
+                .tree()
+                .renderedOptions.find((option) => option.value === LOCKED_LEAF)!;
+
+            expect(locked.disabled).toBe(true);
+            expect(locked.selected).toBe(true);
+        }));
+
+        it('should append the missing locked values without emitting a change', () => {
+            const changeSpy = jest.fn();
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            getFilterBar().onChangePipe.subscribe(changeSpy);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().data.value).toEqual([LOCKED_LEAF]);
+            expect(changeSpy).not.toHaveBeenCalled();
+        });
+
+        it('should leave only the locked values on clear', () => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [LOCKED_LEAF, 'value 2'] })
+            ]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.onClear();
+
+            expect(component.data.value).toEqual([LOCKED_LEAF]);
+        });
+
+        it('should emit the cleared value carrying the locked values', () => {
+            const clearSpy = jest.fn();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [LOCKED_LEAF, 'value 2'] })
+            ]);
+            fixture.detectChanges();
+
+            getFilterBar().onClearPipe.subscribe(clearSpy);
+
+            getPipeComponent().onClear();
+
+            expect(clearSpy).toHaveBeenCalledWith(expect.objectContaining({ value: [LOCKED_LEAF] }));
+        });
+
+        it('should keep the locked nodes selected when all nodes are deselected', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.allOptionsSelected).toBe(true);
+
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.select().selectedValues).toEqual([LOCKED_LEAF]);
+            expect(component.data.value).toEqual([LOCKED_LEAF]);
+        }));
+
+        it('should expose no built-in select cleaner, which would bypass onClear', () => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [LOCKED_LEAF, 'value 2'], cleanable: true })
+            ]);
+            fixture.detectChanges();
+
+            const select = getPipeComponent().select();
+
+            // `KbqTreeSelect.clearValue()` empties the selection model directly, bypassing the pipe's
+            // `onClear()` and taking the locked values with it — hence no `kbqSelectCleaner` in the
+            // template, which is what leaves `canShowCleaner` permanently false.
+            expect(select.cleaner()).toBeUndefined();
+            expect(select.canShowCleaner).toBe(false);
+        });
+
+        it('should keep the "all selected" sentinel across a later template update', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
+
+            expect(component.data.value).toEqual([]);
+
+            // A fresh `pipeTemplates` reference re-emits `internalTemplatesChanges`. The locked values must
+            // not be folded into `[]` here — under "all selected = nothing selected" it stands for a full
+            // selection, so merging would silently downgrade it to "only the locked values selected".
+            setLockedTemplate([LOCKED_LEAF]);
+            fixture.detectChanges();
+
+            expect(component.data.value).toEqual([]);
+        }));
+
+        it('should read as empty when only the locked values are selected', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [LOCKED_LEAF] })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            expect(component.isEmpty).toBe(true);
+            expect(component.showRemoveButton).toBe(false);
+        });
+
+        it('should read as not empty once an unlocked value is selected', () => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [LOCKED_LEAF, 'value 2'] })
+            ]);
+            fixture.detectChanges();
+
+            expect(getPipeComponent().isEmpty).toBe(false);
+        });
+
+        it('should keep the select-all checkbox unchecked when only the locked values are selected', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [LOCKED_LEAF], selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(getPipeComponent().selectAllCheckboxState).toBe('unchecked');
+        }));
+
+        it('should lock the whole subtree of a locked branch', () => {
+            setLockedTemplate([LOCKED_BRANCH]);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+            const { treeControl } = component;
+
+            BRANCH_LEAVES.forEach((value) => {
+                expect(treeControl.isDisabled(treeControl.dataNodes.find((node) => node.value === value)!)).toBe(true);
+            });
+
+            expect(component.data.value).toEqual([LOCKED_BRANCH, ...BRANCH_LEAVES]);
+        });
+
+        it('should keep a locked child selected when its parent is deselected', fakeAsync(() => {
+            setLockedTemplate(['value 4']);
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [LOCKED_BRANCH, ...BRANCH_LEAVES] })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+            const parent = component.tree().renderedOptions.find((option) => option.value === LOCKED_BRANCH)!;
+
+            component.onSelect({ value: parent });
+            flush();
+            fixture.detectChanges();
+
+            expect(component.data.value).toContain('value 4');
+            expect(component.data.value).not.toContain('value 5');
+        }));
+    });
 });

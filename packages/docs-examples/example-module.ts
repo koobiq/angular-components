@@ -1429,6 +1429,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-disabled-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-item-progress": {
+    "packagePath": "components/dropdown/dropdown-item-progress",
+    "title": "Dropdown item progress",
+    "componentName": "DropdownItemProgressExample",
+    "files": [
+      "dropdown-item-progress-example.ts"
+    ],
+    "selector": "dropdown-item-progress-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-item-progress-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dropdown-lazyload-data": {
     "packagePath": "components/dropdown/dropdown-lazyload-data",
     "title": "Dropdown lazy load data",
@@ -1516,6 +1528,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dropdown-with-filter-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-with-filter-example.ts",
+    "importPath": "components/dropdown"
+  },
+  "dropdown-with-footer": {
+    "packagePath": "components/dropdown/dropdown-with-footer",
+    "title": "Dropdown with footer",
+    "componentName": "DropdownWithFooterExample",
+    "files": [
+      "dropdown-with-footer-example.ts"
+    ],
+    "selector": "dropdown-with-footer-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-with-footer-example.ts",
     "importPath": "components/dropdown"
   },
   "dropdown-x-position": {
@@ -2124,6 +2148,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "LocalizationRuntimeLocale"
     ],
     "primaryFile": "filter-bar-localization-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-locked-options": {
+    "packagePath": "components/filter-bar/filter-bar-locked-options",
+    "title": "filter-bar-locked-options",
+    "componentName": "FilterBarLockedOptionsExample",
+    "files": [
+      "filter-bar-locked-options-example.ts"
+    ],
+    "selector": "filter-bar-locked-options-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-locked-options-example.ts",
     "importPath": "components/filter-bar"
   },
   "filter-bar-master-checkbox": {
@@ -6985,6 +7021,8 @@ return import('@koobiq/docs-examples/components/dl');
 return import('@koobiq/docs-examples/components/dl');
   case 'dropdown-disabled':
 return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-item-progress':
+return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-lazyload-data':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-navigation-wrap':
@@ -6998,6 +7036,8 @@ return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-recursive-template':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-with-filter':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-with-footer':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-x-position':
 return import('@koobiq/docs-examples/components/dropdown');
@@ -7098,6 +7138,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-inactive-filter':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-localization':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-locked-options':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-master-checkbox':
 return import('@koobiq/docs-examples/components/filter-bar');

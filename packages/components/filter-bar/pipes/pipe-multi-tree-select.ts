@@ -62,17 +62,15 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     get selectAllCheckboxState(): KbqPseudoCheckboxState {
-        const select = this.select();
-
-        if (!select) return 'unchecked';
+        if (!this.select()) return 'unchecked';
 
         if (this.allOptionsSelected) {
             return 'checked';
-        } else if (select.selected?.length > 0) {
-            return 'indeterminate';
         }
 
-        return 'unchecked';
+        const tally = this.unlockedTally;
+
+        return tally && tally.selected > 0 ? 'indeterminate' : 'unchecked';
     }
 
     get numberOfSelectedLeaves(): number {
@@ -81,10 +79,26 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
     /** true if all options selected */
     get allOptionsSelected(): boolean {
-        const dataNodesLength = this.treeControl?.dataNodes?.length;
-        const dataNodesForSelect = this.data.selectAll ? dataNodesLength - 1 : dataNodesLength;
+        const tally = this.unlockedTally;
 
-        return this.select()?.triggerValues?.length === dataNodesForSelect;
+        return !!tally && tally.selected === tally.total;
+    }
+
+    /**
+     * Selection tally restricted to the nodes the user can actually toggle — the one place the "ignore the
+     * locked nodes" rule of "select all" is expressed. `null` until the tree data has been built.
+     *
+     * `triggerValues` is derived from the very same selection model as `selected`, so either would do.
+     */
+    private get unlockedTally(): { total: number; selected: number } | null {
+        const dataNodes = this.treeControl?.dataNodes;
+
+        if (!dataNodes) return null;
+
+        return this.multiSelect.unlockedTally(
+            dataNodes.filter(({ value }) => value !== kbqTreeSelectAllValue).map(({ value }) => value),
+            (this.select()?.triggerValues ?? []).map(({ value }) => value)
+        );
     }
 
     get selectedAllEqualsSelectedNothing(): boolean {
@@ -93,15 +107,33 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
     /** true if all visible options selected */
     get allVisibleOptionsSelected(): boolean {
-        return this.tree()
-            .renderedOptions.filter((option) => option.value !== kbqTreeSelectAllValue)
-            .every((option) => option.selected);
+        const visible = this.tree().renderedOptions.filter(
+            (option) => option.value !== kbqTreeSelectAllValue && !option.disabled
+        );
+
+        // `[].every()` is `true`: with every visible node locked there is nothing for "select all" to act
+        // on, and claiming "all selected" would send the toggle down the deselect branch instead.
+        return visible.length > 0 && visible.every((option) => option.selected);
     }
+
+    /** Flat nodes whose selection the user cannot remove, the subtree of a locked branch included. */
+    private get lockedDataNodes(): KbqTreeSelectFlatNode[] {
+        return this.lockedValues?.length ? (this.treeControl.dataNodes?.filter(this.isLockedNode) ?? []) : [];
+    }
+
+    /**
+     * Values of every locked node, the subtree of a locked branch included. Resolved once per template
+     * change rather than on demand — `isEmpty` reads it on every change-detection pass.
+     */
+    private lockedNodeValues: unknown[] = [];
 
     private readonly multiSelect = new KbqMultiSelectPipeState({
         data: this.data,
         filterBar: this.filterBar,
-        allOptionsSelected: () => this.allOptionsSelected
+        allOptionsSelected: () => this.allOptionsSelected,
+        lockedValues: () => this.lockedNodeValues,
+        isSameValue: (first, second) => this.treeControl.compareValues(first, second),
+        emptyValue: () => null
     });
 
     constructor() {
@@ -118,6 +150,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
             return node.value === kbqTreeSelectAllValue ? this.localeData.pipe.selectAll : node.name;
         };
 
+        // Patched on the instance for the same reason as `getViewValue` above: `KbqTreeSelectPipeBase`
+        // builds the control before this subclass's fields exist, so it cannot pass the predicate as the
+        // `isDisabled` constructor argument. Routing the locked options through it buys the guards the
+        // tree already has — blocked clicks, exclusion from "select all", disabled trigger values.
+        this.treeControl.isDisabled = this.isLockedNode;
+
         // See the field-init note in `KbqTreeSelectPipeBase`: subscribing here (after this class's
         // `updateTemplates` initializer) ensures the initial replay writes `dataSource.data`.
         this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
@@ -127,6 +165,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         super.ngOnInit();
 
         this.multiSelect.updateInternalSelected();
+    }
+
+    override ngAfterViewInit(): void {
+        super.ngAfterViewInit();
+
+        this.multiSelect.markViewInitialized();
     }
 
     isNodeSelectAll(_: number, nodeData: KbqTreeSelectFlatNode) {
@@ -146,6 +190,10 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
         setTimeout(() => {
             if (this.destroyed) return;
+
+            // `setStateChildren` and `toggleParents` cascade straight through the selection model, so a
+            // locked descendant of a deselected branch has to be put back before the value is read.
+            this.enforceLockedNodes();
 
             if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
                 this.data.value = [];
@@ -167,7 +215,11 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
     toggleSelectAllNode(emitEvent: boolean = true) {
         if (this.select().search()?.ngControl.value) {
-            const renderedOptions = this.tree().renderedOptions.filter(({ value }) => value !== kbqTreeSelectAllValue);
+            // `KbqTreeOption.setSelected()` does not consult `disabled`, so the locked options are filtered
+            // out here rather than relying on the tree's own guards.
+            const renderedOptions = this.tree().renderedOptions.filter(
+                (option) => option.value !== kbqTreeSelectAllValue && !option.disabled
+            );
 
             if (this.allVisibleOptionsSelected) {
                 renderedOptions.forEach((option) => option.setSelected(false));
@@ -175,18 +227,28 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
                 renderedOptions.forEach((option) => option.setSelected(true));
             }
         } else {
+            // Same model the tree owns — see the note in `enforceLockedNodes`.
+            const { selectionModel } = this.select();
+
             if (this.allOptionsSelected) {
-                this.tree().selectionModel.clear();
+                // `clear()` would drop the locked nodes along with the rest. Matched by value rather than
+                // by reference: the last `dataSource.data` assignment rebuilds every flat node, so an
+                // identity check would miss the ones the selection model still holds.
+                selectionModel.deselect(...selectionModel.selected.filter((node) => !this.isLockedNode(node)));
             } else {
                 const [, ...dataNodesForSelect] = this.treeControl.dataNodes;
 
+                // The locked nodes are already selected and stay out of "select all" either way — leaving
+                // them out here keeps them out of the model's `added` payload too.
                 // @todo DS-3827
-                this.tree().selectionModel.select(...(dataNodesForSelect as any));
+                selectionModel.select(...(dataNodesForSelect.filter((node) => !this.isLockedNode(node)) as any));
             }
         }
 
         setTimeout(() => {
             if (this.destroyed) return;
+
+            this.enforceLockedNodes();
 
             if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
                 this.data.value = [];
@@ -223,12 +285,23 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
             this.dataSource.data = values;
         }
+
+        // Expanded here rather than on demand: the `dataSource.data` assignment above is the only thing
+        // that rewrites `treeControl.dataNodes`, so this is the single point where either input changes.
+        this.lockedNodeValues = this.lockedDataNodes.map((node) => node.value);
+
+        this.multiSelect.normalizeValue();
     };
 
     override onClear() {
         super.onClear();
 
         this.multiSelect.updateInternalSelected();
+    }
+
+    /** Clearing keeps the locked values; with none configured the pipe resets to `null` as before. */
+    protected override clearedValue(): KbqSelectValue[] | null {
+        return this.multiSelect.clearedValue();
     }
 
     /** @docs-private */
@@ -246,6 +319,37 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
         this.toggleSelectAllNode();
     };
+
+    /**
+     * Whether the node cannot be deselected: either its own value is locked, or it descends from a locked
+     * branch. Locking a branch has to lock its subtree — deselecting a child would otherwise switch the
+     * locked parent's own checkbox off.
+     */
+    private isLockedNode = (node: KbqTreeSelectFlatNode): boolean => {
+        let current: KbqTreeSelectFlatNode | undefined = node;
+
+        while (current) {
+            const { value } = current;
+
+            if (this.lockedValues?.some((locked) => this.treeControl.compareValues(locked, value))) return true;
+
+            current = current.parent;
+        }
+
+        return false;
+    };
+
+    /** Puts back every locked node the tree's own cascades may have deselected. */
+    private enforceLockedNodes(): void {
+        // The tree-select exposes the very same model the tree owns, but untyped — which is what the
+        // surrounding code (`toggleParents`) already relies on to pass flat nodes around.
+        const { selectionModel } = this.select();
+        const missing = this.lockedDataNodes.filter((node) => !selectionModel.isSelected(node));
+
+        if (missing.length) {
+            selectionModel.select(...missing);
+        }
+    }
 
     private toggleParents(parent: KbqTreeSelectFlatNode | undefined) {
         if (!parent) {

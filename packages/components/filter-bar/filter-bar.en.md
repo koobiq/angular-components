@@ -63,6 +63,18 @@ If there are many values, "Select All" will allow you to select all values ​�
 
 <!-- example(filter-bar-master-checkbox) -->
 
+### Locked values
+
+The `multiselect` and `multi-tree-select` pipe templates accept an optional `lockedValues` — the list of values whose selection cannot be removed. They are always selected: rendered as disabled options with a checked checkbox, kept by clearing the pipe, and folded into an incoming filter value silently, without a change event. A pipe holding nothing but its locked values reads as empty — it renders unfilled and hides its clear button.
+
+"Select all" ignores them entirely: it neither selects nor deselects a locked option, and the master checkbox reflects only the options the user can actually toggle. Note that under `selectedAllEqualsSelectedNothing` a full selection is still committed as an empty `value` — there the locked values are implied rather than listed.
+
+Entries of `lockedValues` have the same shape as the entries of the owning pipe's `value`: `{ name, id }` objects for `multiselect` (matched with `compareWith`, falling back to `id`), and raw node values for `multi-tree-select`. Locking a tree branch locks its whole subtree. The option is ignored by other pipe types.
+
+Because locked options are rendered as `disabled`, keyboard navigation skips them.
+
+<!-- example(filter-bar-locked-options) -->
+
 ### Inactive filter
 
 The filter value cannot be changed or deleted.
