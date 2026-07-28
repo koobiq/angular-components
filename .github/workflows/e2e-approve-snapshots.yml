@@ -1,3 +1,8 @@
+# Triggered workflow by PR comment: /approve-snapshots
+#
+# ⚠️ This job checks out and runs PR-controlled code with a repo write token. Only comment
+# /approve-snapshots after reviewing the PR's contents — the author_association check below
+# only verifies the commenter, not the safety of the code being run.
 name: E2E approve snapshots
 
 on:
@@ -5,12 +10,12 @@ on:
     types: [created]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: write # for stefanzweifel/git-auto-commit-action to push changes
+  pull-requests: write # for thollander/actions-comment-pull-request to comment on PRs
 
 jobs:
   approve_snapshots:
-    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/approve-snapshots') }}
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/approve-snapshots') && contains(fromJSON('["OWNER", "MEMBER"]'), github.event.comment.author_association) }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

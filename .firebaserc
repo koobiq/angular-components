@@ -1,14 +1,17 @@
 {
-  "projects": {
-    "default": "koobiq"
-  },
-  "targets": {
-    "koobiq": {
-      "hosting": {
-        "v19": [
-          "koobiq-v19"
-        ]
-      }
+    "projects": {
+        "default": "koobiq"
+    },
+    "targets": {
+        "koobiq": {
+            "hosting": {
+                "next": [
+                    "koobiq-next"
+                ],
+                "v19": [
+                    "koobiq-v19"
+                ]
+            }
+        }
     }
-  }
 }
