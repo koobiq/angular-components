@@ -1429,6 +1429,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-disabled-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-item-progress": {
+    "packagePath": "components/dropdown/dropdown-item-progress",
+    "title": "Dropdown item progress",
+    "componentName": "DropdownItemProgressExample",
+    "files": [
+      "dropdown-item-progress-example.ts"
+    ],
+    "selector": "dropdown-item-progress-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-item-progress-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dropdown-lazyload-data": {
     "packagePath": "components/dropdown/dropdown-lazyload-data",
     "title": "Dropdown lazy load data",
@@ -6946,6 +6958,8 @@ return import('@koobiq/docs-examples/components/dl');
   case 'dl-vertical-overview':
 return import('@koobiq/docs-examples/components/dl');
   case 'dropdown-disabled':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-item-progress':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-lazyload-data':
 return import('@koobiq/docs-examples/components/dropdown');
