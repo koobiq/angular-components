@@ -1,15 +1,27 @@
 import {
+    FlexibleConnectedPositionStrategy,
     FlexibleConnectedPositionStrategyOrigin,
     OverlayRef,
     ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
-import { ElementRef, NgZone } from '@angular/core';
+import { ElementRef, isDevMode, NgZone } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-export interface KbqHideOnScrollStrategyConfig {
+/**
+ * `FlexibleConnectedPositionStrategy` narrowed to its private `_origin` field, which the
+ * class doesn't expose publicly. `_origin` isn't part of the typed public API surface, so a
+ * future `@angular/cdk` upgrade could rename or remove it without a compile error here —
+ * if that happens, `attach()` below warns in dev mode instead of silently losing the
+ * ancestor-scroll-container tracking.
+ */
+interface PositionStrategyWithOrigin {
+    _origin?: FlexibleConnectedPositionStrategyOrigin;
+}
+
+export interface KbqAutoHideScrollStrategyConfig {
     /**
      * Element whose position is tracked against ancestor scroll container boundaries.
      * When omitted, the overlay panel is checked against the viewport instead.
@@ -32,10 +44,10 @@ export interface KbqScrollStrategyHooks {
  * - With `originElement`: tracks the origin against each ancestor `CdkScrollable` container.
  * - Without `originElement`: tracks the overlay panel against the viewport.
  *
- * Pass `onHide` via the factory returned by `kbqHideOnScrollStrategyFactory` so the strategy
+ * Pass `onHide` via the factory returned by `kbqAutoHideScrollStrategyFactory` so the strategy
  * calls it when the trigger scrolls out of bounds.
  */
-export class KbqHideOnScrollStrategy implements ScrollStrategy {
+export class KbqAutoHideScrollStrategy implements ScrollStrategy {
     private readonly hideSubject = new Subject<void>();
 
     /** Emits when the tracked element scrolls outside its boundary. */
@@ -49,7 +61,7 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
         private readonly scrollDispatcher: ScrollDispatcher,
         private readonly viewportRuler: ViewportRuler,
         private readonly ngZone: NgZone,
-        private readonly config: KbqHideOnScrollStrategyConfig = {},
+        private readonly config: KbqAutoHideScrollStrategyConfig = {},
         private hooks?: KbqScrollStrategyHooks
     ) {
         this.originElement = config.originElement ?? null;
@@ -60,9 +72,22 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
         this.overlayRef = overlayRef;
 
         if (!this.originElement) {
+            const positionStrategy = overlayRef.getConfig().positionStrategy;
+
             // FlexibleConnectedPositionStrategy stores the origin as a private field.
             // Reading it here avoids requiring callers to pass originElement explicitly.
-            this.originElement = this.coerceOriginElement((overlayRef.getConfig().positionStrategy as any)?._origin);
+            if (positionStrategy instanceof FlexibleConnectedPositionStrategy) {
+                const origin = (positionStrategy as PositionStrategyWithOrigin)._origin;
+
+                if (isDevMode() && origin === undefined) {
+                    // eslint-disable-next-line no-console
+                    console.warn(
+                        'KbqAutoHideScrollStrategy: `_origin` is missing on FlexibleConnectedPositionStrategy. Pass `originElement` explicitly.'
+                    );
+                }
+
+                this.originElement = this.coerceOriginElement(origin);
+            }
         }
     }
 
@@ -70,6 +95,11 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
     enable(): void {
         if (this.scrollSubscription) return;
 
+        if (!this.overlayRef) {
+            throw new Error('KbqAutoHideScrollStrategy: enable() was called before attach(). Call attach() first.');
+        }
+
+        const overlayRef = this.overlayRef;
         const { scrollThrottle = 20 } = this.config;
 
         this.scrollSubscription = this.scrollDispatcher
@@ -77,12 +107,11 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
             .pipe(
                 filter(
                     (scrollable) =>
-                        !scrollable ||
-                        !this.overlayRef!.overlayElement.contains(scrollable.getElementRef().nativeElement)
+                        !scrollable || !overlayRef.overlayElement.contains(scrollable.getElementRef().nativeElement)
                 )
             )
             .subscribe(() => {
-                this.overlayRef!.updatePosition();
+                overlayRef.updatePosition();
 
                 const isOutside = this.originElement
                     ? this._isOriginOutsideAncestors(this.originElement)
@@ -152,7 +181,7 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
 }
 
 /**
- * Factory function for `KbqHideOnScrollStrategy`. Use it directly as a `useFactory` value
+ * Factory function for `KbqAutoHideScrollStrategy`. Use it directly as a `useFactory` value
  * when providing a component-level scroll strategy token (e.g. `KBQ_POPOVER_SCROLL_STRATEGY`).
  *
  * The returned factory accepts an optional `onHide` callback. When provided, the strategy calls
@@ -164,14 +193,14 @@ export class KbqHideOnScrollStrategy implements ScrollStrategy {
  * {
  *   provide: KBQ_POPOVER_SCROLL_STRATEGY,
  *   deps: [ScrollDispatcher, ViewportRuler, NgZone],
- *   useFactory: kbqHideOnScrollStrategyFactory
+ *   useFactory: kbqAutoHideScrollStrategyFactory
  * }
  * ```
  */
-export function kbqHideOnScrollStrategyFactory(
+export function kbqAutoHideScrollStrategyFactory(
     scrollDispatcher: ScrollDispatcher,
     viewportRuler: ViewportRuler,
     ngZone: NgZone
-): (hooks?: KbqScrollStrategyHooks) => KbqHideOnScrollStrategy {
-    return (hooks?) => new KbqHideOnScrollStrategy(scrollDispatcher, viewportRuler, ngZone, {}, hooks);
+): (hooks?: KbqScrollStrategyHooks) => KbqAutoHideScrollStrategy {
+    return (hooks?) => new KbqAutoHideScrollStrategy(scrollDispatcher, viewportRuler, ngZone, {}, hooks);
 }

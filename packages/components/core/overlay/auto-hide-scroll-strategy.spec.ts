@@ -1,8 +1,8 @@
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { ElementRef, NgZone } from '@angular/core';
+import { KbqAutoHideScrollStrategy } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
-import { KbqHideOnScrollStrategy } from './hide-on-scroll.strategy';
 
 function makeRect(top: number, left: number, bottom: number, right: number): DOMRect {
     return {
@@ -59,12 +59,12 @@ function buildStrategy(
     const scrollDispatcher = deps.scrollDispatcher ?? makeScrollDispatcher(scroll$);
     const viewportRuler = deps.viewportRuler ?? makeViewportRuler();
     const ngZone = deps.ngZone ?? makeNgZone();
-    const strategy = new KbqHideOnScrollStrategy(scrollDispatcher, viewportRuler, ngZone, config);
+    const strategy = new KbqAutoHideScrollStrategy(scrollDispatcher, viewportRuler, ngZone, config);
 
     return { strategy, scroll$, scrollDispatcher, viewportRuler, ngZone };
 }
 
-describe('KbqHideOnScrollStrategy', () => {
+describe('KbqAutoHideScrollStrategy', () => {
     describe('lifecycle', () => {
         it('attach() stores the overlayRef', () => {
             const { strategy } = buildStrategy();
