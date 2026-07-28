@@ -2683,6 +2683,24 @@ describe('KbqSelect', () => {
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
             }));
 
+            it('should stop ESCAPE propagation when the panel is open so ancestor overlays are not closed', fakeAsync(() => {
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+
+                const event = createKeyboardEvent('keydown', ESCAPE);
+                const stopPropagationSpy = jest.spyOn(event, 'stopPropagation');
+
+                dispatchEvent(trigger, event);
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(stopPropagationSpy).toHaveBeenCalled();
+            }));
+
             it('should focus the first option when pressing HOME', fakeAsync(() => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
