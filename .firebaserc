@@ -6,7 +6,7 @@
         "koobiq": {
             "hosting": {
                 "next-v19": [
-                    "koobiq-next-v19"
+                    "koobiq-next"
                 ],
                 "v19": [
                     "koobiq-v19"
