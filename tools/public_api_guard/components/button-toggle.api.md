@@ -14,6 +14,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/button';
 import * as i2 from '@koobiq/components/title';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
@@ -95,6 +96,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     get selected(): any;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
+    readonly stretched: InputSignalWithTransform<boolean, unknown>;
     syncButtonToggle(toggle: KbqButtonToggle, select: boolean, isUserInput?: boolean): void;
     get value(): any;
     set value(newValue: any);
@@ -103,7 +105,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set vertical(value: boolean);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }

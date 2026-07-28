@@ -38,4 +38,18 @@ test.describe('KbqButtonToggleModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-dark.png');
         });
     });
+
+    test.describe('E2eButtonToggleStatesStretched', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eButtonToggleStatesStretched');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+
+        test('with title, prefix and suffix', async ({ page }) => {
+            await page.goto('/E2eButtonToggleStatesStretched');
+            const locator = getComponent(page);
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-dark.png');
+        });
+    });
 });
