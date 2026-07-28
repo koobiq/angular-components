@@ -883,9 +883,6 @@ export class KbqSelect
     /** Origin element for the overlay panel positioning. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
-    /** Flag indicating if the dropdown class has been added to the overlay container. */
-    private classAddedToOverlayContainer: boolean = false;
-
     private openPanelTimeout: ReturnType<typeof setTimeout>;
 
     constructor() {
@@ -1136,8 +1133,6 @@ export class KbqSelect
                     this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this.triggerFontSize}px`;
                 }
 
-                this.addClassToOverlayContainer();
-
                 if (this.search()) {
                     this.lockOverlayWidthForSearch(this.panel());
                 }
@@ -1155,8 +1150,6 @@ export class KbqSelect
 
         this._changeDetectorRef.markForCheck();
         this.onTouched();
-
-        this.removeClassFromOverlayContainer();
     }
 
     /**
@@ -1959,23 +1952,5 @@ export class KbqSelect
         this._renderer.setStyle(triggerClone, 'max-width', '100%');
 
         return triggerClone;
-    }
-
-    /** Adds the dropdown class to the overlay container when first select opens. */
-    private addClassToOverlayContainer() {
-        const overlayContainer = this.overlayContainer?.getContainerElement();
-
-        if (overlayContainer.childNodes.length === 1) {
-            this.classAddedToOverlayContainer = true;
-
-            this._renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
-        }
-    }
-
-    /** Removes the dropdown class from the overlay container when select closes. */
-    private removeClassFromOverlayContainer() {
-        if (this.classAddedToOverlayContainer) {
-            this._renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');
-        }
     }
 }

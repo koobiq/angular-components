@@ -6,7 +6,6 @@ import {
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConfig,
-    OverlayContainer,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
@@ -23,7 +22,6 @@ import {
     Input,
     OnInit,
     Output,
-    Renderer2,
     TemplateRef,
     Type,
     ViewChild,
@@ -159,9 +157,6 @@ export function getKbqPopoverInvalidPositionError(position: string) {
     exportAs: 'kbqPopover'
 })
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
-    private overlayContainer = inject(OverlayContainer);
-    private renderer = inject(Renderer2);
-
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
 
     /** Controls whether the component should be hidden when it is not visible in the viewport. */
@@ -444,8 +439,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         };
     }
 
-    private classAddedToOverlayContainer: boolean = false;
-
     ngOnInit(): void {
         super.ngOnInit();
 
@@ -468,22 +461,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
                 }
             });
         }
-    }
-
-    /**
-     * Overrides the base `show` method to display the overlay component with the
-     * specified entry delay and apply default positioning offsets.
-     */
-    override show(delay: number = this.enterDelay) {
-        super.show(delay);
-
-        this.addClassToOverlayContainer();
-    }
-
-    override hide(delay: number = this.leaveDelay) {
-        super.hide(delay);
-
-        this.removeClassFromOverlayContainer();
     }
 
     updateData() {
@@ -565,20 +542,4 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
             this.hide();
         }
     };
-
-    private addClassToOverlayContainer() {
-        const overlayContainer = this.overlayContainer?.getContainerElement();
-
-        if (overlayContainer.childNodes.length === 1) {
-            this.classAddedToOverlayContainer = true;
-
-            this.renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
-        }
-    }
-
-    private removeClassFromOverlayContainer() {
-        if (this.classAddedToOverlayContainer) {
-            this.renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');
-        }
-    }
 }

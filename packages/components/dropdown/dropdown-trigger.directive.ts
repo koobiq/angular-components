@@ -5,7 +5,6 @@ import {
     HorizontalConnectionPos,
     Overlay,
     OverlayConfig,
-    OverlayContainer,
     OverlayRef,
     ScrollStrategy,
     VerticalConnectionPos
@@ -14,7 +13,6 @@ import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterContentInit,
-    booleanAttribute,
     ChangeDetectorRef,
     Directive,
     ElementRef,
@@ -27,7 +25,6 @@ import {
     OnDestroy,
     Output,
     output,
-    Renderer2,
     ViewContainerRef
 } from '@angular/core';
 import {
@@ -63,17 +60,6 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     deps: [Overlay],
     useFactory: KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY
 };
-
-/**
- * Marker provided by host components that create their own stacking context at
- * the default overlay z-index (e.g. `KbqTopBar`, `KbqNavbar` use
- * `position: sticky` + `z-index: $overlay-z-index`). When this token is
- * available in the injector tree, `KbqDropdownTrigger` defaults `demoteOverlay`
- * to `false` so the dropdown overlay is not lowered below the host.
- *
- * An explicit `[demoteOverlay]` binding on the trigger still wins.
- */
-export const KBQ_DROPDOWN_HOST = new InjectionToken<unknown>('kbq-dropdown-host');
 
 /** Default top padding of the nested dropdown panel. */
 export const NESTED_PANEL_TOP_PADDING = 4;
@@ -137,12 +123,9 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
 
-    private readonly overlayContainer = inject(OverlayContainer);
-    private readonly renderer = inject(Renderer2);
     private readonly ngZone = inject(NgZone);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
-    private readonly host = inject(KBQ_DROPDOWN_HOST, { optional: true });
     lastDestroyReason: DropdownCloseReason;
 
     /**
@@ -170,15 +153,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input() openByArrowDown: boolean = true;
-
-    /**
-     * Whether to demote the overlay container z-index so that dropdown overlays
-     * sit below sibling overlays (tooltips, modals, etc.). Set to `false` to
-     * keep the dropdown overlay at the default overlay container z-index.
-     */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) demoteOverlay: boolean = true;
 
     /**
      * Whether focus should be restored when the menu is closed.
@@ -255,8 +229,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     private widthLockSubscription = Subscription.EMPTY;
 
-    private classAddedToOverlayContainer: boolean = false;
-
     constructor() {
         const elementRef = this.elementRef;
         const dropdownItemInstance = this.dropdownItemInstance;
@@ -265,10 +237,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
         if (dropdownItemInstance) {
             dropdownItemInstance.isNested = this.isNested();
-        }
-
-        if (this.host) {
-            this.demoteOverlay = false;
         }
     }
 
@@ -339,16 +307,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             this.dropdown.startAnimation();
         }
 
-        this.addClassToOverlayContainer();
-
         this.lockOverlayWidthForSearch();
     }
 
     /** Closes the dropdown. */
     close(): void {
         this.dropdown.closed.emit();
-
-        this.removeClassFromOverlayContainer();
     }
 
     /**
@@ -778,24 +742,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
         if (width) {
             this.overlayRef.updateSize({ width });
-        }
-    }
-
-    private addClassToOverlayContainer() {
-        if (!this.demoteOverlay) return;
-
-        const overlayContainer = this.overlayContainer?.getContainerElement();
-
-        if (overlayContainer.childNodes.length === 1) {
-            this.classAddedToOverlayContainer = true;
-
-            this.renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
-        }
-    }
-
-    private removeClassFromOverlayContainer() {
-        if (this.classAddedToOverlayContainer) {
-            this.renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');
         }
     }
 }

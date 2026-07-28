@@ -56,6 +56,11 @@
             "description": "Migrates KbqAlert consumers to the signal-based API (compact/alertStyle reads become calls; warns on alertColor value change, now-protected members, narrowed inputs)",
             "factory": "./migrations/alert-signals/index",
             "schema": "./migrations/alert-signals/schema.json"
+        },
+        "dropdown-demote-overlay": {
+            "description": "Removes the demoteOverlay input, the KBQ_DROPDOWN_HOST provider and dead .cdk-overlay-container_dropdown styles left by the overlay demotion removal",
+            "factory": "./migrations/dropdown-demote-overlay/index",
+            "schema": "./migrations/dropdown-demote-overlay/schema.json"
         }
     }
 }
