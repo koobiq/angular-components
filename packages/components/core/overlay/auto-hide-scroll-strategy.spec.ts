@@ -1,4 +1,4 @@
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
+import { CdkScrollable, FlexibleConnectedPositionStrategy, ScrollDispatcher } from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { ElementRef, NgZone } from '@angular/core';
 import { KbqAutoHideScrollStrategy } from '@koobiq/components/core';
@@ -26,7 +26,12 @@ function makeScrollDispatcher(scrollSubject: Subject<CdkScrollable | void>, cont
 }
 
 function makeOverlayRef(overlayElement: HTMLElement, positionOrigin?: unknown) {
-    const positionStrategy = positionOrigin !== undefined ? { _origin: positionOrigin } : {};
+    // `instanceof FlexibleConnectedPositionStrategy` mirrors the real CDK class the strategy
+    // checks for in production, without needing a full DI-constructed instance.
+    const positionStrategy =
+        positionOrigin !== undefined
+            ? Object.assign(Object.create(FlexibleConnectedPositionStrategy.prototype), { _origin: positionOrigin })
+            : {};
 
     return {
         overlayElement,
