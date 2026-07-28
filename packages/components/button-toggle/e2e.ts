@@ -183,17 +183,5 @@ export class E2eButtonToggleStates {
     }
 })
 export class E2eButtonToggleStatesStretched {
-    readonly showPrefixIcon = model(false);
-    readonly showTitle = model(true);
-    readonly showSuffixIcon = model(false);
-
     readonly states: E2eButtonState[] = E2E_BUTTON_STATES;
-
-    constructor() {
-        combineLatest([toObservable(this.showPrefixIcon), toObservable(this.showSuffixIcon)])
-            .pipe(takeUntilDestroyed())
-            .subscribe((args) => {
-                if (args.every((a) => !a)) this.showTitle.set(true);
-            });
-    }
 }
