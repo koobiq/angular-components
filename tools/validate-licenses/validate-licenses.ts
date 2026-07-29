@@ -57,9 +57,6 @@ const licenseReplacements: { [key: string]: License } = {
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
 const ignoredPackages: PackageID[] = [
-    // Custom
-    'deep-freeze@0.0.1',
-
     // ISC License https://github.com/eemeli/make-plural/blob/main/LICENSE
     'make-plural@7.3.0',
 
@@ -67,10 +64,7 @@ const ignoredPackages: PackageID[] = [
     'gitconfiglocal@1.0.0',
 
     // https://github.com/streetsidesoftware/cspell-dicts/blob/main/dictionaries/en-common-misspellings/LICENSE
-    '@cspell/dict-en-common-misspellings@2.0.11',
-
-    // https://github.com/bramstein/url-template?tab=BSD-3-Clause-1-ov-file
-    'url-template@2.0.8'
+    '@cspell/dict-en-common-misspellings@2.0.11'
 ];
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
