@@ -81,7 +81,10 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     get allOptionsSelected(): boolean {
         const tally = this.unlockedTally;
 
-        return !!tally && tally.selected === tally.total;
+        // A tally of zero is not a full selection: with every node locked there is nothing for "select
+        // all" to act on, and `0 === 0` would otherwise check the master checkbox over a tree the user
+        // cannot toggle. Same reasoning as `allVisibleOptionsSelected` below.
+        return !!tally && tally.total > 0 && tally.selected === tally.total;
     }
 
     /**

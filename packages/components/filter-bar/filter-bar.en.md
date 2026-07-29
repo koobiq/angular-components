@@ -65,7 +65,7 @@ If there are many values, "Select All" will allow you to select all values ​�
 
 ### Locked values
 
-The `multiselect` and `multi-tree-select` pipe templates accept an optional `lockedValues` — the list of values whose selection cannot be removed. They are always selected: rendered as disabled options with a checked checkbox, kept by clearing the pipe, and folded into an incoming filter value silently, without a change event. A pipe holding nothing but its locked values reads as empty — it renders unfilled and hides its clear button.
+The `multiselect` and `multi-tree-select` pipe templates accept an optional `lockedValues` — the list of values whose selection cannot be removed. They are always selected: rendered as disabled options with a checked checkbox, kept by clearing the pipe, and folded into an incoming filter value silently, without a change event. A pipe holding nothing but its locked values reads as empty — it renders unfilled and hides its clear button. Note that "reads as empty" is about the UI only: because a pipe's `value` is meant to be applied as-is, clearing removes just the entries the user was able to select, and both `onClearPipe` and `onChangePipe` still carry a `value` listing the locked ones.
 
 "Select all" ignores them entirely: it neither selects nor deselects a locked option, and the master checkbox reflects only the options the user can actually toggle. Note that under `selectedAllEqualsSelectedNothing` a full selection is still committed as an empty `value` — there the locked values are implied rather than listed.
 

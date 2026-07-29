@@ -74,10 +74,19 @@ export class KbqMultiSelectPipeState {
         };
     }
 
-    /** Refreshes the snapshot from the current value (only under "all = nothing"). */
+    /**
+     * Refreshes the snapshot from the current value (only under "all = nothing").
+     *
+     * The locked values are folded in rather than copied verbatim. The snapshot is what the panel
+     * renders, and the value it is taken from may be the "all selected" sentinel, which deliberately
+     * omits them — so a plain copy would reopen the panel with a locked option unchecked and, being
+     * disabled, impossible for the user to put back. Merging into the assigned array rather than into
+     * the `selected` getter keeps the reference stable across change detection: the getter feeds the
+     * select's `value` binding, which would otherwise be rewritten on every pass.
+     */
     updateInternalSelected(): void {
         if (this.selectedAllEqualsSelectedNothing) {
-            this.internalSelected = this.host.data.value?.slice() || [];
+            this.internalSelected = this.mergeLocked(this.host.data.value?.slice() || []);
         }
     }
 

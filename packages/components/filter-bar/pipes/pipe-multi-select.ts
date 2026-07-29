@@ -107,7 +107,10 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     get allOptionsSelected(): boolean {
         const tally = this.unlockedTally;
 
-        return !!tally && tally.selected === tally.total;
+        // A tally of zero is not a full selection: with every option locked there is nothing for "select
+        // all" to act on, and `0 === 0` would otherwise collapse the value to the "all selected"
+        // sentinel, dropping the locked values. Same reasoning as `allVisibleOptionsSelected` above.
+        return !!tally && tally.total > 0 && tally.selected === tally.total;
     }
 
     /**
@@ -185,8 +188,10 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.data.value = [];
         } else {
-            // Re-assert the locked options: `kbq-select` toggles a single shift-clicked option straight
-            // through its selection model, without consulting `disabled`.
+            // Defense in depth. The lock itself is enforced upstream — `disabled` blocks every path in
+            // `kbq-select` that could deselect the option — so this merge is expected to be a no-op for
+            // anything the user does here. It stays because a selection can also be reshaped by a value
+            // arriving from outside a user interaction.
             this.data.value = this.multiSelect.mergeLocked(item);
         }
 

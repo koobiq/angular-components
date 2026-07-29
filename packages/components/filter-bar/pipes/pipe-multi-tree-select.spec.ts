@@ -730,6 +730,14 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         const LOCKED_LEAF = 'value 0';
         const LOCKED_BRANCH = DEV_DATA_OBJECT['MP 10'];
         const BRANCH_LEAVES = ['value 4', 'value 5', 'value 6'];
+        // Every root of the tree — the standalone leaf plus all three branches, each locking its own
+        // subtree — so that nothing at all is left for the user to toggle.
+        const ALL_LOCKED = [
+            LOCKED_LEAF,
+            DEV_DATA_OBJECT['Management and Configuration'],
+            LOCKED_BRANCH,
+            DEV_DATA_OBJECT['Knowledge Base']
+        ];
 
         const setLockedTemplate = (lockedValues: unknown[]) => {
             fixture.componentInstance.pipeTemplates = [
@@ -778,6 +786,39 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             expect(locked.disabled).toBe(true);
             expect(locked.selected).toBe(true);
+        }));
+
+        it('should keep the locked node selected after "select all" and reopening the panel', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
+
+            component.onClose();
+            flush();
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            // Closing over a full selection re-snapshots from the "all selected = nothing selected"
+            // sentinel, which deliberately omits the locked values — so the reopened panel used to show
+            // the locked node unchecked while still rendering it disabled.
+            expect(component.selected).toEqual([LOCKED_LEAF]);
+            expect(component.tree().renderedOptions.find((option) => option.value === LOCKED_LEAF)!.selected).toBe(
+                true
+            );
         }));
 
         it('should append the missing locked values without emitting a change', () => {
@@ -919,6 +960,48 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             expect(getPipeComponent().selectAllCheckboxState).toBe('unchecked');
+        }));
+
+        it('should keep the select-all checkbox unchecked when every node is locked', fakeAsync(() => {
+            setLockedTemplate(ALL_LOCKED);
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: null, selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            // Nothing here is togglable, so there is no "all selected" state to report — a checked
+            // master checkbox would promise an action the user cannot take.
+            expect(component.allOptionsSelected).toBe(false);
+            expect(component.selectAllCheckboxState).toBe('unchecked');
+        }));
+
+        it('should keep the locked values when "select all" is toggled with every node locked', fakeAsync(() => {
+            setLockedTemplate(ALL_LOCKED);
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: null, selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.toggleSelectAllNode();
+            flush();
+            fixture.detectChanges();
+
+            // Reporting a full selection here would commit the "all selected = nothing selected"
+            // sentinel and drop the locked values, which no later normalization puts back.
+            expect(component.data.value).not.toEqual([]);
+            expect(component.data.value).toEqual(expect.arrayContaining([LOCKED_LEAF, ...BRANCH_LEAVES]));
         }));
 
         it('should lock the whole subtree of a locked branch', () => {
