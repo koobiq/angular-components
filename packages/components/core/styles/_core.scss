@@ -1,3 +1,4 @@
+@use 'common/animation' as *;
 @use 'common/overlay' as *;
 @use 'common/connected-overlay' as *;
 @use 'common/visually-hidden' as *;
@@ -7,4 +8,6 @@
     @include a11y-visually-hidden();
     @include overlay();
     @include kbq-connected-overlay-gap();
+    // Shared `.kbq-progress` utility; depended on by `button` and `toggle`.
+    @include kbq-progress();
 }

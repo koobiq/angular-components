@@ -110,6 +110,9 @@ const positionMap = {
     host: {
         class: 'kbq-dropdown-trigger',
         '[class.kbq-pressed]': 'opened',
+        // The dropdown panel carries no `role="menu"`, so `true` is used instead of `menu` to avoid over-claiming.
+        '[attr.aria-haspopup]': 'true',
+        '[attr.aria-expanded]': 'opened',
         '(mousedown)': 'handleMousedown($event)',
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'

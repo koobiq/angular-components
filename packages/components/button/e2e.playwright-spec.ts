@@ -14,6 +14,8 @@ test.describe('KbqButtonModule', () => {
             const locator = getComponent(page);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
 
         test('with icon', async ({ page }) => {
@@ -24,6 +26,8 @@ test.describe('KbqButtonModule', () => {
             await toggleTitle(locator);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-dark.png');
         });
 
         test('with title, prefix and suffix', async ({ page }) => {
@@ -36,6 +40,52 @@ test.describe('KbqButtonModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-dark.png');
+        });
+
+        test('with title in RTL', async ({ page }) => {
+            await page.goto('/E2eButtonStateAndStyle');
+            const locator = getComponent(page);
+
+            await togglePrefix(locator);
+            await toggleSuffix(locator);
+            await page.evaluate(() => document.documentElement.setAttribute('dir', 'rtl'));
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('05-rtl.png');
+        });
+
+        test.describe('real pseudo-states', () => {
+            // The matrix above fakes `:hover`/`:focus`/`:active` with classes; these drive the real ones.
+            const getPlainButton = (page: Page) => getComponent(page).getByRole('button', { name: 'normal' }).first();
+
+            test('hovered', async ({ page }) => {
+                await page.goto('/E2eButtonStateAndStyle');
+                const button = getPlainButton(page);
+
+                await button.hover();
+
+                await expect(button).toHaveScreenshot('06-hover.png');
+            });
+
+            test('keyboard focused', async ({ page }) => {
+                await page.goto('/E2eButtonStateAndStyle');
+                const button = getPlainButton(page);
+
+                await button.focus();
+                await page.keyboard.press('Tab');
+                await page.keyboard.press('Shift+Tab');
+
+                await expect(button).toHaveScreenshot('07-keyboard-focus.png');
+            });
+        });
+
+        test('progress state without reduced motion', async ({ page }) => {
+            // The suite runs with `reducedMotion: 'reduce'` by default, which disables the
+            // `.kbq-progress` animation — this covers the animated variant.
+            await page.emulateMedia({ reducedMotion: 'no-preference' });
+            await page.goto('/E2eButtonStateAndStyle');
+            const locator = getComponent(page);
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('08-progress-animated.png');
         });
     });
 
@@ -50,6 +100,15 @@ test.describe('KbqButtonModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-dark.png');
+        });
+
+        test('in RTL', async ({ page }) => {
+            await page.goto('/E2eButtonGroup');
+            const locator = getComponent(page);
+
+            await page.evaluate(() => document.documentElement.setAttribute('dir', 'rtl'));
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('09-rtl.png');
         });
     });
 

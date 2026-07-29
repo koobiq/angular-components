@@ -20,6 +20,27 @@
     border-top-left-radius: $radius;
 }
 
+/* Logical counterparts of the mixins above: the trailing/leading pair follows `dir`. */
+@mixin border-inline-end-radius($radius) {
+    border-start-end-radius: $radius;
+    border-end-end-radius: $radius;
+}
+
+@mixin border-inline-start-radius($radius) {
+    border-start-start-radius: $radius;
+    border-end-start-radius: $radius;
+}
+
+@mixin border-block-start-radius($radius) {
+    border-start-start-radius: $radius;
+    border-start-end-radius: $radius;
+}
+
+@mixin border-block-end-radius($radius) {
+    border-end-start-radius: $radius;
+    border-end-end-radius: $radius;
+}
+
 @mixin group($item-selector: '.kbq-group-item') {
     & {
         display: flex;
@@ -32,15 +53,15 @@
         }
 
         #{$item-selector} + #{$item-selector} {
-            margin-left: calc(-1 * #{var(--kbq-size-border-width)});
+            margin-inline-start: calc(-1 * #{var(--kbq-size-border-width)});
         }
 
         & > #{$item-selector}:first-child:not(:last-child) {
-            @include border-right-radius(0);
+            @include border-inline-end-radius(0);
         }
 
         & > #{$item-selector}:last-child:not(:first-child) {
-            @include border-left-radius(0);
+            @include border-inline-start-radius(0);
         }
 
         & > #{$item-selector}:not(:first-child):not(:last-child) {
@@ -56,15 +77,15 @@
 
         > #{$item-selector} {
             &:first-child:not(:last-child) {
-                @include border-bottom-radius(0);
+                @include border-block-end-radius(0);
 
-                border-top-right-radius: var(--kbq-size-border-radius);
+                border-start-end-radius: var(--kbq-size-border-radius);
             }
 
             &:last-child:not(:first-child) {
-                @include border-top-radius(0);
+                @include border-block-start-radius(0);
 
-                border-bottom-left-radius: var(--kbq-size-border-radius);
+                border-end-start-radius: var(--kbq-size-border-radius);
             }
 
             &:not(:first-child):not(:last-child) {

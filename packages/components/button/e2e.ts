@@ -191,7 +191,7 @@ export class E2eButtonStateAndStyle {
                             {{ data[2] }}
                         </button>
 
-                        <button kbq-button>
+                        <button kbq-button aria-label="More">
                             <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                         </button>
                     </div>
