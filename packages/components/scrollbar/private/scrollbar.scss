@@ -1,0 +1,171 @@
+:where(.kbq-private-scrollbar) {
+    //  Thumb thickness (width for a vertical thumb, height for horizontal) plus the gap between the
+    //  thumb and the track's own edge on each side — the track's own thickness is these two
+    //  composed, not an independent value, so it can't drift out of sync with either. No
+    //  `--kbq-size-*` token lands on 3px, hence the literal value.
+    --kbq-private-scrollbar-size-thumb-thickness: var(--kbq-size-s);
+    --kbq-private-scrollbar-size-track-padding: 3px;
+    --kbq-private-scrollbar-size-track-dimension: calc(
+        var(--kbq-private-scrollbar-size-thumb-thickness) + 2 * var(--kbq-private-scrollbar-size-track-padding)
+    );
+    --kbq-private-scrollbar-size-thumb-min-size: var(--kbq-size-3xl);
+    --kbq-private-scrollbar-size-thumb-border-radius: var(--kbq-size-s);
+    --kbq-private-scrollbar-thumb-default-background: var(--kbq-semantic-contrast-a3, var(--kbq-palette-grey-50-a32));
+    --kbq-private-scrollbar-thumb-hover-background: var(--kbq-semantic-contrast-a4, var(--kbq-palette-grey-50-a48));
+    --kbq-private-scrollbar-thumb-active-background: var(--kbq-semantic-contrast-a5, var(--kbq-palette-grey-20-a55));
+    --kbq-private-scrollbar-track-default-background: transparent;
+    --kbq-private-scrollbar-track-hover-background: transparent;
+    --kbq-private-scrollbar-track-active-background: transparent;
+}
+
+:where(.kbq-dark .kbq-private-scrollbar) {
+    --kbq-private-scrollbar-thumb-default-background: var(
+        --kbq-semantic-dark-contrast-a9,
+        var(--kbq-palette-grey-50-a48)
+    );
+    --kbq-private-scrollbar-thumb-hover-background: var(
+        --kbq-semantic-dark-contrast-a10,
+        var(--kbq-palette-grey-50-a60)
+    );
+    --kbq-private-scrollbar-thumb-active-background: var(
+        --kbq-semantic-dark-contrast-a11,
+        var(--kbq-palette-grey-50-a80)
+    );
+}
+
+.kbq-private-scrollbar {
+    position: relative;
+}
+
+// Hides the native scrollbar on the effective scroll element (host, or the delegated
+// kbqScrollbarViewport child) cross-browser. Applied only when overlaying with our own
+// track/thumb — i.e. not on coarse pointers and not under the `native` config option.
+.kbq-private-scrollbar_hide-native {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-thumb {
+        display: none;
+    }
+}
+
+// Auto-created wrapper for the host's own content when there's no explicit
+// kbqScrollbarViewport — holds `overflow`, so the track/thumb (siblings on the host) stay a
+// fixed overlay instead of scrolling away with the content.
+.kbq-private-scrollbar-viewport {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+
+.kbq-private-scrollbar-track {
+    position: absolute;
+    z-index: 1;
+    box-sizing: border-box;
+    background: var(--kbq-private-scrollbar-track-default-background);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: auto;
+    transition:
+        opacity 0.15s,
+        visibility 0.15s,
+        background-color 0.15s;
+
+    // The synthetic `.kbq-hover`/`.kbq-active` forms match on an ANCESTOR (the host), not on this
+    // element itself — the track is created via `Renderer2`, not template-authored, so nothing
+    // outside this directive can put a class directly on it. Matches how `kbq-scrollbar`'s own
+    // `.os-scrollbar-handle` is driven the same way (`_scrollbar-component-theme.scss`).
+    &:hover,
+    .kbq-private-scrollbar.kbq-hover & {
+        background: var(--kbq-private-scrollbar-track-hover-background);
+    }
+
+    &:active,
+    .kbq-private-scrollbar.kbq-active & {
+        background: var(--kbq-private-scrollbar-track-active-background);
+    }
+}
+
+.kbq-private-scrollbar_disable-interaction .kbq-private-scrollbar-track {
+    pointer-events: none;
+}
+
+.kbq-private-scrollbar_visible .kbq-private-scrollbar-track {
+    opacity: 1;
+    visibility: visible;
+}
+
+.kbq-private-scrollbar-track_vertical {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--kbq-private-scrollbar-size-track-dimension);
+}
+
+.kbq-private-scrollbar_rtl .kbq-private-scrollbar-track_vertical {
+    right: auto;
+    left: 0;
+}
+
+.kbq-private-scrollbar-track_horizontal {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--kbq-private-scrollbar-size-track-dimension);
+}
+
+// `axis: 'both'`, both tracks visible: each track stops short of the shared corner instead of
+// running underneath the other track's thumb.
+.kbq-private-scrollbar-track_vertical.kbq-private-scrollbar-track_has-horizontal {
+    bottom: var(--kbq-private-scrollbar-size-track-dimension);
+}
+
+.kbq-private-scrollbar-track_horizontal.kbq-private-scrollbar-track_has-vertical {
+    right: var(--kbq-private-scrollbar-size-track-dimension);
+}
+
+.kbq-private-scrollbar_rtl .kbq-private-scrollbar-track_horizontal.kbq-private-scrollbar-track_has-vertical {
+    right: 0;
+    left: var(--kbq-private-scrollbar-size-track-dimension);
+}
+
+.kbq-private-scrollbar-thumb {
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: var(--kbq-private-scrollbar-size-thumb-border-radius);
+    background: var(--kbq-private-scrollbar-thumb-default-background);
+    cursor: default;
+    transition: background-color 0.15s;
+
+    &:hover,
+    .kbq-private-scrollbar.kbq-hover & {
+        background: var(--kbq-private-scrollbar-thumb-hover-background);
+    }
+
+    &:active,
+    .kbq-private-scrollbar.kbq-active & {
+        background: var(--kbq-private-scrollbar-thumb-active-background);
+    }
+}
+
+.kbq-private-scrollbar_dragging {
+    user-select: none;
+
+    .kbq-private-scrollbar-thumb {
+        background: var(--kbq-private-scrollbar-thumb-active-background);
+    }
+}
+
+// Insets (not `width: 100%`) so the thumb is actually narrower than the track by the padding on
+// each side — a percentage width on an absolutely positioned element resolves against the
+// containing block's padding box, so it would ignore the track's own padding entirely.
+.kbq-private-scrollbar-track_vertical .kbq-private-scrollbar-thumb {
+    left: var(--kbq-private-scrollbar-size-track-padding);
+    right: var(--kbq-private-scrollbar-size-track-padding);
+}
+
+.kbq-private-scrollbar-track_horizontal .kbq-private-scrollbar-thumb {
+    top: var(--kbq-private-scrollbar-size-track-padding);
+    bottom: var(--kbq-private-scrollbar-size-track-padding);
+}
