@@ -32,26 +32,32 @@ including modals, sidepanels and toasts.
 The schematic walks every `.ts`, `.html`, `.scss` and `.css` file in the project
 (skipping `node_modules` and `dist`).
 
-| Auto-fix                                                                                      | Where                                   |
-| --------------------------------------------------------------------------------------------- | --------------------------------------- |
-| Removes `demoteOverlay`, `demoteOverlay="…"`, `[demoteOverlay]="…"`, `bind-demoteOverlay="…"` | `.html` and inline `template:` literals |
-| Removes `{ provide: KBQ_DROPDOWN_HOST, … }` provider entries                                  | `.ts`                                   |
-| Removes the `KBQ_DROPDOWN_HOST` import specifier it made invalid                              | `.ts`                                   |
-| Drops a `providers: []` array the removal left empty                                          | `.ts`                                   |
+| Auto-fix                                                                                      | Where                                         |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| Removes `demoteOverlay`, `demoteOverlay="…"`, `[demoteOverlay]="…"`, `bind-demoteOverlay="…"` | `.html` and inline `@Component({ template })` |
+| Removes `{ provide: KBQ_DROPDOWN_HOST, … }` entries of a provider array                       | `.ts`                                         |
+| Removes the `KBQ_DROPDOWN_HOST` import specifier it made invalid                              | `.ts`                                         |
+| Drops a `providers: []` array the removal left empty                                          | `.ts`                                         |
 
 Templates are **parsed**, and only nodes the parser reports as attributes are
 removed. An identifier of the same name elsewhere — in an interpolation, a
 binding expression, a `@if` condition or plain text — is left alone.
 
-Template rules are applied to `.ts` files **only inside inline `template:`
-literals**. A wrapper component that declares its own forwarding member
-(`@Input() demoteOverlay = false;`) keeps that declaration untouched — only the
-binding in its template is removed, and the compiler then points at the now-dead
-member.
+Template rules are applied to `.ts` files **only inside inline
+`@Component({ template })` literals**, located through the TypeScript AST. A
+`template` property of some other object, or one mentioned in a comment or a
+string, is not a component template and is left alone. A wrapper component that
+declares its own forwarding member (`@Input() demoteOverlay = false;`) keeps
+that declaration untouched — only the binding in its template is removed, and
+the compiler then points at the now-dead member.
 
-The provider entry is deleted together with exactly one adjacent separator, so
-the surrounding array keeps its shape and nothing else in the file is
-reformatted.
+Provider entries are found through the AST as well, and are removed **only when
+they are elements of a provider array**. A provider object bound to a name
+(`export const HOST_PROVIDER = { provide: KBQ_DROPDOWN_HOST, … };`) is not an
+element of anything — cutting it out would leave `= ;` behind — so it is warned
+about instead. The entry is deleted together with exactly one adjacent
+separator, so the surrounding array keeps its shape and nothing else in the file
+is reformatted.
 
 ## What it does _not_ do (warn-only)
 
@@ -59,7 +65,7 @@ reformatted.
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `.demoteOverlay` in `.ts`                            | Delete the read/assignment — there is nothing left to opt out of                                                                      |
 | `.demoteOverlay` in a template                       | Drop the read (e.g. via a `#trigger="kbqDropdownTrigger"` reference)                                                                  |
-| `KBQ_DROPDOWN_HOST` left over                        | A provider shape the regex could not rewrite (e.g. a `useFactory` returning an object), or an `inject()` call — remove it by hand     |
+| `KBQ_DROPDOWN_HOST` left over                        | A provider declared outside a provider array (`export const HOST_PROVIDER = { … }`), or an `inject()` call — remove it by hand        |
 | `cdk-overlay-container_dropdown` in `.scss` / `.css` | Dead rule — remove it. If it was an override neutralising the demotion, it is now redundant                                           |
 | A template mentioning the input that fails to parse  | Nothing is rewritten in it — editing an unparseable template blind is how a migration corrupts bindings. Remove the attribute by hand |
 

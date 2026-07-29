@@ -147,6 +147,39 @@ describe(SCHEMATIC_NAME, () => {
             expect(messages.join('\n')).toContain('could not be parsed');
         });
 
+        it('leaves a commented-out template alone while migrating the real one', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const comment = '// template: `<button [kbqDropdownTriggerFor]="menu" demoteOverlay>Old</button>`\n';
+
+            appTree.overwrite(
+                ts,
+                'import { Component } from "@angular/core";\n' +
+                    comment +
+                    '@Component({\n' +
+                    '    template: `\n' +
+                    '        <button [kbqDropdownTriggerFor]="menu" demoteOverlay>Open</button>\n' +
+                    '    `\n' +
+                    '})\n' +
+                    'export class App {}\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            expect(updated).toContain(comment);
+            expect(updated).toContain('<button [kbqDropdownTriggerFor]="menu">Open</button>');
+        });
+
+        it('leaves a template property that is not a component template alone', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const original = 'export const config = {\n    template: `<button demoteOverlay>Open</button>`\n};\n';
+
+            appTree.overwrite(ts, original);
+
+            expect((await run(first)).readText(ts)).toBe(original);
+        });
+
         it('removes the binding from an inline template', async () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
@@ -329,6 +362,75 @@ describe(SCHEMATIC_NAME, () => {
 
             expect(updated).not.toContain('KBQ_DROPDOWN_HOST');
             expect(updated).toContain('const unrelated = [\n    1,\n    2,\n];\n');
+        });
+
+        // The provider pass shifts every offset after it, so the template pass has to
+        // work against a re-read of the file rather than the positions it started with.
+        it('removes a provider entry and a template binding from the same file', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import { Component } from '@angular/core';\n" +
+                    "import { KBQ_DROPDOWN_HOST } from '@koobiq/components/dropdown';\n" +
+                    '@Component({\n' +
+                    "    selector: 'my-header',\n" +
+                    '    providers: [{ provide: KBQ_DROPDOWN_HOST, useExisting: MyHeader }],\n' +
+                    '    template: `\n' +
+                    '        <button [kbqDropdownTriggerFor]="menu" [demoteOverlay]="false">Open</button>\n' +
+                    '    `\n' +
+                    '})\n' +
+                    'export class MyHeader {}\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            expect(updated).toBe(
+                "import { Component } from '@angular/core';\n" +
+                    '@Component({\n' +
+                    "    selector: 'my-header',\n" +
+                    '    template: `\n' +
+                    '        <button [kbqDropdownTriggerFor]="menu">Open</button>\n' +
+                    '    `\n' +
+                    '})\n' +
+                    'export class MyHeader {}\n'
+            );
+        });
+
+        it('removes an entry whose useFactory returns an object literal', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import { KBQ_DROPDOWN_HOST } from '@koobiq/components/dropdown';\n" +
+                    '@Component({\n' +
+                    '    providers: [OtherService, { provide: KBQ_DROPDOWN_HOST, useFactory: () => ({ id: 1 }) }],\n' +
+                    '    template: ``\n' +
+                    '})\n' +
+                    'export class MyHeader {}\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            expect(updated).toContain('providers: [OtherService]');
+            expect(updated).not.toContain('KBQ_DROPDOWN_HOST');
+        });
+
+        // Deleting it would leave `export const HOST_PROVIDER = ;` behind, so it is warned about instead.
+        it('leaves a provider object declared outside a provider array untouched', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const original =
+                "import { KBQ_DROPDOWN_HOST } from '@koobiq/components/dropdown';\n\n" +
+                'export const HOST_PROVIDER = { provide: KBQ_DROPDOWN_HOST, useExisting: MyHeader };\n';
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, original);
+
+            expect((await run(first)).readText(ts)).toBe(original);
+            expect(messages.join('\n')).toContain('KBQ_DROPDOWN_HOST was removed');
         });
 
         it('leaves an empty import clause of the same module alone', async () => {

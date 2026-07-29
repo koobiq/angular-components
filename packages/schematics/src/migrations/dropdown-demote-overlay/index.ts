@@ -1,13 +1,14 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import ts from 'typescript';
 import { getSimpleAttributeName, visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { parseTemplate } from '../../utils/typescript';
+import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     BEHAVIOUR_NOTE,
-    PROVIDER_ENTRY,
     PROVIDER_IMPORT,
+    PROVIDER_TOKEN,
     REMOVED_ATTRIBUTE,
     styleWarnPatterns,
     templateWarnPatterns,
@@ -119,58 +120,23 @@ async function migrateTemplate(template: string): Promise<string | null> {
 }
 
 /**
- * Interior `[start, end)` ranges of inline `template:` literals.
+ * Applies the template migration to every inline `@Component({ template })` literal
+ * of a `.ts` source.
  *
  * Scoping matters: a wrapper component may legitimately declare its own
  * `demoteOverlay` member (e.g. `@Input() demoteOverlay = false;`) that forwards
  * to the trigger. Only the binding in its template is removed; the now-dead
  * member is left for the compiler to flag.
  */
-function collectInlineTemplateRanges(content: string): Span[] {
-    const opener = /template\s*:\s*(['"`])/g;
-    const ranges: Span[] = [];
-    let match: RegExpExecArray | null;
-
-    while ((match = opener.exec(content)) !== null) {
-        const quote = match[1];
-        const start = match.index + match[0].length;
-        let index = start;
-        let terminated = false;
-
-        while (index < content.length) {
-            const char = content[index];
-
-            if (char === '\\') {
-                index += 2;
-                continue;
-            }
-
-            if (char === quote) {
-                terminated = true;
-                break;
-            }
-
-            // A quoted (non-template) literal cannot span lines, so an unescaped
-            // line break means this was not a template after all.
-            if (quote !== '`' && char === '\n') break;
-
-            index++;
-        }
-
-        opener.lastIndex = Math.min(index + 1, content.length);
-
-        if (terminated) ranges.push({ start, end: index });
-    }
-
-    return ranges;
-}
-
-/** Applies the template migration to every inline `template:` literal of a `.ts` source. */
-async function migrateInlineTemplates(content: string, onParseError: () => void): Promise<string> {
+async function migrateInlineTemplates(
+    content: string,
+    sourceFile: ts.SourceFile,
+    onParseError: () => void
+): Promise<string> {
     let result = content;
 
     // Splice right-to-left so earlier offsets stay valid.
-    for (const { start, end } of collectInlineTemplateRanges(content).reverse()) {
+    for (const { start, end } of collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start)) {
         const migrated = await migrateTemplate(result.slice(start, end));
 
         if (migrated === null) {
@@ -184,20 +150,70 @@ async function migrateInlineTemplates(content: string, onParseError: () => void)
     return result;
 }
 
-/**
- * Removes the `KBQ_DROPDOWN_HOST` provider entry together with exactly one
- * adjacent separator, so the array keeps its shape and nothing outside the entry
- * is reformatted.
- */
-function removeProviderEntry(content: string): string {
-    const separator = '(,[ \\t]*\\r?\\n?[ \\t]*)';
-    const pattern = new RegExp(`${separator}?(?:${PROVIDER_ENTRY})${separator}?`, 'g');
+const createSourceFile = (fileName: string, content: string): ts.SourceFile =>
+    ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 
-    // With a neighbour on both sides one separator has to survive, otherwise the
-    // entry and whichever separator it had are dropped together.
-    return content.replace(pattern, (_match, before: string | undefined, after: string | undefined) =>
-        before && after ? after : ''
+/** A `{ provide: KBQ_DROPDOWN_HOST, … }` object literal used as an element of a provider array. */
+function isProviderEntry(node: ts.Node): node is ts.ObjectLiteralExpression {
+    return (
+        ts.isObjectLiteralExpression(node) &&
+        ts.isArrayLiteralExpression(node.parent) &&
+        node.properties.some(
+            (prop) =>
+                ts.isPropertyAssignment(prop) &&
+                (ts.isIdentifier(prop.name) || ts.isStringLiteralLike(prop.name)) &&
+                prop.name.text === 'provide' &&
+                ts.isIdentifier(prop.initializer) &&
+                prop.initializer.text === PROVIDER_TOKEN
+        )
     );
+}
+
+/**
+ * Spans of every `KBQ_DROPDOWN_HOST` provider entry.
+ *
+ * Being an array element is what makes the entry safe to delete: a provider
+ * object bound to a name (`export const HOST_PROVIDER = { provide: KBQ_DROPDOWN_HOST, … };`)
+ * or returned from a function is not an element of anything, and cutting it out
+ * would leave `= ;` behind. Those are reported by the leftover-token warning instead.
+ */
+function collectProviderEntrySpans(sourceFile: ts.SourceFile): Span[] {
+    const spans: Span[] = [];
+
+    const visit = (node: ts.Node) => {
+        if (isProviderEntry(node)) {
+            spans.push({ start: node.getStart(sourceFile), end: node.getEnd() });
+        }
+
+        ts.forEachChild(node, visit);
+    };
+
+    ts.forEachChild(sourceFile, visit);
+
+    return spans;
+}
+
+/** A comma and the whitespace — at most one line break — that separates two array elements. */
+const SEPARATOR_BEFORE = /,[ \t]*\r?\n?[ \t]*$/;
+const SEPARATOR_AFTER = /^,[ \t]*\r?\n?[ \t]*/;
+
+/**
+ * Deletes the given provider entries, each together with exactly one adjacent
+ * separator — the preceding one when the entry has one — so the array keeps its
+ * shape and nothing outside the entry is reformatted.
+ */
+function removeProviderEntries(content: string, spans: Span[]): string {
+    let result = content;
+
+    // Right-to-left, so earlier offsets stay valid.
+    for (const { start, end } of [...spans].sort((a, b) => b.start - a.start)) {
+        const before = SEPARATOR_BEFORE.exec(result.slice(0, start));
+        const after = before ? null : SEPARATOR_AFTER.exec(result.slice(end));
+
+        result = result.slice(0, before ? before.index : start) + result.slice(end + (after ? after[0].length : 0));
+    }
+
+    return result;
 }
 
 /**
@@ -297,16 +313,23 @@ export default function dropdownDemoteOverlay(options: Schema): Rule {
             let unparseable = false;
             const reportParseError = () => (unparseable = true);
 
-            if (filePath.endsWith(TS_EXT)) {
-                const withoutProvider = removeProviderEntry(content);
+            // Parsing every `.ts` of the project is not free, and nothing can change in
+            // a file that mentions neither the token nor the input.
+            const mentionsRemovedApi = content.includes(PROVIDER_TOKEN) || content.includes(REMOVED_ATTRIBUTE);
+
+            if (filePath.endsWith(TS_EXT) && mentionsRemovedApi) {
+                let sourceFile = createSourceFile(filePath, content);
+                const withoutProvider = removeProviderEntries(content, collectProviderEntrySpans(sourceFile));
 
                 if (withoutProvider !== content) {
                     content = dropEmptyProvidersProperty(
                         removeImport(withoutProvider, PROVIDER_IMPORT.symbol, PROVIDER_IMPORT.from)
                     );
+                    // Those edits moved every offset that followed them.
+                    sourceFile = createSourceFile(filePath, content);
                 }
 
-                content = await migrateInlineTemplates(content, reportParseError);
+                content = await migrateInlineTemplates(content, sourceFile, reportParseError);
             } else if (filePath.endsWith(HTML_EXT)) {
                 const migrated = await migrateTemplate(content);
 

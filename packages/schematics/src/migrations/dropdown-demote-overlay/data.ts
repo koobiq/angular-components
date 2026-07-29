@@ -23,13 +23,13 @@ export interface WarnPattern {
 export const REMOVED_ATTRIBUTE = 'demoteOverlay';
 
 /**
- * A `{ provide: KBQ_DROPDOWN_HOST, useExisting: MyHeader }` entry and friends.
- *
- * `[^{}]*` deliberately stops at a nested object literal — a `useFactory`
- * returning one is left in place and surfaced by the leftover-token warning
- * instead of being half-deleted.
+ * The token whose provider entries are removed. Matched against the TypeScript
+ * AST — an object literal with a `provide: KBQ_DROPDOWN_HOST` property — so the
+ * entry's own shape does not matter (a `useFactory` returning an object literal
+ * is removed as cleanly as a `useExisting`), and a provider object declared
+ * outside a provider array is never touched.
  */
-export const PROVIDER_ENTRY = '\\{\\s*provide:\\s*KBQ_DROPDOWN_HOST\\s*,[^{}]*\\}';
+export const PROVIDER_TOKEN = 'KBQ_DROPDOWN_HOST';
 
 /** The import specifier the provider removal makes invalid. */
 export const PROVIDER_IMPORT = { symbol: 'KBQ_DROPDOWN_HOST', from: '@koobiq/components/dropdown' };

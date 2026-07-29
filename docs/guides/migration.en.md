@@ -329,13 +329,13 @@ export class MyTrigger {
 }
 ```
 
-**`{ provide: KBQ_DROPDOWN_HOST, … }` provider entries are removed**, together with the `KBQ_DROPDOWN_HOST` import specifier they made invalid and a `providers` array the removal left empty.
+**`{ provide: KBQ_DROPDOWN_HOST, … }` entries of a provider array are removed**, together with the `KBQ_DROPDOWN_HOST` import specifier they made invalid and a `providers` array the removal left empty.
 
 #### What you need to fix manually
 
 **Programmatic `demoteOverlay` access.** A read or an assignment (`this.trigger.demoteOverlay = false`) is reported with a warning rather than rewritten — deleting a statement is not always safe, and the compiler flags it anyway. There is nothing to opt out of any more, so remove the line.
 
-**Provider shapes the schematic could not rewrite.** A `useFactory` that returns an object literal, or an `inject(KBQ_DROPDOWN_HOST)` call, is reported as a leftover `KBQ_DROPDOWN_HOST` warning. Remove it by hand.
+**Providers the schematic could not rewrite.** A provider declared outside a provider array (`export const HOST_PROVIDER = { provide: KBQ_DROPDOWN_HOST, … };`), or an `inject(KBQ_DROPDOWN_HOST)` call, is reported as a leftover `KBQ_DROPDOWN_HOST` warning. Remove it by hand.
 
 **`.cdk-overlay-container_dropdown` rules in your stylesheets** are dead — the class is never applied now. This is reported as a warning. If the rule was an override neutralising the demotion, it is simply redundant.
 
