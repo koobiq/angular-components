@@ -148,7 +148,7 @@ When option values are objects, provide a `virtualOptionFactory` that maps a val
 
 ### Layering
 
-By default, the dropdown menu is hidden beneath the horizontal [Navbar](/en/components/navbar) and [Topbar](/en/components/topbar) in other cases, it appears above adjacent elements.
+By default, the dropdown menu appears above the horizontal [Navbar](/en/components/navbar) and [Topbar](/en/components/topbar), and above adjacent elements in other cases.
 
 To prevent the menu from overlapping a required element during scrolling and instead have it hidden beneath it, adjust its position using a custom z-index or offset parameters.
 

@@ -10,6 +10,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 4. **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
 5. **20.2.0**: the move of the filter-bar API to signals.
 6. **20.2.0**: one shared mechanism for dropdown panel width.
+7. **20.3.0**: removal of the overlay demotion mechanism.
 
 ### 1. Upgrade to 18.5.3
 
@@ -277,6 +278,70 @@ const w = this.select.panelWidth();
 **`KbqDropdown.triggerWidth`** is deprecated and has no effect (it has been unread since 20.0.0). To make a dropdown panel match an element other than its trigger, set `KbqDropdownTrigger.widthOrigin`. `kbq-split-button`'s `panelAutoWidth` does this for you and now works — previously it wrote to `triggerWidth` and did nothing.
 
 **`kbq-dropdown`'s minimum width is now measured with `getBoundingClientRect()`** (the trigger's full border-box) instead of `getComputedStyle().width` minus its borders (the old, incorrectly-computed content-box). A trigger with padding or a border renders a wider panel than before by that amount; a trigger with neither is unaffected.
+
+### 7. Overlay demotion removal (20.3.0)
+
+Until 20.3.0 an open `dropdown`, `select` or `popover` panel lowered the **shared, app-wide** `.cdk-overlay-container` from `z-index: 1000` to `999` by adding a `.cdk-overlay-container_dropdown` class to it. The point was to let a panel slide under a sticky `kbq-navbar` / `kbq-top-bar` while the page scrolled. `KbqDropdownTrigger.demoteOverlay` turned that off for one trigger, and the `KBQ_DROPDOWN_HOST` marker token — provided by `KbqNavbar` and `KbqTopBar` — flipped its default to `false` so a dropdown inside the chrome would not end up behind its own trigger.
+
+The whole mechanism was removed: the input, the token, the class and the stylesheet rule. It operated on the container rather than on individual overlays, so it could not lower a panel without lowering every other overlay — modals, sidepanels, toasts and tooltips included — and it did so from whichever component happened to open first.
+
+**The overlay container now stays at `z-index: 1000` at all times, so panels render above `kbq-navbar` and `kbq-top-bar` instead of sliding under them.**
+
+#### Running the migration
+
+The `dropdown-demote-overlay` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:dropdown-demote-overlay --project <your project>
+```
+
+#### What is fixed automatically
+
+**The `demoteOverlay` attribute is removed from templates** in all of its forms — `demoteOverlay`, `demoteOverlay="false"` and `[demoteOverlay]="expr"` — in `.html` files and in inline `template:` literals.
+
+Template rules are applied to `.ts` files only inside inline templates, so a wrapper component that forwards the input keeps its own member:
+
+```ts
+// Before
+@Component({
+    template: `
+        <button [kbqDropdownTriggerFor]="menu" [demoteOverlay]="demote">…</button>
+    `
+})
+export class MyTrigger {
+    @Input() demote = false;
+}
+
+// After — only the binding is removed; `demote` is now dead code the compiler points at
+@Component({
+    template: `
+        <button [kbqDropdownTriggerFor]="menu">…</button>
+    `
+})
+export class MyTrigger {
+    @Input() demote = false;
+}
+```
+
+**`{ provide: KBQ_DROPDOWN_HOST, … }` entries of a provider array are removed**, together with the `KBQ_DROPDOWN_HOST` import specifier they made invalid and a `providers` array the removal left empty.
+
+#### What you need to fix manually
+
+**Programmatic `demoteOverlay` access.** A read or an assignment (`this.trigger.demoteOverlay = false`) is reported with a warning rather than rewritten — deleting a statement is not always safe, and the compiler flags it anyway. There is nothing to opt out of any more, so remove the line.
+
+**Providers the schematic could not rewrite.** A provider declared outside a provider array (`export const HOST_PROVIDER = { provide: KBQ_DROPDOWN_HOST, … };`), or an `inject(KBQ_DROPDOWN_HOST)` call, is reported as a leftover `KBQ_DROPDOWN_HOST` warning. Remove it by hand.
+
+**`.cdk-overlay-container_dropdown` rules in your stylesheets** are dead — the class is never applied now. This is reported as a warning. If the rule was an override neutralising the demotion, it is simply redundant.
+
+**Panels that used to slide under your sticky chrome now render on top of it.** If you relied on the old behaviour, lower your header below the overlay container z-index (the library ships `$overlay-container-z-index: 1000`) rather than trying to reinstate the demotion — it lowered every overlay, not just the panel.
+
+**`kbq-select` and popover panels inside `kbq-navbar` / `kbq-top-bar` are fixed by this release.** They applied the demotion unconditionally and had no opt-out, so they rendered behind the very chrome that contained them. No action needed — this is the bug the removal fixes.
 
 ### After the migration
 

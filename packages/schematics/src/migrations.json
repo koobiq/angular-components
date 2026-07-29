@@ -20,6 +20,11 @@
             "version": "20.2.0-0",
             "description": "Replaces `panelWidth=\"auto\"` with `panelWidth=\"fit-content\"` on `<kbq-autocomplete>`. `auto` used to be passed to CSS verbatim, so the panel shrank to fit its content; it now means \"match the host width\", matching `kbq-select` and `kbq-tree-select`. The change is silent — `auto` still type-checks and still renders — so unmigrated templates only lay out differently.",
             "factory": "./migrations/autocomplete-panel-width-auto/index"
+        },
+        "dropdown-demote-overlay": {
+            "version": "20.3.0-0",
+            "description": "Cleans up after the removal of the overlay demotion mechanism. Deletes the `demoteOverlay` attribute and property binding from templates, removes `{ provide: KBQ_DROPDOWN_HOST, … }` providers together with the now-invalid `KBQ_DROPDOWN_HOST` import, and warns about programmatic `demoteOverlay` access and dead `.cdk-overlay-container_dropdown` style overrides. Note the behaviour change: dropdown/select/popover panels now render above `kbq-navbar` / `kbq-top-bar` instead of sliding under them.",
+            "factory": "./migrations/dropdown-demote-overlay/index"
         }
     }
 }

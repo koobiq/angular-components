@@ -50,6 +50,49 @@ export function forEachClass(sourceFile: ts.SourceFile, callback: (node: ts.Clas
     });
 }
 
+/**
+ * Interior `[start, end)` ranges of inline `@Component({ template: '…' })` string literals.
+ *
+ * Discovered through the AST rather than by scanning for `template:`, so a `template` property of
+ * some other object, or one mentioned in a comment or a string, is never mistaken for a template.
+ * A template literal with a `${…}` substitution is skipped — its text is not a template on its own.
+ */
+export function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: number; end: number }> {
+    const ranges: Array<{ start: number; end: number }> = [];
+
+    forEachClass(sourceFile, (node) => {
+        const decorator = ts
+            .getDecorators(node)
+            ?.find(
+                (dec) =>
+                    ts.isCallExpression(dec.expression) &&
+                    ts.isIdentifier(dec.expression.expression) &&
+                    dec.expression.expression.text === 'Component'
+            );
+
+        if (!decorator || !ts.isCallExpression(decorator.expression)) return;
+
+        const [arg] = decorator.expression.arguments;
+
+        if (!arg || !ts.isObjectLiteralExpression(arg)) return;
+
+        for (const prop of arg.properties) {
+            if (
+                ts.isPropertyAssignment(prop) &&
+                (ts.isIdentifier(prop.name) || ts.isStringLiteralLike(prop.name)) &&
+                prop.name.text === 'template' &&
+                ts.isStringLiteralLike(prop.initializer) &&
+                prop.initializer.text
+            ) {
+                // +1 / -1 to exclude the opening/closing quote characters.
+                ranges.push({ start: prop.initializer.getStart(sourceFile) + 1, end: prop.initializer.getEnd() - 1 });
+            }
+        }
+    });
+
+    return ranges;
+}
+
 export function canMigrateFile(sourceFile: ts.SourceFile, program: ts.Program): boolean {
     // We shouldn't migrate .d.ts files, files from an external library or type checking files.
     return !(
