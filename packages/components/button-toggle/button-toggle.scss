@@ -63,10 +63,10 @@
 
                 width: 100%;
 
-                // Deliberately margins rather than `gap`: the stretched variant below has to stay a
-                // block container for its `text-overflow` to be painted, and `gap` is inert there.
-                // `KbqButtonToggle` marks which icon sits next to the label — physical properties on
-                // purpose, so they override the same ones from the button's base styles.
+                // The gap between an icon and the label. `KbqButtonToggle` marks which icon sits next
+                // to the label, because only the order of the projected nodes tells which side the
+                // label is on and text nodes are invisible to CSS. Physical properties on purpose, so
+                // they override the same ones from the button's base styles.
                 & .kbq-icon_left {
                     margin-right: var(--kbq-button-toggle-size-item-content-gap-horizontal);
                 }
@@ -117,12 +117,19 @@
         }
     }
 
-    // A toggle with no label has nothing to clip, and a block container would put its icon on a line
-    // box, where `vertical-align: middle` aligns to the x-height and leaves it ~1px low. Keyed off
-    // the button's own class rather than `kbq-button-toggle-icon`, because that one is computed once
-    // in `ngAfterContentInit` and goes stale as soon as the content changes. Declared last so it also
-    // wins over the stretched variant above, which it ties with on specificity.
-    .kbq-button-toggle > :is(.kbq-button, .kbq-button-icon).kbq-button_no-label .kbq-button-toggle-wrapper {
+    // A block container lays its content out as inline boxes, which costs an icon twice: the single
+    // space a template leaves around a projected label is painted next to the icon on top of the
+    // icon's own margin, and `vertical-align: middle` aligns the icon to the x-height rather than to
+    // the centre of the line box, leaving it ~1px low. Neither is reachable from CSS, so an icon opts
+    // the wrapper back into flex, where the space is trimmed at the line edge and the margin is the
+    // whole gap. A label with no icon keeps the block container and its ellipsis: its own edge
+    // whitespace sits at a line edge and is trimmed there anyway. The no-label selector covers
+    // content that is neither text nor an icon, down to a consumer's own wrapper element. Both are
+    // keyed off the button's classes rather than `kbq-button-toggle-icon`, which describes the
+    // toggle as a whole and not the box that has to lay the content out. Declared last so they also
+    // win over the stretched variant above, which they tie with on specificity.
+    .kbq-button-toggle > :is(.kbq-button, .kbq-button-icon).kbq-button_no-label .kbq-button-toggle-wrapper,
+    .kbq-button-toggle > :is(.kbq-button, .kbq-button-icon) .kbq-button-toggle-wrapper:has(.kbq-icon) {
         display: flex;
     }
 }

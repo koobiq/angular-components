@@ -4,10 +4,10 @@ import { e2eEnableDarkTheme } from '../../e2e/utils';
 test.describe('KbqButtonToggleModule', () => {
     /**
      * A toggle projects its content through its own wrapper element, so the icon is never a direct
-     * child of the button's label box and no selector can single it out. Only an icon-only toggle is
-     * covered: the text variants keep a block container so their label still truncates with an
-     * ellipsis, which leaves their icon on a line box. Asserted here rather than left to the
-     * baselines, because a ~1px drift reads as noise in a diff image.
+     * child of the button's label box and no selector can single it out — the wrapper has to lay the
+     * icon out itself, in a flex box, or `vertical-align: middle` aligns it to the x-height and
+     * leaves it ~1px below the centre. Asserted here rather than left to the baselines, because a
+     * ~1px drift reads as noise in a diff image.
      */
     const expectIconsCentred = async (locator: Locator) => {
         const icons = locator.getByTestId('e2eScreenshotTarget').locator('.kbq-icon');
@@ -22,6 +22,41 @@ test.describe('KbqButtonToggleModule', () => {
                 0.5
             );
         }
+    };
+
+    /**
+     * The gap as it is painted, not as it is declared: a block container renders the single space a
+     * template leaves around a projected label right next to the icon, on top of the icon's own
+     * margin. Asserting the margin alone would not notice the gap doubling.
+     */
+    const expectIconsSpacedFromLabel = async (toggle: Locator) => {
+        const gaps = await toggle.evaluate((element) => {
+            const wrapper = element.querySelector('.kbq-button-toggle-wrapper')!;
+            const nodes = Array.from(wrapper.childNodes).filter((node) => node.nodeType !== Node.COMMENT_NODE);
+            const label = nodes.find((node) => node.nodeType === Node.TEXT_NODE)!;
+            const [leading, trailing] = nodes.filter((node) => node.nodeType === Node.ELEMENT_NODE) as HTMLElement[];
+            const text = label.textContent!;
+
+            // measure the label by its glyphs: its own edge whitespace is exactly what must not count
+            // towards the gap
+            const range = document.createRange();
+
+            range.setStart(label, text.length - text.trimStart().length);
+            range.setEnd(label, text.trimEnd().length);
+
+            const labelBox = range.getBoundingClientRect();
+
+            return {
+                left: labelBox.left - leading.getBoundingClientRect().right,
+                right: trailing.getBoundingClientRect().left - labelBox.right,
+                expected: parseFloat(
+                    getComputedStyle(wrapper).getPropertyValue('--kbq-button-toggle-size-item-content-gap-horizontal')
+                )
+            };
+        });
+
+        expect(gaps.left).toBeCloseTo(gaps.expected, 1);
+        expect(gaps.right).toBeCloseTo(gaps.expected, 1);
     };
 
     test.describe('E2eButtonToggleStates', () => {
@@ -90,13 +125,17 @@ test.describe('KbqButtonToggleModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-dark.png');
         });
 
-        test('centres icons vertically in an icon-only toggle', async ({ page }) => {
+        test('centres icons vertically', async ({ page }) => {
             await page.goto('/E2eButtonToggleStatesStretched');
             const locator = getComponent(page);
 
-            // the stretched variant makes the wrapper a block container so the label can truncate,
-            // which is exactly what an icon-only toggle has to opt back out of
+            // beside a label is the case this variant makes hard: it is the only one that lays its
+            // content out as a block, which is exactly what an icon has to opt back out of
             await togglePrefix(locator);
+            await toggleSuffix(locator);
+
+            await expectIconsCentred(locator);
+
             await toggleTitle(locator);
 
             await expectIconsCentred(locator);
@@ -109,30 +148,31 @@ test.describe('KbqButtonToggleModule', () => {
             await togglePrefix(locator);
             await toggleSuffix(locator);
 
-            const icons = locator.getByTestId('e2eScreenshotTarget').locator('.kbq-icon');
-            const leading = icons.first();
-            const trailing = icons.nth(1);
+            const toggle = getScreenshotTarget(locator).locator('kbq-button-toggle').first();
+            const icons = toggle.locator('.kbq-icon');
 
-            // `gap` is inert on the block container this variant needs for its ellipsis, so the
-            // spacing comes from the icons — and only the component knows which side the label is on
-            await expect(leading).toHaveClass(/kbq-icon_left/);
-            await expect(trailing).toHaveClass(/kbq-icon_right/);
+            // the spacing comes from the icons, because only the component knows which side the
+            // label is on — text nodes are invisible to CSS
+            await expect(icons.first()).toHaveClass(/kbq-icon_left/);
+            await expect(icons.nth(1)).toHaveClass(/kbq-icon_right/);
 
-            const margin = (locator: Locator, side: 'marginLeft' | 'marginRight') =>
-                locator.evaluate((element, property) => parseFloat(getComputedStyle(element)[property]), side);
-
-            expect(await margin(leading, 'marginRight')).toBeGreaterThan(0);
-            expect(await margin(trailing, 'marginLeft')).toBeGreaterThan(0);
+            await expectIconsSpacedFromLabel(toggle);
         });
 
-        test('keeps the label in a box that can paint an ellipsis', async ({ page }) => {
+        test('keeps a label-only toggle in a box that can paint an ellipsis', async ({ page }) => {
             await page.goto('/E2eButtonToggleStatesStretched');
-
-            const wrapper = getComponent(page).getByTestId('e2eScreenshotTarget').locator('.kbq-button-toggle-wrapper');
+            const locator = getComponent(page);
+            const wrapper = getScreenshotTarget(locator).locator('.kbq-button-toggle-wrapper').first();
 
             // `text-overflow: ellipsis` is declared on the wrapper and is only painted while it is a
             // block container — a flex box would clip the label with no ellipsis at all
-            await expect(wrapper.first()).toHaveCSS('display', 'block');
+            await expect(wrapper).toHaveCSS('display', 'block');
+
+            await togglePrefix(locator);
+
+            // an icon gives that up: a block container would paint the template's whitespace beside
+            // it on top of its margin, and leave it off the centre of the line box
+            await expect(wrapper).toHaveCSS('display', 'flex');
         });
     });
 });
