@@ -506,6 +506,7 @@ export const enUSLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -755,6 +756,7 @@ export const esLALocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -1233,6 +1235,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1457,6 +1460,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1677,6 +1681,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1903,6 +1908,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -2125,6 +2131,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -4107,6 +4114,7 @@ export const ptBRLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -4543,6 +4551,7 @@ export const ruRULocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -4900,6 +4909,7 @@ export const tkTMLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {

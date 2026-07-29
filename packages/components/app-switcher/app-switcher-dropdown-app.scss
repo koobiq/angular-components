@@ -6,7 +6,7 @@
     flex-direction: row;
 
     width: 100%;
-    min-height: 50px;
+    min-height: var(--kbq-app-switcher-size-dropdown-app-height-min, 50px);
 
     border-radius: var(--kbq-size-xs);
     // transparent border to keep the box model aligned with the other list rows (matches kbq-list-item-base)

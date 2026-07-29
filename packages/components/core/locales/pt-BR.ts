@@ -130,7 +130,8 @@ export const ptBRLocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Pesquisar',
         searchEmptyResult: 'Nada encontrado',
-        sitesHeader: 'Outros sites'
+        sitesHeader: 'Outros sites',
+        clearSearch: 'Limpar a pesquisa'
     },
     timeRange: {
         title: {

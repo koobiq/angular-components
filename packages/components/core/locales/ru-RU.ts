@@ -131,7 +131,8 @@ export const ruRULocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Поиск',
         searchEmptyResult: 'Ничего не найдено',
-        sitesHeader: 'Другие площадки'
+        sitesHeader: 'Другие площадки',
+        clearSearch: 'Очистить поиск'
     },
     timeRange: {
         title: {

@@ -130,7 +130,8 @@ export const esLALocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Búsqueda',
         searchEmptyResult: 'No se encontró nada',
-        sitesHeader: 'Otros sitios'
+        sitesHeader: 'Otros sitios',
+        clearSearch: 'Borrar la búsqueda'
     },
     timeRange: {
         title: {

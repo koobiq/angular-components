@@ -19,21 +19,22 @@ import {
     createKeyboardEvent,
     dispatchKeyboardEvent
 } from '@koobiq/components/core';
+import { axe } from 'jest-axe';
 import { of } from 'rxjs';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
-import { TestScheduler } from 'rxjs/testing';
 import {
+    KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING,
     KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH,
     KbqAppSwitcherApp,
     KbqAppSwitcherComponent,
     KbqAppSwitcherSite,
     KbqAppSwitcherTrigger,
-    defaultGroupBy
+    defaultGroupBy,
+    makeGroupsForApps
 } from './app-switcher';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
+import { KbqAppSwitcherListItem } from './app-switcher-list-item';
 import { KbqAppSwitcherModule } from './app-switcher.module';
-import { KbqAppSwitcherListItem } from './kbq-app-switcher-list-item';
 
 const APP_1: KbqAppSwitcherApp = { id: 1, name: 'App One', type: 'TypeA', link: '/1', icon: '<svg></svg>' };
 const APP_2: KbqAppSwitcherApp = { id: 2, name: 'App Two', type: 'TypeA', link: '/2' };
@@ -60,16 +61,14 @@ const GROUP_APPS: KbqAppSwitcherApp[] = Array.from({ length: 4 }, (_, i) => ({
 
 const GROUP_SITE: KbqAppSwitcherSite = { id: 'grp', name: 'Group Site', apps: [...GROUP_APPS, APP_UNTYPED] };
 
-describe('KbqAppSwitcher', () => {
-    let testScheduler: TestScheduler;
+/** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
+const AXE_TIMEOUT = 15000;
 
+describe('KbqAppSwitcher', () => {
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
             imports: [component, NoopAnimationsModule],
-            providers: [
-                { provide: AsyncScheduler, useValue: testScheduler },
-                ...providers
-            ]
+            providers
         });
         const fixture = TestBed.createComponent<T>(component);
 
@@ -134,7 +133,6 @@ describe('KbqAppSwitcher', () => {
         let overlayContainer: OverlayContainer;
 
         beforeEach(() => {
-            testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
             fixture = createComponent(AppSwitcherSingleSite);
             trigger = getTrigger(fixture);
         });
@@ -185,17 +183,28 @@ describe('KbqAppSwitcher', () => {
         });
 
         describe('currentApps getter', () => {
-            it('returns _parsedApps in single-site mode', () => {
+            // SITE_A's two TypeA apps stay below the grouping threshold, so they are flattened back out -
+            // after the app that was already untyped, since the flattening happens once all apps are seen.
+            const siteAOrder = [APP_UNTYPED.id, APP_1.id, APP_2.id];
+
+            it('returns the grouped apps of the only site in single-site mode', () => {
                 expect(trigger.sitesMode).toBe(false);
-                expect(trigger.currentApps).toBeDefined();
-                expect(Array.isArray(trigger.currentApps)).toBe(true);
+                expect(trigger.currentApps.map((app) => app.id)).toEqual(siteAOrder);
             });
 
-            it('returns selectedSite.apps in multi-site mode', () => {
+            it('returns the grouped apps of the selected site in multi-site mode', () => {
                 trigger.originalSites = [SITE_A, SITE_B];
-                trigger.selectedSite = SITE_A;
+                trigger.selectedSite.set(SITE_A);
                 expect(trigger.sitesMode).toBe(true);
-                expect(trigger.currentApps).toEqual(trigger.selectedSite.apps);
+                expect(trigger.currentApps).toEqual(trigger.parsedSelectedSite()!.apps);
+                expect(trigger.currentApps.map((app) => app.id)).toEqual(siteAOrder);
+            });
+
+            it('returns an empty list in multi-site mode while no site is selected', () => {
+                trigger.originalSites = [SITE_A, SITE_B];
+                trigger.selectedSite.set(undefined);
+
+                expect(trigger.currentApps).toEqual([]);
             });
         });
 
@@ -216,58 +225,97 @@ describe('KbqAppSwitcher', () => {
                 expect(trigger.originalSites).toEqual([SITE_A]);
             });
 
-            it('computes _parsedApps for a single site', () => {
-                trigger.sites = [SITE_A];
-                expect(trigger.currentApps).toBeDefined();
-                expect(Array.isArray(trigger.currentApps)).toBe(true);
+            it('groups the apps of a single site', () => {
+                trigger.sites = [GROUP_SITE];
+
+                // The four `Group`-typed apps collapse into one header carrying them as aliases; the untyped
+                // app stays a plain row.
+                expect(trigger.currentApps).toHaveLength(2);
+                expect(trigger.currentApps[0].name).toBe('Group');
+                expect(trigger.currentApps[0].aliases).toHaveLength(GROUP_APPS.length);
+                expect(trigger.currentApps[1].id).toBe(APP_UNTYPED.id);
             });
 
-            it('creates _parsedSites for multiple sites', () => {
+            it('parses every site when several are provided', () => {
                 trigger.sites = [SITE_A, SITE_B];
-                expect(trigger.sites).toBeDefined();
+
+                expect(trigger.sites.map((site) => site.id)).toEqual([SITE_A.id, SITE_B.id]);
+                expect(trigger.sites.map((site) => site.apps.map((app) => app.id))).toEqual([
+                    [APP_UNTYPED.id, APP_1.id, APP_2.id],
+                    [APP_3.id, APP_4.id]
+                ]);
+            });
+
+            it('does not keep stale sites when reassigned from multiple sites to a single one', () => {
+                trigger.sites = [SITE_A, SITE_B];
                 expect(trigger.sites).toHaveLength(2);
+
+                trigger.sites = [SITE_B];
+
+                expect(trigger.sites.map((site) => site.id)).toEqual([SITE_B.id]);
             });
 
-            it('each parsed site has apps processed through grouping', () => {
+            it('reuses the parsed site objects across reads so rendered rows can be reused', () => {
                 trigger.sites = [SITE_A, SITE_B];
-                trigger.sites.forEach((site) => {
-                    expect(Array.isArray(site.apps)).toBe(true);
-                });
+
+                expect(trigger.sites[0]).toBe(trigger.sites[0]);
+                expect(trigger.currentApps).toBe(trigger.currentApps);
             });
         });
 
         describe('groupBy setter', () => {
-            it('throws when assigned a non-function', () => {
-                expect(() => {
-                    trigger.groupBy = 'not a function' as any;
-                }).toThrow('The argument must be a function');
+            it('regroups the apps with the provided function', () => {
+                trigger.groupBy = (app, _groups, untyped) => untyped.push(app);
+                trigger.sites = [GROUP_SITE];
+
+                // Everything lands in `untyped`, so no group header is produced.
+                expect(trigger.currentApps).toHaveLength(GROUP_SITE.apps.length);
+                expect(trigger.currentApps.every((app) => !app.aliases)).toBe(true);
             });
 
-            it('accepts a valid function', () => {
+            it('returns the assigned function', () => {
                 const customFn = (app: KbqAppSwitcherApp, _groups: any, untyped: KbqAppSwitcherApp[]) =>
                     untyped.push(app);
 
-                expect(() => {
-                    trigger.groupBy = customFn;
-                }).not.toThrow();
+                trigger.groupBy = customFn;
+
+                expect(trigger.groupBy).toBe(customFn);
             });
         });
 
-        describe('selectedSite setter', () => {
-            it('finds the site in originalSites by id and creates a parsed version', () => {
-                trigger.originalSites = [SITE_A, SITE_B];
-                trigger.selectedSite = SITE_A;
+        describe('selectedSite', () => {
+            it('exposes the grouped version of the selected site', () => {
+                trigger.sites = [SITE_A, SITE_B];
+                trigger.selectedSite.set(SITE_A);
 
-                expect(trigger.selectedSite).toBeDefined();
-                expect(trigger.selectedSite.id).toBe(SITE_A.id);
-                expect(trigger.selectedSite.name).toBe(SITE_A.name);
+                expect(trigger.parsedSelectedSite()!.id).toBe(SITE_A.id);
+                expect(trigger.parsedSelectedSite()!.name).toBe(SITE_A.name);
+                expect(trigger.parsedSelectedSite()!.apps.map((app) => app.id)).toEqual([
+                    APP_UNTYPED.id,
+                    APP_1.id,
+                    APP_2.id
+                ]);
             });
 
-            it('processes site apps through grouping', () => {
-                trigger.originalSites = [SITE_A, SITE_B];
-                trigger.selectedSite = SITE_A;
+            it('falls back to the raw value when the id is not among the known sites', () => {
+                trigger.sites = [SITE_A, SITE_B];
 
-                expect(Array.isArray(trigger.selectedSite.apps)).toBe(true);
+                const unknown: KbqAppSwitcherSite = { id: 'does-not-exist', name: 'Gone', apps: [APP_3] };
+
+                expect(() => trigger.selectedSite.set(unknown)).not.toThrow();
+                expect(trigger.parsedSelectedSite()).toBe(unknown);
+                expect(trigger.currentApps).toEqual([APP_3]);
+            });
+
+            it('does not regroup when the same site is selected again', () => {
+                trigger.sites = [SITE_A, SITE_B];
+                trigger.selectedSite.set(SITE_A);
+
+                const parsed = trigger.parsedSelectedSite();
+
+                trigger.selectedSite.set({ ...SITE_A });
+
+                expect(trigger.parsedSelectedSite()).toBe(parsed);
             });
         });
 
@@ -302,7 +350,6 @@ describe('KbqAppSwitcher', () => {
         let overlayContainer: OverlayContainer;
 
         beforeEach(fakeAsync(() => {
-            testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
             fixture = createComponent(AppSwitcherMultiSite);
             trigger = getTrigger(fixture);
 
@@ -319,51 +366,49 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
-        describe('updateTrapFocus', () => {
-            it('sets isTrapFocus to true', () => {
-                popup.updateTrapFocus(true);
-                expect(popup.isTrapFocus).toBe(true);
-            });
-
-            it('sets isTrapFocus to false', () => {
-                popup.updateTrapFocus(true);
-                popup.updateTrapFocus(false);
-                expect(popup.isTrapFocus).toBe(false);
-            });
-        });
-
         describe('escapeHandler', () => {
-            it('calls hide(0)', () => {
-                const hideSpy = jest.spyOn(popup, 'hide');
+            it('removes the popup from the overlay', fakeAsync(() => {
+                expect(overlayContainer.getContainerElement().querySelector('.kbq-app-switcher')).toBeTruthy();
 
                 popup.escapeHandler();
-                expect(hideSpy).toHaveBeenCalledWith(0);
-            });
+                tick();
+                fixture.detectChanges();
+
+                expect(trigger.isOpen).toBe(false);
+            }));
         });
 
         describe('selectAppInSite', () => {
             it('updates trigger.selectedApp', () => {
                 popup.selectAppInSite(SITE_A, APP_1);
-                expect(trigger.selectedApp).toBe(APP_1);
+                expect(trigger.selectedApp()).toBe(APP_1);
             });
 
             it('updates trigger.selectedSite with the given site', () => {
                 popup.selectAppInSite(SITE_A, APP_1);
-                expect(trigger.selectedSite.id).toBe(SITE_A.id);
+                expect(trigger.selectedSite()!.id).toBe(SITE_A.id);
+            });
+
+            it('is a no-op when no site is active', () => {
+                const before = trigger.selectedApp();
+
+                expect(() => popup.selectAppInSite(undefined, APP_1)).not.toThrow();
+                expect(trigger.selectedApp()).toBe(before);
             });
 
             it('emits selectedAppChange with the selected app', () => {
                 const spy = jest.fn();
 
-                trigger.selectedAppChange.subscribe(spy);
-                popup.selectAppInSite(SITE_A, APP_1);
-                expect(spy).toHaveBeenCalledWith(APP_1);
+                // APP_1 is already selected by the fixture, and a model only emits on an actual change.
+                trigger.selectedApp.subscribe(spy);
+                popup.selectAppInSite(SITE_A, APP_2);
+                expect(spy).toHaveBeenCalledWith(APP_2);
             });
 
             it('emits selectedSiteChange with the selected site', () => {
                 const spy = jest.fn();
 
-                trigger.selectedSiteChange.subscribe(spy);
+                trigger.selectedSite.subscribe(spy);
                 popup.selectAppInSite(SITE_A, APP_1);
                 expect(spy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_A.id }));
             });
@@ -371,10 +416,28 @@ describe('KbqAppSwitcher', () => {
 
         describe('filterSites via searchControl', () => {
             it('filteredSites contains all sites when query is empty', fakeAsync(() => {
+                popup.searchControl.setValue('a');
+                tick();
                 popup.searchControl.setValue('');
                 tick();
-                // filterSites with empty query returns structuredClone of originalSites
-                expect(popup.filteredSites).toHaveLength(trigger.originalSites.length);
+
+                expect(popup.filteredSites).toBe(trigger.originalSites);
+            }));
+
+            it('keeps the original app objects instead of cloning them', fakeAsync(() => {
+                popup.searchControl.setValue('App One');
+                tick();
+
+                expect(popup.filteredSites[0].apps[0]).toBe(trigger.originalSites[0].apps[0]);
+            }));
+
+            it('matches the caption as well as the name', fakeAsync(() => {
+                trigger.sites = [{ ...SITE_A, apps: [{ ...APP_1, caption: 'Sentinel deployment' }] }];
+
+                popup.searchControl.setValue('sentinel');
+                tick();
+
+                expect(popup.filteredSites.flatMap((site) => site.apps).map((app) => app.id)).toEqual([APP_1.id]);
             }));
 
             it('filters apps by name case-insensitively', fakeAsync(() => {
@@ -411,7 +474,6 @@ describe('KbqAppSwitcher', () => {
         let overlayContainer: OverlayContainer;
 
         beforeEach(() => {
-            testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
             fixture = createComponent(ListItemHost, [
                 { provide: IMAGE_LOADER, useValue: (config: ImageLoaderConfig) => config.src }
             ]);
@@ -519,13 +581,13 @@ describe('KbqAppSwitcher', () => {
 
             const listItem = getListItem();
 
-            expect(listItem.collapsed).toBe(false);
+            expect(listItem.collapsed()).toBe(false);
 
             listItem.clickHandler(new MouseEvent('click'));
-            expect(listItem.collapsed).toBe(true);
+            expect(listItem.collapsed()).toBe(true);
 
             listItem.clickHandler(new MouseEvent('click'));
-            expect(listItem.collapsed).toBe(false);
+            expect(listItem.collapsed()).toBe(false);
         });
 
         it('clickHandler with toggle=true stops event propagation', () => {
@@ -549,9 +611,72 @@ describe('KbqAppSwitcher', () => {
 
             const listItem = getListItem();
 
-            expect(listItem.collapsed).toBe(false);
+            expect(listItem.collapsed()).toBe(false);
             listItem.clickHandler(new MouseEvent('click'));
-            expect(listItem.collapsed).toBe(false);
+            expect(listItem.collapsed()).toBe(false);
+        });
+
+        describe('icon sanitization', () => {
+            const iconHtml = () =>
+                fixture.debugElement.query(By.css('.kbq-app-switcher-list-item__icon'))?.nativeElement.innerHTML ?? '';
+
+            it('keeps a plain inline SVG icon', () => {
+                fixture.componentInstance.app = {
+                    ...APP_1,
+                    icon: '<svg viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="#212121"/></svg>'
+                };
+                fixture.detectChanges();
+
+                expect(iconHtml()).toContain('<path');
+                expect(iconHtml()).toContain('fill="#212121"');
+            });
+
+            it('strips an event handler smuggled through the icon markup', () => {
+                fixture.componentInstance.app = {
+                    ...APP_1,
+                    icon: '<img src="x" onerror="window.__kbqXss = true">'
+                };
+                fixture.detectChanges();
+
+                expect(iconHtml()).not.toContain('onerror');
+                expect(iconHtml()).not.toContain('<img');
+                expect((window as any).__kbqXss).toBeUndefined();
+            });
+
+            it('strips a script element nested inside the SVG', () => {
+                fixture.componentInstance.app = {
+                    ...APP_1,
+                    icon: '<svg><script>window.__kbqXss = true;</script><path d="M0 0"/></svg>'
+                };
+                fixture.detectChanges();
+
+                expect(iconHtml()).not.toContain('<script');
+                expect(iconHtml()).toContain('<path');
+                expect((window as any).__kbqXss).toBeUndefined();
+            });
+
+            it('falls back to iconSrc when nothing survives sanitization', () => {
+                fixture.componentInstance.app = { ...APP_1, icon: '<img src=x onerror=1>', iconSrc: '/icon.png' };
+                fixture.detectChanges();
+
+                expect(fixture.debugElement.query(By.css('.kbq-app-switcher-list-item__icon img'))).toBeTruthy();
+            });
+
+            it('hides the icon from assistive technology (the row name is the accessible label)', () => {
+                fixture.componentInstance.app = { ...APP_1, icon: '<svg><path d="M0 0"/></svg>' };
+                fixture.detectChanges();
+                const iconSpan = fixture.debugElement.query(By.css('.kbq-app-switcher-list-item__icon'));
+
+                expect(iconSpan.nativeElement.getAttribute('aria-hidden')).toBe('true');
+            });
+
+            it('never renders app.type as image alt text', () => {
+                fixture.componentInstance.app = { ...APP_1, type: 'NAD', icon: undefined, iconSrc: '/icon.png' };
+                fixture.detectChanges();
+                const img = fixture.debugElement.query(By.css('.kbq-app-switcher-list-item__icon img'));
+
+                expect(img.nativeElement.getAttribute('alt')).toBe('');
+            });
         });
     });
 
@@ -560,7 +685,6 @@ describe('KbqAppSwitcher', () => {
         let overlayContainer: OverlayContainer;
 
         beforeEach(() => {
-            testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
             fixture = createComponent(DropdownSiteHost);
         });
 
@@ -602,7 +726,6 @@ describe('KbqAppSwitcher', () => {
         let overlayContainerElement: HTMLElement;
 
         beforeEach(fakeAsync(() => {
-            testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
             fixture = createComponent(AppSwitcherSingleSite);
             trigger = getTrigger(fixture);
         }));
@@ -664,7 +787,6 @@ describe('KbqAppSwitcher', () => {
         let overlayContainerElement: HTMLElement;
 
         beforeEach(fakeAsync(() => {
-            testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
             fixture = createComponent(AppSwitcherMultiSite);
             trigger = getTrigger(fixture);
         }));
@@ -706,7 +828,6 @@ describe('KbqAppSwitcher', () => {
         let overlayContainerElement: HTMLElement;
 
         beforeEach(fakeAsync(() => {
-            testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
             fixture = createComponent(AppSwitcherWithSearch);
             trigger = getTrigger(fixture);
         }));
@@ -793,9 +914,7 @@ describe('KbqAppSwitcher', () => {
         let overlayContainer: OverlayContainer;
         let overlayContainerElement: HTMLElement;
 
-        beforeEach(() => {
-            testScheduler = new TestScheduler((act, exp) => expect(act).toEqual(exp));
-        });
+        beforeEach(() => {});
 
         afterEach(() => overlayContainer?.ngOnDestroy());
 
@@ -1071,13 +1190,13 @@ describe('KbqAppSwitcher', () => {
                 const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
 
                 expect(header.toggle()).toBe(true);
-                expect(header.collapsed).toBe(false);
+                expect(header.collapsed()).toBe(false);
                 const expandedLength = menuItemsOf(popup).length;
 
                 dispatchKeyboardEvent(getHost(), 'keydown', LEFT_ARROW);
                 fixture.detectChanges();
 
-                expect(header.collapsed).toBe(true);
+                expect(header.collapsed()).toBe(true);
                 expect(menuItemsOf(popup).length).toBeLessThan(expandedLength);
             }));
 
@@ -1088,13 +1207,13 @@ describe('KbqAppSwitcher', () => {
                 // Collapse first via the keyboard so the OnPush overlay actually re-renders.
                 dispatchKeyboardEvent(getHost(), 'keydown', LEFT_ARROW);
                 fixture.detectChanges();
-                expect(header.collapsed).toBe(true);
+                expect(header.collapsed()).toBe(true);
                 const collapsedLength = menuItemsOf(popup).length;
 
                 dispatchKeyboardEvent(getHost(), 'keydown', RIGHT_ARROW);
                 fixture.detectChanges();
 
-                expect(header.collapsed).toBe(false);
+                expect(header.collapsed()).toBe(false);
                 expect(menuItemsOf(popup).length).toBeGreaterThan(collapsedLength);
             }));
 
@@ -1102,12 +1221,12 @@ describe('KbqAppSwitcher', () => {
                 const { fixture, popup } = open(AppSwitcherGrouped);
                 const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
 
-                expect(header.collapsed).toBe(false);
+                expect(header.collapsed()).toBe(false);
 
                 dispatchKeyboardEvent(getHost(), 'keydown', ENTER);
                 fixture.detectChanges();
 
-                expect(header.collapsed).toBe(true);
+                expect(header.collapsed()).toBe(true);
             }));
 
             it('moves focus from a nested alias back to its group header on the collapse key', fakeAsync(() => {
@@ -1130,16 +1249,16 @@ describe('KbqAppSwitcher', () => {
                 ]);
                 const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
 
-                expect(header.collapsed).toBe(false);
+                expect(header.collapsed()).toBe(false);
 
                 // In RTL, Right collapses and Left expands.
                 dispatchKeyboardEvent(getHost(), 'keydown', RIGHT_ARROW);
                 fixture.detectChanges();
-                expect(header.collapsed).toBe(true);
+                expect(header.collapsed()).toBe(true);
 
                 dispatchKeyboardEvent(getHost(), 'keydown', LEFT_ARROW);
                 fixture.detectChanges();
-                expect(header.collapsed).toBe(false);
+                expect(header.collapsed()).toBe(false);
             }));
         });
 
@@ -1311,6 +1430,383 @@ describe('KbqAppSwitcher', () => {
             }));
         });
     });
+
+    describe('makeGroupsForApps', () => {
+        const typed = (count: number): KbqAppSwitcherApp[] =>
+            Array.from({ length: count }, (_, i) => ({ id: `t${i}`, name: `Typed ${i}`, type: 'T' }));
+
+        it(`groups a type with more than ${KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING} apps`, () => {
+            const result = makeGroupsForApps(
+                typed(KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING + 1),
+                KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING
+            );
+
+            expect(result).toHaveLength(1);
+            expect(result[0].name).toBe('T');
+            expect(result[0].aliases).toHaveLength(KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING + 1);
+        });
+
+        it(`keeps a type with exactly ${KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING} apps as plain rows`, () => {
+            const result = makeGroupsForApps(
+                typed(KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING),
+                KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING
+            );
+
+            expect(result).toHaveLength(KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
+            expect(result.every((app) => !app.aliases)).toBe(true);
+        });
+
+        it('places groups before the ungrouped apps', () => {
+            const result = makeGroupsForApps(GROUP_SITE.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
+
+            expect(result.map((app) => app.name)).toEqual(['Group', APP_UNTYPED.name]);
+        });
+
+        it('tolerates a custom groupBy that emits a group without aliases', () => {
+            const groupBy = (app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>) => {
+                groups[app.name] = { id: app.id, name: app.name };
+            };
+
+            expect(() => makeGroupsForApps([APP_1], KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING, groupBy)).not.toThrow();
+            expect(makeGroupsForApps([APP_1], KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING, groupBy)).toEqual([
+                { id: APP_1.id, name: APP_1.name }
+            ]);
+        });
+    });
+
+    describe('Integration — rendered app groups', () => {
+        let overlayContainer: OverlayContainer;
+        let overlayContainerElement: HTMLElement;
+
+        afterEach(() => overlayContainer?.ngOnDestroy());
+
+        const open = <T>(component: Type<T>, before?: (instance: T) => void): ComponentFixture<T> => {
+            const fixture = createComponent(component);
+
+            if (before) {
+                before(fixture.componentInstance);
+                fixture.detectChanges();
+            }
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            overlayContainerElement = overlayContainer.getContainerElement();
+
+            getTrigger(fixture).show();
+            tick();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        const rows = () => overlayContainerElement.querySelectorAll('.kbq-app-switcher-list-item');
+        const header = () =>
+            overlayContainerElement.querySelector('.kbq-app-switcher-list-item[aria-expanded]') as HTMLElement;
+
+        it('renders one expanded group header plus its aliases', fakeAsync(() => {
+            open(AppSwitcherGrouped);
+
+            // 1 group header + 4 aliases + 1 ungrouped app.
+            expect(rows()).toHaveLength(GROUP_APPS.length + 2);
+            expect(header()).toBeTruthy();
+            expect(header().getAttribute('aria-expanded')).toBe('true');
+        }));
+
+        it('collapses and expands the group on click, updating aria-expanded', fakeAsync(() => {
+            const fixture = open(AppSwitcherGrouped);
+
+            header().click();
+            fixture.detectChanges();
+
+            expect(header().getAttribute('aria-expanded')).toBe('false');
+            // Only the header and the ungrouped app are left.
+            expect(rows()).toHaveLength(2);
+
+            header().click();
+            fixture.detectChanges();
+
+            expect(header().getAttribute('aria-expanded')).toBe('true');
+            expect(rows()).toHaveLength(GROUP_APPS.length + 2);
+        }));
+
+        it(`renders no group when a type has exactly ${KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING} apps`, fakeAsync(() => {
+            open(AppSwitcherDynamic, (instance) => {
+                instance.sites = [
+                    {
+                        id: 'boundary',
+                        name: 'Boundary',
+                        apps: GROUP_APPS.slice(0, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING)
+                    }
+                ];
+            });
+
+            expect(header()).toBeFalsy();
+            expect(rows()).toHaveLength(KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
+        }));
+
+        it('renders an empty list instead of throwing when no sites are provided', fakeAsync(() => {
+            open(AppSwitcherSimple);
+
+            expect(overlayContainerElement.querySelector('.kbq-app-switcher')).toBeTruthy();
+            expect(rows()).toHaveLength(0);
+            expect(overlayContainerElement.querySelector('.kbq-app-switcher__search-container')).toBeFalsy();
+        }));
+    });
+
+    describe('Integration — nested site navigation', () => {
+        let overlayContainer: OverlayContainer;
+        let overlayContainerElement: HTMLElement;
+
+        afterEach(() => overlayContainer?.ngOnDestroy());
+
+        it('selects an app from another site through its flyout', fakeAsync(() => {
+            const fixture = createComponent(AppSwitcherMultiSite);
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            overlayContainerElement = overlayContainer.getContainerElement();
+
+            const trigger = getTrigger(fixture);
+            const appSpy = jest.fn();
+            const siteSpy = jest.fn();
+
+            trigger.selectedApp.subscribe(appSpy);
+            trigger.selectedSite.subscribe(siteSpy);
+
+            trigger.show();
+            tick();
+            fixture.detectChanges();
+
+            const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
+
+            // Focus populates `activeSite`, which the flyout content is bound to.
+            siteRow.focus();
+            fixture.detectChanges();
+            dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
+            tick();
+            fixture.detectChanges();
+
+            const appRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-app') as HTMLElement;
+
+            expect(appRow).toBeTruthy();
+            // The rows are real links; stop jsdom from trying to navigate away.
+            appRow.addEventListener('click', (event) => event.preventDefault());
+            appRow.click();
+            fixture.detectChanges();
+
+            expect(trigger.selectedSite()!.id).toBe(SITE_B.id);
+            expect(trigger.selectedApp()!.id).toBe(SITE_B.apps[0].id);
+            expect(siteSpy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_B.id }));
+            expect(appSpy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_B.apps[0].id }));
+        }));
+
+        it('clears the flyout content once its dropdown closes', fakeAsync(() => {
+            const fixture = createComponent(AppSwitcherMultiSite);
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            overlayContainerElement = overlayContainer.getContainerElement();
+
+            const trigger = getTrigger(fixture);
+
+            trigger.show();
+            tick();
+            fixture.detectChanges();
+
+            const popup = trigger['instance'] as KbqAppSwitcherComponent;
+            const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
+
+            siteRow.focus();
+            fixture.detectChanges();
+            expect(popup['activeSite']).toBeDefined();
+
+            dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
+            tick();
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(siteRow, 'keydown', ESCAPE);
+            tick();
+            fixture.detectChanges();
+
+            expect(popup['activeSite']).toBeUndefined();
+        }));
+    });
+
+    describe('Integration — accessibility', () => {
+        let overlayContainer: OverlayContainer;
+        let overlayContainerElement: HTMLElement;
+
+        afterEach(() => overlayContainer?.ngOnDestroy());
+
+        const open = <T>(component: Type<T>): { fixture: ComponentFixture<T>; popup: KbqAppSwitcherComponent } => {
+            const fixture = createComponent(component);
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            overlayContainerElement = overlayContainer.getContainerElement();
+
+            const trigger = getTrigger(fixture);
+
+            trigger.show();
+            tick();
+            fixture.detectChanges();
+
+            return { fixture, popup: trigger['instance'] as KbqAppSwitcherComponent };
+        };
+
+        it('names the search field and its clear button', fakeAsync(() => {
+            const { fixture, popup } = open(AppSwitcherWithSearch);
+            const input = overlayContainerElement.querySelector('input[kbqinput]') as HTMLElement;
+
+            expect(input.getAttribute('aria-label')).toBe(popup.localeData.searchPlaceholder);
+
+            // The cleaner only renders once the field has a value.
+            popup.searchControl.setValue('App 0');
+            tick();
+            fixture.detectChanges();
+
+            const cleaner = overlayContainerElement.querySelector('.kbq-cleaner') as HTMLElement;
+
+            expect(cleaner.getAttribute('aria-label')).toBe(popup.localeData.clearSearch);
+        }));
+
+        it('announces the empty search result', fakeAsync(() => {
+            const { fixture, popup } = open(AppSwitcherWithSearch);
+
+            popup.searchControl.setValue('nothing-matches-this');
+            tick();
+            fixture.detectChanges();
+
+            const empty = overlayContainerElement.querySelector('.kbq-app-switcher__empty-search-result');
+
+            expect(empty?.getAttribute('role')).toBe('status');
+        }));
+
+        it('marks the selected app with aria-current', fakeAsync(() => {
+            open(AppSwitcherMultiSite);
+            const current = overlayContainerElement.querySelectorAll('.kbq-app-switcher-list-item[aria-current]');
+
+            expect(current).toHaveLength(1);
+            expect(current[0].classList).toContain('kbq-selected');
+        }));
+
+        it('hides decorative icons from assistive technology', fakeAsync(() => {
+            open(AppSwitcherWithSearch);
+            const searchIcon = overlayContainerElement.querySelector('[kbqPrefix]') as HTMLElement;
+
+            expect(searchIcon.getAttribute('aria-hidden')).toBe('true');
+        }));
+
+        it('marks external links as noopener', fakeAsync(() => {
+            open(AppSwitcherMultiSite);
+            const links = Array.from(overlayContainerElement.querySelectorAll('a.kbq-app-switcher-list-item'));
+
+            expect(links.length).toBeGreaterThan(0);
+            expect(links.every((link) => link.getAttribute('rel') === 'noopener noreferrer')).toBe(true);
+        }));
+
+        it('does not throw when hovering the list of a single-site switcher that has a search field', fakeAsync(() => {
+            const { fixture } = open(AppSwitcherWithSearch);
+            const container = overlayContainerElement.querySelector('.kbq-app-switcher__app-container') as HTMLElement;
+
+            // There is no other-sites flyout to close in single-site mode.
+            expect(() => {
+                container.dispatchEvent(new MouseEvent('mouseenter'));
+                fixture.detectChanges();
+            }).not.toThrow();
+        }));
+
+        it('omits the href attribute for an app without a link', fakeAsync(() => {
+            open(AppSwitcherDynamic);
+            const link = overlayContainerElement.querySelector('a.kbq-app-switcher-list-item') as HTMLElement;
+
+            expect(link.hasAttribute('href')).toBe(false);
+        }));
+
+        // axe runs on real timers, so these cannot share the `fakeAsync` helper above.
+        const openAsync = async <T>(
+            component: Type<T>
+        ): Promise<{ fixture: ComponentFixture<T>; popup: KbqAppSwitcherComponent }> => {
+            const fixture = createComponent(component);
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            overlayContainerElement = overlayContainer.getContainerElement();
+
+            const trigger = getTrigger(fixture);
+
+            trigger.show();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            return { fixture, popup: trigger['instance'] as KbqAppSwitcherComponent };
+        };
+
+        it(
+            'has no axe violations in single-site mode',
+            async () => {
+                await openAsync(AppSwitcherSingleSite);
+
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            },
+            AXE_TIMEOUT
+        );
+
+        it(
+            'has no axe violations in multi-site mode',
+            async () => {
+                await openAsync(AppSwitcherMultiSite);
+
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            },
+            AXE_TIMEOUT
+        );
+
+        it(
+            'has no axe violations while searching',
+            async () => {
+                const { fixture, popup } = await openAsync(AppSwitcherWithSearch);
+
+                popup.searchControl.setValue('App');
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            },
+            AXE_TIMEOUT
+        );
+    });
+
+    describe('teardown', () => {
+        let overlayContainer: OverlayContainer;
+
+        afterEach(() => overlayContainer?.ngOnDestroy());
+
+        it('unsubscribes the inner-scroll guard when the host is destroyed while open', fakeAsync(() => {
+            const fixture = createComponent(AppSwitcherMultiSite);
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+
+            const trigger = getTrigger(fixture);
+
+            trigger.show();
+            tick();
+            fixture.detectChanges();
+
+            const guard = trigger['preventClosingByInnerScrollSubscription'];
+
+            expect(guard.closed).toBe(false);
+
+            fixture.destroy();
+
+            expect(guard.closed).toBe(true);
+        }));
+
+        it('does not throw when the popup reports hidden before it was ever shown', fakeAsync(() => {
+            const fixture = createComponent(AppSwitcherMultiSite);
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+
+            const trigger = getTrigger(fixture);
+
+            expect(() => trigger.visibleChange.emit(false)).not.toThrow();
+        }));
+    });
 });
 
 @Component({
@@ -1320,7 +1816,18 @@ describe('KbqAppSwitcher', () => {
         <button kbqAppSwitcher>AppSwitcher Trigger</button>
     `
 })
-export class AppSwitcherSimple {}
+class AppSwitcherSimple {}
+
+@Component({
+    selector: 'app-switcher-dynamic',
+    imports: [KbqAppSwitcherModule],
+    template: `
+        <button kbqAppSwitcher [sites]="sites" [selectedSite]="sites[0]">Trigger</button>
+    `
+})
+class AppSwitcherDynamic {
+    sites: KbqAppSwitcherSite[] = [{ id: 'nolink', name: 'No link', apps: [{ id: 'a', name: 'Linkless app' }] }];
+}
 
 @Component({
     selector: 'app-switcher-single-site',

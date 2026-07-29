@@ -152,4 +152,90 @@ test.describe('KbqAppSwitcherModule', () => {
             await expect(header).toHaveAttribute('aria-expanded', 'false');
         });
     });
+
+    test.describe('search and pointer interaction', () => {
+        const overlay = (page: Page) => page.locator('.kbq-app-switcher__panel');
+        const listItem = (page: Page) => overlay(page).locator('.kbq-app-switcher-list-item');
+
+        const openWithSites = async (page: Page) => {
+            await page.goto('/E2eAppSwitcherWithSitesStates');
+            await page.getByTestId('e2eAppSwitcherWithSitesStates').getByRole('button').click();
+            await expect(overlay(page)).toBeVisible();
+        };
+
+        test('typing a query narrows the list to the matching apps', async ({ page }) => {
+            await openWithSites(page);
+
+            await page.keyboard.type('phantom');
+            await expect(listItem(page).first()).toBeVisible();
+
+            const texts = await listItem(page).allTextContents();
+
+            expect(texts.length).toBeGreaterThan(0);
+
+            for (const text of texts) {
+                expect(text.toLowerCase()).toContain('phantom');
+            }
+        });
+
+        test('a query with no match shows an announced empty state', async ({ page }) => {
+            await openWithSites(page);
+
+            await page.keyboard.type('no-such-application');
+
+            const empty = overlay(page).locator('.kbq-app-switcher__empty-search-result');
+
+            await expect(empty).toBeVisible();
+            await expect(empty).toHaveAttribute('role', 'status');
+            await expect(listItem(page)).toHaveCount(0);
+        });
+
+        test('the clear button restores the full list and is named for assistive technology', async ({ page }) => {
+            await openWithSites(page);
+            const before = await listItem(page).count();
+
+            await page.keyboard.type('phantom');
+            expect(await listItem(page).count()).toBeLessThan(before);
+
+            const cleaner = overlay(page).locator('kbq-cleaner');
+
+            await expect(cleaner).toHaveAttribute('aria-label', /.+/);
+            await cleaner.click();
+
+            await expect(listItem(page)).toHaveCount(before);
+        });
+
+        test('clicking a group header collapses and expands its aliases', async ({ page }) => {
+            await openWithSites(page);
+            const header = overlay(page).locator('.kbq-app-switcher-list-item[aria-expanded]').first();
+            const expanded = await listItem(page).count();
+
+            await header.click();
+            await expect(header).toHaveAttribute('aria-expanded', 'false');
+            expect(await listItem(page).count()).toBeLessThan(expanded);
+
+            await header.click();
+            await expect(header).toHaveAttribute('aria-expanded', 'true');
+            await expect(listItem(page)).toHaveCount(expanded);
+        });
+
+        test('the search field is named even though it only shows a placeholder', async ({ page }) => {
+            await openWithSites(page);
+
+            await expect(overlay(page).locator('input[kbqinput]')).toHaveAttribute('aria-label', /.+/);
+        });
+    });
+
+    test.describe('reduced motion', () => {
+        test('the switcher opens and stays usable with reduced motion requested', async ({ page }) => {
+            await page.emulateMedia({ reducedMotion: 'reduce' });
+            await page.goto('/E2eAppSwitcherStates');
+            await page.getByTestId('e2eAppSwitcherStates').getByRole('button').click();
+
+            const overlayPanel = page.locator('.kbq-app-switcher__panel');
+
+            await expect(overlayPanel).toBeVisible();
+            await expect(overlayPanel.locator('.kbq-app-switcher-list-item').first()).toBeVisible();
+        });
+    });
 });
