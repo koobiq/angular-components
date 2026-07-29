@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { parseExampleFile } from './parse-example-file';
+import { resolveLocalImportFiles } from './resolve-local-imports';
 
 interface ExampleMetadata {
     /** Name of the example component. */
@@ -19,6 +20,10 @@ interface ExampleMetadata {
     additionalComponents: string[];
     /** Files for this example. */
     files: string[];
+    /** Files shared with other examples via relative imports (e.g. a data file kept as a
+     *  single source of truth), needed to compile the example but not shown in the docs
+     *  source viewer. */
+    localImportFiles: string[];
     /** Path from which to import the example. */
     importPath: string;
 }
@@ -40,6 +45,7 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
             title: data.title,
             componentName: data.componentName,
             files: data.files,
+            localImportFiles: data.localImportFiles,
             selector: data.selector,
             additionalComponents: data.additionalComponents,
             primaryFile: path.basename(data.sourcePath),
@@ -107,6 +113,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
                 title: primaryComponent.title.trim(),
                 additionalComponents: [],
                 files: [],
+                localImportFiles: [],
                 importPath
             };
 
@@ -149,8 +156,16 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
                 }
             }
 
+            // Pick up source shared with other examples via relative imports (e.g. a data
+            // file kept as a single source of truth), so it's included in the generated
+            // StackBlitz project. Kept separate from `files` so it's not shown as a tab of
+            // its own in the docs source viewer.
+            example.localImportFiles.push(...resolveLocalImportFiles(baseDir, packagePath, example.files));
+
             // Ensure referenced files actually exist in the example.
-            example.files.forEach((f) => assertReferencedExampleFileExists(baseDir, packagePath, f));
+            [...example.files, ...example.localImportFiles].forEach((f) =>
+                assertReferencedExampleFileExists(baseDir, packagePath, f)
+            );
             exampleMetadata.push(example);
         } else {
             throw Error(

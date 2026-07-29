@@ -14,6 +14,7 @@ export interface LiveExample {
     selector: string;
     primaryFile: string;
     files: string[];
+    localImportFiles: string[];
     packagePath: string;
     additionalComponents: string[];
     importPath: string;
@@ -28,6 +29,7 @@ export function loadExample(_id: string): Promise<any> {
 export class ExampleData {
     description!: string;
     exampleFiles!: string[];
+    localImportFiles!: string[];
     selectorName!: string;
     indexFilename!: string;
     componentNames!: string[];

@@ -13,6 +13,10 @@ export class ExampleData {
     /** List of files that are part of this example. */
     exampleFiles: string[];
 
+    /** Files shared with other examples via relative imports, needed to compile the example
+     *  (e.g. in StackBlitz) but not shown as a tab of its own in the docs source viewer. */
+    localImportFiles: string[];
+
     /** Selector name of the example component. */
     selectorName: string;
 
@@ -27,11 +31,12 @@ export class ExampleData {
             return;
         }
 
-        const { componentName, files, selector, primaryFile, additionalComponents, title } =
+        const { componentName, files, localImportFiles, selector, primaryFile, additionalComponents, title } =
             EXAMPLE_COMPONENTS[example];
         const exampleName = example.replace(/(?:^\w|\b\w)/g, (letter) => letter.toUpperCase());
 
         this.exampleFiles = files;
+        this.localImportFiles = localImportFiles;
         this.selectorName = selector;
         this.indexFilename = primaryFile;
 

@@ -15,6 +15,9 @@ export interface LiveExample {
   primaryFile: string;
   /** List of files which are part of the example. */
   files: string[];
+  /** Files shared with other examples via relative imports, needed to compile the example
+   *  (e.g. in StackBlitz) but not shown as a tab of its own in the docs source viewer. */
+  localImportFiles: string[];
   /** Path to the directory containing the example. */
   packagePath: string;
   /** List of additional components which are part of the example. */
