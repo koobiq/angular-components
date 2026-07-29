@@ -103,6 +103,14 @@ describe('KbqAppSwitcher', () => {
             expect(groups['TypeA'].icon).toBe(APP_1.icon);
         });
 
+        it('identifies the group by its type, so the rendered row has a non-empty track key', () => {
+            const groups: Record<string, KbqAppSwitcherApp> = {};
+
+            defaultGroupBy(APP_1, groups, []);
+
+            expect(groups['TypeA'].id).toBe(APP_1.type);
+        });
+
         it('appends second app with the same type to existing group aliases', () => {
             const groups: Record<string, KbqAppSwitcherApp> = {};
             const untyped: KbqAppSwitcherApp[] = [];
@@ -375,42 +383,46 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(trigger.isOpen).toBe(false);
+                expect(overlayContainer.getContainerElement().querySelector('.kbq-app-switcher')).toBeFalsy();
             }));
         });
 
+        // The fixture starts on SITE_A/APP_1, so every case below selects from SITE_B - otherwise the
+        // assertions would hold whether or not `selectAppInSite` did anything.
         describe('selectAppInSite', () => {
             it('updates trigger.selectedApp', () => {
-                popup.selectAppInSite(SITE_A, APP_1);
-                expect(trigger.selectedApp()).toBe(APP_1);
+                popup.selectAppInSite(SITE_B, APP_3);
+                expect(trigger.selectedApp()).toBe(APP_3);
             });
 
             it('updates trigger.selectedSite with the given site', () => {
-                popup.selectAppInSite(SITE_A, APP_1);
-                expect(trigger.selectedSite()!.id).toBe(SITE_A.id);
+                popup.selectAppInSite(SITE_B, APP_3);
+                expect(trigger.selectedSite()!.id).toBe(SITE_B.id);
             });
 
             it('is a no-op when no site is active', () => {
-                const before = trigger.selectedApp();
+                const site = trigger.selectedSite();
+                const app = trigger.selectedApp();
 
-                expect(() => popup.selectAppInSite(undefined, APP_1)).not.toThrow();
-                expect(trigger.selectedApp()).toBe(before);
+                expect(() => popup.selectAppInSite(undefined, APP_3)).not.toThrow();
+                expect(trigger.selectedSite()).toBe(site);
+                expect(trigger.selectedApp()).toBe(app);
             });
 
             it('emits selectedAppChange with the selected app', () => {
                 const spy = jest.fn();
 
-                // APP_1 is already selected by the fixture, and a model only emits on an actual change.
                 trigger.selectedApp.subscribe(spy);
-                popup.selectAppInSite(SITE_A, APP_2);
-                expect(spy).toHaveBeenCalledWith(APP_2);
+                popup.selectAppInSite(SITE_B, APP_3);
+                expect(spy).toHaveBeenCalledWith(APP_3);
             });
 
             it('emits selectedSiteChange with the selected site', () => {
                 const spy = jest.fn();
 
                 trigger.selectedSite.subscribe(spy);
-                popup.selectAppInSite(SITE_A, APP_1);
-                expect(spy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_A.id }));
+                popup.selectAppInSite(SITE_B, APP_3);
+                expect(spy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_B.id }));
             });
         });
 
@@ -862,7 +874,7 @@ describe('KbqAppSwitcher', () => {
 
             const emptyResult = overlayContainerElement.querySelector('.kbq-app-switcher__empty-search-result');
 
-            expect(emptyResult).toBeTruthy();
+            expect(emptyResult?.textContent?.trim()).toBe(popup.localeData.searchEmptyResult);
         }));
 
         it('shows search results container when query is not empty', fakeAsync(() => {
@@ -913,8 +925,6 @@ describe('KbqAppSwitcher', () => {
     describe('Keyboard navigation', () => {
         let overlayContainer: OverlayContainer;
         let overlayContainerElement: HTMLElement;
-
-        beforeEach(() => {});
 
         afterEach(() => overlayContainer?.ngOnDestroy());
 
@@ -1472,6 +1482,18 @@ describe('KbqAppSwitcher', () => {
                 { id: APP_1.id, name: APP_1.name }
             ]);
         });
+
+        it('drops the empty alias array of such a group, so it renders as a plain row', () => {
+            const groupBy = (app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>) => {
+                groups[app.name] = { id: app.id, name: app.name, aliases: [] };
+            };
+
+            const [result] = makeGroupsForApps([APP_1], KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING, groupBy);
+
+            // The template gates the group header on `app.aliases`, and `[]` is truthy - keeping it would
+            // render a toggle that expands to nothing.
+            expect(result.aliases).toBeUndefined();
+        });
     });
 
     describe('Integration — rendered app groups', () => {
@@ -1666,16 +1688,29 @@ describe('KbqAppSwitcher', () => {
             expect(cleaner.getAttribute('aria-label')).toBe(popup.localeData.clearSearch);
         }));
 
-        it('announces the empty search result', fakeAsync(() => {
+        it('announces the empty search result from a live region that was already mounted', fakeAsync(() => {
             const { fixture, popup } = open(AppSwitcherWithSearch);
 
-            popup.searchControl.setValue('nothing-matches-this');
+            popup.searchControl.setValue('App 0');
             tick();
             fixture.detectChanges();
 
             const empty = overlayContainerElement.querySelector('.kbq-app-switcher__empty-search-result');
 
+            // Present but blank while the query still matches: a live region inserted into the DOM together
+            // with its text is announced unreliably. It still matches `:empty` despite the comment anchor
+            // Angular leaves behind for `@if` - that is what collapses it (see app-switcher.scss).
             expect(empty?.getAttribute('role')).toBe('status');
+            expect(empty!.textContent!.trim()).toBe('');
+            expect(empty!.matches(':empty')).toBe(true);
+
+            popup.searchControl.setValue('nothing-matches-this');
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-app-switcher__empty-search-result')).toBe(empty);
+            expect(empty!.textContent!.trim()).toBe(popup.localeData.searchEmptyResult);
+            expect(empty!.matches(':empty')).toBe(false);
         }));
 
         it('marks the selected app with aria-current', fakeAsync(() => {
@@ -1833,22 +1868,13 @@ class AppSwitcherDynamic {
     selector: 'app-switcher-single-site',
     imports: [KbqAppSwitcherModule],
     template: `
-        <button
-            kbqAppSwitcher
-            [sites]="sites"
-            [selectedSite]="sites[0]"
-            [selectedApp]="sites[0].apps[0]"
-            (selectedAppChange)="onAppChange($event)"
-            (selectedSiteChange)="onSiteChange($event)"
-        >
+        <button kbqAppSwitcher [sites]="sites" [selectedSite]="sites[0]" [selectedApp]="sites[0].apps[0]">
             Trigger
         </button>
     `
 })
 class AppSwitcherSingleSite {
     sites: KbqAppSwitcherSite[] = [{ ...SITE_A, apps: [...SITE_A.apps] }];
-    onAppChange = jest.fn();
-    onSiteChange = jest.fn();
 }
 
 @Component({

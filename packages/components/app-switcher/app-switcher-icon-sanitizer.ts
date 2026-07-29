@@ -50,6 +50,12 @@ const ALLOWED_ELEMENTS: ReadonlySet<string> = new Set([
 /**
  * Attributes allowed on the elements above — geometry, presentation and a few a11y hooks.
  * Anything absent from this list is removed, which covers every `on*` event handler.
+ *
+ * Note the asymmetry with `UNSAFE_STYLE_VALUE` below: `url(...)` is rejected inside `style`, but the paint
+ * attributes that legitimately take it (`fill`, `stroke`, `filter`, `mask`, `clip-path`) are kept as-is,
+ * because `fill="url(#gradient)"` is how an inline icon references its own gradient. That is safe in practice
+ * — browsers resolve those references only within the same document, so an external URL there neither loads
+ * nor renders anything.
  */
 const ALLOWED_ATTRIBUTES: ReadonlySet<string> = new Set([
     'aria-hidden',

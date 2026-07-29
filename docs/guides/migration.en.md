@@ -11,6 +11,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 5. **20.2.0**: the move of the filter-bar API to signals.
 6. **20.2.0**: one shared mechanism for dropdown panel width.
 7. **20.3.0**: removal of the overlay demotion mechanism.
+8. **20.3.0**: the move of the app-switcher API to signals.
 
 ### 1. Upgrade to 18.5.3
 
@@ -342,6 +343,78 @@ export class MyTrigger {
 **Panels that used to slide under your sticky chrome now render on top of it.** If you relied on the old behaviour, lower your header below the overlay container z-index (the library ships `$overlay-container-z-index: 1000`) rather than trying to reinstate the demotion — it lowered every overlay, not just the panel.
 
 **`kbq-select` and popover panels inside `kbq-navbar` / `kbq-top-bar` are fixed by this release.** They applied the demotion unconditionally and had no opt-out, so they rendered behind the very chrome that contained them. No action needed — this is the bug the removal fixes.
+
+### 8. App-switcher upgrade (20.3.0)
+
+In version 20.3.0 `KbqAppSwitcherTrigger` moved `selectedApp` and `selectedSite` from a plain `@Input()` (plus a matching `output()`) to `model()`, and a review of the component removed several members that never did anything. Template bindings keep working — `[selectedApp]`, `[(selectedSite)]` and `(selectedAppChange)` are unchanged — so only programmatic access and reads through a `#ref="kbqAppSwitcher"` template reference variable break.
+
+| Member                                                                               | Before              | After                                                              |
+| ------------------------------------------------------------------------------------ | ------------------- | ------------------------------------------------------------------ |
+| `selectedApp`                                                                        | `@Input()` property | `ModelSignal<KbqAppSwitcherApp \| undefined>` — write via `.set()` |
+| `selectedSite`                                                                       | accessor input      | `ModelSignal<KbqAppSwitcherSite \| undefined>` — **value changed** |
+| `selectedAppChange` / `selectedSiteChange`                                           | `output()`          | the implicit outputs of the models above                           |
+| `header` / `footer`                                                                  | properties          | removed                                                            |
+| `KbqAppSwitcherComponent.isTrapFocus` / `updateTrapFocus()`                          | public API          | removed                                                            |
+| `KbqAppSwitcherDropdownApp.getIcon()`                                                | public method       | removed                                                            |
+| `KbqAppSwitcherListItem.collapsed`                                                   | property            | `ModelSignal<boolean>`                                             |
+| `app` / `site` inputs of `KbqAppSwitcherListItem` / `-DropdownApp` / `-DropdownSite` | optional inputs     | `input.required` signals                                           |
+
+#### Running the migration
+
+The changes are applied by the `app-switcher-signals` schematic (runs automatically):
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually — for example, if you have already upgraded to 20.3.0. To preview without writing — `--fix=false`:
+
+```bash
+ng g @koobiq/components:app-switcher-signals --project <your project>
+```
+
+#### What is fixed automatically
+
+**Reads and writes in TypeScript** (for receivers annotated `KbqAppSwitcherTrigger`):
+
+- trigger.selectedApp → trigger.selectedApp(),
+- trigger.selectedApp = app → trigger.selectedApp.set(app),
+- trigger.selectedApp.name → trigger.selectedApp().name,
+- trigger.selectedAppChange.subscribe(fn) → trigger.selectedApp.subscribe(fn) — `ModelSignal` implements `OutputRef`, so the callback signature is identical
+
+**Reads through a template reference variable** (`#ref="kbqAppSwitcher"`, in external `.html` files and inline templates):
+
+- switcher.selectedApp → switcher.selectedApp()
+
+All replacements are idempotent — an access already followed by `()`, `.set`, `.update`, `.asReadonly` or `.subscribe` is left alone, so running the schematic twice does not double the call.
+
+Note that `selectedApp()` is typed `KbqAppSwitcherApp | undefined`. Where the old property was read as non-nullable, the compiler will now ask for a `!` or a `?.` — that narrowing is yours to place.
+
+#### What you need to fix manually
+
+The schematic emits warnings for what cannot be rewritten safely:
+
+**`selectedSite` is not rewritten, because its value changed.** The old getter returned the site with its applications already grouped for rendering; the model returns the value that was passed in. Read `trigger.selectedSite()` for the raw site and `trigger.parsedSelectedSite()` for the grouped one, and write with `trigger.selectedSite.set(site)`. `selectedSiteChange` is now the model's implicit output and emits the raw site as well.
+
+**`selectedAppChange.emit(app)`**: no longer an emitter → `trigger.selectedApp.set(app)`.
+
+**`header` / `footer`**: removed. The popup never rendered either, so the value was pushed into the overlay and dropped — delete the usage.
+
+**`isTrapFocus` / `updateTrapFocus()`**: removed from `KbqAppSwitcherComponent`. Its template never bound `[cdkTrapFocus]`, so neither did anything.
+
+**`KbqAppSwitcherDropdownApp.getIcon()`**: removed. Inline markup is sanitized by `KbqAppSwitcherIconSanitizer` and rendered by the component itself.
+
+**Inline `icon` markup is now sanitized** against a strict SVG allow-list before it is rendered: `<script>`, `<style>`, `<foreignObject>`, HTML elements, every `on*` handler and any reference to an external resource are removed, and markup that changes shape when re-parsed is dropped entirely — in which case the row falls back to `iconSrc`. Check any icon that relies on those; prefer `iconSrc` for icons that come from a server.
+
+The schematic does not cover the following changes — check them yourself:
+
+**`KbqAppSwitcherModule` no longer provides `FocusTrapFactory` / `FOCUS_TRAP_INERT_STRATEGY`.** The app-switcher never rendered a focus trap, and those providers are injector-wide: they replaced the CDK inert focus-trap strategy with a no-op for every other focus trap in the same scope. If your application relied on that, provide them explicitly where they are actually needed.
+
+**`defaultGroupBy`** now identifies a synthetic app group by its type name instead of an empty `id`.
+
+**The popup hides itself when it scrolls out of an ancestor marked `kbq-hide-nested-popup`** (a tab body, for example). The guard that used to suppress this never passed, so the behaviour is effectively new.
+
+The schematic matches receivers by explicit type annotation only, so aliases (`const t = this.trigger; t.selectedApp`) are left untouched — fix them by hand.
 
 ### After the migration
 

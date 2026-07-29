@@ -181,12 +181,19 @@
                         </div>
                     </kbq-dropdown>
                 </div>
-            } @else {
-                <!-- Outside the menu: a status message is not a menu item. -->
-                <div class="kbq-app-switcher__empty-search-result" role="status">
-                    {{ localeData.searchEmptyResult }}
-                </div>
             }
+
+            <!--
+                Outside the menu: a status message is not a menu item. The live region itself stays mounted
+                while the query changes, so the message is announced once it appears - a region inserted into
+                the DOM together with its text is announced unreliably. It collapses while there are results
+                (`:empty`, see app-switcher.scss).
+            -->
+            <div class="kbq-app-switcher__empty-search-result" role="status">
+                @if (!filteredSites.length) {
+                    {{ localeData.searchEmptyResult }}
+                }
+            </div>
         </div>
     }
 </div>

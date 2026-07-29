@@ -1,4 +1,3 @@
-import { ConfigurableFocusTrapFactory, FOCUS_TRAP_INERT_STRATEGY, FocusTrapFactory } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkScrollable, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
@@ -36,7 +35,6 @@ import {
     DOWN_ARROW,
     ENTER,
     ESCAPE,
-    EmptyFocusTrapStrategy,
     FocusKeyManager,
     KBQ_LOCALE_SERVICE,
     KbqOptionModule,
@@ -144,7 +142,9 @@ export function defaultGroupBy(
                 aliases: [app],
                 icon: app.icon,
                 iconSrc: app.iconSrc,
-                id: ''
+                // The type name, not an empty string: the rendered rows are tracked by `id`, and a falsy one
+                // would make every group fall back to the name-based key.
+                id: appType
             };
         }
     }
@@ -172,8 +172,10 @@ export function makeGroupsForApps(
         const { aliases } = group;
 
         if (!aliases?.length) {
-            // A custom `groupBy` is free to emit a group without aliases - render it as a plain row.
-            untyped.push(group);
+            // A custom `groupBy` is free to emit a group without aliases - render it as a plain row. An empty
+            // array has to be dropped too: the template gates the group header on the presence of `aliases`,
+            // and `[]` is truthy, so it would render a toggle that expands to nothing.
+            untyped.push(aliases ? { ...group, aliases: undefined } : group);
         } else if (aliases.length > minAppsForGrouping) {
             groupedApps.push(group);
         } else {
@@ -189,7 +191,10 @@ export function makeGroupsForApps(
 export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH: number = 7;
 export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING: number = 3;
 
-/** Scroll handlers read layout (`getBoundingClientRect`); coalesce them to roughly one frame. */
+/**
+ * `hideIfNotInViewPort` reads layout (`getBoundingClientRect`) and hangs off `CdkScrollable.elementScrolled()`,
+ * which - unlike `ScrollDispatcher.scrolled()` - is not audited by the CDK; coalesce it to roughly one frame.
+ */
 const SCROLL_GEOMETRY_THROTTLE = 16;
 
 /** @docs-private */
@@ -220,24 +225,25 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken<KbqAppSwitcherC
 );
 
 /**
- * Providers required by the app-switcher. `KbqAppSwitcherModule` applies them for `NgModule` consumers;
- * standalone consumers that import `KbqAppSwitcherTrigger` directly should add them to their application (or
- * route) providers instead.
+ * Providers used by the app-switcher. `KbqAppSwitcherModule` applies them for `NgModule` consumers;
+ * standalone consumers that import `KbqAppSwitcherTrigger` directly may add them to their application (or
+ * route) providers.
  *
- * The scroll strategy is optional - the directive falls back to the default repositioning strategy - but the
- * focus-trap providers are what keep focus behaving correctly inside the overlay, so they are worth providing
- * explicitly.
+ * Providing them is optional: the only entry is the scroll strategy, and the directive falls back to the
+ * default repositioning strategy when the token is absent. The app-switcher renders no focus trap, so - unlike
+ * `KbqPopoverModule` and `KbqNotificationCenterModule`, whose templates bind `[cdkTrapFocus]` - it must not
+ * swap `FOCUS_TRAP_INERT_STRATEGY`/`FocusTrapFactory`: those are injector-wide and would disable the CDK
+ * inert strategy for every other focus trap in the same scope.
  */
 export function provideKbqAppSwitcher(): Provider[] {
-    return [
-        KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-        { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory },
-        { provide: FOCUS_TRAP_INERT_STRATEGY, useClass: EmptyFocusTrapStrategy }
-    ];
+    return [KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER];
 }
 
-/** Popup rendered by `KbqAppSwitcherTrigger`. Must be placed in the consumer's template and wired to the
- * trigger via `[trigger]`. */
+/**
+ * Popup rendered by `KbqAppSwitcherTrigger`. The trigger attaches it to a CDK overlay itself (see
+ * `getOverlayHandleComponentType`) and assigns `trigger` on the created instance, so consumers never place
+ * `<kbq-app-switcher>` in a template - `[kbqAppSwitcher]` on the trigger element is the whole public surface.
+ */
 @Component({
     selector: 'kbq-app-switcher',
     imports: [
@@ -327,9 +333,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     /** @docs-private */
     private readonly dir = inject(Directionality, { optional: true });
 
-    /** Offset the popup margins were last applied for, so the DOM write happens once instead of per open. */
-    private appliedOffset: number | null | undefined;
-
     /**
      * CSS class marking a nested alias row, bound in the template (see app-switcher.html). Kept as a
      * single named constant, rather than a literal repeated in both places, so handleGroupHorizontal's
@@ -385,11 +388,9 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
         }
 
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
-            // The margin depends only on `offset`, which the trigger pushes in through `updateData()`;
-            // re-writing it on every open would be a DOM write per popup show for no benefit.
-            if (!state || this.offset === null || this.offset === this.appliedOffset) return;
-
-            this.appliedOffset = this.offset;
+            // Not memoized on `offset`: `applyPopupMargins` picks the margin side from the current
+            // `kbq-app-switcher_placement-*` classes, so the write depends on the placement too.
+            if (!state || this.offset === null) return;
 
             applyPopupMargins(this.renderer, this.elementRef.nativeElement, this.prefix, `${this.offset}px`);
         });
@@ -863,10 +864,11 @@ export class KbqAppSwitcherTrigger
 
     ngAfterContentInit(): void {
         // Hide the popup once it scrolls out of an ancestor that opted in with `kbq-hide-nested-popup`
-        // (e.g. a tab body), mirroring `KbqPopover`.
+        // (e.g. a tab body), mirroring `KbqPopover`. No extra throttle: `ScrollDispatcher.scrolled()`
+        // already audits its output (20ms by default).
         this.scrollDispatcher
             .scrolled()
-            .pipe(auditTime(SCROLL_GEOMETRY_THROTTLE), takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((scrollable: CdkScrollable | void) => {
                 if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
 

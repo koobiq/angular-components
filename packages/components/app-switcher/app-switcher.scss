@@ -42,6 +42,13 @@
     height: var(--kbq-app-switcher-size-empty-search-result-height, 96px);
 }
 
+// The element is an always-mounted `role="status"` live region (see app-switcher.html); it only takes up
+// space while it actually holds the message. Comments - the anchors Angular leaves behind for `@if` - do not
+// affect `:empty`, and `preserveWhitespaces: false` keeps whitespace-only text nodes out of the template.
+.kbq-app-switcher__empty-search-result:empty {
+    display: none;
+}
+
 .kbq-app-switcher__app-container {
     display: flex;
     flex-direction: column;

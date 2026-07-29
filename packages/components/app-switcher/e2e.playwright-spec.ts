@@ -2,6 +2,24 @@ import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqAppSwitcherModule', () => {
+    // The e2e host always renders one <kbq-app-switcher> inline (used by the screenshot tests);
+    // clicking the trigger opens a second instance in the CDK overlay. Scope every locator to the
+    // overlay panel so it never ambiguously matches the always-present inline instance.
+    const overlay = (page: Page) => page.locator('.kbq-app-switcher__panel');
+    const listItem = (page: Page) => overlay(page).locator('.kbq-app-switcher-list-item');
+
+    const openStates = async (page: Page) => {
+        await page.goto('/E2eAppSwitcherStates');
+        await page.getByTestId('e2eAppSwitcherStates').getByRole('button').click();
+        await expect(overlay(page)).toBeVisible();
+    };
+
+    const openWithSites = async (page: Page) => {
+        await page.goto('/E2eAppSwitcherWithSitesStates');
+        await page.getByTestId('e2eAppSwitcherWithSitesStates').getByRole('button').click();
+        await expect(overlay(page)).toBeVisible();
+    };
+
     test.describe('E2eAppSwitcherStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eAppSwitcherStates');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
@@ -48,19 +66,8 @@ test.describe('KbqAppSwitcherModule', () => {
     });
 
     test.describe('keyboard navigation', () => {
-        // The e2e host always renders one <kbq-app-switcher> inline (used by the screenshot tests);
-        // clicking the trigger opens a second instance in the CDK overlay. Scope every locator to the
-        // overlay panel so it never ambiguously matches the always-present inline instance.
-        const overlay = (page: Page) => page.locator('.kbq-app-switcher__panel');
-        const listItem = (page: Page) => overlay(page).locator('.kbq-app-switcher-list-item');
         const focusedItem = (page: Page) =>
             overlay(page).locator('.kbq-app-switcher-list-item.cdk-keyboard-focused').first();
-
-        const openStates = async (page: Page) => {
-            await page.goto('/E2eAppSwitcherStates');
-            await page.getByTestId('e2eAppSwitcherStates').getByRole('button').click();
-            await expect(overlay(page)).toBeVisible();
-        };
 
         test('ArrowDown then ArrowUp returns focus to the same item', async ({ page }) => {
             await openStates(page);
@@ -124,9 +131,7 @@ test.describe('KbqAppSwitcherModule', () => {
         });
 
         test('opening a site flyout keeps the menu open', async ({ page }) => {
-            await page.goto('/E2eAppSwitcherWithSitesStates');
-            await page.getByTestId('e2eAppSwitcherWithSitesStates').getByRole('button').click();
-            await expect(overlay(page)).toBeVisible();
+            await openWithSites(page);
 
             await page.keyboard.press('ArrowDown'); // from the search field into the list
             await page.keyboard.press('End'); // the last menu item is an other-site row
@@ -138,9 +143,7 @@ test.describe('KbqAppSwitcherModule', () => {
         });
 
         test('ArrowLeft collapses an app group', async ({ page }) => {
-            await page.goto('/E2eAppSwitcherWithSitesStates');
-            await page.getByTestId('e2eAppSwitcherWithSitesStates').getByRole('button').click();
-            await expect(overlay(page)).toBeVisible();
+            await openWithSites(page);
 
             // The search field is focused first; ArrowDown moves onto the first group header.
             await page.keyboard.press('ArrowDown');
@@ -154,15 +157,6 @@ test.describe('KbqAppSwitcherModule', () => {
     });
 
     test.describe('search and pointer interaction', () => {
-        const overlay = (page: Page) => page.locator('.kbq-app-switcher__panel');
-        const listItem = (page: Page) => overlay(page).locator('.kbq-app-switcher-list-item');
-
-        const openWithSites = async (page: Page) => {
-            await page.goto('/E2eAppSwitcherWithSitesStates');
-            await page.getByTestId('e2eAppSwitcherWithSitesStates').getByRole('button').click();
-            await expect(overlay(page)).toBeVisible();
-        };
-
         test('typing a query narrows the list to the matching apps', async ({ page }) => {
             await openWithSites(page);
 
@@ -180,10 +174,14 @@ test.describe('KbqAppSwitcherModule', () => {
 
         test('a query with no match shows an announced empty state', async ({ page }) => {
             await openWithSites(page);
-
-            await page.keyboard.type('no-such-application');
-
             const empty = overlay(page).locator('.kbq-app-switcher__empty-search-result');
+
+            // The live region is mounted for the whole search, but stays collapsed while there are results.
+            await page.keyboard.type('phantom');
+            await expect(listItem(page).first()).toBeVisible();
+            await expect(empty).toBeHidden();
+
+            await page.keyboard.type('-no-such-application');
 
             await expect(empty).toBeVisible();
             await expect(empty).toHaveAttribute('role', 'status');
@@ -229,13 +227,9 @@ test.describe('KbqAppSwitcherModule', () => {
     test.describe('reduced motion', () => {
         test('the switcher opens and stays usable with reduced motion requested', async ({ page }) => {
             await page.emulateMedia({ reducedMotion: 'reduce' });
-            await page.goto('/E2eAppSwitcherStates');
-            await page.getByTestId('e2eAppSwitcherStates').getByRole('button').click();
+            await openStates(page);
 
-            const overlayPanel = page.locator('.kbq-app-switcher__panel');
-
-            await expect(overlayPanel).toBeVisible();
-            await expect(overlayPanel.locator('.kbq-app-switcher-list-item').first()).toBeVisible();
+            await expect(listItem(page).first()).toBeVisible();
         });
     });
 });
