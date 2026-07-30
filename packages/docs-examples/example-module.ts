@@ -15,6 +15,9 @@ export interface LiveExample {
   primaryFile: string;
   /** List of files which are part of the example. */
   files: string[];
+  /** Files shared with other examples via relative imports, needed to compile the example
+   *  (e.g. in StackBlitz) but not shown as a tab of its own in the docs source viewer. */
+  localImportFiles: string[];
   /** Path to the directory containing the example. */
   packagePath: string;
   /** List of additional components which are part of the example. */
@@ -33,6 +36,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-content-example.html",
       "accordion-content-example.css"
     ],
+    "localImportFiles": [],
     "selector": "accordion-content-example",
     "additionalComponents": [],
     "primaryFile": "accordion-content-example.ts",
@@ -46,6 +50,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-header-example.ts",
       "accordion-header-example.html"
     ],
+    "localImportFiles": [],
     "selector": "accordion-header-example",
     "additionalComponents": [],
     "primaryFile": "accordion-header-example.ts",
@@ -59,6 +64,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-in-panel-example.ts",
       "accordion-in-panel-example.html"
     ],
+    "localImportFiles": [],
     "selector": "accordion-in-panel-example",
     "additionalComponents": [],
     "primaryFile": "accordion-in-panel-example.ts",
@@ -73,6 +79,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-in-section-example.html",
       "accordion-in-section-example.css"
     ],
+    "localImportFiles": [],
     "selector": "accordion-in-section-example",
     "additionalComponents": [],
     "primaryFile": "accordion-in-section-example.ts",
@@ -86,6 +93,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-inactive-section-example.ts",
       "accordion-inactive-section-example.html"
     ],
+    "localImportFiles": [],
     "selector": "accordion-inactive-section-example",
     "additionalComponents": [],
     "primaryFile": "accordion-inactive-section-example.ts",
@@ -99,6 +107,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-overview-example.ts",
       "accordion-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "accordion-overview-example",
     "additionalComponents": [],
     "primaryFile": "accordion-overview-example.ts",
@@ -112,6 +121,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-sections-example.ts",
       "accordion-sections-example.html"
     ],
+    "localImportFiles": [],
     "selector": "accordion-sections-example",
     "additionalComponents": [],
     "primaryFile": "accordion-sections-example.ts",
@@ -125,6 +135,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-states-example.ts",
       "accordion-states-example.html"
     ],
+    "localImportFiles": [],
     "selector": "accordion-states-example",
     "additionalComponents": [],
     "primaryFile": "accordion-states-example.ts",
@@ -137,6 +148,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "actions-panel-adaptive-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "actions-panel-adaptive-example",
     "additionalComponents": [
       "ExampleActionsPanel"
@@ -151,6 +163,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "actions-panel-close-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "actions-panel-close-example",
     "additionalComponents": [],
     "primaryFile": "actions-panel-close-example.ts",
@@ -163,6 +176,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "actions-panel-custom-counter-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "actions-panel-custom-counter-example",
     "additionalComponents": [],
     "primaryFile": "actions-panel-custom-counter-example.ts",
@@ -175,6 +189,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "actions-panel-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "actions-panel-overview-example",
     "additionalComponents": [],
     "primaryFile": "actions-panel-overview-example.ts",
@@ -187,6 +202,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "actions-panel-with-dropdown-and-popover-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "actions-panel-with-dropdown-and-popover-example",
     "additionalComponents": [],
     "primaryFile": "actions-panel-with-dropdown-and-popover-example.ts",
@@ -199,6 +215,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-and-actions-panel-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-and-actions-panel-example",
     "additionalComponents": [
       "ExampleGrid",
@@ -214,6 +231,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-column-menu-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-column-menu-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-column-menu-example.ts",
@@ -226,6 +244,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-column-state-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-column-state-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-column-state-example.ts",
@@ -238,6 +257,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-copy-selected-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-copy-selected-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-copy-selected-example.ts",
@@ -250,6 +270,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-external-filter-state-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-external-filter-state-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-external-filter-state-example.ts",
@@ -262,6 +283,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-filter-state-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-filter-state-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-filter-state-example.ts",
@@ -274,6 +296,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-infinite-selection-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-infinite-selection-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-infinite-selection-example.ts",
@@ -286,6 +309,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-loading-overlay-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-loading-overlay-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-loading-overlay-example.ts",
@@ -298,6 +322,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-overview-example",
     "additionalComponents": [
       "ExampleLinkCellRenderer"
@@ -312,6 +337,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-quick-filter-state-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-quick-filter-state-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-quick-filter-state-example.ts",
@@ -324,6 +350,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-row-actions-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-row-actions-example",
     "additionalComponents": [
       "ExampleRowActionsComponent"
@@ -338,6 +365,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-row-dragging-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-row-dragging-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-row-dragging-example.ts",
@@ -350,6 +378,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-skeleton-cell-renderer-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-skeleton-cell-renderer-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-skeleton-cell-renderer-example.ts",
@@ -362,6 +391,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "ag-grid-status-bar-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "ag-grid-status-bar-example",
     "additionalComponents": [
       "ExampleAgGridStatusBarComponent"
@@ -376,6 +406,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "alert-close-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "alert-close-example",
     "additionalComponents": [],
     "primaryFile": "alert-close-example.ts",
@@ -390,6 +421,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "alert-content-example.html",
       "alert-content-example.css"
     ],
+    "localImportFiles": [],
     "selector": "alert-content-example",
     "additionalComponents": [],
     "primaryFile": "alert-content-example.ts",
@@ -402,6 +434,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "alert-dynamic-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "alert-dynamic-example",
     "additionalComponents": [],
     "primaryFile": "alert-dynamic-example.ts",
@@ -416,6 +449,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "alert-overview-example.html",
       "alert-overview-example.css"
     ],
+    "localImportFiles": [],
     "selector": "alert-overview-example",
     "additionalComponents": [],
     "primaryFile": "alert-overview-example.ts",
@@ -430,6 +464,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "alert-status-example.html",
       "alert-status-example.css"
     ],
+    "localImportFiles": [],
     "selector": "alert-status-example",
     "additionalComponents": [],
     "primaryFile": "alert-status-example.ts",
@@ -443,6 +478,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "alert-variants-example.ts",
       "alert-variants-example.css"
     ],
+    "localImportFiles": [],
     "selector": "alert-variants-example",
     "additionalComponents": [],
     "primaryFile": "alert-variants-example.ts",
@@ -455,6 +491,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "app-switcher-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "app-switcher-overview-example",
     "additionalComponents": [],
     "primaryFile": "app-switcher-overview-example.ts",
@@ -467,6 +504,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "app-switcher-sites-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "app-switcher-sites-example",
     "additionalComponents": [],
     "primaryFile": "app-switcher-sites-example.ts",
@@ -479,6 +517,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "autocomplete-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "autocomplete-overview-example",
     "additionalComponents": [],
     "primaryFile": "autocomplete-overview-example.ts",
@@ -491,6 +530,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "autocomplete-with-footer-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "autocomplete-with-footer-example",
     "additionalComponents": [],
     "primaryFile": "autocomplete-with-footer-example.ts",
@@ -503,6 +543,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "badge-content-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "badge-content-example",
     "additionalComponents": [],
     "primaryFile": "badge-content-example.ts",
@@ -516,6 +557,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "badge-list-example.ts",
       "badge-list-example.css"
     ],
+    "localImportFiles": [],
     "selector": "badge-list-example",
     "additionalComponents": [],
     "primaryFile": "badge-list-example.ts",
@@ -530,6 +572,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "badge-overview-example.html",
       "badge-overview-example.css"
     ],
+    "localImportFiles": [],
     "selector": "badge-overview-example",
     "additionalComponents": [],
     "primaryFile": "badge-overview-example.ts",
@@ -542,6 +585,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "badge-size-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "badge-size-example",
     "additionalComponents": [],
     "primaryFile": "badge-size-example.ts",
@@ -555,6 +599,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "badge-table-example.ts",
       "badge-table-example.html"
     ],
+    "localImportFiles": [],
     "selector": "badge-table-example",
     "additionalComponents": [],
     "primaryFile": "badge-table-example.ts",
@@ -568,6 +613,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "badge-tooltip-example.ts",
       "badge-tooltip-example.css"
     ],
+    "localImportFiles": [],
     "selector": "badge-tooltip-example",
     "additionalComponents": [],
     "primaryFile": "badge-tooltip-example.ts",
@@ -580,6 +626,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-custom-template-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-custom-template-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-custom-template-example.ts",
@@ -592,6 +639,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-dropdown-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-dropdown-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-dropdown-example.ts",
@@ -604,6 +652,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-overview-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-overview-example.ts",
@@ -616,6 +665,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-routing-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-routing-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-routing-example.ts",
@@ -628,6 +678,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-selectable-text-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-selectable-text-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-selectable-text-example.ts",
@@ -640,6 +691,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-size-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-size-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-size-example.ts",
@@ -652,6 +704,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-truncate-by-abbrev-items-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-truncate-by-abbrev-items-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-truncate-by-abbrev-items-example.ts",
@@ -664,6 +717,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-truncate-center-items-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-truncate-center-items-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-truncate-center-items-example.ts",
@@ -676,6 +730,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-truncate-head-items-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-truncate-head-items-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-truncate-head-items-example.ts",
@@ -688,6 +743,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-truncate-tail-items-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-truncate-tail-items-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-truncate-tail-items-example.ts",
@@ -700,6 +756,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-with-auto-wrap-adaptive-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-with-auto-wrap-adaptive-example",
     "additionalComponents": [
       "ExampleBreadcrumbs"
@@ -714,6 +771,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "breadcrumbs-with-wrap-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "breadcrumbs-with-wrap-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-with-wrap-example.ts",
@@ -727,6 +785,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-toggle-alignment-overview-example.ts",
       "button-toggle-alignment-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "button-toggle-alignment-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-alignment-overview-example.ts",
@@ -740,6 +799,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-toggle-disabled-all-overview-example.ts",
       "button-toggle-disabled-all-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "button-toggle-disabled-all-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-disabled-all-overview-example.ts",
@@ -753,6 +813,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-toggle-disabled-partial-overview-example.ts",
       "button-toggle-disabled-partial-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "button-toggle-disabled-partial-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-disabled-partial-overview-example.ts",
@@ -766,6 +827,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-toggle-overview-example.ts",
       "button-toggle-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "button-toggle-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-overview-example.ts",
@@ -778,6 +840,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "button-toggle-tooltip-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "button-toggle-tooltip-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-tooltip-overview-example.ts",
@@ -791,6 +854,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-content-example.ts",
       "button-content-example.css"
     ],
+    "localImportFiles": [],
     "selector": "button-content-example",
     "additionalComponents": [],
     "primaryFile": "button-content-example.ts",
@@ -805,6 +869,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-fill-and-style-only-icon-example.html",
       "button-fill-and-style-only-icon-example.css"
     ],
+    "localImportFiles": [],
     "selector": "button-fill-and-style-only-icon-example",
     "additionalComponents": [],
     "primaryFile": "button-fill-and-style-only-icon-example.ts",
@@ -819,6 +884,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-fill-and-style-example.html",
       "button-fill-and-style-example.css"
     ],
+    "localImportFiles": [],
     "selector": "button-fill-and-style-example",
     "additionalComponents": [],
     "primaryFile": "button-fill-and-style-example.ts",
@@ -832,6 +898,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-fill-content-example.ts",
       "button-fill-content-example.css"
     ],
+    "localImportFiles": [],
     "selector": "button-fill-content-example",
     "additionalComponents": [],
     "primaryFile": "button-fill-content-example.ts",
@@ -845,6 +912,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-fixed-content-example.ts",
       "button-fixed-content-example.css"
     ],
+    "localImportFiles": [],
     "selector": "button-fixed-content-example",
     "additionalComponents": [],
     "primaryFile": "button-fixed-content-example.ts",
@@ -857,6 +925,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "button-group-content-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "button-group-content-example",
     "additionalComponents": [],
     "primaryFile": "button-group-content-example.ts",
@@ -869,6 +938,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "button-group-custom-content-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "button-group-custom-content-example",
     "additionalComponents": [],
     "primaryFile": "button-group-custom-content-example.ts",
@@ -881,6 +951,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "button-group-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "button-group-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-group-overview-example.ts",
@@ -893,6 +964,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "button-group-style-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "button-group-style-example",
     "additionalComponents": [],
     "primaryFile": "button-group-style-example.ts",
@@ -905,6 +977,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "button-group-vertical-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "button-group-vertical-example",
     "additionalComponents": [],
     "primaryFile": "button-group-vertical-example.ts",
@@ -918,6 +991,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-hug-content-example.ts",
       "button-hug-content-example.css"
     ],
+    "localImportFiles": [],
     "selector": "button-hug-content-example",
     "additionalComponents": [],
     "primaryFile": "button-hug-content-example.ts",
@@ -930,6 +1004,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "button-loading-state-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "button-loading-state-example",
     "additionalComponents": [],
     "primaryFile": "button-loading-state-example.ts",
@@ -943,6 +1018,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-overview-example.ts",
       "button-overview-example.css"
     ],
+    "localImportFiles": [],
     "selector": "button-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-overview-example.ts",
@@ -955,6 +1031,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "checkbox-indeterminate-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "checkbox-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "checkbox-indeterminate-example.ts",
@@ -967,6 +1044,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "checkbox-multiline-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "checkbox-multiline-example",
     "additionalComponents": [],
     "primaryFile": "checkbox-multiline-example.ts",
@@ -980,6 +1058,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "checkbox-overview-example.ts",
       "checkbox-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "checkbox-overview-example",
     "additionalComponents": [],
     "primaryFile": "checkbox-overview-example.ts",
@@ -992,6 +1071,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "pseudo-checkbox-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "pseudo-checkbox-example",
     "additionalComponents": [],
     "primaryFile": "pseudo-checkbox-example.ts",
@@ -1004,6 +1084,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "clamped-list-dotted-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "clamped-list-dotted-example",
     "additionalComponents": [],
     "primaryFile": "clamped-list-dotted-example.ts",
@@ -1016,6 +1097,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "clamped-list-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "clamped-list-overview-example",
     "additionalComponents": [],
     "primaryFile": "clamped-list-overview-example.ts",
@@ -1028,6 +1110,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "clamped-list-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "clamped-list-example",
     "additionalComponents": [],
     "primaryFile": "clamped-list-example.ts",
@@ -1040,6 +1123,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "clamped-text-external-state-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "clamped-text-external-state-example",
     "additionalComponents": [],
     "primaryFile": "clamped-text-external-state-example.ts",
@@ -1052,6 +1136,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "clamped-text-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "clamped-text-overview-example",
     "additionalComponents": [],
     "primaryFile": "clamped-text-overview-example.ts",
@@ -1064,6 +1149,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-header-pinned-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-header-pinned-example",
     "additionalComponents": [],
     "primaryFile": "code-block-header-pinned-example.ts",
@@ -1076,6 +1162,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-overview-example",
     "additionalComponents": [],
     "primaryFile": "code-block-overview-example.ts",
@@ -1088,6 +1175,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-with-custom-locale-configuration-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-with-custom-locale-configuration-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-custom-locale-configuration-example.ts",
@@ -1100,6 +1188,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-with-filled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-with-filled-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-filled-example.ts",
@@ -1112,6 +1201,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-with-link-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-with-link-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-link-example.ts",
@@ -1124,6 +1214,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-with-max-height-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-with-max-height-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-max-height-example.ts",
@@ -1136,6 +1227,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-with-no-border-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-with-no-border-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-no-border-example.ts",
@@ -1148,6 +1240,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-with-soft-wrap-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-with-soft-wrap-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-soft-wrap-example.ts",
@@ -1160,6 +1253,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-with-tabs-and-shadow-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-with-tabs-and-shadow-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-tabs-and-shadow-example.ts",
@@ -1172,6 +1266,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "code-block-with-tabs-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "code-block-with-tabs-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-tabs-example.ts",
@@ -1184,6 +1279,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "content-panel-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "content-panel-overview-example",
     "additionalComponents": [],
     "primaryFile": "content-panel-overview-example.ts",
@@ -1196,6 +1292,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "content-panel-with-grid-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "content-panel-with-grid-example",
     "additionalComponents": [
       "ExampleGrid",
@@ -1213,6 +1310,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "absolute-date-formatter-example.html",
       "absolute-date-formatter-example.css"
     ],
+    "localImportFiles": [],
     "selector": "absolute-date-formatter-example",
     "additionalComponents": [],
     "primaryFile": "absolute-date-formatter-example.ts",
@@ -1225,6 +1323,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "date-formatter-special-use-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "date-formatter-special-use-example",
     "additionalComponents": [],
     "primaryFile": "date-formatter-special-use-example.ts",
@@ -1237,6 +1336,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "date-formatter-typical-use-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "date-formatter-typical-use-example",
     "additionalComponents": [],
     "primaryFile": "date-formatter-typical-use-example.ts",
@@ -1251,6 +1351,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "duration-date-formatter-example.html",
       "duration-date-formatter-example.css"
     ],
+    "localImportFiles": [],
     "selector": "duration-date-formatter-example",
     "additionalComponents": [],
     "primaryFile": "duration-date-formatter-example.ts",
@@ -1265,6 +1366,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "range-date-formatter-example.html",
       "range-date-formatter-example.css"
     ],
+    "localImportFiles": [],
     "selector": "range-date-formatter-example",
     "additionalComponents": [],
     "primaryFile": "range-date-formatter-example.ts",
@@ -1279,6 +1381,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "relative-date-formatter-example.html",
       "relative-date-formatter-example.css"
     ],
+    "localImportFiles": [],
     "selector": "relative-date-formatter-example",
     "additionalComponents": [],
     "primaryFile": "relative-date-formatter-example.ts",
@@ -1291,6 +1394,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "datepicker-and-timepicker-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "datepicker-and-timepicker-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-and-timepicker-example.ts",
@@ -1303,6 +1407,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "datepicker-inactive-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "datepicker-inactive-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-inactive-example.ts",
@@ -1315,6 +1420,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "datepicker-minimax-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "datepicker-minimax-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-minimax-example.ts",
@@ -1327,6 +1433,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "datepicker-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "datepicker-overview-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-overview-example.ts",
@@ -1339,6 +1446,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "datepicker-range-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "datepicker-range-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-range-example.ts",
@@ -1351,6 +1459,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "datepicker-required-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "datepicker-required-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-required-example.ts",
@@ -1363,6 +1472,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "divider-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "divider-overview-example",
     "additionalComponents": [],
     "primaryFile": "divider-overview-example.ts",
@@ -1375,6 +1485,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "divider-vertical-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "divider-vertical-example",
     "additionalComponents": [],
     "primaryFile": "divider-vertical-example.ts",
@@ -1387,6 +1498,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dl-horizontal-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dl-horizontal-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-horizontal-overview-example.ts",
@@ -1399,6 +1511,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dl-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dl-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-overview-example.ts",
@@ -1411,6 +1524,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dl-small-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dl-small-example",
     "additionalComponents": [],
     "primaryFile": "dl-small-example.ts",
@@ -1423,6 +1537,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dl-vertical-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dl-vertical-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-vertical-overview-example.ts",
@@ -1436,6 +1551,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-disabled-example.ts",
       "dropdown-disabled-example.html"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-disabled-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-disabled-example.ts",
@@ -1461,6 +1577,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-lazyload-data-example.ts",
       "dropdown-lazyload-data-example.html"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-lazyload-data-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-lazyload-data-example.ts",
@@ -1474,6 +1591,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-navigation-wrap-example.ts",
       "dropdown-navigation-wrap-example.html"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-navigation-wrap-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-navigation-wrap-example.ts",
@@ -1487,6 +1605,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-nested-example.ts",
       "dropdown-nested-example.html"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-nested-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-nested-example.ts",
@@ -1500,6 +1619,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-open-by-arrow-down-example.ts",
       "dropdown-open-by-arrow-down-example.html"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-open-by-arrow-down-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-open-by-arrow-down-example.ts",
@@ -1513,6 +1633,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-overview-example.ts",
       "dropdown-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-overview-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-overview-example.ts",
@@ -1525,6 +1646,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dropdown-recursive-template-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-recursive-template-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-recursive-template-example.ts",
@@ -1537,6 +1659,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dropdown-with-filter-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-with-filter-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-with-filter-example.ts",
@@ -1561,6 +1684,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dropdown-x-position-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-x-position-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-x-position-example.ts",
@@ -1573,6 +1697,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dynamic-translation-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dynamic-translation-overview-example",
     "additionalComponents": [],
     "primaryFile": "dynamic-translation-overview-example.ts",
@@ -1585,6 +1710,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dynamic-translation-with-dynamic-component-creation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dynamic-translation-with-dynamic-component-creation-example",
     "additionalComponents": [],
     "primaryFile": "dynamic-translation-with-dynamic-component-creation-example.ts",
@@ -1597,6 +1723,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-actions-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-actions-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-actions-example.ts",
@@ -1609,6 +1736,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-actions2-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-actions2-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-actions2-example.ts",
@@ -1621,6 +1749,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-align-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-align-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-align-example.ts",
@@ -1633,6 +1762,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-big-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-big-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-big-example.ts",
@@ -1645,6 +1775,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-content-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-content-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-content-example.ts",
@@ -1657,6 +1788,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-error-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-error-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-error-example.ts",
@@ -1669,6 +1801,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-icon-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-icon-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-icon-example.ts",
@@ -1681,6 +1814,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-overview-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-overview-example.ts",
@@ -1693,6 +1827,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-size-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-size-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-size-example.ts",
@@ -1705,6 +1840,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-text-only-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-text-only-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-text-only-example.ts",
@@ -1717,6 +1853,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "empty-state-title-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "empty-state-title-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-title-example.ts",
@@ -1729,6 +1866,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-allowed-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-allowed-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-allowed-example.ts",
@@ -1741,6 +1879,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-custom-text-via-input-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-custom-text-via-input-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-custom-text-via-input-example.ts",
@@ -1753,6 +1892,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-cva-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-cva-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-cva-overview-example.ts",
@@ -1765,6 +1905,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-dropzone-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-dropzone-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-dropzone-example.ts",
@@ -1777,6 +1918,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-indeterminate-loading-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-indeterminate-loading-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-indeterminate-loading-overview-example.ts",
@@ -1789,6 +1931,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-local-dropzone-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-local-dropzone-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-local-dropzone-example.ts",
@@ -1801,6 +1944,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-accept-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-accept-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-accept-validation-example.ts",
@@ -1813,6 +1957,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-compact-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-compact-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-compact-overview-example.ts",
@@ -1824,6 +1969,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "FileUploadMultipleCustomTextOverviewExample",
     "files": [
       "file-upload-multiple-custom-text-overview-example.ts"
+    ],
+    "localImportFiles": [
+      "../en-US.ts",
+      "../es-LA.ts",
+      "../pt-BR.ts",
+      "../ru-RU.ts"
     ],
     "selector": "file-upload-multiple-custom-text-overview-example",
     "additionalComponents": [],
@@ -1837,6 +1988,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-default-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-default-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-default-overview-example.ts",
@@ -1849,6 +2001,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-default-validation-reactive-forms-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-default-validation-reactive-forms-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-default-validation-reactive-forms-overview-example.ts",
@@ -1861,6 +2014,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-disabled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-disabled-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-disabled-example.ts",
@@ -1873,6 +2027,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-error-filled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-error-filled-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-error-filled-example.ts",
@@ -1885,6 +2040,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-error-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-error-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-error-example.ts",
@@ -1897,6 +2053,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-mixed-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-mixed-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-mixed-validation-example.ts",
@@ -1909,6 +2066,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-required-reactive-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-required-reactive-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-required-reactive-validation-example.ts",
@@ -1921,6 +2079,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-with-custom-icon-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-with-custom-icon-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-with-custom-icon-example.ts",
@@ -1933,6 +2092,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-with-fixed-height-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-with-fixed-height-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-with-fixed-height-example.ts",
@@ -1945,6 +2105,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-multiple-with-max-height-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-multiple-with-max-height-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-with-max-height-example.ts",
@@ -1957,6 +2118,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-overview-example.ts",
@@ -1969,6 +2131,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-primitive-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-primitive-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-primitive-example.ts",
@@ -1981,6 +2144,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-single-accept-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-single-accept-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-accept-validation-example.ts",
@@ -1993,6 +2157,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-single-async-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-single-async-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-async-validation-example.ts",
@@ -2005,6 +2170,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-single-mixed-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-single-mixed-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-mixed-validation-example.ts",
@@ -2017,6 +2183,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-single-required-reactive-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-single-required-reactive-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-required-reactive-validation-example.ts",
@@ -2029,6 +2196,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-single-validation-reactive-forms-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-single-validation-reactive-forms-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-validation-reactive-forms-overview-example.ts",
@@ -2041,6 +2209,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-single-with-signal-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-single-with-signal-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-with-signal-example.ts",
@@ -2053,6 +2222,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "file-upload-single-with-size-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "file-upload-single-with-size-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-with-size-example.ts",
@@ -2065,6 +2235,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filesize-formatter-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filesize-formatter-overview-example",
     "additionalComponents": [],
     "primaryFile": "filesize-formatter-overview-example.ts",
@@ -2077,6 +2248,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filesize-formatter-table-number-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filesize-formatter-table-number-example",
     "additionalComponents": [],
     "primaryFile": "filesize-formatter-table-number-example.ts",
@@ -2089,6 +2261,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-cleanable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-cleanable-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-cleanable-example.ts",
@@ -2101,6 +2274,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-complete-functions-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-complete-functions-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-complete-functions-example.ts",
@@ -2114,6 +2288,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-custom-pipe-example.ts",
       "../../../../components/filter-bar/pipes/base-pipe.scss"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-custom-pipe-example",
     "additionalComponents": [
       "ColorPipeComponent"
@@ -2128,6 +2303,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-date-limits-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-date-limits-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-date-limits-example.ts",
@@ -2140,6 +2316,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-inactive-filter-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-inactive-filter-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-inactive-filter-example.ts",
@@ -2152,6 +2329,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-localization-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-localization-example",
     "additionalComponents": [
       "LocalizationDemoBar",
@@ -2181,6 +2359,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-master-checkbox-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-master-checkbox-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-master-checkbox-example.ts",
@@ -2193,6 +2372,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-overview-example.ts",
@@ -2205,6 +2385,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-pipe-types-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-pipe-types-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-pipe-types-example.ts",
@@ -2217,6 +2398,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-readonly-pipe-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-readonly-pipe-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-readonly-pipe-example.ts",
@@ -2229,6 +2411,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-readonly-pipes-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-readonly-pipes-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-readonly-pipes-example.ts",
@@ -2241,6 +2424,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-removable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-removable-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-removable-example.ts",
@@ -2253,6 +2437,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-required-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-required-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-required-example.ts",
@@ -2265,6 +2450,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-saved-filters-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-saved-filters-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-saved-filters-example.ts",
@@ -2277,6 +2463,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-search-in-pipes-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-search-in-pipes-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-search-in-pipes-example.ts",
@@ -2289,6 +2476,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-search-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-search-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-search-example.ts",
@@ -2301,6 +2489,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-uniq-pipes-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-uniq-pipes-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-uniq-pipes-example.ts",
@@ -2313,6 +2502,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "flag-aspect-ratio-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "flag-aspect-ratio-example",
     "additionalComponents": [],
     "primaryFile": "flag-aspect-ratio-example.ts",
@@ -2325,6 +2515,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "flag-circle-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "flag-circle-example",
     "additionalComponents": [],
     "primaryFile": "flag-circle-example.ts",
@@ -2337,6 +2528,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "flag-fallback-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "flag-fallback-example",
     "additionalComponents": [],
     "primaryFile": "flag-fallback-example.ts",
@@ -2349,6 +2541,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "flag-language-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "flag-language-example",
     "additionalComponents": [],
     "primaryFile": "flag-language-example.ts",
@@ -2361,6 +2554,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "flag-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "flag-overview-example",
     "additionalComponents": [],
     "primaryFile": "flag-overview-example.ts",
@@ -2373,6 +2567,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "flag-sizes-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "flag-sizes-example",
     "additionalComponents": [],
     "primaryFile": "flag-sizes-example.ts",
@@ -2385,6 +2580,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "flag-square-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "flag-square-example",
     "additionalComponents": [],
     "primaryFile": "flag-square-example.ts",
@@ -2397,6 +2593,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "flag-stylized-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "flag-stylized-example",
     "additionalComponents": [],
     "primaryFile": "flag-stylized-example.ts",
@@ -2409,6 +2606,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-horizontal-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-horizontal-example",
     "additionalComponents": [],
     "primaryFile": "form-field-horizontal-example.ts",
@@ -2421,6 +2619,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-overview-example",
     "additionalComponents": [],
     "primaryFile": "form-field-overview-example.ts",
@@ -2433,6 +2632,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-password-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-password-overview-example",
     "additionalComponents": [],
     "primaryFile": "form-field-password-overview-example.ts",
@@ -2445,6 +2645,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-with-cleaner-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-with-cleaner-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-cleaner-example.ts",
@@ -2457,6 +2658,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-with-custom-error-state-matcher-set-by-attribute-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-with-custom-error-state-matcher-set-by-attribute-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-custom-error-state-matcher-set-by-attribute-example.ts",
@@ -2469,6 +2671,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example.ts",
@@ -2481,6 +2684,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-with-error-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-with-error-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-error-example.ts",
@@ -2493,6 +2697,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-with-hint-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-with-hint-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-hint-example.ts",
@@ -2505,6 +2710,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-with-prefix-and-suffix-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-with-prefix-and-suffix-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-prefix-and-suffix-example.ts",
@@ -2517,6 +2723,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-field-without-borders-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-field-without-borders-example",
     "additionalComponents": [],
     "primaryFile": "form-field-without-borders-example.ts",
@@ -2529,6 +2736,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-fieldset-invalid-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-fieldset-invalid-example",
     "additionalComponents": [],
     "primaryFile": "form-fieldset-invalid-example.ts",
@@ -2541,6 +2749,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-fieldset-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-fieldset-overview-example",
     "additionalComponents": [],
     "primaryFile": "form-fieldset-overview-example.ts",
@@ -2553,6 +2762,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "form-fieldset-with-button-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "form-fieldset-with-button-example",
     "additionalComponents": [],
     "primaryFile": "form-fieldset-with-button-example.ts",
@@ -2567,6 +2777,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "horizontal-form-labels-example.html",
       "horizontal-form-labels-example.css"
     ],
+    "localImportFiles": [],
     "selector": "horizontal-form-labels-example",
     "additionalComponents": [],
     "primaryFile": "horizontal-form-labels-example.ts",
@@ -2580,6 +2791,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "horizontal-form-example.ts",
       "horizontal-form-example.html"
     ],
+    "localImportFiles": [],
     "selector": "horizontal-form-example",
     "additionalComponents": [],
     "primaryFile": "horizontal-form-example.ts",
@@ -2593,6 +2805,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "vertical-form-example.ts",
       "vertical-form-example.html"
     ],
+    "localImportFiles": [],
     "selector": "vertical-form-example",
     "additionalComponents": [],
     "primaryFile": "vertical-form-example.ts",
@@ -2605,6 +2818,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "highlight-background-complex-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "highlight-background-complex-example",
     "additionalComponents": [],
     "primaryFile": "highlight-background-complex-example.ts",
@@ -2617,6 +2831,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "highlight-background-table-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "highlight-background-table-example",
     "additionalComponents": [],
     "primaryFile": "highlight-background-table-example.ts",
@@ -2629,6 +2844,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "highlight-background-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "highlight-background-example",
     "additionalComponents": [],
     "primaryFile": "highlight-background-example.ts",
@@ -2641,6 +2857,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "highlight-select-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "highlight-select-example",
     "additionalComponents": [],
     "primaryFile": "highlight-select-example.ts",
@@ -2653,6 +2870,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "icon-button-custom-size-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "icon-button-custom-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-custom-size-example.ts",
@@ -2665,6 +2883,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "icon-button-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "icon-button-overview-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-overview-example.ts",
@@ -2677,6 +2896,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "icon-button-size-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "icon-button-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-size-example.ts",
@@ -2689,6 +2909,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "icon-button-style-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "icon-button-style-example",
     "additionalComponents": [],
     "primaryFile": "icon-button-style-example.ts",
@@ -2702,6 +2923,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "icon-item-color-example.ts",
       "icon-item-color-example.css"
     ],
+    "localImportFiles": [],
     "selector": "icon-item-color-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-color-example.ts",
@@ -2715,6 +2937,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "icon-item-overview-example.ts",
       "icon-item-overview-example.css"
     ],
+    "localImportFiles": [],
     "selector": "icon-item-overview-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-overview-example.ts",
@@ -2728,6 +2951,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "icon-item-size-example.ts",
       "icon-item-size-example.css"
     ],
+    "localImportFiles": [],
     "selector": "icon-item-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-size-example.ts",
@@ -2741,6 +2965,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "icon-item-variant-example.ts",
       "icon-item-variant-example.css"
     ],
+    "localImportFiles": [],
     "selector": "icon-item-variant-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-variant-example.ts",
@@ -2753,6 +2978,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-content-alignment-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-content-alignment-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-content-alignment-example.ts",
@@ -2765,6 +2991,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-controls-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-controls-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-controls-example.ts",
@@ -2777,6 +3004,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-custom-handler-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-custom-handler-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-custom-handler-example.ts",
@@ -2789,6 +3017,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-customized-design-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-customized-design-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-customized-design-example.ts",
@@ -2801,6 +3030,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-date-time-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-date-time-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-date-time-example.ts",
@@ -2813,6 +3043,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-disabled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-disabled-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-disabled-example.ts",
@@ -2825,6 +3056,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-editable-header-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-editable-header-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-editable-header-example.ts",
@@ -2837,6 +3069,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-horizontal-list-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-horizontal-list-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-horizontal-list-example.ts",
@@ -2849,6 +3082,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-menu-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-menu-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-menu-example.ts",
@@ -2861,6 +3095,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-on-clean-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-on-clean-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-on-clean-example.ts",
@@ -2873,6 +3108,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-overview-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-overview-example.ts",
@@ -2885,6 +3121,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-unfilled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-unfilled-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-unfilled-example.ts",
@@ -2897,6 +3134,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-validation-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-validation-example.ts",
@@ -2909,6 +3147,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-vertical-list-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-vertical-list-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-vertical-list-example.ts",
@@ -2921,6 +3160,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "inline-edit-without-label-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "inline-edit-without-label-example",
     "additionalComponents": [],
     "primaryFile": "inline-edit-without-label-example.ts",
@@ -2933,6 +3173,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "input-change-password-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "input-change-password-example",
     "additionalComponents": [],
     "primaryFile": "input-change-password-example.ts",
@@ -2945,6 +3186,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "input-number-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "input-number-overview-example",
     "additionalComponents": [],
     "primaryFile": "input-number-overview-example.ts",
@@ -2957,6 +3199,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "input-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "input-overview-example",
     "additionalComponents": [],
     "primaryFile": "input-overview-example.ts",
@@ -2969,6 +3212,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "input-password-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "input-password-overview-example",
     "additionalComponents": [],
     "primaryFile": "input-password-overview-example.ts",
@@ -2981,6 +3225,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "input-with-mask-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "input-with-mask-example",
     "additionalComponents": [],
     "primaryFile": "input-with-mask-example.ts",
@@ -2994,6 +3239,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "layout-flex-alignment-example.ts",
       "layout-flex-alignment-example.css"
     ],
+    "localImportFiles": [],
     "selector": "layout-flex-alignment-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-alignment-example.ts",
@@ -3007,6 +3253,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "layout-flex-behaviour-modifiers-example.ts",
       "layout-flex-behaviour-modifiers-example.css"
     ],
+    "localImportFiles": [],
     "selector": "layout-flex-behaviour-modifiers-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-behaviour-modifiers-example.ts",
@@ -3020,6 +3267,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "layout-flex-offsets-example.ts",
       "layout-flex-offsets-example.css"
     ],
+    "localImportFiles": [],
     "selector": "layout-flex-offsets-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-offsets-example.ts",
@@ -3033,6 +3281,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "layout-flex-order-example.ts",
       "layout-flex-order-example.css"
     ],
+    "localImportFiles": [],
     "selector": "layout-flex-order-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-order-example.ts",
@@ -3046,6 +3295,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "layout-flex-overview-example.ts",
       "layout-flex-overview-example.css"
     ],
+    "localImportFiles": [],
     "selector": "layout-flex-overview-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-overview-example.ts",
@@ -3058,6 +3308,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-application-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-application-example",
     "additionalComponents": [],
     "primaryFile": "link-application-example.ts",
@@ -3070,6 +3321,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-caption-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-caption-example",
     "additionalComponents": [],
     "primaryFile": "link-caption-example.ts",
@@ -3082,6 +3334,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-disabled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-disabled-example",
     "additionalComponents": [],
     "primaryFile": "link-disabled-example.ts",
@@ -3094,6 +3347,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-external-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-external-example",
     "additionalComponents": [],
     "primaryFile": "link-external-example.ts",
@@ -3106,6 +3360,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-general-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-general-example",
     "additionalComponents": [],
     "primaryFile": "link-general-example.ts",
@@ -3118,6 +3373,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-icons-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-icons-example",
     "additionalComponents": [],
     "primaryFile": "link-icons-example.ts",
@@ -3130,6 +3386,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-multi-line-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-multi-line-example",
     "additionalComponents": [],
     "primaryFile": "link-multi-line-example.ts",
@@ -3142,6 +3399,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-overview-example",
     "additionalComponents": [],
     "primaryFile": "link-overview-example.ts",
@@ -3154,6 +3412,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-prepositions-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-prepositions-example",
     "additionalComponents": [],
     "primaryFile": "link-prepositions-example.ts",
@@ -3166,6 +3425,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-print-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-print-example",
     "additionalComponents": [],
     "primaryFile": "link-print-example.ts",
@@ -3178,6 +3438,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-pseudo-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-pseudo-example",
     "additionalComponents": [],
     "primaryFile": "link-pseudo-example.ts",
@@ -3190,6 +3451,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-target-blank-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-target-blank-example",
     "additionalComponents": [],
     "primaryFile": "link-target-blank-example.ts",
@@ -3202,6 +3464,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-visited-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-visited-example",
     "additionalComponents": [],
     "primaryFile": "link-visited-example.ts",
@@ -3214,6 +3477,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "link-with-caption-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "link-with-caption-example",
     "additionalComponents": [],
     "primaryFile": "link-with-caption-example.ts",
@@ -3226,6 +3490,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "list-action-button-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "list-action-button-example",
     "additionalComponents": [],
     "primaryFile": "list-action-button-example.ts",
@@ -3238,6 +3503,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "list-groups-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "list-groups-example",
     "additionalComponents": [],
     "primaryFile": "list-groups-example.ts",
@@ -3251,6 +3517,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "list-intermediate-state-example.ts",
       "./list-intermediate-state-example.html"
     ],
+    "localImportFiles": [],
     "selector": "list-intermediate-state-example",
     "additionalComponents": [],
     "primaryFile": "list-intermediate-state-example.ts",
@@ -3263,6 +3530,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "list-multiple-checkbox-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "list-multiple-checkbox-example",
     "additionalComponents": [],
     "primaryFile": "list-multiple-checkbox-example.ts",
@@ -3275,6 +3543,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "list-multiple-keyboard-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "list-multiple-keyboard-example",
     "additionalComponents": [],
     "primaryFile": "list-multiple-keyboard-example.ts",
@@ -3287,6 +3556,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "list-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "list-overview-example",
     "additionalComponents": [],
     "primaryFile": "list-overview-example.ts",
@@ -3299,6 +3569,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "list-virtual-scroll-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "list-virtual-scroll-example",
     "additionalComponents": [],
     "primaryFile": "list-virtual-scroll-example.ts",
@@ -3311,6 +3582,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "loader-overlay-card-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "loader-overlay-card-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-card-example.ts",
@@ -3323,6 +3595,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "loader-overlay-default-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "loader-overlay-default-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-default-example.ts",
@@ -3335,6 +3608,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "loader-overlay-fixed-top-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "loader-overlay-fixed-top-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-fixed-top-example.ts",
@@ -3347,6 +3621,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "loader-overlay-large-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "loader-overlay-large-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-large-example.ts",
@@ -3359,6 +3634,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "loader-overlay-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "loader-overlay-overview-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-overview-example.ts",
@@ -3371,6 +3647,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "loader-overlay-size-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "loader-overlay-size-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-size-example.ts",
@@ -3384,6 +3661,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-article-example.ts",
       "./markdown-article-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-article-example",
     "additionalComponents": [],
     "primaryFile": "markdown-article-example.ts",
@@ -3397,6 +3675,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-code-block-example.ts",
       "./markdown-code-block-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-code-block-example",
     "additionalComponents": [],
     "primaryFile": "markdown-code-block-example.ts",
@@ -3410,6 +3689,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-code-example.ts",
       "./markdown-code-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-code-example",
     "additionalComponents": [],
     "primaryFile": "markdown-code-example.ts",
@@ -3423,6 +3703,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-divider-example.ts",
       "./markdown-divider-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-divider-example",
     "additionalComponents": [],
     "primaryFile": "markdown-divider-example.ts",
@@ -3436,6 +3717,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-headers-combinations-example.ts",
       "./markdown-headers-combinations-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-headers-combinations-example",
     "additionalComponents": [],
     "primaryFile": "markdown-headers-combinations-example.ts",
@@ -3449,6 +3731,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-image-example.ts",
       "./markdown-image-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-image-example",
     "additionalComponents": [],
     "primaryFile": "markdown-image-example.ts",
@@ -3461,6 +3744,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "markdown-line-break-with-markdown-text-input-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "markdown-line-break-with-markdown-text-input-example",
     "additionalComponents": [],
     "primaryFile": "markdown-line-break-with-markdown-text-input-example.ts",
@@ -3474,6 +3758,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-line-break-example.ts",
       "./markdown-line-break-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-line-break-example",
     "additionalComponents": [],
     "primaryFile": "markdown-line-break-example.ts",
@@ -3487,6 +3772,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-link-example.ts",
       "./markdown-link-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-link-example",
     "additionalComponents": [],
     "primaryFile": "markdown-link-example.ts",
@@ -3500,6 +3786,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-list-example.ts",
       "./markdown-list-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-list-example",
     "additionalComponents": [],
     "primaryFile": "markdown-list-example.ts",
@@ -3513,6 +3800,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-overview-example.ts",
       "./markdown-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-overview-example",
     "additionalComponents": [],
     "primaryFile": "markdown-overview-example.ts",
@@ -3526,6 +3814,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-paragraph-example.ts",
       "./markdown-paragraph-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-paragraph-example",
     "additionalComponents": [],
     "primaryFile": "markdown-paragraph-example.ts",
@@ -3539,6 +3828,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-quote-example.ts",
       "./markdown-quote-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-quote-example",
     "additionalComponents": [],
     "primaryFile": "markdown-quote-example.ts",
@@ -3552,6 +3842,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-selection-example.ts",
       "markdown-selection-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-selection-example",
     "additionalComponents": [],
     "primaryFile": "markdown-selection-example.ts",
@@ -3565,6 +3856,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "markdown-table-example.ts",
       "./markdown-table-example.html"
     ],
+    "localImportFiles": [],
     "selector": "markdown-table-example",
     "additionalComponents": [],
     "primaryFile": "markdown-table-example.ts",
@@ -3577,6 +3869,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-caption-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-caption-example",
     "additionalComponents": [],
     "primaryFile": "modal-caption-example.ts",
@@ -3589,6 +3882,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-component-with-injector-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-component-with-injector-example",
     "additionalComponents": [
       "CustomModalComponent"
@@ -3603,6 +3897,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-component-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-component-example",
     "additionalComponents": [
       "CustomModalComponent"
@@ -3617,6 +3912,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-multiple-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-multiple-example",
     "additionalComponents": [],
     "primaryFile": "modal-multiple-example.ts",
@@ -3629,6 +3925,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-overview-example",
     "additionalComponents": [],
     "primaryFile": "modal-overview-example.ts",
@@ -3641,6 +3938,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-scroll-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-scroll-example",
     "additionalComponents": [
       "CustomModalComponent"
@@ -3655,6 +3953,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-sizes-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-sizes-example",
     "additionalComponents": [],
     "primaryFile": "modal-sizes-example.ts",
@@ -3667,6 +3966,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-template-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-template-example",
     "additionalComponents": [],
     "primaryFile": "modal-template-example.ts",
@@ -3680,6 +3980,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-app-long-name-example.ts",
       "navbar-app-long-name-example.html"
     ],
+    "localImportFiles": [],
     "selector": "navbar-app-long-name-example",
     "additionalComponents": [],
     "primaryFile": "navbar-app-long-name-example.ts",
@@ -3693,6 +3994,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-overview-example.ts",
       "navbar-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "navbar-overview-example",
     "additionalComponents": [],
     "primaryFile": "navbar-overview-example.ts",
@@ -3706,6 +4008,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-template-outlet-example.ts",
       "navbar-template-outlet-example.html"
     ],
+    "localImportFiles": [],
     "selector": "navbar-template-outlet-example",
     "additionalComponents": [],
     "primaryFile": "navbar-template-outlet-example.ts",
@@ -3719,6 +4022,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-vertical-app-long-name-example.ts",
       "navbar-vertical-app-long-name-example.html"
     ],
+    "localImportFiles": [],
     "selector": "navbar-vertical-app-long-name-example",
     "additionalComponents": [],
     "primaryFile": "navbar-vertical-app-long-name-example.ts",
@@ -3732,6 +4036,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-vertical-open-over-example.ts",
       "navbar-vertical-open-over-example.html"
     ],
+    "localImportFiles": [],
     "selector": "navbar-vertical-open-over-example",
     "additionalComponents": [],
     "primaryFile": "navbar-vertical-open-over-example.ts",
@@ -3745,6 +4050,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-vertical-example.ts",
       "navbar-vertical-example.html"
     ],
+    "localImportFiles": [],
     "selector": "navbar-vertical-example",
     "additionalComponents": [],
     "primaryFile": "navbar-vertical-example.ts",
@@ -3758,6 +4064,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-empty-example.ts",
       "notification-center-empty-example.html"
     ],
+    "localImportFiles": [],
     "selector": "notification-center-empty-example",
     "additionalComponents": [],
     "primaryFile": "notification-center-empty-example.ts",
@@ -3771,6 +4078,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-error-example.ts",
       "notification-center-error-example.html"
     ],
+    "localImportFiles": [],
     "selector": "notification-center-error-example",
     "additionalComponents": [],
     "primaryFile": "notification-center-error-example.ts",
@@ -3784,6 +4092,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-infinite-scroll-example.ts",
       "notification-center-infinite-scroll-example.html"
     ],
+    "localImportFiles": [],
     "selector": "notification-center-infinite-scroll-example",
     "additionalComponents": [],
     "primaryFile": "notification-center-infinite-scroll-example.ts",
@@ -3797,6 +4106,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-overview-example.ts",
       "notification-center-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "notification-center-overview-example",
     "additionalComponents": [],
     "primaryFile": "notification-center-overview-example.ts",
@@ -3810,6 +4120,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-popover-example.ts",
       "notification-center-popover-example.html"
     ],
+    "localImportFiles": [],
     "selector": "notification-center-popover-example",
     "additionalComponents": [],
     "primaryFile": "notification-center-popover-example.ts",
@@ -3823,6 +4134,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-push-example.ts",
       "notification-center-push-example.html"
     ],
+    "localImportFiles": [],
     "selector": "notification-center-push-example",
     "additionalComponents": [],
     "primaryFile": "notification-center-push-example.ts",
@@ -3835,6 +4147,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "number-formatter-locale-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "number-formatter-locale-example",
     "additionalComponents": [],
     "primaryFile": "number-formatter-locale-example.ts",
@@ -3847,6 +4160,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "number-formatter-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "number-formatter-overview-example",
     "additionalComponents": [],
     "primaryFile": "number-formatter-overview-example.ts",
@@ -3859,6 +4173,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "number-formatter-rounding-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "number-formatter-rounding-example",
     "additionalComponents": [],
     "primaryFile": "number-formatter-rounding-example.ts",
@@ -3871,6 +4186,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "overflow-items-as-clamped-list-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "overflow-items-as-clamped-list-example",
     "additionalComponents": [],
     "primaryFile": "overflow-items-as-clamped-list-example.ts",
@@ -3883,6 +4199,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "overflow-items-justify-content-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "overflow-items-justify-content-example",
     "additionalComponents": [],
     "primaryFile": "overflow-items-justify-content-example.ts",
@@ -3895,6 +4212,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "overflow-items-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "overflow-items-overview-example",
     "additionalComponents": [],
     "primaryFile": "overflow-items-overview-example.ts",
@@ -3907,6 +4225,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "overflow-items-with-always-visible-item-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "overflow-items-with-always-visible-item-example",
     "additionalComponents": [],
     "primaryFile": "overflow-items-with-always-visible-item-example.ts",
@@ -3919,6 +4238,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "overflow-items-with-order-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "overflow-items-with-order-example",
     "additionalComponents": [],
     "primaryFile": "overflow-items-with-order-example.ts",
@@ -3931,6 +4251,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "overflow-items-with-vertical-orientation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "overflow-items-with-vertical-orientation-example",
     "additionalComponents": [],
     "primaryFile": "overflow-items-with-vertical-orientation-example.ts",
@@ -3943,6 +4264,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "popover-arrow-and-offset-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "popover-arrow-and-offset-example",
     "additionalComponents": [],
     "primaryFile": "popover-arrow-and-offset-example.ts",
@@ -3955,6 +4277,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "popover-arrowless-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "popover-arrowless-example",
     "additionalComponents": [],
     "primaryFile": "popover-arrowless-example.ts",
@@ -3969,6 +4292,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-close-example.html",
       "popover-close-example.css"
     ],
+    "localImportFiles": [],
     "selector": "popover-close-example",
     "additionalComponents": [],
     "primaryFile": "popover-close-example.ts",
@@ -3983,6 +4307,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-content-example.html",
       "popover-content-example.css"
     ],
+    "localImportFiles": [],
     "selector": "popover-content-example",
     "additionalComponents": [],
     "primaryFile": "popover-content-example.ts",
@@ -3996,6 +4321,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-header-example.ts",
       "popover-header-example.html"
     ],
+    "localImportFiles": [],
     "selector": "popover-header-example",
     "additionalComponents": [],
     "primaryFile": "popover-header-example.ts",
@@ -4009,6 +4335,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-height-example.ts",
       "popover-height-example.html"
     ],
+    "localImportFiles": [],
     "selector": "popover-height-example",
     "additionalComponents": [],
     "primaryFile": "popover-height-example.ts",
@@ -4021,6 +4348,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "popover-hover-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "popover-hover-example",
     "additionalComponents": [],
     "primaryFile": "popover-hover-example.ts",
@@ -4033,6 +4361,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "popover-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "popover-overview-example",
     "additionalComponents": [],
     "primaryFile": "popover-overview-example.ts",
@@ -4046,6 +4375,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-paddings-example.ts",
       "popover-paddings-example.html"
     ],
+    "localImportFiles": [],
     "selector": "popover-paddings-example",
     "additionalComponents": [],
     "primaryFile": "popover-paddings-example.ts",
@@ -4059,6 +4389,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-placement-center-example.ts",
       "popover-placement-center-example.html"
     ],
+    "localImportFiles": [],
     "selector": "popover-placement-center-example",
     "additionalComponents": [],
     "primaryFile": "popover-placement-center-example.ts",
@@ -4072,6 +4403,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-placement-edges-example.ts",
       "popover-placement-edges-example.html"
     ],
+    "localImportFiles": [],
     "selector": "popover-placement-edges-example",
     "additionalComponents": [],
     "primaryFile": "popover-placement-edges-example.ts",
@@ -4084,6 +4416,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "popover-scroll-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "popover-scroll-example",
     "additionalComponents": [],
     "primaryFile": "popover-scroll-example.ts",
@@ -4096,6 +4429,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "popover-scrolling-and-layering-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "popover-scrolling-and-layering-example",
     "additionalComponents": [],
     "primaryFile": "popover-scrolling-and-layering-example.ts",
@@ -4109,6 +4443,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-small-example.ts",
       "popover-small-example.html"
     ],
+    "localImportFiles": [],
     "selector": "popover-small-example",
     "additionalComponents": [],
     "primaryFile": "popover-small-example.ts",
@@ -4122,6 +4457,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-width-example.ts",
       "popover-width-example.html"
     ],
+    "localImportFiles": [],
     "selector": "popover-width-example",
     "additionalComponents": [],
     "primaryFile": "popover-width-example.ts",
@@ -4134,6 +4470,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "progress-bar-indeterminate-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "progress-bar-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "progress-bar-indeterminate-example.ts",
@@ -4146,6 +4483,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "progress-bar-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "progress-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "progress-bar-overview-example.ts",
@@ -4158,6 +4496,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "progress-spinner-indeterminate-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "progress-spinner-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "progress-spinner-indeterminate-example.ts",
@@ -4170,6 +4509,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "progress-spinner-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "progress-spinner-overview-example",
     "additionalComponents": [],
     "primaryFile": "progress-spinner-overview-example.ts",
@@ -4183,6 +4523,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "radio-content-example.ts",
       "radio-content-example.html"
     ],
+    "localImportFiles": [],
     "selector": "radio-content-example",
     "additionalComponents": [],
     "primaryFile": "radio-content-example.ts",
@@ -4195,6 +4536,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "radio-group-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "radio-group-example",
     "additionalComponents": [],
     "primaryFile": "radio-group-example.ts",
@@ -4207,6 +4549,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "radio-multiline-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "radio-multiline-example",
     "additionalComponents": [],
     "primaryFile": "radio-multiline-example.ts",
@@ -4219,6 +4562,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "radio-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "radio-overview-example",
     "additionalComponents": [],
     "primaryFile": "radio-overview-example.ts",
@@ -4231,6 +4575,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "radio-style-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "radio-style-example",
     "additionalComponents": [],
     "primaryFile": "radio-style-example.ts",
@@ -4243,6 +4588,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "resizer-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "resizer-overview-example",
     "additionalComponents": [],
     "primaryFile": "resizer-overview-example.ts",
@@ -4255,6 +4601,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "scrollbar-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "scrollbar-overview-example",
     "additionalComponents": [],
     "primaryFile": "scrollbar-overview-example.ts",
@@ -4267,6 +4614,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "scrollbar-scroll-to-top-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "scrollbar-scroll-to-top-example",
     "additionalComponents": [],
     "primaryFile": "scrollbar-scroll-to-top-example.ts",
@@ -4279,6 +4627,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "scrollbar-with-custom-config-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "scrollbar-with-custom-config-example",
     "additionalComponents": [],
     "primaryFile": "scrollbar-with-custom-config-example.ts",
@@ -4291,6 +4640,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "search-expandable-in-header-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "search-expandable-in-header-example",
     "additionalComponents": [],
     "primaryFile": "search-expandable-in-header-example.ts",
@@ -4303,6 +4653,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "search-expandable-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "search-expandable-overview-example",
     "additionalComponents": [],
     "primaryFile": "search-expandable-overview-example.ts",
@@ -4315,6 +4666,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-add-new-option-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-add-new-option-example",
     "additionalComponents": [],
     "primaryFile": "select-add-new-option-example.ts",
@@ -4327,6 +4679,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-cleaner-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-cleaner-example",
     "additionalComponents": [],
     "primaryFile": "select-cleaner-example.ts",
@@ -4339,6 +4692,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-custom-matcher-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-custom-matcher-example",
     "additionalComponents": [],
     "primaryFile": "select-custom-matcher-example.ts",
@@ -4351,6 +4705,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-custom-trigger-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-custom-trigger-example",
     "additionalComponents": [],
     "primaryFile": "select-custom-trigger-example.ts",
@@ -4363,6 +4718,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-disabled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-disabled-example",
     "additionalComponents": [],
     "primaryFile": "select-disabled-example.ts",
@@ -4375,6 +4731,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-footer-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-footer-example",
     "additionalComponents": [],
     "primaryFile": "select-footer-example.ts",
@@ -4387,6 +4744,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-groups-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-groups-example",
     "additionalComponents": [],
     "primaryFile": "select-groups-example.ts",
@@ -4399,6 +4757,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-height-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-height-example",
     "additionalComponents": [],
     "primaryFile": "select-height-example.ts",
@@ -4411,6 +4770,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-icon-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-icon-example",
     "additionalComponents": [],
     "primaryFile": "select-icon-example.ts",
@@ -4423,6 +4783,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-loading-error-custom-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-loading-error-custom-example",
     "additionalComponents": [],
     "primaryFile": "select-loading-error-custom-example.ts",
@@ -4435,6 +4796,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-loading-error-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-loading-error-example",
     "additionalComponents": [],
     "primaryFile": "select-loading-error-example.ts",
@@ -4447,6 +4809,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-loading-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-loading-example",
     "additionalComponents": [],
     "primaryFile": "select-loading-example.ts",
@@ -4459,6 +4822,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-multiple-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-multiple-example",
     "additionalComponents": [],
     "primaryFile": "select-multiple-example.ts",
@@ -4471,6 +4835,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-no-variants-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-no-variants-example",
     "additionalComponents": [],
     "primaryFile": "select-no-variants-example.ts",
@@ -4483,6 +4848,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-overview-example",
     "additionalComponents": [],
     "primaryFile": "select-overview-example.ts",
@@ -4495,6 +4861,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-paging-error-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-paging-error-example",
     "additionalComponents": [],
     "primaryFile": "select-paging-error-example.ts",
@@ -4507,6 +4874,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-paging-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-paging-example",
     "additionalComponents": [],
     "primaryFile": "select-paging-example.ts",
@@ -4519,6 +4887,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-preselected-values-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-preselected-values-example",
     "additionalComponents": [],
     "primaryFile": "select-preselected-values-example.ts",
@@ -4531,6 +4900,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-prioritized-selected-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-prioritized-selected-example",
     "additionalComponents": [],
     "primaryFile": "select-prioritized-selected-example.ts",
@@ -4543,6 +4913,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-scrolling-and-layering-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-scrolling-and-layering-example",
     "additionalComponents": [],
     "primaryFile": "select-scrolling-and-layering-example.ts",
@@ -4555,6 +4926,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-search-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-search-example",
     "additionalComponents": [],
     "primaryFile": "select-search-example.ts",
@@ -4567,6 +4939,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-two-line-option-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-two-line-option-example",
     "additionalComponents": [],
     "primaryFile": "select-two-line-option-example.ts",
@@ -4579,6 +4952,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-validation-example",
     "additionalComponents": [],
     "primaryFile": "select-validation-example.ts",
@@ -4591,6 +4965,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-virtual-scroll-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-virtual-scroll-example",
     "additionalComponents": [],
     "primaryFile": "select-virtual-scroll-example.ts",
@@ -4603,6 +4978,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-with-multiline-matcher-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-with-multiline-matcher-example",
     "additionalComponents": [],
     "primaryFile": "select-with-multiline-matcher-example.ts",
@@ -4615,6 +4991,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-with-panel-min-width-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-with-panel-min-width-example",
     "additionalComponents": [],
     "primaryFile": "select-with-panel-min-width-example.ts",
@@ -4627,6 +5004,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-with-panel-width-auto-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-with-panel-width-auto-example",
     "additionalComponents": [],
     "primaryFile": "select-with-panel-width-auto-example.ts",
@@ -4639,6 +5017,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-with-panel-width-default-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-with-panel-width-default-example",
     "additionalComponents": [],
     "primaryFile": "select-with-panel-width-default-example.ts",
@@ -4651,6 +5030,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "select-with-panel-width-fixed-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "select-with-panel-width-fixed-example",
     "additionalComponents": [],
     "primaryFile": "select-with-panel-width-fixed-example.ts",
@@ -4663,6 +5043,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "sidebar-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "sidebar-overview-example",
     "additionalComponents": [],
     "primaryFile": "sidebar-overview-example.ts",
@@ -4675,6 +5056,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "sidebar-with-splitter-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "sidebar-with-splitter-example",
     "additionalComponents": [],
     "primaryFile": "sidebar-with-splitter-example.ts",
@@ -4688,6 +5070,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidepanel-normal-mode-example.ts",
       "sidepanel-normal-mode-example.html"
     ],
+    "localImportFiles": [],
     "selector": "sidepanel-normal-mode-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-normal-mode-example.ts",
@@ -4701,6 +5084,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidepanel-overlayed-example.ts",
       "./sidepanel-overlayed-example.html"
     ],
+    "localImportFiles": [],
     "selector": "sidepanel-overlayed-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-overlayed-example.ts",
@@ -4714,6 +5098,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidepanel-overview-example.ts",
       "sidepanel-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "sidepanel-overview-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-overview-example.ts",
@@ -4727,6 +5112,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidepanel-sizes-example.ts",
       "sidepanel-sizes-example.html"
     ],
+    "localImportFiles": [],
     "selector": "sidepanel-sizes-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-sizes-example.ts",
@@ -4739,6 +5125,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "sidepanel-with-custom-injector-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "sidepanel-with-custom-injector-example",
     "additionalComponents": [
       "ExampleSidepanelWithCustomInjectorContent"
@@ -4753,6 +5140,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "sidepanel-with-dynamic-config-update-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "sidepanel-with-dynamic-config-update-example",
     "additionalComponents": [
       "ExampleSidepanelComponent"
@@ -4767,6 +5155,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "skeleton-directive-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "skeleton-directive-example",
     "additionalComponents": [],
     "primaryFile": "skeleton-directive-example.ts",
@@ -4779,6 +5168,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "skeleton-in-sidepanel-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "skeleton-in-sidepanel-example",
     "additionalComponents": [],
     "primaryFile": "skeleton-in-sidepanel-example.ts",
@@ -4791,6 +5181,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "skeleton-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "skeleton-overview-example",
     "additionalComponents": [],
     "primaryFile": "skeleton-overview-example.ts",
@@ -4803,6 +5194,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "split-button-content-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "split-button-content-example",
     "additionalComponents": [],
     "primaryFile": "split-button-content-example.ts",
@@ -4815,6 +5207,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "split-button-disabled-state-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "split-button-disabled-state-example",
     "additionalComponents": [],
     "primaryFile": "split-button-disabled-state-example.ts",
@@ -4827,6 +5220,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "split-button-menu-width-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "split-button-menu-width-example",
     "additionalComponents": [],
     "primaryFile": "split-button-menu-width-example.ts",
@@ -4839,6 +5233,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "split-button-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "split-button-overview-example",
     "additionalComponents": [],
     "primaryFile": "split-button-overview-example.ts",
@@ -4851,6 +5246,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "split-button-progress-state-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "split-button-progress-state-example",
     "additionalComponents": [],
     "primaryFile": "split-button-progress-state-example.ts",
@@ -4863,6 +5259,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "split-button-styles-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "split-button-styles-example",
     "additionalComponents": [],
     "primaryFile": "split-button-styles-example.ts",
@@ -4875,6 +5272,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "split-button-text-overflow-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "split-button-text-overflow-example",
     "additionalComponents": [],
     "primaryFile": "split-button-text-overflow-example.ts",
@@ -4887,6 +5285,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "splitter-dynamic-data-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "splitter-dynamic-data-example",
     "additionalComponents": [],
     "primaryFile": "splitter-dynamic-data-example.ts",
@@ -4899,6 +5298,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "splitter-fixed-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "splitter-fixed-example",
     "additionalComponents": [],
     "primaryFile": "splitter-fixed-example.ts",
@@ -4911,6 +5311,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "splitter-nested-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "splitter-nested-example",
     "additionalComponents": [],
     "primaryFile": "splitter-nested-example.ts",
@@ -4923,6 +5324,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "splitter-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "splitter-overview-example",
     "additionalComponents": [],
     "primaryFile": "splitter-overview-example.ts",
@@ -4935,6 +5337,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "splitter-vertical-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "splitter-vertical-example",
     "additionalComponents": [],
     "primaryFile": "splitter-vertical-example.ts",
@@ -4947,6 +5350,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "table-disable-hover-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "table-disable-hover-example",
     "additionalComponents": [],
     "primaryFile": "table-disable-hover-example.ts",
@@ -4960,6 +5364,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "table-full-width-example.ts",
       "table-full-width-example.html"
     ],
+    "localImportFiles": [],
     "selector": "table-full-width-example",
     "additionalComponents": [],
     "primaryFile": "table-full-width-example.ts",
@@ -4972,6 +5377,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "table-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "table-overview-example",
     "additionalComponents": [],
     "primaryFile": "table-overview-example.ts",
@@ -4984,6 +5390,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "table-with-borders-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "table-with-borders-example",
     "additionalComponents": [],
     "primaryFile": "table-with-borders-example.ts",
@@ -4997,6 +5404,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-actionbar-example.ts",
       "tabs-actionbar-example.css"
     ],
+    "localImportFiles": [],
     "selector": "tabs-actionbar-example",
     "additionalComponents": [],
     "primaryFile": "tabs-actionbar-example.ts",
@@ -5009,6 +5417,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tabs-active-tab-id-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tabs-active-tab-id-example",
     "additionalComponents": [],
     "primaryFile": "tabs-active-tab-id-example.ts",
@@ -5021,6 +5430,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tabs-active-tab-index-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tabs-active-tab-index-example",
     "additionalComponents": [],
     "primaryFile": "tabs-active-tab-index-example.ts",
@@ -5034,6 +5444,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-add-tab-vertical-example.ts",
       "./tabs-add-tab-vertical-example.css"
     ],
+    "localImportFiles": [],
     "selector": "tabs-add-tab-vertical-example",
     "additionalComponents": [],
     "primaryFile": "tabs-add-tab-vertical-example.ts",
@@ -5047,6 +5458,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-add-tab-example.ts",
       "./tabs-add-tab-example.css"
     ],
+    "localImportFiles": [],
     "selector": "tabs-add-tab-example",
     "additionalComponents": [],
     "primaryFile": "tabs-add-tab-example.ts",
@@ -5060,6 +5472,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-custom-label-example.ts",
       "tabs-custom-label-example.css"
     ],
+    "localImportFiles": [],
     "selector": "tabs-custom-label-example",
     "additionalComponents": [],
     "primaryFile": "tabs-custom-label-example.ts",
@@ -5072,6 +5485,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tabs-disabled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tabs-disabled-example",
     "additionalComponents": [],
     "primaryFile": "tabs-disabled-example.ts",
@@ -5085,6 +5499,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-empty-label-example.ts",
       "tabs-empty-label-example.css"
     ],
+    "localImportFiles": [],
     "selector": "tabs-empty-label-example",
     "additionalComponents": [],
     "primaryFile": "tabs-empty-label-example.ts",
@@ -5097,6 +5512,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tabs-nav-bar-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tabs-nav-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "tabs-nav-bar-overview-example.ts",
@@ -5109,6 +5525,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tabs-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tabs-overview-example",
     "additionalComponents": [],
     "primaryFile": "tabs-overview-example.ts",
@@ -5121,6 +5538,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tabs-stretch-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tabs-stretch-example",
     "additionalComponents": [],
     "primaryFile": "tabs-stretch-example.ts",
@@ -5133,6 +5551,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tabs-underlined-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tabs-underlined-example",
     "additionalComponents": [],
     "primaryFile": "tabs-underlined-example.ts",
@@ -5146,6 +5565,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-vertical-icons-example.ts",
       "tabs-vertical-icons-example.css"
     ],
+    "localImportFiles": [],
     "selector": "tabs-vertical-icons-example",
     "additionalComponents": [],
     "primaryFile": "tabs-vertical-icons-example.ts",
@@ -5159,6 +5579,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-vertical-example.ts",
       "tabs-vertical-example.css"
     ],
+    "localImportFiles": [],
     "selector": "tabs-vertical-example",
     "additionalComponents": [],
     "primaryFile": "tabs-vertical-example.ts",
@@ -5172,6 +5593,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-with-scroll-vertical-example.ts",
       "tabs-with-scroll-vertical-example.css"
     ],
+    "localImportFiles": [],
     "selector": "tabs-with-scroll-vertical-example",
     "additionalComponents": [],
     "primaryFile": "tabs-with-scroll-vertical-example.ts",
@@ -5184,6 +5606,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tabs-with-scroll-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tabs-with-scroll-example",
     "additionalComponents": [],
     "primaryFile": "tabs-with-scroll-example.ts",
@@ -5196,6 +5619,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-autocomplete-draggable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-autocomplete-draggable-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-draggable-example.ts",
@@ -5208,6 +5632,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-autocomplete-editable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-autocomplete-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-editable-example.ts",
@@ -5221,6 +5646,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tag-autocomplete-onpaste-off-example.ts",
       "tag-autocomplete-onpaste-off-example.html"
     ],
+    "localImportFiles": [],
     "selector": "tag-autocomplete-onpaste-off-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-onpaste-off-example.ts",
@@ -5233,6 +5659,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-autocomplete-option-operations-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-autocomplete-option-operations-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-option-operations-example.ts",
@@ -5245,6 +5672,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-autocomplete-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-autocomplete-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-overview-example.ts",
@@ -5257,6 +5685,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-autocomplete-removable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-autocomplete-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-removable-example.ts",
@@ -5269,6 +5698,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-disabled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-disabled-example",
     "additionalComponents": [],
     "primaryFile": "tag-disabled-example.ts",
@@ -5281,6 +5711,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-editable-with-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-editable-with-validation-example",
     "additionalComponents": [],
     "primaryFile": "tag-editable-with-validation-example.ts",
@@ -5293,6 +5724,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-editable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-editable-example.ts",
@@ -5305,6 +5737,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-fill-and-style-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-fill-and-style-example",
     "additionalComponents": [],
     "primaryFile": "tag-fill-and-style-example.ts",
@@ -5317,6 +5750,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-input-draggable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-input-draggable-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-draggable-example.ts",
@@ -5329,6 +5763,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-input-editable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-input-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-editable-example.ts",
@@ -5342,6 +5777,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tag-input-onpaste-off-example.ts",
       "tag-input-onpaste-off-example.html"
     ],
+    "localImportFiles": [],
     "selector": "tag-input-onpaste-off-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-onpaste-off-example.ts",
@@ -5354,6 +5790,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-input-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-input-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-overview-example.ts",
@@ -5366,6 +5803,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-input-removable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-input-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-removable-example.ts",
@@ -5378,6 +5816,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-input-with-form-control-validators-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-input-with-form-control-validators-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-with-form-control-validators-example.ts",
@@ -5390,6 +5829,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-list-draggable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-list-draggable-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-draggable-example.ts",
@@ -5402,6 +5842,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-list-editable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-list-editable-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-editable-example.ts",
@@ -5414,6 +5855,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-list-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-list-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-overview-example.ts",
@@ -5426,6 +5868,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-list-removable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-list-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-removable-example.ts",
@@ -5438,6 +5881,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-long-text-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-long-text-example",
     "additionalComponents": [],
     "primaryFile": "tag-long-text-example.ts",
@@ -5450,6 +5894,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-overview-example.ts",
@@ -5462,6 +5907,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-removable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-removable-example",
     "additionalComponents": [],
     "primaryFile": "tag-removable-example.ts",
@@ -5474,6 +5920,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-selectable-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-selectable-example",
     "additionalComponents": [],
     "primaryFile": "tag-selectable-example.ts",
@@ -5486,6 +5933,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tag-with-icon-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tag-with-icon-example",
     "additionalComponents": [],
     "primaryFile": "tag-with-icon-example.ts",
@@ -5498,6 +5946,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "textarea-can-grow-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "textarea-can-grow-example",
     "additionalComponents": [],
     "primaryFile": "textarea-can-grow-example.ts",
@@ -5510,6 +5959,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "textarea-disabled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "textarea-disabled-example",
     "additionalComponents": [],
     "primaryFile": "textarea-disabled-example.ts",
@@ -5522,6 +5972,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "textarea-error-state-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "textarea-error-state-example",
     "additionalComponents": [],
     "primaryFile": "textarea-error-state-example.ts",
@@ -5534,6 +5985,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "textarea-max-rows-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "textarea-max-rows-example",
     "additionalComponents": [],
     "primaryFile": "textarea-max-rows-example.ts",
@@ -5546,6 +5998,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "textarea-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "textarea-overview-example",
     "additionalComponents": [],
     "primaryFile": "textarea-overview-example.ts",
@@ -5558,6 +6011,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "time-range-as-form-field-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "time-range-as-form-field-example",
     "additionalComponents": [],
     "primaryFile": "time-range-as-form-field-example.ts",
@@ -5570,6 +6024,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "time-range-custom-option-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "time-range-custom-option-example",
     "additionalComponents": [],
     "primaryFile": "time-range-custom-option-example.ts",
@@ -5582,6 +6037,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "time-range-custom-range-types-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "time-range-custom-range-types-example",
     "additionalComponents": [],
     "primaryFile": "time-range-custom-range-types-example.ts",
@@ -5594,6 +6050,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "time-range-custom-trigger-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "time-range-custom-trigger-example",
     "additionalComponents": [],
     "primaryFile": "time-range-custom-trigger-example.ts",
@@ -5606,6 +6063,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "time-range-empty-type-list-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "time-range-empty-type-list-example",
     "additionalComponents": [],
     "primaryFile": "time-range-empty-type-list-example.ts",
@@ -5618,6 +6076,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "time-range-min-max-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "time-range-min-max-example",
     "additionalComponents": [],
     "primaryFile": "time-range-min-max-example.ts",
@@ -5630,6 +6089,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "time-range-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "time-range-overview-example",
     "additionalComponents": [],
     "primaryFile": "time-range-overview-example.ts",
@@ -5642,6 +6102,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "timepicker-field-validation-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "timepicker-field-validation-example",
     "additionalComponents": [],
     "primaryFile": "timepicker-field-validation-example.ts",
@@ -5654,6 +6115,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "timepicker-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "timepicker-overview-example",
     "additionalComponents": [],
     "primaryFile": "timepicker-overview-example.ts",
@@ -5668,6 +6130,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "timepicker-variations-example.html",
       "timepicker-variations-example.css"
     ],
+    "localImportFiles": [],
     "selector": "timepicker-variations-example",
     "additionalComponents": [],
     "primaryFile": "timepicker-variations-example.ts",
@@ -5679,6 +6142,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TimezoneOverviewExample",
     "files": [
       "timezone-overview-example.ts"
+    ],
+    "localImportFiles": [
+      "../timezone-data.ts"
     ],
     "selector": "timezone-overview-example",
     "additionalComponents": [],
@@ -5692,6 +6158,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "timezone-search-overview-example.ts"
     ],
+    "localImportFiles": [
+      "../timezone-data.ts"
+    ],
     "selector": "timezone-search-overview-example",
     "additionalComponents": [],
     "primaryFile": "timezone-search-overview-example.ts",
@@ -5703,6 +6172,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TimezoneTriggerOverviewExample",
     "files": [
       "timezone-trigger-overview-example.ts"
+    ],
+    "localImportFiles": [
+      "../timezone-data.ts"
     ],
     "selector": "timezone-trigger-overview-example",
     "additionalComponents": [],
@@ -5717,6 +6189,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "title-custom-content-example.ts",
       "./title-custom-content-example.css"
     ],
+    "localImportFiles": [],
     "selector": "title-custom-content-example",
     "additionalComponents": [],
     "primaryFile": "title-custom-content-example.ts",
@@ -5730,6 +6203,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "title-list-option-example.ts",
       "./title-list-option-example.css"
     ],
+    "localImportFiles": [],
     "selector": "title-list-option-example",
     "additionalComponents": [],
     "primaryFile": "title-list-option-example.ts",
@@ -5743,6 +6217,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "title-multiple-text-example.ts",
       "./title-multiple-text-example.css"
     ],
+    "localImportFiles": [],
     "selector": "title-multiple-text-example",
     "additionalComponents": [],
     "primaryFile": "title-multiple-text-example.ts",
@@ -5756,6 +6231,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "title-overview-example.ts",
       "./title-overview-example.css"
     ],
+    "localImportFiles": [],
     "selector": "title-overview-example",
     "additionalComponents": [],
     "primaryFile": "title-overview-example.ts",
@@ -5769,6 +6245,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "title-vertical-overflow-example.ts",
       "./title-vertical-overflow-example.css"
     ],
+    "localImportFiles": [],
     "selector": "title-vertical-overflow-example",
     "additionalComponents": [],
     "primaryFile": "title-vertical-overflow-example.ts",
@@ -5782,6 +6259,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-actions-overview-example.ts",
       "toast-actions-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "toast-actions-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-actions-overview-example.ts",
@@ -5795,6 +6273,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-hide-overview-example.ts",
       "toast-hide-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "toast-hide-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-hide-overview-example.ts",
@@ -5808,6 +6287,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-link-overview-example.ts",
       "toast-link-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "toast-link-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-link-overview-example.ts",
@@ -5820,6 +6300,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toast-multiline-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toast-multiline-example",
     "additionalComponents": [],
     "primaryFile": "toast-multiline-example.ts",
@@ -5832,6 +6313,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toast-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toast-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-overview-example.ts",
@@ -5844,6 +6326,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toast-progress-bar-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toast-progress-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-progress-bar-overview-example.ts",
@@ -5856,6 +6339,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toast-report-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toast-report-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-report-overview-example.ts",
@@ -5869,6 +6353,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-types-overview-example.ts",
       "toast-types-overview-example.html"
     ],
+    "localImportFiles": [],
     "selector": "toast-types-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-types-overview-example.ts",
@@ -5882,6 +6367,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-user-data-example.ts",
       "toast-user-data-example.html"
     ],
+    "localImportFiles": [],
     "selector": "toast-user-data-example",
     "additionalComponents": [],
     "primaryFile": "toast-user-data-example.ts",
@@ -5894,6 +6380,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toggle-disabled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toggle-disabled-example",
     "additionalComponents": [],
     "primaryFile": "toggle-disabled-example.ts",
@@ -5906,6 +6393,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toggle-error-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toggle-error-example",
     "additionalComponents": [],
     "primaryFile": "toggle-error-example.ts",
@@ -5918,6 +6406,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toggle-indeterminate-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toggle-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "toggle-indeterminate-example.ts",
@@ -5930,6 +6419,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toggle-label-left-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toggle-label-left-example",
     "additionalComponents": [],
     "primaryFile": "toggle-label-left-example.ts",
@@ -5942,6 +6432,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toggle-loading-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toggle-loading-example",
     "additionalComponents": [],
     "primaryFile": "toggle-loading-example.ts",
@@ -5954,6 +6445,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toggle-multiline-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toggle-multiline-example",
     "additionalComponents": [],
     "primaryFile": "toggle-multiline-example.ts",
@@ -5966,6 +6458,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toggle-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toggle-overview-example",
     "additionalComponents": [],
     "primaryFile": "toggle-overview-example.ts",
@@ -5978,6 +6471,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "toggle-with-hint-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "toggle-with-hint-example",
     "additionalComponents": [],
     "primaryFile": "toggle-with-hint-example.ts",
@@ -5990,6 +6484,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-arrow-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-arrow-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-arrow-example.ts",
@@ -6002,6 +6497,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-disabled-for-component-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-disabled-for-component-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-disabled-for-component-example.ts",
@@ -6014,6 +6510,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-disabled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-disabled-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-disabled-example.ts",
@@ -6026,6 +6523,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-dynamic-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-dynamic-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-dynamic-example.ts",
@@ -6038,6 +6536,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-extended-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-extended-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-extended-example.ts",
@@ -6050,6 +6549,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-hide-with-timeout-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-hide-with-timeout-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-hide-with-timeout-example.ts",
@@ -6062,6 +6562,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-interactive-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-interactive-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-interactive-example.ts",
@@ -6074,6 +6575,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-offset-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-offset-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-offset-example.ts",
@@ -6086,6 +6588,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-overview-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-overview-example.ts",
@@ -6098,6 +6601,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-placements-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-placements-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-placements-example.ts",
@@ -6110,6 +6614,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-relative-to-pointer-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-relative-to-pointer-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-relative-to-pointer-example.ts",
@@ -6122,6 +6627,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-style-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-style-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-style-example.ts",
@@ -6134,6 +6640,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-wide-width-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-wide-width-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-wide-width-example.ts",
@@ -6146,6 +6653,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tooltip-width-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tooltip-width-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-width-example.ts",
@@ -6158,6 +6666,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "top-bar-actions-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "top-bar-actions-example",
     "additionalComponents": [],
     "primaryFile": "top-bar-actions-example.ts",
@@ -6170,6 +6679,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "top-bar-breadcrumbs-adaptive-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "top-bar-breadcrumbs-adaptive-example",
     "additionalComponents": [
       "ExampleTopBarBreadcrumbs"
@@ -6184,6 +6694,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "top-bar-breadcrumbs-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "top-bar-breadcrumbs-example",
     "additionalComponents": [],
     "primaryFile": "top-bar-breadcrumbs-example.ts",
@@ -6196,6 +6707,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "top-bar-overflow-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "top-bar-overflow-example",
     "additionalComponents": [],
     "primaryFile": "top-bar-overflow-example.ts",
@@ -6208,6 +6720,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "top-bar-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "top-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "top-bar-overview-example.ts",
@@ -6220,6 +6733,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "top-bar-title-counter-adaptive-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "top-bar-title-counter-adaptive-example",
     "additionalComponents": [
       "ExampleTopBar"
@@ -6234,6 +6748,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "top-bar-title-counter-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "top-bar-title-counter-example",
     "additionalComponents": [],
     "primaryFile": "top-bar-title-counter-example.ts",
@@ -6246,6 +6761,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-child-selection-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-child-selection-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-child-selection-overview-example.ts",
@@ -6258,6 +6774,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-custom-matcher-with-input-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-custom-matcher-with-input-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-custom-matcher-with-input-example.ts",
@@ -6270,6 +6787,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-custom-matcher-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-custom-matcher-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-custom-matcher-example.ts",
@@ -6282,6 +6800,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-custom-trigger-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-custom-trigger-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-custom-trigger-example.ts",
@@ -6294,6 +6813,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-deleted-nodes-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-deleted-nodes-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-deleted-nodes-example.ts",
@@ -6306,6 +6826,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-footer-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-footer-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-footer-overview-example.ts",
@@ -6318,6 +6839,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-lazyload-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-lazyload-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-lazyload-example.ts",
@@ -6330,6 +6852,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-multiple-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-multiple-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-multiple-overview-example.ts",
@@ -6342,6 +6865,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-overview-example.ts",
@@ -6354,6 +6878,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-search-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-search-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-search-overview-example.ts",
@@ -6366,6 +6891,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-two-line-option-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-two-line-option-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-two-line-option-example.ts",
@@ -6378,6 +6904,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-with-multiline-matcher-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-with-multiline-matcher-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-with-multiline-matcher-example.ts",
@@ -6390,6 +6917,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-access-rights-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-access-rights-example",
     "additionalComponents": [],
     "primaryFile": "tree-access-rights-example.ts",
@@ -6402,6 +6930,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-action-button-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-action-button-example",
     "additionalComponents": [],
     "primaryFile": "tree-action-button-example.ts",
@@ -6414,6 +6943,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-checked-filtering-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-checked-filtering-example",
     "additionalComponents": [],
     "primaryFile": "tree-checked-filtering-example.ts",
@@ -6426,6 +6956,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-custom-filtering-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-custom-filtering-example",
     "additionalComponents": [],
     "primaryFile": "tree-custom-filtering-example.ts",
@@ -6438,6 +6969,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-descendants-subcategories-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-descendants-subcategories-example",
     "additionalComponents": [],
     "primaryFile": "tree-descendants-subcategories-example.ts",
@@ -6450,6 +6982,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-filtering-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-filtering-example",
     "additionalComponents": [],
     "primaryFile": "tree-filtering-example.ts",
@@ -6462,6 +6995,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-lazyload-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-lazyload-example",
     "additionalComponents": [],
     "primaryFile": "tree-lazyload-example.ts",
@@ -6474,6 +7008,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-multiple-checkbox-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-multiple-checkbox-example",
     "additionalComponents": [],
     "primaryFile": "tree-multiple-checkbox-example.ts",
@@ -6486,6 +7021,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-multiple-checklist-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-multiple-checklist-example",
     "additionalComponents": [],
     "primaryFile": "tree-multiple-checklist-example.ts",
@@ -6498,6 +7034,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-multiple-keyboard-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-multiple-keyboard-example",
     "additionalComponents": [],
     "primaryFile": "tree-multiple-keyboard-example.ts",
@@ -6510,6 +7047,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-overview-example.ts",
@@ -6522,6 +7060,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-select-and-mark-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-select-and-mark-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-and-mark-example.ts",
@@ -6534,6 +7073,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-selection-separate-from-focus-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-selection-separate-from-focus-example",
     "additionalComponents": [],
     "primaryFile": "tree-selection-separate-from-focus-example.ts",
@@ -6546,6 +7086,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "tree-toggle-on-click-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "tree-toggle-on-click-example",
     "additionalComponents": [],
     "primaryFile": "tree-toggle-on-click-example.ts",
@@ -6558,6 +7099,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "username-as-link-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "username-as-link-example",
     "additionalComponents": [],
     "primaryFile": "username-as-link-example.ts",
@@ -6570,6 +7112,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "username-custom-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "username-custom-example",
     "additionalComponents": [],
     "primaryFile": "username-custom-example.ts",
@@ -6582,6 +7125,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "username-filter-bar-option-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "username-filter-bar-option-example",
     "additionalComponents": [],
     "primaryFile": "username-filter-bar-option-example.ts",
@@ -6594,6 +7138,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "username-overview-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "username-overview-example",
     "additionalComponents": [],
     "primaryFile": "username-overview-example.ts",
@@ -6606,6 +7151,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "username-playground-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "username-playground-example",
     "additionalComponents": [],
     "primaryFile": "username-playground-example.ts",
@@ -6618,6 +7164,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "username-search-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "username-search-example",
     "additionalComponents": [],
     "primaryFile": "username-search-example.ts",
@@ -6630,6 +7177,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-basic-multiple-validators-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-basic-multiple-validators-example",
     "additionalComponents": [],
     "primaryFile": "validation-basic-multiple-validators-example.ts",
@@ -6642,6 +7190,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-basic-single-validator-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-basic-single-validator-example",
     "additionalComponents": [],
     "primaryFile": "validation-basic-single-validator-example.ts",
@@ -6654,6 +7203,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-message-for-specific-field-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-message-for-specific-field-example",
     "additionalComponents": [],
     "primaryFile": "validation-message-for-specific-field-example.ts",
@@ -6667,6 +7217,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-message-global-with-links-example.ts",
       "validation-message-global-with-links-example.html"
     ],
+    "localImportFiles": [],
     "selector": "validation-message-global-with-links-example",
     "additionalComponents": [],
     "primaryFile": "validation-message-global-with-links-example.ts",
@@ -6679,6 +7230,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-message-global-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-message-global-example",
     "additionalComponents": [],
     "primaryFile": "validation-message-global-example.ts",
@@ -6691,6 +7243,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-no-message-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-no-message-example",
     "additionalComponents": [],
     "primaryFile": "validation-no-message-example.ts",
@@ -6703,6 +7256,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-on-blur-filled-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-on-blur-filled-example",
     "additionalComponents": [],
     "primaryFile": "validation-on-blur-filled-example.ts",
@@ -6715,6 +7269,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-on-blur-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-on-blur-example",
     "additionalComponents": [],
     "primaryFile": "validation-on-blur-example.ts",
@@ -6727,6 +7282,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-on-open-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-on-open-example",
     "additionalComponents": [
       "DocsNameFormComponent"
@@ -6741,6 +7297,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-on-submit-custom-matcher-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-on-submit-custom-matcher-example",
     "additionalComponents": [],
     "primaryFile": "validation-on-submit-custom-matcher-example.ts",
@@ -6753,6 +7310,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-on-submit-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-on-submit-example",
     "additionalComponents": [],
     "primaryFile": "validation-on-submit-example.ts",
@@ -6765,6 +7323,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-on-type-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-on-type-example",
     "additionalComponents": [],
     "primaryFile": "validation-on-type-example.ts",
@@ -6777,6 +7336,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-optional-label-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-optional-label-example",
     "additionalComponents": [],
     "primaryFile": "validation-optional-label-example.ts",
@@ -6789,6 +7349,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-required-label-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-required-label-example",
     "additionalComponents": [],
     "primaryFile": "validation-required-label-example.ts",
@@ -6801,6 +7362,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "validation-tag-list-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "validation-tag-list-example",
     "additionalComponents": [],
     "primaryFile": "validation-tag-list-example.ts",
