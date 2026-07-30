@@ -91,6 +91,16 @@ describe('KbqAutocomplete', () => {
         overlayContainer.ngOnDestroy();
     }));
 
+    it('should not create a layout box at the declaration point', () => {
+        const fixture = createComponent(SimpleAutocomplete);
+
+        fixture.detectChanges();
+
+        const autocomplete = fixture.debugElement.query(By.css('kbq-autocomplete')).nativeElement;
+
+        expect(getComputedStyle(autocomplete).display).toBe('none');
+    });
+
     describe('panel toggling', () => {
         let fixture: ComponentFixture<SimpleAutocomplete>;
         let input: HTMLInputElement;

@@ -93,6 +93,16 @@ describe('KbqDropdown', () => {
         overlayContainer.ngOnDestroy();
     }));
 
+    it('should not create a layout box at the declaration point', () => {
+        const fixture = createComponent(SimpleDropdown);
+
+        fixture.detectChanges();
+
+        const dropdown = fixture.debugElement.query(By.css('kbq-dropdown')).nativeElement;
+
+        expect(getComputedStyle(dropdown).display).toBe('contents');
+    });
+
     it('should open the dropdown as an idempotent operation', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
 

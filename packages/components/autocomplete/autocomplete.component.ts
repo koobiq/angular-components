@@ -86,7 +86,9 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-autocomplete'
+        class: 'kbq-autocomplete',
+        // Prevent the empty TemplatePortal host from participating in flex/grid layout.
+        '[style.display]': '"none"'
     },
     exportAs: 'kbqAutocomplete'
 })
