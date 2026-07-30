@@ -8,7 +8,7 @@
     flex-direction: row;
 
     max-width: 100%;
-    min-height: 38px;
+    min-height: var(--kbq-app-switcher-size-list-item-height-min, 38px);
 
     border-radius: var(--kbq-size-s);
 
@@ -82,6 +82,19 @@
         & .kbq-icon {
             transform: rotate(180deg);
         }
+    }
+}
+
+// The toggle is revealed by hover or keyboard focus (see the theme mixin below). A pointer-less device
+// produces neither while browsing the list, so keep the affordance visible there instead of hiding the only
+// way to expand a group.
+@media (hover: none) {
+    .kbq-app-switcher-list-item__toggle {
+        display: flex;
+    }
+
+    .kbq-app-switcher-list-item:has(.kbq-app-switcher-list-item__toggle) .kbq-app-switcher-list-item__icon {
+        visibility: hidden;
     }
 }
 

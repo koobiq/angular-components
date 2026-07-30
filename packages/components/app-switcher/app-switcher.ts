@@ -1,12 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import {
-    CdkScrollable,
-    FlexibleConnectedPositionStrategy,
-    Overlay,
-    OverlayConfig,
-    ScrollStrategy
-} from '@angular/cdk/overlay';
+import { CdkScrollable, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
 
 import {
     AfterContentInit,
@@ -20,15 +14,18 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    Provider,
     QueryList,
     TemplateRef,
     Type,
     ViewChildren,
     ViewEncapsulation,
     booleanAttribute,
+    computed,
     inject,
+    model,
     numberAttribute,
-    output,
+    signal,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -40,6 +37,7 @@ import {
     ESCAPE,
     FocusKeyManager,
     KBQ_LOCALE_SERVICE,
+    KbqAppSwitcherConfiguration,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpPlacementValues,
@@ -58,23 +56,30 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqDropdown, KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { Subscription, merge } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { auditTime, distinctUntilChanged, startWith } from 'rxjs/operators';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
-import { KbqAppSwitcherListItem } from './kbq-app-switcher-list-item';
+import { KbqAppSwitcherListItem } from './app-switcher-list-item';
 
 export interface KbqAppSwitcherApp {
     name: string;
     id: string | number;
     type?: string | number;
-    /** Inline SVG markup for the application icon. Use this for SVG icons that should be rendered directly in the DOM. */
+    /**
+     * Inline SVG markup for the application icon. Use this for SVG icons that should be rendered directly in
+     * the DOM.
+     *
+     * The markup is sanitized against a strict SVG allow-list before it is rendered
+     * (see `KbqAppSwitcherIconSanitizer`): scripts, event handlers, `foreignObject`, `style` and external
+     * references are removed. Prefer `iconSrc` when the icon comes from a URL.
+     */
     icon?: string;
     /** Path to the icon file (URL or relative path). */
     iconSrc?: string;
@@ -87,12 +92,25 @@ export interface KbqAppSwitcherSite {
     name: string;
     id: string | number;
     status?: string;
-    /** Inline SVG markup for the site icon. Use this for SVG icons that should be rendered directly in the DOM. */
+    /**
+     * Inline SVG markup for the site icon. Use this for SVG icons that should be rendered directly in the DOM.
+     * Sanitized the same way as `KbqAppSwitcherApp.icon`.
+     */
     icon?: string;
     /** Path to the icon file (URL or relative path). */
     iconSrc?: string;
     apps: KbqAppSwitcherApp[];
 }
+
+/**
+ * Reducer that assigns an application to a group. Called once per application; implementations either push the
+ * app into `untyped` (rendered as a plain row) or add it to a synthetic group in `groups`.
+ */
+export type KbqAppSwitcherGroupBy = (
+    app: KbqAppSwitcherApp,
+    groups: Record<string, KbqAppSwitcherApp>,
+    untyped: KbqAppSwitcherApp[]
+) => void;
 
 /** @docs-private */
 export function defaultGroupBy(
@@ -113,14 +131,60 @@ export function defaultGroupBy(
                 aliases: [app],
                 icon: app.icon,
                 iconSrc: app.iconSrc,
-                id: ''
+                // The type name, not an empty string: the rendered rows are tracked by `id`, and a falsy one
+                // would make every group fall back to the name-based key.
+                id: appType
             };
         }
     }
 }
 
+/**
+ * Runs `groupBy` over `apps` and returns the rendered order: synthetic groups big enough to be collapsible
+ * first, then every remaining application as a plain row.
+ *
+ * A group is kept only when it holds strictly more than `minAppsForGrouping` applications; smaller groups are
+ * flattened back into plain rows.
+ */
+export function makeGroupsForApps(
+    apps: KbqAppSwitcherApp[],
+    minAppsForGrouping: number,
+    groupBy: KbqAppSwitcherGroupBy = defaultGroupBy
+): KbqAppSwitcherApp[] {
+    const groups: Record<string, KbqAppSwitcherApp> = {};
+    const untyped: KbqAppSwitcherApp[] = [];
+    const groupedApps: KbqAppSwitcherApp[] = [];
+
+    apps.forEach((app) => groupBy(app, groups, untyped));
+
+    Object.values(groups).forEach((group) => {
+        const { aliases } = group;
+
+        if (!aliases?.length) {
+            // A custom `groupBy` is free to emit a group without aliases - render it as a plain row. An empty
+            // array has to be dropped too: the template gates the group header on the presence of `aliases`,
+            // and `[]` is truthy, so it would render a toggle that expands to nothing.
+            untyped.push(aliases ? { ...group, aliases: undefined } : group);
+        } else if (aliases.length > minAppsForGrouping) {
+            groupedApps.push(group);
+        } else {
+            untyped.push(...aliases);
+        }
+    });
+
+    groupedApps.push(...untyped);
+
+    return groupedApps;
+}
+
 export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH: number = 7;
 export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING: number = 3;
+
+/**
+ * `hideIfNotInViewPort` reads layout (`getBoundingClientRect`) and hangs off `CdkScrollable.elementScrolled()`,
+ * which - unlike `ScrollDispatcher.scrolled()` - is not audited by the CDK; coalesce it to roughly one frame.
+ */
+const SCROLL_GEOMETRY_THROTTLE = 16;
 
 /** @docs-private */
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -141,13 +205,34 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 /** default configuration of app-switcher */
 /** @docs-private */
-export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION = ruRULocaleData.appSwitcher;
+export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherConfiguration = ruRULocaleData.appSwitcher;
 
 /** Injection Token for providing configuration of app-switcher */
 /** @docs-private */
-export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcherConfiguration');
+export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken<KbqAppSwitcherConfiguration>(
+    'KbqAppSwitcherConfiguration'
+);
 
-/** @docs-private */
+/**
+ * Providers used by the app-switcher. `KbqAppSwitcherModule` applies them for `NgModule` consumers;
+ * standalone consumers that import `KbqAppSwitcherTrigger` directly may add them to their application (or
+ * route) providers.
+ *
+ * Providing them is optional: the only entry is the scroll strategy, and the directive falls back to the
+ * default repositioning strategy when the token is absent. The app-switcher renders no focus trap, so - unlike
+ * `KbqPopoverModule` and `KbqNotificationCenterModule`, whose templates bind `[cdkTrapFocus]` - it must not
+ * swap `FOCUS_TRAP_INERT_STRATEGY`/`FocusTrapFactory`: those are injector-wide and would disable the CDK
+ * inert strategy for every other focus trap in the same scope.
+ */
+export function kbqAppSwitcherProvider(): Provider[] {
+    return [KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER];
+}
+
+/**
+ * Popup rendered by `KbqAppSwitcherTrigger`. The trigger attaches it to a CDK overlay itself (see
+ * `getOverlayHandleComponentType`) and assigns `trigger` on the created instance, so consumers never place
+ * `<kbq-app-switcher>` in a template - `[kbqAppSwitcher]` on the trigger element is the whole public surface.
+ */
 @Component({
     selector: 'kbq-app-switcher',
     imports: [
@@ -165,7 +250,7 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken('KbqAppSwitcher
         KbqAppSwitcherListItem
     ],
     templateUrl: './app-switcher.html',
-    styleUrls: ['./app-switcher.scss'],
+    styleUrls: ['./app-switcher.scss', './app-switcher-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -181,13 +266,15 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
+    /** Configuration provided through `KBQ_APP_SWITCHER_CONFIGURATION`, overriding the locale strings. */
     readonly externalConfiguration = inject(KBQ_APP_SWITCHER_CONFIGURATION, { optional: true });
 
-    configuration;
+    /** Strings currently rendered by the popup. */
+    configuration: KbqAppSwitcherConfiguration = KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
 
     /** localized data
      * @docs-private */
-    get localeData() {
+    get localeData(): KbqAppSwitcherConfiguration {
         return this.configuration;
     }
 
@@ -195,7 +282,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     readonly searchControl = new FormControl('');
 
     /** @docs-private */
-    filteredSites: KbqAppSwitcherSite[];
+    filteredSites: KbqAppSwitcherSite[] = [];
 
     /** @docs-private */
     prefix = 'kbq-app-switcher';
@@ -207,17 +294,21 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     @Input() trigger: KbqAppSwitcherTrigger;
 
     /** @docs-private */
-    isTrapFocus: boolean = false;
-
+    protected activeSite: KbqAppSwitcherSite | undefined;
     /** @docs-private */
-    protected activeSite: KbqAppSwitcherSite;
-    /** @docs-private */
-    protected activeApp: KbqAppSwitcherApp;
+    protected activeApp: KbqAppSwitcherApp | undefined;
 
     /** @docs-private */
     readonly input = viewChild(KbqInput);
-    /** @docs-private */
-    readonly otherSites = viewChild.required<KbqDropdownTrigger>('otherSites');
+
+    /**
+     * The other-sites flyout, closed whenever the pointer moves back over the main list.
+     *
+     * Not `required`: it only exists in multi-site mode, and reading a required query with no match throws -
+     * which a single-site switcher with a search field would do on the first `mouseenter`.
+     * @docs-private
+     */
+    readonly otherSites = viewChild<KbqDropdown>('otherSites');
 
     /** @docs-private */
     @ViewChildren(KbqDropdownItem) protected allItems: QueryList<KbqDropdownItem>;
@@ -285,23 +376,22 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
             input.focus();
         }
 
-        this.visibleChange.subscribe((state) => {
-            if (this.offset !== null && state) {
-                applyPopupMargins(
-                    this.renderer,
-                    this.elementRef.nativeElement,
-                    this.prefix,
-                    `${this.offset!.toString()}px`
-                );
-            }
+        this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
+            // Not memoized on `offset`: `applyPopupMargins` picks the margin side from the current
+            // `kbq-app-switcher_placement-*` classes, so the write depends on the placement too.
+            if (!state || this.offset === null) return;
+
+            applyPopupMargins(this.renderer, this.elementRef.nativeElement, this.prefix, `${this.offset}px`);
         });
 
-        this.searchControl.valueChanges.subscribe((value) => {
-            this.filteredSites = this.filterSites(value);
-            // Switching between the flat list and the search results swaps the rendered items;
-            // drop any stale active item so navigation restarts from the top.
-            this.keyManager?.setActiveItem(-1);
-        });
+        this.searchControl.valueChanges
+            .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+            .subscribe((value) => {
+                this.filteredSites = this.filterSites(value);
+                // Switching between the flat list and the search results swaps the rendered items;
+                // drop any stale active item so navigation restarts from the top.
+                this.keyManager?.setActiveItem(-1);
+            });
     }
 
     /** Releases the internal roving-focus menu QueryList. */
@@ -314,11 +404,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     /** @docs-private */
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
-    }
-
-    /** @docs-private */
-    updateTrapFocus(isTrapFocus: boolean): void {
-        this.isTrapFocus = isTrapFocus;
     }
 
     /** @docs-private */
@@ -384,7 +469,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
 
             // A group header toggles its aliases; any other item activates its underlying link.
             if (activeItem instanceof KbqAppSwitcherListItem && activeItem.toggle()) {
-                activeItem.collapsed = !activeItem.collapsed;
+                activeItem.collapsed.set(!activeItem.collapsed());
                 this.markForCheck();
             } else {
                 activeItem.getHostElement().click();
@@ -419,15 +504,15 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
         const collapseKey = rtl ? RIGHT_ARROW : LEFT_ARROW;
 
         if (activeItem.toggle()) {
-            if (keyCode === expandKey && activeItem.collapsed) {
-                activeItem.collapsed = false;
+            if (keyCode === expandKey && activeItem.collapsed()) {
+                activeItem.collapsed.set(false);
                 this.markForCheck();
 
                 return true;
             }
 
-            if (keyCode === collapseKey && !activeItem.collapsed) {
-                activeItem.collapsed = true;
+            if (keyCode === collapseKey && !activeItem.collapsed()) {
+                activeItem.collapsed.set(true);
                 this.markForCheck();
 
                 return true;
@@ -487,41 +572,54 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
         }
     }
 
-    /** @docs-private */
-    selectAppInSite(site: KbqAppSwitcherSite, app: KbqAppSwitcherApp) {
-        this.trigger.selectedSite = site;
-        this.trigger.selectedApp = app;
+    /** Selects an application belonging to one of the other sites.
+     * @docs-private */
+    selectAppInSite(site: KbqAppSwitcherSite | undefined, app: KbqAppSwitcherApp) {
+        if (!site) return;
 
-        this.trigger.selectedSiteChange.emit(site);
-        this.trigger.selectedAppChange.emit(app);
+        this.trigger.selectedSite.set(site);
+        this.trigger.selectedApp.set(app);
+    }
+
+    /** Drops the flyout content once its dropdown closes, so a reopened panel never shows the previous site.
+     * @docs-private */
+    protected resetActiveSite(): void {
+        this.activeSite = undefined;
+    }
+
+    /** The same for the nested group of a flyout app.
+     * @docs-private */
+    protected resetActiveApp(): void {
+        this.activeApp = undefined;
     }
 
     private filterSites(query: string | null): KbqAppSwitcherSite[] {
-        const filteredSites = structuredClone(this.trigger.originalSites);
+        const sites = this.trigger.originalSites;
 
-        return query
-            ? filteredSites.filter((site) => {
-                  const filteredApps = site.apps.filter((app) => app.name.toLowerCase().includes(query.toLowerCase()));
+        if (!query) return sites;
 
-                  if (filteredApps.length) {
-                      site.apps = filteredApps;
+        const search = query.toLowerCase();
+        const matches = (app: KbqAppSwitcherApp): boolean =>
+            app.name.toLowerCase().includes(search) || !!app.caption?.toLowerCase().includes(search);
 
-                      return true;
-                  }
-
-                  return false;
-              })
-            : filteredSites;
+        // Shallow copies only: a `structuredClone` of every site would be an O(all apps) deep copy per
+        // keystroke, and would also hand `@for` brand-new app objects to re-render on every character.
+        return sites
+            .map((site) => ({ ...site, apps: site.apps.filter(matches) }))
+            .filter((site) => site.apps.length > 0);
     }
 
     private updateLocaleParams = () => {
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('appSwitcher');
+        this.configuration =
+            this.externalConfiguration ||
+            (this.localeService?.getParams('appSwitcher') as KbqAppSwitcherConfiguration) ||
+            KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
 
         this.changeDetectorRef.markForCheck();
     };
 
     private initDefaultParams() {
-        this.configuration = KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
+        this.configuration = this.externalConfiguration || KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
     }
 }
 
@@ -539,10 +637,17 @@ export class KbqAppSwitcherTrigger
     extends KbqPopUpTrigger<KbqAppSwitcherComponent>
     implements AfterContentInit, OnInit
 {
-    /** @docs-private */
-    protected scrollStrategy: () => ScrollStrategy = inject(KBQ_APP_SWITCHER_SCROLL_STRATEGY);
+    /**
+     * Optional so a standalone consumer works without `kbqAppSwitcherProvider()`; an application-level
+     * provider for `KBQ_APP_SWITCHER_SCROLL_STRATEGY` still wins over this fallback.
+     * @docs-private
+     */
+    protected scrollStrategy: () => ScrollStrategy =
+        inject(KBQ_APP_SWITCHER_SCROLL_STRATEGY, { optional: true }) ??
+        kbqAppSwitcherScrollStrategyFactory(this.overlay);
 
-    // not used
+    // Abstract members of `KbqPopUp`/`KbqPopUpTrigger` that the app-switcher has no use for: its content is
+    // fixed (the app list), it never draws an arrow and it never renders a backdrop.
     /** @docs-private */
     arrow: boolean = false;
     /** @docs-private */
@@ -553,12 +658,6 @@ export class KbqAppSwitcherTrigger
     private size: KbqPopUpSizeValues = PopUpSizes.Medium;
     /** @docs-private */
     content: string | TemplateRef<any>;
-    /** @docs-private */
-    header: string | TemplateRef<any>;
-    /** @docs-private */
-    footer: string | TemplateRef<any>;
-    /** @docs-private */
-    private closeOnScroll: null;
 
     /** Whether search is used or not */
     get withSearch(): boolean {
@@ -568,24 +667,23 @@ export class KbqAppSwitcherTrigger
     /** Number of applications to choose from
      * @docs-private */
     get appsCount(): number {
-        return this.originalSites.reduce((acc, site) => acc + site.apps.length, 0);
+        return this.appsCountComputed();
     }
 
     /** Whether the sites are used or not
      * @docs-private */
     get sitesMode(): boolean {
-        return this.originalSites.length > 1;
+        return this.sitesModeComputed();
     }
 
-    /** @docs-private */
-    get currentApps() {
-        return this.sitesMode ? this.selectedSite.apps : this._parsedApps;
+    /** Applications of the currently selected site, grouped for rendering.
+     * @docs-private */
+    get currentApps(): KbqAppSwitcherApp[] {
+        return this.currentAppsComputed();
     }
 
     /** Selected application */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() selectedApp: KbqAppSwitcherApp;
+    readonly selectedApp = model<KbqAppSwitcherApp | undefined>(undefined);
 
     /** Placement of popUp */
     // TODO: Skipped for migration because:
@@ -603,100 +701,47 @@ export class KbqAppSwitcherTrigger
     //  Class of this input is referenced in the signature of another class.
     @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetYWithArrow;
 
-    /** Array of sites */
+    /** Array of sites, with the applications of each site grouped for rendering. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get sites(): KbqAppSwitcherSite[] {
-        return this._parsedSites;
+        return this.parsedSites();
     }
 
     set sites(value: KbqAppSwitcherSite[]) {
         this.originalSites = value;
-
-        if (this.originalSites.length === 1) {
-            this._parsedApps = this.makeGroupsForApps(
-                this.originalSites[0].apps,
-                KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING
-            );
-        } else {
-            this._parsedSites = [];
-
-            value.forEach((site: KbqAppSwitcherSite) => {
-                const newSite: KbqAppSwitcherSite = { ...site, apps: [] };
-
-                newSite.apps = this.makeGroupsForApps(site.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
-
-                this._parsedSites.push(newSite);
-            });
-        }
     }
-
-    private _parsedSites: KbqAppSwitcherSite[];
-
-    private makeGroupsForApps(apps: KbqAppSwitcherApp[], minAppsForGrouping: number): KbqAppSwitcherApp[] {
-        const groups: Record<string, KbqAppSwitcherApp> = {};
-        const untyped: KbqAppSwitcherApp[] = [];
-        const groupedApps: KbqAppSwitcherApp[] = [];
-
-        apps.forEach((app) => {
-            this.groupBy(app, groups, untyped);
-        });
-
-        Object.values(groups).forEach((group) => {
-            if (group.aliases && group.aliases.length > minAppsForGrouping) {
-                groupedApps.push(group);
-            } else {
-                untyped.push(...group.aliases!);
-            }
-        });
-
-        groupedApps.push(...untyped);
-
-        return groupedApps;
-    }
-
-    private _parsedApps: KbqAppSwitcherApp[];
 
     /** Function to group the apps by type. The first argument is an app object with type.
      * The second is a groups object and third is an array for untyped apps */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
-    get groupBy() {
-        return this._groupBy;
+    get groupBy(): KbqAppSwitcherGroupBy {
+        return this.groupBySignal();
     }
 
-    set groupBy(
-        fn: (app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]) => void
-    ) {
-        if (typeof fn !== 'function') {
-            throw new Error('The argument must be a function');
-        }
-
-        this._groupBy = fn;
+    set groupBy(fn: KbqAppSwitcherGroupBy) {
+        this.groupBySignal.set(fn);
     }
-
-    private _groupBy = defaultGroupBy;
 
     /** Selected site */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get selectedSite(): KbqAppSwitcherSite {
-        return this._parsedSelectedSite;
-    }
+    readonly selectedSite = model<KbqAppSwitcherSite | undefined>(undefined);
 
-    set selectedSite(value: KbqAppSwitcherSite) {
-        const originValue = this.originalSites.find((site) => value.id === site.id) as KbqAppSwitcherSite;
-        const newSite: KbqAppSwitcherSite = { ...originValue, apps: [] };
+    /**
+     * `selectedSite` with its applications grouped for rendering.
+     *
+     * Looked up by id among the parsed sites, so re-selecting a site never regroups it again. Falls back to
+     * the raw value when the id is unknown (a stale id, or `selectedSite` set before `sites`) instead of
+     * throwing.
+     * @docs-private
+     */
+    readonly parsedSelectedSite = computed<KbqAppSwitcherSite | undefined>(() => {
+        const value = this.selectedSite();
 
-        newSite.apps = this.makeGroupsForApps(originValue.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
-
-        this._parsedSelectedSite = newSite;
-    }
-
-    private _parsedSelectedSite: KbqAppSwitcherSite;
+        return value && (this.parsedSitesById().get(value.id) ?? value);
+    });
 
     /** Whether the trigger is disabled. */
     // TODO: Skipped for migration because:
@@ -725,16 +770,24 @@ export class KbqAppSwitcherTrigger
     /** Emits a change event whenever the visible state changes. */
     @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
 
-    /** @docs-private */
-    readonly selectedSiteChange = output<KbqAppSwitcherSite>();
-    /** @docs-private */
-    readonly selectedAppChange = output<KbqAppSwitcherApp>();
-
-    /** @docs-private */
+    /**
+     * Space-separated list of DOM events that open the popup (`KbqPopUpTrigger.trigger`).
+     *
+     * Not to be confused with `KbqAppSwitcherComponent.trigger`, which is the back-reference from the popup to
+     * this directive.
+     * @docs-private
+     */
     trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
 
-    /** @docs-private */
-    originalSites: KbqAppSwitcherSite[];
+    /** Sites exactly as supplied through `sites`, without grouping.
+     * @docs-private */
+    get originalSites(): KbqAppSwitcherSite[] {
+        return this.originalSitesSignal();
+    }
+
+    set originalSites(value: KbqAppSwitcherSite[]) {
+        this.originalSitesSignal.set(value ?? []);
+    }
 
     /** @docs-private */
     protected originSelector = '.kbq-app-switcher';
@@ -751,18 +804,61 @@ export class KbqAppSwitcherTrigger
     /** @docs-private */
     protected preventClosingByInnerScrollSubscription: Subscription;
 
+    private readonly originalSitesSignal = signal<KbqAppSwitcherSite[]>([]);
+    private readonly groupBySignal = signal<KbqAppSwitcherGroupBy>(defaultGroupBy);
+
+    /**
+     * Sites with their applications grouped, keyed by site id.
+     *
+     * Grouping runs once per `sites`/`groupBy` change instead of once per `selectedSite` assignment, and the
+     * parsed objects keep their identity so `@for` can reuse the rendered rows.
+     */
+    private readonly parsedSitesById = computed(() => {
+        const groupBy = this.groupBySignal();
+
+        return new Map(
+            this.originalSitesSignal().map((site) => [
+                site.id,
+                {
+                    ...site,
+                    apps: makeGroupsForApps(site.apps, KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING, groupBy)
+                } satisfies KbqAppSwitcherSite
+            ])
+        );
+    });
+
+    private readonly parsedSites = computed(() => [...this.parsedSitesById().values()]);
+
+    private readonly appsCountComputed = computed(() =>
+        this.originalSitesSignal().reduce((acc, site) => acc + site.apps.length, 0)
+    );
+
+    private readonly sitesModeComputed = computed(() => this.originalSitesSignal().length > 1);
+
+    private readonly currentAppsComputed = computed(() =>
+        this.sitesModeComputed()
+            ? // A multi-site switcher can be opened before a site is selected; render nothing rather than crash.
+              (this.parsedSelectedSite()?.apps ?? [])
+            : (this.parsedSites()[0]?.apps ?? [])
+    );
+
     ngOnInit(): void {
         super.ngOnInit();
 
         this.scrollable
             ?.elementScrolled()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(auditTime(SCROLL_GEOMETRY_THROTTLE), takeUntilDestroyed(this.destroyRef))
             .subscribe(this.hideIfNotInViewPort);
     }
 
     ngAfterContentInit(): void {
-        if (this.closeOnScroll === null) {
-            this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable | void) => {
+        // Hide the popup once it scrolls out of an ancestor that opted in with `kbq-hide-nested-popup`
+        // (e.g. a tab body), mirroring `KbqPopover`. No extra throttle: `ScrollDispatcher.scrolled()`
+        // already audits its output (20ms by default).
+        this.scrollDispatcher
+            .scrolled()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((scrollable: CdkScrollable | void) => {
                 if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
 
                 const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
@@ -772,19 +868,24 @@ export class KbqAppSwitcherTrigger
                     this.hide();
                 }
             });
-        }
 
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible: boolean) => {
             if (visible) {
-                // eslint-disable-next-line rxjs-x/no-nested-subscribe
-                this.preventClosingByInnerScrollSubscription = this.closingActions().subscribe((event) => {
-                    if (event['scrollDispatcher']) {
-                        event['kbqPopoverPreventHide'] = true;
-                        event['type'] = 'click';
-                    }
-                });
+                // Scrolling inside the popup reaches the root `ScrollDispatcher` and would otherwise be
+                // treated as a closing action; flag those events instead of closing.
+                // `takeUntilDestroyed` covers the case where the host is removed while the popup is open,
+                // which the `else` branch below never sees.
+                this.preventClosingByInnerScrollSubscription = this.closingActions()
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    // eslint-disable-next-line rxjs-x/no-nested-subscribe
+                    .subscribe((event) => {
+                        if (event['scrollDispatcher']) {
+                            event['kbqPopoverPreventHide'] = true;
+                            event['type'] = 'click';
+                        }
+                    });
             } else {
-                this.preventClosingByInnerScrollSubscription.unsubscribe();
+                this.preventClosingByInnerScrollSubscription?.unsubscribe();
                 this.focus();
             }
         });
@@ -794,30 +895,12 @@ export class KbqAppSwitcherTrigger
     updateData() {
         if (!this.instance) return;
 
-        this.instance.header = this.header;
         this.instance.content = this.content;
         this.instance.arrow = this.arrow;
         this.instance.offset = this.offset;
-        this.instance.footer = this.footer;
-
-        this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
 
         if (this.isOpen) {
             this.updatePosition(true);
-        }
-    }
-
-    /** Updates the current position.
-     * @docs-private */
-    updatePosition(reapplyPosition: boolean = false) {
-        this.overlayRef = this.createOverlay();
-
-        const position = (this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)
-            .withPositions(this.getAdjustedPositions())
-            .withPush(true);
-
-        if (reapplyPosition) {
-            setTimeout(() => position.reapplyLastPosition());
         }
     }
 

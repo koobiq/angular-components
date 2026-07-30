@@ -1,5 +1,6 @@
 import {
     KbqActionsPanelLocaleConfiguration,
+    KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
@@ -130,8 +131,9 @@ export const ptBRLocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Pesquisar',
         searchEmptyResult: 'Nada encontrado',
-        sitesHeader: 'Outros sites'
-    },
+        sitesHeader: 'Outros sites',
+        clearSearch: 'Limpar a pesquisa'
+    } satisfies KbqAppSwitcherConfiguration,
     timeRange: {
         title: {
             for: 'para',

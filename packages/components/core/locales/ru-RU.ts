@@ -1,5 +1,6 @@
 import {
     KbqActionsPanelLocaleConfiguration,
+    KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
@@ -131,8 +132,9 @@ export const ruRULocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Поиск',
         searchEmptyResult: 'Ничего не найдено',
-        sitesHeader: 'Другие площадки'
-    },
+        sitesHeader: 'Другие площадки',
+        clearSearch: 'Очистить поиск'
+    } satisfies KbqAppSwitcherConfiguration,
     timeRange: {
         title: {
             for: 'за',

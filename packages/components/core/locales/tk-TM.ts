@@ -1,5 +1,6 @@
 import {
     KbqActionsPanelLocaleConfiguration,
+    KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
@@ -131,8 +132,9 @@ export const tkTMLocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Gözleg',
         searchEmptyResult: 'Hiç zat tapylmady',
-        sitesHeader: 'Beýleki saýtlar'
-    },
+        sitesHeader: 'Beýleki saýtlar',
+        clearSearch: 'Gözlegi arassala'
+    } satisfies KbqAppSwitcherConfiguration,
     timeRange: {
         title: {
             for: 'soňky',

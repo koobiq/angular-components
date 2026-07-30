@@ -9,7 +9,7 @@
     margin-top: var(--kbq-size-xxs);
     margin-bottom: var(--kbq-size-xxs);
 
-    width: 320px;
+    width: var(--kbq-app-switcher-size-container-width, 320px);
 
     border-radius: var(--kbq-size-xs);
 
@@ -17,6 +17,8 @@
 
     box-sizing: border-box;
 
+    // Keeps the panel above adjacent content when the component is rendered inline (as the docs and e2e
+    // fixtures do) rather than inside a CDK overlay, which stacks on its own.
     z-index: 1;
 }
 
@@ -25,7 +27,7 @@
 }
 
 .kbq-app-switcher__search-result {
-    max-width: 320px;
+    max-width: var(--kbq-app-switcher-size-container-width, 320px);
 
     min-height: 0;
 
@@ -37,7 +39,14 @@
     justify-content: center;
     align-items: center;
 
-    height: 96px;
+    height: var(--kbq-app-switcher-size-empty-search-result-height, 96px);
+}
+
+// The element is an always-mounted `role="status"` live region (see app-switcher.html); it only takes up
+// space while it actually holds the message. Comments - the anchors Angular leaves behind for `@if` - do not
+// affect `:empty`, and `preserveWhitespaces: false` keeps whitespace-only text nodes out of the template.
+.kbq-app-switcher__empty-search-result:empty {
+    display: none;
 }
 
 .kbq-app-switcher__app-container {
