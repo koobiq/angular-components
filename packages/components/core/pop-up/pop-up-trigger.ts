@@ -41,6 +41,7 @@ import {
 import {
     ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
     KbqPopUpPlacementValues,
+    KbqSiblingPopup,
     KbqStickToWindowPlacementValues,
     PopUpPlacements,
     PopUpTriggers
@@ -102,7 +103,7 @@ const getOffset = (
         '(mouseleave)': 'hovered.next(false)'
     }
 })
-export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
+export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblingPopup {
     /** Stream that emits when the popupTrigger is hovered.
      * @docs-private */
     readonly hovered = new BehaviorSubject<boolean>(false);
@@ -161,6 +162,22 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     /** Backing field for `isOpen`. */
     private _isOpen: boolean = false;
+
+    /**
+     * Whether the pop-up overlay is currently attached.
+     *
+     * Unlike `isOpen`, which follows the visibility of the pop-up component and therefore lags a task behind
+     * `show()`/`hide()`, this flips synchronously — it is the window during which the overlay (and its
+     * backdrop) is present in the DOM. Part of the {@link KbqSiblingPopup} contract.
+     */
+    get isAttached(): boolean {
+        return !!this.instance;
+    }
+
+    /** Emits `true` when the pop-up opens and `false` when it closes. Part of the {@link KbqSiblingPopup} contract. */
+    get openedChange(): Observable<boolean> {
+        return this.visibleChange;
+    }
 
     /** Delay in milliseconds before the pop-up is shown.
      * @docs-private */

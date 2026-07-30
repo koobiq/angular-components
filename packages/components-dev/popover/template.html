@@ -42,6 +42,37 @@
 
 <dev-examples />
 
+<!--
+    Reproduction for #DS-5341: a tooltip and a pop-up sharing one element. Hover the button to get the tooltip,
+    open the pop-up, then close it with `Esc`, an outside click or the backdrop — the tooltip must stay closed
+    until the pointer leaves the button and comes back.
+    No `kbqTrigger` here: the input alias is shared, so binding it would reconfigure both directives at once.
+-->
+<div class="dev-section layout-row layout-align-start-center">
+    <button kbq-button kbqPopover [kbqPopoverContent]="'Popover content'" [kbqTooltip]="'Popover trigger tooltip'">
+        Popover
+    </button>
+
+    <button
+        kbq-button
+        kbqPopover
+        [kbqPopoverContent]="'Popover content'"
+        [kbqTooltip]="'Backdrop trigger tooltip'"
+        [hasBackdrop]="true"
+    >
+        Popover with backdrop
+    </button>
+
+    <button kbq-button [kbqDropdownTriggerFor]="siblingDropdown" [kbqTooltip]="'Dropdown trigger tooltip'">
+        Dropdown
+    </button>
+
+    <kbq-dropdown #siblingDropdown="kbqDropdown">
+        <button kbq-dropdown-item>Item</button>
+        <button kbq-dropdown-item>Another item</button>
+    </kbq-dropdown>
+</div>
+
 <div class="dev-container flex-100 layout-column layout-align-start-start">
     <div class="kbq-form-vertical layout-row layou-align-start-start dev-config" [style.order]="getOrder('config')">
         <div class="flex-20 kbq-form__fieldset">

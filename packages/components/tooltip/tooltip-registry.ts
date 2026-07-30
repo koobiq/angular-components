@@ -14,7 +14,7 @@ export const KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT = new InjectionToken<boolean>('
  * @docs-private
  */
 export interface KbqExclusiveTooltip {
-    /** Hides the tooltip because another one has taken its place. */
+    /** Hides the tooltip because another tooltip — or a pop-up on the same element — has taken its place. */
     hideAsInactive(): void;
 }
 

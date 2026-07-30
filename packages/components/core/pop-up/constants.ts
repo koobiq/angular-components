@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, Provider, Type } from '@angular/core';
 import { TooltipSizeArrowSize } from '@koobiq/design-tokens';
 import { Observable } from 'rxjs';
 import { KbqEnumValues } from '../utils';
@@ -11,6 +11,42 @@ export interface KbqParentPopup {
  * InjectionToken for providing component with popup. Used in select and tree-select for tooltip.
  */
 export const KBQ_PARENT_POPUP = new InjectionToken<KbqParentPopup>('kbq-parent-popup');
+
+/**
+ * Contract of a pop-up anchored to the same element as a tooltip — a popover, a dropdown, a select and so on.
+ *
+ * A tooltip sharing its host with such a pop-up mutes itself while the pop-up is on screen, so the two never
+ * compete for the same anchor and the focus restored by the closing pop-up does not re-open the tooltip.
+ */
+export interface KbqSiblingPopup {
+    /**
+     * Whether the pop-up overlay is currently attached. Unlike a visibility flag it must flip synchronously,
+     * both when the overlay is attached and when it is detached.
+     */
+    readonly isAttached: boolean;
+    /** Emits `true` when the pop-up opens and `false` when it closes. */
+    readonly openedChange: Observable<boolean>;
+}
+
+/**
+ * Element-level token for pop-ups sharing their trigger element with a tooltip. Multi-provided, so a single
+ * element can carry several pop-ups at once — for example the filter-bar button with both a popover and a
+ * dropdown attached to it.
+ */
+export const KBQ_SIBLING_POPUP = new InjectionToken<readonly KbqSiblingPopup[]>('kbq-sibling-popup');
+
+/**
+ * Builds the multi-provider entry a pop-up trigger adds to its own `providers` to announce itself to a
+ * tooltip on the same element.
+ *
+ * Every concrete trigger has to add it on its own: Angular copies `providers` to a subclass only when that
+ * subclass has no decorator of its own, so inheriting from an already-announced trigger is not enough.
+ */
+export const kbqSiblingPopupProvider = (popup: Type<KbqSiblingPopup>): Provider => ({
+    provide: KBQ_SIBLING_POPUP,
+    useExisting: popup,
+    multi: true
+});
 
 export enum PopUpPlacements {
     Top = 'top',

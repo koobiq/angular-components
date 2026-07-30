@@ -182,4 +182,47 @@ test.describe('KbqPopoverModule', () => {
             await expect(container).toBeVisible();
         });
     });
+
+    // A tooltip and a popover on one element used to fight over it: closing the popover with `Esc` restores
+    // focus to the trigger with a `keyboard` origin, which re-opened the tooltip out of nowhere (#DS-5341).
+    test.describe('with a tooltip on the same element', () => {
+        const tooltip = (page: Page) => page.locator('.kbq-tooltip');
+        const popover = (page: Page) => page.locator('.kbq-popover');
+
+        test('should not show the tooltip when the popover is closed with Escape', async ({ page }) => {
+            await page.goto('/E2ePopoverWithTooltip');
+            const trigger = page.getByTestId('e2ePopoverWithTooltipTrigger');
+
+            await trigger.hover();
+            await expect(tooltip(page)).toBeVisible();
+
+            await trigger.click();
+            await expect(popover(page)).toBeVisible();
+            await expect(tooltip(page)).toBeHidden();
+
+            await page.keyboard.press('Escape');
+            await expect(popover(page)).toBeHidden();
+            await expect(trigger).toBeFocused();
+
+            // Longer than the tooltip enterDelay (400ms) so a re-opening tooltip would have had time to appear.
+            await page.waitForTimeout(800);
+            await expect(tooltip(page)).toBeHidden();
+        });
+
+        test('should show the tooltip again after the pointer leaves and returns to the trigger', async ({ page }) => {
+            await page.goto('/E2ePopoverWithTooltip');
+            const trigger = page.getByTestId('e2ePopoverWithTooltipTrigger');
+
+            await trigger.click();
+            await expect(popover(page)).toBeVisible();
+
+            await page.keyboard.press('Escape');
+            await expect(popover(page)).toBeHidden();
+
+            await page.mouse.move(0, 0);
+            await trigger.hover();
+
+            await expect(tooltip(page)).toBeVisible();
+        });
+    });
 });

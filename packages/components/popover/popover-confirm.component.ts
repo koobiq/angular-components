@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { kbqSiblingPopupProvider } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { kbqPopoverAnimations } from './popover-animations';
 import { KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
@@ -40,6 +41,9 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
 
 @Directive({
     selector: '[kbqPopoverConfirm]',
+    // Declared again rather than inherited from `KbqPopoverTrigger`: Angular copies `providers` to a subclass
+    // only when that subclass has no decorator of its own.
+    providers: [kbqSiblingPopupProvider(KbqPopoverConfirmTrigger)],
     host: {
         '[class.kbq-popover_open]': 'isOpen',
         '(keydown)': 'keydownHandler($event)',

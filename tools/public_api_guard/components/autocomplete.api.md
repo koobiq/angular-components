@@ -18,6 +18,7 @@ import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
 import { KbqPanelMaxWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
+import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KeyboardNavigationHandler } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -147,7 +148,7 @@ export class KbqAutocompleteSelectedEvent {
 }
 
 // @public (undocumented)
-export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler {
+export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler, KbqSiblingPopup {
     constructor();
     get activeOption(): KbqOption | null;
     readonly autocomplete: _angular_core.InputSignal<KbqAutocomplete>;
@@ -167,6 +168,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     handleInput(event: KeyboardEvent): void;
     // (undocumented)
     handleKeydown(event: KeyboardEvent): void;
+    get isAttached(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -175,6 +177,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     readonly onInputBlur: _angular_core.InputSignal<(event: FocusEvent) => boolean>;
     onTouched: () => void;
     open(): void;
+    readonly openedChange: Observable<boolean>;
     // (undocumented)
     readonly optionSelections: Observable<KbqOptionSelectionChange>;
     get panelClosingActions(): Observable<KbqOptionSelectionChange | null>;

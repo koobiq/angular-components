@@ -60,7 +60,7 @@ import {
     E2eOverflowItemsOrdered,
     E2eOverflowItemsVertical
 } from '../components/overflow-items/e2e';
-import { E2ePopoverPositioning, E2ePopoverStates } from '../components/popover/e2e';
+import { E2ePopoverPositioning, E2ePopoverStates, E2ePopoverWithTooltip } from '../components/popover/e2e';
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
@@ -205,6 +205,7 @@ const components = [
     E2eNotificationCenterStates,
     E2ePopoverStates,
     E2ePopoverPositioning,
+    E2ePopoverWithTooltip,
     E2eTooltipStates,
     E2eTooltipArrowOffset,
     E2eTagListStates,

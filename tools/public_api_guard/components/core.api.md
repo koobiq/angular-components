@@ -2253,6 +2253,9 @@ export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 export const KBQ_SHADOW_DOM_OVERLAY_HOST: InjectionToken<KbqShadowDomOverlayHost>;
 
 // @public
+export const KBQ_SIBLING_POPUP: InjectionToken<readonly KbqSiblingPopup[]>;
+
+// @public
 export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 
 // @public (undocumented)
@@ -3098,7 +3101,7 @@ export type KbqPopUpPlacementValues = KbqEnumValues<PopUpPlacements>;
 export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 
 // @public
-export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
+export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblingPopup {
     abstract arrow: boolean;
     protected readonly availablePositions: {
         [key: string]: ConnectionPositionPair;
@@ -3133,6 +3136,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     readonly hovered: BehaviorSubject<boolean>;
     initListeners(): void;
     protected instance: any | null;
+    get isAttached(): boolean;
     get isOpen(): boolean;
     set isOpen(value: boolean);
     keydownHandler(event: KeyboardEvent): void;
@@ -3143,6 +3147,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     ngOnInit(): void;
     protected readonly ngZone: NgZone;
     onPositionChange: ($event: ConnectedOverlayPositionChange) => void;
+    get openedChange(): Observable<boolean>;
     protected abstract originSelector: string;
     protected readonly overlay: Overlay;
     protected abstract overlayConfig: OverlayConfig;
@@ -3489,6 +3494,15 @@ export type KbqShadowDomOverlayHost = HTMLElement | ElementRef<HTMLElement> | ((
 
 // @public
 export const kbqShadowDomOverlayProvider: (host?: KbqShadowDomOverlayHost) => Provider[];
+
+// @public
+export interface KbqSiblingPopup {
+    readonly isAttached: boolean;
+    readonly openedChange: Observable<boolean>;
+}
+
+// @public
+export const kbqSiblingPopupProvider: (popup: Type<KbqSiblingPopup>) => Provider;
 
 // @public
 export interface KbqSizeUnitsConfig {

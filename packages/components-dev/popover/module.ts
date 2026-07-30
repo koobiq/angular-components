@@ -12,6 +12,7 @@ import {
     PopUpSizes,
     ThemePalette
 } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -19,6 +20,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { PopoverExamplesModule } from 'packages/docs-examples/components/popover';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -62,6 +64,8 @@ export class DevDocsExamples {}
         KbqCheckboxModule,
         KbqRadioModule,
         KbqLinkModule,
+        KbqToolTipModule,
+        KbqDropdownModule,
         DevDocsExamples,
         DevThemeToggle
     ],

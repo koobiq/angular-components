@@ -31,17 +31,20 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     KBQ_PARENT_POPUP,
+    KBQ_SIBLING_POPUP,
     KbqComponentColors,
     KbqParentPopup,
     KbqPopUp,
     KbqPopUpPlacementValues,
     KbqPopUpTrigger,
+    KbqSiblingPopup,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpTriggers,
     applyPopupMargins
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
 import { kbqTooltipAnimations } from './tooltip.animations';
 
@@ -122,6 +125,12 @@ const INTERACTIVE_TRIGGERS = [
     PopUpTriggers.Keydown
 ];
 
+/**
+ * DOM events that mean the user has left the trigger, releasing a tooltip muted by a pop-up on the same
+ * element. Both are bound by `KbqPopUpTrigger.initListeners` whenever the matching show trigger is bound.
+ */
+const RELEASE_TRIGGERS = ['mouseleave', 'blur'];
+
 export const KBQ_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy');
 
 /** @docs-private */
@@ -162,6 +171,13 @@ export class KbqTooltipTrigger
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
     /** @docs-private */
     protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
+    /**
+     * Pop-ups anchored to the very same element — a popover, a dropdown, a select and so on. Resolved with
+     * `self` so a pop-up further up the tree (which the tooltip merely lives inside) is not picked up; that
+     * case is covered by `parentPopup`.
+     */
+    private readonly siblingPopups: readonly KbqSiblingPopup[] =
+        inject(KBQ_SIBLING_POPUP, { self: true, optional: true }) || [];
     /** @docs-private */
     protected focusMonitor: FocusMonitor = inject(FocusMonitor);
     /** @docs-private */
@@ -440,21 +456,55 @@ export class KbqTooltipTrigger
      * assign `trigger = 'manual'` and therefore stay out of the group.
      */
     private get participatesInSingleInstance(): boolean {
-        return this.singleInstance() && INTERACTIVE_TRIGGERS.some((name) => this.trigger.includes(name));
+        return this.singleInstance() && this.hasInteractiveTrigger;
     }
+
+    /**
+     * Whether `kbqTrigger` contains at least one user-driven event, i.e. the tooltip is not driven purely
+     * imperatively. `manual`/`none` tooltips (the validation hints of datepicker, timepicker and inline-edit)
+     * bind no listeners and are expected to stay pinned while the user keeps interacting elsewhere.
+     */
+    private get hasInteractiveTrigger(): boolean {
+        return INTERACTIVE_TRIGGERS.some((name) => this.trigger.includes(name));
+    }
+
+    /**
+     * Whether the tooltip is muted because a pop-up on the same element has taken over the anchor.
+     *
+     * Set when that pop-up opens and released only once the pointer or the focus genuinely leaves the host,
+     * never on the pop-up closing. Both matter: a pop-up restores focus to its trigger when it closes (see
+     * `KbqPopoverComponent.onEscape`), and removing its backdrop replays `mouseenter` on the trigger without
+     * the pointer having moved — either would otherwise pop the tooltip up out of nowhere.
+     */
+    private mutedBySiblingPopup = false;
 
     /**
      * Sets up an effect that mirrors a `forDisabledComponent`'s disabled signal: when that component is disabled it
      * makes the host focusable (so the tooltip can still be triggered) and enables the tooltip, otherwise disables it.
      *
-     * Also joins the "only one tooltip is visible at a time" group. Both the subscription and the teardown live
-     * here rather than in `ngAfterViewInit`/`ngOnDestroy` because several subclasses override those hooks:
-     * `KbqTitleDirective` and `KbqEllipsisCenterDirective` skip `super.ngAfterViewInit()`, and `KbqPasswordToggle`
-     * skips `super` in both hooks entirely. `destroyRef` additionally covers a trigger destroyed while its
-     * tooltip is still visible — that path disposes the overlay without emitting `visibleChange(false)`.
+     * Also joins the "only one tooltip is visible at a time" group and mutes the tooltip while a pop-up on the
+     * same element is open. All of this wiring lives here rather than in `ngAfterViewInit`/`ngOnDestroy` because
+     * several subclasses override those hooks: `KbqTitleDirective` and `KbqEllipsisCenterDirective` skip
+     * `super.ngAfterViewInit()`, and `KbqPasswordToggle` skips `super` in both hooks entirely. `destroyRef`
+     * additionally covers a trigger destroyed while its tooltip is still visible — that path disposes the
+     * overlay without emitting `visibleChange(false)`.
      */
     constructor() {
         super();
+
+        merge(...this.siblingPopups.map(({ openedChange }) => openedChange))
+            .pipe(
+                filter(Boolean),
+                // A tooltip shown imperatively (`manual`/`none`) is not competing for the anchor with the
+                // user — it is pinned on purpose, like the validation hints of datepicker and timepicker.
+                filter(() => this.hasInteractiveTrigger),
+                takeUntilDestroyed()
+            )
+            .subscribe(() => {
+                this.mutedBySiblingPopup = true;
+
+                this.hideAsInactive();
+            });
 
         this.visibleChange.pipe(takeUntilDestroyed()).subscribe((visible) => {
             if (visible) {
@@ -506,10 +556,26 @@ export class KbqTooltipTrigger
     }
 
     /**
-     * Shows the tooltip after `delay` ms. Suppresses showing on a focus trigger that did not originate from
-     * the keyboard, and applies cursor-relative positioning when `relativeToPointer` is enabled.
+     * Shows the tooltip after `delay` ms. Suppresses showing while a pop-up on the same element holds the
+     * anchor or on a focus trigger that did not originate from the keyboard, and applies cursor-relative
+     * positioning when `relativeToPointer` is enabled.
      */
     show(delay: number = this.enterDelay) {
+        if (this.mutedBySiblingPopup) {
+            return;
+        }
+
+        // `isAttached` is checked directly, not just the `mutedBySiblingPopup` latch: `openedChange` can lag
+        // it by a real delay — e.g. select/tree-select only emit it once their open CSS animation finishes,
+        // and a sibling's own `hide()` can cancel a still-pending `show()` outright so it never emits at all
+        // (KbqPopUp.show/hide, pop-up.ts). `isAttached` itself is guaranteed synchronous by the
+        // `KbqSiblingPopup` contract, so checking it here closes that gap regardless of the cause. Gated by
+        // `hasInteractiveTrigger` for the same reason as the constructor subscription: a `manual`/`none`
+        // tooltip is driven imperatively and must not be muted by a sibling at all.
+        if (this.hasInteractiveTrigger && this.siblingPopups.some(({ isAttached }) => isAttached)) {
+            return;
+        }
+
         if (this.triggerName === 'focus' && this.focusMonitor['_lastFocusOrigin'] !== 'keyboard') {
             return;
         }
@@ -522,7 +588,25 @@ export class KbqTooltipTrigger
     }
 
     /**
-     * Hides the tooltip because another tooltip became visible.
+     * Hides the tooltip after `delay` ms and, when the user has genuinely left the host, un-mutes a tooltip
+     * that a pop-up on the same element had muted.
+     *
+     * `mouseleave` and `blur` are the release signals because the base class binds `hide` to both regardless
+     * of whether the tooltip is currently visible. A pop-up that is still attached does not count: its
+     * backdrop steals the hover from the trigger while the pointer stands still, and that `mouseleave` must
+     * not be mistaken for the user leaving.
+     */
+    hide(delay: number = this.leaveDelay) {
+        if (RELEASE_TRIGGERS.includes(this.triggerName) && !this.siblingPopups.some(({ isAttached }) => isAttached)) {
+            this.mutedBySiblingPopup = false;
+        }
+
+        super.hide(delay);
+    }
+
+    /**
+     * Hides the tooltip because something else took its place — another tooltip became visible, or a pop-up
+     * anchored to the same element opened.
      *
      * Goes straight to the pop-up instead of `hide()`: `hide()` silently no-ops when the last recorded
      * `triggerName` is `mouseleave` and the pop-up itself is hovered. Hiding through the instance keeps

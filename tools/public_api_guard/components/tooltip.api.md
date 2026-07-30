@@ -122,6 +122,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     readonly forDisabledComponent: i0.InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
     getOverlayHandleComponentType(): Type<KbqTooltipComponent>;
     header: string | TemplateRef<any>;
+    hide(delay?: number): void;
     hideAsInactive(): void;
     hideWithTimeout: boolean;
     readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;

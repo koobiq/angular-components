@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqPopoverComponent, KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 @Component({
     selector: 'e2e-popover-states',
@@ -183,3 +184,32 @@ export class E2ePopoverStates implements AfterViewInit {
     }
 })
 export class E2ePopoverPositioning {}
+
+// No `kbqTrigger` binding: the input alias is shared by both directives, so setting it would reconfigure the
+// tooltip and the popover at once. Left at the defaults — `hover, focus` and `click, keydown`.
+@Component({
+    selector: 'e2e-popover-with-tooltip',
+    imports: [KbqPopoverModule, KbqToolTipModule, KbqButton, KbqButtonCssStyler],
+    template: `
+        <button
+            data-testid="e2ePopoverWithTooltipTrigger"
+            kbq-button
+            kbqPopover
+            kbqPopoverContent="Popover content"
+            kbqTooltip="Tooltip content"
+        >
+            Open
+        </button>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 100px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2ePopoverWithTooltip'
+    }
+})
+export class E2ePopoverWithTooltip {}
