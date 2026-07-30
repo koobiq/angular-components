@@ -5,8 +5,9 @@ import ts from 'typescript';
 /**
  * Recursively resolves relative (`./`, `../`) TypeScript imports reachable from the given
  * seed files of an example, so that source shared between examples (e.g. a data file kept
- * as a single source of truth) is picked up as part of the example and, from there, shown
- * in the docs source viewer and included in the generated StackBlitz project.
+ * as a single source of truth) is picked up as part of the example and included in the
+ * generated StackBlitz project so it compiles. These files are kept out of the docs source
+ * viewer's tabs — see `localImportFiles` in `generate-example-module.ts`.
  *
  * Returned paths are relative to the example's own package directory, matching the format
  * already used for `templateUrl`/`styleUrls` entries, and may contain `../` segments when
