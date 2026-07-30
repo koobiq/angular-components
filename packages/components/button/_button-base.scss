@@ -92,10 +92,10 @@
     }
 
     & .kbq-button-prefix {
-        margin-right: var(--kbq-button-size-content-padding);
+        margin-inline-end: var(--kbq-button-size-content-padding);
     }
 
     & .kbq-button-suffix {
-        margin-left: var(--kbq-button-size-content-padding);
+        margin-inline-start: var(--kbq-button-size-content-padding);
     }
 }

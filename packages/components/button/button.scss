@@ -36,20 +36,23 @@
     padding-right: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
 
     // an icon button has no label for the slots to space themselves from, so a marker directive on
-    // a lone icon must not push it off centre
+    // a lone icon must not push it off centre. Must stay logical to match the base rules: a physical
+    // `margin-right: 0` would leave the base `margin-inline-end` standing under `dir="rtl"`.
     & .kbq-icon_left,
     & .kbq-button-prefix {
-        margin-right: 0;
+        margin-inline-end: 0;
     }
 
     & .kbq-icon_right,
     & .kbq-button-suffix {
-        margin-left: 0;
+        margin-inline-start: 0;
     }
 
-    // a pair of icons is spaced by the icon-button token rather than by two facing margins
+    // a pair of icons is spaced by a single gap rather than by two facing margins. Uses the size
+    // scale directly: the icon-button content-padding token was removed as dead in 20.3.0 and the
+    // migration guide tells consumers their override of it is gone, so it must not come back.
     &.kbq-button-icon_left.kbq-button-icon_right .kbq-icon_left {
-        margin-right: var(--kbq-button-icon-size-content-padding);
+        margin-inline-end: var(--kbq-size-xxs);
     }
 }
 
