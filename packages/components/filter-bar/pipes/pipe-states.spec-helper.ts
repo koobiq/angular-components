@@ -1,7 +1,44 @@
-import { DebugElement } from '@angular/core';
-import { ComponentFixture } from '@angular/core/testing';
+import { InputModalityDetector } from '@angular/cdk/a11y';
+import { DOCUMENT } from '@angular/common';
+import { DebugElement, ElementRef } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { dispatchKeyboardEvent, ENTER } from '@koobiq/components/core';
 import { KbqFilter, KbqPipe } from '@koobiq/components/filter-bar';
+
+/**
+ * Drives the real `InputModalityDetector` the way a browser would, so focus-origin behaviour can be
+ * asserted end to end instead of mocking CDK internals. The detector is `providedIn: 'root'` and listens
+ * on the document in the capture phase, so the instance the component injected sees these events.
+ *
+ * Deliberately does NOT use the shared `dispatchMouseEvent` helper for the mouse case: its
+ * `createMouseEvent` is built on `initMouseEvent` and leaves `detail`/`buttons` at 0, which CDK reads as a
+ * screen-reader-synthesized mousedown and attributes to `keyboard` — the assertion would silently invert.
+ *
+ * Call after the fixture exists (the detector is constructed by the component under test). The trailing
+ * self-check fails loudly if jsdom ever stops honouring `buttons`/`detail` in `MouseEventInit`.
+ */
+export const setInputModality = (modality: 'mouse' | 'keyboard'): void => {
+    const document = TestBed.inject(DOCUMENT);
+
+    if (modality === 'keyboard') {
+        // ENTER is not in CDK's `ignoreKeys` (modifier keys only), so it does move the modality.
+        dispatchKeyboardEvent(document.body, 'keydown', ENTER);
+    } else {
+        document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, detail: 1, buttons: 1 }));
+    }
+
+    expect(TestBed.inject(InputModalityDetector).mostRecentModality).toBe(modality);
+};
+
+/**
+ * Stands in for the `returnButton` view query when the custom-period view is not actually rendered.
+ * A real `ElementRef` is required: `FocusMonitor.focusVia` runs its argument through `coerceElement`,
+ * which only unwraps genuine `ElementRef` instances and would silently no-op on a plain literal.
+ */
+export const stubReturnButton = () => () => ({
+    elementRef: new ElementRef(TestBed.inject(DOCUMENT).createElement('button'))
+});
 
 /** Minimal host contract shared by every pipe spec's `TestComponent`. */
 export interface PipeStatesHost {

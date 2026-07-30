@@ -1,3 +1,4 @@
+import { FocusMonitor, InputModalityDetector } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -103,6 +104,8 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
 })
 export class KbqFilterSavePopover implements AfterViewInit {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly inputModalityDetector = inject(InputModalityDetector);
 
     /** Popover trigger owned by the parent (`KbqFilters` main button). */
     readonly popoverTrigger = input.required<KbqPopoverTrigger>();
@@ -242,8 +245,20 @@ export class KbqFilterSavePopover implements AfterViewInit {
         this.popoverTrigger().preventClose = false;
 
         this.filterName.enable();
-        // Focus via FocusMonitor (keyboard origin) so the focus ring is preserved on the retry path.
-        setTimeout(() => this.saveFilterButton().focusViaKeyboard());
+        // Put focus back on the re-enabled Save button so the retry is reachable, via FocusMonitor with the
+        // user's current input modality (same rule as `KbqBasePipe.currentFocusOrigin`, duplicated as a
+        // one-line expression here since this component isn't a `KbqBasePipe` subclass and can't reach that
+        // protected getter). A hardcoded `'keyboard'` origin (what `focusViaKeyboard()` does) would paint
+        // the focus ring even when the save came from a click. The `disabled` guard mirrors
+        // `focusViaKeyboard()`'s own early return: it doesn't trigger in the normal single-attempt flow, but
+        // protects a retry that re-disables the button before this deferred callback runs.
+        setTimeout(() => {
+            const button = this.saveFilterButton();
+
+            if (button.disabled) return;
+
+            this.focusMonitor.focusVia(button.elementRef, this.inputModalityDetector.mostRecentModality ?? 'program');
+        });
 
         this.changeDetectorRef.markForCheck();
     }

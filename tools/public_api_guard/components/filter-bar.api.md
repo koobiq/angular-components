@@ -173,6 +173,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected clearedValue(): V | null;
+    protected get currentFocusOrigin(): NonNullable<FocusOrigin>;
     readonly data: KbqPipeData<V>;
     protected destroyed: boolean;
     protected readonly destroyRef: DestroyRef;

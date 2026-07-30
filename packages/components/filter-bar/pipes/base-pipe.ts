@@ -64,9 +64,6 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     private readonly inputModalityDetector = inject(InputModalityDetector);
     private readonly document = inject(DOCUMENT);
 
-    /** Last known focus origin within the pipe. Used to preserve the keyboard focus ring on restore. */
-    private focusOrigin: FocusOrigin = null;
-
     /**
      * Whether this pipe has been destroyed. Guards deferred (`setTimeout`) work that could otherwise
      * read view queries or mutate `data` after the pipe was removed or the filter switched.
@@ -129,19 +126,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
         this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
 
-        // Track the focus origin so the trigger's keyboard focus ring can be restored after
-        // a value is chosen. `checkChildren` captures focus on the inner trigger button.
-        this.focusMonitor
-            .monitor(this.elementRef, true)
-            .pipe(
-                filter((origin) => !!origin),
-                takeUntilDestroyed()
-            )
-            .subscribe((origin) => (this.focusOrigin = origin));
-
         this.destroyRef.onDestroy(() => {
             this.destroyed = true;
-            this.focusMonitor.stopMonitoring(this.elementRef);
         });
 
         afterNextRender(() => {
@@ -221,9 +207,28 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     }
 
     /**
+     * Focus origin to hand to {@link FocusMonitor} whenever this pipe moves focus programmatically, so the
+     * `.cdk-keyboard-focused` ring is painted for keyboard navigation only and never for a mouse-driven one.
+     *
+     * `InputModalityDetector.mostRecentModality` reflects what the user is doing *right now*, and is the
+     * only source that stays correct while a panel is open: panel content lives in the CDK overlay
+     * container, which is not a DOM descendant of the pipe host, so a focus origin captured on the host
+     * itself would freeze at "how the trigger was focused" and couldn't tell a click inside the panel apart
+     * from the keypress that opened it. The detector reacts only to `keydown`/`mousedown`/`touchstart`
+     * (never to hover or scroll), so merely moving the mouse cannot strip a keyboard user's ring, and it
+     * maps a screen reader's synthetic mousedown to `keyboard`. It falls back to `'program'` only before any
+     * such interaction has ever occurred on the page — at which point no ring should be shown anyway.
+     *
+     * @docs-private
+     */
+    protected get currentFocusOrigin(): NonNullable<FocusOrigin> {
+        return this.inputModalityDetector.mostRecentModality ?? 'program';
+    }
+
+    /**
      * Restores focus to the pipe's trigger button after a value is chosen or the panel closes.
-     * Focuses via {@link FocusMonitor} with the captured origin so a keyboard-driven interaction
-     * keeps its focus ring, while a mouse-driven one does not.
+     * Focuses via {@link FocusMonitor} with `currentFocusOrigin` so a keyboard-driven interaction keeps
+     * its focus ring, while a mouse-driven one does not.
      *
      * @docs-private
      */
@@ -246,12 +251,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
             'button:not(.kbq-pipe__remove-button)'
         );
 
-        // A pipe opened right after being added from pipe-add never received focus itself,
-        // so `focusOrigin` is unknown there — fall back to the detected input modality.
-        const origin = this.focusOrigin ?? this.inputModalityDetector.mostRecentModality ?? 'program';
-
         if (trigger) {
-            this.focusMonitor.focusVia(trigger, origin);
+            this.focusMonitor.focusVia(trigger, this.currentFocusOrigin);
         }
     }
 
