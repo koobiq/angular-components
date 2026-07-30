@@ -79,6 +79,7 @@ import { E2ePopoverPositioning, E2ePopoverStates, E2ePopoverWithTooltip } from '
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
+import { E2eScrollbarStateAndStyle } from '../components/scrollbar/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import {
     E2eMultilineSelectStates,
@@ -281,7 +282,8 @@ const components = [
     E2eOverflowItemsHorizontal,
     E2eOverflowItemsVertical,
     E2eOverflowItemsOrdered,
-    E2eOverflowItemsDynamic
+    E2eOverflowItemsDynamic,
+    E2eScrollbarStateAndStyle
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {
