@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
+    PrivateScrollbarDisableInteractionExample,
+    PrivateScrollbarNativeExample,
+    PrivateScrollbarRtlExample,
     PrivateScrollbarScrollToExample,
     PrivateScrollbarVirtualScrollExample,
     PrivateScrollbarVisibilityExample,
@@ -15,6 +18,9 @@ import { DevThemeToggle } from '../theme-toggle';
         PrivateScrollbarVisibilityExample,
         PrivateScrollbarVirtualScrollExample,
         PrivateScrollbarScrollToExample,
+        PrivateScrollbarRtlExample,
+        PrivateScrollbarNativeExample,
+        PrivateScrollbarDisableInteractionExample,
         ScrollbarOverviewExample,
         ScrollbarScrollToTopExample,
         ScrollbarWithCustomConfigExample
@@ -25,6 +31,12 @@ import { DevThemeToggle } from '../theme-toggle';
         <private-scrollbar-virtual-scroll-example />
         <hr />
         <private-scrollbar-scroll-to-example />
+        <hr />
+        <private-scrollbar-rtl-example />
+        <hr />
+        <private-scrollbar-native-example />
+        <hr />
+        <private-scrollbar-disable-interaction-example />
         <hr />
         <scrollbar-overview-example />
         <hr />
