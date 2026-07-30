@@ -27,7 +27,7 @@ import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/
 import {
     KbqComponentColors,
     KbqDefaultSizes,
-    kbqInjectKbqA11yLocaleConfiguration,
+    kbqInjectA11yLocaleConfiguration,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -180,7 +180,7 @@ export class KbqBreadcrumbItem {
 export class KbqBreadcrumbs {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
     /** Accessible name for the icon-only button revealing the collapsed items. */
-    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
     /**
      * Determines if a negative margin should be applied to the first breadcrumb item.
      *

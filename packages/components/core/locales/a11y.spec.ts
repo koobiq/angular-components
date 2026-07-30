@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { kbqA11yLocaleConfigurationProvider, kbqInjectKbqA11yLocaleConfiguration } from './a11y';
+import { kbqA11yLocaleConfigurationProvider, kbqInjectA11yLocaleConfiguration } from './a11y';
 import { enUSLocaleData } from './en-US';
 import { esLALocaleData } from './es-LA';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from './locale-service';
@@ -9,7 +9,7 @@ import { tkTMLocaleData } from './tk-TM';
 import { KbqA11yLocaleConfiguration } from './types';
 
 describe('kbqInjectKbqA11yLocaleConfiguration', () => {
-    const inject = () => TestBed.runInInjectionContext(kbqInjectKbqA11yLocaleConfiguration);
+    const inject = () => TestBed.runInInjectionContext(kbqInjectA11yLocaleConfiguration);
 
     it('should fall back to the default locale when no locale service is provided', () => {
         TestBed.configureTestingModule({});

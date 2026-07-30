@@ -39,7 +39,7 @@ import {
     PopUpSizes,
     PopUpTriggers,
     applyPopupMargins,
-    kbqInjectKbqA11yLocaleConfiguration,
+    kbqInjectA11yLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -143,7 +143,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
     /** Accessible names for the icon-only toolbar buttons.
      * @docs-private */
-    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     configuration;
 

@@ -1,6 +1,6 @@
 import { Component, Directive, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { kbqInjectKbqA11yLocaleConfiguration } from '@koobiq/components/core';
+import { kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqModalComponent } from './modal.component';
@@ -39,7 +39,7 @@ export class KbqModalTitle {
     protected modal = inject(KbqModalComponent);
 
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 }
 
 @Directive({

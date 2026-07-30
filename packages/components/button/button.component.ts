@@ -62,9 +62,6 @@ export const buttonLeftIconClassName = 'kbq-button-icon_left';
  */
 export const buttonRightIconClassName = 'kbq-button-icon_right';
 
-/** `nodeType` of a DOM text node. */
-const TEXT_NODE = 3;
-
 /** Host tags that support the native `disabled` attribute. */
 const nativelyDisableableTags = new Set([
     'button',
@@ -224,7 +221,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
      */
     private getContentNodes(element: HTMLElement): Node[] {
         return getNodesWithoutComments(element.childNodes).filter(
-            (node) => node.nodeType !== TEXT_NODE || !!node.textContent?.trim()
+            (node) => node.nodeType !== Node.TEXT_NODE || !!node.textContent?.trim()
         );
     }
 

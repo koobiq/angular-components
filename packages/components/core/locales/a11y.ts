@@ -28,7 +28,7 @@ export const kbqA11yLocaleConfigurationProvider = (configuration: KbqA11yLocaleC
  *
  * @docs-private
  */
-export function kbqInjectKbqA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration> {
+export function kbqInjectA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration> {
     const localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     const initialValue = inject(KBQ_A11Y_LOCALE_CONFIGURATION);
     const configuration = localeService

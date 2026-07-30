@@ -12,7 +12,7 @@ import {
     SimpleChanges
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { kbqInjectKbqA11yLocaleConfiguration, KbqOverflowShadowContainer } from '@koobiq/components/core';
+import { kbqInjectA11yLocaleConfiguration, KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqSidepanelRef } from './sidepanel-ref';
@@ -99,7 +99,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
 })
 export class KbqSidepanelHeader {
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     /** Add button for close sidepanel. Default false */
     readonly closeable = input<boolean, unknown>(false, { transform: booleanAttribute });

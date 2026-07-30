@@ -20,7 +20,7 @@ import {
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
-    kbqInjectKbqA11yLocaleConfiguration,
+    kbqInjectA11yLocaleConfiguration,
     KbqOverflowShadowContainer
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -134,7 +134,7 @@ export class KbqContentPanelHeader {
      */
     protected readonly componentColors = KbqComponentColors;
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 }
 
 @Component({

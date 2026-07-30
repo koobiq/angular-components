@@ -2764,7 +2764,7 @@ export class KbqHover {
 }
 
 // @public
-export function kbqInjectKbqA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration>;
+export function kbqInjectA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration>;
 
 // @public
 export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;

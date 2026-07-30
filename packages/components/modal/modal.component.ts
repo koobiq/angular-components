@@ -33,7 +33,7 @@ import {
     ENTER,
     ESCAPE,
     KbqComponentColors,
-    kbqInjectKbqA11yLocaleConfiguration,
+    kbqInjectA11yLocaleConfiguration,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop
@@ -93,7 +93,7 @@ export class KbqModalComponent<T = any, R = any>
     private focusMonitor = inject(FocusMonitor);
 
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     protected readonly document = inject<Document>(DOCUMENT);
 

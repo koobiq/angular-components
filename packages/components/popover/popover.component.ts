@@ -48,7 +48,7 @@ import {
     PopUpSizes,
     PopUpTriggers,
     applyPopupMargins,
-    kbqInjectKbqA11yLocaleConfiguration,
+    kbqInjectA11yLocaleConfiguration,
     kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -81,7 +81,7 @@ export const defaultOffsetYWithArrow = 8;
 })
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** Accessible name for the icon-only close button. */
-    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     prefix = 'kbq-popover';
 
