@@ -11,6 +11,7 @@ import {
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqOptionModule,
     KbqOptionSelectionChange,
+    KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
@@ -143,6 +144,7 @@ class BasicTimezoneSelect {
     template: `
         <kbq-form-field>
             <kbq-timezone-select
+                [panelMaxHeight]="panelMaxHeight"
                 [panelMaxWidth]="panelMaxWidth"
                 [panelMinWidth]="panelMinWidth"
                 [panelWidth]="panelWidth"
@@ -159,6 +161,7 @@ class TimezoneSelectWithPanelWidth {
     panelWidth: KbqPanelWidth = null;
     panelMinWidth: KbqPanelMinWidth = KBQ_PANEL_DEFAULT_MIN_WIDTH;
     panelMaxWidth: KbqPanelMaxWidth = null;
+    panelMaxHeight: KbqPanelMaxHeight = null;
 }
 
 @Component({
@@ -336,6 +339,17 @@ describe('KbqTimezoneSelect', () => {
             const panel = pane.querySelector<HTMLElement>('.kbq-timezone-select__panel')!;
 
             expect(panel.style.maxWidth).toBe('500px');
+        });
+
+        it('should apply panelMaxHeight to the panel', () => {
+            const pane = openPanelWithFieldWidth(
+                TimezoneSelectWithPanelWidth,
+                300,
+                (host) => (host.panelMaxHeight = 400)
+            );
+            const panel = pane.querySelector<HTMLElement>('.kbq-timezone-select__panel')!;
+
+            expect(panel.style.getPropertyValue('--kbq-select-panel-size-max-height')).toBe('400px');
         });
     });
 

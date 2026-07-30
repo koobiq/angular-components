@@ -269,6 +269,25 @@ test.describe('KbqTreeSelectModule', () => {
         });
     });
 
+    test.describe('panelMaxHeight', () => {
+        test('should cap the option list at panelMaxHeight', async ({ page }) => {
+            await page.goto('/E2eTreeSelectPanelMaxHeight');
+
+            await page.getByTestId('e2eTreeSelect').click();
+            await page.locator('.kbq-tree-select__content').waitFor();
+
+            // The panel is portaled out of the host, so before the input existed this resolved to the
+            // stylesheet default no matter what the consumer set.
+            const maxHeight = await page.evaluate(() =>
+                getComputedStyle(document.querySelector<HTMLElement>('.kbq-tree-select__content')!).getPropertyValue(
+                    'max-height'
+                )
+            );
+
+            expect(maxHeight).toBe('300px');
+        });
+    });
+
     test.describe('positioning › limited space to open horizontally', () => {
         test('should stay within the viewport when overflowing on the left in ltr', async ({ page }) => {
             await page.goto('/E2eTreeSelectPositioning');

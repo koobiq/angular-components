@@ -263,6 +263,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-copy-selected-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-export": {
+    "packagePath": "components/ag-grid/ag-grid-export",
+    "title": "AG Grid with CSV, XLSX and PDF export",
+    "componentName": "AgGridExportExample",
+    "files": [
+      "ag-grid-export-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-export-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-export-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-external-filter-state": {
     "packagePath": "components/ag-grid/ag-grid-external-filter-state",
     "title": "AG Grid with `KbqAgGridExternalFilterState` directive",
@@ -369,6 +382,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "ag-grid-row-dragging-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-row-dragging-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-row-focus-state": {
+    "packagePath": "components/ag-grid/ag-grid-row-focus-state",
+    "title": "AG Grid with `KbqAgGridRowFocusState` directive",
+    "componentName": "AgGridRowFocusStateExample",
+    "files": [
+      "ag-grid-row-focus-state-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-row-focus-state-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-row-focus-state-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-row-group": {
+    "packagePath": "components/ag-grid/ag-grid-row-group",
+    "title": "AG Grid with `KbqAgGridRowGroup` directive",
+    "componentName": "AgGridRowGroupExample",
+    "files": [
+      "ag-grid-row-group-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-row-group-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-row-group-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-row-selection-state": {
+    "packagePath": "components/ag-grid/ag-grid-row-selection-state",
+    "title": "AG Grid with `KbqAgGridRowSelectionState` directive",
+    "componentName": "AgGridRowSelectionStateExample",
+    "files": [
+      "ag-grid-row-selection-state-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-row-selection-state-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-row-selection-state-example.ts",
     "importPath": "components/ag-grid"
   },
   "ag-grid-skeleton-cell-renderer": {
@@ -1564,6 +1616,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dropdown-item-progress-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-item-progress-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-item-progress-example.ts",
@@ -1672,6 +1725,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dropdown-with-footer-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-with-footer-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-with-footer-example.ts",
@@ -2347,6 +2401,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-locked-options-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-locked-options-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-locked-options-example.ts",
@@ -6832,6 +6887,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-footer-overview-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-height": {
+    "packagePath": "components/tree-select/tree-select-height",
+    "title": "Tree-select height",
+    "componentName": "TreeSelectHeightExample",
+    "files": [
+      "tree-select-height-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-height-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-height-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-lazyload": {
     "packagePath": "components/tree-select/tree-select-lazyload",
     "title": "Tree-select lazyload",
@@ -7405,6 +7473,8 @@ return import('@koobiq/docs-examples/components/ag-grid');
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-copy-selected':
 return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-export':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-external-filter-state':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-filter-state':
@@ -7420,6 +7490,12 @@ return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-row-actions':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-row-dragging':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-row-focus-state':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-row-group':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-row-selection-state':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-skeleton-cell-renderer':
 return import('@koobiq/docs-examples/components/ag-grid');
@@ -8390,6 +8466,8 @@ return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-deleted-nodes':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-footer-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-height':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-lazyload':
 return import('@koobiq/docs-examples/components/tree-select');

@@ -602,3 +602,72 @@ export class E2eSelectLongOptionText {
         this.changingLabel.update((label) => label.concat((this.counter++).toString()));
     }
 }
+
+@Component({
+    selector: 'e2e-select-panel-max-height',
+    imports: [KbqSelectModule],
+    template: `
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-select data-testid="e2eSelect" [panelMaxHeight]="panelMaxHeight()">
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+        <button
+            type="button"
+            data-testid="e2eGrowPanelButton"
+            style="position: fixed; top: 8px; right: 8px; z-index: 9999;"
+            (click)="panelMaxHeight.set(2000)"
+        >
+            grow panel
+        </button>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+            width: 240px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectPanelMaxHeight'
+    }
+})
+export class E2eSelectPanelMaxHeight {
+    readonly panelMaxHeight = signal<number | null>(null);
+    readonly options = Array.from({ length: 30 }).map((_, index) => `Option #${index + 1}`);
+}
+
+@Component({
+    selector: 'e2e-virtual-scroll-select-panel-max-height',
+    imports: [KbqSelectModule, ScrollingModule],
+    template: `
+        <kbq-form-field [attr.data-testid]="'e2eFormField'">
+            <kbq-select data-testid="e2eSelect" [panelMaxHeight]="300">
+                <cdk-virtual-scroll-viewport [itemSize]="itemSize" [minBufferPx]="100" [maxBufferPx]="400">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
+                        {{ option }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+            width: 240px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eVirtualScrollSelectPanelMaxHeight'
+    }
+})
+export class E2eVirtualScrollSelectPanelMaxHeight {
+    readonly itemSize = 32;
+    // Fewer options than the cap can show, so that the pinned viewport height is observable.
+    readonly options = ['Abakan', 'Almetyevsk', 'Anadyr'];
+}

@@ -9,7 +9,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select [panelClass]="'example-select-panel-height'" [(value)]="value">
+            <kbq-select [panelMaxHeight]="500" [(value)]="value">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -17,10 +17,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </kbq-form-field>
     `,
     styles: `
-        ::ng-deep .example-select-panel-height.kbq-select__panel {
-            --kbq-select-panel-size-max-height: 500px;
-        }
-
         :host {
             display: flex;
             justify-content: center;

@@ -26,6 +26,28 @@
 
 <!-- example(tree-select-footer-overview) -->
 
+### Dropdown height
+
+By default, the maximum height of the list is 256px, and the list scrolls once the tree does not fit. Use the `panelMaxHeight` attribute with a value in pixels to change it.
+
+<!-- example(tree-select-height) -->
+
+`panelMaxHeight` caps the scrollable list. A search field and a footer are rendered beside the list, so they add to the total height of the panel. A value larger than the space left in the viewport is clipped by the overlay rather than scrolled.
+
+For all dropdowns in a module, using the `kbqTreeSelectOptionsProvider` provider:
+
+```ts
+import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
+
+@NgModule({
+    providers: [
+        kbqTreeSelectOptionsProvider({ panelMaxHeight: 400 })
+    ]
+})
+```
+
+For theming, the same height is available as the `--kbq-select-panel-size-max-height` token — set it on `:root` to change every panel at once, or on a class passed through `panelClass` to change a single one.
+
 ### Dropdown width
 
 By default, the dropdown width equals the select width and grows when the list contains long text. This behavior can be changed using the `panelWidth` attribute:

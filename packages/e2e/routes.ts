@@ -77,13 +77,15 @@ import {
     E2eMultiSelectRtlPositioning,
     E2eMultiSelectStates,
     E2eSelectLongOptionText,
+    E2eSelectPanelMaxHeight,
     E2eSelectPositioning,
     E2eSelectRtlPositioning,
     E2eSelectStates,
     E2eSelectWithGroupsPositioning,
     E2eSelectWithGroupsRtlPositioning,
     E2eSelectWithSearchAndFooter,
-    E2eVirtualScrollMultiSelectNarrow
+    E2eVirtualScrollMultiSelectNarrow,
+    E2eVirtualScrollSelectPanelMaxHeight
 } from '../components/select/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle, E2eSplitButtonTruncation } from '../components/split-button/e2e';
@@ -117,6 +119,7 @@ import {
     E2eTreeSelectInitiallyHidden,
     E2eTreeSelectMultiBehavior,
     E2eTreeSelectNoPlaceholder,
+    E2eTreeSelectPanelMaxHeight,
     E2eTreeSelectPanelWidthAuto,
     E2eTreeSelectPositioning,
     E2eTreeSelectPropertyDisabled,
@@ -237,6 +240,7 @@ const components = [
     E2eTreeSelectDataMutation,
     E2eTreeSelectNoPlaceholder,
     E2eTreeSelectPanelWidthAuto,
+    E2eTreeSelectPanelMaxHeight,
     E2eSelectWithSearchAndFooter,
     E2eSelectPositioning,
     E2eMultiSelectPositioning,
@@ -246,6 +250,8 @@ const components = [
     E2eSelectWithGroupsRtlPositioning,
     E2eMultiSelectNarrow,
     E2eVirtualScrollMultiSelectNarrow,
+    E2eSelectPanelMaxHeight,
+    E2eVirtualScrollSelectPanelMaxHeight,
     E2eSelectLongOptionText,
     E2eInlineEditStates,
     E2eInlineEditMenuButton,
