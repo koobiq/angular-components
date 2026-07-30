@@ -32,7 +32,11 @@ const SELECT_VALUES = Array.from({ length: 6 }, (_, i) => ({ name: `Option #${i}
         KbqFilterBarModule
     ],
     template: `
-        <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates">
+        <kbq-filter-bar
+            [filter]="activeFilter"
+            [pipeTemplates]="pipeTemplates"
+            [selectedAllEqualsSelectedNothing]="false"
+        >
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
@@ -56,7 +60,6 @@ export class FilterBarLockedOptionsExample {
                 value: [{ name: 'Option #3', id: '3' }],
 
                 search: true,
-                selectAll: true,
 
                 cleanable: true,
                 removable: false,
@@ -69,7 +72,6 @@ export class FilterBarLockedOptionsExample {
                 value: ['value 2'],
 
                 search: true,
-                selectAll: true,
 
                 cleanable: true,
                 removable: false,
