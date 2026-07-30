@@ -259,6 +259,85 @@ const DATA_OBJECT_FOR_TREE_TWO_LINE_NODE_EXAMPLE = {
     }
 };
 
+const DATA_OBJECT_FOR_TREE_OPTION_ACTION_VISIBILITY = {
+    'node-1': 'app',
+    'node-2': 'app',
+    'node-3': 'app'
+};
+
+/**
+ * Unlike `E2eTreeStates`, this fixture forces no state classes at all — the option action must be
+ * revealed by real hover / real keyboard focus only. See the `kbq-option-action-visibility` mixin.
+ */
+@Component({
+    selector: 'e2e-tree-option-action-visibility',
+    imports: [
+        KbqTreeModule,
+        KbqOptionActionComponent
+    ],
+    template: `
+        <kbq-tree-selection
+            data-testid="e2eTree"
+            style="width: 300px"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [attr.data-testid]="node.name">
+                {{ treeControl.getViewValue(node) }}
+                <kbq-option-action />
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTreeOptionActionVisibility'
+    }
+})
+export class E2eTreeOptionActionVisibility {
+    treeControl: FlatTreeControl<FileFlatNode>;
+    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
+
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    constructor() {
+        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
+
+        this.treeControl = new FlatTreeControl<FileFlatNode>(
+            this.getLevel,
+            this.isExpandable,
+            this.getValue,
+            this.getViewValue,
+            defaultCompareValues,
+            defaultCompareViewValues
+        );
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+        this.dataSource.data = buildFileTree(DATA_OBJECT_FOR_TREE_OPTION_ACTION_VISIBILITY, 0);
+    }
+
+    protected transformer = (node: FileNode, level: number, parent: any) => {
+        const flatNode = new FileFlatNode();
+
+        flatNode.name = node.name;
+        flatNode.parent = parent;
+        flatNode.type = node.type;
+        flatNode.level = level;
+        flatNode.expandable = !!node.children;
+
+        return flatNode;
+    };
+
+    protected getLevel = (node: FileFlatNode) => node.level;
+
+    protected isExpandable = (node: FileFlatNode) => node.expandable;
+
+    protected getChildren = (node: FileNode): FileNode[] => node.children;
+
+    protected getValue = (node: FileFlatNode): string => node.name;
+
+    protected getViewValue = (node: FileFlatNode): string => node.name;
+}
+
 @Component({
     selector: 'e2e-tree-two-line-node',
     imports: [

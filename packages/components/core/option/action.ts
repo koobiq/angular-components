@@ -114,7 +114,11 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
             this.nativeElement.focus();
         }
 
-        this.hasFocus = true;
+        // The action lives inside `.kbq-action-container`, which is `display: none` until the option
+        // is hovered or keyboard-focused. Focusing a hidden element is a no-op, so `hasFocus` has to
+        // reflect what actually happened: assuming success would latch `kbq-action-button-focused`
+        // on the option forever, since `FocusMonitor` never emits for an element that never got focus.
+        this.hasFocus = this.nativeElement.ownerDocument.activeElement === this.nativeElement;
     }
 
     onClick($event) {

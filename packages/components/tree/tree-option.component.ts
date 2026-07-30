@@ -377,7 +377,11 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         if ($event.keyCode === TAB && !$event.shiftKey && !actionButton.hasFocus) {
             actionButton.focus();
 
-            $event.preventDefault();
+            // Swallow Tab only if focus actually moved to the action. It stays hidden while the
+            // option is focused by mouse, and suppressing Tab there would trap focus on the option.
+            if (actionButton.hasFocus) {
+                $event.preventDefault();
+            }
         }
     }
 

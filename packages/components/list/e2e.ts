@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
+import { KbqOptionModule } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqListModule } from '@koobiq/components/list';
 
@@ -218,3 +220,35 @@ import { KbqListModule } from '@koobiq/components/list';
     }
 })
 export class E2eListStates {}
+
+/**
+ * Unlike `E2eListStates`, this fixture forces no state classes at all — the option action must be
+ * revealed by real hover / real keyboard focus only. See `kbq-option-action-visibility` mixin.
+ */
+@Component({
+    selector: 'e2e-list-option-action-visibility',
+    imports: [KbqListModule, KbqOptionModule, KbqDropdownModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="width: 400px">
+            <kbq-list-selection data-testid="e2eList">
+                @for (option of options; track option) {
+                    <kbq-list-option [attr.data-testid]="option">
+                        {{ option }}
+                        <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
+                    </kbq-list-option>
+                }
+            </kbq-list-selection>
+        </div>
+
+        <kbq-dropdown #dropdown>
+            <button kbq-dropdown-item data-testid="dropdownItem">action</button>
+        </kbq-dropdown>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eListOptionActionVisibility'
+    }
+})
+export class E2eListOptionActionVisibility {
+    protected readonly options = ['option-1', 'option-2', 'option-3'];
+}

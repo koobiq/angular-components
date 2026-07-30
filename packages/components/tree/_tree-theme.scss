@@ -94,10 +94,6 @@
     .cdk-keyboard-focused {
         & .kbq-tree-option.kbq-focused:not(.kbq-action-button-focused) {
             border-color: var(--kbq-tree-states-focused-focus-outline-color);
-
-            & .kbq-action-container {
-                display: flex;
-            }
         }
     }
 }
