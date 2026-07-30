@@ -194,6 +194,16 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      */
     compareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
     /**
+     * Options whose selection cannot be removed by the user: they are always selected, render as
+     * `disabled` with a checked checkbox, and survive both "select all" toggling and clearing the pipe.
+     *
+     * Entries have the same shape as the entries of the owning pipe's `value`: `KbqSelectValue` objects
+     * for the `multiselect` pipe (matched with `compareWith`, falling back to the pipe's id-based
+     * comparator), and raw node values for the `multi-tree-select` pipe. Locking a tree branch locks its
+     * whole subtree. Ignored by other pipe types.
+     */
+    lockedValues?: unknown[];
+    /**
      * Earliest selectable instant for the `date` / `datetime` pipe custom period. Accepts any value the
      * configured `DateAdapter` can deserialize (with the default Luxon adapter: an ISO-8601 string, a
      * `Date`, or a `DateTime`). The `date` pipe uses only its day (pinned to the start of day). Ignored by

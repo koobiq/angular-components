@@ -1387,6 +1387,15 @@ export class KbqSelect
 
     /** @docs-private */
     setSelectedOptionsByClick(option: KbqOption) {
+        // `KbqOption.handleClick` routes a shift-click straight here, skipping the `disabled`/`selectable`
+        // check that `selectViaInteraction` applies to a plain click — so the guard has to live here.
+        // It precedes `setActiveItem` deliberately: the range anchor must not come to rest on an option
+        // the user cannot toggle, or the next shift-range would take its direction from that option's
+        // (unchangeable) selected state. Mirrors `KbqTreeSelection.setSelectedOptionsByClick`.
+        if (option.disabled || !option.selectable()) {
+            return;
+        }
+
         if (this.multiple || this.multiline()) {
             this.keyManager.setActiveItem(option);
             const options = this.options.toArray();
@@ -1407,7 +1416,7 @@ export class KbqSelect
 
             options
                 .slice(fromIndex, toIndex + 1)
-                .filter((item) => !item.disabled)
+                .filter((item) => !item.disabled && item.selectable())
                 .forEach((option) => {
                     if (selectedOptionState) {
                         option.select();
