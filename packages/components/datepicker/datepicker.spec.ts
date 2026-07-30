@@ -52,6 +52,9 @@ const getDatepickerInputElement = (fixture: ComponentFixture<unknown>): HTMLInpu
 const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
     fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
 
+const getDatepickerToggleIconElement = (fixture: ComponentFixture<unknown>): HTMLElement =>
+    fixture.debugElement.query(By.css('kbq-datepicker-toggle-icon i[kbq-icon-button]')).nativeElement;
+
 const customErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.untouched
 };
@@ -62,6 +65,7 @@ const customErrorStateMatcher: ErrorStateMatcher = {
         <form [formGroup]="form">
             <kbq-form-field>
                 <input formControlName="date" [kbqDatepicker]="d" [errorStateMatcher]="errorStateMatcher" />
+                <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
                 <kbq-datepicker #d />
             </kbq-form-field>
             <button type="submit">Submit</button>
@@ -70,6 +74,7 @@ const customErrorStateMatcher: ErrorStateMatcher = {
 })
 class DatepickerWithErrorStateMatcher {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+    readonly datepickerToggle = viewChild.required(KbqDatepickerToggleIconComponent);
     readonly form = new FormGroup({ date: new FormControl<DateTime | null>(null, Validators.required) });
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
@@ -778,6 +783,19 @@ describe('KbqDatepicker', () => {
                     fixture.detectChanges();
 
                     expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                });
+
+                it('should apply kbq-error class to the datepicker toggle icon when invalid and touched', () => {
+                    const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
+
+                    fixture.detectChanges();
+
+                    expect(getDatepickerToggleIconElement(fixture).classList.contains('kbq-error')).toBe(false);
+
+                    fixture.componentInstance.form.controls.date.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(getDatepickerToggleIconElement(fixture).classList.contains('kbq-error')).toBe(true);
                 });
 
                 it('should be in error state when form is submitted and control is invalid', () => {

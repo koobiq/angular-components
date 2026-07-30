@@ -193,6 +193,21 @@ export class InputFormFieldWithCustomErrorStateMatcher {
 }
 
 @Component({
+    selector: 'input-form-field-with-cleaner-and-custom-error-state-matcher',
+    imports: [KbqInputModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput [formControl]="control" [errorStateMatcher]="errorStateMatcher" />
+            <kbq-cleaner />
+        </kbq-form-field>
+    `
+})
+export class InputFormFieldWithCleanerAndCustomErrorStateMatcher {
+    readonly control = new FormControl('koobiq', [Validators.required, Validators.minLength(10)]);
+    errorStateMatcher = new CustomErrorStateMatcher();
+}
+
+@Component({
     selector: 'input-form-field-with-border-customization',
     imports: [ReactiveFormsModule, KbqInputModule],
     template: `
@@ -352,6 +367,14 @@ describe(KbqFormField.name, () => {
 
         cleaner.nativeElement.click();
         expect(componentInstance.control.value).toBeNull();
+    });
+
+    it('should apply kbq-error class to KbqCleaner icon when control is invalid', () => {
+        const { debugElement } = createComponent(InputFormFieldWithCleanerAndCustomErrorStateMatcher);
+
+        const cleaner = getCleanerDebugElement(debugElement);
+
+        expect(cleaner.nativeElement.classList.contains('kbq-error')).toBe(true);
     });
 
     it('should throw Error for KbqFormField without KbqFormFieldControl', () => {
