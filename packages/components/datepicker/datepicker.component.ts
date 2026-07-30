@@ -22,7 +22,12 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { DateAdapter, defaultOffsetY, KbqScrollStrategyHooks } from '@koobiq/components/core';
+import {
+    DateAdapter,
+    KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
+    KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
+    KbqScrollStrategyHooks
+} from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';

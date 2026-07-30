@@ -13,6 +13,7 @@ import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterContentInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Directive,
     ElementRef,
