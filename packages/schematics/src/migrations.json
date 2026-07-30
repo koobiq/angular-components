@@ -20,6 +20,11 @@
             "version": "20.2.0-0",
             "description": "Replaces `panelWidth=\"auto\"` with `panelWidth=\"fit-content\"` on `<kbq-autocomplete>`. `auto` used to be passed to CSS verbatim, so the panel shrank to fit its content; it now means \"match the host width\", matching `kbq-select` and `kbq-tree-select`. The change is silent — `auto` still type-checks and still renders — so unmigrated templates only lay out differently.",
             "factory": "./migrations/autocomplete-panel-width-auto/index"
+        },
+        "button-truncation": {
+            "version": "20.4.6-0",
+            "description": "Migrates KbqButton and KbqButtonToggle consumers to labels that truncate with an ellipsis by default. Moves an icon sitting at either edge of the default slot into the kbqButtonPrefix/kbqButtonSuffix slot, which is what keeps it beside the truncating label box instead of inside it (icon-only buttons are left alone, and an icon rendered by a single-element @if block is still marked). Reports — without rewriting — stylesheets that override .kbq-button-text (was a flex row, now inline-block), .kbq-button-wrapper (hand-rolled truncation now stacks on the built-in one) and .kbq-button-toggle-wrapper (the label moved into the new .kbq-button-toggle-text box), and notes the silent part: .kbq-button/.kbq-light-button gained max-width: 100%, so a button that used to overflow its container now clamps and clips its label.",
+            "factory": "./migrations/button-truncation/index"
         }
     }
 }

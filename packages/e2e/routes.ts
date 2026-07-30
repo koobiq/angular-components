@@ -25,8 +25,12 @@ import {
     E2eBreadcrumbsOverflowMax,
     E2eBreadcrumbsStateAndStyle
 } from '../components/breadcrumbs/e2e';
-import { E2eButtonToggleStates, E2eButtonToggleStatesStretched } from '../components/button-toggle/e2e';
-import { E2eButtonGroup, E2eButtonStateAndStyle, E2eButtonStress } from '../components/button/e2e';
+import {
+    E2eButtonToggleStates,
+    E2eButtonToggleStatesStretched,
+    E2eButtonToggleTruncation
+} from '../components/button-toggle/e2e';
+import { E2eButtonGroup, E2eButtonStateAndStyle, E2eButtonStress, E2eButtonTruncation } from '../components/button/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
 import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
@@ -137,7 +141,7 @@ import {
     E2eVirtualScrollSelectPanelMaxHeight
 } from '../components/select/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
-import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
+import { E2eSplitButtonStateAndStyle, E2eSplitButtonTruncation } from '../components/split-button/e2e';
 import { E2eSplitterGhost } from '../components/splitter/e2e';
 import { E2eTableStates } from '../components/table/e2e';
 import { E2eTabNavBar, E2eTabsStates } from '../components/tabs/e2e';
@@ -185,7 +189,9 @@ const components = [
     E2eButtonStateAndStyle,
     E2eButtonGroup,
     E2eButtonStress,
+    E2eButtonTruncation,
     E2eSplitButtonStateAndStyle,
+    E2eSplitButtonTruncation,
     E2eSplitterGhost,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
@@ -209,6 +215,7 @@ const components = [
     E2eDividerStateAndStyle,
     E2eButtonToggleStates,
     E2eButtonToggleStatesStretched,
+    E2eButtonToggleTruncation,
     E2eTabsStates,
     E2eTabNavBar,
     E2eClampedTextStateAndStyle,

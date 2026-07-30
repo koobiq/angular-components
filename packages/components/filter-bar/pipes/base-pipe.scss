@@ -14,8 +14,8 @@
         height: unset;
     }
 
-    // The button's default slot is a flex row; a pipe puts its own two independently truncated parts
-    // (name + value) in there as two shrinkable grid tracks instead: as flex items they would give up
+    // The button's default slot is a plain text box; a pipe puts its own two independently truncated
+    // parts (name + value) in there as two shrinkable grid tracks: as flex items they would give up
     // the same percentage, which wipes out a short name long before a long value becomes unreadable.
     // Qualified with `.kbq-button` on purpose: the base rule is `.kbq-button .kbq-button-text`, so a
     // two-class selector would only win on source order, which differs between app bundles.

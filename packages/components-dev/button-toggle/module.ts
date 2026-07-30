@@ -8,14 +8,17 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
     ButtonToggleAlignmentOverviewExample,
-    ButtonToggleExamplesModule
+    ButtonToggleExamplesModule,
+    ButtonToggleTooltipOverviewExample
 } from '../../docs-examples/components/button-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [ButtonToggleAlignmentOverviewExample],
+    imports: [ButtonToggleAlignmentOverviewExample, ButtonToggleTooltipOverviewExample],
     template: `
         <button-toggle-alignment-overview-example />
+        <hr />
+        <button-toggle-tooltip-overview-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

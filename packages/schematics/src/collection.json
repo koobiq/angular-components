@@ -56,6 +56,11 @@
             "description": "Migrates KbqAlert consumers to the signal-based API (compact/alertStyle reads become calls; warns on alertColor value change, now-protected members, narrowed inputs)",
             "factory": "./migrations/alert-signals/index",
             "schema": "./migrations/alert-signals/schema.json"
+        },
+        "button-truncation": {
+            "description": "Moves edge icons of a button/button-toggle into the kbqButtonPrefix/kbqButtonSuffix slots so labels keep their ellipsis, and reports stylesheet overrides affected by the new truncation layout",
+            "factory": "./migrations/button-truncation/index",
+            "schema": "./migrations/button-truncation/schema.json"
         }
     }
 }

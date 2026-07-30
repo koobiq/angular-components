@@ -1,4 +1,3 @@
-@use '../core/styles/common/list';
 @use './split-button-theme';
 
 .kbq-split-button {
@@ -21,10 +20,6 @@
 
             border-top-right-radius: unset;
             border-bottom-right-radius: unset;
-
-            & .kbq-button-wrapper {
-                @include list.kbq-truncate-line();
-            }
         }
 
         & .kbq-split-button_second {

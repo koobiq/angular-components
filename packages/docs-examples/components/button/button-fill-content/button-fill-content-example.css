@@ -1,14 +1,3 @@
 .example-fill-content__button {
     width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.example-fill-content__button ::ng-deep .kbq-button-wrapper {
-    display: inline-block;
-    flex-grow: 1;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
