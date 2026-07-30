@@ -57,6 +57,13 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar/private';
                 work to test each guess. One of the measures of the strength of an encryption system is how long it
                 would theoretically take an attacker to mount a successful brute-force attack against it.[3]
             </p>
+            <p>
+                In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists
+                of an attacker submitting many possible keys or passwords with the hope of eventually guessing
+                correctly. This strategy can theoretically be used to break any form of encryption that is not
+                information-theoretically secure.[1] However, in a properly designed cryptosystem the chance of
+                successfully guessing the key is negligible.
+            </p>
         </div>
     `,
     styles: `

@@ -263,6 +263,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-copy-selected-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-export": {
+    "packagePath": "components/ag-grid/ag-grid-export",
+    "title": "AG Grid with CSV, XLSX and PDF export",
+    "componentName": "AgGridExportExample",
+    "files": [
+      "ag-grid-export-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-export-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-export-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-external-filter-state": {
     "packagePath": "components/ag-grid/ag-grid-external-filter-state",
     "title": "AG Grid with `KbqAgGridExternalFilterState` directive",
@@ -369,6 +382,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "ag-grid-row-dragging-example",
     "additionalComponents": [],
     "primaryFile": "ag-grid-row-dragging-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-row-focus-state": {
+    "packagePath": "components/ag-grid/ag-grid-row-focus-state",
+    "title": "AG Grid with `KbqAgGridRowFocusState` directive",
+    "componentName": "AgGridRowFocusStateExample",
+    "files": [
+      "ag-grid-row-focus-state-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-row-focus-state-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-row-focus-state-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-row-group": {
+    "packagePath": "components/ag-grid/ag-grid-row-group",
+    "title": "AG Grid with `KbqAgGridRowGroup` directive",
+    "componentName": "AgGridRowGroupExample",
+    "files": [
+      "ag-grid-row-group-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-row-group-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-row-group-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-row-selection-state": {
+    "packagePath": "components/ag-grid/ag-grid-row-selection-state",
+    "title": "AG Grid with `KbqAgGridRowSelectionState` directive",
+    "componentName": "AgGridRowSelectionStateExample",
+    "files": [
+      "ag-grid-row-selection-state-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-row-selection-state-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-row-selection-state-example.ts",
     "importPath": "components/ag-grid"
   },
   "ag-grid-skeleton-cell-renderer": {
@@ -1564,6 +1616,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dropdown-item-progress-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-item-progress-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-item-progress-example.ts",
@@ -1672,6 +1725,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "dropdown-with-footer-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "dropdown-with-footer-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-with-footer-example.ts",
@@ -2347,6 +2401,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "filter-bar-locked-options-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "filter-bar-locked-options-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-locked-options-example.ts",
@@ -4593,6 +4648,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "resizer-overview-example.ts",
     "importPath": "components/resizer"
+  },
+  "private-scrollbar-scroll-to": {
+    "packagePath": "components/scrollbar/private-scrollbar-scroll-to",
+    "title": "Scrollbar scrollTo methods",
+    "componentName": "PrivateScrollbarScrollToExample",
+    "files": [
+      "private-scrollbar-scroll-to-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "private-scrollbar-scroll-to-example",
+    "additionalComponents": [],
+    "primaryFile": "private-scrollbar-scroll-to-example.ts",
+    "importPath": "components/scrollbar"
+  },
+  "private-scrollbar-virtual-scroll": {
+    "packagePath": "components/scrollbar/private-scrollbar-virtual-scroll",
+    "title": "Scrollbar with virtual scroll",
+    "componentName": "PrivateScrollbarVirtualScrollExample",
+    "files": [
+      "private-scrollbar-virtual-scroll-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "private-scrollbar-virtual-scroll-example",
+    "additionalComponents": [],
+    "primaryFile": "private-scrollbar-virtual-scroll-example.ts",
+    "importPath": "components/scrollbar"
+  },
+  "private-scrollbar-visibility": {
+    "packagePath": "components/scrollbar/private-scrollbar-visibility",
+    "title": "Scrollbar visibility",
+    "componentName": "PrivateScrollbarVisibilityExample",
+    "files": [
+      "private-scrollbar-visibility-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "private-scrollbar-visibility-example",
+    "additionalComponents": [],
+    "primaryFile": "private-scrollbar-visibility-example.ts",
+    "importPath": "components/scrollbar"
   },
   "scrollbar-overview": {
     "packagePath": "components/scrollbar/scrollbar-overview",
@@ -7405,6 +7499,8 @@ return import('@koobiq/docs-examples/components/ag-grid');
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-copy-selected':
 return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-export':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-external-filter-state':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-filter-state':
@@ -7420,6 +7516,12 @@ return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-row-actions':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-row-dragging':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-row-focus-state':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-row-group':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-row-selection-state':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-skeleton-cell-renderer':
 return import('@koobiq/docs-examples/components/ag-grid');
@@ -8053,6 +8155,12 @@ return import('@koobiq/docs-examples/components/radio');
 return import('@koobiq/docs-examples/components/radio');
   case 'resizer-overview':
 return import('@koobiq/docs-examples/components/resizer');
+  case 'private-scrollbar-scroll-to':
+return import('@koobiq/docs-examples/components/scrollbar');
+  case 'private-scrollbar-virtual-scroll':
+return import('@koobiq/docs-examples/components/scrollbar');
+  case 'private-scrollbar-visibility':
+return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-overview':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-scroll-to-top':

@@ -35,3 +35,7 @@ npm install overlayscrollbars@2.7.3
     ...
 </kbq-scrollbar>
 ```
+
+## Программное управление скроллом
+
+<!-- example(scrollbar-scroll-to-top) -->
