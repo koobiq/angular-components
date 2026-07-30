@@ -81,14 +81,14 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     get checkboxState(): KbqPseudoCheckboxState {
         if (!this.options()) return 'unchecked';
 
-        const select = this.select();
+        const tally = this.unlockedTally;
 
-        if (!select?.selectionModel) return 'unchecked';
+        if (!tally) return 'unchecked';
 
-        if (select.selectionModel.selected.length === this.values.length) {
-            return 'checked';
-        } else if (!select.selectionModel.selected.length) {
+        if (!tally.selected) {
             return 'unchecked';
+        } else if (tally.selected === tally.total) {
+            return 'checked';
         }
 
         return 'indeterminate';
@@ -96,16 +96,37 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** true if all visible options selected */
     get allVisibleOptionsSelected(): boolean {
-        return this.visibleOptions?.every((option) => option.selected);
+        const visible = this.visibleOptions;
+
+        // `[].every()` is `true`: with every visible option locked there is nothing for "select all" to
+        // act on, and claiming "all selected" would send the toggle down the deselect branch instead.
+        return !!visible?.length && visible.every((option) => option.selected);
     }
 
     /** true if all options selected */
     get allOptionsSelected(): boolean {
+        const tally = this.unlockedTally;
+
+        // A tally of zero is not a full selection: with every option locked there is nothing for "select
+        // all" to act on, and `0 === 0` would otherwise collapse the value to the "all selected"
+        // sentinel, dropping the locked values. Same reasoning as `allVisibleOptionsSelected` above.
+        return !!tally && tally.total > 0 && tally.selected === tally.total;
+    }
+
+    /**
+     * Selection tally restricted to the options the user can actually toggle — the one place the
+     * "ignore the locked options" rule of "select all" is expressed. `null` while there is nothing to
+     * tally: no options came from the pipe template yet, or the view is not up.
+     */
+    private get unlockedTally(): { total: number; selected: number } | null {
         const select = this.select();
 
-        if (!select?.selectionModel) return false;
+        if (!this.values || !select?.selectionModel) return null;
 
-        return select.triggerValues.length === this.values?.length;
+        return this.multiSelect.unlockedTally(
+            this.values,
+            select.selectionModel.selected.map((option) => option.value)
+        );
     }
 
     get selectedAllEqualsSelectedNothing(): boolean {
@@ -113,15 +134,32 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     private get visibleOptions(): KbqOption[] {
-        return this.options()?.filter((option) => option.selectable());
+        // Excluding the disabled options excludes the locked ones from "select all": `KbqOption.select()`
+        // and `deselect()` do not consult `disabled`, so filtering has to happen here.
+        return this.options()?.filter((option) => option.selectable() && !option.disabled);
     }
 
     private selectionAllInProgress = false;
     private readonly multiSelect = new KbqMultiSelectPipeState({
         data: this.data,
         filterBar: this.filterBar,
-        allOptionsSelected: () => this.allOptionsSelected
+        allOptionsSelected: () => this.allOptionsSelected,
+        lockedValues: () => this.lockedValues ?? [],
+        isSameValue: (first, second) =>
+            (this.optionCompareWith ?? this.compareByValue)(first as KbqSelectValue, second as KbqSelectValue),
+        emptyValue: () => []
     });
+
+    constructor() {
+        super();
+
+        // The subscription established by `KbqBasePipe`'s constructor captured the base `updateTemplates`,
+        // which refreshes `lockedValues` but knows nothing about the committed value. Subscribing again
+        // here folds the locked values in right after — including on the initial replay.
+        this.filterBar?.internalTemplatesChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.multiSelect.normalizeValue());
+    }
 
     /** @docs-private */
     ngOnInit(): void {
@@ -136,6 +174,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
+        this.multiSelect.markViewInitialized();
+
         this.select()
             .closedStream.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.filterBar?.onClosePipe.emit(this.data));
@@ -148,7 +188,11 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.data.value = [];
         } else {
-            this.data.value = item;
+            // Defense in depth. The lock itself is enforced upstream — `disabled` blocks every path in
+            // `kbq-select` that could deselect the option — so this merge is expected to be a no-op for
+            // anything the user does here. It stays because a selection can also be reshaped by a value
+            // arriving from outside a user interaction.
+            this.data.value = this.multiSelect.mergeLocked(item);
         }
 
         this.multiSelect.emitChangePipeEvent();
@@ -156,9 +200,14 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.stateChanges.next();
     }
 
+    /** Whether the option cannot be deselected by the user. Template-only. */
+    protected isLocked(item: KbqSelectValue): boolean {
+        return this.multiSelect.isLocked(item);
+    }
+
     /** @docs-private */
     onClear() {
-        this.data.value = [];
+        this.data.value = this.multiSelect.clearedValue();
 
         this.multiSelect.updateInternalSelected();
 
@@ -189,7 +238,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.data.value = [];
         } else {
-            this.data.value = [...this.select().value];
+            this.data.value = this.multiSelect.mergeLocked([...this.select().value]);
         }
 
         if (emitEvent) {

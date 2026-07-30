@@ -733,6 +733,36 @@ class MultiSelect {
 }
 
 @Component({
+    selector: 'multi-select-with-non-selectable-option',
+    imports: [
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple placeholder="Food" [formControl]="control">
+                <kbq-option [selectable]="false">Select all</kbq-option>
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithNonSelectableOption {
+    foods: any[] = [
+        { value: 'steak-0', viewValue: 'Steak' },
+        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'tacos-2', viewValue: 'Tacos' }
+    ];
+    control = new UntypedFormControl();
+
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
     selector: 'multi-select-narrow',
     imports: [
         KbqSelectModule,
@@ -3054,6 +3084,26 @@ describe('KbqSelect', () => {
                 expect(fixture.componentInstance.select().selected).toBeUndefined();
             }));
 
+            it('should not select a disabled option on shift + click', fakeAsync(() => {
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+
+                const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+                // The single-selection branch toggles the clicked option through the selection model
+                // just as the multiple one does, so a shift-click used to select a disabled option
+                // visually while leaving the form control untouched.
+                options[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+                fixture.detectChanges();
+                tick();
+                flush();
+
+                expect(options[2].classList).not.toContain('kbq-selected');
+                expect(fixture.componentInstance.select().selected).toBeUndefined();
+                expect(fixture.componentInstance.control.value).toBeFalsy();
+            }));
+
             it('should not select options inside a disabled group', fakeAsync(() => {
                 fixture.destroy();
 
@@ -4949,7 +4999,8 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([
                 MultiSelect,
                 MultiSelectWithCustomizedTagContent,
-                MultiSelectNarrow
+                MultiSelectNarrow,
+                MultiSelectWithNonSelectableOption
             ]);
             fixture = TestBed.createComponent(MultiSelect);
             testInstance = fixture.componentInstance;
@@ -5308,6 +5359,65 @@ describe('KbqSelect', () => {
             flush();
 
             expect(testInstance.control.value).toEqual([]);
+        }));
+
+        it('should not deselect a disabled option on a repeated shift + click', fakeAsync(() => {
+            testInstance.control.setValue(['tacos-2']);
+            fixture.detectChanges();
+
+            testInstance.options()[2].disabled = true;
+            fixture.detectChanges();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const shiftClickDisabledOption = () => {
+                options[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+                fixture.detectChanges();
+                tick();
+                flush();
+            };
+
+            // Twice on purpose: the first shift-click re-anchors the range onto the disabled option, and
+            // the second one then took the `toIndex === fromIndex` branch, toggling it straight through
+            // the selection model. That path emits no `selectionChange`, so nothing could repair it.
+            shiftClickDisabledOption();
+            shiftClickDisabledOption();
+
+            expect(testInstance.options()[2].selected).toBe(true);
+            expect(testInstance.select().selectionModel.isSelected(testInstance.options()[2])).toBe(true);
+            expect(testInstance.control.value).toEqual(['tacos-2']);
+            // A rejected click must leave the range anchor alone: parking it on an option the user cannot
+            // toggle would let that option's frozen selected state dictate the next shift-range.
+            expect(testInstance.select().keyManager.activeItemIndex).toBe(0);
+        }));
+
+        it('should not select a non-selectable option on shift + click', fakeAsync(() => {
+            fixture.destroy();
+
+            const nonSelectableFixture = TestBed.createComponent(MultiSelectWithNonSelectableOption);
+
+            nonSelectableFixture.detectChanges();
+            nonSelectableFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+            nonSelectableFixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const select = nonSelectableFixture.componentInstance.select();
+
+            // A single click is the whole reproduction here: the non-selectable option is the first item,
+            // so it is already the active one when the panel opens and the shift-click lands straight in
+            // the `toIndex === fromIndex` branch. Clicking twice would toggle it back out and hide the bug.
+            options[0].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+            nonSelectableFixture.detectChanges();
+            tick();
+            flush();
+
+            expect(select.selectionModel.selected.length).toBe(0);
+            expect(options[0].classList).not.toContain('kbq-selected');
+            expect(nonSelectableFixture.componentInstance.control.value).toBeFalsy();
         }));
 
         it('should select all options when pressing ctrl + a', () => {

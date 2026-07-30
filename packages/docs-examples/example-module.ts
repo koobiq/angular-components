@@ -1542,6 +1542,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-with-filter-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-with-footer": {
+    "packagePath": "components/dropdown/dropdown-with-footer",
+    "title": "Dropdown with footer",
+    "componentName": "DropdownWithFooterExample",
+    "files": [
+      "dropdown-with-footer-example.ts"
+    ],
+    "selector": "dropdown-with-footer-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-with-footer-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dropdown-x-position": {
     "packagePath": "components/dropdown/dropdown-x-position",
     "title": "Dropdown xPosition",
@@ -2148,6 +2160,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "LocalizationRuntimeLocale"
     ],
     "primaryFile": "filter-bar-localization-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-locked-options": {
+    "packagePath": "components/filter-bar/filter-bar-locked-options",
+    "title": "filter-bar-locked-options",
+    "componentName": "FilterBarLockedOptionsExample",
+    "files": [
+      "filter-bar-locked-options-example.ts"
+    ],
+    "selector": "filter-bar-locked-options-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-locked-options-example.ts",
     "importPath": "components/filter-bar"
   },
   "filter-bar-master-checkbox": {
@@ -7027,6 +7051,8 @@ return import('@koobiq/docs-examples/components/dropdown');
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-with-filter':
 return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-with-footer':
+return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-x-position':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dynamic-translation-overview':
@@ -7126,6 +7152,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-inactive-filter':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-localization':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-locked-options':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-master-checkbox':
 return import('@koobiq/docs-examples/components/filter-bar');

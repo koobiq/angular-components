@@ -87,6 +87,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         o1: KbqSelectValue | null | undefined,
         o2: KbqSelectValue | null | undefined
     ) => boolean;
+    /**
+     * Values forwarded from the pipe template whose selection the user cannot remove. Only consumed by
+     * the multi-select pipe components; other pipe types ignore it.
+     */
+    protected lockedValues?: unknown[];
 
     /**
      * Whether the current platform is a Mac.
@@ -181,8 +186,10 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         // Sync the comparator whenever a matching template is present, independently of `values`, so a
         // template that sets/updates/removes `compareWith` (or omits `values`) is never left with a stale
         // comparator. Absent `compareWith` resets to the pipe's default id-based `compareByValue`.
+        // `lockedValues` is synced on the same terms, and for the same reason.
         if (template) {
             this.optionCompareWith = template.compareWith;
+            this.lockedValues = template.lockedValues;
         }
     };
 
@@ -195,12 +202,22 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
     /** clears the pipe and triggers changes */
     onClear() {
-        this.data.value = null;
+        this.data.value = this.clearedValue();
 
         this.stateChanges.next();
 
         this.filterBar?.onClearPipe.emit(this.data);
         this.filterBar?.onChangePipe.emit(this.data);
+    }
+
+    /**
+     * Value a cleared pipe is left with. Overridden by pipes that keep part of their value across a clear
+     * — the multi-select pipes hold on to their locked options.
+     *
+     * @docs-private
+     */
+    protected clearedValue(): V | null {
+        return null;
     }
 
     /**

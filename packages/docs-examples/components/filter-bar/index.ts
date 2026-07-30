@@ -5,6 +5,7 @@ import { FilterBarCustomPipeExample } from './filter-bar-custom-pipe/filter-bar-
 import { FilterBarDateLimitsExample } from './filter-bar-date-limits/filter-bar-date-limits-example';
 import { FilterBarInactiveFilterExample } from './filter-bar-inactive-filter/filter-bar-inactive-filter-example';
 import { FilterBarLocalizationExample } from './filter-bar-localization/filter-bar-localization-example';
+import { FilterBarLockedOptionsExample } from './filter-bar-locked-options/filter-bar-locked-options-example';
 import { FilterBarMasterCheckboxExample } from './filter-bar-master-checkbox/filter-bar-master-checkbox-example';
 import { FilterBarOverviewExample } from './filter-bar-overview/filter-bar-overview-example';
 import { FilterBarPipeTypesExample } from './filter-bar-pipe-types/filter-bar-pipe-types-example';
@@ -24,6 +25,7 @@ export {
     FilterBarDateLimitsExample,
     FilterBarInactiveFilterExample,
     FilterBarLocalizationExample,
+    FilterBarLockedOptionsExample,
     FilterBarMasterCheckboxExample,
     FilterBarOverviewExample,
     FilterBarPipeTypesExample,
@@ -52,6 +54,7 @@ const EXAMPLES = [
     FilterBarReadonlyPipeExample,
     FilterBarReadonlyPipesExample,
     FilterBarMasterCheckboxExample,
+    FilterBarLockedOptionsExample,
     FilterBarInactiveFilterExample,
     FilterBarSearchInPipesExample,
     FilterBarLocalizationExample

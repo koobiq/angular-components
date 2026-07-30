@@ -172,6 +172,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     $implicit: unknown;
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
+    protected clearedValue(): V | null;
     readonly data: KbqPipeData<V>;
     protected destroyed: boolean;
     protected readonly destroyRef: DestroyRef;
@@ -182,6 +183,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     isMac: boolean;
     isTemplateRef(value: unknown): boolean;
     get localeData(): KbqFilterBarConfiguration;
+    protected lockedValues?: unknown[];
     // (undocumented)
     ngAfterViewInit(): void;
     onClear(): void;
@@ -797,12 +799,14 @@ export class KbqPipeMinWidth {
 
 // @public (undocumented)
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
+    constructor();
     get allOptionsSelected(): boolean;
     get allVisibleOptionsSelected(): boolean;
     get checkboxState(): KbqPseudoCheckboxState;
     compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
     filteredOptions: Observable<KbqSelectValue[]>;
     get isEmpty(): boolean;
+    protected isLocked(item: KbqSelectValue): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     ngOnInit(): void;
@@ -830,9 +834,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     constructor();
     get allOptionsSelected(): boolean;
     get allVisibleOptionsSelected(): boolean;
+    protected clearedValue(): KbqSelectValue[] | null;
     get isEmpty(): boolean;
     // (undocumented)
     isNodeSelectAll(_: number, nodeData: KbqTreeSelectFlatNode): boolean;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
@@ -905,6 +912,7 @@ export class KbqPipeState<T> {
 // @public (undocumented)
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     compareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
+    lockedValues?: unknown[];
     maxDateTime?: unknown;
     maxInterval?: unknown;
     minDateTime?: unknown;
