@@ -153,6 +153,7 @@ export type KbqCalendarCellCssClasses = string | string[] | Set<string> | {
 // @public
 export class KbqCalendarHeader<D> implements AfterContentInit {
     constructor();
+    protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     get activeDate(): D;
     set activeDate(value: D);

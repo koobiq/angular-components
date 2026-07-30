@@ -34,6 +34,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 class="example-tab-add-button"
                 color="contrast-fade"
                 kbq-button
+                aria-label="Add"
                 kbqTooltip="Add tab"
                 (click)="addTab()"
                 (keydown)="$event.stopPropagation()"

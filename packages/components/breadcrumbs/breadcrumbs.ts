@@ -24,7 +24,12 @@ import {
 import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
+import {
+    KbqComponentColors,
+    KbqDefaultSizes,
+    kbqInjectKbqA11yLocaleConfiguration,
+    PopUpPlacements
+} from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -174,6 +179,8 @@ export class KbqBreadcrumbItem {
 })
 export class KbqBreadcrumbs {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
+    /** Accessible name for the icon-only button revealing the collapsed items. */
+    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
     /**
      * Determines if a negative margin should be applied to the first breadcrumb item.
      *

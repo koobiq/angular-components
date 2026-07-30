@@ -22,10 +22,20 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <kbq-content-panel-header>
                     <div kbqContentPanelHeaderTitle>Title</div>
                     <div kbqContentPanelHeaderActions>
-                        <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
+                        <button
+                            kbq-button
+                            aria-label="Copy link"
+                            [color]="componentColors.Contrast"
+                            [kbqStyle]="buttonStyles.Transparent"
+                        >
                             <i kbq-icon="kbq-link_16"></i>
                         </button>
-                        <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
+                        <button
+                            kbq-button
+                            aria-label="Expand"
+                            [color]="componentColors.Contrast"
+                            [kbqStyle]="buttonStyles.Transparent"
+                        >
                             <i kbq-icon="kbq-arrows-expand-diagonal_16"></i>
                         </button>
                     </div>

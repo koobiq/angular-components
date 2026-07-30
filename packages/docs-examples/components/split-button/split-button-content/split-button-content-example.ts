@@ -21,23 +21,23 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
                 <i kbq-icon="kbq-plus_16"></i>
                 Split Button
             </button>
-            <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-split-button>
             <button kbq-button>Split Button</button>
-            <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-split-button>
-            <button kbq-button>
+            <button kbq-button aria-label="Add">
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
-            <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>

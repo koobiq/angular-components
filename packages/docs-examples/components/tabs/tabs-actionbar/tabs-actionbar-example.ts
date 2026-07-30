@@ -26,10 +26,10 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             </div>
 
             <div class="example-tabs-actionbar_controls">
-                <button class="kbq-button_transparent" color="contrast" kbq-button>
+                <button class="kbq-button_transparent" color="contrast" kbq-button aria-label="List view">
                     <i kbq-icon="kbq-list_16"></i>
                 </button>
-                <button class="kbq-button_transparent" color="contrast" kbq-button>
+                <button class="kbq-button_transparent" color="contrast" kbq-button aria-label="Filter">
                     <i kbq-icon="kbq-filter_16"></i>
                 </button>
                 <button color="contrast" kbq-button (click)="createDashboard()">

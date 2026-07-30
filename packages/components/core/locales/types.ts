@@ -1,5 +1,30 @@
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 
+/**
+ * Accessible names for the icon-only buttons the library renders itself.
+ *
+ * An icon carries no text, so without one of these a button has no accessible name at all (AXE
+ * `button-name`). They are announced by assistive tech and are never displayed.
+ */
+export type KbqA11yLocaleConfiguration = {
+    /** Close button of a modal, popover, sidepanel, content panel or notification center. */
+    close: string;
+    /** Confirm button of an inline edit. */
+    save: string;
+    /** Discard button of an inline edit. */
+    cancel: string;
+    /** Button removing every notification at once. */
+    removeAll: string;
+    /** Breadcrumbs button revealing the items hidden by overflow. */
+    expandBreadcrumbs: string;
+    /** Calendar button switching to the previous month. */
+    previousMonth: string;
+    /** Calendar button switching back to the current date. */
+    currentDate: string;
+    /** Calendar button switching to the next month. */
+    nextMonth: string;
+};
+
 /** Locale configuration for `KbqCodeBlockModule`. */
 export type KbqCodeBlockLocaleConfiguration = {
     softWrapOnTooltip: string;

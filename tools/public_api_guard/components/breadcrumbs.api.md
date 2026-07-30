@@ -9,6 +9,7 @@ import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -45,6 +46,7 @@ export class KbqBreadcrumbItem {
 // @public (undocumented)
 export class KbqBreadcrumbs {
     constructor();
+    protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;

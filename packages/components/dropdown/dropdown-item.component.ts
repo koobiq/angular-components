@@ -20,7 +20,9 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
 
 /**
  * This directive is intended to be used inside an kbq-dropdown tag.
- * It exists mostly to set the role attribute.
+ *
+ * Note that it sets no ARIA role: neither the panel nor its items currently carry menu semantics, so
+ * triggers must not advertise a popup they cannot describe.
  */
 @Component({
     selector: 'kbq-dropdown-item, [kbq-dropdown-item]',

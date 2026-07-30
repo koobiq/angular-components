@@ -33,6 +33,7 @@ import {
     ENTER,
     ESCAPE,
     KbqComponentColors,
+    kbqInjectKbqA11yLocaleConfiguration,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop
@@ -90,6 +91,9 @@ export class KbqModalComponent<T = any, R = any>
     private modalControl = inject(KbqModalControlService);
     private changeDetector = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
+
+    /** Accessible name for the icon-only close button. */
+    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
 
     protected readonly document = inject<Document>(DOCUMENT);
 

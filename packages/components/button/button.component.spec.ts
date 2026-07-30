@@ -36,6 +36,7 @@ describe('KbqButton', () => {
                 NoopAnimationsModule,
                 TestApp,
                 AnchorWithoutHrefTestApp,
+                DynamicHrefTestApp,
                 ButtonDropdownTrigger
             ]
         }).compileComponents();
@@ -165,7 +166,7 @@ describe('KbqButton', () => {
 
             expect(anchorElement.getAttribute('aria-disabled')).toBe('true');
 
-            // `disabled || null` must remove the attribute (not set "false") when re-enabled
+            // re-enabling must remove the attribute, not set it to "false"
             testComponent.isDisabled = false;
             fixture.detectChanges();
 
@@ -324,24 +325,25 @@ describe('KbqButton', () => {
             expect(fixture.debugElement.query(By.css('a')).nativeElement.getAttribute('role')).toBe('button');
         });
 
-        it('should keep the link role on a routerLink anchor', () => {
-            TestBed.resetTestingModule();
-            TestBed.configureTestingModule({
-                imports: [KbqButtonModule, RouterLink, RouterLinkTestApp],
-                providers: [provideRouter([])]
-            }).compileComponents();
+        it('should drop role="button" once an href appears', () => {
+            const fixture = TestBed.createComponent(DynamicHrefTestApp);
 
-            const fixture = TestBed.createComponent(RouterLinkTestApp);
-
-            // `RouterLink` applies `href` through a host binding of the same element, so the role
-            // must not be decided before its first update pass.
             fixture.detectChanges();
             fixture.detectChanges();
 
             const anchor = fixture.debugElement.query(By.css('a')).nativeElement;
 
-            expect(anchor.hasAttribute('href')).toBe(true);
+            expect(anchor.getAttribute('role')).toBe('button');
+
+            fixture.componentInstance.href = '/somewhere';
+            fixture.detectChanges();
+
             expect(anchor.hasAttribute('role')).toBe(false);
+
+            fixture.componentInstance.href = null;
+            fixture.detectChanges();
+
+            expect(anchor.getAttribute('role')).toBe('button');
         });
 
         it('should use the native disabled attribute on a button and aria-disabled on an anchor', () => {
@@ -362,20 +364,45 @@ describe('KbqButton', () => {
             expect(anchor.getAttribute('aria-disabled')).toBe('true');
         });
 
-        it('should expose aria-haspopup and aria-expanded on a dropdown trigger', () => {
+        it('should expose aria-expanded on a dropdown trigger', () => {
             const fixture: ComponentFixture<ButtonDropdownTrigger> = TestBed.createComponent(ButtonDropdownTrigger);
 
             fixture.detectChanges();
 
             const trigger = fixture.componentInstance.trigger().nativeElement;
 
-            expect(trigger.getAttribute('aria-haspopup')).toBe('true');
+            // No `aria-haspopup`: the panel has no menu semantics for it to describe.
+            expect(trigger.hasAttribute('aria-haspopup')).toBe(false);
             expect(trigger.getAttribute('aria-expanded')).toBe('false');
 
             dispatchFakeEvent(trigger, 'click');
             fixture.detectChanges();
 
             expect(trigger.getAttribute('aria-expanded')).toBe('true');
+        });
+    });
+
+    describe('accessibility with the router', () => {
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqButtonModule, RouterLink, RouterLinkTestApp],
+                providers: [provideRouter([])]
+            }).compileComponents();
+        });
+
+        it('should keep the link role on a routerLink anchor', () => {
+            const fixture = TestBed.createComponent(RouterLinkTestApp);
+
+            // `RouterLink` applies `href` through a host binding of the same element, so the role
+            // must not be decided before its first update pass.
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            const anchor = fixture.debugElement.query(By.css('a')).nativeElement;
+
+            expect(anchor.hasAttribute('href')).toBe(true);
+            expect(anchor.hasAttribute('role')).toBe(false);
         });
     });
 
@@ -1098,6 +1125,17 @@ class TestApp {
     `
 })
 class AnchorWithoutHrefTestApp {}
+
+@Component({
+    selector: 'dynamic-href-test-app',
+    imports: [KbqButtonModule],
+    template: `
+        <a kbq-button [attr.href]="href">Act</a>
+    `
+})
+class DynamicHrefTestApp {
+    href: string | null = null;
+}
 
 @Component({
     selector: 'router-link-test-app',

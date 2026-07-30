@@ -2,6 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterContentInit,
+    AfterViewChecked,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -276,7 +277,10 @@ export class KbqButtonCssStyler implements AfterContentInit {
         '(blur)': 'onBlur()'
     }
 })
-export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
+export class KbqButton
+    extends KbqColorDirective
+    implements OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef
+{
     private focusMonitor = inject(FocusMonitor);
     protected styler = inject(KbqButtonCssStyler);
 
@@ -394,8 +398,9 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
      * announced as a button. Anchors that do navigate (`href`, `routerLink`) keep their link role,
      * and a native `<button>` keeps its implicit one.
      *
-     * Resolved in `ngAfterViewInit` rather than per check: `RouterLink` applies its `href` through a
-     * host binding of the same element, which runs after this component's own host bindings.
+     * A signal rather than a plain getter: `href` is applied by host bindings of the same element
+     * (`RouterLink`, `[attr.href]`), which run after this component's own, so the value cannot be
+     * resolved while the host bindings are being evaluated.
      */
     protected readonly roleAttribute = signal<'button' | null>(null);
 
@@ -417,6 +422,11 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
         // Applied through `super` so that the default does not count as an explicit color.
         super.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);
+
+        // `KbqColorDirective`'s constructor assigns `this.color`, which dispatches to the override
+        // below and flips the flag. Reset it here rather than relying on the field initializer
+        // happening to run after `super()`.
+        this.colorSetExplicitly = false;
 
         // Native capture-phase listeners instead of host listeners: Angular coalesces listeners
         // for the same event on the same element, so stopImmediatePropagation from a host listener
@@ -466,15 +476,25 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
         this.updateRole();
     }
 
+    ngAfterViewChecked(): void {
+        // `href` can appear or disappear long after the first check — `[attr.href]` bound to a value
+        // that resolves later, or a `RouterLink` whose target becomes `null`. Only anchors can change
+        // role, so a `<button>` host skips the lookup entirely; setting the signal to its current
+        // value is a no-op, so a stable host does not schedule extra passes.
+        if (this.hostTagName === 'a') {
+            this.updateRole();
+        }
+    }
+
     /**
-     * Re-evaluates the role announced to assistive tech. Call it after adding or removing the host
-     * `href` outside of Angular.
+     * Re-evaluates the role announced to assistive tech. Only needed when the host `href` is added or
+     * removed outside of Angular, without a subsequent change detection pass.
      * @docs-private
      */
     updateRole(): void {
-        const isLink = this.hostTagName !== 'a' || this.elementRef.nativeElement.hasAttribute('href');
+        const navigates = this.hostTagName !== 'a' || this.elementRef.nativeElement.hasAttribute('href');
 
-        this.roleAttribute.set(isLink ? null : 'button');
+        this.roleAttribute.set(navigates ? null : 'button');
     }
 
     ngOnDestroy() {

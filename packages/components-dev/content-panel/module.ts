@@ -30,6 +30,7 @@ import { DevThemeToggle } from '../theme-toggle';
                     @for (_b of asideButtons; track $index) {
                         <button
                             kbq-button
+                            aria-label="Report a bug"
                             [class.kbq-active]="$first"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
@@ -46,7 +47,12 @@ import { DevThemeToggle } from '../theme-toggle';
                     </div>
                     <div class="example-content-header-actions" kbqContentPanelHeaderActions>
                         @for (_i of headerActions; track $index) {
-                            <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
+                            <button
+                                kbq-button
+                                aria-label="Copy link"
+                                [color]="componentColors.Contrast"
+                                [kbqStyle]="buttonStyles.Transparent"
+                            >
                                 <i kbq-icon="kbq-link_16"></i>
                             </button>
                         }

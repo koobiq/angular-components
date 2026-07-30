@@ -98,6 +98,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
                 class="kbq-actions-panel-container__close-button"
                 color="contrast"
                 kbq-button
+                [attr.aria-label]="localeConfiguration()!.closeTooltip"
                 [kbqTooltip]="localeConfiguration()!.closeTooltip"
                 [kbqTooltipOffset]="16"
                 (click)="close()"

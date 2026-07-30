@@ -225,7 +225,7 @@ export class E2eIconStateAndStyle {
                         <i kbq-icon="kbq-play_16"></i>
                         Split button
                     </button>
-                    <button kbq-button>
+                    <button kbq-button aria-label="More options">
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </button>
                 </kbq-split-button>
@@ -235,7 +235,7 @@ export class E2eIconStateAndStyle {
                         <i kbq-icon="kbq-play_16"></i>
                         Split button
                     </button>
-                    <button kbq-button>
+                    <button kbq-button aria-label="More options">
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </button>
                 </kbq-split-button>

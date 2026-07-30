@@ -17,7 +17,7 @@ import { KbqIcon } from '@koobiq/components/icon';
         App: {{ selectedApp.name }}
         <br />
         <br />
-        <button kbq-button kbqAppSwitcher [sites]="sites" [(selectedApp)]="selectedApp">
+        <button kbq-button aria-label="Apps" kbqAppSwitcher [sites]="sites" [(selectedApp)]="selectedApp">
             <i kbq-icon="kbq-bento-menu_16"></i>
         </button>
     `,

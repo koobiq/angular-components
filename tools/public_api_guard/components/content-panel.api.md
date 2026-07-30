@@ -82,6 +82,7 @@ export class KbqContentPanelFooter {
 
 // @public (undocumented)
 export class KbqContentPanelHeader {
+    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly buttonStyles: typeof KbqButtonStyles;
     protected readonly componentColors: typeof KbqComponentColors;
     protected readonly contentPanel: KbqContentPanel;

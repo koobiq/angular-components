@@ -1,4 +1,5 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
     KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
@@ -8,6 +9,16 @@ import {
 } from './types';
 
 export const ptBRLocaleData = {
+    a11y: {
+        close: 'Fechar',
+        save: 'Salvar',
+        cancel: 'Cancelar',
+        removeAll: 'Remover tudo',
+        expandBreadcrumbs: 'Mostrar itens ocultos',
+        previousMonth: 'Mês anterior',
+        currentDate: 'Data atual',
+        nextMonth: 'Próximo mês'
+    } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'dd/mm/yyyy'

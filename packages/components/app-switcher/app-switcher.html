@@ -91,11 +91,9 @@
                             @for (site of trigger.sites; track site.id) {
                                 @if (site.id !== trigger.selectedSite()?.id) {
                                     <div
-                                        #siteFlyoutTrigger="kbqDropdownTrigger"
                                         [kbq-app-switcher-dropdown-site]="site"
                                         [kbqDropdownTriggerFor]="dropdownWithSelectedSite"
                                         [offsetX]="0"
-                                        [attr.aria-expanded]="siteFlyoutTrigger.opened"
                                         (mouseenter)="activeSite = site"
                                         (focus)="activeSite = site"
                                     ></div>
@@ -125,7 +123,6 @@
                                 [kbqDropdownTriggerFor]="dropdownWithGroupedApps"
                                 [offsetX]="0"
                                 [class.kbq-pressed]="dropdownWithGroupedAppsTrigger.opened"
-                                [attr.aria-expanded]="dropdownWithGroupedAppsTrigger.opened"
                                 (mouseenter)="activeApp = app"
                                 (focus)="activeApp = app"
                             ></div>

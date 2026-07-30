@@ -27,7 +27,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
                     teams can build what you need on one platform.
                 </span>
             </button>
-            <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>

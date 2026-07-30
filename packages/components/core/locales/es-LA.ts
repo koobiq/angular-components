@@ -1,4 +1,5 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
     KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
@@ -8,6 +9,16 @@ import {
 } from './types';
 
 export const esLALocaleData = {
+    a11y: {
+        close: 'Cerrar',
+        save: 'Guardar',
+        cancel: 'Cancelar',
+        removeAll: 'Eliminar todo',
+        expandBreadcrumbs: 'Mostrar elementos ocultos',
+        previousMonth: 'Mes anterior',
+        currentDate: 'Fecha actual',
+        nextMonth: 'Mes siguiente'
+    } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'dd/mm/aaaa'

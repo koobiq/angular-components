@@ -20,6 +20,7 @@ import {
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
+    kbqInjectKbqA11yLocaleConfiguration,
     KbqOverflowShadowContainer
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -96,6 +97,7 @@ export class KbqContentPanelHeaderActions {}
                         class="kbq-content-panel-header__close-button"
                         kbq-button
                         type="button"
+                        [attr.aria-label]="a11yLocaleConfiguration().close"
                         [color]="componentColors.Contrast"
                         [kbqStyle]="buttonStyles.Transparent"
                         (click)="contentPanelContainer.close()"
@@ -131,6 +133,8 @@ export class KbqContentPanelHeader {
      * @docs-private
      */
     protected readonly componentColors = KbqComponentColors;
+    /** Accessible name for the icon-only close button. */
+    protected readonly a11yLocaleConfiguration = kbqInjectKbqA11yLocaleConfiguration();
 }
 
 @Component({

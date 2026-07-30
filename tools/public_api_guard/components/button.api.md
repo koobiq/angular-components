@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -27,7 +28,7 @@ export const buttonLeftIconClassName = "kbq-button-icon_left";
 export const buttonRightIconClassName = "kbq-button-icon_right";
 
 // @public (undocumented)
-export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
+export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef {
     constructor();
     protected get ariaDisabledAttribute(): true | null;
     get color(): KbqComponentColors | ThemePalette | string;
@@ -52,6 +53,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
+    // (undocumented)
+    ngAfterViewChecked(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
