@@ -6,10 +6,14 @@ import { CdkScrollable, CdkVirtualScrollViewport } from '@angular/cdk/scrolling'
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
+    ApplicationRef,
     booleanAttribute,
+    ChangeDetectionStrategy,
     Component,
+    ComponentRef,
     computed,
     contentChild,
+    createComponent,
     DestroyRef,
     Directive,
     effect,
@@ -115,7 +119,7 @@ export const kbqScrollbarConfigProvider = (config: KbqScrollbarConfig): Provider
     useValue: config
 });
 
-/** The two axes a `kbqScrollbar` always builds a track for — see `updateAxis`. */
+/** The two axes a `kbqScrollbar` always builds a track for — see `measureAxis`/`paintAxis`. */
 type Axis = 'vertical' | 'horizontal';
 
 const AXES: readonly Axis[] = ['vertical', 'horizontal'];
@@ -143,20 +147,28 @@ type DragContext = {
 class KbqScrollbarStyleLoader {}
 
 /**
- * Marks the element that is actually scrollable when it doesn't coincide with the `kbqScrollbar`
- * host — e.g. a `<cdk-virtual-scroll-viewport>` nested inside a `<div kbqScrollbar>`. When
- * present, `KbqScrollbar` measures, listens to, and scrolls this element instead of its own host.
+ * Marks a `<cdk-virtual-scroll-viewport>` nested inside a `<div kbqScrollbar>` as the element
+ * `KbqScrollbar` should actually measure, listen to, and scroll — instead of its own host.
  */
 @Directive({
-    selector: '[kbqScrollbarViewport]',
-    host: { class: 'kbq-private-scrollbar-viewport' }
+    selector: '[kbqScrollbarVirtualViewport]'
 })
-export class KbqScrollbarViewport {
+export class KbqScrollbarVirtualViewport {
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    /** @docs-private Set only when the viewport element also hosts `CdkVirtualScrollViewport`. */
-    readonly virtualScrollViewport = inject(CdkVirtualScrollViewport, { optional: true, self: true });
+    /** @docs-private */
+    readonly viewport = inject(CdkVirtualScrollViewport, { self: true });
 }
+
+/** Auto-created scroll wrapper for `KbqScrollbar` when there's no explicit `kbqScrollbarVirtualViewport`. */
+@Component({
+    selector: 'kbq-scrollbar-viewport',
+    template: '<ng-content />',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'kbq-private-scrollbar-viewport' },
+    hostDirectives: [CdkScrollable]
+})
+class KbqScrollbarViewport {}
 
 /**
  * Dependency-free custom scrollbar directive. Draws its own track/thumb via `Renderer2` on top of
@@ -177,6 +189,10 @@ export class KbqScrollbarViewport {
         '[class.kbq-private-scrollbar_rtl]': 'rtl()',
         '[class.kbq-private-scrollbar_disable-interaction]': 'disableInteraction()'
     },
+    // Redundant (but harmless) whenever `scrollElement` resolves to a `kbqScrollbarVirtualViewport`
+    // or the auto-created viewport — both already provide their own `CdkScrollable`. Needed here
+    // for the remaining case: `native`/coarse pointer with no explicit viewport, where neither of
+    // those exists and the host itself becomes the real, scrolling element.
     hostDirectives: [CdkScrollable],
     exportAs: 'kbqScrollbar'
 })
@@ -189,6 +205,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     private readonly destroyRef = inject(DestroyRef);
     private readonly zone = inject(NgZone);
     private readonly injector = inject(Injector);
+    private readonly appRef = inject(ApplicationRef);
     private readonly config = inject(KBQ_SCROLLBAR_CONFIG);
     private readonly directionality = inject(Directionality, { optional: true });
 
@@ -209,7 +226,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
      */
     protected readonly rtl = signal(this.directionality?.value === 'rtl');
 
-    private readonly viewport = contentChild(KbqScrollbarViewport);
+    private readonly viewport = contentChild(KbqScrollbarVirtualViewport);
 
     /** Controls when the custom track/thumb are shown — see `KbqScrollbarVisibility`. */
     readonly visibility = input<KbqScrollbarVisibility>(
@@ -256,13 +273,13 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     /**
      * Emits after every recompute (resize, content change, or manual `update()`) — thumb
      * size/position when the custom track/thumb are built, or just the overflow/edge measurement
-     * behind `isAtTop`-family signals and `reach*` otherwise (`native`, coarse pointer).
+     * behind `isTopReached`-family signals and `reach*` otherwise (`native`, coarse pointer).
      */
     readonly updated = output<void>({ alias: 'kbqScrollbarUpdated' });
 
     // Separate from the `*At*` signals below: whether an axis overflows at all, so a track with
     // nothing to scroll reads as trivially at both of its own edges (see the early return in
-    // `updateAxis`) without that no-overflow state overwriting — and being mistaken later for — a
+    // `measureAxis`) without that no-overflow state overwriting — and being mistaken later for — a
     // real, measured edge position once content does overflow.
     private readonly verticalOverflows = signal(false);
     private readonly horizontalOverflows = signal(false);
@@ -273,21 +290,21 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     private readonly horizontalAtRight = signal(false);
 
     /** Whether the vertical axis is currently scrolled all the way to the top. */
-    readonly isAtTop = computed(() => !this.verticalOverflows() || this.verticalAtTop());
+    readonly isTopReached = computed(() => !this.verticalOverflows() || this.verticalAtTop());
     /** Whether the vertical axis is currently scrolled all the way to the bottom. */
-    readonly isAtBottom = computed(() => !this.verticalOverflows() || this.verticalAtBottom());
+    readonly isBottomReached = computed(() => !this.verticalOverflows() || this.verticalAtBottom());
     /**
      * Whether the horizontal axis is currently scrolled to its logical start — the right edge in
      * RTL, left in LTR. Matches `scrollStart()`/`reachStart`.
      */
-    readonly isAtStart = computed(
+    readonly isStartReached = computed(
         () => !this.horizontalOverflows() || (this.rtl() ? this.horizontalAtRight() : this.horizontalAtLeft())
     );
     /**
      * Whether the horizontal axis is currently scrolled to its logical end — the left edge in
      * RTL, right in LTR. Matches `scrollEnd()`/`reachEnd`.
      */
-    readonly isAtEnd = computed(
+    readonly isEndReached = computed(
         () => !this.horizontalOverflows() || (this.rtl() ? this.horizontalAtLeft() : this.horizontalAtRight())
     );
 
@@ -311,7 +328,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     private dragContext: DragContext | null = null;
 
     /**
-     * Auto-created scroll wrapper, only when there's no explicit `kbqScrollbarViewport` and the
+     * Auto-created scroll wrapper, only when there's no explicit `kbqScrollbarVirtualViewport` and the
      * custom track/thumb are actually being rendered. The track/thumb are `position: absolute`
      * siblings of this wrapper on the (non-scrolling) host — if they were children of the element
      * that itself has `overflow: auto` (i.e. the host, when the host is also the scroll element),
@@ -319,6 +336,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
      * an overlay.
      */
     private autoViewport: HTMLElement | null = null;
+    private autoViewportRef: ComponentRef<KbqScrollbarViewport> | null = null;
 
     constructor() {
         inject(_CdkPrivateStyleLoader).load(KbqScrollbarStyleLoader);
@@ -341,18 +359,18 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
 
                 if (buildingCustomUi) {
                     this.applyNativeHiding();
-                    this.applyGutterReservation();
+                    this.wireGutterReservation();
                     this.buildDom();
                     this.wireGlobalDragListeners();
                     this.wireVisibility();
                 }
 
-                // Runs even under `native`/coarse pointer — `isAtTop`-family signals and `reach*`
+                // Runs even under `native`/coarse pointer — `isTopReached`-family signals and `reach*`
                 // outputs still need an initial measurement, not just the custom track/thumb.
                 this.recompute();
 
-                // A `kbqScrollbarViewport` backed by `CdkVirtualScrollViewport` (or any scroll
-                // element whose own layout isn't settled yet) can make the very first recompute
+                // A `kbqScrollbarVirtualViewport` (or any scroll element whose own layout isn't
+                // settled yet) can make the very first recompute
                 // under-measure — a 0-height track, or overflow that hasn't shown up yet. Its outer
                 // box may never resize again afterwards, so there's no guaranteed later trigger to
                 // correct it — retry once, next frame.
@@ -363,20 +381,27 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         });
     }
 
-    /** Moves the host's existing content into a new wrapper so the host itself can stay a
-     *  non-scrolling, non-clipping positioning context for the track/thumb overlay. */
+    /**
+     * Moves the host's existing content into a new wrapper so the host itself can stay a
+     * non-scrolling, non-clipping positioning context for the track/thumb overlay. A real
+     * component (via `createComponent`), not a bare `Renderer2`-created element, specifically so
+     * `KbqScrollbarViewport`'s `hostDirectives: [CdkScrollable]` registers this element (the
+     * real scroll element) with `ScrollDispatcher` through Angular's own directive lifecycle.
+     */
     private createAutoViewport(): HTMLElement {
-        const wrapper = this.renderer.createElement('div') as HTMLElement;
+        this.autoViewportRef = createComponent(KbqScrollbarViewport, {
+            environmentInjector: this.appRef.injector,
+            elementInjector: this.injector,
+            projectableNodes: [Array.from(this.hostElement.childNodes)]
+        });
 
-        this.renderer.addClass(wrapper, 'kbq-private-scrollbar-viewport');
+        this.appRef.attachView(this.autoViewportRef.hostView);
 
-        for (const child of Array.from(this.hostElement.childNodes)) {
-            this.renderer.appendChild(wrapper, child);
-        }
+        const element = this.autoViewportRef.location.nativeElement as HTMLElement;
 
-        this.renderer.appendChild(this.hostElement, wrapper);
+        this.renderer.appendChild(this.hostElement, element);
 
-        return wrapper;
+        return element;
     }
 
     ngOnDestroy(): void {
@@ -384,14 +409,19 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         this.tracks.forEach((track) => this.renderer.removeChild(this.hostElement, track));
         this.tracks.clear();
         this.thumbs.clear();
+
+        if (this.autoViewportRef) {
+            this.appRef.detachView(this.autoViewportRef.hostView);
+            this.autoViewportRef.destroy();
+        }
     }
 
-    /** Scrolls the effective scroll element (or delegates to `kbqScrollbarViewport`'s virtual scroll viewport). */
+    /** Scrolls the effective scroll element (or delegates to `kbqScrollbarVirtualViewport`'s viewport). */
     scrollTo(options: KbqScrollbarScrollToOptions): void {
-        const virtualScrollViewport = this.viewport()?.virtualScrollViewport;
+        const viewport = this.viewport()?.viewport;
 
-        if (virtualScrollViewport) {
-            virtualScrollViewport.scrollToOffset(options.top ?? options.left ?? 0, options.behavior ?? 'auto');
+        if (viewport) {
+            viewport.scrollToOffset(options.top ?? options.left ?? 0, options.behavior ?? 'auto');
 
             return;
         }
@@ -522,12 +552,31 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         this.renderer.setStyle(this.scrollElement, 'overflowX', 'auto');
     }
 
+    /** Reacts to `kbqScrollbarFloating`/direction changing at runtime, not just their value at first render. */
+    private wireGutterReservation(): void {
+        effect(() => this.applyGutterReservation(), { injector: this.injector });
+    }
+
     private applyGutterReservation(): void {
-        if (this.floating()) return;
+        // Always clear the *other* side first — otherwise flipping direction (or `floating`
+        // itself) can leave a stale gutter behind instead of moving/removing it: this only ever
+        // sets the side matching the current direction, so the opposite one would never get
+        // cleared on its own.
+        const activeSide = this.rtl() ? 'paddingLeft' : 'paddingRight';
+        const inactiveSide = this.rtl() ? 'paddingRight' : 'paddingLeft';
+
+        this.renderer.removeStyle(this.scrollElement, inactiveSide);
+
+        if (this.floating()) {
+            this.renderer.removeStyle(this.scrollElement, activeSide);
+            this.renderer.removeStyle(this.scrollElement, 'paddingBottom');
+
+            return;
+        }
 
         const dimension = 'var(--kbq-private-scrollbar-size-track-dimension)';
 
-        this.renderer.setStyle(this.scrollElement, this.rtl() ? 'paddingLeft' : 'paddingRight', dimension);
+        this.renderer.setStyle(this.scrollElement, activeSide, dimension);
         this.renderer.setStyle(this.scrollElement, 'paddingBottom', dimension);
     }
 
@@ -556,11 +605,22 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         this.wireTrackInteraction(axis, track, thumb);
     }
 
+    /**
+     * Whether a `pointerdown` should be treated as a drag/track-click start — the primary button
+     * (left click, or a single touch/pen contact) only. `isPrimary` is checked against `false`
+     * specifically, not falsiness: a plain `MouseEvent` (as opposed to a real `PointerEvent`)
+     * doesn't have the property at all, and treating that as "not primary" would reject events
+     * that never claimed to be secondary in the first place.
+     */
+    private isPrimaryPointerDown(event: PointerEvent): boolean {
+        return event.button === 0 && event.isPrimary !== false;
+    }
+
     private wireTrackInteraction(axis: Axis, track: HTMLElement, thumb: HTMLElement): void {
         fromEvent<PointerEvent>(thumb, 'pointerdown')
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                if (this.disableInteraction()) return;
+                if (this.disableInteraction() || !this.isPrimaryPointerDown(event)) return;
                 this.beginInteraction(axis, track, thumb, event, false);
             });
 
@@ -570,7 +630,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         fromEvent<PointerEvent>(track, 'pointerdown')
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                if (this.disableInteraction() || event.target === thumb) return;
+                if (this.disableInteraction() || event.target === thumb || !this.isPrimaryPointerDown(event)) return;
                 this.beginInteraction(axis, track, thumb, event, true);
             });
     }
@@ -596,6 +656,17 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
                 if (!this.dragContext || event.pointerId !== this.dragContext.pointerId) return;
                 this.endDrag();
             });
+
+        // A gesture can be interrupted outside the normal pointerup path — e.g. a touch drag cut
+        // short by an OS-level gesture, or the browser revoking pointer capture. Without this,
+        // `dragContext`/the `_dragging` class/`user-select: none` would be stuck until some later,
+        // unrelated pointerup happens to carry the same `pointerId`.
+        fromEvent<PointerEvent>(this.document, 'pointercancel')
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((event) => {
+                if (!this.dragContext || event.pointerId !== this.dragContext.pointerId) return;
+                this.endDrag();
+            });
     }
 
     private beginInteraction(
@@ -610,7 +681,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         const isVertical = axis === 'vertical';
         const trackRect = track.getBoundingClientRect();
         const thumbRect = thumb.getBoundingClientRect();
-        // Inset by the same `cssTrackPadding` gap `updateAxis` positions the thumb within, so a
+        // Inset by the same `cssTrackPadding` gap `paintAxis` positions the thumb within, so a
         // drag maps 1:1 to the thumb's actual travel range instead of the track's full box.
         const trackStart = (isVertical ? trackRect.top : trackRect.left) + this.cssTrackPadding;
         const trackLength = (isVertical ? trackRect.height : trackRect.width) - 2 * this.cssTrackPadding;
@@ -662,6 +733,20 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
 
         this.dragContext = null;
         this.renderer.removeClass(this.hostElement, 'kbq-private-scrollbar_dragging');
+
+        // `beginInteraction()` force-shows the scrollbar regardless of mode — restore whatever the
+        // current mode's steady state actually is now that the drag is over, the same way a real
+        // scroll/pointerleave would. Without this it can stay visible forever: 'scroll' mode never
+        // got a `showTemporarily()` timer scheduled for this reveal (only a direct `setVisible`),
+        // and 'hover' mode never got a `pointerleave` if the pointer left while dragging (that
+        // listener skips hiding on purpose while a drag is in progress).
+        const mode = this.visibility();
+
+        if (mode === 'scroll') {
+            this.showTemporarily();
+        } else if (mode === 'hover' && !this.isPointerOver) {
+            this.setVisible(false);
+        }
     }
 
     private wireVisibility(): void {
@@ -687,9 +772,15 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         // moment; ongoing hover-driven toggling still comes from the listeners above. 'scroll'
         // mode's temporary reveal-on-scroll keeps coming from onUserScroll()/showTemporarily() —
         // 'hidden' starts from the same steady state but never gets revealed from anywhere.
+        //
+        // Clearing any pending auto-hide timeout here, before applying the new mode's steady
+        // state, matters: without it, a 'scroll'-mode reveal's timeout can outlive a switch to
+        // 'always' and fire later, hiding a scrollbar that's supposed to stay permanently visible.
         effect(
             () => {
                 const mode = this.visibility();
+
+                clearTimeout(this.autoHideTimeoutId);
 
                 if (mode === 'always') {
                     this.setVisible(true);
@@ -726,14 +817,25 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     }
 
     private recompute(): void {
+        const measurements = new Map<Axis, { scrollOffset: number; scrollRange: number }>();
+
         for (const axis of AXES) {
-            this.updateAxis(axis);
+            const measurement = this.measureAxis(axis);
+
+            if (measurement) measurements.set(axis, measurement);
         }
 
         // Corner-avoidance only makes sense between two custom tracks — a no-op anyway without
-        // them, but skip it outright under `native`/coarse pointer.
+        // them, but skip it outright under `native`/coarse pointer. Must run before `paintAxis()`
+        // below, not after: it can shrink a track's real size via CSS, and `paintAxis()` measures
+        // that size to place the thumb — sizing it first would size/position the thumb against a
+        // stale, pre-shrink track on the very frame content starts overflowing both axes.
         if (!this.native && !this.isCoarsePointer) {
             this.updateCornerAvoidance();
+        }
+
+        for (const [axis, measurement] of measurements) {
+            this.paintAxis(axis, measurement.scrollOffset, measurement.scrollRange);
         }
 
         this.emit(this.updated, undefined);
@@ -770,12 +872,18 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     }
 
     /**
-     * Measures overflow/edge state for `isAtTop`-family signals and `reach*` outputs, then — only
-     * when this axis actually has a track/thumb built (i.e. not `native`, not a coarse pointer) —
-     * paints the thumb's size and position. The measurement half runs unconditionally: those
-     * signals/outputs are meant to keep working even when there's no custom UI of our own to show.
+     * Measures overflow/edge state for `isTopReached`-family signals and `reach*` outputs, and shows or
+     * hides this axis's track accordingly — runs unconditionally, regardless of `native`/coarse
+     * pointer, since those signals/outputs are meant to keep working even when there's no custom
+     * UI of our own to show. Returns the scroll offset/range `paintAxis()` needs to size and
+     * position the thumb, or `null` when this axis doesn't overflow (nothing to paint).
+     *
+     * Deliberately doesn't measure/paint the thumb itself — `recompute()` runs
+     * `updateCornerAvoidance()` between this and `paintAxis()`, since corner avoidance can shrink
+     * a track's real size via CSS, and the thumb needs to be sized against that final size, not
+     * whatever it measured before corner avoidance ran.
      */
-    private updateAxis(axis: Axis): void {
+    private measureAxis(axis: Axis): { scrollOffset: number; scrollRange: number } | null {
         const scrollEl = this.scrollElement;
         const isVertical = axis === 'vertical';
         const viewportSize = isVertical ? scrollEl.clientHeight : scrollEl.clientWidth;
@@ -783,19 +891,27 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         const rawScrollOffset = isVertical ? scrollEl.scrollTop : scrollEl.scrollLeft;
         const overflows = isVertical ? this.verticalOverflows : this.horizontalOverflows;
         const track = this.tracks.get(axis);
-        const thumb = this.thumbs.get(axis);
 
         if (contentSize <= viewportSize) {
             if (track) this.renderer.setStyle(track, 'display', 'none');
-            // Nothing to scroll on this axis — `isAtTop()`/`isAtBottom()`-family signals short-
+            // Nothing to scroll on this axis — `isTopReached()`/`isBottomReached()`-family signals short-
             // circuit to `true` off this flag, without touching the real edge-position signals
             // below (those stay at whatever they last genuinely measured).
             overflows.set(false);
 
-            return;
+            return null;
         }
 
         overflows.set(true);
+
+        // Un-hide *before* `paintAxis()` measures, not after: a `CdkVirtualScrollViewport` (or any
+        // scroll element whose layout isn't settled on the very first pass) can make an earlier
+        // call land in the branch above and set `display: none`. A hidden element always measures
+        // a 0 clientHeight/Width, so if we measured first and only unhid on success, a stale
+        // `display: none` would make every subsequent pass measure 0 and bail out below, trapping
+        // the track hidden forever even once real content overflow is detected here. Also needs to
+        // happen before `updateCornerAvoidance()`, which checks each track's current visibility.
+        if (track) this.renderer.removeStyle(track, 'display');
 
         const scrollRange = contentSize - viewportSize;
         // Physical distance from the left/top edge, in [0, scrollRange] — normalizes RTL's negative
@@ -806,18 +922,21 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
 
         this.checkReachedEdges(axis, scrollOffset, scrollRange);
 
+        return { scrollOffset, scrollRange };
+    }
+
+    /** Sizes and positions this axis's thumb, given the scroll offset/range `measureAxis()` already computed. */
+    private paintAxis(axis: Axis, scrollOffset: number, scrollRange: number): void {
+        const track = this.tracks.get(axis);
+        const thumb = this.thumbs.get(axis);
+
         // No custom track/thumb to paint for this axis — `native`/coarse pointer, or the DOM for
-        // it hasn't been built. Measurement above already ran either way.
+        // it hasn't been built.
         if (!track || !thumb) return;
 
-        // Un-hide *before* measuring, not after: a `CdkVirtualScrollViewport` (or any scroll
-        // element whose layout isn't settled on the very first pass) can make an earlier call
-        // land in the branch above and set `display: none`. A hidden element always measures a
-        // 0 clientHeight/Width, so if we measured first and only unhid on success, a stale
-        // `display: none` would make every subsequent pass measure 0 and bail out below,
-        // trapping the track hidden forever even once real content overflow is detected here.
-        this.renderer.removeStyle(track, 'display');
-
+        const isVertical = axis === 'vertical';
+        const scrollEl = this.scrollElement;
+        const viewportSize = isVertical ? scrollEl.clientHeight : scrollEl.clientWidth;
         const trackLength = isVertical ? track.clientHeight : track.clientWidth;
 
         // Track not laid out yet (e.g. inserted this same tick) — a later pass will retry.
@@ -830,7 +949,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         const travelLength = trackLength - 2 * this.cssTrackPadding;
 
         // Round the ratio up so the thumb never reads as undersized from float error.
-        const ratio = Math.min(1, Math.ceil((viewportSize / contentSize) * 100) / 100);
+        const ratio = Math.min(1, Math.ceil((viewportSize / (viewportSize + scrollRange)) * 100) / 100);
         const thumbSize = Math.min(travelLength, Math.max(ratio * travelLength, this.cssMinThumbSize));
         const scrollRatio = scrollRange > 0 ? scrollOffset / scrollRange : 0;
         const thumbOffset = this.cssTrackPadding + scrollRatio * (travelLength - thumbSize);
@@ -845,9 +964,10 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     }
 
     /**
-     * The writable `isAtTop`/`isAtStart`-family signals for one physical axis — `[start, end]`,
-     * both always physically named (top/bottom, left/right); the public `isAtStart`/`isAtEnd`
-     * computed signals are what re-map "left/right" onto RTL-aware "start/end".
+     * The writable `isTopReached`/`isStartReached`-family signals for one physical axis —
+     * `[start, end]`, both always physically named (top/bottom, left/right); the public
+     * `isStartReached`/`isEndReached` computed signals are what re-map "left/right" onto
+     * RTL-aware "start/end".
      */
     private edgeSignals(axis: Axis): readonly [WritableSignal<boolean>, WritableSignal<boolean>] {
         return axis === 'vertical'

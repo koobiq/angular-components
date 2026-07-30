@@ -10,16 +10,16 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar/private';
     imports: [KbqScrollbar, KbqButtonModule],
     template: `
         <div class="example-buttons">
-            <button kbq-button [disabled]="scrollbar.isAtTop()" (click)="scrollbar.scrollToTop('smooth')">
+            <button kbq-button [disabled]="scrollbar.isTopReached()" (click)="scrollbar.scrollToTop('smooth')">
                 Scroll top
             </button>
-            <button kbq-button [disabled]="scrollbar.isAtBottom()" (click)="scrollbar.scrollToBottom('smooth')">
+            <button kbq-button [disabled]="scrollbar.isBottomReached()" (click)="scrollbar.scrollToBottom('smooth')">
                 Scroll bottom
             </button>
-            <button kbq-button [disabled]="scrollbar.isAtStart()" (click)="scrollbar.scrollStart('smooth')">
+            <button kbq-button [disabled]="scrollbar.isStartReached()" (click)="scrollbar.scrollStart('smooth')">
                 Scroll start
             </button>
-            <button kbq-button [disabled]="scrollbar.isAtEnd()" (click)="scrollbar.scrollEnd('smooth')">
+            <button kbq-button [disabled]="scrollbar.isEndReached()" (click)="scrollbar.scrollEnd('smooth')">
                 Scroll end
             </button>
             <button
@@ -57,17 +57,6 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar/private';
                 work to test each guess. One of the measures of the strength of an encryption system is how long it
                 would theoretically take an attacker to mount a successful brute-force attack against it.[3]
             </p>
-            <p>
-                Brute-force attacks can be made less effective by implementing key stretching techniques making it more
-                difficult for an attacker to recognize when the code has been cracked or by making the attacker do more
-                work to test each guess. One of the measures of the strength of an encryption system is how long it
-                would theoretically take an attacker to mount a successful brute-force attack against it.[3]
-            </p>
-            <p>
-                Brute-force attacks are an application of brute-force search, the general problem-solving technique of
-                enumerating all candidates and checking each one. The word 'hammering' is sometimes used to describe a
-                brute-force attack,[4] with 'anti-hammering' for countermeasures.[5]
-            </p>
         </div>
     `,
     styles: `
@@ -87,7 +76,14 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar/private';
         }
 
         .example-scrollbar {
+            overflow: auto;
+            resize: both;
             height: 200px;
+            min-height: 200px;
+            max-height: 400px;
+            width: 100%;
+            min-width: 200px;
+            max-width: 100%;
             border-radius: var(--kbq-size-border-radius);
             background-color: var(--kbq-background-bg-secondary);
         }

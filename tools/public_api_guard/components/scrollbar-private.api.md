@@ -36,10 +36,10 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     readonly floating: _angular_core.InputSignalWithTransform<boolean, unknown>;
     getScrollElement(): HTMLElement | null;
     readonly initialized: OutputEmitterRef<void>;
-    readonly isAtBottom: _angular_core.Signal<boolean>;
-    readonly isAtEnd: _angular_core.Signal<boolean>;
-    readonly isAtStart: _angular_core.Signal<boolean>;
-    readonly isAtTop: _angular_core.Signal<boolean>;
+    readonly isBottomReached: _angular_core.Signal<boolean>;
+    readonly isEndReached: _angular_core.Signal<boolean>;
+    readonly isStartReached: _angular_core.Signal<boolean>;
+    readonly isTopReached: _angular_core.Signal<boolean>;
     // (undocumented)
     ngOnDestroy(): void;
     readonly onScroll: Observable<void>;
@@ -84,7 +84,7 @@ export class KbqScrollbarModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqScrollbarModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqScrollbarModule, never, [typeof KbqScrollbar, typeof KbqScrollbarViewport], [typeof KbqScrollbar, typeof KbqScrollbarViewport]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqScrollbarModule, never, [typeof KbqScrollbar, typeof KbqScrollbarVirtualViewport], [typeof KbqScrollbar, typeof KbqScrollbarVirtualViewport]>;
 }
 
 // @public
@@ -108,13 +108,13 @@ export type KbqScrollbarScrollToOptions = Partial<{
 }>;
 
 // @public
-export class KbqScrollbarViewport {
+export class KbqScrollbarVirtualViewport {
     readonly elementRef: ElementRef<HTMLElement>;
-    readonly virtualScrollViewport: CdkVirtualScrollViewport | null;
+    readonly viewport: CdkVirtualScrollViewport;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqScrollbarViewport, "[kbqScrollbarViewport]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqScrollbarVirtualViewport, "[kbqScrollbarVirtualViewport]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqScrollbarViewport, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqScrollbarVirtualViewport, never>;
 }
 
 // @public

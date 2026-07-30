@@ -1,5 +1,5 @@
 import { Directionality } from '@angular/cdk/bidi';
-import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, ScrollDispatcher, ScrollingModule } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -12,7 +12,7 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
-import { KBQ_SCROLLBAR_CONFIG, KbqScrollbar, KbqScrollbarViewport, KbqScrollbarVisibility } from './scrollbar';
+import { KBQ_SCROLLBAR_CONFIG, KbqScrollbar, KbqScrollbarVirtualViewport, KbqScrollbarVisibility } from './scrollbar';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers });
@@ -93,6 +93,35 @@ class TestScrollbarNonFloatingHost {
 }
 
 @Component({
+    selector: 'test-scrollbar-dynamic-floating-host',
+    imports: [KbqScrollbar],
+    template: `
+        <div kbqScrollbar data-testid="host" style="height: 100px; overflow: auto" [kbqScrollbarFloating]="floating">
+            <div style="height: 500px">content</div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestScrollbarDynamicFloatingHost {
+    // Same `markForCheck()` requirement as `TestScrollbarVisibilityHost` — a plain (non-signal)
+    // field read through an OnPush host needs it, and `fixture.changeDetectorRef.markForCheck()`
+    // from outside doesn't mark this view dirty.
+    private readonly cdr = inject(ChangeDetectorRef);
+    private _floating = true;
+
+    get floating(): boolean {
+        return this._floating;
+    }
+
+    set floating(value: boolean) {
+        this._floating = value;
+        this.cdr.markForCheck();
+    }
+
+    readonly scrollbar = viewChild.required(KbqScrollbar);
+}
+
+@Component({
     selector: 'test-scrollbar-visibility-host',
     imports: [KbqScrollbar],
     template: `
@@ -141,28 +170,12 @@ class TestScrollbarDualOverflowHost {
 }
 
 @Component({
-    selector: 'test-scrollbar-viewport-host',
-    imports: [KbqScrollbar, KbqScrollbarViewport],
-    template: `
-        <div kbqScrollbar data-testid="host">
-            <div kbqScrollbarViewport data-testid="viewport" style="height: 100px; overflow: auto">
-                <div style="height: 500px">content</div>
-            </div>
-        </div>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-class TestScrollbarViewportHost {
-    readonly scrollbar = viewChild.required(KbqScrollbar);
-}
-
-@Component({
     selector: 'test-scrollbar-virtual-host',
-    imports: [KbqScrollbar, KbqScrollbarViewport, ScrollingModule],
+    imports: [KbqScrollbar, KbqScrollbarVirtualViewport, ScrollingModule],
     template: `
         <div kbqScrollbar data-testid="host">
             <cdk-virtual-scroll-viewport
-                kbqScrollbarViewport
+                kbqScrollbarVirtualViewport
                 itemSize="20"
                 data-testid="viewport"
                 style="height: 100px"
@@ -187,6 +200,45 @@ class TestScrollbarVirtualHost {
     hostDirectives: [KbqScrollbar]
 })
 class TestScrollbarComposedHost {}
+
+@Component({
+    selector: 'test-scrollbar-initialized-host',
+    imports: [KbqScrollbar],
+    template: `
+        <div
+            kbqScrollbar
+            data-testid="host"
+            style="height: 100px; overflow: auto"
+            (kbqScrollbarInitialized)="initializedCount = initializedCount + 1"
+        >
+            <div style="height: 500px">content</div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestScrollbarInitializedHost {
+    initializedCount = 0;
+}
+
+@Component({
+    selector: 'test-scrollbar-scroll-visibility-host',
+    imports: [KbqScrollbar],
+    template: `
+        <div
+            kbqScrollbar
+            kbqScrollbarVisibility="scroll"
+            kbqScrollbarAutoHideDelay="50"
+            data-testid="host"
+            style="height: 100px; overflow: auto"
+        >
+            <div style="height: 500px">content</div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestScrollbarScrollVisibilityHost {
+    readonly scrollbar = viewChild.required(KbqScrollbar);
+}
 
 describe(KbqScrollbar.name, () => {
     describe('basic rendering', () => {
@@ -252,6 +304,35 @@ describe(KbqScrollbar.name, () => {
             expect(verticalTrack.classList.contains('kbq-private-scrollbar-track_has-horizontal')).toBe(false);
         });
 
+        it('sizes the thumb against the track size AFTER corner-avoidance shrinks it, not a stale pre-shrink size', () => {
+            const fixture = createComponent(TestScrollbarDualOverflowHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const verticalTrack = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const horizontalTrack = host.querySelector('.kbq-private-scrollbar-track_horizontal') as HTMLElement;
+            const thumb = verticalTrack.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            // jsdom doesn't run layout, so this getter stands in for what a real browser would do:
+            // once corner-avoidance's `_has-horizontal` modifier lands, `scrollbar.scss`'s
+            // `bottom: var(--...)` rule shrinks the track's real clientHeight.
+            Object.defineProperty(verticalTrack, 'clientHeight', {
+                configurable: true,
+                get(this: HTMLElement) {
+                    return this.classList.contains('kbq-private-scrollbar-track_has-horizontal') ? 92 : 106;
+                }
+            });
+
+            setMetrics(scrollEl, { clientHeight: 250, scrollHeight: 500, clientWidth: 100, scrollWidth: 500 });
+            setMetrics(horizontalTrack, { clientWidth: 100 });
+            fixture.componentInstance.scrollbar().update();
+
+            expect(verticalTrack.classList.contains('kbq-private-scrollbar-track_has-horizontal')).toBe(true);
+            // Correct (post-shrink 92px track): travelLength 92-2*3=86, ratio ceil(250/500*100)/100
+            // = 0.5, thumbSize max(0.5*86, 32) = 43. A stale pre-shrink 106px track would instead
+            // give travelLength 100 and thumbSize 50.
+            expect(thumb.style.height).toBe('43px');
+        });
+
         it('does not create track/thumb when KBQ_SCROLLBAR_CONFIG sets native: true', () => {
             const fixture = createComponent(TestScrollbarHost, [
                 { provide: KBQ_SCROLLBAR_CONFIG, useValue: { native: true } }
@@ -261,7 +342,7 @@ describe(KbqScrollbar.name, () => {
             expect(host.querySelector('.kbq-private-scrollbar-track')).toBeNull();
         });
 
-        it('still tracks isAtTop/isAtBottom and fires reachTop/reachBottom when native: true, despite having no track/thumb of its own', () => {
+        it('still tracks isTopReached/isBottomReached and fires reachTop/reachBottom when native: true, despite having no track/thumb of its own', () => {
             const fixture = createComponent(TestScrollbarHost, [
                 { provide: KBQ_SCROLLBAR_CONFIG, useValue: { native: true } }
             ]);
@@ -278,16 +359,16 @@ describe(KbqScrollbar.name, () => {
             setMetrics(host, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
             scrollbar.update();
 
-            expect(scrollbar.isAtTop()).toBe(true);
-            expect(scrollbar.isAtBottom()).toBe(false);
+            expect(scrollbar.isTopReached()).toBe(true);
+            expect(scrollbar.isBottomReached()).toBe(false);
             expect(topSpy).toHaveBeenCalled();
             expect(bottomSpy).not.toHaveBeenCalled();
 
             setMetrics(host, { scrollTop: 400 });
             scrollbar.update();
 
-            expect(scrollbar.isAtTop()).toBe(false);
-            expect(scrollbar.isAtBottom()).toBe(true);
+            expect(scrollbar.isTopReached()).toBe(false);
+            expect(scrollbar.isBottomReached()).toBe(true);
             expect(bottomSpy).toHaveBeenCalled();
         });
 
@@ -384,6 +465,331 @@ describe(KbqScrollbar.name, () => {
 
             expect(thumbBottom).toBe(103);
         });
+
+        it('establishes native scroll on both axes, not just vertical', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            expect(scrollEl.style.overflowY).toBe('auto');
+            expect(scrollEl.style.overflowX).toBe('auto');
+        });
+
+        it('hides the native scrollbar on the effective scroll element when building the custom UI', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            expect(scrollEl.classList.contains('kbq-private-scrollbar_hide-native')).toBe(true);
+        });
+
+        it('does not hide the native scrollbar when KBQ_SCROLLBAR_CONFIG sets native: true', () => {
+            const fixture = createComponent(TestScrollbarHost, [
+                { provide: KBQ_SCROLLBAR_CONFIG, useValue: { native: true } }
+            ]);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+
+            // `native: true` never creates an auto-viewport wrapper — the host itself is the
+            // effective scroll element.
+            expect(host.classList.contains('kbq-private-scrollbar_hide-native')).toBe(false);
+        });
+
+        it('reads a real, resolvable --kbq-private-scrollbar-size-thumb-min-size CSS token over the hardcoded fallback', () => {
+            const customTokenProvider: Provider = {
+                provide: KBQ_WINDOW,
+                useValue: {
+                    getComputedStyle: () => ({
+                        getPropertyValue: (property: string) =>
+                            property === '--kbq-private-scrollbar-size-thumb-min-size' ? '60px' : ''
+                    })
+                }
+            };
+
+            const fixture = createComponent(TestScrollbarHost, [customTokenProvider]);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            // A very small viewport ratio so the min-size clamp is what actually determines thumb
+            // size, not the ratio itself.
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 10, scrollHeight: 1000 });
+            setMetrics(track, { clientHeight: 106 });
+            fixture.componentInstance.scrollbar().update();
+
+            expect(thumb.style.height).toBe('60px');
+        });
+    });
+
+    describe('drag interaction', () => {
+        const mockRects = (track: HTMLElement, thumb: HTMLElement, axis: 'vertical' | 'horizontal') => {
+            if (axis === 'vertical') {
+                jest.spyOn(track, 'getBoundingClientRect').mockReturnValue({ top: 0, height: 106 } as DOMRect);
+                jest.spyOn(thumb, 'getBoundingClientRect').mockReturnValue({ top: 3, height: 32 } as DOMRect);
+            } else {
+                jest.spyOn(track, 'getBoundingClientRect').mockReturnValue({ left: 0, width: 106 } as DOMRect);
+                jest.spyOn(thumb, 'getBoundingClientRect').mockReturnValue({ left: 3, width: 32 } as DOMRect);
+            }
+        };
+
+        it('dragging the thumb scrolls proportionally and toggles the dragging class', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            // trackStart = 0 + padding(3) = 3; trackLength = 106 - 2*3 = 100; thumbSize = 32 (mocked
+            // rect); trackTravel = 100 - 32 = 68. Grabbing exactly the thumb's own top edge (clientY:
+            // 3) makes grabOffset 0, so pointer position maps 1:1 onto the [trackStart, trackStart +
+            // trackTravel] range.
+            thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
+
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(true);
+
+            document.dispatchEvent(new MouseEvent('pointermove', { clientY: 37, buttons: 1, cancelable: true }));
+            // ratio = (37 - 3 - 0) / 68 = 0.5; scrollRange = 500 - 100 = 400.
+            expect(scrollEl.scrollTop).toBe(200);
+
+            document.dispatchEvent(new MouseEvent('pointermove', { clientY: 71, buttons: 1, cancelable: true }));
+            expect(scrollEl.scrollTop).toBe(400);
+
+            document.dispatchEvent(new MouseEvent('pointerup', { cancelable: true }));
+
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
+        });
+
+        it('clicking the track (not the thumb) jumps the thumb to the click point and continues as a drag', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            // grabOffset is hardcoded to thumbSize/2 (16) for a track click. clientY: 53 ->
+            // pointerRelative = 53 - trackStart(3) = 50; ratio = (50 - 16) / trackTravel(68) = 0.5.
+            track.dispatchEvent(new MouseEvent('pointerdown', { clientY: 53, bubbles: true, cancelable: true }));
+
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(true);
+            expect(scrollEl.scrollTop).toBe(200);
+        });
+
+        it('disableInteraction blocks both thumb drag and track jump-to-click', () => {
+            const fixture = createComponent(TestScrollbarDisableInteractionHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
+
+            track.dispatchEvent(new MouseEvent('pointerdown', { clientY: 53, bubbles: true, cancelable: true }));
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
+            expect(scrollEl.scrollTop).toBe(0);
+        });
+
+        it('ignores pointermove events from a different pointerId than the one that started the drag', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            const downEvent = new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true });
+
+            Object.defineProperty(downEvent, 'pointerId', { value: 1, configurable: true });
+            thumb.dispatchEvent(downEvent);
+
+            const moveEvent = new MouseEvent('pointermove', { clientY: 71, buttons: 1, cancelable: true });
+
+            Object.defineProperty(moveEvent, 'pointerId', { value: 2, configurable: true });
+            document.dispatchEvent(moveEvent);
+
+            expect(scrollEl.scrollTop).toBe(0);
+        });
+
+        it('ends the drag if pointermove reports no buttons pressed, instead of continuing to scroll', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(true);
+
+            document.dispatchEvent(new MouseEvent('pointermove', { clientY: 71, buttons: 0, cancelable: true }));
+
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
+            expect(scrollEl.scrollTop).toBe(0);
+        });
+
+        it('does not attempt to scroll when the thumb fills the entire track travel range', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            jest.spyOn(track, 'getBoundingClientRect').mockReturnValue({ top: 0, height: 106 } as DOMRect);
+            // thumbSize (100) equals trackLength (106 - 2*3), so trackTravel is 0.
+            jest.spyOn(thumb, 'getBoundingClientRect').mockReturnValue({ top: 3, height: 100 } as DOMRect);
+
+            thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
+            document.dispatchEvent(new MouseEvent('pointermove', { clientY: 71, buttons: 1, cancelable: true }));
+
+            expect(scrollEl.scrollTop).toBe(0);
+        });
+
+        it('drags correctly on the horizontal axis in RTL, inverting the physical ratio onto the negative scrollLeft range', () => {
+            const mockDir = new MockDirectionality();
+
+            mockDir.value = 'rtl';
+
+            const fixture = createComponent(TestScrollbarDualOverflowHost, [
+                { provide: Directionality, useValue: mockDir }
+            ]);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_horizontal') as HTMLElement;
+            const thumb = track.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollLeft: 0, clientWidth: 100, scrollWidth: 500, clientHeight: 500 });
+            mockRects(track, thumb, 'horizontal');
+
+            // Dragging all the way to the track's physical left (ratio 0) must land on the most
+            // negative scrollLeft (RTL's logical end) — not 0, which is what the LTR branch would
+            // give at the same ratio.
+            thumb.dispatchEvent(new MouseEvent('pointerdown', { clientX: 3, bubbles: true, cancelable: true }));
+            document.dispatchEvent(new MouseEvent('pointermove', { clientX: 3, buttons: 1, cancelable: true }));
+
+            expect(scrollEl.scrollLeft).toBe(-400);
+        });
+
+        it('ignores pointerdown from a non-primary mouse button (e.g. right-click)', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            thumb.dispatchEvent(
+                new MouseEvent('pointerdown', { clientY: 3, button: 2, bubbles: true, cancelable: true })
+            );
+
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
+        });
+
+        it('ignores a pointerdown that is explicitly not the primary pointer', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            const event = new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true });
+
+            Object.defineProperty(event, 'isPrimary', { value: false, configurable: true });
+            thumb.dispatchEvent(event);
+
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
+        });
+
+        it('ends the drag on pointercancel, the same as pointerup, instead of leaving it stuck', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(true);
+
+            document.dispatchEvent(new MouseEvent('pointercancel', { cancelable: true }));
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
+
+            // A pointermove after the cancel must be a no-op — the drag already ended.
+            document.dispatchEvent(new MouseEvent('pointermove', { clientY: 71, buttons: 1, cancelable: true }));
+            expect(scrollEl.scrollTop).toBe(0);
+        });
+
+        it("hides the scrollbar once a drag ends in 'hover' mode if the pointer already left the host mid-drag", () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            host.dispatchEvent(new Event('pointerenter'));
+            thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
+            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+            // Pointer leaves the host while still dragging — must not hide yet, a drag is active.
+            host.dispatchEvent(new Event('pointerleave'));
+            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+            document.dispatchEvent(new MouseEvent('pointerup', { cancelable: true }));
+
+            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+        });
+
+        it("schedules the auto-hide once a drag ends in 'scroll' mode, instead of leaving the scrollbar visible forever", () => {
+            const fixture = createComponent(TestScrollbarScrollVisibilityHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
+
+            jest.useFakeTimers();
+
+            try {
+                // A click-without-movement: `beginInteraction()` shows the scrollbar directly
+                // (not via `showTemporarily()`), so without the fix nothing would ever schedule
+                // hiding it.
+                thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                document.dispatchEvent(new MouseEvent('pointerup', { cancelable: true }));
+
+                jest.advanceTimersByTime(50);
+
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+            } finally {
+                jest.useRealTimers();
+            }
+        });
     });
 
     describe('floating', () => {
@@ -403,6 +809,61 @@ describe(KbqScrollbar.name, () => {
 
             expect(scrollEl.style.paddingRight).toBe('var(--kbq-private-scrollbar-size-track-dimension)');
             expect(scrollEl.style.paddingBottom).toBe('var(--kbq-private-scrollbar-size-track-dimension)');
+        });
+
+        it('reserves the gutter on the left in RTL instead of the right', () => {
+            const mockDir = new MockDirectionality();
+
+            mockDir.value = 'rtl';
+
+            const fixture = createComponent(TestScrollbarNonFloatingHost, [
+                { provide: Directionality, useValue: mockDir }
+            ]);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            expect(scrollEl.style.paddingLeft).toBe('var(--kbq-private-scrollbar-size-track-dimension)');
+            expect(scrollEl.style.paddingRight).toBe('');
+        });
+
+        it('reacts to kbqScrollbarFloating changing at runtime, not just its value at first render', () => {
+            const fixture = createComponent(TestScrollbarDynamicFloatingHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            expect(scrollEl.style.paddingRight).toBe('');
+
+            fixture.componentInstance.floating = false;
+            fixture.detectChanges();
+            TestBed.tick();
+
+            expect(scrollEl.style.paddingRight).toBe('var(--kbq-private-scrollbar-size-track-dimension)');
+
+            fixture.componentInstance.floating = true;
+            fixture.detectChanges();
+            TestBed.tick();
+
+            expect(scrollEl.style.paddingRight).toBe('');
+        });
+
+        it('moves the gutter to the other side when direction flips at runtime, instead of leaving both', () => {
+            const mockDir = new MockDirectionality();
+            const fixture = createComponent(TestScrollbarNonFloatingHost, [
+                { provide: Directionality, useValue: mockDir }
+            ]);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            expect(scrollEl.style.paddingRight).toBe('var(--kbq-private-scrollbar-size-track-dimension)');
+            expect(scrollEl.style.paddingLeft).toBe('');
+
+            mockDir.value = 'rtl';
+            mockDir.change.next('rtl');
+            fixture.detectChanges();
+            TestBed.tick();
+
+            expect(scrollEl.style.paddingLeft).toBe('var(--kbq-private-scrollbar-size-track-dimension)');
+            expect(scrollEl.style.paddingRight).toBe('');
         });
     });
 
@@ -448,6 +909,52 @@ describe(KbqScrollbar.name, () => {
 
             expect(scrollEl.scrollTop).toBe(140);
             expect(scrollEl.scrollLeft).toBe(200);
+        });
+
+        it('scrollToElement applies an independent left offset', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const target = scrollEl.querySelector('div') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, scrollLeft: 0 });
+            jest.spyOn(scrollEl, 'getBoundingClientRect').mockReturnValue({ top: 0, left: 0 } as DOMRect);
+            jest.spyOn(target, 'getBoundingClientRect').mockReturnValue({ top: 150, left: 200 } as DOMRect);
+
+            fixture.componentInstance.scrollbar().scrollToElement(target, { left: 20 });
+
+            expect(scrollEl.scrollTop).toBe(150);
+            expect(scrollEl.scrollLeft).toBe(180);
+        });
+
+        it('scrollToElement resolves a string target as a selector against the scroll element', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const target = scrollEl.querySelector('div') as HTMLElement;
+
+            target.setAttribute('data-target', '');
+            setMetrics(scrollEl, { scrollTop: 0, scrollLeft: 0 });
+            jest.spyOn(scrollEl, 'getBoundingClientRect').mockReturnValue({ top: 0, left: 0 } as DOMRect);
+            jest.spyOn(target, 'getBoundingClientRect').mockReturnValue({ top: 150, left: 200 } as DOMRect);
+
+            fixture.componentInstance.scrollbar().scrollToElement('[data-target]');
+
+            expect(scrollEl.scrollTop).toBe(150);
+            expect(scrollEl.scrollLeft).toBe(200);
+        });
+
+        it('scrollToElement does nothing when the string selector matches no element', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            setMetrics(scrollEl, { scrollTop: 55, scrollLeft: 33 });
+
+            fixture.componentInstance.scrollbar().scrollToElement('.does-not-exist');
+
+            expect(scrollEl.scrollTop).toBe(55);
+            expect(scrollEl.scrollLeft).toBe(33);
         });
 
         it('scrollStart / scrollEnd scroll the horizontal axis', () => {
@@ -602,22 +1109,150 @@ describe(KbqScrollbar.name, () => {
             expect(visibleSpy).not.toHaveBeenCalledWith(true);
             expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
         });
+
+        it("'hover' mode (the default) shows on a real pointerenter and hides again on pointerleave", () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+
+            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+
+            host.dispatchEvent(new Event('pointerenter'));
+            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+            host.dispatchEvent(new Event('pointerleave'));
+            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+        });
+
+        it("'scroll' mode temporarily reveals on a real scroll event and auto-hides after kbqScrollbarAutoHideDelay", () => {
+            const fixture = createComponent(TestScrollbarScrollVisibilityHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            jest.useFakeTimers();
+
+            try {
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+
+                scrollEl.dispatchEvent(new Event('scroll'));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                jest.advanceTimersByTime(49);
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                jest.advanceTimersByTime(1);
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+            } finally {
+                jest.useRealTimers();
+            }
+        });
+
+        it("'scroll' mode restarts the auto-hide timer on every subsequent scroll instead of hiding on the first timer", () => {
+            const fixture = createComponent(TestScrollbarScrollVisibilityHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            jest.useFakeTimers();
+
+            try {
+                scrollEl.dispatchEvent(new Event('scroll'));
+                jest.advanceTimersByTime(30);
+
+                scrollEl.dispatchEvent(new Event('scroll'));
+                jest.advanceTimersByTime(30);
+
+                // Only 30ms since the second scroll, not yet the full 50ms delay.
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                jest.advanceTimersByTime(20);
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+            } finally {
+                jest.useRealTimers();
+            }
+        });
+
+        it("switching away from 'scroll' clears its pending auto-hide timer, instead of that timer hiding the scrollbar later under the new mode", () => {
+            const fixture = createComponent(TestScrollbarVisibilityHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            jest.useFakeTimers();
+
+            try {
+                setVisibility(fixture, 'scroll');
+                scrollEl.dispatchEvent(new Event('scroll'));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                setVisibility(fixture, 'always');
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                // Well past the default autoHideDelay (100ms) — the stale 'scroll'-mode timer must
+                // not fire and hide a scrollbar that's supposed to stay permanently visible now.
+                jest.advanceTimersByTime(200);
+
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+            } finally {
+                jest.useRealTimers();
+            }
+        });
     });
 
-    describe('kbqScrollbarViewport delegation', () => {
-        it('measures and scrolls the delegated viewport instead of the host', () => {
-            const fixture = createComponent(TestScrollbarViewportHost);
+    describe('kbqScrollbarVirtualViewport delegation', () => {
+        it('measures the delegated virtual viewport instead of the host', () => {
+            const fixture = createComponent(TestScrollbarVirtualHost);
             const viewport = fixture.debugElement.nativeElement.querySelector(
                 '[data-testid="viewport"]'
             ) as HTMLElement;
 
-            setMetrics(viewport, { scrollTop: 0 });
-
             expect(fixture.componentInstance.scrollbar().getScrollElement()).toBe(viewport);
+        });
+    });
 
-            fixture.componentInstance.scrollbar().scrollTo({ top: 42 });
+    describe('CdkScrollable / ScrollDispatcher integration', () => {
+        const registeredElements = (): HTMLElement[] =>
+            Array.from(TestBed.inject(ScrollDispatcher).scrollContainers.keys()).map(
+                (scrollable) => scrollable.getElementRef().nativeElement
+            );
 
-            expect(viewport.scrollTop).toBe(42);
+        it('registers the auto-viewport (the real scroll element) with ScrollDispatcher', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            // `KbqScrollbar`'s own `hostDirectives: [CdkScrollable]` also still registers the host
+            // itself — harmlessly: the host has no `overflow` of its own in this case (the
+            // auto-viewport does), so its `CdkScrollable` never actually fires, it just stays
+            // registered alongside the one that matters.
+            expect(registeredElements()).toContain(scrollEl);
+        });
+
+        it('sees a delegated virtual viewport via its own built-in CdkScrollable', () => {
+            const fixture = createComponent(TestScrollbarVirtualHost);
+            const viewport = fixture.debugElement.nativeElement.querySelector(
+                '[data-testid="viewport"]'
+            ) as HTMLElement;
+
+            expect(registeredElements()).toContain(viewport);
+        });
+
+        it('registers the host itself when it is the real scroll element (native: true)', () => {
+            const fixture = createComponent(TestScrollbarHost, [
+                { provide: KBQ_SCROLLBAR_CONFIG, useValue: { native: true } }
+            ]);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+
+            expect(registeredElements()).toContain(host);
+        });
+
+        it('de-registers the auto-viewport from ScrollDispatcher on destroy', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            expect(registeredElements()).toContain(scrollEl);
+
+            fixture.destroy();
+
+            expect(registeredElements()).not.toContain(scrollEl);
         });
     });
 
@@ -735,10 +1370,97 @@ describe(KbqScrollbar.name, () => {
 
             expect(endSpy).toHaveBeenCalled();
         });
+
+        it('does not re-emit reachTop on subsequent updates while still at the top', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const topSpy = jest.fn();
+
+            fixture.componentInstance.scrollbar().reachTop.subscribe(topSpy);
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            setMetrics(track, { clientHeight: 100 });
+            fixture.componentInstance.scrollbar().update();
+            fixture.componentInstance.scrollbar().update();
+            fixture.componentInstance.scrollbar().update();
+
+            expect(topSpy).toHaveBeenCalledTimes(1);
+        });
     });
 
-    describe('isAtTop / isAtBottom / isAtStart / isAtEnd', () => {
-        it('isAtTop / isAtBottom track the current vertical position, not just the moment it was reached', () => {
+    describe('outputs', () => {
+        it('emits scrollChange with the current scroll position on a real scroll event', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const spy = jest.fn();
+
+            fixture.componentInstance.scrollbar().scrollChange.subscribe(spy);
+
+            setMetrics(scrollEl, { scrollTop: 77, scrollLeft: 12 });
+            scrollEl.dispatchEvent(new Event('scroll'));
+
+            expect(spy).toHaveBeenCalledWith({ top: 77, left: 12 });
+        });
+
+        it('onScroll (KbqOverflowShadowSource) emits on the same real scroll event as scrollChange', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const spy = jest.fn();
+
+            fixture.componentInstance.scrollbar().onScroll.subscribe(spy);
+            expect(fixture.componentInstance.scrollbar().getScrollElement()).toBe(scrollEl);
+
+            scrollEl.dispatchEvent(new Event('scroll'));
+
+            expect(spy).toHaveBeenCalled();
+        });
+
+        it('emits kbqScrollbarInitialized exactly once after initial setup', () => {
+            const fixture = createComponent(TestScrollbarInitializedHost);
+
+            expect(fixture.componentInstance.initializedCount).toBe(1);
+        });
+
+        it('emits kbqScrollbarInitialized even under native: true, where there is no track/thumb of its own to render', () => {
+            const fixture = createComponent(TestScrollbarInitializedHost, [
+                { provide: KBQ_SCROLLBAR_CONFIG, useValue: { native: true } }
+            ]);
+
+            expect(fixture.componentInstance.initializedCount).toBe(1);
+        });
+    });
+
+    describe('ngOnDestroy', () => {
+        it('removes the track/thumb DOM on destroy', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+
+            expect(host.querySelector('.kbq-private-scrollbar-track')).toBeTruthy();
+
+            fixture.destroy();
+
+            expect(host.querySelector('.kbq-private-scrollbar-track')).toBeNull();
+        });
+
+        it('clears a pending auto-hide timeout on destroy', () => {
+            const fixture = createComponent(TestScrollbarScrollVisibilityHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const clearTimeoutSpy = jest.spyOn(window, 'clearTimeout');
+
+            scrollEl.dispatchEvent(new Event('scroll'));
+            fixture.destroy();
+
+            expect(clearTimeoutSpy).toHaveBeenCalled();
+        });
+    });
+
+    describe('isTopReached / isBottomReached / isStartReached / isEndReached', () => {
+        it('isTopReached / isBottomReached track the current vertical position, not just the moment it was reached', () => {
             const fixture = createComponent(TestScrollbarHost);
             const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
             const scrollEl = getAutoViewport(host);
@@ -749,22 +1471,22 @@ describe(KbqScrollbar.name, () => {
             setMetrics(track, { clientHeight: 100 });
             scrollbar.update();
 
-            expect(scrollbar.isAtTop()).toBe(true);
-            expect(scrollbar.isAtBottom()).toBe(false);
+            expect(scrollbar.isTopReached()).toBe(true);
+            expect(scrollbar.isBottomReached()).toBe(false);
 
             setMetrics(scrollEl, { scrollTop: 200 });
             scrollbar.update();
 
-            expect(scrollbar.isAtTop()).toBe(false);
-            expect(scrollbar.isAtBottom()).toBe(false);
+            expect(scrollbar.isTopReached()).toBe(false);
+            expect(scrollbar.isBottomReached()).toBe(false);
 
             setMetrics(scrollEl, { scrollTop: 400 });
             scrollbar.update();
 
-            expect(scrollbar.isAtBottom()).toBe(true);
+            expect(scrollbar.isBottomReached()).toBe(true);
         });
 
-        it('isAtStart / isAtEnd track the current horizontal position in LTR', () => {
+        it('isStartReached / isEndReached track the current horizontal position in LTR', () => {
             const fixture = createComponent(TestScrollbarDualOverflowHost);
             const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
             const scrollEl = getAutoViewport(host);
@@ -783,17 +1505,17 @@ describe(KbqScrollbar.name, () => {
             setMetrics(hTrack, { clientWidth: 100 });
             scrollbar.update();
 
-            expect(scrollbar.isAtStart()).toBe(true);
-            expect(scrollbar.isAtEnd()).toBe(false);
+            expect(scrollbar.isStartReached()).toBe(true);
+            expect(scrollbar.isEndReached()).toBe(false);
 
             setMetrics(scrollEl, { scrollLeft: 400 });
             scrollbar.update();
 
-            expect(scrollbar.isAtStart()).toBe(false);
-            expect(scrollbar.isAtEnd()).toBe(true);
+            expect(scrollbar.isStartReached()).toBe(false);
+            expect(scrollbar.isEndReached()).toBe(true);
         });
 
-        it('isAtStart / isAtEnd flip which physical edge they track in RTL', () => {
+        it('isStartReached / isEndReached flip which physical edge they track in RTL', () => {
             const mockDir = new MockDirectionality();
 
             mockDir.value = 'rtl';
@@ -819,15 +1541,15 @@ describe(KbqScrollbar.name, () => {
             setMetrics(hTrack, { clientWidth: 100 });
             scrollbar.update();
 
-            expect(scrollbar.isAtStart()).toBe(true);
-            expect(scrollbar.isAtEnd()).toBe(false);
+            expect(scrollbar.isStartReached()).toBe(true);
+            expect(scrollbar.isEndReached()).toBe(false);
 
             // scrollLeft: -400 is RTL's logical end — physically the left edge.
             setMetrics(scrollEl, { scrollLeft: -400 });
             scrollbar.update();
 
-            expect(scrollbar.isAtStart()).toBe(false);
-            expect(scrollbar.isAtEnd()).toBe(true);
+            expect(scrollbar.isStartReached()).toBe(false);
+            expect(scrollbar.isEndReached()).toBe(true);
         });
 
         it('reads as both at-start and at-end when there is no overflow to scroll at all', () => {
@@ -839,8 +1561,8 @@ describe(KbqScrollbar.name, () => {
             setMetrics(scrollEl, { clientHeight: 500, scrollHeight: 500 });
             scrollbar.update();
 
-            expect(scrollbar.isAtTop()).toBe(true);
-            expect(scrollbar.isAtBottom()).toBe(true);
+            expect(scrollbar.isTopReached()).toBe(true);
+            expect(scrollbar.isBottomReached()).toBe(true);
         });
     });
 
