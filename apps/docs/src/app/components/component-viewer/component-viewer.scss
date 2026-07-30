@@ -206,6 +206,22 @@
         padding-left: var(--kbq-size-7xl);
     }
 
+    .docs-component-header {
+        .docs-component-navbar {
+            width: calc(100% - 340px - var(--kbq-size-7xl));
+            max-width: 850px;
+        }
+    }
+
+    @media (1201px <= width <= 1280px) {
+        .docs-component-header {
+            .docs-component-navbar {
+                width: calc(100% - 300px - var(--kbq-size-7xl));
+                max-width: 850px;
+            }
+        }
+    }
+
     .docs-component-overview {
         gap: var(--kbq-size-7xl);
 
@@ -219,6 +235,12 @@
     .docs-component-header,
     .docs-component-overview {
         padding-left: 160px;
+    }
+
+    .docs-component-header {
+        .docs-component-navbar {
+            width: 650px;
+        }
     }
 
     .docs-component-overview {

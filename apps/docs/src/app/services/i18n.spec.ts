@@ -33,6 +33,7 @@ describe('DOCS_TRANSLATIONS', () => {
             improvementSuggestions: { ru: 'Предложения по улучшению', en: 'Suggestions for improvement' },
             overviewTab: { ru: 'Обзор', en: 'Overview' },
             examplesTab: { ru: 'Примеры', en: 'Examples' },
+            viewSourceOnGitHub: { ru: 'Исходный код', en: 'Source code' },
 
             welcomeTitle: { ru: 'Дизайн-система Koobiq', en: 'Koobiq design system' },
             welcomeDescription: {
