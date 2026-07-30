@@ -1,7 +1,12 @@
 import { Routes } from '@angular/router';
 import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
-import { E2ePrivateScrollbarStateAndStyle } from 'packages/components/scrollbar/private/e2e';
+import {
+    E2ePrivateScrollbarDrag,
+    E2ePrivateScrollbarHoverVisibility,
+    E2ePrivateScrollbarScrollTo,
+    E2ePrivateScrollbarStateAndStyle
+} from 'packages/components/scrollbar/private/e2e';
 import { E2eAccordionStates } from '../components/accordion/e2e';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
@@ -211,6 +216,9 @@ const components = [
     E2eSearchExpandableStates,
     E2eInputStateAndStyle,
     E2ePrivateScrollbarStateAndStyle,
+    E2ePrivateScrollbarDrag,
+    E2ePrivateScrollbarScrollTo,
+    E2ePrivateScrollbarHoverVisibility,
     E2eRadioStateAndStyle,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,

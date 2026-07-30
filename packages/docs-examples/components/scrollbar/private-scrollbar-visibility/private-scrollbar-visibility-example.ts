@@ -60,7 +60,14 @@ import { KbqSelectModule } from '@koobiq/components/select';
         }
 
         .example-scrollbar {
+            overflow: auto;
+            resize: both;
             height: 200px;
+            min-height: 200px;
+            max-height: 400px;
+            width: 100%;
+            min-width: 200px;
+            max-width: 100%;
             border-radius: var(--kbq-size-border-radius);
             background-color: var(--kbq-background-bg-secondary);
         }

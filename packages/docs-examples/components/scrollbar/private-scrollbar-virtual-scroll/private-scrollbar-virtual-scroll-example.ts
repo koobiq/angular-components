@@ -1,19 +1,19 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqScrollbar, KbqScrollbarViewport } from '@koobiq/components/scrollbar/private';
+import { KbqScrollbar, KbqScrollbarVirtualViewport } from '@koobiq/components/scrollbar/private';
 
 /**
  * @title Scrollbar with virtual scroll
  */
 @Component({
     selector: 'private-scrollbar-virtual-scroll-example',
-    imports: [KbqScrollbar, KbqScrollbarViewport, ScrollingModule, KbqButtonModule],
+    imports: [KbqScrollbar, KbqScrollbarVirtualViewport, ScrollingModule, KbqButtonModule],
     template: `
         <button kbq-button (click)="addItems()">Add items</button>
 
         <div class="example-scrollbar" kbqScrollbar>
-            <cdk-virtual-scroll-viewport kbqScrollbarViewport itemSize="32" [style.height.%]="100">
+            <cdk-virtual-scroll-viewport kbqScrollbarVirtualViewport itemSize="32" [style.height.%]="100">
                 <div *cdkVirtualFor="let item of items()" class="example-item">{{ item }}</div>
             </cdk-virtual-scroll-viewport>
         </div>

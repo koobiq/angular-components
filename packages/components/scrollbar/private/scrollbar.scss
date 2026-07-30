@@ -54,6 +54,11 @@
 // kbqScrollbarViewport — holds `overflow`, so the track/thumb (siblings on the host) stay a
 // fixed overlay instead of scrolling away with the content.
 .kbq-private-scrollbar-viewport {
+    // The auto-created wrapper is a real component (`kbq-scrollbar-viewport`, an
+    // unknown custom element to the browser) so it can carry `hostDirectives: [CdkScrollable]` —
+    // unlike a plain `div`, it doesn't default to `display: block`, so `width`/`height: 100%`
+    // wouldn't apply without this.
+    display: block;
     box-sizing: border-box;
     width: 100%;
     height: 100%;

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import { KbqScrollbar, KbqScrollbarViewport } from './scrollbar';
+import { KbqScrollbar, KbqScrollbarVirtualViewport } from './scrollbar';
 
 const COMPONENTS = [
     KbqScrollbar,
-    KbqScrollbarViewport
+    KbqScrollbarVirtualViewport
 ];
 
 @NgModule({
