@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -10,6 +11,7 @@ import {
     Component,
     contentChildren,
     Directive,
+    effect,
     ElementRef,
     forwardRef,
     inject,
@@ -18,6 +20,7 @@ import {
     OnDestroy,
     OnInit,
     output,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -306,9 +309,15 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 @Component({
     selector: 'kbq-button-toggle',
     imports: [
+        CdkObserveContent,
         KbqTitleDirective,
         KbqButtonModule
     ],
+    // Both title references sit on the label box on purpose. The box that paints `text-overflow` is
+    // the only one whose `scrollWidth` still reports the untruncated label, so it has to be the one
+    // `kbq-title` measures; and measuring it against the whole button instead would leave a dead zone
+    // as wide as an icon plus its gap, where the label is already clipped but the tooltip does not
+    // open yet. Measured against itself, the comparison is exactly `clientWidth < scrollWidth`.
     template: `
         <button
             kbq-button
@@ -320,8 +329,12 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
             [tabIndex]="tabIndex() || 0"
             (click)="onToggleClick()"
         >
-            <div #kbqTitleText class="kbq-button-toggle-wrapper">
-                <ng-content />
+            <div class="kbq-button-toggle-wrapper" (cdkObserveContent)="updateIconType()">
+                <ng-content select="[kbqButtonPrefix]" />
+                <span #kbqTitleContainer #kbqTitleText class="kbq-button-toggle-text">
+                    <ng-content />
+                </span>
+                <ng-content select="[kbqButtonSuffix]" />
             </div>
         </button>
     `,
@@ -397,6 +410,18 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     private _checked = false;
     private _disabled: boolean = false;
 
+    constructor() {
+        // The content query only tracks KbqIcon instances, while `iconType` also depends on the text
+        // nodes beside them, which the query cannot see — those are covered by the MutationObserver
+        // in the template. This effect covers icons appearing or disappearing (e.g. via @if) without
+        // waiting for the observer.
+        effect(() => {
+            this.icons();
+
+            untracked(() => this.updateIconType());
+        });
+    }
+
     ngOnInit() {
         this.isSingleSelector = this.buttonToggleGroup && !this.buttonToggleGroup.multiple;
         this.type = this.isSingleSelector ? 'radio' : 'checkbox';
@@ -407,15 +432,36 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     }
 
     ngAfterContentInit(): void {
-        const icons = this.icons();
+        this.updateIconType();
+    }
 
-        if (icons.length) {
-            const nodesWithoutComments = getNodesWithoutComments(
-                this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper')!.childNodes as NodeList
-            ).length;
+    /**
+     * Refreshes `iconType`, which tells whether the toggle holds icons only or icons beside a label.
+     *
+     * No selector can work this out: CSS cannot see text nodes, so it can never tell an icon-only
+     * toggle from a label that happens to contain an icon.
+     *
+     * @docs-private
+     */
+    updateIconType(): void {
+        const wrapper: HTMLElement | null = this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper');
+        const label = wrapper?.querySelector('.kbq-button-toggle-text');
 
-            this.iconType = nodesWithoutComments === icons.length ? '-icon' : '-icon-text';
-        }
+        if (!wrapper || !label) return;
+
+        const iconElements = this.icons().map((icon) => icon.getHostElement());
+
+        // The label box belongs to the template rather than to the projected content, so it is
+        // flattened out: an icon marked with `kbqButtonPrefix`/`kbqButtonSuffix` sits beside the box
+        // and a legacy one inside it, and both have to be counted the same way. Same shape as
+        // `KbqButtonCssStyler`, which flattens `.kbq-button-text` for the same reason.
+        const nodes = getNodesWithoutComments(wrapper.childNodes).flatMap((node) =>
+            node === label ? getNodesWithoutComments(node.childNodes) : [node]
+        );
+
+        this.iconType = iconElements.length ? (nodes.length === iconElements.length ? '-icon' : '-icon-text') : '';
+
+        this.changeDetectorRef.markForCheck();
     }
 
     ngAfterViewInit(): void {

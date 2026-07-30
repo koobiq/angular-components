@@ -71,6 +71,11 @@
             "description": "Rewrites the removed physical border-radius mixins to logical ones and warns about the v20.3.0 button host-attribute, button-group ownership, .kbq-progress and locale changes",
             "factory": "./migrations/button-state-and-styles/index",
             "schema": "./migrations/button-state-and-styles/schema.json"
+        },
+        "button-truncation": {
+            "description": "Moves edge icons of a button/button-toggle into the kbqButtonPrefix/kbqButtonSuffix slots so labels keep their ellipsis, and reports stylesheet overrides affected by the new truncation layout",
+            "factory": "./migrations/button-truncation/index",
+            "schema": "./migrations/button-truncation/schema.json"
         }
     }
 }

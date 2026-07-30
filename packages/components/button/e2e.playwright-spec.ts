@@ -77,6 +77,179 @@ test.describe('KbqButtonModule', () => {
         });
     });
 
+    test.describe('E2eButtonTruncation', () => {
+        const getText = (button: Locator) => button.locator('.kbq-button-text');
+
+        /** Width the label would need if nothing clipped it, versus the width it actually got. */
+        const getTextWidths = (button: Locator) =>
+            getText(button).evaluate((element) => ({
+                scroll: element.scrollWidth,
+                client: element.clientWidth
+            }));
+
+        /** Distance between the icon's centre and the button's centre, per axis. */
+        const getOffset = async (button: Locator, icon: Locator) => {
+            const buttonBox = (await button.boundingBox())!;
+            const iconBox = (await icon.boundingBox())!;
+
+            return {
+                x: Math.abs(iconBox.x + iconBox.width / 2 - (buttonBox.x + buttonBox.width / 2)),
+                y: Math.abs(iconBox.y + iconBox.height / 2 - (buttonBox.y + buttonBox.height / 2))
+            };
+        };
+
+        test('clamps a hug-width button to its container instead of overflowing it', async ({ page }) => {
+            await page.goto('/E2eButtonTruncation');
+
+            // The container is 150px and the button carries no width of its own — `max-width: 100%`
+            // on the host is the only thing keeping it in. Without it the button grows to its label.
+            const box = (await page.getByTestId('e2eButtonTruncationHug').boundingBox())!;
+
+            expect(box.width).toBeLessThanOrEqual(150);
+        });
+
+        for (const testId of [
+            'e2eButtonTruncationHug',
+            'e2eButtonTruncationFixed',
+            'e2eButtonTruncationFill',
+            'e2eButtonTruncationNestedIcon'
+        ]) {
+            test(`clips the label of ${testId}`, async ({ page }) => {
+                await page.goto('/E2eButtonTruncation');
+
+                const widths = await getTextWidths(page.getByTestId(testId));
+
+                expect(widths.scroll).toBeGreaterThan(widths.client);
+            });
+        }
+
+        test('keeps the label a block container so the ellipsis is painted', async ({ page }) => {
+            await page.goto('/E2eButtonTruncation');
+
+            // `text-overflow: ellipsis` is not painted on a flex box, so this must never be `flex`.
+            // The CSS specifies `inline-block`, but `.kbq-button-text` is always a flex item of
+            // `.kbq-button-wrapper`, so the CSS blockification spec turns the computed value into
+            // `block` (getComputedStyle, and therefore toHaveCSS, sees the computed value).
+            await expect(getText(page.getByTestId('e2eButtonTruncationHug'))).toHaveCSS('display', 'block');
+            await expect(getText(page.getByTestId('e2eButtonTruncationSlots'))).toHaveCSS('display', 'block');
+
+            // An icon nested inside a wrapper is a descendant but not a direct child of
+            // .kbq-button-text, so it must not trigger the legacy-markup flex fallback either.
+            await expect(getText(page.getByTestId('e2eButtonTruncationNestedIcon'))).toHaveCSS('display', 'block');
+        });
+
+        test('gives a text-free label a flex context whatever the content is nested in', async ({ page }) => {
+            await page.goto('/E2eButtonTruncation');
+
+            // The same nesting as the block-container case above, only without text — which a
+            // selector cannot distinguish, so this is the styler's `kbq-button_no-label` at work.
+            await expect(page.getByTestId('e2eButtonTruncationWrappedIconOnly')).toHaveClass(/kbq-button_no-label/);
+            await expect(getText(page.getByTestId('e2eButtonTruncationWrappedIconOnly'))).toHaveCSS('display', 'flex');
+
+            await expect(page.getByTestId('e2eButtonTruncationNestedIcon')).not.toHaveClass(/kbq-button_no-label/);
+        });
+
+        test('does not stretch a short label', async ({ page }) => {
+            await page.goto('/E2eButtonTruncation');
+
+            const box = (await page.getByTestId('e2eButtonTruncationShort').boundingBox())!;
+
+            // The container is 260px wide; the button must still hug its two-character label.
+            expect(box.width).toBeLessThan(100);
+        });
+
+        test('keeps slot icons at full size while the label is clipped', async ({ page }) => {
+            await page.goto('/E2eButtonTruncation');
+
+            const button = page.getByTestId('e2eButtonTruncationSlots');
+            const prefix = (await button.locator('.kbq-button-prefix').boundingBox())!;
+            const suffix = (await button.locator('.kbq-button-suffix').boundingBox())!;
+            const widths = await getTextWidths(button);
+
+            // Only `.kbq-button-text` carries `min-width: 0`, so the icons must not absorb the shrink.
+            expect(prefix.width).toBeCloseTo(16, 0);
+            expect(suffix.width).toBeCloseTo(16, 0);
+            expect(widths.scroll).toBeGreaterThan(widths.client);
+        });
+
+        const iconPlacements = [
+            { name: 'prefix slot', testId: 'e2eButtonTruncationSlots', icon: '.kbq-button-prefix' },
+            { name: 'suffix slot', testId: 'e2eButtonTruncationSlots', icon: '.kbq-button-suffix' },
+            { name: 'legacy default slot', testId: 'e2eButtonTruncationLegacy', icon: '.kbq-icon' },
+            { name: 'icon-only button', testId: 'e2eButtonTruncationIconOnly', icon: '.kbq-icon' },
+            { name: 'wrapped icon-only button', testId: 'e2eButtonTruncationWrappedIconOnly', icon: '.kbq-icon' },
+            {
+                name: 'icon-only button with a marker',
+                testId: 'e2eButtonTruncationIconOnlyWithMarker',
+                icon: '.kbq-icon'
+            },
+            { name: 'squeezed icon-only button', testId: 'e2eButtonTruncationIconOnlySqueezed', icon: '.kbq-icon' }
+        ];
+
+        for (const placement of iconPlacements) {
+            test(`centres the icon vertically in the ${placement.name}`, async ({ page }) => {
+                await page.goto('/E2eButtonTruncation');
+
+                const button = page.getByTestId(placement.testId);
+
+                // `vertical-align: middle` aligns to the x-height rather than the line box centre and
+                // leaves the icon ~1px low, so a default-slot icon needs a flex context to sit true.
+                expect((await getOffset(button, button.locator(placement.icon).first())).y).toBeLessThanOrEqual(0.5);
+            });
+        }
+
+        const centredIconOnlyButtons = [
+            'e2eButtonTruncationIconOnly',
+            'e2eButtonTruncationWrappedIconOnly',
+            'e2eButtonTruncationIconOnlyWithMarker',
+            'e2eButtonTruncationIconOnlySqueezed'
+        ];
+
+        for (const testId of centredIconOnlyButtons) {
+            test(`centres the icon horizontally in ${testId}`, async ({ page }) => {
+                await page.goto('/E2eButtonTruncation');
+
+                const button = page.getByTestId(testId);
+
+                // a lone icon has no label to sit next to, so the slot margins must not apply to it
+                expect((await getOffset(button, button.locator('.kbq-icon').first())).x).toBeLessThanOrEqual(0.5);
+            });
+        }
+
+        test('keeps an icon button at its own size in a narrower container', async ({ page }) => {
+            await page.goto('/E2eButtonTruncation');
+
+            const button = page.getByTestId('e2eButtonTruncationIconOnlySqueezed');
+            const box = (await button.boundingBox())!;
+            const widths = await getTextWidths(button);
+
+            // the container is 20px; an icon button has no label to truncate, so it must not be
+            // clamped down and clip its own icon
+            expect(box.width).toBeGreaterThan(30);
+            expect(widths.scroll).toEqual(widths.client);
+        });
+
+        test('shows the full label in a tooltip once it is clipped', async ({ page }) => {
+            await page.goto('/E2eButtonTruncation');
+
+            await page.getByTestId('e2eButtonTruncationTitle').hover();
+
+            await expect(page.locator('.kbq-tooltip')).toBeVisible();
+        });
+
+        test('renders the ellipsis', async ({ page }) => {
+            await page.goto('/E2eButtonTruncation');
+
+            // Geometry is identical whether or not the ellipsis is painted, so the glyph itself can
+            // only be verified visually.
+            const screenshotTarget = page.getByTestId('e2eButtonTruncation').getByTestId('e2eScreenshotTarget');
+
+            await expect(screenshotTarget).toHaveScreenshot('05-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('05-dark.png');
+        });
+    });
+
     test.describe('E2eButtonStress', () => {
         test('renders a large batch of icon buttons without overflowing the stack', async ({ page }) => {
             const pageErrors: Error[] = [];

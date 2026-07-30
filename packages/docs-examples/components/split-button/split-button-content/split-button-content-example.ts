@@ -18,7 +18,7 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     template: `
         <kbq-split-button>
             <button kbq-button>
-                <i kbq-icon="kbq-plus_16"></i>
+                <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
                 Split Button
             </button>
             <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">

@@ -3,6 +3,8 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqButtonToggle, KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
 
 describe('KbqButtonToggle with forms', () => {
@@ -615,6 +617,166 @@ describe('KbqButtonToggle without forms', () => {
     });
 });
 
+/**
+ * The label lives in a box of its own, because it has two jobs no single box can do at once: paint
+ * `text-overflow: ellipsis`, which a flex box never does, and lay icons out beside it, which only a
+ * flex box does exactly. Nothing here asserts computed styles — jest-preset-angular strips component
+ * styles — so what is pinned instead is the structure those styles are written against, and the
+ * element `kbq-title` measures.
+ */
+describe('KbqButtonToggle label', () => {
+    const getLabel = (fixture: ComponentFixture<unknown>): HTMLElement =>
+        fixture.nativeElement.querySelector('.kbq-button-toggle-text');
+    const getWrapper = (fixture: ComponentFixture<unknown>): HTMLElement =>
+        fixture.nativeElement.querySelector('.kbq-button-toggle-wrapper');
+    const getTitle = (fixture: ComponentFixture<unknown>): KbqTitleDirective =>
+        fixture.debugElement.query(By.directive(KbqTitleDirective)).injector.get(KbqTitleDirective);
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                KbqButtonToggleModule,
+                KbqIconModule,
+                ButtonToggleWithLabelOnly,
+                ButtonToggleWithSlottedIcons,
+                ButtonToggleWithConditionalSlottedIcon,
+                ButtonToggleWithLegacyIcon,
+                ButtonToggleWithIconOnly,
+                ButtonToggleWithSlottedIconOnly
+            ]
+        }).compileComponents();
+    });
+
+    describe('content projection', () => {
+        it('should project the label into the label box', () => {
+            const fixture = TestBed.createComponent(ButtonToggleWithSlottedIcons);
+
+            fixture.detectChanges();
+
+            expect(getLabel(fixture).textContent!.trim()).toBe('Label');
+        });
+
+        it('should project marked icons beside the label box, in source order', () => {
+            const fixture = TestBed.createComponent(ButtonToggleWithSlottedIcons);
+
+            fixture.detectChanges();
+
+            const label = getLabel(fixture);
+
+            // the whole point of the slots: an icon inside the label box would share its line and
+            // take the ellipsis with it
+            expect(label.querySelector('.kbq-icon')).toBeNull();
+            expect(Array.from(getWrapper(fixture).children)).toEqual([
+                fixture.nativeElement.querySelector('#prefix'),
+                label,
+                fixture.nativeElement.querySelector('#suffix')
+            ]);
+        });
+
+        it('should project a marked icon rendered by @if beside the label box', () => {
+            const fixture = TestBed.createComponent(ButtonToggleWithConditionalSlottedIcon);
+
+            fixture.detectChanges();
+
+            // A slot selector is matched at compile time, so content Angular only creates later still
+            // has to reach it — otherwise every conditional icon would silently fall back to the
+            // default slot and take the ellipsis with it.
+            expect(getLabel(fixture).querySelector('.kbq-icon')).toBeNull();
+            expect(getWrapper(fixture).querySelector(':scope > .kbq-icon')).not.toBeNull();
+
+            fixture.componentInstance.showIcon = false;
+            fixture.detectChanges();
+
+            expect(getWrapper(fixture).querySelector('.kbq-icon')).toBeNull();
+        });
+
+        it('should project an unmarked icon into the label box', () => {
+            const fixture = TestBed.createComponent(ButtonToggleWithLegacyIcon);
+
+            fixture.detectChanges();
+
+            expect(getLabel(fixture).querySelector('#legacy')).not.toBeNull();
+            expect(getWrapper(fixture).children.length).toBe(1);
+        });
+
+        it('should leave the label box empty when everything is slotted', () => {
+            const fixture = TestBed.createComponent(ButtonToggleWithSlottedIconOnly);
+
+            fixture.detectChanges();
+
+            // `:empty` is what stops the box from taking a gap of the row and pushing the lone icon
+            // off centre, so it has to stay empty — whitespace included
+            expect(getLabel(fixture).childNodes.length).toBe(0);
+        });
+    });
+
+    describe('kbq-title', () => {
+        it('should measure the label box against itself', () => {
+            const fixture = TestBed.createComponent(ButtonToggleWithSlottedIcons);
+
+            fixture.detectChanges();
+
+            const title = getTitle(fixture);
+            const label = getLabel(fixture);
+
+            // Measuring the label against the whole button would leave a band as wide as an icon plus
+            // its gap where the label is already clipped but the tooltip stays silent. Measured
+            // against itself, the comparison is exactly `clientWidth < scrollWidth`.
+            expect(title.child).toBe(label);
+            expect(title.parent).toBe(label);
+        });
+
+        it('should enable the tooltip only while the label is clipped', () => {
+            const fixture = TestBed.createComponent(ButtonToggleWithSlottedIcons);
+
+            fixture.detectChanges();
+
+            const title = getTitle(fixture);
+            const label = getLabel(fixture);
+            const setWidths = (offsetWidth: number, scrollWidth: number) => {
+                Object.defineProperty(label, 'offsetWidth', { value: offsetWidth, configurable: true });
+                Object.defineProperty(label, 'scrollWidth', { value: scrollWidth, configurable: true });
+            };
+
+            setWidths(100, 200);
+            title.handleElementEnter();
+
+            expect(title.disabled).toBe(false);
+            expect(title.content).toBe('Label');
+
+            setWidths(100, 100);
+            title.handleElementEnter();
+
+            expect(title.disabled).toBe(true);
+        });
+    });
+
+    describe('iconType', () => {
+        /**
+         * The host class is the only consumer-visible signal for "icons only" versus "icons beside a
+         * label", and no stylesheet in the repo reads it — so nothing else would catch it drifting.
+         * The label box is flattened out of the node walk to keep a marked and an unmarked icon
+         * counted the same way; these are the cases that go wrong without it.
+         */
+        it.each([
+            ['text only', () => ButtonToggleWithLabelOnly, ''],
+            ['a marked icon beside a label', () => ButtonToggleWithSlottedIcons, '-icon-text'],
+            ['an unmarked icon beside a label', () => ButtonToggleWithLegacyIcon, '-icon-text'],
+            ['an unmarked icon on its own', () => ButtonToggleWithIconOnly, '-icon'],
+            ['a marked icon on its own', () => ButtonToggleWithSlottedIconOnly, '-icon']
+        ])('should report %s', (_, component, expected) => {
+            const fixture = TestBed.createComponent(component());
+
+            fixture.detectChanges();
+
+            const toggle = fixture.debugElement.query(By.directive(KbqButtonToggle));
+
+            expect(toggle.componentInstance.iconType).toBe(expected);
+            expect(toggle.nativeElement.classList).toContain(`kbq-button-toggle${expected}`);
+        });
+    });
+});
+
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
@@ -742,3 +904,69 @@ class RepeatedButtonTogglesWithPreselectedValue {
     possibleValues = ['One', 'Two', 'Three'];
     value = 'Two';
 }
+
+@Component({
+    imports: [KbqButtonToggleModule],
+    template: `
+        <kbq-button-toggle>Label</kbq-button-toggle>
+    `
+})
+class ButtonToggleWithLabelOnly {}
+
+@Component({
+    imports: [KbqButtonToggleModule, KbqIconModule],
+    template: `
+        <kbq-button-toggle>
+            <i id="prefix" kbqButtonPrefix kbq-icon="kbq-play_16"></i>
+            Label
+            <i id="suffix" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+        </kbq-button-toggle>
+    `
+})
+class ButtonToggleWithSlottedIcons {}
+
+@Component({
+    imports: [KbqButtonToggleModule, KbqIconModule],
+    template: `
+        <kbq-button-toggle>
+            @if (showIcon) {
+                <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
+            }
+            Label
+        </kbq-button-toggle>
+    `
+})
+class ButtonToggleWithConditionalSlottedIcon {
+    showIcon = true;
+}
+
+@Component({
+    imports: [KbqButtonToggleModule, KbqIconModule],
+    template: `
+        <kbq-button-toggle>
+            <i id="legacy" kbq-icon="kbq-play_16"></i>
+            Label
+        </kbq-button-toggle>
+    `
+})
+class ButtonToggleWithLegacyIcon {}
+
+@Component({
+    imports: [KbqButtonToggleModule, KbqIconModule],
+    template: `
+        <kbq-button-toggle>
+            <i kbq-icon="kbq-play_16"></i>
+        </kbq-button-toggle>
+    `
+})
+class ButtonToggleWithIconOnly {}
+
+@Component({
+    imports: [KbqButtonToggleModule, KbqIconModule],
+    template: `
+        <kbq-button-toggle>
+            <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
+        </kbq-button-toggle>
+    `
+})
+class ButtonToggleWithSlottedIconOnly {}

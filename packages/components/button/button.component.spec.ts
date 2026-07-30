@@ -875,6 +875,65 @@ describe('Button text container', () => {
     });
 });
 
+/**
+ * The label box has to be a block container for `text-overflow: ellipsis` to be painted, but only a
+ * flex context centres non-text content exactly. A selector cannot tell those cases apart, because it
+ * cannot see text nodes — so the styler marks the text-free case and CSS keys off that class.
+ * Asserted on the class rather than on a computed style: jest-preset-angular strips component styles,
+ * so `getComputedStyle` reports nothing either way.
+ */
+describe('Button without a label', () => {
+    const hasNoLabelClass = (fixture: ComponentFixture<unknown>): boolean =>
+        fixture.debugElement.query(By.directive(KbqButton)).nativeElement.classList.contains('kbq-button_no-label');
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                KbqButtonModule,
+                KbqIconModule,
+                KbqButtonIconNgIfCaseTestApp,
+                KbqButtonHtmlIconLeftCaseTestApp,
+                KbqButtonWrappedIconOnlyTestApp,
+                KbqButtonWrappedIconAndTextTestApp
+            ]
+        }).compileComponents();
+    });
+
+    it('should mark a button whose only content is an icon', () => {
+        const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
+
+        fixture.detectChanges();
+
+        expect(hasNoLabelClass(fixture)).toBe(true);
+    });
+
+    it('should mark a button whose icon is nested in a wrapper element', () => {
+        const fixture = TestBed.createComponent(KbqButtonWrappedIconOnlyTestApp);
+
+        fixture.detectChanges();
+
+        // the shape KbqButtonToggle projects: the icon is a descendant, not a direct child, so
+        // neither the content query nor a child selector can see it
+        expect(hasNoLabelClass(fixture)).toBe(true);
+    });
+
+    it('should not mark a button that has text alongside its icon', () => {
+        const fixture = TestBed.createComponent(KbqButtonHtmlIconLeftCaseTestApp);
+
+        fixture.detectChanges();
+
+        expect(hasNoLabelClass(fixture)).toBe(false);
+    });
+
+    it('should not mark a button whose wrapped content includes text', () => {
+        const fixture = TestBed.createComponent(KbqButtonWrappedIconAndTextTestApp);
+
+        fixture.detectChanges();
+
+        expect(hasNoLabelClass(fixture)).toBe(false);
+    });
+});
+
 describe('KbqButtonCssStyler without KbqButton', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -1316,6 +1375,31 @@ class KbqButtonPreserveWhitespacesTestApp {}
     `
 })
 class KbqButtonLabelledIconTestApp {}
+
+@Component({
+    selector: 'kbq-button-wrapped-icon-only-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <span class="wrapper"><i kbq-icon="kbq-chevron-down-s_16"></i></span>
+        </button>
+    `
+})
+class KbqButtonWrappedIconOnlyTestApp {}
+
+@Component({
+    selector: 'kbq-button-wrapped-icon-and-text-test-app',
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button">
+            <span class="wrapper">
+                <i kbq-icon="kbq-chevron-down-s_16"></i>
+                Some text
+            </span>
+        </button>
+    `
+})
+class KbqButtonWrappedIconAndTextTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqDropdownModule],

@@ -10,6 +10,13 @@
         & .kbq-button-wrapper {
             width: 100%;
         }
+
+        // the button's default slot is an inline text box; `.kbq-filters__filter-name` truncates
+        // itself and is measured by `kbq-title`, so it has to stay a block-level flex item
+        & .kbq-button-text {
+            display: flex;
+            align-items: center;
+        }
     }
 
     > .kbq-button .kbq-icon {

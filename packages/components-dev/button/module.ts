@@ -12,6 +12,14 @@ import { ButtonExamplesModule } from '../../docs-examples/components/button';
     template: `
         <button-overview-example />
         <hr />
+        <button-content-example />
+        <hr />
+        <button-hug-content-example />
+        <hr />
+        <button-fixed-content-example />
+        <hr />
+        <button-fill-content-example />
+        <hr />
         <button-group-overview-example />
         <hr />
         <button-group-style-example />

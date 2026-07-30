@@ -20,4 +20,6 @@ By default, the size of the button group depends on its content, but there is an
 
 If text does not fit within a button, it is truncated with an ellipsis. A tooltip with the full name is available on hover or focus.
 
+Mark an icon next to the text with `kbqButtonPrefix` or `kbqButtonSuffix`: it is then laid out outside the truncated text and stays fully visible. An unmarked icon shares one box with the text, and such text is clipped without an ellipsis.
+
 <!-- example(button-toggle-tooltip-overview) -->

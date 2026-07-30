@@ -20,6 +20,7 @@ export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
 
 // @public
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+    constructor();
     // (undocumented)
     buttonToggleGroup: KbqButtonToggleGroup;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
@@ -48,9 +49,10 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     readonly tabIndex: _angular_core.InputSignal<number | null>;
     // (undocumented)
     type: ToggleType;
+    updateIconType(): void;
     value: any;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggle, never>;
 }
@@ -109,7 +111,7 @@ export class KbqButtonToggleModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqButtonToggleModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof KbqButtonToggleGroup, typeof KbqButtonToggle], [typeof KbqButtonToggleGroup, typeof KbqButtonToggle]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof KbqButtonToggleGroup, typeof KbqButtonToggle], [typeof KbqButtonToggleGroup, typeof KbqButtonToggle, typeof i1.KbqButtonPrefix, typeof i1.KbqButtonSuffix]>;
 }
 
 // @public

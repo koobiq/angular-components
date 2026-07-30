@@ -7,8 +7,17 @@
 // `.kbq-button-icon_left` / `.kbq-button-icon_right` are set by `KbqButtonCssStyler` and styled by
 // `dropdown.scss` — they have no rules here on purpose.
 
+// hug the content by default, but never grow past the container: `white-space: nowrap` makes the
+// label's min-content contribution its full width, so without this the button would overflow instead
+// of letting `.kbq-button-text` truncate. Deliberately not on `.kbq-button-icon`: an icon button has
+// no label to truncate, so clamping it would only shrink `.kbq-button-text` and clip the icon.
+%kbq-button-clamped-to-container {
+    max-width: 100%;
+}
+
 .kbq-button {
     @extend %kbq-button-base;
+    @extend %kbq-button-clamped-to-container;
 
     // base padding - border-width
     padding-left: kbq-difference-series-css-variables([button-size-horizontal-padding, button-size-border-width]);
@@ -17,6 +26,7 @@
 
 .kbq-light-button {
     @extend %kbq-button-base;
+    @extend %kbq-button-clamped-to-container;
 }
 
 .kbq-button-icon {
@@ -24,6 +34,26 @@
 
     padding-left: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
     padding-right: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
+
+    // an icon button has no label for the slots to space themselves from, so a marker directive on
+    // a lone icon must not push it off centre. Must stay logical to match the base rules: a physical
+    // `margin-right: 0` would leave the base `margin-inline-end` standing under `dir="rtl"`.
+    & .kbq-icon_left,
+    & .kbq-button-prefix {
+        margin-inline-end: 0;
+    }
+
+    & .kbq-icon_right,
+    & .kbq-button-suffix {
+        margin-inline-start: 0;
+    }
+
+    // a pair of icons is spaced by a single gap rather than by two facing margins. Uses the size
+    // scale directly: the icon-button content-padding token was removed as dead in 20.3.0 and the
+    // migration guide tells consumers their override of it is gone, so it must not come back.
+    &.kbq-button-icon_left.kbq-button-icon_right .kbq-icon_left {
+        margin-inline-end: var(--kbq-size-xxs);
+    }
 }
 
 @include kbq-button-theme();
