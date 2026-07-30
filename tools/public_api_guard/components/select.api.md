@@ -48,6 +48,7 @@ import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
 import { KbqSelectSearchEmptyResult } from '@koobiq/components/core';
 import { KbqSelectTrigger } from '@koobiq/components/core';
+import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTag } from '@koobiq/components/tags';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqVirtualOption } from '@koobiq/components/core';
@@ -95,7 +96,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 }
 
 // @public (undocumented)
-export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
+export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState, KbqSiblingPopup {
     constructor();
     readonly backdropClass: _angular_core.InputSignal<string>;
     readonly beforeOpened: _angular_core.OutputEmitterRef<void>;
@@ -149,6 +150,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string;
     get id(): string;
     set id(value: string);
+    get isAttached(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
     get isEmptySearchResult(): boolean;

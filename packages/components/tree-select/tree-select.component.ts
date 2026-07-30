@@ -64,6 +64,7 @@ import {
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectTrigger,
+    KbqSiblingPopup,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -80,6 +81,7 @@ import {
     isSelectAll,
     isUndefined,
     kbqSelectAnimations,
+    kbqSiblingPopupProvider,
     shouldSelectSearchText
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -168,7 +170,8 @@ export class KbqTreeSelectChange {
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
         { provide: KbqTree, useExisting: KbqTreeSelect },
-        { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect }
+        { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect },
+        kbqSiblingPopupProvider(KbqTreeSelect)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -201,7 +204,8 @@ export class KbqTreeSelect
         DoCheck,
         ControlValueAccessor,
         KbqFormFieldControl<KbqTreeOption>,
-        CanUpdateErrorState
+        CanUpdateErrorState,
+        KbqSiblingPopup
 {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -321,7 +325,12 @@ export class KbqTreeSelect
     //  Your application code writes to the input. This prevents migration.
     @Input() hiddenItemsText: string = '+{{ number }}';
 
-    /** Event emitted when the select panel has been toggled. */
+    /**
+     * Event emitted when the select panel has been toggled.
+     * Also serves as the `openedChange` member of the `KbqSiblingPopup` contract — a tooltip sharing
+     * this element's host reacts to it, so its emission timing (gated on `panelDoneAnimatingStream`, see
+     * `ngOnInit`) matters beyond this output's original consumers.
+     */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Event emitted when the select has been opened. */
@@ -665,6 +674,11 @@ export class KbqTreeSelect
     private _searchMinOptionsThreshold = this.resolveSearchMinOptionsThreshold();
 
     get panelOpen(): boolean {
+        return this._panelOpen;
+    }
+
+    /** Whether the overlay panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
+    get isAttached(): boolean {
         return this._panelOpen;
     }
 

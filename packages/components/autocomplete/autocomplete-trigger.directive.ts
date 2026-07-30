@@ -29,6 +29,7 @@ import {
     inject,
     input
 } from '@angular/core';
+import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     DOWN_ARROW,
@@ -40,12 +41,14 @@ import {
     KbqOption,
     KbqOptionSelectionChange,
     KbqResolvedPanelWidth,
+    KbqSiblingPopup,
     KeyboardNavigationHandler,
     TAB,
     UP_ARROW,
     defaultOffsetY,
     kbqGetPanelWidthOrigin,
-    kbqResolvePanelWidth
+    kbqResolvePanelWidth,
+    kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, defer, fromEvent, merge, of as observableOf } from 'rxjs';
@@ -101,7 +104,7 @@ export function getKbqAutocompleteMissingPanelError(): Error {
 
 @Directive({
     selector: `input[kbqAutocomplete], textarea[kbqAutocomplete]`,
-    providers: [KBQ_AUTOCOMPLETE_VALUE_ACCESSOR],
+    providers: [KBQ_AUTOCOMPLETE_VALUE_ACCESSOR, kbqSiblingPopupProvider(KbqAutocompleteTrigger)],
     host: {
         class: 'kbq-autocomplete-trigger',
         '[attr.autocomplete]': 'autocompleteAttribute()',
@@ -116,7 +119,7 @@ export function getKbqAutocompleteMissingPanelError(): Error {
     exportAs: 'kbqAutocompleteTrigger'
 })
 export class KbqAutocompleteTrigger
-    implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler
+    implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler, KbqSiblingPopup
 {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private viewContainerRef = inject(ViewContainerRef);
@@ -155,6 +158,28 @@ export class KbqAutocompleteTrigger
 
     /** The autocomplete panel to be attached to this trigger. */
     readonly autocomplete = input<KbqAutocomplete>(undefined!, { alias: 'kbqAutocomplete' });
+
+    /** Whether the autocomplete panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
+    get isAttached(): boolean {
+        return this.overlayAttached;
+    }
+
+    /**
+     * Emits `true` when the panel opens and `false` when it closes. Part of the `KbqSiblingPopup`
+     * contract.
+     *
+     * Built on top of the `autocomplete` signal rather than read once: the panel is bound after the consumers
+     * of this stream are created (a tooltip on the same element subscribes in its constructor).
+     */
+    readonly openedChange: Observable<boolean> = toObservable(this.autocomplete).pipe(
+        filter(Boolean),
+        switchMap((autocomplete) =>
+            merge(
+                outputToObservable(autocomplete.opened).pipe(map(() => true)),
+                outputToObservable(autocomplete.closed).pipe(map(() => false))
+            )
+        )
+    );
 
     /**
      * Reference relative to which to position the autocomplete panel.

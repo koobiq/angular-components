@@ -3,7 +3,6 @@
         <div class="kbq-notification-center-title__text">{{ localeData.notifications }}</div>
         <button
             #notificationSwitcher
-            #dropdownTrigger="kbqDropdownTrigger"
             kbq-button
             class="kbq-notification-center-title__button"
             data-testid="kbq-notification-center-silent-mode-toggle"
@@ -12,7 +11,6 @@
             [kbqTooltipArrow]="false"
             [kbqPlacement]="'right'"
             [kbqTooltipOffset]="4"
-            [kbqTooltipDisabled]="dropdownTrigger.opened"
             [kbqStyle]="'transparent'"
             [color]="'contrast'"
         >
