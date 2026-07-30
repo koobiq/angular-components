@@ -55,6 +55,9 @@ const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement 
 const getTimepickerElement = (fixture: ComponentFixture<unknown>): HTMLInputElement =>
     fixture.debugElement.query(By.directive(KbqTimepicker)).nativeElement;
 
+const getTimepickerPrefixIconElement = (fixture: ComponentFixture<unknown>): HTMLElement =>
+    fixture.debugElement.query(By.css('i[kbq-icon]')).nativeElement;
+
 const customErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.untouched
 };
@@ -881,11 +884,12 @@ describe('KbqTimepicker', () => {
     });
 
     @Component({
-        imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+        imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule, KbqIconModule],
         standalone: true,
         template: `
             <form [formGroup]="form">
                 <kbq-form-field>
+                    <i kbq-icon="kbq-clock_16" kbqPrefix [autoColor]="true"></i>
                     <input kbqTimepicker formControlName="input" [errorStateMatcher]="errorStateMatcher" />
                 </kbq-form-field>
                 <button type="submit">Submit</button>
@@ -934,6 +938,17 @@ describe('KbqTimepicker', () => {
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+            });
+
+            it('should apply kbq-error class to a prefix clock icon when invalid and touched', () => {
+                const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
+
+                expect(getTimepickerPrefixIconElement(fixture).classList.contains('kbq-error')).toBe(false);
+
+                fixture.componentInstance.form.controls.input.markAsTouched();
+                fixture.detectChanges();
+
+                expect(getTimepickerPrefixIconElement(fixture).classList.contains('kbq-error')).toBe(true);
             });
 
             it('should be in error state when form is submitted and control is invalid', () => {

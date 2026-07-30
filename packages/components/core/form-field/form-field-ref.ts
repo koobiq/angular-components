@@ -4,6 +4,7 @@ import { InjectionToken, ModelSignal } from '@angular/core';
  * @deprecated Will be removed in next major release, use `KbqFormField` instead.
  */
 export interface KbqFormFieldRef {
+    /** @see KbqFormField.control */
     control: any;
     canCleanerClearByEsc: boolean;
     /** Use when KbqFormField is in an overlay container. */
