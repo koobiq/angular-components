@@ -176,7 +176,10 @@ export class DocsStackblitzWriter {
             );
         }
 
-        for (const relativeFilePath of data.exampleFiles) {
+        // `localImportFiles` covers source shared with other examples via relative imports
+        // (e.g. a data file kept as a single source of truth). It's not shown as a tab of
+        // its own in the docs source viewer, but StackBlitz still needs it to compile.
+        for (const relativeFilePath of [...data.exampleFiles, ...data.localImportFiles]) {
             // Note: Since we join with paths from the example data, we normalize
             // the final target path. This is necessary because StackBlitz does
             // not and paths like `./bla.ts` would result in a directory called `.`.
