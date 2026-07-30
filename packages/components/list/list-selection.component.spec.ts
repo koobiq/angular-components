@@ -775,11 +775,14 @@ describe('KbqListSelection without forms', () => {
 
         it('should not swallow Tab when the action button cannot take focus', fakeAsync(() => {
             const option = options[0];
-            const actionButton = option.query(By.directive(KbqOptionActionComponent)).componentInstance;
+            const actionButtonDebugElement = option.query(By.directive(KbqOptionActionComponent));
+            const actionButton = actionButtonDebugElement.componentInstance;
 
-            // The action lives in a `display: none` container until the option is hovered or
-            // keyboard-focused; jsdom applies no styles, so emulate the no-op focus explicitly.
-            jest.spyOn(actionButton, 'focus').mockImplementation(() => {});
+            // In a browser the action sits in a `display: none` container until the option is hovered or
+            // keyboard-focused, so `.focus()` is a no-op. jsdom ignores styles and would always focus it,
+            // so neutralise the DOM call only — `KbqOptionActionComponent.focus()` itself must still run,
+            // otherwise its `activeElement` check (the fix under test) is never exercised.
+            jest.spyOn(actionButtonDebugElement.nativeElement, 'focus').mockImplementation(() => {});
 
             const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
 

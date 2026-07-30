@@ -76,6 +76,18 @@ test.describe('KbqListModule', () => {
             await expect(page.getByTestId('option-1')).not.toHaveClass(/kbq-action-button-focused/);
         });
 
+        test('opens the action dropdown with the keyboard alone', async ({ page }) => {
+            await page.keyboard.press('Tab');
+            // Second Tab moves focus from the option onto its now-visible action.
+            await page.keyboard.press('Tab');
+
+            await expect(page.getByTestId('option-1').locator('kbq-option-action')).toBeFocused();
+
+            await page.keyboard.press('Enter');
+
+            await expect(page.getByTestId('dropdownItem')).toBeVisible();
+        });
+
         test('keeps the action visible while its dropdown is open and after it closes', async ({ page }) => {
             // The action is only clickable once the option is hovered — that is the whole point.
             await page.getByTestId('option-1').hover();

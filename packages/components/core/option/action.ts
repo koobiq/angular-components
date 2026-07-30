@@ -150,3 +150,26 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         setTimeout(() => (this.option.tooltipTrigger.disabled = false));
     }
 }
+
+/**
+ * Moves focus from an option to its trailing action button on Tab.
+ *
+ * Shared by `KbqListOption` and `KbqTreeOption` so the two cannot drift apart. Tab is swallowed only
+ * when focus actually landed: the action lives in a `display: none` container until the option is
+ * hovered or keyboard-focused, and focusing a hidden element is a no-op, so suppressing Tab there
+ * would trap focus on the option.
+ */
+export function kbqFocusOptionActionOnTab(
+    $event: KeyboardEvent,
+    actionButton: KbqOptionActionComponent | undefined
+): void {
+    if (!actionButton || $event.keyCode !== TAB || $event.shiftKey || actionButton.hasFocus) {
+        return;
+    }
+
+    actionButton.focus();
+
+    if (actionButton.hasFocus) {
+        $event.preventDefault();
+    }
+}

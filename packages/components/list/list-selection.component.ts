@@ -48,6 +48,7 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
+    kbqFocusOptionActionOnTab,
     KbqOptgroup,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
@@ -926,21 +927,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
 
     onKeydown($event) {
-        const actionButton = this.actionButton();
-
-        if (!actionButton) {
-            return;
-        }
-
-        if ($event.keyCode === TAB && !$event.shiftKey && !actionButton.hasFocus) {
-            actionButton.focus();
-
-            // Swallow Tab only if focus actually moved to the action. It stays hidden while the
-            // option is focused by mouse, and suppressing Tab there would trap focus on the option.
-            if (actionButton.hasFocus) {
-                $event.preventDefault();
-            }
-        }
+        kbqFocusOptionActionOnTab($event, this.actionButton());
     }
 
     focus() {

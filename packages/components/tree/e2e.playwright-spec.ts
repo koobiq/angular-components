@@ -82,5 +82,35 @@ test.describe('KbqTreeModule', () => {
             await expect(getOptionAction(page, 'node-1')).toBeHidden();
             await expect(page.getByTestId('node-1')).not.toHaveClass(/kbq-action-button-focused/);
         });
+
+        test('opens the action dropdown with the keyboard alone', async ({ page }) => {
+            await page.keyboard.press('Tab');
+            await page.keyboard.press('ArrowDown');
+            // Second Tab moves focus from the option onto its now-visible action.
+            await page.keyboard.press('Tab');
+
+            await expect(page.getByTestId('node-1').locator('kbq-option-action')).toBeFocused();
+
+            await page.keyboard.press('Enter');
+
+            await expect(page.getByTestId('dropdownItem')).toBeVisible();
+        });
+
+        test('keeps the action visible while its dropdown is open and after it closes', async ({ page }) => {
+            await page.getByTestId('node-1').hover();
+            await page.getByTestId('node-1').locator('kbq-option-action').click();
+            await expect(page.getByTestId('dropdownItem')).toBeVisible();
+
+            // The pointer is off the option, so only the `kbq-action-button-focused` latch keeps it up.
+            await page.mouse.move(0, 0);
+            await expect(getOptionAction(page, 'node-1')).toBeVisible();
+
+            // On close the action is re-focused, so it must stay visible — otherwise focus would
+            // land on an invisible control (WCAG 2.4.7).
+            await page.getByTestId('dropdownItem').click();
+            await expect(page.getByTestId('dropdownItem')).toBeHidden();
+            await expect(page.getByTestId('node-1')).toHaveClass(/kbq-action-button-focused/);
+            await expect(getOptionAction(page, 'node-1')).toBeVisible();
+        });
     });
 });

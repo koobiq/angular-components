@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqOptionActionComponent, PopUpPlacements } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import {
@@ -273,7 +274,8 @@ const DATA_OBJECT_FOR_TREE_OPTION_ACTION_VISIBILITY = {
     selector: 'e2e-tree-option-action-visibility',
     imports: [
         KbqTreeModule,
-        KbqOptionActionComponent
+        KbqOptionActionComponent,
+        KbqDropdownModule
     ],
     template: `
         <kbq-tree-selection
@@ -284,9 +286,13 @@ const DATA_OBJECT_FOR_TREE_OPTION_ACTION_VISIBILITY = {
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [attr.data-testid]="node.name">
                 {{ treeControl.getViewValue(node) }}
-                <kbq-option-action />
+                <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
             </kbq-tree-option>
         </kbq-tree-selection>
+
+        <kbq-dropdown #dropdown>
+            <button kbq-dropdown-item data-testid="dropdownItem">action</button>
+        </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
