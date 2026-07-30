@@ -41,7 +41,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 
         <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button class="kbq-dropdown-trigger">
+                <button kbq-button aria-label="Diamond options" class="kbq-dropdown-trigger">
                     <i kbq-icon="kbq-diamond_16"></i>
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
@@ -50,7 +50,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 
         <div kbq-button-group>
             @for (item of data; track item) {
-                <button kbq-button>
+                <button kbq-button aria-label="Diamond">
                     <i kbq-icon="kbq-diamond_16"></i>
                 </button>
             }

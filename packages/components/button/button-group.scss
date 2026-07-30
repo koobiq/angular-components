@@ -17,6 +17,13 @@
         }
     }
 
+    // Filled buttons paint their background under the transparent border the mixins above rely on,
+    // so in a uniformly filled contrast group the junction between buttons disappears. Clipping the
+    // background to the padding box keeps that border visible as a divider. Each selector reads as
+    // "the group has no direct child that is *not* a filled contrast[-fade] button", i.e. every
+    // child matches.
+    // @TODO tech debt (#DS-4847): replace the DOM introspection with a modifier class once the
+    // per-button color/style state is signal-based and can be observed by `KbqButtonGroupRoot`.
     &:not(:has(> :not(.kbq-contrast-fade.kbq-button_filled))),
     &:not(:has(> :not(.kbq-contrast.kbq-button_filled))) {
         :is(.kbq-button, .kbq-button-icon) {

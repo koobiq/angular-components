@@ -66,6 +66,11 @@
             "description": "Migrates KbqAppSwitcherTrigger consumers to its model()-based API (selectedApp reads become calls, writes become .set()) and warns on selectedSite value semantics, the removed header/footer/isTrapFocus/getIcon members and the new inline-icon sanitization",
             "factory": "./migrations/app-switcher-signals/index",
             "schema": "./migrations/app-switcher-signals/schema.json"
+        },
+        "button-state-and-styles": {
+            "description": "Rewrites the removed physical border-radius mixins to logical ones and warns about the v20.3.0 button host-attribute, button-group ownership, .kbq-progress and locale changes",
+            "factory": "./migrations/button-state-and-styles/index",
+            "schema": "./migrations/button-state-and-styles/schema.json"
         }
     }
 }

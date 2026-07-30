@@ -20,6 +20,7 @@
                 kbq-button
                 kbqBreadcrumb
                 class="kbq-breadcrumb__expand"
+                [attr.aria-label]="a11yLocaleConfiguration().expandBreadcrumbs"
                 [kbqDropdownTriggerFor]="hiddenBreadcrumbsDropdown"
                 [kbqStyle]="KbqButtonStyles.Transparent"
             >

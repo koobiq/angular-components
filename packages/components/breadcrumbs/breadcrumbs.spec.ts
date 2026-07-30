@@ -103,7 +103,10 @@ describe(KbqBreadcrumbs.name, () => {
             const disabledLink = disabledItem.query(By.css('a[kbq-button]'));
 
             expect(disabledItem).toBeTruthy();
-            expect(disabledLink.nativeElement.getAttribute('disabled')).not.toBeNull();
+            // `disabled` is not a valid attribute on an anchor, so the state is exposed via ARIA.
+            expect(disabledLink.nativeElement.getAttribute('aria-disabled')).toBe('true');
+            expect(disabledLink.nativeElement.getAttribute('tabindex')).toBe('-1');
+            expect(disabledLink.nativeElement.classList).toContain('kbq-disabled');
         });
 
         it('should render all items inside the overflow container when max is exceeded', async () => {

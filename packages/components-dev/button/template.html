@@ -27,7 +27,7 @@
     </button>
     &nbsp;
     <!-- icon-only two-icon trigger, markers in reversed order -->
-    <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast">
+    <button kbq-button aria-label="Run with options" class="kbq-dropdown-trigger" [color]="colors.Contrast">
         <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
         <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
     </button>
@@ -68,66 +68,32 @@
 
 <div>
     <div>
-        <button disabled kbq-button class="kbq-dropdown-trigger">
+        <button disabled kbq-button aria-label="Run with options" class="kbq-dropdown-trigger">
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger">
+        <button kbq-button aria-label="Run with options" class="kbq-dropdown-trigger">
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger kbq-hover">
+        <button kbq-button aria-label="Run with options" class="kbq-dropdown-trigger kbq-hover">
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger kbq-active">
+        <button kbq-button aria-label="Run with options" class="kbq-dropdown-trigger kbq-active">
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger cdk-keyboard-focused">
+        <button kbq-button aria-label="Run with options" class="kbq-dropdown-trigger cdk-keyboard-focused">
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger kbq-progress">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-
-        <br />
-        <br />
-
-        <button disabled kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger kbq-hover" [color]="colors.Contrast">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger kbq-active" [color]="colors.Contrast">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger cdk-keyboard-focused" [color]="colors.Contrast">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger kbq-progress" [color]="colors.Contrast">
+        <button kbq-button aria-label="Run with options" class="kbq-dropdown-trigger kbq-progress">
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -136,18 +102,92 @@
         <br />
         <br />
 
-        <button disabled kbq-button class="kbq-dropdown-trigger" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button
+            disabled
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger"
+            [color]="colors.Contrast"
+        >
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button kbq-button aria-label="Run with options" class="kbq-dropdown-trigger" [color]="colors.Contrast">
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger kbq-hover"
+            [color]="colors.Contrast"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger kbq-active"
+            [color]="colors.Contrast"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger cdk-keyboard-focused"
+            [color]="colors.Contrast"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger kbq-progress"
+            [color]="colors.Contrast"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+
+        <br />
+        <br />
+
+        <button
+            disabled
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger kbq-hover"
             [color]="colors.ThemeFade"
             [kbqStyle]="styles.Outline"
@@ -158,6 +198,7 @@
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger kbq-active"
             [color]="colors.ThemeFade"
             [kbqStyle]="styles.Outline"
@@ -168,6 +209,7 @@
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger cdk-keyboard-focused"
             [color]="colors.ThemeFade"
             [kbqStyle]="styles.Outline"
@@ -178,6 +220,7 @@
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger kbq-progress"
             [color]="colors.ThemeFade"
             [kbqStyle]="styles.Outline"
@@ -190,52 +233,92 @@
         <br />
         <br />
 
-        <button disabled kbq-button class="kbq-dropdown-trigger" [kbqStyle]="styles.Outline">
+        <button
+            disabled
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger" [kbqStyle]="styles.Outline">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger kbq-hover" [kbqStyle]="styles.Outline">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger kbq-active" [kbqStyle]="styles.Outline">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger cdk-keyboard-focused" [kbqStyle]="styles.Outline">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger kbq-progress" [kbqStyle]="styles.Outline">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-
-        <br />
-        <br />
-
-        <button disabled kbq-button class="kbq-dropdown-trigger" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
-            <i kbq-icon="kbq-play_16"></i>
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-        </button>
-        &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button kbq-button aria-label="Run with options" class="kbq-dropdown-trigger" [kbqStyle]="styles.Outline">
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger kbq-hover"
+            [kbqStyle]="styles.Outline"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger kbq-active"
+            [kbqStyle]="styles.Outline"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger cdk-keyboard-focused"
+            [kbqStyle]="styles.Outline"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger kbq-progress"
+            [kbqStyle]="styles.Outline"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+
+        <br />
+        <br />
+
+        <button
+            disabled
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
+            <i kbq-icon="kbq-play_16"></i>
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+        &nbsp;
+        <button
+            kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger kbq-hover"
             [color]="colors.Theme"
             [kbqStyle]="styles.Transparent"
@@ -246,6 +329,7 @@
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger kbq-active"
             [color]="colors.Theme"
             [kbqStyle]="styles.Transparent"
@@ -256,6 +340,7 @@
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger cdk-keyboard-focused"
             [color]="colors.Theme"
             [kbqStyle]="styles.Transparent"
@@ -266,6 +351,7 @@
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger kbq-progress"
             [color]="colors.Theme"
             [kbqStyle]="styles.Transparent"
@@ -281,6 +367,7 @@
         <button
             disabled
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger"
             [color]="colors.Contrast"
             [kbqStyle]="styles.Transparent"
@@ -289,13 +376,20 @@
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            aria-label="Run with options"
+            class="kbq-dropdown-trigger"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger kbq-hover"
             [color]="colors.Contrast"
             [kbqStyle]="styles.Transparent"
@@ -306,6 +400,7 @@
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger kbq-active"
             [color]="colors.Contrast"
             [kbqStyle]="styles.Transparent"
@@ -316,6 +411,7 @@
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger cdk-keyboard-focused"
             [color]="colors.Contrast"
             [kbqStyle]="styles.Transparent"
@@ -326,6 +422,7 @@
         &nbsp;
         <button
             kbq-button
+            aria-label="Run with options"
             class="kbq-dropdown-trigger kbq-progress"
             [color]="colors.Contrast"
             [kbqStyle]="styles.Transparent"

@@ -3,13 +3,13 @@ import {
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
-    Input,
-    ViewEncapsulation,
     inject,
-    output
+    Input,
+    output,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { DateAdapter, KbqOptionModule } from '@koobiq/components/core';
+import { DateAdapter, kbqInjectA11yLocaleConfiguration, KbqOptionModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -44,6 +44,9 @@ export type MonthName = {
 })
 export class KbqCalendarHeader<D> implements AfterContentInit {
     private readonly adapter = inject<DateAdapter<D>>(DateAdapter);
+
+    /** Accessible names for the icon-only month navigation buttons. */
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     monthNames: MonthName[];
     selectedMonth: number;

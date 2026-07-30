@@ -45,6 +45,7 @@ import { map } from 'rxjs/operators';
                         kbqOverflowItem="0"
                         kbqTooltip="Filter"
                         kbq-button
+                        aria-label="Filter"
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
                         [kbqPlacement]="PopUpPlacements.Bottom"
@@ -73,6 +74,7 @@ import { map } from 'rxjs/operators';
                     <div kbqOverflowItemsResult>
                         <button
                             kbq-button
+                            aria-label="More"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
                             [kbqDropdownTriggerFor]="appDropdown"

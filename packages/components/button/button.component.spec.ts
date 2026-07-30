@@ -1,7 +1,9 @@
-﻿import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
+﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { Component, ElementRef, Provider, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter, RouterLink } from '@angular/router';
 import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
@@ -28,7 +30,15 @@ import {
 describe('KbqButton', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqButtonModule, KbqDropdownModule, NoopAnimationsModule, TestApp, ButtonDropdownTrigger]
+            imports: [
+                KbqButtonModule,
+                KbqDropdownModule,
+                NoopAnimationsModule,
+                TestApp,
+                AnchorWithoutHrefTestApp,
+                DynamicHrefTestApp,
+                ButtonDropdownTrigger
+            ]
         }).compileComponents();
     });
 
@@ -156,7 +166,7 @@ describe('KbqButton', () => {
 
             expect(anchorElement.getAttribute('aria-disabled')).toBe('true');
 
-            // `disabled || null` must remove the attribute (not set "false") when re-enabled
+            // re-enabling must remove the attribute, not set it to "false"
             testComponent.isDisabled = false;
             fixture.detectChanges();
 
@@ -215,14 +225,263 @@ describe('KbqButton', () => {
         });
     });
 
-    it('should handle a click on the button', () => {
-        const fixture = TestBed.createComponent(TestApp);
-        const testComponent = fixture.debugElement.componentInstance;
-        const buttonDebugElement = fixture.debugElement.query(By.css('button'));
+    describe('kbqStyle', () => {
+        it('should apply the filled style by default', () => {
+            const fixture = TestBed.createComponent(TestApp);
 
-        buttonDebugElement.nativeElement.click();
+            fixture.detectChanges();
 
-        expect(testComponent.clickCount).toBe(1);
+            const button = fixture.debugElement.query(By.css('button'));
+
+            expect(button.nativeElement.classList.contains('kbq-button_filled')).toBe(true);
+            expect(button.componentInstance.kbqStyle).toBe('kbq-button_filled');
+        });
+
+        it('should fall back to the filled style when a falsy value is set', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+
+            button.componentInstance.kbqStyle = KbqButtonStyles.Outline;
+            fixture.detectChanges();
+            expect(button.nativeElement.classList.contains('kbq-button_outline')).toBe(true);
+
+            button.componentInstance.kbqStyle = '';
+            fixture.detectChanges();
+            expect(button.nativeElement.classList.contains('kbq-button_filled')).toBe(true);
+        });
+    });
+
+    describe('tabIndex', () => {
+        it('should not render a redundant tabindex on a native button', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('button')).nativeElement.hasAttribute('tabindex')).toBe(false);
+            // An anchor keeps it: without `href` it would not be focusable at all.
+            expect(fixture.debugElement.query(By.css('a')).nativeElement.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('should reflect a custom tabIndex while enabled and -1 once disabled', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const testComponent = fixture.debugElement.componentInstance;
+
+            testComponent.tabIndex = 3;
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+
+            expect(button.nativeElement.getAttribute('tabindex')).toBe('3');
+            expect(button.componentInstance.tabIndex).toBe(3);
+
+            testComponent.isDisabled = true;
+            fixture.detectChanges();
+
+            expect(button.nativeElement.getAttribute('tabindex')).toBe('-1');
+            expect(button.componentInstance.tabIndex).toBe(-1);
+        });
+
+        it('should never render NaN for a non-numeric tabIndex', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const testComponent = fixture.debugElement.componentInstance;
+
+            testComponent.tabIndex = 'not-a-number';
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+
+            expect(button.componentInstance.tabIndex).toBe(0);
+            expect(button.nativeElement.getAttribute('tabindex')).not.toBe('NaN');
+        });
+    });
+
+    describe('accessibility', () => {
+        it('should not set a role on a native button', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('button')).nativeElement.hasAttribute('role')).toBe(false);
+        });
+
+        it('should keep the link role on an anchor with href', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('a')).nativeElement.hasAttribute('role')).toBe(false);
+        });
+
+        it('should set role="button" on an anchor without href', () => {
+            const fixture = TestBed.createComponent(AnchorWithoutHrefTestApp);
+
+            // The role is resolved in `ngAfterViewInit`, so it lands on the following pass.
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('a')).nativeElement.getAttribute('role')).toBe('button');
+        });
+
+        it('should drop role="button" once an href appears', () => {
+            const fixture = TestBed.createComponent(DynamicHrefTestApp);
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            const anchor = fixture.debugElement.query(By.css('a')).nativeElement;
+
+            expect(anchor.getAttribute('role')).toBe('button');
+
+            fixture.componentInstance.href = '/somewhere';
+            fixture.detectChanges();
+
+            expect(anchor.hasAttribute('role')).toBe(false);
+
+            fixture.componentInstance.href = null;
+            fixture.detectChanges();
+
+            expect(anchor.getAttribute('role')).toBe('button');
+        });
+
+        it('should use the native disabled attribute on a button and aria-disabled on an anchor', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const testComponent = fixture.debugElement.componentInstance;
+
+            testComponent.isDisabled = true;
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            const anchor = fixture.debugElement.query(By.css('a')).nativeElement;
+
+            expect(button.hasAttribute('disabled')).toBe(true);
+            expect(button.hasAttribute('aria-disabled')).toBe(false);
+
+            // `disabled` is not a valid attribute on an anchor.
+            expect(anchor.hasAttribute('disabled')).toBe(false);
+            expect(anchor.getAttribute('aria-disabled')).toBe('true');
+        });
+
+        it('should expose aria-expanded on a dropdown trigger', () => {
+            const fixture: ComponentFixture<ButtonDropdownTrigger> = TestBed.createComponent(ButtonDropdownTrigger);
+
+            fixture.detectChanges();
+
+            const trigger = fixture.componentInstance.trigger().nativeElement;
+
+            // No `aria-haspopup`: the panel has no menu semantics for it to describe.
+            expect(trigger.hasAttribute('aria-haspopup')).toBe(false);
+            expect(trigger.getAttribute('aria-expanded')).toBe('false');
+
+            dispatchFakeEvent(trigger, 'click');
+            fixture.detectChanges();
+
+            expect(trigger.getAttribute('aria-expanded')).toBe('true');
+        });
+    });
+
+    describe('accessibility with the router', () => {
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqButtonModule, RouterLink, RouterLinkTestApp],
+                providers: [provideRouter([])]
+            }).compileComponents();
+        });
+
+        it('should keep the link role on a routerLink anchor', () => {
+            const fixture = TestBed.createComponent(RouterLinkTestApp);
+
+            // `RouterLink` applies `href` through a host binding of the same element, so the role
+            // must not be decided before its first update pass.
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            const anchor = fixture.debugElement.query(By.css('a')).nativeElement;
+
+            expect(anchor.hasAttribute('href')).toBe(true);
+            expect(anchor.hasAttribute('role')).toBe(false);
+        });
+    });
+
+    describe('focus management', () => {
+        it('should monitor the host element and stop monitoring on destroy', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const stopMonitoring = jest.spyOn(focusMonitor, 'stopMonitoring');
+
+            fixture.detectChanges();
+
+            const host = fixture.debugElement.query(By.css('button')).nativeElement;
+
+            fixture.destroy();
+
+            expect(stopMonitoring).toHaveBeenCalledWith(host);
+        });
+
+        it('should move focus and track it via hasFocus', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+
+            expect(button.componentInstance.hasFocus).toBe(false);
+
+            button.componentInstance.focus();
+
+            expect(button.componentInstance.hasFocus).toBe(true);
+            expect(document.activeElement).toBe(button.nativeElement);
+        });
+
+        it('should focus via the FocusMonitor with the keyboard origin', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const focusVia = jest.spyOn(focusMonitor, 'focusVia');
+
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+
+            button.componentInstance.focusViaKeyboard();
+
+            expect(focusVia).toHaveBeenCalledWith(button.nativeElement, 'keyboard');
+        });
+
+        it('should not move focus while disabled', () => {
+            const fixture = TestBed.createComponent(TestApp);
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const focusVia = jest.spyOn(focusMonitor, 'focusVia');
+            const testComponent = fixture.debugElement.componentInstance;
+
+            testComponent.isDisabled = true;
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+
+            button.componentInstance.focus();
+            button.componentInstance.focusViaKeyboard();
+
+            expect(button.componentInstance.hasFocus).toBe(false);
+            expect(focusVia).not.toHaveBeenCalled();
+            expect(document.activeElement).not.toBe(button.nativeElement);
+        });
+
+        it('should toggle hasFocus on focus and blur events', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+
+            dispatchFakeEvent(button.nativeElement, 'focus');
+            expect(button.componentInstance.hasFocus).toBe(true);
+
+            dispatchFakeEvent(button.nativeElement, 'blur');
+            expect(button.componentInstance.hasFocus).toBe(false);
+        });
     });
 });
 
@@ -232,6 +491,8 @@ describe('Button with icon', () => {
             imports: [
                 KbqButtonModule,
                 KbqIconModule,
+                KbqButtonPreserveWhitespacesTestApp,
+                KbqButtonLabelledIconTestApp,
                 KbqButtonCommentCaseTestApp,
                 KbqButtonHtmlIconLeftCaseTestApp,
                 KbqButtonHtmlIconRightCaseTestApp,
@@ -362,7 +623,7 @@ describe('Button with icon', () => {
         });
     });
 
-    it('should toggle additional classes on icon removal/reveal', (done) => {
+    it('should toggle the left icon class on icon removal/reveal', (done) => {
         const fixture = TestBed.createComponent(KbqButtonTextIconLeftNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
 
@@ -379,7 +640,7 @@ describe('Button with icon', () => {
         });
     });
 
-    it('should toggle additional classes on icon removal/reveal', (done) => {
+    it('should toggle the right icon class on icon removal/reveal', (done) => {
         const fixture = TestBed.createComponent(KbqButtonTextIconRightNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
 
@@ -416,6 +677,40 @@ describe('Button with icon', () => {
             expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalsy();
             done();
         });
+    });
+
+    it('should detect an icon-only button when whitespace is preserved', () => {
+        const fixture = TestBed.createComponent(KbqButtonPreserveWhitespacesTestApp);
+        const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
+
+        fixture.detectChanges();
+
+        expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeTruthy();
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalsy();
+    });
+
+    it('should warn in dev mode when an icon-only button has no accessible name', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+        try {
+            TestBed.createComponent(KbqButtonIconNgIfCaseTestApp).detectChanges();
+
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('no accessible name'), expect.anything());
+        } finally {
+            warn.mockRestore();
+        }
+    });
+
+    it('should not warn when an icon-only button is labelled', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+        try {
+            TestBed.createComponent(KbqButtonLabelledIconTestApp).detectChanges();
+
+            expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('no accessible name'), expect.anything());
+        } finally {
+            warn.mockRestore();
+        }
     });
 });
 
@@ -716,13 +1011,98 @@ describe(KbqButtonGroupRoot.name, () => {
             expect(btn.classList.toString()).toContain(KbqButtonStyles.Outline);
         });
     });
+
+    it("should preserve an individual button's style when the group style changes", () => {
+        const fixture = createComponent(OverriddenChildTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.groupStyle = KbqButtonStyles.Outline;
+        fixture.detectChanges();
+
+        const [overridden, inherited] = componentInstance.buttons();
+
+        expect(overridden.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Transparent}`);
+        expect(inherited.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Outline}`);
+    });
+
+    it("should preserve an individual button's color when the group color changes", () => {
+        const fixture = createComponent(OverriddenChildTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.groupColor = KbqComponentColors.Error;
+        fixture.detectChanges();
+
+        const [overridden, inherited] = componentInstance.buttons();
+
+        expect(overridden.color).toBe(KbqComponentColors.Theme);
+        expect(inherited.color).toBe(KbqComponentColors.Error);
+    });
+
+    it('should preserve overrides when a button is added to the group', () => {
+        const fixture = createComponent(OverriddenChildTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.groupStyle = KbqButtonStyles.Outline;
+        fixture.detectChanges();
+
+        componentInstance.showExtra = true;
+        fixture.detectChanges();
+
+        const [overridden] = componentInstance.buttons();
+
+        expect(componentInstance.buttons().length).toBe(3);
+        expect(overridden.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Transparent}`);
+    });
+
+    it('should disable every child while the group is disabled', () => {
+        const fixture = createComponent(OverriddenChildTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.groupDisabled = true;
+        fixture.detectChanges();
+
+        componentInstance.buttons().forEach((button) => expect(button.disabled).toBe(true));
+    });
+
+    it('should keep an individually disabled button disabled when the group is re-enabled', () => {
+        const fixture = createComponent(OverriddenChildTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.groupDisabled = true;
+        fixture.detectChanges();
+
+        componentInstance.groupDisabled = false;
+        fixture.detectChanges();
+
+        const [overridden, inherited] = componentInstance.buttons();
+
+        expect(overridden.disabled).toBe(true);
+        expect(inherited.disabled).toBe(false);
+    });
+
+    it('should not disable children while the disabled input is unbound', () => {
+        const fixture = createComponent(DynamicChildrenTestComponent);
+
+        fixture.detectChanges();
+
+        const buttons: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        buttons.forEach((btn) => expect(btn.hasAttribute('disabled')).toBe(false));
+    });
 });
 
 @Component({
     selector: 'test-app',
     imports: [KbqButtonModule, KbqDropdownModule],
     template: `
-        <button kbq-button type="button" [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></button>
+        <button
+            kbq-button
+            type="button"
+            [color]="buttonColor"
+            [disabled]="isDisabled"
+            [tabIndex]="tabIndex"
+            (click)="increment()"
+        ></button>
         <a href="#" kbq-button [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></a>
     `
 })
@@ -730,6 +1110,7 @@ class TestApp {
     clickCount: number = 0;
     isDisabled: boolean = false;
     buttonColor: ThemePalette;
+    tabIndex: number | string = 0;
 
     increment() {
         this.clickCount++;
@@ -737,7 +1118,35 @@ class TestApp {
 }
 
 @Component({
-    selector: 'kbq-button-comment-case-test-app',
+    selector: 'anchor-without-href-test-app',
+    imports: [KbqButtonModule],
+    template: `
+        <a kbq-button>Act</a>
+    `
+})
+class AnchorWithoutHrefTestApp {}
+
+@Component({
+    selector: 'dynamic-href-test-app',
+    imports: [KbqButtonModule],
+    template: `
+        <a kbq-button [attr.href]="href">Act</a>
+    `
+})
+class DynamicHrefTestApp {
+    href: string | null = null;
+}
+
+@Component({
+    selector: 'router-link-test-app',
+    imports: [KbqButtonModule, RouterLink],
+    template: `
+        <a kbq-button [routerLink]="['/somewhere']">Navigate</a>
+    `
+})
+class RouterLinkTestApp {}
+
+@Component({
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -750,7 +1159,6 @@ class TestApp {
 class KbqButtonCommentCaseTestApp {}
 
 @Component({
-    selector: 'kbq-button-two-icons-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -762,7 +1170,6 @@ class KbqButtonCommentCaseTestApp {}
 class KbqButtonHtmlIconRightCaseTestApp {}
 
 @Component({
-    selector: 'kbq-button-two-icons-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -771,12 +1178,9 @@ class KbqButtonHtmlIconRightCaseTestApp {}
         </button>
     `
 })
-class KbqButtonHtmlIconLeftCaseTestApp {
-    avoidCollisionMockTarget() {}
-}
+class KbqButtonHtmlIconLeftCaseTestApp {}
 
 @Component({
-    selector: 'kbq-button-text-icon-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -789,7 +1193,6 @@ class KbqButtonHtmlIconLeftCaseTestApp {
 class KbqButtonTextIconCaseTestApp {}
 
 @Component({
-    selector: 'kbq-button-text-icon-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -802,12 +1205,9 @@ class KbqButtonTextIconCaseTestApp {}
 })
 class KbqButtonTextIconLeftNgIfCaseTestApp {
     visible = true;
-
-    avoidCollisionMockTarget() {}
 }
 
 @Component({
-    selector: 'kbq-button-text-icon-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -823,7 +1223,6 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
 }
 
 @Component({
-    selector: 'kbq-button-text-icon-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -840,7 +1239,6 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
 }
 
 @Component({
-    selector: 'kbq-button-text-icon-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -861,7 +1259,6 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
 }
 
 @Component({
-    selector: 'kbq-button-comment-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -873,7 +1270,6 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
 class KbqButtonTwoIconsCaseTestApp {}
 
 @Component({
-    selector: 'kbq-button-three-icons-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -886,7 +1282,6 @@ class KbqButtonTwoIconsCaseTestApp {}
 class KbqButtonThreeIconsCaseTestApp {}
 
 @Component({
-    selector: 'kbq-button-text-icon-case-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -899,6 +1294,28 @@ class KbqButtonThreeIconsCaseTestApp {}
 class KbqButtonIconNgIfCaseTestApp {
     visible = true;
 }
+
+@Component({
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button" aria-label="Expand">
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+    `,
+    // Verifies that icon-only detection ignores whitespace text nodes.
+    preserveWhitespaces: true
+})
+class KbqButtonPreserveWhitespacesTestApp {}
+
+@Component({
+    imports: [KbqButtonModule, KbqIconModule],
+    template: `
+        <button kbq-button type="button" aria-label="Expand">
+            <i kbq-icon="kbq-chevron-down-s_16"></i>
+        </button>
+    `
+})
+class KbqButtonLabelledIconTestApp {}
 
 @Component({
     imports: [KbqButtonModule, KbqDropdownModule],
@@ -971,7 +1388,6 @@ class DynamicChildrenTestComponent {
 }
 
 @Component({
-    selector: 'kbq-button-prefix-slot-reorder-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -983,7 +1399,6 @@ class DynamicChildrenTestComponent {
 class KbqButtonPrefixSlotReorderTestApp {}
 
 @Component({
-    selector: 'kbq-button-suffix-slot-reorder-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -995,7 +1410,6 @@ class KbqButtonPrefixSlotReorderTestApp {}
 class KbqButtonSuffixSlotReorderTestApp {}
 
 @Component({
-    selector: 'kbq-button-prefix-suffix-slot-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -1008,7 +1422,6 @@ class KbqButtonSuffixSlotReorderTestApp {}
 class KbqButtonPrefixSuffixSlotTestApp {}
 
 @Component({
-    selector: 'kbq-button-two-icons-slot-test-app',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -1020,7 +1433,6 @@ class KbqButtonPrefixSuffixSlotTestApp {}
 class KbqButtonTwoIconsSlotTestApp {}
 
 @Component({
-    selector: 'kbq-button-non-icon-slots-test-app',
     imports: [KbqButtonModule],
     template: `
         <button kbq-button type="button">
@@ -1033,7 +1445,6 @@ class KbqButtonTwoIconsSlotTestApp {}
 class KbqButtonNonIconSlotsTestApp {}
 
 @Component({
-    selector: 'styler-only-test-app',
     // KbqButton is intentionally NOT imported, so the host has no .kbq-button-wrapper
     imports: [KbqButtonCssStyler],
     template: `
@@ -1041,3 +1452,28 @@ class KbqButtonNonIconSlotsTestApp {}
     `
 })
 class StylerOnlyTestApp {}
+
+@Component({
+    imports: [KbqButtonModule],
+    template: `
+        <div kbqButtonGroupRoot [kbqStyle]="groupStyle" [color]="groupColor" [disabled]="groupDisabled">
+            <button kbq-button [kbqStyle]="ownStyle" [color]="ownColor" [disabled]="true">Overridden</button>
+            <button kbq-button>Inherited</button>
+            @if (showExtra) {
+                <button kbq-button>Dynamic</button>
+            }
+        </div>
+    `
+})
+class OverriddenChildTestComponent {
+    readonly buttons = viewChildren(KbqButton);
+
+    groupStyle: KbqButtonStyles | string = KbqButtonStyles.Filled;
+    groupColor: KbqComponentColors | ThemePalette | string = KbqComponentColors.ContrastFade;
+    groupDisabled = false;
+
+    readonly ownStyle = KbqButtonStyles.Transparent;
+    readonly ownColor = KbqComponentColors.Theme;
+
+    showExtra = false;
+}

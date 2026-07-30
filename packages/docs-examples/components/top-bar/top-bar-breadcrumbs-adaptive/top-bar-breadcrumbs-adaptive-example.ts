@@ -96,6 +96,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                         kbqOverflowItem="filter"
                         kbqTooltip="Filter"
                         kbq-button
+                        aria-label="Filter"
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
                         [kbqPlacement]="PopUpPlacements.Bottom"
@@ -124,6 +125,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                     <div kbqOverflowItemsResult>
                         <button
                             kbq-button
+                            aria-label="More"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
                             [kbqDropdownTriggerFor]="appDropdown"

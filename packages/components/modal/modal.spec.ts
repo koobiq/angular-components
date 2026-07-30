@@ -5,7 +5,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, inject as testingInject, t
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { dispatchKeyboardEvent, ENTER, TAB, ThemePalette } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, ENTER, ruRULocaleData, TAB, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
@@ -184,6 +184,21 @@ describe('KbqModal', () => {
             tick(ANIMATION_DURATION);
             expect(spy).toHaveBeenCalled();
             expect(modalService.openModals.length).toBe(0);
+        }));
+
+        it('should give the close button an accessible name', fakeAsync(() => {
+            // The close button lives in the header, which is rendered only for a titled modal.
+            modalService.create({ kbqClosable: true, kbqTitle: 'Title' });
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            const closeButton = overlayContainerElement.querySelector('.kbq-modal-close')!;
+
+            // The button holds an icon only, so without this it has no accessible name at all.
+            expect(closeButton.getAttribute('aria-label')).toBe(ruRULocaleData.a11y.close);
+
+            flush();
         }));
 
         it('should modal not be registered twice', fakeAsync(() => {

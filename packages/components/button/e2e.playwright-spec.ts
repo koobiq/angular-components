@@ -14,6 +14,8 @@ test.describe('KbqButtonModule', () => {
             const locator = getComponent(page);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
 
         test('with icon', async ({ page }) => {
@@ -24,6 +26,8 @@ test.describe('KbqButtonModule', () => {
             await toggleTitle(locator);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-dark.png');
         });
 
         test('with title, prefix and suffix', async ({ page }) => {
@@ -36,6 +40,17 @@ test.describe('KbqButtonModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('03-dark.png');
+        });
+
+        test('with title in RTL', async ({ page }) => {
+            await page.goto('/E2eButtonStateAndStyle');
+            const locator = getComponent(page);
+
+            await togglePrefix(locator);
+            await toggleSuffix(locator);
+            await page.evaluate(() => document.documentElement.setAttribute('dir', 'rtl'));
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('05-rtl.png');
         });
     });
 
@@ -50,6 +65,15 @@ test.describe('KbqButtonModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('04-dark.png');
+        });
+
+        test('in RTL', async ({ page }) => {
+            await page.goto('/E2eButtonGroup');
+            const locator = getComponent(page);
+
+            await page.evaluate(() => document.documentElement.setAttribute('dir', 'rtl'));
+
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('06-rtl.png');
         });
     });
 

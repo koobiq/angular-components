@@ -13,7 +13,14 @@ import { KbqIconModule } from '@koobiq/components/icon';
     imports: [KbqAppSwitcherModule, KbqButtonModule, KbqIconModule, KbqAppSwitcherComponent],
     template: `
         <div data-testid="e2eScreenshotTarget" style="width: 330px; height: 390px; padding: 8px">
-            <button #trigger="kbqAppSwitcher" kbq-button kbqAppSwitcher [sites]="sites" [(selectedApp)]="selected">
+            <button
+                #trigger="kbqAppSwitcher"
+                kbq-button
+                aria-label="Apps"
+                kbqAppSwitcher
+                [sites]="sites"
+                [(selectedApp)]="selected"
+            >
                 <i kbq-icon="kbq-bento-menu_16"></i>
             </button>
 
@@ -95,6 +102,7 @@ export class E2eAppSwitcherStates {
             <button
                 #trigger="kbqAppSwitcher"
                 kbq-button
+                aria-label="Apps"
                 kbqAppSwitcher
                 [sites]="sites"
                 [(selectedSite)]="selectedSite"

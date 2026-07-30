@@ -63,6 +63,7 @@ type DevButton = DevButtonState & DevButtonStyle;
                                 </button>
                                 <button
                                     kbq-button
+                                    aria-label="More options"
                                     [class.cdk-keyboard-focused]="button.focusedSecond"
                                     [class.kbq-active]="button.activeSecond"
                                     [class.kbq-hover]="button.hoverSecond"

@@ -110,6 +110,11 @@ const positionMap = {
     host: {
         class: 'kbq-dropdown-trigger',
         '[class.kbq-pressed]': 'opened',
+        // No `aria-haspopup` here: the panel carries neither `role="menu"` nor `role="menuitem"`, and
+        // `aria-haspopup="true"` is a synonym for `menu` — it would announce a menu that does not
+        // exist. Hosts that do build menu semantics on top (e.g. `KbqAppSwitcherDropdownSite`) set the
+        // attribute themselves.
+        '[attr.aria-expanded]': 'opened',
         '(mousedown)': 'handleMousedown($event)',
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'

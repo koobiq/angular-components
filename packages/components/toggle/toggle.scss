@@ -1,6 +1,7 @@
 @use '../core/styles/common/tokens';
-@use '../core/styles/common/animation';
 @use './toggle-theme' as theme;
+
+// The `.kbq-progress` loading state used by this component is emitted globally by `kbq-core()`.
 
 $toggle-thumb-offset: 8px;
 

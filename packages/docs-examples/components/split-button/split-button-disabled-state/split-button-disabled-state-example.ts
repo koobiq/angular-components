@@ -23,7 +23,7 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
                     <i kbq-icon="kbq-plus_16"></i>
                     Split Button
                 </button>
-                <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -36,7 +36,7 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
                     <i kbq-icon="kbq-plus_16"></i>
                     Split Button
                 </button>
-                <button kbq-button [disabled]="true" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button aria-label="More options" [disabled]="true" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
@@ -49,7 +49,7 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
                     <i kbq-icon="kbq-plus_16"></i>
                     Split Button
                 </button>
-                <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>

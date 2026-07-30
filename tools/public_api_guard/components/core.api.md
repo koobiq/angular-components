@@ -53,6 +53,7 @@ import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -379,6 +380,16 @@ export const enUSFormattersData: {
 
 // @public (undocumented)
 export const enUSLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };
@@ -630,6 +641,16 @@ export const esLAFormattersData: {
 
 // @public (undocumented)
 export const esLALocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };
@@ -1046,6 +1067,9 @@ export const J = 74;
 export const K = 75;
 
 // @public
+export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
+
+// @public
 export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";
 
 // @public
@@ -1107,6 +1131,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
+        };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1334,6 +1368,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -1554,6 +1598,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
+        };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1781,6 +1835,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -2003,6 +2067,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
+        };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2273,6 +2347,21 @@ export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
 // @public
 export const KBQ_WINDOW: InjectionToken<Window>;
+
+// @public
+export type KbqA11yLocaleConfiguration = {
+    close: string;
+    save: string;
+    cancel: string;
+    removeAll: string;
+    expandBreadcrumbs: string;
+    previousMonth: string;
+    currentDate: string;
+    nextMonth: string;
+};
+
+// @public
+export const kbqA11yLocaleConfigurationProvider: (configuration: KbqA11yLocaleConfiguration) => Provider;
 
 // @public (undocumented)
 export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]> implements PipeTransform {
@@ -2673,6 +2762,9 @@ export class KbqHover {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHover, never>;
 }
+
+// @public
+export function kbqInjectA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration>;
 
 // @public
 export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
@@ -4010,6 +4102,16 @@ export const ptBRFormattersData: {
 
 // @public (undocumented)
 export const ptBRLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };
@@ -4446,6 +4548,16 @@ export const ruRUFormattersData: {
 
 // @public (undocumented)
 export const ruRULocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };
@@ -4804,6 +4916,16 @@ export const tkTMFormattersData: {
 
 // @public (undocumented)
 export const tkTMLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };

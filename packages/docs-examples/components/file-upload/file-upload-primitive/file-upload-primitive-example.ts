@@ -71,6 +71,7 @@ import { BehaviorSubject } from 'rxjs';
                         <kbq-badge>{{ item.file.name }}</kbq-badge>
                         <button
                             kbq-button
+                            aria-label="Delete"
                             [kbqStyle]="'transparent'"
                             [color]="'contrast'"
                             (click)="list.removeAt($index)"

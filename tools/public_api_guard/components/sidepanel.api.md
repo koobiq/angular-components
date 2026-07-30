@@ -13,8 +13,7 @@ import { ComponentType } from '@angular/cdk/portal';
 import { EmbeddedViewRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1$1 from '@angular/cdk/overlay';
-import * as i1 from '@koobiq/components/core';
+import * as i1 from '@angular/cdk/overlay';
 import * as i2 from '@angular/cdk/portal';
 import * as i3 from '@koobiq/components/button';
 import * as i4 from '@koobiq/components/icon';
@@ -23,6 +22,7 @@ import * as i6 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqOverflowShadowState } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -54,7 +54,7 @@ export class KbqSidepanelActions {
 export class KbqSidepanelBody {
     constructor();
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelBody, never>;
 }
@@ -143,6 +143,7 @@ export class KbqSidepanelFooter {
 
 // @public
 export class KbqSidepanelHeader {
+    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     readonly closeable: i0.InputSignalWithTransform<boolean, unknown>;
     protected sidepanelRef: KbqSidepanelRef<any, any>;
     readonly truncateText: i0.InputSignalWithTransform<boolean, unknown>;
@@ -159,7 +160,7 @@ export class KbqSidepanelModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSidepanelModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, never, [typeof i1$1.OverlayModule, typeof i2.PortalModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions], [typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions], [typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions]>;
 }
 
 // @public (undocumented)

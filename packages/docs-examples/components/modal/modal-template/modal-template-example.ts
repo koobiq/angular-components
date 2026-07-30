@@ -28,7 +28,7 @@ import { KbqSplitButton } from '@koobiq/components/split-button';
 
             <kbq-split-button class="layout-margin-top-m">
                 <button kbq-button (click)="createModal(title, content, footer)">Open next modal</button>
-                <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>

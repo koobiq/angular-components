@@ -61,12 +61,13 @@
         min-width: 0;
     }
 
+    /* Logical properties so the leading/trailing icon gap mirrors under `dir="rtl"`. */
     & .kbq-icon_left {
-        margin-right: var(--kbq-button-size-content-padding);
+        margin-inline-end: var(--kbq-button-size-content-padding);
     }
 
     & .kbq-icon_right {
-        margin-left: var(--kbq-button-size-content-padding);
+        margin-inline-start: var(--kbq-button-size-content-padding);
     }
 
     & .kbq-button-prefix {

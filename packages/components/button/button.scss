@@ -1,9 +1,11 @@
-@use '../core/styles/common/animation';
-
 @use 'button-base' as *;
 @use '../core/styles/common/tokens' as *;
 
 @use './button-theme' as *;
+
+// The `.kbq-progress` loading state used by this component is emitted globally by `kbq-core()`.
+// `.kbq-button-icon_left` / `.kbq-button-icon_right` are set by `KbqButtonCssStyler` and styled by
+// `dropdown.scss` — they have no rules here on purpose.
 
 .kbq-button {
     @extend %kbq-button-base;

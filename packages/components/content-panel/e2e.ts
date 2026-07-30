@@ -62,6 +62,7 @@ export class E2eContentPanelScrollOverflow {
                     @for (_i of [0, 1, 2, 3]; track $index) {
                         <button
                             kbq-button
+                            aria-label="Report a bug"
                             [class.kbq-active]="$first"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
@@ -73,10 +74,20 @@ export class E2eContentPanelScrollOverflow {
                 <kbq-content-panel-header>
                     <div kbqContentPanelHeaderTitle>Title</div>
                     <div kbqContentPanelHeaderActions>
-                        <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
+                        <button
+                            kbq-button
+                            aria-label="Copy link"
+                            [color]="componentColors.Contrast"
+                            [kbqStyle]="buttonStyles.Transparent"
+                        >
                             <i kbq-icon="kbq-link_16"></i>
                         </button>
-                        <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
+                        <button
+                            kbq-button
+                            aria-label="Expand"
+                            [color]="componentColors.Contrast"
+                            [kbqStyle]="buttonStyles.Transparent"
+                        >
                             <i kbq-icon="kbq-arrows-expand-diagonal_16"></i>
                         </button>
                     </div>

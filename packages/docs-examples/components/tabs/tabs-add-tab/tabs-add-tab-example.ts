@@ -35,7 +35,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 </a>
             }
         </nav>
-        <button color="contrast" kbqStyle="transparent" kbq-button kbqTooltip="Add tab" (click)="addTab()">
+        <button
+            color="contrast"
+            kbqStyle="transparent"
+            kbq-button
+            aria-label="Add"
+            kbqTooltip="Add tab"
+            (click)="addTab()"
+        >
             <i kbq-icon="kbq-plus_16"></i>
         </button>
     `,

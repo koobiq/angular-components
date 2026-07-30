@@ -32,6 +32,7 @@ import {
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
+    kbqInjectA11yLocaleConfiguration,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -149,6 +150,9 @@ export class KbqInlineEditMenu {
     exportAs: 'kbqInlineEdit'
 })
 export class KbqInlineEdit {
+    /** Accessible names for the icon-only save/cancel buttons. */
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+
     private readonly overlay = inject(Overlay);
     private readonly document = inject(DOCUMENT);
     private readonly resizeObserver = inject(SharedResizeObserver);

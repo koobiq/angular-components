@@ -1,4 +1,5 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
     KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
@@ -8,6 +9,16 @@ import {
 } from './types';
 
 export const ruRULocaleData = {
+    a11y: {
+        close: 'Закрыть',
+        save: 'Сохранить',
+        cancel: 'Отменить',
+        removeAll: 'Удалить все',
+        expandBreadcrumbs: 'Показать скрытые элементы',
+        previousMonth: 'Предыдущий месяц',
+        currentDate: 'Текущая дата',
+        nextMonth: 'Следующий месяц'
+    } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'дд.мм.гггг',

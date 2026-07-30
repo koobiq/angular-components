@@ -37,6 +37,7 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
                     kbqOverflowItemsResult
                     color="contrast"
                     kbq-button
+                    aria-label="More"
                     data-testid="e2eActionsPanelOverflowItemsResultButton"
                     [kbqDropdownTriggerFor]="dropdown"
                 >

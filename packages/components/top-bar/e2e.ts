@@ -56,6 +56,7 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
                         <div kbqOverflowItemsResult>
                             <button
                                 kbq-button
+                                aria-label="More"
                                 [kbqStyle]="buttonStyles.Transparent"
                                 [color]="componentColors.Contrast"
                                 [kbqDropdownTriggerFor]="appDropdown"
@@ -106,6 +107,7 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
                         <div kbqOverflowItemsResult>
                             <button
                                 kbq-button
+                                aria-label="More"
                                 [kbqStyle]="buttonStyles.Transparent"
                                 [color]="componentColors.Contrast"
                                 [kbqDropdownTriggerFor]="appDropdown"
@@ -160,6 +162,7 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
                         <div kbqOverflowItemsResult>
                             <button
                                 kbq-button
+                                aria-label="More"
                                 [kbqStyle]="buttonStyles.Transparent"
                                 [color]="componentColors.Contrast"
                                 [kbqDropdownTriggerFor]="appDropdown"
@@ -197,6 +200,7 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
                             kbqOverflowItem="0"
                             kbqTooltip="Filter"
                             kbq-button
+                            aria-label="Filter"
                             [kbqStyle]="buttonStyles.Transparent"
                             [color]="componentColors.Contrast"
                             [kbqPlacement]="placements.Bottom"
@@ -220,6 +224,7 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
                         <div kbqOverflowItemsResult>
                             <button
                                 kbq-button
+                                aria-label="More"
                                 [kbqStyle]="buttonStyles.Transparent"
                                 [color]="componentColors.Contrast"
                                 [kbqDropdownTriggerFor]="appDropdown"

@@ -27,6 +27,7 @@ import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
@@ -65,6 +66,7 @@ export const kbqPopoverAnimations: {
 
 // @public (undocumented)
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
+    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     readonly cdkTrapFocus: i0.Signal<CdkTrapFocus>;
     // (undocumented)
