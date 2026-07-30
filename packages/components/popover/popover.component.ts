@@ -6,7 +6,6 @@ import {
     FlexibleConnectedPositionStrategy,
     Overlay,
     OverlayConfig,
-    OverlayContainer,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
@@ -23,7 +22,6 @@ import {
     Input,
     OnInit,
     Output,
-    Renderer2,
     TemplateRef,
     Type,
     ViewChild,
