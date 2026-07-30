@@ -7,12 +7,16 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { ButtonToggleExamplesModule } from '../../docs-examples/components/button-toggle';
+import {
+    ButtonToggleExamplesModule,
+    ButtonToggleTooltipOverviewExample
+} from '../../docs-examples/components/button-toggle';
 
 @Component({
     selector: 'dev-app',
     imports: [
         ButtonToggleExamplesModule,
+        ButtonToggleTooltipOverviewExample,
         KbqButtonModule,
         KbqButtonToggleModule,
         KbqIconModule,

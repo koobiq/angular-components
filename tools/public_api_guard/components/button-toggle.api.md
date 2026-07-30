@@ -55,9 +55,10 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     tabIndex: number | null;
     // (undocumented)
     type: ToggleType;
+    updateIconType(): void;
     value: any;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggle, [{ optional: true; }, null, null, null]>;
 }
@@ -119,7 +120,7 @@ export class KbqButtonToggleModule {
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle], [typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, never, [typeof i1.KbqButtonModule, typeof i2.KbqTitleModule, typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle], [typeof i3.KbqButtonToggleGroup, typeof i3.KbqButtonToggle, typeof i1.KbqButtonPrefix, typeof i1.KbqButtonSuffix]>;
 }
 
 // @public

@@ -36,6 +36,11 @@
             "description": "Updates names of icons in dedicated files",
             "factory": "./migrations/icons-replacement/index",
             "schema": "./migrations/icons-replacement/schema.json"
+        },
+        "button-truncation": {
+            "description": "Moves edge icons of a button/button-toggle into the kbqButtonPrefix/kbqButtonSuffix slots so labels keep their ellipsis, and reports stylesheet overrides affected by the new truncation layout",
+            "factory": "./migrations/button-truncation/index",
+            "schema": "./migrations/button-truncation/schema.json"
         }
     }
 }

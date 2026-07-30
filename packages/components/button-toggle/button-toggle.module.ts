@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqButtonModule, KbqButtonPrefix, KbqButtonSuffix } from '@koobiq/components/button';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqButtonToggle, KbqButtonToggleGroup } from './button-toggle.component';
 
 @NgModule({
     imports: [KbqButtonModule, KbqTitleModule, KbqButtonToggleGroup, KbqButtonToggle],
-    exports: [KbqButtonToggleGroup, KbqButtonToggle]
+    // The slot markers are re-exported because a toggle projects them itself: they are what keeps an
+    // icon outside the truncated label.
+    exports: [KbqButtonToggleGroup, KbqButtonToggle, KbqButtonPrefix, KbqButtonSuffix]
 })
 export class KbqButtonToggleModule {}
