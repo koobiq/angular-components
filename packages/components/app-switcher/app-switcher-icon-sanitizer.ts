@@ -158,9 +158,6 @@ const URL_ATTRIBUTES: ReadonlySet<string> = new Set(['href', 'xlink:href']);
 /** Inline styles that can load or execute something are dropped rather than parsed. */
 const UNSAFE_STYLE_VALUE = /url\s*\(|expression\s*\(|javascript\s*:/i;
 
-const ELEMENT_NODE = 1;
-const TEXT_NODE = 3;
-
 /**
  * Turns the caller-supplied inline SVG of an app-switcher icon into markup that is safe to hand to
  * `[innerHtml]`.
@@ -207,7 +204,7 @@ export class KbqAppSwitcherIconSanitizer {
     private sanitizeChildren(node: Node): void {
         // Snapshot the list: removing a node while iterating a live NodeList skips its sibling.
         for (const child of Array.from(node.childNodes)) {
-            if (child.nodeType === ELEMENT_NODE) {
+            if (child.nodeType === Node.ELEMENT_NODE) {
                 const element = child as Element;
 
                 if (ALLOWED_ELEMENTS.has(element.localName.toLowerCase())) {
@@ -216,7 +213,7 @@ export class KbqAppSwitcherIconSanitizer {
 
                     continue;
                 }
-            } else if (child.nodeType === TEXT_NODE) {
+            } else if (child.nodeType === Node.TEXT_NODE) {
                 continue;
             }
 

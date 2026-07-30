@@ -23,6 +23,18 @@ export type KbqActionsPanelLocaleConfiguration = {
     closeTooltip: string;
 };
 
+/** Locale configuration for `KbqAppSwitcherModule`: the strings rendered by the app-switcher popup. */
+export type KbqAppSwitcherConfiguration = {
+    /** Placeholder and accessible name of the search field. */
+    searchPlaceholder: string;
+    /** Message shown when no application matches the search query. */
+    searchEmptyResult: string;
+    /** Heading above the list of other sites. */
+    sitesHeader: string;
+    /** Accessible name of the button that clears the search field. */
+    clearSearch: string;
+};
+
 /** Options for overriding locale-based number formatting */
 export type KbqNumberFormatOptions = {
     /** Overrides the default group separator in the formatted output */

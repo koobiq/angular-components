@@ -14,6 +14,7 @@ import { FocusKeyManager } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { KbqAppSwitcherConfiguration } from '@koobiq/components/core';
 import { KbqDropdown } from '@koobiq/components/dropdown';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqInput } from '@koobiq/components/input';
@@ -119,14 +120,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
 }
 
 // @public
-export interface KbqAppSwitcherConfiguration {
-    clearSearch: string;
-    searchEmptyResult: string;
-    searchPlaceholder: string;
-    sitesHeader: string;
-}
-
-// @public
 export class KbqAppSwitcherDropdownApp extends KbqDropdownItem {
     readonly app: i0.InputSignal<KbqAppSwitcherApp>;
     protected readonly safeIcon: i0.Signal<_angular_platform_browser.SafeHtml | null>;
@@ -180,6 +173,9 @@ export class KbqAppSwitcherModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAppSwitcherModule, never, [typeof KbqAppSwitcherComponent, typeof KbqAppSwitcherTrigger, typeof KbqAppSwitcherListItem, typeof KbqAppSwitcherDropdownApp, typeof KbqAppSwitcherDropdownSite], [typeof KbqAppSwitcherTrigger]>;
 }
+
+// @public
+export function kbqAppSwitcherProvider(): Provider[];
 
 // @public
 export function kbqAppSwitcherScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
@@ -249,9 +245,6 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
 
 // @public
 export function makeGroupsForApps(apps: KbqAppSwitcherApp[], minAppsForGrouping: number, groupBy?: KbqAppSwitcherGroupBy): KbqAppSwitcherApp[];
-
-// @public
-export function provideKbqAppSwitcher(): Provider[];
 
 // (No @packageDocumentation comment for this package)
 

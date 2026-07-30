@@ -2391,6 +2391,14 @@ export enum KbqAnimationDurations {
     Rapid = "100ms"
 }
 
+// @public
+export type KbqAppSwitcherConfiguration = {
+    searchPlaceholder: string;
+    searchEmptyResult: string;
+    sitesHeader: string;
+    clearSearch: string;
+};
+
 // @public (undocumented)
 export interface KbqBaseFileUploadLocaleConfig {
     // (undocumented)

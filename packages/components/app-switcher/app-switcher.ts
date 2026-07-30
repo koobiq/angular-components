@@ -37,6 +37,7 @@ import {
     ESCAPE,
     FocusKeyManager,
     KBQ_LOCALE_SERVICE,
+    KbqAppSwitcherConfiguration,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpPlacementValues,
@@ -99,18 +100,6 @@ export interface KbqAppSwitcherSite {
     /** Path to the icon file (URL or relative path). */
     iconSrc?: string;
     apps: KbqAppSwitcherApp[];
-}
-
-/** Localized strings rendered by the app-switcher popup. */
-export interface KbqAppSwitcherConfiguration {
-    /** Placeholder and accessible name of the search field. */
-    searchPlaceholder: string;
-    /** Message shown when no application matches the search query. */
-    searchEmptyResult: string;
-    /** Heading above the list of other sites. */
-    sitesHeader: string;
-    /** Accessible name of the button that clears the search field. */
-    clearSearch: string;
 }
 
 /**
@@ -235,7 +224,7 @@ export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken<KbqAppSwitcherC
  * swap `FOCUS_TRAP_INERT_STRATEGY`/`FocusTrapFactory`: those are injector-wide and would disable the CDK
  * inert strategy for every other focus trap in the same scope.
  */
-export function provideKbqAppSwitcher(): Provider[] {
+export function kbqAppSwitcherProvider(): Provider[] {
     return [KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER];
 }
 
@@ -649,7 +638,7 @@ export class KbqAppSwitcherTrigger
     implements AfterContentInit, OnInit
 {
     /**
-     * Optional so a standalone consumer works without `provideKbqAppSwitcher()`; an application-level
+     * Optional so a standalone consumer works without `kbqAppSwitcherProvider()`; an application-level
      * provider for `KBQ_APP_SWITCHER_SCROLL_STRATEGY` still wins over this fallback.
      * @docs-private
      */

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { KbqAppSwitcherComponent, KbqAppSwitcherTrigger, provideKbqAppSwitcher } from './app-switcher';
+import { KbqAppSwitcherComponent, KbqAppSwitcherTrigger, kbqAppSwitcherProvider } from './app-switcher';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 import { KbqAppSwitcherListItem } from './app-switcher-list-item';
@@ -12,7 +12,7 @@ import { KbqAppSwitcherListItem } from './app-switcher-list-item';
         KbqAppSwitcherDropdownApp,
         KbqAppSwitcherDropdownSite
     ],
-    providers: provideKbqAppSwitcher(),
+    providers: kbqAppSwitcherProvider(),
     exports: [
         KbqAppSwitcherTrigger
     ]

@@ -1,5 +1,6 @@
 import {
     KbqActionsPanelLocaleConfiguration,
+    KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
@@ -133,7 +134,7 @@ export const enUSLocaleData = {
         searchEmptyResult: 'Nothing found',
         sitesHeader: 'Other sites',
         clearSearch: 'Clear search'
-    },
+    } satisfies KbqAppSwitcherConfiguration,
     timeRange: {
         title: {
             for: 'for',
