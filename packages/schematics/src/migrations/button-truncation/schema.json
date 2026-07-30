@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-button-truncation",
+    "title": "Koobiq components button truncation migration",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project to migrate. If omitted, the migration runs over the whole tree.",
+            "$default": {
+                "$source": "projectName"
+            }
+        },
+        "fix": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true, moves edge icons into the kbqButtonPrefix/kbqButtonSuffix slots. When false, prints what would change without writing. Stylesheet findings are always reported, never rewritten."
+        }
+    }
+}

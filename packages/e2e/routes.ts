@@ -13,7 +13,11 @@ import {
 } from '../components/autocomplete/e2e';
 import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
 import { E2eBreadcrumbsOverflowMax, E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
-import { E2eButtonToggleStates, E2eButtonToggleStatesStretched } from '../components/button-toggle/e2e';
+import {
+    E2eButtonToggleStates,
+    E2eButtonToggleStatesStretched,
+    E2eButtonToggleTruncation
+} from '../components/button-toggle/e2e';
 import { E2eButtonGroup, E2eButtonStateAndStyle, E2eButtonStress, E2eButtonTruncation } from '../components/button/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
 import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
@@ -148,6 +152,7 @@ const components = [
     E2eDividerStateAndStyle,
     E2eButtonToggleStates,
     E2eButtonToggleStatesStretched,
+    E2eButtonToggleTruncation,
     E2eTabsStates,
     E2eTabNavBar,
     E2eClampedTextStateAndStyle,

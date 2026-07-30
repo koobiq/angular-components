@@ -20,14 +20,13 @@ import {
     OnDestroy,
     OnInit,
     output,
-    Renderer2,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
-import { getNodesWithoutComments, leftIconClassName, rightIconClassName } from '@koobiq/components/core';
+import { getNodesWithoutComments } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 
@@ -314,6 +313,11 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
         KbqTitleDirective,
         KbqButtonModule
     ],
+    // Both title references sit on the label box on purpose. The box that paints `text-overflow` is
+    // the only one whose `scrollWidth` still reports the untruncated label, so it has to be the one
+    // `kbq-title` measures; and measuring it against the whole button instead would leave a dead zone
+    // as wide as an icon plus its gap, where the label is already clipped but the tooltip does not
+    // open yet. Measured against itself, the comparison is exactly `clientWidth < scrollWidth`.
     template: `
         <button
             kbq-button
@@ -325,8 +329,12 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
             [tabIndex]="tabIndex() || 0"
             (click)="onToggleClick()"
         >
-            <div #kbqTitleText class="kbq-button-toggle-wrapper" (cdkObserveContent)="updateContentPlacement()">
-                <ng-content />
+            <div class="kbq-button-toggle-wrapper" (cdkObserveContent)="updateIconType()">
+                <ng-content select="[kbqButtonPrefix]" />
+                <span #kbqTitleContainer #kbqTitleText class="kbq-button-toggle-text">
+                    <ng-content />
+                </span>
+                <ng-content select="[kbqButtonSuffix]" />
             </div>
         </button>
     `,
@@ -398,24 +406,19 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     /** Event emitted when the group value changes. */
     readonly change = output<KbqButtonToggleChange>();
 
-    private readonly renderer = inject(Renderer2);
-
     private isSingleSelector = false;
     private _checked = false;
     private _disabled: boolean = false;
 
-    private leadingIcon: HTMLElement | null = null;
-    private trailingIcon: HTMLElement | null = null;
-
     constructor() {
-        // The content query only tracks KbqIcon instances, while placement also depends on the text
+        // The content query only tracks KbqIcon instances, while `iconType` also depends on the text
         // nodes beside them, which the query cannot see — those are covered by the MutationObserver
         // in the template. This effect covers icons appearing or disappearing (e.g. via @if) without
         // waiting for the observer.
         effect(() => {
             this.icons();
 
-            untracked(() => this.updateContentPlacement());
+            untracked(() => this.updateIconType());
         });
     }
 
@@ -429,56 +432,36 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     }
 
     ngAfterContentInit(): void {
-        this.updateContentPlacement();
+        this.updateIconType();
     }
 
     /**
-     * Marks the outermost icons so they can space themselves from the label, and refreshes
-     * `iconType`.
+     * Refreshes `iconType`, which tells whether the toggle holds icons only or icons beside a label.
      *
-     * The spacing cannot come from `gap`: a stretched toggle needs a block container for its
-     * `text-overflow` to be painted at all, and `gap` has no effect on one. So the icons carry it as
-     * a margin — and only their position among the projected nodes tells which side the label is on,
-     * which no selector can work out, because text nodes are invisible to CSS.
+     * No selector can work this out: CSS cannot see text nodes, so it can never tell an icon-only
+     * toggle from a label that happens to contain an icon.
      *
      * @docs-private
      */
-    updateContentPlacement(): void {
+    updateIconType(): void {
         const wrapper: HTMLElement | null = this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper');
+        const label = wrapper?.querySelector('.kbq-button-toggle-text');
 
-        if (!wrapper) return;
+        if (!wrapper || !label) return;
 
         const iconElements = this.icons().map((icon) => icon.getHostElement());
-        const nodes = getNodesWithoutComments(wrapper.childNodes);
+
+        // The label box belongs to the template rather than to the projected content, so it is
+        // flattened out: an icon marked with `kbqButtonPrefix`/`kbqButtonSuffix` sits beside the box
+        // and a legacy one inside it, and both have to be counted the same way. Same shape as
+        // `KbqButtonCssStyler`, which flattens `.kbq-button-text` for the same reason.
+        const nodes = getNodesWithoutComments(wrapper.childNodes).flatMap((node) =>
+            node === label ? getNodesWithoutComments(node.childNodes) : [node]
+        );
 
         this.iconType = iconElements.length ? (nodes.length === iconElements.length ? '-icon' : '-icon-text') : '';
 
-        // with a single node there is no label to space the icon from
-        const outermost = (node: Node | undefined): HTMLElement | null =>
-            nodes.length > 1 && node && iconElements.includes(node as HTMLElement) ? (node as HTMLElement) : null;
-
-        const leading = outermost(nodes[0]);
-        const trailing = outermost(nodes[nodes.length - 1]);
-
-        this.updateIconClass(this.leadingIcon, leading, leftIconClassName);
-        this.updateIconClass(this.trailingIcon, trailing, rightIconClassName);
-
-        this.leadingIcon = leading;
-        this.trailingIcon = trailing;
-
         this.changeDetectorRef.markForCheck();
-    }
-
-    private updateIconClass(previous: HTMLElement | null, current: HTMLElement | null, className: string): void {
-        if (previous === current) return;
-
-        if (previous) {
-            this.renderer.removeClass(previous, className);
-        }
-
-        if (current) {
-            this.renderer.addClass(current, className);
-        }
     }
 
     ngAfterViewInit(): void {
