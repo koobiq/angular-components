@@ -1807,7 +1807,6 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             trigger = fixture.componentInstance.triggerEl().nativeElement;
-            patchElementFocus(trigger);
         });
 
         it('should hide the tooltip when the dropdown opens', fakeAsync(() => {
@@ -1838,6 +1837,24 @@ describe('KbqDropdown', () => {
 
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeFalsy();
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+        }));
+
+        it('should show the tooltip again after the pointer leaves and returns to the trigger', fakeAsync(() => {
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            flush();
+
+            dispatchKeyboardEvent(overlayContainerElement.querySelector(PANEL_SELECTOR)!, 'keydown', ESCAPE);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            dispatchMouseEvent(trigger, 'mouseleave');
+            fixture.detectChanges();
+
+            showTooltip();
+
+            expect(overlayContainerElement.textContent).toContain('TOOLTIP');
         }));
     });
 

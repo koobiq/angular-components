@@ -476,9 +476,7 @@ describe('KbqPopover', () => {
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
         }));
 
-        it('should not show the tooltip when the popover is closed by an outside click', fakeAsync(() => {
-            showTooltip();
-
+        it('should release the mute after the popover is closed by an outside click', fakeAsync(() => {
             dispatchMouseEvent(trigger, 'click');
             tick();
             fixture.detectChanges();
@@ -490,6 +488,16 @@ describe('KbqPopover', () => {
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+
+            // The mute must be released by this closing path too, not just by Escape (the other test above):
+            // a genuine mouseleave + mouseenter after the outside click should show the tooltip again.
+            dispatchMouseEvent(trigger, 'mouseleave');
+            tick();
+            fixture.detectChanges();
+
+            showTooltip();
+
+            expect(overlayContainerElement.textContent).toContain('TOOLTIP');
         }));
 
         it('should show the tooltip again after the pointer leaves and returns to the trigger', fakeAsync(() => {

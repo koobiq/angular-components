@@ -325,7 +325,12 @@ export class KbqTreeSelect
     //  Your application code writes to the input. This prevents migration.
     @Input() hiddenItemsText: string = '+{{ number }}';
 
-    /** Event emitted when the select panel has been toggled. */
+    /**
+     * Event emitted when the select panel has been toggled.
+     * Also serves as the `openedChange` member of the `KbqSiblingPopup` contract — a tooltip sharing
+     * this element's host reacts to it, so its emission timing (gated on `panelDoneAnimatingStream`, see
+     * `ngOnInit`) matters beyond this output's original consumers.
+     */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Event emitted when the select has been opened. */

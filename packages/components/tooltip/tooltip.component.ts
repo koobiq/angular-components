@@ -565,6 +565,17 @@ export class KbqTooltipTrigger
             return;
         }
 
+        // `isAttached` is checked directly, not just the `mutedBySiblingPopup` latch: `openedChange` can lag
+        // it by a real delay — e.g. select/tree-select only emit it once their open CSS animation finishes,
+        // and a sibling's own `hide()` can cancel a still-pending `show()` outright so it never emits at all
+        // (KbqPopUp.show/hide, pop-up.ts). `isAttached` itself is guaranteed synchronous by the
+        // `KbqSiblingPopup` contract, so checking it here closes that gap regardless of the cause. Gated by
+        // `hasInteractiveTrigger` for the same reason as the constructor subscription: a `manual`/`none`
+        // tooltip is driven imperatively and must not be muted by a sibling at all.
+        if (this.hasInteractiveTrigger && this.siblingPopups.some(({ isAttached }) => isAttached)) {
+            return;
+        }
+
         if (this.triggerName === 'focus' && this.focusMonitor['_lastFocusOrigin'] !== 'keyboard') {
             return;
         }

@@ -663,6 +663,19 @@ describe('KbqTooltip', () => {
             flush();
         }));
 
+        it('should not show the tooltip while a sibling is attached, even before it announces opening', fakeAsync(() => {
+            // Models the gap between a sibling's overlay attaching and its `openedChange` actually firing —
+            // e.g. select/tree-select only emit it once their open CSS animation finishes.
+            component.popup().isAttached = true;
+
+            dispatchMouseEvent(trigger, 'mouseenter');
+            fixture.detectChanges();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).not.toContain('SIBLING');
+        }));
+
         it('should not show the tooltip on hover while the pop-up is open', fakeAsync(() => {
             component.popup().open();
             flush();
@@ -676,9 +689,9 @@ describe('KbqTooltip', () => {
             component.popup().open();
             flush();
 
-            // How `KbqPopoverComponent.onEscape` closes: the pop-up announces the close and restores focus
-            // to its trigger while the overlay is still attached.
-            component.popup().close();
+            // How `KbqPopoverComponent.onEscape` closes: it restores focus to the trigger with a `keyboard`
+            // origin (passing the tooltip's own focus-origin gate) before the overlay is actually detached —
+            // `isAttached` is still `true` at this point, which is what must keep the tooltip suppressed.
             showByKeyboardFocus(fixture, trigger);
 
             expect(overlayContainerElement.textContent).not.toContain('SIBLING');

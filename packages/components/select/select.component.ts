@@ -479,7 +479,12 @@ export class KbqSelect
         );
     }) as Observable<KbqOptionSelectionChange>;
 
-    /** Event emitted when the select panel has been toggled. Emits true when opened, false when closed. */
+    /**
+     * Event emitted when the select panel has been toggled. Emits true when opened, false when closed.
+     * Also serves as the `openedChange` member of the `KbqSiblingPopup` contract — a tooltip sharing
+     * this element's host reacts to it, so its emission timing (gated on `panelDoneAnimatingStream`, see
+     * `ngOnInit`) matters beyond this output's original consumers.
+     */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Event emitted before the select panel starts opening. */
