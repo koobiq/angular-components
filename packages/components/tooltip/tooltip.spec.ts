@@ -1,6 +1,6 @@
 ﻿import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
-import { Component, ElementRef, viewChild } from '@angular/core';
+import { Component, Directive, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,10 +10,13 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
+    KbqSiblingPopup,
+    kbqSiblingPopupProvider,
     TAB
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
+import { Subject } from 'rxjs';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
@@ -64,7 +67,8 @@ describe('KbqTooltip', () => {
                 NoopAnimationsModule,
                 KbqTooltipTestWrapperComponent,
                 KbqTooltipDisabledComponent,
-                KbqTooltipWithTemplateRefContent
+                KbqTooltipWithTemplateRefContent,
+                TooltipWithSiblingPopup
             ]
         }).compileComponents();
     });
@@ -621,7 +625,165 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
         }));
     });
+
+    describe('pop-up on the same element', () => {
+        let fixture: ComponentFixture<TooltipWithSiblingPopup>;
+        let component: TooltipWithSiblingPopup;
+        let trigger: HTMLElement;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipWithSiblingPopup);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+
+            trigger = component.trigger().nativeElement;
+        });
+
+        it('should hide a visible tooltip when the pop-up opens', fakeAsync(() => {
+            showByHover(fixture, trigger);
+
+            expect(overlayContainerElement.textContent).toContain('SIBLING');
+
+            component.popup().open();
+            flush();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).not.toContain('SIBLING');
+        }));
+
+        it('should cancel a pending show when the pop-up opens', fakeAsync(() => {
+            dispatchMouseEvent(trigger, 'mouseenter');
+            fixture.detectChanges();
+
+            component.popup().open();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).not.toContain('SIBLING');
+            flush();
+        }));
+
+        it('should not show the tooltip on hover while the pop-up is open', fakeAsync(() => {
+            component.popup().open();
+            flush();
+
+            showByHover(fixture, trigger);
+
+            expect(overlayContainerElement.textContent).not.toContain('SIBLING');
+        }));
+
+        it('should not show the tooltip when the closing pop-up restores focus to the trigger', fakeAsync(() => {
+            component.popup().open();
+            flush();
+
+            // How `KbqPopoverComponent.onEscape` closes: the pop-up announces the close and restores focus
+            // to its trigger while the overlay is still attached.
+            component.popup().close();
+            showByKeyboardFocus(fixture, trigger);
+
+            expect(overlayContainerElement.textContent).not.toContain('SIBLING');
+        }));
+
+        it('should not show the tooltip on the mouseenter replayed when the pop-up overlay is removed', fakeAsync(() => {
+            showByHover(fixture, trigger);
+
+            component.popup().open();
+            flush();
+            // Inserting a backdrop over the trigger makes the browser fire `mouseleave` without the pointer
+            // having moved; removing it fires the matching `mouseenter`.
+            dispatchMouseEvent(trigger, 'mouseleave');
+            component.popup().close();
+            component.popup().detach();
+
+            showByHover(fixture, trigger);
+
+            expect(overlayContainerElement.textContent).not.toContain('SIBLING');
+        }));
+
+        it('should show the tooltip again after the pointer leaves the trigger', fakeAsync(() => {
+            component.popup().open();
+            flush();
+            component.popup().close();
+            component.popup().detach();
+
+            dispatchMouseEvent(trigger, 'mouseleave');
+            flush();
+
+            showByHover(fixture, trigger);
+
+            expect(overlayContainerElement.textContent).toContain('SIBLING');
+        }));
+
+        it('should show the tooltip again after the focus leaves the trigger', fakeAsync(() => {
+            component.popup().open();
+            flush();
+            component.popup().close();
+            component.popup().detach();
+
+            dispatchFakeEvent(trigger, 'blur');
+            flush();
+
+            showByKeyboardFocus(fixture, trigger);
+
+            expect(overlayContainerElement.textContent).toContain('SIBLING');
+        }));
+
+        it('should not mute a tooltip that is driven imperatively', fakeAsync(() => {
+            component.manualPopup().open();
+            flush();
+
+            component.manualTooltip().show();
+            flush();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('MANUAL');
+        }));
+    });
 });
+
+/**
+ * Stand-in for a popover/dropdown/select sharing the host element with a tooltip. Announcing the close and
+ * detaching the overlay are separate steps on purpose — that is the gap in which the real pop-ups restore
+ * focus to their trigger and let the browser replay `mouseenter`.
+ */
+@Directive({
+    selector: '[siblingPopup]',
+    providers: [kbqSiblingPopupProvider(SiblingPopup)],
+    exportAs: 'siblingPopup'
+})
+class SiblingPopup implements KbqSiblingPopup {
+    isAttached = false;
+
+    readonly openedChange = new Subject<boolean>();
+
+    open(): void {
+        this.isAttached = true;
+        this.openedChange.next(true);
+    }
+
+    close(): void {
+        this.openedChange.next(false);
+    }
+
+    detach(): void {
+        this.isAttached = false;
+    }
+}
+
+@Component({
+    selector: 'tooltip-with-sibling-popup',
+    imports: [KbqToolTipModule, SiblingPopup],
+    template: `
+        <button #trigger siblingPopup [kbqTooltip]="'SIBLING'">Show</button>
+        <button #manualTrigger siblingPopup [kbqTooltip]="'MANUAL'" [kbqTrigger]="'manual'">Show</button>
+    `
+})
+class TooltipWithSiblingPopup {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly popup = viewChild.required('trigger', { read: SiblingPopup });
+    readonly manualPopup = viewChild.required('manualTrigger', { read: SiblingPopup });
+    readonly manualTooltip = viewChild.required('manualTrigger', { read: KbqTooltipTrigger });
+}
 
 @Component({
     selector: 'kbq-tooltip-single-instance',

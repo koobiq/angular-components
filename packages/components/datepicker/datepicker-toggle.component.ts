@@ -14,9 +14,11 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { KbqSiblingPopup, kbqSiblingPopupProvider } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { merge, Subscription } from 'rxjs';
+import { merge, Observable, Subscription } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { KbqDatepicker } from './datepicker.component';
 
 /** Can be used to override the icon of a `kbqDatepickerToggle`. */
@@ -41,6 +43,7 @@ export class KbqDatepickerToggleIcon {}
         </ng-content>
     `,
     styleUrls: ['./datepicker-toggle.scss'],
+    providers: [kbqSiblingPopupProvider(KbqDatepickerToggleIconComponent)],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -50,7 +53,7 @@ export class KbqDatepickerToggleIcon {}
         '(click)': 'open($event)'
     }
 })
-export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy {
+export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy, KbqSiblingPopup {
     /** Whether the toggle button is disabled. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -67,6 +70,29 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
 
     /** Datepicker instance that the button will toggle. */
     readonly datepicker = input<KbqDatepicker<D>>(undefined!, { alias: 'for' });
+
+    /** Whether the calendar is currently on screen. Part of the `KbqSiblingPopup` contract. */
+    get isAttached(): boolean {
+        return !!this.datepicker()?.opened;
+    }
+
+    /**
+     * Emits `true` when the calendar opens and `false` when it closes. Part of the `KbqSiblingPopup`
+     * contract.
+     *
+     * Built on top of the `datepicker` signal rather than read once, because the instance is bound after the
+     * consumers of this stream (a tooltip on the same element subscribes in its constructor) and may be
+     * swapped later — the same reason `watchStateChanges` is re-run from `ngOnChanges`.
+     */
+    readonly openedChange: Observable<boolean> = toObservable(this.datepicker).pipe(
+        filter(Boolean),
+        switchMap((datepicker) =>
+            merge(
+                outputToObservable(datepicker.openedStream).pipe(map(() => true)),
+                outputToObservable(datepicker.closedStream).pipe(map(() => false))
+            )
+        )
+    );
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly cdr = inject(ChangeDetectorRef);

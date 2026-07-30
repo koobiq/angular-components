@@ -26,8 +26,10 @@ import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
@@ -430,10 +432,11 @@ export class KbqDatepickerToggleIcon {
 }
 
 // @public (undocumented)
-export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy {
+export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy, KbqSiblingPopup {
     readonly datepicker: _angular_core.InputSignal<KbqDatepicker<D>>;
     get disabled(): boolean;
     set disabled(value: boolean);
+    get isAttached(): boolean;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -441,6 +444,7 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     // (undocumented)
     ngOnDestroy(): void;
     open($event: MouseEvent): void;
+    readonly openedChange: Observable<boolean>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDatepickerToggleIconComponent<any>, "kbq-datepicker-toggle-icon", never, { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; "isSignal": true; }; }, {}, never, ["[kbqDatepickerToggleIcon]"], true, never>;
     // (undocumented)

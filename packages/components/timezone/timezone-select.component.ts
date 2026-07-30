@@ -9,7 +9,7 @@ import {
     contentChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_OPTION_PARENT_COMPONENT, ruRULocaleData } from '@koobiq/components/core';
+import { KBQ_OPTION_PARENT_COMPONENT, kbqSiblingPopupProvider, ruRULocaleData } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
@@ -38,7 +38,10 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
     ],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTimezoneSelect },
-        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect }
+        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect },
+        // Declared again rather than inherited from `KbqSelect`: Angular copies `providers` to a subclass only
+        // when that subclass has no decorator of its own.
+        kbqSiblingPopupProvider(KbqTimezoneSelect)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

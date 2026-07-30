@@ -9,15 +9,21 @@ import {
     ENTER,
     ESCAPE,
     SPACE,
+    createKeyboardEvent,
+    dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/components/core';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
 import { KbqPopoverTrigger } from './popover.component';
 import { KbqPopoverModule } from './popover.module';
+
+/** `KbqTooltipTrigger` default enter delay (400 ms) plus a buffer for the deferred show. */
+const tooltipEnterDelay = 410;
 
 function openAndAssertPopover<T>(componentFixture: ComponentFixture<T>, triggerElement: ElementRef) {
     dispatchMouseEvent(coerceElement(triggerElement), 'click');
@@ -402,6 +408,106 @@ describe('KbqPopover', () => {
             expect(footer).toEqual(componentInstance.context.footer);
         }));
     });
+
+    describe('with a tooltip on the same element', () => {
+        let fixture: ComponentFixture<PopoverWithTooltip>;
+        let trigger: HTMLElement;
+
+        /** Opens the tooltip by hover and settles its 400 ms enter delay and the deferred reposition. */
+        const showTooltip = () => {
+            dispatchMouseEvent(trigger, 'mouseenter');
+            fixture.detectChanges();
+            tick(tooltipEnterDelay);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+        };
+
+        /** Presses `Escape` inside the open panel, which is what makes the popover restore focus. */
+        const pressEscapeInPanel = () => {
+            const panel = overlayContainerElement.querySelector('.kbq-popover')!;
+
+            dispatchEvent(panel, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
+            tick();
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
+            fixture = createComponent(PopoverWithTooltip);
+            trigger = fixture.componentInstance.trigger().nativeElement;
+        });
+
+        beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
+            overlayContainer = oc;
+            overlayContainerElement = oc.getContainerElement();
+        }));
+
+        afterEach(() => {
+            overlayContainer.ngOnDestroy();
+        });
+
+        it('should hide the tooltip when the popover opens', fakeAsync(() => {
+            showTooltip();
+
+            expect(overlayContainerElement.textContent).toContain('TOOLTIP');
+
+            dispatchMouseEvent(trigger, 'click');
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+            expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+        }));
+
+        it('should not show the tooltip when the popover is closed with Escape', fakeAsync(() => {
+            showTooltip();
+
+            dispatchMouseEvent(trigger, 'click');
+            tick();
+            fixture.detectChanges();
+
+            pressEscapeInPanel();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
+            expect(document.activeElement).toBe(trigger);
+            expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+        }));
+
+        it('should not show the tooltip when the popover is closed by an outside click', fakeAsync(() => {
+            showTooltip();
+
+            dispatchMouseEvent(trigger, 'click');
+            tick();
+            fixture.detectChanges();
+
+            dispatchMouseEvent(document.body, 'click');
+            tick();
+            fixture.detectChanges();
+            tick();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
+            expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+        }));
+
+        it('should show the tooltip again after the pointer leaves and returns to the trigger', fakeAsync(() => {
+            dispatchMouseEvent(trigger, 'click');
+            tick();
+            fixture.detectChanges();
+
+            pressEscapeInPanel();
+
+            dispatchMouseEvent(trigger, 'mouseleave');
+            tick();
+            fixture.detectChanges();
+
+            showTooltip();
+
+            expect(overlayContainerElement.textContent).toContain('TOOLTIP');
+        }));
+    });
 });
 
 @Component({
@@ -516,4 +622,17 @@ class KbqPopoverConfirmWithProvidersTestComponent {
 class KbqPopoverWithTemplateRef {
     readonly trigger = viewChild.required<ElementRef>('trigger');
     context = { header: 'header', content: 'content', footer: 'footer' };
+}
+
+// No `kbqTrigger` binding on purpose: the input alias is shared by both directives, so setting it would
+// reconfigure the tooltip and the popover at once. Left at the defaults — `hover, focus` and `click, keydown`.
+@Component({
+    selector: 'popover-with-tooltip',
+    imports: [KbqPopoverModule, KbqToolTipModule],
+    template: `
+        <button #trigger kbqPopover [kbqPopoverContent]="'POPOVER'" [kbqTooltip]="'TOOLTIP'">Button</button>
+    `
+})
+class PopoverWithTooltip {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
 }

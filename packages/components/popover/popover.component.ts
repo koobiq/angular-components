@@ -47,7 +47,8 @@ import {
     POSITION_TO_CSS_MAP,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins
+    applyPopupMargins,
+    kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { NEVER, merge } from 'rxjs';
@@ -148,6 +149,7 @@ export function getKbqPopoverInvalidPositionError(position: string) {
 
 @Directive({
     selector: '[kbqPopover]',
+    providers: [kbqSiblingPopupProvider(KbqPopoverTrigger)],
     host: {
         '[class.kbq-popover_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',

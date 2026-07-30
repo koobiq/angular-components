@@ -77,6 +77,7 @@ import {
     KbqSelectSearch,
     KbqSelectSearchEmptyResult,
     KbqSelectTrigger,
+    KbqSiblingPopup,
     KbqVirtualOption,
     LEFT_ARROW,
     PAGE_DOWN,
@@ -93,6 +94,7 @@ import {
     isSelectAll,
     isUndefined,
     kbqSelectAnimations,
+    kbqSiblingPopupProvider,
     shouldSelectSearchText,
     toggleSelectAll
 } from '@koobiq/components/core';
@@ -189,7 +191,8 @@ export const minimumTimeToDisplayLoading = 300;
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
-        { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
+        { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect },
+        kbqSiblingPopupProvider(KbqSelect)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -221,7 +224,8 @@ export class KbqSelect
         DoCheck,
         ControlValueAccessor,
         KbqFormFieldControl<any>,
-        CanUpdateErrorState
+        CanUpdateErrorState,
+        KbqSiblingPopup
 {
     private readonly _changeDetectorRef = inject(ChangeDetectorRef);
     private readonly _ngZone = inject(NgZone);
@@ -782,6 +786,11 @@ export class KbqSelect
 
     /** Whether the select panel is currently open. */
     panelOpen = false;
+
+    /** Whether the overlay panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
+    get isAttached(): boolean {
+        return this.panelOpen;
+    }
 
     /** Whether virtual scrolling is enabled for the options panel. */
     withVirtualScroll: boolean;

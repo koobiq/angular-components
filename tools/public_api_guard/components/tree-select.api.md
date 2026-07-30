@@ -39,6 +39,7 @@ import { KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqSelectSearch } from '@koobiq/components/core';
 import { KbqSelectTrigger } from '@koobiq/components/core';
+import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTag } from '@koobiq/components/tags';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelection } from '@koobiq/components/tree';
@@ -62,7 +63,7 @@ export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
 }>>;
 
 // @public (undocumented)
-export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState {
+export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState, KbqSiblingPopup {
     constructor();
     // (undocumented)
     get autoSelect(): boolean;
@@ -123,6 +124,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     get id(): string;
     set id(value: string);
+    get isAttached(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
     // (undocumented)

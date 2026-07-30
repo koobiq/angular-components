@@ -42,7 +42,7 @@ import {
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
+import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER, KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import {
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
@@ -1785,6 +1785,62 @@ describe('KbqDropdown', () => {
         }));
     });
 
+    describe('with a tooltip on the trigger element', () => {
+        let fixture: ComponentFixture<DropdownWithTooltipOnTrigger>;
+        let trigger: HTMLElement;
+
+        /** `KbqTooltipTrigger` default enter delay (400 ms) plus a buffer for the deferred show. */
+        const tooltipEnterDelay = 410;
+
+        /** Opens the tooltip by hover and settles its enter delay and the deferred reposition. */
+        const showTooltip = () => {
+            dispatchMouseEvent(trigger, 'mouseenter');
+            fixture.detectChanges();
+            tick(tooltipEnterDelay);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            fixture = createComponent(DropdownWithTooltipOnTrigger, [KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER]);
+            fixture.detectChanges();
+
+            trigger = fixture.componentInstance.triggerEl().nativeElement;
+            patchElementFocus(trigger);
+        });
+
+        it('should hide the tooltip when the dropdown opens', fakeAsync(() => {
+            showTooltip();
+
+            expect(overlayContainerElement.textContent).toContain('TOOLTIP');
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+        }));
+
+        it('should not show the tooltip when the closing dropdown restores focus to the trigger', fakeAsync(() => {
+            showTooltip();
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            flush();
+
+            // Closing by `keydown` is what makes `KbqDropdownTrigger.destroy` restore focus to the trigger.
+            dispatchKeyboardEvent(overlayContainerElement.querySelector(PANEL_SELECTOR)!, 'keydown', ESCAPE);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeFalsy();
+            expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+        }));
+    });
+
     describe('panel min-width', () => {
         /** JSDOM does not lay out, so the trigger's border-box width has to be mocked. */
         const mockTriggerWidth = (fixture: ComponentFixture<SimpleDropdown>, width: number) =>
@@ -2434,6 +2490,23 @@ class DropdownWithTooltip implements TestableDropdown {
 
     defaultValue = 'Just a text';
     longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
+}
+
+@Component({
+    imports: [
+        KbqDropdownModule,
+        KbqToolTipModule
+    ],
+    template: `
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown" [kbqTooltip]="'TOOLTIP'">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+    `
+})
+class DropdownWithTooltipOnTrigger {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
 }
 
 @Component({
