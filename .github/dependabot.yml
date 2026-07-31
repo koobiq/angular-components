@@ -4,13 +4,42 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'monthly'
+      interval: 'weekly'
+    # Grouping collapses most updates into a handful of pull requests, but the limit keeps
+    # a bad week from filling the queue. Raise it if updates start starving each other.
+    open-pull-requests-limit: 10
     ignore:
-      # Ignores any major updates
-      - dependency-name: '*'
+      # Majors are ignored only where the version is coupled to the Angular release train
+      # and has to be upgraded deliberately, together with the framework. Everything else
+      # gets major updates: a blanket ignore was the reason the tree drifted far enough to
+      # accumulate advisories whose only fix lives in a newer major.
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@angular-builders/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@angular-devkit/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@schematics/angular'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'angular-eslint'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'jest-preset-angular'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'ng-packagr'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'rxjs'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'zone.js'
         update-types: ['version-update:semver-major']
       # Ignores any major and minor updates, because @angular-devkit/architect@0.x.x has a non-standard angular semantic
       # version number
@@ -21,6 +50,11 @@ updates:
       - dependency-name: '@angular-devkit/architect-cli'
         update-types: ['version-update:semver-major', 'version-update:semver-minor']
     groups:
+      # Security fixes arrive as a single pull request rather than one per advisory.
+      security:
+        applies-to: security-updates
+        patterns:
+          - '*'
       eslint:
         patterns:
           - 'eslint*'
@@ -107,3 +141,14 @@ updates:
         patterns:
           - 'express'
           - '@types/express'
+
+  # @koobiq/cli is published to npm with its own runtime dependencies, declared here rather
+  # than in the root manifest. Without this entry those ranges are never updated and drift
+  # away from the root devDependencies that mirror them.
+  - package-ecosystem: 'npm'
+    directory: '/packages/cli'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'chore(cli)'
