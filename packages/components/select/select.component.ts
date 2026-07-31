@@ -207,6 +207,9 @@ export const minimumTimeToDisplayLoading = 300;
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
+        // The select is not a native control, so the invalid and required states have to be exposed explicitly.
+        '[attr.aria-invalid]': 'errorState',
+        '[attr.aria-required]': 'required',
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline()',

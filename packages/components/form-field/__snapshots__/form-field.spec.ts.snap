@@ -8,7 +8,10 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
+      aria-label="Скрыть пароль"
+      aria-pressed="true"
       class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye-slash_16"
+      role="button"
       tabindex="0"
     />
     
@@ -19,39 +22,11 @@ DebugElement {
 exports[`KbqFormField should display KbqCleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
+    aria-label="Очистить"
     class="kbq-cleaner kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-circle-xmark_16"
+    role="button"
     tabindex="0"
   />,
-}
-`;
-
-exports[`KbqFormField should display KbqError 1`] = `
-DebugElement {
-  "nativeNode": <kbq-error
-    class="kbq-error kbq-hint"
-    id="test-error-id"
-  >
-    <span
-      class="kbq-hint__text"
-    >
-      Error
-    </span>
-  </kbq-error>,
-}
-`;
-
-exports[`KbqFormField should display KbqHint 1`] = `
-DebugElement {
-  "nativeNode": <kbq-hint
-    class="kbq-hint kbq-empty"
-    id="test-hint-id"
-  >
-    <span
-      class="kbq-hint__text"
-    >
-      Hint
-    </span>
-  </kbq-hint>,
 }
 `;
 
@@ -73,22 +48,14 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
+      aria-label="Показать пароль"
+      aria-pressed="false"
       class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      role="button"
       tabindex="0"
     />
     
   </kbq-password-toggle>,
-}
-`;
-
-exports[`KbqFormField should display KbqPrefix 1`] = `
-DebugElement {
-  "nativeNode": <span
-    class="kbq-prefix"
-    kbqprefix=""
-  >
-    Prefix
-  </span>,
 }
 `;
 
@@ -137,11 +104,11 @@ DebugElement {
 exports[`KbqFormField should display KbqReactivePasswordHint success for valid password 1`] = `
 DebugElement {
   "nativeNode": <kbq-reactive-password-hint
-    class="kbq-reactive-password-hint kbq-hint kbq-contrast-fade kbq-hint_fill-text-off"
+    class="kbq-reactive-password-hint kbq-hint kbq-hint_fill-text-off kbq-success"
     id="test-reactive-password-hint-id"
   >
     <i
-      class="kbq kbq-icon kbq-contrast-fade kbq-check-s_16"
+      class="kbq kbq-icon kbq-success kbq-check-s_16"
       style="max-height: 16px;"
     />
     <span
@@ -154,17 +121,6 @@ DebugElement {
 }
 `;
 
-exports[`KbqFormField should display KbqSuffix 1`] = `
-DebugElement {
-  "nativeNode": <span
-    class="kbq-suffix"
-    kbqsuffix=""
-  >
-    Suffix
-  </span>,
-}
-`;
-
 exports[`KbqFormField should hide KbqPasswordToggle initially 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
@@ -173,7 +129,10 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
+      aria-label="Показать пароль"
+      aria-pressed="false"
       class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      role="button"
       tabindex="0"
     />
     

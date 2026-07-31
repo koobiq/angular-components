@@ -24,6 +24,7 @@ let nextUniqueId = 0;
         '[attr.type]': 'elementType',
         '[attr.placeholder]': 'placeholder',
         '[attr.disabled]': 'disabled || null',
+        '[attr.aria-invalid]': 'errorState',
         '[required]': 'required',
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',

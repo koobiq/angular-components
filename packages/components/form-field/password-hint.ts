@@ -1,22 +1,30 @@
 import {
     AfterContentInit,
+    afterNextRender,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     inject,
-    Input,
+    Injector,
     input,
+    model,
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_FORM_FIELD_REF, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { Subject } from 'rxjs';
+import { EMPTY, Observable, Subject } from 'rxjs';
 import { KbqFormField } from './form-field';
 import { KbqHint } from './hint';
 
 let nextPasswordHintUniqueId = 0;
 
+/**
+ * @deprecated Use `KbqReactivePasswordHint` instead. Will be removed in the next major release.
+ */
 export enum PasswordRules {
     Length,
     UpperLatin,
@@ -26,19 +34,36 @@ export enum PasswordRules {
     Custom
 }
 
-export const regExpPasswordValidator = {
+/**
+ * Regular expressions checked by `KbqPasswordHint` for the rules that are expressed as a pattern.
+ *
+ * @deprecated Use `KbqReactivePasswordHint` with `PasswordValidators` instead. Will be removed in the next
+ * major release.
+ */
+export const regExpPasswordValidator: Partial<Record<PasswordRules, RegExp>> = {
     [PasswordRules.LowerLatin]: RegExp(/^(?=.*?[a-z])/),
     [PasswordRules.UpperLatin]: RegExp(/^(?=.*?[A-Z])/),
     [PasswordRules.Digit]: RegExp(/^(?=.*?[0-9])/),
     [PasswordRules.LatinAndSpecialSymbols]: RegExp(/[^ !`"'#№$%&()*+,-./\\:;<=>?@[\]^_{|}~A-Za-z0-9]/)
 };
 
+/**
+ * Whether any of the password hints reports an error.
+ *
+ * @deprecated Use `KbqReactivePasswordHint` instead. Will be removed in the next major release.
+ */
 export const hasPasswordStrengthError = (
     passwordHints: QueryList<KbqPasswordHint> | readonly KbqPasswordHint[]
 ): boolean => {
     return passwordHints.some((hint: KbqPasswordHint) => hint.hasError);
 };
 
+/**
+ * Password hint driven by the `PasswordRules` engine.
+ *
+ * @deprecated Use `KbqReactivePasswordHint` instead: it derives its state from the form control validators
+ * rather than from the control's internal streams. Will be removed in the next major release.
+ */
 @Component({
     selector: 'kbq-password-hint',
     imports: [KbqIconModule],
@@ -57,35 +82,52 @@ export const hasPasswordStrengthError = (
         class: 'kbq-hint kbq-password-hint',
         '[class.kbq-success]': 'checked',
         '[class.kbq-error]': 'hasError',
-        '[class.kbq-hint_fill-text-off]': 'fillTextOff',
-        '[class.kbq-hint_compact]': 'compact'
-    }
+        '[class.kbq-hint_fill-text-off]': 'fillTextOff()',
+        '[class.kbq-hint_compact]': 'compact()'
+    },
+    exportAs: 'kbqPasswordHint'
 })
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
-    private changeDetectorRef = inject(ChangeDetectorRef);
-    private formField = inject(KBQ_FORM_FIELD_REF, { optional: true })!;
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
+    // @TODO fix types (#DS-2915)
+    private formField = inject<KbqFormField>(KBQ_FORM_FIELD_REF, { optional: true })!;
 
-    readonly id = input<string>(`kbq-hint-${nextPasswordHintUniqueId++}`);
+    /** Unique ID for the hint. Referenced by the `aria-describedby` of the form field control. */
+    override readonly id = input<string>(`kbq-password-hint-${nextPasswordHintUniqueId++}`);
 
-    readonly rule = input<PasswordRules | any>();
+    /** Rule the hint checks the password against. */
+    readonly rule = input<PasswordRules>();
 
-    readonly min = input<number>(undefined!);
-    readonly max = input<number>(undefined!);
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() regex: RegExp | null;
+    /** Minimal password length, required by `PasswordRules.Length`. */
+    readonly min = input<number>();
+    /** Maximal password length, required by `PasswordRules.Length`. */
+    readonly max = input<number>();
+
+    /** Pattern the password is checked against, required by `PasswordRules.Custom` when `checkRule` is not set. */
+    readonly regex = model<RegExp | null>(null);
+
+    /** Custom predicate the password is checked against, an alternative to `regex` for `PasswordRules.Custom`. */
     readonly customCheckRule = input<(value: string) => boolean>(undefined!, { alias: 'checkRule' });
 
+    /** Form field the hint belongs to, when it can not be injected (e.g. the hint is rendered outside of it). */
     readonly viewFormField = input<KbqFormField>();
 
-    // TODO: Skipped for migration because:
-    //  This input is inherited from a superclass, but the parent cannot be migrated.
-    @Input() fillTextOff: boolean = true;
+    /** Disables `color` for the hint text. */
+    override readonly fillTextOff = input(true, { transform: booleanAttribute });
 
+    /** Whether the password fails the rule. */
     hasError: boolean = false;
+    /** Whether the password satisfies the rule. */
     checked: boolean = false;
 
-    get icon(): string {
+    /**
+     * Icon reflecting the current state of the rule.
+     *
+     * @docs-private
+     */
+    protected get icon(): string {
         return this.checked ? 'kbq-check-s_16' : 'kbq-xmark-s_16';
     }
 
@@ -95,7 +137,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
      * @docs-private
      */
     protected get iconColor(): KbqComponentColors {
-        if (this.control?.ngControl.untouched && this.control?.ngControl.pristine) {
+        if (this.control?.ngControl?.untouched && this.control?.ngControl?.pristine) {
             return KbqComponentColors.ContrastFade;
         }
 
@@ -108,7 +150,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
         return this.formField.control();
     }
 
-    private lastControlValue: string;
+    private lastControlValue: string | null = null;
 
     constructor() {
         super();
@@ -122,37 +164,49 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
         const rule = this.rule();
         const customCheckRule = this.customCheckRule();
 
-        if (rule === PasswordRules.Custom && this.regex === undefined && customCheckRule === undefined) {
+        if (rule === PasswordRules.Custom && this.regex() == null && customCheckRule === undefined) {
             throw Error('You should set [regex] or [checkRule] for PasswordRules.Custom');
         }
 
-        if (rule === PasswordRules.Length && (this.min() || this.max()) === null) {
+        if (rule === PasswordRules.Length && this.min() == null && this.max() == null) {
             throw Error('For [rule] "Length" need set [min] and [max]');
         }
 
         if (rule === PasswordRules.Length) {
             this.checkRule = this.checkLengthRule;
-        } else if ([PasswordRules.UpperLatin, PasswordRules.LowerLatin, PasswordRules.Digit].includes(rule)) {
-            this.regex = regExpPasswordValidator[rule];
+        } else if (
+            rule !== undefined &&
+            [PasswordRules.UpperLatin, PasswordRules.LowerLatin, PasswordRules.Digit].includes(rule)
+        ) {
+            this.regex.set(regExpPasswordValidator[rule]!);
             this.checkRule = this.checkRegexRule;
         } else if (rule === PasswordRules.LatinAndSpecialSymbols) {
-            this.regex = regExpPasswordValidator[rule];
+            this.regex.set(regExpPasswordValidator[rule]!);
             this.checkRule = this.checkSpecialSymbolsRegexRule;
         } else if (rule === PasswordRules.Custom) {
-            this.checkRule = this.regex === undefined ? customCheckRule : this.checkRegexRule;
+            this.checkRule = this.regex() == null ? customCheckRule : this.checkRegexRule;
         } else {
             throw Error(`Unknown [rule]=${rule}`);
         }
 
-        // prevent error when formField.control is undefined
-        setTimeout(() => {
-            this.formField.control().stateChanges.subscribe(this.checkValue);
+        // The control is not resolvable until the form field content is initialized, and neither stream must be
+        // subscribed on the server.
+        afterNextRender(
+            () => {
+                const control = this.formField.control();
 
-            (this.formField.control() as unknown as { checkRule: Subject<any> }).checkRule.subscribe(() => {
-                this.checked = this.checkRule(this.control.value);
-                this.hasError = !this.checkRule(this.control.value);
-            });
-        });
+                control.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.checkValue);
+
+                ((control as unknown as { checkRule?: Subject<unknown> }).checkRule || (EMPTY as Observable<unknown>))
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe(() => {
+                        this.checked = this.checkRule(this.control.value);
+                        this.hasError = !this.checked;
+                        this.changeDetectorRef.markForCheck();
+                    });
+            },
+            { injector: this.injector }
+        );
     }
 
     private checkValue = () => {
@@ -172,17 +226,17 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
         this.changeDetectorRef.markForCheck();
     };
 
-    private checkLengthRule(value: string): boolean {
-        return value.length >= this.min() && value.length <= this.max();
-    }
-
-    private checkRegexRule = (value: string): boolean => {
-        return !!this.regex?.test(value);
+    private checkLengthRule = (value: string): boolean => {
+        return value.length >= (this.min() ?? 0) && value.length <= (this.max() ?? Infinity);
     };
 
-    private checkSpecialSymbolsRegexRule(value: string): boolean {
-        return !!value && !this.regex?.test(value);
-    }
+    private checkRegexRule = (value: string): boolean => {
+        return !!this.regex()?.test(value);
+    };
+
+    private checkSpecialSymbolsRegexRule = (value: string): boolean => {
+        return !!value && !this.regex()?.test(value);
+    };
 
     private isValueChanged(): boolean {
         return this.lastControlValue !== this.formField.control().value;

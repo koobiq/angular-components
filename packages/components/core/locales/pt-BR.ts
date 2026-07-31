@@ -17,7 +17,10 @@ export const ptBRLocaleData = {
         expandBreadcrumbs: 'Mostrar itens ocultos',
         previousMonth: 'Mês anterior',
         currentDate: 'Data atual',
-        nextMonth: 'Próximo mês'
+        nextMonth: 'Próximo mês',
+        clear: 'Apagar',
+        showPassword: 'Mostrar a senha',
+        hidePassword: 'Ocultar a senha'
     } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {

@@ -17,7 +17,10 @@ export const tkTMLocaleData = {
         expandBreadcrumbs: 'Gizlenen elementleri görkez',
         previousMonth: 'Öňki aý',
         currentDate: 'Şu günki sene',
-        nextMonth: 'Indiki aý'
+        nextMonth: 'Indiki aý',
+        clear: 'Arassala',
+        showPassword: 'Paroly görkez',
+        hidePassword: 'Paroly gizle'
     } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {

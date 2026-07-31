@@ -17,7 +17,10 @@ export const esLALocaleData = {
         expandBreadcrumbs: 'Mostrar elementos ocultos',
         previousMonth: 'Mes anterior',
         currentDate: 'Fecha actual',
-        nextMonth: 'Mes siguiente'
+        nextMonth: 'Mes siguiente',
+        clear: 'Borrar',
+        showPassword: 'Mostrar la contraseña',
+        hidePassword: 'Ocultar la contraseña'
     } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {

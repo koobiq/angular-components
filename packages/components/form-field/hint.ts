@@ -1,4 +1,4 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, Input, input, ViewEncapsulation } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 
 let nextUniqueId = 0;
@@ -13,22 +13,18 @@ let nextUniqueId = 0;
     host: {
         class: 'kbq-hint',
         '[attr.id]': 'id()',
-        '[class.kbq-hint_fill-text-off]': 'fillTextOff',
-        '[class.kbq-hint_compact]': 'compact'
+        '[class.kbq-hint_fill-text-off]': 'fillTextOff()',
+        '[class.kbq-hint_compact]': 'compact()'
     },
     exportAs: 'kbqHint'
 })
 export class KbqHint extends KbqColorDirective {
-    /** Unique ID for the hint. */
+    /** Unique ID for the hint. Referenced by the `aria-describedby` of the form field control. */
     readonly id = input<string>(`kbq-hint-${nextUniqueId++}`);
 
     /** Disables `color` for the hint text. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) fillTextOff: boolean = false;
+    readonly fillTextOff = input(false, { transform: booleanAttribute });
 
     /** Makes the hint size smaller. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) compact: boolean = false;
+    readonly compact = input(false, { transform: booleanAttribute });
 }

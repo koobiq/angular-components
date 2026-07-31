@@ -17,6 +17,7 @@ import {
     ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
+import { Subject } from 'rxjs';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
 import { getKbqFormFieldMissingControlError, KbqFormField, kbqFormFieldDefaultOptionsProvider } from './form-field';
@@ -111,6 +112,18 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
 export class InputFormFieldWithHintAndError {
     readonly control = new FormControl('', [Validators.required]);
 }
+
+@Component({
+    selector: 'input-form-field-with-hint-customization',
+    imports: [KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput />
+            <kbq-hint compact fillTextOff>Hint</kbq-hint>
+        </kbq-form-field>
+    `
+})
+export class InputFormFieldWithHintCustomization {}
 
 @Component({
     selector: 'input-form-field-with-prefix-and-suffix',
@@ -307,11 +320,49 @@ class InputFormFieldWithInvalidOrSubmitMatcher {
     submitted = false;
 }
 
+@Component({
+    selector: 'password-form-field-with-conditional-content',
+    imports: [ReactiveFormsModule, KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInputPassword [formControl]="formControl" />
+            @if (visible) {
+                <kbq-password-toggle />
+                <kbq-reactive-password-hint [hasError]="false">Hint</kbq-reactive-password-hint>
+            }
+        </kbq-form-field>
+    `
+})
+class PasswordFormFieldWithConditionalContent {
+    readonly formControl = new FormControl('');
+    visible = true;
+}
+
 describe(KbqFormField.name, () => {
     it('should display KbqHint', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        const hint = getHintDebugElement(debugElement).nativeElement;
 
-        expect(getHintDebugElement(debugElement)).toMatchSnapshot();
+        expect(hint.classList.contains('kbq-hint')).toBe(true);
+        expect(hint.getAttribute('id')).toBe('test-hint-id');
+        expect(hint.textContent?.trim()).toBe('Hint');
+        expect(hint.closest('.kbq-form-field__hint')).toBeTruthy();
+    });
+
+    it('should NOT set kbq-hint_fill-text-off and kbq-hint_compact for KbqHint by default', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        const hint = getHintDebugElement(debugElement).nativeElement;
+
+        expect(hint.classList.contains('kbq-hint_fill-text-off')).toBe(false);
+        expect(hint.classList.contains('kbq-hint_compact')).toBe(false);
+    });
+
+    it('should set kbq-hint_fill-text-off and kbq-hint_compact for KbqHint by attribute', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintCustomization);
+        const hint = getHintDebugElement(debugElement).nativeElement;
+
+        expect(hint.classList.contains('kbq-hint_fill-text-off')).toBe(true);
+        expect(hint.classList.contains('kbq-hint_compact')).toBe(true);
     });
 
     it('should display KbqError', () => {
@@ -320,7 +371,11 @@ describe(KbqFormField.name, () => {
 
         input.focus();
         input.blur();
-        expect(getErrorDebugElement(debugElement)).toMatchSnapshot();
+        const error = getErrorDebugElement(debugElement).nativeElement;
+
+        expect(error.classList.contains('kbq-error')).toBe(true);
+        expect(error.getAttribute('id')).toBe('test-error-id');
+        expect(error.textContent?.trim()).toBe('Error');
     });
 
     it('should hide KbqError', () => {
@@ -331,14 +386,18 @@ describe(KbqFormField.name, () => {
 
     it('should display KbqPrefix', () => {
         const { debugElement } = createComponent(InputFormFieldWithPrefixAndSuffix);
+        const prefix = getPrefixDebugElement(debugElement).nativeElement;
 
-        expect(getPrefixDebugElement(debugElement)).toMatchSnapshot();
+        expect(prefix.classList.contains('kbq-prefix')).toBe(true);
+        expect(prefix.closest('.kbq-form-field__prefix')).toBeTruthy();
     });
 
-    it('should display KbqSuffix', async () => {
+    it('should display KbqSuffix', () => {
         const { debugElement } = createComponent(InputFormFieldWithPrefixAndSuffix);
+        const suffix = getSuffixDebugElement(debugElement).nativeElement;
 
-        expect(getSuffixDebugElement(debugElement)).toMatchSnapshot();
+        expect(suffix.classList.contains('kbq-suffix')).toBe(true);
+        expect(suffix.closest('.kbq-form-field__suffix')).toBeTruthy();
     });
 
     it('should hide KbqCleaner', () => {
@@ -474,12 +533,6 @@ describe(KbqFormField.name, () => {
         componentInstance.control.disable();
         fixture.detectChanges();
         expect(formField.classes['kbq-disabled']).toBeTruthy();
-    });
-
-    it('should add kbq-form-field_invalid selector for KbqFormField initially', () => {
-        const { debugElement } = createComponent(InputFormFieldWithCustomErrorStateMatcher);
-
-        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_invalid']).toBeTruthy();
     });
 
     it('should add kbq-form-field_invalid selector for KbqFormField initially', () => {
@@ -690,6 +743,176 @@ describe(KbqFormField.name, () => {
 
         expect(getLabelNativeElement(debugElement).classList.contains('test-label')).toBeTruthy();
         expect(getContentNativeElement(debugElement).classList.contains('test-content')).toBeTruthy();
+    });
+
+    describe('lifecycle', () => {
+        const getStateChangesObserverCount = (debugElement: DebugElement): number => {
+            const control = debugElement.query(By.directive(KbqInputPassword)).injector.get(KbqInputPassword);
+
+            return (control.stateChanges as Subject<void>).observers.length;
+        };
+
+        it('should unsubscribe the projected content from the control stateChanges on destroy', () => {
+            const fixture = createComponent(PasswordFormFieldWithConditionalContent);
+            const { debugElement, componentInstance } = fixture;
+            const initial = getStateChangesObserverCount(debugElement);
+
+            componentInstance.visible = false;
+            fixture.detectChanges();
+            const afterDestroy = getStateChangesObserverCount(debugElement);
+
+            componentInstance.visible = true;
+            fixture.detectChanges();
+
+            expect(afterDestroy).toBeLessThan(initial);
+            expect(getStateChangesObserverCount(debugElement)).toBe(initial);
+        });
+
+        it('should unsubscribe the form field from the control stateChanges on destroy', () => {
+            const fixture = createComponent(PasswordFormFieldWithConditionalContent);
+            const control = fixture.debugElement.query(By.directive(KbqInputPassword)).injector.get(KbqInputPassword);
+
+            expect((control.stateChanges as Subject<void>).observers.length).toBeGreaterThan(0);
+            fixture.destroy();
+            expect((control.stateChanges as Subject<void>).observers.length).toBe(0);
+        });
+    });
+
+    describe('accessibility', () => {
+        const getDescribedByIds = (debugElement: DebugElement): string[] => {
+            return (getInputNativeElement(debugElement).getAttribute('aria-describedby') || '')
+                .split(/\s+/)
+                .filter(Boolean);
+        };
+
+        it('should link KbqHint to the control by aria-describedby', () => {
+            const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+
+            expect(getDescribedByIds(debugElement)).toEqual(['test-hint-id']);
+        });
+
+        it('should add KbqError to aria-describedby when the control becomes invalid', () => {
+            const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+            const input = getInputNativeElement(debugElement);
+
+            expect(getDescribedByIds(debugElement)).not.toContain('test-error-id');
+            input.focus();
+            input.blur();
+            expect(getDescribedByIds(debugElement)).toEqual(['test-error-id', 'test-hint-id']);
+        });
+
+        it('should remove KbqError from aria-describedby when the control becomes valid', () => {
+            const fixture = createComponent(InputFormFieldWithHintAndError);
+            const { debugElement } = fixture;
+            const input = getInputNativeElement(debugElement);
+
+            input.focus();
+            input.blur();
+            expect(getDescribedByIds(debugElement)).toContain('test-error-id');
+
+            input.value = 'koobiq';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            expect(getDescribedByIds(debugElement)).not.toContain('test-error-id');
+        });
+
+        it('should only reference ids that are present in the DOM', () => {
+            const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+
+            getDescribedByIds(debugElement).forEach((id) => {
+                expect(debugElement.nativeElement.querySelector(`#${id}`)).toBeTruthy();
+            });
+        });
+
+        it('should link KbqReactivePasswordHint to the control by aria-describedby', () => {
+            const { debugElement } = createComponent(PasswordFormField);
+            const input = getPasswordInputNativeElement(debugElement);
+
+            expect(input.getAttribute('aria-describedby')).toBe('test-reactive-password-hint-id');
+        });
+
+        it('should NOT set aria-describedby when there is nothing to describe', () => {
+            const { debugElement } = createComponent(InputFormFieldWithLabel);
+
+            expect(getInputNativeElement(debugElement).hasAttribute('aria-describedby')).toBe(false);
+        });
+
+        it('should set aria-invalid on the control according to the error state', () => {
+            const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+            const input = getInputNativeElement(debugElement);
+
+            expect(input.getAttribute('aria-invalid')).toBe('false');
+            input.focus();
+            input.blur();
+            expect(input.getAttribute('aria-invalid')).toBe('true');
+        });
+
+        it('should announce KbqError as an alert', () => {
+            const { debugElement } = createComponent(InputFormFieldWithCustomErrorStateMatcher);
+            const error = getErrorDebugElement(debugElement).nativeElement;
+
+            expect(error.getAttribute('role')).toBe('alert');
+            expect(error.getAttribute('aria-atomic')).toBe('true');
+        });
+
+        it('should expose KbqCleaner as a named button', () => {
+            const { debugElement } = createComponent(InputFormFieldWithCleaner);
+            const input = getInputNativeElement(debugElement);
+
+            input.value = 'koobiq';
+            input.dispatchEvent(new Event('input'));
+            const cleaner = getCleanerDebugElement(debugElement).nativeElement;
+
+            expect(cleaner.getAttribute('role')).toBe('button');
+            expect(cleaner.getAttribute('aria-label')).toBeTruthy();
+            expect(cleaner.getAttribute('tabindex')).toBe('0');
+        });
+
+        it.each(['Enter', ' '])('should clean field by KbqCleaner on %s', (key) => {
+            const { debugElement, componentInstance } = createComponent(InputFormFieldWithCleaner);
+            const input = getInputNativeElement(debugElement);
+
+            input.value = 'koobiq';
+            input.dispatchEvent(new Event('input'));
+            expect(componentInstance.control.value).toBe('koobiq');
+
+            const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+
+            getCleanerDebugElement(debugElement).nativeElement.dispatchEvent(event);
+            expect(componentInstance.control.value).toBeNull();
+            expect(event.defaultPrevented).toBe(true);
+        });
+
+        it('should expose KbqPasswordToggle as a named toggle button', () => {
+            const { debugElement } = createComponent(PasswordFormField);
+            const toggle = getPasswordToggleDebugElement(debugElement).nativeElement.querySelector('i');
+
+            expect(toggle.getAttribute('role')).toBe('button');
+            expect(toggle.getAttribute('aria-label')).toBeTruthy();
+            expect(toggle.getAttribute('aria-pressed')).toBe('false');
+        });
+
+        it('should reflect the shown password in KbqPasswordToggle aria-pressed and aria-label', () => {
+            const { debugElement } = createComponent(PasswordFormField);
+            const passwordToggle = getPasswordToggleDebugElement(debugElement);
+            const toggle = () => passwordToggle.nativeElement.querySelector('i');
+            const hiddenLabel = toggle().getAttribute('aria-label');
+
+            passwordToggle.nativeElement.click();
+            expect(toggle().getAttribute('aria-pressed')).toBe('true');
+            expect(toggle().getAttribute('aria-label')).not.toBe(hiddenLabel);
+        });
+
+        it.each(['Enter', ' '])('should display password by %s on KbqPasswordToggle', (key) => {
+            const { debugElement } = createComponent(PasswordFormField);
+            const input = getPasswordInputNativeElement(debugElement);
+
+            expect(input.type).toBe('password');
+            getPasswordToggleDebugElement(debugElement).nativeElement.dispatchEvent(
+                new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+            );
+            expect(input.type).toBe('text');
+        });
     });
 
     describe(ShowRequiredOnSubmitErrorStateMatcher.name, () => {

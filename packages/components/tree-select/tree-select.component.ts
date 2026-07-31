@@ -1547,7 +1547,7 @@ export class KbqTreeSelect
     private subscribeOnSearchChanges() {
         const search = this.search();
 
-        if (!search?.ngControl.valueChanges) return;
+        if (!search?.ngControl?.valueChanges) return;
 
         search.ngControl.valueChanges
             .pipe(

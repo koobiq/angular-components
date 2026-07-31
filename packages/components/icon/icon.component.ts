@@ -67,6 +67,17 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         return this.elementRef.nativeElement;
     }
 
+    /**
+     * Sets the icon name outside of the template, keeping the SVG resolution stream in sync.
+     * `ngOnChanges` does not run for values assigned in a constructor, so subclasses have to use this.
+     *
+     * @docs-private
+     */
+    protected setIconName(name: string): void {
+        this.iconName = name;
+        this.svgIconName.next(name);
+    }
+
     updateMaxHeight() {
         if (this.name !== 'KbqIcon') {
             return;

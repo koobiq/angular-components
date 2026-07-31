@@ -23,6 +23,12 @@ export type KbqA11yLocaleConfiguration = {
     currentDate: string;
     /** Calendar button switching to the next month. */
     nextMonth: string;
+    /** Form field button that clears the control value. */
+    clear: string;
+    /** Password form field button that reveals the password. */
+    showPassword: string;
+    /** Password form field button that masks the password. */
+    hidePassword: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */

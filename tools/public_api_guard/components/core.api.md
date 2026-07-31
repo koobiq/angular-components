@@ -8,6 +8,7 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
@@ -211,18 +212,15 @@ export interface CanColor {
     color: KbqComponentColors | ThemePalette | string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
-//
-// @public
-export type CanColorCtor = Constructor<CanColor> & AbstractConstructor<CanColor>;
-
 // @public (undocumented)
 export interface CanDisable {
     // (undocumented)
     disabled: boolean;
 }
 
+// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
+//
 // @public
 export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
 
@@ -309,7 +307,7 @@ export { dispatchEvent_2 as dispatchEvent }
 export function dispatchFakeEvent(node: Node | Window, type: string, canBubble?: boolean): Event;
 
 // @public
-export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, target?: Element): KeyboardEvent;
+export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, target?: Element, key?: string): KeyboardEvent;
 
 // @public
 export function dispatchMouseEvent(node: Node, type: string, x?: number, y?: number, event?: MouseEvent): MouseEvent;
@@ -389,6 +387,9 @@ export const enUSLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
     };
     select: {
         hiddenItemsText: string;
@@ -650,6 +651,9 @@ export const esLALocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
     };
     select: {
         hiddenItemsText: string;
@@ -1141,6 +1145,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1377,6 +1384,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1608,6 +1618,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1844,6 +1857,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2077,6 +2093,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             previousMonth: string;
             currentDate: string;
             nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2358,6 +2377,9 @@ export type KbqA11yLocaleConfiguration = {
     previousMonth: string;
     currentDate: string;
     nextMonth: string;
+    clear: string;
+    showPassword: string;
+    hidePassword: string;
 };
 
 // @public
@@ -2722,11 +2744,26 @@ export class KbqFormElement implements AfterContentInit {
 }
 
 // @public
+export interface KbqFormFieldControlRef<T = unknown> {
+    readonly controlType?: string;
+    readonly disabled: boolean;
+    readonly empty: boolean;
+    readonly errorState: boolean;
+    readonly focused: boolean;
+    readonly id: string;
+    readonly ngControl: NgControl | null;
+    placeholder: string;
+    readonly required: boolean;
+    readonly stateChanges: Observable<void>;
+    value: T | null;
+}
+
+// @public
 export interface KbqFormFieldRef {
     // (undocumented)
     canCleanerClearByEsc: boolean;
     // (undocumented)
-    control: any;
+    readonly control: Signal<KbqFormFieldControlRef>;
     // (undocumented)
     focus(): void;
     inOverlay: ModelSignal<boolean>;
@@ -3588,7 +3625,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    get ngControl(): any;
+    get ngControl(): _angular_forms.NgControl | null;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -3596,7 +3633,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     setPlaceholder(value: string): void;
     // (undocumented)
-    value(): any;
+    value(): unknown;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearch, "[kbqSelectSearch]", ["kbqSelectSearch"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -3848,11 +3885,6 @@ export const MAC_WK_CMD_RIGHT = 93;
 
 // @public (undocumented)
 export const META = 91;
-
-// Warning: (ae-forgotten-export) The symbol "HasElementRef" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function mixinColor<T extends AbstractConstructor<HasElementRef>>(base: T, defaultColor?: KbqComponentColors | ThemePalette): CanColorCtor & T;
 
 // @public
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
@@ -4144,6 +4176,9 @@ export const ptBRLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
     };
     select: {
         hiddenItemsText: string;
@@ -4590,6 +4625,9 @@ export const ruRULocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
     };
     select: {
         hiddenItemsText: string;
@@ -4958,6 +4996,9 @@ export const tkTMLocaleData: {
         previousMonth: string;
         currentDate: string;
         nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
     };
     select: {
         hiddenItemsText: string;

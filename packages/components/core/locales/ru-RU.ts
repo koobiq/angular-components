@@ -17,7 +17,10 @@ export const ruRULocaleData = {
         expandBreadcrumbs: 'Показать скрытые элементы',
         previousMonth: 'Предыдущий месяц',
         currentDate: 'Текущая дата',
-        nextMonth: 'Следующий месяц'
+        nextMonth: 'Следующий месяц',
+        clear: 'Очистить',
+        showPassword: 'Показать пароль',
+        hidePassword: 'Скрыть пароль'
     } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {

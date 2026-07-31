@@ -1,4 +1,4 @@
-﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentChecked,
@@ -8,9 +8,9 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
+    computed,
     contentChild,
-    ContentChildren,
+    contentChildren,
     DestroyRef,
     Directive,
     ElementRef,
@@ -21,25 +21,25 @@ import {
     model,
     OnDestroy,
     Provider,
-    QueryList,
+    Signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
-import { ESCAPE, F8, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
+import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { delay, startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
-import { KbqFormFieldControl } from './form-field-control';
+import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';
 import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqReactivePasswordHint } from './reactive-password-hint';
-import { KbqStepper } from './stepper';
+import { KbqNumberInputControl, KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
 /** @docs-private */
@@ -51,6 +51,9 @@ export function getKbqFormFieldMissingControlError(): Error {
 export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
     return Error(`You can't use kbq-cleaner with input that have type="number"`);
 }
+
+/** Error key set on the control by the legacy `KbqPasswordHint` when the password is not strong enough. */
+const PASSWORD_STRENGTH_ERROR = 'passwordStrength';
 
 /**
  * Default options for the kbq-form-field that can be configured using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS`
@@ -90,17 +93,26 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
     styleUrls: [
         'form-field.scss',
         'form-field-tokens.scss',
-        // KbqInput is a directive and can't have styles, so we need to include its styles here.
-        // The KbqInput styles are fairly minimal so it shouldn't be a big deal for people who aren't using KbqInput.
+        // The controls below are directives, and directives can't declare styles. The form field is the only
+        // component they are always rendered inside of, so it carries their styles on their behalf.
+        // Keep every entry paired with the control that owns it; removing one silently unstyles that control.
+        // KbqInput
         '../input/input.scss',
         '../input/input-tokens.scss',
+        // KbqTimepicker
         '../timepicker/timepicker.scss',
+        // KbqDatepickerInput
         '../datepicker/datepicker-input.scss',
+        // KbqTextarea
         '../textarea/textarea.scss',
+        // KbqTagInput
         '../tags/tag-input-tokens.scss'
     ],
     providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    // Every component of this package renders unencapsulated, on purpose: the `kbq-form-field__*` and
+    // `kbq-hint*` classes are a public contract that themes, the controls projected into the field and
+    // consumer stylesheets all target. Renaming or nesting them is a breaking change.
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-form-field',
@@ -165,38 +177,41 @@ export class KbqFormField
     readonly stepper = contentChild(KbqStepper);
     /**
      * @docs-private
-     *
-     * @TODO Should be readonly (#DS-3883)
      */
-    @ContentChild(KbqCleaner, { descendants: false }) cleaner: KbqCleaner | null;
+    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
     /**
      * @docs-private
      */
-    @ContentChild(KbqPasswordToggle) passwordToggle: KbqPasswordToggle | null;
+    readonly passwordToggle = contentChild(KbqPasswordToggle);
     /**
      * @docs-private
      */
-    @ContentChildren(KbqHint) hint: QueryList<KbqHint>;
+    readonly hint = contentChildren(KbqHint);
     /**
      * @docs-private
      */
-    @ContentChildren(KbqPasswordHint) passwordHints: QueryList<KbqPasswordHint>;
+    readonly passwordHints = contentChildren(KbqPasswordHint);
     /**
      * @docs-private
      */
-    @ContentChildren(KbqSuffix) suffix: QueryList<KbqSuffix>;
+    readonly suffix = contentChildren(KbqSuffix);
     /**
      * @docs-private
      */
-    @ContentChildren(KbqPrefix) prefix: QueryList<KbqPrefix>;
+    readonly prefix = contentChildren(KbqPrefix);
     /**
      * @docs-private
      */
     readonly connectionContainerRef = viewChild.required<ElementRef>('connectionContainer');
 
-    @ContentChildren(KbqReactivePasswordHint) private readonly reactivePasswordHint: QueryList<KbqReactivePasswordHint>;
-    @ContentChildren(KbqError) private readonly error: QueryList<KbqError>;
-    @ContentChild(KbqLabel) private readonly label: KbqLabel | null;
+    /** Host element of the control, used as the `aria-describedby` target. */
+    private readonly controlElementRef: Signal<ElementRef<HTMLElement>> = contentChild.required(KbqFormFieldControl, {
+        read: ElementRef
+    });
+
+    private readonly reactivePasswordHint = contentChildren(KbqReactivePasswordHint);
+    private readonly error = contentChildren(KbqError);
+    private readonly label = contentChild(KbqLabel);
 
     /**
      * @docs-private
@@ -218,36 +233,70 @@ export class KbqFormField
      *
      * @docs-private
      */
-    protected get hasReactivePasswordHint(): boolean {
-        return this.reactivePasswordHint.length > 0;
-    }
+    protected readonly hasReactivePasswordHint = computed(() => this.reactivePasswordHint().length > 0);
 
     /**
      * Whether the form-field contains kbq-error.
      *
      * @docs-private
      */
-    protected get hasError(): boolean {
-        return this.error.length > 0;
-    }
+    protected readonly hasError = computed(() => this.error().length > 0);
 
     /**
      * Whether the form-field contains kbq-label.
      *
      * @docs-private
      */
-    protected get hasLabel(): boolean {
-        return !!this.label;
-    }
+    protected readonly hasLabel = computed(() => !!this.label());
 
     /**
      * Whether the form-field contains kbq-password-hint.
      *
      * @docs-private
      */
-    get hasPasswordHint(): boolean {
-        return this.passwordHints?.length > 0;
-    }
+    readonly hasPasswordHint = computed(() => this.passwordHints().length > 0);
+
+    /**
+     * Whether the form-field contains kbq-hint.
+     *
+     * @docs-private
+     */
+    readonly hasHint = computed(() => this.hint().length > 0);
+
+    /**
+     * Whether the form-field contains kbqSuffix.
+     *
+     * @docs-private
+     */
+    readonly hasSuffix = computed(() => this.suffix().length > 0);
+
+    /**
+     * Whether the form-field contains kbqPrefix.
+     *
+     * @docs-private
+     */
+    readonly hasPrefix = computed(() => this.prefix().length > 0);
+
+    /**
+     * Whether the form-field contains kbq-cleaner.
+     *
+     * @docs-private
+     */
+    readonly hasCleaner = computed(() => !!this.cleaner());
+
+    /**
+     * Whether the form-field contains kbq-stepper.
+     *
+     * @docs-private
+     */
+    readonly hasStepper = computed(() => !!this.stepper());
+
+    /**
+     * Whether the form-field contains kbq-password-toggle.
+     *
+     * @docs-private
+     */
+    readonly hasPasswordToggle = computed(() => !!this.passwordToggle());
 
     /**
      * Current focus origin state.
@@ -264,113 +313,69 @@ export class KbqFormField
      * @docs-private
      */
     get hasFocus(): boolean {
-        return this.control()?.focused;
+        return !!this.control()?.focused;
     }
 
     /**
-     * Whether the form-field contains kbq-hint.
+     * Whether the cleaner can be displayed: it requires a projected `kbq-cleaner`, an enabled control
+     * and a value that is not empty.
      *
-     * @docs-private
-     */
-    get hasHint(): boolean {
-        return this.hint?.length > 0;
-    }
-
-    /**
-     * Whether the form-field contains kbqSuffix.
-     *
-     * @docs-private
-     */
-    get hasSuffix(): boolean {
-        return this.suffix?.length > 0;
-    }
-
-    /**
-     * Whether the form-field contains kbqPrefix.
-     *
-     * @docs-private
-     */
-    get hasPrefix(): boolean {
-        return this.prefix?.length > 0;
-    }
-
-    /**
-     * Whether the form-field contains kbq-cleaner.
-     *
-     * @docs-private
-     */
-    get hasCleaner(): boolean {
-        return !!this.cleaner;
-    }
-
-    /**
-     * Whether the form-field contains kbq-stepper.
-     *
-     * @docs-private
-     */
-    get hasStepper(): boolean {
-        return !!this.stepper();
-    }
-
-    /**
-     * Whether the form-field contains kbq-password-toggle.
-     *
-     * @docs-private
-     */
-    get hasPasswordToggle(): boolean {
-        return !!this.passwordToggle;
-    }
-
-    /**
      * @docs-private
      */
     get canShowCleaner(): boolean {
-        const control = this.control();
+        const ngControl = this.control()?.ngControl;
 
-        return this.hasCleaner && control?.ngControl ? control.ngControl.value && !this.disabled : false;
+        if (!this.hasCleaner() || !ngControl) {
+            return false;
+        }
+
+        const { value } = ngControl;
+
+        return value !== null && value !== undefined && value !== '' && !this.disabled;
     }
 
     /** Whether the form field is disabled. */
     get disabled(): boolean {
-        return this.control()?.disabled;
+        return !!this.control()?.disabled;
     }
+
+    /** Ids last written to the control's `aria-describedby`, to skip redundant DOM writes. */
+    private appliedDescribedByIds: string = '';
 
     ngAfterContentInit(): void {
         this.validateControlChild();
 
-        if ((this.control() as any).numberInput && this.hasCleaner) {
-            this.cleaner = null;
+        if (this.numberInput() && this.hasCleaner()) {
             throw getKbqFormFieldYouCanNotUseCleanerInNumberInputError();
         }
 
         // Subscribe to changes in the child control state in order to update the form field UI.
         this.control()
-            .stateChanges.pipe(startWith(), delay(0))
-            .subscribe((state: any) => {
-                if (this.passwordHints.length && !state?.focused && hasPasswordStrengthError(this.passwordHints)) {
-                    this.control().ngControl?.control?.setErrors({ passwordStrength: true });
+            .stateChanges.pipe(startWith(), delay(0), takeUntilDestroyed(this.destroyRef))
+            .subscribe((state) => {
+                const focused = (state as { focused?: boolean } | undefined)?.focused;
+
+                if (this.passwordHints().length && !focused && hasPasswordStrengthError(this.passwordHints())) {
+                    this.setPasswordStrengthError();
                 }
             });
 
-        if (this.hasStepper) {
-            this.stepper()!.connectTo((this.control() as any).numberInput);
+        if (this.hasStepper()) {
+            this.stepper()!.connectTo(this.numberInput()!);
         }
 
         this.initializeControl();
-        this.initializePrefixAndSuffix();
-        this.initializeHint();
     }
 
     ngAfterContentChecked(): void {
         this.validateControlChild();
+        this.updateDescribedByIds();
     }
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();
 
-        // Because the above changes a value used in the template after it was checked, we need
-        // to trigger CD or the change might not be reflected if there is no other CD scheduled.
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
     }
 
     ngOnDestroy(): void {
@@ -387,6 +392,11 @@ export class KbqFormField
      */
     clearValue(event: Event): void {
         event.stopPropagation();
+
+        // Keyboard activation of the cleaner must not also scroll the page (Space) or submit the form (Enter).
+        if (event.type === 'keydown') {
+            event.preventDefault();
+        }
 
         const control = this.control();
 
@@ -415,11 +425,11 @@ export class KbqFormField
     onKeyDown(event: KeyboardEvent): void {
         const control = this.control();
 
-        if (control.controlType === 'input-password' && event.altKey && event.keyCode === F8) {
+        if (control.controlType === 'input-password' && event.altKey && event.key === 'F8') {
             (control as unknown as { toggleType(): void }).toggleType();
         }
 
-        if (this.canCleanerClearByEsc && event.keyCode === ESCAPE && control.focused && this.hasCleaner) {
+        if (this.canCleanerClearByEsc && event.key === 'Escape' && control.focused && this.hasCleaner()) {
             control?.ngControl?.reset();
 
             event.preventDefault();
@@ -449,9 +459,7 @@ export class KbqFormField
      * @docs-private
      */
     shouldForward(prop: keyof NgControl): boolean {
-        const ngControl = this.control()?.ngControl;
-
-        return ngControl && ngControl[prop];
+        return !!this.control()?.ngControl?.[prop];
     }
 
     /**
@@ -494,6 +502,51 @@ export class KbqFormField
         }
     }
 
+    /** Resolves the number input hosted by the control, `null` when the control is not a `kbqNumberInput`. */
+    private numberInput(): KbqNumberInputControl | null {
+        return (this.control() as unknown as { numberInput?: KbqNumberInputControl }).numberInput || null;
+    }
+
+    /**
+     * Links the hints and the error rendered by the form field to the control via `aria-describedby`,
+     * so assistive technology announces them when the control gets focused.
+     */
+    private updateDescribedByIds(): void {
+        const ids = [
+            // The error is rendered only while the control is invalid, and `aria-describedby` must not
+            // reference elements that are not in the DOM.
+            ...(this.invalid ? this.error() : []),
+            ...this.hint(),
+            ...this.passwordHints(),
+            ...this.reactivePasswordHint()
+        ].map((hint) => hint.id());
+        const joinedIds = ids.join(' ');
+
+        if (joinedIds === this.appliedDescribedByIds) {
+            return;
+        }
+
+        this.appliedDescribedByIds = joinedIds;
+
+        const control = this.control();
+
+        if (control.setDescribedByIds) {
+            control.setDescribedByIds(ids);
+        } else {
+            kbqSetDescribedByIds(this.controlElementRef().nativeElement, ids);
+        }
+    }
+
+    /**
+     * Adds the password strength error to the control, keeping the errors set by the other validators:
+     * `setErrors` replaces the whole errors object.
+     */
+    private setPasswordStrengthError(): void {
+        const control = this.control().ngControl?.control;
+
+        control?.setErrors({ ...control.errors, [PASSWORD_STRENGTH_ERROR]: true });
+    }
+
     /** Initializes the form field control. */
     private initializeControl(): void {
         const control = this.control();
@@ -506,25 +559,15 @@ export class KbqFormField
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.changeDetectorRef.markForCheck());
     }
-
-    /** Initializes the kbqPrefix and kbqSuffix containers. */
-    private initializePrefixAndSuffix(): void {
-        // Mark the form field as dirty whenever the prefix or suffix children change. This is necessary because we
-        // conditionally display the prefix/suffix containers based on whether there is projected content.
-        merge(this.prefix.changes, this.suffix.changes)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.changeDetectorRef.markForCheck());
-    }
-
-    /** Initializes the KbqHint, KbqPasswordHint, KbqReactivePasswordHint and KbqError containers. */
-    private initializeHint(): void {
-        merge(this.hint.changes, this.passwordHints.changes, this.reactivePasswordHint.changes, this.error.changes)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.changeDetectorRef.markForCheck());
-    }
 }
 
 /**
+ * Trims the value of `kbqInput` and `kbqTextarea` before it reaches the model.
+ *
+ * The value displayed in the control is left untouched, so trimming never fights the user while they
+ * are typing. Add the `no-trim` attribute to the control to keep the value as is. `kbqInputPassword`
+ * is not matched by this directive, so passwords keep their leading and trailing whitespace.
+ *
  * @docs-private
  */
 @Directive({
@@ -536,7 +579,7 @@ export class KbqTrim {
     private readonly noTrim = coerceBooleanProperty(inject(new HostAttributeToken('no-trim'), { optional: true }));
     private ngControl = inject(NgControl, { optional: true, self: true })!;
 
-    private original: (fn: any) => void;
+    private original: (fn: (value: unknown) => void) => void;
 
     constructor() {
         if (this.noTrim || !this.ngControl?.valueAccessor) {
@@ -548,7 +591,12 @@ export class KbqTrim {
         this.ngControl.valueAccessor.registerOnChange = this.registerOnChange;
     }
 
-    trim(value) {
+    /**
+     * Trims the value when it is a string, other values are passed through as is.
+     *
+     * @docs-private
+     */
+    trim(value: unknown): unknown {
         if (this.noTrim) {
             return value;
         }
@@ -556,7 +604,7 @@ export class KbqTrim {
         return typeof value === 'string' ? value.trim() : value;
     }
 
-    private registerOnChange = (fn) => {
-        return this.original.call(this.ngControl.valueAccessor, (value) => fn(this.trim(value)));
+    private registerOnChange = (fn: (value: unknown) => void) => {
+        return this.original.call(this.ngControl.valueAccessor, (value: unknown) => fn(this.trim(value)));
     };
 }
