@@ -2,8 +2,11 @@ import { Routes } from '@angular/router';
 import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
 import {
+    E2ePrivateScrollbarContentMutation,
     E2ePrivateScrollbarDrag,
+    E2ePrivateScrollbarHostPadding,
     E2ePrivateScrollbarHoverVisibility,
+    E2ePrivateScrollbarKeyboard,
     E2ePrivateScrollbarScrollTo,
     E2ePrivateScrollbarStateAndStyle
 } from 'packages/components/scrollbar/private/e2e';
@@ -220,6 +223,9 @@ const components = [
     E2ePrivateScrollbarDrag,
     E2ePrivateScrollbarScrollTo,
     E2ePrivateScrollbarHoverVisibility,
+    E2ePrivateScrollbarContentMutation,
+    E2ePrivateScrollbarHostPadding,
+    E2ePrivateScrollbarKeyboard,
     E2eRadioStateAndStyle,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,
