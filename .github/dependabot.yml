@@ -102,8 +102,6 @@ updates:
         patterns:
           - 'conventional-changelog*'
           - '@conventional-changelog/*'
-          - '@types/conventional-changelog'
-          - '@types/conventional-changelog-writer'
       jest:
         patterns:
           - 'jest*'
