@@ -29,10 +29,14 @@ export const runCliCommands = () => {
         .option('-d, --dist-dir <string>', 'packages dist directory', process.env['RELEASE_DIST'] ?? DIST_DIR)
         .option('-c, --changelog-scope <string>', 'default changelog scope', process.env['CHANGELOG_SCOPE'] ?? 'koobiq')
         .option('-t, --tag-name <string>', 'Name of the NPM dist tag.', 'latest')
+        // `-n` was previously declared for three different options. Commander resolved it to
+        // the first one, so --without-notification and --repo-name were unreachable by their
+        // short flag; commander 15 rejects the duplicate outright. `-n` keeps its original
+        // meaning and the other two get short flags of their own.
         .option('-n, --without-references', 'exclude changelog links', false)
-        .option('-n, --without-notification', 'cancel mattermost notifications', false)
+        .option('-w, --without-notification', 'cancel mattermost notifications', false)
         .option('-o, --repo-owner <string>', 'github owner name', process.env['REPO_OWNER'] ?? 'koobiq')
-        .option('-n, --repo-name <string>', 'github repo name', process.env['REPO_NAME'] ?? 'koobiq')
+        .option('-r, --repo-name <string>', 'github repo name', process.env['REPO_NAME'] ?? 'koobiq')
         .action((subcommand, options) => {
             switch (subcommand) {
                 case CommandTypes.Stage:

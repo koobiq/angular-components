@@ -124,7 +124,7 @@ updates:
       inquirer:
         patterns:
           - 'inquirer'
-          - '@types/inquirer'
+          - '@inquirer/*'
       chalk:
         patterns:
           - 'chalk'

@@ -10,12 +10,11 @@
         "resolveJsonModule": true,
         "jsx": "preserve",
         "lib": ["esnext", "dom"],
-        "module": "esnext",
-        "moduleResolution": "node"
-    },
-    "ts-node": {
-        "compilerOptions": {
-            "module": "commonjs"
-        }
+        // NodeNext is required to resolve the "exports" maps of @octokit/rest, inquirer and
+        // commander, which no longer publish a top-level "main". This package has no
+        // "type": "module", so NodeNext still emits CommonJS; TypeScript 5.8 and Node 22.12+
+        // both allow require() of an ES module, which is how those packages are consumed.
+        "module": "nodenext",
+        "moduleResolution": "nodenext"
     }
 }
