@@ -2,13 +2,15 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
+    CdkScrollable,
     FlexibleConnectedPositionStrategy,
+    Overlay,
     OverlayConfig,
-    OverlayContainer,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
+    AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
@@ -16,7 +18,9 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
+    InjectionToken,
     Input,
+    OnInit,
     Output,
     TemplateRef,
     Type,
@@ -31,7 +35,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KBQ_HIDE_ON_SCROLL_STRATEGY,
     KbqComponentColors,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
@@ -159,22 +162,8 @@ export function getKbqPopoverInvalidPositionError(position: string) {
     },
     exportAs: 'kbqPopover'
 })
-export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
-    private overlayContainer = inject(OverlayContainer);
-    private renderer = inject(Renderer2);
-    private kbqHideOnScrollStrategy = inject(KBQ_HIDE_ON_SCROLL_STRATEGY);
-
-    protected scrollStrategy = (): ScrollStrategy => {
-        if (this.closeOnScroll === null && this.hideIfNotInViewPort()) {
-            const strategy = this.kbqHideOnScrollStrategy({ originElement: this.elementRef.nativeElement });
-
-            strategy.hide$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.hide());
-
-            return strategy;
-        }
-
-        return this.overlay.scrollStrategies.reposition({ scrollThrottle: 20 });
-    };
+export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
+    protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
 
     /** Controls whether the component should be hidden when it is not visible in the viewport. */
     readonly hideIfNotInViewPort = input(true, { transform: booleanAttribute });
@@ -456,22 +445,28 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
         };
     }
 
-    private classAddedToOverlayContainer: boolean = false;
+    ngOnInit(): void {
+        super.ngOnInit();
 
-    /**
-     * Overrides the base `show` method to display the overlay component with the
-     * specified entry delay and apply default positioning offsets.
-     */
-    override show(delay: number = this.enterDelay) {
-        super.show(delay);
-
-        this.addClassToOverlayContainer();
+        this.scrollable
+            ?.elementScrolled()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(this.hideIfScrolledOutOfView);
     }
 
-    override hide(delay: number = this.leaveDelay) {
-        super.hide(delay);
+    ngAfterContentInit(): void {
+        if (this.closeOnScroll === null) {
+            this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable | void) => {
+                if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
 
-        this.removeClassFromOverlayContainer();
+                const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
+                const childRects = this.elementRef.nativeElement.getBoundingClientRect();
+
+                if (childRects.bottom < parentRects.top || childRects.top > parentRects.bottom) {
+                    this.hide();
+                }
+            });
+        }
     }
 
     updateData() {
@@ -538,19 +533,19 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> {
         return merge(...this.closingActionsForClick(), this.closeOnScroll ? this.scrollDispatcher.scrolled() : NEVER);
     }
 
-    private addClassToOverlayContainer() {
-        const overlayContainer = this.overlayContainer?.getContainerElement();
+    private hideIfScrolledOutOfView = () => {
+        if (!this.scrollable || !this.hideIfNotInViewPort()) return;
 
-        if (overlayContainer.childNodes.length === 1) {
-            this.classAddedToOverlayContainer = true;
+        const rect = this.elementRef.nativeElement.getBoundingClientRect();
+        const containerRect = this.scrollable.getElementRef().nativeElement.getBoundingClientRect();
 
-            this.renderer.addClass(overlayContainer, 'cdk-overlay-container_dropdown');
+        if (!(
+            rect.bottom >= containerRect.top &&
+            rect.right >= containerRect.left &&
+            rect.top <= containerRect.bottom &&
+            rect.left <= containerRect.right
+        )) {
+            this.hide();
         }
-    }
-
-    private removeClassFromOverlayContainer() {
-        if (this.classAddedToOverlayContainer) {
-            this.renderer.removeClass(this.overlayContainer.getContainerElement(), 'cdk-overlay-container_dropdown');
-        }
-    }
+    };
 }
