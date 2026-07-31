@@ -16,6 +16,15 @@
     --kbq-private-scrollbar-track-default-background: transparent;
     --kbq-private-scrollbar-track-hover-background: transparent;
     --kbq-private-scrollbar-track-active-background: transparent;
+    --kbq-private-scrollbar-transition-duration: 0.15s;
+
+    // Overwritten inline by `KbqScrollbar.syncHostPadding()` with the host's own real computed
+    // padding on every recompute — these `0px` defaults only apply before the first recompute, or
+    // when `syncHostPadding()` doesn't run at all (`native`/coarse pointer, no track to position).
+    --kbq-private-scrollbar-host-padding-top: 0px;
+    --kbq-private-scrollbar-host-padding-right: 0px;
+    --kbq-private-scrollbar-host-padding-bottom: 0px;
+    --kbq-private-scrollbar-host-padding-left: 0px;
 }
 
 :where(.kbq-dark .kbq-private-scrollbar) {
@@ -38,7 +47,7 @@
 }
 
 // Hides the native scrollbar on the effective scroll element (host, or the delegated
-// kbqScrollbarViewport child) cross-browser. Applied only when overlaying with our own
+// kbqScrollbarVirtualViewport child) cross-browser. Applied only when overlaying with our own
 // track/thumb — i.e. not on coarse pointers and not under the `native` config option.
 .kbq-private-scrollbar_hide-native {
     scrollbar-width: none;
@@ -51,7 +60,7 @@
 }
 
 // Auto-created wrapper for the host's own content when there's no explicit
-// kbqScrollbarViewport — holds `overflow`, so the track/thumb (siblings on the host) stay a
+// kbqScrollbarVirtualViewport — holds `overflow`, so the track/thumb (siblings on the host) stay a
 // fixed overlay instead of scrolling away with the content.
 .kbq-private-scrollbar-viewport {
     // The auto-created wrapper is a real component (`kbq-scrollbar-viewport`, an
@@ -72,15 +81,20 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: auto;
+    // Prevents the browser's own touch-scroll/pan gesture recognition from fighting our
+    // pointer-driven drag on hybrid-input devices (e.g. touchscreen laptops) that can still route
+    // a touch pointer here despite `KbqScrollbar` building custom UI only when
+    // `matchMedia('(pointer: coarse)')` is false at init.
+    touch-action: none;
     transition:
-        opacity 0.15s,
-        visibility 0.15s,
-        background-color 0.15s;
+        opacity var(--kbq-private-scrollbar-transition-duration),
+        visibility var(--kbq-private-scrollbar-transition-duration),
+        background-color var(--kbq-private-scrollbar-transition-duration);
 
     // The synthetic `.kbq-hover`/`.kbq-active` forms match on an ANCESTOR (the host), not on this
     // element itself — the track is created via `Renderer2`, not template-authored, so nothing
-    // outside this directive can put a class directly on it. Matches how `kbq-scrollbar`'s own
-    // `.os-scrollbar-handle` is driven the same way (`_scrollbar-component-theme.scss`).
+    // outside this directive can put a class directly on it. Matches the same ancestor-class
+    // pattern already used in `kbq-scrollbar`'s own theme (`_scrollbar-component-theme.scss`).
     &:hover,
     .kbq-private-scrollbar.kbq-hover & {
         background: var(--kbq-private-scrollbar-track-hover-background);
@@ -92,7 +106,17 @@
     }
 }
 
-.kbq-private-scrollbar_disable-interaction .kbq-private-scrollbar-track {
+// Only when BOTH drag and click are disabled does the whole track (and, via inheritance, its
+// thumb) go fully inert. Deliberately not split into two single-flag rules: `pointer-events: none`
+// on just the thumb makes a click landing on it pass through to the track underneath, which the
+// track's own pointerdown listener then reads as `event.target !== thumb` — i.e. an ordinary track
+// click — and still runs the full `beginInteraction()`/drag-follow flow through `_disable-click`
+// alone, silently un-disabling drag. Same problem mirrored on `_disable-click` alone. With only one
+// of the two flags set, blocking is left entirely to the `disableDrag()`/`disableClick()` checks in
+// `scrollbar.ts` (`wireTrackInteraction`) instead — the thumb's own listener no-ops, and the
+// pointerdown event bubbles to the track listener which excludes `event.target === thumb`, so
+// nothing happens on either path once even one side is genuinely disabled.
+.kbq-private-scrollbar_disable-drag.kbq-private-scrollbar_disable-click .kbq-private-scrollbar-track {
     pointer-events: none;
 }
 
@@ -101,38 +125,53 @@
     visibility: visible;
 }
 
+// The custom track/thumb are a purely interactive, screen-only affordance — nothing on a printed
+// page can be dragged or clicked, so keep them out of print output entirely rather than rendering
+// an inert (and `aria-hidden`) bar of unused affordance space.
+@media print {
+    .kbq-private-scrollbar-track {
+        display: none;
+    }
+}
+
+// Inset by the host's own padding (see `--kbq-private-scrollbar-host-padding-*` above) instead of
+// flush `0` — the track is `position: absolute` directly on the host, so without this it would
+// sit at the host's border edge even when the host's own padding pushes the real content further
+// in, leaving the track floating over empty padding instead of overlaying the content it belongs
+// to.
 .kbq-private-scrollbar-track_vertical {
-    top: 0;
-    right: 0;
-    bottom: 0;
+    top: var(--kbq-private-scrollbar-host-padding-top);
+    right: var(--kbq-private-scrollbar-host-padding-right);
+    bottom: var(--kbq-private-scrollbar-host-padding-bottom);
     width: var(--kbq-private-scrollbar-size-track-dimension);
 }
 
 .kbq-private-scrollbar_rtl .kbq-private-scrollbar-track_vertical {
     right: auto;
-    left: 0;
+    left: var(--kbq-private-scrollbar-host-padding-left);
 }
 
 .kbq-private-scrollbar-track_horizontal {
-    left: 0;
-    right: 0;
-    bottom: 0;
+    left: var(--kbq-private-scrollbar-host-padding-left);
+    right: var(--kbq-private-scrollbar-host-padding-right);
+    bottom: var(--kbq-private-scrollbar-host-padding-bottom);
     height: var(--kbq-private-scrollbar-size-track-dimension);
 }
 
 // `axis: 'both'`, both tracks visible: each track stops short of the shared corner instead of
-// running underneath the other track's thumb.
+// running underneath the other track's thumb — added on top of (not instead of) the host-padding
+// inset above.
 .kbq-private-scrollbar-track_vertical.kbq-private-scrollbar-track_has-horizontal {
-    bottom: var(--kbq-private-scrollbar-size-track-dimension);
+    bottom: calc(var(--kbq-private-scrollbar-host-padding-bottom) + var(--kbq-private-scrollbar-size-track-dimension));
 }
 
 .kbq-private-scrollbar-track_horizontal.kbq-private-scrollbar-track_has-vertical {
-    right: var(--kbq-private-scrollbar-size-track-dimension);
+    right: calc(var(--kbq-private-scrollbar-host-padding-right) + var(--kbq-private-scrollbar-size-track-dimension));
 }
 
 .kbq-private-scrollbar_rtl .kbq-private-scrollbar-track_horizontal.kbq-private-scrollbar-track_has-vertical {
-    right: 0;
-    left: var(--kbq-private-scrollbar-size-track-dimension);
+    right: var(--kbq-private-scrollbar-host-padding-right);
+    left: calc(var(--kbq-private-scrollbar-host-padding-left) + var(--kbq-private-scrollbar-size-track-dimension));
 }
 
 .kbq-private-scrollbar-thumb {
@@ -141,7 +180,18 @@
     border-radius: var(--kbq-private-scrollbar-size-thumb-border-radius);
     background: var(--kbq-private-scrollbar-thumb-default-background);
     cursor: default;
-    transition: background-color 0.15s;
+    touch-action: none;
+    transition: background-color var(--kbq-private-scrollbar-transition-duration);
+
+    // Expands the thumb's interactive hit area 3px beyond its rendered box without changing how it
+    // looks — a pseudo-element isn't a separate event target, so a pointerdown landing in this
+    // margin still reports `event.target` as the thumb itself, which `KbqScrollbar`'s own
+    // `pointerdown` listener on the thumb already handles like any other hit.
+    &::before {
+        content: '';
+        position: absolute;
+        inset: -3px;
+    }
 
     &:hover,
     .kbq-private-scrollbar.kbq-hover & {

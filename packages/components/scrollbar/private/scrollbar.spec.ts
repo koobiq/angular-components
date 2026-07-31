@@ -65,16 +65,44 @@ class TestScrollbarHost {
 }
 
 @Component({
-    selector: 'test-scrollbar-disable-interaction-host',
+    selector: 'test-scrollbar-padding-host',
     imports: [KbqScrollbar],
     template: `
-        <div kbqScrollbar kbqScrollbarDisableInteraction data-testid="host" style="height: 100px; overflow: auto">
+        <div kbqScrollbar data-testid="host" style="height: 100px; overflow: auto; padding: 10px 20px 30px 40px">
             <div style="height: 500px">content</div>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class TestScrollbarDisableInteractionHost {
+class TestScrollbarPaddingHost {
+    readonly scrollbar = viewChild.required(KbqScrollbar);
+}
+
+@Component({
+    selector: 'test-scrollbar-disable-drag-host',
+    imports: [KbqScrollbar],
+    template: `
+        <div kbqScrollbar kbqScrollbarDisableDrag data-testid="host" style="height: 100px; overflow: auto">
+            <div style="height: 500px">content</div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestScrollbarDisableDragHost {
+    readonly scrollbar = viewChild.required(KbqScrollbar);
+}
+
+@Component({
+    selector: 'test-scrollbar-disable-click-host',
+    imports: [KbqScrollbar],
+    template: `
+        <div kbqScrollbar kbqScrollbarDisableClick data-testid="host" style="height: 100px; overflow: auto">
+            <div style="height: 500px">content</div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestScrollbarDisableClickHost {
     readonly scrollbar = viewChild.required(KbqScrollbar);
 }
 
@@ -372,11 +400,20 @@ describe(KbqScrollbar.name, () => {
             expect(bottomSpy).toHaveBeenCalled();
         });
 
-        it('adds the disable-interaction class when kbqScrollbarDisableInteraction is set', () => {
-            const fixture = createComponent(TestScrollbarDisableInteractionHost);
+        it('adds the disable-drag class when kbqScrollbarDisableDrag is set, independent of disable-click', () => {
+            const fixture = createComponent(TestScrollbarDisableDragHost);
             const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
 
-            expect(host.classList.contains('kbq-private-scrollbar_disable-interaction')).toBe(true);
+            expect(host.classList.contains('kbq-private-scrollbar_disable-drag')).toBe(true);
+            expect(host.classList.contains('kbq-private-scrollbar_disable-click')).toBe(false);
+        });
+
+        it('adds the disable-click class when kbqScrollbarDisableClick is set, independent of disable-drag', () => {
+            const fixture = createComponent(TestScrollbarDisableClickHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+
+            expect(host.classList.contains('kbq-private-scrollbar_disable-click')).toBe(true);
+            expect(host.classList.contains('kbq-private-scrollbar_disable-drag')).toBe(false);
         });
 
         it('does not create track/thumb on a coarse pointer', () => {
@@ -519,6 +556,51 @@ describe(KbqScrollbar.name, () => {
 
             expect(thumb.style.height).toBe('60px');
         });
+
+        it("publishes the host's own computed padding as CSS custom properties consumed by the track positioning rules", () => {
+            const fixture = createComponent(TestScrollbarPaddingHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+
+            fixture.componentInstance.scrollbar().update();
+
+            expect(host.style.getPropertyValue('--kbq-private-scrollbar-host-padding-top')).toBe('10px');
+            expect(host.style.getPropertyValue('--kbq-private-scrollbar-host-padding-right')).toBe('20px');
+            expect(host.style.getPropertyValue('--kbq-private-scrollbar-host-padding-bottom')).toBe('30px');
+            expect(host.style.getPropertyValue('--kbq-private-scrollbar-host-padding-left')).toBe('40px');
+        });
+
+        it('re-reads the host padding on every recompute(), picking up a runtime change with no resize of its own', () => {
+            const fixture = createComponent(TestScrollbarPaddingHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+
+            fixture.componentInstance.scrollbar().update();
+            expect(host.style.getPropertyValue('--kbq-private-scrollbar-host-padding-top')).toBe('10px');
+
+            host.style.padding = '5px';
+            fixture.componentInstance.scrollbar().update();
+
+            expect(host.style.getPropertyValue('--kbq-private-scrollbar-host-padding-top')).toBe('5px');
+        });
+
+        it('does not publish host padding CSS custom properties under native: true — there is no track to position', () => {
+            const fixture = createComponent(TestScrollbarPaddingHost, [
+                { provide: KBQ_SCROLLBAR_CONFIG, useValue: { native: true } }
+            ]);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+
+            fixture.componentInstance.scrollbar().update();
+
+            expect(host.style.getPropertyValue('--kbq-private-scrollbar-host-padding-top')).toBe('');
+        });
+
+        it('does not publish host padding CSS custom properties on a coarse pointer — there is no track to position', () => {
+            const fixture = createComponent(TestScrollbarPaddingHost, [coarsePointerWindowProvider]);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+
+            fixture.componentInstance.scrollbar().update();
+
+            expect(host.style.getPropertyValue('--kbq-private-scrollbar-host-padding-top')).toBe('');
+        });
     });
 
     describe('drag interaction', () => {
@@ -580,8 +662,8 @@ describe(KbqScrollbar.name, () => {
             expect(scrollEl.scrollTop).toBe(200);
         });
 
-        it('disableInteraction blocks both thumb drag and track jump-to-click', () => {
-            const fixture = createComponent(TestScrollbarDisableInteractionHost);
+        it('disableDrag blocks thumb drag but leaves track jump-to-click working as a one-shot, not a continued drag', () => {
+            const fixture = createComponent(TestScrollbarDisableDragHost);
             const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
             const scrollEl = getAutoViewport(host);
             const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
@@ -592,10 +674,39 @@ describe(KbqScrollbar.name, () => {
 
             thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
             expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
+            expect(scrollEl.scrollTop).toBe(0);
+
+            track.dispatchEvent(new MouseEvent('pointerdown', { clientY: 53, bubbles: true, cancelable: true }));
+            // The jump itself still happens...
+            expect(scrollEl.scrollTop).toBe(200);
+            // ...but, unlike an ordinary track click, it must not arm a continued drag — otherwise
+            // holding the mouse down past the jump would keep following the pointer exactly like a
+            // real drag, despite disableDrag.
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
+
+            document.dispatchEvent(new MouseEvent('pointermove', { clientY: 90, buttons: 1, cancelable: true }));
+            expect(scrollEl.scrollTop).toBe(200);
+        });
+
+        it('disableClick blocks track jump-to-click but leaves thumb drag working', () => {
+            const fixture = createComponent(TestScrollbarDisableClickHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            mockRects(track, thumb, 'vertical');
 
             track.dispatchEvent(new MouseEvent('pointerdown', { clientY: 53, bubbles: true, cancelable: true }));
             expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(false);
             expect(scrollEl.scrollTop).toBe(0);
+
+            thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
+            expect(host.classList.contains('kbq-private-scrollbar_dragging')).toBe(true);
+
+            document.dispatchEvent(new MouseEvent('pointermove', { clientY: 37, buttons: 1, cancelable: true }));
+            expect(scrollEl.scrollTop).toBe(200);
         });
 
         it('ignores pointermove events from a different pointerId than the one that started the drag', () => {
@@ -1584,5 +1695,43 @@ describe(KbqScrollbar.name, () => {
             expect(updateSpy).toHaveBeenCalled();
             expect(thumb.style.top).not.toBe('0px');
         });
+
+        it(
+            'does NOT pick up a content-only growth automatically — this directive only recomputes on ' +
+                "scroll, on a resize of the scroll element's own box, or on an explicit update() call. " +
+                'A `scrollHeight` change with no box-size change (e.g. appending rows to a list) fires ' +
+                'neither, so the thumb is left stale until something calls update() for it',
+            () => {
+                const fixture = createComponent(TestScrollbarHost);
+                const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+                const scrollEl = getAutoViewport(host);
+                const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+                const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+                setMetrics(scrollEl, { scrollTop: 0, clientHeight: 200, scrollHeight: 500 });
+                setMetrics(track, { clientHeight: 206 });
+                fixture.componentInstance.scrollbar().update();
+
+                // ratio = ceil(200/500*100)/100 = 0.4; thumbSize = max(0.4*200, 32) = 80.
+                expect(thumb.style.height).toBe('80px');
+
+                // Simulate content being appended: scrollHeight grows, clientHeight (the scroll
+                // element's own box size) does not — this is exactly the shape of change a real
+                // ResizeObserver never reports, since it only fires on box-size changes, not on
+                // scrollHeight/scrollWidth. No scroll event happens either.
+                setMetrics(scrollEl, { scrollHeight: 1000 });
+
+                // Nothing re-measures on its own: no scroll fired, no resize fired, and no manual
+                // update() was called — by design, there's no MutationObserver watching content
+                // mutations here, so the thumb stays stale until update() is called explicitly.
+                expect(thumb.style.height).toBe('80px');
+
+                fixture.componentInstance.scrollbar().update();
+
+                // ratio = ceil(200/1000*100)/100 = 0.2; thumbSize = max(0.2*200, 32) = 40 — only
+                // reached once something explicitly calls update().
+                expect(thumb.style.height).toBe('40px');
+            }
+        );
     });
 });

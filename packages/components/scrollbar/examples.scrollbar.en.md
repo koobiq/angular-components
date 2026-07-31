@@ -30,6 +30,6 @@ Setting `native: true` via `kbqScrollbarConfigProvider` makes the directive fall
 
 ## Disabling interaction
 
-The `kbqScrollbarDisableInteraction` input keeps scrolling functional while disabling drag-on-thumb and click-on-track.
+The `kbqScrollbarDisableDrag` and `kbqScrollbarDisableClick` inputs keep scrolling functional while independently disabling drag-on-thumb and click-on-track — e.g. keep drag for quick scanning while disabling accidental track clicks, or the other way around.
 
 <!-- example(private-scrollbar-disable-interaction) -->

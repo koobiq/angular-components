@@ -10,16 +10,23 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'private-scrollbar-disable-interaction-example',
     imports: [KbqScrollbar, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="disableInteraction">Disable interaction</kbq-toggle>
+        <div class="example-toggles">
+            <kbq-toggle [(ngModel)]="disableDrag">Disable drag</kbq-toggle>
+            <kbq-toggle [(ngModel)]="disableClick">Disable click</kbq-toggle>
+        </div>
 
         <div
             class="example-scrollbar"
             kbqScrollbar
             kbqScrollbarVisibility="always"
-            [kbqScrollbarDisableInteraction]="disableInteraction()"
+            [kbqScrollbarDisableDrag]="disableDrag()"
+            [kbqScrollbarDisableClick]="disableClick()"
         >
             <p>
-                <strong>Drag & click for the scrollbar are {{ disableInteraction() ? 'disabled' : 'enabled' }}</strong>
+                <strong>Drag for the scrollbar is {{ disableDrag() ? 'disabled' : 'enabled' }}</strong>
+            </p>
+            <p>
+                <strong>Click for the scrollbar is {{ disableClick() ? 'disabled' : 'enabled' }}</strong>
             </p>
             <p>
                 In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists
@@ -52,6 +59,11 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             padding: var(--kbq-size-l);
         }
 
+        .example-toggles {
+            display: flex;
+            gap: var(--kbq-size-l);
+        }
+
         .example-scrollbar {
             overflow: auto;
             resize: both;
@@ -73,5 +85,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PrivateScrollbarDisableInteractionExample {
-    protected readonly disableInteraction = model(true);
+    protected readonly disableDrag = model(true);
+    protected readonly disableClick = model(false);
 }

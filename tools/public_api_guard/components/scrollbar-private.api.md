@@ -22,7 +22,8 @@ export const KBQ_SCROLLBAR_CONFIG: InjectionToken<Partial<{
     autoHideDelay: number;
     floating: boolean;
     native: boolean;
-    disableInteraction: boolean;
+    disableDrag: boolean;
+    disableClick: boolean;
 }>>;
 
 // @public
@@ -32,7 +33,8 @@ export const KBQ_SCROLLBAR_DEFAULT_CONFIG: Required<KbqScrollbarConfig>;
 export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     constructor();
     readonly autoHideDelay: _angular_core.InputSignalWithTransform<number, unknown>;
-    readonly disableInteraction: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly disableClick: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly disableDrag: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly floating: _angular_core.InputSignalWithTransform<boolean, unknown>;
     getScrollElement(): HTMLElement | null;
     readonly initialized: OutputEmitterRef<void>;
@@ -60,7 +62,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     readonly visibility: _angular_core.InputSignal<KbqScrollbarVisibility>;
     readonly visibilityChange: OutputEmitterRef<boolean>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqScrollbar, "[kbqScrollbar]", ["kbqScrollbar"], { "visibility": { "alias": "kbqScrollbarVisibility"; "required": false; "isSignal": true; }; "autoHideDelay": { "alias": "kbqScrollbarAutoHideDelay"; "required": false; "isSignal": true; }; "floating": { "alias": "kbqScrollbarFloating"; "required": false; "isSignal": true; }; "disableInteraction": { "alias": "kbqScrollbarDisableInteraction"; "required": false; "isSignal": true; }; }, { "scrollChange": "kbqScrollbarScrollChange"; "reachTop": "kbqScrollbarReachTop"; "reachBottom": "kbqScrollbarReachBottom"; "reachStart": "kbqScrollbarReachStart"; "reachEnd": "kbqScrollbarReachEnd"; "visibilityChange": "kbqScrollbarVisibilityChange"; "initialized": "kbqScrollbarInitialized"; "updated": "kbqScrollbarUpdated"; }, ["viewport"], never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqScrollbar, "[kbqScrollbar]", ["kbqScrollbar"], { "visibility": { "alias": "kbqScrollbarVisibility"; "required": false; "isSignal": true; }; "autoHideDelay": { "alias": "kbqScrollbarAutoHideDelay"; "required": false; "isSignal": true; }; "floating": { "alias": "kbqScrollbarFloating"; "required": false; "isSignal": true; }; "disableDrag": { "alias": "kbqScrollbarDisableDrag"; "required": false; "isSignal": true; }; "disableClick": { "alias": "kbqScrollbarDisableClick"; "required": false; "isSignal": true; }; }, { "scrollChange": "kbqScrollbarScrollChange"; "reachTop": "kbqScrollbarReachTop"; "reachBottom": "kbqScrollbarReachBottom"; "reachStart": "kbqScrollbarReachStart"; "reachEnd": "kbqScrollbarReachEnd"; "visibilityChange": "kbqScrollbarVisibilityChange"; "initialized": "kbqScrollbarInitialized"; "updated": "kbqScrollbarUpdated"; }, ["viewport"], never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqScrollbar, never>;
 }
@@ -71,7 +73,8 @@ export type KbqScrollbarConfig = Partial<{
     autoHideDelay: number;
     floating: boolean;
     native: boolean;
-    disableInteraction: boolean;
+    disableDrag: boolean;
+    disableClick: boolean;
 }>;
 
 // @public

@@ -30,6 +30,7 @@ import {
     OutputEmitterRef,
     Provider,
     Renderer2,
+    RendererStyleFlags2,
     signal,
     ViewEncapsulation,
     WritableSignal
@@ -83,14 +84,16 @@ export type KbqScrollbarConfig = Partial<{
      * could change per instance at runtime wouldn't have anything to react to anyway.
      */
     native: boolean;
-    /** Default for the `kbqScrollbarDisableInteraction` input. */
-    disableInteraction: boolean;
+    /** Default for the `kbqScrollbarDisableDrag` input. */
+    disableDrag: boolean;
+    /** Default for the `kbqScrollbarDisableClick` input. */
+    disableClick: boolean;
 }>;
 
 /**
  * Default values for `kbqScrollbar` inputs. `autoHideDelay` mirrors
  * `KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG` (`../scrollbar.types.ts`) to keep UX parity with the
- * `overlayscrollbars`-based `kbq-scrollbar`.
+ * existing `kbq-scrollbar`.
  *
  * @docs-private
  */
@@ -99,7 +102,8 @@ export const KBQ_SCROLLBAR_DEFAULT_CONFIG: Required<KbqScrollbarConfig> = {
     autoHideDelay: 100,
     floating: true,
     native: false,
-    disableInteraction: false
+    disableDrag: false,
+    disableClick: false
 };
 
 /**
@@ -135,6 +139,12 @@ type DragContext = {
     scrollRange: number;
 };
 
+/** What `measureAxis()` hands `paintAxis()` for one axis — see both. */
+type AxisMeasurement = {
+    scrollOffset: number;
+    scrollRange: number;
+};
+
 /**
  * Component used to load the `.kbq-private-scrollbar` styles.
  */
@@ -142,6 +152,7 @@ type DragContext = {
     selector: 'scrollbar-style-loader',
     template: '',
     styleUrl: 'scrollbar.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 class KbqScrollbarStyleLoader {}
@@ -171,9 +182,11 @@ export class KbqScrollbarVirtualViewport {
 class KbqScrollbarViewport {}
 
 /**
+ * NOTE! Intended exclusively for use within this repository.
+ *
  * Dependency-free custom scrollbar directive. Draws its own track/thumb via `Renderer2` on top of
- * the host's content — no third-party library, unlike `kbqScrollbar`/`kbq-scrollbar`
- * (`../scrollbar.directive.ts`/`../scrollbar.component.ts`), which wrap `overlayscrollbars`.
+ * the host's content — no external dependency, unlike `kbqScrollbar`/`kbq-scrollbar`
+ * (`../scrollbar.directive.ts`/`../scrollbar.component.ts`), which wrap an external library.
  *
  * Usable as a plain attribute (`<div kbqScrollbar>`) or composed via `hostDirectives:
  * [KbqScrollbar]` in another component.
@@ -187,7 +200,8 @@ class KbqScrollbarViewport {}
     host: {
         class: 'kbq-private-scrollbar',
         '[class.kbq-private-scrollbar_rtl]': 'rtl()',
-        '[class.kbq-private-scrollbar_disable-interaction]': 'disableInteraction()'
+        '[class.kbq-private-scrollbar_disable-drag]': 'disableDrag()',
+        '[class.kbq-private-scrollbar_disable-click]': 'disableClick()'
     },
     // Redundant (but harmless) whenever `scrollElement` resolves to a `kbqScrollbarVirtualViewport`
     // or the auto-created viewport — both already provide their own `CdkScrollable`. Needed here
@@ -246,11 +260,17 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         transform: booleanAttribute
     });
 
-    /** Keeps scrolling working but disables drag-on-thumb and click-on-track. */
-    readonly disableInteraction = input(
-        this.config.disableInteraction ?? KBQ_SCROLLBAR_DEFAULT_CONFIG.disableInteraction,
-        { alias: 'kbqScrollbarDisableInteraction', transform: booleanAttribute }
-    );
+    /** Keeps scrolling working but disables drag-on-thumb — click-on-track keeps working independently, see `disableClick`. */
+    readonly disableDrag = input(this.config.disableDrag ?? KBQ_SCROLLBAR_DEFAULT_CONFIG.disableDrag, {
+        alias: 'kbqScrollbarDisableDrag',
+        transform: booleanAttribute
+    });
+
+    /** Keeps scrolling working but disables click-on-track (jump-to-click) — drag-on-thumb keeps working independently, see `disableDrag`. */
+    readonly disableClick = input(this.config.disableClick ?? KBQ_SCROLLBAR_DEFAULT_CONFIG.disableClick, {
+        alias: 'kbqScrollbarDisableClick',
+        transform: booleanAttribute
+    });
 
     /** Emits the scroll position on every scroll event. */
     readonly scrollChange = output<KbqScrollbarScrollChangeEvent>({ alias: 'kbqScrollbarScrollChange' });
@@ -321,11 +341,18 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     // `--kbq-private-scrollbar-size-thumb-min-size`/`--kbq-private-scrollbar-size-track-padding`.
     private cssMinThumbSize = 32;
     private cssTrackPadding = 3;
+    // The scroll element's own box/content size — refreshed only on a "full" `recompute()` (see
+    // its doc comment), not on every scroll tick: scrolling alone can never change either, only a
+    // resize or a content mutation can.
+    private readonly cachedViewportSize: Record<Axis, number> = { vertical: 0, horizontal: 0 };
+    private readonly cachedContentSize: Record<Axis, number> = { vertical: 0, horizontal: 0 };
     private isCoarsePointer = false;
     private isVisible = false;
     private isPointerOver = false;
     private autoHideTimeoutId: ReturnType<typeof setTimeout> | undefined;
-    private dragContext: DragContext | null = null;
+    // Keyed by axis (not a single field) — the vertical and horizontal thumbs are independent, so
+    // a two-finger drag (one per axis) must track both without one overwriting the other.
+    private readonly dragContexts: Record<Axis, DragContext | null> = { vertical: null, horizontal: null };
 
     /**
      * Auto-created scroll wrapper, only when there's no explicit `kbqScrollbarVirtualViewport` and the
@@ -487,12 +514,17 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
      * are handled automatically via `SharedResizeObserver`; call this manually when content grows
      * `scrollHeight`/`scrollWidth` without the scroll element's own box size changing — a resize
      * observer can't see that on its own (same caveat as `core/overflow-shadow/overflow-shadow.ts`).
+     *
+     * @docs-private
      */
     update(): void {
         this.recompute();
     }
 
-    /** @docs-private Implementation of `KbqOverflowShadowSource`. */
+    /**
+     * Implementation of `KbqOverflowShadowSource`.
+     * @docs-private
+     */
     getScrollElement(): HTMLElement | null {
         return this.scrollElement;
     }
@@ -518,7 +550,10 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.scrollSubject.next();
-                this.recompute();
+                // `syncPadding: false` — see `recompute()`'s doc comment. `scroll` is this
+                // directive's highest-frequency, least-throttled event; re-reading the host's own
+                // (effectively static) padding on every tick isn't worth the forced style read.
+                this.recompute(false);
                 this.onUserScroll();
             });
     }
@@ -620,7 +655,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         fromEvent<PointerEvent>(thumb, 'pointerdown')
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                if (this.disableInteraction() || !this.isPrimaryPointerDown(event)) return;
+                if (this.disableDrag() || !this.isPrimaryPointerDown(event)) return;
                 this.beginInteraction(axis, track, thumb, event, false);
             });
 
@@ -630,42 +665,62 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         fromEvent<PointerEvent>(track, 'pointerdown')
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                if (this.disableInteraction() || event.target === thumb || !this.isPrimaryPointerDown(event)) return;
+                if (this.disableClick() || event.target === thumb || !this.isPrimaryPointerDown(event)) return;
                 this.beginInteraction(axis, track, thumb, event, true);
             });
     }
 
+    // The vertical/horizontal thumbs drag independently, so a pointer event is matched back to
+    // whichever axis armed it, not just "the" drag.
+    private axisForPointerId(pointerId: number): Axis | null {
+        if (this.dragContexts.vertical?.pointerId === pointerId) return 'vertical';
+        if (this.dragContexts.horizontal?.pointerId === pointerId) return 'horizontal';
+
+        return null;
+    }
+
+    private get isDragging(): boolean {
+        return !!this.dragContexts.vertical || !!this.dragContexts.horizontal;
+    }
+
     private wireGlobalDragListeners(): void {
-        fromEvent<PointerEvent>(this.document, 'pointermove')
+        // None of these three ever call `preventDefault()` (only the `pointerdown` handlers in
+        // `wireTrackInteraction` do, via `beginInteraction()`) — marking them passive lets the
+        // browser treat them as non-blocking for compositor/touch-scroll purposes.
+        fromEvent<PointerEvent>(this.document, 'pointermove', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                if (!this.dragContext || event.pointerId !== this.dragContext.pointerId) return;
+                const axis = this.axisForPointerId(event.pointerId);
+
+                if (!axis) return;
 
                 if (!event.buttons) {
-                    this.endDrag();
+                    this.endDrag(axis);
 
                     return;
                 }
 
-                this.applyDrag(this.dragContext.axis === 'vertical' ? event.clientY : event.clientX);
+                this.applyDrag(axis, axis === 'vertical' ? event.clientY : event.clientX);
             });
 
-        fromEvent<PointerEvent>(this.document, 'pointerup')
+        fromEvent<PointerEvent>(this.document, 'pointerup', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                if (!this.dragContext || event.pointerId !== this.dragContext.pointerId) return;
-                this.endDrag();
+                const axis = this.axisForPointerId(event.pointerId);
+
+                if (axis) this.endDrag(axis);
             });
 
         // A gesture can be interrupted outside the normal pointerup path — e.g. a touch drag cut
         // short by an OS-level gesture, or the browser revoking pointer capture. Without this,
-        // `dragContext`/the `_dragging` class/`user-select: none` would be stuck until some later,
+        // `dragContexts`/the `_dragging` class/`user-select: none` would be stuck until some later,
         // unrelated pointerup happens to carry the same `pointerId`.
-        fromEvent<PointerEvent>(this.document, 'pointercancel')
+        fromEvent<PointerEvent>(this.document, 'pointercancel', { passive: true })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((event) => {
-                if (!this.dragContext || event.pointerId !== this.dragContext.pointerId) return;
-                this.endDrag();
+                const axis = this.axisForPointerId(event.pointerId);
+
+                if (axis) this.endDrag(axis);
             });
     }
 
@@ -694,7 +749,15 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
             ? scrollEl.scrollHeight - scrollEl.clientHeight
             : scrollEl.scrollWidth - scrollEl.clientWidth;
 
-        this.dragContext = {
+        // Author CSS may set `scroll-behavior: smooth` on the scroll element — without overriding
+        // it here, every `applyDrag()` write below would animate toward the new position instead of
+        // jumping straight there, so the thumb would visibly lag behind the pointer for the whole
+        // drag. Only touched on the transition into the very first concurrently-active drag (a
+        // second axis joining an already-active one must not stomp on it), and restored once
+        // `endDrag()` sees every axis has ended.
+        if (!this.isDragging) this.renderer.setStyle(scrollEl, 'scrollBehavior', 'auto');
+
+        this.dragContexts[axis] = {
             axis,
             pointerId: event.pointerId,
             trackStart,
@@ -704,12 +767,28 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         };
 
         this.setVisible(true);
+        this.applyDrag(axis, pointerCoord);
+
+        // `centerOnThumb` is only ever `true` for a track click (never a thumb grab — the thumb's
+        // own pointerdown handler already excludes calling this at all when `disableDrag()` is
+        // set). Without this, a track click while dragging is disabled would still perform its
+        // one-shot jump above, but then keep this axis' drag context armed — the always-on global
+        // `pointermove` listener (`wireGlobalDragListeners`) would then keep following the pointer
+        // for as long as the button stays down, behaving exactly like a real drag despite
+        // `disableDrag()`. Clearing it back out right after the jump keeps the click a discrete
+        // action, the same way `disableClick` alone already keeps drag a discrete action.
+        if (centerOnThumb && this.disableDrag()) {
+            this.dragContexts[axis] = null;
+            this.restoreScrollBehaviorIfIdle();
+
+            return;
+        }
+
         this.renderer.addClass(this.hostElement, 'kbq-private-scrollbar_dragging');
-        this.applyDrag(pointerCoord);
     }
 
-    private applyDrag(pointerCoord: number): void {
-        const ctx = this.dragContext;
+    private applyDrag(axis: Axis, pointerCoord: number): void {
+        const ctx = this.dragContexts[axis];
 
         if (!ctx || ctx.trackTravel <= 0) return;
 
@@ -717,7 +796,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         // Physical ratio: 0 at the track's physical start (left/top), 1 at its physical end.
         const ratio = clamp((pointerRelative - ctx.grabOffset) / ctx.trackTravel, 0, 1);
 
-        if (ctx.axis === 'vertical') {
+        if (axis === 'vertical') {
             this.scrollElement.scrollTop = ratio * ctx.scrollRange;
         } else if (this.rtl()) {
             // RTL `scrollLeft` runs 0 (physical right) to -scrollRange (physical left) — invert
@@ -728,25 +807,37 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         }
     }
 
-    private endDrag(): void {
-        if (!this.dragContext) return;
+    private endDrag(axis: Axis): void {
+        if (!this.dragContexts[axis]) return;
 
-        this.dragContext = null;
+        this.dragContexts[axis] = null;
+
+        // The other axis can still be mid-drag (two-finger drag of both thumbs) — keep the
+        // `_dragging` state and defer visibility restoration until every axis has ended.
+        if (this.isDragging) return;
+
         this.renderer.removeClass(this.hostElement, 'kbq-private-scrollbar_dragging');
+        this.restoreScrollBehaviorIfIdle();
 
         // `beginInteraction()` force-shows the scrollbar regardless of mode — restore whatever the
-        // current mode's steady state actually is now that the drag is over, the same way a real
-        // scroll/pointerleave would. Without this it can stay visible forever: 'scroll' mode never
-        // got a `showTemporarily()` timer scheduled for this reveal (only a direct `setVisible`),
-        // and 'hover' mode never got a `pointerleave` if the pointer left while dragging (that
-        // listener skips hiding on purpose while a drag is in progress).
-        const mode = this.visibility();
-
-        if (mode === 'scroll') {
+        // current mode's steady state actually is now that every axis' drag has ended. 'scroll'
+        // mode gets its usual timed reveal via `showTemporarily()` (not an immediate hide); every
+        // other mode goes through the same steady-state logic the mode-change effect above uses
+        // (and skips while `isDragging`).
+        if (this.visibility() === 'scroll') {
             this.showTemporarily();
-        } else if (mode === 'hover' && !this.isPointerOver) {
-            this.setVisible(false);
+        } else {
+            this.applySteadyVisibility();
         }
+    }
+
+    // Reverts the `scroll-behavior: auto` override `beginInteraction()` applies — a no-op guard
+    // since this is called from two places (the disableDrag "jump" early-return above, and the
+    // normal end-of-drag path below), only one of which is guaranteed to be the actual last axis.
+    private restoreScrollBehaviorIfIdle(): void {
+        if (this.isDragging) return;
+
+        this.renderer.removeStyle(this.scrollElement, 'scrollBehavior');
     }
 
     private wireVisibility(): void {
@@ -763,7 +854,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
             .subscribe(() => {
                 this.isPointerOver = false;
 
-                if (this.visibility() === 'hover' && !this.dragContext) this.setVisible(false);
+                if (this.visibility() === 'hover' && !this.isDragging) this.setVisible(false);
             });
 
         // Reacts to `kbqScrollbarVisibility` changing at runtime, not just its value at first
@@ -773,25 +864,37 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         // mode's temporary reveal-on-scroll keeps coming from onUserScroll()/showTemporarily() —
         // 'hidden' starts from the same steady state but never gets revealed from anywhere.
         //
-        // Clearing any pending auto-hide timeout here, before applying the new mode's steady
-        // state, matters: without it, a 'scroll'-mode reveal's timeout can outlive a switch to
-        // 'always' and fire later, hiding a scrollbar that's supposed to stay permanently visible.
+        // Skipped entirely while a drag is in progress — forcing the new mode's steady state here
+        // would otherwise yank the track/thumb visibility out from under an active drag (e.g.
+        // hiding it mid-gesture on a switch to 'hidden') even though the drag itself keeps
+        // scrolling regardless of visibility. `endDrag()` applies the (possibly now-different)
+        // steady state once the drag actually ends instead.
         effect(
             () => {
-                const mode = this.visibility();
+                this.visibility();
 
-                clearTimeout(this.autoHideTimeoutId);
+                if (this.isDragging) return;
 
-                if (mode === 'always') {
-                    this.setVisible(true);
-                } else if (mode === 'hover') {
-                    this.setVisible(this.isPointerOver);
-                } else {
-                    this.setVisible(false);
-                }
+                this.applySteadyVisibility();
             },
             { injector: this.injector }
         );
+    }
+
+    // Shared by the mode-change effect above and by `endDrag()` — applies whatever the current
+    // mode's non-drag, non-transient visibility should be.
+    private applySteadyVisibility(): void {
+        const mode = this.visibility();
+
+        clearTimeout(this.autoHideTimeoutId);
+
+        if (mode === 'always') {
+            this.setVisible(true);
+        } else if (mode === 'hover') {
+            this.setVisible(this.isPointerOver);
+        } else {
+            this.setVisible(false);
+        }
     }
 
     private onUserScroll(): void {
@@ -804,7 +907,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         this.setVisible(true);
         clearTimeout(this.autoHideTimeoutId);
         this.autoHideTimeoutId = setTimeout(() => {
-            if (!this.dragContext) this.setVisible(false);
+            if (!this.isDragging) this.setVisible(false);
         }, this.autoHideDelay());
     }
 
@@ -816,21 +919,32 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         this.emit(this.visibilityChange, value);
     }
 
-    private recompute(): void {
-        const measurements = new Map<Axis, { scrollOffset: number; scrollRange: number }>();
+    /**
+     * @param fullRefresh Whether to also re-read the two comparatively expensive, effectively-
+     * static-during-a-pure-scroll things: the host's own padding (`syncHostPadding()`) and the
+     * scroll element's own box/content size (`cachedViewportSize`/`cachedContentSize`, consumed by
+     * `measureAxis()`). Defaults to `true` — the one caller that opts out is `wireScroll()`, since
+     * `scroll` is by far this directive's highest-frequency, un-throttled event, and neither the
+     * host's author-set padding nor the scroll element's own box/content size has any real chance
+     * of changing from scrolling alone between one tick and the next.
+     */
+    private recompute(fullRefresh = true): void {
+        const measurements = new Map<Axis, AxisMeasurement>();
 
         for (const axis of AXES) {
-            const measurement = this.measureAxis(axis);
+            const measurement = this.measureAxis(axis, fullRefresh);
 
             if (measurement) measurements.set(axis, measurement);
         }
 
-        // Corner-avoidance only makes sense between two custom tracks — a no-op anyway without
-        // them, but skip it outright under `native`/coarse pointer. Must run before `paintAxis()`
-        // below, not after: it can shrink a track's real size via CSS, and `paintAxis()` measures
-        // that size to place the thumb — sizing it first would size/position the thumb against a
-        // stale, pre-shrink track on the very frame content starts overflowing both axes.
+        // Both only make sense with a custom track/thumb to position — a no-op anyway without
+        // them, but skip outright under `native`/coarse pointer. Must run before `paintAxis()`
+        // below, not after: both can shrink a track's real size via CSS (host padding insets it,
+        // corner-avoidance shrinks it further), and `paintAxis()` measures that size to place the
+        // thumb — sizing it first would size/position the thumb against a stale, pre-shrink track
+        // on the very frame content starts overflowing, or the very frame host padding changes.
         if (!this.native && !this.isCoarsePointer) {
+            if (fullRefresh) this.syncHostPadding();
             this.updateCornerAvoidance();
         }
 
@@ -839,6 +953,34 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         }
 
         this.emit(this.updated, undefined);
+    }
+
+    /**
+     * Publishes the host's own computed padding as CSS custom properties consumed by
+     * `scrollbar.scss`'s track positioning rules — the track is `position: absolute` directly on
+     * the host, so without this it insets by 0 regardless of any padding the host itself carries,
+     * leaving the track sitting flush with the host's border edge instead of its actual content
+     * edge (a gap of empty padding between the track and the real content it's supposed to overlay).
+     * Read fresh on every `recompute()` rather than once at init, since author CSS can change the
+     * host's padding at runtime (e.g. a responsive class) with no resize of the host's own box to
+     * otherwise trigger a re-read.
+     */
+    private syncHostPadding(): void {
+        const style = this.window.getComputedStyle(this.hostElement);
+
+        this.setHostPaddingVar('top', style.paddingTop);
+        this.setHostPaddingVar('right', style.paddingRight);
+        this.setHostPaddingVar('bottom', style.paddingBottom);
+        this.setHostPaddingVar('left', style.paddingLeft);
+    }
+
+    private setHostPaddingVar(side: 'top' | 'right' | 'bottom' | 'left', value: string): void {
+        this.renderer.setStyle(
+            this.hostElement,
+            `--kbq-private-scrollbar-host-padding-${side}`,
+            value,
+            RendererStyleFlags2.DashCase
+        );
     }
 
     /**
@@ -882,12 +1024,22 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
      * `updateCornerAvoidance()` between this and `paintAxis()`, since corner avoidance can shrink
      * a track's real size via CSS, and the thumb needs to be sized against that final size, not
      * whatever it measured before corner avoidance ran.
+     *
+     * @param fullRefresh Whether to re-read the scroll element's own box/content size
+     * (`clientHeight`/`clientWidth`/`scrollHeight`/`scrollWidth`) or reuse whatever `cachedViewportSize`/
+     * `cachedContentSize` already hold from the last time it was — see `recompute()`'s doc comment.
      */
-    private measureAxis(axis: Axis): { scrollOffset: number; scrollRange: number } | null {
+    private measureAxis(axis: Axis, fullRefresh: boolean): AxisMeasurement | null {
         const scrollEl = this.scrollElement;
         const isVertical = axis === 'vertical';
-        const viewportSize = isVertical ? scrollEl.clientHeight : scrollEl.clientWidth;
-        const contentSize = isVertical ? scrollEl.scrollHeight : scrollEl.scrollWidth;
+
+        if (fullRefresh) {
+            this.cachedViewportSize[axis] = isVertical ? scrollEl.clientHeight : scrollEl.clientWidth;
+            this.cachedContentSize[axis] = isVertical ? scrollEl.scrollHeight : scrollEl.scrollWidth;
+        }
+
+        const viewportSize = this.cachedViewportSize[axis];
+        const contentSize = this.cachedContentSize[axis];
         const rawScrollOffset = isVertical ? scrollEl.scrollTop : scrollEl.scrollLeft;
         const overflows = isVertical ? this.verticalOverflows : this.horizontalOverflows;
         const track = this.tracks.get(axis);

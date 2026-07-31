@@ -6,6 +6,7 @@ const COMPONENTS = [
     KbqScrollbarVirtualViewport
 ];
 
+/** NOTE! Intended exclusively for use within this repository. */
 @NgModule({
     imports: COMPONENTS,
     exports: COMPONENTS
