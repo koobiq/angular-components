@@ -1003,3 +1003,147 @@ export class E2eFilterBarStates implements AfterViewInit {
         ];
     }
 }
+
+/**
+ * Pipes covering both directions of `panelMaxHeight`: two `select` pipes left at the 256px default to pin
+ * the "eight 32px options fit without a scrollbar" contract from either side, and three pipes exercising a
+ * template-supplied cap. The panel is portaled out of the bar, so only a real browser can tell whether the
+ * token reaches `__content` and whether the list actually scrolls — JSDOM computes no cascade and no layout.
+ */
+@Component({
+    selector: 'e2e-filter-bar-panel-max-height',
+    imports: [KbqFilterBarModule],
+    template: `
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+            @for (pipe of filter.pipes; track pipe) {
+                <ng-container *kbqPipe="pipe" />
+            }
+        </kbq-filter-bar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarPanelMaxHeight'
+    }
+})
+export class E2eFilterBarPanelMaxHeight {
+    private buildOptions(count: number) {
+        return Array.from({ length: count }, (_, index) => ({ name: `Option ${index + 1}`, id: `${index + 1}` }));
+    }
+
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            // 8 × 32px == the 256px default exactly: the list must not scroll.
+            name: 'Select 8',
+            id: 'E2ESelectEightOptions',
+            type: KbqPipeTypes.Select,
+            values: this.buildOptions(8),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            // One option past the default: the same list must scroll.
+            name: 'Select 9',
+            id: 'E2ESelectNineOptions',
+            type: KbqPipeTypes.Select,
+            values: this.buildOptions(9),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiSelect',
+            id: 'E2EMultiSelectCappedHeight',
+            type: KbqPipeTypes.MultiSelect,
+            values: this.buildOptions(30),
+            panelMaxHeight: 192,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'TreeSelect',
+            id: 'E2ETreeSelectCappedHeight',
+            type: KbqPipeTypes.TreeSelect,
+            values: kbqBuildTree(DEV_DATA_OBJECT, 0),
+            panelMaxHeight: 128,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiTreeSelect',
+            id: 'E2EMultiTreeSelectDefaultHeight',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: kbqBuildTree(DEV_DATA_OBJECT, 0),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    readonly filter: KbqFilter = {
+        name: 'panelMaxHeight',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'Select 8',
+                id: 'E2ESelectEightOptions',
+                type: KbqPipeTypes.Select,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Select 9',
+                id: 'E2ESelectNineOptions',
+                type: KbqPipeTypes.Select,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'MultiSelect',
+                id: 'E2EMultiSelectCappedHeight',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'TreeSelect',
+                id: 'E2ETreeSelectCappedHeight',
+                type: KbqPipeTypes.TreeSelect,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'MultiTreeSelect',
+                id: 'E2EMultiTreeSelectDefaultHeight',
+                type: KbqPipeTypes.MultiTreeSelect,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+}

@@ -2433,6 +2433,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-overview-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-panel-max-height": {
+    "packagePath": "components/filter-bar/filter-bar-panel-max-height",
+    "title": "filter-bar-panel-max-height",
+    "componentName": "FilterBarPanelMaxHeightExample",
+    "files": [
+      "filter-bar-panel-max-height-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-panel-max-height-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-panel-max-height-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-pipe-types": {
     "packagePath": "components/filter-bar/filter-bar-pipe-types",
     "title": "filter-bar-pipe-types",
@@ -7796,6 +7809,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-master-checkbox':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-panel-max-height':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-pipe-types':
 return import('@koobiq/docs-examples/components/filter-bar');

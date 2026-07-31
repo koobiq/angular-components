@@ -6,12 +6,6 @@
     }
 }
 
-// Shared scroll height for the select/tree overlay panels rendered outside the bar.
-// Keeps the single magic value in one place (used by every select-family pipe panel).
-@mixin kbq-filter-bar-panel-content-max-height() {
-    max-height: 404px;
-}
-
 // Themable colour surfaces of a pipe. Kept out of the layout SCSS so every colour
 // lives behind a theme hook (they still resolve through the global semantic tokens).
 @mixin kbq-filter-bar-pipe-theme() {
