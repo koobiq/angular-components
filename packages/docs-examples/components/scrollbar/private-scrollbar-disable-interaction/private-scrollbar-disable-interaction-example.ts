@@ -18,7 +18,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         <div
             class="example-scrollbar"
             kbqScrollbar
-            kbqScrollbarVisibility="always"
             [kbqScrollbarDisableDrag]="disableDrag()"
             [kbqScrollbarDisableClick]="disableClick()"
         >

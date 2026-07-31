@@ -30,7 +30,7 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar/private';
             </button>
         </div>
 
-        <div #scrollbar="kbqScrollbar" class="example-scrollbar" kbqScrollbar kbqScrollbarVisibility="always">
+        <div #scrollbar="kbqScrollbar" class="example-scrollbar" kbqScrollbar>
             <p>
                 In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists
                 of an attacker submitting many possible keys or passwords with the hope of eventually guessing
