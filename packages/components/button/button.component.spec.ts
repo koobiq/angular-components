@@ -12,8 +12,7 @@ import {
     KbqComponentColors,
     leftIconClassName,
     rightIconClassName,
-    SPACE,
-    ThemePalette
+    SPACE
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -21,9 +20,11 @@ import {
     buttonLeftIconClassName,
     buttonRightIconClassName,
     KbqButton,
+    KbqButtonColor,
     KbqButtonCssStyler,
     KbqButtonGroupRoot,
     KbqButtonModule,
+    KbqButtonStyleInput,
     KbqButtonStyles
 } from './index';
 
@@ -49,21 +50,21 @@ describe('KbqButton', () => {
         const buttonDebugElement = fixture.debugElement.query(By.css('button'));
         const aDebugElement = fixture.debugElement.query(By.css('a'));
 
-        testComponent.buttonColor = 'primary';
+        testComponent.buttonColor = KbqComponentColors.Theme;
         fixture.detectChanges();
-        expect(buttonDebugElement.nativeElement.classList.contains('kbq-primary')).toBe(true);
-        expect(aDebugElement.nativeElement.classList.contains('kbq-primary')).toBe(true);
+        expect(buttonDebugElement.nativeElement.classList.contains('kbq-theme')).toBe(true);
+        expect(aDebugElement.nativeElement.classList.contains('kbq-theme')).toBe(true);
 
-        testComponent.buttonColor = 'accent';
+        testComponent.buttonColor = KbqComponentColors.Contrast;
         fixture.detectChanges();
-        expect(buttonDebugElement.nativeElement.classList.contains('kbq-accent')).toBe(true);
-        expect(aDebugElement.nativeElement.classList.contains('kbq-accent')).toBe(true);
+        expect(buttonDebugElement.nativeElement.classList.contains('kbq-contrast')).toBe(true);
+        expect(aDebugElement.nativeElement.classList.contains('kbq-contrast')).toBe(true);
 
         testComponent.buttonColor = null;
         fixture.detectChanges();
 
-        expect(buttonDebugElement.nativeElement.classList).not.toContain('kbq-accent');
-        expect(aDebugElement.nativeElement.classList).not.toContain('kbq-accent');
+        expect(buttonDebugElement.nativeElement.classList.contains('kbq-contrast')).toBe(false);
+        expect(aDebugElement.nativeElement.classList.contains('kbq-contrast')).toBe(false);
     });
 
     it('should should not clear previous defined classes', () => {
@@ -73,17 +74,17 @@ describe('KbqButton', () => {
 
         buttonDebugElement.nativeElement.classList.add('custom-class');
 
-        testComponent.buttonColor = 'primary';
+        testComponent.buttonColor = KbqComponentColors.Theme;
         fixture.detectChanges();
 
-        expect(buttonDebugElement.nativeElement.classList.contains('kbq-primary')).toBe(true);
+        expect(buttonDebugElement.nativeElement.classList.contains('kbq-theme')).toBe(true);
         expect(buttonDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
 
-        testComponent.buttonColor = 'accent';
+        testComponent.buttonColor = KbqComponentColors.Contrast;
         fixture.detectChanges();
 
-        expect(buttonDebugElement.nativeElement.classList.contains('kbq-primary')).toBe(false);
-        expect(buttonDebugElement.nativeElement.classList.contains('kbq-accent')).toBe(true);
+        expect(buttonDebugElement.nativeElement.classList.contains('kbq-theme')).toBe(false);
+        expect(buttonDebugElement.nativeElement.classList.contains('kbq-contrast')).toBe(true);
         expect(buttonDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
     });
 
@@ -251,6 +252,96 @@ describe('KbqButton', () => {
             button.componentInstance.kbqStyle = '';
             fixture.detectChanges();
             expect(button.nativeElement.classList.contains('kbq-button_filled')).toBe(true);
+        });
+    });
+
+    describe('default color', () => {
+        // Each style has its own neutral color, and `kbq-button-theme()` selects on both classes at
+        // once: a style paired with a color the design system does not define for it renders through
+        // the style's unqualified fallback rule instead of its own tokens.
+        const setStyle = (fixture: ComponentFixture<TestApp>, style: KbqButtonStyleInput) => {
+            const button = fixture.debugElement.query(By.css('button'));
+
+            button.componentInstance.kbqStyle = style;
+            fixture.detectChanges();
+
+            return button.nativeElement as HTMLElement;
+        };
+
+        it('should apply contrast-fade for the filled style', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(setStyle(fixture, KbqButtonStyles.Filled).classList.contains('kbq-contrast-fade')).toBe(true);
+        });
+
+        it('should apply contrast-fade for the outline style', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(setStyle(fixture, KbqButtonStyles.Outline).classList.contains('kbq-contrast-fade')).toBe(true);
+        });
+
+        it('should apply contrast for the transparent style', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            const element = setStyle(fixture, KbqButtonStyles.Transparent);
+
+            expect(element.classList.contains('kbq-contrast')).toBe(true);
+            expect(element.classList.contains('kbq-contrast-fade')).toBe(false);
+        });
+
+        it('should follow the style when it changes back and forth', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(setStyle(fixture, KbqButtonStyles.Transparent).classList.contains('kbq-contrast')).toBe(true);
+            expect(setStyle(fixture, KbqButtonStyles.Filled).classList.contains('kbq-contrast-fade')).toBe(true);
+        });
+
+        it('should keep an explicitly set color when the style changes', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.componentInstance.buttonColor = KbqComponentColors.ThemeFade;
+            fixture.detectChanges();
+
+            const element = setStyle(fixture, KbqButtonStyles.Transparent);
+
+            expect(element.classList.contains('kbq-theme-fade')).toBe(true);
+            expect(element.classList.contains('kbq-contrast')).toBe(false);
+        });
+
+        it('should fall back to the style default when the color is cleared', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.componentInstance.buttonColor = KbqComponentColors.ThemeFade;
+            fixture.detectChanges();
+
+            const element = setStyle(fixture, KbqButtonStyles.Transparent);
+
+            expect(element.classList.contains('kbq-theme-fade')).toBe(true);
+
+            fixture.componentInstance.buttonColor = null;
+            fixture.detectChanges();
+
+            expect(element.classList.contains('kbq-contrast')).toBe(true);
+            expect(element.classList.contains('kbq-theme-fade')).toBe(false);
+        });
+
+        it('should take the filled default for a custom style', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            const element = setStyle(fixture, 'changed-filter');
+
+            expect(element.classList.contains('kbq-button_changed-filter')).toBe(true);
+            expect(element.classList.contains('kbq-contrast-fade')).toBe(true);
         });
     });
 
@@ -1009,14 +1100,27 @@ describe(KbqButtonGroupRoot.name, () => {
         });
     });
 
-    it('should accept arbitrary string color token', () => {
-        const fixture = createComponent(BasicButtonGroupRootTestComponent);
-        const { componentInstance } = fixture;
+    it('should leave every child on the default color of its own style while the color is unbound', () => {
+        const fixture = createComponent(UnboundColorGroupTestComponent);
 
-        componentInstance.color = 'custom-brand';
         fixture.detectChanges();
 
-        expect(componentInstance.groupRoot().color).toBe('custom-brand');
+        const [filled, transparent] = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        expect(filled.classList.contains('kbq-contrast-fade')).toBe(true);
+        expect(transparent.classList.contains('kbq-contrast')).toBe(true);
+    });
+
+    it('should propagate the group color over the default color of a style', () => {
+        const fixture = createComponent(UnboundColorGroupTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.color = KbqComponentColors.Theme;
+        fixture.detectChanges();
+
+        Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('[kbq-button]')).forEach((btn) =>
+            expect(btn.classList.contains('kbq-theme')).toBe(true)
+        );
     });
 
     it('should propagate disabled state to all child buttons', () => {
@@ -1037,7 +1141,7 @@ describe(KbqButtonGroupRoot.name, () => {
         const fixture = createComponent(DynamicChildrenTestComponent);
         const { componentInstance } = fixture;
 
-        componentInstance.color = KbqComponentColors.Error;
+        componentInstance.color = KbqComponentColors.ThemeFade;
         fixture.detectChanges();
 
         componentInstance.showExtra = true;
@@ -1048,7 +1152,7 @@ describe(KbqButtonGroupRoot.name, () => {
         expect(buttons.length).toBe(2);
 
         buttons.forEach((btn) => {
-            expect(btn.classList.toString()).toContain(KbqComponentColors.Error);
+            expect(btn.classList.contains('kbq-theme-fade')).toBe(true);
         });
     });
 
@@ -1088,13 +1192,13 @@ describe(KbqButtonGroupRoot.name, () => {
         const fixture = createComponent(OverriddenChildTestComponent);
         const { componentInstance } = fixture;
 
-        componentInstance.groupColor = KbqComponentColors.Error;
+        componentInstance.groupColor = KbqComponentColors.ThemeFade;
         fixture.detectChanges();
 
         const [overridden, inherited] = componentInstance.buttons();
 
         expect(overridden.color).toBe(KbqComponentColors.Theme);
-        expect(inherited.color).toBe(KbqComponentColors.Error);
+        expect(inherited.color).toBe(KbqComponentColors.ThemeFade);
     });
 
     it('should preserve overrides when a button is added to the group', () => {
@@ -1168,7 +1272,7 @@ describe(KbqButtonGroupRoot.name, () => {
 class TestApp {
     clickCount: number = 0;
     isDisabled: boolean = false;
-    buttonColor: ThemePalette;
+    buttonColor: KbqButtonColor | null = null;
     tabIndex: number | string = 0;
 
     increment() {
@@ -1447,8 +1551,8 @@ class DisabledButtonDropdownTrigger {
 class BasicButtonGroupRootTestComponent {
     readonly groupRoot = viewChild.required(KbqButtonGroupRoot);
 
-    style: KbqButtonStyles | string = KbqButtonStyles.Filled;
-    color: KbqComponentColors | ThemePalette | string = KbqComponentColors.ContrastFade;
+    style: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    color: KbqButtonColor = KbqComponentColors.ContrastFade;
     disabled = false;
 }
 
@@ -1466,9 +1570,24 @@ class BasicButtonGroupRootTestComponent {
 class DynamicChildrenTestComponent {
     readonly groupRoot = viewChild.required(KbqButtonGroupRoot);
 
-    style: KbqButtonStyles | string = KbqButtonStyles.Filled;
-    color: KbqComponentColors | string = KbqComponentColors.Theme;
+    style: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    color: KbqButtonColor = KbqComponentColors.Theme;
     showExtra = false;
+}
+
+@Component({
+    imports: [KbqButtonModule],
+    template: `
+        <div kbqButtonGroupRoot [color]="color">
+            <button kbq-button>Filled</button>
+            <button kbq-button [kbqStyle]="transparent">Transparent</button>
+        </div>
+    `
+})
+class UnboundColorGroupTestComponent {
+    readonly transparent = KbqButtonStyles.Transparent;
+
+    color: KbqButtonColor | null = null;
 }
 
 @Component({
@@ -1552,8 +1671,8 @@ class StylerOnlyTestApp {}
 class OverriddenChildTestComponent {
     readonly buttons = viewChildren(KbqButton);
 
-    groupStyle: KbqButtonStyles | string = KbqButtonStyles.Filled;
-    groupColor: KbqComponentColors | ThemePalette | string = KbqComponentColors.ContrastFade;
+    groupStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    groupColor: KbqButtonColor = KbqComponentColors.ContrastFade;
     groupDisabled = false;
 
     readonly ownStyle = KbqButtonStyles.Transparent;

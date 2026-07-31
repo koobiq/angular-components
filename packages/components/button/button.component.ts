@@ -31,13 +31,13 @@ import {
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
     KbqComponentColors,
+    KbqEnumValues,
     KbqTitleTextRef,
     LEFT_ARROW,
     leftIconClassName,
     RIGHT_ARROW,
     rightIconClassName,
-    SPACE,
-    ThemePalette
+    SPACE
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -47,6 +47,50 @@ export enum KbqButtonStyles {
     Outline = 'outline',
     Transparent = 'transparent'
 }
+
+/** Visual style of a button, as an enum member or its plain string form. */
+export type KbqButtonStyle = KbqEnumValues<KbqButtonStyles>;
+
+/**
+ * Value accepted by the `kbqStyle` input: one of the built-in styles, or a custom string that is
+ * applied verbatim as the `kbq-button_<value>` host class and themed by whoever sets it —
+ * `kbq-filter-bar` defines its `changed-filter` style that way. A custom style is not covered by
+ * `kbq-button-theme()` and takes the `filled` default color.
+ */
+export type KbqButtonStyleInput = KbqButtonStyle | (string & {});
+
+/**
+ * Colors a button can be rendered in, as an enum member or its plain string form.
+ *
+ * A narrower set than `KbqComponentColors`: the design system pairs each color with a subset of
+ * the styles (`filled` with `contrast`/`contrast-fade`, `outline` with `theme-fade`/`contrast-fade`,
+ * `transparent` with `theme`/`contrast`), and defines no button appearance for the status colors.
+ * A pair the design system does not define falls back to the style's default color rather than
+ * leaving the button unstyled.
+ */
+export type KbqButtonColor = KbqEnumValues<
+    | KbqComponentColors.Theme
+    | KbqComponentColors.ThemeFade
+    | KbqComponentColors.Contrast
+    | KbqComponentColors.ContrastFade
+>;
+
+/**
+ * Default color of each visual style.
+ *
+ * `transparent` differs from the other two on purpose: it paints neither a fill nor a border, so
+ * its color only picks the foreground, and the design system has no faded variant for it — the
+ * neutral transparent button is `contrast`, not `contrast-fade`.
+ */
+const defaultColorForStyle: Record<KbqButtonStyle, KbqButtonColor> = {
+    [KbqButtonStyles.Filled]: KbqComponentColors.ContrastFade,
+    [KbqButtonStyles.Outline]: KbqComponentColors.ContrastFade,
+    [KbqButtonStyles.Transparent]: KbqComponentColors.Contrast
+};
+
+/** Default color of a style. A custom style has no entry and falls back to the `filled` default. */
+const getDefaultColorForStyle = (style: KbqButtonStyleInput): KbqButtonColor =>
+    defaultColorForStyle[style as KbqButtonStyle] ?? defaultColorForStyle[KbqButtonStyles.Filled];
 
 /**
  * Class set on a button host whose first visible child is an icon.
@@ -312,8 +356,11 @@ export class KbqButton
     @ViewChild('parentTextElement') parentTextElement: ElementRef<HTMLElement>;
 
     /**
-     * Visual style of the button. Setting it marks the value as owned by the button, so a
-     * surrounding `KbqButtonGroupRoot` no longer overrides it.
+     * Visual style of the button. Setting it to a value marks that value as owned by the button, so
+     * a surrounding `KbqButtonGroupRoot` no longer overrides it.
+     *
+     * Reads back as the resulting host class rather than the value that was set, because the host
+     * `[class]` binding is what consumes it.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -322,30 +369,37 @@ export class KbqButton
         return this._kbqStyleClassName;
     }
 
-    set kbqStyle(value: string | KbqButtonStyles) {
-        this.kbqStyleSetExplicitly = true;
+    set kbqStyle(value: KbqButtonStyleInput | null | undefined) {
+        this.kbqStyleSetExplicitly = !!value;
 
         this.applyKbqStyle(value);
     }
 
-    private _kbqStyle: string | KbqButtonStyles = KbqButtonStyles.Filled;
+    private _kbqStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
     private _kbqStyleClassName = `kbq-button_${KbqButtonStyles.Filled}`;
 
     /**
-     * Color of the button. Setting it marks the value as owned by the button, so a surrounding
-     * `KbqButtonGroupRoot` no longer overrides it.
+     * Color of the button. Setting it to a value marks that value as owned by the button, so a
+     * surrounding `KbqButtonGroupRoot` no longer overrides it.
+     *
+     * Left unset — or set to a falsy value — the button follows the default color of its current
+     * `kbqStyle` and keeps following it when the style changes.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
-    override get color(): KbqComponentColors | ThemePalette | string {
-        return super.color;
+    override get color(): KbqButtonColor {
+        // `KbqColorDirective` stores the widened type, but this setter is the only writer and
+        // every value it forwards is a button color.
+        return super.color as KbqButtonColor;
     }
 
-    override set color(value: KbqComponentColors | ThemePalette | string) {
-        this.colorSetExplicitly = true;
+    override set color(value: KbqButtonColor | null | undefined) {
+        this.colorSetExplicitly = !!value;
 
-        super.color = value;
+        // A falsy value falls back to `defaultColor`, which `applyDefaultColor` keeps in sync with
+        // the current style.
+        super.color = value!;
     }
 
     // @todo 20 In the next major release this feature will be replaced on the input signal.
@@ -431,14 +485,12 @@ export class KbqButton
     constructor() {
         super();
 
-        // Applied through `super` so that the default does not count as an explicit color.
-        super.color = KbqComponentColors.ContrastFade;
-        this.setDefaultColor(KbqComponentColors.ContrastFade);
-
         // `KbqColorDirective`'s constructor assigns `this.color`, which dispatches to the override
-        // below and flips the flag. Reset it here rather than relying on the field initializer
-        // happening to run after `super()`.
+        // above and flips the flag. Reset it here rather than relying on the field initializer
+        // happening to run after `super()`, so that `applyDefaultColor` below is free to apply.
         this.colorSetExplicitly = false;
+
+        this.applyDefaultColor();
 
         // Native capture-phase listeners instead of host listeners: Angular coalesces listeners
         // for the same event on the same element, so stopImmediatePropagation from a host listener
@@ -455,7 +507,7 @@ export class KbqButton
      * its own.
      * @docs-private
      */
-    setColorFromGroup(value: KbqComponentColors | ThemePalette | string): void {
+    setColorFromGroup(value: KbqButtonColor): void {
         if (this.colorSetExplicitly) return;
 
         super.color = value;
@@ -466,7 +518,7 @@ export class KbqButton
      * its own.
      * @docs-private
      */
-    setKbqStyleFromGroup(value: KbqButtonStyles | string): void {
+    setKbqStyleFromGroup(value: KbqButtonStyleInput): void {
         if (this.kbqStyleSetExplicitly) return;
 
         this.applyKbqStyle(value);
@@ -560,7 +612,7 @@ export class KbqButton
         this.styler.updateClassModifierForIcons();
     }
 
-    private applyKbqStyle(value: string | KbqButtonStyles): void {
+    private applyKbqStyle(value: KbqButtonStyleInput | null | undefined): void {
         const kbqStyle = value || KbqButtonStyles.Filled;
 
         if (kbqStyle === this._kbqStyle) return;
@@ -568,7 +620,25 @@ export class KbqButton
         this._kbqStyle = kbqStyle;
         this._kbqStyleClassName = `kbq-button_${kbqStyle}`;
 
+        this.applyDefaultColor();
+
         this.changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Applies the default color of the current style. Re-evaluated on every style change, because
+     * the design system defines a different neutral color per style. A color set from the outside
+     * always wins; one that was never set — or was set to a falsy value — keeps following the style.
+     */
+    private applyDefaultColor(): void {
+        const color = getDefaultColorForStyle(this._kbqStyle);
+
+        this.setDefaultColor(color);
+
+        if (this.colorSetExplicitly) return;
+
+        // Through `super` so that the default does not count as an explicit color.
+        super.color = color;
     }
 
     private applyDisabledState(): void {

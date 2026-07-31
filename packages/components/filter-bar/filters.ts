@@ -16,7 +16,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqFormsModule, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
+import { KbqFormsModule, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -69,8 +69,6 @@ export class KbqFilters implements OnInit {
     protected readonly placements = PopUpPlacements;
     /** @docs-private */
     protected readonly styles = KbqButtonStyles;
-    /** @docs-private */
-    protected readonly colors = KbqComponentColors;
 
     /** KbqFilterBar instance */
     protected readonly filterBar = inject(KbqFilterBar);

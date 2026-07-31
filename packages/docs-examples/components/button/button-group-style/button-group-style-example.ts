@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
@@ -45,7 +45,7 @@ export class ButtonGroupStyleExample {
         'Snooze'
     ] as const;
 
-    protected readonly buttonStyles: { color: KbqComponentColors; appearance: KbqButtonStyles; gap?: boolean }[] = [
+    protected readonly buttonStyles: { color: KbqButtonColor; appearance: KbqButtonStyle; gap?: boolean }[] = [
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ThemeFade, appearance: KbqButtonStyles.Outline },

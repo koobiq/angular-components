@@ -9,8 +9,8 @@ import {
     input,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqColorDirective, KbqComponentColors, KbqOrientation, ThemePalette } from '@koobiq/components/core';
-import { KbqButton, KbqButtonStyles } from './button.component';
+import { KbqColorDirective, KbqComponentColors, KbqOrientation } from '@koobiq/components/core';
+import { KbqButton, KbqButtonColor, KbqButtonStyleInput, KbqButtonStyles } from './button.component';
 
 /**
  * Root directive that groups related buttons,
@@ -35,32 +35,41 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
         return this._kbqStyle && `kbq-button-group-root_${this._kbqStyle}`;
     }
 
-    set kbqStyle(value: KbqButtonStyles | string) {
+    set kbqStyle(value: KbqButtonStyleInput | null | undefined) {
         this._kbqStyle = value || KbqButtonStyles.Filled;
 
         this.updateStyle(this._kbqStyle, this.buttons?.());
     }
 
-    private _kbqStyle: string | KbqButtonStyles = '';
+    /** Empty until the input is bound, so that an unstyled group emits no root style class. */
+    private _kbqStyle: KbqButtonStyleInput | '' = '';
 
     /**
      * Color applied to the group and propagated to every nested button.
      * A button that sets its own `color` keeps it.
+     *
+     * Left unbound, nothing is propagated and every nested button follows the default color of its
+     * own style.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
-    get color(): KbqComponentColors | ThemePalette | string {
-        return this._color;
+    get color(): KbqButtonColor {
+        return this._color as KbqButtonColor;
     }
 
-    set color(value: KbqComponentColors | ThemePalette | string) {
+    set color(value: KbqButtonColor | null | undefined) {
         if (!value) return;
+
+        this.colorSetExplicitly = true;
 
         super.color = value;
 
         this.updateColor(this.color, this.buttons?.());
     }
+
+    /** Whether `color` was bound from the outside rather than left at the group's own default. */
+    private colorSetExplicitly = false;
 
     /**
      * Whether the root is disabled. Disabling the group disables every nested button; re-enabling it
@@ -87,7 +96,15 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
     constructor() {
         super();
 
-        this.color = KbqComponentColors.ContrastFade;
+        // `KbqColorDirective`'s constructor assigns `this.color`, which dispatches to the setter
+        // above and flips the flag. Reset it here rather than relying on the field initializer
+        // happening to run after `super()`.
+        this.colorSetExplicitly = false;
+
+        // Applied through `super` so that the group's own default does not count as an explicit
+        // color: it styles the root element (see `button-group.scss`) but is not propagated, so
+        // every nested button is free to follow the default color of its own style.
+        super.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);
 
         effect(() => {
@@ -99,11 +116,17 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
         });
     }
 
-    private updateColor(color: KbqComponentColors | ThemePalette | string, buttons?: readonly KbqButton[]) {
+    private updateColor(color: KbqButtonColor, buttons?: readonly KbqButton[]) {
+        if (!this.colorSetExplicitly) return;
+
         buttons?.forEach((button: KbqButton) => button.setColorFromGroup(color));
     }
 
-    private updateStyle(style: KbqButtonStyles | string, buttons?: readonly KbqButton[]) {
+    private updateStyle(style: KbqButtonStyleInput | '', buttons?: readonly KbqButton[]) {
+        // Empty only while the input is unbound, and a button already defaults to `filled` on its
+        // own, so there is nothing to propagate.
+        if (!style) return;
+
         buttons?.forEach((button: KbqButton) => button.setKbqStyleFromGroup(style));
     }
 

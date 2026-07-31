@@ -1,7 +1,7 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, model, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KBQ_WINDOW, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -18,8 +18,8 @@ type DevButtonState = Partial<{
 }>;
 
 type DevButtonStyle = Partial<{
-    style: KbqButtonStyles;
-    color: KbqComponentColors;
+    style: KbqButtonStyle;
+    color: KbqButtonColor;
 }>;
 
 type DevButton = DevButtonState & DevButtonStyle;
@@ -106,13 +106,15 @@ export class E2eButtonStateAndStyle {
         { title: 'progress', progress: true }
     ];
 
+    // A row without a `color` covers the style's default color, which differs per style.
     private readonly styles: DevButtonStyle[] = [
         {},
         { color: KbqComponentColors.Contrast },
         { color: KbqComponentColors.ThemeFade, style: KbqButtonStyles.Outline },
         { style: KbqButtonStyles.Outline },
         { color: KbqComponentColors.Theme, style: KbqButtonStyles.Transparent },
-        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent }
+        { color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { style: KbqButtonStyles.Transparent }
     ];
 
     readonly rows: DevButton[][] = this.styles.map((style) => this.states.map((state) => ({ ...state, ...style })));
@@ -242,13 +244,15 @@ export class E2eButtonGroup {
         'Snooze'
     ] as const;
 
-    protected readonly buttonStyles: { color: KbqComponentColors; appearance: KbqButtonStyles }[] = [
+    // An entry without a `color` covers the default color the group leaves each button to pick.
+    protected readonly buttonStyles: { color?: KbqButtonColor; appearance: KbqButtonStyle }[] = [
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ThemeFade, appearance: KbqButtonStyles.Outline },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Outline },
         { color: KbqComponentColors.Theme, appearance: KbqButtonStyles.Transparent },
-        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Transparent }
+        { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Transparent },
+        { appearance: KbqButtonStyles.Transparent }
     ];
 
     protected readonly color = KbqComponentColors.ContrastFade;

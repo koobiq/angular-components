@@ -10,8 +10,8 @@ import {
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqColorDirective, KbqComponentColors, kbqInjectNativeElement, ThemePalette } from '@koobiq/components/core';
+import { KbqButton, KbqButtonColor, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqColorDirective, KbqComponentColors, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { delay } from 'rxjs/operators';
 
@@ -52,23 +52,23 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         return `kbq-button_${this._kbqStyle}`;
     }
 
-    set kbqStyle(value: KbqButtonStyles | string) {
+    set kbqStyle(value: KbqButtonStyleInput | null | undefined) {
         this._kbqStyle = value || KbqButtonStyles.Filled;
 
         this.updateStyle(this._kbqStyle);
     }
 
-    private _kbqStyle: string | KbqButtonStyles = KbqButtonStyles.Filled;
+    private _kbqStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
 
     /** component color, will be set for nested buttons */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
-    get color(): KbqComponentColors | ThemePalette | string {
-        return this._color;
+    get color(): KbqButtonColor {
+        return this._color as KbqButtonColor;
     }
 
-    set color(value: KbqComponentColors | ThemePalette | string) {
+    set color(value: KbqButtonColor | null | undefined) {
         if (!value) return;
 
         super.color = value;
@@ -137,11 +137,11 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         });
     }
 
-    private updateColor(color: KbqComponentColors | ThemePalette | string) {
+    private updateColor(color: KbqButtonColor) {
         this.buttons?.forEach((button: KbqButton) => (button.color = color));
     }
 
-    private updateStyle(style: KbqButtonStyles | string) {
+    private updateStyle(style: KbqButtonStyleInput) {
         this.buttons?.forEach((button: KbqButton) => (button.kbqStyle = style));
     }
 
