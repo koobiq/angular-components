@@ -44,7 +44,6 @@ import { map, startWith, take } from 'rxjs/operators';
 import { KbqInputModule } from '../input/index';
 import {
     KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS,
-    KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
     KbqAutocomplete,
     KbqAutocompleteModule,
     KbqAutocompleteOrigin,
@@ -2795,107 +2794,9 @@ class AutocompleteWithCustomOnBlur {
     customBlurSpy: jest.Mock<boolean, [FocusEvent]> = jest.fn().mockReturnValue(false);
 }
 
-// ---------------------------------------------------------------------------
-// hide-on-scroll tests
-// ---------------------------------------------------------------------------
-
-@Component({
-    imports: [KbqInputModule, KbqAutocompleteModule],
-    template: `
-        <kbq-form-field>
-            <input kbqInput [kbqAutocomplete]="auto" />
-        </kbq-form-field>
-        <kbq-autocomplete #auto="kbqAutocomplete">
-            <kbq-option value="one">one</kbq-option>
-        </kbq-autocomplete>
-    `
-})
-class AutocompleteHideOnScrollDefault {
-    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
-}
-
-@Component({
-    imports: [KbqInputModule, KbqAutocompleteModule],
-    template: `
-        <kbq-form-field>
-            <input kbqInput [kbqAutocomplete]="auto" [shouldHideOnScrollOut]="true" />
-        </kbq-form-field>
-        <kbq-autocomplete #auto="kbqAutocomplete">
-            <kbq-option value="one">one</kbq-option>
-        </kbq-autocomplete>
-    `
-})
-class AutocompleteHideOnScrollEnabled {
-    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
-}
-
+// TODO implement per component (#DS-5388)
 describe('KbqAutocompleteTrigger hide-on-scroll', () => {
-    let capturedOnHide: (() => void) | undefined;
-
-    const testStrategyFactory = (hooks?: { onHide?: () => void }) => {
-        capturedOnHide = hooks?.onHide;
-
-        return { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() } as any;
-    };
-
-    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [AutocompleteHideOnScrollDefault, NoopAnimationsModule, KbqLocaleServiceModule]
-        }).compileComponents();
-        TestBed.overrideProvider(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, { useValue: testStrategyFactory });
-
-        const fixture = TestBed.createComponent(AutocompleteHideOnScrollDefault);
-
-        fixture.detectChanges();
-
-        fixture.componentInstance.trigger().open();
-        fixture.detectChanges();
-        tick();
-
-        const closeSpy = jest.spyOn(fixture.componentInstance.trigger(), 'closePanel');
-
-        capturedOnHide?.();
-        flush();
-
-        expect(closeSpy).not.toHaveBeenCalled();
-    }));
-
-    it('closes when shouldHideOnScrollOut=true and onHide is invoked', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [AutocompleteHideOnScrollEnabled, NoopAnimationsModule, KbqLocaleServiceModule]
-        }).compileComponents();
-        TestBed.overrideProvider(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, { useValue: testStrategyFactory });
-
-        const fixture = TestBed.createComponent(AutocompleteHideOnScrollEnabled);
-
-        fixture.detectChanges();
-
-        fixture.componentInstance.trigger().open();
-        fixture.detectChanges();
-        tick();
-
-        const closeSpy = jest.spyOn(fixture.componentInstance.trigger(), 'closePanel');
-
-        capturedOnHide!();
-        flush();
-
-        expect(closeSpy).toHaveBeenCalled();
-    }));
-
-    it('does not crash when strategy factory ignores onHide', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [AutocompleteHideOnScrollEnabled, NoopAnimationsModule, KbqLocaleServiceModule]
-        }).compileComponents();
-
-        const fixture = TestBed.createComponent(AutocompleteHideOnScrollEnabled);
-
-        fixture.detectChanges();
-
-        expect(() => {
-            fixture.componentInstance.trigger().open();
-            fixture.detectChanges();
-            tick();
-            flush();
-        }).not.toThrow();
-    }));
+    it.todo('does not close when input is false (default)');
+    it.todo('closes when input is true and close hook is invoked');
+    it.todo('does not crash when strategy factory ignores the close hook');
 });

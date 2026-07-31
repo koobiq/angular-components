@@ -38,7 +38,6 @@ import {
     ErrorStateMatcher,
     HOME,
     KBQ_LOCALE_SERVICE,
-    KBQ_SELECT_SCROLL_STRATEGY,
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqPanelWidth,
@@ -4961,102 +4960,9 @@ describe('KbqTreeSelect', () => {
     });
 });
 
-// ---------------------------------------------------------------------------
-// hide-on-scroll tests
-// ---------------------------------------------------------------------------
-
-@Component({
-    imports: [KbqTreeSelectModule, ReactiveFormsModule],
-    template: `
-        <kbq-form-field>
-            <kbq-tree-select [formControl]="control" />
-        </kbq-form-field>
-    `
-})
-class TreeSelectHideOnScrollDefault {
-    readonly treeSelect = viewChild.required(KbqTreeSelect);
-    readonly control = new FormControl('');
-}
-
-@Component({
-    imports: [KbqTreeSelectModule, ReactiveFormsModule],
-    template: `
-        <kbq-form-field>
-            <kbq-tree-select [formControl]="control" [shouldHideOnScrollOut]="true" />
-        </kbq-form-field>
-    `
-})
-class TreeSelectHideOnScrollEnabled {
-    readonly treeSelect = viewChild.required(KbqTreeSelect);
-    readonly control = new FormControl('');
-}
-
+// TODO implement per component (#DS-5388)
 describe('KbqTreeSelect hide-on-scroll', () => {
-    let capturedOnHide: (() => void) | undefined;
-
-    const testStrategyFactory = (hooks?: { onHide?: () => void }) => {
-        capturedOnHide = hooks?.onHide;
-
-        return { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() } as any;
-    };
-
-    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [TreeSelectHideOnScrollDefault, NoopAnimationsModule]
-        }).compileComponents();
-        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: testStrategyFactory });
-
-        const fixture = TestBed.createComponent(TreeSelectHideOnScrollDefault);
-
-        fixture.autoDetectChanges();
-        flush();
-
-        fixture.componentInstance.treeSelect().open();
-        fixture.detectChanges();
-        flush();
-
-        const closeSpy = jest.spyOn(fixture.componentInstance.treeSelect(), 'close');
-
-        capturedOnHide?.();
-        flush();
-
-        expect(closeSpy).not.toHaveBeenCalled();
-    }));
-
-    it('closes when shouldHideOnScrollOut=true and onHide is invoked', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [TreeSelectHideOnScrollEnabled, NoopAnimationsModule]
-        }).compileComponents();
-        TestBed.overrideProvider(KBQ_SELECT_SCROLL_STRATEGY, { useValue: testStrategyFactory });
-
-        const fixture = TestBed.createComponent(TreeSelectHideOnScrollEnabled);
-
-        fixture.autoDetectChanges();
-        flush();
-
-        fixture.componentInstance.treeSelect().open();
-        fixture.detectChanges();
-        flush();
-
-        const closeSpy = jest.spyOn(fixture.componentInstance.treeSelect(), 'close');
-
-        capturedOnHide!();
-        flush();
-
-        expect(closeSpy).toHaveBeenCalled();
-    }));
-
-    it('does not crash when strategy factory ignores onHide', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [TreeSelectHideOnScrollEnabled, NoopAnimationsModule]
-        }).compileComponents();
-
-        const fixture = TestBed.createComponent(TreeSelectHideOnScrollEnabled);
-
-        fixture.autoDetectChanges();
-
-        expect(() => {
-            flush();
-        }).not.toThrow();
-    }));
+    it.todo('does not close when input is false (default)');
+    it.todo('closes when input is true and close hook is invoked');
+    it.todo('does not crash when strategy factory ignores the close hook');
 });

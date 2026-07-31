@@ -19,7 +19,6 @@ import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
-import { KbqScrollStrategyHooks } from '@koobiq/components/core';
 import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
 import { KbqToastData } from '@koobiq/components/toast';
 import { KbqToastStyle } from '@koobiq/components/toast';
@@ -49,11 +48,11 @@ export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: {
 };
 
 // @public
-export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY: InjectionToken<(hooks?: KbqScrollStrategyHooks) => ScrollStrategy>;
+export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
 export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
-    provide: InjectionToken<(hooks?: KbqScrollStrategyHooks) => ScrollStrategy>;
+    provide: InjectionToken<() => ScrollStrategy>;
     deps: (typeof Overlay)[];
     useFactory: typeof kbqNotificationCenterScrollStrategyFactory;
 };
@@ -110,7 +109,7 @@ export class KbqNotificationCenterModule {
 }
 
 // @public
-export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): (hooks?: KbqScrollStrategyHooks) => ScrollStrategy;
+export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
 // @public (undocumented)
 export class KbqNotificationCenterService {
@@ -186,7 +185,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     set popoverMode(value: boolean);
     protected preventClosingByInnerScrollSubscription: Subscription;
     scrolledToBottomOffset: number;
-    protected scrollStrategy: (hooks?: KbqScrollStrategyHooks) => ScrollStrategy;
+    protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
     stickToWindow: KbqStickToWindowPlacementValues;
     trigger: string;

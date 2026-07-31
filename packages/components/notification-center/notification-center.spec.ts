@@ -1,12 +1,11 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement, ElementRef, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFormattersModule, dispatchFakeEvent } from '@koobiq/components/core';
 import {
-    KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY,
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
     KbqNotificationCenterTrigger,
@@ -793,97 +792,9 @@ export class KbqNotificationCenterWithStickContainer {
     readonly container = viewChild.required<ElementRef<HTMLElement>>('containerRef');
 }
 
-// ---------------------------------------------------------------------------
-// hide-on-scroll tests
-// ---------------------------------------------------------------------------
-
-@Component({
-    imports: [KbqNotificationCenterModule, KbqLuxonDateModule, KbqFormattersModule],
-    template: `
-        <button kbqNotificationCenterTrigger>Trigger</button>
-    `
-})
-class NotificationCenterHideOnScrollDefault {
-    readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
-}
-
-@Component({
-    imports: [KbqNotificationCenterModule, KbqLuxonDateModule, KbqFormattersModule],
-    template: `
-        <button kbqNotificationCenterTrigger [shouldHideOnScrollOut]="true">Trigger</button>
-    `
-})
-class NotificationCenterHideOnScrollEnabled {
-    readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
-}
-
+// TODO implement per component (#DS-5388)
 describe('KbqNotificationCenterTrigger hide-on-scroll', () => {
-    let capturedOnHide: (() => void) | undefined;
-
-    const testStrategyFactory = (hooks?: { onHide?: () => void }) => {
-        capturedOnHide = hooks?.onHide;
-
-        return { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() } as any;
-    };
-
-    it('does not hide when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [NotificationCenterHideOnScrollDefault, NoopAnimationsModule]
-        }).compileComponents();
-        TestBed.overrideProvider(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY, { useValue: testStrategyFactory });
-
-        const fixture = TestBed.createComponent(NotificationCenterHideOnScrollDefault);
-
-        fixture.detectChanges();
-
-        fixture.componentInstance.trigger().show();
-        fixture.detectChanges();
-        tick();
-
-        const hideSpy = jest.spyOn(fixture.componentInstance.trigger(), 'hide');
-
-        capturedOnHide?.();
-        flush();
-
-        expect(hideSpy).not.toHaveBeenCalled();
-    }));
-
-    it('hides when shouldHideOnScrollOut=true and onHide is invoked', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [NotificationCenterHideOnScrollEnabled, NoopAnimationsModule]
-        }).compileComponents();
-        TestBed.overrideProvider(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY, { useValue: testStrategyFactory });
-
-        const fixture = TestBed.createComponent(NotificationCenterHideOnScrollEnabled);
-
-        fixture.detectChanges();
-
-        fixture.componentInstance.trigger().show();
-        fixture.detectChanges();
-        tick();
-
-        const hideSpy = jest.spyOn(fixture.componentInstance.trigger(), 'hide');
-
-        capturedOnHide!();
-        flush();
-
-        expect(hideSpy).toHaveBeenCalled();
-    }));
-
-    it('does not crash when strategy factory ignores onHide', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [NotificationCenterHideOnScrollEnabled, NoopAnimationsModule]
-        }).compileComponents();
-
-        const fixture = TestBed.createComponent(NotificationCenterHideOnScrollEnabled);
-
-        fixture.detectChanges();
-
-        expect(() => {
-            fixture.componentInstance.trigger().show();
-            fixture.detectChanges();
-            tick();
-            flush();
-        }).not.toThrow();
-    }));
+    it.todo('does not hide when input is false (default)');
+    it.todo('hides when input is true and close hook is invoked');
+    it.todo('does not crash when strategy factory ignores the close hook');
 });

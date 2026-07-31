@@ -1,6 +1,5 @@
 import { Overlay, RepositionScrollStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
-import { KbqScrollStrategyHooks } from '../overlay/auto-hide-scroll-strategy';
 
 /**
  * Minimum option count threshold for displaying select search.
@@ -15,14 +14,10 @@ export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;
 
 /** Injection token that determines the scroll handling while a select is open. */
-export const KBQ_SELECT_SCROLL_STRATEGY = new InjectionToken<(hooks?: KbqScrollStrategyHooks) => ScrollStrategy>(
-    'kbq-select-scroll-strategy'
-);
+export const KBQ_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-select-scroll-strategy');
 
 /** @docs-private */
-export function kbqSelectScrollStrategyProviderFactory(
-    overlay: Overlay
-): (hooks?: KbqScrollStrategyHooks) => RepositionScrollStrategy {
+export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => RepositionScrollStrategy {
     return () => overlay.scrollStrategies.reposition();
 }
 

@@ -43,7 +43,7 @@ import { map, Observable, timer } from 'rxjs';
 import { KbqInputModule } from '../input/index';
 import { KbqDatepickerInput, KbqDatepickerInputEvent } from './datepicker-input.directive';
 import { KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
-import { KBQ_DATEPICKER_SCROLL_STRATEGY, KbqDatepicker } from './datepicker.component';
+import { KbqDatepicker } from './datepicker.component';
 import { KbqDatepickerModule } from './index';
 
 const getDatepickerInputElement = (fixture: ComponentFixture<unknown>): HTMLInputElement =>
@@ -1787,99 +1787,9 @@ class DelayedDatepicker {
     assignedDatepicker: KbqDatepicker<DateTime>;
 }
 
-// ---------------------------------------------------------------------------
-// hide-on-scroll tests
-// ---------------------------------------------------------------------------
-
-@Component({
-    imports: [KbqDatepickerModule, KbqInputModule, KbqLuxonDateModule],
-    template: `
-        <input [kbqDatepicker]="picker" />
-        <kbq-datepicker #picker />
-    `
-})
-class DatepickerHideOnScrollDefault {
-    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('picker');
-}
-
-@Component({
-    imports: [KbqDatepickerModule, KbqInputModule, KbqLuxonDateModule],
-    template: `
-        <input [kbqDatepicker]="picker" />
-        <kbq-datepicker #picker [shouldHideOnScrollOut]="true" />
-    `
-})
-class DatepickerHideOnScrollEnabled {
-    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('picker');
-}
-
+// TODO implement per component (#DS-5388)
 describe('KbqDatepicker hide-on-scroll', () => {
-    let capturedOnHide: (() => void) | undefined;
-
-    const testStrategyFactory = (hooks?: { onHide?: () => void }) => {
-        capturedOnHide = hooks?.onHide;
-
-        return { attach: jest.fn(), enable: jest.fn(), disable: jest.fn(), detach: jest.fn() } as any;
-    };
-
-    it('does not close when shouldHideOnScrollOut is false (default)', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [DatepickerHideOnScrollDefault, NoopAnimationsModule]
-        }).compileComponents();
-        TestBed.overrideProvider(KBQ_DATEPICKER_SCROLL_STRATEGY, { useValue: testStrategyFactory });
-
-        const fixture = TestBed.createComponent(DatepickerHideOnScrollDefault);
-
-        fixture.detectChanges();
-
-        fixture.componentInstance.datepicker().open();
-        fixture.detectChanges();
-        tick();
-
-        const closeSpy = jest.spyOn(fixture.componentInstance.datepicker(), 'close');
-
-        capturedOnHide?.();
-        flush();
-
-        expect(closeSpy).not.toHaveBeenCalled();
-    }));
-
-    it('closes when shouldHideOnScrollOut=true and onHide is invoked', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [DatepickerHideOnScrollEnabled, NoopAnimationsModule]
-        }).compileComponents();
-        TestBed.overrideProvider(KBQ_DATEPICKER_SCROLL_STRATEGY, { useValue: testStrategyFactory });
-
-        const fixture = TestBed.createComponent(DatepickerHideOnScrollEnabled);
-
-        fixture.detectChanges();
-
-        fixture.componentInstance.datepicker().open();
-        fixture.detectChanges();
-        tick();
-
-        const closeSpy = jest.spyOn(fixture.componentInstance.datepicker(), 'close');
-
-        capturedOnHide!();
-        flush();
-
-        expect(closeSpy).toHaveBeenCalled();
-    }));
-
-    it('does not crash when strategy factory ignores onHide', fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [DatepickerHideOnScrollEnabled, NoopAnimationsModule]
-        }).compileComponents();
-
-        const fixture = TestBed.createComponent(DatepickerHideOnScrollEnabled);
-
-        fixture.detectChanges();
-
-        expect(() => {
-            fixture.componentInstance.datepicker().open();
-            fixture.detectChanges();
-            tick();
-            flush();
-        }).not.toThrow();
-    }));
+    it.todo('does not close when input is false (default)');
+    it.todo('closes when input is true and close hook is invoked');
+    it.todo('does not crash when strategy factory ignores the close hook');
 });

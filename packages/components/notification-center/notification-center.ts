@@ -33,7 +33,6 @@ import {
     KbqPopUpPlacementValues,
     KbqPopUpSizeValues,
     KbqPopUpTrigger,
-    KbqScrollStrategyHooks,
     KbqStickToWindowPlacementValues,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
@@ -83,14 +82,12 @@ export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION = ruRULocaleData.noti
 export const KBQ_NOTIFICATION_CENTER_CONFIGURATION = new InjectionToken('KbqNotificationCenterConfiguration');
 
 /** @docs-private */
-export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY = new InjectionToken<
-    (hooks?: KbqScrollStrategyHooks) => ScrollStrategy
->('kbq-notification-center-scroll-strategy');
+export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
+    'kbq-notification-center-scroll-strategy'
+);
 
 /** @docs-private */
-export function kbqNotificationCenterScrollStrategyFactory(
-    overlay: Overlay
-): (hooks?: KbqScrollStrategyHooks) => ScrollStrategy {
+export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
     return () => overlay.scrollStrategies.reposition({ scrollThrottle: 20 });
 }
 
@@ -366,7 +363,7 @@ export class KbqNotificationCenterTrigger
     implements AfterContentInit
 {
     /** @docs-private */
-    protected scrollStrategy = inject(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY);
+    protected scrollStrategy: () => ScrollStrategy = inject(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY);
     /** @docs-private */
     protected readonly service = inject(KbqNotificationCenterService);
 

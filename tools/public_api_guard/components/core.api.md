@@ -2318,11 +2318,11 @@ export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
 
 // @public
-export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<(hooks?: KbqScrollStrategyHooks) => ScrollStrategy>;
+export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
 export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
-    provide: InjectionToken<(hooks?: KbqScrollStrategyHooks) => ScrollStrategy>;
+    provide: InjectionToken<() => ScrollStrategy>;
     deps: (typeof Overlay)[];
     useFactory: typeof kbqSelectScrollStrategyProviderFactory;
 };
@@ -2740,30 +2740,6 @@ export class KbqFormsModule {
 
 // @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
-
-// @public
-export interface KbqHideOnScrollOverlay {
-    readonly shouldHideOnScrollOut: Signal<boolean>;
-}
-
-// @public
-export class KbqHideOnScrollStrategy implements ScrollStrategy {
-    constructor(_scrollDispatcher: ScrollDispatcher, _viewportRuler: ViewportRuler, _ngZone: NgZone, _config?: KbqHideOnScrollStrategyConfig);
-    attach(overlayRef: OverlayRef): void;
-    detach(): void;
-    disable(): void;
-    enable(): void;
-    readonly hide$: Observable<void>;
-}
-
-// @public (undocumented)
-export interface KbqHideOnScrollStrategyConfig {
-    originElement?: HTMLElement;
-    scrollThrottle?: number;
-}
-
-// @public
-export function kbqHideOnScrollStrategyFactory(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone): (config?: KbqHideOnScrollStrategyConfig) => KbqHideOnScrollStrategy;
 
 // @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
@@ -3315,9 +3291,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected readonly scheduler: AsyncScheduler | undefined;
     protected readonly scrollable: CdkScrollable | null;
     protected readonly scrollDispatcher: ScrollDispatcher;
-    protected abstract scrollStrategy: (hooks?: KbqScrollStrategyHooks) => ScrollStrategy;
+    protected abstract scrollStrategy: () => ScrollStrategy;
     setExternalNativeElement(value: HTMLElement): void;
-    readonly shouldHideOnScrollOut: i0.InputSignalWithTransform<boolean, unknown>;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues;
     protected strategy: FlexibleConnectedPositionStrategy;
@@ -3334,7 +3309,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected visible: boolean;
     abstract visibleChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopUpTrigger<any>, never, never, { "shouldHideOnScrollOut": { "alias": "shouldHideOnScrollOut"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopUpTrigger<any>, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopUpTrigger<any>, never>;
 }
@@ -3583,7 +3558,7 @@ export class KbqSelectMatcher {
 }
 
 // @public
-export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): (hooks?: KbqScrollStrategyHooks) => RepositionScrollStrategy;
+export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => RepositionScrollStrategy;
 
 // @public (undocumented)
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
@@ -5206,9 +5181,6 @@ export const VOLUME_UP = 175;
 
 // @public (undocumented)
 export const W = 87;
-
-// @public
-export function wireHideOnScroll(strategy: ScrollStrategy, destroyRef: DestroyRef, onHide: () => void): void;
 
 // @public (undocumented)
 export function wrappedErrorMessage(e: Error): RegExp;
