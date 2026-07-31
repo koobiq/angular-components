@@ -126,7 +126,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     get yPosition(): KbqDropdownPositionY;
     set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
@@ -161,6 +161,14 @@ export interface KbqDropdownDefaultOptions {
     overlapTriggerY: boolean;
     xPosition: KbqDropdownPositionX;
     yPosition: KbqDropdownPositionY;
+}
+
+// @public
+export class KbqDropdownFooter {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownFooter, "[kbqDropdownFooter], kbq-dropdown-footer", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownFooter, never>;
 }
 
 // @public
@@ -215,7 +223,7 @@ export class KbqDropdownModule {
     // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof i3.NgClass, typeof i4.KbqDropdownStaticContent, typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent], [typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent, typeof i4.KbqDropdownStaticContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof i3.NgClass, typeof i4.KbqDropdownStaticContent, typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent, typeof i4.KbqDropdownFooter], [typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent, typeof i4.KbqDropdownStaticContent, typeof i4.KbqDropdownFooter]>;
 }
 
 // @public
