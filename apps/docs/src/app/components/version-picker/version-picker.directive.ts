@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { afterNextRender, ChangeDetectorRef, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW } from '@koobiq/components/core';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 type DocsVersion = {
     version: string;
