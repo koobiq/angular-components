@@ -12,7 +12,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, PopUpPlacements, ThemeService } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -31,8 +31,8 @@ type ExampleAction = {
     icon?: string;
     text?: string;
     action?: () => void;
-    style: KbqButtonStyles | string;
-    color: KbqComponentColors;
+    style: KbqButtonStyleInput;
+    color: KbqButtonColor;
 };
 
 enum NavbarIcItems {
