@@ -1,13 +1,20 @@
-name: Build Documentation
-description: Common setup steps used by our workflows
+name: Build documentation
+description: Build documentation application
 runs:
   using: composite
   steps:
-    - name: Build Documentation
+    - name: Build docs examples module
       shell: bash
-      run: |
-        yarn run build:docs-examples-module
-        yarn run build:docs-examples
-        yarn run build:docs-content
-        yarn run build:package-docs-content
-        yarn run docs:build
+      run: yarn run build:docs-examples-module
+    - name: Build docs examples
+      shell: bash
+      run: yarn run build:docs-examples
+    - name: Build docs content
+      shell: bash
+      run: yarn run build:docs-content
+    - name: Build package docs content
+      shell: bash
+      run: yarn run build:package-docs-content
+    - name: Build docs
+      shell: bash
+      run: yarn run docs:build
