@@ -132,6 +132,42 @@ test.describe('KbqScrollbar (private)', () => {
 
             await expect.poll(() => viewport.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
         });
+
+        test('kbqScrollbarDisableDrag + kbqScrollbarDisableClick together make the whole track inert', async ({
+            page
+        }) => {
+            await page.goto('/E2ePrivateScrollbarDrag');
+            const container = page.getByTestId('both-disabled');
+            const viewport = getViewport(container);
+            const track = container.locator('.kbq-private-scrollbar-track_vertical');
+            const thumb = track.locator('.kbq-private-scrollbar-thumb');
+
+            const trackBox = await track.boundingBox();
+
+            if (!trackBox) throw new Error('bounding box is null');
+
+            // Click on the track away from the thumb — with only one flag set this would jump-to-
+            // click ([scrollbar.scss] makes the track `pointer-events: none` entirely once both
+            // flags are set, not just individually), so nothing should happen here at all.
+            await page.mouse.click(trackBox.x + trackBox.width / 2, trackBox.y + trackBox.height - 5);
+
+            expect(await viewport.evaluate((el) => el.scrollTop)).toBe(0);
+
+            // A real drag directly on the thumb too — same result: `pointer-events: none` on the
+            // ancestor track means the thumb never receives the pointerdown either.
+            const thumbBox = await thumb.boundingBox();
+
+            if (!thumbBox) throw new Error('bounding box is null');
+
+            await page.mouse.move(thumbBox.x + thumbBox.width / 2, thumbBox.y + thumbBox.height / 2);
+            await page.mouse.down();
+            await page.mouse.move(thumbBox.x + thumbBox.width / 2, thumbBox.y + thumbBox.height / 2 + 40, {
+                steps: 5
+            });
+            await page.mouse.up();
+
+            expect(await viewport.evaluate((el) => el.scrollTop)).toBe(0);
+        });
     });
 
     test.describe('E2ePrivateScrollbarScrollTo', () => {
@@ -187,25 +223,58 @@ test.describe('KbqScrollbar (private)', () => {
     });
 
     test.describe('E2ePrivateScrollbarHostPadding', () => {
-        test("insets the track by the host's own padding instead of sitting flush with its border edge", async ({
-            page
-        }) => {
+        // Host padding is asymmetric (10/25/15/35, see `E2ePrivateScrollbarHostPadding`'s styles) —
+        // deliberately, so a bug that swaps two sides wouldn't go unnoticed the way it could with a
+        // single uniform padding value. Both tracks overflow here, so corner-avoidance is active;
+        // every assertion below picks the one edge per track corner-avoidance never touches (only
+        // the vertical track's `bottom` and the horizontal track's `right` — or `left` in RTL — are
+        // ever adjusted to dodge the other track).
+        test("insets the vertical and horizontal tracks by the host's own asymmetric padding", async ({ page }) => {
             await page.goto('/E2ePrivateScrollbarHostPadding');
             const container = page.getByTestId('host-padding');
-            const track = container.locator('.kbq-private-scrollbar-track_vertical');
+            const verticalTrack = container.locator('.kbq-private-scrollbar-track_vertical');
+            const horizontalTrack = container.locator('.kbq-private-scrollbar-track_horizontal');
 
             const containerBox = await container.boundingBox();
-            const trackBox = await track.boundingBox();
+            const verticalBox = await verticalTrack.boundingBox();
+            const horizontalBox = await horizontalTrack.boundingBox();
 
-            if (!containerBox || !trackBox) throw new Error('bounding box is null');
+            if (!containerBox || !verticalBox || !horizontalBox) throw new Error('bounding box is null');
 
-            // The host has 20px of its own padding on every side — the track's right edge should
-            // align with the padding box (the real content edge), not the host's border edge 20px
-            // further out.
-            const expectedRight = containerBox.x + containerBox.width - 20;
+            expect(verticalBox.y).toBeCloseTo(containerBox.y + 10, 0);
+            expect(verticalBox.x + verticalBox.width).toBeCloseTo(containerBox.x + containerBox.width - 25, 0);
 
-            expect(trackBox.x + trackBox.width).toBeCloseTo(expectedRight, 0);
-            expect(trackBox.y).toBeCloseTo(containerBox.y + 20, 0);
+            expect(horizontalBox.x).toBeCloseTo(containerBox.x + 35, 0);
+            expect(horizontalBox.y + horizontalBox.height).toBeCloseTo(containerBox.y + containerBox.height - 15, 0);
+        });
+
+        test("flips the vertical track to the host's logical-left padding under RTL", async ({ page }) => {
+            await page.goto('/E2ePrivateScrollbarHostPadding');
+
+            // `host-padding-rtl` is wrapped in CDK's `[dir]` directive (`<div dir="rtl">`), which
+            // provides `Directionality` locally via DI from its own attribute — global
+            // `document.documentElement.dir` isn't an option here, since `Directionality` only ever
+            // reads it once, at its own construction (app bootstrap), so setting it later (e.g. via
+            // `page.evaluate()`, or even `addInitScript`, which this dev server's own bootstrapping
+            // ends up clobbering before Angular reads it) wouldn't be picked up at all.
+            const container = page.getByTestId('host-padding-rtl');
+            const verticalTrack = container.locator('.kbq-private-scrollbar-track_vertical');
+            const horizontalTrack = container.locator('.kbq-private-scrollbar-track_horizontal');
+
+            const containerBox = await container.boundingBox();
+            const verticalBox = await verticalTrack.boundingBox();
+            const horizontalBox = await horizontalTrack.boundingBox();
+
+            if (!containerBox || !verticalBox || !horizontalBox) throw new Error('bounding box is null');
+
+            // RTL moves the vertical track to the logical-left (host-padding-left) edge instead of
+            // the right.
+            expect(verticalBox.x).toBeCloseTo(containerBox.x + 35, 0);
+
+            // The horizontal track's corner-avoidance-adjusted side mirrors too (becomes `left`
+            // instead of `right`) — its `right`/`bottom` stay the safe, untouched edges here.
+            expect(horizontalBox.x + horizontalBox.width).toBeCloseTo(containerBox.x + containerBox.width - 25, 0);
+            expect(horizontalBox.y + horizontalBox.height).toBeCloseTo(containerBox.y + containerBox.height - 15, 0);
         });
     });
 

@@ -341,11 +341,6 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     // `--kbq-private-scrollbar-size-thumb-min-size`/`--kbq-private-scrollbar-size-track-padding`.
     private cssMinThumbSize = 32;
     private cssTrackPadding = 3;
-    // The scroll element's own box/content size — refreshed only on a "full" `recompute()` (see
-    // its doc comment), not on every scroll tick: scrolling alone can never change either, only a
-    // resize or a content mutation can.
-    private readonly cachedViewportSize: Record<Axis, number> = { vertical: 0, horizontal: 0 };
-    private readonly cachedContentSize: Record<Axis, number> = { vertical: 0, horizontal: 0 };
     private isCoarsePointer = false;
     private isVisible = false;
     private isPointerOver = false;
@@ -722,6 +717,19 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
 
                 if (axis) this.endDrag(axis);
             });
+
+        // Mirrors `pointercancel` above for the rarer case pointer capture itself gets revoked
+        // mid-gesture (e.g. another element calls `setPointerCapture` for the same pointerId, or
+        // the browser does so on focus change) without a `pointerup`/`pointercancel` ever firing.
+        // Bubbles like the others, so `document` still sees it even though capture itself was set
+        // on the thumb/track (`beginInteraction()`).
+        fromEvent<PointerEvent>(this.document, 'lostpointercapture', { passive: true })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((event) => {
+                const axis = this.axisForPointerId(event.pointerId);
+
+                if (axis) this.endDrag(axis);
+            });
     }
 
     private beginInteraction(
@@ -732,6 +740,20 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         centerOnThumb: boolean
     ): void {
         event.preventDefault();
+
+        // Captures all further events for this pointerId to `captureTarget` regardless of where
+        // the pointer travels afterward (even outside the window, or over an iframe/native
+        // control) — without this, the pointer leaving the document before it's released can mean
+        // the eventual `pointerup` never reaches `document` at all, leaving the drag stuck open
+        // forever. `lostpointercapture` (handled in `wireGlobalDragListeners()`) is the safety net
+        // for the rarer case capture itself gets revoked mid-gesture. Feature-detected: some
+        // environments (this repo's jsdom-based Jest setup among them) don't implement
+        // `Element.setPointerCapture` — same caveat as `scrollTo()`.
+        const captureTarget = centerOnThumb ? track : thumb;
+
+        if (typeof captureTarget.setPointerCapture === 'function') {
+            captureTarget.setPointerCapture(event.pointerId);
+        }
 
         const isVertical = axis === 'vertical';
         const trackRect = track.getBoundingClientRect();
@@ -920,19 +942,17 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     }
 
     /**
-     * @param fullRefresh Whether to also re-read the two comparatively expensive, effectively-
-     * static-during-a-pure-scroll things: the host's own padding (`syncHostPadding()`) and the
-     * scroll element's own box/content size (`cachedViewportSize`/`cachedContentSize`, consumed by
-     * `measureAxis()`). Defaults to `true` — the one caller that opts out is `wireScroll()`, since
-     * `scroll` is by far this directive's highest-frequency, un-throttled event, and neither the
-     * host's author-set padding nor the scroll element's own box/content size has any real chance
-     * of changing from scrolling alone between one tick and the next.
+     * @param syncPadding Whether to also re-read the host's own padding into the CSS custom
+     * properties `scrollbar.scss`'s track positioning rules consume (`syncHostPadding()`).
+     * Defaults to `true` — the one caller that opts out is `wireScroll()`, since `scroll` is by far
+     * this directive's highest-frequency, un-throttled event, and the host's own author-set
+     * padding has no real chance of changing on its own between one scroll tick and the next.
      */
-    private recompute(fullRefresh = true): void {
+    private recompute(syncPadding = true): void {
         const measurements = new Map<Axis, AxisMeasurement>();
 
         for (const axis of AXES) {
-            const measurement = this.measureAxis(axis, fullRefresh);
+            const measurement = this.measureAxis(axis);
 
             if (measurement) measurements.set(axis, measurement);
         }
@@ -944,7 +964,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         // thumb — sizing it first would size/position the thumb against a stale, pre-shrink track
         // on the very frame content starts overflowing, or the very frame host padding changes.
         if (!this.native && !this.isCoarsePointer) {
-            if (fullRefresh) this.syncHostPadding();
+            if (syncPadding) this.syncHostPadding();
             this.updateCornerAvoidance();
         }
 
@@ -1024,31 +1044,32 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
      * `updateCornerAvoidance()` between this and `paintAxis()`, since corner avoidance can shrink
      * a track's real size via CSS, and the thumb needs to be sized against that final size, not
      * whatever it measured before corner avoidance ran.
-     *
-     * @param fullRefresh Whether to re-read the scroll element's own box/content size
-     * (`clientHeight`/`clientWidth`/`scrollHeight`/`scrollWidth`) or reuse whatever `cachedViewportSize`/
-     * `cachedContentSize` already hold from the last time it was — see `recompute()`'s doc comment.
      */
-    private measureAxis(axis: Axis, fullRefresh: boolean): AxisMeasurement | null {
+    private measureAxis(axis: Axis): AxisMeasurement | null {
         const scrollEl = this.scrollElement;
         const isVertical = axis === 'vertical';
-
-        if (fullRefresh) {
-            this.cachedViewportSize[axis] = isVertical ? scrollEl.clientHeight : scrollEl.clientWidth;
-            this.cachedContentSize[axis] = isVertical ? scrollEl.scrollHeight : scrollEl.scrollWidth;
-        }
-
-        const viewportSize = this.cachedViewportSize[axis];
-        const contentSize = this.cachedContentSize[axis];
+        const viewportSize = isVertical ? scrollEl.clientHeight : scrollEl.clientWidth;
+        const contentSize = isVertical ? scrollEl.scrollHeight : scrollEl.scrollWidth;
         const rawScrollOffset = isVertical ? scrollEl.scrollTop : scrollEl.scrollLeft;
         const overflows = isVertical ? this.verticalOverflows : this.horizontalOverflows;
         const track = this.tracks.get(axis);
 
         if (contentSize <= viewportSize) {
             if (track) this.renderer.setStyle(track, 'display', 'none');
-            // Nothing to scroll on this axis — `isTopReached()`/`isBottomReached()`-family signals short-
-            // circuit to `true` off this flag, without touching the real edge-position signals
-            // below (those stay at whatever they last genuinely measured).
+
+            // Nothing to scroll on this axis — trivially "at both edges" at once. The public
+            // `isTopReached()`/`isBottomReached()`-family signals already short-circuit to `true`
+            // off `overflows` alone regardless of what's passed here, but the discrete `reach*`
+            // outputs only ever fire from `checkReachedEdges()` — without calling it on a genuine
+            // overflowing→not-overflowing transition too, a consumer listening to the outputs (not
+            // the signals) would never hear about content shrinking to fit. Gated on the *previous*
+            // `overflows()` value specifically: this axis simply never having overflowed yet (its
+            // state from construction, before any real measurement) must NOT also count as such a
+            // transition — that would fire `reach*` before anyone's had a chance to subscribe, and
+            // permanently mark both edges "already reached" so a later, genuine first overflow
+            // never fires them at all.
+            if (overflows()) this.checkReachedEdges(axis, 0, 0);
+
             overflows.set(false);
 
             return null;
@@ -1097,8 +1118,11 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         // The thumb travels within the track minus a `cssTrackPadding` gap at *each* end, so it
         // never sits flush against the track's own start/end edge — matching the CSS insets
         // already applied on its cross-axis (`scrollbar.scss`'s `left`/`right`/`top`/`bottom`
-        // rules), just computed here since this axis is otherwise entirely JS-driven.
-        const travelLength = trackLength - 2 * this.cssTrackPadding;
+        // rules), just computed here since this axis is otherwise entirely JS-driven. Clamped to
+        // `0` (not left negative) for a track shorter than `2 * cssTrackPadding` — `Math.min(travelLength,
+        // ...)` below already collapses `thumbSize` to `0` correctly once this is non-negative;
+        // left negative, it would instead flow through as a bogus negative thumb size.
+        const travelLength = Math.max(0, trackLength - 2 * this.cssTrackPadding);
 
         // Round the ratio up so the thumb never reads as undersized from float error.
         const ratio = Math.min(1, Math.ceil((viewportSize / (viewportSize + scrollRange)) * 100) / 100);
@@ -1129,7 +1153,12 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
 
     private checkReachedEdges(axis: Axis, scrollOffset: number, scrollRange: number): void {
         const atPhysicalStart = scrollOffset <= 0;
-        const atPhysicalEnd = scrollRange > 0 && Math.round(scrollOffset) >= Math.round(scrollRange);
+        // No `scrollRange > 0` guard: the one caller passing `scrollRange: 0` (`measureAxis()`'s
+        // no-longer-overflowing branch) means "nothing to scroll," which — same as
+        // `atPhysicalStart` above — is trivially also "at the end." Every other caller only ever
+        // reaches this with a genuinely positive `scrollRange` already, so this doesn't change
+        // anything for them.
+        const atPhysicalEnd = Math.round(scrollOffset) >= Math.round(scrollRange);
         const [startState, endState] = this.edgeSignals(axis);
 
         // Vertical has no RTL concept — top is always physically first. Horizontal's physical

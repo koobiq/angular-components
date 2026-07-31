@@ -1,3 +1,4 @@
+import { Dir } from '@angular/cdk/bidi';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqScrollbar, kbqScrollbarConfigProvider } from './scrollbar';
 
@@ -73,6 +74,17 @@ export class E2ePrivateScrollbarStateAndStyle {}
             kbqScrollbarVisibility="always"
             kbqScrollbarDisableClick
             data-testid="click-disabled"
+        >
+            <p>{{ content }}</p>
+        </div>
+
+        <div
+            class="e2e-scrollbar"
+            kbqScrollbar
+            kbqScrollbarVisibility="always"
+            kbqScrollbarDisableDrag
+            kbqScrollbarDisableClick
+            data-testid="both-disabled"
         >
             <p>{{ content }}</p>
         </div>
@@ -260,10 +272,22 @@ export class E2ePrivateScrollbarContentMutation {
  */
 @Component({
     selector: 'e2e-private-scrollbar-host-padding',
-    imports: [KbqScrollbar],
+    imports: [KbqScrollbar, Dir],
     template: `
         <div class="e2e-scrollbar" kbqScrollbar kbqScrollbarVisibility="always" data-testid="host-padding">
             <p>{{ content }}</p>
+        </div>
+
+        <!--
+            The \`Dir\` directive (\`[dir]\`, \`@angular/cdk/bidi\`) provides \`Directionality\` locally
+            from its own \`dir\` value via DI — unlike toggling \`document.documentElement.dir\` at
+            runtime, which the global \`Directionality\` singleton only ever reads once, at its own
+            construction (app bootstrap), so a later change wouldn't be picked up here at all.
+        -->
+        <div dir="rtl">
+            <div class="e2e-scrollbar" kbqScrollbar kbqScrollbarVisibility="always" data-testid="host-padding-rtl">
+                <p>{{ content }}</p>
+            </div>
         </div>
     `,
     styles: `
@@ -276,9 +300,12 @@ export class E2ePrivateScrollbarContentMutation {
             box-sizing: border-box;
             width: 200px;
             height: 100px;
-            padding: 20px;
+            /* Deliberately asymmetric (not a single uniform value) — otherwise a bug that swaps
+               two sides (e.g. left/right, or physical/logical in RTL) could go unnoticed. */
+            padding: 10px 25px 15px 35px;
             border-radius: var(--kbq-size-border-radius);
             background-color: var(--kbq-background-bg-secondary);
+            margin-bottom: var(--kbq-size-l);
         }
 
         p {
