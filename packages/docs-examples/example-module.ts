@@ -1460,6 +1460,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-with-filter-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-with-footer": {
+    "packagePath": "components/dropdown/dropdown-with-footer",
+    "title": "Dropdown with footer",
+    "componentName": "DropdownWithFooterExample",
+    "files": [
+      "dropdown-with-footer-example.ts"
+    ],
+    "selector": "dropdown-with-footer-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-with-footer-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dropdown-x-position": {
     "packagePath": "components/dropdown/dropdown-x-position",
     "title": "Dropdown xPosition",
@@ -6679,6 +6691,8 @@ return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-recursive-template':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-with-filter':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-with-footer':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-x-position':
 return import('@koobiq/docs-examples/components/dropdown');

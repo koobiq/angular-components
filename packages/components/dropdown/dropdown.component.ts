@@ -47,6 +47,13 @@ import {
 })
 export class KbqDropdownStaticContent {}
 
+/** Footer that is rendered below the dropdown options panel. */
+@Directive({
+    selector: '[kbqDropdownFooter], kbq-dropdown-footer',
+    host: { class: 'kbq-dropdown-footer' }
+})
+export class KbqDropdownFooter {}
+
 @Component({
     selector: 'kbq-dropdown',
     imports: [
