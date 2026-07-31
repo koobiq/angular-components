@@ -11,7 +11,7 @@
 @use '../forms/forms-theme' as *;
 @use '../highlight/highlight-theme' as *;
 
-@mixin koobiq-theme($theme: null) {
+@mixin koobiq-theme() {
     @include kbq-core-theme();
 
     @include kbq-forms-theme();
@@ -25,7 +25,7 @@
     @include kbq-tag-theme();
 }
 
-@mixin koobiq-typography($tokens: null, $config: null, $md-config: null) {
+@mixin koobiq-typography() {
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
     @include kbq-markdown-typography();
