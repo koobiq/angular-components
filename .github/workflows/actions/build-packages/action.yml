@@ -3,6 +3,9 @@ description: Build all koobiq packages
 runs:
   using: composite
   steps:
+    - name: Build @koobiq/cdk
+      shell: bash
+      run: yarn run build:cdk
     - name: Build @koobiq/components
       shell: bash
       run: yarn run build:components
