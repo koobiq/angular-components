@@ -80,7 +80,7 @@ export type KbqScrollbarConfig = Partial<{
 // @public
 export const kbqScrollbarConfigProvider: (config: KbqScrollbarConfig) => Provider;
 
-// @public (undocumented)
+// @public
 export class KbqScrollbarModule {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqScrollbarModule, never>;
