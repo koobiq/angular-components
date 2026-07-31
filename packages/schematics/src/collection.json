@@ -76,6 +76,11 @@
             "description": "Moves edge icons of a button/button-toggle into the kbqButtonPrefix/kbqButtonSuffix slots so labels keep their ellipsis, and reports stylesheet overrides affected by the new truncation layout",
             "factory": "./migrations/button-truncation/index",
             "schema": "./migrations/button-truncation/schema.json"
+        },
+        "button-supported-colors": {
+            "description": "Removes button colors outside theme/theme-fade/contrast/contrast-fade from templates and warns about the ones it cannot resolve, plus the transparent default color change",
+            "factory": "./migrations/button-supported-colors/index",
+            "schema": "./migrations/button-supported-colors/schema.json"
         }
     }
 }
