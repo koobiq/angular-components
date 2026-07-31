@@ -53,6 +53,7 @@ import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -2490,6 +2491,29 @@ export type KbqAppSwitcherConfiguration = {
     clearSearch: string;
 };
 
+// @public
+export class KbqAutoHideScrollStrategy implements ScrollStrategy {
+    constructor(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone, config?: KbqAutoHideScrollStrategyConfig, hooks?: KbqAutoHideScrollStrategyHooks | undefined);
+    attach(overlayRef: OverlayRef): void;
+    detach(): void;
+    disable(): void;
+    enable(): void;
+}
+
+// @public
+export interface KbqAutoHideScrollStrategyConfig {
+    originElement?: HTMLElement;
+    scrollThrottle?: number;
+}
+
+// @public
+export function kbqAutoHideScrollStrategyFactory(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone): (hooks?: KbqAutoHideScrollStrategyHooks, config?: KbqAutoHideScrollStrategyConfig) => KbqAutoHideScrollStrategy;
+
+// @public
+export interface KbqAutoHideScrollStrategyHooks {
+    onHide?: () => void;
+}
+
 // @public (undocumented)
 export interface KbqBaseFileUploadLocaleConfig {
     // (undocumented)
@@ -2716,25 +2740,6 @@ export class KbqFormsModule {
 
 // @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
-
-// @public
-export class KbqHideOnScrollStrategy implements ScrollStrategy {
-    constructor(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone, config?: KbqHideOnScrollStrategyConfig, hooks?: KbqScrollStrategyHooks | undefined);
-    attach(overlayRef: OverlayRef): void;
-    detach(): void;
-    disable(): void;
-    enable(): void;
-    readonly hide: Observable<void>;
-}
-
-// @public (undocumented)
-export interface KbqHideOnScrollStrategyConfig {
-    originElement?: HTMLElement;
-    scrollThrottle?: number;
-}
-
-// @public
-export function kbqHideOnScrollStrategyFactory(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone): (hooks?: KbqScrollStrategyHooks) => KbqHideOnScrollStrategy;
 
 // @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
@@ -3507,11 +3512,6 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRoundDecimalPipe, "kbqRoundNumber", true>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqRoundDecimalPipe>;
-}
-
-// @public
-export interface KbqScrollStrategyHooks {
-    onHide?: () => void;
 }
 
 // @public
