@@ -53,4 +53,13 @@ describe('docs structure registry', () => {
             expect(DateTime.fromISO(date).isValid).toBe(true);
         }
     });
+
+    // `expiresAt` flips a badge off silently once its date passes, so an expired entry lingers in the
+    // registry forever with nothing to signal it. Failing here turns that silent expiry into a CI
+    // signal: when this breaks, delete the `isNew: expiresAt(...)` line the message names.
+    it('has no isNew badge whose expiry date has already passed', () => {
+        const expired = docsGetIsNewExpiryDates().filter((date) => DateTime.fromISO(date).diffNow('days').days <= 0);
+
+        expect(expired).toEqual([]);
+    });
 });

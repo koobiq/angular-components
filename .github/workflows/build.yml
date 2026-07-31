@@ -14,3 +14,16 @@ jobs:
       - uses: ./.github/workflows/actions/setup-node
       - uses: ./.github/workflows/actions/build-packages
       - uses: ./.github/workflows/actions/build-docs
+      # Smoke the docs site against the build produced above. Runs here rather than in the E2E
+      # workflow because that one serves the `dev-e2e` app and would have to rebuild the whole
+      # docs content pipeline just to reach a page.
+      - name: Install Playwright browser
+        run: npx playwright install chromium --with-deps
+      - id: run-docs-smoke
+        run: yarn run e2e:docs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: ${{ failure() && steps.run-docs-smoke.outcome == 'failure' }}
+        with:
+          name: playwright-report-docs
+          path: playwright-report-docs/
+          retention-days: 5

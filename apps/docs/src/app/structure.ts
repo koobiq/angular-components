@@ -158,7 +158,10 @@ const makeStructure = (structure: DocsStructure): DocsStructure => {
     return structure;
 };
 
-/** Every ISO date passed to `expiresAt`, retained so a test can flag already-expired `isNew` badges. */
+/**
+ * Every ISO date passed to `expiresAt`, retained so `structure.spec` can fail the build on an
+ * already-expired `isNew` badge instead of letting it linger silently in the registry.
+ */
 const isNewExpiryDates: string[] = [];
 
 const expiresAt = (expiresAt: string): boolean => {
@@ -260,8 +263,7 @@ const structure: DocsStructure = makeStructure({
                     },
                     svgPreview: '',
                     hasApi: false,
-                    hasExamples: false,
-                    isNew: expiresAt('2025-07-13')
+                    hasExamples: false
                 }
             ]
         }
@@ -309,8 +311,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'app-switcher',
                     hasApi: true,
                     apiId: 'app-switcher',
-                    hasExamples: false,
-                    isNew: expiresAt('2025-10-20')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.AgGrid,
@@ -320,8 +321,7 @@ const structure: DocsStructure = makeStructure({
                     },
                     svgPreview: 'ag-grid',
                     hasApi: false,
-                    hasExamples: false,
-                    isNew: expiresAt('2025-05-04')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Alert,
@@ -404,8 +404,7 @@ const structure: DocsStructure = makeStructure({
                     path: 'packages/components/button',
                     hasApi: true,
                     apiId: 'button',
-                    hasExamples: false,
-                    isNew: expiresAt('2026-04-20')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Checkbox,
@@ -428,8 +427,7 @@ const structure: DocsStructure = makeStructure({
                     path: 'packages/components/clamped-text',
                     hasApi: true,
                     apiId: 'clamped-text',
-                    hasExamples: false,
-                    isNew: expiresAt('2026-03-31')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.ClampedText,
@@ -441,8 +439,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'clamped-text',
                     hasApi: true,
                     apiId: 'clamped-text',
-                    hasExamples: false,
-                    isNew: expiresAt('2025-08-29')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.CodeBlock,
@@ -466,8 +463,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'content-panel',
                     hasApi: true,
                     apiId: 'content-panel',
-                    hasExamples: false,
-                    isNew: expiresAt('2025-08-29')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Core,
@@ -539,8 +535,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'dynamic-translation',
                     hasApi: true,
                     apiId: 'dynamic-translation',
-                    hasExamples: true,
-                    isNew: expiresAt('2025-09-14')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.EmptyState,
@@ -575,8 +570,7 @@ const structure: DocsStructure = makeStructure({
                     path: 'packages/components/icon',
                     hasApi: true,
                     apiId: 'icon',
-                    hasExamples: false,
-                    isNew: expiresAt('2026-02-28')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.IconItem,
@@ -600,8 +594,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'inline-edit',
                     hasApi: true,
                     apiId: 'inline-edit',
-                    hasExamples: true,
-                    isNew: expiresAt('2025-10-15')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.Input,
@@ -662,7 +655,6 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'form-field',
                     hasApi: true,
                     apiId: 'form-field',
-                    isNew: expiresAt('2025-07-26'),
                     hasExamples: false
                 },
                 {
@@ -673,7 +665,6 @@ const structure: DocsStructure = makeStructure({
                     },
                     path: 'packages/components/core/highlight',
                     hasApi: false,
-                    isNew: expiresAt('2026-07-15'),
                     hasExamples: false
                 },
                 {
@@ -769,8 +760,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'notification-center',
                     hasApi: true,
                     apiId: 'notification-center',
-                    hasExamples: true,
-                    isNew: expiresAt('2025-11-10')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.OverflowItems,
@@ -877,8 +867,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'search-expandable',
                     hasApi: true,
                     apiId: 'search-expandable',
-                    hasExamples: false,
-                    isNew: expiresAt('2025-10-10')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Sidebar,
@@ -890,8 +879,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'sidebar',
                     hasApi: true,
                     apiId: 'sidebar',
-                    hasExamples: true,
-                    isNew: expiresAt('2025-06-16')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.Sidepanel,
@@ -915,8 +903,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'skeleton',
                     hasApi: true,
                     apiId: 'skeleton',
-                    hasExamples: false,
-                    isNew: expiresAt('2026-03-03')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Splitter,
@@ -940,8 +927,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'split-button',
                     hasApi: true,
                     apiId: 'split-button',
-                    hasExamples: false,
-                    isNew: expiresAt('2025-10-10')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Table,
@@ -1049,8 +1035,7 @@ const structure: DocsStructure = makeStructure({
                     path: 'packages/components/time-range',
                     hasApi: true,
                     apiId: 'time-range',
-                    hasExamples: true,
-                    isNew: expiresAt('2025-10-31')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.Timezone,
@@ -1156,8 +1141,7 @@ const structure: DocsStructure = makeStructure({
                     path: 'packages/components/username',
                     hasApi: true,
                     apiId: 'username',
-                    hasExamples: false,
-                    isNew: expiresAt('2025-08-24')
+                    hasExamples: false
                 }
             ].sort((a, b) => a.name.en.localeCompare(b.name.en))
         }
@@ -1192,8 +1176,7 @@ const structure: DocsStructure = makeStructure({
                     path: 'packages/components/core/formatters/filesize',
                     svgPreview: 'formatter-filesize',
                     hasApi: false,
-                    hasExamples: false,
-                    isNew: expiresAt('2025-06-08')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Forms,

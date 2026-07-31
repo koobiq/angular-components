@@ -282,6 +282,8 @@
         "dev:e2e": "ng serve dev-e2e",
         "e2e:setup": "playwright install chromium --with-deps && playwright install webkit --with-deps",
         "e2e:components": "playwright test",
+        "e2e:docs": "playwright test --config playwright.docs.config.ts",
+        "serve:docs": "node tools/serve-docs.mjs",
         "-----API-----": "--------------------------------------------------------------------------------------------",
         "approve-api": "ts-node --project tools/api-extractor/tsconfig.json tools/api-extractor/api-extractor.ts",
         "check-api": "yarn run approve-api onlyCheck",

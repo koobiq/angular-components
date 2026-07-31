@@ -12,6 +12,9 @@ const webServerCommand = process.env.WEB_SERVER_COMMAND || 'yarn run dev:e2e --c
 export default defineConfig({
     testDir: __dirname,
     testMatch: ['**/*.playwright-spec.ts'],
+    // The docs smoke needs the prerendered docs build, not the `dev-e2e` app this config serves.
+    // It has its own config/server: `playwright.docs.config.ts` (`yarn run e2e:docs`).
+    testIgnore: ['apps/docs/**'],
     tsconfig: 'tsconfig.playwright-spec.json',
     timeout: 15 * 1000,
     fullyParallel: true,

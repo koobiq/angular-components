@@ -6,7 +6,7 @@ import {
     Directive,
     ElementRef,
     inject,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -117,7 +117,9 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
 
     componentDocItem: DocsStructureItem | null = null;
 
-    @ViewChild(DocsAnchorsComponent, { static: false }) private readonly anchors: DocsAnchorsComponent;
+    // Optional (not `.required`): the anchors list belongs to the subclass templates and is absent
+    // while the document is still loading, so reading it must never throw.
+    private readonly anchors = viewChild(DocsAnchorsComponent);
 
     constructor() {
         super();
@@ -141,13 +143,13 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
     scrollToSelectedContentSection() {
         this.showView();
 
-        this.anchors?.setScrollPosition();
+        this.anchors()?.setScrollPosition();
     }
 
     showDocumentLostAlert() {
         this.showView();
 
-        this.anchors?.setScrollPosition();
+        this.anchors()?.setScrollPosition();
     }
 
     private showView() {
