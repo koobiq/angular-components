@@ -482,6 +482,22 @@ describe(KbqScrollbar.name, () => {
             expect(thumb.style.top).toBe('3px');
         });
 
+        it('clamps the thumb to 0 rather than a negative size when the track is shorter than 2 * cssTrackPadding', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const thumb = host.querySelector('.kbq-private-scrollbar-thumb') as HTMLElement;
+
+            setMetrics(scrollEl, { scrollTop: 0, clientHeight: 200, scrollHeight: 500 });
+            // 4px track: shorter than 2 * the 3px cssTrackPadding default (6px), so travelLength
+            // would go negative (4 - 6 = -2) without the clamp.
+            setMetrics(track, { clientHeight: 4 });
+            fixture.componentInstance.scrollbar().update();
+
+            expect(thumb.style.height).toBe('0px');
+        });
+
         it("keeps the thumb inset from the track's own start/end edges by cssTrackPadding at both scroll extremes", () => {
             const fixture = createComponent(TestScrollbarHost);
             const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
@@ -1408,6 +1424,48 @@ describe(KbqScrollbar.name, () => {
             fixture.componentInstance.scrollbar().update();
 
             expect(bottomSpy).toHaveBeenCalled();
+        });
+
+        it('fires reachTop and reachBottom together when content shrinks to no longer overflow, mid-scroll', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+            const track = host.querySelector('.kbq-private-scrollbar-track_vertical') as HTMLElement;
+            const topSpy = jest.fn();
+            const bottomSpy = jest.fn();
+
+            fixture.componentInstance.scrollbar().reachTop.subscribe(topSpy);
+            fixture.componentInstance.scrollbar().reachBottom.subscribe(bottomSpy);
+
+            // Mid-scroll — neither edge reached yet.
+            setMetrics(scrollEl, { scrollTop: 200, clientHeight: 100, scrollHeight: 500 });
+            setMetrics(track, { clientHeight: 100 });
+            fixture.componentInstance.scrollbar().update();
+
+            expect(topSpy).not.toHaveBeenCalled();
+            expect(bottomSpy).not.toHaveBeenCalled();
+
+            // Content shrinks to fit the viewport — nothing left to scroll, trivially "at both
+            // edges" at once, even though scrollTop itself never went anywhere near 0 or the max.
+            setMetrics(scrollEl, { scrollHeight: 100 });
+            fixture.componentInstance.scrollbar().update();
+
+            expect(topSpy).toHaveBeenCalled();
+            expect(bottomSpy).toHaveBeenCalled();
+        });
+
+        it('does not fire reachTop/reachBottom on construction, before this axis has ever overflowed', () => {
+            const fixture = createComponent(TestScrollbarHost);
+            const topSpy = jest.fn();
+            const bottomSpy = jest.fn();
+
+            fixture.componentInstance.scrollbar().reachTop.subscribe(topSpy);
+            fixture.componentInstance.scrollbar().reachBottom.subscribe(bottomSpy);
+
+            fixture.componentInstance.scrollbar().update();
+
+            expect(topSpy).not.toHaveBeenCalled();
+            expect(bottomSpy).not.toHaveBeenCalled();
         });
 
         it('reachStart / reachEnd fire for the horizontal axis in LTR, matching the physical left/right edges', () => {
