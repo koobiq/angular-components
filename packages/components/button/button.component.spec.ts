@@ -398,6 +398,26 @@ describe('KbqButton', () => {
             expect(fixture.debugElement.query(By.css('button')).nativeElement.hasAttribute('role')).toBe(false);
         });
 
+        it('should keep a role the consumer set on a native button', () => {
+            // Only an anchor can lack an implicit role, so the button decides nothing for any other
+            // host — a host binding would have to write `null` there, wiping out a role like the
+            // `role="radio"` KbqButtonToggle renders on the button it composes.
+            @Component({
+                imports: [KbqButtonModule],
+                template: `
+                    <button kbq-button role="radio" [attr.aria-checked]="true">Radio</button>
+                `
+            })
+            class ButtonWithRole {}
+
+            const fixture = TestBed.createComponent(ButtonWithRole);
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('role')).toBe('radio');
+        });
+
         it('should keep the link role on an anchor with href', () => {
             const fixture = TestBed.createComponent(TestApp);
 

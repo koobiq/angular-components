@@ -15,9 +15,10 @@
     }
 </kbq-button-toggle-group>
 
-<kbq-button-toggle-group #group3="kbqButtonToggleGroup" [stretched]="true">
+<!-- an icon carries no accessible name, so an icon-only toggle needs one of its own -->
+<kbq-button-toggle-group #group3="kbqButtonToggleGroup" aria-label="Способ доставки" [stretched]="true">
     @for (toggle of group; track toggle) {
-        <kbq-button-toggle [checked]="$index === 2" [value]="$index">
+        <kbq-button-toggle [aria-label]="toggle" [checked]="$index === 2" [value]="$index">
             <i kbq-icon="kbq-briefcase_16"></i>
         </kbq-button-toggle>
     }

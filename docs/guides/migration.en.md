@@ -14,6 +14,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 8. **20.3.0**: the move of the app-switcher API to signals.
 9. **20.3.0**: the button review — host attributes, group ownership and styles.
 10. **20.3.0**: button supported colors — a default color of its own per style.
+11. **20.3.0**: the button-toggle review — ARIA semantics, keyboard navigation and signal inputs.
 
 ### 1. Upgrade to 18.5.3
 
@@ -560,6 +561,78 @@ Array.from({ length: 3 }, (_, i): Action => ({ color: KbqComponentColors.Contras
 **Stylesheets targeting `.kbq-button_transparent.kbq-contrast-fade`** are reported: the selector no longer matches, because a transparent button is `contrast` now. Point it at `.kbq-contrast` — or drop it, if it was a workaround for the transparent button rendering unstyled.
 
 **Changes with no textual signature.** A transparent button with no explicit color renders in `contrast` instead of `contrast-fade`, and the `color` getter reads back accordingly. A style paired with a color the design system does not define renders in the style default instead of as a native button. `KbqButtonGroupRoot` no longer propagates a color it was never given — each nested button follows the default color of its own style, while a color bound on the group still overrides that default.
+
+### 11. Button-toggle review (20.3.0)
+
+The review of `kbq-button-toggle` gave the control the semantics it always behaved with. A single-selection group is now announced as a `radiogroup` of radio buttons and navigated like one; a `multiple` group is announced as a `group` of toggle buttons.
+
+#### What changed in the markup and on the keyboard
+
+| Surface                                    | Before                     | After                                                                                         |
+| ------------------------------------------ | -------------------------- | --------------------------------------------------------------------------------------------- |
+| `<kbq-button-toggle-group>`                | no role, no way to name it | `role="radiogroup"`, or `role="group"` with `multiple`; `aria-label`/`aria-labelledby` inputs |
+| inner `<button>`, single selection         | no role, no state          | `role="radio"` + `aria-checked`                                                               |
+| inner `<button>`, `multiple` or standalone | no state                   | `aria-pressed`                                                                                |
+| Tab in a single-selection group            | every toggle is a tab stop | one tab stop — the selected toggle, or the first enabled one                                  |
+| arrow keys                                 | nothing                    | move focus and selection together; `Home`/`End` jump to the ends                              |
+
+Selection used to be readable from the `.kbq-selected` class alone, which assistive tech does not see. Tests that count tab stops, snapshot the rendered markup or drive the group with arrow keys will notice the difference.
+
+**An icon-only toggle needs a name.** `aria-label` and `aria-labelledby` are now inputs of `KbqButtonToggle` and are forwarded to the inner button. A toggle that projects nothing but icons and has no name logs a dev-mode warning — diagnostic only, but it will point at your own markup, because an icon glyph is `aria-hidden`.
+
+**`[kbq-button]` no longer removes a `role` from a host that is not an anchor.** The host binding used to write `null` over whatever the consumer authored. Anchors are unaffected: one without `href` is still announced as `role="button"`.
+
+#### Running the migration
+
+The `button-toggle-signals-and-aria` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:button-toggle-signals-and-aria --project <your project>
+```
+
+#### What is fixed automatically
+
+**Reads of the two inputs that became signals**, on receivers annotated `KbqButtonToggleGroup` and through a `#ref="kbqButtonToggleGroup"` template reference variable (external and inline templates):
+
+- group.vertical → group.vertical(),
+- group.multiple → group.multiple()
+
+Receivers are matched by explicit type annotation only, so an alias (`const g = this.group; g.multiple`) is left untouched. Every replacement is idempotent.
+
+**Icon-only toggles with no accessible name are reported with their line number.** Every `<kbq-button-toggle>` whose content holds an icon and no text at all, and that carries no `aria-label` / `aria-labelledby` / `title`, is listed. The schematic cannot invent the text, but it finds the places the new dev-mode warning will fire in.
+
+#### What you need to fix manually
+
+**`vertical` and `multiple` are signal inputs.** Template bindings are unchanged; reads and imperative writes are not:
+
+```ts
+// Before
+group.vertical = true;
+if (group.multiple) { ... }
+
+// After — bind the input instead of writing it
+if (group.multiple()) { ... }
+```
+
+**Members that were never meant to be public are gone or narrowed.** `buttonToggleGroup` is `protected` (it was typed non-null while being `null` for a standalone toggle), `icons` is private, and the dead `mcButton` view query was removed. Use `focus()`, which now focuses the inner button instead of the non-focusable host, or the new `focusViaKeyboard()`.
+
+**`type` and `iconType` are read-only getters** rather than writable fields, and `type` follows `multiple` at runtime instead of being frozen in `ngOnInit`.
+
+**Types tightened.** `selected` is `KbqButtonToggle | KbqButtonToggle[] | null`, `buttonToggles()` is `readonly KbqButtonToggle[]`, `onTouched` and `registerOnTouched` take `() => void`, and `KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR` is a `Provider`. `value` stays `any`.
+
+**`disabled` on a standalone toggle is a real `boolean`.** It used to return the group it could not find — `null` — whenever the toggle was not disabled itself. Falsy either way, but `=== false` and `typeof` checks behaved differently.
+
+**`tabIndex` defaults to `null`** instead of `undefined`, which is what its declared type always said.
+
+**`markForCheck()` on a toggle is no longer called by the library.** A toggle derives `checked` and `disabled` from signals owned by its group and re-renders on its own. The method is kept for back-compatibility.
+
+**Styles.** The keyboard-focus `border-color` is set by the theme alone, from `--kbq-button-toggle-item-states-focused-outline`; the structural stylesheet no longer declares it from the raw `--kbq-states-line-focus-theme` token, so overriding the component token works regardless of import order. The theme also stopped targeting `.kbq-icon-button`, a class `KbqButton` never emitted, in favour of `.kbq-button-icon`.
 
 ### After the migration
 

@@ -32,5 +32,9 @@
     --kbq-button-toggle-item-states-disabled-background: none;
     --kbq-button-toggle-item-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-button-toggle-item-states-disabled-icon: var(--kbq-states-icon-disabled);
+    /* The shared focus colour is hsl(216 100% 60%): 3.55:1 against the selected fill (`background-card`)
+       and 3.43:1 against the group background in the dark theme, but 2.77:1 against it in the light one,
+       i.e. just under the 3:1 of WCAG 1.4.11 for an unselected toggle. Raising it belongs to the shared
+       token — every component draws the same ring — not to an override here. */
     --kbq-button-toggle-item-states-focused-outline: var(--kbq-states-line-focus-theme);
 }
