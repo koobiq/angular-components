@@ -1123,6 +1123,38 @@ describe(KbqButtonGroupRoot.name, () => {
         );
     });
 
+    it('should keep the group color when a non-default style is bound from the start', () => {
+        // The shape of `button-group-style-example`: both inputs carry static values, so the color
+        // and the style reach the children in the same pass through the group's effect.
+        const fixture = createComponent(ColoredNonDefaultStyleGroupTestComponent);
+
+        fixture.detectChanges();
+
+        Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('[kbq-button]')).forEach((btn) => {
+            expect(btn.classList.contains('kbq-theme-fade')).toBe(true);
+            expect(btn.classList.contains('kbq-contrast-fade')).toBe(false);
+        });
+    });
+
+    it('should keep the group color when the group style changes at runtime', () => {
+        // The group propagates the color before the style, and a style change re-evaluates the
+        // button's default color — so without a marker for "this color came from the group" the
+        // style default would win over it.
+        const fixture = createComponent(BasicButtonGroupRootTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.color = KbqComponentColors.Theme;
+        fixture.detectChanges();
+
+        componentInstance.style = KbqButtonStyles.Transparent;
+        fixture.detectChanges();
+
+        Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('[kbq-button]')).forEach((btn) => {
+            expect(btn.classList.contains('kbq-theme')).toBe(true);
+            expect(btn.classList.contains('kbq-contrast')).toBe(false);
+        });
+    });
+
     it('should propagate disabled state to all child buttons', () => {
         const fixture = createComponent(BasicButtonGroupRootTestComponent);
         const { componentInstance } = fixture;
@@ -1588,6 +1620,20 @@ class UnboundColorGroupTestComponent {
     readonly transparent = KbqButtonStyles.Transparent;
 
     color: KbqButtonColor | null = null;
+}
+
+@Component({
+    imports: [KbqButtonModule],
+    template: `
+        <div kbqButtonGroupRoot [color]="color" [kbqStyle]="style">
+            <button kbq-button>First</button>
+            <button kbq-button>Second</button>
+        </div>
+    `
+})
+class ColoredNonDefaultStyleGroupTestComponent {
+    readonly color = KbqComponentColors.ThemeFade;
+    readonly style = KbqButtonStyles.Outline;
 }
 
 @Component({

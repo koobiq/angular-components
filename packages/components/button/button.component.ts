@@ -396,6 +396,7 @@ export class KbqButton
 
     override set color(value: KbqButtonColor | null | undefined) {
         this.colorSetExplicitly = !!value;
+        this.colorSetFromGroup = false;
 
         // A falsy value falls back to `defaultColor`, which `applyDefaultColor` keeps in sync with
         // the current style.
@@ -425,6 +426,13 @@ export class KbqButton
 
     /** Whether `color` was set from the outside rather than propagated by a button group. */
     private colorSetExplicitly = false;
+
+    /**
+     * Whether the current color was propagated by a surrounding `KbqButtonGroupRoot`. Kept apart
+     * from `colorSetExplicitly` because the three sources rank: the button's own `color` wins over
+     * the group's, which in turn wins over the default color of the current style.
+     */
+    private colorSetFromGroup = false;
 
     /** Disabled state requested through the `disabled` input. */
     private ownDisabled = false;
@@ -509,6 +517,8 @@ export class KbqButton
      */
     setColorFromGroup(value: KbqButtonColor): void {
         if (this.colorSetExplicitly) return;
+
+        this.colorSetFromGroup = true;
 
         super.color = value;
     }
@@ -627,15 +637,16 @@ export class KbqButton
 
     /**
      * Applies the default color of the current style. Re-evaluated on every style change, because
-     * the design system defines a different neutral color per style. A color set from the outside
-     * always wins; one that was never set — or was set to a falsy value — keeps following the style.
+     * the design system defines a different neutral color per style. A color set from the outside or
+     * propagated by a group always wins; one that was never set — or was set to a falsy value —
+     * keeps following the style.
      */
     private applyDefaultColor(): void {
         const color = getDefaultColorForStyle(this._kbqStyle);
 
         this.setDefaultColor(color);
 
-        if (this.colorSetExplicitly) return;
+        if (this.colorSetExplicitly || this.colorSetFromGroup) return;
 
         // Through `super` so that the default does not count as an explicit color.
         super.color = color;
