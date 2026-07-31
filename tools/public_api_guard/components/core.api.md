@@ -2498,6 +2498,7 @@ export class KbqAutoHideScrollStrategy implements ScrollStrategy {
     detach(): void;
     disable(): void;
     enable(): void;
+    readonly hide: Observable<void>;
 }
 
 // @public

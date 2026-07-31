@@ -8,7 +8,7 @@ import {
 } from '@angular/cdk/overlay';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { ElementRef, isDevMode, NgZone } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 /** Configuration options for `KbqAutoHideScrollStrategy`. */
@@ -29,16 +29,25 @@ export interface KbqAutoHideScrollStrategyHooks {
 }
 
 /**
- * Scroll strategy that repositions the overlay on scroll and calls the optional `onHide` callback
- * when the tracked element moves outside its boundary:
+ * Scroll strategy that repositions the overlay on scroll and reports when the tracked element
+ * moves outside its boundary:
  *
  * - With `originElement`: tracks the origin against each ancestor `CdkScrollable` container.
  * - Without `originElement`: tracks the overlay panel against the viewport.
  *
- * Pass `onHide` via the factory returned by `kbqAutoHideScrollStrategyFactory` so the strategy
- * calls it when the trigger scrolls out of bounds.
+ * Two ways to react to the out-of-bounds event, usable independently or together:
+ * - Subscribe to `hide` — a handle for callers that don't control how this strategy is
+ *   constructed (e.g. reaching into an existing component's `overlayRef.getConfig().scrollStrategy`
+ *   from the outside).
+ * - Pass `onHide` via the factory returned by `kbqAutoHideScrollStrategyFactory` — for callers
+ *   that construct the strategy themselves.
  */
 export class KbqAutoHideScrollStrategy implements ScrollStrategy {
+    private readonly hideSubject = new Subject<void>();
+
+    /** Emits once when the tracked element scrolls outside its boundary. */
+    readonly hide: Observable<void> = this.hideSubject.asObservable();
+
     private overlayRef: OverlayRef | null = null;
     private scrollSubscription: Subscription | null = null;
     private originElement: HTMLElement | null = null;
@@ -92,7 +101,10 @@ export class KbqAutoHideScrollStrategy implements ScrollStrategy {
 
                 if (isOutside) {
                     this.disable();
-                    this.ngZone.run(() => this.hooks?.onHide?.());
+                    this.ngZone.run(() => {
+                        this.hideSubject.next();
+                        this.hooks?.onHide?.();
+                    });
 
                     return;
                 }
@@ -107,9 +119,10 @@ export class KbqAutoHideScrollStrategy implements ScrollStrategy {
         this.scrollSubscription = null;
     }
 
-    /** Disables the strategy. */
+    /** Disables the strategy and completes `hide`. */
     detach(): void {
         this.disable();
+        this.hideSubject.complete();
         this.hooks = undefined;
         this.overlayRef = null;
         this.originElement = null;

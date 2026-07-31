@@ -180,6 +180,73 @@ describe('KbqAutoHideScrollStrategy', () => {
         });
     });
 
+    describe('hide observable', () => {
+        it('emits when out of bounds, even without hooks', () => {
+            const originEl = document.createElement('div');
+            const container = document.createElement('div');
+
+            container.getBoundingClientRect = () => makeRect(0, 0, 500, 500);
+            originEl.getBoundingClientRect = () => makeRect(-100, 0, -50, 100);
+
+            const scroll$ = new Subject<CdkScrollable | void>();
+            const scrollDispatcher = makeScrollDispatcher(scroll$, [makeScrollable(container)]);
+            const viewportRuler = makeViewportRuler();
+            const ngZone = makeNgZone();
+            const strategy = new KbqAutoHideScrollStrategy(scrollDispatcher, viewportRuler, ngZone, {
+                originElement: originEl
+            });
+
+            let count = 0;
+
+            strategy.hide.subscribe(() => count++);
+
+            strategy.attach(makeOverlayRef(document.createElement('div')));
+            strategy.enable();
+            scroll$.next();
+
+            expect(count).toBe(1);
+        });
+
+        it('emits alongside onHide when both are used', () => {
+            const originEl = document.createElement('div');
+            const container = document.createElement('div');
+
+            container.getBoundingClientRect = () => makeRect(0, 0, 500, 500);
+            originEl.getBoundingClientRect = () => makeRect(-100, 0, -50, 100);
+
+            const scroll$ = new Subject<CdkScrollable | void>();
+            const scrollDispatcher = makeScrollDispatcher(scroll$, [makeScrollable(container)]);
+            const { strategy, onHide } = buildStrategy({ originElement: originEl }, { scrollDispatcher });
+
+            let hideCount = 0;
+
+            strategy.hide.subscribe(() => hideCount++);
+
+            strategy.attach(makeOverlayRef(document.createElement('div')));
+            strategy.enable();
+            scroll$.next();
+
+            expect(hideCount).toBe(1);
+            expect(onHide).toHaveBeenCalledTimes(1);
+        });
+
+        it('completes on detach()', () => {
+            const { strategy } = buildStrategy();
+            const overlayEl = document.createElement('div');
+
+            strategy.attach(makeOverlayRef(overlayEl));
+            strategy.enable();
+
+            let completed = false;
+
+            strategy.hide.subscribe({ complete: () => (completed = true) });
+
+            strategy.detach();
+
+            expect(completed).toBe(true);
+        });
+    });
+
     describe('auto-origin derivation in enable()', () => {
         it('uses _origin when it is an HTMLElement', () => {
             const originEl = document.createElement('div');
