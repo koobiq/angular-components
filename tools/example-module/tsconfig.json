@@ -1,7 +1,10 @@
 {
     "compilerOptions": {
         "lib": ["es2020"],
-        "module": "commonjs",
+        // NodeNext resolution is required to read glob's "exports" map. Emitted format stays
+        // CommonJS because the repository's package.json has no "type": "module".
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "esModuleInterop": true,
         "target": "es2020",
         "sourceMap": true,

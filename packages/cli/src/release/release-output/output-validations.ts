@@ -1,11 +1,10 @@
 import { existsSync, readFileSync } from 'fs';
-import glob from 'glob';
+import { globSync } from 'glob';
 import { dirname, isAbsolute, join } from 'path';
 import ts from 'typescript';
 
 /** RegExp that matches Angular component inline styles that contain a sourcemap reference. */
 const inlineStylesSourcemapRegex = /styles: ?\[["'].*sourceMappingURL=.*["']/;
-const { sync } = glob;
 /**
  * Checks the specified release bundle and ensures that it does not contain
  * any external resource URLs.
@@ -73,7 +72,7 @@ export function checkKoobiqPackage(packagePath: string): string[] {
     const themingFilePath = join(packagePath, '_theming.scss');
     const failures: string[] = [];
 
-    if (sync('*.css', { cwd: prebuiltThemesPath }).length === 0) {
+    if (globSync('*.css', { cwd: prebuiltThemesPath }).length === 0) {
         failures.push('No prebuilt themes could be found.');
     }
 

@@ -1,6 +1,19 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "module": "CommonJS"
+        // NodeNext resolution is required to read the "exports" maps of chalk 5+ and glob 9+.
+        // The emitted format is still CommonJS because the repository's package.json has no
+        // "type": "module".
+        "module": "nodenext",
+        "moduleResolution": "nodenext"
+    },
+    // The root config forces module to CommonJS for ts-node, which conflicts with NodeNext
+    // resolution (TS5110). Repeat the block here with a matching module setting.
+    "ts-node": {
+        "transpileOnly": true,
+        "compilerOptions": {
+            "types": ["node"],
+            "module": "nodenext"
+        }
     }
 }
