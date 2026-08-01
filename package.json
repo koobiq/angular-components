@@ -134,7 +134,7 @@
         "path-normalize": "^6.0.7",
         "postcss": "^8.5.14",
         "postcss-discard-comments": "^7.0.8",
-        "prettier": "^3.9.4",
+        "prettier": "^3.9.6",
         "prettier-plugin-multiline-arrays": "^4.1.10",
         "prettier-plugin-organize-imports": "^4.3.0",
         "rimraf": "^5.0.10",
