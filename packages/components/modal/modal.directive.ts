@@ -1,7 +1,6 @@
 import { Component, Directive, effect, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
-import { KbqOverflowShadowContainer } from '@koobiq/components/core';
+import { kbqInjectA11yLocaleConfiguration, KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqModalComponent } from './modal.component';
