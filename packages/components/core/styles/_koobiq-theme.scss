@@ -11,7 +11,8 @@
 @use '../forms/forms-theme' as *;
 @use '../highlight/highlight-theme' as *;
 
-@mixin koobiq-theme() {
+// @TODO: Argument is unused. will be removed in next major release
+@mixin koobiq-theme($theme: null) {
     @include kbq-core-theme();
 
     @include kbq-forms-theme();
@@ -25,7 +26,8 @@
     @include kbq-tag-theme();
 }
 
-@mixin koobiq-typography() {
+// @TODO: Argument is unused. will be removed in next major release
+@mixin koobiq-typography($tokens: null, $config: null, $md-config: null) {
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
     @include kbq-markdown-typography();
