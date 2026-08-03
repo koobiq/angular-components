@@ -700,4 +700,84 @@ test.describe('KbqSelectModule', () => {
             await expect(counter).toContainText('+2');
         });
     });
+
+    test.describe('panelMaxHeight', () => {
+        /** Reads a resolved CSS length off the first element matching the selector. */
+        async function computed(page: Page, selector: string, property: string): Promise<string> {
+            return page.evaluate(
+                ({ selector, property }) =>
+                    getComputedStyle(document.querySelector<HTMLElement>(selector)!).getPropertyValue(property),
+                { selector, property }
+            );
+        }
+
+        test('should cap the option list at panelMaxHeight', async ({ page }) => {
+            await page.goto('/E2eSelectPanelMaxHeight');
+
+            await page.getByTestId('e2eSelect').click();
+
+            const content = page.locator('.cdk-overlay-pane .kbq-select__content');
+
+            await content.waitFor();
+            expect(await computed(page, '.cdk-overlay-pane .kbq-select__content', 'max-height')).toBe('256px');
+
+            await page.keyboard.press('Escape');
+            await page.getByTestId('e2eGrowPanelButton').click();
+            await page.getByTestId('e2eSelect').click();
+            await content.waitFor();
+
+            expect(await computed(page, '.cdk-overlay-pane .kbq-select__content', 'max-height')).toBe('2000px');
+        });
+
+        test('should keep the panel inside the viewport when panelMaxHeight exceeds it', async ({ page }) => {
+            await page.goto('/E2eSelectPanelMaxHeight');
+
+            // 2000px is well past the 720px viewport, so the pane has to clamp.
+            await page.getByTestId('e2eGrowPanelButton').click();
+            await page.getByTestId('e2eSelect').click();
+            await page.locator('.cdk-overlay-pane .kbq-select__panel').waitFor();
+
+            const pane = await box(page.locator('.cdk-overlay-pane'));
+            const viewportHeight = page.viewportSize()!.height;
+
+            expect(pane.height).toBeLessThanOrEqual(viewportHeight);
+        });
+
+        test('should pin the virtual scroll viewport to panelMaxHeight even with few options', async ({ page }) => {
+            await page.goto('/E2eVirtualScrollSelectPanelMaxHeight');
+
+            await page.getByTestId('e2eSelect').click();
+
+            const viewport = page.locator('.cdk-overlay-pane .cdk-virtual-scroll-viewport');
+
+            await viewport.waitFor();
+
+            const selector = '.cdk-overlay-pane .cdk-virtual-scroll-viewport';
+
+            // `min-height` and `max-height` are both pinned to the token, so with virtual scroll the value
+            // is an exact height: three 32px options still occupy the full 300px.
+            expect(await computed(page, selector, 'min-height')).toBe('300px');
+            expect(await computed(page, selector, 'max-height')).toBe('300px');
+            expect((await box(viewport)).height).toBe(300);
+        });
+
+        test('should flip the panel above the trigger when a tall panel does not fit below', async ({ page }) => {
+            await page.goto('/E2eSelectPanelMaxHeight');
+
+            await pinFormField(page, { bottom: 100, left: 20 });
+            await page.getByTestId('e2eGrowPanelButton').click();
+            await page.getByTestId('e2eSelect').click();
+
+            const panel = page.locator('.cdk-overlay-pane .kbq-select__panel');
+
+            await panel.waitFor();
+
+            const triggerBox = await box(page.getByTestId('e2eSelect'));
+            const panelBox = await box(panel);
+
+            // The height has to be in the DOM before CDK measures the overlay, otherwise CDK sizes a 256px
+            // panel, decides it fits below, and this assertion fails.
+            expect(panelBox.y + panelBox.height).toBeLessThanOrEqual(triggerBox.y);
+        });
+    });
 });

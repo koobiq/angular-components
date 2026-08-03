@@ -26,6 +26,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqOption } from '@koobiq/components/core';
+import { KbqPanelMaxHeight } from '@koobiq/components/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
@@ -190,6 +191,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     onRemove(): void;
     abstract open(): void;
     protected optionCompareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
+    protected panelMaxHeight?: KbqPanelMaxHeight;
     protected restoreTriggerFocus(): void;
     get showRemoveButton(): boolean;
     readonly stateChanges: Subject<void>;
@@ -917,6 +919,7 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     maxInterval?: unknown;
     minDateTime?: unknown;
     minInterval?: unknown;
+    panelMaxHeight?: KbqPanelMaxHeight;
     // (undocumented)
     values?: unknown[];
     // (undocumented)

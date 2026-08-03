@@ -42,6 +42,7 @@ import {
     HOME,
     KbqOption,
     KbqOptionSelectionChange,
+    KbqPanelMaxHeight,
     KbqVirtualOption,
     LEFT_ARROW,
     RIGHT_ARROW,
@@ -1798,6 +1799,23 @@ class BasicSelectNoPlaceholder {}
 })
 class SelectWithPanelWidth {
     panelWidth: KbqSelectPanelWidth;
+}
+
+@Component({
+    imports: [KbqSelectModule],
+    template: `
+        <kbq-form-field style="width: 300px">
+            <kbq-select [panelMaxHeight]="panelMaxHeight">
+                <kbq-option [value]="'option1'">Option1</kbq-option>
+                <kbq-option [value]="'option2'">Option2</kbq-option>
+                <kbq-option [value]="'option3'">Option3</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class SelectWithPanelMaxHeight {
+    panelMaxHeight: KbqPanelMaxHeight | undefined;
 }
 
 @Component({
@@ -6981,6 +6999,113 @@ describe('KbqSelect', () => {
 
                 shrinkSpy.mockRestore();
             }));
+        });
+    });
+
+    describe('panelMaxHeight', () => {
+        let panelOverlayContainer: OverlayContainer;
+        let panelOverlayContainerElement: HTMLElement;
+
+        function createPanelMaxHeightComponent<T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> {
+            TestBed.configureTestingModule({
+                imports: [component, NoopAnimationsModule],
+                providers
+            }).compileComponents();
+            panelOverlayContainer = TestBed.inject(OverlayContainer);
+            panelOverlayContainerElement = panelOverlayContainer.getContainerElement();
+
+            const fixture = TestBed.createComponent<T>(component);
+
+            fixture.autoDetectChanges();
+
+            return fixture;
+        }
+
+        /**
+         * Opens the panel and reads the token off it. JSDOM computes no layout, so the inline custom
+         * property is the observable contract here — the height itself is asserted in Playwright.
+         */
+        function openAndReadToken<T>(fixture: ComponentFixture<T>): string {
+            getSelectDebugElement(fixture.debugElement).nativeElement.click();
+            fixture.detectChanges();
+
+            const panel = panelOverlayContainerElement.querySelector('.kbq-select__panel') as HTMLElement;
+
+            return panel.style.getPropertyValue('--kbq-select-panel-size-max-height');
+        }
+
+        afterEach(() => {
+            panelOverlayContainer?.ngOnDestroy();
+        });
+
+        it('should set the token from the panelMaxHeight attribute', () => {
+            const fixture = createPanelMaxHeightComponent(SelectWithPanelMaxHeight);
+
+            fixture.componentInstance.panelMaxHeight = 300;
+            fixture.detectChanges();
+
+            expect(openAndReadToken(fixture)).toBe('300px');
+        });
+
+        it('should leave the token unset by default so the stylesheet default applies', () => {
+            expect(openAndReadToken(createPanelMaxHeightComponent(BaseSelect))).toBe('');
+        });
+
+        it('should treat zero as an explicit height rather than as unset', () => {
+            const fixture = createPanelMaxHeightComponent(SelectWithPanelMaxHeight);
+
+            fixture.componentInstance.panelMaxHeight = 0;
+            fixture.detectChanges();
+
+            expect(openAndReadToken(fixture)).toBe('0px');
+        });
+
+        it('should clamp a negative panelMaxHeight to zero', () => {
+            const fixture = createPanelMaxHeightComponent(SelectWithPanelMaxHeight);
+
+            fixture.componentInstance.panelMaxHeight = -10;
+            fixture.detectChanges();
+
+            expect(openAndReadToken(fixture)).toBe('0px');
+        });
+
+        it('should leave the token unset when the binding is not a number', () => {
+            const fixture = createPanelMaxHeightComponent(SelectWithPanelMaxHeight);
+
+            // `numberAttribute` coerces this to NaN rather than to null.
+            fixture.componentInstance.panelMaxHeight = undefined;
+            fixture.detectChanges();
+
+            expect(openAndReadToken(fixture)).toBe('');
+        });
+
+        describe('with KBQ_SELECT_OPTIONS', () => {
+            it('should take the default from the provider', () => {
+                const fixture = createPanelMaxHeightComponent(BaseSelect, [
+                    kbqSelectOptionsProvider({ panelMaxHeight: 400 })
+                ]);
+
+                expect(openAndReadToken(fixture)).toBe('400px');
+            });
+
+            it('should let the attribute win over the provider', () => {
+                const fixture = createPanelMaxHeightComponent(SelectWithPanelMaxHeight, [
+                    kbqSelectOptionsProvider({ panelMaxHeight: 400 })
+                ]);
+
+                fixture.componentInstance.panelMaxHeight = 500;
+                fixture.detectChanges();
+
+                expect(openAndReadToken(fixture)).toBe('500px');
+            });
+
+            it('should honour an explicit null from the provider', () => {
+                const fixture = createPanelMaxHeightComponent(BaseSelect, [
+                    kbqSelectOptionsProvider({ panelMaxHeight: null })
+                ]);
+
+                expect(openAndReadToken(fixture)).toBe('');
+            });
         });
     });
 

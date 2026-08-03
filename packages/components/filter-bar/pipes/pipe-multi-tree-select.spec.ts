@@ -426,6 +426,59 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         });
     });
 
+    describe('panelMaxHeight forwarding', () => {
+        // JSDOM computes no layout, so the inline custom property on the panel is the observable
+        // contract here; that it resolves to an actual height is covered by the filter-bar Playwright
+        // specs, which read the computed `max-height` of `__content`.
+        const readPanelMaxHeightToken = (): string => {
+            const panel = TestBed.inject(OverlayContainer)
+                .getContainerElement()
+                .querySelector<HTMLElement>('.kbq-pipe-multi-tree-select__panel')!;
+
+            return panel.style.getPropertyValue('--kbq-select-panel-size-max-height');
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should forward panelMaxHeight from the pipe template to the panel', fakeAsync(() => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiTreeSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiTreeSelect,
+                    values: TREE_DATA,
+                    panelMaxHeight: 300,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(readPanelMaxHeightToken()).toBe('300px');
+        }));
+
+        it('should leave the token unset when the template omits panelMaxHeight', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            // No inline custom property at all, so the select-family default of 256px applies.
+            expect(readPanelMaxHeightToken()).toBe('');
+        }));
+    });
+
     describe('onClear', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);

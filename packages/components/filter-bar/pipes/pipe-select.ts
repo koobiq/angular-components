@@ -32,7 +32,7 @@ import { KbqPipeState } from './pipe-state';
         AsyncPipe
     ],
     templateUrl: 'pipe-select.html',
-    styleUrls: ['base-pipe.scss', 'pipe-select.scss'],
+    styleUrls: ['base-pipe.scss'],
     providers: [
         {
             provide: KbqBasePipe,
