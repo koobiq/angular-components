@@ -3905,6 +3905,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "modal-component-example.ts",
     "importPath": "components/modal"
   },
+  "modal-full-custom": {
+    "packagePath": "components/modal/modal-full-custom",
+    "title": "Modal full custom",
+    "componentName": "ModalFullCustomExample",
+    "files": [
+      "modal-full-custom-example.ts"
+    ],
+    "selector": "modal-full-custom-example",
+    "additionalComponents": [
+      "CustomModalComponent"
+    ],
+    "primaryFile": "modal-full-custom-example.ts",
+    "importPath": "components/modal"
+  },
   "modal-multiple": {
     "packagePath": "components/modal/modal-multiple",
     "title": "Modal multiple",
@@ -7950,6 +7964,8 @@ return import('@koobiq/docs-examples/components/modal');
   case 'modal-component-with-injector':
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-component':
+return import('@koobiq/docs-examples/components/modal');
+  case 'modal-full-custom':
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-multiple':
 return import('@koobiq/docs-examples/components/modal');

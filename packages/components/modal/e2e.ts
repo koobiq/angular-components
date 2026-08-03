@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { KbqModalService } from '@koobiq/components/modal';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 
 @Component({
     selector: 'e2e-modal-states',
@@ -55,6 +56,57 @@ export class E2eModalStates {
             kbqWidth: '280px',
             kbqContent: `Koobiq is awesome!`,
             kbqOkText: 'Agree'
+        });
+    }
+}
+
+@Component({
+    selector: 'e2e-modal-full-custom-content',
+    imports: [KbqModalModule, KbqButtonModule],
+    template: `
+        <kbq-modal-title>Full custom modal title</kbq-modal-title>
+
+        <kbq-modal-body>
+            @for (item of items; track $index) {
+                <p>{{ item }}</p>
+            }
+        </kbq-modal-body>
+
+        <div kbq-modal-footer>
+            <button kbq-button>Ok</button>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eModalFullCustomContent {
+    protected readonly items = Array.from({ length: 30 }, (_, i) => `Item #${i}`);
+}
+
+@Component({
+    selector: 'e2e-modal-full-custom',
+    template: `
+        <button data-testid="e2eOpenModal" (click)="open()">Open modal</button>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 350px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eModalFullCustom'
+    }
+})
+export class E2eModalFullCustom {
+    private readonly modal = inject(KbqModalService);
+
+    protected open(): void {
+        this.modal.open({
+            kbqWidth: '400px',
+            kbqComponent: E2eModalFullCustomContent
         });
     }
 }

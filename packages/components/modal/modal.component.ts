@@ -20,6 +20,7 @@ import {
     Output,
     output,
     Renderer2,
+    signal,
     SimpleChanges,
     TemplateRef,
     Type,
@@ -35,6 +36,7 @@ import {
     KbqComponentColors,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
+    KbqOverflowShadowState,
     KbqOverflowShadowTop
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -275,6 +277,14 @@ export class KbqModalComponent<T = any, R = any>
     modalAnimationClassMap: object | null;
     // The origin point that animation based on
     transformOrigin = '0px 0px 0px';
+
+    /**
+     * Scroll-shadow state published by `KbqModalBody` when the modal content is composed
+     * manually (`kbq-modal-title`/`kbq-modal-body`/`kbq-modal-footer`), so the header/footer
+     * can render matching shadows without a direct template reference between them.
+     * @docs-private
+     */
+    readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
 
     // Observable alias for kbqAfterOpen
     get afterOpen(): Observable<void> {
