@@ -1,9 +1,11 @@
+@use '../core/option/action-container-mixins' as action-container;
 @use '../core/styles/common';
 @use '../core/styles/common/tokens' as *;
 @use '../core/styles/common/vendor-prefixes';
 
 .kbq-tree-option {
     @include vendor-prefixes.user-select(none);
+    @include action-container.kbq-option-action-visibility('.kbq-tree-selection.cdk-keyboard-focused');
 
     position: relative;
 
@@ -72,14 +74,6 @@
 
     &:not(.kbq-disabled) {
         cursor: pointer;
-
-        &:hover,
-        &.kbq-hovered,
-        &.kbq-action-button-focused {
-            & .kbq-action-container {
-                display: flex;
-            }
-        }
     }
 
     &:is(.kbq-checked, .kbq-selected, .kbq-focused):has(+ :is(.kbq-checked, .kbq-selected, .kbq-focused)) {
