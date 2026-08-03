@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { SelectAddNewOptionExample } from './select-add-new-option/select-add-new-option-example';
+import { SelectAutoHideScrollStrategyExample } from './select-auto-hide-scroll-strategy/select-auto-hide-scroll-strategy-example';
 import { SelectCleanerExample } from './select-cleaner/select-cleaner-example';
 import { SelectCustomMatcherExample } from './select-custom-matcher/select-custom-matcher-example';
 import { SelectCustomTriggerExample } from './select-custom-trigger/select-custom-trigger-example';
@@ -31,6 +32,7 @@ import { SelectWithPanelWidthFixedExample } from './select-with-panel-width-fixe
 
 export {
     SelectAddNewOptionExample,
+    SelectAutoHideScrollStrategyExample,
     SelectCleanerExample,
     SelectCustomMatcherExample,
     SelectCustomTriggerExample,
@@ -62,6 +64,7 @@ export {
 };
 
 const EXAMPLES = [
+    SelectAutoHideScrollStrategyExample,
     SelectCleanerExample,
     SelectDisabledExample,
     SelectOverviewExample,

@@ -43,3 +43,9 @@ kbq-select-trigger - позволяет переопределить блок, �
 kbq-select-matcher - позволяет заменить все содержимое kbq-select, включая placeholder, cleaner и icon
 
 <!-- example(select-custom-matcher) -->
+
+## Кастомная стратегия прокрутки
+
+Стратегию прокрутки можно переопределить через токен `KBQ_SELECT_SCROLL_STRATEGY`. `KbqAutoHideScrollStrategy` (из `@koobiq/components/core`) останавливает изменение позиции, как только триггер выходит за пределы видимости, и генерирует событие в `hide` — подпишитесь на него, чтобы закрыть панель самостоятельно.
+
+<!-- example(select-auto-hide-scroll-strategy) -->
