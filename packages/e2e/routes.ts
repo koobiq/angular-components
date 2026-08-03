@@ -41,7 +41,7 @@ import {
 } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eLinkStates } from '../components/link/e2e';
-import { E2eListSelectionState, E2eListStates } from '../components/list/e2e';
+import { E2eListOptionActionVisibility, E2eListSelectionState, E2eListStates } from '../components/list/e2e';
 import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eModalFullCustom, E2eModalStates } from '../components/modal/e2e';
@@ -114,7 +114,7 @@ import {
     E2eTreeSelectRtlPositioning,
     E2eTreeSelectStates
 } from '../components/tree-select/e2e';
-import { E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
+import { E2eTreeOptionActionVisibility, E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
 import { E2eUsernameStateAndStyle } from '../components/username/e2e';
 
 const components = [
@@ -170,6 +170,7 @@ const components = [
     E2eModalFullCustom,
     E2eListStates,
     E2eListSelectionState,
+    E2eListOptionActionVisibility,
     E2eLoaderOverlayStates,
     E2eLoaderOverlayCard,
     E2eAutocompleteStates,
@@ -235,6 +236,7 @@ const components = [
     E2eFormHorizontal,
     E2eTypographyStyles,
     E2eTreeTwoLineNode,
+    E2eTreeOptionActionVisibility,
     E2eOverflowItemsAdditionalTargets,
     E2eOverflowItemsHorizontal,
     E2eOverflowItemsVertical,

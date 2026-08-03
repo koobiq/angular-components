@@ -1,10 +1,19 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { A, C } from '@koobiq/cdk/keycodes';
-import { createKeyboardEvent, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { A, C, TAB } from '@koobiq/cdk/keycodes';
+import {
+    createKeyboardEvent,
+    createMouseEvent,
+    dispatchEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent
+} from '@koobiq/cdk/testing';
+import { KbqOptionActionComponent, KbqOptionModule } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -750,6 +759,73 @@ describe('KbqTreeSelection', () => {
             }));
         });
 
+        describe('action button visibility', () => {
+            let fixture: ComponentFixture<TreeWithActionButtonApp>;
+            let options: DebugElement[];
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+
+                fixture = TestBed.createComponent(TreeWithActionButtonApp);
+                fixture.detectChanges();
+
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+                options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
+            });
+
+            // Styles are stripped in jsdom, so these assert the classes the reveal rules key off:
+            // `.kbq-tree-selection.cdk-keyboard-focused .kbq-tree-option.kbq-focused` (see tree-option.scss).
+            it('should not mark the tree as keyboard-focused when an option is focused by mouse', fakeAsync(() => {
+                TestBed.inject(FocusMonitor).focusVia(options[0].nativeElement, 'mouse');
+                flush();
+                fixture.detectChanges();
+
+                expect(options[0].nativeElement.classList).toContain('kbq-focused');
+                expect(treeElement.classList).not.toContain('cdk-keyboard-focused');
+            }));
+
+            it('should mark the tree as keyboard-focused when an option is focused via keyboard', fakeAsync(() => {
+                TestBed.inject(FocusMonitor).focusVia(options[0].nativeElement, 'keyboard');
+                flush();
+                fixture.detectChanges();
+
+                expect(options[0].nativeElement.classList).toContain('kbq-focused');
+                expect(treeElement.classList).toContain('cdk-keyboard-focused');
+            }));
+
+            it('should not swallow Tab when the action button cannot take focus', fakeAsync(() => {
+                const option = options[0];
+                const actionButtonDebugElement = option.query(By.directive(KbqOptionActionComponent));
+                const actionButton = actionButtonDebugElement.componentInstance;
+
+                // In a browser the action sits in a `display: none` container until the option is hovered
+                // or keyboard-focused, so `.focus()` is a no-op. jsdom ignores styles and would always
+                // focus it, so neutralise the DOM call only — `KbqOptionActionComponent.focus()` itself
+                // must still run, otherwise its `activeElement` check (the fix under test) is never hit.
+                jest.spyOn(actionButtonDebugElement.nativeElement, 'focus').mockImplementation(() => {});
+
+                const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
+
+                flush();
+                fixture.detectChanges();
+
+                expect(actionButton.hasFocus).toBe(false);
+                expect(event.defaultPrevented).toBe(false);
+                expect(option.nativeElement.classList).not.toContain('kbq-action-button-focused');
+            }));
+
+            it('should swallow Tab when the action button takes focus', fakeAsync(() => {
+                const option = options[0];
+                const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
+
+                flush();
+                fixture.detectChanges();
+
+                expect(event.defaultPrevented).toBe(true);
+                expect(option.nativeElement.classList).toContain('kbq-action-button-focused');
+            }));
+        });
+
         describe('selection with CTRL + A', () => {
             let fixture: ComponentFixture<KbqTreeAppMultiple>;
             let component: KbqTreeAppMultiple;
@@ -1332,4 +1408,33 @@ class FiltrationKbqTreeApp {
     hasChild(_: number, nodeData: FileFlatNode) {
         return nodeData.expandable;
     }
+}
+
+@Component({
+    imports: [
+        KbqTreeModule,
+        KbqDropdownModule,
+        KbqOptionModule
+    ],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                {{ node.name }}
+                <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+                <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
+            </kbq-tree-option>
+        </kbq-tree-selection>
+
+        <kbq-dropdown #dropdown>
+            <button kbq-dropdown-item>action</button>
+        </kbq-dropdown>
+    `
+})
+class TreeWithActionButtonApp extends TreeParams {
+    @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
 }

@@ -54,6 +54,7 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
+    kbqFocusOptionActionOnTab,
     KbqOptgroup,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
@@ -869,15 +870,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     }
 
     onKeydown($event) {
-        if (!this.actionButton) {
-            return;
-        }
-
-        if ($event.keyCode === TAB && !$event.shiftKey && !this.actionButton.hasFocus) {
-            this.actionButton.focus();
-
-            $event.preventDefault();
-        }
+        kbqFocusOptionActionOnTab($event, this.actionButton);
     }
 
     focus() {

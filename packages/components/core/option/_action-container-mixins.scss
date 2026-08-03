@@ -1,0 +1,28 @@
+/// Decides when the trailing `<kbq-option-action>` of an option becomes visible.
+///
+/// `.kbq-action-container` is `display: none` by default (see `action-container.scss`),
+/// so this mixin is the single source of truth for the reveal rules shared by
+/// `kbq-list-option` and `kbq-tree-option`. Include it inside the option's own rule.
+///
+/// @param {String} $keyboard-focused-host - selector of the focus-monitored selection host
+///   that CDK's `FocusMonitor` marks with `cdk-keyboard-focused`.
+@mixin kbq-option-action-visibility($keyboard-focused-host) {
+    &:not(.kbq-disabled) {
+        &:hover,
+        &.kbq-hovered,
+        &.kbq-action-button-focused {
+            & .kbq-action-container {
+                display: flex;
+            }
+        }
+    }
+
+    // Roving focus reveals the action only when focus arrived from the keyboard.
+    // `.kbq-focused` alone is not enough: options are `tabindex="-1"`, so a mouse click
+    // focuses them too and the action would stay visible after the pointer moves away.
+    #{$keyboard-focused-host} &:not(.kbq-disabled).kbq-focused {
+        & .kbq-action-container {
+            display: flex;
+        }
+    }
+}

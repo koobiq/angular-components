@@ -17,11 +17,12 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { hasModifierKey, TAB } from '@koobiq/cdk/keycodes';
+import { hasModifierKey } from '@koobiq/cdk/keycodes';
 import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
+    kbqFocusOptionActionOnTab,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
@@ -347,15 +348,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     onKeydown($event) {
-        if (!this.actionButton) {
-            return;
-        }
-
-        if ($event.keyCode === TAB && !$event.shiftKey && !this.actionButton.hasFocus) {
-            this.actionButton.focus();
-
-            $event.preventDefault();
-        }
+        kbqFocusOptionActionOnTab($event, this.actionButton);
     }
 
     selectViaInteraction($event?: KeyboardEvent): void {
