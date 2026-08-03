@@ -17,12 +17,21 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: ./.github/workflows/actions/setup-node
-      # Browser download plus apt normally takes a couple of minutes. Capping the step means a
-      # stalled install fails fast instead of consuming the whole job budget and taking the test
-      # run down with it — which is what happened in run 30790866073, where the job hit the 30
-      # minute wall during setup and produced no report at all.
-      - run: yarn run e2e:setup
-        timeout-minutes: 60
+      - id: playwright-version
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      # The browser build is ~170 MB and was downloaded on every single run. It only changes
+      # when Playwright does, so key the cache on the resolved version.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+      # Capping the step means a stalled download fails fast instead of consuming the whole job
+      # budget and taking the test run down with it — which is what happened in run 30790866073,
+      # where the job hit the wall during setup and produced no report at all.
+      - if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: yarn run e2e:setup
+        timeout-minutes: 8
       - id: run-e2e-tests
         run: |
           yarn run e2e:components

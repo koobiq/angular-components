@@ -13,9 +13,6 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
-    # Grouping collapses most updates into a handful of pull requests, but the limit keeps
-    # a bad week from filling the queue. Raise it if updates start starving each other.
-    open-pull-requests-limit: 10
     ignore:
       # Majors are ignored only where the version is coupled to the Angular release train
       # and has to be upgraded deliberately, together with the framework. Everything else

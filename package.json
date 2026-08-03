@@ -286,7 +286,7 @@
         "unit:api-gen": "jest --roots tools/api-gen",
         "-----E2E_TESTS-----": "--------------------------------------------------------------------------------------",
         "dev:e2e": "ng serve dev-e2e",
-        "e2e:setup": "playwright install chromium --with-deps",
+        "e2e:setup": "playwright install chromium",
         "e2e:components": "playwright test",
         "-----API-----": "--------------------------------------------------------------------------------------------",
         "approve-api": "ts-node --project tools/api-extractor/tsconfig.json tools/api-extractor/api-extractor.ts",
