@@ -1,3 +1,5 @@
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
+
 /**
  * Maximum height of an overlay panel's scrollable content, in pixels. `null` falls back to the
  * `--kbq-select-panel-size-max-height` design token.
@@ -20,5 +22,5 @@ export type KbqPanelMaxHeight = number | null;
 export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null {
     // `numberAttribute` coerces `null` and other invalid bindings to `NaN`, so guard on finiteness
     // rather than on `null`, which never reaches us from a template binding.
-    return Number.isFinite(panelMaxHeight) ? `${Math.max(panelMaxHeight as number, 0)}px` : null;
+    return Number.isFinite(panelMaxHeight) ? coerceCssPixelValue(Math.max(panelMaxHeight as number, 0)) : null;
 }

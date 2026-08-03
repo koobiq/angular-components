@@ -68,7 +68,7 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 })
 ```
 
-For theming, the same height is available as the `--kbq-select-panel-size-max-height` token — set it on `:root` to change every panel at once, or on a class passed through `panelClass` to change a single one.
+For theming, the same height is available as the `--kbq-select-panel-size-max-height` token — set it on `:root` to change every panel at once, or on a class passed through `panelClass` to change a single one. The example above shows both approaches side by side.
 
 ### Select width
 

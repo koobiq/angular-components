@@ -1006,9 +1006,11 @@ export class E2eFilterBarStates implements AfterViewInit {
 
 /**
  * Pipes covering both directions of `panelMaxHeight`: two `select` pipes left at the 256px default to pin
- * the "eight 32px options fit without a scrollbar" contract from either side, and three pipes exercising a
- * template-supplied cap. The panel is portaled out of the bar, so only a real browser can tell whether the
- * token reaches `__content` and whether the list actually scrolls — JSDOM computes no cascade and no layout.
+ * the "eight 32px options fit without a scrollbar" contract from either side, a `multi-tree-select` pipe
+ * also left at the default so the tree panel is checked against the same token, and two pipes
+ * (`multi-select`, `tree-select`) exercising a template-supplied cap. The panel is portaled out of the bar,
+ * so only a real browser can tell whether the token reaches `__content` and whether the list actually
+ * scrolls — JSDOM computes no cascade and no layout.
  */
 @Component({
     selector: 'e2e-filter-bar-panel-max-height',
