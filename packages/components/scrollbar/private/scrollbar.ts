@@ -443,7 +443,17 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
         const viewport = this.viewport()?.viewport;
 
         if (viewport) {
-            viewport.scrollToOffset(options.top ?? options.left ?? 0, options.behavior ?? 'auto');
+            // `scrollToOffset()` scrolls along whichever single axis the viewport itself is
+            // configured for (`orientation`, 'vertical' unless set to 'horizontal') — it has no
+            // concept of top/left independently. Picking whichever of `options.top`/`options.left`
+            // matches that axis (not just whichever happens to be set, defaulting to `top`) means a
+            // horizontal-only caller (`scrollStart()`/`scrollEnd()`) on the far more common default
+            // vertical viewport genuinely does nothing, instead of misreading `left` as a vertical
+            // offset and actually scrolling it — and the same the other way for `scrollToTop()`/
+            // `scrollToBottom()` against an `orientation="horizontal"` viewport.
+            const offset = viewport.orientation === 'horizontal' ? options.left : options.top;
+
+            if (offset !== undefined) viewport.scrollToOffset(offset, options.behavior ?? 'auto');
 
             return;
         }
