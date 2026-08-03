@@ -37,4 +37,4 @@ Name the group with `aria-label` or `aria-labelledby` so that its purpose is ann
 </kbq-button-toggle-group>
 ```
 
-An icon carries no accessible name of its own, so a toggle that projects nothing but icons needs one — the same `aria-label`/`aria-labelledby` inputs are available on the toggle. In development builds such a toggle logs a warning until it is named.
+An icon carries no accessible name of its own, so a toggle that projects nothing but icons needs one: `aria-label` and `aria-labelledby` are inputs of the toggle and are forwarded to the inner button, which is the element the name is computed for. In development builds such a toggle logs a warning until it is named.

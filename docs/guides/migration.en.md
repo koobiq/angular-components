@@ -568,14 +568,14 @@ The review of `kbq-button-toggle` gave the control the semantics it always behav
 
 #### What changed in the markup and on the keyboard
 
-| Surface                                    | Before                     | After                                                                                         |
-| ------------------------------------------ | -------------------------- | --------------------------------------------------------------------------------------------- |
-| `<kbq-button-toggle-group>`                | no role, no way to name it | `role="radiogroup"`, or `role="group"` with `multiple`; `aria-label`/`aria-labelledby` inputs |
-| `<kbq-button-toggle-group>`, radio group   | no orientation             | `aria-orientation`, following `vertical`                                                      |
-| inner `<button>`, single selection         | no role, no state          | `role="radio"` + `aria-checked`                                                               |
-| inner `<button>`, `multiple` or standalone | no state                   | `aria-pressed`                                                                                |
-| Tab in a single-selection group            | every toggle is a tab stop | one tab stop — the selected toggle, or the first enabled one                                  |
-| arrow keys                                 | nothing                    | move focus and selection together; `Home`/`End` jump to the ends                              |
+| Surface                                    | Before                     | After                                                                                        |
+| ------------------------------------------ | -------------------------- | -------------------------------------------------------------------------------------------- |
+| `<kbq-button-toggle-group>`                | no role, no way to name it | `role="radiogroup"`, or `role="group"` with `multiple`; an `aria-label` is announced with it |
+| `<kbq-button-toggle-group>`, radio group   | no orientation             | `aria-orientation`, following `vertical`                                                     |
+| inner `<button>`, single selection         | no role, no state          | `role="radio"` + `aria-checked`                                                              |
+| inner `<button>`, `multiple` or standalone | no state                   | `aria-pressed`                                                                               |
+| Tab in a single-selection group            | every toggle is a tab stop | one tab stop — the selected toggle, or the first enabled one                                 |
+| arrow keys                                 | nothing                    | move focus and selection together; `Home`/`End` jump to the ends                             |
 
 Selection used to be readable from the `.kbq-selected` class alone, which assistive tech does not see. Tests that count tab stops, snapshot the rendered markup or drive the group with arrow keys will notice the difference.
 

@@ -544,17 +544,16 @@ export class KbqButton
 
     ngAfterViewChecked(): void {
         // `href` can appear or disappear long after the first check — `[attr.href]` bound to a value
-        // that resolves later, or a `RouterLink` whose target becomes `null`. Only anchors can change
-        // role, so a `<button>` host skips the lookup entirely, and `updateRole` writes nothing while
-        // the role it would write is already there.
-        if (this.hostTagName === 'a') {
-            this.updateRole();
-        }
+        // that resolves later, or a `RouterLink` whose target becomes `null`. Running on every pass
+        // costs nothing: `updateRole` leaves a host that is not an anchor alone, and writes nothing
+        // while the role it would write is already there.
+        this.updateRole();
     }
 
     /**
-     * Re-evaluates the role announced to assistive tech. Only needed when the host `href` is added or
-     * removed outside of Angular, without a subsequent change detection pass.
+     * Re-evaluates the role announced to assistive tech. Only anchors can change role, so the guard
+     * lives here rather than at the call sites: this is public, and a `<button>` host must not have
+     * a role stamped onto it from the outside.
      *
      * An `<a kbq-button>` without `href` does not navigate and has no implicit role, so it is
      * announced as a button. Anchors that do navigate (`href`, `routerLink`) keep their link role.

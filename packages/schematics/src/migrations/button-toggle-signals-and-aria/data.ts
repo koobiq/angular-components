@@ -182,8 +182,8 @@ export const BEHAVIOUR_NOTE = [
     '  aria-orientation, following `vertical`. Snapshot and DOM-query tests change.',
     '- Arrow keys now move focus and selection together inside a single-selection group, and Home/End jump to',
     '  its ends. The keydown is preventDefault-ed, so a consumer handler on the same keys no longer runs.',
-    '- Name the group with the new aria-label / aria-labelledby inputs so its purpose is announced along with',
-    '  the selected item.',
+    '- Name the group with a plain aria-label / aria-labelledby attribute so its purpose is announced along',
+    '  with the selected item. It had no role to be announced against before.',
     '- `disabled` on a standalone toggle returns a real boolean. It used to return the group it could not',
     '  find — `null` — whenever the toggle was not disabled itself: falsy either way, but `=== false` and',
     '  `typeof` checks behaved differently.',
@@ -191,9 +191,7 @@ export const BEHAVIOUR_NOTE = [
     '- `KbqButtonToggleGroup` implements OnDestroy and ignores a sync scheduled by a toggle that outlived it,',
     '  so tearing a whole selected group down no longer emits valueChange after destruction.',
     '- `onTouched` / `registerOnTouched` take `() => void` instead of `any`, and',
-    '  KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR is typed `Provider`.',
-    '- The focus ring is unchanged, but measured: 2.77:1 against the group background in the light theme,',
-    '  under the 3:1 of WCAG 1.4.11. It comes from the shared --kbq-states-line-focus-theme token.'
+    '  KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR is typed `Provider`.'
 ];
 
 /**

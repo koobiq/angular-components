@@ -56,7 +56,7 @@ type DevButton = E2eButtonState & E2eButtonOrientation;
                     @for (button of buttons; track button.title) {
                         <td>
                             <kbq-button-toggle-group
-                                [aria-label]="'states'"
+                                aria-label="states"
                                 [vertical]="button.vertical!"
                                 [multiple]="button.multiple!"
                             >
@@ -157,7 +157,7 @@ export class E2eButtonToggleStates {
 
         <div data-testid="e2eScreenshotTarget">
             @for (state of states; track state.title) {
-                <kbq-button-toggle-group stretched [aria-label]="'states'">
+                <kbq-button-toggle-group stretched aria-label="states">
                     <kbq-button-toggle
                         [value]="1"
                         [aria-label]="state.title!"

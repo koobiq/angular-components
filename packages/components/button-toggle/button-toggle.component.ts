@@ -81,6 +81,10 @@ export class KbqButtonToggleChange {
  * By default it behaves like a radio-button group — one toggle at a time, announced as a
  * `radiogroup` and walked with the arrow keys. With `multiple` the toggles become independent
  * toggle buttons and the group is announced as a plain `group`.
+ *
+ * Name it with a plain `aria-label`/`aria-labelledby` attribute. The host is the very element the
+ * consumer writes, so an input aliased to the same name would only write back what is already
+ * there — and would wipe an `[attr.aria-label]` binding, which never reaches the input.
  */
 @Directive({
     selector: 'kbq-button-toggle-group',
@@ -90,9 +94,7 @@ export class KbqButtonToggleChange {
         '[class.kbq-button-toggle_vertical]': 'vertical()',
         '[class.kbq-button-toggle-group_stretched]': 'stretched()',
         '[attr.role]': 'role()',
-        '[attr.aria-orientation]': 'ariaOrientation()',
-        '[attr.aria-label]': 'ariaLabel()',
-        '[attr.aria-labelledby]': 'ariaLabelledby()'
+        '[attr.aria-orientation]': 'ariaOrientation()'
     },
     exportAs: 'kbqButtonToggleGroup'
 })
@@ -107,12 +109,6 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
     /** Whether multiple button toggles can be selected. */
     readonly multiple = input(false, { transform: booleanAttribute });
-
-    /** Accessible name of the group. */
-    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
-
-    /** Id of the element that labels the group. */
-    readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
 
     /**
      * Value of the toggle group.

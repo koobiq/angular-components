@@ -112,17 +112,15 @@ Printed once per run, because no call site points at it:
   `aria-orientation`, which snapshot and DOM-query tests will notice;
 - arrow keys moving focus and selection together and `Home`/`End` jumping to the
   ends, with the keydown `preventDefault`-ed;
-- the new `aria-label` / `aria-labelledby` inputs on the group;
+- naming the group with a plain `aria-label` / `aria-labelledby` attribute, which
+  it had no role to be announced against before;
 - `disabled` on a standalone toggle finally returning a `boolean` instead of the
   `null` group it could not find;
 - `tabIndex` defaulting to `null` instead of `undefined`;
 - the group implementing `OnDestroy`, so tearing down a whole selected group no
   longer emits `valueChange` after destruction;
 - `onTouched` / `registerOnTouched` taking `() => void`, and
-  `KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR` being typed `Provider`;
-- the focus ring, unchanged but measured: 2.77:1 against the group background in
-  the light theme, under the 3:1 of WCAG 1.4.11. It comes from the shared
-  `--kbq-states-line-focus-theme` token, so it is not a button-toggle fix.
+  `KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR` being typed `Provider`.
 
 ## Usage
 

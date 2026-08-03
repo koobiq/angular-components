@@ -71,8 +71,6 @@ export class KbqButtonToggleChange {
 
 // @public
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit, OnDestroy {
-    readonly ariaLabel: _angular_core.InputSignal<string | null>;
-    readonly ariaLabelledby: _angular_core.InputSignal<string | null>;
     protected readonly ariaOrientation: _angular_core.Signal<"vertical" | "horizontal" | null>;
     readonly buttonToggles: _angular_core.Signal<readonly KbqButtonToggle[]>;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
@@ -105,7 +103,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     readonly vertical: _angular_core.InputSignalWithTransform<boolean, unknown>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }
