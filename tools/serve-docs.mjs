@@ -9,7 +9,7 @@
  */
 import express from 'express';
 import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { isAbsolute, relative, resolve } from 'node:path';
 
 const DEFAULT_ROOT = 'dist/releases/koobiq-docs/browser';
 const DEFAULT_PORT = 4300;
@@ -36,9 +36,21 @@ app.use((request, response) => {
     // A prerendered route is a directory holding its own index.html. Serve it directly rather than
     // letting `express.static` bounce the request to a trailing-slash URL the app never links to.
     const prerendered = resolve(root, `.${decodeURIComponent(request.path)}`, 'index.html');
-    const isInsideRoot = prerendered.startsWith(root);
+    // Compare on path segments, not on the raw string: a `..` segment can escape into a sibling
+    // directory whose name merely starts with the root's own (`browser` -> `browser-something`),
+    // which a `startsWith` check would wave through. `express.static` blocks traversal itself, but
+    // this fallback resolves the path by hand and has to repeat the guard.
+    const relativeToRoot = relative(root, prerendered);
+    const isInsideRoot = !!relativeToRoot && !relativeToRoot.startsWith('..') && !isAbsolute(relativeToRoot);
 
     response.sendFile(isInsideRoot && existsSync(prerendered) ? prerendered : shell);
 });
 
-app.listen(port, () => console.log(`[serve-docs] Serving ${root} on http://localhost:${port}`));
+const server = app.listen(port, () => console.log(`[serve-docs] Serving ${root} on http://localhost:${port}`));
+
+// Without a listener a bind failure (e.g. EADDRINUSE) surfaces as a raw unhandled exception, which
+// is a lot harder to read in a CI log than the checks above.
+server.on('error', (error) => {
+    console.error(`[serve-docs] Could not listen on port ${port}: ${error.message}`);
+    process.exit(1);
+});

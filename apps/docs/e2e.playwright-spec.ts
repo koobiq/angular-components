@@ -84,11 +84,21 @@ test.describe('docs app', () => {
         await waitForHydration(page);
 
         const viewer = page.locator('docs-live-example-viewer').first();
+        // Not the `.docs-live-example__example` wrapper: it is bound to `exampleData`, which a reset
+        // never clears, so it stays visible (and padded, hence non-empty) even when the example
+        // inside it is gone. Only the outlet content can tell a re-render from a blank-out.
+        const renderedExample = viewer.locator('.docs-live-example__example > *');
+
+        await expect(renderedExample).toBeVisible();
+        // Mark the live instance. The reset destroys the outlet and builds a fresh element, so the
+        // marker comes back only if the example was never re-rendered.
+        await renderedExample.evaluate((element) => element.setAttribute('data-before-reset', ''));
 
         await viewer.getByRole('button', { name: 'Reset state' }).click();
 
         // Re-running the loader for the already-selected example must re-render it, not blank it out.
-        await expect(viewer.locator('.docs-live-example__example')).toBeVisible();
+        await expect(renderedExample).toBeVisible();
+        await expect(renderedExample).not.toHaveAttribute('data-before-reset');
     });
 
     test('switches the interface locale and rewrites the URL', async ({ page }) => {
@@ -108,6 +118,15 @@ test.describe('docs app', () => {
     test('redirects an unknown component id to the 404 page without a console error', async ({ page }) => {
         const errors: string[] = [];
 
+        // Angular funnels uncaught template and subscription failures through its `ErrorHandler`,
+        // which logs instead of rethrowing, so `pageerror` alone would miss that whole class.
+        // Browser-emitted fetch failures are skipped: a blocked third-party asset says nothing
+        // about the app's own error handling and would only make this flaky offline.
+        page.on('console', (message) => {
+            if (message.type() === 'error' && !message.text().startsWith('Failed to load resource')) {
+                errors.push(message.text());
+            }
+        });
         page.on('pageerror', (error) => errors.push(error.message));
 
         await page.goto('/en/components/definitely-not-a-component/overview');

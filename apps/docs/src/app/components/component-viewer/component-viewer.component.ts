@@ -65,7 +65,9 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
     protected readonly structureItemTab = DocsStructureItemTab;
-    protected structureItem: DocsStructureItem;
+    // Stays `null` for an unknown id: the redirect to /404 is async, so the template renders at
+    // least once with nothing resolved and has to tolerate it.
+    protected structureItem: DocsStructureItem | null = null;
     protected structureCategoryId: DocsStructureCategoryId;
 
     private readonly activatedRoute = inject(ActivatedRoute);
@@ -106,7 +108,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
 
     /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */
     protected get githubSourceUrl(): string | null {
-        return this.structureItem.path ? `${GITHUB_REPO_TREE_URL}/${this.structureItem.path}` : null;
+        return this.structureItem?.path ? `${GITHUB_REPO_TREE_URL}/${this.structureItem.path}` : null;
     }
 }
 
