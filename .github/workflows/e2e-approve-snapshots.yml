@@ -28,16 +28,8 @@ jobs:
         with:
           message: 🔄 [Updating](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) snapshots.
       - uses: ./.github/workflows/actions/setup-node
-      - id: playwright-version
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      # Same cache as e2e.yml, so the two workflows share the entry.
-      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
-      - if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: yarn run e2e:setup
+      # Same as e2e.yml: no --with-deps, and a cap so a stalled download fails fast.
+      - run: yarn run e2e:setup
         timeout-minutes: 8
       - id: update-snapshots
         run: |
