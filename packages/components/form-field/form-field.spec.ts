@@ -1,5 +1,5 @@
 import { Component, DebugElement, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import {
     AbstractControl,
     FormControl,
@@ -660,15 +660,23 @@ describe(KbqFormField.name, () => {
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display KbqReactivePasswordHint error for invalid password', () => {
-        const { debugElement } = createComponent(PasswordFormField);
+    it('should display KbqReactivePasswordHint error for invalid password', fakeAsync(() => {
+        const fixture = createComponent(PasswordFormField);
+        const { debugElement } = fixture;
         const input = getPasswordInputNativeElement(debugElement);
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
+        // `hasError` stays true for an already invalid control, so the color is escalated by the `delay(0)`
+        // handler instead of the effect that follows `hasError`.
+        tick();
+        fixture.detectChanges();
 
-        expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
-    });
+        const hint = getReactivePasswordHintDebugElement(debugElement);
+
+        expect(hint.nativeElement.classList).toContain('kbq-error');
+        expect(hint).toMatchSnapshot();
+    }));
 
     it('should display KbqReactivePasswordHint success for valid password', () => {
         const { debugElement } = createComponent(PasswordFormField);

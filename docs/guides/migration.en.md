@@ -723,7 +723,9 @@ A receiver is matched by its explicit type annotation (`KbqFormField`, `KbqHint`
 
 **`cleaner` and `passwordToggle` return `undefined`, not `null`.** A strict `=== null` comparison silently stops matching — use a truthiness check or `== null`.
 
-**Assignments to `fillTextOff`, `compact` and `cleaner` no longer compile.** They are read-only signals; drive them with a template binding. `KbqFormField.cleaner` was writable only because of an internal workaround, which is gone.
+**Assignments to `fillTextOff` and `compact` no longer compile.** They are read-only signal inputs; drive them with a template binding.
+
+**Assignments to the `KbqFormField` content queries no longer compile either** — `cleaner`, `passwordToggle`, `hint`, `passwordHints`, `prefix` and `suffix` are read-only signals. `cleaner` was writable only because of an internal workaround, which is gone; the rest were a `QueryList`, which test code used to reassign to fake the projected content. Project the content into the form field instead.
 
 **`KbqPasswordHint.icon` is `protected`.** Derive the state from `checked` / `hasError` instead of reading the icon name.
 

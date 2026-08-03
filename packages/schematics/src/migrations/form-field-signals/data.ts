@@ -96,8 +96,22 @@ export const NULLABILITY_CHANGED_MEMBERS: readonly string[] = ['cleaner', 'passw
 /** Members that moved from `public` to `protected` and can no longer be read from outside the component. */
 export const PROTECTED_MEMBERS: readonly string[] = ['icon'];
 
-/** Members that were writable properties and are now read-only signal inputs. */
-export const READ_ONLY_MEMBERS: readonly string[] = ['fillTextOff', 'compact', 'cleaner'];
+/** Inputs that were writable properties and are now read-only signal inputs. */
+export const READ_ONLY_INPUT_MEMBERS: readonly string[] = ['fillTextOff', 'compact'];
+
+/**
+ * `KbqFormField` content queries that were writable properties and are now read-only signals. `cleaner` was
+ * writable only because of an internal workaround; the rest were a `QueryList`, which consumers reassigned to
+ * fake the projected content in tests.
+ */
+export const READ_ONLY_QUERY_MEMBERS: readonly string[] = [
+    'cleaner',
+    'passwordToggle',
+    'hint',
+    'passwordHints',
+    'prefix',
+    'suffix'
+];
 
 export interface WarnPattern {
     pattern: string;

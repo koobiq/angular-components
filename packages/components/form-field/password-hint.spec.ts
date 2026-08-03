@@ -220,6 +220,23 @@ describe(KbqPasswordHint.name, () => {
                 passwordStrength: true
             });
         }));
+
+        it('should clear the error once the password satisfies the rule', fakeAsync(() => {
+            const fixture = createComponent(PasswordFormFieldWithHint);
+            const { control } = fixture.componentInstance;
+
+            enterValue(fixture, 'kbq');
+            tick();
+            fixture.detectChanges();
+
+            expect(control.errors).toEqual({ passwordStrength: true });
+
+            enterValue(fixture, 'koobiq');
+            tick();
+            fixture.detectChanges();
+
+            expect(control.errors).toBeNull();
+        }));
     });
 
     describe(hasPasswordStrengthError.name, () => {

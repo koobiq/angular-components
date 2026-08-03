@@ -201,7 +201,50 @@ describe(SCHEMATIC_NAME, () => {
 
         // left untouched — the consumer has to replace it with a binding
         expect(updated).toContain('hint.fillTextOff = true;');
-        expect(messages.join('\n')).toContain('read-only signals');
+        expect(messages.join('\n')).toContain('signal inputs now');
+    });
+
+    it.each(['cleaner', 'passwordToggle', 'hint', 'passwordHints', 'prefix', 'suffix'])(
+        'warns about an assignment to the now read-only %s content query',
+        async (member) => {
+            const ts = firstTsPath();
+            const assignment = `formField.${member} = fake;`;
+
+            appTree.overwrite(
+                ts,
+                "import { KbqFormField } from '@koobiq/components/form-field';\n" +
+                    'class Demo {\n' +
+                    `    fake(formField: KbqFormField, fake: any) {\n` +
+                    `        ${assignment}\n` +
+                    '    }\n' +
+                    '}\n'
+            );
+
+            const updated = (await run()).readText(ts);
+
+            // left untouched — the assignment has to go, there is nothing to rewrite it to
+            expect(updated).toContain(assignment);
+            expect(messages.join('\n')).toContain('signal content queries now');
+        }
+    );
+
+    it('does NOT warn about a read of a read-only member', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqFormField } from '@koobiq/components/form-field';\n" +
+                'class Demo {\n' +
+                '    read(formField: KbqFormField) {\n' +
+                '        return formField.prefix;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('return formField.prefix();');
+        expect(messages.join('\n')).not.toContain('can no longer be assigned');
     });
 
     it('warns about the removed mixinColor', async () => {

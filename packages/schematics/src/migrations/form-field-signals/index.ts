@@ -11,7 +11,8 @@ import {
     PROTECTED_MEMBERS,
     QUERY_LIST_MEMBERS,
     QUERY_LIST_ONLY_API,
-    READ_ONLY_MEMBERS,
+    READ_ONLY_INPUT_MEMBERS,
+    READ_ONLY_QUERY_MEMBERS,
     styleRewrites,
     Target,
     TARGETS,
@@ -200,15 +201,26 @@ interface ReceiverWarnings {
     queryListApi: Set<string>;
     nullability: Set<string>;
     protectedAccess: Set<string>;
-    readOnlyWrites: Set<string>;
+    readOnlyInputWrites: Set<string>;
+    readOnlyQueryWrites: Set<string>;
 }
 
 const emptyWarnings = (): ReceiverWarnings => ({
     queryListApi: new Set<string>(),
     nullability: new Set<string>(),
     protectedAccess: new Set<string>(),
-    readOnlyWrites: new Set<string>()
+    readOnlyInputWrites: new Set<string>(),
+    readOnlyQueryWrites: new Set<string>()
 });
+
+/** Whether the node is the left-hand side of an assignment, i.e. a write to a now read-only member. */
+function isAssignmentTarget(node: ts.PropertyAccessExpression): boolean {
+    return (
+        ts.isBinaryExpression(node.parent) &&
+        node.parent.left === node &&
+        node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
+    );
+}
 
 /** Collects the members that the auto-fix can't fully migrate for one target. */
 function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, receivers: Receiver[]): ReceiverWarnings {
@@ -227,15 +239,15 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, rece
                 warnings.nullability.add(name);
             }
 
+            // `target.signalMembers` scopes the flat name lists to the members this receiver actually owns.
             if (
                 onReceiver &&
-                READ_ONLY_MEMBERS.includes(name) &&
+                target.signalMembers.includes(name) &&
                 !target.writableMembers.has(name) &&
-                ts.isBinaryExpression(node.parent) &&
-                node.parent.left === node &&
-                node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
+                isAssignmentTarget(node)
             ) {
-                warnings.readOnlyWrites.add(name);
+                if (READ_ONLY_INPUT_MEMBERS.includes(name)) warnings.readOnlyInputWrites.add(name);
+                else if (READ_ONLY_QUERY_MEMBERS.includes(name)) warnings.readOnlyQueryWrites.add(name);
             }
 
             // `formField.hint.changes` — the query member is migrated, the QueryList API below it is not.
@@ -273,7 +285,8 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
         warnings.queryListApi.forEach((value) => merged.queryListApi.add(value));
         warnings.nullability.forEach((value) => merged.nullability.add(value));
         warnings.protectedAccess.forEach((value) => merged.protectedAccess.add(value));
-        warnings.readOnlyWrites.forEach((value) => merged.readOnlyWrites.add(value));
+        warnings.readOnlyInputWrites.forEach((value) => merged.readOnlyInputWrites.add(value));
+        warnings.readOnlyQueryWrites.forEach((value) => merged.readOnlyQueryWrites.add(value));
     }
 
     if (merged.queryListApi.size > 0) {
@@ -302,11 +315,21 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
         ]);
     }
 
-    if (merged.readOnlyWrites.size > 0) {
+    if (merged.readOnlyInputWrites.size > 0) {
         logMessage(context.logger, [
             `[${MIGRATION}] ${filePath}`,
-            `  \`${[...merged.readOnlyWrites].join('`, `')}\` can no longer be assigned: they are read-only signals`,
-            `  now. Drive them with a template binding (e.g. \`[fillTextOff]="…"\`) instead of an assignment.`
+            `  \`${[...merged.readOnlyInputWrites].join('`, `')}\` can no longer be assigned: they are read-only`,
+            `  signal inputs now. Drive them with a template binding (e.g. \`[fillTextOff]="…"\`) instead of an`,
+            `  assignment.`
+        ]);
+    }
+
+    if (merged.readOnlyQueryWrites.size > 0) {
+        logMessage(context.logger, [
+            `[${MIGRATION}] ${filePath}`,
+            `  \`${[...merged.readOnlyQueryWrites].join('`, `')}\` can no longer be assigned: they are read-only`,
+            `  signal content queries now. Project the content into the form field instead — code that assigned a`,
+            `  query result (usually a test faking the projected content) has to render the real component.`
         ]);
     }
 }

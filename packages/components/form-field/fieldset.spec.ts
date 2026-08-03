@@ -42,6 +42,21 @@ class FieldsetWithLegend {
 }
 
 @Component({
+    selector: 'fieldset-with-error',
+    imports: [KbqFormFieldModule, KbqInputModule],
+    template: `
+        <kbq-fieldset>
+            <kbq-form-field kbqFieldsetItem>
+                <input kbqInput />
+            </kbq-form-field>
+
+            <kbq-error>Error</kbq-error>
+        </kbq-fieldset>
+    `
+})
+class FieldsetWithError {}
+
+@Component({
     selector: 'fieldset-without-legend',
     imports: [KbqFormFieldModule, KbqInputModule],
     template: `
@@ -130,5 +145,15 @@ describe(KbqFieldset.name, () => {
         const hint = getFieldsetNativeElement(debugElement).querySelector('.kbq-fieldset > .kbq-form-field__hint');
 
         expect(hint?.textContent?.trim()).toBe('Hint');
+    });
+
+    // The fieldset owns no control, so the projected error is shown unconditionally — unlike in KbqFormField.
+    it('should render a projected error in the hint area', () => {
+        const { debugElement } = createComponent(FieldsetWithError);
+        const error = getFieldsetNativeElement(debugElement).querySelector(
+            '.kbq-fieldset > .kbq-form-field__hint > kbq-error'
+        );
+
+        expect(error?.textContent?.trim()).toBe('Error');
     });
 });
