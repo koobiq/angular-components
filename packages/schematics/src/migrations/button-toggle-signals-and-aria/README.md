@@ -37,12 +37,25 @@ mentions `kbq-button-toggle`; a stylesheet only if it mentions
 | `ref.vertical` → `()`   | templates, through `#ref="kbqButtonToggleGroup"` |
 | `ref.multiple` → `()`   | templates, through `#ref="kbqButtonToggleGroup"` |
 
-Receivers are matched by **explicit type annotation only** — there is no
-cross-package type resolution — so method and function parameters, class fields
-(view queries included), constructor parameter-properties and typed locals are
-covered, while `const g = this.group; g.multiple` is not. Template reference
-variables are matched through the `exportAs`, in external `.html` files and in
-inline `@Component({ template })` strings alike.
+Receivers are resolved **within the file**, with no cross-file type resolution.
+Covered: method and function parameters, class fields, constructor
+parameter-properties and locals — by explicit type annotation, by an import under
+an alias (`KbqButtonToggleGroup as Group`), or by a `viewChild()` /
+`viewChild.required()` / `contentChild()` / `inject()` initialiser, where the
+signal form is reached through its call (`this.group().multiple`). Not covered:
+a receiver whose type comes from another file (`const g = this.group; g.multiple`,
+an imported const) — those are reported instead of being rewritten.
+
+Resolution is lexical: every declaration of a name is collected, not only the
+button-toggle-typed ones, and the innermost scope containing the access wins. A
+nested `const group = { vertical: 'north' }` therefore shadows an outer
+`KbqButtonToggleGroup` of the same name and is left alone, which matters most in
+spec files, where a `describe` often reuses short names.
+
+Template reference variables are matched through the `exportAs`, in external
+`.html` files and in inline `@Component({ template })` strings alike, with
+whitespace around the dot tolerated (`group . multiple`, or a binding wrapped
+over two lines) and preserved by the rewrite.
 
 Every rewrite is idempotent: an access that is already a call, or is followed by
 `.set` / `.update` / `.asReadonly` / `.subscribe`, is left alone.
@@ -55,23 +68,31 @@ drive the bound value instead.
 
 **Members that were removed or narrowed**, found on a typed receiver:
 
-| Member                              | Why                                                                                        |
-| ----------------------------------- | ------------------------------------------------------------------------------------------ |
-| `KbqButtonToggle.mcButton`          | removed — a dead view query with a legacy prefix; use `focus()` / `focusViaKeyboard()`     |
-| `KbqButtonToggle.buttonToggleGroup` | `protected`, and typed `KbqButtonToggleGroup \| null` — it was non-null while being `null` |
-| `KbqButtonToggle.icons`             | private — read the resulting `iconType` instead                                            |
-| `KbqButtonToggle.iconType`          | read-only getter                                                                           |
-| `KbqButtonToggle.type`              | read-only getter, and it follows `multiple` at runtime instead of freezing in `ngOnInit`   |
-| `KbqButtonToggleGroup.selected`     | typed `KbqButtonToggle \| KbqButtonToggle[] \| null` instead of `any`                      |
+| Member                                 | Why                                                                                        |
+| -------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `KbqButtonToggle.mcButton`             | removed — a dead view query with a legacy prefix; use `focus()` / `focusViaKeyboard()`     |
+| `KbqButtonToggle.buttonToggleGroup`    | `protected`, and typed `KbqButtonToggleGroup \| null` — it was non-null while being `null` |
+| `KbqButtonToggle.icons`                | private — read the resulting `iconType` instead                                            |
+| `KbqButtonToggle.iconType`             | read-only getter — reported on assignment only, a read still reads the same                |
+| `KbqButtonToggle.type`                 | read-only getter that follows `multiple` at runtime — reported on assignment only          |
+| `KbqButtonToggleGroup.selected`        | typed `KbqButtonToggle \| KbqButtonToggle[] \| null` instead of `any`                      |
+| `KbqButtonToggleGroup.emitChangeEvent` | takes the toggle the change came from: `emitChangeEvent(toggle)`                           |
+
+**Reads it could not resolve.** A `vertical` / `multiple` read on a receiver that
+is not declared in the file — an imported const, an alias assigned from somewhere
+else — is reported once per file, since a single-file pass cannot tell whether it
+is a group.
 
 **Icon-only toggles with no accessible name.** The template is parsed and every
 `<kbq-button-toggle>` whose content holds an icon and no text at all is reported
-with its line number, unless it carries `aria-label`, `aria-labelledby` or
-`title` (bound or static, `[attr.]`-prefixed or not). An icon glyph is
-`aria-hidden`, so such a button is announced as unlabelled — an AXE `button-name`
-failure — and the component now logs a dev-mode warning about it. `aria-label`
-and `aria-labelledby` are inputs of the toggle and are forwarded to the inner
-button, so the fix is one attribute; the schematic cannot invent the text.
+with its line number, unless it carries `aria-label` or `aria-labelledby` (bound
+or static, `[attr.]`-prefixed or not). A `title` does not count: it stays on
+`<kbq-button-toggle>`, while the accessible name is computed for the inner
+`<button>`, and the attribute never reaches it. An icon glyph is `aria-hidden`, so
+such a button is announced as unlabelled — an AXE `button-name` failure — and the
+component now logs a dev-mode warning about it. `aria-label` and `aria-labelledby`
+are inputs of the toggle and are forwarded to the inner button, so the fix is one
+attribute; the schematic cannot invent the text.
 
 **Patterns worth a second look**, in files that already reference the
 button-toggle: anything mentioning `tabindex` (the tab order of a single-selection
@@ -87,8 +108,8 @@ stylesheet stopped declaring it.
 
 Printed once per run, because no call site points at it:
 
-- the rendered `role` / `aria-checked` / `aria-pressed`, which snapshot and
-  DOM-query tests will notice;
+- the rendered `role` / `aria-checked` / `aria-pressed` and the group's
+  `aria-orientation`, which snapshot and DOM-query tests will notice;
 - arrow keys moving focus and selection together and `Home`/`End` jumping to the
   ends, with the keydown `preventDefault`-ed;
 - the new `aria-label` / `aria-labelledby` inputs on the group;

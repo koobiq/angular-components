@@ -1,4 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { Directionality } from '@angular/cdk/bidi';
 import { Component, DebugElement, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
@@ -16,6 +17,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { axe } from 'jest-axe';
+import { EMPTY } from 'rxjs';
 import { KbqButtonToggle, KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
 
 describe('KbqButtonToggle with forms', () => {
@@ -505,6 +507,24 @@ describe('KbqButtonToggle without forms', () => {
             expect(changeSpy).toHaveBeenCalledTimes(2);
         }));
 
+        it('should report the toggle the change came from, including the one that emptied the group', () => {
+            const events: KbqButtonToggleChange[] = [];
+
+            groupInstance.change.subscribe((event) => events.push(event));
+
+            innerButtons[0].click();
+            fixture.detectChanges();
+
+            expect(events[0].source).toBe(buttonToggleInstances[0]);
+
+            // Nothing is selected after this one, so there is no "last selected" toggle to fall back on.
+            innerButtons[0].click();
+            fixture.detectChanges();
+
+            expect(events[1].source).toBe(buttonToggleInstances[0]);
+            expect(events[1].value).toEqual([]);
+        });
+
         it('should throw when attempting to assign a non-array value', () => {
             expect(() => {
                 groupInstance.value = 'not-an-array';
@@ -808,6 +828,7 @@ describe('KbqButtonToggle accessibility', () => {
                 StandaloneButtonToggleWithTabIndex,
                 ButtonToggleWithIconOnly,
                 UnnamedIconOnlyButtonToggle,
+                TitledIconOnlyButtonToggle,
                 DestroyableButtonToggleGroup
             ]
         }).compileComponents();
@@ -821,6 +842,7 @@ describe('KbqButtonToggle accessibility', () => {
 
             expect(getGroup(fixture).getAttribute('role')).toBe('radiogroup');
             expect(getGroup(fixture).getAttribute('aria-label')).toBe('Delivery');
+            expect(getGroup(fixture).getAttribute('aria-orientation')).toBe('horizontal');
 
             for (const button of getInnerButtons(fixture)) {
                 expect(button.getAttribute('role')).toBe('radio');
@@ -863,6 +885,30 @@ describe('KbqButtonToggle accessibility', () => {
             fixture.detectChanges();
 
             expect(getInnerButtons(fixture)[0].getAttribute('aria-pressed')).toBe('true');
+        });
+
+        it('should announce the orientation a radio group is walked in', () => {
+            const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+            fixture.componentInstance.isMultiple = false;
+            fixture.detectChanges();
+
+            expect(getGroup(fixture).getAttribute('aria-orientation')).toBe('horizontal');
+
+            fixture.componentInstance.isVertical = true;
+            fixture.detectChanges();
+
+            expect(getGroup(fixture).getAttribute('aria-orientation')).toBe('vertical');
+        });
+
+        it('should leave the orientation off a multiple-selection group, which does not support it', () => {
+            // `role="group"` has no `aria-orientation` (AXE `aria-allowed-attr`), and no arrow keys either.
+            const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+            fixture.componentInstance.isVertical = true;
+            fixture.detectChanges();
+
+            expect(getGroup(fixture).hasAttribute('aria-orientation')).toBe(false);
         });
 
         it('should announce a standalone toggle as a toggle button', () => {
@@ -910,6 +956,28 @@ describe('KbqButtonToggle accessibility', () => {
             // An icon glyph is `aria-hidden`, so such a button has no name at all (AXE `button-name`).
             const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = TestBed.createComponent(UnnamedIconOnlyButtonToggle);
+
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('no accessible name'), expect.anything());
+
+            warn.mockRestore();
+        });
+
+        it('should stay quiet about an icon-only toggle that carries a name', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const fixture = TestBed.createComponent(ButtonToggleWithIconOnly);
+
+            fixture.detectChanges();
+
+            expect(warn).not.toHaveBeenCalled();
+
+            warn.mockRestore();
+        });
+
+        it('should not accept a title on the host, which never reaches the button it would name', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const fixture = TestBed.createComponent(TitledIconOnlyButtonToggle);
 
             fixture.detectChanges();
 
@@ -1002,7 +1070,7 @@ describe('KbqButtonToggle accessibility', () => {
             ['ArrowDown', DOWN_ARROW, 1],
             ['ArrowLeft', LEFT_ARROW, 2],
             ['ArrowUp', UP_ARROW, 2]
-        ])('should move focus and selection with %s, wrapping around', (_, keyCode, expected) => {
+        ])('should move focus and selection with %s', (_, keyCode, expected) => {
             const fixture = TestBed.createComponent(NamedButtonToggleGroup);
 
             fixture.detectChanges();
@@ -1046,7 +1114,26 @@ describe('KbqButtonToggle accessibility', () => {
             expect(getToggles(fixture)[2].checked).toBe(true);
         });
 
-        it('should leave a multiple-selection group to the Tab key', () => {
+        it('should wrap around at both ends of the group', () => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.detectChanges();
+
+            const buttons = getInnerButtons(fixture);
+
+            // backwards off the first toggle lands on the last one, and forwards off the last one
+            dispatchKeyboardEvent(buttons[0], 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(getToggles(fixture)[2].checked).toBe(true);
+
+            dispatchKeyboardEvent(buttons[2], 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(getToggles(fixture)[0].checked).toBe(true);
+        });
+
+        it('should ignore the arrow keys in a multiple-selection group, leaving them to the browser', () => {
             const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
 
             fixture.detectChanges();
@@ -1124,6 +1211,48 @@ describe('KbqButtonToggle accessibility', () => {
 
             expect(valueChange).not.toHaveBeenCalled();
         }));
+    });
+});
+
+describe('KbqButtonToggle keyboard navigation in RTL', () => {
+    const getInnerButtons = (fixture: ComponentFixture<unknown>): HTMLButtonElement[] =>
+        Array.from(fixture.nativeElement.querySelectorAll('button'));
+    const getToggles = (fixture: ComponentFixture<unknown>): KbqButtonToggle[] =>
+        fixture.debugElement.queryAll(By.directive(KbqButtonToggle)).map((debugEl) => debugEl.componentInstance);
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqButtonToggleModule, NamedButtonToggleGroup],
+            providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }]
+        }).compileComponents();
+    });
+
+    it.each([
+        ['ArrowLeft', LEFT_ARROW, 1],
+        ['ArrowRight', RIGHT_ARROW, 2]
+    ])('should swap the horizontal keys, so %s follows the reading direction', (_, keyCode, expected) => {
+        const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+        fixture.detectChanges();
+
+        dispatchKeyboardEvent(getInnerButtons(fixture)[0], 'keydown', keyCode);
+        fixture.detectChanges();
+
+        expect(getToggles(fixture)[expected].checked).toBe(true);
+    });
+
+    it.each([
+        ['ArrowDown', DOWN_ARROW, 1],
+        ['ArrowUp', UP_ARROW, 2]
+    ])('should leave the vertical key %s pointing the same way', (_, keyCode, expected) => {
+        const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+        fixture.detectChanges();
+
+        dispatchKeyboardEvent(getInnerButtons(fixture)[0], 'keydown', keyCode);
+        fixture.detectChanges();
+
+        expect(getToggles(fixture)[expected].checked).toBe(true);
     });
 });
 
@@ -1333,6 +1462,16 @@ class ButtonToggleWithSlottedIconOnly {}
     `
 })
 class UnnamedIconOnlyButtonToggle {}
+
+@Component({
+    imports: [KbqButtonToggleModule, KbqIconModule],
+    template: `
+        <kbq-button-toggle title="Play">
+            <i kbq-icon="kbq-play_16"></i>
+        </kbq-button-toggle>
+    `
+})
+class TitledIconOnlyButtonToggle {}
 
 @Component({
     imports: [KbqButtonToggleModule],

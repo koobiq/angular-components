@@ -24,11 +24,23 @@ export const GROUP_EXPORT_AS = 'kbqButtonToggleGroup';
 /** Element the accessible-name check looks for. */
 export const TOGGLE_ELEMENT = 'kbq-button-toggle';
 
-/** Attributes that make an element an icon, i.e. content that carries no accessible name of its own. */
+/**
+ * Attributes that make an element an icon, i.e. content that carries no accessible name of its own.
+ *
+ * Deliberately wider than the component's own detection, which is a `contentChildren(KbqIcon)` query and so
+ * only ever sees `[kbq-icon]`: `KbqIconButton` and `KbqIconItem` extend `KbqIcon` without providing its
+ * token, so the query walks past them. They are glyphs all the same and name nothing, so a toggle holding
+ * only one of them is worth reporting even where the runtime warning stays quiet.
+ */
 export const ICON_ATTRS: readonly string[] = ['kbq-icon', 'kbq-icon-button', 'kbq-icon-item'];
 
-/** Attributes that give a toggle an accessible name. */
-export const NAME_ATTRS: readonly string[] = ['aria-label', 'aria-labelledby', 'title'];
+/**
+ * Attributes that give a toggle an accessible name.
+ *
+ * `title` is not among them: it would sit on `<kbq-button-toggle>`, while the name is computed for the
+ * inner `<button>` the user actually focuses, and the attribute never reaches it.
+ */
+export const NAME_ATTRS: readonly string[] = ['aria-label', 'aria-labelledby'];
 
 /** Group members that became `input()` signals: a read becomes a call. Auto-fixed. */
 export const SIGNAL_MEMBERS: readonly string[] = ['vertical', 'multiple'];
@@ -55,6 +67,12 @@ export const WRITE_MESSAGES: ReadonlyMap<string, string> = new Map([
             '(`[multiple]="isMultiple"`) and drive the bound value instead.'
     ]
 ]);
+
+/**
+ * Members of `MANUAL_MEMBERS` that only break for a writer. They became read-only getters, so a read still
+ * compiles and reads exactly as it did — reporting one would bury the lines that do need work.
+ */
+export const WRITE_ONLY_MANUAL_MEMBERS: ReadonlySet<string> = new Set(['iconType', 'type']);
 
 /**
  * Members accessed on a group or a toggle that were removed, narrowed or made read-only. Reported with the
@@ -93,6 +111,13 @@ export const MANUAL_MEMBERS: ReadonlyMap<string, string> = new Map([
         '`KbqButtonToggleGroup.selected` is typed `KbqButtonToggle | KbqButtonToggle[] | null` instead of ' +
             '`any`, so an assignment to a differently typed variable stops compiling. In multiple-selection ' +
             'mode it hands back a fresh array per selection change rather than the model’s own.'
+    ],
+    [
+        'emitChangeEvent',
+        '`KbqButtonToggleGroup.emitChangeEvent()` takes the toggle the change came from: ' +
+            '`emitChangeEvent(toggle)`. It used to read the source off the selection, which is empty right ' +
+            'after the last toggle of a multiple-selection group is unchecked — `KbqButtonToggleChange.source` ' +
+            'came out `undefined` there, against its own type.'
     ]
 ]);
 
@@ -153,7 +178,8 @@ export const UNNAMED_ICON_TOGGLE_MESSAGE =
 export const BEHAVIOUR_NOTE = [
     'Behaviour changes with no call site to migrate:',
     '- A single-selection group renders role="radiogroup" and its inner buttons role="radio" + aria-checked;',
-    '  a multiple-selection group renders role="group" and aria-pressed. Snapshot and DOM-query tests change.',
+    '  a multiple-selection group renders role="group" and aria-pressed. The group also renders',
+    '  aria-orientation, following `vertical`. Snapshot and DOM-query tests change.',
     '- Arrow keys now move focus and selection together inside a single-selection group, and Home/End jump to',
     '  its ends. The keydown is preventDefault-ed, so a consumer handler on the same keys no longer runs.',
     '- Name the group with the new aria-label / aria-labelledby inputs so its purpose is announced along with',
@@ -169,6 +195,15 @@ export const BEHAVIOUR_NOTE = [
     '- The focus ring is unchanged, but measured: 2.77:1 against the group background in the light theme,',
     '  under the 3:1 of WCAG 1.4.11. It comes from the shared --kbq-states-line-focus-theme token.'
 ];
+
+/**
+ * Reported when a file works with a group but reads `vertical` / `multiple` on a receiver declared
+ * somewhere else, which is as far as a single-file pass can see.
+ */
+export const UNRESOLVED_SIGNAL_READ_MESSAGE =
+    'This file reads `vertical` or `multiple` on a receiver that is not declared in it, so the read could ' +
+    'not be verified or rewritten. Both are `input()` signals now: check by hand whether the receiver is a ' +
+    '`KbqButtonToggleGroup`, and if it is, append `()` to the read.';
 
 /** Reported when a template names the group but cannot be parsed, so nothing was inspected or rewritten. */
 export const UNPARSEABLE_TEMPLATE_MESSAGE =

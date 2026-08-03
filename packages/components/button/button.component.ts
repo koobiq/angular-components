@@ -545,8 +545,8 @@ export class KbqButton
     ngAfterViewChecked(): void {
         // `href` can appear or disappear long after the first check — `[attr.href]` bound to a value
         // that resolves later, or a `RouterLink` whose target becomes `null`. Only anchors can change
-        // role, so a `<button>` host skips the lookup entirely; setting the signal to its current
-        // value is a no-op, so a stable host does not schedule extra passes.
+        // role, so a `<button>` host skips the lookup entirely, and `updateRole` writes nothing while
+        // the role it would write is already there.
         if (this.hostTagName === 'a') {
             this.updateRole();
         }
@@ -569,11 +569,16 @@ export class KbqButton
         if (this.hostTagName !== 'a') return;
 
         const host = this.getHostElement();
+        const role = host.hasAttribute('href') ? null : 'button';
 
-        if (host.hasAttribute('href')) {
-            this.renderer.removeAttribute(host, 'role');
+        // Called from every `ngAfterViewChecked`, so the write is worth skipping while the attribute
+        // already reads the way it would be rewritten.
+        if (host.getAttribute('role') === role) return;
+
+        if (role) {
+            this.renderer.setAttribute(host, 'role', role);
         } else {
-            this.renderer.setAttribute(host, 'role', 'button');
+            this.renderer.removeAttribute(host, 'role');
         }
     }
 

@@ -165,6 +165,95 @@ describe(SCHEMATIC_NAME, () => {
             expect((await run(name)).readText(ts)).toBe(original);
             expect(messages.join('\n')).toContain('cannot be assigned');
         });
+
+        it('rewrites a read on a receiver imported under an alias', async () => {
+            const { name, ts } = firstProject();
+
+            appTree.overwrite(
+                ts,
+                [
+                    "import { KbqButtonToggleGroup as Group } from '@koobiq/components/button-toggle';",
+                    '',
+                    'export function isStacked(group: Group) {',
+                    '    return group.vertical;',
+                    '}',
+                    ''
+                ].join('\n')
+            );
+
+            expect((await run(name)).readText(ts)).toContain('return group.vertical();');
+        });
+
+        it.each([
+            ['viewChild.required', 'viewChild.required(KbqButtonToggleGroup)', 'this.group().multiple'],
+            ['contentChild', 'contentChild(KbqButtonToggleGroup)', 'this.group().multiple'],
+            ['inject', 'inject(KbqButtonToggleGroup, { optional: true })', 'this.group.multiple']
+        ])('rewrites a read on a %s receiver, which carries no type annotation', async (_, initializer, read) => {
+            const { name, ts } = firstProject();
+
+            appTree.overwrite(
+                ts,
+                [
+                    "import { contentChild, inject, viewChild } from '@angular/core';",
+                    "import { KbqButtonToggleGroup } from '@koobiq/components/button-toggle';",
+                    '',
+                    'export class Host {',
+                    `    readonly group = ${initializer};`,
+                    '',
+                    '    run() {',
+                    `        return ${read};`,
+                    '    }',
+                    '}',
+                    ''
+                ].join('\n')
+            );
+
+            expect((await run(name)).readText(ts)).toContain(`return ${read}();`);
+        });
+
+        it('leaves an unrelated variable that merely shares the name of a group alone', async () => {
+            const { name, ts } = firstProject();
+            // The nested declaration shadows the outer group, so neither read belongs to it.
+            const original = [
+                "import { KbqButtonToggleGroup } from '@koobiq/components/button-toggle';",
+                '',
+                'let group: KbqButtonToggleGroup;',
+                '',
+                'export function describeWind() {',
+                "    const group = { vertical: 'north', multiple: 3 };",
+                '',
+                '    return `${group.vertical} ${group.multiple}`;',
+                '}',
+                ''
+            ].join('\n');
+
+            appTree.overwrite(ts, original);
+
+            expect((await run(name)).readText(ts)).toBe(original);
+        });
+
+        it('reports a read on a receiver it cannot resolve rather than passing over it', async () => {
+            const { name, ts } = firstProject();
+            // `groups` comes from another file, so a single-file pass cannot tell what `first` holds.
+            const original = [
+                "import { KbqButtonToggleGroup } from '@koobiq/components/button-toggle';",
+                "import { groups } from './groups';",
+                '',
+                'export function isMultiple(): boolean {',
+                '    return groups.first.multiple;',
+                '}',
+                '',
+                'export declare const registry: Record<string, KbqButtonToggleGroup>;',
+                ''
+            ].join('\n');
+
+            appTree.overwrite(ts, original);
+
+            const messages = collectLogs();
+
+            expect((await run(name)).readText(ts)).toBe(original);
+            expect(messages.join('\n')).toContain('could not be verified or rewritten');
+        });
     });
 
     describe('removed and narrowed members', () => {
@@ -196,6 +285,33 @@ describe(SCHEMATIC_NAME, () => {
 
             expect(messages.join('\n')).toContain('`KbqButtonToggleGroup.selected` is typed');
         });
+
+        it('reports the new emitChangeEvent signature on a group', async () => {
+            const { name, ts } = firstProject();
+
+            appTree.overwrite(ts, withGroup('this.group.emitChangeEvent();'));
+
+            const messages = collectLogs();
+
+            await run(name);
+
+            expect(messages.join('\n')).toContain('`KbqButtonToggleGroup.emitChangeEvent()` takes the toggle');
+        });
+
+        it.each([['iconType'], ['type']])(
+            'stays quiet about a read of %s, which still reads the same',
+            async (member) => {
+                const { name, ts } = firstProject();
+
+                appTree.overwrite(ts, withToggle(`const value = this.toggle.${member};`));
+
+                const messages = collectLogs();
+
+                await run(name);
+
+                expect(messages.join('\n')).not.toContain(`\`KbqButtonToggle.${member}\``);
+            }
+        );
     });
 
     describe('templates', () => {
@@ -252,6 +368,23 @@ describe(SCHEMATIC_NAME, () => {
             expect((await run(name)).readText(ts)).toContain('{{ group.multiple() }}');
         });
 
+        it('rewrites a read whose dot is wrapped over two lines, keeping the layout', async () => {
+            const { name, html } = firstProject();
+
+            appTree.overwrite(
+                html,
+                '<kbq-button-toggle-group #group="kbqButtonToggleGroup">\n' +
+                    '    <kbq-button-toggle [value]="1">One</kbq-button-toggle>\n' +
+                    '</kbq-button-toggle-group>\n' +
+                    '<span\n' +
+                    '    [class.stacked]="group\n' +
+                    '        .vertical"\n' +
+                    '></span>\n'
+            );
+
+            expect((await run(name)).readText(html)).toContain('group\n        .vertical()');
+        });
+
         it('leaves the value accessor alone — it is still a getter', async () => {
             const { name, html } = firstProject();
             const original =
@@ -284,21 +417,31 @@ describe(SCHEMATIC_NAME, () => {
             expect(messages.join('\n')).toContain('line 2: `<kbq-button-toggle>` projects icons only');
         });
 
-        it.each([
-            ['aria-label="Play" '],
-            ['[aria-label]="label" '],
-            ['[attr.aria-labelledby]="id" '],
-            ['title="Play" ']
-        ])('stays quiet when named with %s', async (attrs) => {
+        it.each([['aria-label="Play" '], ['[aria-label]="label" '], ['[attr.aria-labelledby]="id" ']])(
+            'stays quiet when named with %s',
+            async (attrs) => {
+                const { name, html } = firstProject();
+
+                appTree.overwrite(html, iconOnly(attrs));
+
+                const messages = collectLogs();
+
+                await run(name);
+
+                expect(messages.join('\n')).not.toContain('projects icons only');
+            }
+        );
+
+        it('still reports one carrying only a title, which never reaches the inner button', async () => {
             const { name, html } = firstProject();
 
-            appTree.overwrite(html, iconOnly(attrs));
+            appTree.overwrite(html, iconOnly('title="Play" '));
 
             const messages = collectLogs();
 
             await run(name);
 
-            expect(messages.join('\n')).not.toContain('projects icons only');
+            expect(messages.join('\n')).toContain('projects icons only');
         });
 
         it('stays quiet when the toggle also projects a label', async () => {

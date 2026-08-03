@@ -73,12 +73,13 @@ export class KbqButtonToggleChange {
 export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit, OnDestroy {
     readonly ariaLabel: _angular_core.InputSignal<string | null>;
     readonly ariaLabelledby: _angular_core.InputSignal<string | null>;
+    protected readonly ariaOrientation: _angular_core.Signal<"vertical" | "horizontal" | null>;
     readonly buttonToggles: _angular_core.Signal<readonly KbqButtonToggle[]>;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
     controlValueAccessorChangeFn: (value: any) => void;
     get disabled(): boolean;
     set disabled(value: boolean);
-    emitChangeEvent(): void;
+    emitChangeEvent(source: KbqButtonToggle): void;
     isPrechecked(toggle: KbqButtonToggle): boolean;
     isSelected(toggle: KbqButtonToggle): boolean;
     readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;

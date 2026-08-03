@@ -457,6 +457,29 @@ describe('KbqButton', () => {
             expect(anchor.getAttribute('role')).toBe('button');
         });
 
+        // The fixture components are declared below, so the table hands back a class rather than one.
+        it.each([
+            ['without href', () => AnchorWithoutHrefTestApp, 'a'],
+            ['with href', () => TestApp, 'a[href]']
+        ])('should not rewrite the role of a settled anchor %s on every check', (_, testApp, selector) => {
+            // `updateRole` runs from `ngAfterViewChecked`, i.e. on every pass, so an anchor whose role
+            // is already right must not keep writing it to the DOM.
+            const fixture = TestBed.createComponent(testApp());
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            const anchor: HTMLAnchorElement = fixture.debugElement.query(By.css(selector)).nativeElement;
+            const setAttribute = jest.spyOn(anchor, 'setAttribute');
+            const removeAttribute = jest.spyOn(anchor, 'removeAttribute');
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(setAttribute).not.toHaveBeenCalledWith('role', expect.anything());
+            expect(removeAttribute).not.toHaveBeenCalledWith('role');
+        });
+
         it('should use the native disabled attribute on a button and aria-disabled on an anchor', () => {
             const fixture = TestBed.createComponent(TestApp);
             const testComponent = fixture.debugElement.componentInstance;

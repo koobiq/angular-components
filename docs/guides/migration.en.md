@@ -571,6 +571,7 @@ The review of `kbq-button-toggle` gave the control the semantics it always behav
 | Surface                                    | Before                     | After                                                                                         |
 | ------------------------------------------ | -------------------------- | --------------------------------------------------------------------------------------------- |
 | `<kbq-button-toggle-group>`                | no role, no way to name it | `role="radiogroup"`, or `role="group"` with `multiple`; `aria-label`/`aria-labelledby` inputs |
+| `<kbq-button-toggle-group>`, radio group   | no orientation             | `aria-orientation`, following `vertical`                                                      |
 | inner `<button>`, single selection         | no role, no state          | `role="radio"` + `aria-checked`                                                               |
 | inner `<button>`, `multiple` or standalone | no state                   | `aria-pressed`                                                                                |
 | Tab in a single-selection group            | every toggle is a tab stop | one tab stop — the selected toggle, or the first enabled one                                  |
@@ -603,21 +604,34 @@ ng g @koobiq/components:button-toggle-signals-and-aria --project <your project>
 - group.vertical → group.vertical(),
 - group.multiple → group.multiple()
 
-Receivers are matched by explicit type annotation only, so an alias (`const g = this.group; g.multiple`) is left untouched. Every replacement is idempotent.
+Receivers are resolved within the file: an explicit type annotation, an import under an alias (`KbqButtonToggleGroup as Group`), and a `viewChild()` / `contentChild()` / `inject()` initialiser are all recognised, and a nested declaration of the same name shadows the group rather than being rewritten as one. What is left over is a receiver whose type lives in another file (`const g = this.group; g.multiple`), which is reported instead. Every replacement is idempotent.
 
-**Icon-only toggles with no accessible name are reported with their line number.** Every `<kbq-button-toggle>` whose content holds an icon and no text at all, and that carries no `aria-label` / `aria-labelledby` / `title`, is listed. The schematic cannot invent the text, but it finds the places the new dev-mode warning will fire in.
+**Icon-only toggles with no accessible name are reported with their line number.** Every `<kbq-button-toggle>` whose content holds an icon and no text at all, and that carries no `aria-label` / `aria-labelledby`, is listed. A `title` does not count: it stays on `<kbq-button-toggle>`, while the accessible name is computed for the inner `<button>` and the attribute never reaches it. The schematic cannot invent the text, but it finds the places the new dev-mode warning will fire in.
 
 #### What you need to fix manually
 
 **`vertical` and `multiple` are signal inputs.** Template bindings are unchanged; reads and imperative writes are not:
+
+A read gains a call; a write has nowhere to go, because an `input()` has no `.set()` — bind it in the template and drive the bound value:
 
 ```ts
 // Before
 group.vertical = true;
 if (group.multiple) { ... }
 
-// After — bind the input instead of writing it
+// After
+this.isVertical = true; // <kbq-button-toggle-group [vertical]="isVertical">
 if (group.multiple()) { ... }
+```
+
+**`emitChangeEvent()` takes the toggle the change came from.** It used to read the source off the selection, which is empty right after the last toggle of a multiple-selection group is unchecked — `KbqButtonToggleChange.source` came out `undefined` there, against its own type. The group passes the interacted toggle now; a call of your own has to do the same:
+
+```ts
+// Before
+group.emitChangeEvent();
+
+// After
+group.emitChangeEvent(toggle);
 ```
 
 **Members that were never meant to be public are gone or narrowed.** `buttonToggleGroup` is `protected` (it was typed non-null while being `null` for a standalone toggle), `icons` is private, and the dead `mcButton` view query was removed. Use `focus()`, which now focuses the inner button instead of the non-focusable host, or the new `focusViaKeyboard()`.
@@ -631,6 +645,8 @@ if (group.multiple()) { ... }
 **`tabIndex` defaults to `null`** instead of `undefined`, which is what its declared type always said.
 
 **`markForCheck()` on a toggle is no longer called by the library.** A toggle derives `checked` and `disabled` from signals owned by its group and re-renders on its own. The method is kept for back-compatibility.
+
+**The group implements `OnDestroy` and no longer emits after teardown.** A selected toggle schedules its own removal from the selection on a microtask, which used to outlive the group and reach it with a `valueChange` once the whole group had already been destroyed. The group ignores that late sync now. A test asserting the old emission, or code that relied on it to clean up after a destroyed group, needs re-checking.
 
 **Styles.** The keyboard-focus `border-color` is set by the theme alone, from `--kbq-button-toggle-item-states-focused-outline`; the structural stylesheet no longer declares it from the raw `--kbq-states-line-focus-theme` token, so overriding the component token works regardless of import order. The theme also stopped targeting `.kbq-icon-button`, a class `KbqButton` never emitted, in favour of `.kbq-button-icon`.
 

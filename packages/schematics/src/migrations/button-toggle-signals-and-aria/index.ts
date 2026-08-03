@@ -20,7 +20,9 @@ import {
     tsWarnPatterns,
     UNNAMED_ICON_TOGGLE_MESSAGE,
     UNPARSEABLE_TEMPLATE_MESSAGE,
-    WRITE_MESSAGES
+    UNRESOLVED_SIGNAL_READ_MESSAGE,
+    WRITE_MESSAGES,
+    WRITE_ONLY_MANUAL_MEMBERS
 } from './data';
 import { Schema } from './schema';
 
@@ -37,12 +39,12 @@ interface Edit {
     text: string;
 }
 
-/** A receiver whose static type is a group or a toggle, valid within `[start, end]` of the source. */
-interface Receiver {
-    /** Source text of the receiver expression, e.g. `group` or `this.group`. */
+/** A declaration a receiver expression can resolve to, in effect within `[start, end]` of the source. */
+interface Declaration {
+    /** Source text the declaration is reachable by, e.g. `group`, `this.group` or `this.group()`. */
     text: string;
-    /** Whether the receiver is the group; a toggle only ever carries manual members. */
-    isGroup: boolean;
+    /** Button-toggle type it holds, or `undefined` for an unrelated declaration that merely shadows. */
+    typeName?: string;
     start: number;
     end: number;
 }
@@ -102,13 +104,35 @@ function findAncestor(node: ts.Node, predicate: (node: ts.Node) => boolean): ts.
     return undefined;
 }
 
+/** Local names the button-toggle types are reachable by in this file, `import { X as Y }` included. */
+function collectTypeAliases(sourceFile: ts.SourceFile): Map<string, string> {
+    const aliases = new Map<string, string>([
+        [GROUP_TYPE, GROUP_TYPE],
+        [TOGGLE_TYPE, TOGGLE_TYPE]
+    ]);
+
+    for (const statement of sourceFile.statements) {
+        if (!ts.isImportDeclaration(statement)) continue;
+
+        const bindings = statement.importClause?.namedBindings;
+
+        if (!bindings || !ts.isNamedImports(bindings)) continue;
+
+        for (const element of bindings.elements) {
+            const imported = (element.propertyName ?? element.name).text;
+
+            if (imported === GROUP_TYPE || imported === TOGGLE_TYPE) aliases.set(element.name.text, imported);
+        }
+    }
+
+    return aliases;
+}
+
 /** The button-toggle type a type annotation refers to, if any. */
-function toggleTypeOf(type: ts.TypeNode | undefined): string | undefined {
+function toggleTypeOf(type: ts.TypeNode | undefined, aliases: ReadonlyMap<string, string>): string | undefined {
     if (!type || !ts.isTypeReferenceNode(type) || !ts.isIdentifier(type.typeName)) return undefined;
 
-    const name = type.typeName.text;
-
-    return name === GROUP_TYPE || name === TOGGLE_TYPE ? name : undefined;
+    return aliases.get(type.typeName.text);
 }
 
 const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
@@ -118,44 +142,88 @@ const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
     ts.SyntaxKind.ReadonlyKeyword
 ]);
 
+/** Factories that hand back a signal, so the declaration is read through a call: `this.group()`. */
+const QUERY_FACTORIES = new Set(['viewChild', 'contentChild']);
+
+/** Factories that hand back the instance itself. */
+const INSTANCE_FACTORIES = new Set(['inject']);
+
 /**
- * Collects the receivers whose static type is a group or a toggle, by explicit annotation only (no
- * cross-package type resolution): method/function params, class fields (incl. view queries and constructor
- * parameter-properties) and typed locals.
+ * The button-toggle an initialiser holds, for the shapes that carry no type annotation to read —
+ * `viewChild(X)`, `viewChild.required(X)`, `contentChild(X)` and `inject(X)`, which is how a modern
+ * Angular consumer reaches a group.
  */
-function collectReceivers(sourceFile: ts.SourceFile): Receiver[] {
-    const receivers: Receiver[] = [];
-    const add = (text: string, typeName: string, scope: ts.Node) =>
-        receivers.push({
-            text,
-            isGroup: typeName === GROUP_TYPE,
-            start: scope.getStart(sourceFile),
-            end: scope.getEnd()
-        });
+function initializerTypeOf(
+    initializer: ts.Expression | undefined,
+    aliases: ReadonlyMap<string, string>
+): { typeName: string; isCall: boolean } | undefined {
+    if (!initializer || !ts.isCallExpression(initializer)) return undefined;
+
+    const callee = initializer.expression;
+    let factory: string | undefined;
+
+    if (ts.isIdentifier(callee)) {
+        factory = callee.text;
+    } else if (ts.isPropertyAccessExpression(callee) && ts.isIdentifier(callee.expression)) {
+        // `viewChild.required(X)` — the `.required` variant of the same factory.
+        factory = callee.name.text === 'required' ? callee.expression.text : undefined;
+    }
+
+    const [argument] = initializer.arguments;
+    const typeName = factory && argument && ts.isIdentifier(argument) ? aliases.get(argument.text) : undefined;
+
+    if (!factory || !typeName) return undefined;
+    if (QUERY_FACTORIES.has(factory)) return { typeName, isCall: true };
+    if (INSTANCE_FACTORIES.has(factory)) return { typeName, isCall: false };
+
+    return undefined;
+}
+
+/**
+ * Collects every declaration a receiver can resolve to — not only the ones typed as a button-toggle.
+ * An unrelated declaration of the same name has to be collected as well: it is what makes a nested
+ * `const group = { vertical: 'north' }` shadow an outer group instead of being rewritten as one.
+ *
+ * Types are read from an explicit annotation or from a signal-query / `inject()` initialiser; there is
+ * no cross-file type resolution, so a receiver whose type lives elsewhere resolves to nothing.
+ */
+function collectDeclarations(sourceFile: ts.SourceFile, aliases: ReadonlyMap<string, string>): Declaration[] {
+    const declarations: Declaration[] = [];
+    const add = (text: string, typeName: string | undefined, scope: ts.Node) =>
+        declarations.push({ text, typeName, start: scope.getStart(sourceFile), end: scope.getEnd() });
+
+    /** A declaration reached by its own name, plus the call form when it holds a signal. */
+    const addWithInitializer = (
+        name: string,
+        node: ts.PropertyDeclaration | ts.VariableDeclaration,
+        scope: ts.Node
+    ) => {
+        const annotated = toggleTypeOf(node.type, aliases);
+        const initialized = annotated ? undefined : initializerTypeOf(node.initializer, aliases);
+
+        add(name, annotated ?? (initialized?.isCall ? undefined : initialized?.typeName), scope);
+
+        if (initialized?.isCall) add(`${name}()`, initialized.typeName, scope);
+    };
 
     const visit = (node: ts.Node): void => {
         if (ts.isParameter(node) && ts.isIdentifier(node.name)) {
-            const typeName = toggleTypeOf(node.type);
+            const typeName = toggleTypeOf(node.type, aliases);
 
-            if (typeName) {
-                add(node.name.text, typeName, findAncestor(node, isFunctionLike) ?? sourceFile);
+            add(node.name.text, typeName, findAncestor(node, isFunctionLike) ?? sourceFile);
 
-                // A constructor parameter-property is also a class field, reachable as `this.<name>`.
-                if (node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
-                    const owner = findAncestor(node, ts.isClassDeclaration);
+            // A constructor parameter-property is also a class field, reachable as `this.<name>`.
+            if (node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
+                const owner = findAncestor(node, ts.isClassDeclaration);
 
-                    if (owner) add(`this.${node.name.text}`, typeName, owner);
-                }
+                if (owner) add(`this.${node.name.text}`, typeName, owner);
             }
         } else if (ts.isPropertyDeclaration(node) && ts.isIdentifier(node.name)) {
-            const typeName = toggleTypeOf(node.type);
-            const owner = typeName ? findAncestor(node, ts.isClassDeclaration) : undefined;
+            const owner = findAncestor(node, ts.isClassDeclaration);
 
-            if (typeName && owner) add(`this.${node.name.text}`, typeName, owner);
+            if (owner) addWithInitializer(`this.${node.name.text}`, node, owner);
         } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
-            const typeName = toggleTypeOf(node.type);
-
-            if (typeName) add(node.name.text, typeName, findAncestor(node, isFunctionLike) ?? sourceFile);
+            addWithInitializer(node.name.text, node, findAncestor(node, isFunctionLike) ?? sourceFile);
         }
 
         node.forEachChild(visit);
@@ -163,20 +231,31 @@ function collectReceivers(sourceFile: ts.SourceFile): Receiver[] {
 
     visit(sourceFile);
 
-    return receivers;
+    return declarations;
 }
 
-/** The receiver a property access belongs to, if the access is within that receiver's scope. */
-function receiverOf(
+/**
+ * The declaration a receiver resolves to: the innermost scope that still contains the access, which is
+ * the one with the latest start. Matching the name alone is not enough — an unrelated local of the same
+ * name has to win over an outer group, or the rewrite lands on code that is not a button-toggle at all.
+ */
+function resolveDeclaration(
     node: ts.PropertyAccessExpression,
     sourceFile: ts.SourceFile,
-    receivers: Receiver[]
-): Receiver | undefined {
-    const receiverText = node.expression.getText(sourceFile);
+    declarations: readonly Declaration[]
+): Declaration | undefined {
+    const text = node.expression.getText(sourceFile);
     const start = node.getStart(sourceFile);
     const end = node.getEnd();
+    let resolved: Declaration | undefined;
 
-    return receivers.find((r) => r.text === receiverText && start >= r.start && end <= r.end);
+    for (const declaration of declarations) {
+        if (declaration.text !== text || start < declaration.start || end > declaration.end) continue;
+
+        if (!resolved || declaration.start > resolved.start) resolved = declaration;
+    }
+
+    return resolved;
 }
 
 /** The signal method a member access is immediately followed by, if any (`x.multiple.set`). */
@@ -191,6 +270,18 @@ const isAssignmentTarget = (node: ts.PropertyAccessExpression): boolean =>
     ts.isBinaryExpression(node.parent) &&
     node.parent.left === node &&
     node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken;
+
+/** Whether a member access is already a call, i.e. reads a signal the way the new API expects. */
+const isCalled = (node: ts.PropertyAccessExpression): boolean =>
+    ts.isCallExpression(node.parent) && node.parent.expression === node;
+
+/**
+ * Whether a member of a removed-or-narrowed receiver has to be reported. Most of them break on any
+ * access, having become `private`/`protected` or gone altogether; the ones that only turned into a
+ * read-only getter still read exactly as they did, so only an assignment is worth a line.
+ */
+const isBreakingManualAccess = (member: string, node: ts.PropertyAccessExpression): boolean =>
+    MANUAL_MEMBERS.has(member) && (!WRITE_ONLY_MANUAL_MEMBERS.has(member) || isAssignmentTarget(node));
 
 /**
  * Classifies a matched property access of a group signal member: a read becomes a call, a write is left to
@@ -217,24 +308,28 @@ function classifySignalAccess(node: ts.PropertyAccessExpression, edits: Edit[], 
 /** Pass A — rewrite reads of the group's signal inputs and collect what cannot be rewritten. */
 function migrateTs(content: string, fileName: string): { content: string; findings: Findings } {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile);
+    const aliases = collectTypeAliases(sourceFile);
+    const declarations = collectDeclarations(sourceFile, aliases);
     const findings = emptyFindings();
-
-    if (receivers.length === 0) return { content, findings };
-
     const edits: Edit[] = [];
+
+    // A receiver typed elsewhere resolves to nothing here, so a signal read on it is neither rewritten
+    // nor reported by name. Worth one line per file, but only where a group is actually in play.
+    const namesGroup = content.includes(GROUP_TYPE);
 
     const visit = (node: ts.Node): void => {
         if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
-            const receiver = receiverOf(node, sourceFile, receivers);
+            const declaration = resolveDeclaration(node, sourceFile, declarations);
             const member = node.name.text;
 
-            if (receiver) {
-                if (receiver.isGroup && SIGNAL_MEMBERS.includes(member)) {
+            if (declaration?.typeName) {
+                if (declaration.typeName === GROUP_TYPE && SIGNAL_MEMBERS.includes(member)) {
                     classifySignalAccess(node, edits, findings);
-                } else if (MANUAL_MEMBERS.has(member)) {
+                } else if (isBreakingManualAccess(member, node)) {
                     findings.manual.add(member);
                 }
+            } else if (!declaration && namesGroup && SIGNAL_MEMBERS.includes(member) && !isCalled(node)) {
+                findings.notes.add(UNRESOLVED_SIGNAL_READ_MESSAGE);
             }
         }
 
@@ -312,7 +407,8 @@ class TemplateCollector implements Visitor {
         }
 
         if (element.name === TOGGLE_ELEMENT && hasIcon(element) && !hasTextContent(element)) {
-            // `title` counts: KbqButtonToggle checks it too before warning, and the browser exposes it.
+            // A `title` here does not count: it stays on the host, while the name is computed for the
+            // inner button. `KbqButtonToggle` does not accept it either.
             if (!hasAttr(element, NAME_ATTRS)) {
                 this.unnamedToggleLines.push((element.startSourceSpan?.start.line ?? 0) + 1);
             }
@@ -343,12 +439,15 @@ class TemplateCollector implements Visitor {
 /**
  * Matches `<ref>.<member>` where the access is neither already a call nor a signal-API call. A template can
  * only read these, so an assignment never needs excluding.
+ *
+ * The dot is matched with the whitespace around it — Angular's expression grammar allows `group . multiple`
+ * and a binding wrapped over two lines — and that whitespace is captured so the rewrite keeps the layout.
  */
 function memberAccessPattern(ref: string): RegExp {
     const methods = [...SIGNAL_API_METHODS].join('|');
 
     return new RegExp(
-        `\\b(${escapeRegExp(ref)})\\.(${SIGNAL_MEMBERS.join('|')})\\b(?!\\s*\\()(?!\\s*\\.\\s*(?:${methods})\\b)`,
+        `\\b(${escapeRegExp(ref)})(\\s*\\.\\s*)(${SIGNAL_MEMBERS.join('|')})\\b(?!\\s*\\()(?!\\s*\\.\\s*(?:${methods})\\b)`,
         'g'
     );
 }
@@ -359,7 +458,7 @@ function rewriteRefReads(template: string, refs: string[]): { content: string; c
     let changed = false;
 
     for (const ref of refs) {
-        const next = content.replace(memberAccessPattern(ref), '$1.$2()');
+        const next = content.replace(memberAccessPattern(ref), '$1$2$3()');
 
         if (next !== content) {
             content = next;
@@ -370,13 +469,16 @@ function rewriteRefReads(template: string, refs: string[]): { content: string; c
     return { content, changed };
 }
 
-/** Manual members read through a group reference variable in a template. */
+/**
+ * Manual members read through a group reference variable in a template. A template cannot assign, so the
+ * members that only broke for writers — the ones that became read-only getters — are left out.
+ */
 function collectRefManualMembers(template: string, refs: string[]): Set<string> {
-    const members = [...MANUAL_MEMBERS.keys()];
+    const members = [...MANUAL_MEMBERS.keys()].filter((member) => !WRITE_ONLY_MANUAL_MEMBERS.has(member));
     const found = new Set<string>();
 
     for (const ref of refs) {
-        const pattern = new RegExp(`\\b${escapeRegExp(ref)}\\.(${members.join('|')})\\b`, 'g');
+        const pattern = new RegExp(`\\b${escapeRegExp(ref)}\\s*\\.\\s*(${members.join('|')})\\b`, 'g');
 
         for (const match of template.matchAll(pattern)) {
             found.add(match[1]);

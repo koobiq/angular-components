@@ -90,6 +90,7 @@ export class KbqButtonToggleChange {
         '[class.kbq-button-toggle_vertical]': 'vertical()',
         '[class.kbq-button-toggle-group_stretched]': 'stretched()',
         '[attr.role]': 'role()',
+        '[attr.aria-orientation]': 'ariaOrientation()',
         '[attr.aria-label]': 'ariaLabel()',
         '[attr.aria-labelledby]': 'ariaLabelledby()'
     },
@@ -188,6 +189,19 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     protected readonly role = computed(() => (this.multiple() ? 'group' : 'radiogroup'));
 
     /**
+     * Layout of the group, announced alongside its role so that the arrow-key affordance a screen
+     * reader describes matches the direction the toggles actually run in.
+     *
+     * A radio group is the only mode that has one: `role="group"` does not support `aria-orientation`
+     * (AXE `aria-allowed-attr`), and with `multiple` there are no arrow keys to describe anyway.
+     */
+    protected readonly ariaOrientation = computed(() => {
+        if (this.multiple()) return null;
+
+        return this.vertical() ? 'vertical' : 'horizontal';
+    });
+
+    /**
      * Whether the group has been destroyed. A selected toggle schedules its own removal from the
      * selection on a microtask, which outlives a teardown of the whole group.
      */
@@ -256,11 +270,15 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
         this.disabled = isDisabled;
     }
 
-    /** Dispatch change event with current selection and group value. */
-    emitChangeEvent(): void {
-        const selected = this.selected;
-        const source = Array.isArray(selected) ? selected[selected.length - 1] : selected;
-        const event = new KbqButtonToggleChange(source!, this.value);
+    /**
+     * Dispatches a change event for the group value.
+     *
+     * @param source Toggle the change originated from. Taken from the interaction rather than from the
+     * selection, which is empty whenever the last selected toggle of a multiple-selection group is
+     * unchecked — there is no "last selected" toggle left to report then.
+     */
+    emitChangeEvent(source: KbqButtonToggle): void {
+        const event = new KbqButtonToggleChange(source, this.value);
 
         this.controlValueAccessorChangeFn(event.value);
         this.change.emit(event);
@@ -299,7 +317,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
         // Only emit the change event for user input.
         if (isUserInput) {
-            this.emitChangeEvent();
+            this.emitChangeEvent(toggle);
         }
 
         // Note: we emit this one no matter whether it was a user interaction, because
@@ -694,16 +712,19 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
 
     /**
      * `KbqIcon` renders a decorative glyph, so an icon-only toggle carries no text. Without an
-     * `aria-label`/`aria-labelledby`/`title` its button has no accessible name at all (AXE
-     * `button-name`). `KbqButtonCssStyler` cannot warn about it here: a toggle projects its icons
-     * through its own wrapper, so the button's own content query never sees them.
+     * `aria-label`/`aria-labelledby` its button has no accessible name at all (AXE `button-name`).
+     * `KbqButtonCssStyler` cannot warn about it here: a toggle projects its icons through its own
+     * wrapper, so the button's own content query never sees them.
+     *
+     * A `title` on the host is deliberately not accepted as a name: the host is not the element the
+     * accessible name is computed for — the inner button is — and the attribute never reaches it.
      */
     private warnIfIconOnlyHasNoAccessibleName(): void {
         if (!isDevMode() || this.accessibleNameWarned || this._iconType() !== '-icon') return;
 
-        const host = this.element.nativeElement;
+        if (this.ariaLabel() || this.ariaLabelledby()) return;
 
-        if (this.ariaLabel() || this.ariaLabelledby() || host.hasAttribute('title')) return;
+        const host = this.element.nativeElement;
 
         this.accessibleNameWarned = true;
 
