@@ -15,20 +15,20 @@ import { KbqIcon } from '@koobiq/components/icon';
     template: `
         <div kbq-button-group>
             <button kbq-button>
-                <i kbq-icon="kbq-diamond_16"></i>
+                <i kbqButtonPrefix kbq-icon="kbq-diamond_16"></i>
                 {{ data[0] }}
             </button>
 
             <button kbq-button class="kbq-dropdown-trigger">
                 {{ data[1] }}
-                <i kbq-icon="kbq-chevron-down-s_16"></i>
+                <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
             <button kbq-button>
                 {{ data[2] }}
             </button>
 
-            <button kbq-button>
+            <button kbq-button aria-label="More">
                 <i kbq-icon="kbq-ellipsis-vertical_16"></i>
             </button>
         </div>

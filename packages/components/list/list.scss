@@ -1,3 +1,4 @@
+@use '../core/option/action-container-mixins' as action-container;
 @use '../core/styles/common/list';
 @use '../core/styles/common/vendor-prefixes';
 @use './list-theme' as theme;
@@ -29,18 +30,10 @@
     @include vendor-prefixes.user-select(none);
     @include list.kbq-list-item-base();
     @include _kbq-list-item-border-radius();
+    @include action-container.kbq-option-action-visibility('.kbq-list-selection.cdk-keyboard-focused');
 
     &:not(.kbq-disabled) {
         cursor: pointer;
-
-        &.kbq-hovered,
-        &:hover,
-        &.kbq-focused,
-        &.kbq-action-button-focused {
-            & .kbq-action-container {
-                display: flex;
-            }
-        }
     }
 }
 

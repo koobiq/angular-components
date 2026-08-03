@@ -13,6 +13,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqLabel } from '@koobiq/components/form-field';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
@@ -34,6 +35,7 @@ export class KbqFocusRegionItem {
 // @public
 export class KbqInlineEdit {
     constructor();
+    protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly anchorFocused: _angular_core.WritableSignal<boolean>;
     protected cancel(): void;
     protected readonly canceled: _angular_core.OutputEmitterRef<void>;

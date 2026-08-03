@@ -30,6 +30,7 @@ import {
     ViewEncapsulation,
     afterNextRender,
     booleanAttribute,
+    computed,
     contentChild,
     inject,
     input,
@@ -57,6 +58,7 @@ import {
     KbqAbstractSelect,
     KbqComponentColors,
     KbqLocaleService,
+    KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
@@ -64,6 +66,7 @@ import {
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectTrigger,
+    KbqSiblingPopup,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -79,7 +82,9 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
+    kbqSiblingPopupProvider,
     shouldSelectSearchText
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -121,6 +126,11 @@ export type KbqTreeSelectOptions = Partial<{
      * explicit `panelWidth`. If null, the `--kbq-panel-size-width-max` token applies.
      */
     panelMaxWidth: KbqPanelMaxWidth;
+    /**
+     * Maximum height of the panel's scrollable option list. Does not include the search field or the
+     * footer. If null, the `--kbq-select-panel-size-max-height` token applies.
+     */
+    panelMaxHeight: KbqPanelMaxHeight;
     /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
@@ -168,7 +178,8 @@ export class KbqTreeSelectChange {
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
         { provide: KbqTree, useExisting: KbqTreeSelect },
-        { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect }
+        { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect },
+        kbqSiblingPopupProvider(KbqTreeSelect)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -201,7 +212,8 @@ export class KbqTreeSelect
         DoCheck,
         ControlValueAccessor,
         KbqFormFieldControl<KbqTreeOption>,
-        CanUpdateErrorState
+        CanUpdateErrorState,
+        KbqSiblingPopup
 {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -321,7 +333,12 @@ export class KbqTreeSelect
     //  Your application code writes to the input. This prevents migration.
     @Input() hiddenItemsText: string = '+{{ number }}';
 
-    /** Event emitted when the select panel has been toggled. */
+    /**
+     * Event emitted when the select panel has been toggled.
+     * Also serves as the `openedChange` member of the `KbqSiblingPopup` contract — a tooltip sharing
+     * this element's host reacts to it, so its emission timing (gated on `panelDoneAnimatingStream`, see
+     * `ngOnInit`) matters beyond this output's original consumers.
+     */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Event emitted when the select has been opened. */
@@ -645,6 +662,25 @@ export class KbqTreeSelect
     );
 
     /**
+     * Maximum height of the panel's scrollable option list, in pixels. Applied as the
+     * `--kbq-select-panel-size-max-height` custom property on the panel.
+     *
+     * The search field and the footer sit outside the scrollable area and add to the panel's total height.
+     * When null, the token default (256px) applies.
+     */
+    readonly panelMaxHeight = input<KbqPanelMaxHeight, unknown>(
+        this.defaultOptions?.panelMaxHeight === undefined ? null : this.defaultOptions.panelMaxHeight,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * `panelMaxHeight` rendered as a CSS length for the `--kbq-select-panel-size-max-height` token.
+     * A non-finite value (e.g. `null`) leaves the stylesheet default in place.
+     * @docs-private
+     */
+    protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
+
+    /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
      * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
@@ -665,6 +701,11 @@ export class KbqTreeSelect
     private _searchMinOptionsThreshold = this.resolveSearchMinOptionsThreshold();
 
     get panelOpen(): boolean {
+        return this._panelOpen;
+    }
+
+    /** Whether the overlay panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
+    get isAttached(): boolean {
         return this._panelOpen;
     }
 

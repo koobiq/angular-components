@@ -108,7 +108,12 @@ export class ExampleGrid {
             <div>Click any table row to open Content panel</div>
             <div class="example-modal-title-actions">
                 <button kbq-button [color]="componentColors.Contrast" (click)="modalRef.close()">Close window</button>
-                <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
+                <button
+                    kbq-button
+                    aria-label="More"
+                    [color]="componentColors.Contrast"
+                    [kbqStyle]="buttonStyles.Transparent"
+                >
                     <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
                 </button>
             </div>
@@ -125,6 +130,7 @@ export class ExampleGrid {
                         @for (_i of [0, 1, 2, 3]; track $index) {
                             <button
                                 kbq-button
+                                aria-label="Report a bug"
                                 [class.kbq-active]="$first"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
@@ -140,13 +146,28 @@ export class ExampleGrid {
                             <a kbq-link pseudo>July 21, 2025 2:29 PM</a>
                         </div>
                         <div class="example-content-header-actions" kbqContentPanelHeaderActions>
-                            <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
+                            <button
+                                kbq-button
+                                aria-label="Copy link"
+                                [color]="componentColors.Contrast"
+                                [kbqStyle]="buttonStyles.Transparent"
+                            >
                                 <i kbq-icon="kbq-link_16"></i>
                             </button>
-                            <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
+                            <button
+                                kbq-button
+                                aria-label="Expand"
+                                [color]="componentColors.Contrast"
+                                [kbqStyle]="buttonStyles.Transparent"
+                            >
                                 <i kbq-icon="kbq-arrows-expand-diagonal_16"></i>
                             </button>
-                            <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
+                            <button
+                                kbq-button
+                                aria-label="More"
+                                [color]="componentColors.Contrast"
+                                [kbqStyle]="buttonStyles.Transparent"
+                            >
                                 <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                             </button>
                         </div>

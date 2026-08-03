@@ -1,5 +1,7 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
+    KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
@@ -7,6 +9,16 @@ import {
 } from './types';
 
 export const ptBRLocaleData = {
+    a11y: {
+        close: 'Fechar',
+        save: 'Salvar',
+        cancel: 'Cancelar',
+        removeAll: 'Remover tudo',
+        expandBreadcrumbs: 'Mostrar itens ocultos',
+        previousMonth: 'Mês anterior',
+        currentDate: 'Data atual',
+        nextMonth: 'Próximo mês'
+    } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'dd/mm/yyyy'
@@ -130,8 +142,9 @@ export const ptBRLocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Pesquisar',
         searchEmptyResult: 'Nada encontrado',
-        sitesHeader: 'Outros sites'
-    },
+        sitesHeader: 'Outros sites',
+        clearSearch: 'Limpar a pesquisa'
+    } satisfies KbqAppSwitcherConfiguration,
     timeRange: {
         title: {
             for: 'para',

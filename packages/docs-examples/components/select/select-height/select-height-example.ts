@@ -9,7 +9,17 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select [panelClass]="'example-select-panel-height'" [(value)]="value">
+            <kbq-label>panelMaxHeight</kbq-label>
+            <kbq-select [panelMaxHeight]="500" [(value)]="value">
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-label>--kbq-select-panel-size-max-height</kbq-label>
+            <kbq-select [panelClass]="'example-select-panel-height'" [(value)]="themedValue">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -17,13 +27,16 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </kbq-form-field>
     `,
     styles: `
+        /* The same height set through the design token on a class passed via panelClass. */
         ::ng-deep .example-select-panel-height.kbq-select__panel {
             --kbq-select-panel-size-max-height: 500px;
         }
 
         :host {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
+            gap: var(--kbq-size-l);
             padding: var(--kbq-size-l);
         }
 
@@ -36,4 +49,5 @@ import { KbqSelectModule } from '@koobiq/components/select';
 export class SelectHeightExample {
     readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i + 1}`);
     protected readonly value = model(this.options[0]);
+    protected readonly themedValue = model(this.options[0]);
 }

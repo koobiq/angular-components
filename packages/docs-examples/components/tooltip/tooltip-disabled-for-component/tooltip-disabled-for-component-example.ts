@@ -14,7 +14,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <button kbq-button (click)="disableState = !disableState">toggle</button>
 
         <div kbqTooltip="kbq-button" [forDisabledComponent]="button">
-            <button #button kbq-button [disabled]="disableState">
+            <button #button kbq-button aria-label="Add" [disabled]="disableState">
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
         </div>

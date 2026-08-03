@@ -50,9 +50,25 @@ If additional controls need to be arranged, you can enable the display of a foot
 
 By default, the maximum height of the list is 256px. When there are many selections in the select-footer, the drop-down menu will appear scrolling.
 
-You can customize the height if needed. For example, in a normal menu, 7-8 items are visible. If there are 10 options to choose from, you can increase the height of the list and show all the items without hiding a small part under the scroll.
+You can customize the height if needed. For example, in a normal menu, 7-8 items are visible. If there are 10 options to choose from, you can increase the height of the list and show all the items without hiding a small part under the scroll. Use the `panelMaxHeight` attribute with a value in pixels.
 
 <!-- example(select-height) -->
+
+`panelMaxHeight` caps the scrollable option list. A search field and a footer are rendered beside the list, so they add to the total height of the panel. A value larger than the space left in the viewport is clipped by the overlay rather than scrolled. With `cdk-virtual-scroll-viewport` the value is an exact height rather than a cap, because a virtual scroller needs a definite height.
+
+To set the height for all selects within a module that share common display rules, you can use the `kbqSelectOptionsProvider`.
+
+```ts
+import { kbqSelectOptionsProvider } from '@koobiq/components/select';
+
+@NgModule({
+    providers: [
+        kbqSelectOptionsProvider({ panelMaxHeight: 400 })
+    ]
+})
+```
+
+For theming, the same height is available as the `--kbq-select-panel-size-max-height` token — set it on `:root` to change every panel at once, or on a class passed through `panelClass` to change a single one. The example above shows both approaches side by side.
 
 ### Select width
 

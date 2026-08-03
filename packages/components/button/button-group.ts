@@ -26,7 +26,7 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
     private readonly buttons = contentChildren(KbqButton);
     /**
      * Style applied to the group and propagated to every nested button.
-     * individual button's style preserved but updated when group input changed.
+     * A button that sets its own `kbqStyle` keeps it.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -45,7 +45,7 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
 
     /**
      * Color applied to the group and propagated to every nested button.
-     * individual button's color preserved but updated when group input changed.
+     * A button that sets its own `color` keeps it.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -62,11 +62,16 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
         this.updateColor(this.color, this.buttons?.());
     }
 
-    /** Whether the root is disabled. */
+    /**
+     * Whether the root is disabled. Disabling the group disables every nested button; re-enabling it
+     * leaves buttons that are disabled through their own input untouched.
+     *
+     * Stays `undefined` while the input is unbound so that nested buttons are not force-enabled.
+     */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
+    get disabled(): boolean | undefined {
         return this._disabled;
     }
 
@@ -77,7 +82,7 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
     }
 
     /** @docs-private */
-    protected _disabled: boolean;
+    protected _disabled: boolean | undefined;
 
     constructor() {
         super();
@@ -90,22 +95,22 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
 
             this.updateColor(this.color, buttons);
             this.updateStyle(this._kbqStyle, buttons);
-            this.updateDisabledState(this.disabled, buttons);
+            this.updateDisabledState(this._disabled, buttons);
         });
     }
 
     private updateColor(color: KbqComponentColors | ThemePalette | string, buttons?: readonly KbqButton[]) {
-        buttons?.forEach((button: KbqButton) => (button.color = color));
+        buttons?.forEach((button: KbqButton) => button.setColorFromGroup(color));
     }
 
     private updateStyle(style: KbqButtonStyles | string, buttons?: readonly KbqButton[]) {
-        buttons?.forEach((button: KbqButton) => (button.kbqStyle = style));
+        buttons?.forEach((button: KbqButton) => button.setKbqStyleFromGroup(style));
     }
 
-    private updateDisabledState(state: boolean, buttons?: readonly KbqButton[]) {
+    private updateDisabledState(state: boolean | undefined, buttons?: readonly KbqButton[]) {
         if (state === undefined) return;
 
-        buttons?.forEach((button: KbqButton) => (button.disabled = state));
+        buttons?.forEach((button: KbqButton) => button.setDisabledFromGroup(state));
     }
 }
 

@@ -41,6 +41,9 @@ import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from 
 
         <tree-select-deleted-nodes-example />
         <hr />
+
+        <tree-select-height-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

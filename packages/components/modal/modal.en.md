@@ -126,6 +126,12 @@ Opening one modal dialog from another is incorrect. But if it happens (as an eco
 
 <!-- example(modal-multiple) -->
 
+#### Fully custom content
+
+When a modal is opened via `KbqModalService.open` with a `kbqComponent`, use the `kbq-modal-title`, `kbq-modal-body`, and `kbq-modal-footer` directives to compose the dialog. They keep the standard layout and scroll shadows, so a long body still casts a shadow onto the header and footer, exactly as in a modal created via `KbqModalService.create`.
+
+<!-- example(modal-full-custom) -->
+
 ### Related components
 
 A modal dialog abruptly concentrates attention on itself, causes the user to lose focus, and prevents interaction with the page beneath it. Therefore, in most cases you should try to avoid modality. These approaches will help you treat the user considerately and avoid modal window stacking:

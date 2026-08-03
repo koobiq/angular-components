@@ -1,0 +1,15 @@
+/**
+ * Sizes specific to the app-switcher, exposed as override points instead of literals scattered across the
+ * component styles.
+ *
+ * Declared on both selectors because the site flyouts render in their own CDK overlay (panel class
+ * `.kbq-app-switcher-sites`) and therefore inherit nothing from `.kbq-app-switcher`. Every consumer still
+ * passes the current value as the `var()` fallback, so the styles hold up even outside these containers.
+ */
+.kbq-app-switcher,
+.kbq-app-switcher-sites {
+    --kbq-app-switcher-size-container-width: 320px;
+    --kbq-app-switcher-size-empty-search-result-height: 96px;
+    --kbq-app-switcher-size-list-item-height-min: 38px;
+    --kbq-app-switcher-size-dropdown-app-height-min: 50px;
+}

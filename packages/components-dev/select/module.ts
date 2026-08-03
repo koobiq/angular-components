@@ -19,6 +19,9 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     imports: [SelectExamplesModule],
     template: `
+        <select-auto-hide-scroll-strategy-example />
+        <hr />
+
         <select-preselected-values-example />
         <hr />
 

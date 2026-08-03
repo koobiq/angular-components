@@ -27,8 +27,4 @@
     .kbq-app-switcher-group-header__badge {
         @include kbq-typography-level-to-styles-css-variables(typography, text-compact-medium);
     }
-
-    .kbq-app-switch-tree-option__text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
-    }
 }

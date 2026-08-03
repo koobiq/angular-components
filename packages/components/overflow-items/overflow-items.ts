@@ -32,7 +32,6 @@ import { debounceTime, merge, skip, switchMap } from 'rxjs';
 @Directive({
     host: {
         '[attr.aria-hidden]': 'hidden()',
-        // @TODO should be refactored (#DS-3834)
         '[class.kbq-overflow-item-hidden]': 'hidden()'
     }
 })

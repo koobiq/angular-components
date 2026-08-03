@@ -23,6 +23,7 @@ import { KbqPanelMaxWidth } from '@koobiq/components/core';
 import { KbqPanelMinWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqPanelWidthOrigin } from '@koobiq/components/core';
+import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -275,7 +276,7 @@ export class KbqDropdownStaticContent {
 }
 
 // @public
-export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
+export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSiblingPopup {
     constructor();
     close(): void;
     data: any;
@@ -288,6 +289,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     handleClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
     handleMousedown(event: MouseEvent): void;
+    get isAttached(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
     isNested(): boolean;
@@ -309,6 +311,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     get opened(): boolean;
     // (undocumented)
     openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
+    readonly openedChange: Observable<boolean>;
     restoreFocus: boolean;
     toggle(): void;
     widthOrigin?: KbqPanelWidthOrigin;

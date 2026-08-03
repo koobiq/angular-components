@@ -7,6 +7,7 @@
     [class]="{ 'kbq-active': select.panelOpen }"
     [ngModel]="selected"
     [panelClass]="'kbq-pipe-multi-tree-select__panel'"
+    [panelMaxHeight]="panelMaxHeight"
     [selectAllHandler]="selectAllHandler"
     [tabIndex]="-1"
     (closed)="onClose()"

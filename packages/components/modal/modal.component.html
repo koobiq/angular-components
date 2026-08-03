@@ -83,6 +83,7 @@
                     kbq-button
                     type="button"
                     class="kbq-modal-close kbq-button_transparent"
+                    [attr.aria-label]="a11yLocaleConfiguration().close"
                     [color]="'contrast'"
                     (click)="onClickCloseBtn()"
                 >

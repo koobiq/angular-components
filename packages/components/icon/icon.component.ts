@@ -138,7 +138,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     private updateState = () => {
-        this.hasError = this.formField?.control?.errorState;
+        this.hasError = !!this.formField?.control()?.errorState;
 
         this.changeDetectorRef.markForCheck();
     };

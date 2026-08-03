@@ -1,5 +1,7 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
+    KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
@@ -7,6 +9,16 @@ import {
 } from './types';
 
 export const enUSLocaleData = {
+    a11y: {
+        close: 'Close',
+        save: 'Save',
+        cancel: 'Cancel',
+        removeAll: 'Remove all',
+        expandBreadcrumbs: 'Show hidden breadcrumbs',
+        previousMonth: 'Previous month',
+        currentDate: 'Current date',
+        nextMonth: 'Next month'
+    } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'yyyy-mm-dd',
@@ -131,8 +143,9 @@ export const enUSLocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Search',
         searchEmptyResult: 'Nothing found',
-        sitesHeader: 'Other sites'
-    },
+        sitesHeader: 'Other sites',
+        clearSearch: 'Clear search'
+    } satisfies KbqAppSwitcherConfiguration,
     timeRange: {
         title: {
             for: 'for',

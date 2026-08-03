@@ -15,6 +15,18 @@ npm install overlayscrollbars@2.7.3
 
 <!-- example(app-switcher-overview) -->
 
+### Application icons
+
+An application can carry either `iconSrc` — a URL loaded into an `<img>` — or `icon`, inline SVG markup rendered
+into the DOM. Because inline markup ends up in the page, it is sanitized against a strict SVG allow-list before
+rendering: `<script>`, `<style>`, `<foreignObject>`, HTML elements, every `on*` handler and any reference to an
+external resource are removed, and markup that changes shape when re-parsed is dropped entirely. An icon that
+loses everything falls back to `iconSrc`.
+
+Prefer `iconSrc` for icons that come from a server. If the sanitizer strips something a legitimate icon needs,
+the icon is likely relying on a feature (external references, embedded HTML) that does not belong in an inline
+icon.
+
 ### Multiple platforms
 
 When the system has multiple platforms, the applications of the selected platform are shown at the top of the list and the platform name is displayed. Other platforms are collapsed at the bottom of the list. 4 or more applications of the same type within a platform are grouped together. The main platform is marked with a badge.

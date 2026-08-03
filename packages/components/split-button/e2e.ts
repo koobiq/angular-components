@@ -63,6 +63,7 @@ type DevButton = DevButtonState & DevButtonStyle;
                                 </button>
                                 <button
                                     kbq-button
+                                    aria-label="More options"
                                     [class.cdk-keyboard-focused]="button.focusedSecond"
                                     [class.kbq-active]="button.activeSecond"
                                     [class.kbq-hover]="button.hoverSecond"
@@ -137,4 +138,60 @@ export class E2eSplitButtonStateAndStyle {
                 if (args.every((a) => a === false)) this.showTitle.set(true);
             });
     }
+}
+
+/**
+ * Label truncation for the leading button of a split-button.
+ *
+ * The leading button is a regular `kbq-button` under the hood, so it truncates exactly like one:
+ * with no icon, or with an icon in `kbqButtonPrefix`, `.kbq-button-text` stays a block container and
+ * the label truncates with an ellipsis. The trailing chevron button is always icon-only and isn't
+ * exercised here.
+ */
+@Component({
+    selector: 'e2e-split-button-truncation',
+    imports: [KbqSplitButtonModule, KbqButtonModule, KbqIconModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            <div class="narrow">
+                <kbq-split-button data-testid="e2eSplitButtonTruncationNoIcon">
+                    <button kbq-button>{{ label }}</button>
+                    <button kbq-button>
+                        <i kbq-icon="kbq-chevron-down-s_16"></i>
+                    </button>
+                </kbq-split-button>
+            </div>
+
+            <div class="narrow">
+                <kbq-split-button data-testid="e2eSplitButtonTruncationPrefixIcon">
+                    <button kbq-button>
+                        <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
+                        {{ label }}
+                    </button>
+                    <button kbq-button>
+                        <i kbq-icon="kbq-chevron-down-s_16"></i>
+                    </button>
+                </kbq-split-button>
+            </div>
+        </div>
+    `,
+    styles: `
+        [data-testid='e2eScreenshotTarget'] {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-m);
+            padding: var(--kbq-size-m);
+        }
+
+        .narrow {
+            width: 180px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSplitButtonTruncation'
+    }
+})
+export class E2eSplitButtonTruncation {
+    protected readonly label = 'Очень длинный текст кнопки, который не помещается';
 }

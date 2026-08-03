@@ -21,7 +21,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Icon+Text</div>
                 <button kbq-button [color]="colors.Contrast">
-                    <i kbq-icon="kbq-plus_16"></i>
+                    <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
                     Кнопка
                 </button>
             </div>
@@ -29,15 +29,15 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <div class="example-label kbq-text-compact">Text+Icon</div>
                 <button kbq-button [color]="colors.Contrast">
                     Кнопка
-                    <i kbq-icon="kbq-plus_16"></i>
+                    <i kbqButtonSuffix kbq-icon="kbq-plus_16"></i>
                 </button>
             </div>
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Icon+Text+Icon</div>
                 <button kbq-button [color]="colors.Contrast">
-                    <i kbq-icon="kbq-plus_16"></i>
+                    <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
                     Кнопка
-                    <i kbq-icon="kbq-plus_16"></i>
+                    <i kbqButtonSuffix kbq-icon="kbq-plus_16"></i>
                 </button>
             </div>
             <div class="example-button">

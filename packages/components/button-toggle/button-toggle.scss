@@ -1,3 +1,5 @@
+@use '../core/styles/common/list';
+
 @use '../core/styles/common/tokens' as *;
 
 @use './button-toggle-theme' as *;
@@ -55,15 +57,48 @@
             .kbq-button-toggle-wrapper {
                 display: inline-flex;
                 justify-content: center;
-
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
                 align-items: center;
 
                 width: 100%;
 
                 gap: var(--kbq-button-toggle-size-item-content-gap-horizontal);
+
+                // The button's base styles space its own slots with the button token; inside a toggle
+                // the row's `gap` is the whole spacing. Physical properties on purpose, so they
+                // override the same ones from the button.
+                > .kbq-button-prefix {
+                    margin-right: 0;
+                }
+
+                > .kbq-button-suffix {
+                    margin-left: 0;
+                }
+            }
+
+            .kbq-button-toggle-text {
+                @include list.kbq-truncate-line();
+
+                // must stay a block container: `text-overflow: ellipsis` is not painted on a flex box.
+                // `min-width: 0` is what lets this box — and only this box — absorb the shrink, so
+                // icons beside it keep their full size while the label truncates.
+                display: block;
+                min-width: 0;
+
+                // Legacy `<i kbq-icon> Text` markup is projected into the default slot, i.e. in here,
+                // and a block container costs it twice: the single space a template leaves around the
+                // label is painted next to the icon on top of the gap, and `vertical-align: middle`
+                // aligns the icon to the x-height rather than to the centre of the line box, leaving
+                // it ~1px low. Neither is reachable from CSS, so such an icon opts the label box into
+                // flex, where the space is trimmed at the line edge and the gap is the whole gap — at
+                // the cost of the ellipsis. `kbqButtonPrefix`/`kbqButtonSuffix` keep both, exactly as
+                // in `.kbq-button-text`. Scoped to a direct child so an icon nested deeper in the
+                // label (e.g. inside a projected badge) does not also give the ellipsis up.
+                &:has(> .kbq-icon) {
+                    display: flex;
+                    align-items: center;
+
+                    gap: var(--kbq-button-toggle-size-item-content-gap-horizontal);
+                }
             }
 
             &.cdk-keyboard-focused {
@@ -97,12 +132,27 @@
                 .kbq-button-wrapper {
                     justify-content: center;
                 }
-
-                .kbq-button-toggle-wrapper {
-                    display: block;
-                }
             }
         }
+    }
+
+    // Content that is neither text nor an icon, down to a consumer's own wrapper element, has nothing
+    // to truncate and is only centred exactly by a flex context. `:has()` cannot decide this on its
+    // own — it would have to tell such content from a label containing an icon, and selectors cannot
+    // see text nodes — so the class is computed by `KbqButtonCssStyler`. Keyed off the button's own
+    // classes rather than `kbq-button-toggle-icon`, which describes the toggle as a whole and not the
+    // box that has to lay the content out.
+    .kbq-button-toggle > :is(.kbq-button, .kbq-button-icon).kbq-button_no-label .kbq-button-toggle-text {
+        display: flex;
+        align-items: center;
+    }
+
+    // Content in a marker slot with nothing beside it: the empty label box would still take a gap of
+    // the row and push that content off centre. Written with the same prefix as the rule above and
+    // declared last, so it wins the tie on specificity — a bare `.kbq-button-toggle-text:empty` would
+    // lose to both rules above it.
+    .kbq-button-toggle > :is(.kbq-button, .kbq-button-icon) .kbq-button-toggle-text:empty {
+        display: none;
     }
 }
 

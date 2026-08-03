@@ -1,5 +1,7 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
+    KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
@@ -7,6 +9,16 @@ import {
 } from './types';
 
 export const ruRULocaleData = {
+    a11y: {
+        close: 'Закрыть',
+        save: 'Сохранить',
+        cancel: 'Отменить',
+        removeAll: 'Удалить все',
+        expandBreadcrumbs: 'Показать скрытые элементы',
+        previousMonth: 'Предыдущий месяц',
+        currentDate: 'Текущая дата',
+        nextMonth: 'Следующий месяц'
+    } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'дд.мм.гггг',
@@ -131,8 +143,9 @@ export const ruRULocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Поиск',
         searchEmptyResult: 'Ничего не найдено',
-        sitesHeader: 'Другие площадки'
-    },
+        sitesHeader: 'Другие площадки',
+        clearSearch: 'Очистить поиск'
+    } satisfies KbqAppSwitcherConfiguration,
     timeRange: {
         title: {
             for: 'за',

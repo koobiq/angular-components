@@ -53,6 +53,7 @@ import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -379,6 +380,16 @@ export const enUSFormattersData: {
 
 // @public (undocumented)
 export const enUSLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };
@@ -506,6 +517,7 @@ export const enUSLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -629,6 +641,16 @@ export const esLAFormattersData: {
 
 // @public (undocumented)
 export const esLALocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };
@@ -755,6 +777,7 @@ export const esLALocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -1044,6 +1067,9 @@ export const J = 74;
 export const K = 75;
 
 // @public
+export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
+
+// @public
 export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";
 
 // @public
@@ -1105,6 +1131,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
+        };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1233,6 +1269,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1331,6 +1368,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -1457,6 +1504,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1551,6 +1599,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -1677,6 +1735,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1776,6 +1835,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -1903,6 +1972,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1998,6 +2068,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+        };
         select: {
             hiddenItemsText: string;
         };
@@ -2125,6 +2205,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -2253,6 +2334,9 @@ export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 export const KBQ_SHADOW_DOM_OVERLAY_HOST: InjectionToken<KbqShadowDomOverlayHost>;
 
 // @public
+export const KBQ_SIBLING_POPUP: InjectionToken<readonly KbqSiblingPopup[]>;
+
+// @public
 export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 
 // @public (undocumented)
@@ -2263,6 +2347,21 @@ export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
 // @public
 export const KBQ_WINDOW: InjectionToken<Window>;
+
+// @public
+export type KbqA11yLocaleConfiguration = {
+    close: string;
+    save: string;
+    cancel: string;
+    removeAll: string;
+    expandBreadcrumbs: string;
+    previousMonth: string;
+    currentDate: string;
+    nextMonth: string;
+};
+
+// @public
+export const kbqA11yLocaleConfigurationProvider: (configuration: KbqA11yLocaleConfiguration) => Provider;
 
 // @public (undocumented)
 export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]> implements PipeTransform {
@@ -2382,6 +2481,38 @@ export enum KbqAnimationDurations {
     Long = "300ms",
     // (undocumented)
     Rapid = "100ms"
+}
+
+// @public
+export type KbqAppSwitcherConfiguration = {
+    searchPlaceholder: string;
+    searchEmptyResult: string;
+    sitesHeader: string;
+    clearSearch: string;
+};
+
+// @public
+export class KbqAutoHideScrollStrategy implements ScrollStrategy {
+    constructor(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone, config?: KbqAutoHideScrollStrategyConfig, hooks?: KbqAutoHideScrollStrategyHooks | undefined);
+    attach(overlayRef: OverlayRef): void;
+    detach(): void;
+    disable(): void;
+    enable(): void;
+    readonly hide: Observable<void>;
+}
+
+// @public
+export interface KbqAutoHideScrollStrategyConfig {
+    originElement?: HTMLElement;
+    scrollThrottle?: number;
+}
+
+// @public
+export function kbqAutoHideScrollStrategyFactory(scrollDispatcher: ScrollDispatcher, viewportRuler: ViewportRuler, ngZone: NgZone): (hooks?: KbqAutoHideScrollStrategyHooks, config?: KbqAutoHideScrollStrategyConfig) => KbqAutoHideScrollStrategy;
+
+// @public
+export interface KbqAutoHideScrollStrategyHooks {
+    onHide?: () => void;
 }
 
 // @public (undocumented)
@@ -2541,6 +2672,9 @@ export type KbqFlexDirection = 'row' | 'column';
 // @public
 export type KbqFlexWrap = 'nowrap' | 'wrap';
 
+// @public
+export function kbqFocusOptionActionOnTab($event: KeyboardEvent, actionButton: KbqOptionActionComponent | undefined): void;
+
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {
     // (undocumented)
@@ -2655,6 +2789,9 @@ export class KbqHover {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHover, never>;
 }
+
+// @public
+export function kbqInjectA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration>;
 
 // @public
 export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
@@ -3002,6 +3139,9 @@ export class KbqOverflowShadowTop {
 }
 
 // @public
+export type KbqPanelMaxHeight = number | null;
+
+// @public
 export type KbqPanelMaxWidth = number | null;
 
 // @public
@@ -3098,7 +3238,7 @@ export type KbqPopUpPlacementValues = KbqEnumValues<PopUpPlacements>;
 export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 
 // @public
-export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
+export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblingPopup {
     abstract arrow: boolean;
     protected readonly availablePositions: {
         [key: string]: ConnectionPositionPair;
@@ -3133,6 +3273,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     readonly hovered: BehaviorSubject<boolean>;
     initListeners(): void;
     protected instance: any | null;
+    get isAttached(): boolean;
     get isOpen(): boolean;
     set isOpen(value: boolean);
     keydownHandler(event: KeyboardEvent): void;
@@ -3143,6 +3284,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     ngOnInit(): void;
     protected readonly ngZone: NgZone;
     onPositionChange: ($event: ConnectedOverlayPositionChange) => void;
+    get openedChange(): Observable<boolean>;
     protected abstract originSelector: string;
     protected readonly overlay: Overlay;
     protected abstract overlayConfig: OverlayConfig;
@@ -3360,6 +3502,9 @@ export interface KbqResolvedPanelWidth {
 }
 
 // @public
+export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null;
+
+// @public
 export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;
 
 // @public (undocumented)
@@ -3489,6 +3634,15 @@ export type KbqShadowDomOverlayHost = HTMLElement | ElementRef<HTMLElement> | ((
 
 // @public
 export const kbqShadowDomOverlayProvider: (host?: KbqShadowDomOverlayHost) => Provider[];
+
+// @public
+export interface KbqSiblingPopup {
+    readonly isAttached: boolean;
+    readonly openedChange: Observable<boolean>;
+}
+
+// @public
+export const kbqSiblingPopupProvider: (popup: Type<KbqSiblingPopup>) => Provider;
 
 // @public
 export interface KbqSizeUnitsConfig {
@@ -3981,6 +4135,16 @@ export const ptBRFormattersData: {
 
 // @public (undocumented)
 export const ptBRLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };
@@ -4107,6 +4271,7 @@ export const ptBRLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -4416,6 +4581,16 @@ export const ruRUFormattersData: {
 
 // @public (undocumented)
 export const ruRULocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };
@@ -4543,6 +4718,7 @@ export const ruRULocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -4773,6 +4949,16 @@ export const tkTMFormattersData: {
 
 // @public (undocumented)
 export const tkTMLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+    };
     select: {
         hiddenItemsText: string;
     };
@@ -4900,6 +5086,7 @@ export const tkTMLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {

@@ -1,45 +1,17 @@
 @use './groups-mixins';
 
-@mixin border-top-radius($radius) {
-    border-top: {
-        right-radius: $radius;
-        left-radius: $radius;
-    }
-}
-
-@mixin border-bottom-radius($radius) {
-    border-bottom: {
-        right-radius: $radius;
-        left-radius: $radius;
-    }
-}
-
-@mixin border-right-radius($radius) {
-    border: {
-        bottom-right-radius: $radius;
-        top-right-radius: $radius;
-    }
-}
-
-@mixin border-left-radius($radius) {
-    border: {
-        bottom-left-radius: $radius;
-        top-left-radius: $radius;
-    }
-}
-
 .kbq-group {
     @include groups-mixins.group();
 
     & > .kbq-group-item:first-child:not(:last-child) {
         .kbq-form-field__container {
-            @include border-right-radius(0);
+            @include groups-mixins.border-inline-end-radius(0);
         }
     }
 
     & > .kbq-group-item:last-child:not(:first-child) {
         .kbq-form-field__container {
-            @include border-left-radius(0);
+            @include groups-mixins.border-inline-start-radius(0);
         }
     }
 
@@ -56,13 +28,13 @@
     > .kbq-group-item {
         &:first-child:not(:last-child) {
             .kbq-form-field__container {
-                @include border-bottom-radius(0);
+                @include groups-mixins.border-block-end-radius(0);
             }
         }
 
         &:last-child:not(:first-child) {
             .kbq-form-field__container {
-                @include border-top-radius(0);
+                @include groups-mixins.border-block-start-radius(0);
             }
         }
 

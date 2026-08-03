@@ -27,6 +27,7 @@ import {
     output,
     ViewContainerRef
 } from '@angular/core';
+import { outputToObservable } from '@angular/core/rxjs-interop';
 import {
     defaultOffsetY,
     DOWN_ARROW,
@@ -35,12 +36,14 @@ import {
     KbqPanelWidthOrigin,
     KbqResolvedPanelWidth,
     kbqResolvePanelWidth,
+    KbqSiblingPopup,
+    kbqSiblingPopupProvider,
     LEFT_ARROW,
     RIGHT_ARROW,
     SPACE
 } from '@koobiq/components/core';
 import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
-import { delay, filter, take, takeUntil } from 'rxjs/operators';
+import { delay, filter, map, take, takeUntil } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KbqDropdown } from './dropdown.component';
@@ -103,16 +106,22 @@ const positionMap = {
  */
 @Directive({
     selector: `[kbqDropdownTriggerFor]`,
+    providers: [kbqSiblingPopupProvider(KbqDropdownTrigger)],
     host: {
         class: 'kbq-dropdown-trigger',
         '[class.kbq-pressed]': 'opened',
+        // No `aria-haspopup` here: the panel carries neither `role="menu"` nor `role="menuitem"`, and
+        // `aria-haspopup="true"` is a synonym for `menu` — it would announce a menu that does not
+        // exist. Hosts that do build menu semantics on top (e.g. `KbqAppSwitcherDropdownSite`) set the
+        // attribute themselves.
+        '[attr.aria-expanded]': 'opened',
         '(mousedown)': 'handleMousedown($event)',
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'
     },
     exportAs: 'kbqDropdownTrigger'
 })
-export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
+export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSiblingPopup {
     private overlay = inject(Overlay);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private viewContainerRef = inject(ViewContainerRef);
@@ -203,6 +212,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
      */
     @Output() readonly dropdownClosed = new EventEmitter<void>();
 
+    /** Emits `true` when the dropdown opens and `false` when it closes. Part of the `KbqSiblingPopup` contract. */
+    readonly openedChange: Observable<boolean> = merge(
+        outputToObservable(this.dropdownOpened).pipe(map(() => true)),
+        this.dropdownClosed.pipe(map(() => false))
+    );
+
     // Tracking input type is necessary so it's possible to only auto-focus
     // the first item of the list when the dropdown is opened via the keyboard
     openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
@@ -214,6 +229,17 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     /** Whether the dropdown is open. */
     get opened(): boolean {
+        return this._opened;
+    }
+
+    /**
+     * Whether the dropdown overlay is currently attached. Part of the `KbqSiblingPopup` contract.
+     *
+     * `opened` is set synchronously right after the overlay is attached and, on close, only once the exit
+     * animation is done — i.e. it stays `true` for the whole time the trigger is busy with its panel,
+     * including the moment `destroy()` restores focus to the trigger.
+     */
+    get isAttached(): boolean {
         return this._opened;
     }
 

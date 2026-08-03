@@ -18,6 +18,8 @@ import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqOverflowShadowState } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -73,16 +75,18 @@ export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
 // @public
 export const KBQ_MODAL_DATA: InjectionToken<unknown>;
 
-// @public (undocumented)
+// @public
 export class KbqModalBody {
+    constructor();
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalBody, never>;
 }
 
 // @public (undocumented)
 export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions {
+    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     get afterClose(): Observable<R | undefined>;
     // (undocumented)
@@ -94,6 +98,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     get beforeClose(): Observable<R | undefined>;
     // (undocumented)
     readonly bodyContainer: i0.Signal<ViewContainerRef>;
+    readonly bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
     // (undocumented)
     get cancelText(): string;
     // (undocumented)
@@ -243,6 +248,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
 // @public (undocumented)
 export class KbqModalFooter {
     // (undocumented)
+    protected modal: KbqModalComponent<any, any>;
+    // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalFooter, "[kbq-modal-footer], kbq-modal-footer, [kbqModalFooter]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalFooter, never>;
@@ -317,6 +324,7 @@ export class KbqModalService {
 
 // @public (undocumented)
 export class KbqModalTitle {
+    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     protected modal: KbqModalComponent<any, any>;
     // (undocumented)

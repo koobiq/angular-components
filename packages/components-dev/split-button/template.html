@@ -3,10 +3,10 @@
 <e2e-split-button-state-and-style />
 
 <kbq-split-button>
-    <button kbq-button [disabled]="true">
+    <button kbq-button aria-label="Add" [disabled]="true">
         <i kbq-icon="kbq-plus_16"></i>
     </button>
-    <button kbq-button>
+    <button kbq-button aria-label="More options">
         <i kbq-icon="kbq-chevron-down-s_16"></i>
     </button>
 </kbq-split-button>
@@ -15,10 +15,10 @@
 <br />
 
 <kbq-split-button [color]="'contrast-fade'" [kbqStyle]="'outline'">
-    <button kbq-button>
+    <button kbq-button aria-label="Add">
         <i kbq-icon="kbq-plus_16"></i>
     </button>
-    <button kbq-button>
+    <button kbq-button aria-label="More options">
         <i kbq-icon="kbq-chevron-down-s_16"></i>
     </button>
 </kbq-split-button>

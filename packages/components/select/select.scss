@@ -19,8 +19,6 @@
 .kbq-select__content {
     @extend %kbq-select-content;
 
-    box-sizing: initial;
-
     .kbq-option {
         @include item-active-area(var(--kbq-size-3xs));
     }

@@ -25,6 +25,21 @@
             "version": "20.3.0-0",
             "description": "Cleans up after the removal of the overlay demotion mechanism. Deletes the `demoteOverlay` attribute and property binding from templates, removes `{ provide: KBQ_DROPDOWN_HOST, … }` providers together with the now-invalid `KBQ_DROPDOWN_HOST` import, and warns about programmatic `demoteOverlay` access and dead `.cdk-overlay-container_dropdown` style overrides. Note the behaviour change: dropdown/select/popover panels now render above `kbq-navbar` / `kbq-top-bar` instead of sliding under them.",
             "factory": "./migrations/dropdown-demote-overlay/index"
+        },
+        "app-switcher-signals": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqAppSwitcherTrigger consumers to its model()-based API. Rewrites programmatic reads of `selectedApp` to calls and `selectedApp = v` writes to `selectedApp.set(v)` on receivers typed KbqAppSwitcherTrigger, including reads through a #ref=\"kbqAppSwitcher\" template reference variable (external and inline templates), and renames `selectedAppChange.subscribe` to `selectedApp.subscribe`. Warns — without auto-fixing — on `selectedSite`/`selectedSiteChange` (now a model whose value is the raw site instead of the grouped one; `parsedSelectedSite()` returns the grouped one), on the removed `header`/`footer`/`isTrapFocus`/`updateTrapFocus`/`getIcon` members, on the required `app`/`site` inputs and the signal-based `collapsed` of the internal row components, and on inline `icon` markup now being sanitized against a strict SVG allow-list.",
+            "factory": "./migrations/app-switcher-signals/index"
+        },
+        "button-state-and-styles": {
+            "version": "20.3.0-0",
+            "description": "Migrates consumers of the v20.3.0 button review. Rewrites the removed physical border-radius mixins (border-right/left/top/bottom-radius) to their logical counterparts (border-inline-end/start-radius, border-block-start/end-radius) in SCSS, and warns about the changes that need review: `<a kbq-button>` no longer renders the `disabled` attribute (aria-disabled + tabindex=\"-1\" + .kbq-disabled instead) while `<button kbq-button>` no longer renders `aria-disabled`; a native button no longer renders tabindex=\"0\"; an href-less anchor is announced as role=\"button\"; KbqButtonGroupRoot no longer overwrites a kbqStyle/color the button sets itself and its `disabled` became additive and `boolean | undefined`; the `.kbq-progress` utility moved from button.css/toggle.css into kbq-core(); two dead --kbq-button-icon-size-* custom properties were dropped; and locale data gained an `a11y` section for the accessible names of built-in icon-only buttons.",
+            "factory": "./migrations/button-state-and-styles/index"
+        },
+        "button-truncation": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqButton and KbqButtonToggle consumers to labels that truncate with an ellipsis by default. Moves an icon sitting at either edge of the default slot into the kbqButtonPrefix/kbqButtonSuffix slot, which is what keeps it beside the truncating label box instead of inside it (icon-only buttons are left alone, and an icon rendered by a single-element @if block is still marked). Reports — without rewriting — stylesheets that override .kbq-button-text (was a flex row, now inline-block), .kbq-button-wrapper (hand-rolled truncation now stacks on the built-in one) and .kbq-button-toggle-wrapper (the label moved into the new .kbq-button-toggle-text box), and notes the silent part: .kbq-button/.kbq-light-button gained max-width: 100%, so a button that used to overflow its container now clamps and clips its label.",
+            "factory": "./migrations/button-truncation/index"
         }
     }
 }

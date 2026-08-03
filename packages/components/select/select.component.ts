@@ -31,6 +31,7 @@ import {
     ViewEncapsulation,
     afterNextRender,
     booleanAttribute,
+    computed,
     contentChild,
     contentChildren,
     inject,
@@ -68,6 +69,7 @@ import {
     KbqOption,
     KbqOptionBase,
     KbqOptionSelectionChange,
+    KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
@@ -77,6 +79,7 @@ import {
     KbqSelectSearch,
     KbqSelectSearchEmptyResult,
     KbqSelectTrigger,
+    KbqSiblingPopup,
     KbqVirtualOption,
     LEFT_ARROW,
     PAGE_DOWN,
@@ -92,7 +95,9 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
+    kbqSiblingPopupProvider,
     shouldSelectSearchText,
     toggleSelectAll
 } from '@koobiq/components/core';
@@ -149,6 +154,11 @@ export type KbqSelectOptions = Partial<{
      */
     panelMaxWidth: KbqPanelMaxWidth;
     /**
+     * Maximum height of the panel's scrollable option list. Does not include the search field or the
+     * footer. If null, the `--kbq-select-panel-size-max-height` token applies.
+     */
+    panelMaxHeight: KbqPanelMaxHeight;
+    /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
      * - `'auto'` uses `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` as min value.
@@ -189,7 +199,8 @@ export const minimumTimeToDisplayLoading = 300;
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
-        { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
+        { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect },
+        kbqSiblingPopupProvider(KbqSelect)
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -221,7 +232,8 @@ export class KbqSelect
         DoCheck,
         ControlValueAccessor,
         KbqFormFieldControl<any>,
-        CanUpdateErrorState
+        CanUpdateErrorState,
+        KbqSiblingPopup
 {
     private readonly _changeDetectorRef = inject(ChangeDetectorRef);
     private readonly _ngZone = inject(NgZone);
@@ -475,7 +487,12 @@ export class KbqSelect
         );
     }) as Observable<KbqOptionSelectionChange>;
 
-    /** Event emitted when the select panel has been toggled. Emits true when opened, false when closed. */
+    /**
+     * Event emitted when the select panel has been toggled. Emits true when opened, false when closed.
+     * Also serves as the `openedChange` member of the `KbqSiblingPopup` contract — a tooltip sharing
+     * this element's host reacts to it, so its emission timing (gated on `panelDoneAnimatingStream`, see
+     * `ngOnInit`) matters beyond this output's original consumers.
+     */
     @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Event emitted before the select panel starts opening. */
@@ -687,6 +704,26 @@ export class KbqSelect
         { transform: numberAttribute }
     );
 
+    /**
+     * Maximum height of the panel's scrollable option list, in pixels. Applied as the
+     * `--kbq-select-panel-size-max-height` custom property on the panel, so it also drives the pinned height
+     * of a `cdk-virtual-scroll-viewport` — with virtual scroll the value is an exact height, not a cap.
+     *
+     * The search field and the footer sit outside the scrollable area and add to the panel's total height.
+     * When null, the token default (256px) applies.
+     */
+    readonly panelMaxHeight = input<KbqPanelMaxHeight, unknown>(
+        this.defaultOptions?.panelMaxHeight === undefined ? null : this.defaultOptions.panelMaxHeight,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * `panelMaxHeight` rendered as a CSS length for the `--kbq-select-panel-size-max-height` token.
+     * A non-finite value (e.g. `null`) leaves the stylesheet default in place.
+     * @docs-private
+     */
+    protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
+
     /** Value of the select control. Can be a single value or array of values for multiple selection. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -782,6 +819,11 @@ export class KbqSelect
 
     /** Whether the select panel is currently open. */
     panelOpen = false;
+
+    /** Whether the overlay panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
+    get isAttached(): boolean {
+        return this.panelOpen;
+    }
 
     /** Whether virtual scrolling is enabled for the options panel. */
     withVirtualScroll: boolean;

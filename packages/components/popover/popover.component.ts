@@ -47,7 +47,9 @@ import {
     POSITION_TO_CSS_MAP,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins
+    applyPopupMargins,
+    kbqInjectA11yLocaleConfiguration,
+    kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { NEVER, merge } from 'rxjs';
@@ -78,6 +80,9 @@ export const defaultOffsetYWithArrow = 8;
     preserveWhitespaces: false
 })
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
+    /** Accessible name for the icon-only close button. */
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
+
     prefix = 'kbq-popover';
 
     header: string | TemplateRef<any>;
@@ -148,6 +153,7 @@ export function getKbqPopoverInvalidPositionError(position: string) {
 
 @Directive({
     selector: '[kbqPopover]',
+    providers: [kbqSiblingPopupProvider(KbqPopoverTrigger)],
     host: {
         '[class.kbq-popover_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',

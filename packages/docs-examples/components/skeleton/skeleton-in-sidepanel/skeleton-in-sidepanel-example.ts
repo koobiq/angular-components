@@ -24,7 +24,7 @@ import { KbqTableModule } from '@koobiq/components/table';
                             <i kbq-icon="kbq-circle-play_16"></i>
                             Start synchronization
                         </button>
-                        <button kbq-button class="example-fade-in">
+                        <button kbq-button aria-label="Edit" class="example-fade-in">
                             <i kbq-icon="kbq-pencil_16"></i>
                         </button>
                         <button kbq-button class="example-fade-in">

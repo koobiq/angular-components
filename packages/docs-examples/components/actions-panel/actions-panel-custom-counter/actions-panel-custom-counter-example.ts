@@ -69,7 +69,13 @@ type ExampleAction = {
             @let hiddenItemIDs = kbqOverflowItems.hiddenItemIDs();
             <!-- ignores when only action.Counter is hidden -->
             @if (hiddenItemIDs.size > 1) {
-                <button kbqOverflowItemsResult color="contrast" kbq-button [kbqDropdownTriggerFor]="dropdown">
+                <button
+                    kbqOverflowItemsResult
+                    color="contrast"
+                    kbq-button
+                    aria-label="More"
+                    [kbqDropdownTriggerFor]="dropdown"
+                >
                     <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                 </button>
             }

@@ -1,17 +1,22 @@
 ﻿import { Component, DebugElement, Provider, Type, inject, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import {
+    AbstractControl,
+    FormGroupDirective,
     FormsModule,
+    NgForm,
     ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
-    UntypedFormGroup
+    UntypedFormGroup,
+    Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
     COMMA,
     DASH,
     DOWN_ARROW,
+    ErrorStateMatcher,
     FF_MINUS,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
@@ -157,6 +162,29 @@ class KbqNumberInputMaxMinStep {
     value: number | null = null;
 }
 
+class NumberInputCustomErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null, _form: FormGroupDirective | NgForm | null): boolean {
+        return !!control?.invalid;
+    }
+}
+
+@Component({
+    imports: [
+        ReactiveFormsModule,
+        KbqInputModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqNumberInput [formControl]="formControl" [errorStateMatcher]="errorStateMatcher" />
+            <kbq-stepper />
+        </kbq-form-field>
+    `
+})
+class KbqNumberInputWithErrorState {
+    formControl = new UntypedFormControl(100, [Validators.max(10)]);
+    errorStateMatcher = new NumberInputCustomErrorStateMatcher();
+}
+
 @Component({
     imports: [
         KbqInputModule,
@@ -266,6 +294,19 @@ describe('KbqNumberInput', () => {
 
         expect(stepper).not.toBeNull();
         expect(icons.length).toBe(2);
+    }));
+
+    it('should apply kbq-error class to stepper icons when control is invalid', fakeAsync(() => {
+        const fixture = createComponent(KbqNumberInputWithErrorState);
+
+        fixture.detectChanges();
+        flush();
+
+        const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+        const icons = stepper.queryAll(By.css('.kbq-icon'));
+
+        expect(icons.length).toBe(2);
+        expect(icons.every((icon) => icon.nativeElement.classList.contains('kbq-error'))).toBe(true);
     }));
 
     it('should throw error with stepper', () => {

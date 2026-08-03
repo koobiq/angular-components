@@ -22,8 +22,12 @@ import {
 } from '../components/autocomplete/e2e';
 import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
 import { E2eBreadcrumbsOverflowMax, E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
-import { E2eButtonToggleStates, E2eButtonToggleStatesStretched } from '../components/button-toggle/e2e';
-import { E2eButtonGroup, E2eButtonStateAndStyle, E2eButtonStress } from '../components/button/e2e';
+import {
+    E2eButtonToggleStates,
+    E2eButtonToggleStatesStretched,
+    E2eButtonToggleTruncation
+} from '../components/button-toggle/e2e';
+import { E2eButtonGroup, E2eButtonStateAndStyle, E2eButtonStress, E2eButtonTruncation } from '../components/button/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
 import { E2eClampedTextStateAndStyle, E2eClampedTextStates } from '../components/clamped-text/e2e';
 import { E2eCodeBlockStates } from '../components/code-block/e2e';
@@ -39,7 +43,12 @@ import {
 } from '../components/dropdown/e2e';
 import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
-import { E2eFilterBarFilters, E2eFilterBarStates } from '../components/filter-bar/e2e';
+import {
+    E2eFilterBarFilters,
+    E2eFilterBarPanelMaxHeight,
+    E2eFilterBarPipeTruncation,
+    E2eFilterBarStates
+} from '../components/filter-bar/e2e';
 import { E2eFlagStyles } from '../components/flag/e2e';
 import { E2eFormFieldGroup, E2eFormFieldset } from '../components/form-field/e2e';
 import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
@@ -51,10 +60,10 @@ import {
 } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eLinkStates, E2eLinkWithCaption } from '../components/link/e2e';
-import { E2eListStates } from '../components/list/e2e';
+import { E2eListOptionActionVisibility, E2eListStates } from '../components/list/e2e';
 import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
-import { E2eModalStates } from '../components/modal/e2e';
+import { E2eModalFullCustom, E2eModalStates } from '../components/modal/e2e';
 import {
     E2eHorizontalNavbarStates,
     E2eVerticalNavbarBrandAutoLongTitle,
@@ -69,7 +78,7 @@ import {
     E2eOverflowItemsOrdered,
     E2eOverflowItemsVertical
 } from '../components/overflow-items/e2e';
-import { E2ePopoverPositioning, E2ePopoverStates } from '../components/popover/e2e';
+import { E2ePopoverPositioning, E2ePopoverStates, E2ePopoverWithTooltip } from '../components/popover/e2e';
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
@@ -82,16 +91,18 @@ import {
     E2eMultiSelectRtlPositioning,
     E2eMultiSelectStates,
     E2eSelectLongOptionText,
+    E2eSelectPanelMaxHeight,
     E2eSelectPositioning,
     E2eSelectRtlPositioning,
     E2eSelectStates,
     E2eSelectWithGroupsPositioning,
     E2eSelectWithGroupsRtlPositioning,
     E2eSelectWithSearchAndFooter,
-    E2eVirtualScrollMultiSelectNarrow
+    E2eVirtualScrollMultiSelectNarrow,
+    E2eVirtualScrollSelectPanelMaxHeight
 } from '../components/select/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
-import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
+import { E2eSplitButtonStateAndStyle, E2eSplitButtonTruncation } from '../components/split-button/e2e';
 import { E2eSplitterGhost } from '../components/splitter/e2e';
 import { E2eTableStates } from '../components/table/e2e';
 import { E2eTabNavBar, E2eTabsStates } from '../components/tabs/e2e';
@@ -122,20 +133,23 @@ import {
     E2eTreeSelectInitiallyHidden,
     E2eTreeSelectMultiBehavior,
     E2eTreeSelectNoPlaceholder,
+    E2eTreeSelectPanelMaxHeight,
     E2eTreeSelectPanelWidthAuto,
     E2eTreeSelectPositioning,
     E2eTreeSelectPropertyDisabled,
     E2eTreeSelectRtlPositioning,
     E2eTreeSelectStates
 } from '../components/tree-select/e2e';
-import { E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
+import { E2eTreeOptionActionVisibility, E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
 import { E2eUsernameStateAndStyle } from '../components/username/e2e';
 
 const components = [
     E2eButtonStateAndStyle,
     E2eButtonGroup,
     E2eButtonStress,
+    E2eButtonTruncation,
     E2eSplitButtonStateAndStyle,
+    E2eSplitButtonTruncation,
     E2eSplitterGhost,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
@@ -155,6 +169,7 @@ const components = [
     E2eDividerStateAndStyle,
     E2eButtonToggleStates,
     E2eButtonToggleStatesStretched,
+    E2eButtonToggleTruncation,
     E2eTabsStates,
     E2eTabNavBar,
     E2eClampedTextStateAndStyle,
@@ -174,6 +189,8 @@ const components = [
     E2eTagAutocompleteStates,
     E2eFilterBarStates,
     E2eFilterBarFilters,
+    E2eFilterBarPanelMaxHeight,
+    E2eFilterBarPipeTruncation,
     E2eFlagStyles,
     E2eTimepickerStates,
     E2eIconStateAndStyle,
@@ -184,7 +201,9 @@ const components = [
     E2eLinkWithCaption,
     E2eTagInputStates,
     E2eModalStates,
+    E2eModalFullCustom,
     E2eListStates,
+    E2eListOptionActionVisibility,
     E2eLoaderOverlayStates,
     E2eLoaderOverlayCard,
     E2eAutocompleteStates,
@@ -220,6 +239,7 @@ const components = [
     E2eNotificationCenterStates,
     E2ePopoverStates,
     E2ePopoverPositioning,
+    E2ePopoverWithTooltip,
     E2eTooltipStates,
     E2eTooltipArrowOffset,
     E2eTagListStates,
@@ -243,6 +263,7 @@ const components = [
     E2eTreeSelectDataMutation,
     E2eTreeSelectNoPlaceholder,
     E2eTreeSelectPanelWidthAuto,
+    E2eTreeSelectPanelMaxHeight,
     E2eSelectWithSearchAndFooter,
     E2eSelectPositioning,
     E2eMultiSelectPositioning,
@@ -252,6 +273,8 @@ const components = [
     E2eSelectWithGroupsRtlPositioning,
     E2eMultiSelectNarrow,
     E2eVirtualScrollMultiSelectNarrow,
+    E2eSelectPanelMaxHeight,
+    E2eVirtualScrollSelectPanelMaxHeight,
     E2eSelectLongOptionText,
     E2eInlineEditStates,
     E2eInlineEditMenuButton,
@@ -260,6 +283,7 @@ const components = [
     E2eFormHorizontal,
     E2eTypographyStyles,
     E2eTreeTwoLineNode,
+    E2eTreeOptionActionVisibility,
     E2eOverflowItemsAdditionalTargets,
     E2eOverflowItemsHorizontal,
     E2eOverflowItemsVertical,

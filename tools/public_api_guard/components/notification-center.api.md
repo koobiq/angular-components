@@ -65,6 +65,7 @@ export const KbqNotificationCenterAnimations: {
 // @public
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit {
     constructor();
+    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     configuration: any;

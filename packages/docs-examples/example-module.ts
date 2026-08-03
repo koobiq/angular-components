@@ -2433,6 +2433,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-overview-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-panel-max-height": {
+    "packagePath": "components/filter-bar/filter-bar-panel-max-height",
+    "title": "filter-bar-panel-max-height",
+    "componentName": "FilterBarPanelMaxHeightExample",
+    "files": [
+      "filter-bar-panel-max-height-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-panel-max-height-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-panel-max-height-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-pipe-types": {
     "packagePath": "components/filter-bar/filter-bar-pipe-types",
     "title": "filter-bar-pipe-types",
@@ -3958,6 +3971,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "CustomModalComponent"
     ],
     "primaryFile": "modal-component-example.ts",
+    "importPath": "components/modal"
+  },
+  "modal-full-custom": {
+    "packagePath": "components/modal/modal-full-custom",
+    "title": "Modal full custom",
+    "componentName": "ModalFullCustomExample",
+    "files": [
+      "modal-full-custom-example.ts"
+    ],
+    "selector": "modal-full-custom-example",
+    "additionalComponents": [
+      "CustomModalComponent"
+    ],
+    "primaryFile": "modal-full-custom-example.ts",
     "importPath": "components/modal"
   },
   "modal-multiple": {
@@ -6926,6 +6953,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-footer-overview-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-height": {
+    "packagePath": "components/tree-select/tree-select-height",
+    "title": "Tree-select height",
+    "componentName": "TreeSelectHeightExample",
+    "files": [
+      "tree-select-height-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-height-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-height-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-lazyload": {
     "packagePath": "components/tree-select/tree-select-lazyload",
     "title": "Tree-select lazyload",
@@ -7823,6 +7863,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
 return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-panel-max-height':
+return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-pipe-types':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-readonly-pipe':
@@ -8052,6 +8094,8 @@ return import('@koobiq/docs-examples/components/modal');
   case 'modal-component-with-injector':
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-component':
+return import('@koobiq/docs-examples/components/modal');
+  case 'modal-full-custom':
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-multiple':
 return import('@koobiq/docs-examples/components/modal');
@@ -8498,6 +8542,8 @@ return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-deleted-nodes':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-footer-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-height':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-lazyload':
 return import('@koobiq/docs-examples/components/tree-select');

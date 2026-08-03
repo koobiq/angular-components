@@ -1,13 +1,3 @@
-@keyframes kbq-progress {
-    from {
-        background-position: 0 0;
-    }
-
-    to {
-        background-position: 64px 0;
-    }
-}
-
 // Renders the striped "loading" shimmer used by .kbq-progress. Extracted into a mixin so
 // components whose `::before`/`::after` pseudo-elements are already spoken for (e.g. kbq-dropdown-item's
 // hit-area extension) can apply the same overlay to a real element instead.
@@ -38,14 +28,35 @@
     animation: kbq-progress 1s linear infinite;
 }
 
-.kbq-progress {
-    position: relative;
+/**
+ * Global `.kbq-progress` loading indicator.
+ *
+ * Shared utility, not owned by any single component: `button` and `toggle` both rely on it.
+ * Emitted once from `kbq-core()` — do not scope it under a component selector.
+ *
+ * Also emits the `kbq-progress` keyframes driving `kbq-progress-overlay()`, so components applying
+ * that mixin on their own rely on the core styles being present.
+ */
+@mixin kbq-progress() {
+    @keyframes kbq-progress {
+        from {
+            background-position: 0 0;
+        }
 
-    &:after {
-        @include kbq-progress-overlay();
+        to {
+            background-position: 64px 0;
+        }
+    }
 
-        @media (prefers-reduced-motion: reduce) {
-            animation: none;
+    .kbq-progress {
+        position: relative;
+
+        &:after {
+            @include kbq-progress-overlay();
+
+            @media (prefers-reduced-motion: reduce) {
+                animation: none;
+            }
         }
     }
 }

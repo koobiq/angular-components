@@ -1,5 +1,7 @@
 import {
+    KbqA11yLocaleConfiguration,
     KbqActionsPanelLocaleConfiguration,
+    KbqAppSwitcherConfiguration,
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
@@ -7,6 +9,16 @@ import {
 } from './types';
 
 export const tkTMLocaleData = {
+    a11y: {
+        close: 'Ýap',
+        save: 'Ýazdyr',
+        cancel: 'Ýatyr',
+        removeAll: 'Ählisini aýyr',
+        expandBreadcrumbs: 'Gizlenen elementleri görkez',
+        previousMonth: 'Öňki aý',
+        currentDate: 'Şu günki sene',
+        nextMonth: 'Indiki aý'
+    } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}' },
     datepicker: {
         placeholder: 'gg.aa.ýý.',
@@ -131,8 +143,9 @@ export const tkTMLocaleData = {
     appSwitcher: {
         searchPlaceholder: 'Gözleg',
         searchEmptyResult: 'Hiç zat tapylmady',
-        sitesHeader: 'Beýleki saýtlar'
-    },
+        sitesHeader: 'Beýleki saýtlar',
+        clearSearch: 'Gözlegi arassala'
+    } satisfies KbqAppSwitcherConfiguration,
     timeRange: {
         title: {
             for: 'soňky',
