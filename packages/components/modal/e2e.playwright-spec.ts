@@ -67,4 +67,42 @@ test.describe('KbqModalModule', () => {
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-footer'))).toBeTruthy();
         });
     });
+
+    test.describe('overflow shadow (full custom content)', () => {
+        test('should show footer shadow on init when body content overflows', async ({ page }) => {
+            await page.setViewportSize({ width: 400, height: 350 });
+            await page.goto('/E2eModalFullCustom');
+            await page.getByTestId('e2eOpenModal').click();
+            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
+
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-footer'))).toBeTruthy();
+        });
+
+        test('should show header shadow after scrolling down', async ({ page }) => {
+            await page.setViewportSize({ width: 400, height: 350 });
+            await page.goto('/E2eModalFullCustom');
+            await page.getByTestId('e2eOpenModal').click();
+            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
+
+            await page.locator('.kbq-modal-body').evaluate((el) => {
+                el.scrollTop = 50;
+            });
+
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-header'))).toBeTruthy();
+        });
+
+        test('should show both shadows when scrolled to the middle', async ({ page }) => {
+            await page.setViewportSize({ width: 400, height: 350 });
+            await page.goto('/E2eModalFullCustom');
+            await page.getByTestId('e2eOpenModal').click();
+            await page.locator('.kbq-modal-container').waitFor({ state: 'visible' });
+
+            await page.locator('.kbq-modal-body').evaluate((el) => {
+                el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
+            });
+
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-header'))).toBeTruthy();
+            await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-modal-footer'))).toBeTruthy();
+        });
+    });
 });
