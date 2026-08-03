@@ -35,6 +35,7 @@ import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export type ConfirmType = 'confirm' | 'success' | 'warn';
@@ -79,8 +80,10 @@ export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
 // @public
 export const KBQ_MODAL_DATA: InjectionToken<unknown>;
 
-// @public (undocumented)
+// @public
 export class KbqModalBody {
+    constructor();
+    protected checkOverflow(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -102,6 +105,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     get beforeClose(): Observable<R | undefined>;
     // (undocumented)
     bodyContainer: ViewContainerRef;
+    readonly bodyOverflow: WritableSignal<KbqOverflowShadowState>;
     // (undocumented)
     get cancelText(): string;
     // (undocumented)
@@ -258,6 +262,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
 // @public (undocumented)
 export class KbqModalFooter {
     // (undocumented)
+    protected modal: KbqModalComponent<any, any>;
+    // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalFooter, "[kbq-modal-footer], kbq-modal-footer, [kbqModalFooter]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalFooter, never>;
@@ -342,6 +348,12 @@ export class KbqModalTitle {
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [kbqModalTitle]", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalTitle, never>;
+}
+
+// @public
+export interface KbqOverflowShadowState {
+    bottom: boolean;
+    top: boolean;
 }
 
 // @public
