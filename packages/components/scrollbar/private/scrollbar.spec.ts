@@ -220,6 +220,29 @@ class TestScrollbarVirtualHost {
 }
 
 @Component({
+    selector: 'test-scrollbar-virtual-horizontal-host',
+    imports: [KbqScrollbar, KbqScrollbarVirtualViewport, ScrollingModule],
+    template: `
+        <div kbqScrollbar data-testid="host">
+            <cdk-virtual-scroll-viewport
+                kbqScrollbarVirtualViewport
+                orientation="horizontal"
+                itemSize="20"
+                data-testid="viewport"
+                style="width: 100px"
+            >
+                <div *cdkVirtualFor="let item of items" style="width: 20px">{{ item }}</div>
+            </cdk-virtual-scroll-viewport>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestScrollbarVirtualHorizontalHost {
+    readonly scrollbar = viewChild.required(KbqScrollbar);
+    readonly items = Array.from({ length: 100 }, (_, i) => i);
+}
+
+@Component({
     selector: 'test-scrollbar-composed-host',
     template: `
         <div style="height: 500px">content</div>
@@ -1107,6 +1130,52 @@ describe(KbqScrollbar.name, () => {
             fixture.componentInstance.scrollbar().scrollTo({ top: 123 });
 
             expect(scrollToOffsetSpy).toHaveBeenCalledWith(123, 'auto');
+        });
+
+        it('scrollStart/scrollEnd do NOT call scrollToOffset on a (default) vertical viewport — `left` is not this axis', () => {
+            const fixture = createComponent(TestScrollbarVirtualHost);
+            const scrollToOffsetSpy = jest
+                .spyOn(CdkVirtualScrollViewport.prototype, 'scrollToOffset')
+                .mockImplementation(() => {});
+
+            fixture.componentInstance.scrollbar().scrollStart();
+            fixture.componentInstance.scrollbar().scrollEnd();
+
+            expect(scrollToOffsetSpy).not.toHaveBeenCalled();
+        });
+
+        it('scrollToTop/scrollToBottom do NOT call scrollToOffset on an orientation="horizontal" viewport — `top` is not this axis', () => {
+            const fixture = createComponent(TestScrollbarVirtualHorizontalHost);
+            const scrollToOffsetSpy = jest
+                .spyOn(CdkVirtualScrollViewport.prototype, 'scrollToOffset')
+                .mockImplementation(() => {});
+
+            fixture.componentInstance.scrollbar().scrollToTop();
+            fixture.componentInstance.scrollbar().scrollToBottom();
+
+            expect(scrollToOffsetSpy).not.toHaveBeenCalled();
+        });
+
+        it('routes scrollTo({ left }) through scrollToOffset when the delegated viewport is orientation="horizontal"', () => {
+            const fixture = createComponent(TestScrollbarVirtualHorizontalHost);
+            const scrollToOffsetSpy = jest
+                .spyOn(CdkVirtualScrollViewport.prototype, 'scrollToOffset')
+                .mockImplementation(() => {});
+
+            fixture.componentInstance.scrollbar().scrollTo({ left: 77 });
+
+            expect(scrollToOffsetSpy).toHaveBeenCalledWith(77, 'auto');
+        });
+
+        it('scrollTo({ top }) is ignored (not just defaulted to 0) against an orientation="horizontal" viewport', () => {
+            const fixture = createComponent(TestScrollbarVirtualHorizontalHost);
+            const scrollToOffsetSpy = jest
+                .spyOn(CdkVirtualScrollViewport.prototype, 'scrollToOffset')
+                .mockImplementation(() => {});
+
+            fixture.componentInstance.scrollbar().scrollTo({ top: 999 });
+
+            expect(scrollToOffsetSpy).not.toHaveBeenCalled();
         });
     });
 
