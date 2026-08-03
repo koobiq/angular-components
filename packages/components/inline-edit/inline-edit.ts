@@ -283,6 +283,11 @@ export class KbqInlineEdit {
         this.mode.update((mode) => (mode === 'view' ? 'edit' : 'view'));
     }
 
+    /** Saves the current value and returns to view mode, running the same validation as a normal save. */
+    commit(): void {
+        this.save();
+    }
+
     /** @docs-private */
     protected onClick(event: Event): void {
         if (this.disabled() || this.isEditMode() || this.isInteractiveElement(event.target)) return;
@@ -331,6 +336,10 @@ export class KbqInlineEdit {
 
     /** @docs-private */
     protected save($event?: Event): void {
+        // Guards against a control triggering both its own commit() and the overlay's outside-click handler for the
+        // same interaction — without this, the second call would toggle back into edit mode.
+        if (!this.isEditMode()) return;
+
         if (this.isInvalid()) {
             $event?.stopPropagation();
 

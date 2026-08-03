@@ -18,6 +18,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <inline-edit-vertical-list-example />
         <inline-edit-without-label-example />
         <inline-edit-controls-example />
+        <inline-edit-select-example />
         <inline-edit-editable-header-example />
         <inline-edit-customized-design-example />
         <inline-edit-date-time-example />

@@ -70,6 +70,12 @@ Inline-editable elements should remain aligned with their appearance in view mod
 
 <!-- example(inline-edit-customized-design) -->
 
+#### Select-style editor
+
+For a single select, edit mode can show only the dropdown panel instead of a bordered input box, with a "not specified" option inside the panel standing in for a clear button.
+
+<!-- example(inline-edit-select) -->
+
 ### Recommendations
 
 Inline edits should be saved immediately after a change—without requiring a global **Save** button.

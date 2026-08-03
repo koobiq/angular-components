@@ -42,6 +42,7 @@ export class KbqInlineEdit {
     readonly canSaveOnEnter: _angular_core.InputSignal<(event: KeyboardEvent) => boolean>;
     protected readonly className: _angular_core.Signal<string>;
     protected readonly colors: typeof KbqComponentColors;
+    commit(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly editModeWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     // (undocumented)
