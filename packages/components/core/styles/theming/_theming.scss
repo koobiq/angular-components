@@ -214,10 +214,10 @@
 // @deprecated @TODO: unused. Will be removed in next major release
 @function kbq-palette($base-palette, $default) {
     @return map.merge(
-            $base-palette,
-            (
-                default: $default
-            )
+        $base-palette,
+        (
+            default: $default
+        )
     );
 }
 
