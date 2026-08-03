@@ -27,11 +27,15 @@ import {
     ENTER,
     FocusKeyManager,
     HOME,
+    KbqOptionActionComponent,
+    KbqOptionModule,
     PAGE_DOWN,
     PAGE_UP,
     SPACE,
+    TAB,
     UP_ARROW
 } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import {
     KbqListCopyEvent,
     KbqListModule,
@@ -720,6 +724,87 @@ describe('KbqListSelection without forms', () => {
         }));
     });
 
+    describe('action button visibility', () => {
+        let fixture: ComponentFixture<SelectionListWithActionButton>;
+        let list: DebugElement;
+        let options: DebugElement[];
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({ imports: [KbqListModule, KbqOptionModule, KbqDropdownModule] });
+
+            fixture = TestBed.createComponent(SelectionListWithActionButton);
+            list = fixture.debugElement.query(By.directive(KbqListSelection));
+            options = fixture.debugElement.queryAll(By.directive(KbqListOption));
+
+            fixture.detectChanges();
+        });
+
+        // Styles are stripped in jsdom, so these assert the classes the reveal rules key off:
+        // `.kbq-list-selection.cdk-keyboard-focused .kbq-list-option.kbq-focused` (see list.scss).
+        it('should not mark the list as keyboard-focused when an option is focused by mouse', fakeAsync(() => {
+            getFocusMonitor().focusVia(options[0].nativeElement, 'mouse');
+            flush();
+            fixture.detectChanges();
+
+            expect(options[0].nativeElement.classList).toContain('kbq-focused');
+            expect(list.nativeElement.classList).not.toContain('cdk-keyboard-focused');
+        }));
+
+        it('should mark the list as keyboard-focused when an option is focused via keyboard', fakeAsync(() => {
+            getFocusMonitor().focusVia(options[0].nativeElement, 'keyboard');
+            flush();
+            fixture.detectChanges();
+
+            expect(options[0].nativeElement.classList).toContain('kbq-focused');
+            expect(list.nativeElement.classList).toContain('cdk-keyboard-focused');
+        }));
+
+        it('should mark the option with kbq-action-button-focused while the action holds focus', fakeAsync(() => {
+            const option = options[0];
+            const actionButton = option.query(By.directive(KbqOptionActionComponent));
+
+            expect(option.nativeElement.classList).not.toContain('kbq-action-button-focused');
+
+            actionButton.componentInstance.focus();
+            flush();
+            fixture.detectChanges();
+
+            expect(actionButton.componentInstance.hasFocus).toBe(true);
+            expect(option.nativeElement.classList).toContain('kbq-action-button-focused');
+        }));
+
+        it('should not swallow Tab when the action button cannot take focus', fakeAsync(() => {
+            const option = options[0];
+            const actionButtonDebugElement = option.query(By.directive(KbqOptionActionComponent));
+            const actionButton = actionButtonDebugElement.componentInstance;
+
+            // In a browser the action sits in a `display: none` container until the option is hovered or
+            // keyboard-focused, so `.focus()` is a no-op. jsdom ignores styles and would always focus it,
+            // so neutralise the DOM call only — `KbqOptionActionComponent.focus()` itself must still run,
+            // otherwise its `activeElement` check (the fix under test) is never exercised.
+            jest.spyOn(actionButtonDebugElement.nativeElement, 'focus').mockImplementation(() => {});
+
+            const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
+
+            flush();
+            fixture.detectChanges();
+
+            expect(actionButton.hasFocus).toBe(false);
+            expect(event.defaultPrevented).toBe(false);
+            expect(option.nativeElement.classList).not.toContain('kbq-action-button-focused');
+        }));
+
+        it('should swallow Tab when the action button takes focus', fakeAsync(() => {
+            const option = options[0];
+            const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
+
+            flush();
+            fixture.detectChanges();
+
+            expect(event.defaultPrevented).toBe(true);
+        }));
+    });
+
     describe('with list disabled', () => {
         let fixture: ComponentFixture<SelectionListWithListDisabled>;
         let listOption: DebugElement[];
@@ -1308,6 +1393,31 @@ class SelectionListWithSelectedOption {}
 class SelectionListFocusStates {
     selectedOptions: string[] = [];
 }
+
+@Component({
+    imports: [
+        KbqListModule,
+        KbqOptionModule,
+        KbqDropdownModule
+    ],
+    template: `
+        <kbq-list-selection>
+            <kbq-list-option [value]="'option_1'">
+                Option 1
+                <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
+            </kbq-list-option>
+            <kbq-list-option [value]="'option_2'">
+                Option 2
+                <kbq-option-action [kbqDropdownTriggerFor]="dropdown" />
+            </kbq-list-option>
+        </kbq-list-selection>
+
+        <kbq-dropdown #dropdown>
+            <button kbq-dropdown-item>action</button>
+        </kbq-dropdown>
+    `
+})
+class SelectionListWithActionButton {}
 
 @Component({
     imports: [

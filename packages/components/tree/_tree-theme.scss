@@ -91,13 +91,12 @@
         }
     }
 
-    .cdk-keyboard-focused {
+    // Scoped to the tree's own focus-monitored host, matching `kbq-option-action-visibility`. A bare
+    // `.cdk-keyboard-focused` would also match an outer monitored ancestor (e.g. the tree-select panel),
+    // drawing the focus ring on a row whose action button stays correctly hidden.
+    .kbq-tree-selection.cdk-keyboard-focused {
         & .kbq-tree-option.kbq-focused:not(.kbq-action-button-focused) {
             border-color: var(--kbq-tree-states-focused-focus-outline-color);
-
-            & .kbq-action-container {
-                display: flex;
-            }
         }
     }
 }

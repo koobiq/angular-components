@@ -24,11 +24,11 @@ import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
+    kbqFocusOptionActionOnTab,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
-    KbqTitleTextRef,
-    TAB
+    KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -368,17 +368,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     onKeydown($event) {
-        const actionButton = this.actionButton();
-
-        if (!actionButton) {
-            return;
-        }
-
-        if ($event.keyCode === TAB && !$event.shiftKey && !actionButton.hasFocus) {
-            actionButton.focus();
-
-            $event.preventDefault();
-        }
+        kbqFocusOptionActionOnTab($event, this.actionButton());
     }
 
     selectViaInteraction($event?: KeyboardEvent): void {

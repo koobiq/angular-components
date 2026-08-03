@@ -2672,6 +2672,9 @@ export type KbqFlexDirection = 'row' | 'column';
 // @public
 export type KbqFlexWrap = 'nowrap' | 'wrap';
 
+// @public
+export function kbqFocusOptionActionOnTab($event: KeyboardEvent, actionButton: KbqOptionActionComponent | undefined): void;
+
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {
     // (undocumented)
