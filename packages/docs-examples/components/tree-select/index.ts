@@ -5,6 +5,7 @@ import { TreeSelectCustomMatcherExample } from './tree-select-custom-matcher/tre
 import { TreeSelectCustomTriggerExample } from './tree-select-custom-trigger/tree-select-custom-trigger-example';
 import { TreeSelectDeletedNodesExample } from './tree-select-deleted-nodes/tree-select-deleted-nodes-example';
 import { TreeSelectFooterOverviewExample } from './tree-select-footer-overview/tree-select-footer-overview-example';
+import { TreeSelectHeightExample } from './tree-select-height/tree-select-height-example';
 import { TreeSelectLazyloadExample } from './tree-select-lazyload/tree-select-lazyload-example';
 import { TreeSelectMultipleOverviewExample } from './tree-select-multiple-overview/tree-select-multiple-overview-example';
 import { TreeSelectOverviewExample } from './tree-select-overview/tree-select-overview-example';
@@ -19,6 +20,7 @@ export {
     TreeSelectCustomTriggerExample,
     TreeSelectDeletedNodesExample,
     TreeSelectFooterOverviewExample,
+    TreeSelectHeightExample,
     TreeSelectLazyloadExample,
     TreeSelectMultipleOverviewExample,
     TreeSelectOverviewExample,
@@ -39,7 +41,8 @@ const EXAMPLES = [
     TreeSelectWithMultilineMatcherExample,
     TreeSelectCustomMatcherWithInputExample,
     TreeSelectTwoLineOptionExample,
-    TreeSelectDeletedNodesExample
+    TreeSelectDeletedNodesExample,
+    TreeSelectHeightExample
 ];
 
 @NgModule({

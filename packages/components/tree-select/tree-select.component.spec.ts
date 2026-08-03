@@ -40,6 +40,7 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
+    KbqPanelMaxHeight,
     KbqPanelWidth,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxModule,
@@ -1670,6 +1671,35 @@ class NgIfTreeSelect {
 })
 class TreeSelectWithPanelWidth {
     panelWidth: KbqPanelWidth;
+
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(TREE_DATA, 0);
+    }
+}
+
+@Component({
+    selector: 'tree-select-with-panel-max-height',
+    imports: [KbqTreeModule, KbqTreeSelectModule],
+    template: `
+        <kbq-form-field style="width: 300px">
+            <kbq-tree-select [panelMaxHeight]="panelMaxHeight">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node">
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+class TreeSelectWithPanelMaxHeight {
+    panelMaxHeight: KbqPanelMaxHeight | undefined;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -4924,6 +4954,116 @@ describe('KbqTreeSelect', () => {
 
                 spy.mockRestore();
             }));
+        });
+    });
+
+    describe('panelMaxHeight', () => {
+        /**
+         * Opens the panel and reads the token off it. JSDOM computes no layout, so the inline custom
+         * property is the observable contract here — the height itself is asserted in Playwright.
+         */
+        function openAndReadToken(fixture: ComponentFixture<unknown>): string {
+            fixture.debugElement.query(By.directive(KbqTreeSelect)).nativeElement.click();
+            fixture.detectChanges();
+
+            const panel = overlayContainerElement.querySelector('.kbq-tree-select__panel') as HTMLElement;
+
+            return panel.style.getPropertyValue('--kbq-select-panel-size-max-height');
+        }
+
+        describe('from the attribute', () => {
+            beforeEach(() => configureKbqTreeSelectTestingModule([TreeSelectWithPanelMaxHeight]));
+
+            it('should set the token from the panelMaxHeight attribute', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelMaxHeight);
+
+                fixture.componentInstance.panelMaxHeight = 300;
+                fixture.detectChanges();
+
+                expect(openAndReadToken(fixture)).toBe('300px');
+            });
+
+            it('should treat zero as an explicit height rather than as unset', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelMaxHeight);
+
+                fixture.componentInstance.panelMaxHeight = 0;
+                fixture.detectChanges();
+
+                expect(openAndReadToken(fixture)).toBe('0px');
+            });
+
+            it('should clamp a negative panelMaxHeight to zero', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelMaxHeight);
+
+                fixture.componentInstance.panelMaxHeight = -10;
+                fixture.detectChanges();
+
+                expect(openAndReadToken(fixture)).toBe('0px');
+            });
+
+            it('should leave the token unset when the binding is not a number', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelMaxHeight);
+
+                // `numberAttribute` coerces this to NaN rather than to null.
+                fixture.componentInstance.panelMaxHeight = undefined;
+                fixture.detectChanges();
+
+                expect(openAndReadToken(fixture)).toBe('');
+            });
+        });
+
+        describe('without the attribute', () => {
+            beforeEach(() => configureKbqTreeSelectTestingModule([TreeSelectWithPanelWidth]));
+
+            it('should leave the token unset by default so the stylesheet default applies', () => {
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+
+                fixture.detectChanges();
+
+                expect(openAndReadToken(fixture)).toBe('');
+            });
+        });
+
+        describe('with KBQ_TREE_SELECT_OPTIONS', () => {
+            it('should take the default from the provider', () => {
+                configureKbqTreeSelectTestingModule(
+                    [TreeSelectWithPanelWidth],
+                    [kbqTreeSelectOptionsProvider({ panelMaxHeight: 400 })]
+                );
+
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+
+                fixture.detectChanges();
+
+                expect(openAndReadToken(fixture)).toBe('400px');
+            });
+
+            it('should let the attribute win over the provider', () => {
+                configureKbqTreeSelectTestingModule(
+                    [TreeSelectWithPanelMaxHeight],
+                    [kbqTreeSelectOptionsProvider({ panelMaxHeight: 400 })]
+                );
+
+                const fixture = TestBed.createComponent(TreeSelectWithPanelMaxHeight);
+
+                fixture.componentInstance.panelMaxHeight = 500;
+                fixture.detectChanges();
+
+                expect(openAndReadToken(fixture)).toBe('500px');
+            });
+
+            it('should honour an explicit null from the provider', () => {
+                configureKbqTreeSelectTestingModule(
+                    [TreeSelectWithPanelWidth],
+                    [kbqTreeSelectOptionsProvider({ panelMaxHeight: null })]
+                );
+
+                const fixture = TestBed.createComponent(TreeSelectWithPanelWidth);
+
+                fixture.detectChanges();
+
+                expect(openAndReadToken(fixture)).toBe('');
+            });
         });
     });
 

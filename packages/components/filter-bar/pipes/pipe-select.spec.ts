@@ -460,6 +460,117 @@ describe('KbqPipeSelectComponent', () => {
         }));
     });
 
+    describe('panelMaxHeight forwarding', () => {
+        const setTemplateWithPanelMaxHeight = (panelMaxHeight: number) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    panelMaxHeight,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        // JSDOM computes no layout, so the inline custom property on the panel is the observable
+        // contract here; that it resolves to an actual height is covered by the select suite and by
+        // the filter-bar Playwright specs, which read the computed `max-height` of `__content`.
+        const readPanelMaxHeightToken = (): string => {
+            const panel = document.querySelector<HTMLElement>('.kbq-pipe-select__panel')!;
+
+            return panel.style.getPropertyValue('--kbq-select-panel-size-max-height');
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should forward panelMaxHeight from the pipe template to the panel', fakeAsync(() => {
+            setTemplateWithPanelMaxHeight(300);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(readPanelMaxHeightToken()).toBe('300px');
+        }));
+
+        it('should leave the token unset when the template omits panelMaxHeight', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            // No inline custom property at all, so the select-family default of 256px applies.
+            expect(readPanelMaxHeightToken()).toBe('');
+        }));
+
+        it('should clear a previously set panelMaxHeight when a later template update omits it', fakeAsync(() => {
+            setTemplateWithPanelMaxHeight(300);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(readPanelMaxHeightToken()).toBe('300px');
+
+            // A follow-up pipeTemplates update for the same pipe id that omits panelMaxHeight must fall
+            // back to the filter-bar default, not keep the stale height.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: SELECT_VALUES,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            expect(readPanelMaxHeightToken()).toBe('');
+        }));
+
+        it('should forward panelMaxHeight from a later template update even when it omits values', fakeAsync(() => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(readPanelMaxHeightToken()).toBe('');
+
+            // `panelMaxHeight` is synced independently of `values`, same as `compareWith`.
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    panelMaxHeight: 240,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            expect(readPanelMaxHeightToken()).toBe('240px');
+        }));
+    });
+
     describe('open', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);

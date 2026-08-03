@@ -6,6 +6,7 @@
     [class]="{ 'kbq-active': select.panelOpen }"
     [ngModel]="selected"
     [panelClass]="'kbq-pipe-tree-select__panel'"
+    [panelMaxHeight]="panelMaxHeight"
     [tabIndex]="-1"
     (opened)="onOpen()"
     (selectionChange)="onSelect($event.value)"

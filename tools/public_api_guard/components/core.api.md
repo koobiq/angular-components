@@ -3040,6 +3040,9 @@ export class KbqOverflowShadowTop {
 }
 
 // @public
+export type KbqPanelMaxHeight = number | null;
+
+// @public
 export type KbqPanelMaxWidth = number | null;
 
 // @public
@@ -3398,6 +3401,9 @@ export interface KbqResolvedPanelWidth {
     // (undocumented)
     width: number | string;
 }
+
+// @public
+export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null;
 
 // @public
 export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;

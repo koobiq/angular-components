@@ -882,6 +882,8 @@ export class DevApp implements AfterViewInit {
                 values: kbqBuildTree(DEV_DATA_OBJECT, 0),
                 // Raw node values; locking a branch value would lock its whole subtree.
                 lockedValues: ['value 0'],
+                // 5 × 32px, overriding the 256px default; the neighbouring pipes keep it.
+                panelMaxHeight: 160,
 
                 cleanable: false,
                 removable: false,

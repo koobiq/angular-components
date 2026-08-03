@@ -1,5 +1,5 @@
 import { InjectionToken, ModelSignal, OutputEmitterRef, Provider, Signal, TemplateRef, Type } from '@angular/core';
-import { ruRULocaleData } from '@koobiq/components/core';
+import { KbqPanelMaxHeight, ruRULocaleData } from '@koobiq/components/core';
 import { BehaviorSubject } from 'rxjs';
 import { KbqFilterBar } from './filter-bar';
 import type { KbqBasePipe } from './pipes/base-pipe';
@@ -203,6 +203,19 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * whole subtree. Ignored by other pipe types.
      */
     lockedValues?: unknown[];
+    /**
+     * Maximum height of the dropdown panel's scrollable list, in pixels, forwarded to the underlying
+     * `kbq-select` / `kbq-tree-select` of the `select`, `multiselect`, `tree-select` and `multi-tree-select`
+     * pipes. Omitting it — or passing `null` — keeps the select-family default of 256px, i.e. exactly eight
+     * 32px options.
+     *
+     * The cap covers the scrollable list only, and the list's own padding is added on top of it, so a
+     * multiple of the option height fits without a scrollbar. The pipe's search field is rendered above the
+     * list and adds to the panel's total height, while the "select all" row scrolls with the options and is
+     * counted by the cap. A value taller than the room left in the viewport is clipped by the overlay rather
+     * than scrolled. Ignored by other pipe types.
+     */
+    panelMaxHeight?: KbqPanelMaxHeight;
     /**
      * Earliest selectable instant for the `date` / `datetime` pipe custom period. Accepts any value the
      * configured `DateAdapter` can deserialize (with the default Luxon adapter: an ISO-8601 string, a

@@ -30,6 +30,7 @@ import {
     ViewEncapsulation,
     afterNextRender,
     booleanAttribute,
+    computed,
     contentChild,
     inject,
     input,
@@ -57,6 +58,7 @@ import {
     KbqAbstractSelect,
     KbqComponentColors,
     KbqLocaleService,
+    KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
@@ -80,6 +82,7 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
     shouldSelectSearchText
@@ -123,6 +126,11 @@ export type KbqTreeSelectOptions = Partial<{
      * explicit `panelWidth`. If null, the `--kbq-panel-size-width-max` token applies.
      */
     panelMaxWidth: KbqPanelMaxWidth;
+    /**
+     * Maximum height of the panel's scrollable option list. Does not include the search field or the
+     * footer. If null, the `--kbq-select-panel-size-max-height` token applies.
+     */
+    panelMaxHeight: KbqPanelMaxHeight;
     /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
@@ -652,6 +660,25 @@ export class KbqTreeSelect
         this.defaultOptions?.panelMaxWidth === undefined ? null : this.defaultOptions.panelMaxWidth,
         { transform: numberAttribute }
     );
+
+    /**
+     * Maximum height of the panel's scrollable option list, in pixels. Applied as the
+     * `--kbq-select-panel-size-max-height` custom property on the panel.
+     *
+     * The search field and the footer sit outside the scrollable area and add to the panel's total height.
+     * When null, the token default (256px) applies.
+     */
+    readonly panelMaxHeight = input<KbqPanelMaxHeight, unknown>(
+        this.defaultOptions?.panelMaxHeight === undefined ? null : this.defaultOptions.panelMaxHeight,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * `panelMaxHeight` rendered as a CSS length for the `--kbq-select-panel-size-max-height` token.
+     * A non-finite value (e.g. `null`) leaves the stylesheet default in place.
+     * @docs-private
+     */
+    protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
 
     /**
      * Controls when the search functionality is displayed based on the number of available options.

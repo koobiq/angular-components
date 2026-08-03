@@ -31,6 +31,7 @@ import {
     ViewEncapsulation,
     afterNextRender,
     booleanAttribute,
+    computed,
     contentChild,
     contentChildren,
     inject,
@@ -68,6 +69,7 @@ import {
     KbqOption,
     KbqOptionBase,
     KbqOptionSelectionChange,
+    KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
@@ -93,6 +95,7 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
     shouldSelectSearchText,
@@ -150,6 +153,11 @@ export type KbqSelectOptions = Partial<{
      * explicit `panelWidth`. If null, the `--kbq-panel-size-width-max` token applies.
      */
     panelMaxWidth: KbqPanelMaxWidth;
+    /**
+     * Maximum height of the panel's scrollable option list. Does not include the search field or the
+     * footer. If null, the `--kbq-select-panel-size-max-height` token applies.
+     */
+    panelMaxHeight: KbqPanelMaxHeight;
     /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
@@ -695,6 +703,26 @@ export class KbqSelect
         this.defaultOptions?.panelMaxWidth === undefined ? null : this.defaultOptions.panelMaxWidth,
         { transform: numberAttribute }
     );
+
+    /**
+     * Maximum height of the panel's scrollable option list, in pixels. Applied as the
+     * `--kbq-select-panel-size-max-height` custom property on the panel, so it also drives the pinned height
+     * of a `cdk-virtual-scroll-viewport` — with virtual scroll the value is an exact height, not a cap.
+     *
+     * The search field and the footer sit outside the scrollable area and add to the panel's total height.
+     * When null, the token default (256px) applies.
+     */
+    readonly panelMaxHeight = input<KbqPanelMaxHeight, unknown>(
+        this.defaultOptions?.panelMaxHeight === undefined ? null : this.defaultOptions.panelMaxHeight,
+        { transform: numberAttribute }
+    );
+
+    /**
+     * `panelMaxHeight` rendered as a CSS length for the `--kbq-select-panel-size-max-height` token.
+     * A non-finite value (e.g. `null`) leaves the stylesheet default in place.
+     * @docs-private
+     */
+    protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
 
     /** Value of the select control. Can be a single value or array of values for multiple selection. */
     // TODO: Skipped for migration because:

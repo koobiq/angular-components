@@ -5,6 +5,7 @@
     [kbq-title]="pipeTooltip"
     [class]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-select__panel'"
+    [panelMaxHeight]="panelMaxHeight"
     [tabIndex]="-1"
     [value]="selected"
     (selectionChange)="onSelect($event.value)"

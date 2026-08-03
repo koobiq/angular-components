@@ -13,7 +13,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isMac } from '@koobiq/components/core';
+import { isMac, KbqPanelMaxHeight } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import {
@@ -92,6 +92,12 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      * the multi-select pipe components; other pipe types ignore it.
      */
     protected lockedValues?: unknown[];
+    /**
+     * Maximum height of the dropdown panel's scrollable list, forwarded from the pipe template to the
+     * underlying `kbq-select` / `kbq-tree-select`. Only consumed by the select-family pipe components;
+     * `undefined` leaves the list at the select-family default of 256px.
+     */
+    protected panelMaxHeight?: KbqPanelMaxHeight;
 
     /**
      * Whether the current platform is a Mac.
@@ -186,10 +192,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         // Sync the comparator whenever a matching template is present, independently of `values`, so a
         // template that sets/updates/removes `compareWith` (or omits `values`) is never left with a stale
         // comparator. Absent `compareWith` resets to the pipe's default id-based `compareByValue`.
-        // `lockedValues` is synced on the same terms, and for the same reason.
+        // `lockedValues` and `panelMaxHeight` are synced on the same terms, and for the same reason.
         if (template) {
             this.optionCompareWith = template.compareWith;
             this.lockedValues = template.lockedValues;
+            this.panelMaxHeight = template.panelMaxHeight;
         }
     };
 

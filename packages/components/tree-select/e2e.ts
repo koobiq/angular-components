@@ -694,3 +694,30 @@ export class E2eTreeSelectNoPlaceholder extends BaseTreeSelectStates {}
     }
 })
 export class E2eTreeSelectPanelWidthAuto extends BaseTreeSelectStates {}
+
+@Component({
+    selector: 'e2e-tree-select-panel-max-height',
+    imports: [KbqTreeModule, KbqTreeSelectModule],
+    template: `
+        <kbq-form-field style="width: 300px;" [attr.data-testid]="'e2eFormField'">
+            <kbq-tree-select data-testid="e2eTreeSelect" [panelMaxHeight]="300">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTreeSelectPanelMaxHeight'
+    }
+})
+export class E2eTreeSelectPanelMaxHeight extends BaseTreeSelectStates {}

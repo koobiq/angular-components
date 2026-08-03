@@ -217,6 +217,11 @@
 }
 
 %kbq-select-content {
+    // Content-box so that the cap counts whole options and is not eaten by the padding below — and so
+    // that a global `border-box` reset in a consuming app cannot change what `panelMaxHeight` means.
+    // The token is deliberately left undeclared so that a `:root` override reaches every panel.
+    box-sizing: initial;
+
     max-height: var(--kbq-select-panel-size-max-height, 256px);
     padding: var(--kbq-size-xxs);
     overflow: hidden auto;

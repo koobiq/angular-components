@@ -30,7 +30,12 @@ import {
 } from '../components/dropdown/e2e';
 import { E2eEmptyStateStateAndStyle } from '../components/empty-state/e2e';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../components/file-upload/e2e';
-import { E2eFilterBarFilters, E2eFilterBarStates } from '../components/filter-bar/e2e';
+import {
+    E2eFilterBarFilters,
+    E2eFilterBarPanelMaxHeight,
+    E2eFilterBarPipeTruncation,
+    E2eFilterBarStates
+} from '../components/filter-bar/e2e';
 import { E2eFlagStyles } from '../components/flag/e2e';
 import { E2eFormFieldGroup, E2eFormFieldset } from '../components/form-field/e2e';
 import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
@@ -73,13 +78,15 @@ import {
     E2eMultiSelectRtlPositioning,
     E2eMultiSelectStates,
     E2eSelectLongOptionText,
+    E2eSelectPanelMaxHeight,
     E2eSelectPositioning,
     E2eSelectRtlPositioning,
     E2eSelectStates,
     E2eSelectWithGroupsPositioning,
     E2eSelectWithGroupsRtlPositioning,
     E2eSelectWithSearchAndFooter,
-    E2eVirtualScrollMultiSelectNarrow
+    E2eVirtualScrollMultiSelectNarrow,
+    E2eVirtualScrollSelectPanelMaxHeight
 } from '../components/select/e2e';
 import { E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
 import { E2eSplitButtonStateAndStyle } from '../components/split-button/e2e';
@@ -113,6 +120,7 @@ import {
     E2eTreeSelectInitiallyHidden,
     E2eTreeSelectMultiBehavior,
     E2eTreeSelectNoPlaceholder,
+    E2eTreeSelectPanelMaxHeight,
     E2eTreeSelectPanelWidthAuto,
     E2eTreeSelectPositioning,
     E2eTreeSelectPropertyDisabled,
@@ -165,6 +173,8 @@ const components = [
     E2eTagAutocompleteStates,
     E2eFilterBarStates,
     E2eFilterBarFilters,
+    E2eFilterBarPanelMaxHeight,
+    E2eFilterBarPipeTruncation,
     E2eFlagStyles,
     E2eTimepickerStates,
     E2eIconStateAndStyle,
@@ -231,6 +241,7 @@ const components = [
     E2eTreeSelectDataMutation,
     E2eTreeSelectNoPlaceholder,
     E2eTreeSelectPanelWidthAuto,
+    E2eTreeSelectPanelMaxHeight,
     E2eSelectWithSearchAndFooter,
     E2eSelectPositioning,
     E2eMultiSelectPositioning,
@@ -240,6 +251,8 @@ const components = [
     E2eSelectWithGroupsRtlPositioning,
     E2eMultiSelectNarrow,
     E2eVirtualScrollMultiSelectNarrow,
+    E2eSelectPanelMaxHeight,
+    E2eVirtualScrollSelectPanelMaxHeight,
     E2eSelectLongOptionText,
     E2eInlineEditStates,
     E2eInlineEditMenuButton,

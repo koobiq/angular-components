@@ -75,6 +75,29 @@ Because locked options are rendered as `disabled`, keyboard navigation skips the
 
 <!-- example(filter-bar-locked-options) -->
 
+### Dropdown height
+
+By default the dropdown list of the `select`, `multiselect`, `tree-select` and `multi-tree-select` pipes is 256px tall — exactly eight 32px options, so a list of eight fits without a scrollbar. Pass `panelMaxHeight` in the pipe template, in pixels, to change that:
+
+```ts
+pipeTemplates: KbqPipeTemplate[] = [
+    {
+        name: 'Select',
+        type: KbqPipeTypes.Select,
+        values: [/* ... */],
+        panelMaxHeight: 160,
+
+        cleanable: false,
+        removable: false,
+        disabled: false
+    }
+];
+```
+
+The value caps the scrollable list only, and the list's own padding is added on top of it — so a multiple of the 32px option height fits without a scrollbar and without a clipped row. The pipe's search field is rendered above the list and adds to the panel's total height, while the "select all" row scrolls with the options and is counted by the cap. A value taller than the room left in the viewport is clipped by the overlay rather than scrolled. Omitting the option — or passing `null` — restores the default. The option is ignored by other pipe types.
+
+<!-- example(filter-bar-panel-max-height) -->
+
 ### Inactive filter
 
 The filter value cannot be changed or deleted.
