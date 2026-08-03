@@ -42,7 +42,7 @@
     @return rgba($color, $opacity);
 }
 
-//  Mixin that renders all of the core styles that depend on the theme.
+// Mixin that renders all of the core styles that depend on the theme.
 // @TODO: Argument is unused. will be removed in next major release
 @mixin kbq-core-theme($theme: null) {
     .kbq-app-background {
@@ -50,7 +50,6 @@
         color: var(--kbq-foreground-contrast);
     }
 }
-
 
 // @deprecated @TODO: unused. Will be removed in next major release
 @function _theme_foreground($tokens, $scheme) {
@@ -78,7 +77,6 @@
     );
 }
 
-
 // @deprecated @TODO: unused. Will be removed in next major release
 @function _theme_background($tokens, $scheme) {
     @return (
@@ -104,7 +102,6 @@
     );
 }
 
-
 // @deprecated @TODO: unused. Will be removed in next major release
 @function _theme_icon($tokens, $scheme) {
     @return (
@@ -120,7 +117,6 @@
         visited: map.get($tokens, '#{$scheme}-icon-visited')
     );
 }
-
 
 // @deprecated @TODO: unused. Will be removed in next major release
 @function _theme_line($tokens, $scheme) {
@@ -203,7 +199,6 @@
     );
 }
 
-
 // @deprecated @TODO: unused. Will be removed in next major release
 @function _theme_states($tokens, $scheme) {
     @return (
@@ -225,7 +220,6 @@
             )
     );
 }
-
 
 // @deprecated @TODO: unused. Will be removed in next major release
 @function _theme_palette($tokens, $scheme, $name) {
@@ -262,21 +256,21 @@
     $scheme: 'dark';
 
     @return (
-            is-dark: true,
+        is-dark: true,
 
-            background: _theme_background($tokens, $scheme),
-            foreground: _theme_foreground($tokens, $scheme),
-            icon: _theme_icon($tokens, $scheme),
-            line: _theme_line($tokens, $scheme),
-            states: _theme_states($tokens, $scheme),
-            theme: _theme_palette($tokens, $scheme, theme),
-            success: _theme_palette($tokens, $scheme, success),
-            warning: _theme_palette($tokens, $scheme, warning),
-            error: _theme_palette($tokens, $scheme, error),
-            contrast: _theme_palette($tokens, $scheme, contrast),
-            white: _theme_palette($tokens, $scheme, white),
-            black: _theme_palette($tokens, $scheme, black),
-            purple: _theme_palette($tokens, $scheme, purple),
-            tokens: $tokens
+        background: _theme_background($tokens, $scheme),
+        foreground: _theme_foreground($tokens, $scheme),
+        icon: _theme_icon($tokens, $scheme),
+        line: _theme_line($tokens, $scheme),
+        states: _theme_states($tokens, $scheme),
+        theme: _theme_palette($tokens, $scheme, theme),
+        success: _theme_palette($tokens, $scheme, success),
+        warning: _theme_palette($tokens, $scheme, warning),
+        error: _theme_palette($tokens, $scheme, error),
+        contrast: _theme_palette($tokens, $scheme, contrast),
+        white: _theme_palette($tokens, $scheme, white),
+        black: _theme_palette($tokens, $scheme, black),
+        purple: _theme_palette($tokens, $scheme, purple),
+        tokens: $tokens
     );
 }
