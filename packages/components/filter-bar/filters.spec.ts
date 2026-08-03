@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, DebugElement, inject, viewChild } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, inject, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,6 +16,7 @@ import {
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
+import { setInputModality } from './pipes/pipe-states.spec-helper';
 
 const PIPE_TEMPLATE_ID = 'TestText';
 
@@ -714,6 +716,67 @@ describe('KbqFilters', () => {
             component.filterSavedUnsuccessfully({ text: 'Failed' });
 
             expect(showErrorSpy).toHaveBeenCalledWith({ text: 'Failed' });
+        }));
+
+        /**
+         * The Save button gets focus back so the retry is reachable, but the ring (painted off
+         * `.cdk-keyboard-focused`) must only appear when the failed save came from the keyboard.
+         */
+        const shouldRefocusSaveButtonWith = (modality: 'mouse' | 'keyboard') => {
+            initFixture(createFilter([], { name: 'Test' }));
+
+            const component = getFiltersComponent();
+
+            component.openSaveAsNewFilterPopover();
+            fixture.detectChanges();
+            flush();
+
+            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
+            setInputModality(modality);
+
+            component.filterSavedUnsuccessfully();
+            flush();
+
+            expect(focusViaSpy).toHaveBeenCalledWith(
+                expect.objectContaining({ nativeElement: expect.any(HTMLButtonElement) }),
+                modality
+            );
+        };
+
+        it('should refocus the Save button with the keyboard origin after a keyboard-driven save', fakeAsync(() => {
+            shouldRefocusSaveButtonWith('keyboard');
+        }));
+
+        it('should refocus the Save button with the mouse origin after a mouse-driven save', fakeAsync(() => {
+            shouldRefocusSaveButtonWith('mouse');
+        }));
+
+        /**
+         * Mirrors `focusViaKeyboard()`'s own early return: if the button is re-disabled (a fast retry)
+         * before the deferred focus-restore runs, it must not steal focus onto a disabled control.
+         */
+        it('should not refocus the Save button if it is disabled again by the time the callback fires', fakeAsync(() => {
+            initFixture(createFilter([], { name: 'Test' }));
+
+            const component = getFiltersComponent();
+
+            component.openSaveAsNewFilterPopover();
+            fixture.detectChanges();
+            flush();
+
+            const popover = (component as any).savePopover();
+            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
+            popover.saveFilterButton = () => ({
+                disabled: true,
+                elementRef: new ElementRef(document.createElement('button'))
+            });
+
+            component.filterSavedUnsuccessfully();
+            flush();
+
+            expect(focusViaSpy).not.toHaveBeenCalled();
         }));
 
         it('should re-enable filterName', fakeAsync(() => {

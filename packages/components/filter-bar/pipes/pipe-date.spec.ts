@@ -18,7 +18,7 @@ import {
 import { DateTime } from 'luxon';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeDateComponent } from './pipe-date';
-import { registerPipeStatesTests } from './pipe-states.spec-helper';
+import { registerPipeStatesTests, setInputModality, stubReturnButton } from './pipe-states.spec-helper';
 
 const PIPE_TEMPLATE_ID = 'TestDate';
 
@@ -288,10 +288,9 @@ describe('KbqPipeDateComponent', () => {
             const component = getPipeComponent();
             const internal = asInternal(component);
             const updatePosition = jest.fn();
-            const focusViaKeyboard = jest.fn();
 
             internal.popover = () => ({ updatePosition });
-            internal.returnButton = () => ({ focusViaKeyboard });
+            internal.returnButton = stubReturnButton();
             internal.showStartCalendar = true;
             internal.showEndCalendar = true;
 
@@ -307,7 +306,37 @@ describe('KbqPipeDateComponent', () => {
             flush();
 
             expect(updatePosition).toHaveBeenCalledWith(true);
-            expect(focusViaKeyboard).toHaveBeenCalled();
+        }));
+
+        /**
+         * The "back" button must always receive focus (the period list it replaces is destroyed), but with
+         * the origin the user actually interacted with — the ring is painted off `.cdk-keyboard-focused`.
+         */
+        const shouldFocusReturnButtonWith = (modality: 'mouse' | 'keyboard') => {
+            const component = getPipeComponent();
+            const internal = asInternal(component);
+            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
+            internal.popover = () => ({ updatePosition: jest.fn() });
+            internal.returnButton = stubReturnButton();
+
+            setInputModality(modality);
+
+            component.showPeriod();
+            flush();
+
+            expect(focusViaSpy).toHaveBeenCalledWith(
+                expect.objectContaining({ nativeElement: expect.any(HTMLButtonElement) }),
+                modality
+            );
+        };
+
+        it('should focus the "back" button with the keyboard origin when opened from the keyboard', fakeAsync(() => {
+            shouldFocusReturnButtonWith('keyboard');
+        }));
+
+        it('should focus the "back" button with the mouse origin when opened with the mouse', fakeAsync(() => {
+            shouldFocusReturnButtonWith('mouse');
         }));
     });
 
@@ -377,6 +406,33 @@ describe('KbqPipeDateComponent', () => {
             flush();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
+        }));
+
+        /**
+         * Mixed modality: the popover is reached from the keyboard but the preset is picked with the mouse.
+         * The origin captured on the pipe host is still `'keyboard'` here — it goes stale the moment the
+         * popover opens, since the popover content lives in the overlay container, outside the host, and
+         * hiding it does not move focus back into the host either. Only the current input modality keeps
+         * the focus ring off the trigger.
+         */
+        it('should restore the trigger with the mouse origin when a preset is picked with the mouse', fakeAsync(() => {
+            const component = getPipeComponent();
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const trigger = fixture.debugElement.query(By.css('.kbq-pipe button')).nativeElement;
+
+            setInputModality('keyboard');
+            focusMonitor.focusVia(trigger, 'keyboard');
+            flush();
+
+            const focusViaSpy = jest.spyOn(focusMonitor, 'focusVia');
+
+            asInternal(component).popover = () => ({ hide: jest.fn() });
+
+            setInputModality('mouse');
+            component.onSelect({ name: 'test', start: '', end: '' });
+            flush();
+
+            expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), 'mouse');
         }));
     });
 
@@ -1064,7 +1120,7 @@ describe('KbqPipeDateComponent', () => {
 
             // showPeriod()'s deferred focus-restore isn't relevant to hint rendering; stub it out so the
             // real (isListMode-driven) template swap below isn't gated on the returnButton view query.
-            internal.returnButton = () => ({ focusViaKeyboard: () => {} });
+            internal.returnButton = stubReturnButton();
 
             component.showPeriod();
             fixture.detectChanges();
@@ -1111,7 +1167,7 @@ describe('KbqPipeDateComponent', () => {
 
             const internal = asInternal(component);
 
-            internal.returnButton = () => ({ focusViaKeyboard: () => {} });
+            internal.returnButton = stubReturnButton();
 
             component.showPeriod();
             fixture.detectChanges();
