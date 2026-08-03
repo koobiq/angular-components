@@ -10,6 +10,14 @@ export type ModalType = 'default' | 'confirm' | 'custom';
 // Subtypes of Confirm Modal
 export type ConfirmType = 'confirm' | 'success' | 'warn';
 
+/** Shadow visibility state — which of the two overflow shadows should be rendered. */
+export interface KbqOverflowShadowState {
+    /** Whether the top (header) shadow should be visible — content is scrolled past the top. */
+    top: boolean;
+    /** Whether the bottom (footer) shadow should be visible — more content remains below the fold. */
+    bottom: boolean;
+}
+
 export enum ModalSize {
     Small = 'small',
     Medium = 'medium',

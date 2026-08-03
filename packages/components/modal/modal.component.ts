@@ -20,6 +20,7 @@ import {
     Output,
     QueryList,
     Renderer2,
+    signal,
     SimpleChanges,
     TemplateRef,
     Type,
@@ -40,6 +41,7 @@ import { KbqModalRef } from './modal-ref.class';
 import { modalUtilObject as ModalUtil } from './modal-util';
 import {
     IModalButtonOptions,
+    KbqOverflowShadowState,
     MODAL_ANIMATE_DURATION,
     ModalOptions,
     ModalSize,
@@ -186,6 +188,14 @@ export class KbqModalComponent<T = any, R = any>
 
     isTopOverflow: boolean = false;
     isBottomOverflow: boolean = false;
+
+    /**
+     * Scroll-shadow state published by `KbqModalBody` when the modal content is composed
+     * manually (`kbq-modal-title`/`kbq-modal-body`/`kbq-modal-footer`), so the header/footer
+     * can render matching shadows without a direct template reference between them.
+     * @docs-private
+     */
+    readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
 
     maskAnimationClassMap: object | null;
     modalAnimationClassMap: object | null;

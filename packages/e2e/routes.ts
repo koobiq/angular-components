@@ -39,7 +39,7 @@ import { E2eLinkStates } from '../components/link/e2e';
 import { E2eListStates } from '../components/list/e2e';
 import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
-import { E2eModalStates } from '../components/modal/e2e';
+import { E2eModalFullCustom, E2eModalStates } from '../components/modal/e2e';
 import { E2eHorizontalNavbarStates, E2eVerticalNavbarStates } from '../components/navbar/e2e';
 import { E2eNotificationCenterStates } from '../components/notification-center/e2e';
 import {
@@ -153,6 +153,7 @@ const components = [
     E2eLinkStates,
     E2eTagInputStates,
     E2eModalStates,
+    E2eModalFullCustom,
     E2eListStates,
     E2eLoaderOverlayStates,
     E2eLoaderOverlayCard,
