@@ -32,6 +32,11 @@ export default defineConfig({
         }
     ],
     expect: {
+        // These baselines are compared with threshold: 0, so they are tied to one exact browser
+        // build. @playwright/test is pinned to an exact version in package.json for that reason:
+        // even a patch release can bump the bundled Chromium (1.55.0 ships build 1187, 1.55.1
+        // ships 1193) and invalidate every screenshot. Upgrade it on its own branch and refresh
+        // the baselines with /approve-snapshots in the same pull request.
         toHaveScreenshot: {
             pathTemplate: '{testFileDir}/__screenshots__/{arg}{ext}',
             threshold: 0,

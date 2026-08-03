@@ -112,12 +112,21 @@ module.exports = tseslint.config(
     // Global ignores (ported from .eslintignore)
     {
         ignores: [
-            'dist',
-            'node_modules',
-            'coverage',
+            // `**/` matters: a bare pattern is anchored to this config's directory, so it would
+            // only cover the root folders. Nested build output such as packages/cli/dist would
+            // still be linted — and since that is a multi-megabyte minified bundle, linting it
+            // makes `yarn eslint` appear to hang. CI never hit it only because linters run on a
+            // fresh checkout that has not built anything.
+            '**/dist',
+            '**/node_modules',
+            '**/coverage',
             // ignore Yarn's bundled release/plugin binaries (flat config lints .cjs by default,
             // unlike the previous `--ext=.js,.ts,.html`)
             '.yarn',
+            // ignore git-ignored local tooling directories: `eslint .` walks into them, and the
+            // files there belong to no tsconfig project, so the type-aware rules fail on them
+            '.ai',
+            '.claude',
             // ignore build tokens
             'apps/docs/src/styles/koobiq/default-theme/',
             // ignore nunjuck templates

@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { existsSync } from 'fs';
-import glob from 'glob';
+import { globSync } from 'glob';
 import { join } from 'path';
 import { checkKoobiqPackage, checkReleaseBundle, checkTypeDefinitionFile } from './output-validations';
 
@@ -17,7 +17,6 @@ const releaseTypeDefinitionsGlob = '**/*.d.ts';
 type PackageFailures = Map<string, string[]>;
 
 const { red, bold, yellow } = chalk;
-const { sync } = glob;
 
 /**
  * Checks a specified release package against generic and package-specific output validations.
@@ -32,8 +31,12 @@ export function checkReleasePackage(releasesPath: string, packageName: string): 
         failures.set(message, (failures.get(message) || []).concat(filePath));
     };
 
-    const bundlePaths = sync(releaseBundlesGlob, { cwd: packagePath, absolute: true });
-    const typeDefinitions = sync(releaseTypeDefinitionsGlob, { cwd: packagePath, absolute: true });
+    // glob v9 stopped sorting its results, so sort explicitly to keep the failure report in a
+    // stable order. Not using `posix` here: combined with `absolute` it returns the
+    // `//?/C:/...` extended-length form on Windows, and these paths are read back from disk.
+    const globOptions = { cwd: packagePath, absolute: true } as const;
+    const bundlePaths = globSync(releaseBundlesGlob, globOptions).sort();
+    const typeDefinitions = globSync(releaseTypeDefinitionsGlob, globOptions).sort();
 
     // We want to walk through each bundle within the current package and run
     // release validations that ensure that the bundles are not invalid.

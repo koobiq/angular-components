@@ -17,6 +17,7 @@
         "dgeni",
         "docsearch",
         "frontends",
+        "GHSA",
         "gulpfile",
         "Infosec",
         "interpuncts",
@@ -26,6 +27,9 @@
         "luxon",
         "Maskito",
         "messageformat",
+        "minimatch",
+        "neutralise",
+        "neutralising",
         "noborder",
         "opensource",
         "overlayed",
@@ -43,6 +47,9 @@
         "subfolders",
         "timepicker",
         "Topbar",
-        "unclickable"
+        "unclickable",
+        "unmigrated",
+        "unparseable",
+        "yarnrc"
     ]
 }

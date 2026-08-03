@@ -1,6 +1,9 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        // Rollup bundles this tool to ESM; "bundler" resolution is what lets TypeScript read
+        // the "exports" maps of chalk 5+ and glob 9+.
+        "moduleResolution": "bundler",
         "types": ["node", "jest"]
     }
 }

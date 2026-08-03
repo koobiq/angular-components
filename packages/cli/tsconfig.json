@@ -1,11 +1,17 @@
 {
     "compilerOptions": {
         "target": "ES2017",
-        "module": "commonjs",
+        // Rollup consumes ES modules and emits the CommonJS bundle itself; "bundler"
+        // resolution is what lets TypeScript read the "exports" maps of @octokit/rest,
+        // inquirer and commander, which no longer publish a top-level "main".
+        "module": "esnext",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "resolveJsonModule": true,
+        // Matches tsconfig.lib.json. Without it the ES2022-era declarations shipped by
+        // @octokit/request-error fail against this config's ES2017 target.
+        "skipLibCheck": true,
         "strict": true,
         "sourceMap": false,
         "composite": true,

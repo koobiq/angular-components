@@ -1,0 +1,25 @@
+name: Audit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/workflows/actions/setup-node
+      # Deliberately narrow: only advisories that reach the runtime dependency graph fail
+      # a pull request. Development-only tooling is far larger, moves constantly, and is
+      # covered by the weekly audit-report workflow instead — a vulnerable linter must not
+      # block unrelated work.
+      #
+      # Exceptions live in .yarnrc.yml (npmAuditExcludePackages / npmAuditIgnoreAdvisories),
+      # each with the reasoning and the condition for removing it.
+      - run: yarn npm audit --all --recursive --no-deprecations --environment production --severity high

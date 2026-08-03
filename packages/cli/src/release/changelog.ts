@@ -1,14 +1,10 @@
 import chalk from 'chalk';
-import conventionalChangelog from 'conventional-changelog';
 import { createReadStream, createWriteStream, readFileSync } from 'fs';
 import inquirer from 'inquirer';
 import merge2 from 'merge2';
 import { join } from 'path';
 import { Readable } from 'stream';
 import { IReleaseTaskConfig } from './base-release-task';
-
-const changelogCompare = require('conventional-changelog-writer/lib/util.js');
-const writerOpts = require('conventional-changelog-angular/writer-opts.js');
 
 const { yellow, bold } = chalk;
 const { prompt } = inquirer;
@@ -42,34 +38,58 @@ export async function promptAndGenerateChangelog(changelogPath: string, config: 
  * @param releaseName Name of the release that should show up in the changelog.
  * @param config task configuration
  */
+export async function buildChangelogStream(
+    changelogPath: string,
+    releaseName: string,
+    config: IReleaseTaskConfig
+): Promise<Readable> {
+    // conventional-changelog 8 and its presets are ES modules and publish no `require`
+    // condition, so they cannot be required. A dynamic import works from CommonJS, and
+    // TypeScript preserves it in the emitted output under `module: nodenext`.
+    const { ConventionalChangelog } = await import('conventional-changelog');
+    const createAngularPreset = (await import('conventional-changelog-angular')).default;
+    const angularPreset = (await createAngularPreset()) as { writer: any };
+
+    return new ConventionalChangelog(config.projectDir)
+        .loadPreset('angular')
+        .readPackage(join(config.projectDir, 'package.json'))
+        .readRepository()
+        .context({ title: releaseName })
+        .commits(
+            {},
+            {
+                // Expansion of the convention-changelog-angular preset to extract the package
+                // name from the commit message.
+                headerPattern: /^(\w*)(?:\((?:([^/]+)\/)?(.*)\))?: (.*)$/,
+                headerCorrespondence: ['type', 'package', 'scope', 'subject']
+            }
+        )
+        .writer(createChangelogWriterOptions(changelogPath, angularPreset.writer, config))
+        .writeStream();
+}
+
+/**
+ * Writes the changelog from the latest Semver tag to the current HEAD.
+ * @param changelogPath Path to the changelog file.
+ * @param releaseName Name of the release that should show up in the changelog.
+ * @param config task configuration
+ */
 export async function prependChangelogFromLatestTag(
     changelogPath: string,
     releaseName: string,
     config: IReleaseTaskConfig
 ) {
-    const angularPresetWriterOptions = await writerOpts;
-    const outputStream: Readable = conventionalChangelog(
-        {
-            preset: 'angular',
-            pkg: {
-                path: join(config.projectDir, 'package.json')
-            }
-        } /* core options */,
-        { title: releaseName } /* context options */,
-        undefined,
-        {
-            /* commit parser options */
-            // Expansion of the convention-changelog-angular preset to extract the package
-            // name from the commit message.
-            headerPattern: /^(\w*)(?:\((?:([^/]+)\/)?(.*)\))?: (.*)$/,
-            headerCorrespondence: ['type', 'package', 'scope', 'subject']
-        },
-        createChangelogWriterOptions(changelogPath, angularPresetWriterOptions, config) /* writer options */
-    );
+    const outputStream = await buildChangelogStream(changelogPath, releaseName, config);
 
     // Stream for reading the existing changelog. This is necessary because we want to
     // actually prepend the new changelog to the existing one.
     const previousChangelogStream = createReadStream(changelogPath);
+
+    // conventional-changelog-writer 9 trims each rendered block and terminates it with a single
+    // newline, so unlike version 5 it no longer leaves a blank line at the end of the section.
+    // Emit that separator here, otherwise the new section runs straight into the heading of the
+    // previous release.
+    const sectionSeparator = Readable.from('\n');
 
     return new Promise((resolve, reject) => {
         // Sequentially merge the changelog output and the previous changelog stream, so that
@@ -77,7 +97,7 @@ export async function prependChangelogFromLatestTag(
         // changelog file, so that the changes are reflected on file system.
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const mergedCompleteChangelog = merge2(outputStream, previousChangelogStream);
+        const mergedCompleteChangelog = merge2(outputStream, sectionSeparator, previousChangelogStream);
 
         // Wait for the previous changelog to be completely read because otherwise we would
         // read and write from the same source which causes the content to be thrown off.
@@ -101,24 +121,90 @@ export async function promptChangelogReleaseName(): Promise<string> {
     ).releaseName;
 }
 
+/**
+ * Sorts commits by the given keys, concatenated and compared as one string.
+ *
+ * Reimplements `functionify` from conventional-changelog-writer 5, which was reached through the
+ * internal `lib/util.js` path. Version 9 neither exports it nor keeps that path, and its own
+ * `commitsSort` option only sorts the writer's groups, not the per-package groups built below.
+ */
+function compareCommitsBy(keys: string[]) {
+    return (a: any, b: any): number => {
+        const left = keys.map((key) => a[key] || '').join('');
+        const right = keys.map((key) => b[key] || '').join('');
+
+        return left.localeCompare(right);
+    };
+}
+
+/**
+ * Renders the base url a commit link points at. Mirrors the branch the old commit.hbs took:
+ * `host/owner/repository` when a repository is known, and the plain repository url otherwise.
+ */
+function renderRepositoryUrl(context: any): string {
+    if (!context.repository) {
+        return context.repoUrl;
+    }
+
+    const host = context.host ? `${context.host}/` : '';
+    const owner = context.owner ? `${context.owner}/` : '';
+
+    return `${host}${owner}${context.repository}`;
+}
+
+/**
+ * Renders a single commit entry.
+ *
+ * Replaces the former commit.hbs. conventional-changelog-writer 9 dropped Handlebars entirely
+ * and takes render functions instead, so the template is expressed directly. The output is
+ * byte for byte the same: an optional bold scope, the subject (or the raw header when there is
+ * no subject), then either a linked short hash or the bare short hash.
+ */
+function renderCommit(context: any, commit: any): string {
+    const scope = commit.scope ? ` **${commit.scope}:**` : '';
+    const subject = commit.subject || commit.header;
+    const link = context.linkReferences
+        ? `([${commit.shortHash}](${renderRepositoryUrl(context)}/${context.commit}/${commit.hash}))`
+        : commit.shortHash;
+
+    return `${scope} ${subject} ${link}`;
+}
+
 function createChangelogWriterOptions(changelogPath: string, presetWriterOptions: any, config: IReleaseTaskConfig) {
     const existingChangelogContent = readFileSync(changelogPath, 'utf8');
-    const commitSortFunction = changelogCompare.functionify(['type', 'scope', 'subject']);
+    const commitSortFunction = compareCommitsBy(['type', 'scope', 'subject']);
 
     return {
-        // Overwrite the changelog templates so that we can render the commits grouped
-        // by package names. Templates are based on the original templates of the
-        // angular preset: "conventional-changelog-angular/templates".
-        mainTemplate: readFileSync(join(__dirname, 'templates/template.hbs'), 'utf8'),
-        commitPartial: readFileSync(join(__dirname, 'templates/commit.hbs'), 'utf8'),
+        // Replaces the former template.hbs and commit.hbs, which rendered the commits grouped by
+        // package name. conventional-changelog-writer 9 replaced Handlebars templates with render
+        // functions, so the two customised templates now live in this file. The release header is
+        // still the one from the angular preset, exactly as `{{> header}}` used to resolve it.
+        template: (context: any) =>
+            `${presetWriterOptions.headerPartial(context)}\n\n` +
+            context.packageGroups
+                .map(
+                    (group: any) =>
+                        `### ${group.title}\n\n` +
+                        group.commits
+                            .map((commit: any) => ` * ${commit.type} ${renderCommit(context, commit)}\n`)
+                            .join('') +
+                        '\n'
+                )
+                .join(''),
+        commitPartial: renderCommit,
 
         // Overwrites the conventional-changelog-angular preset transform function. This is necessary
         // because the Angular preset changes every commit note to a breaking change note. Since we
         // have a custom note type for deprecations, we need to keep track of the original type.
+        //
+        // conventional-changelog-writer 9 hands the transform an immutable commit and merges the
+        // returned diff, so the note type is carried on a copy rather than assigned in place. The
+        // preset spreads each incoming note before overwriting its title, so `type` survives, and
+        // it returns `notes` as part of its diff.
         transform: (commit: any, context: any) => {
-            commit.notes.forEach((n: any) => (n.type = n.title));
+            const notes = commit.notes.map((note: any) => ({ ...note, type: note.title }));
 
-            return presetWriterOptions.transform(commit, context);
+            return presetWriterOptions.transform({ ...commit, notes }, context);
         },
 
         // Specify a writer option that can be used to modify the content of a new changelog section.

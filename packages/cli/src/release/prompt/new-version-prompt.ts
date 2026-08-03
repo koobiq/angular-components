@@ -1,4 +1,4 @@
-import inquirer, { type ListChoiceOptions, type SeparatorOptions } from 'inquirer';
+import inquirer from 'inquirer';
 import { ReleaseType, createNewVersion } from '../version-name/create-version';
 import { Version, parseVersionName } from '../version-name/parse-version';
 import { determineAllowedPrereleaseLabels } from './prerelease-labels';
@@ -13,12 +13,19 @@ interface IVersionPromptAnswers {
 const { prompt, Separator } = inquirer;
 
 /**
+ * A single entry of the version list prompt: either a selectable version or a visual
+ * separator. Inquirer stopped exporting `ListChoiceOptions` and `SeparatorOptions` in v10,
+ * so the shape is described structurally instead.
+ */
+type VersionChoice = { value: string; name: string } | InstanceType<typeof Separator>;
+
+/**
  * Prompts the current user-input interface for a new version name. The new version will be
  * validated to be a proper increment of the specified current version.
  */
 export async function promptForNewVersion(currentVersion: Version): Promise<Version> {
     const allowedPrereleaseChoices = determineAllowedPrereleaseLabels(currentVersion);
-    const versionChoices: (ListChoiceOptions | SeparatorOptions)[] = [];
+    const versionChoices: VersionChoice[] = [];
     const currentVersionName = currentVersion.format();
 
     if (currentVersion.prereleaseLabel) {

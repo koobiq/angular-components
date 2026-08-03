@@ -1,31 +1,50 @@
-Thanks for helping make GitHub safe for everyone.
+# Security Policy
 
-## Security
+Thanks for helping keep Koobiq and its users safe.
 
-GitHub takes the security of our software products and services seriously, including all of the open source code repositories managed through our GitHub organization, such as [Koobiq](https://github.com/koobiq).
+## Supported versions
 
-Even though [open source repositories are outside of the scope of our bug bounty program](https://bounty.github.com/index.html#scope) and therefore not eligible for bounty rewards, we will ensure that your finding gets passed along to the appropriate maintainers for remediation.
+Security fixes are made on `main`, which is the current release line (`20.x`). Older release
+branches (`19.x`, `18.x`) receive backports where the fix applies cleanly and the line is
+still in use.
 
-## Reporting Security Issues
+Note that `@koobiq/components` and the adapter packages declare their Angular dependencies
+as peer dependencies. Vulnerabilities in Angular itself should be reported to the
+[Angular project](https://github.com/angular/angular/security/policy).
 
-If you believe you have found a security vulnerability in any GitHub-owned repository, please report it to us through coordinated disclosure.
+## Reporting a vulnerability
 
-**Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**
+**Please do not report security vulnerabilities through public issues, discussions, or pull
+requests.**
 
-Instead, please send an email to opensource-security[@]github.com.
+Report privately through GitHub instead: open the
+[Security tab](https://github.com/koobiq/angular-components/security) of this repository and
+use **Report a vulnerability**. The report is visible only to the maintainers, and it gives
+us a private place to discuss and prepare a fix with you.
 
-Please include as much of the information listed below as you can to help us better understand and resolve the issue:
+To help us triage quickly, please include as much of the following as you can:
 
-- The type of issue (e.g., buffer overflow, SQL injection, or cross-site scripting)
-- Full paths of source file(s) related to the manifestation of the issue
-- The location of the affected source code (tag/branch/commit or direct URL)
-- Any special configuration required to reproduce the issue
-- Step-by-step instructions to reproduce the issue
-- Proof-of-concept or exploit code (if possible)
-- Impact of the issue, including how an attacker might exploit the issue
+- the type of issue (for example cross-site scripting, prototype pollution, or a supply
+  chain problem);
+- the affected package and version, and the source files involved;
+- the configuration needed to reproduce the issue;
+- step-by-step reproduction instructions, ideally a minimal example;
+- proof-of-concept or exploit code, if you have it;
+- the impact, and how an attacker might use it.
 
-This information will help us triage your report more quickly.
+## What happens next
 
-## Policy
+We will acknowledge the report, keep you updated as we investigate, and credit you in the
+advisory when the fix is published, unless you would rather stay anonymous. We ask that you
+give us a chance to release a fix before disclosing the issue publicly.
 
-See [GitHub's Safe Harbor Policy](https://docs.github.com/en/github/site-policy/github-bug-bounty-program-legal-safe-harbor#1-safe-harbor-terms)
+## Dependency vulnerabilities
+
+Advisories against dependencies are tracked by Dependabot and by the `Audit` and
+`Audit report` workflows in this repository.
+
+The published packages (`@koobiq/components`, `@koobiq/components-experimental`, the date
+adapters) depend only on `tslib` at runtime; everything else is a peer dependency or build
+tooling that is not shipped to consumers. Advisories that cannot be fixed by an upgrade are
+recorded in [`.yarnrc.yml`](../.yarnrc.yml), each with the reasoning and the condition under
+which the exception should be removed.

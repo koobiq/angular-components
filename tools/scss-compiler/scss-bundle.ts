@@ -1,6 +1,6 @@
 import autoprefixer from 'autoprefixer';
 import fs from 'fs';
-import glob from 'glob';
+import { globSync } from 'glob';
 import path from 'path';
 import postcss from 'postcss';
 import * as sass from 'sass';
@@ -51,11 +51,15 @@ async function postProcessCss({ css, from }: { css: string; from: string }) {
     const distPrebuiltThemes = `${dist}/core/styles/theming/prebuilt`;
     const componentsPath = path.resolve(process.cwd(), `${src}/**/*.scss`);
 
-    const filesToCopy = glob.sync(componentsPath);
+    // glob v9 stopped sorting its results and treats a backslash as an escape rather than a
+    // separator; `componentsPath` comes from `path.resolve`, so on Windows it is
+    // backslash-separated. Not using `posix` here on purpose: for an absolute Windows pattern
+    // it returns the `//?/C:/...` extended-length form, which sass cannot open. Nothing here
+    // is checked in, so native separators are fine.
+    const scssFiles = globSync(componentsPath, { windowsPathsNoEscape: true }).sort();
 
-    filesToCopy.forEach(copyFiles(src, dist));
+    scssFiles.forEach(copyFiles(src, dist));
 
-    const scssFiles = glob.sync(componentsPath);
     const scssPipe = writeScss({ src, dist });
 
     for (const file of scssFiles) {

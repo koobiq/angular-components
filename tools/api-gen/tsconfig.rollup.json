@@ -1,7 +1,12 @@
 {
     "compilerOptions": {
         "target": "ES2022",
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        // Rollup emits ESM (.mjs) and keeps chalk and glob external, so Node resolves them
+        // natively at runtime. "bundler" resolution is what lets TypeScript read their
+        // "exports" maps; without it both fail to type-check with TS2307.
+        "module": "esnext",
+        "moduleResolution": "bundler"
     },
     "exclude": ["**/*.spec.ts"]
 }
