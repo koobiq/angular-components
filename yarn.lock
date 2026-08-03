@@ -3125,17 +3125,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docsearch/css@npm:^4.6.3":
-  version: 4.6.3
-  resolution: "@docsearch/css@npm:4.6.3"
-  checksum: 10c0/10c1282f102332915eaced15b16422d6aeb6b845311483e73d0f789fdc9c0913278adfa9f6ab29c856d769eafd1598d3271d6ef7059d74bec9d3f3c53a29f132
+"@docsearch/css@npm:^4.7.0":
+  version: 4.7.0
+  resolution: "@docsearch/css@npm:4.7.0"
+  checksum: 10c0/1623c539b93aa54cbeea5d8ed3ba7c6f78717a7d39ac174be69b4751fddce77c2536ea1572cbecc4db096c858b43647f554337618d494df5089efe4ae0202c8f
   languageName: node
   linkType: hard
 
-"@docsearch/js@npm:^4.6.3":
-  version: 4.6.3
-  resolution: "@docsearch/js@npm:4.6.3"
-  checksum: 10c0/90aecad104a4a14a2a6607f3ab4015dfb40ad0e2dfa85c49b924683f6493e7beae1575fcd3e880f1fa1f448c883a7e573800aee195edfba93d921f3a96f5bc4f
+"@docsearch/js@npm:^4.7.0":
+  version: 4.7.0
+  resolution: "@docsearch/js@npm:4.7.0"
+  checksum: 10c0/f55322ddf768d2261432f71483086394ca7062696e924ad3ae26c7725ebd59fd2ed9280038a65bbaf43b2c78a569dc51029536c06c2e8c434a86e2cbfd1a681d
   languageName: node
   linkType: hard
 
@@ -13420,8 +13420,8 @@ __metadata:
     "@commitlint/cli": "npm:^19.8.1"
     "@commitlint/config-conventional": "npm:^19.8.1"
     "@cspell/dict-ru_ru": "npm:^2.3.2"
-    "@docsearch/css": "npm:^4.6.3"
-    "@docsearch/js": "npm:^4.6.3"
+    "@docsearch/css": "npm:^4.7.0"
+    "@docsearch/js": "npm:^4.7.0"
     "@eslint-community/eslint-plugin-eslint-comments": "npm:^4.5.0"
     "@eslint/js": "npm:^9.0.0"
     "@fontsource/inter": "npm:^5.2.8"
