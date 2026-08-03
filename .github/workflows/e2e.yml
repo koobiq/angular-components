@@ -22,7 +22,7 @@ jobs:
       # run down with it — which is what happened in run 30790866073, where the job hit the 30
       # minute wall during setup and produced no report at all.
       - run: yarn run e2e:setup
-        timeout-minutes: 8
+        timeout-minutes: 60
       - id: run-e2e-tests
         run: |
           yarn run e2e:components

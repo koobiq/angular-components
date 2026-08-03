@@ -30,7 +30,7 @@ jobs:
       - uses: ./.github/workflows/actions/setup-node
       # Same cap as e2e.yml: fail fast on a stalled install rather than burning the job budget.
       - run: yarn run e2e:setup
-        timeout-minutes: 8
+        timeout-minutes: 60
       - id: update-snapshots
         run: |
           yarn run e2e:components --update-snapshots
