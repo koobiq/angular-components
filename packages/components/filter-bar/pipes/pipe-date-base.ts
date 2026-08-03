@@ -390,9 +390,12 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
             if (this.destroyed) return;
 
             this.popover().updatePosition(true);
-            // Focus via FocusMonitor (keyboard origin) so the focus ring is preserved; a native
-            // `.focus()` bypasses FocusMonitor and drops the `.cdk-keyboard-focused` ring.
-            this.returnButton().focusViaKeyboard();
+            // The period list this view replaces is being torn down, so focus has to move or it lands on
+            // <body>. Focus via FocusMonitor with the user's *current* input modality — not
+            // `KbqButton.focusViaKeyboard()`, which hardcodes `'keyboard'` and paints the ring even for a
+            // mouse click on the "custom period" row. This also leaves FocusMonitor's last focus origin
+            // truthful, so the native focus `showList()` performs on the way back inherits the right origin.
+            this.focusMonitor.focusVia(this.returnButton().elementRef, this.currentFocusOrigin);
         });
     }
 
