@@ -231,21 +231,27 @@ describe('KbqPasswordInput', () => {
     });
 
     it('should provide custom password rule via callback', fakeAsync(() => {
-        const valueToTest = 'TestValue';
         const fixture = createComponent(KbqPasswordInputCustomPasswordRule);
 
         fixture.detectChanges();
         flush();
-        const passwordInput: any = fixture.debugElement.query(By.directive(KbqInputPassword));
-        const input = passwordInput.nativeElement;
 
-        fixture.componentInstance.value = valueToTest;
-        dispatchFakeEvent(input, 'input');
+        const input = fixture.debugElement.query(By.directive(KbqInputPassword)).nativeElement;
+        const hint = () => fixture.componentInstance.passwordHint();
+        const type = (value: string) => {
+            input.value = value;
+            dispatchFakeEvent(input, 'input');
+            fixture.detectChanges();
+        };
 
-        expect(fixture.componentInstance.passwordHint().customCheckRule()).toBeTruthy();
-        expect(fixture.componentInstance.passwordHint().hasError).toEqual(
-            fixture.componentInstance.passwordHint().customCheckRule()(valueToTest)
-        );
+        expect(hint().customCheckRule()).toBeTruthy();
+
+        // The rule asks for at least five uppercase letters.
+        type('TestValue');
+        expect(hint().hasError).toBe(true);
+
+        type('TESTValue');
+        expect(hint().hasError).toBe(false);
     }));
 
     it('should apply validation rules on blur', fakeAsync(() => {

@@ -322,7 +322,7 @@ describe('KbqInput', () => {
 
                 expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(1);
 
-                dispatchKeyboardEvent(formFieldDebug.nativeElement, 'keydown', ESCAPE);
+                dispatchKeyboardEvent(formFieldDebug.nativeElement, 'keydown', ESCAPE, undefined, 'Escape');
                 fixture.detectChanges();
 
                 expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(0);

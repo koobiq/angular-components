@@ -43,6 +43,15 @@ export abstract class KbqFormFieldControl<T> {
      */
     readonly controlType?: string;
 
+    /**
+     * Sets the ids of the elements (hints, errors) that describe the control.
+     *
+     * Implement it only when `aria-describedby` has to be placed on an element other than the one
+     * the control is declared on: `KbqFormField` writes the attribute on the control's host element
+     * by default.
+     */
+    setDescribedByIds?: (ids: string[]) => void;
+
     /** Handles a click on the control's container. */
     abstract onContainerClick(event: MouseEvent): void;
 
@@ -50,5 +59,27 @@ export abstract class KbqFormFieldControl<T> {
     abstract focus(options?: FocusOptions): void;
 
     /** Opens control's overlay. */
-    abstract open?(): void;
+    open?: () => void;
+}
+
+/** Ids written by `kbqSetDescribedByIds` for a given element, so consumer-provided ids survive updates. */
+const ownDescribedByIds = new WeakMap<HTMLElement, string[]>();
+
+/**
+ * Writes `aria-describedby` on the control's element, preserving the ids the consumer set themselves.
+ *
+ * @docs-private
+ */
+export function kbqSetDescribedByIds(element: HTMLElement, ids: string[]): void {
+    const previouslyOwned = ownDescribedByIds.get(element) || [];
+    const current = (element.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+    const next = [...current.filter((id) => !previouslyOwned.includes(id)), ...ids];
+
+    ownDescribedByIds.set(element, ids);
+
+    if (next.length) {
+        element.setAttribute('aria-describedby', next.join(' '));
+    } else {
+        element.removeAttribute('aria-describedby');
+    }
 }

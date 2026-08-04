@@ -78,7 +78,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     }
 
     hasPlaceholder(): boolean {
-        return !!this.formField?.control.placeholder;
+        return !!this.formField?.control().placeholder;
     }
 
     focus(): void {
@@ -103,7 +103,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
         }
 
         Promise.resolve().then(() => {
-            this.searchChangesSubscription = this.ngControl.valueChanges!.subscribe((value) => {
+            this.searchChangesSubscription = this.ngControl!.valueChanges!.subscribe((value) => {
                 this.isSearchChanged = true;
                 this.changes.next(value);
             });

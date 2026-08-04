@@ -217,7 +217,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     toggleSelectAllNode(emitEvent: boolean = true) {
-        if (this.select().search()?.ngControl.value) {
+        if (this.select().search()?.ngControl?.value) {
             // `KbqTreeOption.setSelected()` does not consult `disabled`, so the locked options are filtered
             // out here rather than relying on the tree's own guards.
             const renderedOptions = this.tree().renderedOptions.filter(

@@ -5,6 +5,7 @@ import { Directive } from '@angular/core';
     selector: '[kbqSuffix]',
     host: {
         class: 'kbq-suffix'
-    }
+    },
+    exportAs: 'kbqSuffix'
 })
 export class KbqSuffix {}

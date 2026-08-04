@@ -1,6 +1,6 @@
 @use './form-field-theme';
 @use './form-field';
-@use './fiedset-theme';
+@use './fieldset-theme';
 
 .kbq-fieldset {
     display: flex;
@@ -59,7 +59,7 @@
         }
     }
 
-    @include fiedset-theme.kbq-fieldset-theme();
+    @include fieldset-theme.kbq-fieldset-theme();
 }
 
 .kbq-fieldset__container {

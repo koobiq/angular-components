@@ -6,6 +6,7 @@ import {
     Component,
     computed,
     DestroyRef,
+    effect,
     inject,
     input,
     ViewEncapsulation
@@ -49,6 +50,9 @@ export class KbqReactivePasswordHint extends KbqHint {
     /** Whether the form field control has an error. */
     readonly hasError = input(false, { transform: booleanAttribute });
 
+    /** Disables `color` for the hint text. */
+    override readonly fillTextOff = input(true, { transform: booleanAttribute });
+
     /**
      * The form field hint icon.
      *
@@ -59,19 +63,27 @@ export class KbqReactivePasswordHint extends KbqHint {
     constructor() {
         super();
 
-        this.fillTextOff = true;
-        this.compact = false;
         this.color = KbqComponentColors.ContrastFade;
+
+        // `hasError` also drives `icon`, so the color has to follow it in the same pass, otherwise the icon and
+        // its color disagree for a tick.
+        effect(() => {
+            this.hasError();
+
+            this.updateColor();
+        });
 
         afterNextRender(() => {
             (this.formField?.control()?.stateChanges || EMPTY)
                 .pipe(delay(0), takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                    this.color = this.makeColor();
-
-                    this.changeDetectorRef.markForCheck();
-                });
+                .subscribe(() => this.updateColor());
         });
+    }
+
+    private updateColor(): void {
+        this.color = this.makeColor();
+
+        this.changeDetectorRef.markForCheck();
     }
 
     private makeColor(): KbqComponentColors {

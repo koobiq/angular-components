@@ -54,6 +54,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     protected readonly registry: KbqIconRegistry | null;
+    protected setIconName(name: string): void;
     // (undocumented)
     readonly small: i0.InputSignal<boolean>;
     protected svgIcon: boolean;

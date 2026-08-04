@@ -9,8 +9,8 @@
                 [attr.aria-label]="localeData.searchPlaceholder"
                 [formControl]="searchControl"
             />
-            <!-- `kbq-cleaner` renders a plain custom element, so it needs a role for its name to be exposed. -->
-            <kbq-cleaner role="button" [attr.aria-label]="localeData.clearSearch" />
+            <!-- `kbq-cleaner` is a button with a localized default name; here it clears the search specifically. -->
+            <kbq-cleaner [aria-label]="localeData.clearSearch" />
         </kbq-form-field>
     </div>
 

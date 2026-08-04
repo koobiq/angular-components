@@ -15,6 +15,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 9. **20.3.0**: the button review — host attributes, group ownership and styles.
 10. **20.3.0**: button supported colors — a default color of its own per style.
 11. **20.3.0**: the button-toggle review — ARIA semantics, keyboard navigation and signal inputs.
+12. **20.3.0**: the form-field review — signals, accessibility and the removal of `mixinColor`.
 
 ### 1. Upgrade to 18.5.3
 
@@ -649,6 +650,96 @@ group.emitChangeEvent(toggle);
 **The group implements `OnDestroy` and no longer emits after teardown.** A selected toggle schedules its own removal from the selection on a microtask, which used to outlive the group and reach it with a `valueChange` once the whole group had already been destroyed. The group ignores that late sync now. A test asserting the old emission, or code that relied on it to clean up after a destroyed group, needs re-checking.
 
 **Styles.** The keyboard-focus `border-color` is set by the theme alone, from `--kbq-button-toggle-item-states-focused-outline`; the structural stylesheet no longer declares it from the raw `--kbq-states-line-focus-theme` token, so overriding the component token works regardless of import order. The theme also stopped targeting `.kbq-icon-button`, a class `KbqButton` never emitted, in favour of `.kbq-button-icon`.
+
+### 12. Form field review (20.3.0)
+
+The review of `<kbq-form-field>` finished the move of the container and the hint family to signals, gave the icon-only cleaner and password toggle real button semantics, and removed the deprecated `mixinColor`. Most of it stops your code from compiling, but the accessibility part changes rendered markup silently.
+
+**The content queries and their `has*` getters are signals.** `control`, `stepper` and `connectionContainerRef` were already signals and are unchanged; everything else moved in this release:
+
+| Member                                                                                                  | Before             | After                    |
+| ------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------ |
+| `cleaner`, `passwordToggle`                                                                             | `T \| null`        | `Signal<T \| undefined>` |
+| `hint`, `passwordHints`, `prefix`, `suffix`                                                             | `QueryList<T>`     | `Signal<readonly T[]>`   |
+| `hasCleaner`, `hasHint`, `hasPasswordHint`, `hasPasswordToggle`, `hasPrefix`, `hasStepper`, `hasSuffix` | getter             | `Signal<boolean>`        |
+| `hasError`, `hasLabel`, `hasReactivePasswordHint`                                                       | `protected` getter | `protected` signal       |
+
+**The hint inputs are signals.** `fillTextOff` and `compact` became signal inputs on `KbqHint` and everything that extends it — `KbqError`, `KbqPasswordHint`, `KbqReactivePasswordHint`. `KbqPasswordHint.regex` became a `model()`, so it is read as a call and written through `.set()`. Template bindings (`[fillTextOff]`, `[compact]`, `[regex]`) are unaffected.
+
+**The cleaner and the password toggle are buttons now.** Both were focusable graphics with no role and no accessible name. `<kbq-cleaner>` renders `role="button"` and a localized `aria-label`, and activates on <kbd>Space</kbd> as well as <kbd>Enter</kbd>. The toggle's icon renders `role="button"`, an `aria-label` that follows the state ("Show password" / "Hide password") and `aria-pressed`. Because the cleaner now owns the `aria-label` host binding, an `[attr.aria-label]` written by hand is overwritten — it has to move to the new `[aria-label]` input.
+
+**The form field describes its control.** Hints and the error are linked to the control through `aria-describedby`, `kbq-error` renders `role="alert"`, and `KbqInput` / `KbqInputPassword` / `KbqSelect` render `aria-invalid` (`KbqSelect` also renders `aria-required`). Nothing here breaks a build — it changes rendered markup.
+
+**`mixinColor` was removed.** It was deprecated, unused inside the library, and logged a dev-mode warning on every instance. `KbqColorDirective` replaces it and exposes the same `color` input.
+
+#### Running the migration
+
+The `form-field-signals` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:form-field-signals --project <your project>
+```
+
+#### What is fixed automatically
+
+**Reads of the migrated members become calls**, both in TypeScript and through a template reference variable:
+
+```ts
+// Before
+if (formField.hasCleaner && formField.hint.length && hint.fillTextOff) {
+}
+
+// After
+if (formField.hasCleaner() && formField.hint().length && hint.fillTextOff()) {
+}
+```
+
+```html
+<!-- Before -->
+<kbq-form-field #field="kbqFormField">…</kbq-form-field>
+<span>{{ field.hasHint }}</span>
+
+<!-- After -->
+<span>{{ field.hasHint() }}</span>
+```
+
+A receiver is matched by its explicit type annotation (`KbqFormField`, `KbqHint`, `KbqError`, `KbqPasswordHint`, `KbqReactivePasswordHint`) — parameters, class fields including content queries, constructor parameter-properties and typed locals.
+
+**Writes to `KbqPasswordHint.regex` become `.set()`:** `hint.regex = /x/` → `hint.regex.set(/x/)`.
+
+**The cleaner's accessible name moves to the input:** `<kbq-cleaner [attr.aria-label]="label" />` → `<kbq-cleaner [aria-label]="label" />`.
+
+**The misspelled stylesheet is renamed:** `_fiedset-theme.scss` became `_fieldset-theme.scss`, so `@use '…/form-field/fiedset-theme'` is rewritten.
+
+#### What you need to fix manually
+
+**The `QueryList` API is gone.** `hint`, `passwordHints`, `prefix` and `suffix` are signals over a readonly array, so `.changes`, `.first`, `.last`, `.toArray()` and `.get(i)` no longer exist. React to the queries with `computed()` / `effect()` instead of subscribing to `.changes`, and index the array directly. Every occurrence is reported with its file.
+
+**`cleaner` and `passwordToggle` return `undefined`, not `null`.** A strict `=== null` comparison silently stops matching — use a truthiness check or `== null`.
+
+**Assignments to `fillTextOff` and `compact` no longer compile.** They are read-only signal inputs; drive them with a template binding.
+
+**Assignments to the `KbqFormField` content queries no longer compile either** — `cleaner`, `passwordToggle`, `hint`, `passwordHints`, `prefix` and `suffix` are read-only signals. `cleaner` was writable only because of an internal workaround, which is gone; the rest were a `QueryList`, which test code used to reassign to fake the projected content. Project the content into the form field instead.
+
+**`KbqPasswordHint.icon` is `protected`.** Derive the state from `checked` / `hasError` instead of reading the icon name.
+
+**`KBQ_FORM_FIELD_REF.control` is typed.** It used to be `any`, so `formField.control.placeholder` compiled and was silently `undefined` — the library had exactly that bug. Call the signal first: `formField.control().placeholder`.
+
+**Custom locale data needs three more `a11y` keys** — `clear`, `showPassword` and `hidePassword` — for the accessible names of the cleaner and the password toggle. A locale object literal without them stops type-checking; data registered through `KBQ_LOCALE_DATA` falls back to the ru-RU strings.
+
+**The `KbqPasswordHint` rules engine is deprecated.** `PasswordRules`, `regExpPasswordValidator` and `hasPasswordStrengthError` will be removed in the next major release — migrate to `KbqReactivePasswordHint`, which derives its state from the form control validators. `regExpPasswordValidator` is also typed `Partial<Record<PasswordRules, RegExp>>` now, so indexing it yields `RegExp | undefined`; it never had entries for `Length` and `Custom`.
+
+**Three fixed bugs change behaviour.** A failing password strength check used to call `setErrors({ passwordStrength: true })`, wiping every other error on the control — it now merges. A `PasswordRules.Length` hint compared against `undefined` bounds, so a valid-length password was always reported as failing; the bounds now default to `0` and `Infinity`, and the guard only throws when neither `min` nor `max` is set. And the hint now checks the control's current value instead of waiting for the control to be focused with a value that differs from the last one it saw — a rule was left unchecked for a control that was already filled when the hint appeared, which is the usual case for an edit form.
+
+**Snapshot and DOM-query tests.** Beyond the ARIA attributes above, the generated id of `KbqPasswordHint` changed prefix from `kbq-hint-N` to `kbq-password-hint-N` so that it stops colliding with `KbqHint`. Nothing should depend on a generated id, but selectors keyed on it will stop matching.
+
+**Stylesheets that fought `!important`.** `.kbq-form-field_no-borders` and `.kbq-form-field_in-overlay` used `!important` to beat the state theme; they now override the `--kbq-form-field-*` tokens instead. The computed result is the same, but an override written specifically to outrank the old `!important` can be simplified.
 
 ### After the migration
 

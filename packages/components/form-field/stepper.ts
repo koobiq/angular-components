@@ -1,5 +1,14 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, output, OutputEmitterRef, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    inject,
+    output,
+    OutputEmitterRef,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -7,15 +16,22 @@ import { concatMap, fromEvent, interval, Subject, timer } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { KbqFormFieldControl } from './form-field-control';
 
-// @TODO Temporary solution to resolve circular dependency (#DS-3893)
-type KbqNumberInput = KbqFormFieldControl<unknown> & {
+/**
+ * The subset of `KbqNumberInput` the stepper drives.
+ *
+ * Declared here instead of imported from `@koobiq/components/input` to break the circular dependency
+ * between the packages (#DS-3893).
+ */
+export interface KbqNumberInputControl extends KbqFormFieldControl<unknown> {
+    /** Increases the value by `step`. */
     stepUp: (step: number) => void;
+    /** Decreases the value by `step`. */
     stepDown: (step: number) => void;
+    /** Amount the value changes by on a single step. */
     step: number;
-};
+}
 
-// @TODO Temporary solution to resolve circular dependency (#DS-3893)
-const isNumberInput = (control: KbqFormFieldControl<unknown>): control is KbqNumberInput => {
+const isNumberInput = (control: KbqFormFieldControl<unknown>): control is KbqNumberInputControl => {
     return 'stepUp' in control && 'stepDown' in control;
 };
 
@@ -41,21 +57,23 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
     imports: [KbqIconModule],
     template: `
         <i
+            aria-hidden="true"
             class="kbq-stepper-step-up"
             color="contrast-fade"
             kbq-icon-button="kbq-chevron-up-s_16"
             [tabindex]="-1"
             [autoColor]="true"
-            [disabled]="control.disabled"
+            [disabled]="control().disabled"
             (mousedown)="onStepUp($event)"
         ></i>
         <i
+            aria-hidden="true"
             class="kbq-stepper-step-down"
             color="contrast-fade"
             kbq-icon-button="kbq-chevron-down-s_16"
             [tabindex]="-1"
             [autoColor]="true"
-            [disabled]="control.disabled"
+            [disabled]="control().disabled"
             (mousedown)="onStepDown($event)"
         ></i>
     `,
@@ -70,6 +88,7 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
 export class KbqStepper {
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
     private readonly document = inject<Document>(DOCUMENT);
+    private readonly destroyRef = inject(DestroyRef);
 
     /** Emitted when the stepper is incremented. */
     readonly stepUp = output<void>();
@@ -96,27 +115,37 @@ export class KbqStepper {
         takeUntil(this.mouseUp)
     );
 
+    /** Whether `connectTo` has already wired the number input. */
+    private connected = false;
+
     /**
-     * Form field number control.
+     * Form field number control. Resolved once per control change instead of on every template read.
      *
      * @docs-private
      */
-    protected get control(): KbqNumberInput {
+    protected readonly control = computed<KbqNumberInputControl>(() => {
         const control = this.formField?.control();
-        const input = (control as any)?.numberInput;
+        const input = (control as { numberInput?: KbqFormFieldControl<unknown> })?.numberInput;
 
-        if (!isNumberInput(input)) {
+        if (!input || !isNumberInput(input)) {
             throw getKbqStepperToggleMissingControlError();
         }
 
         return input;
+    });
+
+    constructor() {
+        this.destroyRef.onDestroy(() => this.mouseUp.complete());
     }
 
     /**
      * @docs-private
      */
-    connectTo(numberInput: KbqNumberInput): void {
-        if (!numberInput) return;
+    connectTo(numberInput: KbqNumberInputControl): void {
+        // The form field calls it on every content init, and the outputs must not be wired twice.
+        if (!numberInput || this.connected) return;
+
+        this.connected = true;
 
         this.stepUp.subscribe(() => {
             numberInput.stepUp(numberInput.step);
@@ -138,12 +167,12 @@ export class KbqStepper {
     }
 
     private handleStep($event: MouseEvent, emitter: OutputEmitterRef<void>): void {
-        if (this.control.disabled) return;
+        if (this.control().disabled) return;
 
         emitter.emit();
         // handle case when cursor is out of viewport.
         fromEvent(this.document, 'mouseup')
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.mouseUp.next());
         this.longPress.subscribe(() => emitter.emit());
         $event.preventDefault();
