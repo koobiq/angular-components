@@ -1123,6 +1123,39 @@ describe(KbqButtonGroupRoot.name, () => {
         );
     });
 
+    it('should revert to its own default color when the group color is unbound at runtime', () => {
+        const fixture = createComponent(UnboundColorGroupTestComponent);
+        const { componentInstance, nativeElement } = fixture;
+
+        componentInstance.color = KbqComponentColors.Theme;
+        fixture.detectChanges();
+
+        componentInstance.color = null;
+        fixture.detectChanges();
+
+        const groupRoot: HTMLElement = nativeElement.querySelector('[kbqButtonGroupRoot]');
+
+        expect(groupRoot.classList.contains('kbq-contrast-fade')).toBe(true);
+        expect(groupRoot.classList.contains('kbq-theme')).toBe(false);
+    });
+
+    it('should release every child back to its style default when the group color is unbound at runtime', () => {
+        const fixture = createComponent(UnboundColorGroupTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.color = KbqComponentColors.Theme;
+        fixture.detectChanges();
+
+        componentInstance.color = null;
+        fixture.detectChanges();
+
+        const [filled, transparent] = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        expect(filled.classList.contains('kbq-contrast-fade')).toBe(true);
+        expect(transparent.classList.contains('kbq-contrast')).toBe(true);
+        expect(transparent.classList.contains('kbq-theme')).toBe(false);
+    });
+
     it('should keep the group color when a non-default style is bound from the start', () => {
         // The shape of `button-group-style-example`: both inputs carry static values, so the color
         // and the style reach the children in the same pass through the group's effect.

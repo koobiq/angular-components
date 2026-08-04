@@ -60,7 +60,12 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
 
     private _kbqStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
 
-    /** component color, will be set for nested buttons */
+    /**
+     * component color, will be set for nested buttons
+     *
+     * Left unbound, nothing is propagated and every nested button follows the default color of the
+     * current style.
+     */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -69,12 +74,17 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     }
 
     set color(value: KbqButtonColor | null | undefined) {
-        if (!value) return;
+        this.colorSetExplicitly = !!value;
 
-        super.color = value;
+        // A falsy value means the input is (back to being) unbound: it falls back to `defaultColor`,
+        // the split button's own color, which is not propagated — see the constructor.
+        super.color = value!;
 
-        this.updateColor(this.color);
+        this.updateColor();
     }
+
+    /** Whether `color` was bound from the outside rather than left at the split button's own default. */
+    private colorSetExplicitly = false;
 
     /** Whether the checkbox is disabled. */
     // TODO: Skipped for migration because:
@@ -103,13 +113,22 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     constructor() {
         super();
 
-        this.color = KbqComponentColors.ContrastFade;
+        // `KbqColorDirective`'s constructor assigns `this.color`, which dispatches to the setter
+        // above and flips the flag. Reset it here rather than relying on the field initializer
+        // happening to run after `super()`.
+        this.colorSetExplicitly = false;
+
+        // Applied through `super` so that the split button's own default does not count as an
+        // explicit color: it styles the host element but is not propagated, so every nested button
+        // is free to follow the default color of the current style.
+        super.color = KbqComponentColors.ContrastFade;
+        this.setDefaultColor(KbqComponentColors.ContrastFade);
     }
 
     ngAfterContentInit(): void {
         this.updateClasses();
         this.updateStyle(this._kbqStyle);
-        this.updateColor(this.color);
+        this.updateColor();
         this.updateDisabledState(this.disabled);
         this.updateDropdownParams();
 
@@ -120,7 +139,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         this.buttons.changes.pipe(delay(0)).subscribe(() => {
             this.updateClasses();
             this.updateStyle(this._kbqStyle);
-            this.updateColor(this.color);
+            this.updateColor();
             this.updateDropdownParams();
         });
     }
@@ -137,7 +156,13 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         });
     }
 
-    private updateColor(color: KbqButtonColor) {
+    /**
+     * Propagates the split button's color, or — while the input is unbound — releases every nested
+     * button back to the default color of the current style.
+     */
+    private updateColor() {
+        const color = this.colorSetExplicitly ? this.color : undefined;
+
         this.buttons?.forEach((button: KbqButton) => (button.color = color));
     }
 

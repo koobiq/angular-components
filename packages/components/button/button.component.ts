@@ -512,15 +512,18 @@ export class KbqButton
 
     /**
      * Applies the color propagated by a surrounding `KbqButtonGroupRoot`, unless the button defines
-     * its own.
+     * its own. A falsy value — the group's `color` input is unbound — releases the button back to
+     * the default color of its style.
      * @docs-private
      */
-    setColorFromGroup(value: KbqButtonColor): void {
+    setColorFromGroup(value: KbqButtonColor | null | undefined): void {
         if (this.colorSetExplicitly) return;
 
-        this.colorSetFromGroup = true;
+        this.colorSetFromGroup = !!value;
 
-        super.color = value;
+        // A falsy value falls back to `defaultColor`, which `applyDefaultColor` keeps in sync with
+        // the current style.
+        super.color = value!;
     }
 
     /**

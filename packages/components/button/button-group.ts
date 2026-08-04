@@ -59,13 +59,13 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
     }
 
     set color(value: KbqButtonColor | null | undefined) {
-        if (!value) return;
+        this.colorSetExplicitly = !!value;
 
-        this.colorSetExplicitly = true;
+        // A falsy value means the input is (back to being) unbound: it falls back to `defaultColor`,
+        // the group's own color, which is not propagated — see the constructor.
+        super.color = value!;
 
-        super.color = value;
-
-        this.updateColor(this.color, this.buttons?.());
+        this.updateColor(this.buttons?.());
     }
 
     /** Whether `color` was bound from the outside rather than left at the group's own default. */
@@ -110,14 +110,18 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
         effect(() => {
             const buttons = this.buttons();
 
-            this.updateColor(this.color, buttons);
+            this.updateColor(buttons);
             this.updateStyle(this._kbqStyle, buttons);
             this.updateDisabledState(this._disabled, buttons);
         });
     }
 
-    private updateColor(color: KbqButtonColor, buttons?: readonly KbqButton[]) {
-        if (!this.colorSetExplicitly) return;
+    /**
+     * Propagates the group's color, or — while the input is unbound — releases every nested button
+     * back to the default color of its own style.
+     */
+    private updateColor(buttons?: readonly KbqButton[]) {
+        const color = this.colorSetExplicitly ? this.color : undefined;
 
         buttons?.forEach((button: KbqButton) => button.setColorFromGroup(color));
     }
