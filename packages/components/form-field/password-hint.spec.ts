@@ -103,6 +103,23 @@ class PasswordHintWithNullValue {
     rule: PasswordRules | undefined = PasswordRules.Length;
 }
 
+/** Mirrors the e2e fixture: the control already holds a password that satisfies the rule. */
+@Component({
+    selector: 'password-form-field-with-prefilled-control',
+    imports: [ReactiveFormsModule, KbqInputModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInputPassword [formControl]="control" />
+            <kbq-password-hint [max]="15" [min]="8" [rule]="rule">Hint</kbq-password-hint>
+        </kbq-form-field>
+    `
+})
+class PasswordFormFieldWithPrefilledControl {
+    @ViewChild(KbqPasswordHint) readonly hint: KbqPasswordHint;
+    readonly control = new FormControl('P@a$$w0rd');
+    rule: PasswordRules | undefined = PasswordRules.Length;
+}
+
 @Component({
     selector: 'password-form-field-with-validators',
     imports: [ReactiveFormsModule, KbqInputModule, KbqFormFieldModule],
@@ -234,6 +251,30 @@ describe(KbqPasswordHint.name, () => {
             enterValue(fixture, '');
             expect(fixture.componentInstance.hint.hasError).toBe(false);
             expect(fixture.componentInstance.hint.checked).toBe(false);
+        });
+
+        it('should report a rule satisfied by the value the control already holds', () => {
+            const fixture = createComponent(PasswordFormFieldWithPrefilledControl);
+
+            expect(fixture.componentInstance.hint.checked).toBe(true);
+            expect(fixture.componentInstance.hint.hasError).toBe(false);
+        });
+
+        it('should re-check the rule when the value is set programmatically', () => {
+            const fixture = createComponent(PasswordFormFieldWithPrefilledControl);
+            const { control, hint } = fixture.componentInstance;
+
+            control.setValue('kbq');
+            fixture.detectChanges();
+
+            expect(hint.checked).toBe(false);
+            expect(hint.hasError).toBe(true);
+
+            control.setValue('koobiq!!');
+            fixture.detectChanges();
+
+            expect(hint.checked).toBe(true);
+            expect(hint.hasError).toBe(false);
         });
 
         it('should generate a unique id for aria-describedby', () => {

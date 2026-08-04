@@ -159,8 +159,6 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
         return this.control.value ?? '';
     }
 
-    private lastControlValue: string | null = null;
-
     constructor() {
         super();
         this.color = KbqComponentColors.ContrastFade;
@@ -213,25 +211,25 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
                         this.hasError = !this.checked;
                         this.changeDetectorRef.markForCheck();
                     });
+
+                // A control that is already filled emits nothing on its own, so its value would stay
+                // unchecked until the first interaction.
+                this.checkValue();
             },
             { injector: this.injector }
         );
     }
 
     private checkValue = () => {
-        if (this.control.focused && this.isValueChanged()) {
-            this.hasError = false;
-
-            this.checked = this.checkRule(this.controlValue);
-        } else if (!this.control.focused && !this.isValueChanged()) {
-            this.hasError = !this.checkRule(this.controlValue);
-        }
+        this.checked = this.checkRule(this.controlValue);
+        // While the control has focus the password is still being typed, so a rule it does not satisfy yet
+        // must not be reported as an error.
+        this.hasError = this.control.focused ? false : !this.checked;
 
         if (!this.control.required && !this.control.value) {
             this.checked = this.hasError = false;
         }
 
-        this.lastControlValue = this.control.value;
         this.changeDetectorRef.markForCheck();
     };
 
@@ -246,8 +244,4 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     private checkSpecialSymbolsRegexRule = (value: string): boolean => {
         return !!value && !this.regex()?.test(value);
     };
-
-    private isValueChanged(): boolean {
-        return this.lastControlValue !== this.formField.control().value;
-    }
 }
