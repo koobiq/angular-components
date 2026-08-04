@@ -141,7 +141,7 @@ describe('KbqFilters', () => {
         filtersDebugElement = fixture.debugElement.query(By.directive(KbqFilters));
     };
 
-    it('should not create a layout box at the declaration point for the save popover', () => {
+    it('should remove the save popover host box via display: none', () => {
         initFixture(createFilter([]));
 
         const savePopover = fixture.debugElement.query(By.css('kbq-filter-save-popover')).nativeElement;

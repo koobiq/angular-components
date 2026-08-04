@@ -93,7 +93,9 @@ describe('KbqDropdown', () => {
         overlayContainer.ngOnDestroy();
     }));
 
-    it('should not create a layout box at the declaration point', () => {
+    it('should remove the host box via display: contents', () => {
+        // jsdom doesn't do layout, so this only guards the `display` value itself; the actual
+        // no-layout-box behavior is covered by the navbar Playwright baseline (packages/components/navbar/e2e.ts).
         const fixture = createComponent(SimpleDropdown);
 
         fixture.detectChanges();

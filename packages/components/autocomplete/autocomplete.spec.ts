@@ -91,7 +91,7 @@ describe('KbqAutocomplete', () => {
         overlayContainer.ngOnDestroy();
     }));
 
-    it('should not create a layout box at the declaration point', () => {
+    it('should remove the host box via display: none', () => {
         const fixture = createComponent(SimpleAutocomplete);
 
         fixture.detectChanges();

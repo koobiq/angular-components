@@ -87,8 +87,9 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-autocomplete',
-        // Prevent the empty TemplatePortal host from participating in flex/grid layout.
-        '[style.display]': '"none"'
+        // Remove the empty TemplatePortal host from layout entirely — it would otherwise contribute an
+        // inline box in normal flow, or a phantom item in a flex/grid container.
+        style: 'display: none'
     },
     exportAs: 'kbqAutocomplete'
 })

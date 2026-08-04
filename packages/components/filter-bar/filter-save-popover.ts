@@ -102,9 +102,10 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        // The whole template is pushed onto the popover trigger imperatively; prevent the empty host from
-        // participating in the parent's (`.kbq-filters`, flex) layout.
-        '[style.display]': '"none"'
+        // The whole template is pushed onto the popover trigger imperatively; remove the empty host from
+        // layout entirely, since it would otherwise be an inline box in normal flow or a phantom item
+        // in the parent's (`.kbq-filters`, flex) layout.
+        style: 'display: none'
     }
 })
 export class KbqFilterSavePopover implements AfterViewInit {
