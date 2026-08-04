@@ -6,7 +6,7 @@ import {
     Directive,
     ElementRef,
     inject,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -65,7 +65,9 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
     protected readonly structureItemTab = DocsStructureItemTab;
-    protected structureItem: DocsStructureItem;
+    // Stays `null` for an unknown id: the redirect to /404 is async, so the template renders at
+    // least once with nothing resolved and has to tolerate it.
+    protected structureItem: DocsStructureItem | null = null;
     protected structureCategoryId: DocsStructureCategoryId;
 
     private readonly activatedRoute = inject(ActivatedRoute);
@@ -106,7 +108,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
 
     /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */
     protected get githubSourceUrl(): string | null {
-        return this.structureItem.path ? `${GITHUB_REPO_TREE_URL}/${this.structureItem.path}` : null;
+        return this.structureItem?.path ? `${GITHUB_REPO_TREE_URL}/${this.structureItem.path}` : null;
     }
 }
 
@@ -117,7 +119,9 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
 
     componentDocItem: DocsStructureItem | null = null;
 
-    @ViewChild(DocsAnchorsComponent, { static: false }) private readonly anchors: DocsAnchorsComponent;
+    // Optional (not `.required`): the anchors list belongs to the subclass templates and is absent
+    // while the document is still loading, so reading it must never throw.
+    private readonly anchors = viewChild(DocsAnchorsComponent);
 
     constructor() {
         super();
@@ -141,13 +145,13 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
     scrollToSelectedContentSection() {
         this.showView();
 
-        this.anchors?.setScrollPosition();
+        this.anchors()?.setScrollPosition();
     }
 
     showDocumentLostAlert() {
         this.showView();
 
-        this.anchors?.setScrollPosition();
+        this.anchors()?.setScrollPosition();
     }
 
     private showView() {

@@ -6,7 +6,7 @@ import {
     Component,
     DestroyRef,
     inject,
-    Input,
+    input,
     OnDestroy,
     OnInit,
     ViewEncapsulation
@@ -48,10 +48,16 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     private ref = inject(ChangeDetectorRef);
     private document = inject<Document>(DOCUMENT);
 
-    @Input() anchors: KbqDocsAnchor[] = [];
-    @Input() headerSelectors: string;
+    /** CSS selector matching the headings the anchor list is built from. */
+    readonly headerSelectors = input.required<string>();
 
-    pathName: string;
+    /**
+     * Anchors currently rendered in the list. Rebuilt from the DOM on every `setScrollPosition`
+     * call, so it is component state rather than an input.
+     */
+    protected anchors: KbqDocsAnchor[] = [];
+
+    protected pathName: string;
 
     private readonly headerHeight: number = 64;
 
@@ -117,7 +123,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         clearTimeout(this.fragmentScrollTimer);
     }
 
-    getAnchorByHref(href: string): KbqDocsAnchor | null {
+    protected getAnchorByHref(href: string): KbqDocsAnchor | null {
         return this.anchors.find((anchor) => anchor.href === href) || this.firstAnchor;
     }
 
@@ -155,7 +161,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         this.ref.detectChanges();
     }
 
-    scrollIntoView(anchor: KbqDocsAnchor) {
+    protected scrollIntoView(anchor: KbqDocsAnchor) {
         anchor.element.scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -215,7 +221,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private createAnchors(): KbqDocsAnchor[] {
-        return Array.from(this.document.querySelectorAll<HTMLElement>(this.headerSelectors)).map(
+        return Array.from(this.document.querySelectorAll<HTMLElement>(this.headerSelectors())).map(
             (header: HTMLElement, i: number): KbqDocsAnchor => ({
                 href: header.id,
                 name: header.innerText.trim(),

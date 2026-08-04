@@ -3,9 +3,10 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    effect,
     ElementRef,
     inject,
-    Input,
+    input,
     NgZone,
     signal,
     Type,
@@ -59,6 +60,13 @@ interface ExampleFileData {
     }
 })
 export class DocsLiveExampleViewerComponent extends DocsLocaleState {
+    /**
+     * Key of the example to display, resolved against `EXAMPLE_COMPONENTS`. Set declaratively from a
+     * template, or with `ComponentRef.setInput` by the viewers that attach this component through a
+     * portal.
+     */
+    readonly example = input<string | null>(null);
+
     protected readonly isSourceShown = signal(false);
 
     files: KbqCodeBlockFile[] = [];
@@ -67,34 +75,13 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     exampleData: LiveExample;
 
     /** Component type for the current example. */
-    exampleComponentType: Type<any> | null = null;
+    exampleComponentType: Type<unknown> | null = null;
 
     exampleHeight = signal<number | null>(null);
 
     get exampleId() {
         return this.exampleData?.selector.replace('-example', '');
     }
-
-    /** String key of the currently displayed example. */
-    @Input()
-    get example() {
-        return this._example;
-    }
-
-    set example(exampleName: string | null) {
-        if (exampleName && exampleName !== this._example && EXAMPLE_COMPONENTS[exampleName]) {
-            this._example = exampleName;
-            this.exampleData = EXAMPLE_COMPONENTS[exampleName];
-            this.loadExampleComponent()
-                .then(() => this.exampleHeight.set(null))
-                .catch((error) => console.error(`Could not load example '${exampleName}': ${error}`));
-            this.generateExampleTabs();
-        } else {
-            console.error(`Could not find example: ${exampleName}`);
-        }
-    }
-
-    private _example: string | null;
 
     readonly exampleElement = viewChild<ElementRef<HTMLElement>>('exampleElement');
 
@@ -106,13 +93,19 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     private readonly modalService = inject(KbqModalService, { optional: true });
     private readonly toastService = inject(KbqToastService, { optional: true });
 
+    constructor() {
+        super();
+
+        // Load whenever the key changes (replaces a side-effecting `@Input` setter). The effect only
+        // reacts to an actual change, so `reload()` re-invokes the loader directly instead.
+        effect(() => this.loadExample(this.example()));
+    }
+
     toggleSourceView() {
         this.isSourceShown.update((isShown) => !isShown);
     }
 
     protected reload(): void {
-        const previous = this.example;
-
         const exampleElement = this.exampleElement();
 
         if (exampleElement) {
@@ -125,14 +118,35 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
             this.exampleHeight.set(height);
         }
 
-        this._example = '';
         this.exampleComponentType = null;
 
         this.sidepanelService?.closeAll();
         this.modalService?.closeAll();
         this.toastService?.toasts.forEach(({ instance }) => this.toastService?.hide(instance.id));
 
-        this.example = previous;
+        this.loadExample(this.example());
+    }
+
+    /** Resolves the example metadata, instantiates its component and (re)builds the source tabs. */
+    private loadExample(exampleName: string | null): void {
+        // `null` is the "no example requested yet" default — nothing to load and nothing to report.
+        if (exampleName === null) {
+            return;
+        }
+
+        if (!EXAMPLE_COMPONENTS[exampleName]) {
+            console.error(`Could not find example: ${exampleName}`);
+
+            return;
+        }
+
+        this.exampleData = EXAMPLE_COMPONENTS[exampleName];
+
+        this.loadExampleComponent(exampleName)
+            .then(() => this.exampleHeight.set(null))
+            .catch((error) => console.error(`Could not load example '${exampleName}': ${error}`));
+
+        this.generateExampleTabs();
     }
 
     /**
@@ -167,7 +181,9 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
                     (a, b) =>
                         preferredExampleFileOrder.indexOf(a.language) - preferredExampleFileOrder.indexOf(b.language)
                 );
-                this.files.push(...this.prepareCodeFiles(results));
+                // Assign rather than append: `reload()` runs this again for the same example, and
+                // appending would duplicate every source tab.
+                this.files = this.prepareCodeFiles(results);
                 // Files arrive from async HTTP; under OnPush the code panel needs an explicit check.
                 this.cdr.markForCheck();
             },
@@ -202,16 +218,14 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         return this.documentLoader.get(importPath);
     }
 
-    private loadExampleComponent(): Promise<void> {
-        if (this._example == null) return Promise.resolve();
-
+    private loadExampleComponent(exampleName: string): Promise<void> {
         const { componentName } = this.exampleData;
 
         // Run inside Angular zone so zone.js tracks the dynamic import Promise.
         // This ensures ngZone.onStable fires only after the example module is loaded
         // and the component is rendered — preventing premature anchor scroll.
         return this.ngZone.run(async () => {
-            const moduleExports = await loadExample(this._example!);
+            const moduleExports = await loadExample(exampleName);
 
             this.exampleComponentType = moduleExports[componentName];
 

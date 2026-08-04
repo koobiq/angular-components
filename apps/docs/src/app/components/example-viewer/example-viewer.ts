@@ -66,10 +66,6 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
 
     readonly documentContent = signal<SafeHtml | null>(null);
 
-    private static initExampleViewer(exampleViewerComponent: DocsLiveExampleViewerComponent, example: string) {
-        exampleViewerComponent.example = example;
-    }
-
     private readonly documentLoader = inject(DocsDocumentLoader);
     private readonly platformId = inject(PLATFORM_ID);
 
@@ -154,10 +150,9 @@ export class DocsExampleViewerComponent extends DocsLocaleState implements OnDes
             const portalHost = new DomPortalOutlet(element, this.appRef, this.injector);
             const examplePortal = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
-            const exampleViewerComponent = exampleViewer.instance as DocsLiveExampleViewerComponent;
 
             if (example !== null) {
-                DocsExampleViewerComponent.initExampleViewer(exampleViewerComponent, example);
+                exampleViewer.setInput('example', example);
             }
 
             this.portalHosts.push(portalHost);

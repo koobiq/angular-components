@@ -18,8 +18,7 @@ describe('DocsAnchorsComponent', () => {
         it('does not throw from setScrollPosition when docs-component-viewer is absent', () => {
             const fixture = createComponent();
 
-            fixture.componentInstance.headerSelectors = '.docs-header-link';
-            fixture.componentInstance.anchors = [];
+            fixture.componentRef.setInput('headerSelectors', '.docs-header-link');
 
             // No <docs-component-viewer> exists in the test DOM, so the scroll-container query
             // returns null. Before the guard this threw "Cannot read properties of null".
