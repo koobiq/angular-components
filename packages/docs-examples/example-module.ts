@@ -4783,7 +4783,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-custom-matcher": {
     "packagePath": "components/select/select-custom-matcher",
-    "title": "select-custom-trigger",
+    "title": "select-custom-matcher",
     "componentName": "SelectCustomMatcherExample",
     "files": [
       "select-custom-matcher-example.ts"

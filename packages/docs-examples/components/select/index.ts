@@ -87,7 +87,6 @@ const EXAMPLES = [
     SelectWithPanelWidthAutoExample,
     SelectWithPanelWidthFixedExample,
     SelectPrioritizedSelectedExample,
-    SelectWithPanelWidthFixedExample,
     SelectWithPanelMinWidthExample,
     SelectScrollingAndLayeringExample,
     SelectLoadingExample,
