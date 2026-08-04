@@ -82,6 +82,16 @@ describe('KbqAutocomplete', () => {
         overlayContainer.ngOnDestroy();
     }));
 
+    it('should remove the host box via display: none', () => {
+        const fixture = createComponent(SimpleAutocomplete);
+
+        fixture.detectChanges();
+
+        const autocomplete = fixture.debugElement.query(By.css('kbq-autocomplete')).nativeElement;
+
+        expect(getComputedStyle(autocomplete).display).toBe('none');
+    });
+
     describe('panel toggling', () => {
         let fixture: ComponentFixture<SimpleAutocomplete>;
         let input: HTMLInputElement;

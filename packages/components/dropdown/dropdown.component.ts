@@ -65,6 +65,10 @@ export class KbqDropdownFooter {}
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqDropdown',
+    host: {
+        // Remove the TemplatePortal host box from layout while keeping kbqDropdownStaticContent in the document flow.
+        style: 'display: contents'
+    },
     animations: [
         kbqDropdownAnimations.transformDropdown,
         kbqDropdownAnimations.fadeInItems
