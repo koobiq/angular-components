@@ -11,6 +11,13 @@ import { DateFormatter } from './formatter';
  * change detection cycle — a `[from, to]` tuple returned from a getter or a `computed()`, a `units`
  * array built in a method — still hits the cache of the impure pipes below. Array literals written
  * directly in a template are already memoized by Angular (`ɵɵpureFunction`); this covers the rest.
+ *
+ * Compares array elements by reference, like the `a === b` fallback it wraps — it has no notion of two
+ * dates being "equal". Mutating a date already passed to a pipe in place (`Date#setHours`, a Moment
+ * instance updated without cloning, …) keeps the same reference, so a `[from, to]` tuple rebuilt around
+ * that mutated instance still reads as unchanged and the cached, now-stale string is returned. Replace
+ * pipe inputs instead of mutating them — the same requirement Angular's OnPush change detection already
+ * places on any object bound to an OnPush view.
  */
 const shallowEqual = (a: unknown, b: unknown): boolean => {
     if (a === b) return true;
@@ -30,8 +37,14 @@ const toValidDate = <D>(adapter: DateAdapter<D>, value: unknown): D | null => {
     return date != null && adapter.isValid(date) ? date : null;
 };
 
-/** A `[from, to]` tuple with both bounds required; `null` when either is missing or invalid. */
-const toClosedRange = <D>(adapter: DateAdapter<D>, [from, to]: D[] | string[]): [D, D] | null => {
+/**
+ * A `[from, to]` tuple with both bounds required; `null` when either is missing or invalid.
+ *
+ * Takes the tuple itself as possibly missing, not just its bounds: a pipe input that has not been
+ * populated yet is `null`/`undefined` rather than `[null, null]`, and destructuring that throws.
+ */
+const toClosedRange = <D>(adapter: DateAdapter<D>, value: D[] | string[] | null | undefined): [D, D] | null => {
+    const [from, to] = value ?? [];
     const startDate = toValidDate(adapter, from);
     const endDate = toValidDate(adapter, to);
 
@@ -44,7 +57,11 @@ const toClosedRange = <D>(adapter: DateAdapter<D>, [from, to]: D[] | string[]): 
  * The range formatters switch to the opened-range template on their own when a bound is missing, but
  * throw when both are — and a throwing pipe aborts the rendering of the whole view.
  */
-const toOpenedRange = <D>(adapter: DateAdapter<D>, [from, to]: D[] | string[]): [D | null, D | null] | null => {
+const toOpenedRange = <D>(
+    adapter: DateAdapter<D>,
+    value: D[] | string[] | null | undefined
+): [D | null, D | null] | null => {
+    const [from, to] = value ?? [];
     const startDate = toValidDate(adapter, from);
     const endDate = toValidDate(adapter, to);
 
@@ -55,7 +72,7 @@ const toOpenedRange = <D>(adapter: DateAdapter<D>, [from, to]: D[] | string[]): 
  * A `[from, to]` tuple the duration formatters accept: both bounds required and chronologically
  * ordered. `DateFormatter.duration*` throws on anything else.
  */
-const toDurationRange = <D>(adapter: DateAdapter<D>, value: D[] | string[]): [D, D] | null => {
+const toDurationRange = <D>(adapter: DateAdapter<D>, value: D[] | string[] | null | undefined): [D, D] | null => {
     const range = toClosedRange(adapter, value);
 
     return range && adapter.compareDateTime(range[0], range[1]) <= 0 ? range : null;
@@ -74,7 +91,8 @@ export class BaseFormatterPipe<D> {
  * - a subscription to `KbqLocaleService.changes` that invalidates the cache and
  *   marks the host for check (the same approach the built-in `AsyncPipe` uses);
  * - caching by `(value, args, localeId)`, so the impure `transform()` only does
- *   real work when an input or the active locale actually changed.
+ *   real work when an input or the active locale actually changed — see
+ *   `shallowEqual` for how the comparison works and its limits.
  *
  * Subclasses implement `format()`, which receives the raw pipe input(s) — a
  * single value for absolute/relative pipes, or a `[from, to]` tuple for range

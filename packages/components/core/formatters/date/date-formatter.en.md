@@ -72,7 +72,11 @@ Pass `null` instead of one of the bounds and the range pipe switches to the open
 
 #### Empty and invalid values
 
-When a date is missing or cannot be parsed, the pipe renders an empty string. For ranges that applies when both bounds are empty; the duration pipes additionally render an empty string when the start is later than the end. Call the `DateFormatter` methods directly if you need to be told about the error instead of hiding it — they throw.
+When a date is missing or cannot be parsed, the pipe renders an empty string.
+
+The range pipes that support an opened range — `kbqRangeShortDate`, `kbqRangeLongDate`, `kbqRangeShortDateTime`, `kbqRangeLongDateTime` — render an empty string only when both bounds are missing or invalid; a single valid bound switches them to the opened-range format instead. `kbqRangeMiddleDateTime` and the duration pipes need both bounds, so they render an empty string as soon as either one is missing or invalid; the duration pipes additionally render an empty string when the start is later than the end.
+
+Call the `DateFormatter` methods directly if you need to be told about the error instead of hiding it — they throw.
 
 #### Custom formats
 

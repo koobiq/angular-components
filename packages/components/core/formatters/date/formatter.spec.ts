@@ -38,6 +38,7 @@ import {
     RangeShortDateFormatterPipe,
     RangeShortDateTimeFormatterPipe
 } from '@koobiq/components/core';
+import { DurationUnit } from '@koobiq/date-adapter';
 import { DateTime, DateTimeUnit } from 'luxon';
 
 /**
@@ -52,6 +53,9 @@ const refresh = (fixture: ComponentFixture<unknown>) => {
     fixture.componentRef.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
 };
+
+/** What the range and duration pipe hosts bind: a `[from, to]` tuple whose bounds may be absent or unparseable. */
+type RangeValue = (DateTime | string | null)[];
 
 describe('Date formatter', () => {
     let adapter: LuxonDateAdapter;
@@ -2614,7 +2618,7 @@ describe('Date formatter (imports and providing)', () => {
             changeDetection: ChangeDetectionStrategy.OnPush
         })
         class DurationPipesHostComponent {
-            readonly range = signal<(DateTime | string | null)[]>([]);
+            readonly range = signal<RangeValue>([]);
         }
 
         // The legacy families share the formatting code with the `kbq*` ones but not the locale reactivity:
@@ -2640,7 +2644,7 @@ describe('Date formatter (imports and providing)', () => {
             changeDetection: ChangeDetectionStrategy.OnPush
         })
         class LegacyDurationPipesHostComponent {
-            readonly range = signal<(DateTime | string | null)[]>([]);
+            readonly range = signal<RangeValue>([]);
         }
 
         @Component({
@@ -2724,6 +2728,22 @@ describe('Date formatter (imports and providing)', () => {
             );
         });
 
+        // `toDurationRange` accepts equal bounds (`compareDateTime(...) <= 0`) — only a reversed range is
+        // unformattable, so a zero duration has to render as one instead of falling through to ''.
+        it('renders a zero duration for equal bounds', () => {
+            const fixture = TestBed.createComponent(DurationPipesHostComponent);
+
+            fixture.componentInstance.range.set([start, start]);
+            fixture.detectChanges();
+
+            Object.entries(durationExpect).forEach(([id, fn]) =>
+                expect(read(fixture, id)).toBe(fn(dateFormatter, start, start))
+            );
+            // Not the '' of the unformattable-range guard: the bounds do reach the formatter. Asserted on
+            // `shortest` because `durationShortest` without seconds renders a zero duration as '' itself.
+            expect(read(fixture, 'shortest')).not.toBe('');
+        });
+
         it('renders the same output through the legacy pure and impure families', () => {
             const fixture = TestBed.createComponent(LegacyDurationPipesHostComponent);
 
@@ -2801,21 +2821,25 @@ describe('Date formatter (imports and providing)', () => {
 
         // `DateFormatter.duration*` throws on all of these; a throwing pipe would abort the whole view.
         describe('unformattable input', () => {
-            const cases: [string, (d: DateTime) => (DateTime | string | null)[]][] = [
+            // The last two cases are the tuple itself being missing rather than a bound inside it — what a
+            // not-yet-populated input actually holds. `toDurationRange` used to destructure it and throw.
+            const cases: [string, (d: DateTime) => RangeValue | null | undefined][] = [
                 ['an empty tuple', () => []],
                 ['a missing start', (d) => [null, d]],
                 ['a missing end', (d) => [d, null]],
                 ['both bounds missing', () => [null, null]],
                 ['an unparseable bound', (d) => ['not-a-date', d]],
-                ['a reversed range', (d) => [d.plus({ days: 1 }), d]]
+                ['a reversed range', (d) => [d.plus({ days: 1 }), d]],
+                ['the whole value missing', () => null],
+                ['the whole value undefined', () => undefined]
             ];
 
             it.each(cases)('renders an empty string for %s', (_, makeRange) => {
                 const fixture = TestBed.createComponent(DurationPipesHostComponent);
                 const legacyFixture = TestBed.createComponent(LegacyDurationPipesHostComponent);
 
-                fixture.componentInstance.range.set(makeRange(start));
-                legacyFixture.componentInstance.range.set(makeRange(start));
+                fixture.componentInstance.range.set(makeRange(start) as RangeValue);
+                legacyFixture.componentInstance.range.set(makeRange(start) as RangeValue);
 
                 expect(() => {
                     fixture.detectChanges();
@@ -2858,7 +2882,7 @@ describe('Date formatter (imports and providing)', () => {
             changeDetection: ChangeDetectionStrategy.OnPush
         })
         class RangeBoundsHostComponent {
-            readonly range = signal<(DateTime | string | null)[]>([]);
+            readonly range = signal<RangeValue>([]);
         }
 
         let dateFormatter: DateFormatter<DateTime>;
@@ -2898,15 +2922,19 @@ describe('Date formatter (imports and providing)', () => {
         }));
 
         // `openedRangeDate` throws when neither bound is a date, which used to abort the rendering of the
-        // whole host view — reachable from a template as soon as a range form control is left empty.
+        // whole host view — reachable from a template as soon as a range form control is left empty. The
+        // last two cases are the tuple itself being missing rather than a bound inside it, which is what an
+        // input that has not been populated yet actually holds.
         it.each([
             ['an empty tuple', []],
             ['both bounds missing', [null, null]],
-            ['both bounds unparseable', ['x', 'y']]
-        ])('renders an empty string for %s', (_, range) => {
+            ['both bounds unparseable', ['x', 'y']],
+            ['the whole value missing', null],
+            ['the whole value undefined', undefined]
+        ] as [string, RangeValue | null | undefined][])('renders an empty string for %s', (_, range) => {
             const fixture = TestBed.createComponent(RangeBoundsHostComponent);
 
-            fixture.componentInstance.range.set(range as (DateTime | string | null)[]);
+            fixture.componentInstance.range.set(range as RangeValue);
 
             expect(() => fixture.detectChanges()).not.toThrow();
 
@@ -2924,6 +2952,11 @@ describe('Date formatter (imports and providing)', () => {
             expect(read(fixture, 'kbqShort')).toBe(dateFormatter.rangeShortDate(date));
             expect(read(fixture, 'pureLong')).toBe(dateFormatter.rangeLongDate(date, null));
             expect(read(fixture, 'pureShort')).toBe(dateFormatter.rangeShortDate(date));
+            // `rangeLongDateTime` types its end bound as `D`, not `D | null`, so the pipes pass `undefined`.
+            expect(read(fixture, 'kbqLongTime')).toBe(dateFormatter.rangeLongDateTime(date));
+            expect(read(fixture, 'kbqShortTime')).toBe(dateFormatter.rangeShortDateTime(date, null));
+            expect(read(fixture, 'pureLongTime')).toBe(dateFormatter.rangeLongDateTime(date));
+            expect(read(fixture, 'pureShortTime')).toBe(dateFormatter.rangeShortDateTime(date, null));
 
             // The middle format has no opened-range template, so it renders nothing instead of throwing.
             expect(read(fixture, 'kbqMidTime')).toBe('');
@@ -2949,13 +2982,36 @@ describe('Date formatter (imports and providing)', () => {
             }
         }
 
+        // The same for the arguments rather than the value: the `[from, to]` literal stays memoized while
+        // `units` is rebuilt on every access, so only `argsEqual` decides whether the cache is hit.
+        @Component({
+            selector: 'kbq-rebuilt-units-host',
+            imports: [KbqDurationLongPipe],
+            template: '{{ [from, to] | kbqDurationLong: units }}',
+            changeDetection: ChangeDetectionStrategy.OnPush
+        })
+        class RebuiltUnitsHostComponent {
+            from!: DateTime;
+            to!: DateTime;
+            unitList: DurationUnit[] = ['hours', 'minutes'];
+
+            get units(): DurationUnit[] {
+                return [...this.unitList];
+            }
+        }
+
         let dateFormatter: DateFormatter<DateTime>;
         let testAdapter: LuxonDateAdapter;
 
         beforeEach(() => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [RebuiltRangeHostComponent, KbqFormattersModule, KbqLuxonDateModule],
+                imports: [
+                    RebuiltRangeHostComponent,
+                    RebuiltUnitsHostComponent,
+                    KbqFormattersModule,
+                    KbqLuxonDateModule
+                ],
                 providers: [
                     { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
                     { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
@@ -2995,6 +3051,38 @@ describe('Date formatter (imports and providing)', () => {
             const rendered = fixture.nativeElement.textContent.trim();
 
             fixture.componentInstance.to = fixture.componentInstance.from.plus({ days: 9 });
+            refresh(fixture);
+
+            expect(fixture.nativeElement.textContent.trim()).not.toBe(rendered);
+        });
+
+        it('hits the cache for a units array rebuilt on every CD tick', () => {
+            const fixture = TestBed.createComponent(RebuiltUnitsHostComponent);
+
+            fixture.componentInstance.from = testAdapter.createDateTime(2024, 0, 15, 10, 0, 0, 0);
+            fixture.componentInstance.to = fixture.componentInstance.from.plus({ days: 2, hours: 4 });
+            fixture.detectChanges();
+
+            const spy = jest.spyOn(dateFormatter, 'durationLong');
+
+            refresh(fixture);
+            refresh(fixture);
+            refresh(fixture);
+
+            expect(spy).not.toHaveBeenCalled();
+        });
+
+        it('recomputes when an element of the rebuilt units array changes', () => {
+            const fixture = TestBed.createComponent(RebuiltUnitsHostComponent);
+
+            fixture.componentInstance.from = testAdapter.createDateTime(2024, 0, 15, 10, 0, 0, 0);
+            fixture.componentInstance.to = fixture.componentInstance.from.plus({ days: 2, hours: 4 });
+            fixture.detectChanges();
+
+            const rendered = fixture.nativeElement.textContent.trim();
+
+            // Same length as the initial units, so only an element-wise comparison can tell them apart.
+            fixture.componentInstance.unitList = ['days', 'hours'];
             refresh(fixture);
 
             expect(fixture.nativeElement.textContent.trim()).not.toBe(rendered);
