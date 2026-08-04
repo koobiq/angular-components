@@ -46,7 +46,7 @@ kbq-select-matcher allows you to replace the entire contents of kbq-select, incl
 
 ### Example with kbqSelectTagContent
 
-kbqSelectTagContent allows you to override the markup of every tag in the matcher in multiple selection mode. The template receives the option itself and the select instance, so each tag can be rendered differently depending on its value.
+`kbqSelectTagContent` allows you to override the markup of every tag in the matcher in multiple selection mode. The template receives the option itself and the select instance, so each tag can be rendered differently depending on its value.
 
 <!-- example(select-custom-tag-content) -->
 
