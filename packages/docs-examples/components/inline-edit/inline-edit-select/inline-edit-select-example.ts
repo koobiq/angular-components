@@ -33,42 +33,49 @@ const USERS: KbqUserInfo[] = [
         KbqUsername
     ],
     template: `
-        <kbq-inline-edit #inlineEdit="kbqInlineEdit" [overlayPanelClass]="'example-inline-select__panel'">
-            <kbq-label>Assignee</kbq-label>
+        <div style="width: 200px">
+            <kbq-inline-edit
+                #inlineEdit="kbqInlineEdit"
+                #selectOrigin="kbqSelectOrigin"
+                kbqSelectOrigin
+                class="example-inline-select__host"
+                [overlayPanelClass]="'example-inline-select__panel'"
+            >
+                <kbq-label>Assignee</kbq-label>
 
-            <div kbqInlineEditViewMode class="example-inline-select__view">
-                @if (control.value) {
-                    <kbq-username isCompact [userInfo]="control.value" />
-                } @else {
-                    <span kbqInlineEditPlaceholder>{{ notSetLabel }}</span>
-                }
-            </div>
-            <kbq-form-field kbqInlineEditEditMode [noBorders]="true">
-                <kbq-select
-                    class="example-inline-select__select"
-                    panelWidth="auto"
-                    [panelClass]="'example-inline-select__options'"
-                    [placeholder]="notSetLabel"
-                    [formControl]="control"
-                    (selectionChange)="inlineEdit.commit()"
-                >
+                <div kbqInlineEditViewMode class="example-inline-select__view">
                     @if (control.value) {
-                        <ng-container kbq-select-trigger>
-                            <kbq-username isCompact [userInfo]="control.value" />
-                        </ng-container>
+                        <kbq-username isCompact [userInfo]="control.value" />
+                    } @else {
+                        <span kbqInlineEditPlaceholder>{{ notSetLabel }}</span>
                     }
+                </div>
+                <kbq-form-field kbqInlineEditEditMode [noBorders]="true">
+                    <kbq-select
+                        panelWidth="auto"
+                        [panelClass]="'example-inline-select__options'"
+                        [placeholder]="notSetLabel"
+                        [formControl]="control"
+                        [kbqSelectConnectedTo]="selectOrigin"
+                        (selectionChange)="inlineEdit.commit()"
+                    >
+                        <!-- Left empty on purpose: the currently selected user is already shown in
+                             view mode, so the trigger itself doesn't need to render kbq-username again
+                             (which would otherwise have to be re-constrained to avoid overflowing). -->
+                        <div kbq-select-matcher></div>
 
-                    <kbq-option class="example-inline-select__empty-option" [value]="null">
-                        {{ notSetLabel }}
-                    </kbq-option>
-                    @for (user of users; track user) {
-                        <kbq-option [value]="user">
-                            <kbq-username [userInfo]="user" />
+                        <kbq-option class="example-inline-select__empty-option" [value]="null">
+                            {{ notSetLabel }}
                         </kbq-option>
-                    }
-                </kbq-select>
-            </kbq-form-field>
-        </kbq-inline-edit>
+                        @for (user of users; track user) {
+                            <kbq-option [value]="user">
+                                <kbq-username [userInfo]="user" />
+                            </kbq-option>
+                        }
+                    </kbq-select>
+                </kbq-form-field>
+            </kbq-inline-edit>
+        </div>
     `,
     styles: `
         .example-inline-select__view {
@@ -78,40 +85,72 @@ const USERS: KbqUserInfo[] = [
         }
 
         /* The following rules reach into content rendered by kbq-inline-edit/kbq-select inside
-           the CDK overlay, which lives outside this component's own DOM subtree. */
+           the CDK overlay, which lives outside this component's own DOM subtree - a portal, not a
+           child of this component's host, so CSS custom properties set on the host don't cascade
+           into it and it needs its own background rather than inheriting one. */
 
-        /* View mode already gets hover styling from kbq-inline-edit itself (transparent-hover
-           background). While editing, the trigger has no border of its own, so give it the same
-           "active" background a dropdown trigger gets while its panel is open, otherwise the field
-           looks empty. */
-        ::ng-deep .example-inline-select__panel .kbq-inline-edit__control-container {
-            box-shadow: none;
+        /* Gives the host itself the same "active" look while the panel is open, for the sliver of
+           host (e.g. the label row) that remains visible around the portaled panel. */
+        ::ng-deep .example-inline-select__host.kbq-inline-edit_edit {
+            --kbq-inline-edit-background: var(--kbq-states-background-transparent-active);
         }
 
+        /* kbq-inline-edit__view-content keeps rendering behind the panel even in edit mode (it's
+           what the panel's position/size is measured against), so the control-container needs an
+           opaque background of its own to mask it - transparent here would let the old value's
+           text show through underneath. */
+        ::ng-deep .example-inline-select__panel .kbq-inline-edit__control-container {
+            display: none;
+            box-shadow: none;
+            background-color: var(--kbq-states-background-transparent-active);
+            padding: var(--kbq-inline-edit-padding-vertical) var(--kbq-inline-edit-padding-horizontal);
+        }
+
+        /* The form-field/select fill that box edge-to-edge with no padding or background of their
+           own, so the text sits at the same offset as in view mode, nothing shifts when the panel
+           opens, and the control-container's background above shows through uniformly instead of
+           the form-field's own opaque default poking through as a mismatched patch. */
         ::ng-deep .example-inline-select__panel .kbq-form-field__container {
-            background-color: var(--kbq-states-background-transparent-active) !important;
-            padding-left: 0;
-            padding-right: 0;
+            padding: 0 !important;
+            background-color: transparent !important;
             min-height: unset;
         }
 
-        ::ng-deep .example-inline-select__panel .kbq-form-field__container .kbq-select__arrow-wrapper {
+        ::ng-deep .example-inline-select__panel .kbq-form-field__infix {
+            padding-left: 0 !important;
+        }
+
+        ::ng-deep .example-inline-select__panel .kbq-select__matcher {
+            padding: 0 !important;
+        }
+
+        ::ng-deep .example-inline-select__panel .kbq-select__arrow-wrapper {
             visibility: hidden;
         }
 
-        ::ng-deep .example-inline-select__options .kbq-option {
-            align-items: flex-start;
-            min-height: unset;
-            padding-top: var(--kbq-size-xs);
-            padding-bottom: var(--kbq-size-xs);
-        }
-
+        /* kbq-username isn't a <span>, so the select's own "shrink the matcher content" rule
+           (which only targets a direct span child) doesn't reach it - constrain it explicitly so a
+           long name wraps instead of overflowing the option row. */
         ::ng-deep .example-inline-select__options .kbq-option-text {
             white-space: normal;
             overflow-wrap: break-word;
         }
+
+        ::ng-deep .example-inline-select__options .kbq-option-text > kbq-username {
+            width: 100%;
+            min-width: 0;
+        }
+
+        ::ng-deep .example-inline-select__options .kbq-username__primary,
+        ::ng-deep .example-inline-select__options .kbq-username__secondary {
+            white-space: normal;
+            overflow-wrap: break-word;
+        }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-column layout-align-center-center'
+    }
 })
 export class InlineEditSelectExample {
     protected readonly notSetLabel = 'Not specified';

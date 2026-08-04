@@ -23,7 +23,7 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i1 from '@angular/cdk/overlay';
-import * as i11 from '@koobiq/components/form-field';
+import * as i12 from '@koobiq/components/form-field';
 import * as i2 from '@koobiq/components/core';
 import * as i3 from '@koobiq/components/icon';
 import * as i4 from '@koobiq/components/tags';
@@ -112,6 +112,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get colorForState(): KbqComponentColors;
     get compareWith(): (o1: any, o2: any) => boolean;
     set compareWith(fn: (o1: any, o2: any) => boolean);
+    readonly connectedTo: _angular_core.InputSignal<KbqSelectOrigin | undefined>;
     controlType: string;
     readonly customMatcher: _angular_core.Signal<KbqSelectMatcher | undefined>;
     readonly customTagTemplateRef: _angular_core.Signal<TemplateRef<any> | undefined>;
@@ -263,7 +264,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     withVirtualScroll: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "panelMaxHeight": { "alias": "panelMaxHeight"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "panelMaxHeight": { "alias": "panelMaxHeight"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "kbqSelectConnectedTo"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "beforeOpened": "beforeOpened"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelect, never>;
 }
@@ -309,7 +310,7 @@ export class KbqSelectModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqSelectModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqSelect, typeof KbqOptionTooltip, typeof KbqSelectLoading, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText], [typeof KbqSelect, typeof KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqSelect, typeof KbqSelectOrigin, typeof KbqOptionTooltip, typeof KbqSelectLoading, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText], [typeof KbqSelect, typeof KbqSelectOrigin, typeof KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof KbqSelectLoading, typeof i12.KbqFormFieldModule, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText]>;
 }
 
 // @public
@@ -331,6 +332,16 @@ export type KbqSelectOptions = Partial<{
 
 // @public
 export const kbqSelectOptionsProvider: (options: KbqSelectOptions) => Provider;
+
+// @public
+export class KbqSelectOrigin {
+    // (undocumented)
+    elementRef: ElementRef<HTMLElement>;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSelectOrigin, "[kbqSelectOrigin]", ["kbqSelectOrigin"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelectOrigin, never>;
+}
 
 // @public @deprecated
 export type KbqSelectPanelWidth = KbqPanelWidth;
