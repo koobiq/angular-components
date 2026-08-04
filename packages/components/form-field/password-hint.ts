@@ -150,6 +150,15 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
         return this.formField.control();
     }
 
+    /**
+     * Control value coerced to a string. A control reports `T | null`, while every rule — including the
+     * consumer's `checkRule` — is typed for a string: `checkLengthRule` throws on `null`, and a regex rule
+     * silently matches the coerced `"null"`.
+     */
+    private get controlValue(): string {
+        return this.control.value ?? '';
+    }
+
     private lastControlValue: string | null = null;
 
     constructor() {
@@ -200,7 +209,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
                 ((control as unknown as { checkRule?: Subject<unknown> }).checkRule || (EMPTY as Observable<unknown>))
                     .pipe(takeUntilDestroyed(this.destroyRef))
                     .subscribe(() => {
-                        this.checked = this.checkRule(this.control.value);
+                        this.checked = this.checkRule(this.controlValue);
                         this.hasError = !this.checked;
                         this.changeDetectorRef.markForCheck();
                     });
@@ -213,9 +222,9 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
         if (this.control.focused && this.isValueChanged()) {
             this.hasError = false;
 
-            this.checked = this.checkRule(this.control.value);
+            this.checked = this.checkRule(this.controlValue);
         } else if (!this.control.focused && !this.isValueChanged()) {
-            this.hasError = !this.checkRule(this.control.value);
+            this.hasError = !this.checkRule(this.controlValue);
         }
 
         if (!this.control.required && !this.control.value) {

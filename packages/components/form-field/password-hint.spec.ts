@@ -1,8 +1,10 @@
-import { Component, DebugElement, Type, ViewChild } from '@angular/core';
+import { Component, DebugElement, signal, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
+import { Subject } from 'rxjs';
+import { KbqFormField } from './form-field';
 import { KbqFormFieldModule } from './form-field.module';
 import { hasPasswordStrengthError, KbqPasswordHint, PasswordRules, regExpPasswordValidator } from './password-hint';
 
@@ -72,6 +74,33 @@ class PasswordFormFieldWithCustomHint {
     rule: PasswordRules | undefined = PasswordRules.Custom;
     regex: RegExp | null = null;
     checkRule: ((value: string) => boolean) | undefined = undefined;
+}
+
+/**
+ * A control reports `T | null` and is free to return `null` — a custom `KBQ_INPUT_VALUE_ACCESSOR` is typed
+ * `{ value: any }` — while every rule is typed for a string. `required` keeps `checkValue` from resetting the
+ * state for an empty value, so the rule result stays observable.
+ */
+@Component({
+    selector: 'password-hint-with-null-value',
+    imports: [KbqFormFieldModule],
+    template: `
+        <kbq-password-hint [max]="8" [min]="4" [rule]="rule" [viewFormField]="formField">Hint</kbq-password-hint>
+    `
+})
+class PasswordHintWithNullValue {
+    @ViewChild(KbqPasswordHint) readonly hint: KbqPasswordHint;
+    readonly stateChanges = new Subject<void>();
+    readonly formField = {
+        control: signal({
+            value: null,
+            focused: false,
+            required: true,
+            ngControl: null,
+            stateChanges: this.stateChanges
+        })
+    } as unknown as KbqFormField;
+    rule: PasswordRules | undefined = PasswordRules.Length;
 }
 
 @Component({
@@ -144,6 +173,22 @@ describe(KbqPasswordHint.name, () => {
             enterValue(fixture, 'not-koobiq');
 
             expect(getHintNativeElement(fixture.debugElement).classList.contains('kbq-error')).toBe(true);
+        });
+
+        it('should NOT throw for PasswordRules.Length when the control reports null', () => {
+            const fixture = createComponent(PasswordHintWithNullValue, { rule: PasswordRules.Length });
+
+            fixture.componentInstance.stateChanges.next();
+
+            expect(fixture.componentInstance.hint.hasError).toBe(true);
+        });
+
+        it('should NOT satisfy a regex rule when the control reports null', () => {
+            const fixture = createComponent(PasswordHintWithNullValue, { rule: PasswordRules.LowerLatin });
+
+            fixture.componentInstance.stateChanges.next();
+
+            expect(fixture.componentInstance.hint.hasError).toBe(true);
         });
     });
 
