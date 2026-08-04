@@ -12,6 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqHighlightModule, ThemePalette } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -20,7 +21,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import type { KbqIconsMetadata } from '@koobiq/icons/types/icons';
-import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
+import { auditTime, BehaviorSubject, combineLatest, distinctUntilChanged, map, startWith } from 'rxjs';
 import { DocsIconItem, DocsIconItems } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocStates } from '../../services/doc-states';
@@ -43,7 +44,8 @@ const SEARCH_DEBOUNCE_TIME = 300;
         ReactiveFormsModule,
         KbqHighlightModule,
         KbqEmptyStateModule,
-        KbqToolTipModule
+        KbqToolTipModule,
+        KbqCheckboxModule
     ],
     templateUrl: './icons-viewer.template.html',
     styleUrls: ['./icons-viewer.scss'],
@@ -67,6 +69,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     readonly themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');
+    accentColorFilterControl = new FormControl<boolean>(false, { nonNullable: true });
     filteredIcons = new BehaviorSubject<DocsIconItem[]>([]);
 
     availableSizes: number[];
@@ -105,28 +108,28 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     }
 
     init() {
-        this.searchControl.valueChanges
+        combineLatest([
+            this.searchControl.valueChanges.pipe(auditTime(SEARCH_DEBOUNCE_TIME), distinctUntilChanged()),
+            this.accentColorFilterControl.valueChanges.pipe(startWith(this.accentColorFilterControl.value))
+        ])
             .pipe(
-                auditTime(SEARCH_DEBOUNCE_TIME),
-                distinctUntilChanged(),
-                map((value) => {
+                map(([value, accentColorOnly]) => {
                     this.syncSearchQuery(value!);
-
-                    if (!value) {
-                        return this.iconItems.getItems();
-                    }
 
                     const lowered = value?.toLowerCase() || '';
 
-                    const items = this.iconItems
-                        .getItems()
-                        .filter(
-                            (item) =>
-                                item.name.toLowerCase().includes(lowered) ||
-                                item.cssClass.toLowerCase().includes(lowered) ||
-                                (Array.isArray(item.tags) &&
-                                    item.tags.some((tag) => tag.toLowerCase().includes(lowered)))
+                    const items = this.iconItems.getItems().filter((item) => {
+                        if (accentColorOnly && !item.hasAccentColor) {
+                            return false;
+                        }
+
+                        return (
+                            !lowered ||
+                            item.name.toLowerCase().includes(lowered) ||
+                            item.cssClass.toLowerCase().includes(lowered) ||
+                            (Array.isArray(item.tags) && item.tags.some((tag) => tag.toLowerCase().includes(lowered)))
                         );
+                    });
 
                     return items.length ? items : undefined;
                 }),

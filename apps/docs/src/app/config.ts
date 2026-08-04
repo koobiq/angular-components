@@ -7,12 +7,14 @@ import { KBQ_LOCALE_SERVICE, KbqLocaleService, kbqLocaleServiceLangAttrNameProvi
 import { DOCS_ROUTES } from './routes';
 import { docsProvideAnalytics } from './services/analytics';
 import { DocsTitleStrategy } from './services/title-strategy';
+import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const appConfig: ApplicationConfig = {
     providers: [
         { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
         kbqLocaleServiceLangAttrNameProvider('examples-lang'),
+        kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(DOCS_ROUTES),
         provideHttpClient(withFetch()),

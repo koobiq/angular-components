@@ -84,3 +84,19 @@ bootstrapApplication(AppComponent, {
 })
 export class AppComponent {}
 ```
+
+---
+
+### Two-tone icons
+
+Some SVG icons (e.g. `folder-dot_16`, `envelope-dot_24`) include an extra accent element that can be recolored independently of the icon's main color. The accent color is controlled by the `--icon-accent-color` CSS variable, which defaults to `currentColor`.
+
+```css
+.my-scope {
+    --icon-accent-color: var(--kbq-foreground-error);
+}
+```
+
+The variable only applies to SVG icons — font icons are always single-color.
+
+See the full list of two-tone icons on the [Icons](/en/icons) page with the "Two-color only" filter enabled.
