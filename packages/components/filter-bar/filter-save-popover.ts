@@ -100,7 +100,13 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
         </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        // The whole template is pushed onto the popover trigger imperatively; remove the empty host from
+        // layout entirely, since it would otherwise be an inline box in normal flow or a phantom item
+        // in the parent's (`.kbq-filters`, flex) layout.
+        style: 'display: none'
+    }
 })
 export class KbqFilterSavePopover implements AfterViewInit {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
