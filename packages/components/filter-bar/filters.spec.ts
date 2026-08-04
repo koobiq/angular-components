@@ -141,6 +141,14 @@ describe('KbqFilters', () => {
         filtersDebugElement = fixture.debugElement.query(By.directive(KbqFilters));
     };
 
+    it('should not create a layout box at the declaration point for the save popover', () => {
+        initFixture(createFilter([]));
+
+        const savePopover = fixture.debugElement.query(By.css('kbq-filter-save-popover')).nativeElement;
+
+        expect(getComputedStyle(savePopover).display).toBe('none');
+    });
+
     describe('filter-bar button style (effect-driven)', () => {
         it('should switch the main button to the changed-filter style when the filter becomes saved', () => {
             initFixture(createFilter([]));
