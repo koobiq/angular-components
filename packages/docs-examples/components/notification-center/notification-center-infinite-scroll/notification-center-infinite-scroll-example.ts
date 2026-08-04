@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, ThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -37,8 +37,8 @@ type ExampleAction = {
     icon?: string;
     text?: string;
     action?: () => void;
-    style: KbqButtonStyles | string;
-    color: KbqComponentColors;
+    style: KbqButtonStyleInput;
+    color: KbqButtonColor;
 };
 
 enum NavbarIcItems {

@@ -15,11 +15,11 @@ import * as i3 from '@angular/cdk/observers';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqEnumValues } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
 
 // @public
 export const buttonLeftIconClassName = "kbq-button-icon_left";
@@ -31,8 +31,8 @@ export const buttonRightIconClassName = "kbq-button-icon_right";
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef {
     constructor();
     protected get ariaDisabledAttribute(): true | null;
-    get color(): KbqComponentColors | ThemePalette | string;
-    set color(value: KbqComponentColors | ThemePalette | string);
+    get color(): KbqButtonColor;
+    set color(value: KbqButtonColor | null | undefined);
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledSignal: i0.WritableSignal<boolean>;
@@ -47,7 +47,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     hasFocus: boolean;
     get kbqStyle(): string;
-    set kbqStyle(value: string | KbqButtonStyles);
+    set kbqStyle(value: KbqButtonStyleInput | null | undefined);
     protected get nativeDisabledAttribute(): true | null;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -67,9 +67,9 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     projectContentChanged(): void;
     protected readonly roleAttribute: i0.WritableSignal<"button" | null>;
-    setColorFromGroup(value: KbqComponentColors | ThemePalette | string): void;
+    setColorFromGroup(value: KbqButtonColor | null | undefined): void;
     setDisabledFromGroup(value: boolean): void;
-    setKbqStyleFromGroup(value: KbqButtonStyles | string): void;
+    setKbqStyleFromGroup(value: KbqButtonStyleInput): void;
     // (undocumented)
     protected styler: KbqButtonCssStyler;
     // (undocumented)
@@ -84,6 +84,9 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButton, never>;
 }
+
+// @public
+export type KbqButtonColor = KbqEnumValues<KbqComponentColors.Theme | KbqComponentColors.ThemeFade | KbqComponentColors.Contrast | KbqComponentColors.ContrastFade>;
 
 // @public
 export class KbqButtonCssStyler implements AfterContentInit {
@@ -126,13 +129,13 @@ export class KbqButtonGroup {
 // @public
 export class KbqButtonGroupRoot extends KbqColorDirective {
     constructor();
-    get color(): KbqComponentColors | ThemePalette | string;
-    set color(value: KbqComponentColors | ThemePalette | string);
+    get color(): KbqButtonColor;
+    set color(value: KbqButtonColor | null | undefined);
     get disabled(): boolean | undefined;
     set disabled(value: boolean);
     protected _disabled: boolean | undefined;
     get kbqStyle(): string;
-    set kbqStyle(value: KbqButtonStyles | string);
+    set kbqStyle(value: KbqButtonStyleInput | null | undefined);
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -158,6 +161,12 @@ export class KbqButtonPrefix {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonPrefix, never>;
 }
+
+// @public
+export type KbqButtonStyle = KbqEnumValues<KbqButtonStyles>;
+
+// @public
+export type KbqButtonStyleInput = KbqButtonStyle | (string & {});
 
 // @public
 export enum KbqButtonStyles {

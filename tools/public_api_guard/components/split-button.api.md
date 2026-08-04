@@ -7,19 +7,18 @@
 import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
-import { KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButtonColor } from '@koobiq/components/button';
+import { KbqButtonStyleInput } from '@koobiq/components/button';
 import { KbqColorDirective } from '@koobiq/components/core';
-import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { QueryList } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
 
 // @public (undocumented)
 export class KbqSplitButton extends KbqColorDirective implements AfterContentInit {
     constructor();
     protected buttons: QueryList<KbqButton>;
-    get color(): KbqComponentColors | ThemePalette | string;
-    set color(value: KbqComponentColors | ThemePalette | string);
+    get color(): KbqButtonColor;
+    set color(value: KbqButtonColor | null | undefined);
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
@@ -28,7 +27,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     // (undocumented)
     get firstDisabled(): boolean;
     get kbqStyle(): string;
-    set kbqStyle(value: KbqButtonStyles | string);
+    set kbqStyle(value: KbqButtonStyleInput | null | undefined);
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)

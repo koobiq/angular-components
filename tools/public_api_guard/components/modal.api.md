@@ -17,6 +17,7 @@ import * as i5 from '@koobiq/components/title';
 import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { KbqButtonColor } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqOverflowShadowState } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
@@ -180,8 +181,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     set kbqOkLoading(value: boolean);
     // (undocumented)
     kbqOkText: string;
-    // (undocumented)
-    kbqOkType: KbqComponentColors;
+    kbqOkType: KbqButtonColor;
     // (undocumented)
     readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T>;
     // (undocumented)
@@ -389,7 +389,7 @@ export interface ModalOptions<C = any, R = any> {
     // (undocumented)
     kbqOkText?: string;
     // (undocumented)
-    kbqOkType?: string;
+    kbqOkType?: KbqButtonColor;
     // (undocumented)
     kbqOnCancel?: EventEmitter<C> | OnClickCallback<C>;
     // (undocumented)

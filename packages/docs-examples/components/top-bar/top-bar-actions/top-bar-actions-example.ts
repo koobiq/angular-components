@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -15,8 +15,8 @@ type ExampleAction = {
     icon?: string;
     text?: string;
     action?: () => void;
-    style: KbqButtonStyles | string;
-    color: KbqComponentColors;
+    style: KbqButtonStyleInput;
+    color: KbqButtonColor;
     alwaysVisible?: boolean;
 };
 
@@ -141,7 +141,7 @@ export class TopBarActionsExample {
             style: '',
             alwaysVisible: true
         },
-        ...Array.from({ length: 3 }, (_, i) => ({
+        ...Array.from({ length: 3 }, (_, i): ExampleAction => ({
             id: `action${i + 7}`,
             text: `Action ${i + 7}`,
             color: KbqComponentColors.ContrastFade,

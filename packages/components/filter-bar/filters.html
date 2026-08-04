@@ -39,7 +39,6 @@
         class="kbq-button_action"
         [attr.aria-label]="localeData.saveNewFilterTooltip"
         [class.kbq-active]="focusedElementBeforeIs(saveNewFilterButton) && opened"
-        [color]="colors.Empty"
         [disabled]="savePopover.isSaving"
         (click)="savePopover.openSaveAsNewFilterPopover()"
     >
@@ -54,7 +53,6 @@
         kbqFilterBarButton
         class="kbq-button_action"
         [attr.aria-label]="localeData.actionsTooltip"
-        [color]="colors.Empty"
         [kbqDropdownTriggerFor]="filterActions"
         [disabled]="savePopover.isSaving"
         [class.kbq-active]="focusedElementBeforeIs(filterActionsButton) && filterActionsOpened"

@@ -447,7 +447,6 @@ export class KbqFilterReset {
 // @public (undocumented)
 export class KbqFilters implements OnInit {
     closePopover(restoreFocus?: boolean): void;
-    protected readonly colors: typeof KbqComponentColors;
     protected readonly destroyRef: DestroyRef;
     protected readonly dropdown: _angular_core.Signal<KbqDropdownTrigger>;
     protected readonly elementRef: ElementRef<any>;

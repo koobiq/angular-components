@@ -29,7 +29,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
     ENTER,
     ESCAPE,
@@ -229,7 +229,8 @@ export class KbqModalComponent<T = any, R = any>
     // TODO: Skipped for migration because:
     //  This input overrides a field from a superclass, while the superclass field
     //  is not migrated.
-    @Input() kbqOkType = KbqComponentColors.Contrast;
+    /** Color of the predefined OK button. */
+    @Input() kbqOkType: KbqButtonColor = KbqComponentColors.Contrast;
 
     // TODO: Skipped for migration because:
     //  This input overrides a field from a superclass, while the superclass field
