@@ -3980,6 +3980,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-full-custom-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-full-custom-example",
     "additionalComponents": [
       "CustomModalComponent"
@@ -4754,6 +4755,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-add-new-option-example.ts",
     "importPath": "components/select"
   },
+  "select-auto-hide-scroll-strategy": {
+    "packagePath": "components/select/select-auto-hide-scroll-strategy",
+    "title": "select-auto-hide-scroll-strategy",
+    "componentName": "SelectAutoHideScrollStrategyExample",
+    "files": [
+      "select-auto-hide-scroll-strategy-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-auto-hide-scroll-strategy-example",
+    "additionalComponents": [],
+    "primaryFile": "select-auto-hide-scroll-strategy-example.ts",
+    "importPath": "components/select"
+  },
   "select-cleaner": {
     "packagePath": "components/select/select-cleaner",
     "title": "Select cleaner",
@@ -4769,7 +4783,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-custom-matcher": {
     "packagePath": "components/select/select-custom-matcher",
-    "title": "select-custom-trigger",
+    "title": "select-custom-matcher",
     "componentName": "SelectCustomMatcherExample",
     "files": [
       "select-custom-matcher-example.ts"
@@ -4778,6 +4792,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-custom-matcher-example",
     "additionalComponents": [],
     "primaryFile": "select-custom-matcher-example.ts",
+    "importPath": "components/select"
+  },
+  "select-custom-tag-content": {
+    "packagePath": "components/select/select-custom-tag-content",
+    "title": "select-custom-tag-content",
+    "componentName": "SelectCustomTagContentExample",
+    "files": [
+      "select-custom-tag-content-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-custom-tag-content-example",
+    "additionalComponents": [],
+    "primaryFile": "select-custom-tag-content-example.ts",
     "importPath": "components/select"
   },
   "select-custom-trigger": {
@@ -8172,9 +8199,13 @@ return import('@koobiq/docs-examples/components/search-expandable');
 return import('@koobiq/docs-examples/components/search-expandable');
   case 'select-add-new-option':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-auto-hide-scroll-strategy':
+return import('@koobiq/docs-examples/components/select');
   case 'select-cleaner':
 return import('@koobiq/docs-examples/components/select');
   case 'select-custom-matcher':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-custom-tag-content':
 return import('@koobiq/docs-examples/components/select');
   case 'select-custom-trigger':
 return import('@koobiq/docs-examples/components/select');
