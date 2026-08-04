@@ -53,3 +53,30 @@ jobs:
             ---
 
             💡 Comment `/approve-snapshots` to approve snapshot changes.
+
+  # Functional smoke for the documentation site. A separate job so it runs in parallel with the
+  # component suite instead of sharing its time budget.
+  #
+  # TODO: `build`, `deploy-preview` and this job each rebuild the docs from scratch. Share the
+  # `docs:build` output between the workflows as an artifact instead of rebuilding it three times.
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read # for actions/checkout to read the repository
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: ./.github/workflows/actions/setup-node
+      - uses: ./.github/workflows/actions/build-packages
+      - uses: ./.github/workflows/actions/build-docs
+      # Only Chromium: the docs smoke has a single project, unlike `e2e:setup`, which also pulls WebKit.
+      - name: Install Playwright browser
+        run: npx playwright install chromium --with-deps
+      - id: run-docs-tests
+        run: yarn run e2e:docs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: ${{ failure() && steps.run-docs-tests.outcome == 'failure' }}
+        with:
+          name: playwright-report-docs
+          path: playwright-report-docs/
+          retention-days: 5

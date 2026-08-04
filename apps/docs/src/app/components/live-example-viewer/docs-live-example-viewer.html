@@ -32,9 +32,10 @@
                 kbqStyle="transparent"
                 kbqPlacement="bottom"
                 [kbqTooltip]="t('resetState')"
+                [attr.aria-label]="t('resetState')"
                 (click)="reload()"
             >
-                <i kbq-icon="kbq-arrow-rotate-left_16"></i>
+                <i kbq-icon="kbq-arrow-rotate-left_16" aria-hidden="true"></i>
             </button>
             <kbq-divider class="docs-live-example-footer__divider" [vertical]="true" />
             <docs-stackblitz-button [exampleId]="exampleId" />

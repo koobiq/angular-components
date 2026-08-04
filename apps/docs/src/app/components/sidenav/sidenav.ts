@@ -57,7 +57,7 @@ class TreeFlatNode {
     name: Record<DocsLocale, string>;
     level: number;
     expandable: boolean;
-    parent: any;
+    parent: TreeFlatNode | null;
     type: TreeNodeType;
     isNew: boolean;
 }
