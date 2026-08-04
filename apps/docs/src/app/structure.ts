@@ -159,8 +159,9 @@ const makeStructure = (structure: DocsStructure): DocsStructure => {
 };
 
 /**
- * Every ISO date passed to `expiresAt`, retained so `structure.spec` can fail the build on an
- * already-expired `isNew` badge instead of letting it linger silently in the registry.
+ * Every ISO date passed to `expiresAt`, retained so `structure.spec` can flag a typo'd one. Expired
+ * entries are not asserted on — that would turn a date into a CI failure for unrelated changes;
+ * `yarn run docs:prune-is-new-badges` deletes them during `release:stage:commit` instead.
  */
 const isNewExpiryDates: string[] = [];
 

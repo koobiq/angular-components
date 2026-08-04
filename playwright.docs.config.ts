@@ -1,12 +1,16 @@
 import { defineConfig, devices, ViewportSize } from '@playwright/test';
+import baseConfig from './playwright.config';
 
 /**
  * Playwright config for the documentation site.
  *
- * Kept separate from `playwright.config.ts` because the two suites need different servers: the
- * component suite runs against the `dev-e2e` app, while these specs run against the prerendered
+ * Derives from `playwright.config.ts` and overrides only what the two suites genuinely disagree on:
+ * the component suite runs against the `dev-e2e` app, while these specs run against the prerendered
  * docs build (`yarn run docs:build`). This is a functional smoke — no visual snapshots — so it is
  * safe to run on any platform, unlike the component suite's Linux-only baselines.
+ *
+ * Spread rather than `defineConfig(baseConfig, {...})`: the multi-argument form *concatenates*
+ * `webServer` entries, which would boot the `dev-e2e` server alongside the docs one.
  */
 const isCI = !!process.env.CI;
 const viewport: ViewportSize = {
@@ -16,13 +20,10 @@ const viewport: ViewportSize = {
 const baseURL = process.env.DOCS_BASE_URL || 'http://localhost:4300';
 
 export default defineConfig({
+    ...baseConfig,
     testDir: 'apps/docs',
-    testMatch: ['**/*.playwright-spec.ts'],
-    tsconfig: 'tsconfig.playwright-spec.json',
+    // Hydration plus a lazily loaded example chunk outlasts the component suite's budget.
     timeout: 30 * 1000,
-    fullyParallel: true,
-    forbidOnly: isCI,
-    retries: isCI ? 2 : 0,
     reporter: [
         ['list', { printSteps: true }],
         ['html', { open: 'never', outputFolder: 'playwright-report-docs' }]
@@ -43,8 +44,8 @@ export default defineConfig({
         reuseExistingServer: !isCI
     },
     use: {
+        ...baseConfig.use,
         baseURL,
-        trace: 'on-first-retry',
         contextOptions: {
             reducedMotion: 'reduce',
             viewport

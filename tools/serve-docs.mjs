@@ -22,6 +22,13 @@ if (!existsSync(root)) {
     process.exit(1);
 }
 
+// `app.listen` coerces whatever it gets, so an empty or non-numeric PORT would surface as a bind
+// error naming a port nobody asked for. Reject it here while the offending value is still around.
+if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    console.error(`[serve-docs] Invalid PORT "${process.env.PORT}": expected an integer between 1 and 65535.`);
+    process.exit(1);
+}
+
 const app = express();
 
 // Mirrors the hosting rewrite in `firebase.json`: routes that were not prerendered fall back to the
@@ -32,10 +39,28 @@ const shell = existsSync(csrShell) ? csrShell : resolve(root, 'index.html');
 
 app.use(express.static(root, { index: 'index.html', redirect: false }));
 
+// Malformed percent-encoding (`/%E0%`) makes `decodeURIComponent` throw. Express would turn that
+// into a 500; such a URL simply matches nothing on disk, so it belongs on the CSR shell instead.
+const decodePath = (path) => {
+    try {
+        return decodeURIComponent(path);
+    } catch {
+        return null;
+    }
+};
+
 app.use((request, response) => {
+    const path = decodePath(request.path);
+
+    if (path === null) {
+        response.sendFile(shell);
+
+        return;
+    }
+
     // A prerendered route is a directory holding its own index.html. Serve it directly rather than
     // letting `express.static` bounce the request to a trailing-slash URL the app never links to.
-    const prerendered = resolve(root, `.${decodeURIComponent(request.path)}`, 'index.html');
+    const prerendered = resolve(root, `.${path}`, 'index.html');
     // Compare on path segments, not on the raw string: a `..` segment can escape into a sibling
     // directory whose name merely starts with the root's own (`browser` -> `browser-something`),
     // which a `startsWith` check would wave through. `express.static` blocks traversal itself, but

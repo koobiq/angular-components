@@ -88,7 +88,8 @@ npx jest <TEST_PATH_PATTERN>       # Run specific Jest tests (e.g., npx jest pac
 
 # E2E tests (Playwright)
 yarn run e2e:setup                      # Install Playwright browsers (run once)
-yarn run e2e:components                 # Run all E2E tests
+yarn run e2e:components                 # Run all component E2E tests
+yarn run e2e:docs                       # Run the docs site smoke suite (needs `yarn run docs:build` first)
 npx playwright test <TEST_PATH_PATTERN> # Run specific E2E tests (e.g., npx playwright test packages/components/button/e2e.playwright-spec.ts)
 ```
 
