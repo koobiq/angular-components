@@ -86,6 +86,18 @@ describe('KbqDropdown', () => {
         overlayContainer.ngOnDestroy();
     }));
 
+    it('should remove the host box via display: contents', () => {
+        // jsdom doesn't do layout, so this only guards the `display` value itself; the actual
+        // no-layout-box behavior is covered by the navbar Playwright baseline (packages/components/navbar/e2e.ts).
+        const fixture = createComponent(SimpleDropdown);
+
+        fixture.detectChanges();
+
+        const dropdown = fixture.debugElement.query(By.css('kbq-dropdown')).nativeElement;
+
+        expect(getComputedStyle(dropdown).display).toBe('contents');
+    });
+
     it('should open the dropdown as an idempotent operation', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
 

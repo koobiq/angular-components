@@ -18,7 +18,7 @@ import { KbqDropdownModule, KbqDropdownPositionX } from '@koobiq/components/drop
 
         <button kbq-button [kbqDropdownTriggerFor]="appDropdown">Dropdown ({{ xPosition() }})</button>
 
-        <kbq-dropdown #appDropdown="kbqDropdown" style="display: none" [xPosition]="xPosition()">
+        <kbq-dropdown #appDropdown="kbqDropdown" [xPosition]="xPosition()">
             <button kbq-dropdown-item>Dropdown option 1</button>
             <button kbq-dropdown-item>Dropdown option 2</button>
             <kbq-divider />
