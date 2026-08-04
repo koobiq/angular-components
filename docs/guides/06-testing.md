@@ -21,6 +21,7 @@ yarn run unit:angular-luxon-adapter
 yarn run unit:schematics
 yarn run unit:koobiq-docs
 yarn run unit:api-gen
+yarn run unit:tools
 ```
 
 ## E2E tests
@@ -39,4 +40,12 @@ yarn run e2e:setup
 
 ```bash
 yarn run e2e:components
+```
+
+The documentation site has its own smoke suite. It runs against the prerendered build, so that has to
+exist first:
+
+```bash
+yarn run docs:build
+yarn run e2e:docs
 ```

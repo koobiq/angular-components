@@ -174,6 +174,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected clearedValue(): V | null;
+    protected get currentFocusOrigin(): NonNullable<FocusOrigin>;
     readonly data: KbqPipeData<V>;
     protected destroyed: boolean;
     protected readonly destroyRef: DestroyRef;
@@ -446,7 +447,6 @@ export class KbqFilterReset {
 // @public (undocumented)
 export class KbqFilters implements OnInit {
     closePopover(restoreFocus?: boolean): void;
-    protected readonly colors: typeof KbqComponentColors;
     protected readonly destroyRef: DestroyRef;
     protected readonly dropdown: _angular_core.Signal<KbqDropdownTrigger>;
     protected readonly elementRef: ElementRef<any>;

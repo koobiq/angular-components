@@ -431,5 +431,22 @@
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
+
+        <br />
+        <br />
+
+        <!-- Transparent with no explicit color: renders through the style's default color. -->
+        <button disabled kbq-button [kbqStyle]="styles.Transparent">Кнопка</button>
+        &nbsp;
+        <button kbq-button [kbqStyle]="styles.Transparent">Кнопка</button>
+        &nbsp;
+        <button kbq-button class="kbq-hover" [kbqStyle]="styles.Transparent">Кнопка</button>
+        &nbsp;
+        <button kbq-button class="kbq-active" [kbqStyle]="styles.Transparent">Кнопка</button>
+        &nbsp;
+        <button kbq-button class="cdk-keyboard-focused" [kbqStyle]="styles.Transparent">Кнопка</button>
+        &nbsp;
+        <button kbq-button class="kbq-progress" [kbqStyle]="styles.Transparent">Кнопка</button>
+        &nbsp;
     </div>
 </div>

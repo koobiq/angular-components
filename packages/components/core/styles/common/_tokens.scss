@@ -1,13 +1,4 @@
-@use 'sass:map';
 @use 'sass:meta';
-
-@use '../tokens';
-
-$tokens: meta.module-variables(tokens) !default;
-
-@function getToken($name) {
-    @return map.get($tokens, $name);
-}
 
 @mixin kbq-css-font-variable($component, $component-property, $font-property, $font) {
     #{$font-property}: var(--kbq-#{$component}-#{$font}#{$component-property}-#{$font-property});

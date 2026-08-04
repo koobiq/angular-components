@@ -5,14 +5,14 @@
         </button>
         <button
             kbq-button
-            [color]="mode() === 'adopted' ? colors.Error : colors.ContrastFade"
+            [color]="mode() === 'adopted' ? colors.Theme : colors.ContrastFade"
             (click)="apply('adopted')"
         >
             adoptedStyleSheets без слоя — БАГ
         </button>
         <button
             kbq-button
-            [color]="mode() === 'adopted-layer' ? colors.Success : colors.ContrastFade"
+            [color]="mode() === 'adopted-layer' ? colors.Theme : colors.ContrastFade"
             (click)="apply('adopted-layer')"
         >
             adoptedStyleSheets + &#64;layer — ФИКС

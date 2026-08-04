@@ -17,6 +17,7 @@
         "dgeni",
         "docsearch",
         "frontends",
+        "GHSA",
         "gulpfile",
         "Infosec",
         "interpuncts",
@@ -26,6 +27,7 @@
         "luxon",
         "Maskito",
         "messageformat",
+        "minimatch",
         "neutralise",
         "neutralising",
         "noborder",
@@ -34,6 +36,7 @@
         "overlayscrollbars",
         "packagr",
         "prerender",
+        "prerendered",
         "refreshable",
         "Repobeats",
         "Resizer",
@@ -47,6 +50,7 @@
         "Topbar",
         "unclickable",
         "unmigrated",
-        "unparseable"
+        "unparseable",
+        "yarnrc"
     ]
 }

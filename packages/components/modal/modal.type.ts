@@ -1,5 +1,6 @@
 ﻿import { OverlayRef } from '@angular/cdk/overlay';
 import { EventEmitter, Injector, TemplateRef, Type } from '@angular/core';
+import { KbqButtonColor } from '@koobiq/components/button';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<false | void | {}>;
@@ -53,7 +54,7 @@ export interface ModalOptions<C = any, R = any> {
 
     // --- Predefined OK & Cancel buttons
     kbqOkText?: string;
-    kbqOkType?: string;
+    kbqOkType?: KbqButtonColor;
     kbqOkLoading?: boolean;
     kbqOnOk?: EventEmitter<C> | OnClickCallback<C>;
     kbqCancelText?: string;

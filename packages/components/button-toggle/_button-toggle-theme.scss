@@ -1,8 +1,13 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-button-toggle-state($state-name) {
-    & > .kbq-button,
-    & > .kbq-icon-button {
+    // The style class is named on purpose. The inner button is a transparent `KbqButton`, so
+    // `kbq-button-theme()` also styles it, at the same specificity a bare `> .kbq-button` would
+    // have — which stylesheet wins would then come down to the order the two are injected in.
+    // (`.kbq-button-icon` rather than `.kbq-icon-button`: the former is what `KbqButtonCssStyler`
+    // sets on an icon-only button, the latter is the unrelated `KbqIconButton` host class.)
+    & > .kbq-button.kbq-button_transparent,
+    & > .kbq-button-icon.kbq-button_transparent {
         background: var(--kbq-button-toggle-item-#{$state-name}-background);
 
         color: var(--kbq-button-toggle-item-#{$state-name}-text);

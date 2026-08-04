@@ -1,13 +1,29 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
-import { KbqButton, KbqButtonCssStyler, KbqButtonDropdownTrigger, KbqButtonStyles } from '@koobiq/components/button';
+import {
+    KbqButton,
+    KbqButtonColor,
+    KbqButtonCssStyler,
+    KbqButtonDropdownTrigger,
+    KbqButtonStyleInput,
+    KbqButtonStyles
+} from '@koobiq/components/button';
 import { KbqComponentColors, KbqDecimalPipe, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
+
+/** An overflowing action rendered as a button. Annotated so the values keep the button's types. */
+type E2eTopBarAction = {
+    id: string;
+    color: KbqButtonColor;
+    style: KbqButtonStyleInput;
+    icon: string;
+    text: string;
+};
 
 @Component({
     selector: 'e2e-top-bar-states',
@@ -261,7 +277,7 @@ import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
     }
 })
 export class E2eTopBarStates {
-    protected readonly actions = [
+    protected readonly actions: E2eTopBarAction[] = [
         {
             id: '1',
             color: KbqComponentColors.Contrast,

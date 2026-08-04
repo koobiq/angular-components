@@ -50,7 +50,19 @@
     .kbq-button-icon {
         -webkit-font-smoothing: antialiased;
 
+        // Every style opens with an unqualified rule carrying its default color, so a button always
+        // renders: `kbq-button-reset()` sets neither `background` nor `color`, so a style that
+        // matched no branch at all fell through to the user-agent button appearance. The design
+        // system pairs each style with only a subset of the colors, and the styles do not share a
+        // default — `transparent` paints no fill, so its neutral color is `contrast`, not
+        // `contrast-fade`. Being one class less specific than every color branch below, and than
+        // any container theme restyling a nested button (e.g. `kbq-button-toggle`), the unqualified
+        // rule only takes effect where nothing else matches. The branches that repeat it are kept
+        // for the same reason: dropping them would lower the specificity those container themes
+        // currently compete with. Same shape as `_icon-theme.scss`.
         &.kbq-button_filled {
+            @include kbq-button-type(filled, contrast-fade-on);
+
             &.kbq-contrast {
                 @include kbq-button-type(filled, contrast-fade-off);
             }
@@ -61,6 +73,8 @@
         }
 
         &.kbq-button_outline {
+            @include kbq-button-type(outline, contrast-fade-on);
+
             &.kbq-theme-fade {
                 @include kbq-button-type(outline, theme-fade-on);
             }
@@ -71,6 +85,8 @@
         }
 
         &.kbq-button_transparent {
+            @include kbq-button-type(transparent, contrast-fade-on);
+
             &.kbq-theme {
                 @include kbq-button-type(transparent, theme-fade-on);
             }

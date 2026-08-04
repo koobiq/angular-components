@@ -4,7 +4,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import {
+    KbqButton,
+    KbqButtonColor,
+    KbqButtonModule,
+    KbqButtonStyleInput,
+    KbqButtonStyles
+} from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -25,7 +31,8 @@ describe('KbqSplitButton', () => {
                 TestAppNoButtons,
                 TestAppSecondDisabled,
                 TestAppDropdown,
-                TestAppDropdownAutoWidth
+                TestAppDropdownAutoWidth,
+                TestAppUnboundColor
             ]
         }).compileComponents();
     });
@@ -160,15 +167,37 @@ describe('KbqSplitButton', () => {
             });
         });
 
-        it('should not update color when an empty value is set', () => {
+        it('should release nested buttons back to the style default when an empty value is set', () => {
             component.color = KbqComponentColors.Contrast;
             fixture.detectChanges();
 
-            component.color = '';
+            component.color = null;
             fixture.detectChanges();
 
             buttons.forEach((btn) => {
+                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.ContrastFade);
+            });
+        });
+
+        it('should leave nested buttons on the default color of the style while the color is unbound', () => {
+            const unboundFixture = TestBed.createComponent(TestAppUnboundColor);
+
+            unboundFixture.detectChanges();
+
+            unboundFixture.debugElement.queryAll(By.directive(KbqButton)).forEach((btn) => {
                 expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.Contrast);
+            });
+        });
+
+        it('should keep the color when the style changes while the color is bound', () => {
+            component.color = KbqComponentColors.Theme;
+            fixture.detectChanges();
+
+            component.style = KbqButtonStyles.Transparent;
+            fixture.detectChanges();
+
+            buttons.forEach((btn) => {
+                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.Theme);
             });
         });
     });
@@ -372,11 +401,25 @@ class TestAppEnabled {}
     `
 })
 class TestAppInputs {
-    style: string = KbqButtonStyles.Filled;
-    color: string = KbqComponentColors.ContrastFade;
+    style: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    color: KbqButtonColor | null = KbqComponentColors.ContrastFade;
     disabled: boolean = false;
     firstDisabled: boolean = false;
     secondDisabled: boolean = false;
+}
+
+@Component({
+    selector: 'test-app-unbound-color',
+    imports: [KbqSplitButtonModule, KbqButtonModule],
+    template: `
+        <kbq-split-button [kbqStyle]="style">
+            <button kbq-button>First</button>
+            <button kbq-button>Second</button>
+        </kbq-split-button>
+    `
+})
+class TestAppUnboundColor {
+    readonly style = KbqButtonStyles.Transparent;
 }
 
 @Component({

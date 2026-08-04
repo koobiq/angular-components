@@ -52,9 +52,6 @@
         },
         "./prebuilt-themes/theme.css": {
             "style": "./prebuilt-themes/theme.css"
-        },
-        "./prebuilt-visual/default-visual.css": {
-            "style": "./prebuilt-visual/default-visual.css"
         }
     },
     "schematics": "./schematics/collection.json",

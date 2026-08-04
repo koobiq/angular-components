@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { access, mkdir, readFile, writeFile } from 'fs/promises';
-import { GlobSync } from 'glob';
+import { globSync } from 'glob';
 import { basename, join } from 'path';
 import { configureMarkedGlobally } from './marked/configuration';
 import { DocsMarkdownRenderer } from './marked/docs-marked-renderer';
@@ -14,19 +14,25 @@ const markdownRenderer = new DocsMarkdownRenderer();
 // Setup custom marked instance.
 const marked = configureMarkedGlobally(markdownRenderer);
 
+/**
+ * glob v9 removed the GlobSync class, stopped sorting results, treats a backslash as an
+ * escape rather than a separator, and returns native separators. `windowsPathsNoEscape` makes
+ * joined patterns work on Windows, `posix` keeps the paths identical on Windows and Linux, and
+ * the sort keeps the generated documentation stable.
+ */
+const findFiles = (pattern: string): string[] => globSync(pattern, { windowsPathsNoEscape: true, posix: true }).sort();
+
 export const src = (path: string | string[]): string[] => {
     let res: string[] = [];
 
     if (Array.isArray(path)) {
         res = path.reduce((result, curPath) => {
-            const files = new GlobSync(curPath).found;
-
-            result.push(...files);
+            result.push(...findFiles(curPath));
 
             return result;
         }, [] as string[]);
     } else if (typeof path === 'string') {
-        res = new GlobSync(path).found;
+        res = findFiles(path);
     }
 
     return res;

@@ -13,6 +13,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 7. **20.3.0**: removal of the overlay demotion mechanism.
 8. **20.3.0**: the move of the app-switcher API to signals.
 9. **20.3.0**: the button review — host attributes, group ownership and styles.
+10. **20.3.0**: button supported colors — a default color of its own per style.
 
 ### 1. Upgrade to 18.5.3
 
@@ -492,6 +493,73 @@ Drop the binding if you wanted the group value, or keep it if you wanted the ove
 **Snapshot and DOM-query tests.** Beyond the attribute table above, every `[kbqDropdownTriggerFor]` now renders `aria-expanded`, and the built-in icon-only buttons render a localized `aria-label`. Both are additions rather than removals, but they change rendered markup.
 
 **A dev-mode warning about unnamed icon buttons.** An icon-only `[kbq-button]` with no `aria-label`, `aria-labelledby`, `title` or text now logs a warning in development builds. It is diagnostic only — nothing breaks — but it will point at your own buttons, since an icon carries no accessible name.
+
+### 10. Button supported colors (20.3.0)
+
+A button's `color` accepted any `KbqComponentColors` / `ThemePalette` value, but `kbq-button-theme()` only ever styled the pairs the design system defines:
+
+| `kbqStyle`    | Supported colors              |
+| ------------- | ----------------------------- |
+| `filled`      | `contrast`, `contrast-fade`   |
+| `outline`     | `theme-fade`, `contrast-fade` |
+| `transparent` | `theme`, `contrast`           |
+
+Every other combination matched no rule at all, so the button fell through to the user-agent appearance — a grey OS button. The most visible case was `transparent` with no explicit color: the shared default was `contrast-fade`, which is not one of the two colors the transparent block styled.
+
+Each style now carries its own default color, every style gained an unqualified fallback rule, and `color` was narrowed to four values. `transparent` defaults to `contrast` rather than `contrast-fade`: it paints neither fill nor border, so the color only picks the foreground, and the design system has no faded transparent variant.
+
+#### Running the migration
+
+The `button-supported-colors` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:button-supported-colors --project <your project>
+```
+
+#### What is fixed automatically
+
+**An unsupported color written as a literal is removed** from `[kbq-button]`, `kbq-button-group`, `[kbqButtonGroupRoot]` and `kbq-split-button` hosts. The `color="error"`, `[color]="'error'"` and `bind-color="'error'"` forms are handled, for the values `error`, `warning`, `success`, `empty`, `primary`, `secondary` and `info`:
+
+```html
+<!-- Before -->
+<button kbq-button color="error">Delete</button>
+
+<!-- After -->
+<button kbq-button>Delete</button>
+```
+
+**The appearance does not change.** The button already rendered in its style's default color: an unsupported color matched no theme rule, and the new unqualified rule resolves to exactly the tokens the default color branch resolves to. What is removed is a value that never had an effect — and the type error with it.
+
+#### What you need to fix manually
+
+**A color read from an enum member** — `[color]="colors.Error"` — is reported with a file name and a line number, but not rewritten: the expression is not resolved, so the member name alone does not prove which enum it comes from. Remove the binding to keep the style's default, or pick a supported color. Programmatic assignments such as `button.color = KbqComponentColors.Error` are reported the same way.
+
+**Members typed `KbqComponentColors` / `ThemePalette`.** The wide type no longer assigns to a button `color` binding — narrow it to `KbqButtonColor`:
+
+```ts
+type Action = {
+    style: KbqButtonStyleInput; // was KbqButtonStyles | string
+    color: KbqButtonColor; // was KbqComponentColors
+};
+```
+
+Check values built inside `Array.from` / `map` callbacks separately: without a return-type annotation an enum member widens to the whole enum and stops assigning even when every value is supported.
+
+```ts
+Array.from({ length: 3 }, (_, i): Action => ({ color: KbqComponentColors.ContrastFade, style: '' }));
+```
+
+**`kbqOkType`** on `KbqModalComponent` and `ModalOptions` was narrowed from `string` to `KbqButtonColor` — it colors the predefined OK button.
+
+**Stylesheets targeting `.kbq-button_transparent.kbq-contrast-fade`** are reported: the selector no longer matches, because a transparent button is `contrast` now. Point it at `.kbq-contrast` — or drop it, if it was a workaround for the transparent button rendering unstyled.
+
+**Changes with no textual signature.** A transparent button with no explicit color renders in `contrast` instead of `contrast-fade`, and the `color` getter reads back accordingly. A style paired with a color the design system does not define renders in the style default instead of as a native button. `KbqButtonGroupRoot` no longer propagates a color it was never given — each nested button follows the default color of its own style, while a color bound on the group still overrides that default.
 
 ### After the migration
 

@@ -28,8 +28,10 @@ export class KbqFilterBarButton {
             this.button.color = KbqComponentColors.ContrastFade;
 
             if (filter?.changed || filter?.saved) {
+                // `changed-filter` is a style of this package, not of the button, so it is not
+                // covered by `kbq-button-theme()` and paints its own colors regardless of which
+                // color class the button carries — the color set above is simply left in place.
                 this.button.kbqStyle = 'changed-filter';
-                this.button.color = KbqComponentColors.Empty;
             }
         });
     }

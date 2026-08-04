@@ -13,7 +13,6 @@ if (!existsSync(getDistPath(distCLIPath))) {
     mkdirSync(getDistPath(distCLIPath));
     mkdirSync(getDistPath(`${distCLIPath}/bin`));
     mkdirSync(getDistPath(`${distCLIPath}/dist`));
-    mkdirSync(getDistPath(`${distCLIPath}/dist/templates`));
 }
 
 copyFileSync(getSrcPckgPath('package.json'), getDistPath(`${distCLIPath}/package.json`));
@@ -22,14 +21,6 @@ copyFileSync(getSrcPckgPath('LICENSE'), getDistPath(`${distCLIPath}/LICENSE`));
 copyFileSync(getSrcPckgPath('bin/cli'), getDistPath(`${distCLIPath}/bin/cli`));
 copyFileSync(getSrcPckgPath('dist/cli.js'), getDistPath(`${distCLIPath}/dist/cli.js`));
 copyFileSync(getSrcPckgPath('dist/cli.js.map'), getDistPath(`${distCLIPath}/dist/cli.js.map`));
-
-// Add all templates to make cli work as external tool
-['commit', 'template', 'footer', 'header'].forEach((template) => {
-    copyFileSync(
-        getSrcPckgPath(`src/release/templates/${template}.hbs`),
-        getDistPath(`${distCLIPath}/dist/templates/${template}.hbs`)
-    );
-});
 
 // Update package version
 const currentVersion = JSON.parse(readFileSync('package.json', 'utf8')).version;
