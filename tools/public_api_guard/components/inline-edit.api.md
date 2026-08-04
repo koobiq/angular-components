@@ -8,10 +8,12 @@ import * as _angular_core from '@angular/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
+import * as i2 from '@koobiq/components/select';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqLabel } from '@koobiq/components/form-field';
+import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -53,6 +55,7 @@ export class KbqInlineEdit {
     protected readonly hasInteractiveContent: _angular_core.WritableSignal<boolean>;
     readonly interactiveSelectors: _angular_core.InputSignal<string[]>;
     protected readonly isEditMode: _angular_core.Signal<boolean>;
+    protected readonly isSingleSelect: _angular_core.Signal<boolean>;
     protected readonly label: _angular_core.Signal<KbqLabel | undefined>;
     protected readonly menu: _angular_core.Signal<KbqInlineEditMenu | undefined>;
     protected readonly mode: _angular_core.WritableSignal<KbqInlineEditMode>;
@@ -71,6 +74,7 @@ export class KbqInlineEdit {
     protected save($event?: Event): void;
     protected readonly saved: _angular_core.OutputEmitterRef<void>;
     protected readonly scrollStrategy: _angular_core.WritableSignal<ScrollStrategy>;
+    protected readonly selectRef: _angular_core.Signal<KbqSelect | undefined>;
     readonly setValueHandler: _angular_core.InputSignal<((value: any) => void) | undefined>;
     readonly showActions: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly showTooltipOnError: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -81,7 +85,7 @@ export class KbqInlineEdit {
     readonly validationTooltip: _angular_core.InputSignal<string | TemplateRef<any> | undefined>;
     protected readonly viewContainer: _angular_core.Signal<ElementRef<HTMLElement>>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "overlayPanelClass": { "alias": "overlayPanelClass"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; "interactiveSelectors": { "alias": "interactiveSelectors"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRefList"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "overlayPanelClass": { "alias": "overlayPanelClass"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; "interactiveSelectors": { "alias": "interactiveSelectors"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRefList", "selectRef"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i2.KbqSelectOrigin; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInlineEdit, never>;
 }
