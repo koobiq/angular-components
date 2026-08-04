@@ -24,6 +24,24 @@
 
 <!-- example(select-with-multiline-matcher) -->
 
+### Настройка тегов
+
+При множественном выборе разметку каждого тега можно заменить своей. Объявите внутри `<kbq-select>` шаблон `<ng-template #kbqSelectTagContent>` — он разворачивается для каждой выбранной опции и получает саму опцию как `$implicit`, а экземпляр `KbqSelect` — как `select`:
+
+<!-- prettier-ignore -->
+```html
+<ng-template #kbqSelectTagContent let-option let-select="select">
+    <kbq-tag [selectable]="false" [disabled]="option.disabled || select.disabled">
+        {{ option.viewValue }}
+        @if (!option.disabled && !select.disabled) {
+            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="select.onRemoveMatcherItem(option, $event)"></i>
+        }
+    </kbq-tag>
+</ng-template>
+```
+
+Шаблон полностью замещает встроенную разметку, поэтому цвет, неактивное состояние и элемент удаления нужно воспроизвести самостоятельно. Корневым элементом должен остаться `<kbq-tag>`: счетчик скрытых тегов «+N» измеряет отрисованные элементы `kbq-tag`, и любой другой корневой элемент его ломает.
+
 ### Группировка значений
 
 <!-- example(select-groups) -->

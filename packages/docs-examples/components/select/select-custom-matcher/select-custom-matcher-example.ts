@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title select-custom-trigger
+ * @title select-custom-matcher
  */
 @Component({
     selector: 'select-custom-matcher-example',
