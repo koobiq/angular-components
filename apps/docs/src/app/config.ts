@@ -4,10 +4,10 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, TitleStrategy } from '@angular/router';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService, kbqLocaleServiceLangAttrNameProvider } from '@koobiq/components/core';
+import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 import { DOCS_ROUTES } from './routes';
 import { docsProvideAnalytics } from './services/analytics';
 import { DocsTitleStrategy } from './services/title-strategy';
-import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const appConfig: ApplicationConfig = {
