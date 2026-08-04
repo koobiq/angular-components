@@ -81,6 +81,11 @@
             "description": "Removes button colors outside theme/theme-fade/contrast/contrast-fade from templates and warns about the ones it cannot resolve, plus the transparent default color change",
             "factory": "./migrations/button-supported-colors/index",
             "schema": "./migrations/button-supported-colors/schema.json"
+        },
+        "scrollbar-deprecated-path": {
+            "description": "Rewrites @koobiq/components/scrollbar imports to @koobiq/components/scrollbar/deprecated — the overlayscrollbars-based implementation moved there when the dependency-free implementation was promoted to @koobiq/components/scrollbar",
+            "factory": "./migrations/scrollbar-deprecated-path/index",
+            "schema": "./migrations/scrollbar-deprecated-path/schema.json"
         }
     }
 }

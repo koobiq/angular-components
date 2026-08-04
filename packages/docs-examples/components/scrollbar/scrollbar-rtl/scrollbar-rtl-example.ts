@@ -1,13 +1,13 @@
 import { Dir } from '@angular/cdk/bidi';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqScrollbar } from '@koobiq/components/scrollbar/private';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 
 /**
  * @title Scrollbar RTL
  */
 @Component({
-    selector: 'private-scrollbar-rtl-example',
+    selector: 'scrollbar-rtl-example',
     imports: [KbqScrollbar, KbqButtonModule, Dir],
     template: `
         <div class="example-buttons">
@@ -86,4 +86,4 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar/private';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PrivateScrollbarRtlExample {}
+export class ScrollbarRtlExample {}

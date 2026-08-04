@@ -47,7 +47,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BehaviorSubject, Subject, Subscription, merge } from 'rxjs';
 import { auditTime, distinctUntilChanged, filter, map, pairwise } from 'rxjs/operators';

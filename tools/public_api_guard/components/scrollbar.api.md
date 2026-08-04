@@ -4,154 +4,124 @@
 
 ```ts
 
-import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { EventListenerArgs } from 'overlayscrollbars';
-import { EventListeners } from 'overlayscrollbars';
-import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/overlay';
-import { InitializationTarget } from 'overlayscrollbars';
+import * as i1 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { KbqOverflowShadowSource } from '@koobiq/components/core';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { OverlayScrollbars } from 'overlayscrollbars';
-import * as overlayscrollbars from 'overlayscrollbars';
-import { PartialOptions } from 'overlayscrollbars';
+import { OutputEmitterRef } from '@angular/core';
 import { Provider } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
-// @public (undocumented)
-export const KBQ_SCROLLBAR_CONFIG: InjectionToken<{
-    paddingAbsolute?: boolean | undefined;
-    showNativeOverlaidScrollbars?: boolean | undefined;
-    update?: {
-        elementEvents?: [elementSelector: string, eventNames: string][] | null | undefined;
-        debounce?: number | [timeout: number, maxWait: number] | null | undefined;
-        attributes?: string[] | null | undefined;
-        ignoreMutation?: ((mutation: MutationRecord) => any) | null | undefined;
-    } | undefined;
-    overflow?: {
-        x?: overlayscrollbars.OverflowBehavior | undefined;
-        y?: overlayscrollbars.OverflowBehavior | undefined;
-    } | undefined;
-    scrollbars?: {
-        theme?: string | null | undefined;
-        visibility?: overlayscrollbars.ScrollbarsVisibilityBehavior | undefined;
-        autoHide?: overlayscrollbars.ScrollbarsAutoHideBehavior | undefined;
-        autoHideDelay?: number | undefined;
-        autoHideSuspend?: boolean | undefined;
-        dragScroll?: boolean | undefined;
-        clickScroll?: boolean | undefined;
-        pointers?: string[] | null | undefined;
-    } | undefined;
+// @public
+export const KBQ_SCROLLBAR_CONFIG: InjectionToken<Partial<{
+    visibility: KbqScrollbarVisibility;
+    autoHideDelay: number;
+    floating: boolean;
+    native: boolean;
+    disableDrag: boolean;
+    disableClick: boolean;
+}>>;
+
+// @public
+export const KBQ_SCROLLBAR_DEFAULT_CONFIG: Required<KbqScrollbarConfig>;
+
+// @public
+export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
+    constructor();
+    readonly autoHideDelay: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly disableClick: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly disableDrag: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly floating: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    getScrollElement(): HTMLElement | null;
+    readonly initialized: OutputEmitterRef<void>;
+    readonly isBottomReached: _angular_core.Signal<boolean>;
+    readonly isEndReached: _angular_core.Signal<boolean>;
+    readonly isStartReached: _angular_core.Signal<boolean>;
+    readonly isTopReached: _angular_core.Signal<boolean>;
+    // (undocumented)
+    ngOnDestroy(): void;
+    readonly onScroll: Observable<void>;
+    readonly reachBottom: OutputEmitterRef<void>;
+    readonly reachEnd: OutputEmitterRef<void>;
+    readonly reachStart: OutputEmitterRef<void>;
+    readonly reachTop: OutputEmitterRef<void>;
+    protected readonly rtl: WritableSignal<boolean>;
+    readonly scrollChange: OutputEmitterRef<KbqScrollbarScrollChangeEvent>;
+    scrollEnd(behavior?: ScrollBehavior): void;
+    scrollStart(behavior?: ScrollBehavior): void;
+    scrollTo(options: KbqScrollbarScrollToOptions): void;
+    scrollToBottom(behavior?: ScrollBehavior): void;
+    scrollToElement(target: HTMLElement | string, options?: KbqScrollbarScrollToElementOptions): void;
+    scrollToTop(behavior?: ScrollBehavior): void;
+    update(): void;
+    readonly updated: OutputEmitterRef<void>;
+    readonly visibility: _angular_core.InputSignal<KbqScrollbarVisibility>;
+    readonly visibilityChange: OutputEmitterRef<boolean>;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqScrollbar, "[kbqScrollbar]", ["kbqScrollbar"], { "visibility": { "alias": "kbqScrollbarVisibility"; "required": false; "isSignal": true; }; "autoHideDelay": { "alias": "kbqScrollbarAutoHideDelay"; "required": false; "isSignal": true; }; "floating": { "alias": "kbqScrollbarFloating"; "required": false; "isSignal": true; }; "disableDrag": { "alias": "kbqScrollbarDisableDrag"; "required": false; "isSignal": true; }; "disableClick": { "alias": "kbqScrollbarDisableClick"; "required": false; "isSignal": true; }; }, { "scrollChange": "kbqScrollbarScrollChange"; "reachTop": "kbqScrollbarReachTop"; "reachBottom": "kbqScrollbarReachBottom"; "reachStart": "kbqScrollbarReachStart"; "reachEnd": "kbqScrollbarReachEnd"; "visibilityChange": "kbqScrollbarVisibilityChange"; "initialized": "kbqScrollbarInitialized"; "updated": "kbqScrollbarUpdated"; }, ["viewport"], never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqScrollbar, never>;
+}
+
+// @public
+export type KbqScrollbarConfig = Partial<{
+    visibility: KbqScrollbarVisibility;
+    autoHideDelay: number;
+    floating: boolean;
+    native: boolean;
+    disableDrag: boolean;
+    disableClick: boolean;
 }>;
 
-// @public (undocumented)
-export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG: KbqScrollbarOptions;
+// @public
+export const kbqScrollbarConfigProvider: (config: KbqScrollbarConfig) => Provider;
 
 // @public
-export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider;
-
-// @public
-export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadowSource {
-    readonly contentElement: i0.Signal<ElementRef<HTMLDivElement>>;
-    readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
-    // (undocumented)
-    get element(): HTMLElement;
-    // (undocumented)
-    readonly events: i0.InputSignal<{
-        initialized?: ((instance: overlayscrollbars.OverlayScrollbars) => void) | ((instance: overlayscrollbars.OverlayScrollbars) => void)[] | null | undefined;
-        updated?: ((instance: overlayscrollbars.OverlayScrollbars, onUpdatedArgs: overlayscrollbars.OnUpdatedEventListenerArgs) => void) | ((instance: overlayscrollbars.OverlayScrollbars, onUpdatedArgs: overlayscrollbars.OnUpdatedEventListenerArgs) => void)[] | null | undefined;
-        destroyed?: ((instance: overlayscrollbars.OverlayScrollbars, canceled: boolean) => void) | ((instance: overlayscrollbars.OverlayScrollbars, canceled: boolean) => void)[] | null | undefined;
-        scroll?: ((instance: overlayscrollbars.OverlayScrollbars, event: Event) => void) | ((instance: overlayscrollbars.OverlayScrollbars, event: Event) => void)[] | null | undefined;
-    }>;
-    getScrollElement(): HTMLElement | null;
-    readonly initializationTarget: i0.InputSignal<overlayscrollbars.InitializationTarget | undefined>;
-    // (undocumented)
-    mergeEvents(): KbqScrollbarEvents;
-    // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    readonly onDestroy: EventEmitter<[instance: overlayscrollbars.OverlayScrollbars, canceled: boolean]>;
-    // (undocumented)
-    readonly onInitialize: EventEmitter<[instance: overlayscrollbars.OverlayScrollbars]>;
-    // (undocumented)
-    readonly onScroll: EventEmitter<[instance: overlayscrollbars.OverlayScrollbars, event: Event]>;
-    readonly onUpdate: EventEmitter<[instance: overlayscrollbars.OverlayScrollbars, onUpdatedArgs: overlayscrollbars.OnUpdatedEventListenerArgs]>;
-    readonly options: i0.InputSignal<{
-        paddingAbsolute?: boolean | undefined;
-        showNativeOverlaidScrollbars?: boolean | undefined;
-        update?: {
-            elementEvents?: [elementSelector: string, eventNames: string][] | null | undefined;
-            debounce?: number | [timeout: number, maxWait: number] | null | undefined;
-            attributes?: string[] | null | undefined;
-            ignoreMutation?: ((mutation: MutationRecord) => any) | null | undefined;
-        } | undefined;
-        overflow?: {
-            x?: overlayscrollbars.OverflowBehavior | undefined;
-            y?: overlayscrollbars.OverflowBehavior | undefined;
-        } | undefined;
-        scrollbars?: {
-            theme?: string | null | undefined;
-            visibility?: overlayscrollbars.ScrollbarsVisibilityBehavior | undefined;
-            autoHide?: overlayscrollbars.ScrollbarsAutoHideBehavior | undefined;
-            autoHideDelay?: number | undefined;
-            autoHideSuspend?: boolean | undefined;
-            dragScroll?: boolean | undefined;
-            clickScroll?: boolean | undefined;
-            pointers?: string[] | null | undefined;
-        } | undefined;
-    }>;
-    scrollTo(options?: ScrollToOptions): void;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqScrollbar, "kbq-scrollbar, [kbq-scrollbar]", ["kbqScrollbar"], { "initializationTarget": { "alias": "initializationTarget"; "required": false; "isSignal": true; }; "options": { "alias": "options"; "required": false; "isSignal": true; }; "events": { "alias": "events"; "required": false; "isSignal": true; }; "defer": { "alias": "defer"; "required": false; "isSignal": true; }; }, { "onInitialize": "onInitialize"; "onUpdate": "onUpdate"; "onDestroy": "onDestroy"; "onScroll": "onScroll"; }, never, ["*"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbar, never>;
-}
-
-// @public
-export class KbqScrollbarDirective implements OnDestroy {
-    constructor();
-    readonly defer: i0.InputSignal<boolean | IdleRequestOptions | undefined>;
-    set events(value: KbqScrollbarEvents);
-    // (undocumented)
-    get events(): KbqScrollbarEvents | undefined;
-    // (undocumented)
-    initialize(target: KbqScrollbarTarget): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    set options(value: KbqScrollbarOptions);
-    get options(): KbqScrollbarOptions | undefined;
-    // (undocumented)
-    scrollbarInstance?: OverlayScrollbars;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarDirective, "[kbqScrollbar]", never, { "options": { "alias": "options"; "required": false; }; "events": { "alias": "events"; "required": false; }; "defer": { "alias": "defer"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbarDirective, never>;
-}
-
-// @public (undocumented)
-export type KbqScrollbarEventListenerArgs = EventListenerArgs;
-
-// @public (undocumented)
-export type KbqScrollbarEvents = EventListeners;
-
-// @public (undocumented)
 export class KbqScrollbarModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbarModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqScrollbarModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqScrollbarModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqScrollbarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqScrollbarModule, never, [typeof KbqScrollbar, typeof KbqScrollbarDirective], [typeof KbqScrollbar, typeof KbqScrollbarDirective]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqScrollbarModule, never, [typeof KbqScrollbar, typeof KbqScrollbarVirtualViewport], [typeof KbqScrollbar, typeof KbqScrollbarVirtualViewport]>;
 }
 
-// @public (undocumented)
-export type KbqScrollbarOptions = PartialOptions;
+// @public
+export type KbqScrollbarScrollChangeEvent = {
+    top: number;
+    left: number;
+};
 
-// @public (undocumented)
-export type KbqScrollbarTarget = InitializationTarget;
+// @public
+export type KbqScrollbarScrollToElementOptions = Partial<{
+    top: number;
+    left: number;
+    behavior: ScrollBehavior;
+}>;
+
+// @public
+export type KbqScrollbarScrollToOptions = Partial<{
+    top: number;
+    left: number;
+    behavior: ScrollBehavior;
+}>;
+
+// @public
+export class KbqScrollbarVirtualViewport {
+    readonly elementRef: ElementRef<HTMLElement>;
+    readonly viewport: CdkVirtualScrollViewport;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqScrollbarVirtualViewport, "[kbqScrollbarVirtualViewport]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqScrollbarVirtualViewport, never>;
+}
+
+// @public
+export type KbqScrollbarVisibility = 'hover' | 'always' | 'scroll' | 'hidden';
 
 // (No @packageDocumentation comment for this package)
 

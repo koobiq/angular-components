@@ -25,7 +25,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
-import { KbqScrollbar } from '@koobiq/components/scrollbar/private';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
 
 const KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION = trigger('contentAnimation', [

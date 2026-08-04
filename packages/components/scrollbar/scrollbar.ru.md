@@ -1,41 +1,35 @@
-`<kbq-scrollbar>` - это компонент который используется для настройки параметров скроллбара.
+## Отображение скроллбара
 
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Обрати внимание</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-Для работы компонента, необходимо наличие [`overlayscrollbars@2.7.3`](https://github.com/KingSora/OverlayScrollbars/tree/v2.7.0) зависимости:
-
-```bash
-npm install overlayscrollbars@2.7.3
-```
-
-</div>
-</div>
-
-## Настройка и передача параметров:
-
-- для определенного скроллбара, при помощи атрибута `options`:
+Входной параметр `kbqScrollbarVisibility` управляет тем, когда показываются кастомные трек и ползунок — `hover`, `always`, `scroll` или `hidden`; скролл при этом всегда остаётся рабочим.
 
 <!-- example(scrollbar-overview) -->
 
-- для всех скроллбаров в модуле, при помощи _Dependency Injection_ c использованием `KBQ_SCROLLBAR_CONFIG` токена:
+## Виртуальный скролл
 
-<!-- example(scrollbar-with-custom-config) -->
+Директива `kbqScrollbarVirtualViewport` помечает вложенный `cdk-virtual-scroll-viewport` как элемент, который `kbqScrollbar` должен измерять, слушать и скроллить вместо собственного хоста.
 
-### Обработка событий:
-
-```ts
-<kbq-scrollbar
-    (onInitialize)="onInitialize($event)"
-    (onDestroy)="onDestroy($event)"
-    (onScroll)="onScroll($event)"
-    (onUpdate)="onUpdate($event)"
->
-    ...
-</kbq-scrollbar>
-```
+<!-- example(scrollbar-virtual-scroll) -->
 
 ## Программное управление скроллом
 
-<!-- example(scrollbar-scroll-to-top) -->
+Через `exportAs="kbqScrollbar"` директива открывает методы `scrollTo`, `scrollToElement`, `scrollToTop`/`scrollToBottom`, `scrollStart`/`scrollEnd`, а также сигналы `isTopReached`/`isBottomReached`/`isStartReached`/`isEndReached`.
+
+<!-- example(scrollbar-scroll-to) -->
+
+## Поддержка RTL
+
+Скроллбар учитывает направление, заданное родительским элементом (например, через `Directionality`/`Dir`), и соответствующим образом изменяет перетаскивание, `scrollStart`/`scrollEnd` и состояние достижения краёв.
+
+<!-- example(scrollbar-rtl) -->
+
+## Нативный скроллбар
+
+Значение `native: true`, переданное через `kbqScrollbarConfigProvider`, полностью переключает директиву на нативный скроллбар браузера вместо пользовательского трека/ползунка — так же, как это происходит автоматически на устройствах с сенсорным вводом.
+
+<!-- example(scrollbar-native) -->
+
+## Отключение взаимодействия
+
+Входные параметры `kbqScrollbarDisableDrag` и `kbqScrollbarDisableClick` оставляют скролл рабочим, но независимо друг от друга отключают перетаскивание ползунка и клик по треку — например, можно оставить перетаскивание для быстрой прокрутки, но отключить случайные клики по треку, или наоборот.
+
+<!-- example(scrollbar-disable-interaction) -->

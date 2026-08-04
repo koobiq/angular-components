@@ -11,7 +11,7 @@ import {
     KbqNotificationCenterTrigger,
     KbqNotificationItem
 } from '@koobiq/components/notification-center';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 import { KbqToastService } from '@koobiq/components/toast';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';

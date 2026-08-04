@@ -1,35 +1,5 @@
-## Scrollbar visibility
+🚧 **Documentation in progress** 🚧
 
-The `kbqScrollbarVisibility` input controls when the custom track/thumb are shown — `hover`, `always`, `scroll`, or `hidden`; scrolling itself always stays functional.
+Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
 
-<!-- example(private-scrollbar-visibility) -->
-
-## Virtual scroll
-
-The `kbqScrollbarVirtualViewport` directive marks a nested `cdk-virtual-scroll-viewport` as the element `kbqScrollbar` should measure, listen to, and scroll — instead of its own host.
-
-<!-- example(private-scrollbar-virtual-scroll) -->
-
-## Programmatic scrollbar control
-
-Via `exportAs="kbqScrollbar"`, the directive exposes `scrollTo`, `scrollToElement`, `scrollToTop`/`scrollToBottom`, `scrollStart`/`scrollEnd`, and the `isTopReached`/`isBottomReached`/`isStartReached`/`isEndReached` signals.
-
-<!-- example(private-scrollbar-scroll-to) -->
-
-## RTL support
-
-The scrollbar tracks ancestor direction (e.g. `Directionality`/`dir`) and adjusts drag, `scrollStart`/`scrollEnd`, and edge-reached state accordingly.
-
-<!-- example(private-scrollbar-rtl) -->
-
-## Native fallback
-
-Setting `native: true` via `kbqScrollbarConfigProvider` makes the directive fall back to the browser's native scrollbar entirely, bypassing the custom track/thumb — the same behavior applied automatically on coarse-pointer (touch) devices.
-
-<!-- example(private-scrollbar-native) -->
-
-## Disabling interaction
-
-The `kbqScrollbarDisableDrag` and `kbqScrollbarDisableClick` inputs keep scrolling functional while independently disabling drag-on-thumb and click-on-track — e.g. keep drag for quick scanning while disabling accidental track clicks, or the other way around.
-
-<!-- example(private-scrollbar-disable-interaction) -->
+If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.

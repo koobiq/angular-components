@@ -1,24 +1,32 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqScrollbar, KbqScrollbarVisibility } from '@koobiq/components/scrollbar/private';
-import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
- * @title Scrollbar visibility
+ * @title Scrollbar disable interaction
  */
 @Component({
-    selector: 'private-scrollbar-visibility-example',
-    imports: [KbqScrollbar, KbqSelectModule, FormsModule],
+    selector: 'scrollbar-disable-interaction-example',
+    imports: [KbqScrollbar, KbqToggleModule, FormsModule],
     template: `
-        <kbq-form-field class="example-form-field">
-            <kbq-select [(ngModel)]="visibility">
-                @for (visibility of visibilities; track visibility) {
-                    <kbq-option [value]="visibility">{{ visibility }}</kbq-option>
-                }
-            </kbq-select>
-        </kbq-form-field>
+        <div class="example-toggles">
+            <kbq-toggle [(ngModel)]="disableDrag">Disable drag</kbq-toggle>
+            <kbq-toggle [(ngModel)]="disableClick">Disable click</kbq-toggle>
+        </div>
 
-        <div class="example-scrollbar" kbqScrollbar [kbqScrollbarVisibility]="visibility()">
+        <div
+            class="example-scrollbar"
+            kbqScrollbar
+            [kbqScrollbarDisableDrag]="disableDrag()"
+            [kbqScrollbarDisableClick]="disableClick()"
+        >
+            <p>
+                <strong>Drag for the scrollbar is {{ disableDrag() ? 'disabled' : 'enabled' }}</strong>
+            </p>
+            <p>
+                <strong>Click for the scrollbar is {{ disableClick() ? 'disabled' : 'enabled' }}</strong>
+            </p>
             <p>
                 In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists
                 of an attacker submitting many possible keys or passwords with the hope of eventually guessing
@@ -38,11 +46,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 work to test each guess. One of the measures of the strength of an encryption system is how long it
                 would theoretically take an attacker to mount a successful brute-force attack against it.[3]
             </p>
-            <p>
-                Brute-force attacks are an application of brute-force search, the general problem-solving technique of
-                enumerating all candidates and checking each one. The word 'hammering' is sometimes used to describe a
-                brute-force attack,[4] with 'anti-hammering' for countermeasures.[5]
-            </p>
         </div>
     `,
     styles: `
@@ -55,8 +58,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
             padding: var(--kbq-size-l);
         }
 
-        .example-form-field {
-            width: 200px;
+        .example-toggles {
+            display: flex;
+            gap: var(--kbq-size-l);
         }
 
         .example-scrollbar {
@@ -79,7 +83,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PrivateScrollbarVisibilityExample {
-    protected readonly visibilities: KbqScrollbarVisibility[] = ['always', 'hover', 'scroll', 'hidden'] as const;
-    protected readonly visibility = model<KbqScrollbarVisibility>('hover');
+export class ScrollbarDisableInteractionExample {
+    protected readonly disableDrag = model(true);
+    protected readonly disableClick = model(false);
 }

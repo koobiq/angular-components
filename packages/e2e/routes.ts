@@ -2,14 +2,14 @@ import { Routes } from '@angular/router';
 import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
 import {
-    E2ePrivateScrollbarContentMutation,
-    E2ePrivateScrollbarDrag,
-    E2ePrivateScrollbarHostPadding,
-    E2ePrivateScrollbarHoverVisibility,
-    E2ePrivateScrollbarKeyboard,
-    E2ePrivateScrollbarScrollTo,
-    E2ePrivateScrollbarStateAndStyle
-} from 'packages/components/scrollbar/private/e2e';
+    E2eScrollbarContentMutation,
+    E2eScrollbarDrag,
+    E2eScrollbarHostPadding,
+    E2eScrollbarHoverVisibility,
+    E2eScrollbarKeyboard,
+    E2eScrollbarScrollTo,
+    E2eScrollbarStateAndStyle
+} from 'packages/components/scrollbar/e2e';
 import { E2eAccordionStates } from '../components/accordion/e2e';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
@@ -82,7 +82,7 @@ import { E2ePopoverPositioning, E2ePopoverStates, E2ePopoverWithTooltip } from '
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
-import { E2eScrollbarStateAndStyle } from '../components/scrollbar/e2e';
+import { E2eDeprecatedScrollbarStateAndStyle } from '../components/scrollbar/deprecated/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import {
     E2eMultilineSelectStates,
@@ -219,13 +219,13 @@ const components = [
     E2eMarkdownStates,
     E2eSearchExpandableStates,
     E2eInputStateAndStyle,
-    E2ePrivateScrollbarStateAndStyle,
-    E2ePrivateScrollbarDrag,
-    E2ePrivateScrollbarScrollTo,
-    E2ePrivateScrollbarHoverVisibility,
-    E2ePrivateScrollbarContentMutation,
-    E2ePrivateScrollbarHostPadding,
-    E2ePrivateScrollbarKeyboard,
+    E2eScrollbarStateAndStyle,
+    E2eScrollbarDrag,
+    E2eScrollbarScrollTo,
+    E2eScrollbarHoverVisibility,
+    E2eScrollbarContentMutation,
+    E2eScrollbarHostPadding,
+    E2eScrollbarKeyboard,
     E2eRadioStateAndStyle,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,
@@ -289,7 +289,7 @@ const components = [
     E2eOverflowItemsVertical,
     E2eOverflowItemsOrdered,
     E2eOverflowItemsDynamic,
-    E2eScrollbarStateAndStyle
+    E2eDeprecatedScrollbarStateAndStyle
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {

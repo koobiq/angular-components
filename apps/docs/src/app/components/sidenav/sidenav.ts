@@ -16,7 +16,7 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,

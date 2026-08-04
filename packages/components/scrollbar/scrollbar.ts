@@ -182,11 +182,10 @@ export class KbqScrollbarVirtualViewport {
 class KbqScrollbarViewport {}
 
 /**
- * NOTE! Intended exclusively for use within this repository.
- *
  * Dependency-free custom scrollbar directive. Draws its own track/thumb via `Renderer2` on top of
- * the host's content — no external dependency, unlike `kbqScrollbar`/`kbq-scrollbar`
- * (`../scrollbar.directive.ts`/`../scrollbar.component.ts`), which wrap an external library.
+ * the host's content — no external dependency, unlike the deprecated `kbqScrollbar`/`kbq-scrollbar`
+ * (`./deprecated/scrollbar.directive.ts`/`./deprecated/scrollbar.component.ts`), which wrap
+ * `overlayscrollbars`.
  *
  * Usable as a plain attribute (`<div kbqScrollbar>`) or composed via `hostDirectives:
  * [KbqScrollbar]` in another component.

@@ -41,7 +41,7 @@
         "radio",
         "resizer",
         "scrollbar",
-        "scrollbar/private",
+        "scrollbar/deprecated",
         "select",
         "search-expandable",
         "sidebar",

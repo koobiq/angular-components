@@ -1,13 +1,13 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqScrollbar, KbqScrollbarVirtualViewport } from '@koobiq/components/scrollbar/private';
+import { KbqScrollbar, KbqScrollbarVirtualViewport } from '@koobiq/components/scrollbar';
 
 /**
  * @title Scrollbar with virtual scroll
  */
 @Component({
-    selector: 'private-scrollbar-virtual-scroll-example',
+    selector: 'scrollbar-virtual-scroll-example',
     imports: [KbqScrollbar, KbqScrollbarVirtualViewport, ScrollingModule, KbqButtonModule],
     template: `
         <button kbq-button (click)="addItems()">Add items</button>
@@ -42,7 +42,7 @@ import { KbqScrollbar, KbqScrollbarVirtualViewport } from '@koobiq/components/sc
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PrivateScrollbarVirtualScrollExample {
+export class ScrollbarVirtualScrollExample {
     protected readonly items = signal(Array.from({ length: 1000 }).map((_, i) => `Item #${i}`));
 
     protected addItems(): void {

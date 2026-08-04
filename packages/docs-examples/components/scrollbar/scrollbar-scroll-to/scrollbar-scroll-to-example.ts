@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqScrollbar, kbqScrollbarConfigProvider } from '@koobiq/components/scrollbar/private';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 
 /**
- * @title Scrollbar native fallback
+ * @title Scrollbar scrollTo methods
  */
 @Component({
-    selector: 'private-scrollbar-native-example',
+    selector: 'scrollbar-scroll-to-example',
     imports: [KbqScrollbar, KbqButtonModule],
     template: `
         <div class="example-buttons">
@@ -22,15 +22,15 @@ import { KbqScrollbar, kbqScrollbarConfigProvider } from '@koobiq/components/scr
             <button kbq-button [disabled]="scrollbar.isEndReached()" (click)="scrollbar.scrollEnd('smooth')">
                 Scroll end
             </button>
+            <button
+                kbq-button
+                (click)="scrollbar.scrollToElement(scrollTarget, { behavior: 'smooth', top: 16, left: 16 })"
+            >
+                Scroll to element
+            </button>
         </div>
 
-        <div
-            #scrollbar="kbqScrollbar"
-            class="example-scrollbar"
-            kbqScrollbar
-            (kbqScrollbarScrollChange)="scrollbarChange($event)"
-        >
-            <p><strong>Native fallback scrollbar</strong></p>
+        <div #scrollbar="kbqScrollbar" class="example-scrollbar" kbqScrollbar>
             <p>
                 In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists
                 of an attacker submitting many possible keys or passwords with the hope of eventually guessing
@@ -39,16 +39,30 @@ import { KbqScrollbar, kbqScrollbarConfigProvider } from '@koobiq/components/scr
                 successfully guessing the key is negligible.
             </p>
             <p>
+                Brute-force attacks can be made less effective by implementing key stretching techniques making it more
+                difficult for an attacker to recognize when the code has been cracked or by making the attacker do more
+                work to test each guess. One of the measures of the strength of an encryption system is how long it
+                would theoretically take an attacker to mount a successful brute-force attack against it.[3]
+            </p>
+            <p #scrollTarget>
+                <b>[Scroll target]</b>
                 When cracking passwords, this method is very fast when used to check all short passwords, but for longer
                 passwords other methods such as the dictionary attack are used because a brute-force search takes too
                 long. Longer passwords, passphrases and keys have more possible values, making them exponentially more
                 difficult to crack than shorter ones due to the diversity of characters.[2]
             </p>
             <p>
-                When cracking passwords, this method is very fast when used to check all short passwords, but for longer
-                passwords other methods such as the dictionary attack are used because a brute-force search takes too
-                long. Longer passwords, passphrases and keys have more possible values, making them exponentially more
-                difficult to crack than shorter ones due to the diversity of characters.[2]
+                Brute-force attacks can be made less effective by implementing key stretching techniques making it more
+                difficult for an attacker to recognize when the code has been cracked or by making the attacker do more
+                work to test each guess. One of the measures of the strength of an encryption system is how long it
+                would theoretically take an attacker to mount a successful brute-force attack against it.[3]
+            </p>
+            <p>
+                In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists
+                of an attacker submitting many possible keys or passwords with the hope of eventually guessing
+                correctly. This strategy can theoretically be used to break any form of encryption that is not
+                information-theoretically secure.[1] However, in a properly designed cryptosystem the chance of
+                successfully guessing the key is negligible.
             </p>
         </div>
     `,
@@ -82,15 +96,10 @@ import { KbqScrollbar, kbqScrollbarConfigProvider } from '@koobiq/components/scr
         }
 
         p {
-            margin: var(--kbq-size-l);
             width: 150%;
+            margin: var(--kbq-size-l);
         }
     `,
-    providers: [kbqScrollbarConfigProvider({ native: true })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PrivateScrollbarNativeExample {
-    protected scrollbarChange(event: any): void {
-        console.log('scrollbarChange', event);
-    }
-}
+export class ScrollbarScrollToExample {}

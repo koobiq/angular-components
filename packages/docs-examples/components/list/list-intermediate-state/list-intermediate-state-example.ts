@@ -9,7 +9,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqListModule, KbqListSelectionChange } from '@koobiq/components/list';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 import { KbqUsernameModule } from '@koobiq/components/username';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';

@@ -14,6 +14,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 8. **20.3.0**: the move of the app-switcher API to signals.
 9. **20.3.0**: the button review — host attributes, group ownership and styles.
 10. **20.3.0**: button supported colors — a default color of its own per style.
+11. **20.3.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
 
 ### 1. Upgrade to 18.5.3
 
@@ -560,6 +561,44 @@ Array.from({ length: 3 }, (_, i): Action => ({ color: KbqComponentColors.Contras
 **Stylesheets targeting `.kbq-button_transparent.kbq-contrast-fade`** are reported: the selector no longer matches, because a transparent button is `contrast` now. Point it at `.kbq-contrast` — or drop it, if it was a workaround for the transparent button rendering unstyled.
 
 **Changes with no textual signature.** A transparent button with no explicit color renders in `contrast` instead of `contrast-fade`, and the `color` getter reads back accordingly. A style paired with a color the design system does not define renders in the style default instead of as a native button. `KbqButtonGroupRoot` no longer propagates a color it was never given — each nested button follows the default color of its own style, while a color bound on the group still overrides that default.
+
+### 11. Scrollbar overlayscrollbars implementation deprecation (20.3.0)
+
+Until 20.3.0, `@koobiq/components/scrollbar` wrapped the third-party `overlayscrollbars` library: the `KbqScrollbar` component (`kbq-scrollbar` / `[kbq-scrollbar]`) and the low-level `KbqScrollbarDirective` (`[kbqScrollbar]`), with `options`, `events`, `defer` inputs and raw access to `scrollbarInstance`.
+
+As of 20.3.0, `@koobiq/components/scrollbar` is a new, dependency-free `[kbqScrollbar]` directive with a different public API (`kbqScrollbarVisibility`, `kbqScrollbarDisableDrag` / `kbqScrollbarDisableClick`, `scrollTo` / `scrollToElement` / `scrollToTop` / `scrollToBottom` / `scrollStart` / `scrollEnd` methods, `isTopReached` / `isBottomReached` / `isStartReached` / `isEndReached` signals). The previous implementation has not gone away — it moved, unchanged, to `@koobiq/components/scrollbar/deprecated` and will be removed in a future major version.
+
+#### Running the migration
+
+The `scrollbar-deprecated-path` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:scrollbar-deprecated-path --project <your project>
+```
+
+#### What is fixed automatically
+
+**The `@koobiq/components/scrollbar` import path is rewritten to `@koobiq/components/scrollbar/deprecated`** — in every `.ts` file, in both single- and double-quoted specifiers. The implementation itself and its public API (`options` / `events` / `defer` / `scrollbarInstance`, the `kbq-scrollbar` / `[kbq-scrollbar]` / `[kbqScrollbar]` selectors) are unchanged — only where you import them from changes.
+
+```ts
+// Before
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+
+// After
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
+```
+
+#### What you need to fix manually
+
+**Moving to the new implementation** is a separate, manual migration, not just an import path change: the new directive has no `options` / `events` / `defer` / `scrollbarInstance`, and the `kbq-scrollbar` / `[kbq-scrollbar]` selectors are not supported — there is only the `[kbqScrollbar]` attribute on an arbitrary element. See the Scrollbar component documentation for the new API.
+
+**Do not import both the old and the new implementation into the same standalone component.** Both use the same attribute selector `[kbqScrollbar]` (`KbqScrollbarDirective` on the old one, `KbqScrollbar` on the new one) — Angular does not stop you from declaring both in `imports`, and if the attribute ends up on the same element, both directives silently initialize on it at once. There is no compile error — during a gradual manual migration, keep old and new usage in separate components.
 
 ### After the migration
 

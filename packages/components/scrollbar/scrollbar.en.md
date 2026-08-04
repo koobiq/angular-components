@@ -1,41 +1,35 @@
-`<kbq-scrollbar>` is a component used to configure scrollbar parameters.
+## Scrollbar visibility
 
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Note</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-For the component to work, the [`overlayscrollbars@2.7.3`](https://github.com/KingSora/OverlayScrollbars/tree/v2.7.0) dependency is required:
-
-```bash
-npm install overlayscrollbars@2.7.3
-```
-
-</div>
-</div>
-
-## Configuration and passing parameters:
-
-- for a specific scrollbar, using the `options` attribute:
+The `kbqScrollbarVisibility` input controls when the custom track/thumb are shown — `hover`, `always`, `scroll`, or `hidden`; scrolling itself always stays functional.
 
 <!-- example(scrollbar-overview) -->
 
-- for all scrollbars in a module, using _Dependency Injection_ with the `KBQ_SCROLLBAR_CONFIG` token:
+## Virtual scroll
 
-<!-- example(scrollbar-with-custom-config) -->
+The `kbqScrollbarVirtualViewport` directive marks a nested `cdk-virtual-scroll-viewport` as the element `kbqScrollbar` should measure, listen to, and scroll — instead of its own host.
 
-### Event handling:
-
-```ts
-<kbq-scrollbar
-    (onInitialize)="onInitialize($event)"
-    (onDestroy)="onDestroy($event)"
-    (onScroll)="onScroll($event)"
-    (onUpdate)="onUpdate($event)"
->
-    ...
-</kbq-scrollbar>
-```
+<!-- example(scrollbar-virtual-scroll) -->
 
 ## Programmatic scrollbar control
 
-<!-- example(scrollbar-scroll-to-top) -->
+Via `exportAs="kbqScrollbar"`, the directive exposes `scrollTo`, `scrollToElement`, `scrollToTop`/`scrollToBottom`, `scrollStart`/`scrollEnd`, and the `isTopReached`/`isBottomReached`/`isStartReached`/`isEndReached` signals.
+
+<!-- example(scrollbar-scroll-to) -->
+
+## RTL support
+
+The scrollbar tracks ancestor direction (e.g. `Directionality`/`dir`) and adjusts drag, `scrollStart`/`scrollEnd`, and edge-reached state accordingly.
+
+<!-- example(scrollbar-rtl) -->
+
+## Native fallback
+
+Setting `native: true` via `kbqScrollbarConfigProvider` makes the directive fall back to the browser's native scrollbar entirely, bypassing the custom track/thumb — the same behavior applied automatically on coarse-pointer (touch) devices.
+
+<!-- example(scrollbar-native) -->
+
+## Disabling interaction
+
+The `kbqScrollbarDisableDrag` and `kbqScrollbarDisableClick` inputs keep scrolling functional while independently disabling drag-on-thumb and click-on-track — e.g. keep drag for quick scanning while disabling accidental track clicks, or the other way around.
+
+<!-- example(scrollbar-disable-interaction) -->

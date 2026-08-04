@@ -9,7 +9,7 @@ import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
-import { KbqScrollbar } from '@koobiq/components/scrollbar/private';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import * as _koobiq_components_core from '@koobiq/components/core';
 
 // @public (undocumented)

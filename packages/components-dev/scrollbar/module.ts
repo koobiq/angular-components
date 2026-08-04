@@ -1,48 +1,37 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
-    PrivateScrollbarDisableInteractionExample,
-    PrivateScrollbarNativeExample,
-    PrivateScrollbarRtlExample,
-    PrivateScrollbarScrollToExample,
-    PrivateScrollbarVirtualScrollExample,
-    PrivateScrollbarVisibilityExample,
+    ScrollbarDisableInteractionExample,
+    ScrollbarNativeExample,
     ScrollbarOverviewExample,
-    ScrollbarScrollToTopExample,
-    ScrollbarWithCustomConfigExample
+    ScrollbarRtlExample,
+    ScrollbarScrollToExample,
+    ScrollbarVirtualScrollExample
 } from 'packages/docs-examples/components/scrollbar';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
     imports: [
-        PrivateScrollbarVisibilityExample,
-        PrivateScrollbarVirtualScrollExample,
-        PrivateScrollbarScrollToExample,
-        PrivateScrollbarRtlExample,
-        PrivateScrollbarNativeExample,
-        PrivateScrollbarDisableInteractionExample,
         ScrollbarOverviewExample,
-        ScrollbarScrollToTopExample,
-        ScrollbarWithCustomConfigExample
+        ScrollbarVirtualScrollExample,
+        ScrollbarScrollToExample,
+        ScrollbarRtlExample,
+        ScrollbarNativeExample,
+        ScrollbarDisableInteractionExample
     ],
     template: `
-        <private-scrollbar-visibility-example />
-        <hr />
-        <private-scrollbar-virtual-scroll-example />
-        <hr />
-        <private-scrollbar-scroll-to-example />
-        <hr />
-        <private-scrollbar-rtl-example />
-        <hr />
-        <private-scrollbar-native-example />
-        <hr />
-        <private-scrollbar-disable-interaction-example />
-        <hr />
         <scrollbar-overview-example />
         <hr />
-        <scrollbar-scroll-to-top-example />
+        <scrollbar-virtual-scroll-example />
         <hr />
-        <scrollbar-with-custom-config-example />
+        <scrollbar-scroll-to-example />
+        <hr />
+        <scrollbar-rtl-example />
+        <hr />
+        <scrollbar-native-example />
+        <hr />
+        <scrollbar-disable-interaction-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

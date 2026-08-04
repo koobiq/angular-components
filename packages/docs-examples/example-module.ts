@@ -4676,48 +4676,35 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "resizer-overview-example.ts",
     "importPath": "components/resizer"
   },
-  "private-scrollbar-scroll-to": {
-    "packagePath": "components/scrollbar/private-scrollbar-scroll-to",
-    "title": "Scrollbar scrollTo methods",
-    "componentName": "PrivateScrollbarScrollToExample",
+  "scrollbar-disable-interaction": {
+    "packagePath": "components/scrollbar/scrollbar-disable-interaction",
+    "title": "Scrollbar disable interaction",
+    "componentName": "ScrollbarDisableInteractionExample",
     "files": [
-      "private-scrollbar-scroll-to-example.ts"
+      "scrollbar-disable-interaction-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "private-scrollbar-scroll-to-example",
+    "selector": "scrollbar-disable-interaction-example",
     "additionalComponents": [],
-    "primaryFile": "private-scrollbar-scroll-to-example.ts",
+    "primaryFile": "scrollbar-disable-interaction-example.ts",
     "importPath": "components/scrollbar"
   },
-  "private-scrollbar-virtual-scroll": {
-    "packagePath": "components/scrollbar/private-scrollbar-virtual-scroll",
-    "title": "Scrollbar with virtual scroll",
-    "componentName": "PrivateScrollbarVirtualScrollExample",
+  "scrollbar-native": {
+    "packagePath": "components/scrollbar/scrollbar-native",
+    "title": "Scrollbar native fallback",
+    "componentName": "ScrollbarNativeExample",
     "files": [
-      "private-scrollbar-virtual-scroll-example.ts"
+      "scrollbar-native-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "private-scrollbar-virtual-scroll-example",
+    "selector": "scrollbar-native-example",
     "additionalComponents": [],
-    "primaryFile": "private-scrollbar-virtual-scroll-example.ts",
-    "importPath": "components/scrollbar"
-  },
-  "private-scrollbar-visibility": {
-    "packagePath": "components/scrollbar/private-scrollbar-visibility",
-    "title": "Scrollbar visibility",
-    "componentName": "PrivateScrollbarVisibilityExample",
-    "files": [
-      "private-scrollbar-visibility-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "private-scrollbar-visibility-example",
-    "additionalComponents": [],
-    "primaryFile": "private-scrollbar-visibility-example.ts",
+    "primaryFile": "scrollbar-native-example.ts",
     "importPath": "components/scrollbar"
   },
   "scrollbar-overview": {
     "packagePath": "components/scrollbar/scrollbar-overview",
-    "title": "Scrollbar with options",
+    "title": "Scrollbar overview example",
     "componentName": "ScrollbarOverviewExample",
     "files": [
       "scrollbar-overview-example.ts"
@@ -4728,30 +4715,43 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "scrollbar-overview-example.ts",
     "importPath": "components/scrollbar"
   },
-  "scrollbar-scroll-to-top": {
-    "packagePath": "components/scrollbar/scrollbar-scroll-to-top",
-    "title": "Scrollbar scroll to top",
-    "componentName": "ScrollbarScrollToTopExample",
+  "scrollbar-rtl": {
+    "packagePath": "components/scrollbar/scrollbar-rtl",
+    "title": "Scrollbar RTL",
+    "componentName": "ScrollbarRtlExample",
     "files": [
-      "scrollbar-scroll-to-top-example.ts"
+      "scrollbar-rtl-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "scrollbar-scroll-to-top-example",
+    "selector": "scrollbar-rtl-example",
     "additionalComponents": [],
-    "primaryFile": "scrollbar-scroll-to-top-example.ts",
+    "primaryFile": "scrollbar-rtl-example.ts",
     "importPath": "components/scrollbar"
   },
-  "scrollbar-with-custom-config": {
-    "packagePath": "components/scrollbar/scrollbar-with-custom-config",
-    "title": "Scrollbar with custom KBQ_SCROLLBAR_CONFIG",
-    "componentName": "ScrollbarWithCustomConfigExample",
+  "scrollbar-scroll-to": {
+    "packagePath": "components/scrollbar/scrollbar-scroll-to",
+    "title": "Scrollbar scrollTo methods",
+    "componentName": "ScrollbarScrollToExample",
     "files": [
-      "scrollbar-with-custom-config-example.ts"
+      "scrollbar-scroll-to-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "scrollbar-with-custom-config-example",
+    "selector": "scrollbar-scroll-to-example",
     "additionalComponents": [],
-    "primaryFile": "scrollbar-with-custom-config-example.ts",
+    "primaryFile": "scrollbar-scroll-to-example.ts",
+    "importPath": "components/scrollbar"
+  },
+  "scrollbar-virtual-scroll": {
+    "packagePath": "components/scrollbar/scrollbar-virtual-scroll",
+    "title": "Scrollbar with virtual scroll",
+    "componentName": "ScrollbarVirtualScrollExample",
+    "files": [
+      "scrollbar-virtual-scroll-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "scrollbar-virtual-scroll-example",
+    "additionalComponents": [],
+    "primaryFile": "scrollbar-virtual-scroll-example.ts",
     "importPath": "components/scrollbar"
   },
   "search-expandable-in-header": {
@@ -8199,17 +8199,17 @@ return import('@koobiq/docs-examples/components/radio');
 return import('@koobiq/docs-examples/components/radio');
   case 'resizer-overview':
 return import('@koobiq/docs-examples/components/resizer');
-  case 'private-scrollbar-scroll-to':
+  case 'scrollbar-disable-interaction':
 return import('@koobiq/docs-examples/components/scrollbar');
-  case 'private-scrollbar-virtual-scroll':
-return import('@koobiq/docs-examples/components/scrollbar');
-  case 'private-scrollbar-visibility':
+  case 'scrollbar-native':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-overview':
 return import('@koobiq/docs-examples/components/scrollbar');
-  case 'scrollbar-scroll-to-top':
+  case 'scrollbar-rtl':
 return import('@koobiq/docs-examples/components/scrollbar');
-  case 'scrollbar-with-custom-config':
+  case 'scrollbar-scroll-to':
+return import('@koobiq/docs-examples/components/scrollbar');
+  case 'scrollbar-virtual-scroll':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'search-expandable-in-header':
 return import('@koobiq/docs-examples/components/search-expandable');
