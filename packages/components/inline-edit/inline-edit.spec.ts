@@ -19,7 +19,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { Subject } from 'rxjs';
@@ -551,6 +551,50 @@ describe('KbqInlineEdit', () => {
         await fixture.whenStable();
 
         expect(document.querySelector(componentCssClasses.selectPanel)).toBeTruthy();
+    });
+
+    describe('select-style editor', () => {
+        it('should mark a single select as such and add the select-style panel class while editing', async () => {
+            const fixture = setup(TestWithSelect);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+            expect(inlineEditDebugElement.classes['kbq-inline-edit_select']).toBe(true);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(document.querySelector(`${componentCssClasses.panel}.kbq-inline-edit__panel_select`)).toBeTruthy();
+        });
+
+        it('should connect the select panel to the inline-edit host', async () => {
+            const fixture = setup(TestWithSelect);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const select = fixture.debugElement.query(By.directive(KbqSelect)).componentInstance as KbqSelect;
+
+            expect(select.connectedTo()?.elementRef.nativeElement).toBe(inlineEditDebugElement.nativeElement);
+        });
+
+        it('should not treat a multi-select as a select-style editor', async () => {
+            const fixture = setup(TestWithMultiSelect);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+            expect(inlineEditDebugElement.classes['kbq-inline-edit_select']).toBeFalsy();
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(document.querySelector(`${componentCssClasses.panel}.kbq-inline-edit__panel_select`)).toBeNull();
+        });
     });
 
     it('should stay in view mode when commit() is followed by a redundant outside-click save()', async () => {
@@ -1222,6 +1266,32 @@ export class TestWithSelect extends BaseTestComponent {
 export class TestWithSelectAutoCommit {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
     readonly selected = model(this.options[0]);
+}
+
+@Component({
+    selector: 'name',
+    imports: [
+        FormsModule,
+        KbqInlineEditModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
+    template: `
+        <kbq-inline-edit>
+            <div kbqInlineEditViewMode>{{ selected().join(', ') }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <kbq-select multiple placeholder="Placeholder" [(ngModel)]="selected">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithMultiSelect {
+    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    readonly selected = model([this.options[0]]);
 }
 
 @Component({

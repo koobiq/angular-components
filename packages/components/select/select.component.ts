@@ -732,9 +732,14 @@ export class KbqSelect
      * Custom element the panel is positioned and sized against, overriding the default
      * (the parent `kbq-form-field`'s container, if any, or the trigger itself). Useful when the select
      * is nested inside another component whose own box better represents the panel's visual anchor
-     * than the select's immediate wrapper.
+     * than the select's immediate wrapper. Defaults to the nearest ancestor providing `kbqSelectOrigin`, if any.
      */
-    readonly connectedTo = input<KbqSelectOrigin>(undefined, { alias: 'kbqSelectConnectedTo' });
+    readonly connectedTo = input<KbqSelectOrigin | undefined>(
+        inject(KbqSelectOrigin, { optional: true }) ?? undefined,
+        {
+            alias: 'kbqSelectConnectedTo'
+        }
+    );
 
     /** Value of the select control. Can be a single value or array of values for multiple selection. */
     // TODO: Skipped for migration because:
