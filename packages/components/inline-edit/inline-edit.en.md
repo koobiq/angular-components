@@ -72,15 +72,27 @@ Inline-editable elements should remain aligned with their appearance in view mod
 
 #### Select-style editor
 
-For a single select, edit mode can show only the dropdown panel instead of a bordered input box, with a "not specified" option inside the panel standing in for a clear button.
+On selection, open only the dropdown menu — don't show a bordered input field like Select's. The field doesn't need a border of its own, the dropdown alone is enough.
+
+<!-- example(inline-edit-select-basic) -->
+
+After picking an option, the field returns to view mode.
+
+#### Multiline field
+
+Sometimes it's worth making the dropdown options multiline. It's recommended to match the dropdown's width to the field's width.
+
+<!-- example(inline-edit-select-multiline) -->
+
+#### Reset
+
+Place the clear element inside the dropdown menu — since the select field itself isn't visible, there's no other suitable place for a reset button.
+
+Also recommended: add an option whose label makes it clear that no value is set. This echoes the wording used for the empty field in view mode.
 
 <!-- example(inline-edit-select) -->
 
-#### Multiline select
-
-When option text is too long for a single line, let both the trigger and the options wrap instead of truncating, and size the panel to the field's width.
-
-<!-- example(inline-edit-select-multiline) -->
+After picking an option, the field returns to view mode.
 
 ### Recommendations
 

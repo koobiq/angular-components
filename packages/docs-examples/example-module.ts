@@ -3196,6 +3196,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-overview-example.ts",
     "importPath": "components/inline-edit"
   },
+  "inline-edit-select-basic": {
+    "packagePath": "components/inline-edit/inline-edit-select-basic",
+    "title": "Inline edit select basic",
+    "componentName": "InlineEditSelectBasicExample",
+    "files": [
+      "inline-edit-select-basic-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-select-basic-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-select-basic-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "inline-edit-select-multiline": {
     "packagePath": "components/inline-edit/inline-edit-select-multiline",
     "title": "Inline edit select multiline",
@@ -8006,6 +8019,8 @@ return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-on-clean':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-overview':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-select-basic':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-select-multiline':
 return import('@koobiq/docs-examples/components/inline-edit');

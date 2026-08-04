@@ -10,6 +10,7 @@ import { InlineEditHorizontalListExample } from './inline-edit-horizontal-list/i
 import { InlineEditMenuExample } from './inline-edit-menu/inline-edit-menu-example';
 import { InlineEditOnCleanExample } from './inline-edit-on-clean/inline-edit-on-clean-example';
 import { InlineEditOverviewExample } from './inline-edit-overview/inline-edit-overview-example';
+import { InlineEditSelectBasicExample } from './inline-edit-select-basic/inline-edit-select-basic-example';
 import { InlineEditSelectMultilineExample } from './inline-edit-select-multiline/inline-edit-select-multiline-example';
 import { InlineEditSelectExample } from './inline-edit-select/inline-edit-select-example';
 import { InlineEditUnfilledExample } from './inline-edit-unfilled/inline-edit-unfilled-example';
@@ -29,6 +30,7 @@ export {
     InlineEditMenuExample,
     InlineEditOnCleanExample,
     InlineEditOverviewExample,
+    InlineEditSelectBasicExample,
     InlineEditSelectExample,
     InlineEditSelectMultilineExample,
     InlineEditUnfilledExample,
@@ -44,6 +46,7 @@ const EXAMPLES = [
     InlineEditDisabledExample,
     InlineEditHorizontalListExample,
     InlineEditOnCleanExample,
+    InlineEditSelectBasicExample,
     InlineEditSelectExample,
     InlineEditSelectMultilineExample,
     InlineEditValidationExample,
