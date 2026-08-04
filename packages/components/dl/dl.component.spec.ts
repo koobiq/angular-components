@@ -1,51 +1,59 @@
-import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { KbqDdComponent, KbqDlComponent, KbqDlModule, KbqDtComponent } from './index';
+import { Provider, Type } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { KbqDlAlign, KbqDlComponent } from './dl.component';
 
-describe('KbqDl', () => {
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [KbqDlModule, TestApp]
-        }).compileComponents();
+const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component], providers });
+    const fixture = TestBed.createComponent<T>(component);
+
+    fixture.autoDetectChanges();
+
+    return fixture;
+};
+
+const getDlElement = ({ nativeElement }: ComponentFixture<unknown>): HTMLElement => nativeElement;
+
+describe(KbqDlComponent.name, () => {
+    it('should use start alignment by default', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        expect(fixture.componentInstance.verticalAlign()).toBe('start');
+        expect(fixture.componentInstance.horizontalAlign()).toBe('start');
+        expect(getDlElement(fixture).className).toBe('kbq-dl');
     });
 
-    it('default rendering', () => {
-        const fixture = TestBed.createComponent(TestApp);
+    it.each<{ align: Exclude<KbqDlAlign, 'start'>; className: string }>([
+        { align: 'center', className: 'kbq-dl_vertical-align-center' },
+        { align: 'end', className: 'kbq-dl_vertical-align-end' }
+    ])('should apply $align vertical alignment', ({ align, className }) => {
+        const fixture = createComponent(KbqDlComponent);
 
-        const dlDebugElement = fixture.debugElement.query(By.directive(KbqDlComponent));
-        const dtDebugElement = fixture.debugElement.query(By.directive(KbqDtComponent));
-        const ddDebugElement = fixture.debugElement.query(By.directive(KbqDdComponent));
+        fixture.componentRef.setInput('verticalAlign', align);
+        fixture.detectChanges();
 
-        expect(dlDebugElement.nativeElement.classList.contains('kbq-dl')).toBe(true);
-        expect(dtDebugElement.nativeElement.classList.contains('kbq-dt')).toBe(true);
-        expect(ddDebugElement.nativeElement.classList.contains('kbq-dd')).toBe(true);
+        expect(getDlElement(fixture).classList).toContain(className);
+    });
+
+    it.each<{ align: Exclude<KbqDlAlign, 'start'>; className: string }>([
+        { align: 'center', className: 'kbq-dl_horizontal-align-center' },
+        { align: 'end', className: 'kbq-dl_horizontal-align-end' }
+    ])('should apply $align horizontal alignment', ({ align, className }) => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('horizontalAlign', align);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).toContain(className);
+    });
+
+    it('should apply layout classes', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('wide', true);
+        fixture.componentRef.setInput('vertical', true);
+        fixture.detectChanges();
+
+        expect(getDlElement(fixture).classList).toContain('kbq-dl_wide');
+        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
     });
 });
-
-@Component({
-    selector: 'test-app',
-    imports: [KbqDlModule],
-    template: `
-        <kbq-dl [minWidth]="600">
-            <kbq-dt>Тип инцидента</kbq-dt>
-            <kbq-dd>Вредоносное ПО</kbq-dd>
-
-            <kbq-dt>Идентификатор</kbq-dt>
-            <kbq-dd>INC-2022-125-78253</kbq-dd>
-
-            <kbq-dt>Статус</kbq-dt>
-            <kbq-dd>Новый</kbq-dd>
-
-            <kbq-dt>Ответственный</kbq-dt>
-            <kbq-dd>Иванов Иван</kbq-dd>
-
-            <kbq-dt>Описание</kbq-dt>
-            <kbq-dd>
-                Здесь нужно добавить очень длинное описание, но Я не знаю, что еще можно сюда добавить, поэтому Вы
-                видите этот текст.
-            </kbq-dd>
-        </kbq-dl>
-    `
-})
-class TestApp {}

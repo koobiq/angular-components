@@ -7,6 +7,22 @@
 
     grid-template-columns: repeat(4, 1fr);
 
+    &.kbq-dl_vertical-align-center {
+        align-items: center;
+    }
+
+    &.kbq-dl_vertical-align-end {
+        align-items: end;
+    }
+
+    &.kbq-dl_horizontal-align-center {
+        justify-items: center;
+    }
+
+    &.kbq-dl_horizontal-align-end {
+        justify-items: end;
+    }
+
     .kbq-dt {
         grid-column: 1;
     }
