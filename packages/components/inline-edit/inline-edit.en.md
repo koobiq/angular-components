@@ -76,6 +76,12 @@ For a single select, edit mode can show only the dropdown panel instead of a bor
 
 <!-- example(inline-edit-select) -->
 
+#### Multiline select
+
+When option text is too long for a single line, let both the trigger and the options wrap instead of truncating, and size the panel to the field's width.
+
+<!-- example(inline-edit-select-multiline) -->
+
 ### Recommendations
 
 Inline edits should be saved immediately after a change—without requiring a global **Save** button.

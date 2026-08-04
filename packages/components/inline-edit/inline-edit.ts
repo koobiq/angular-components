@@ -38,6 +38,7 @@ import {
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqSelect, KbqSelectOrigin } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -139,12 +140,14 @@ export class KbqInlineEditMenu {
         '[class.kbq-inline-edit_with-menu]': '!!menu()',
         '[class.kbq-inline-edit_disabled]': 'disabled()',
         '[class.kbq-inline-edit_anchor-focused]': 'anchorFocused()',
+        '[class.kbq-inline-edit_select]': 'isSingleSelect()',
         '(click)': 'onClick($event)',
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
     },
     hostDirectives: [
-        CdkMonitorFocus
+        CdkMonitorFocus,
+        KbqSelectOrigin
     ],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     exportAs: 'kbqInlineEdit'
@@ -216,6 +219,19 @@ export class KbqInlineEdit {
     protected readonly formFieldRef = computed<KbqFormField | undefined>(() => this.formFieldRefList()[0]);
     /** @docs-private */
     protected readonly formFieldRefList = contentChildren(KbqFormField, { descendants: true });
+
+    /** @docs-private */
+    protected readonly selectRef = contentChild(KbqSelect, { descendants: true });
+    /**
+     * Whether edit mode contains a single-value select. When true, edit mode shows only the
+     * dropdown panel instead of a bordered field - see the "Select-style editor" example.
+     * @docs-private
+     */
+    protected readonly isSingleSelect = computed(() => {
+        const select = this.selectRef();
+
+        return !!select && !select.multiple && !select.multiline();
+    });
 
     /** @docs-private */
     protected overlayOrigin: HTMLElement = this.elementRef.nativeElement;
