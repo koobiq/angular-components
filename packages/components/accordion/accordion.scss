@@ -17,6 +17,27 @@
     display: flex;
 
     height: var(--kbq-accordion-size-item-header-height);
+    // The height above is fixed, so a trigger label long enough to wrap would paint outside the
+    // header and over the item's border. Clipping keeps it inside; the trigger is a flex container,
+    // so `text-overflow` cannot ellipsize its text — wrap the label in an element of your own if you
+    // need that.
+    overflow: hidden;
+
+    // Interactive controls live NEXT TO the trigger, never inside it: the trigger is `role="button"`
+    // and nesting focusable elements in it is an accessibility violation. The trigger's `flex: 1`
+    // keeps the rest of the header clickable, so the actions sit flush right; their padding matches
+    // the trigger's own right padding, which is `--kbq-size-s` in every variant.
+    & > .kbq-accordion-header__actions {
+        display: flex;
+        align-items: center;
+        gap: var(--kbq-accordion-size-item-header-actions-gap);
+
+        // Icon buttons have a fixed size and nothing to reflow, so the trigger — not the actions —
+        // is what gives way when the header runs out of room.
+        flex-shrink: 0;
+
+        padding-right: var(--kbq-accordion-size-item-header-actions-padding-right);
+    }
 }
 
 .kbq-accordion-content {

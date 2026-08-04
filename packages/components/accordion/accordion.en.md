@@ -38,6 +38,12 @@ This area can contain any type of content.
 
 <!-- example(accordion-content) -->
 
+##### Interactive Elements
+
+Buttons, dropdown menus and form controls can be placed in the section header next to the trigger, as well as inside the content area. Place them **next to** the trigger, never inside it: the trigger is a `role="button"`, and nesting focusable elements in it breaks accessibility. Enter and Space toggle the section only while the trigger itself is focused.
+
+<!-- example(accordion-interactive-elements) -->
+
 ### Usage Examples
 
 #### Inside a Section

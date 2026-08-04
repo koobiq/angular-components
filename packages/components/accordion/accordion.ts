@@ -50,8 +50,7 @@ let uniqueIdCounter: number = 0;
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion',
-        '[attr.data-orientation]': 'orientation()',
-        '(keydown)': 'keydownHandler($event)'
+        '[attr.data-orientation]': 'orientation()'
     }
 })
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
@@ -75,11 +74,28 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     /** Emits every time `openAll()` or `closeAll()` is called. @docs-private */
     readonly openCloseAllActions = new Subject<boolean>();
 
-    /** The accordion items projected into this accordion. @docs-private */
-    readonly items = contentChildren(
+    /**
+     * Every item the content query matches, including those of a nested accordion.
+     * Use `items` instead — this one is the raw, unfiltered query.
+     * @docs-private
+     */
+    protected readonly allItems = contentChildren(
         forwardRef(() => KbqAccordionItem),
         { descendants: true }
     );
+
+    /**
+     * The accordion items that belong to this accordion.
+     *
+     * A descendant content query resolves against the template the tag is authored in and does not
+     * stop at a nested component of the same type, so `allItems` of an outer accordion also matches
+     * the items of an accordion rendered inside an item's content. Each item's own `accordion` is
+     * injected and therefore always its nearest one, which makes ownership the reliable filter.
+     * Without it the key manager would move focus into the nested accordion's headers, `valueChange`
+     * would report a nested item's value and state saving would persist it under the outer key.
+     * @docs-private
+     */
+    readonly items = computed(() => this.allItems().filter((item) => item.accordion === this));
 
     /** Whether the accordion persists the expanded state of its items across reloads. Defaults to `false`. */
     readonly useStateSaving = input(false, { transform: booleanAttribute });
@@ -249,20 +265,23 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         this.keyManager?.destroy();
     }
 
-    /** @docs-private */
+    /**
+     * Handles a key pressed on an item's trigger.
+     *
+     * Invoked by `KbqAccordionTriggerDirective`, not bound on the accordion host: a root listener
+     * also receives keys bubbling from the section content and from controls placed next to the
+     * trigger, and would swallow their Enter/Space and hijack their arrow keys. It would also
+     * activate the first item — stealing focus — the first time any key was pressed anywhere inside.
+     * @docs-private
+     */
     keydownHandler(event: KeyboardEvent) {
-        if (!this.keyManager) return;
+        const activeItem = this.keyManager?.activeItem;
 
-        if (!this.keyManager.activeItem) {
-            this.keyManager.setFirstItemActive();
-        }
-
-        const activeItem = this.keyManager.activeItem;
+        if (!activeItem) return;
 
         if (
             (event.keyCode === ENTER || event.keyCode === SPACE) &&
             !this.keyManager.isTyping() &&
-            activeItem &&
             !activeItem.disabled
         ) {
             event.preventDefault();

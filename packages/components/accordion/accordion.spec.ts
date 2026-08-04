@@ -67,7 +67,10 @@ describe('KbqAccordion', () => {
                 AccordionValueMultiple,
                 AccordionMissingContent,
                 AccordionLevel,
-                AccordionStateSaving
+                AccordionStateSaving,
+                AccordionInteractiveContent,
+                AccordionNestedInTrigger,
+                AccordionNested
             ]
         }).compileComponents();
     });
@@ -477,7 +480,7 @@ describe('KbqAccordion', () => {
 
             accordion.setActiveItem(items[0].componentInstance as KbqAccordionItem);
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', ENTER);
+            dispatchKeyboardEvent(triggers[0].nativeElement, 'keydown', ENTER);
             fixture.detectChanges();
 
             expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
@@ -489,12 +492,13 @@ describe('KbqAccordion', () => {
 
             const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
             const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
 
             const accordion = accordionEl.componentInstance as KbqAccordion;
 
             accordion.setActiveItem(items[0].componentInstance as KbqAccordionItem);
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', SPACE);
+            dispatchKeyboardEvent(triggers[0].nativeElement, 'keydown', SPACE);
             fixture.detectChanges();
 
             expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
@@ -513,7 +517,7 @@ describe('KbqAccordion', () => {
             accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
             expect(document.activeElement).toBe(triggers[0].nativeElement);
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', DOWN_ARROW);
+            dispatchKeyboardEvent(triggers[0].nativeElement, 'keydown', DOWN_ARROW);
             fixture.detectChanges();
 
             expect(document.activeElement).toBe(triggers[1].nativeElement);
@@ -532,7 +536,7 @@ describe('KbqAccordion', () => {
             accordion.setActiveItem(items[1].injector.get(KbqAccordionItem));
             expect(document.activeElement).toBe(triggers[1].nativeElement);
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', UP_ARROW);
+            dispatchKeyboardEvent(triggers[1].nativeElement, 'keydown', UP_ARROW);
             fixture.detectChanges();
 
             expect(document.activeElement).toBe(triggers[0].nativeElement);
@@ -550,11 +554,12 @@ describe('KbqAccordion', () => {
 
             accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', END);
+            dispatchKeyboardEvent(triggers[0].nativeElement, 'keydown', END);
             fixture.detectChanges();
             expect(document.activeElement).toBe(triggers[triggers.length - 1].nativeElement);
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', HOME);
+            // Focus is on the last trigger now, so that is where the next key really comes from.
+            dispatchKeyboardEvent(triggers[triggers.length - 1].nativeElement, 'keydown', HOME);
             fixture.detectChanges();
             expect(document.activeElement).toBe(triggers[0].nativeElement);
         });
@@ -565,11 +570,12 @@ describe('KbqAccordion', () => {
 
             const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
             const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
             const accordion = accordionEl.componentInstance as KbqAccordion;
 
             accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
 
-            const event = dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', TAB);
+            const event = dispatchKeyboardEvent(triggers[0].nativeElement, 'keydown', TAB);
 
             fixture.detectChanges();
 
@@ -584,10 +590,11 @@ describe('KbqAccordion', () => {
             const accordionEl = fixture.debugElement.query(By.directive(KbqAccordion));
             const accordion = accordionEl.componentInstance as KbqAccordion;
             const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+            const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
 
             accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', ENTER);
+            dispatchKeyboardEvent(triggers[0].nativeElement, 'keydown', ENTER);
             fixture.detectChanges();
 
             expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
@@ -613,11 +620,11 @@ describe('KbqAccordion', () => {
 
             accordion.setActiveItem(items[0].injector.get(KbqAccordionItem));
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', RIGHT_ARROW);
+            dispatchKeyboardEvent(triggers[0].nativeElement, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
             expect(document.activeElement).toBe(triggers[1].nativeElement);
 
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', LEFT_ARROW);
+            dispatchKeyboardEvent(triggers[1].nativeElement, 'keydown', LEFT_ARROW);
             fixture.detectChanges();
             expect(document.activeElement).toBe(triggers[0].nativeElement);
         });
@@ -639,9 +646,229 @@ describe('KbqAccordion', () => {
             accordion.setActiveItem(items[1].injector.get(KbqAccordionItem));
 
             // In RTL, Right arrow moves to the previous item.
-            dispatchKeyboardEvent(accordionEl.nativeElement, 'keydown', RIGHT_ARROW);
+            dispatchKeyboardEvent(triggers[1].nativeElement, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
             expect(document.activeElement).toBe(triggers[0].nativeElement);
+        });
+    });
+
+    describe('interactive content', () => {
+        // Attaching to the document is required for `document.activeElement` focus assertions to work.
+        afterEach(() => {
+            if (fixture?.nativeElement?.parentNode === document.body) {
+                document.body.removeChild(fixture.nativeElement);
+            }
+        });
+
+        /** Creates the interactive fixture, attaches it to the document and returns its parts. */
+        const createInteractiveFixture = () => {
+            fixture = TestBed.createComponent(AccordionInteractiveContent);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            return {
+                accordion: fixture.debugElement.query(By.directive(KbqAccordion)),
+                items: fixture.debugElement.queryAll(By.directive(KbqAccordionItem)),
+                triggers: fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger)),
+                headerAction: fixture.nativeElement.querySelector('#header-action') as HTMLButtonElement,
+                secondaryHeaderAction: fixture.nativeElement.querySelector(
+                    '#header-action-secondary'
+                ) as HTMLButtonElement,
+                disabledItemAction: fixture.nativeElement.querySelector('#disabled-item-action') as HTMLButtonElement,
+                contentInput: fixture.nativeElement.querySelector('#content-input') as HTMLInputElement
+            };
+        };
+
+        it('ENTER on a header action should not toggle the item', () => {
+            const { items, headerAction } = createInteractiveFixture();
+
+            const event = dispatchKeyboardEvent(headerAction, 'keydown', ENTER);
+
+            fixture.detectChanges();
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
+            expect(event.defaultPrevented).toBe(false);
+        });
+
+        it('SPACE inside the expanded content should not collapse the item', () => {
+            const { items, triggers, contentInput } = createInteractiveFixture();
+
+            triggers[0].nativeElement.click();
+            fixture.detectChanges();
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
+
+            const event = dispatchKeyboardEvent(contentInput, 'keydown', SPACE);
+
+            fixture.detectChanges();
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
+            expect(event.defaultPrevented).toBe(false);
+        });
+
+        it('arrow keys inside the content should not move focus between headers', () => {
+            const { triggers, contentInput } = createInteractiveFixture();
+
+            triggers[0].nativeElement.click();
+            fixture.detectChanges();
+
+            contentInput.focus();
+            expect(document.activeElement).toBe(contentInput);
+
+            dispatchKeyboardEvent(contentInput, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(contentInput);
+        });
+
+        it('HOME inside the content should not move focus to the first header', () => {
+            const { triggers, contentInput } = createInteractiveFixture();
+
+            triggers[0].nativeElement.click();
+            fixture.detectChanges();
+
+            contentInput.focus();
+
+            dispatchKeyboardEvent(contentInput, 'keydown', HOME);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(contentInput);
+        });
+
+        it('a key pressed inside the content should not activate the first item', () => {
+            const { items, contentInput } = createInteractiveFixture();
+
+            // No `setActiveItem` beforehand: the removed `setFirstItemActive()` used to focus the
+            // first trigger and toggle it on the very first key pressed anywhere inside the accordion.
+            contentInput.focus();
+
+            dispatchKeyboardEvent(contentInput, 'keydown', ENTER);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(contentInput);
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
+            expect(items[1].nativeElement.getAttribute('data-state')).toBe('closed');
+        });
+
+        it('the accordion host should not handle keys itself', () => {
+            const { accordion, items } = createInteractiveFixture();
+
+            (accordion.componentInstance as KbqAccordion).setActiveItem(items[0].injector.get(KbqAccordionItem));
+
+            const event = dispatchKeyboardEvent(accordion.nativeElement, 'keydown', ENTER);
+
+            fixture.detectChanges();
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
+            expect(event.defaultPrevented).toBe(false);
+        });
+
+        it('ENTER on a focusable element nested inside the trigger should not toggle the item', () => {
+            fixture = TestBed.createComponent(AccordionNestedInTrigger);
+            fixture.detectChanges();
+
+            const item = fixture.debugElement.query(By.directive(KbqAccordionItem));
+            const nested = fixture.nativeElement.querySelector('#nested-in-trigger') as HTMLElement;
+
+            const event = dispatchKeyboardEvent(nested, 'keydown', ENTER);
+
+            fixture.detectChanges();
+
+            expect(item.nativeElement.getAttribute('data-state')).toBe('closed');
+            expect(event.defaultPrevented).toBe(false);
+        });
+
+        it('ENTER on the second header action should not toggle the item either', () => {
+            const { items, secondaryHeaderAction } = createInteractiveFixture();
+
+            const event = dispatchKeyboardEvent(secondaryHeaderAction, 'keydown', ENTER);
+
+            fixture.detectChanges();
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
+            expect(event.defaultPrevented).toBe(false);
+        });
+
+        it('header actions should be reachable and stay interactive on a disabled item', () => {
+            const { items, disabledItemAction } = createInteractiveFixture();
+            const clicked = jest.fn();
+
+            expect(items[2].nativeElement.getAttribute('data-disabled')).toBe('true');
+
+            // Disabling an item only bars toggling it; the actions beside its trigger are ordinary
+            // buttons the consumer owns, so they keep their focus and their clicks.
+            disabledItemAction.addEventListener('click', clicked);
+            disabledItemAction.focus();
+            disabledItemAction.click();
+
+            expect(document.activeElement).toBe(disabledItemAction);
+            expect(clicked).toHaveBeenCalled();
+        });
+
+        it('ENTER on a disabled item header action should not toggle the item', () => {
+            const { items, disabledItemAction } = createInteractiveFixture();
+
+            const event = dispatchKeyboardEvent(disabledItemAction, 'keydown', ENTER);
+
+            fixture.detectChanges();
+
+            expect(items[2].nativeElement.getAttribute('data-state')).toBe('closed');
+            expect(event.defaultPrevented).toBe(false);
+        });
+    });
+
+    describe('nested accordion', () => {
+        /** Creates the nested fixture, attaches it to the document and returns its parts. */
+        const createNestedFixture = () => {
+            fixture = TestBed.createComponent(AccordionNested);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            const accordions = fixture.debugElement.queryAll(By.directive(KbqAccordion));
+
+            return {
+                outer: accordions[0].componentInstance as KbqAccordion,
+                inner: accordions[1].componentInstance as KbqAccordion,
+                triggers: fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger)),
+                host: fixture.componentInstance as AccordionNested
+            };
+        };
+
+        afterEach(() => {
+            if (fixture?.nativeElement?.parentNode === document.body) {
+                document.body.removeChild(fixture.nativeElement);
+            }
+        });
+
+        it('should not claim the items of a nested accordion', () => {
+            const { outer, inner } = createNestedFixture();
+
+            expect(outer.items().map((item) => item.value())).toEqual(['outer-1', 'outer-2']);
+            expect(inner.items().map((item) => item.value())).toEqual(['inner-1', 'inner-2']);
+        });
+
+        it('arrow keys should move between the outer headers, skipping the nested ones', () => {
+            const { triggers } = createNestedFixture();
+            // Document order is outer-1, inner-1, inner-2, outer-2.
+            const [outerTrigger1, , , outerTrigger2] = triggers.map((trigger) => trigger.nativeElement);
+
+            outerTrigger1.focus();
+
+            dispatchKeyboardEvent(outerTrigger1, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(outerTrigger2);
+        });
+
+        it('toggling a nested item should not emit the outer valueChange', () => {
+            const { host, triggers } = createNestedFixture();
+
+            host.outerValueChanges.length = 0;
+
+            // Index 1 is the first trigger of the nested accordion.
+            triggers[1].nativeElement.click();
+            fixture.detectChanges();
+
+            expect(host.outerValueChanges).toEqual([]);
         });
     });
 
@@ -887,6 +1114,37 @@ describe('KbqAccordion', () => {
 
                 accordionHeaderDebugElement = fixture.debugElement.query(By.directive(KbqAccordionHeader));
                 expect(accordionHeaderDebugElement.nativeElement.getAttribute('role')).toBe('heading');
+            });
+
+            it('should name the heading after the trigger', () => {
+                fixture = TestBed.createComponent(TestApp);
+                fixture.detectChanges();
+
+                accordionHeaderDebugElement = fixture.debugElement.query(By.directive(KbqAccordionHeader));
+                accordionTriggerDebugElement = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
+
+                expect(accordionHeaderDebugElement.nativeElement.getAttribute('aria-labelledby')).toBe(
+                    accordionTriggerDebugElement.nativeElement.getAttribute('id')
+                );
+            });
+
+            it('should keep header action labels out of the heading name', () => {
+                fixture = TestBed.createComponent(AccordionInteractiveContent);
+                fixture.detectChanges();
+
+                const header = fixture.debugElement.query(By.directive(KbqAccordionHeader)).nativeElement;
+                const labelSource = fixture.nativeElement.querySelector(
+                    `#${header.getAttribute('aria-labelledby')}`
+                ) as HTMLElement;
+
+                const actionLabels = Array.from(
+                    header.querySelectorAll('.kbq-accordion-header__actions [aria-label]')
+                ).map((action) => (action as HTMLElement).getAttribute('aria-label'));
+
+                // The labelled actions really do sit inside the heading — without the explicit
+                // reference, name-from-content would append both of them to the section title.
+                expect(actionLabels).toEqual(['Run Trigger 1', 'More for Trigger 1']);
+                expect(labelSource.textContent?.trim()).toBe('Trigger 1');
             });
         });
 
@@ -1241,6 +1499,58 @@ describe('KbqAccordion', () => {
 
         it('has no axe violations when an item is expanded', async () => {
             fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        // Pins the `nested-interactive` fix: actions must be siblings of the trigger, never inside
+        // it, because the trigger is a `role="button"`. The fixture also holds a disabled item with
+        // its own action, so the disabled styling is covered in both states.
+        it('has no axe violations with collapsed header actions', async () => {
+            fixture = TestBed.createComponent(AccordionInteractiveContent);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('has no axe violations with header actions and expanded content controls', async () => {
+            fixture = TestBed.createComponent(AccordionInteractiveContent);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('has no axe violations with header actions in RTL', async () => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqAccordionModule, AccordionInteractiveContent],
+                providers: [
+                    { provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }
+                ]
+            });
+
+            fixture = TestBed.createComponent(AccordionInteractiveContent);
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('has no axe violations for a nested accordion', async () => {
+            fixture = TestBed.createComponent(AccordionNested);
             fixture.detectChanges();
             document.body.appendChild(fixture.nativeElement);
 
@@ -1621,3 +1931,100 @@ class AccordionLevel {
     `
 })
 class AccordionStateSaving {}
+
+// The action buttons are deliberately icon-only (empty, named solely by `aria-label`), matching what
+// the docs ship: a button with its own visible text would keep the axe checks passing even if the
+// pattern stopped exposing an accessible name at all.
+@Component({
+    selector: 'accordion-interactive-content',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [type]="'multiple'">
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Trigger 1</button>
+                    <div class="kbq-accordion-header__actions">
+                        <button id="header-action" type="button" aria-label="Run Trigger 1"></button>
+                        <button id="header-action-secondary" type="button" aria-label="More for Trigger 1"></button>
+                    </div>
+                </kbq-accordion-header>
+                <kbq-accordion-content>
+                    <input id="content-input" type="text" aria-label="Content input" />
+                </kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Trigger 2</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 2</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item [disabled]="true">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Trigger 3</button>
+                    <div class="kbq-accordion-header__actions">
+                        <button id="disabled-item-action" type="button" aria-label="Run Trigger 3"></button>
+                    </div>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 3</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionInteractiveContent {}
+
+@Component({
+    selector: 'accordion-nested',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [type]="'multiple'" (valueChange)="outerValueChanges.push($event)">
+            <kbq-accordion-item [value]="'outer-1'">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Outer 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>
+                    <kbq-accordion [type]="'multiple'">
+                        <kbq-accordion-item [value]="'inner-1'">
+                            <kbq-accordion-header>
+                                <button kbq-accordion-trigger type="button">Inner 1</button>
+                            </kbq-accordion-header>
+                            <kbq-accordion-content>Inner content 1</kbq-accordion-content>
+                        </kbq-accordion-item>
+                        <kbq-accordion-item [value]="'inner-2'">
+                            <kbq-accordion-header>
+                                <button kbq-accordion-trigger type="button">Inner 2</button>
+                            </kbq-accordion-header>
+                            <kbq-accordion-content>Inner content 2</kbq-accordion-content>
+                        </kbq-accordion-item>
+                    </kbq-accordion>
+                </kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item [value]="'outer-2'">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Outer 2</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Outer content 2</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionNested {
+    readonly outerValueChanges: (string[] | string)[] = [];
+}
+
+@Component({
+    selector: 'accordion-nested-in-trigger',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion>
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">
+                        <span id="nested-in-trigger" tabindex="0">Nested</span>
+                    </button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionNestedInTrigger {}

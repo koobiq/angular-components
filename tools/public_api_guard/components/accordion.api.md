@@ -25,6 +25,7 @@ export const KBQ_ACCORDION_STATE_STORE: InjectionToken<KbqAccordionStateStore>;
 // @public (undocumented)
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
     constructor();
+    protected readonly allItems: _angular_core.Signal<readonly any[]>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     closeAll(): void;
     readonly collapsible: _angular_core.InputSignal<boolean>;
@@ -36,7 +37,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     get hasSavedState(): boolean;
     get id(): string;
     get isMultiple(): boolean;
-    readonly items: _angular_core.Signal<readonly any[]>;
+    readonly items: _angular_core.Signal<any[]>;
     keydownHandler(event: KeyboardEvent): void;
     protected keyManager: FocusKeyManager<KbqAccordionItem>;
     readonly level: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -60,7 +61,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     readonly valueInput: _angular_core.InputSignal<string | string[] | undefined>;
     readonly variant: _angular_core.InputSignal<KbqAccordionVariant>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "level": { "alias": "level"; "required": false; "isSignal": true; }; "defaultValue": { "alias": "defaultValue"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; }, ["items"], ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordion, "kbq-accordion, [kbq-accordion]", never, { "useStateSaving": { "alias": "useStateSaving"; "required": false; "isSignal": true; }; "stateSavingKey": { "alias": "stateSavingKey"; "required": false; "isSignal": true; }; "variant": { "alias": "variant"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "level": { "alias": "level"; "required": false; "isSignal": true; }; "defaultValue": { "alias": "defaultValue"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; "collapsible": { "alias": "collapsible"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; }, ["allItems"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordion, never>;
 }
@@ -99,6 +100,7 @@ export class KbqAccordionContentDirective implements AfterViewInit {
 export class KbqAccordionHeader {
     protected readonly accordion: KbqAccordion;
     protected readonly item: KbqAccordionItem;
+    protected get labelledBy(): string | null;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAccordionHeader, "kbq-accordion-header, [kbq-accordion-header]", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -108,7 +110,7 @@ export class KbqAccordionHeader {
 // @public (undocumented)
 export class KbqAccordionItem implements OnDestroy {
     constructor();
-    protected readonly accordion: KbqAccordion;
+    readonly accordion: KbqAccordion;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     close(): void;
     readonly closed: _angular_core.OutputEmitterRef<void>;
@@ -226,6 +228,7 @@ export class KbqAccordionTriggerDirective {
     protected readonly nativeElement: HTMLElement;
     onClick(): void;
     onFocus(): void;
+    onKeydown(event: KeyboardEvent): void;
     get triggerId(): string;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAccordionTriggerDirective, "[kbqAccordionTrigger]", never, {}, {}, never, never, true, never>;
