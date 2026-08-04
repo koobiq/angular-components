@@ -325,7 +325,6 @@ export class KbqButtonCssStyler implements AfterContentInit {
     host: {
         '[attr.disabled]': 'nativeDisabledAttribute',
         '[attr.aria-disabled]': 'ariaDisabledAttribute',
-        '[attr.role]': 'roleAttribute()',
         '[class.kbq-disabled]': 'disabled',
         '[attr.tabindex]': 'tabIndexAttribute',
         '[class]': 'kbqStyle',
@@ -341,6 +340,7 @@ export class KbqButton
     protected styler = inject(KbqButtonCssStyler);
 
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly renderer = inject(Renderer2);
 
     /** Lower-cased tag name of the host element. */
     private readonly hostTagName = this.elementRef.nativeElement.nodeName.toLowerCase();
@@ -468,17 +468,6 @@ export class KbqButton
     }
 
     /**
-     * An `<a kbq-button>` without `href` does not navigate and has no implicit role, so it is
-     * announced as a button. Anchors that do navigate (`href`, `routerLink`) keep their link role,
-     * and a native `<button>` keeps its implicit one.
-     *
-     * A signal rather than a plain getter: `href` is applied by host bindings of the same element
-     * (`RouterLink`, `[attr.href]`), which run after this component's own, so the value cannot be
-     * resolved while the host bindings are being evaluated.
-     */
-    protected readonly roleAttribute = signal<'button' | null>(null);
-
-    /**
      * Value rendered into the `tabindex` attribute. A native `<button>`/`<input>` is already in the
      * tab order, so the default needs no attribute at all. Anchors keep it: one without `href` is
      * not focusable otherwise, and whether an `href` is present cannot be decided here — directives
@@ -555,23 +544,41 @@ export class KbqButton
 
     ngAfterViewChecked(): void {
         // `href` can appear or disappear long after the first check — `[attr.href]` bound to a value
-        // that resolves later, or a `RouterLink` whose target becomes `null`. Only anchors can change
-        // role, so a `<button>` host skips the lookup entirely; setting the signal to its current
-        // value is a no-op, so a stable host does not schedule extra passes.
-        if (this.hostTagName === 'a') {
-            this.updateRole();
-        }
+        // that resolves later, or a `RouterLink` whose target becomes `null`. Running on every pass
+        // costs nothing: `updateRole` leaves a host that is not an anchor alone, and writes nothing
+        // while the role it would write is already there.
+        this.updateRole();
     }
 
     /**
-     * Re-evaluates the role announced to assistive tech. Only needed when the host `href` is added or
-     * removed outside of Angular, without a subsequent change detection pass.
+     * Re-evaluates the role announced to assistive tech. Only anchors can change role, so the guard
+     * lives here rather than at the call sites: this is public, and a `<button>` host must not have
+     * a role stamped onto it from the outside.
+     *
+     * An `<a kbq-button>` without `href` does not navigate and has no implicit role, so it is
+     * announced as a button. Anchors that do navigate (`href`, `routerLink`) keep their link role.
+     *
+     * Every other host already has an implicit role and is left exactly as it was authored — a host
+     * binding would instead have to write `null` for it, which removes a `role` the consumer set
+     * itself. `KbqButtonToggle` relies on that: it renders `role="radio"` on its inner button.
+     *
      * @docs-private
      */
     updateRole(): void {
-        const navigates = this.hostTagName !== 'a' || this.elementRef.nativeElement.hasAttribute('href');
+        if (this.hostTagName !== 'a') return;
 
-        this.roleAttribute.set(navigates ? null : 'button');
+        const host = this.getHostElement();
+        const role = host.hasAttribute('href') ? null : 'button';
+
+        // Called from every `ngAfterViewChecked`, so the write is worth skipping while the attribute
+        // already reads the way it would be rewritten.
+        if (host.getAttribute('role') === role) return;
+
+        if (role) {
+            this.renderer.setAttribute(host, 'role', role);
+        } else {
+            this.renderer.removeAttribute(host, 'role');
+        }
     }
 
     ngOnDestroy() {

@@ -66,7 +66,6 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     parentTextElement: ElementRef<HTMLElement>;
     // (undocumented)
     projectContentChanged(): void;
-    protected readonly roleAttribute: i0.WritableSignal<"button" | null>;
     setColorFromGroup(value: KbqButtonColor | null | undefined): void;
     setDisabledFromGroup(value: boolean): void;
     setKbqStyleFromGroup(value: KbqButtonStyleInput): void;

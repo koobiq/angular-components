@@ -29,9 +29,10 @@
         border-radius: var(--kbq-button-toggle-size-item-border-radius);
         border: var(--kbq-size-border-width) solid transparent;
 
+        // `border-color` is the theme's to set, from the same token — declaring it here as well
+        // would only work by source order, and would break a consumer who overrides the token.
         &.cdk-keyboard-focused {
-            outline: 1px solid var(--kbq-states-line-focus-theme);
-            border-color: var(--kbq-states-line-focus-theme);
+            outline: 1px solid var(--kbq-button-toggle-item-states-focused-outline);
         }
 
         > .kbq-button,
@@ -165,8 +166,6 @@
         > .kbq-button,
         > .kbq-button-icon {
             width: 100%;
-
-            border-radius: var(--kbq-button-toggle-size-item-border-radius);
         }
     }
 }

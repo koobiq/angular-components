@@ -55,9 +55,14 @@ type DevButton = E2eButtonState & E2eButtonOrientation;
                 <tr>
                     @for (button of buttons; track button.title) {
                         <td>
-                            <kbq-button-toggle-group [vertical]="button.vertical!" [multiple]="button.multiple!">
+                            <kbq-button-toggle-group
+                                aria-label="states"
+                                [vertical]="button.vertical!"
+                                [multiple]="button.multiple!"
+                            >
                                 <kbq-button-toggle
                                     [value]="1"
+                                    [aria-label]="button.title!"
                                     [checked]="button.checked!"
                                     [class.cdk-keyboard-focused]="button.focused"
                                     [class.kbq-active]="button.active"
@@ -152,9 +157,10 @@ export class E2eButtonToggleStates {
 
         <div data-testid="e2eScreenshotTarget">
             @for (state of states; track state.title) {
-                <kbq-button-toggle-group stretched>
+                <kbq-button-toggle-group stretched aria-label="states">
                     <kbq-button-toggle
                         [value]="1"
+                        [aria-label]="state.title!"
                         [checked]="state.checked!"
                         [class.cdk-keyboard-focused]="state.focused"
                         [class.kbq-active]="state.active"
@@ -269,7 +275,7 @@ export class E2eButtonToggleStatesStretched {
             <!-- a slotted icon with no label at all: the label box is empty and must not take a gap
                  of the row, or it would push the icon off centre -->
             <kbq-button-toggle-group>
-                <kbq-button-toggle data-testid="e2eButtonToggleTruncationIconOnly" [value]="1">
+                <kbq-button-toggle data-testid="e2eButtonToggleTruncationIconOnly" aria-label="Play" [value]="1">
                     <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
                 </kbq-button-toggle>
             </kbq-button-toggle-group>

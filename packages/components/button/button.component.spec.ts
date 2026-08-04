@@ -398,6 +398,26 @@ describe('KbqButton', () => {
             expect(fixture.debugElement.query(By.css('button')).nativeElement.hasAttribute('role')).toBe(false);
         });
 
+        it('should keep a role the consumer set on a native button', () => {
+            // Only an anchor can lack an implicit role, so the button decides nothing for any other
+            // host — a host binding would have to write `null` there, wiping out a role like the
+            // `role="radio"` KbqButtonToggle renders on the button it composes.
+            @Component({
+                imports: [KbqButtonModule],
+                template: `
+                    <button kbq-button role="radio" [attr.aria-checked]="true">Radio</button>
+                `
+            })
+            class ButtonWithRole {}
+
+            const fixture = TestBed.createComponent(ButtonWithRole);
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('role')).toBe('radio');
+        });
+
         it('should keep the link role on an anchor with href', () => {
             const fixture = TestBed.createComponent(TestApp);
 
@@ -435,6 +455,29 @@ describe('KbqButton', () => {
             fixture.detectChanges();
 
             expect(anchor.getAttribute('role')).toBe('button');
+        });
+
+        // The fixture components are declared below, so the table hands back a class rather than one.
+        it.each([
+            ['without href', () => AnchorWithoutHrefTestApp, 'a'],
+            ['with href', () => TestApp, 'a[href]']
+        ])('should not rewrite the role of a settled anchor %s on every check', (_, testApp, selector) => {
+            // `updateRole` runs from `ngAfterViewChecked`, i.e. on every pass, so an anchor whose role
+            // is already right must not keep writing it to the DOM.
+            const fixture = TestBed.createComponent(testApp());
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            const anchor: HTMLAnchorElement = fixture.debugElement.query(By.css(selector)).nativeElement;
+            const setAttribute = jest.spyOn(anchor, 'setAttribute');
+            const removeAttribute = jest.spyOn(anchor, 'removeAttribute');
+
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(setAttribute).not.toHaveBeenCalledWith('role', expect.anything());
+            expect(removeAttribute).not.toHaveBeenCalledWith('role');
         });
 
         it('should use the native disabled attribute on a button and aria-disabled on an anchor', () => {

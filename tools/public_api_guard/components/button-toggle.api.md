@@ -10,33 +10,34 @@ import * as _angular_core from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import * as i1 from '@koobiq/components/button';
 import * as i2 from '@koobiq/components/title';
-import { KbqButton } from '@koobiq/components/button';
-import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Provider } from '@angular/core';
 
 // @public
-export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
+export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: Provider;
 
 // @public
 export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     constructor();
-    // (undocumented)
-    buttonToggleGroup: KbqButtonToggleGroup;
+    protected readonly ariaChecked: _angular_core.Signal<boolean | null>;
+    readonly ariaLabel: _angular_core.InputSignal<string | null>;
+    readonly ariaLabelledby: _angular_core.InputSignal<string | null>;
+    protected readonly ariaPressed: _angular_core.Signal<boolean | null>;
+    protected readonly buttonToggleGroup: KbqButtonToggleGroup | null;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
     get checked(): boolean;
     set checked(value: boolean);
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     focus(): void;
-    // (undocumented)
-    readonly icons: _angular_core.Signal<readonly KbqIcon[]>;
-    // (undocumented)
-    iconType: string;
+    focusViaKeyboard(): void;
+    get iconType(): string;
     markForCheck(): void;
     // (undocumented)
-    readonly mcButton: _angular_core.Signal<KbqButton>;
+    static ngAcceptInputType_checked: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -45,14 +46,16 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
+    protected onKeydown(event: KeyboardEvent): void;
     onToggleClick(): void;
+    protected readonly role: _angular_core.Signal<"radio" | null>;
     readonly tabIndex: _angular_core.InputSignal<number | null>;
-    // (undocumented)
-    type: ToggleType;
+    protected readonly tabIndexValue: _angular_core.Signal<number>;
+    get type(): ToggleType;
     updateIconType(): void;
     value: any;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggle, never>;
 }
@@ -67,44 +70,45 @@ export class KbqButtonToggleChange {
 }
 
 // @public
-export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
-    readonly buttonToggles: _angular_core.Signal<readonly any[]>;
+export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit, OnDestroy {
+    protected readonly ariaOrientation: _angular_core.Signal<"vertical" | "horizontal" | null>;
+    readonly buttonToggles: _angular_core.Signal<readonly KbqButtonToggle[]>;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
     controlValueAccessorChangeFn: (value: any) => void;
     get disabled(): boolean;
     set disabled(value: boolean);
-    emitChangeEvent(): void;
+    emitChangeEvent(source: KbqButtonToggle): void;
     isPrechecked(toggle: KbqButtonToggle): boolean;
     isSelected(toggle: KbqButtonToggle): boolean;
-    get multiple(): boolean;
-    set multiple(value: boolean);
+    readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
     ngOnInit(): void;
-    onTouched: () => any;
-    // (undocumented)
+    onTouched: () => void;
     registerOnChange(fn: (value: any) => void): void;
-    // (undocumented)
-    registerOnTouched(fn: any): void;
-    get selected(): any;
-    // (undocumented)
+    registerOnTouched(fn: () => void): void;
+    protected readonly role: _angular_core.Signal<"group" | "radiogroup">;
+    get selected(): KbqButtonToggle | KbqButtonToggle[] | null;
     setDisabledState(isDisabled: boolean): void;
     readonly stretched: _angular_core.InputSignalWithTransform<boolean, unknown>;
     syncButtonToggle(toggle: KbqButtonToggle, select: boolean, isUserInput?: boolean): void;
     get value(): any;
     set value(newValue: any);
     readonly valueChange: _angular_core.OutputEmitterRef<any>;
-    get vertical(): boolean;
-    set vertical(value: boolean);
+    readonly vertical: _angular_core.InputSignalWithTransform<boolean, unknown>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqButtonToggleModule {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleModule, never>;

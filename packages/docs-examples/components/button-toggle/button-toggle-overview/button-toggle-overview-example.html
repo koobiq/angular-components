@@ -24,14 +24,15 @@
 </div>
 
 <div>
-    <kbq-button-toggle-group #group3="kbqButtonToggleGroup">
-        <kbq-button-toggle [checked]="true" [value]="1">
+    <!-- an icon carries no accessible name, so an icon-only toggle needs one of its own -->
+    <kbq-button-toggle-group #group3="kbqButtonToggleGroup" aria-label="Способ доставки">
+        <kbq-button-toggle aria-label="Курьером" [checked]="true" [value]="1">
             <i kbq-icon="kbq-briefcase_16"></i>
         </kbq-button-toggle>
-        <kbq-button-toggle [value]="2">
+        <kbq-button-toggle aria-label="Ослик Экспресс" [value]="2">
             <i kbq-icon="kbq-briefcase_16"></i>
         </kbq-button-toggle>
-        <kbq-button-toggle [value]="3">
+        <kbq-button-toggle aria-label="Почтой Средиземья" [value]="3">
             <i kbq-icon="kbq-briefcase_16"></i>
         </kbq-button-toggle>
     </kbq-button-toggle-group>

@@ -1,10 +1,23 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { Directionality } from '@angular/cdk/bidi';
 import { Component, DebugElement, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
+import {
+    dispatchKeyboardEvent,
+    DOWN_ARROW,
+    END,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    UP_ARROW
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
+import { axe } from 'jest-axe';
+import { EMPTY } from 'rxjs';
 import { KbqButtonToggle, KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
 
 describe('KbqButtonToggle with forms', () => {
@@ -123,7 +136,7 @@ describe('KbqButtonToggle with forms', () => {
             expect(selected.value).toBe(groupInstance.value);
         });
 
-        it('should have the correct FormControl state initially and after interaction', fakeAsync(() => {
+        it('should have the correct NgModel control state initially and after interaction', fakeAsync(() => {
             expect(groupNgModel.valid).toBe(true);
             expect(groupNgModel.pristine).toBe(true);
             expect(groupNgModel.touched).toBe(false);
@@ -178,7 +191,7 @@ describe('KbqButtonToggle without forms', () => {
         let groupNativeElement: HTMLElement;
         let buttonToggleDebugElements: DebugElement[];
         let buttonToggleNativeElements: HTMLElement[];
-        let buttonToggleLabelElements: HTMLLabelElement[];
+        let innerButtons: HTMLButtonElement[];
         let groupInstance: KbqButtonToggleGroup;
         let buttonToggleInstances: KbqButtonToggle[];
         let testComponent: ButtonTogglesInsideButtonToggleGroup;
@@ -197,9 +210,7 @@ describe('KbqButtonToggle without forms', () => {
 
             buttonToggleNativeElements = buttonToggleDebugElements.map((debugEl) => debugEl.nativeElement);
 
-            buttonToggleLabelElements = fixture.debugElement
-                .queryAll(By.css('button'))
-                .map((debugEl) => debugEl.nativeElement);
+            innerButtons = fixture.debugElement.queryAll(By.css('button')).map((debugEl) => debugEl.nativeElement);
 
             buttonToggleInstances = buttonToggleDebugElements.map((debugEl) => debugEl.componentInstance);
         });
@@ -215,7 +226,7 @@ describe('KbqButtonToggle without forms', () => {
 
             fixture.detectChanges();
 
-            buttonToggleLabelElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
 
             expect(buttonToggleInstances[0].checked).toBe(true);
@@ -234,7 +245,7 @@ describe('KbqButtonToggle without forms', () => {
 
         it('should update the group value when one of the toggles changes', () => {
             expect(groupInstance.value).toBeFalsy();
-            buttonToggleLabelElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
 
             expect(groupInstance.value).toBe('test1');
@@ -243,7 +254,7 @@ describe('KbqButtonToggle without forms', () => {
 
         it('should propagate the value change back up via a two-way binding', () => {
             expect(groupInstance.value).toBeFalsy();
-            buttonToggleLabelElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
 
             expect(groupInstance.value).toBe('test1');
@@ -252,7 +263,7 @@ describe('KbqButtonToggle without forms', () => {
 
         it('should update the group and toggles when one of the button toggles is clicked', () => {
             expect(groupInstance.value).toBeFalsy();
-            buttonToggleLabelElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
 
             expect(groupInstance.value).toBe('test1');
@@ -260,7 +271,7 @@ describe('KbqButtonToggle without forms', () => {
             expect(buttonToggleInstances[0].checked).toBe(true);
             expect(buttonToggleInstances[1].checked).toBe(false);
 
-            buttonToggleLabelElements[1].click();
+            innerButtons[1].click();
             fixture.detectChanges();
 
             expect(groupInstance.value).toBe('test2');
@@ -269,18 +280,10 @@ describe('KbqButtonToggle without forms', () => {
             expect(buttonToggleInstances[1].checked).toBe(true);
         });
 
-        it('should check a button toggle upon interaction with underlying native radio button', () => {
-            buttonToggleLabelElements[0].click();
-            fixture.detectChanges();
-
-            expect(buttonToggleInstances[0].checked).toBe(true);
-            expect(groupInstance.value);
-        });
-
         it('should change the vertical state', () => {
             expect(groupNativeElement.classList).not.toContain('kbq-button-toggle_vertical');
 
-            groupInstance.vertical = true;
+            testComponent.isVertical = true;
             fixture.detectChanges();
 
             expect(groupNativeElement.classList).toContain('kbq-button-toggle_vertical');
@@ -293,12 +296,12 @@ describe('KbqButtonToggle without forms', () => {
 
             buttonToggleInstances[0].change.subscribe(changeSpy);
 
-            buttonToggleLabelElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
             tick();
             expect(changeSpy).toHaveBeenCalledTimes(1);
 
-            buttonToggleLabelElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
             tick();
 
@@ -313,12 +316,12 @@ describe('KbqButtonToggle without forms', () => {
 
             groupInstance.change.subscribe(changeSpy);
 
-            buttonToggleLabelElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
             tick();
             expect(changeSpy).toHaveBeenCalled();
 
-            buttonToggleLabelElements[1].click();
+            innerButtons[1].click();
             fixture.detectChanges();
             tick();
             expect(changeSpy).toHaveBeenCalledTimes(2);
@@ -344,7 +347,7 @@ describe('KbqButtonToggle without forms', () => {
             expect(buttonToggleInstances[1].checked).toBe(true);
         });
 
-        it('should deselect all of the checkboxes when the group value is cleared', () => {
+        it('should deselect all of the toggles when the group value is cleared', () => {
             buttonToggleInstances[0].checked = true;
 
             expect(groupInstance.value).toBeTruthy();
@@ -356,7 +359,7 @@ describe('KbqButtonToggle without forms', () => {
 
         it('should update the model if a selected toggle is removed', fakeAsync(() => {
             expect(groupInstance.value).toBeFalsy();
-            buttonToggleLabelElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
 
             expect(groupInstance.value).toBe('test1');
@@ -382,7 +385,7 @@ describe('KbqButtonToggle without forms', () => {
             fixture.detectChanges();
 
             // Note that we cast to a boolean, because the event has some circular references
-            // which will crash the runner when Jasmine attempts to stringify them.
+            // which will crash the runner when it attempts to stringify them.
             expect(!!testComponent.lastEvent).toBe(false);
             expect(groupInstance.value).toBe('red');
 
@@ -400,7 +403,7 @@ describe('KbqButtonToggle without forms', () => {
         let groupNativeElement: HTMLElement;
         let buttonToggleDebugElements: DebugElement[];
         let buttonToggleNativeElements: HTMLElement[];
-        let buttonToggleButtonElements: HTMLLabelElement[];
+        let innerButtons: HTMLButtonElement[];
         let groupInstance: KbqButtonToggleGroup;
         let buttonToggleInstances: KbqButtonToggle[];
         let testComponent: ButtonTogglesInsideButtonToggleGroupMultiple;
@@ -417,9 +420,7 @@ describe('KbqButtonToggle without forms', () => {
 
             buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(KbqButtonToggle));
             buttonToggleNativeElements = buttonToggleDebugElements.map((debugEl) => debugEl.nativeElement);
-            buttonToggleButtonElements = fixture.debugElement
-                .queryAll(By.css('button'))
-                .map((debugEl) => debugEl.nativeElement);
+            innerButtons = fixture.debugElement.queryAll(By.css('button')).map((debugEl) => debugEl.nativeElement);
             buttonToggleInstances = buttonToggleDebugElements.map((debugEl) => debugEl.componentInstance);
         });
 
@@ -434,9 +435,9 @@ describe('KbqButtonToggle without forms', () => {
         it('should check a button toggle when clicked', () => {
             expect(buttonToggleInstances.every((buttonToggle) => !buttonToggle.checked)).toBe(true);
 
-            const nativeCheckboxLabel = buttonToggleDebugElements[0].query(By.css('button')).nativeElement;
+            const innerButton = buttonToggleDebugElements[0].query(By.css('button')).nativeElement;
 
-            nativeCheckboxLabel.click();
+            innerButton.click();
 
             expect(groupInstance.value).toEqual(['eggs']);
             expect(buttonToggleInstances[0].checked).toBe(true);
@@ -457,34 +458,24 @@ describe('KbqButtonToggle without forms', () => {
             expect(buttonToggleInstances[0].checked).toBe(true);
         });
 
-        it('should check a button toggle upon interaction with underlying native checkbox', () => {
-            const nativeCheckboxButton = buttonToggleDebugElements[0].query(By.css('button')).nativeElement;
-
-            nativeCheckboxButton.click();
-            fixture.detectChanges();
-
-            expect(groupInstance.value).toEqual(['eggs']);
-            expect(buttonToggleInstances[0].checked).toBe(true);
-        });
-
         it('should change the vertical state', () => {
             expect(groupNativeElement.classList).not.toContain('kbq-button-toggle_vertical');
 
-            groupInstance.vertical = true;
+            testComponent.isVertical = true;
             fixture.detectChanges();
 
             expect(groupNativeElement.classList).toContain('kbq-button-toggle_vertical');
         });
 
         it('should deselect a button toggle when selected twice', fakeAsync(() => {
-            buttonToggleButtonElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
             tick();
 
             expect(buttonToggleInstances[0].checked).toBe(true);
             expect(groupInstance.value).toEqual(['eggs']);
 
-            buttonToggleButtonElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
             tick();
 
@@ -499,13 +490,13 @@ describe('KbqButtonToggle without forms', () => {
 
             buttonToggleInstances[0].change.subscribe(changeSpy);
 
-            buttonToggleButtonElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
             tick();
             expect(changeSpy).toHaveBeenCalled();
             expect(groupInstance.value).toEqual(['eggs']);
 
-            buttonToggleButtonElements[0].click();
+            innerButtons[0].click();
             fixture.detectChanges();
             tick();
             expect(groupInstance.value).toEqual([]);
@@ -515,6 +506,24 @@ describe('KbqButtonToggle without forms', () => {
             // using the multiple mode.
             expect(changeSpy).toHaveBeenCalledTimes(2);
         }));
+
+        it('should report the toggle the change came from, including the one that emptied the group', () => {
+            const events: KbqButtonToggleChange[] = [];
+
+            groupInstance.change.subscribe((event) => events.push(event));
+
+            innerButtons[0].click();
+            fixture.detectChanges();
+
+            expect(events[0].source).toBe(buttonToggleInstances[0]);
+
+            // Nothing is selected after this one, so there is no "last selected" toggle to fall back on.
+            innerButtons[0].click();
+            fixture.detectChanges();
+
+            expect(events[1].source).toBe(buttonToggleInstances[0]);
+            expect(events[1].value).toEqual([]);
+        });
 
         it('should throw when attempting to assign a non-array value', () => {
             expect(() => {
@@ -526,7 +535,7 @@ describe('KbqButtonToggle without forms', () => {
     describe('as standalone', () => {
         let fixture: ComponentFixture<StandaloneButtonToggle>;
         let buttonToggleDebugElement: DebugElement;
-        let buttonToggleButtonElement: HTMLLabelElement;
+        let innerButton: HTMLButtonElement;
         let buttonToggleInstance: KbqButtonToggle;
 
         beforeEach(() => {
@@ -534,19 +543,19 @@ describe('KbqButtonToggle without forms', () => {
             fixture.detectChanges();
 
             buttonToggleDebugElement = fixture.debugElement.query(By.directive(KbqButtonToggle));
-            buttonToggleButtonElement = fixture.debugElement.query(By.css('button')).nativeElement;
+            innerButton = fixture.debugElement.query(By.css('button')).nativeElement;
 
             buttonToggleInstance = buttonToggleDebugElement.componentInstance;
         });
 
         it('should toggle when clicked', fakeAsync(() => {
-            buttonToggleButtonElement.click();
+            innerButton.click();
             fixture.detectChanges();
             flush();
 
             expect(buttonToggleInstance.checked).toBe(true);
 
-            buttonToggleButtonElement.click();
+            innerButton.click();
             fixture.detectChanges();
             flush();
 
@@ -560,12 +569,12 @@ describe('KbqButtonToggle without forms', () => {
 
             buttonToggleInstance.change.subscribe(changeSpy);
 
-            buttonToggleButtonElement.click();
+            innerButton.click();
             fixture.detectChanges();
             tick();
             expect(changeSpy).toHaveBeenCalled();
 
-            buttonToggleButtonElement.click();
+            innerButton.click();
             fixture.detectChanges();
             tick();
 
@@ -573,6 +582,23 @@ describe('KbqButtonToggle without forms', () => {
             // to false. That's because the current input type is set to `checkbox`.
             expect(changeSpy).toHaveBeenCalledTimes(2);
         }));
+
+        it('should report the disabled state as a boolean without a group to fall back on', () => {
+            // The getter used to hand back the group it could not find, i.e. `null`, whenever the
+            // toggle was not disabled itself — falsy, so it rendered fine, and still not a boolean.
+            expect(buttonToggleInstance.disabled).toBe(false);
+
+            fixture.componentInstance.isDisabled = true;
+            fixture.detectChanges();
+
+            expect(buttonToggleInstance.disabled).toBe(true);
+            expect(innerButton.disabled).toBe(true);
+
+            innerButton.click();
+            fixture.detectChanges();
+
+            expect(buttonToggleInstance.checked).toBe(false);
+        });
     });
 
     it('should not throw on init when toggles are repeated and there is an initial value', () => {
@@ -777,6 +803,459 @@ describe('KbqButtonToggle label', () => {
     });
 });
 
+/**
+ * The control behaves like a radio group in single-selection mode and like a set of toggle buttons
+ * with `multiple`, and none of that reaches assistive tech through the styling: `.kbq-selected` is a
+ * class, not a state. What is pinned here is the semantics the two modes render — role, state, the
+ * accessible name, and the tab order that `role="radio"` implies.
+ */
+describe('KbqButtonToggle accessibility', () => {
+    const getGroup = (fixture: ComponentFixture<unknown>): HTMLElement =>
+        fixture.nativeElement.querySelector('kbq-button-toggle-group');
+    const getInnerButtons = (fixture: ComponentFixture<unknown>): HTMLButtonElement[] =>
+        Array.from(fixture.nativeElement.querySelectorAll('button'));
+    const getToggles = (fixture: ComponentFixture<unknown>): KbqButtonToggle[] =>
+        fixture.debugElement.queryAll(By.directive(KbqButtonToggle)).map((debugEl) => debugEl.componentInstance);
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                KbqButtonToggleModule,
+                KbqIconModule,
+                NamedButtonToggleGroup,
+                ButtonTogglesInsideButtonToggleGroupMultiple,
+                StandaloneButtonToggle,
+                StandaloneButtonToggleWithTabIndex,
+                ButtonToggleWithIconOnly,
+                UnnamedIconOnlyButtonToggle,
+                TitledIconOnlyButtonToggle,
+                DestroyableButtonToggleGroup
+            ]
+        }).compileComponents();
+    });
+
+    describe('role and state', () => {
+        it('should announce a single-selection group as a named radiogroup of radios', () => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.detectChanges();
+
+            expect(getGroup(fixture).getAttribute('role')).toBe('radiogroup');
+            expect(getGroup(fixture).getAttribute('aria-label')).toBe('Delivery');
+            expect(getGroup(fixture).getAttribute('aria-orientation')).toBe('horizontal');
+
+            for (const button of getInnerButtons(fixture)) {
+                expect(button.getAttribute('role')).toBe('radio');
+                expect(button.getAttribute('aria-checked')).toBe('false');
+                expect(button.hasAttribute('aria-pressed')).toBe(false);
+            }
+        });
+
+        it('should track the selection in aria-checked', () => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.detectChanges();
+
+            getInnerButtons(fixture)[1].click();
+            fixture.detectChanges();
+
+            expect(getInnerButtons(fixture).map((button) => button.getAttribute('aria-checked'))).toEqual([
+                'false',
+                'true',
+                'false'
+            ]);
+        });
+
+        it('should announce a multiple-selection group as toggle buttons in a group', () => {
+            const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+            fixture.detectChanges();
+
+            expect(getGroup(fixture).getAttribute('role')).toBe('group');
+
+            // A native button is already a button; a multi-select toggle only misses its pressed
+            // state, which is exactly what the toggle-button pattern asks for.
+            for (const button of getInnerButtons(fixture)) {
+                expect(button.hasAttribute('role')).toBe(false);
+                expect(button.getAttribute('aria-pressed')).toBe('false');
+                expect(button.hasAttribute('aria-checked')).toBe(false);
+            }
+
+            getInnerButtons(fixture)[0].click();
+            fixture.detectChanges();
+
+            expect(getInnerButtons(fixture)[0].getAttribute('aria-pressed')).toBe('true');
+        });
+
+        it('should announce the orientation a radio group is walked in', () => {
+            const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+            fixture.componentInstance.isMultiple = false;
+            fixture.detectChanges();
+
+            expect(getGroup(fixture).getAttribute('aria-orientation')).toBe('horizontal');
+
+            fixture.componentInstance.isVertical = true;
+            fixture.detectChanges();
+
+            expect(getGroup(fixture).getAttribute('aria-orientation')).toBe('vertical');
+        });
+
+        it('should leave the orientation off a multiple-selection group, which does not support it', () => {
+            // `role="group"` has no `aria-orientation` (AXE `aria-allowed-attr`), and no arrow keys either.
+            const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+            fixture.componentInstance.isVertical = true;
+            fixture.detectChanges();
+
+            expect(getGroup(fixture).hasAttribute('aria-orientation')).toBe(false);
+        });
+
+        it('should announce a standalone toggle as a toggle button', () => {
+            const fixture = TestBed.createComponent(StandaloneButtonToggle);
+
+            fixture.detectChanges();
+
+            const button = getInnerButtons(fixture)[0];
+
+            expect(button.hasAttribute('role')).toBe(false);
+            expect(button.getAttribute('aria-pressed')).toBe('false');
+
+            button.click();
+            fixture.detectChanges();
+
+            expect(button.getAttribute('aria-pressed')).toBe('true');
+        });
+
+        it('should follow the mode when it changes at runtime', () => {
+            const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+            fixture.detectChanges();
+
+            expect(getToggles(fixture)[0].type).toBe('checkbox');
+
+            fixture.componentInstance.isMultiple = false;
+            fixture.detectChanges();
+
+            expect(getToggles(fixture)[0].type).toBe('radio');
+            expect(getGroup(fixture).getAttribute('role')).toBe('radiogroup');
+            expect(getInnerButtons(fixture)[0].getAttribute('role')).toBe('radio');
+        });
+    });
+
+    describe('accessible name', () => {
+        it('should forward the name to the button, which is the element the user focuses', () => {
+            const fixture = TestBed.createComponent(ButtonToggleWithIconOnly);
+
+            fixture.detectChanges();
+
+            expect(getInnerButtons(fixture)[0].getAttribute('aria-label')).toBe('Play');
+        });
+
+        it('should warn about an icon-only toggle with no accessible name', () => {
+            // An icon glyph is `aria-hidden`, so such a button has no name at all (AXE `button-name`).
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const fixture = TestBed.createComponent(UnnamedIconOnlyButtonToggle);
+
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('no accessible name'), expect.anything());
+
+            warn.mockRestore();
+        });
+
+        it('should stay quiet about an icon-only toggle that carries a name', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const fixture = TestBed.createComponent(ButtonToggleWithIconOnly);
+
+            fixture.detectChanges();
+
+            expect(warn).not.toHaveBeenCalled();
+
+            warn.mockRestore();
+        });
+
+        it('should not accept a title on the host, which never reaches the button it would name', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const fixture = TestBed.createComponent(TitledIconOnlyButtonToggle);
+
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('no accessible name'), expect.anything());
+
+            warn.mockRestore();
+        });
+    });
+
+    describe('axe', () => {
+        it('should have no violations in a single-selection group', async () => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('should have no violations in a multiple-selection group', async () => {
+            const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('should have no violations for a named icon-only toggle', async () => {
+            const fixture = TestBed.createComponent(ButtonToggleWithIconOnly);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+    });
+
+    describe('roving tabindex', () => {
+        // `KbqButton` renders no `tabindex` for the default 0: a native button is in the tab order
+        // already. Anything else is rendered, so `-1` is what the excluded toggles show.
+        const getTabIndexes = (fixture: ComponentFixture<unknown>) =>
+            getInnerButtons(fixture).map((button) => button.getAttribute('tabindex'));
+
+        it('should leave one tab stop in a radio group and move it with the selection', () => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.detectChanges();
+
+            expect(getTabIndexes(fixture)).toEqual([null, '-1', '-1']);
+
+            getInnerButtons(fixture)[2].click();
+            fixture.detectChanges();
+
+            expect(getTabIndexes(fixture)).toEqual(['-1', '-1', null]);
+        });
+
+        it('should not park the tab stop on a disabled toggle', () => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.componentInstance.isFirstDisabled = true;
+            fixture.detectChanges();
+
+            // a disabled button is out of the tab order on its own, so the entry point has to move
+            expect(getTabIndexes(fixture)).toEqual(['-1', null, '-1']);
+        });
+
+        it('should keep every toggle in the tab order in a multiple-selection group', () => {
+            const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+            fixture.detectChanges();
+
+            expect(getTabIndexes(fixture)).toEqual([null, null, null]);
+        });
+
+        it('should reflect an explicit tabIndex', () => {
+            const fixture = TestBed.createComponent(StandaloneButtonToggleWithTabIndex);
+
+            fixture.detectChanges();
+
+            expect(getTabIndexes(fixture)).toEqual([null]);
+
+            fixture.componentInstance.tabIndex = 3;
+            fixture.detectChanges();
+
+            expect(getTabIndexes(fixture)).toEqual(['3']);
+        });
+    });
+
+    describe('keyboard navigation', () => {
+        it.each([
+            ['ArrowRight', RIGHT_ARROW, 1],
+            ['ArrowDown', DOWN_ARROW, 1],
+            ['ArrowLeft', LEFT_ARROW, 2],
+            ['ArrowUp', UP_ARROW, 2]
+        ])('should move focus and selection with %s', (_, keyCode, expected) => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.detectChanges();
+
+            const buttons = getInnerButtons(fixture);
+
+            dispatchKeyboardEvent(buttons[0], 'keydown', keyCode);
+            fixture.detectChanges();
+
+            // selection follows focus, which is what makes it a radio group rather than a toolbar
+            expect(getToggles(fixture)[expected].checked).toBe(true);
+            expect(document.activeElement).toBe(buttons[expected]);
+        });
+
+        it.each([
+            ['Home', HOME, 0],
+            ['End', END, 2]
+        ])('should jump to the edge of the group with %s', (_, keyCode, expected) => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.detectChanges();
+
+            const buttons = getInnerButtons(fixture);
+
+            dispatchKeyboardEvent(buttons[1], 'keydown', keyCode);
+            fixture.detectChanges();
+
+            expect(getToggles(fixture)[expected].checked).toBe(true);
+        });
+
+        it('should skip a disabled toggle', () => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.componentInstance.isFirstDisabled = true;
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(getInnerButtons(fixture)[1], 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(getToggles(fixture)[0].checked).toBe(false);
+            expect(getToggles(fixture)[2].checked).toBe(true);
+        });
+
+        it('should wrap around at both ends of the group', () => {
+            const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+            fixture.detectChanges();
+
+            const buttons = getInnerButtons(fixture);
+
+            // backwards off the first toggle lands on the last one, and forwards off the last one
+            dispatchKeyboardEvent(buttons[0], 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(getToggles(fixture)[2].checked).toBe(true);
+
+            dispatchKeyboardEvent(buttons[2], 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(getToggles(fixture)[0].checked).toBe(true);
+        });
+
+        it('should ignore the arrow keys in a multiple-selection group, leaving them to the browser', () => {
+            const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+            fixture.detectChanges();
+
+            const event = dispatchKeyboardEvent(getInnerButtons(fixture)[0], 'keydown', RIGHT_ARROW);
+
+            fixture.detectChanges();
+
+            expect(event.defaultPrevented).toBe(false);
+            expect(getToggles(fixture).some((toggle) => toggle.checked)).toBe(false);
+        });
+    });
+
+    describe('focus', () => {
+        it('should focus the inner button rather than the non-focusable host', () => {
+            const fixture = TestBed.createComponent(StandaloneButtonToggle);
+
+            fixture.detectChanges();
+
+            getToggles(fixture)[0].focus();
+
+            expect(document.activeElement).toBe(getInnerButtons(fixture)[0]);
+        });
+
+        it('should show the focus ring when focused via the keyboard', () => {
+            const fixture = TestBed.createComponent(StandaloneButtonToggle);
+
+            fixture.detectChanges();
+
+            getToggles(fixture)[0].focusViaKeyboard();
+            fixture.detectChanges();
+
+            // the class is the only thing that paints the ring, and only FocusMonitor sets it
+            expect(fixture.nativeElement.querySelector('kbq-button-toggle').classList).toContain(
+                'cdk-keyboard-focused'
+            );
+        });
+
+        it('should monitor the host and stop on destroy', () => {
+            const focusMonitor = TestBed.inject(FocusMonitor);
+            const monitor = jest.spyOn(focusMonitor, 'monitor');
+            const stopMonitoring = jest.spyOn(focusMonitor, 'stopMonitoring');
+            const fixture = TestBed.createComponent(StandaloneButtonToggle);
+
+            fixture.detectChanges();
+
+            const host = fixture.nativeElement.querySelector('kbq-button-toggle');
+
+            expect(monitor).toHaveBeenCalledWith(host, true);
+
+            fixture.destroy();
+
+            expect(stopMonitoring).toHaveBeenCalledWith(host);
+        });
+    });
+
+    describe('teardown', () => {
+        it('should not sync the selection after the whole group is destroyed', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DestroyableButtonToggleGroup);
+
+            fixture.detectChanges();
+
+            const group = fixture.debugElement
+                .query(By.directive(KbqButtonToggleGroup))
+                .injector.get(KbqButtonToggleGroup);
+            const valueChange = jest.fn();
+
+            group.valueChange.subscribe(valueChange);
+
+            // Each selected toggle queues its own removal from the selection on a microtask, which
+            // runs after the group it would notify is already gone.
+            fixture.componentInstance.render = false;
+            fixture.detectChanges();
+            flush();
+
+            expect(valueChange).not.toHaveBeenCalled();
+        }));
+    });
+});
+
+describe('KbqButtonToggle keyboard navigation in RTL', () => {
+    const getInnerButtons = (fixture: ComponentFixture<unknown>): HTMLButtonElement[] =>
+        Array.from(fixture.nativeElement.querySelectorAll('button'));
+    const getToggles = (fixture: ComponentFixture<unknown>): KbqButtonToggle[] =>
+        fixture.debugElement.queryAll(By.directive(KbqButtonToggle)).map((debugEl) => debugEl.componentInstance);
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqButtonToggleModule, NamedButtonToggleGroup],
+            providers: [{ provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }]
+        }).compileComponents();
+    });
+
+    it.each([
+        ['ArrowLeft', LEFT_ARROW, 1],
+        ['ArrowRight', RIGHT_ARROW, 2]
+    ])('should swap the horizontal keys, so %s follows the reading direction', (_, keyCode, expected) => {
+        const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+        fixture.detectChanges();
+
+        dispatchKeyboardEvent(getInnerButtons(fixture)[0], 'keydown', keyCode);
+        fixture.detectChanges();
+
+        expect(getToggles(fixture)[expected].checked).toBe(true);
+    });
+
+    it.each([
+        ['ArrowDown', DOWN_ARROW, 1],
+        ['ArrowUp', UP_ARROW, 2]
+    ])('should leave the vertical key %s pointing the same way', (_, keyCode, expected) => {
+        const fixture = TestBed.createComponent(NamedButtonToggleGroup);
+
+        fixture.detectChanges();
+
+        dispatchKeyboardEvent(getInnerButtons(fixture)[0], 'keydown', keyCode);
+        fixture.detectChanges();
+
+        expect(getToggles(fixture)[expected].checked).toBe(true);
+    });
+});
+
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
@@ -822,7 +1301,7 @@ class ButtonToggleGroupWithNgModel {
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
-        <kbq-button-toggle-group multiple [disabled]="isGroupDisabled" [vertical]="isVertical">
+        <kbq-button-toggle-group [disabled]="isGroupDisabled" [multiple]="isMultiple" [vertical]="isVertical">
             <kbq-button-toggle [value]="'eggs'">Eggs</kbq-button-toggle>
             <kbq-button-toggle [value]="'flour'">Flour</kbq-button-toggle>
             <kbq-button-toggle [value]="'sugar'">Sugar</kbq-button-toggle>
@@ -832,6 +1311,7 @@ class ButtonToggleGroupWithNgModel {
 class ButtonTogglesInsideButtonToggleGroupMultiple {
     isGroupDisabled: boolean = false;
     isVertical: boolean = false;
+    isMultiple: boolean = true;
 }
 
 @Component({
@@ -853,10 +1333,12 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
-        <kbq-button-toggle>Yes</kbq-button-toggle>
+        <kbq-button-toggle [disabled]="isDisabled">Yes</kbq-button-toggle>
     `
 })
-class StandaloneButtonToggle {}
+class StandaloneButtonToggle {
+    isDisabled = false;
+}
 
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
@@ -954,7 +1436,7 @@ class ButtonToggleWithLegacyIcon {}
 @Component({
     imports: [KbqButtonToggleModule, KbqIconModule],
     template: `
-        <kbq-button-toggle>
+        <kbq-button-toggle aria-label="Play">
             <i kbq-icon="kbq-play_16"></i>
         </kbq-button-toggle>
     `
@@ -964,9 +1446,69 @@ class ButtonToggleWithIconOnly {}
 @Component({
     imports: [KbqButtonToggleModule, KbqIconModule],
     template: `
-        <kbq-button-toggle>
+        <kbq-button-toggle aria-label="Play">
             <i kbqButtonPrefix kbq-icon="kbq-play_16"></i>
         </kbq-button-toggle>
     `
 })
 class ButtonToggleWithSlottedIconOnly {}
+
+@Component({
+    imports: [KbqButtonToggleModule, KbqIconModule],
+    template: `
+        <kbq-button-toggle>
+            <i kbq-icon="kbq-play_16"></i>
+        </kbq-button-toggle>
+    `
+})
+class UnnamedIconOnlyButtonToggle {}
+
+@Component({
+    imports: [KbqButtonToggleModule, KbqIconModule],
+    template: `
+        <kbq-button-toggle title="Play">
+            <i kbq-icon="kbq-play_16"></i>
+        </kbq-button-toggle>
+    `
+})
+class TitledIconOnlyButtonToggle {}
+
+@Component({
+    imports: [KbqButtonToggleModule],
+    template: `
+        <kbq-button-toggle-group aria-label="Delivery">
+            <kbq-button-toggle [disabled]="isFirstDisabled" [value]="1">One</kbq-button-toggle>
+            <kbq-button-toggle [value]="2">Two</kbq-button-toggle>
+            <kbq-button-toggle [value]="3">Three</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    `
+})
+class NamedButtonToggleGroup {
+    isFirstDisabled = false;
+}
+
+@Component({
+    imports: [KbqButtonToggleModule],
+    template: `
+        <kbq-button-toggle [tabIndex]="tabIndex">Standalone</kbq-button-toggle>
+    `
+})
+class StandaloneButtonToggleWithTabIndex {
+    tabIndex: number | null = null;
+}
+
+@Component({
+    imports: [KbqButtonToggleModule],
+    template: `
+        @if (render) {
+            <kbq-button-toggle-group [(value)]="value">
+                <kbq-button-toggle [value]="1">One</kbq-button-toggle>
+                <kbq-button-toggle [value]="2">Two</kbq-button-toggle>
+            </kbq-button-toggle-group>
+        }
+    `
+})
+class DestroyableButtonToggleGroup {
+    render = true;
+    value = 1;
+}

@@ -93,6 +93,8 @@ test.describe('KbqButtonToggleModule', () => {
             const locator = getComponent(page);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
 
         test('with icon', async ({ page }) => {
@@ -103,6 +105,57 @@ test.describe('KbqButtonToggleModule', () => {
             await toggleTitle(locator);
 
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(locator)).toHaveScreenshot('02-dark.png');
+        });
+
+        /**
+         * Every state in the screenshots above is faked with a class — `.kbq-hover`, `.kbq-active`,
+         * `.cdk-keyboard-focused` — which the theme aliases to the real pseudo-class. That verifies
+         * the class branch and nothing else: the real `:hover` selector, the real tab order and
+         * `FocusMonitor` are never exercised by a baseline.
+         */
+        test('paints the hover state from a real pointer', async ({ page }) => {
+            await page.goto('/E2eButtonToggleStates');
+            const locator = getComponent(page);
+            // the "normal" column carries none of the faked classes
+            const button = getScreenshotTarget(locator)
+                .locator('kbq-button-toggle-group')
+                .first()
+                .locator('kbq-button-toggle')
+                .last()
+                .locator('button');
+
+            const before = await button.evaluate((element) => getComputedStyle(element).backgroundColor);
+
+            await button.hover();
+
+            const after = await button.evaluate((element) => getComputedStyle(element).backgroundColor);
+
+            expect(after).not.toBe(before);
+        });
+
+        test('reaches the group with Tab and walks it with the arrow keys', async ({ page }) => {
+            await page.goto('/E2eButtonToggleStates');
+            const locator = getComponent(page);
+            const group = getScreenshotTarget(locator).locator('kbq-button-toggle-group').first();
+
+            await locator.getByTestId('e2eShowSuffixIcon').locator('input').focus();
+            await page.keyboard.press('Tab');
+
+            // a radio group is a single tab stop, and only a keyboard origin paints the ring
+            const focused = group.locator('kbq-button-toggle.cdk-keyboard-focused');
+
+            await expect(focused).toHaveCount(1);
+            await expect(focused.locator('button')).toBeFocused();
+
+            await page.keyboard.press('ArrowRight');
+
+            // the arrows move focus and selection together, as a radiogroup is expected to
+            const selected = group.locator('button[aria-checked="true"]');
+
+            await expect(selected).toHaveCount(1);
+            await expect(selected).toBeFocused();
         });
 
         test('with title, prefix and suffix', async ({ page }) => {
