@@ -50,6 +50,7 @@
         "unclickable",
         "unmigrated",
         "unparseable",
+        "xmark",
         "yarnrc"
     ]
 }

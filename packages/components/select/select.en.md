@@ -26,6 +26,24 @@ When a value is selected once, the reset control is hidden. Its display can be e
 
 <!-- example(select-with-multiline-matcher) -->
 
+#### Customizing tags
+
+In multiple selection mode the markup of every tag can be replaced with your own. Declare an `<ng-template #kbqSelectTagContent>` inside `<kbq-select>` — it is rendered once per selected option and receives the option as `$implicit` and the `KbqSelect` instance as `select`:
+
+<!-- prettier-ignore -->
+```html
+<ng-template #kbqSelectTagContent let-option let-select="select">
+    <kbq-tag [selectable]="false" [disabled]="option.disabled || select.disabled">
+        {{ option.viewValue }}
+        @if (!option.disabled && !select.disabled) {
+            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove (click)="select.onRemoveMatcherItem(option, $event)"></i>
+        }
+    </kbq-tag>
+</ng-template>
+```
+
+The template replaces the built-in markup completely, so the color, the disabled state and the remove control have to be reproduced by hand. Keep `<kbq-tag>` as the root element: the “+N” counter of hidden tags measures the rendered `kbq-tag` elements, and any other root element breaks it.
+
 #### Grouping values
 
 <!-- example(select-groups) -->

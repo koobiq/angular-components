@@ -3,6 +3,7 @@ import { SelectAddNewOptionExample } from './select-add-new-option/select-add-ne
 import { SelectAutoHideScrollStrategyExample } from './select-auto-hide-scroll-strategy/select-auto-hide-scroll-strategy-example';
 import { SelectCleanerExample } from './select-cleaner/select-cleaner-example';
 import { SelectCustomMatcherExample } from './select-custom-matcher/select-custom-matcher-example';
+import { SelectCustomTagContentExample } from './select-custom-tag-content/select-custom-tag-content-example';
 import { SelectCustomTriggerExample } from './select-custom-trigger/select-custom-trigger-example';
 import { SelectDisabledExample } from './select-disabled/select-disabled-example';
 import { SelectFooterExample } from './select-footer/select-footer-example';
@@ -35,6 +36,7 @@ export {
     SelectAutoHideScrollStrategyExample,
     SelectCleanerExample,
     SelectCustomMatcherExample,
+    SelectCustomTagContentExample,
     SelectCustomTriggerExample,
     SelectDisabledExample,
     SelectFooterExample,
@@ -80,6 +82,7 @@ const EXAMPLES = [
     SelectWithPanelWidthDefaultExample,
     SelectCustomMatcherExample,
     SelectCustomTriggerExample,
+    SelectCustomTagContentExample,
     SelectWithMultilineMatcherExample,
     SelectWithPanelWidthAutoExample,
     SelectWithPanelWidthFixedExample,
