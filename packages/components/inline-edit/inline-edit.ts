@@ -14,6 +14,7 @@ import {
     Directive,
     effect,
     ElementRef,
+    forwardRef,
     inject,
     input,
     numberAttribute,
@@ -29,15 +30,18 @@ import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
+    KBQ_CONNECTED_OVERLAY_ORIGIN,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
+    KbqConnectedOverlayOriginProvider,
     kbqInjectA11yLocaleConfiguration,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -129,6 +133,7 @@ export class KbqInlineEditMenu {
     ],
     templateUrl: './inline-edit.html',
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
+    providers: [{ provide: KBQ_CONNECTED_OVERLAY_ORIGIN, useExisting: forwardRef(() => KbqInlineEdit) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -139,17 +144,16 @@ export class KbqInlineEditMenu {
         '[class.kbq-inline-edit_with-menu]': '!!menu()',
         '[class.kbq-inline-edit_disabled]': 'disabled()',
         '[class.kbq-inline-edit_anchor-focused]': 'anchorFocused()',
+        '[class.kbq-inline-edit_select]': 'isSingleSelect()',
         '(click)': 'onClick($event)',
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
     },
-    hostDirectives: [
-        CdkMonitorFocus
-    ],
+    hostDirectives: [CdkMonitorFocus],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     exportAs: 'kbqInlineEdit'
 })
-export class KbqInlineEdit {
+export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     /** Accessible names for the icon-only save/cancel buttons. */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
@@ -218,6 +222,19 @@ export class KbqInlineEdit {
     protected readonly formFieldRefList = contentChildren(KbqFormField, { descendants: true });
 
     /** @docs-private */
+    protected readonly selectRef = contentChild(KbqSelect, { descendants: true });
+    /**
+     * Whether edit mode contains a single-value select. When true, edit mode shows only the
+     * dropdown panel instead of a bordered field - see the "Select-style editor" example.
+     * @docs-private
+     */
+    protected readonly isSingleSelect = computed(() => {
+        const select = this.selectRef();
+
+        return !!select && !select.multiple && !select.multiline();
+    });
+
+    /** @docs-private */
     protected overlayOrigin: HTMLElement = this.elementRef.nativeElement;
     /** @docs-private */
     protected readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
@@ -283,6 +300,21 @@ export class KbqInlineEdit {
         this.mode.update((mode) => (mode === 'view' ? 'edit' : 'view'));
     }
 
+    /**
+     * Implements `KbqConnectedOverlayOriginProvider`, letting a nested `KbqFormField`'s control
+     * anchor its overlay to this element instead of the form-field's own container.
+     * When no override is needed, the form-field falls back to its default.
+     * @docs-private
+     */
+    getConnectedOverlayOrigin(): ElementRef | undefined {
+        return this.isSingleSelect() ? this.elementRef : undefined;
+    }
+
+    /** Saves the current value and returns to view mode, running the same validation as a normal save. */
+    commit(): void {
+        this.save();
+    }
+
     /** @docs-private */
     protected onClick(event: Event): void {
         if (this.disabled() || this.isEditMode() || this.isInteractiveElement(event.target)) return;
@@ -331,6 +363,10 @@ export class KbqInlineEdit {
 
     /** @docs-private */
     protected save($event?: Event): void {
+        // Guards against a control triggering both its own commit() and the overlay's outside-click handler for the
+        // same interaction — without this, the second call would toggle back into edit mode.
+        if (!this.isEditMode()) return;
+
         if (this.isInvalid()) {
             $event?.stopPropagation();
 

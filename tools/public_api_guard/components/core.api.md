@@ -1079,6 +1079,9 @@ export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";
 // @public
 export const KBQ_CONNECTED_OVERLAY_BELOW_CLASS = "kbq-connected-overlay_below";
 
+// @public
+export const KBQ_CONNECTED_OVERLAY_ORIGIN: InjectionToken<KbqConnectedOverlayOriginProvider>;
+
 // @public (undocumented)
 export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER: <T>(token: InjectionToken<T>, factory: (overlay: Overlay) => () => ScrollStrategy) => {
     provide: InjectionToken<T>;
@@ -2614,6 +2617,11 @@ export enum KbqComponentColors {
     ThemeFade = "theme-fade",
     // (undocumented)
     Warning = "warning"
+}
+
+// @public
+export interface KbqConnectedOverlayOriginProvider {
+    getConnectedOverlayOrigin(): ElementRef | undefined;
 }
 
 // @public (undocumented)

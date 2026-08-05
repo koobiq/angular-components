@@ -70,6 +70,30 @@ Inline-editable elements should remain aligned with their appearance in view mod
 
 <!-- example(inline-edit-customized-design) -->
 
+#### Select-style editor
+
+On selection, open only the dropdown menu — don't show a bordered input field like Select's. The field doesn't need a border of its own, the dropdown alone is enough.
+
+<!-- example(inline-edit-select-basic) -->
+
+After picking an option, the field returns to view mode.
+
+#### Multiline field
+
+Sometimes it's worth making the dropdown options multiline. It's recommended to match the dropdown's width to the field's width.
+
+<!-- example(inline-edit-select-multiline) -->
+
+#### Reset
+
+Place the clear element inside the dropdown menu — since the select field itself isn't visible, there's no other suitable place for a reset button.
+
+Also recommended: add an option whose label makes it clear that no value is set. This echoes the wording used for the empty field in view mode.
+
+<!-- example(inline-edit-select) -->
+
+After picking an option, the field returns to view mode.
+
 ### Recommendations
 
 Inline edits should be saved immediately after a change—without requiring a global **Save** button.

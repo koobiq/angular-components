@@ -16,7 +16,7 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -349,6 +349,42 @@ describe('KbqInlineEdit', () => {
         expect(spyFn).not.toHaveBeenCalled();
     });
 
+    it('should save and return to view mode when commit() is called directly', () => {
+        const fixture = setup(TestComponent);
+        const { componentInstance, debugElement } = fixture;
+        const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+        const spyFn = jest.spyOn(componentInstance, 'update');
+
+        inlineEditDebugElement.nativeElement.click();
+        fixture.detectChanges();
+
+        (inlineEditDebugElement.componentInstance as KbqInlineEdit).commit();
+        fixture.detectChanges();
+
+        expect(spyFn).toHaveBeenCalled();
+        expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
+    });
+
+    it('should not save when commit() is called while control is invalid', () => {
+        const fixture = setup(TestWithValidatedControl);
+        const { componentInstance, debugElement } = fixture;
+        const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+        const spyFn = jest.spyOn(componentInstance, 'update');
+
+        inlineEditDebugElement.nativeElement.click();
+        fixture.detectChanges();
+
+        componentInstance.control.markAsTouched();
+        componentInstance.control.updateValueAndValidity();
+        fixture.detectChanges();
+
+        (inlineEditDebugElement.componentInstance as KbqInlineEdit).commit();
+        fixture.detectChanges();
+
+        expect(spyFn).not.toHaveBeenCalled();
+        expect(inlineEditDebugElement.classes['kbq-inline-edit_edit']).toBe(true);
+    });
+
     it('should reposition the edit mode overlay when the surrounding layout resizes', () => {
         const resize$ = new Subject<void>();
         const fixture = setup(TestComponent, [
@@ -515,6 +551,86 @@ describe('KbqInlineEdit', () => {
         await fixture.whenStable();
 
         expect(document.querySelector(componentCssClasses.selectPanel)).toBeTruthy();
+    });
+
+    describe('select-style editor', () => {
+        it('should mark a single select as such and add the select-style panel class while editing', async () => {
+            const fixture = setup(TestWithSelect);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+            expect(inlineEditDebugElement.classes['kbq-inline-edit_select']).toBe(true);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(document.querySelector(`${componentCssClasses.panel}.kbq-inline-edit__panel_select`)).toBeTruthy();
+        });
+
+        it('should connect the select panel to the inline-edit host', async () => {
+            const fixture = setup(TestWithSelect);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const formField = fixture.debugElement.query(By.directive(KbqFormField)).componentInstance as KbqFormField;
+
+            expect(formField.getConnectedOverlayOrigin().nativeElement).toBe(inlineEditDebugElement.nativeElement);
+        });
+
+        it('should not treat a multi-select as a select-style editor', async () => {
+            const fixture = setup(TestWithMultiSelect);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+            expect(inlineEditDebugElement.classes['kbq-inline-edit_select']).toBeFalsy();
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(document.querySelector(`${componentCssClasses.panel}.kbq-inline-edit__panel_select`)).toBeNull();
+        });
+
+        it('should not override the overlay origin for a non-select control', async () => {
+            const fixture = setup(TestComponent);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const formField = fixture.debugElement.query(By.directive(KbqFormField)).componentInstance as KbqFormField;
+
+            expect(formField.getConnectedOverlayOrigin().nativeElement).not.toBe(inlineEditDebugElement.nativeElement);
+        });
+    });
+
+    it('should stay in view mode when commit() is followed by a redundant outside-click save()', async () => {
+        // A control whose panel is a separate CDK overlay (e.g. kbq-select) makes the overlay's own
+        // outside-click detection see clicks on that panel as "outside" inline-edit's overlay, so both
+        // the control's own (selectionChange)-driven commit() and the overlay's outside-click handler
+        // can fire for the same interaction. Since save() used to be an unconditional toggle, the
+        // second (redundant) call would flip the mode straight back to 'edit'.
+        const fixture = setup(TestWithSelectAutoCommit);
+        const { debugElement } = fixture;
+        const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+        const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
+
+        inlineEditDebugElement.nativeElement.click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        inlineEdit.commit();
+        (inlineEdit as any).save();
+        fixture.detectChanges();
+
+        expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
     });
 
     describe('with multiple form fields', () => {
@@ -1138,6 +1254,58 @@ export class TestWithSelect extends BaseTestComponent {
     }
 
     cancel = jest.fn();
+}
+
+@Component({
+    selector: 'name',
+    imports: [
+        FormsModule,
+        KbqInlineEditModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
+    template: `
+        <kbq-inline-edit #inlineEdit="kbqInlineEdit">
+            <div kbqInlineEditViewMode>{{ selected() }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <kbq-select placeholder="Placeholder" [(ngModel)]="selected" (selectionChange)="inlineEdit.commit()">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithSelectAutoCommit {
+    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    readonly selected = model(this.options[0]);
+}
+
+@Component({
+    selector: 'name',
+    imports: [
+        FormsModule,
+        KbqInlineEditModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
+    template: `
+        <kbq-inline-edit>
+            <div kbqInlineEditViewMode>{{ selected().join(', ') }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <kbq-select multiple placeholder="Placeholder" [(ngModel)]="selected">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithMultiSelect {
+    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    readonly selected = model([this.options[0]]);
 }
 
 @Component({
