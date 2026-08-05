@@ -14,6 +14,7 @@ import {
     Directive,
     effect,
     ElementRef,
+    forwardRef,
     inject,
     input,
     numberAttribute,
@@ -132,7 +133,7 @@ export class KbqInlineEditMenu {
     ],
     templateUrl: './inline-edit.html',
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
-    providers: [{ provide: KBQ_CONNECTED_OVERLAY_ORIGIN, useExisting: KbqInlineEdit }],
+    providers: [{ provide: KBQ_CONNECTED_OVERLAY_ORIGIN, useExisting: forwardRef(() => KbqInlineEdit) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -306,7 +307,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
      * @docs-private
      */
     getConnectedOverlayOrigin(): ElementRef | undefined {
-        return this.isSingleSelect() ? new ElementRef(this.overlayOrigin) : undefined;
+        return this.isSingleSelect() ? this.elementRef : undefined;
     }
 
     /** Saves the current value and returns to view mode, running the same validation as a normal save. */
