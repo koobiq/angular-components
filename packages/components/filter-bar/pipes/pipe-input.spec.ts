@@ -398,8 +398,8 @@ describe('KbqPipeInputComponent', () => {
     describe('clearing', () => {
         beforeEach(createFixture);
 
-        // `KbqFormField.clearValue()` and the Escape handler only reset the control; the pipe bridges that
-        // back into `data`. Driving `reset()` directly covers both entry points at the seam the pipe owns.
+        // `KbqCleaner` resets the control for pointer and Escape activation; the pipe bridges that back into
+        // `data`. Driving `reset()` directly covers both entry points at the seam the pipe owns.
         it('should propagate a control reset to data and emit onClearPipe', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();

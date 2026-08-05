@@ -74,14 +74,13 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly backdropClass: _angular_core.InputSignal<string>;
     // (undocumented)
     calculateHiddenItems: () => void;
-    // (undocumented)
     get canShowCleaner(): boolean;
     // (undocumented)
     readonly changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
     readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
-    // (undocumented)
-    clearValue($event: any): void;
+    clear(): void;
+    // @deprecated
+    clearValue(event: Event): void;
     close(): void;
     readonly closedStream: Observable<void>;
     get colorForState(): KbqComponentColors;

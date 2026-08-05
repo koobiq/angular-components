@@ -4,13 +4,14 @@ import {
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
+    contentChild,
     Directive,
-    ViewEncapsulation,
-    contentChild
+    inject,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_OPTION_PARENT_COMPONENT, kbqSiblingPopupProvider, ruRULocaleData } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
 
@@ -38,6 +39,20 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
     ],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTimezoneSelect },
+        kbqCleanerFactoryProvider(() => {
+            const timezoneSelect = inject(KbqTimezoneSelect);
+
+            return {
+                get control() {
+                    return timezoneSelect;
+                },
+                get keydownTarget() {
+                    return timezoneSelect.elementRef.nativeElement;
+                },
+                clearByEscape: false,
+                clear: () => timezoneSelect.clear()
+            };
+        }),
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqTimezoneSelect },
         // Declared again rather than inherited from `KbqSelect`: Angular copies `providers` to a subclass only
         // when that subclass has no decorator of its own.

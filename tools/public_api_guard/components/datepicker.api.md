@@ -16,7 +16,6 @@ import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import * as i1 from '@koobiq/components/button';
-import * as i15 from '@koobiq/components/form-field';
 import * as i2 from '@angular/cdk/overlay';
 import * as i3 from '@angular/cdk/a11y';
 import * as i4 from '@angular/cdk/portal';
@@ -24,11 +23,11 @@ import * as i5 from '@koobiq/components/select';
 import * as i6 from '@koobiq/components/icon';
 import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
-import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import * as _koobiq_components_form_field from '@koobiq/components/form-field';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -311,7 +310,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     focusChanged(isFocused: boolean): void;
     // (undocumented)
     focused: boolean;
-    protected readonly formField: KbqFormField | null;
+    protected readonly formField: _koobiq_components_form_field.KbqFormField | null;
     getOrigin(): ElementRef;
     // (undocumented)
     get id(): string;
@@ -421,7 +420,7 @@ export class KbqDatepickerModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDatepickerModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof KbqDatepickerToggleIconComponent, typeof i8.TitleCasePipe, typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqMonthView, typeof KbqCalendarHeader], [typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqDatepickerToggleIconComponent, typeof KbqMonthView, typeof KbqCalendarHeader, typeof i15.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDatepickerModule, never, [typeof i1.KbqButtonModule, typeof i2.OverlayModule, typeof i3.A11yModule, typeof i4.PortalModule, typeof i5.KbqSelectModule, typeof i6.KbqIconModule, typeof KbqDatepickerToggleIconComponent, typeof i8.TitleCasePipe, typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqMonthView, typeof KbqCalendarHeader], [typeof KbqCalendar, typeof KbqCalendarBody, typeof KbqDatepicker, typeof KbqDatepickerContent, typeof KbqDatepickerInput, typeof KbqDatepickerToggleIcon, typeof KbqDatepickerToggleIconComponent, typeof KbqMonthView, typeof KbqCalendarHeader, typeof _koobiq_components_form_field.KbqFormFieldModule]>;
 }
 
 // @public

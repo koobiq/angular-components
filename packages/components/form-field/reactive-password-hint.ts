@@ -12,11 +12,11 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_FORM_FIELD_REF, KbqComponentColors } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { EMPTY } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { KbqFormField } from './form-field';
+import { KBQ_FORM_FIELD } from './form-field';
 import { KbqHint } from './hint';
 
 /** Password hint to be shown below the password form field control. */
@@ -42,8 +42,7 @@ import { KbqHint } from './hint';
     exportAs: 'kbqReactivePasswordHint'
 })
 export class KbqReactivePasswordHint extends KbqHint {
-    // @TODO fix types (#DS-2915)
-    private readonly formField = inject<KbqFormField>(KBQ_FORM_FIELD_REF, { optional: true });
+    private readonly formField = inject(KBQ_FORM_FIELD, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 

@@ -122,7 +122,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     errorState: boolean;
 
-    controlType?: string | undefined;
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     * @docs-private
+     */
+    controlType: string = 'input-number';
 
     /**
      * Allows input and pasting of integers only.

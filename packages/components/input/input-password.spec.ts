@@ -1,4 +1,5 @@
-﻿import { Component, Provider, Type, viewChild } from '@angular/core';
+﻿import { F8 } from '@angular/cdk/keycodes';
+import { Component, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -142,7 +143,39 @@ class PasswordInputWithReactiveControl {
     });
 }
 
+@Component({
+    imports: [KbqInputModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInputPassword [(ngModel)]="value" />
+            @if (showToggle) {
+                <kbq-password-toggle />
+            }
+        </kbq-form-field>
+    `
+})
+class PasswordInputWithDynamicToggle {
+    value = 'password';
+    showToggle = false;
+}
+
 describe('KbqPasswordInput', () => {
+    it('should handle Alt+F8 only when KbqPasswordToggle is present', () => {
+        const fixture = createComponent(PasswordInputWithDynamicToggle);
+        const input = fixture.debugElement.query(By.directive(KbqInputPassword)).nativeElement as HTMLInputElement;
+        const togglePassword = () =>
+            input.dispatchEvent(new KeyboardEvent('keydown', { key: 'F8', keyCode: F8, altKey: true, bubbles: true }));
+
+        fixture.detectChanges();
+        togglePassword();
+        expect(input.type).toBe('password');
+
+        fixture.componentInstance.showToggle = true;
+        fixture.detectChanges();
+        togglePassword();
+        expect(input.type).toBe('text');
+    });
+
     it('should have toggle', fakeAsync(() => {
         const fixture = createComponent(KbqPasswordInputDefault);
 

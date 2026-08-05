@@ -21,7 +21,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     template: `
         <kbq-form-field [style.width.px]="300">
             <kbq-select placeholder="External filter" [(ngModel)]="filter">
-                <kbq-cleaner #kbqSelectCleaner (click)="externalFilterState.reset()" />
+                <kbq-cleaner (click)="externalFilterState.reset()" />
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }

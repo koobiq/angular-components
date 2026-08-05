@@ -65,7 +65,7 @@ class BaseTimezoneStates {
                 }
 
                 <!-- KbqSelect.cleaner is queried by this template reference, not by type. -->
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
             </kbq-timezone-select>
         </kbq-form-field>
 
@@ -195,7 +195,7 @@ export class E2eTimezonePanelStates extends BaseTimezoneStates {}
                         [placeholder]="'Город или часовой пояс'"
                         [(ngModel)]="control"
                     />
-                    <kbq-cleaner #kbqSelectCleaner />
+                    <kbq-cleaner />
                 </kbq-form-field>
 
                 <div kbq-select-search-empty-result>Ничего не найдено</div>

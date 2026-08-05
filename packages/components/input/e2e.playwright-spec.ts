@@ -47,6 +47,8 @@ test.describe('KbqInputModule', () => {
                 await page.goto('/E2eInputStateAndStyle');
                 const locator = getComponent(page);
                 const screenshotTarget = getInputPasswordTestRow(locator);
+
+                await screenshotTarget.locator('input').focus();
                 const toggle = screenshotTarget.locator('kbq-password-toggle');
 
                 await toggle.click();

@@ -55,7 +55,7 @@ import {
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
 import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { KbqCalendar } from './calendar.component';
@@ -251,7 +251,7 @@ export class KbqDatepickerInput<D>
     readonly adapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
     private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true });
     /** @docs-private */
-    protected readonly formField = inject(KbqFormField, { optional: true, host: true });
+    protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     /** @docs-private */

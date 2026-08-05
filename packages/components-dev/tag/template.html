@@ -78,7 +78,7 @@
             [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
             (kbqTagInputTokenEnd)="inputOnCreate($event)"
         />
-        <kbq-cleaner #kbqTagListCleaner (click)="inputTags.length = 0" />
+        <kbq-cleaner (click)="inputTags.length = 0" />
     </kbq-tag-list>
 </kbq-form-field>
 
@@ -105,7 +105,7 @@
             (kbqTagInputTokenEnd)="autocompleteOnCreate($event)"
         />
 
-        <kbq-cleaner #kbqTagListCleaner (click)="autocompleteSelectedTags.length = 0" />
+        <kbq-cleaner (click)="autocompleteSelectedTags.length = 0" />
     </kbq-tag-list>
     <kbq-autocomplete #autocomplete (optionSelected)="autocompleteOnSelect($event)">
         @if (canCreate) {
@@ -145,7 +145,7 @@
             (kbqTagInputTokenEnd)="enterOnCreate($event)"
         />
 
-        <kbq-cleaner #kbqTagListCleaner (click)="enterTags.length = 0" />
+        <kbq-cleaner (click)="enterTags.length = 0" />
     </kbq-tag-list>
 </kbq-form-field>
 

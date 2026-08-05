@@ -62,7 +62,7 @@ import {
     kbqErrorStateMatcherProvider,
     wrappedErrorMessage
 } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -326,7 +326,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
                     </kbq-tree-option>
                 </kbq-tree-selection>
 
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
             </kbq-tree-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
@@ -2865,7 +2865,7 @@ describe('KbqTreeSelect', () => {
 
                 expect(value.nativeElement.textContent).toContain('rootNode_1');
 
-                cleaner = fixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
+                cleaner = fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement;
                 cleaner.click();
                 fixture.detectChanges();
                 tick();

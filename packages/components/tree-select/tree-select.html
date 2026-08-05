@@ -70,12 +70,7 @@
             }
 
             @if (canShowCleaner) {
-                <div
-                    class="kbq-select__cleaner"
-                    (click)="clearValue($event)"
-                    (keydown.enter)="clearValue($event)"
-                    (keydown.space)="clearValue($event)"
-                >
+                <div class="kbq-select__cleaner">
                     <ng-content select="kbq-cleaner" />
                 </div>
             }

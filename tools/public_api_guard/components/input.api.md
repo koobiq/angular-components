@@ -192,7 +192,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
     get required(): boolean;
     set required(value: boolean);
     readonly stateChanges: Subject<any>;
-    // (undocumented)
     toggleType(): void;
     // (undocumented)
     protected uid: string;
@@ -211,8 +210,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     constructor();
     // (undocumented)
     bigStep: number;
-    // (undocumented)
-    controlType?: string | undefined;
+    controlType: string;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);

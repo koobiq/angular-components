@@ -41,7 +41,7 @@ import {
     E2eFilterBarStates
 } from '../components/filter-bar/e2e';
 import { E2eFlagStyles } from '../components/flag/e2e';
-import { E2eFormFieldGroup, E2eFormFieldset } from '../components/form-field/e2e';
+import { E2eFormFieldAddons, E2eFormFieldGroup, E2eFormFieldset } from '../components/form-field/e2e';
 import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
 import {
     E2eInlineEditActionButtons,
@@ -145,6 +145,7 @@ const components = [
     E2eSplitterGhost,
     E2eFileUploadStateAndStyle,
     E2eFileUploadDropzone,
+    E2eFormFieldAddons,
     E2eFormFieldGroup,
     E2eFormFieldset,
     E2eActionsPanelWithOverlayContainer,

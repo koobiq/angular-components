@@ -39,7 +39,6 @@ import {
     isCopy,
     isSelectAll,
     isVerticalMovement,
-    KBQ_FORM_FIELD_REF,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -50,6 +49,7 @@ import {
     toggleSelectAll,
     UP_ARROW
 } from '@koobiq/components/core';
+import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
 import { merge, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay } from 'rxjs/operators';
@@ -148,7 +148,7 @@ export class KbqTreeSelection
      * by the host `KbqTreeSelect` so hover works even when the tree-select has no form-field
      * wrapper (e.g. the filter-bar pipes render the tree-select bare).
      */
-    inSelect = !!inject(KBQ_FORM_FIELD_REF, { optional: true, host: true });
+    inSelect = !!inject(KBQ_FORM_FIELD, { optional: true, host: true });
 
     renderedOptions = new QueryList<KbqTreeOption>();
 

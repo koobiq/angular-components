@@ -28,9 +28,10 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
 import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
+import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
 import { EMPTY, merge } from 'rxjs';
 import { delay, startWith } from 'rxjs/operators';
-import { KbqCleaner } from './cleaner';
+import { KbqCleaner, kbqCleanerFactoryProvider } from './cleaner';
 import { KbqError } from './error';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
 import { KbqHint } from './hint';
@@ -39,7 +40,7 @@ import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqReactivePasswordHint } from './reactive-password-hint';
-import { KbqNumberInputControl, KbqStepper } from './stepper';
+import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
 /** @docs-private */
@@ -47,10 +48,11 @@ export function getKbqFormFieldMissingControlError(): Error {
     return Error('kbq-form-field must contain a KbqFormFieldControl');
 }
 
-/** @docs-private */
-export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
-    return Error(`You can't use kbq-cleaner with input that have type="number"`);
-}
+/**
+ * Injection token used to access the owning `KbqFormField`.
+ * @docs-private
+ */
+export const KBQ_FORM_FIELD = new InjectionToken<KbqFormField>('KbqFormField');
 
 /** Error key set on the control by the legacy `KbqPasswordHint` when the password is not strong enough. */
 const PASSWORD_STRENGTH_ERROR = 'passwordStrength';
@@ -74,6 +76,7 @@ export type KbqFormFieldDefaultOptions = Partial<{
 
 /**
  * Injection token that can be used to configure the default options for all kbq-form-field's.
+ * @docs-private
  */
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<KbqFormFieldDefaultOptions>(
     'KBQ_FORM_FIELD_DEFAULT_OPTIONS'
@@ -108,7 +111,36 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         // KbqTagInput
         '../tags/tag-input-tokens.scss'
     ],
-    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }],
+    providers: [
+        // Kept for consumers that cannot depend on the form-field entry point.
+        { provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField },
+        { provide: KBQ_FORM_FIELD, useExisting: KbqFormField },
+        kbqCleanerFactoryProvider(() => {
+            const formField = inject(KBQ_FORM_FIELD);
+
+            return {
+                get control() {
+                    return formField.control();
+                },
+                get keydownTarget() {
+                    return formField.elementRef.nativeElement;
+                },
+                clearByEscape: true
+            };
+        }),
+        kbqIconErrorStateContextFactoryProvider(() => {
+            const formField = inject(KBQ_FORM_FIELD);
+
+            return {
+                get errorState() {
+                    return formField.control().errorState;
+                },
+                get stateChanges() {
+                    return formField.control().stateChanges;
+                }
+            };
+        })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     // Every component of this package renders unencapsulated, on purpose: the `kbq-form-field__*` and
     // `kbq-hint*` classes are a public contract that themes, the controls projected into the field and
@@ -221,6 +253,7 @@ export class KbqFormField
 
     /**
      * @docs-private
+     * @deprecated Unused. This property is no longer used by the form field and will be removed in a future version.
      */
     canCleanerClearByEsc: boolean = true;
 
@@ -324,15 +357,7 @@ export class KbqFormField
      * @docs-private
      */
     get canShowCleaner(): boolean {
-        const ngControl = this.control()?.ngControl;
-
-        if (!this.hasCleaner() || !ngControl) {
-            return false;
-        }
-
-        const { value } = ngControl;
-
-        return value !== null && value !== undefined && value !== '' && !this.disabled;
+        return !!this.cleaner()?.canShow;
     }
 
     /** Whether the form field is disabled. */
@@ -346,10 +371,6 @@ export class KbqFormField
     ngAfterContentInit(): void {
         this.validateControlChild();
 
-        if (this.numberInput() && this.hasCleaner()) {
-            throw getKbqFormFieldYouCanNotUseCleanerInNumberInputError();
-        }
-
         // Subscribe to changes in the child control state in order to update the form field UI.
         this.control()
             .stateChanges.pipe(startWith(), delay(0), takeUntilDestroyed(this.destroyRef))
@@ -360,10 +381,6 @@ export class KbqFormField
                     this.setPasswordStrengthError();
                 }
             });
-
-        if (this.hasStepper()) {
-            this.stepper()!.connectTo(this.numberInput()!);
-        }
 
         this.initializeControl();
     }
@@ -392,17 +409,7 @@ export class KbqFormField
      * @docs-private
      */
     clearValue(event: Event): void {
-        event.stopPropagation();
-
-        // Keyboard activation of the cleaner must not also scroll the page (Space) or submit the form (Enter).
-        if (event.type === 'keydown') {
-            event.preventDefault();
-        }
-
-        const control = this.control();
-
-        control?.ngControl?.reset();
-        control?.focus();
+        this.cleaner()?.clear(event);
     }
 
     /**
@@ -420,22 +427,10 @@ export class KbqFormField
 
     /**
      * Handles keydown events.
-     *
+     * @deprecated Unused. This method is no longer called by the form field and will be removed in a future version.
      * @docs-private
      */
-    onKeyDown(event: KeyboardEvent): void {
-        const control = this.control();
-
-        if (control.controlType === 'input-password' && event.altKey && event.key === 'F8') {
-            (control as unknown as { toggleType(): void }).toggleType();
-        }
-
-        if (this.canCleanerClearByEsc && event.key === 'Escape' && control.focused && this.hasCleaner()) {
-            control?.ngControl?.reset();
-
-            event.preventDefault();
-        }
-    }
+    onKeyDown(_event: KeyboardEvent): void {}
 
     /**
      * @docs-private
@@ -503,11 +498,6 @@ export class KbqFormField
         if (!control) {
             throw getKbqFormFieldMissingControlError();
         }
-    }
-
-    /** Resolves the number input hosted by the control, `null` when the control is not a `kbqNumberInput`. */
-    private numberInput(): KbqNumberInputControl | null {
-        return (this.control() as unknown as { numberInput?: KbqNumberInputControl }).numberInput || null;
     }
 
     /**

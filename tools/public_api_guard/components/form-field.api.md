@@ -37,6 +37,12 @@ export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error;
 export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint> | readonly KbqPasswordHint[]) => boolean;
 
 // @public
+export const KBQ_CLEANER_CONTEXT: InjectionToken<KbqCleanerContext | null>;
+
+// @public
+export const KBQ_FORM_FIELD: InjectionToken<KbqFormField>;
+
+// @public
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
     noBorders: boolean;
     inOverlay: boolean;
@@ -52,15 +58,33 @@ export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
 export const KBQ_STEPPER_INTERVAL_DELAY = 75;
 
 // @public
-export class KbqCleaner extends KbqIconButton {
+export class KbqCleaner extends KbqIconButton implements AfterContentInit {
     constructor();
     protected readonly accessibleName: i0.Signal<string>;
     readonly ariaLabel: i0.InputSignal<string | undefined>;
+    get canShow(): boolean;
+    clear(event: Event): void;
+    // (undocumented)
+    ngAfterContentInit(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCleaner, never>;
 }
+
+// @public
+export interface KbqCleanerContext {
+    clear?(): void;
+    // (undocumented)
+    readonly clearByEscape: boolean;
+    // (undocumented)
+    readonly control: KbqFormFieldControl<unknown>;
+    // (undocumented)
+    readonly keydownTarget: HTMLElement;
+}
+
+// @public
+export const kbqCleanerFactoryProvider: (factory: () => KbqCleanerContext) => Provider;
 
 // @public
 export class KbqError extends KbqHint {
@@ -90,6 +114,7 @@ export class KbqFieldsetItem {
 
 // @public
 export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
+    // @deprecated
     canCleanerClearByEsc: boolean;
     get canShowCleaner(): boolean;
     readonly cleaner: Signal<KbqCleaner | undefined>;
@@ -130,7 +155,8 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly noBorders: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     onContainerClick(event: MouseEvent): void;
     onHoverChanged(isHovered: boolean): void;
-    onKeyDown(event: KeyboardEvent): void;
+    // @deprecated
+    onKeyDown(_event: KeyboardEvent): void;
     readonly passwordHints: Signal<readonly KbqPasswordHint[]>;
     readonly passwordToggle: Signal<KbqPasswordToggle | undefined>;
     readonly prefix: Signal<readonly KbqPrefix[]>;
@@ -215,13 +241,6 @@ export class KbqLegend {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLegend, never>;
 }
 
-// @public
-export interface KbqNumberInputControl extends KbqFormFieldControl<unknown> {
-    step: number;
-    stepDown: (step: number) => void;
-    stepUp: (step: number) => void;
-}
-
 // @public @deprecated
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     constructor();
@@ -263,8 +282,11 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     readonly kbqTooltipHidden: i0.InputSignal<string | TemplateRef<any>>;
     // (undocumented)
     protected readonly nativeElement: HTMLElement;
+    // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     readonly tabindex: i0.InputSignalWithTransform<number, unknown>;
@@ -302,11 +324,13 @@ export function kbqSetDescribedByIds(element: HTMLElement, ids: string[]): void;
 // @public
 export class KbqStepper {
     constructor();
-    connectTo(numberInput: KbqNumberInputControl): void;
-    protected readonly control: i0.Signal<KbqNumberInputControl>;
+    // @deprecated (undocumented)
+    connectTo(_: any): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqStepperControl" needs to be exported by the entry point index.d.ts
+    protected readonly control: i0.Signal<KbqStepperControl>;
     protected readonly mouseUp: Subject<void>;
-    onStepDown($event: MouseEvent): void;
-    onStepUp($event: MouseEvent): void;
+    onStepDown(event: MouseEvent): void;
+    onStepUp(event: MouseEvent): void;
     readonly stepDown: OutputEmitterRef<void>;
     readonly stepUp: OutputEmitterRef<void>;
     // (undocumented)

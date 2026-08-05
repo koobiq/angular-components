@@ -106,7 +106,9 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get canShowCleaner(): boolean;
     readonly cdkVirtualForOf: _angular_core.Signal<CdkVirtualForOf<any> | undefined>;
     readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
-    clearValue($event: any): void;
+    clear(): void;
+    // @deprecated
+    clearValue(event: Event): void;
     close(): void;
     readonly closedStream: Observable<void>;
     get colorForState(): KbqComponentColors;
