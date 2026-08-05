@@ -1,5 +1,8 @@
 import type { KbqIconsMetadata } from '@koobiq/icons/types/icons';
 
+/** Icons whose accent element is colored via the `--icon-accent-color` CSS variable are named `xxx-dot(-o)_size`. */
+const ACCENT_COLOR_ICON_PATTERN = /-dot(-|_)/;
+
 export interface DocsIconItem {
     id: string;
     name: string;
@@ -8,6 +11,7 @@ export interface DocsIconItem {
     description: string;
     size: number;
     tags: string[];
+    hasAccentColor: boolean;
 }
 
 export class DocsIconItems {
@@ -28,7 +32,18 @@ export class DocsIconItems {
 
             name = name.charAt(0).toUpperCase() + name.slice(1);
 
-            return { id, name, cssClass, code: parseInt(codepoint), size, tags, description } as DocsIconItem;
+            const hasAccentColor = ACCENT_COLOR_ICON_PATTERN.test(id);
+
+            return {
+                id,
+                name,
+                cssClass,
+                code: parseInt(codepoint),
+                size,
+                tags,
+                description,
+                hasAccentColor
+            } as DocsIconItem;
         });
     }
 

@@ -3,11 +3,15 @@
         {{ t('iconsTitle') }}
     </span>
 
-    <kbq-form-field>
-        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [color]="themePalette.Secondary"></i>
-        <input kbqInput [formControl]="searchControl" [placeholder]="t('iconNamePlaceholder')" />
-        <kbq-cleaner />
-    </kbq-form-field>
+    <div class="docs-icons-viewer__header-controls">
+        <kbq-form-field>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [color]="themePalette.Secondary"></i>
+            <input kbqInput [formControl]="searchControl" [placeholder]="t('iconNamePlaceholder')" />
+            <kbq-cleaner />
+        </kbq-form-field>
+
+        <kbq-checkbox [formControl]="accentColorFilterControl">{{ t('iconsAccentColorFilter') }}</kbq-checkbox>
+    </div>
 </div>
 
 <div class="docs-icons-viewer__table">
@@ -41,7 +45,7 @@
         }
     }
 
-    @if (searchControl.value && !filteredIcons.value) {
+    @if ((searchControl.value || accentColorFilterControl.value) && !filteredIcons.value) {
         <div class="docs-icons-viewer__table-empty-results">
             <kbq-empty-state size="big">
                 <div kbq-empty-state-title>{{ t('nothingFound') }}</div>

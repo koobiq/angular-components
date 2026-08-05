@@ -79,6 +79,7 @@ export const DOCS_TRANSLATIONS = {
     // icons viewer
     iconsTitle: { ru: 'Иконки', en: 'Icons' },
     iconNamePlaceholder: { ru: 'Название иконки', en: 'Icon name' },
+    iconsAccentColorFilter: { ru: 'Только двухцветные', en: 'Two-color only' },
     nothingFound: { ru: 'Ничего не найдено', en: 'Nothing found' }
 } satisfies Record<string, Record<DocsLocale, string>>;
 

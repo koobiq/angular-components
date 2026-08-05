@@ -1,0 +1,198 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across the docs components 1`] = `
+{
+  "copied": {
+    "en": "Copied",
+    "ru": "Скопировано",
+  },
+  "copy": {
+    "en": "Copy",
+    "ru": "Скопировать",
+  },
+  "copySvg": {
+    "en": "Copy SVG",
+    "ru": "Скопировать SVG",
+  },
+  "cssClassName": {
+    "en": "CSS Class Name",
+    "ru": "Имя CSS-класса",
+  },
+  "designTokens": {
+    "en": "Design tokens",
+    "ru": "Дизайн-токены",
+  },
+  "downloadSvg": {
+    "en": "Download SVG",
+    "ru": "Скачать SVG",
+  },
+  "examplesTab": {
+    "en": "Examples",
+    "ru": "Примеры",
+  },
+  "footerExamples": {
+    "en": "Examples",
+    "ru": "Примеры",
+  },
+  "footerInterface": {
+    "en": "Interface",
+    "ru": "Интерфейс",
+  },
+  "footerLanguageGroupHeader": {
+    "en": "LANGUAGE",
+    "ru": "ЯЗЫК",
+  },
+  "footerLanguageLabel": {
+    "en": "Interface and examples language",
+    "ru": "Язык интерфейса и примеров",
+  },
+  "footerVersionGroupHeader": {
+    "en": "VERSION",
+    "ru": "ВЕРСИЯ",
+  },
+  "footerVersionLabel": {
+    "en": "Version",
+    "ru": "Версия",
+  },
+  "footerVersionLatest": {
+    "en": " (latest)",
+    "ru": " (последняя)",
+  },
+  "forMsWord": {
+    "en": "For MS Word",
+    "ru": "Для MS Word",
+  },
+  "goToMainPage": {
+    "en": "Go to main page",
+    "ru": "Перейти на главную страницу",
+  },
+  "hideExampleCode": {
+    "en": "Hide example code",
+    "ru": "Скрыть пример кода",
+  },
+  "iconColor": {
+    "en": "Color",
+    "ru": "Цвет",
+  },
+  "iconDescription": {
+    "en": "Description",
+    "ru": "Описание",
+  },
+  "iconKeywords": {
+    "en": "Key words",
+    "ru": "Ключевые слова",
+  },
+  "iconNamePlaceholder": {
+    "en": "Icon name",
+    "ru": "Название иконки",
+  },
+  "iconSize": {
+    "en": "Size",
+    "ru": "Размер",
+  },
+  "iconsAccentColorFilter": {
+    "en": "Two-color only",
+    "ru": "Только двухцветные",
+  },
+  "iconsTitle": {
+    "en": "Icons",
+    "ru": "Иконки",
+  },
+  "improvementSuggestions": {
+    "en": "Suggestions for improvement",
+    "ru": "Предложения по улучшению",
+  },
+  "loadingDocument": {
+    "en": "Loading document...",
+    "ru": "Загрузка документа...",
+  },
+  "nothingFound": {
+    "en": "Nothing found",
+    "ru": "Ничего не найдено",
+  },
+  "overviewTab": {
+    "en": "Overview",
+    "ru": "Обзор",
+  },
+  "pageNotFound": {
+    "en": "Page not found",
+    "ru": "Страница не найдена",
+  },
+  "resetState": {
+    "en": "Reset state",
+    "ru": "Сбросить состояние",
+  },
+  "showExampleCode": {
+    "en": "Show example code",
+    "ru": "Показать пример кода",
+  },
+  "themeDark": {
+    "en": "Dark",
+    "ru": "Тёмная",
+  },
+  "themeGroupHeader": {
+    "en": "THEME",
+    "ru": "ТЕМА",
+  },
+  "themeLight": {
+    "en": "Light",
+    "ru": "Светлая",
+  },
+  "themeSystem": {
+    "en": "Same as system",
+    "ru": "Как в системе",
+  },
+  "token": {
+    "en": "Token",
+    "ru": "Токен",
+  },
+  "tokensTabBorderRadius": {
+    "en": "Border radius",
+    "ru": "Скругления",
+  },
+  "tokensTabColors": {
+    "en": "Colors",
+    "ru": "Цвета",
+  },
+  "tokensTabPalette": {
+    "en": "Engineer palette",
+    "ru": "Инженерная палитра",
+  },
+  "tokensTabSemantic": {
+    "en": "Semantic palette",
+    "ru": "Семантическая палитра",
+  },
+  "tokensTabShadows": {
+    "en": "Shadows",
+    "ru": "Тени",
+  },
+  "tokensTabSizes": {
+    "en": "Sizes",
+    "ru": "Размеры",
+  },
+  "tokensTabTypography": {
+    "en": "Typography",
+    "ru": "Типографика",
+  },
+  "typographyExample": {
+    "en": "Typography Example",
+    "ru": "Пример типографики",
+  },
+  "value": {
+    "en": "Value",
+    "ru": "Значение",
+  },
+  "viewSourceOnGitHub": {
+    "en": "Source code",
+    "ru": "Исходный код",
+  },
+  "welcomeDescription": {
+    "en": "A set of principles and tools for creating web applications. The design system simplifies product development and ensures consistency across their interfaces.",
+    "ru": "Набор принципов и инструментов для создания веб-приложений. Дизайн-система упрощает создание продуктов и обеспечивает единообразие их интерфейсов.",
+  },
+  "welcomeTitle": {
+    "en": "Koobiq design system",
+    "ru": "Дизайн-система Koobiq",
+  },
+}
+`;
