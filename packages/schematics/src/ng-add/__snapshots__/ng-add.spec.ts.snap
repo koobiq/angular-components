@@ -16,6 +16,7 @@ exports[`ng add '@koobiq/components' should add missing dependencies to 'package
   "@koobiq/design-tokens": "^0.0.0",
   "@koobiq/icons": "^0.0.0",
   "luxon": "^0.0.0",
+  "overlayscrollbars": "^0.0.0",
   "rxjs": "~7.8.0",
   "tslib": "^2.3.0",
   "zone.js": "~0.15.0",

@@ -147,7 +147,9 @@ function syncComponentsVersion(
     if (rootPackageJson.version && (!newPackageJson.version || newPackageJson.version.trim() === placeholder)) {
         newPackageJson.version = rootPackageJson.version;
 
-        for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
+        // A package without `peerDependencies` is nothing to sync, not a crash: reading the field
+        // unguarded would throw a raw TypeError before `assertNoPlaceholders` could report anything.
+        for (const [key, value] of Object.entries(releaseJson.peerDependencies || {})) {
             if (value.includes(placeholder)) {
                 // Substitute rather than overwrite, so the source manifest controls the shape of the
                 // range: `^{{VERSION}}` must publish as `^1.2.3`, not as the exact pin `1.2.3`.
@@ -156,6 +158,7 @@ function syncComponentsVersion(
                 const range = value.replace(placeholder, newPackageJson.version!);
 
                 context.logger.info(`${key}: ${range}`);
+                // Reaching this line means the field exists — the loop body never runs otherwise.
                 newPackageJson.peerDependencies![key] = range;
             }
         }
@@ -172,7 +175,7 @@ function syncNgVersion(
 ): IPackageJson {
     const updatedJson = { ...releaseJson };
 
-    for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
+    for (const [key, value] of Object.entries(releaseJson.peerDependencies || {})) {
         if (value.includes(placeholder)) {
             const range = value.replace(placeholder, rootPackageJson.requiredAngularVersion);
 

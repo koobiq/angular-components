@@ -33,7 +33,7 @@ bootstrapApplication(AppComponent, {
 ```
 
 Без этого провайдера открытие компонента с анимацией — dropdown, select, tooltip, toast,
-datepicker — завершится ошибкой `NG05105: Found the synthetic property @state`.
+datepicker — завершится ошибкой `NG05105: Unexpected synthetic property @state found`.
 
 ### Настройка стилей
 

@@ -54,6 +54,9 @@ const resolvePlaceholders = (range: string): string =>
  */
 const caret = (range: string): string => (range.startsWith('^') ? range : `^${range}`);
 
+const ngAddPath = join(projectRoot, 'packages', 'schematics', 'src', 'ng-add', 'index.ts');
+const rollupConfigPath = join(projectRoot, 'packages', 'schematics', 'rollup.config.js');
+
 const schematicInjectedRanges: Record<string, string> = {
     '@angular/animations': caret(rootPackageJson.dependencies!['@angular/animations']),
     '@angular/cdk': caret(rootPackageJson.dependencies!['@angular/cdk']),
@@ -61,7 +64,9 @@ const schematicInjectedRanges: Record<string, string> = {
     '@koobiq/date-formatter': caret(rootPackageJson.dependencies!['@koobiq/date-formatter']),
     '@koobiq/date-adapter': caret(rootPackageJson.dependencies!['@koobiq/date-adapter']),
     '@koobiq/icons': caret(rootPackageJson.dependencies!['@koobiq/icons']),
-    '@koobiq/design-tokens': caret(rootPackageJson.devDependencies!['@koobiq/design-tokens'])
+    '@koobiq/design-tokens': caret(rootPackageJson.devDependencies!['@koobiq/design-tokens']),
+    luxon: caret(rootPackageJson.devDependencies!.luxon),
+    overlayscrollbars: caret(rootPackageJson.dependencies!.overlayscrollbars)
 };
 
 const failures: string[] = [];
@@ -107,6 +112,47 @@ for (const pkg of publishedPackages) {
     }
 }
 
+/**
+ * `schematicInjectedRanges` mirrors the schematic by hand, so a package added to `ng add` without a
+ * matching entry here would silently drop out of the range check above — losing coverage exactly
+ * where a new dependency needs it most. Read the schematic back and fail on the drift instead.
+ */
+const checkSchematicRangesInSync = () => {
+    const ngAdd = readFileSync(ngAddPath, { encoding: 'utf-8' });
+    const installed = new Set(
+        [...ngAdd.matchAll(/addPackageToPackageJson\(\s*tree,\s*'([^']+)'/g)].map((match) => match[1])
+    );
+
+    for (const dependency of installed) {
+        if (!(dependency in schematicInjectedRanges)) {
+            fail('schematics', `\`ng add\` installs "${dependency}", which schematicInjectedRanges does not list`);
+        }
+    }
+
+    for (const dependency of Object.keys(schematicInjectedRanges)) {
+        if (!installed.has(dependency)) {
+            fail('schematics', `schematicInjectedRanges lists "${dependency}", which \`ng add\` does not install`);
+        }
+    }
+
+    // Every `VERSIONS.*` the schematic reads is a build-time string replacement. One missing from
+    // rollup's map is not an error anywhere — it just publishes the literal "VERSIONS.FOO" as the
+    // installed range, and the schematic's own tests read the source default, so they never see it.
+    const rollupConfig = readFileSync(rollupConfigPath, { encoding: 'utf-8' });
+    const referenced = new Set([...ngAdd.matchAll(/VERSIONS\.([A-Z_]+)/g)].map((match) => match[1]));
+
+    for (const key of referenced) {
+        if (!rollupConfig.includes(`'VERSIONS.${key}'`)) {
+            fail(
+                'schematics',
+                `\`ng add\` reads VERSIONS.${key}, which packages/schematics/rollup.config.js never replaces`
+            );
+        }
+    }
+};
+
+checkSchematicRangesInSync();
+
 /** Every module the published bundles import but do not declare is a "Module not found" for consumers. */
 const checkUndeclaredImports = () => {
     const components = publishedPackages.find((pkg) => pkg.name === 'components');
@@ -126,7 +172,11 @@ const checkUndeclaredImports = () => {
             [
                 'grep',
                 '-hoE',
-                "from '(@?[^.'][^']*)'",
+                // Static `import`/`export ... from '…'` plus lazy `import('…')`: a dynamically
+                // imported package still has to be installed for the consumer's bundler to find it.
+                // The space after `from` is required — without it prose like `the 'from' date-time`
+                // in a comment parses as an import of whatever the next quoted run happens to be.
+                "(from +|import\\( *)'(@?[^.'][^']*)'",
                 '--',
                 'packages/components/**/*.ts',
                 // Tests and dev harnesses are not published, so their imports carry no obligation.
@@ -136,15 +186,20 @@ const checkUndeclaredImports = () => {
             ],
             { cwd: projectRoot, encoding: 'utf-8' }
         );
-    } catch {
-        // `git grep` exits non-zero when nothing matches; nothing to validate in that case.
+    } catch (error) {
+        // Exit code 1 is `git grep`'s "no matches"; anything else means the search never ran, and
+        // silently returning would leave this — the only check for undeclared imports — green.
+        if ((error as { status?: number }).status !== 1) {
+            throw error;
+        }
+
         return;
     }
 
     const undeclared = new Set<string>();
 
     for (const line of imports.split('\n')) {
-        const match = line.match(/from '([^']+)'/);
+        const match = line.match(/(?:from +|import\( *)'([^']+)'/);
 
         if (!match) continue;
 

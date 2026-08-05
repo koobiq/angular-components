@@ -29,6 +29,11 @@ const rootPackageJson: PackageJson = JSON.parse(readFileSync(join(projectRoot, '
 const angularVersion = rootPackageJson.dependencies!['@angular/core'];
 const cdkVersion = rootPackageJson.dependencies!['@angular/cdk'];
 
+/** Mirrors `version()` in packages/schematics/rollup.config.js, which shapes what `ng add` writes. */
+const caret = (range: string): string => (range.startsWith('^') ? range : `^${range}`);
+
+const iconsRange = caret(rootPackageJson.dependencies!['@koobiq/icons']);
+
 /** An Angular app of the given major, as `ng new` would leave it. */
 const angularApp = (versions: Record<string, string>) => ({
     name: 'fixture',
@@ -55,10 +60,13 @@ const fixtures = [
         extraInstalls: [] as string[]
     },
     {
-        name: 'angular-20-app-latest-icons',
-        description: 'an Angular 20 application pulling the latest @koobiq/icons, as `ng add` does',
+        name: 'angular-20-app-ng-add-icons',
+        description: 'an Angular 20 application with the @koobiq/icons range `ng add` installs',
         packageJson: angularApp({ angular: angularVersion, cdk: cdkVersion }),
-        extraInstalls: ['@koobiq/icons@latest']
+        // The range comes from the root manifest, the way the schematic resolves it at build time —
+        // NOT from `@latest`. Pinning to the registry tip would make an unrelated @koobiq/icons
+        // release fail this check on every open pull request, for a version nothing has adopted yet.
+        extraInstalls: [`@koobiq/icons@${iconsRange}`]
     },
     {
         name: 'documented-install',
@@ -82,7 +90,8 @@ const npm = (args: string[], cwd: string): string => {
 
     // Node >= 20.12 rejects spawning a `.cmd` without a shell, so Windows goes through `execSync`.
     // Paths here come from `mkdtemp` and the workspace, both of which can contain spaces — quote
-    // every argument.
+    // every argument. Quoting is enough on its own: `"` is a reserved character in Windows paths, so
+    // no argument can close the quote, and cmd.exe leaves `&`/`|`/`^` alone inside one.
     return isWindows
         ? execSync(`npm.cmd ${args.map((arg) => `"${arg}"`).join(' ')}`, { cwd, encoding, stdio })
         : execFileSync('npm', args, { cwd, encoding, stdio });
