@@ -27,8 +27,18 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # No setup-node and no browser install: node is already on the runner, tools/e2e/run.js only
-      # reads package.json, and the browsers come baked into the image. That also removes the
-      # ~174 MB `playwright install` download this job used to have to nurse through a timeout.
+      # reads package.json, and the browsers come baked into the image. That removes the ~174 MB
+      # `playwright install` download this job used to nurse through a timeout — but it is not a
+      # net time saving and should not be read as one. GitHub-hosted runners keep no Docker layer
+      # cache between runs, so every run rebuilds the image from scratch: the Node install, the
+      # font layer and `yarn install --immutable` all re-run, and the base image is pulled again
+      # (872 MB compressed, 3.6 GB on disk). Measured cold on a 64-core machine, the build alone is
+      # ~157s, and a 4-vCPU runner will be slower. Against the old job this is roughly a wash.
+      #
+      # What is bought with that is reproducibility, not speed. If the wall clock ever does become
+      # the problem, the answer is a prebuilt image pulled from GHCR by tag — not
+      # `cache-to: type=gha`, which would push well over a gigabyte of layers into the same 10 GB
+      # Actions cache that every other job's yarn cache is competing for.
       #
       # docker compose creates a missing bind-mount source as root. Creating them up front keeps
       # the workspace owned by the runner user, which matters on self-hosted runners where the

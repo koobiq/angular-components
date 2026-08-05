@@ -66,11 +66,15 @@ RUN apt-get update \
 # The base image ships Node 22 from NodeSource. Every other CI job runs the .nvmrc version, so
 # install that rather than accept a second Node major for this one job. Its own layer, ahead of the
 # manifests, so that editing package.json does not reinstall Node.
+# `n` keeps every version it fetches under /usr/local/n, which is 202 MB of no use once the binary
+# is in place. Dropped in the same layer, so the bytes are never committed in the first place.
 COPY .nvmrc ./
 RUN set -eux; \
     node_version="$(tr -d '\r\n' < .nvmrc)"; \
     npm install --global n; \
     n "$node_version"; \
+    npm remove --global n; \
+    rm -rf /usr/local/n; \
     npm cache clean --force; \
     test "v$node_version" = "$(node --version)"; \
     node --version
@@ -99,7 +103,11 @@ COPY tools/e2e/assert-browsers.js tools/e2e/
 
 # For whoever debugs a failure here: `xlsx` resolves to https://cdn.sheetjs.com/, not the npm
 # registry, so this layer needs that host reachable as well as the registry.
-RUN yarn install --immutable
+#
+# The cache is cleaned in the same layer rather than a later one: node_modules is already
+# materialised by then (nodeLinker: node-modules), and Yarn's global cache is another 640 MB that
+# would otherwise be committed and then paid for again on every image export and pull.
+RUN yarn install --immutable && yarn cache clean --all
 
 # Fails the build if the image's browsers are not the ones this @playwright/test expects, which is
 # otherwise silent and surfaces much later as an unexplained diff in every screenshot.
