@@ -5,8 +5,8 @@
  * The image ships its browsers under /ms-playwright, so `playwright install` never runs in the
  * container. That only holds while the image tag matches @playwright/test exactly. When it does
  * not, nothing fails loudly: `playwright`'s postinstall quietly downloads a second browser set,
- * the tests run against a different Chromium than CI, and the result is an unexplained diff in
- * every screenshot — the baselines are compared with `threshold: 0`, so a different browser build
+ * the tests run against a different build than CI, and the result is an unexplained diff in every
+ * screenshot — the baselines are compared with `threshold: 0`, so a different browser build
  * invalidates all of them at once.
  *
  * This check turns all of that into one build failure with an actionable message.
@@ -22,21 +22,25 @@ const { browsers } = JSON.parse(
     readFileSync(join(dirname(require.resolve('playwright-core/package.json')), 'browsers.json'), 'utf8')
 );
 
-// Both matter: Playwright launches chromium-headless-shell whenever `headless` is set, which is
-// the default, but the full chromium build is what a headed debugging run would use.
-const required = ['chromium', 'chromium-headless-shell'];
+// Everything `playwright install` would fetch, rather than a hand-maintained list. Chromium is the
+// obvious one, but it is not the only browser this suite uses: the scrollbar and sidepanel specs
+// select WebKit with `test.use({ browserName: 'webkit' })`, which overrides the project's browser
+// per file and is easy to miss when reading playwright.config.ts alone. Deriving the list means a
+// spec that reaches for Firefox tomorrow is covered without anyone remembering to edit this file.
+//
+// The excluded entries are the ones the image legitimately lacks: tip-of-tree and beta channels,
+// `android`, and `winldd` (Windows-only).
+const required = browsers.filter((browser) => browser.installByDefault);
 const missing = [];
 
-for (const name of required) {
-    const browser = browsers.find((candidate) => candidate.name === name);
+if (required.length === 0) {
+    console.error('No installByDefault browsers in playwright-core/browsers.json — the check cannot be trusted.');
+    process.exit(1);
+}
 
-    if (!browser) {
-        missing.push(`${name} (absent from playwright-core/browsers.json)`);
-        continue;
-    }
-
+for (const { name, revision } of required) {
     // playwright-core stores revisions per browser name; on disk the directories use underscores.
-    const directory = `/ms-playwright/${name.replace(/-/g, '_')}-${browser.revision}`;
+    const directory = `/ms-playwright/${name.replace(/-/g, '_')}-${revision}`;
 
     if (existsSync(directory)) {
         console.log(`ok ${directory}`);
