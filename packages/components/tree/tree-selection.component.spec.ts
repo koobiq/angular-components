@@ -1005,6 +1005,30 @@ describe('KbqTreeSelection', () => {
                 expect(getActiveValue()).toBe('src');
             }));
 
+            it('should move the focus to the parent when the toggle of an expanded option is disabled', fakeAsync(() => {
+                expandNode(1);
+                expandNode(3);
+
+                // the toggle is disabled only after expanding — a disabled toggle cannot be clicked open
+                component.disabledToggles = ['cdk'];
+                fixture.detectChanges();
+
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                // the option itself stays enabled, so DOWN_ARROW does not skip it
+                expect(getActiveValue()).toBe('cdk');
+
+                pressKey(LEFT_ARROW);
+
+                // a disabled toggle makes the option non-expandable, so `cdk` is not collapsed
+                expect(getNodes(treeElement).length).toBe(8);
+                expect(component.treeControl.expansionModel.selected.length).toBe(2);
+                expect(getActiveValue()).toBe('src');
+            }));
+
             it('should do nothing on a root-level option', fakeAsync(() => {
                 pressKey(DOWN_ARROW);
 
@@ -1038,6 +1062,29 @@ describe('KbqTreeSelection', () => {
                 // `cdk` cannot take the focus, so the walk narrows to its level and reaches `src` —
                 // without narrowing it would stop on `assets`, a sibling of the parent
                 expect(getActiveValue()).toBe('src');
+            }));
+
+            it('should keep narrowing the level across a chain of disabled ancestors', fakeAsync(() => {
+                component.disabledNodes = ['src', 'cdk'];
+                fixture.detectChanges();
+
+                expandNode(1);
+                expandNode(3);
+
+                expect(getNodes(treeElement).length).toBe(8);
+
+                // DOWN_ARROW skips both disabled ancestors, so the third press lands on `a11y`
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('a11y');
+
+                pressKey(LEFT_ARROW);
+
+                // the walk narrows twice — over `cdk` to level 1, then over `src` to level 0 — so
+                // neither `assets` (a sibling of `cdk`) nor `docs` (a sibling of `src`) takes the focus
+                expect(getActiveValue()).toBe('a11y');
             }));
 
             it('should do nothing when every ancestor is disabled', fakeAsync(() => {
@@ -1852,7 +1899,7 @@ export const DEEP_DATA_OBJECT_WITH_SIBLINGS = {
                 kbqTreeNodePadding
                 [disabled]="disabledNodes.includes(node.name)"
             >
-                <kbq-tree-node-toggle [node]="node" />
+                <kbq-tree-node-toggle [node]="node" [disabled]="disabledToggles.includes(node.name)" />
 
                 {{ node.name }}
             </kbq-tree-option>
@@ -1862,6 +1909,8 @@ export const DEEP_DATA_OBJECT_WITH_SIBLINGS = {
 class KbqTreeAppDeepData extends TreeParams {
     modelValue: any = '';
     disabledNodes: string[] = [];
+    // disables only the toggle, leaving the option itself focusable — unlike `disabledNodes`
+    disabledToggles: string[] = [];
     @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
 
     constructor() {

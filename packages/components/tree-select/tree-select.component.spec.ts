@@ -3162,11 +3162,44 @@ describe('KbqTreeSelect', () => {
             expect(tree.keyManager.activeItem!.value).toBe('core');
             expect(document.activeElement).toBe(searchInput);
 
-            // every toggle is disabled while filtering, so LEFT_ARROW always takes the move-to-parent
-            // branch — the highlight moves up, but the caret must stay in the search field
+            // `core` is a leaf, so LEFT_ARROW takes the move-to-parent branch — the highlight moves
+            // up, but the caret must stay in the search field
             pressPanelKey(LEFT_ARROW);
 
             expect(tree.keyManager.activeItem!.value).toBe('src');
+            expect(document.activeElement).toBe(searchInput);
+        }));
+
+        it('should return the caret to the search field on RIGHT_ARROW', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const searchInput: HTMLElement = overlayContainerElement.querySelector('.search-input')!;
+
+            const select = fixture.componentInstance.select();
+            const tree = select.tree()!;
+
+            const pressPanelKey = (keyCode: number) => {
+                select.panelKeydownHandler(createKeyboardEvent('keydown', keyCode));
+                fixture.detectChanges();
+                flush();
+            };
+
+            pressPanelKey(DOWN_ARROW);
+
+            const activeOption = tree.keyManager.activeItem!;
+
+            // RIGHT_ARROW only expands and never moves the active item, so nothing takes the focus
+            // away from the search field on its own. Hand the focus to the option the way the key
+            // manager does, to prove the branch restores it rather than relying on it never moving.
+            activeOption.focus('keyboard');
+
+            expect(document.activeElement).not.toBe(searchInput);
+
+            pressPanelKey(RIGHT_ARROW);
+
+            expect(tree.keyManager.activeItem).toBe(activeOption);
             expect(document.activeElement).toBe(searchInput);
         }));
 
