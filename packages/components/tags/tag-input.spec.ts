@@ -878,6 +878,18 @@ describe('KbqTagInput', () => {
             tagInputDirective.onKeydown(SPACE_EVENT);
             expect(preventDefaultSpy).toHaveBeenCalled();
         });
+
+        it('should not prevent default when TAB separator is pressed with empty input', () => {
+            const TAB_EVENT = createKeyboardEvent('keydown', TAB, inputNativeElement, 'Tab');
+            const preventDefaultSpy = jest.spyOn(TAB_EVENT, 'preventDefault');
+
+            tagInputDirective.separatorKeyCodes = [TAB];
+            (inputNativeElement as HTMLInputElement).value = '';
+            fixture.detectChanges();
+
+            tagInputDirective.onKeydown(TAB_EVENT);
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+        });
     });
 });
 
