@@ -16,7 +16,7 @@
         "src/**/*.d.ts"
     ],
     "files": [
-        "src/main.ts",
+        "src/main.browser.ts",
         "src/main.server.ts"
     ],
     "exclude": [
