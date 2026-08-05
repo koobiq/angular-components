@@ -15,7 +15,8 @@ import { KbqAccordionItem } from './accordion-item';
         '[attr.data-disabled]': 'item.disabled',
         '[attr.data-orientation]': 'item.orientation',
         '(click)': 'onClick()',
-        '(focus)': 'onFocus()'
+        '(focus)': 'onFocus()',
+        '(keydown)': 'onKeydown($event)'
     }
 })
 export class KbqAccordionTriggerDirective {
@@ -52,6 +53,24 @@ export class KbqAccordionTriggerDirective {
      */
     onFocus(): void {
         this.accordion.setActiveItem(this.item);
+    }
+
+    /**
+     * Routes keyboard interaction to the accordion, but only while the trigger itself is focused.
+     *
+     * A `keydown` targets the focused element, so header actions placed next to the trigger and
+     * controls inside the expanded content keep their own keys — the accordion no longer toggles the
+     * section on Enter/Space nor moves focus to another header on the arrow keys. The `target` check
+     * additionally covers focusable content mistakenly nested inside the trigger.
+     */
+    onKeydown(event: KeyboardEvent): void {
+        if (event.target !== this.nativeElement) return;
+
+        // The key manager can lag behind when focus was moved programmatically rather than by the
+        // user, in which case `onFocus` never ran.
+        this.accordion.setActiveItem(this.item);
+
+        this.accordion.keydownHandler(event);
     }
 
     /** @docs-private */

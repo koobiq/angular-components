@@ -23,6 +23,8 @@
         margin-right: var(--kbq-size-s);
     }
 
+    // @deprecated Actions nested inside the trigger are focusable elements inside a `role="button"`.
+    // Put them in a `.kbq-accordion-header__actions` sibling of the trigger instead.
     & .kbq-accordion-trigger__action {
         padding: var(--kbq-size-xxs) var(--kbq-size-xxs) var(--kbq-size-3xs);
         margin-bottom: calc(-1 * #{var(--kbq-size-3xs)});
@@ -61,4 +63,8 @@
 
 button.kbq-accordion-trigger {
     flex: 1;
+
+    // A flex item floors at its min-content width by default, which would push the header actions
+    // past the item's right edge instead of letting a long label give way.
+    min-width: 0;
 }

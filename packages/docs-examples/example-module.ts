@@ -99,6 +99,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "accordion-inactive-section-example.ts",
     "importPath": "components/accordion"
   },
+  "accordion-interactive-elements": {
+    "packagePath": "components/accordion/accordion-interactive-elements",
+    "title": "Accordion interactive elements",
+    "componentName": "AccordionInteractiveElementsExample",
+    "files": [
+      "accordion-interactive-elements-example.ts",
+      "accordion-interactive-elements-example.html"
+    ],
+    "localImportFiles": [],
+    "selector": "accordion-interactive-elements-example",
+    "additionalComponents": [],
+    "primaryFile": "accordion-interactive-elements-example.ts",
+    "importPath": "components/accordion"
+  },
   "accordion-overview": {
     "packagePath": "components/accordion/accordion-overview",
     "title": "Accordion",
@@ -7502,6 +7516,8 @@ return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-in-section':
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-inactive-section':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-interactive-elements':
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-overview':
 return import('@koobiq/docs-examples/components/accordion');

@@ -17,6 +17,11 @@ import { KbqAccordionItem } from './accordion-item';
         '[attr.id]': 'contentId',
         '[attr.role]': '"region"',
         '[attr.hidden]': 'hidden() ? "" : null',
+        // `hidden` alone does not take the collapsed content out of the tab order: the host keeps an
+        // explicit `display: block` so the height can animate, which overrides `[hidden]`'s
+        // `display: none`. Without `inert`, every control inside a closed section stays focusable in
+        // a zero-height, clipped box.
+        '[attr.inert]': 'hidden() ? "" : null',
         '[attr.aria-labelledby]': 'triggerId',
 
         '[attr.data-state]': 'item.dataState',

@@ -33,8 +33,11 @@ export type KbqAccordionItemState = 'open' | 'closed';
     }
 })
 export class KbqAccordionItem implements OnDestroy {
-    /** @docs-private */
-    protected readonly accordion = inject(KbqAccordion);
+    /**
+     * The accordion this item belongs to — always the nearest one, because it is injected.
+     * The accordion reads it back to tell its own items apart from a nested accordion's.
+     */
+    readonly accordion = inject(KbqAccordion);
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */

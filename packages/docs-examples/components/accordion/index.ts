@@ -4,6 +4,7 @@ import { AccordionHeaderExample } from './accordion-header/accordion-header-exam
 import { AccordionInPanelExample } from './accordion-in-panel/accordion-in-panel-example';
 import { AccordionInSectionExample } from './accordion-in-section/accordion-in-section-example';
 import { AccordionInactiveSectionExample } from './accordion-inactive-section/accordion-inactive-section-example';
+import { AccordionInteractiveElementsExample } from './accordion-interactive-elements/accordion-interactive-elements-example';
 import { AccordionOverviewExample } from './accordion-overview/accordion-overview-example';
 import { AccordionSectionsExample } from './accordion-sections/accordion-sections-example';
 import { AccordionStatesExample } from './accordion-states/accordion-states-example';
@@ -14,6 +15,7 @@ export {
     AccordionInactiveSectionExample,
     AccordionInPanelExample,
     AccordionInSectionExample,
+    AccordionInteractiveElementsExample,
     AccordionOverviewExample,
     AccordionSectionsExample,
     AccordionStatesExample
@@ -26,6 +28,7 @@ const EXAMPLES = [
     AccordionInactiveSectionExample,
     AccordionHeaderExample,
     AccordionContentExample,
+    AccordionInteractiveElementsExample,
     AccordionInSectionExample,
     AccordionInPanelExample
 ];

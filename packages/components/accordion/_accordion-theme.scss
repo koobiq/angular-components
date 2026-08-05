@@ -1,8 +1,12 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-accordion-theme() {
+    // Only the trigger owns the item's focus ring. `:focus-within` would also fire for header
+    // actions and for controls inside the expanded content, ringing a section the user is merely
+    // typing in. Both shapes are matched because `<kbq-accordion-header>` is optional.
     .kbq-accordion.cdk-keyboard-focused {
-        & .kbq-accordion-item:focus-within {
+        & .kbq-accordion-item:has(> .kbq-accordion-trigger:focus),
+        & .kbq-accordion-item:has(> .kbq-accordion-header .kbq-accordion-trigger:focus) {
             border-color: var(--kbq-accordion-item-states-focus-border-color);
         }
     }
