@@ -1021,7 +1021,11 @@ export class KbqSelect
             ?.changes.pipe(
                 takeUntilDestroyed(this.destroyRef),
                 delay(0),
-                filter(() => this.isActiveItemStale())
+                // Only while the panel is open. `beforeOpened` gives consumers a chance to (re)load
+                // options, and with no options the panel itself opens with a delay, so search changes
+                // can land while the panel is still closed. Moving the highlight then is read as
+                // keyboard navigation of a closed select and silently overwrites the value.
+                filter(() => this.panelOpen && this.isActiveItemStale())
             )
             .subscribe(() => this.keyManager.setFirstItemActive());
     }

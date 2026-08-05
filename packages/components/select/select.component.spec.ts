@@ -1891,6 +1891,32 @@ class SelectWithShowPreselectedValuesMultiple {
     control = new UntypedFormControl(['unknown-value-1', 'pizza', 'unknown-value-2']);
 }
 
+@Component({
+    selector: 'select-with-search-and-preselected-value',
+    imports: [KbqSelectModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select [showPreselectedValues]="true" [(value)]="value">
+                <kbq-form-field kbqSelectSearch>
+                    <input kbqInput type="text" [formControl]="searchCtrl" />
+                </kbq-form-field>
+
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithSearchAndPreselectedValue {
+    readonly select = viewChild.required(KbqSelect);
+
+    searchCtrl = new UntypedFormControl('');
+    options = ['One', 'Two', 'Three'];
+    /** Deliberately absent from `options`, as a value from an already unloaded page would be. */
+    value = 'Unknown';
+}
+
 const ASYNC_OPTIONS_PAGE_SIZE = 10;
 
 @Component({
@@ -6706,6 +6732,53 @@ describe('KbqSelect', () => {
 
             expect(testInstance.select().keyManager.activeItem!.value.id).toBe(0);
             expect(testInstance.select().keyManager.activeItemIndex).toBe(1);
+        }));
+    });
+
+    describe('with a search field on a closed panel', () => {
+        let fixture: ComponentFixture<SelectWithSearchAndPreselectedValue>;
+        let testInstance: SelectWithSearchAndPreselectedValue;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([SelectWithSearchAndPreselectedValue]);
+            fixture = TestBed.createComponent(SelectWithSearchAndPreselectedValue);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        }));
+
+        it('should not change the value when the search emits while the panel is closed', fakeAsync(() => {
+            expect(testInstance.select().panelOpen).toBe(false);
+
+            // `beforeOpened` consumers reset the search to reload options, and with no options
+            // the panel opens with a delay — so this lands while the panel is still closed.
+            testInstance.searchCtrl.setValue('');
+            fixture.detectChanges();
+            tick();
+            flush();
+            fixture.detectChanges();
+
+            const triggerText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement
+                .textContent;
+
+            expect(testInstance.select().value).toBe('Unknown');
+            expect(triggerText.trim()).toBe('Unknown');
+        }));
+
+        it('should highlight the first option when the search emits while the panel is open', fakeAsync(() => {
+            testInstance.select().open();
+            fixture.detectChanges();
+            flush();
+
+            testInstance.searchCtrl.setValue('');
+            fixture.detectChanges();
+            tick();
+            flush();
+            fixture.detectChanges();
+
+            expect(testInstance.select().keyManager.activeItemIndex).toBe(0);
+            expect(testInstance.select().value).toBe('Unknown');
         }));
     });
 
