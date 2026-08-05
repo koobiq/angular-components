@@ -51,14 +51,12 @@
         border-radius: var(--kbq-navbar-item-size-content-border-radius);
     }
 
-    &.kbq-horizontal {
-        /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
-        @extend navbar-item_horizontal !optional;
-    }
+    // The badge sits in the same corner in both orientations; only the offsets differ, and each partial
+    // supplies its own.
+    & .kbq-badge {
+        position: absolute;
 
-    &.kbq-vertical {
-        /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
-        @extend navbar-item_vertical !optional;
+        z-index: 1;
     }
 }
 

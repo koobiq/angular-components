@@ -55,6 +55,11 @@
             "version": "20.3.0-0",
             "description": "Migrates consumers to the narrowed button color set. `color` on KbqButton, KbqButtonGroupRoot and KbqSplitButton (and `kbqOkType` on KbqModalComponent / ModalOptions) now accepts theme, theme-fade, contrast and contrast-fade only — every other value matched no rule in kbq-button-theme() and rendered the button as a native one. Removes such a color written as a literal from templates, which is appearance-preserving now that each style falls back to its own default color, and warns about the ones it cannot resolve (enum members, programmatic assignment, members still typed KbqComponentColors / ThemePalette). Also flags the silent part: a transparent button with no explicit color now defaults to contrast instead of contrast-fade, so a `.kbq-button_transparent.kbq-contrast-fade` override stops matching.",
             "factory": "./migrations/button-supported-colors/index"
+        },
+        "navbar-signals-and-aria": {
+            "version": "20.3.0-0",
+            "description": "Migrates consumers of the navbar review. Rewrites programmatic and template-reference reads of the now-signal members (KbqVerticalNavbar.expanded/configuration/openOver, KbqFocusableComponent.tabIndex, KbqNavbarItem.isCollapsed/collapsable/collapsedText, KbqNavbarBrand.collapsed/collapsedText) to calls, writes of the model-backed expanded/tabIndex to .set(), and the removed KbqNavbarRectangleElement.horizontal/vertical booleans to isHorizontal()/isVertical() and orientation. Warns - without auto-fixing - on the removed KbqNavbarItem.disabled/KbqNavbarBrand.disabled tooltip-suppression getters, on the tooltip members no longer inherited now that item and brand compose a KbqTooltipTrigger instead of extending one, on the removed hovered Subjects and KbqNavbarContainerPositionType, and on stylesheets matching the disabled content attribute that a navbar item no longer renders. Notes the changes no call site can point at: Ctrl+/ scoped to a single navbar, role=navigation/button/separator plus aria-label and aria-disabled, and the navbar leaving the CDK overlay z-index layer for its own tokens.",
+            "factory": "./migrations/navbar-signals-and-aria/index"
         }
     }
 }

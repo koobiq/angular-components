@@ -80,13 +80,11 @@
         }
     }
 
+    // Position and stacking come from the shared `.kbq-navbar-item .kbq-badge` rule; only the offsets are
+    // orientation-specific.
     .kbq-badge {
-        position: absolute;
-
-        z-index: 1;
-
-        top: -2px;
-        right: -2px;
+        top: calc(-1 * var(--kbq-size-4xs));
+        right: calc(-1 * var(--kbq-size-4xs));
     }
 
     &.kbq-navbar-item_has-nested {

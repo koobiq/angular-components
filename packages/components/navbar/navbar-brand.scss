@@ -78,13 +78,15 @@ a.kbq-navbar-brand {
 
     &.kbq-expanded {
         & .kbq-navbar-title {
-            max-width: 200px;
+            max-width: var(--kbq-navbar-brand-vertical-size-title-max-width);
         }
     }
 
+    // Three classes on the brand beat the two of the long-title rule below, so a collapsed title stays hidden
+    // whichever presentation it is in - no `!important` required.
     &.kbq-collapsed {
         & .kbq-navbar-title {
-            display: none !important;
+            display: none;
         }
     }
 }
@@ -92,7 +94,7 @@ a.kbq-navbar-brand {
 // Must stay below the per-orientation rules: `.kbq-vertical` sets `display: block` on the title at the very
 // same specificity, so moving this up lets that win and silently kills the clamp - `-webkit-line-clamp` does
 // nothing without `-webkit-box`, and the title then wraps to an unbounded number of lines with no ellipsis.
-// `.kbq-collapsed` still wins over it via `!important`.
+// `.kbq-collapsed` still wins over it, on specificity.
 .kbq-navbar-brand.kbq-navbar-brand_long-title .kbq-navbar-title {
     display: -webkit-box;
 

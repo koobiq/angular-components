@@ -1,6 +1,19 @@
 .kbq-navbar,
 .kbq-vertical-navbar {
     --kbq-navbar-item-size-content-border-radius: var(--kbq-size-border-radius);
+    /* SIZE TOKENS */
+    /* 40px of content plus the 1px gap that keeps the focus ring of adjacent items apart. */
+    --kbq-navbar-item-vertical-size-height: 41px;
+    --kbq-navbar-vertical-size-expanded-width: 240px;
+    --kbq-navbar-brand-vertical-size-title-max-width: 200px;
+    --kbq-navbar-toggle-size-circle: 28px;
+    /* LAYER TOKENS */
+    /* The navbar is page chrome: it sits above the page content but below every CDK overlay (1000). The
+       toggle overhangs the navbar's edge, so it needs one layer more; a navbar opened over the content
+       needs one less, to stay under the toggle of the navbar next to it. */
+    --kbq-navbar-z-index: 990;
+    --kbq-navbar-vertical-open-over-z-index: 989;
+    --kbq-navbar-toggle-z-index: 991;
     /* THEME TOKENS */
     --kbq-navbar-background: var(--kbq-background-bg);
     --kbq-navbar-vertical-background: var(--kbq-background-bg-tertiary);

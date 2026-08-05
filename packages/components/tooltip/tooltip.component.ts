@@ -646,6 +646,16 @@ export class KbqTooltipTrigger
         this.strategy.setOrigin(element);
     }
 
+    /**
+     * Replaces the CSS classes put on the tooltip's overlay pane.
+     *
+     * Exists for components that own a tooltip through `hostDirectives` instead of extending this class and
+     * therefore cannot reach the protected overlay configuration (e.g. `KbqNavbarItem`).
+     * @docs-private */
+    setOverlayPanelClass(panelClass: string | string[]): void {
+        this.overlayConfig.panelClass = panelClass;
+    }
+
     /** @docs-private */
     updateData() {
         if (!this.instance) {

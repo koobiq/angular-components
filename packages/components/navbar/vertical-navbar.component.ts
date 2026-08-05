@@ -1,5 +1,4 @@
-﻿import { CdkMonitorFocus } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -7,12 +6,12 @@ import {
     contentChild,
     contentChildren,
     effect,
-    ElementRef,
     forwardRef,
     inject,
     InjectionToken,
-    Input,
     input,
+    model,
+    signal,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -29,18 +28,33 @@ import { Subject } from 'rxjs';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
 
+/** Localizable strings of the vertical navbar. */
+export interface KbqVerticalNavbarConfiguration {
+    /** Labels of the expand/collapse toggle, used for its tooltip and its accessible name. */
+    toggle: {
+        expand: string;
+        collapse: string;
+    };
+}
+
 /** default configuration of navbar */
 /** @docs-private */
-export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION = ruRULocaleData.navbar;
+export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqVerticalNavbarConfiguration = ruRULocaleData.navbar;
 
 /** Injection Token for providing configuration of navbar */
 /** @docs-private */
-export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVerticalNavbarConfiguration');
+export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqVerticalNavbarConfiguration>(
+    'KbqVerticalNavbarConfiguration'
+);
 
 @Component({
     selector: 'kbq-vertical-navbar',
     template: `
-        <div class="kbq-vertical-navbar__container" [class.kbq-collapsed]="!expanded" [class.kbq-expanded]="expanded">
+        <div
+            class="kbq-vertical-navbar__container"
+            [class.kbq-collapsed]="!expanded()"
+            [class.kbq-expanded]="expanded()"
+        >
             <ng-content select="[kbq-navbar-container], kbq-navbar-container" />
             <ng-content select="[kbq-navbar-toggle], kbq-navbar-toggle" />
         </div>
@@ -56,8 +70,10 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-vertical-navbar',
+        role: 'navigation',
+        '[attr.aria-label]': 'ariaLabel()',
         '[class.kbq-vertical-navbar_open-over]': 'openOver()',
-        '[attr.tabindex]': 'tabIndex',
+        '[attr.tabindex]': 'tabIndex()',
         '[attr.cdkMonitorSubtreeFocus]': 'true',
 
         '(focus)': 'focus()',
@@ -69,61 +85,72 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVertical
     exportAs: 'KbqVerticalNavbar'
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
-    protected elementRef: ElementRef<HTMLElement>;
-
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true });
-    configuration;
 
-    rectangleElements = contentChildren(
+    /** Configuration provided through `KBQ_VERTICAL_NAVBAR_CONFIGURATION`, when any. @docs-private */
+    readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true });
+
+    /**
+     * Localizable strings of the navbar.
+     *
+     * A signal so that a locale change reaches the `OnPush` descendants that render these strings — a plain
+     * field would leave them showing the previous locale until something else marked them dirty.
+     *
+     * Seeded here rather than from the locale subscription alone: the locale service is optional, and without
+     * it an externally provided configuration would never be applied at all.
+     */
+    readonly configuration = signal<KbqVerticalNavbarConfiguration>(
+        this.externalConfiguration || KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION
+    );
+
+    /** @docs-private */
+    readonly rectangleElements = contentChildren<KbqNavbarRectangleElement>(
         forwardRef(() => KbqNavbarRectangleElement),
         { descendants: true }
     );
 
-    readonly items = contentChildren(
+    /** @docs-private */
+    readonly items = contentChildren<KbqNavbarItem>(
         forwardRef(() => KbqNavbarItem),
         { descendants: true }
     );
 
-    readonly bento = contentChild(forwardRef(() => KbqNavbarBento));
+    /** @docs-private */
+    readonly bento = contentChild<KbqNavbarBento>(forwardRef(() => KbqNavbarBento));
 
+    /** @docs-private */
     readonly animationDone: Subject<void> = new Subject();
 
+    /** Whether the expanded navbar overlays the page content instead of taking room from it. */
     readonly openOver = input<boolean>(false);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get expanded() {
-        return this._expanded;
-    }
-
-    set expanded(value: boolean) {
-        this._expanded = coerceBooleanProperty(value);
-
-        this.updateExpandedStateForItems();
-    }
-
-    private _expanded: boolean = false;
+    /** Whether the navbar is expanded. */
+    readonly expanded = model<boolean>(false);
 
     constructor() {
-        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
         super();
-        this.elementRef = elementRef;
+
+        this.destroyRef.onDestroy(() => this.animationDone.complete());
 
         this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
 
-        effect(() => this.setItemsVerticalStateAndUpdateExpandedState(this.rectangleElements()));
+        effect(() => {
+            // Re-runs both when the projected elements change and when the navbar is expanded or collapsed.
+            const expanded = this.expanded();
+
+            this.rectangleElements().forEach((item) => {
+                item.orientation = 'vertical';
+                item.collapsed = !expanded;
+            });
+
+            this.refreshButtonIcons();
+        });
 
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
     }
 
+    /** @docs-private */
     ngAfterContentInit(): void {
         this.updateTooltipForItems();
 
@@ -132,13 +159,13 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         this.keyManager.withVerticalOrientation(true);
     }
 
+    /** Expands a collapsed navbar and collapses an expanded one. */
     toggle(): void {
-        this.expanded = !this.expanded;
-
-        this.changeDetectorRef.markForCheck();
+        this.expanded.set(!this.expanded());
     }
 
-    onKeyDown(event: KeyboardEvent) {
+    /** @docs-private */
+    protected onKeyDown(event: KeyboardEvent) {
         const keyCode = event.keyCode;
 
         if (
@@ -161,34 +188,26 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         }
     }
 
-    private updateExpandedStateForItems = () => this.rectangleElements().forEach(this.updateItemExpandedState);
-
     private updateTooltipForItems = () => this.items().forEach((item) => item.updateTooltip());
 
-    private setItemsVerticalStateAndUpdateExpandedState = (rectangleElements: Readonly<KbqNavbarRectangleElement[]>) =>
-        rectangleElements.forEach(this.setItemVerticalStateAndUpdateExpandedState);
+    /**
+     * Buttons projected into the items re-pick their icon-only modifier from the rendered width, so the pass
+     * has to wait for the collapsed/expanded classes to reach the DOM. One deferred pass over every item, not
+     * one timer per item.
+     */
+    private refreshButtonIcons(): void {
+        const elements = this.rectangleElements();
 
-    private setItemVerticalStateAndUpdateExpandedState = (item: KbqNavbarRectangleElement): void => {
-        queueMicrotask(() => this.setItemVerticalState(item));
-        this.updateItemExpandedState(item);
-    };
+        if (!elements.length) return;
 
-    private setItemVerticalState = (item: KbqNavbarRectangleElement): void => {
-        item.vertical = true;
-    };
+        const timeoutId = setTimeout(() => elements.forEach((item) => item.button()?.updateClassModifierForIcons()));
 
-    private updateItemExpandedState = (item: KbqNavbarRectangleElement): void => {
-        item.collapsed = !this.expanded;
-        setTimeout(() => item.button()?.updateClassModifierForIcons());
-    };
+        this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
+    }
 
     private updateLocaleParams = () => {
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('navbar');
+        const fromLocale = this.localeService?.getParams('navbar') as KbqVerticalNavbarConfiguration | undefined;
 
-        this.changeDetectorRef.markForCheck();
+        this.configuration.set(this.externalConfiguration || fromLocale || KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION);
     };
-
-    private initDefaultParams() {
-        this.configuration = KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
-    }
 }

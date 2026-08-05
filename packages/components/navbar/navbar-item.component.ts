@@ -1,32 +1,39 @@
-﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
+    contentChild,
+    DestroyRef,
     Directive,
+    effect,
     ElementRef,
+    inject,
     Input,
+    input,
     NgZone,
     OnDestroy,
-    ViewEncapsulation,
-    booleanAttribute,
-    contentChild,
-    inject
+    Signal,
+    signal,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import {
     DOWN_ARROW,
+    ENTER,
     IFocusableOption,
     KBQ_WINDOW,
+    kbqInjectNativeElement,
     PopUpPlacements,
     PopUpTriggers,
     RIGHT_ARROW,
-    kbqInjectNativeElement
+    SPACE
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
@@ -35,6 +42,25 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
+/** Orientation of the navbar an element belongs to. */
+export type KbqNavbarOrientation = 'horizontal' | 'vertical';
+
+/**
+ * Elements that already turn Enter/Space into a `click` on their own. Items authored on top of them must not
+ * get a synthetic activation on the same key, or the handler runs twice.
+ */
+const NATIVELY_ACTIONABLE_TAGS = new Set(['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA']);
+
+/**
+ * Sums the element's width and its horizontal margins.
+ *
+ * Each value is guarded on its own: a computed style of `'auto'` or `''` parses to `NaN`, and a single one of
+ * them would otherwise poison the total and, through it, the whole collapse decision.
+ */
+const sumOuterWidth = ({ width, marginLeft, marginRight }: CSSStyleDeclaration): number =>
+    [width, marginLeft, marginRight].reduce((acc, value) => acc + (parseInt(value, 10) || 0), 0);
+
+/** @docs-private */
 export interface KbqNavbarFocusableItemEvent {
     item: KbqNavbarFocusableItem;
 }
@@ -42,14 +68,10 @@ export interface KbqNavbarFocusableItemEvent {
 @Directive({
     selector: 'kbq-navbar-logo, [kbq-navbar-logo]',
     host: {
-        class: 'kbq-navbar-logo',
-        '(mouseenter)': 'hovered.next(true)',
-        '(mouseleave)': 'hovered.next(false)'
+        class: 'kbq-navbar-logo'
     }
 })
-export class KbqNavbarLogo {
-    readonly hovered = new Subject<boolean>();
-}
+export class KbqNavbarLogo {}
 
 @Directive({
     selector: 'kbq-navbar-item[bento], [kbq-navbar-item][bento]',
@@ -62,26 +84,26 @@ export class KbqNavbarBento {}
 @Directive({
     selector: 'kbq-navbar-title, [kbq-navbar-title]',
     host: {
-        class: 'kbq-navbar-title',
-        '(mouseenter)': 'hovered.next(true)',
-        '(mouseleave)': 'hovered.next(false)'
+        class: 'kbq-navbar-title'
     }
 })
 export class KbqNavbarTitle implements AfterViewInit {
+    /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
+    /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
 
-    readonly hovered = new Subject<boolean>();
-
+    /** @docs-private */
     outerElementWidth: number;
 
+    /** Text content of the title element. */
     get text(): string {
         return this.nativeElement.textContent || '';
     }
 
     /** Whether the text is clipped horizontally (e.g. by `text-overflow: ellipsis`). */
-    get isOverflown() {
+    get isOverflown(): boolean {
         if (!this.isBrowser) return false;
 
         return this.nativeElement.scrollWidth > this.nativeElement.clientWidth;
@@ -101,14 +123,14 @@ export class KbqNavbarTitle implements AfterViewInit {
         return this.nativeElement.scrollHeight > this.nativeElement.clientHeight;
     }
 
+    /** @docs-private */
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
 
-        const { width, marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
-
-        return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item) || 0, 0);
+        return sumOuterWidth(this.window.getComputedStyle(this.nativeElement));
     }
 
+    /** @docs-private */
     ngAfterViewInit(): void {
         this.outerElementWidth = this.getOuterElementWidth();
     }
@@ -117,16 +139,32 @@ export class KbqNavbarTitle implements AfterViewInit {
 @Directive({
     selector: 'kbq-navbar-divider',
     host: {
-        class: 'kbq-navbar-divider'
+        class: 'kbq-navbar-divider',
+        role: 'separator',
+        '[attr.aria-orientation]': 'ariaOrientation'
     }
 })
-export class KbqNavbarDivider {}
+export class KbqNavbarDivider {
+    // Optional: the divider only picks up a rectangle element when both directives are imported, which is
+    // what `KbqNavbarModule` does but a hand-rolled standalone import need not.
+    private readonly rectangleElement = inject(KbqNavbarRectangleElement, { optional: true });
+
+    /**
+     * The separator runs across the navbar, so it is oriented the other way round: a horizontal navbar gets a
+     * vertical rule and vice versa.
+     */
+    protected get ariaOrientation(): 'horizontal' | 'vertical' {
+        return this.rectangleElement?.isHorizontal() ? 'vertical' : 'horizontal';
+    }
+}
 
 @Directive({
     selector: 'kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle',
     host: {
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled || null',
+        // `aria-disabled` and not the `disabled` content attribute: these are custom elements, not form
+        // controls, so the browser and assistive technology both ignore `disabled` on them.
+        '[attr.aria-disabled]': 'disabled || null',
 
         class: 'kbq-navbar-focusable-item',
         '[class.kbq-navbar-item_has-nested]': '!!nestedElement',
@@ -141,27 +179,36 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     private changeDetector = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
     private ngZone = inject(NgZone);
+    private readonly destroyRef = inject(DestroyRef);
 
+    /** @docs-private */
     readonly title = contentChild(KbqNavbarTitle);
 
+    /** @docs-private */
     readonly button = contentChild(KbqButton);
 
+    /** @docs-private */
     readonly formField = contentChild(KbqFormField);
 
+    /** Interactive element projected into the item, if any. */
     get nestedElement(): KbqButton | KbqFormField | undefined {
         return this.button() || this.formField();
     }
 
+    /** @docs-private */
     get tooltip(): KbqTooltipTrigger {
         return this._tooltip;
     }
 
     private _tooltip: KbqTooltipTrigger;
 
+    /** @docs-private */
     readonly onFocus = new Subject<KbqNavbarFocusableItemEvent>();
 
+    /** @docs-private */
     readonly onBlur = new Subject<KbqNavbarFocusableItemEvent>();
 
+    /** @docs-private */
     get hasFocus(): boolean {
         return !!this.nestedElement?.hasFocus || this._hasFocus;
     }
@@ -172,11 +219,15 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
     private _hasFocus: boolean = false;
 
-    /** Whether the item is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Whether the item is disabled.
+     *
+     * Deliberately kept a plain accessor input rather than a signal: `FocusKeyManager` reads it as a boolean
+     * through its default skip predicate, and a signal would always read truthy there — the manager would then
+     * skip every item and arrow navigation would stop working entirely.
+     */
     @Input({ transform: booleanAttribute })
-    get disabled() {
+    get disabled(): boolean {
         return this._disabled;
     }
 
@@ -189,14 +240,27 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
     private _disabled = false;
 
+    /**
+     * Items are never in the tab order themselves: the navbar host owns the single tab stop and moves focus
+     * between items with the arrow keys (roving tabindex).
+     */
     get tabIndex(): number {
         return -1;
     }
 
+    constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.onFocus.complete();
+            this.onBlur.complete();
+        });
+    }
+
+    /** @docs-private */
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef);
     }
 
+    /** @docs-private */
     ngAfterContentInit(): void {
         const button = this.button();
 
@@ -205,14 +269,17 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
         }
     }
 
+    /** @docs-private */
     ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
+    /** @docs-private */
     setTooltip(value: KbqTooltipTrigger) {
         this._tooltip = value;
     }
 
+    /** @docs-private */
     onFocusHandler() {
         if (this.disabled || this.hasFocus) {
             return;
@@ -227,6 +294,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
         this.elementRef.nativeElement.focus();
     }
 
+    /** @docs-private */
     focus(origin?: FocusOrigin): void {
         if (this.disabled || this.hasFocus) {
             return;
@@ -257,6 +325,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
         }
     }
 
+    /** @docs-private */
     blur(): void {
         // When animations are enabled, Angular may end up removing the option from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the list
@@ -264,7 +333,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
         // as not focused until the next time the zone stabilizes.
         this.ngZone.onStable
             .asObservable()
-            .pipe(take(1))
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.ngZone.run(() => {
                     this._hasFocus = false;
@@ -280,6 +349,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
             });
     }
 
+    /** @docs-private */
     getLabel(): string {
         return this.title()?.text || '';
     }
@@ -288,78 +358,81 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 @Directive({
     selector: 'kbq-navbar-item, [kbq-navbar-item], kbq-navbar-divider, kbq-navbar-brand, [kbq-navbar-brand]',
     host: {
-        '[class.kbq-vertical]': 'vertical',
-        '[class.kbq-horizontal]': 'horizontal',
+        '[class.kbq-vertical]': 'isVertical()',
+        '[class.kbq-horizontal]': 'isHorizontal()',
 
-        '[class.kbq-expanded]': 'vertical && !collapsed',
-        '[class.kbq-collapsed]': 'vertical && collapsed'
+        '[class.kbq-expanded]': 'isVertical() && !collapsed',
+        '[class.kbq-collapsed]': 'isVertical() && collapsed'
     }
 })
 export class KbqNavbarRectangleElement {
+    /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
+    /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly destroyRef = inject(DestroyRef);
 
+    /** Emits whenever the orientation or the collapsed state of the element changes. @docs-private */
     readonly state = new Subject<void>();
 
-    get horizontal(): boolean {
-        return this._horizontal;
+    private readonly _orientation = signal<KbqNavbarOrientation>('vertical');
+
+    /**
+     * Orientation of the navbar this element belongs to. Written by the ambient `KbqNavbar` /
+     * `KbqVerticalNavbar`; the element itself only reads it.
+     */
+    get orientation(): KbqNavbarOrientation {
+        return this._orientation();
     }
 
-    set horizontal(value: boolean) {
-        if (this._horizontal === value) return;
+    set orientation(value: KbqNavbarOrientation) {
+        if (this._orientation() === value) return;
 
-        this._horizontal = value;
-        this._vertical = !value;
+        this._orientation.set(value);
 
         this.state.next();
-        this.changeDetectorRef.markForCheck();
     }
 
-    private _horizontal: boolean = false;
+    /** Whether the ambient navbar is horizontal. @docs-private */
+    readonly isHorizontal: Signal<boolean> = computed(() => this._orientation() === 'horizontal');
 
-    get vertical(): boolean {
-        return this._vertical;
-    }
+    /** Whether the ambient navbar is vertical. @docs-private */
+    readonly isVertical: Signal<boolean> = computed(() => this._orientation() === 'vertical');
 
-    set vertical(value: boolean) {
-        if (this._vertical === value) return;
+    // Deliberately left `undefined`: it is not equal to either boolean, so the guard below always lets the
+    // first assignment through. Initializing it to `false` would swallow the initial `collapsed = false` of a
+    // navbar that starts expanded, and with it the `updateDropdown()` that rides on that emission.
+    private readonly _collapsed = signal<boolean | undefined>(undefined);
 
-        this._vertical = value;
-        this._horizontal = !value;
-
-        this.state.next();
-        this.changeDetectorRef.markForCheck();
-    }
-
-    private _vertical: boolean = true;
-
+    /** Whether the element is rendered in its collapsed (icon-only) form. @docs-private */
     get collapsed(): boolean {
-        return this._collapsed;
+        return !!this._collapsed();
     }
 
     set collapsed(value: boolean) {
-        if (this._collapsed === value) return;
+        if (this._collapsed() === value) return;
 
-        this._collapsed = value;
+        this._collapsed.set(value);
 
         this.state.next();
     }
 
-    // Deliberately left `undefined`: it is not equal to either boolean, so the guard above always lets the
-    // first assignment through. Initializing it to `false` would swallow the initial `collapsed = false` of a
-    // navbar that starts expanded, and with it the `updateDropdown()` that rides on that emission.
-    private _collapsed: boolean;
+    /** Signal mirror of `collapsed`, for `computed()` consumers. @docs-private */
+    readonly collapsedState: Signal<boolean> = computed(() => !!this._collapsed());
 
+    /** @docs-private */
     readonly button = contentChild(KbqButtonCssStyler);
 
+    constructor() {
+        this.destroyRef.onDestroy(() => this.state.complete());
+    }
+
+    /** @docs-private */
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
 
-        const { width, marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
-
-        return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item), 0);
+        return sumOuterWidth(this.window.getComputedStyle(this.nativeElement));
     }
 }
 
@@ -373,192 +446,253 @@ export class KbqNavbarRectangleElement {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-item',
-        '[class.kbq-navbar-item_collapsed]': 'isCollapsed',
+        '[class.kbq-navbar-item_collapsed]': 'isCollapsed()',
         '[class.kbq-navbar-item_with-title]': '!!title()',
+
+        '[attr.role]': 'role',
+        '[attr.aria-label]': 'resolvedAriaLabel',
 
         '(keydown)': 'onKeyDown($event)'
     },
+    // Composition, not inheritance: the item is not a tooltip trigger, it merely owns one. Only the tooltip
+    // inputs that make sense on a navbar item are re-exposed; `KbqNavbarToggle` uses the same pattern.
+    hostDirectives: [
+        {
+            directive: KbqTooltipTrigger,
+            inputs: [
+                'kbqTooltip',
+                'kbqTooltipClass',
+                'kbqTooltipColor',
+                'kbqTooltipContext',
+                'kbqTooltipOffset',
+                'kbqTrigger',
+                'kbqPlacement',
+                'kbqPlacementPriority',
+                'kbqEnterDelay',
+                'kbqLeaveDelay',
+                'kbqVisible'
+            ],
+            outputs: [
+                'kbqVisibleChange',
+                'kbqPlacementChange'
+            ]
+        }
+    ],
     exportAs: 'kbqNavbarItem'
 })
-export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit {
-    rectangleElement = inject(KbqNavbarRectangleElement);
-    navbarFocusableItem = inject(KbqNavbarFocusableItem);
-    private changeDetectorRef = inject(ChangeDetectorRef);
-    private dropdownTrigger = inject(KbqDropdownTrigger, { optional: true })!;
-    private bento = inject(KbqNavbarBento, { optional: true });
+export class KbqNavbarItem implements AfterContentInit {
+    /** @docs-private */
+    readonly rectangleElement = inject(KbqNavbarRectangleElement);
+    /** @docs-private */
+    readonly navbarFocusableItem = inject(KbqNavbarFocusableItem);
+    /** @docs-private */
+    readonly tooltip = inject(KbqTooltipTrigger, { self: true });
+
+    private readonly nativeElement = kbqInjectNativeElement();
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly dropdownTrigger = inject(KbqDropdownTrigger, { optional: true })!;
+    private readonly bento = inject(KbqNavbarBento, { optional: true });
+
+    /** @docs-private */
     readonly title = contentChild(KbqNavbarTitle);
 
+    /** @docs-private */
     readonly icon = contentChild(KbqIcon);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get collapsedText(): string {
-        return this._collapsedText;
-    }
+    /** Text shown in the tooltip of a collapsed item. Defaults to the text of the projected `kbq-navbar-title`. */
+    readonly collapsedText = input<string>('');
 
-    set collapsedText(value: string) {
-        this._collapsedText = value;
+    /** Whether the item may be collapsed when the horizontal navbar runs out of room. */
+    readonly collapsable = input(true, { transform: booleanAttribute });
 
-        this.updateTooltip();
-    }
+    /**
+     * Explicitly enables or disables the item's tooltip.
+     *
+     * Left unset, the tooltip is enabled exactly when the title cannot be read from the item itself — the item
+     * is collapsed, or its title is clipped.
+     */
+    readonly tooltipDisabled = input<boolean | undefined, unknown>(undefined, {
+        alias: 'kbqTooltipDisabled',
+        transform: (value: unknown) => (value === undefined ? undefined : booleanAttribute(value))
+    });
 
-    private _collapsedText: string;
+    private readonly ownCollapsed = signal<boolean | undefined>(undefined);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTrigger')
-    get trigger(): string {
-        return this._trigger;
-    }
-
-    set trigger(value: string) {
-        if (value) {
-            this._trigger = value;
-
-            this.initListeners();
-        }
-    }
-
+    /** Collapses the item regardless of what the ambient navbar decided. */
     set collapsed(value: boolean) {
-        if (this._collapsed !== value) {
-            this._collapsed = value;
-
-            this.updateTooltip();
-        }
+        this.ownCollapsed.set(value);
     }
 
     // todo in future need rename to 'collapsed'
-    get isCollapsed(): boolean {
-        return this._collapsed ?? this.rectangleElement.collapsed;
-    }
+    /** Whether the item is rendered in its collapsed (icon-only) form. */
+    readonly isCollapsed: Signal<boolean> = computed(
+        () => this.ownCollapsed() ?? this.rectangleElement.collapsedState()
+    );
 
-    private _collapsed = false;
-
+    /** @docs-private */
     get croppedText(): string {
         const croppedTitleText = this.title()?.isOverflown ? this.titleText : '';
 
         return `${croppedTitleText}`;
     }
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get collapsable(): boolean {
-        return this._collapsable;
-    }
-
-    set collapsable(value: boolean) {
-        this._collapsable = coerceBooleanProperty(value);
-    }
-
-    private _collapsable: boolean = true;
-
+    /** Text used for the tooltip and for the accessible name of a collapsed item. */
     get titleText(): string | null {
-        return this._collapsedText || this.title()?.text || null;
+        return this.collapsedText() || this.title()?.text || null;
     }
 
-    get disabled(): boolean {
-        if (this._disabled !== undefined) {
-            return this._disabled;
-        }
-
-        return !this.isCollapsed && !this.hasCroppedText;
-    }
-
-    set disabled(value) {
-        this._disabled = coerceBooleanProperty(value);
-    }
-
+    /** @docs-private */
     get hasDropDownTrigger(): boolean {
         return !!this.dropdownTrigger;
     }
 
-    get showVerticalDropDownAngle(): boolean {
-        return !this.bento && this.hasDropDownTrigger && this.rectangleElement.vertical && !this.isCollapsed;
-    }
+    /** @docs-private */
+    protected readonly showVerticalDropDownAngle: Signal<boolean> = computed(
+        () => !this.bento && this.hasDropDownTrigger && this.rectangleElement.isVertical() && !this.isCollapsed()
+    );
 
-    get showHorizontalDropDownAngle(): boolean {
-        return this.hasDropDownTrigger && this.rectangleElement.horizontal && !this.isCollapsed;
-    }
+    /** @docs-private */
+    protected readonly showHorizontalDropDownAngle: Signal<boolean> = computed(
+        () => this.hasDropDownTrigger && this.rectangleElement.isHorizontal() && !this.isCollapsed()
+    );
 
+    /** @docs-private */
     get hasCroppedText(): boolean {
         return !!this.title()?.isOverflown;
     }
 
-    constructor() {
-        super();
+    /**
+     * Accessible name of the item. Needed for an icon-only item, which has no visible label of its own; an
+     * item that renders a title is named by it.
+     */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
+    /**
+     * A collapsed item shows nothing but its icon, and a tooltip is a transient overlay — never an accessible
+     * name. The name is therefore published on the element itself, unless the consumer named it already.
+     */
+    protected get resolvedAriaLabel(): string | null {
+        return this.ariaLabel() ?? (this.isCollapsed() ? this.titleText : null);
+    }
+
+    /**
+     * Items authored as `<kbq-navbar-item>` are custom elements with no implicit role, so they are announced as
+     * plain content. Anything already actionable — a native element, or a projected button/form field that owns
+     * the interaction — keeps its own semantics.
+     *
+     * No `aria-haspopup` for dropdown-trigger items on purpose: `KbqDropdownTrigger` deliberately omits it
+     * because the panel carries no menu semantics; it does publish `aria-expanded` itself.
+     */
+    protected get role(): string | null {
+        if (NATIVELY_ACTIONABLE_TAGS.has(this.nativeElement.tagName) || this.navbarFocusableItem.nestedElement) {
+            return null;
+        }
+
+        return 'button';
+    }
+
+    /** Whether Enter/Space has to be turned into a click by hand. */
+    private get needsSyntheticActivation(): boolean {
+        return this.role === 'button' && !this.hasDropDownTrigger;
+    }
+
+    constructor() {
         if (this.hasDropDownTrigger) {
             this.dropdownTrigger.openByArrowDown = false;
         }
 
         this.rectangleElement.state.pipe(takeUntilDestroyed()).subscribe(() => {
-            this.collapsed = this.rectangleElement.collapsed;
-
             this.updateDropdown();
 
-            this.changeDetectorRef.detectChanges();
+            this.updateTooltip();
+
+            this.changeDetectorRef.markForCheck();
         });
 
-        this._trigger = `${PopUpTriggers.Hover}`;
+        this.navbarFocusableItem.setTooltip(this.tooltip);
 
-        this.navbarFocusableItem.setTooltip(this);
+        this.tooltip.arrow = false;
+        this.tooltip.offset = 0;
 
-        this.arrow = false;
-        this.offset = 0;
+        this.tooltip.setOverlayPanelClass('kbq-tooltip-panel_horizontal-navbar');
 
-        this.overlayConfig.panelClass = 'kbq-tooltip-panel_horizontal-navbar';
+        // The tooltip of a collapsed item stands in for its missing title, so it must not also open on focus:
+        // `KbqNavbarFocusableItem.focus()` shows it explicitly, and only for keyboard focus.
+        this.tooltip.trigger = `${PopUpTriggers.Hover}`;
+
+        effect(() => {
+            // Re-read the reactive inputs the tooltip content depends on.
+            this.collapsedText();
+            this.tooltipDisabled();
+            this.isCollapsed();
+
+            this.updateTooltip();
+        });
     }
 
+    /** @docs-private */
     ngAfterContentInit(): void {
         this.updateTooltip();
     }
 
-    updateDropdown(): void {
-        if (!this.dropdownTrigger?.dropdown) return;
-
-        if (this.rectangleElement.vertical) {
-            this.dropdownTrigger.dropdown.overlapTriggerX = false;
-            this.dropdownTrigger.dropdown.overlapTriggerY = true;
-            // needs to shift dropdown to the left by 8 pixels
-            this.dropdownTrigger.offsetX = -8;
-        }
-    }
-
+    /** @docs-private */
     updateTooltip(): void {
-        if (this.isCollapsed) {
-            this.content = `${this.titleText || ''}`;
-        } else if (!this.isCollapsed && this.hasCroppedText) {
-            this.content = this.croppedText;
+        if (this.isCollapsed()) {
+            this.tooltip.content = `${this.titleText || ''}`;
+        } else if (this.hasCroppedText) {
+            this.tooltip.content = this.croppedText;
         }
 
-        if (this.rectangleElement.vertical) {
-            this.placement = PopUpPlacements.Right;
-            this.placementPriority = PopUpPlacements.Right;
+        // A fully visible title needs no tooltip; a collapsed or clipped one is the only way to read it.
+        this.tooltip.disabled = this.tooltipDisabled() ?? (!this.isCollapsed() && !this.hasCroppedText);
+
+        if (this.rectangleElement.isVertical()) {
+            this.tooltip.tooltipPlacement = PopUpPlacements.Right;
+            this.tooltip.tooltipPlacementPriority = PopUpPlacements.Right;
         }
 
         this.changeDetectorRef.markForCheck();
     }
 
+    /** @docs-private */
     getTitleWidth(): number {
         return this.title()?.outerElementWidth ?? 0;
     }
 
-    onKeyDown($event: KeyboardEvent) {
+    /** @docs-private */
+    protected onKeyDown($event: KeyboardEvent) {
+        if (this.needsSyntheticActivation && [ENTER, SPACE].includes($event.keyCode)) {
+            this.nativeElement.click();
+
+            $event.preventDefault();
+
+            return;
+        }
+
         if (!this.hasDropDownTrigger) {
             return;
         }
 
         if (
-            (this.rectangleElement.horizontal && $event.keyCode === DOWN_ARROW) ||
-            (this.rectangleElement.vertical && $event.keyCode === RIGHT_ARROW)
+            (this.rectangleElement.isHorizontal() && $event.keyCode === DOWN_ARROW) ||
+            (this.rectangleElement.isVertical() && $event.keyCode === RIGHT_ARROW)
         ) {
             this.dropdownTrigger.openedBy = 'keyboard';
             this.dropdownTrigger.open();
 
             $event.stopPropagation();
             $event.preventDefault();
+        }
+    }
+
+    private updateDropdown(): void {
+        if (!this.dropdownTrigger?.dropdown) return;
+
+        if (this.rectangleElement.isVertical()) {
+            this.dropdownTrigger.dropdown.overlapTriggerX = false;
+            this.dropdownTrigger.dropdown.overlapTriggerY = true;
+            // needs to shift dropdown to the left by 8 pixels
+            this.dropdownTrigger.offsetX = -8;
         }
     }
 }

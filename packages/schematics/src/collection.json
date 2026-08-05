@@ -5,7 +5,9 @@
             "description": "Adds @koobiq/components library to the project and installs dependencies",
             "factory": "./ng-add/index",
             "schema": "./ng-add/schema.json",
-            "aliases": ["install"]
+            "aliases": [
+                "install"
+            ]
         },
         "new-icons-pack": {
             "description": "Updates prefixes and names of changed/removed icons",
@@ -91,6 +93,11 @@
             "description": "Migrates KbqButtonToggleGroup consumers to its signal inputs (vertical/multiple reads become calls) and reports the ARIA, tab-order and keyboard changes of the button-toggle review, including icon-only toggles left without an accessible name",
             "factory": "./migrations/button-toggle-signals-and-aria/index",
             "schema": "./migrations/button-toggle-signals-and-aria/schema.json"
+        },
+        "navbar-signals-and-aria": {
+            "description": "Migrates navbar consumers to the signal-based API (expanded/configuration/isCollapsed/collapsable reads become calls, expanded/tabIndex writes become .set(), rectangle-element horizontal/vertical become orientation) and reports the removed tooltip inheritance, the removed disabled/hovered members and the new ARIA, keyboard and z-index behaviour",
+            "factory": "./migrations/navbar-signals-and-aria/index",
+            "schema": "./migrations/navbar-signals-and-aria/schema.json"
         }
     }
 }

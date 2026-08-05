@@ -12,8 +12,11 @@
         color: var(--kbq-navbar-item-#{$state-name}-content-text);
     }
 
+    // No `!important` needed: the child combinator plus the item class already outweighs everything that
+    // colours a bare icon (`.kbq-icon` and its `.kbq-icon.kbq-<color>` modifiers, at most two classes), and
+    // the state variants below add a class of their own on top of this one.
     & > .kbq-icon.kbq-empty {
-        color: var(--kbq-navbar-item-#{$state-name}-content-icon-left) !important;
+        color: var(--kbq-navbar-item-#{$state-name}-content-icon-left);
     }
 }
 
