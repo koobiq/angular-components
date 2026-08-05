@@ -16,6 +16,7 @@ import * as i1 from '@koobiq/components/icon';
 import { InjectionToken } from '@angular/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
@@ -25,7 +26,7 @@ export const KBQ_ACCORDION_STATE_STORE: InjectionToken<KbqAccordionStateStore>;
 // @public (undocumented)
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
     constructor();
-    protected readonly allItems: _angular_core.Signal<readonly any[]>;
+    protected readonly allItems: Signal<readonly KbqAccordionItem[]>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     closeAll(): void;
     readonly collapsible: _angular_core.InputSignal<boolean>;
@@ -37,7 +38,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     get hasSavedState(): boolean;
     get id(): string;
     get isMultiple(): boolean;
-    readonly items: _angular_core.Signal<any[]>;
+    readonly items: Signal<readonly KbqAccordionItem[]>;
     keydownHandler(event: KeyboardEvent): void;
     protected keyManager: FocusKeyManager<KbqAccordionItem>;
     readonly level: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -56,7 +57,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     readonly stateSavingKey: _angular_core.InputSignal<string>;
     readonly type: _angular_core.InputSignal<KbqAccordionType>;
     readonly useStateSaving: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly value: _angular_core.Signal<string | string[]>;
+    readonly value: Signal<string | string[]>;
     readonly valueChange: _angular_core.OutputEmitterRef<string | string[]>;
     readonly valueInput: _angular_core.InputSignal<string | string[] | undefined>;
     readonly variant: _angular_core.InputSignal<KbqAccordionVariant>;

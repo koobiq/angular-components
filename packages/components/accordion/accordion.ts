@@ -21,6 +21,7 @@ import {
     numberAttribute,
     OnDestroy,
     output,
+    Signal,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
@@ -79,7 +80,9 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
      * Use `items` instead — this one is the raw, unfiltered query.
      * @docs-private
      */
-    protected readonly allItems = contentChildren(
+    // The generic is explicit because `forwardRef` erases the locator type, which would leave both
+    // this query and `items` as `Signal<any[]>` in the public API report.
+    protected readonly allItems: Signal<readonly KbqAccordionItem[]> = contentChildren(
         forwardRef(() => KbqAccordionItem),
         { descendants: true }
     );
@@ -95,7 +98,9 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
      * would report a nested item's value and state saving would persist it under the outer key.
      * @docs-private
      */
-    readonly items = computed(() => this.allItems().filter((item) => item.accordion === this));
+    readonly items: Signal<readonly KbqAccordionItem[]> = computed(() =>
+        this.allItems().filter((item) => item.accordion === this)
+    );
 
     /** Whether the accordion persists the expanded state of its items across reloads. Defaults to `false`. */
     readonly useStateSaving = input(false, { transform: booleanAttribute });

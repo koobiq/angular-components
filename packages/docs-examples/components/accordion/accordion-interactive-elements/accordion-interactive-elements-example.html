@@ -10,12 +10,12 @@
                          own section so the actions stay distinguishable in a screen reader element list. -->
                     <div class="kbq-accordion-header__actions">
                         <button
-                            attr.aria-label="Run {{ section.title }}"
+                            aria-label="Run {{ section.title }}"
                             kbq-icon-button="kbq-bolt_16"
                             type="button"
                         ></button>
                         <button
-                            attr.aria-label="More actions for {{ section.title }}"
+                            aria-label="More actions for {{ section.title }}"
                             kbq-icon-button="kbq-ellipsis-vertical_16"
                             type="button"
                             [kbqDropdownTriggerFor]="dropdown"

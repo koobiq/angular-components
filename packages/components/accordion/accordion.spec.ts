@@ -814,6 +814,27 @@ describe('KbqAccordion', () => {
             expect(items[2].nativeElement.getAttribute('data-state')).toBe('closed');
             expect(event.defaultPrevented).toBe(false);
         });
+
+        it('should make the content of a collapsed item inert', () => {
+            const { items, triggers } = createInteractiveFixture();
+            const content = items[0].nativeElement.querySelector('kbq-accordion-content') as HTMLElement;
+
+            // `hidden` cannot do this on its own: the host keeps an explicit `display: block` so the
+            // height can animate, which overrides `[hidden]`'s `display: none` and leaves every
+            // control inside a closed section focusable.
+            expect(content.hasAttribute('inert')).toBe(true);
+
+            triggers[0].nativeElement.click();
+            fixture.detectChanges();
+
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
+            expect(content.hasAttribute('inert')).toBe(false);
+
+            triggers[0].nativeElement.click();
+            fixture.detectChanges();
+
+            expect(content.hasAttribute('inert')).toBe(true);
+        });
     });
 
     describe('nested accordion', () => {
