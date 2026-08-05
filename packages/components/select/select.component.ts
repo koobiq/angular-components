@@ -118,7 +118,6 @@ import {
     take,
     takeUntil
 } from 'rxjs/operators';
-import { KbqSelectOrigin } from './select-origin.directive';
 
 let nextUniqueId = 0;
 
@@ -728,19 +727,6 @@ export class KbqSelect
      */
     protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
 
-    /**
-     * Custom element the panel is positioned and sized against, overriding the default
-     * (the parent `kbq-form-field`'s container, if any, or the trigger itself). Useful when the select
-     * is nested inside another component whose own box better represents the panel's visual anchor
-     * than the select's immediate wrapper. Defaults to the nearest ancestor providing `kbqSelectOrigin`, if any.
-     */
-    readonly connectedTo = input<KbqSelectOrigin | undefined>(
-        inject(KbqSelectOrigin, { optional: true }) ?? undefined,
-        {
-            alias: 'kbqSelectConnectedTo'
-        }
-    );
-
     /** Value of the select control. Can be a single value or array of values for multiple selection. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -1157,13 +1143,9 @@ export class KbqSelect
 
         if (!trigger || !this.keyManager) return;
 
-        const connectedTo = this.connectedTo();
-
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
         this.triggerRect = (
-            connectedTo?.elementRef.nativeElement ||
-            this.parentFormField?.getConnectedOverlayOrigin().nativeElement ||
-            trigger.nativeElement
+            this.parentFormField?.getConnectedOverlayOrigin().nativeElement || trigger.nativeElement
         ).getBoundingClientRect();
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
@@ -1173,9 +1155,7 @@ export class KbqSelect
         // It's important that we read this as late as possible, because doing so earlier will
         // return a different element since it's based on queries in the form field which may
         // not have run yet. Also this needs to be assigned before we measure the overlay width.
-        if (connectedTo) {
-            this.overlayOrigin = connectedTo.elementRef;
-        } else if (this.parentFormField) {
+        if (this.parentFormField) {
             this.overlayOrigin = this.parentFormField.getConnectedOverlayOrigin();
         }
 

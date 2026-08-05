@@ -1856,41 +1856,6 @@ class SelectWithSearchAndPanelWidth {
 class BaseSelect {}
 
 @Component({
-    imports: [KbqSelectModule],
-    template: `
-        <div kbqSelectOrigin class="ambient-origin" style="width: 300px">
-            <kbq-form-field>
-                <kbq-select>
-                    <kbq-option [value]="'option1'">Option1</kbq-option>
-                    <kbq-option [value]="'option2'">Option2</kbq-option>
-                </kbq-select>
-            </kbq-form-field>
-        </div>
-    `
-})
-class SelectWithAmbientOrigin {
-    readonly select = viewChild.required(KbqSelect);
-}
-
-@Component({
-    imports: [KbqSelectModule],
-    template: `
-        <div kbqSelectOrigin class="ambient-origin" style="width: 300px">
-            <kbq-form-field>
-                <kbq-select [kbqSelectConnectedTo]="explicit">
-                    <kbq-option [value]="'option1'">Option1</kbq-option>
-                    <kbq-option [value]="'option2'">Option2</kbq-option>
-                </kbq-select>
-            </kbq-form-field>
-        </div>
-        <div #explicit="kbqSelectOrigin" kbqSelectOrigin class="explicit-origin" style="width: 150px"></div>
-    `
-})
-class SelectWithExplicitConnectedTo {
-    readonly select = viewChild.required(KbqSelect);
-}
-
-@Component({
     selector: 'select-with-show-preselected-values-single',
     imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
@@ -7594,45 +7559,5 @@ describe('KbqSelect', () => {
                 expect(testInstance.emitCount).toBe(1);
             }));
         });
-    });
-
-    describe('connectedTo', () => {
-        it('falls back to the nearest ancestor kbqSelectOrigin when connectedTo is not bound', fakeAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [SelectWithAmbientOrigin, NoopAnimationsModule]
-            }).compileComponents();
-
-            const fixture = TestBed.createComponent(SelectWithAmbientOrigin);
-
-            fixture.detectChanges();
-            flush();
-
-            const ambientOrigin = fixture.debugElement.query(By.css('.ambient-origin')).nativeElement;
-
-            fixture.componentInstance.select().open();
-            fixture.detectChanges();
-            flush();
-
-            expect((fixture.componentInstance.select() as any).overlayOrigin.nativeElement).toBe(ambientOrigin);
-        }));
-
-        it('prefers an explicit connectedTo over the ambient origin', fakeAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [SelectWithExplicitConnectedTo, NoopAnimationsModule]
-            }).compileComponents();
-
-            const fixture = TestBed.createComponent(SelectWithExplicitConnectedTo);
-
-            fixture.detectChanges();
-            flush();
-
-            const explicitOrigin = fixture.debugElement.query(By.css('.explicit-origin')).nativeElement;
-
-            fixture.componentInstance.select().open();
-            fixture.detectChanges();
-            flush();
-
-            expect((fixture.componentInstance.select() as any).overlayOrigin.nativeElement).toBe(explicitOrigin);
-        }));
     });
 });

@@ -29,16 +29,18 @@ import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
+    KBQ_CONNECTED_OVERLAY_ORIGIN,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
+    KbqConnectedOverlayOriginProvider,
     kbqInjectA11yLocaleConfiguration,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqSelect, KbqSelectOrigin } from '@koobiq/components/select';
+import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -130,6 +132,7 @@ export class KbqInlineEditMenu {
     ],
     templateUrl: './inline-edit.html',
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
+    providers: [{ provide: KBQ_CONNECTED_OVERLAY_ORIGIN, useExisting: KbqInlineEdit }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -145,14 +148,11 @@ export class KbqInlineEditMenu {
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
     },
-    hostDirectives: [
-        CdkMonitorFocus,
-        KbqSelectOrigin
-    ],
+    hostDirectives: [CdkMonitorFocus],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     exportAs: 'kbqInlineEdit'
 })
-export class KbqInlineEdit {
+export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     /** Accessible names for the icon-only save/cancel buttons. */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
@@ -297,6 +297,16 @@ export class KbqInlineEdit {
     /** Manually switch mode */
     toggleMode(): void {
         this.mode.update((mode) => (mode === 'view' ? 'edit' : 'view'));
+    }
+
+    /**
+     * Implements `KbqConnectedOverlayOriginProvider`, letting a nested `KbqFormField`'s control
+     * anchor its overlay to this element instead of the form-field's own container.
+     * When no override is needed, the form-field falls back to its default.
+     * @docs-private
+     */
+    getConnectedOverlayOrigin(): ElementRef | undefined {
+        return this.isSingleSelect() ? new ElementRef(this.overlayOrigin) : undefined;
     }
 
     /** Saves the current value and returns to view mode, running the same validation as a normal save. */

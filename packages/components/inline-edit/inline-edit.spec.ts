@@ -16,10 +16,10 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
+import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { Subject } from 'rxjs';
@@ -577,9 +577,9 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
             await fixture.whenStable();
 
-            const select = fixture.debugElement.query(By.directive(KbqSelect)).componentInstance as KbqSelect;
+            const formField = fixture.debugElement.query(By.directive(KbqFormField)).componentInstance as KbqFormField;
 
-            expect(select.connectedTo()?.elementRef.nativeElement).toBe(inlineEditDebugElement.nativeElement);
+            expect(formField.getConnectedOverlayOrigin().nativeElement).toBe(inlineEditDebugElement.nativeElement);
         });
 
         it('should not treat a multi-select as a select-style editor', async () => {
@@ -594,6 +594,20 @@ describe('KbqInlineEdit', () => {
             await fixture.whenStable();
 
             expect(document.querySelector(`${componentCssClasses.panel}.kbq-inline-edit__panel_select`)).toBeNull();
+        });
+
+        it('should not override the overlay origin for a non-select control', async () => {
+            const fixture = setup(TestComponent);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const formField = fixture.debugElement.query(By.directive(KbqFormField)).componentInstance as KbqFormField;
+
+            expect(formField.getConnectedOverlayOrigin().nativeElement).not.toBe(inlineEditDebugElement.nativeElement);
         });
     });
 
