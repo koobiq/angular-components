@@ -10,6 +10,8 @@
     scroll-behavior: smooth;
 
     width: 100%;
+
+    --icon-accent-color: var(--kbq-foreground-error);
 }
 
 .docs-icons-viewer__header {
@@ -30,7 +32,14 @@
         text-align: left;
     }
 
-    & > .kbq-form-field {
+    & .docs-icons-viewer__header-controls {
+        display: flex;
+        align-items: center;
+
+        column-gap: var(--kbq-size-l);
+    }
+
+    & .kbq-form-field {
         max-width: 320px;
     }
 }
