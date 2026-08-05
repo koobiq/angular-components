@@ -88,6 +88,8 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
         context.logger.info('Syncing Angular dependency versions for releasing...');
         releasePackageJson = syncNgVersion(releasePackageJson, packageJson, options.ngVersionPlaceholder, context);
 
+        assertNoPlaceholders(releasePackageJson, releasePackageJsonPath);
+
         writeFileSync(join(libraryDestination, 'package.json'), JSON.stringify(releasePackageJson, null, 4), {
             encoding: 'utf-8'
         });
@@ -126,10 +128,10 @@ interface INgPackagerJson {
 interface IPackageJson {
     version?: string;
     requiredAngularVersion: string;
-    peerDependencies: {
+    peerDependencies?: {
         [key: string]: string;
     };
-    dependencies: {
+    dependencies?: {
         [key: string]: string;
     };
 }
@@ -147,8 +149,14 @@ function syncComponentsVersion(
 
         for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
             if (value.includes(placeholder)) {
-                context.logger.info(`${key}: ${newPackageJson.version}`);
-                newPackageJson.peerDependencies![key] = `${newPackageJson.version}`;
+                // Substitute rather than overwrite, so the source manifest controls the shape of the
+                // range: `^{{VERSION}}` must publish as `^1.2.3`, not as the exact pin `1.2.3`.
+                // Exact-pinning our own packages to each other makes them mutually unsatisfiable as
+                // soon as their versions drift apart.
+                const range = value.replace(placeholder, newPackageJson.version!);
+
+                context.logger.info(`${key}: ${range}`);
+                newPackageJson.peerDependencies![key] = range;
             }
         }
     }
@@ -166,12 +174,40 @@ function syncNgVersion(
 
     for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
         if (value.includes(placeholder)) {
-            context.logger.info(`${key}: ${rootPackageJson.requiredAngularVersion}`);
-            updatedJson.peerDependencies![key] = `${rootPackageJson.requiredAngularVersion}`;
+            const range = value.replace(placeholder, rootPackageJson.requiredAngularVersion);
+
+            context.logger.info(`${key}: ${range}`);
+            updatedJson.peerDependencies![key] = range;
         }
     }
 
     return updatedJson;
+}
+
+/**
+ * Fails the build if any `{{...}}` placeholder survived substitution.
+ *
+ * `syncComponentsVersion` only rewrites peers when the package version itself is still a
+ * placeholder, so a change in ng-packagr's output could silently leave `{{VERSION}}` in a
+ * published `peerDependencies` — an unsatisfiable range that breaks `npm install` for every
+ * consumer. Yarn's node-modules linker tolerates it in-repo, so nothing else would notice.
+ */
+function assertNoPlaceholders(releaseJson: IPackageJson, packageJsonPath: string) {
+    const leaked = Object.entries(releaseJson.peerDependencies || {})
+        .concat(Object.entries(releaseJson.dependencies || {}))
+        .filter(([, value]) => value.includes('{{'))
+        .map(([key, value]) => `${key}: ${value}`);
+
+    if (releaseJson.version?.includes('{{')) {
+        leaked.unshift(`version: ${releaseJson.version}`);
+    }
+
+    if (leaked.length > 0) {
+        throw new Error(
+            `❌ Unresolved version placeholders in ${packageJsonPath}:\n  ${leaked.join('\n  ')}\n` +
+                'Publishing this would produce an unsatisfiable dependency range.'
+        );
+    }
 }
 
 async function tryJsonParse<T>(path: string): Promise<T> {

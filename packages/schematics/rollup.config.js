@@ -55,6 +55,7 @@ module.exports = [
             clean(),
             replace({
                 preventAssignment: true,
+                'VERSIONS.ANGULAR_ANIMATIONS': version(pkg.dependencies['@angular/animations']),
                 'VERSIONS.ANGULAR_CDK': version(pkg.dependencies['@angular/cdk']),
                 'VERSIONS.KOOBIQ_CDK': version(pkg.version),
                 'VERSIONS.KOOBIQ_ANGULAR_LUXON_ADAPTER': version(pkg.version),

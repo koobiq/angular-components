@@ -11,8 +11,29 @@ ng add @koobiq/components
 Ручная установка:
 
 ```bash
-npm install @koobiq/components @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
+npm install @koobiq/components @angular/cdk @angular/animations overlayscrollbars @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
 ```
+
+`@koobiq/angular-luxon-adapter` (или `@koobiq/angular-moment-adapter`) нужен только при использовании
+компонентов для работы с датами — [datepicker](/ru/components/datepicker),
+[timepicker](/ru/components/timepicker) или [filter-bar](/ru/components/filter-bar). Установите
+`marked`, если используете [markdown](/ru/components/markdown), и `highlight.js`, если используете
+[code-block](/ru/components/code-block).
+
+### Настройка анимаций
+
+Компоненты используют анимации Angular, поэтому приложение должно их предоставить:
+
+```typescript
+import { provideAnimations } from '@angular/platform-browser/animations';
+
+bootstrapApplication(AppComponent, {
+    providers: [provideAnimations()]
+});
+```
+
+Без этого провайдера открытие компонента с анимацией — dropdown, select, tooltip, toast,
+datepicker — завершится ошибкой `NG05105: Found the synthetic property @state`.
 
 ### Настройка стилей
 

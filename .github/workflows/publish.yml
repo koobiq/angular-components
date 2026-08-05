@@ -26,6 +26,9 @@ jobs:
       - name: Build packages
         uses: ./.github/workflows/actions/build-packages
 
+      - name: Check npm can resolve the packages
+        run: yarn run check-npm-resolution
+
       - name: Publish package
         run: |
           rm -rf .npmrc && echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_KOOBIQ" > ~/.npmrc

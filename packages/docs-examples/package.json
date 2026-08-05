@@ -9,12 +9,14 @@
     ],
     "license": "MIT",
     "peerDependencies": {
+        "@angular/animations": "{{NG_VERSION}}",
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/common": "{{NG_VERSION}}",
-        "@koobiq/components": "{{VERSION}}",
-        "@koobiq/angular-moment-adapter": "{{VERSION}}",
-        "@koobiq/angular-luxon-adapter": "{{VERSION}}"
+        "@angular/forms": "{{NG_VERSION}}",
+        "@koobiq/components": "^{{VERSION}}",
+        "@koobiq/angular-moment-adapter": "^{{VERSION}}",
+        "@koobiq/angular-luxon-adapter": "^{{VERSION}}"
     },
     "dependencies": {
         "tslib": "^2.6.2"

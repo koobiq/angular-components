@@ -5,6 +5,7 @@ import * as messages from './messages';
 import { Schema } from './schema';
 
 const VERSIONS = {
+    ANGULAR_ANIMATIONS: '^0.0.0',
     ANGULAR_CDK: '^0.0.0',
     KOOBIQ_ANGULAR_LUXON_ADAPTER: '^0.0.0',
     KOOBIQ_DATE_FORMATTER: '^0.0.0',
@@ -32,6 +33,9 @@ export default function ngAdd(options: Schema): Rule {
         }
 
         // Installing dependencies
+        // `@angular/animations` is a mandatory peer: the components declare `animations: [...]`
+        // metadata and bind synthetic `[@state]` properties, which throw NG05105 without it.
+        addPackageToPackageJson(tree, '@angular/animations', VERSIONS.ANGULAR_ANIMATIONS);
         addPackageToPackageJson(tree, '@angular/cdk', VERSIONS.ANGULAR_CDK);
         addPackageToPackageJson(tree, '@koobiq/angular-luxon-adapter', VERSIONS.KOOBIQ_ANGULAR_LUXON_ADAPTER);
         addPackageToPackageJson(tree, '@koobiq/date-formatter', VERSIONS.KOOBIQ_DATE_FORMATTER);
