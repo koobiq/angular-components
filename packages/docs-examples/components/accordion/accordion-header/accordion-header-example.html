@@ -1,161 +1,209 @@
 <div class="layout-row layout-fill layout-align-space-around docs-example-vertical-margin">
     <kbq-accordion useStateSaving style="width: 360px">
         <kbq-accordion-item>
-            <button kbq-accordion-trigger type="button">
-                @if (icon) {
-                    <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
-                }
-                <span class="layout-margin-right-s">Text</span>
-                @if (caption) {
-                    <span
-                        style="color: var(--kbq-foreground-contrast-secondary)"
-                        class="kbq-accordion-trigger__caption"
-                    >
-                        Caption
-                    </span>
-                }
-                @if (leftBadge) {
-                    <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
-                }
+            <kbq-accordion-header>
+                <button kbq-accordion-trigger type="button">
+                    @if (icon) {
+                        <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
+                    }
+                    <span class="layout-margin-right-s">Text</span>
+                    @if (caption) {
+                        <span
+                            style="color: var(--kbq-foreground-contrast-secondary)"
+                            class="kbq-accordion-trigger__caption"
+                        >
+                            Caption
+                        </span>
+                    }
+                    @if (leftBadge) {
+                        <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
+                    }
+                    @if (rightBadge) {
+                        <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
+                            Badge
+                        </kbq-badge>
+                    }
+                </button>
+
+                <!-- Actions go next to the trigger, not inside it: the trigger is a role="button",
+                     and nesting focusable elements in it breaks accessibility. Each label names its
+                     own section, since every section here shares the same "Text" title. -->
                 @if (actions) {
-                    <i kbq-icon-button="kbq-bolt_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-bug_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-ellipsis-vertical_16" class="kbq-accordion-trigger__action"></i>
+                    <div class="kbq-accordion-header__actions">
+                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 1"></button>
+                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 1"></button>
+                        <button
+                            kbq-icon-button="kbq-ellipsis-vertical_16"
+                            type="button"
+                            aria-label="More, section 1"
+                        ></button>
+                    </div>
                 }
-                @if (rightBadge) {
-                    <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
-                        Badge
-                    </kbq-badge>
-                }
-            </button>
+            </kbq-accordion-header>
             <kbq-accordion-content>
                 Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item>
-            <button kbq-accordion-trigger type="button">
-                @if (icon) {
-                    <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
-                }
-                <span class="layout-margin-right-s">Text</span>
-                @if (caption) {
-                    <span
-                        style="color: var(--kbq-foreground-contrast-secondary)"
-                        class="kbq-accordion-trigger__caption"
-                    >
-                        Caption
-                    </span>
-                }
-                @if (leftBadge) {
-                    <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
-                }
+            <kbq-accordion-header>
+                <button kbq-accordion-trigger type="button">
+                    @if (icon) {
+                        <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
+                    }
+                    <span class="layout-margin-right-s">Text</span>
+                    @if (caption) {
+                        <span
+                            style="color: var(--kbq-foreground-contrast-secondary)"
+                            class="kbq-accordion-trigger__caption"
+                        >
+                            Caption
+                        </span>
+                    }
+                    @if (leftBadge) {
+                        <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
+                    }
+                    @if (rightBadge) {
+                        <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
+                            Badge
+                        </kbq-badge>
+                    }
+                </button>
+
                 @if (actions) {
-                    <i kbq-icon-button="kbq-bolt_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-bug_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-ellipsis-vertical_16" class="kbq-accordion-trigger__action"></i>
+                    <div class="kbq-accordion-header__actions">
+                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 2"></button>
+                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 2"></button>
+                        <button
+                            kbq-icon-button="kbq-ellipsis-vertical_16"
+                            type="button"
+                            aria-label="More, section 2"
+                        ></button>
+                    </div>
                 }
-                @if (rightBadge) {
-                    <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
-                        Badge
-                    </kbq-badge>
-                }
-            </button>
+            </kbq-accordion-header>
             <kbq-accordion-content>
                 Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item>
-            <button kbq-accordion-trigger type="button">
-                @if (icon) {
-                    <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
-                }
-                <span class="layout-margin-right-s">Text</span>
-                @if (caption) {
-                    <span
-                        style="color: var(--kbq-foreground-contrast-secondary)"
-                        class="kbq-accordion-trigger__caption"
-                    >
-                        Caption
-                    </span>
-                }
-                @if (leftBadge) {
-                    <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
-                }
+            <kbq-accordion-header>
+                <button kbq-accordion-trigger type="button">
+                    @if (icon) {
+                        <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
+                    }
+                    <span class="layout-margin-right-s">Text</span>
+                    @if (caption) {
+                        <span
+                            style="color: var(--kbq-foreground-contrast-secondary)"
+                            class="kbq-accordion-trigger__caption"
+                        >
+                            Caption
+                        </span>
+                    }
+                    @if (leftBadge) {
+                        <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
+                    }
+                    @if (rightBadge) {
+                        <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
+                            Badge
+                        </kbq-badge>
+                    }
+                </button>
+
                 @if (actions) {
-                    <i kbq-icon-button="kbq-bolt_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-bug_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-ellipsis-vertical_16" class="kbq-accordion-trigger__action"></i>
+                    <div class="kbq-accordion-header__actions">
+                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 3"></button>
+                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 3"></button>
+                        <button
+                            kbq-icon-button="kbq-ellipsis-vertical_16"
+                            type="button"
+                            aria-label="More, section 3"
+                        ></button>
+                    </div>
                 }
-                @if (rightBadge) {
-                    <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
-                        Badge
-                    </kbq-badge>
-                }
-            </button>
+            </kbq-accordion-header>
             <kbq-accordion-content>
                 Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item>
-            <button kbq-accordion-trigger type="button">
-                @if (icon) {
-                    <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
-                }
-                <span class="layout-margin-right-s">Text</span>
-                @if (caption) {
-                    <span
-                        style="color: var(--kbq-foreground-contrast-secondary)"
-                        class="kbq-accordion-trigger__caption"
-                    >
-                        Caption
-                    </span>
-                }
-                @if (leftBadge) {
-                    <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
-                }
+            <kbq-accordion-header>
+                <button kbq-accordion-trigger type="button">
+                    @if (icon) {
+                        <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
+                    }
+                    <span class="layout-margin-right-s">Text</span>
+                    @if (caption) {
+                        <span
+                            style="color: var(--kbq-foreground-contrast-secondary)"
+                            class="kbq-accordion-trigger__caption"
+                        >
+                            Caption
+                        </span>
+                    }
+                    @if (leftBadge) {
+                        <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
+                    }
+                    @if (rightBadge) {
+                        <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
+                            Badge
+                        </kbq-badge>
+                    }
+                </button>
+
                 @if (actions) {
-                    <i kbq-icon-button="kbq-bolt_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-bug_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-ellipsis-vertical_16" class="kbq-accordion-trigger__action"></i>
+                    <div class="kbq-accordion-header__actions">
+                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 4"></button>
+                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 4"></button>
+                        <button
+                            kbq-icon-button="kbq-ellipsis-vertical_16"
+                            type="button"
+                            aria-label="More, section 4"
+                        ></button>
+                    </div>
                 }
-                @if (rightBadge) {
-                    <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
-                        Badge
-                    </kbq-badge>
-                }
-            </button>
+            </kbq-accordion-header>
             <kbq-accordion-content>
                 Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item>
-            <button kbq-accordion-trigger type="button">
-                @if (icon) {
-                    <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
-                }
-                <span class="layout-margin-right-s">Text</span>
-                @if (caption) {
-                    <span
-                        style="color: var(--kbq-foreground-contrast-secondary)"
-                        class="kbq-accordion-trigger__caption"
-                    >
-                        Caption
-                    </span>
-                }
-                @if (leftBadge) {
-                    <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
-                }
+            <kbq-accordion-header>
+                <button kbq-accordion-trigger type="button">
+                    @if (icon) {
+                        <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
+                    }
+                    <span class="layout-margin-right-s">Text</span>
+                    @if (caption) {
+                        <span
+                            style="color: var(--kbq-foreground-contrast-secondary)"
+                            class="kbq-accordion-trigger__caption"
+                        >
+                            Caption
+                        </span>
+                    }
+                    @if (leftBadge) {
+                        <kbq-badge class="kbq-accordion-trigger__badge" [compact]="true">Badge</kbq-badge>
+                    }
+                    @if (rightBadge) {
+                        <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
+                            Badge
+                        </kbq-badge>
+                    }
+                </button>
+
                 @if (actions) {
-                    <i kbq-icon-button="kbq-bolt_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-bug_16" class="kbq-accordion-trigger__action"></i>
-                    <i kbq-icon-button="kbq-ellipsis-vertical_16" class="kbq-accordion-trigger__action"></i>
+                    <div class="kbq-accordion-header__actions">
+                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 5"></button>
+                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 5"></button>
+                        <button
+                            kbq-icon-button="kbq-ellipsis-vertical_16"
+                            type="button"
+                            aria-label="More, section 5"
+                        ></button>
+                    </div>
                 }
-                @if (rightBadge) {
-                    <kbq-badge style="margin-left: auto" class="kbq-accordion-trigger__badge" [compact]="true">
-                        Badge
-                    </kbq-badge>
-                }
-            </button>
+            </kbq-accordion-header>
             <kbq-accordion-content>
                 Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
             </kbq-accordion-content>

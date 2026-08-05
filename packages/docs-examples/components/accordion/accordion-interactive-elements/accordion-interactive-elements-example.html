@@ -1,0 +1,53 @@
+<div class="layout-column layout-fill layout-align-center-center docs-example-vertical-margin">
+    <kbq-accordion stateSavingKey="accordion-interactive-elements" useStateSaving style="width: 360px">
+        @for (section of sections; track section.id) {
+            <kbq-accordion-item [value]="section.id">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">{{ section.title }}</button>
+
+                    <!-- Actions go next to the trigger, not inside it: the trigger is a role="button",
+                         and nesting focusable elements in it breaks accessibility. Each label names its
+                         own section so the actions stay distinguishable in a screen reader element list. -->
+                    <div class="kbq-accordion-header__actions">
+                        <button
+                            aria-label="Run {{ section.title }}"
+                            kbq-icon-button="kbq-bolt_16"
+                            type="button"
+                        ></button>
+                        <button
+                            aria-label="More actions for {{ section.title }}"
+                            kbq-icon-button="kbq-ellipsis-vertical_16"
+                            type="button"
+                            [kbqDropdownTriggerFor]="dropdown"
+                        ></button>
+                    </div>
+                </kbq-accordion-header>
+
+                <kbq-accordion-content>
+                    <div class="layout-column layout-gap-s">
+                        <kbq-checkbox [(ngModel)]="section.enabled">Enabled</kbq-checkbox>
+
+                        <kbq-form-field>
+                            <input kbqInput placeholder="Name" [(ngModel)]="section.name" />
+                        </kbq-form-field>
+
+                        <button kbq-button type="button">Apply</button>
+                    </div>
+                </kbq-accordion-content>
+            </kbq-accordion-item>
+        }
+    </kbq-accordion>
+
+    <kbq-dropdown #dropdown="kbqDropdown">
+        <button kbq-dropdown-item type="button">Rename</button>
+        <button kbq-dropdown-item type="button">Duplicate</button>
+        <button kbq-dropdown-item type="button">Delete</button>
+    </kbq-dropdown>
+</div>
+
+<div
+    style="color: var(--kbq-foreground-contrast-secondary)"
+    class="kbq-text-normal layout-margin-top-l layout-margin-bottom-s layout-row layout-align-center"
+>
+    Enter and Space toggle the section only while the trigger itself is focused
+</div>
