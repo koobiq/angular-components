@@ -125,6 +125,12 @@
         }
     }
 
+    // Select-style editor: edit mode shows only the dropdown, not a bordered field, so the view
+    // text keeps showing through and just gets the "active" look instead.
+    &.kbq-inline-edit_select.kbq-inline-edit_edit {
+        --kbq-inline-edit-background: var(--kbq-states-background-transparent-active);
+    }
+
     &:hover,
     &.cdk-keyboard-focused,
     &.kbq-inline-edit_anchor-focused {
@@ -185,6 +191,10 @@
         flex-direction: row;
         gap: var(--kbq-size-xxs);
         padding: var(--kbq-size-xxs) var(--kbq-size-s) var(--kbq-size-s);
+    }
+
+    &.kbq-inline-edit__panel_select .kbq-inline-edit__control-container {
+        display: none;
     }
 
     .kbq-inline-edit__control-container,

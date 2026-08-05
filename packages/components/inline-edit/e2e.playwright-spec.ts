@@ -85,6 +85,23 @@ test.describe('KbqInlineEdit', () => {
         });
     });
 
+    test.describe('E2eInlineEditSelectMultiline', () => {
+        const getContainer = (page: Page) => page.getByTestId('e2eInlineEditSelectMultilineContainer');
+        const getInlineEdit = (locator: Locator) => locator.getByTestId('e2eInlineEditSelectMultiline');
+
+        test('multiline select-style editor', async ({ page }) => {
+            await page.goto('/E2eInlineEditSelectMultiline');
+
+            const screenshotTarget = getContainer(page);
+
+            await getInlineEdit(screenshotTarget).click();
+
+            await expect(screenshotTarget).toHaveScreenshot('06-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('06-dark.png');
+        });
+    });
+
     test.describe('E2eInlineEditMenuButton', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eInlineEditMenuButton');
         const getContainer = (page: Page) => page.getByTestId('e2eInlineEditMenuButtonContainer');

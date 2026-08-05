@@ -3196,6 +3196,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-overview-example.ts",
     "importPath": "components/inline-edit"
   },
+  "inline-edit-select-basic": {
+    "packagePath": "components/inline-edit/inline-edit-select-basic",
+    "title": "Inline edit select basic",
+    "componentName": "InlineEditSelectBasicExample",
+    "files": [
+      "inline-edit-select-basic-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-select-basic-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-select-basic-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-select-multiline": {
+    "packagePath": "components/inline-edit/inline-edit-select-multiline",
+    "title": "Inline edit select multiline",
+    "componentName": "InlineEditSelectMultilineExample",
+    "files": [
+      "inline-edit-select-multiline-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-select-multiline-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-select-multiline-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-select": {
+    "packagePath": "components/inline-edit/inline-edit-select",
+    "title": "Inline edit select",
+    "componentName": "InlineEditSelectExample",
+    "files": [
+      "inline-edit-select-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-select-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-select-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "inline-edit-unfilled": {
     "packagePath": "components/inline-edit/inline-edit-unfilled",
     "title": "Inline edit unfilled",
@@ -7980,6 +8019,12 @@ return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-on-clean':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-overview':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-select-basic':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-select-multiline':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-select':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-unfilled':
 return import('@koobiq/docs-examples/components/inline-edit');

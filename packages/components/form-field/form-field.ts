@@ -27,7 +27,13 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
-import { ESCAPE, F8, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
+import {
+    ESCAPE,
+    F8,
+    KBQ_CONNECTED_OVERLAY_ORIGIN,
+    KBQ_FORM_FIELD_REF,
+    KbqColorDirective
+} from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { delay, startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
@@ -133,6 +139,7 @@ export class KbqFormField
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
+    private readonly customOverlayOrigin = inject(KBQ_CONNECTED_OVERLAY_ORIGIN, { optional: true });
     /**
      * @docs-private
      */
@@ -440,7 +447,9 @@ export class KbqFormField
      * Gets an ElementRef for the element that a overlay attached to the form-field should be positioned relative to.
      */
     getConnectedOverlayOrigin(): ElementRef {
-        return this.connectionContainerRef() || this.elementRef;
+        return (
+            this.customOverlayOrigin?.getConnectedOverlayOrigin() ?? this.connectionContainerRef() ?? this.elementRef
+        );
     }
 
     /**
