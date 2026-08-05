@@ -15,5 +15,7 @@
         "downlevelIteration": true
     },
     "include": ["**/*.ts", "**/*.json"],
-    "exclude": ["node_modules", "dist", "tsconfig.json"]
+    // Specs are compiled by jest, which supplies its own globals; this project is compiled by
+    // `postinstall` to produce the builder itself, and must not need the test typings to do it.
+    "exclude": ["node_modules", "dist", "tsconfig.json", "**/*.spec.ts"]
 }

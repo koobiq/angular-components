@@ -9,12 +9,28 @@
     ],
     "license": "MIT",
     "peerDependencies": {
+        "@angular/animations": "{{NG_VERSION}}",
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/common": "{{NG_VERSION}}",
-        "@koobiq/components": "{{VERSION}}",
-        "@koobiq/angular-moment-adapter": "{{VERSION}}",
-        "@koobiq/angular-luxon-adapter": "{{VERSION}}"
+        "@angular/forms": "{{NG_VERSION}}",
+        "@angular/platform-browser": "{{NG_VERSION}}",
+        "@angular/router": "{{NG_VERSION}}",
+        "@koobiq/ag-grid-angular-theme": "^34.5.1",
+        "@koobiq/components": "^{{VERSION}}",
+        "@koobiq/angular-moment-adapter": "^{{VERSION}}",
+        "@koobiq/angular-luxon-adapter": "^{{VERSION}}",
+        "@maskito/angular": "^5.1.0",
+        "@maskito/core": "^5.1.0",
+        "@maskito/kit": "^5.3.1",
+        "ag-grid-angular": "^34.3.1",
+        "ag-grid-community": "^34.3.1",
+        "country-flag-icons": "^1.6.20",
+        "highlight.js": "^11.11.1",
+        "jspdf": "^4.2.1",
+        "jspdf-autotable": "^5.0.8",
+        "luxon": "^3.7.2",
+        "rxjs": "^7.4.0"
     },
     "dependencies": {
         "tslib": "^2.6.2"

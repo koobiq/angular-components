@@ -16,6 +16,9 @@ jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
+    # `check-npm-resolution` gates this job on the npm registry answering; a stall must not hold the
+    # release runner for the six-hour default.
+    timeout-minutes: 60
     if: ${{ github.repository_owner == 'koobiq' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -25,6 +28,9 @@ jobs:
 
       - name: Build packages
         uses: ./.github/workflows/actions/build-packages
+
+      - name: Check npm can resolve the packages
+        run: yarn run check-npm-resolution
 
       - name: Publish package
         run: |

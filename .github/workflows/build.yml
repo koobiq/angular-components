@@ -9,8 +9,14 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # `check-npm-resolution` talks to the npm registry, so this job can stall on an outage instead
+    # of failing. Bound it rather than holding a runner for the six-hour default.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/workflows/actions/setup-node
       - uses: ./.github/workflows/actions/build-packages
+      # Yarn's node-modules linker tolerates peer conflicts that npm rejects, so the built packages
+      # have to be resolved with npm to catch an ERESOLVE before it reaches consumers.
+      - run: yarn run check-npm-resolution
       - uses: ./.github/workflows/actions/build-docs

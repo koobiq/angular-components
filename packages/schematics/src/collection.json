@@ -87,6 +87,11 @@
             "factory": "./migrations/button-supported-colors/index",
             "schema": "./migrations/button-supported-colors/schema.json"
         },
+        "mandatory-peer-dependencies": {
+            "description": "Adds @angular/animations, overlayscrollbars and @koobiq/date-adapter, which became mandatory peers of @koobiq/components, to projects whose package manager does not install new peers on upgrade",
+            "factory": "./migrations/mandatory-peer-dependencies/index",
+            "schema": "./migrations/mandatory-peer-dependencies/schema.json"
+        },
         "button-toggle-signals-and-aria": {
             "description": "Migrates KbqButtonToggleGroup consumers to its signal inputs (vertical/multiple reads become calls) and reports the ARIA, tab-order and keyboard changes of the button-toggle review, including icon-only toggles left without an accessible name",
             "factory": "./migrations/button-toggle-signals-and-aria/index",

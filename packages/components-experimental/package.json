@@ -25,7 +25,7 @@
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/forms": "{{NG_VERSION}}",
-        "@koobiq/components": "{{VERSION}}"
+        "@koobiq/components": "^{{VERSION}}"
     },
     "dependencies": {
         "tslib": "^2.6.2"

@@ -55,6 +55,7 @@ module.exports = [
             clean(),
             replace({
                 preventAssignment: true,
+                'VERSIONS.ANGULAR_ANIMATIONS': version(pkg.dependencies['@angular/animations']),
                 'VERSIONS.ANGULAR_CDK': version(pkg.dependencies['@angular/cdk']),
                 'VERSIONS.KOOBIQ_CDK': version(pkg.version),
                 'VERSIONS.KOOBIQ_ANGULAR_LUXON_ADAPTER': version(pkg.version),
@@ -62,7 +63,8 @@ module.exports = [
                 'VERSIONS.KOOBIQ_DATE_ADAPTER': version(pkg.dependencies['@koobiq/date-adapter']),
                 'VERSIONS.KOOBIQ_DESIGN_TOKENS': version(pkg.devDependencies['@koobiq/design-tokens']),
                 'VERSIONS.KOOBIQ_ICONS': version(pkg.dependencies['@koobiq/icons']),
-                'VERSIONS.LUXON': version(pkg.devDependencies.luxon)
+                'VERSIONS.LUXON': version(pkg.devDependencies.luxon),
+                'VERSIONS.OVERLAYSCROLLBARS': version(pkg.dependencies.overlayscrollbars)
             }),
             typescript({
                 tsconfig: path.join(__dirname, 'tsconfig.rollup.json')
