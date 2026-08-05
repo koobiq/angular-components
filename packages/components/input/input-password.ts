@@ -230,8 +230,10 @@ export class KbqInputPassword
         this.checkRule.next();
     }
 
-    toggleType() {
+    /** Toggles the native input type between password and text. */
+    toggleType(): void {
         this.elementType = this.elementType === 'password' ? 'text' : 'password';
+        this.stateChanges.next(null);
     }
 
     /** Focuses the input. */

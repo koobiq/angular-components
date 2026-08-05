@@ -177,7 +177,7 @@ class BaseTreeSelectStates {
 
                 <div kbq-select-search-empty-result>Nothing found</div>
 
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
 
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -241,7 +241,7 @@ export class E2eTreeSelectStates extends BaseTreeSelectStates {}
 
                 <div kbq-select-search-empty-result>Nothing found</div>
 
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
 
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -302,7 +302,7 @@ export class E2eMultiTreeSelectStates extends BaseTreeSelectStates {}
 
                 <div kbq-select-search-empty-result>Nothing found</div>
 
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
 
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>

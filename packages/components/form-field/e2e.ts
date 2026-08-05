@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -95,3 +96,46 @@ export class E2eFormFieldGroup {}
     }
 })
 export class E2eFormFieldset {}
+
+@Component({
+    selector: 'e2e-form-field-addons',
+    imports: [FormsModule, KbqInputModule, KbqButtonModule],
+    template: `
+        <kbq-form-field>
+            <input data-testid="cleanerInput" kbqInput [(ngModel)]="textValue" />
+            <kbq-cleaner data-testid="cleaner" ariaLabel="Clear text" />
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <input data-testid="passwordInput" kbqInputPassword [(ngModel)]="passwordValue" />
+            <kbq-password-toggle data-testid="passwordToggle" />
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <input data-testid="numberInput" kbqNumberInput [(ngModel)]="numberValue" />
+            @if (showStepper()) {
+                <kbq-stepper data-testid="stepper" />
+            }
+        </kbq-form-field>
+
+        <button data-testid="showStepper" kbq-button (click)="showStepper.set(true)">Show stepper</button>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-m);
+            width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFormFieldAddons'
+    }
+})
+export class E2eFormFieldAddons {
+    protected textValue = 'Koobiq';
+    protected passwordValue = 'password';
+    protected numberValue = 10;
+    protected readonly showStepper = signal(false);
+}

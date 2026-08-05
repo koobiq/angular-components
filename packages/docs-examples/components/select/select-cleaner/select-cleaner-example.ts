@@ -10,7 +10,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <kbq-form-field>
             <kbq-select placeholder="Placeholder" [value]="selected">
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }

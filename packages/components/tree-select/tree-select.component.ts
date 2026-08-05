@@ -87,7 +87,12 @@ import {
     kbqSiblingPopupProvider,
     shouldSelectSearchText
 } from '@koobiq/components/core';
-import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
+import {
+    KBQ_FORM_FIELD,
+    KbqCleaner,
+    KbqFormFieldControl,
+    kbqCleanerFactoryProvider
+} from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag, KbqTagRemove } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
@@ -177,6 +182,20 @@ export class KbqTreeSelectChange {
     styleUrls: ['./tree-select.scss', './tree-select-tokens.scss', '../select/select-tokens.scss'],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
+        kbqCleanerFactoryProvider(() => {
+            const treeSelect = inject(KbqTreeSelect);
+
+            return {
+                get control() {
+                    return treeSelect;
+                },
+                get keydownTarget() {
+                    return treeSelect.elementRef.nativeElement;
+                },
+                clearByEscape: false,
+                clear: () => treeSelect.clear()
+            };
+        }),
         { provide: KbqTree, useExisting: KbqTreeSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect },
         kbqSiblingPopupProvider(KbqTreeSelect)
@@ -224,7 +243,7 @@ export class KbqTreeSelect
     private readonly dir = inject(Directionality, { optional: true });
     parentForm = inject(NgForm, { optional: true });
     parentFormGroup = inject(FormGroupDirective, { optional: true });
-    private readonly parentFormField = inject(KbqFormField, { host: true, optional: true })!;
+    private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true })!;
     ngControl = inject(NgControl, { optional: true, self: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly isBrowser = inject(Platform).isBrowser;
@@ -316,7 +335,11 @@ export class KbqTreeSelect
 
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 
-    readonly cleaner = contentChild<KbqCleaner>('kbqSelectCleaner');
+    /**
+     * Reference to the optional cleaner element for clearing selection.
+     * @docs-private
+     */
+    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
 
     /** User-supplied override of the trigger element. */
     readonly customTrigger = contentChild(KbqSelectTrigger);
@@ -709,8 +732,12 @@ export class KbqTreeSelect
         return this._panelOpen;
     }
 
+    /**
+     * Whether the cleaner (clear button) should be shown.
+     * @docs-private
+     */
     get canShowCleaner(): boolean {
-        return !this.disabled && !!this.cleaner() && this.selectionModel.hasValue();
+        return !!this.cleaner()?.canShow;
     }
 
     /** @docs-private */
@@ -920,22 +947,34 @@ export class KbqTreeSelect
         return hiddenItemsText.replace('{{ number }}', hiddenItems.toString());
     }
 
-    clearValue($event): void {
-        // need to prevent opening
-        $event.stopPropagation();
-        // need to prevent scrolling
-        $event.preventDefault();
-
+    /**
+     * Clears the current selection.
+     * @docs-private
+     */
+    clear(): void {
         this.selectionModel.clear();
         this.tree()!.keyManager.setActiveItem(-1);
-
         this.setSelectionByValue([]);
-
         this.onChange(this.selectedValues);
-
         this.selectionChange.emit(new KbqTreeSelectChange(this, this.selectedValues));
+    }
 
-        this.focus();
+    /**
+     * Clears the current selection.
+     * @deprecated Activate the projected `KbqCleaner` instead.
+     * @docs-private
+     */
+    clearValue(event: Event): void {
+        const cleaner = this.cleaner();
+
+        if (cleaner) {
+            cleaner.clear(event);
+        } else {
+            event.stopPropagation();
+            event.preventDefault();
+            this.clear();
+            this.focus();
+        }
     }
 
     /** `View -> model callback called when value changes` */

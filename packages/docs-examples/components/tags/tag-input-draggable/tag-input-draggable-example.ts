@@ -38,7 +38,7 @@ const getTags = () => Array.from({ length: 3 }, (_, id) => ({ id, value: `Dragga
                     (kbqTagInputTokenEnd)="create($event)"
                 />
 
-                <kbq-cleaner #kbqTagListCleaner (click)="clear()" />
+                <kbq-cleaner (click)="clear()" />
             </kbq-tag-list>
         </kbq-form-field>
     `,

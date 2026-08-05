@@ -15,7 +15,7 @@ yarn install
 Setup git hooks:
 
 ```bash
-yarn husky
+npx husky
 ```
 
 ## Package Structure
@@ -152,6 +152,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Do NOT use `ngClass`, use `class` bindings instead
 - Do NOT use `ngStyle`, use `style` bindings instead
 - When using external templates/styles, use paths relative to the component TS file.
+- When a projected child depends on its host component, inject a narrow `InjectionToken` scoped to the members it uses, not the host's concrete class.
 
 ### Form Validation
 

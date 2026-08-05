@@ -13,9 +13,10 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { EMPTY, ReplaySubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
 
 @Component({
@@ -33,7 +34,11 @@ import { KbqIconRegistry } from './icon-registry';
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    protected readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
+    /**
+     * Host providing error state for `autoColor`, when the icon sits inside one (e.g. a form field).
+     * @docs-private
+     */
+    protected readonly errorStateContext = inject(KBQ_ICON_ERROR_STATE_CONTEXT, { optional: true });
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     protected readonly registry = inject(KbqIconRegistry, { optional: true });
     protected readonly destroyRef = inject(DestroyRef);
@@ -98,7 +103,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     ngAfterContentInit(): void {
         if (this.autoColor) {
-            this.formField?.control()?.stateChanges.subscribe(this.updateState);
+            this.errorStateContext?.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
             this.updateState();
         }
 
@@ -149,7 +154,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     private updateState = () => {
-        this.hasError = !!this.formField?.control()?.errorState;
+        this.hasError = !!this.errorStateContext?.errorState;
 
         this.changeDetectorRef.markForCheck();
     };

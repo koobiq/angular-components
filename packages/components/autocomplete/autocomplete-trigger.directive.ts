@@ -50,7 +50,7 @@ import {
     kbqResolvePanelWidth,
     kbqSiblingPopupProvider
 } from '@koobiq/components/core';
-import { KbqFormField } from '@koobiq/components/form-field';
+import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, defer, fromEvent, merge, of as observableOf } from 'rxjs';
 import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
@@ -127,7 +127,7 @@ export class KbqAutocompleteTrigger
     private overlay = inject(Overlay);
     private zone = inject(NgZone);
     private dir = inject(Directionality, { optional: true })!;
-    private formField = inject(KbqFormField, { optional: true, host: true });
+    private readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
     private viewportRuler = inject(ViewportRuler);
 
     protected readonly document = inject<Document>(DOCUMENT);

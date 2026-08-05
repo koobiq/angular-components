@@ -2356,7 +2356,7 @@ export const KBQ_DEFAULT_LOCALE_ID = "ru-RU";
 // @public
 export const KBQ_DEFAULT_PRECISION_SEPARATOR = ".";
 
-// @public
+// @public @deprecated
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
 // @public (undocumented)
@@ -2869,7 +2869,7 @@ export interface KbqFormFieldControlRef<T = unknown> {
     value: T | null;
 }
 
-// @public
+// @public @deprecated
 export interface KbqFormFieldRef {
     // (undocumented)
     canCleanerClearByEsc: boolean;

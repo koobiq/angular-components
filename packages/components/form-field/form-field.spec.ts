@@ -12,6 +12,8 @@ import {
 import { By } from '@angular/platform-browser';
 import {
     ErrorStateMatcher,
+    ESCAPE,
+    KBQ_FORM_FIELD_REF,
     PasswordValidators,
     ShowOnFormSubmitErrorStateMatcher,
     ShowRequiredOnSubmitErrorStateMatcher
@@ -20,7 +22,12 @@ import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/i
 import { Subject } from 'rxjs';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
-import { getKbqFormFieldMissingControlError, KbqFormField, kbqFormFieldDefaultOptionsProvider } from './form-field';
+import {
+    getKbqFormFieldMissingControlError,
+    KBQ_FORM_FIELD,
+    KbqFormField,
+    kbqFormFieldDefaultOptionsProvider
+} from './form-field';
 import { KbqFormFieldModule } from './form-field.module';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';
@@ -339,6 +346,14 @@ class PasswordFormFieldWithConditionalContent {
 }
 
 describe(KbqFormField.name, () => {
+    it('should provide typed and legacy form-field tokens', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        const formField = getFormFieldDebugElement(debugElement);
+
+        expect(formField.injector.get(KBQ_FORM_FIELD)).toBe(formField.componentInstance);
+        expect(formField.injector.get(KBQ_FORM_FIELD_REF)).toBe(formField.componentInstance);
+    });
+
     it('should display KbqHint', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const hint = getHintDebugElement(debugElement).nativeElement;
@@ -425,6 +440,32 @@ describe(KbqFormField.name, () => {
         const cleaner = getCleanerDebugElement(debugElement);
 
         cleaner.nativeElement.click();
+        expect(componentInstance.control.value).toBeNull();
+    });
+
+    it('should clean field by KbqCleaner on Space', () => {
+        const { debugElement, componentInstance } = createComponent(InputFormFieldWithCleaner);
+        const input = getInputNativeElement(debugElement);
+
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
+
+        getCleanerDebugElement(debugElement).nativeElement.dispatchEvent(
+            new KeyboardEvent('keydown', { key: ' ', bubbles: true })
+        );
+
+        expect(componentInstance.control.value).toBeNull();
+    });
+
+    it('should clean focused field by KbqCleaner on Escape', () => {
+        const { debugElement, componentInstance } = createComponent(InputFormFieldWithCleaner);
+        const input = getInputNativeElement(debugElement);
+
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
+        input.focus();
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: ESCAPE, bubbles: true }));
+
         expect(componentInstance.control.value).toBeNull();
     });
 

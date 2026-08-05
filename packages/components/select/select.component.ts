@@ -101,7 +101,12 @@ import {
     shouldSelectSearchText,
     toggleSelectAll
 } from '@koobiq/components/core';
-import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
+import {
+    KBQ_FORM_FIELD,
+    KbqCleaner,
+    KbqFormFieldControl,
+    kbqCleanerFactoryProvider
+} from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTag } from '@koobiq/components/tags';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
@@ -198,6 +203,20 @@ export const minimumTimeToDisplayLoading = 300;
     styleUrls: ['./select.scss', './select-tokens.scss'],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
+        kbqCleanerFactoryProvider(() => {
+            const select = inject(KbqSelect);
+
+            return {
+                get control() {
+                    return select;
+                },
+                get keydownTarget() {
+                    return select.elementRef.nativeElement;
+                },
+                clearByEscape: false,
+                clear: () => select.clear()
+            };
+        }),
         { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
         { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect },
         kbqSiblingPopupProvider(KbqSelect)
@@ -247,7 +266,7 @@ export class KbqSelect
     private readonly _dir = inject(Directionality, { optional: true });
     parentForm = inject(NgForm, { optional: true });
     parentFormGroup = inject(FormGroupDirective, { optional: true });
-    private readonly parentFormField = inject(KbqFormField, { host: true, optional: true })!;
+    private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true })!;
     ngControl = inject(NgControl, { self: true, optional: true });
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
     protected localeService? = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
@@ -372,8 +391,11 @@ export class KbqSelect
     /** Custom template reference for rendering tag content. */
     readonly customTagTemplateRef = contentChild('kbqSelectTagContent', { read: TemplateRef });
 
-    /** Reference to the optional cleaner element for clearing selection. */
-    readonly cleaner = contentChild<KbqCleaner>('kbqSelectCleaner');
+    /**
+     * Reference to the optional cleaner element for clearing selection.
+     * @docs-private
+     */
+    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
 
     /** All of the defined select options. */
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
@@ -840,9 +862,12 @@ export class KbqSelect
         return !!search && this.options?.filter((option) => option.selectable()).length === 0 && !!search.value();
     }
 
-    /** Whether the cleaner (clear button) should be shown. */
+    /**
+     * Whether the cleaner (clear button) should be shown.
+     * @docs-private
+     */
     get canShowCleaner(): boolean {
-        return !this.disabled && !!this.cleaner() && this.selectionModel.hasValue();
+        return !!this.cleaner()?.canShow;
     }
 
     /** Returns the currently selected option(s). Single value or array for multiple selection. */
@@ -1065,20 +1090,31 @@ export class KbqSelect
 
     /**
      * Clears the current selection.
-     * @param $event Mouse event to prevent default behavior.
+     * @docs-private
      */
-    clearValue($event): void {
-        // need to prevent opening
-        $event.stopPropagation();
-        // need to prevent scrolling
-        $event.preventDefault();
-
+    clear(): void {
         this.selectionModel.clear();
         this.keyManager.setActiveItem(-1);
 
         this.propagateChanges();
+    }
 
-        this.focus();
+    /**
+     * Clears the current selection.
+     * @deprecated Activate the projected `KbqCleaner` instead.
+     * @docs-private
+     */
+    clearValue(event: Event): void {
+        const cleaner = this.cleaner();
+
+        if (cleaner) {
+            cleaner.clear(event);
+        } else {
+            event.stopPropagation();
+            event.preventDefault();
+            this.clear();
+            this.focus();
+        }
     }
 
     /** `View -> model callback called when value changes` */

@@ -13,7 +13,6 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -22,6 +21,9 @@ import { ReplaySubject } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { SimpleChanges } from '@angular/core';
+
+// @public
+export const KBQ_ICON_ERROR_STATE_CONTEXT: InjectionToken<KbqIconErrorStateContext>;
 
 // @public
 export const KBQ_ICON_RESOLVER: InjectionToken<KbqIconResolver[]>;
@@ -39,8 +41,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
-    protected readonly formField: _koobiq_components_core.KbqFormFieldRef | null;
+    protected readonly errorStateContext: KbqIconErrorStateContext | null;
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
@@ -99,6 +100,15 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
 // @public
 export type KbqIconButtonSize = 'compact' | 'normal';
+
+// @public
+export interface KbqIconErrorStateContext {
+    readonly errorState: boolean;
+    readonly stateChanges: Observable<void>;
+}
+
+// @public
+export const kbqIconErrorStateContextFactoryProvider: (factory: () => KbqIconErrorStateContext) => Provider;
 
 // @public (undocumented)
 export class KbqIconItem extends KbqIcon {

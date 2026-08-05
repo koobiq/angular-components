@@ -1,5 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 
+import { F8 } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     afterNextRender,
@@ -17,31 +18,40 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-    KBQ_FORM_FIELD_REF,
-    kbqInjectA11yLocaleConfiguration,
-    kbqInjectNativeElement,
-    PopUpTriggers
-} from '@koobiq/components/core';
+import { kbqInjectA11yLocaleConfiguration, kbqInjectNativeElement, PopUpTriggers } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { EMPTY } from 'rxjs';
-import { KbqFormField } from './form-field';
+import { EMPTY, fromEvent } from 'rxjs';
+import { KBQ_FORM_FIELD } from './form-field';
 import { KbqFormFieldControl } from './form-field-control';
 
-// @TODO Temporary solution to resolve circular dependency (#DS-3893)
-type KbqInputPassword = KbqFormFieldControl<unknown> & {
-    elementType: string;
+/**
+ * Narrow structural contract for `kbqInputPassword`, duck-typed here to avoid a circular
+ * dependency between `@koobiq/components/form-field` and `@koobiq/components/input`.
+ */
+type KbqPasswordToggleControl = KbqFormFieldControl<unknown> & {
+    readonly controlType: 'input-password';
+    elementType: 'text' | 'password';
     toggleType: () => void;
 };
 
-// @TODO Temporary solution to resolve circular dependency (#DS-3893)
-const isInputPassword = (control: KbqFormFieldControl<unknown>): control is KbqInputPassword => {
-    return 'elementType' in control;
+/**
+ * Checks whether the given control structurally matches `KbqPasswordToggleControl`.
+ */
+const isPasswordToggleControl = (control: unknown): control is KbqPasswordToggleControl => {
+    return (
+        !!control &&
+        typeof control === 'object' &&
+        'controlType' in control &&
+        control.controlType === 'input-password' &&
+        'elementType' in control &&
+        'toggleType' in control &&
+        typeof control.toggleType === 'function'
+    );
 };
 
 const getKbqPasswordToggleMissingControlError = (): Error => {
-    return Error('kbq-password-toggle should use with kbqInputPassword');
+    return Error('You should use kbq-password-toggle with kbqInputPassword');
 };
 
 /** Component which changes password visibility. */
@@ -82,9 +92,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
-
-    // @TODO fix types (#DS-2915)
-    private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
+    private readonly formField = inject(KBQ_FORM_FIELD, { optional: true });
 
     readonly tabindex = input<number, unknown>(0, { transform: numberAttribute });
 
@@ -116,10 +124,10 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     protected hasError: boolean = false;
 
     /** Form field password control. */
-    private get control(): KbqInputPassword {
+    private get control(): KbqPasswordToggleControl {
         const control = this.formField?.control();
 
-        if (!control || !isInputPassword(control)) {
+        if (!isPasswordToggleControl(control)) {
             throw getKbqPasswordToggleMissingControlError();
         }
 
@@ -163,6 +171,14 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
 
         this.trigger = `${PopUpTriggers.Hover}`;
 
+        const keydownTarget = this.formField?.elementRef.nativeElement;
+
+        if (keydownTarget) {
+            fromEvent<KeyboardEvent>(keydownTarget, 'keydown')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((event) => this.onFormFieldKeyDown(event));
+        }
+
         // `stateChanges` is owned by the control and outlives the toggle, so the subscription has to be torn
         // down explicitly. Subscribing after render also keeps it off the server, matching KbqReactivePasswordHint.
         afterNextRender(() => {
@@ -172,23 +188,14 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
         });
     }
 
-    /**
-     * @docs-private
-     */
     ngAfterContentInit(): void {
         this.updateState();
     }
 
-    /**
-     * @docs-private
-     */
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.nativeElement, true);
     }
 
-    /**
-     * @docs-private
-     */
     ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.nativeElement);
     }
@@ -196,7 +203,9 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     /**
      * @docs-private
      */
-    toggle(event: Event) {
+    toggle(event: Event): void {
+        if (this.control.disabled) return;
+
         this.hide();
 
         this.control.toggleType();
@@ -206,8 +215,17 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
         event.preventDefault();
     }
 
+    /**
+     * Toggles password visibility for the Alt+F8 shortcut.
+     */
+    private onFormFieldKeyDown(event: KeyboardEvent): void {
+        if (event.altKey && event.keyCode === F8) {
+            this.toggle(event);
+        }
+    }
+
     private updateState = () => {
-        this.hasError = !!this.formField?.control()?.errorState;
+        this.hasError = !!this.control.errorState;
 
         this.changeDetectorRef.markForCheck();
     };

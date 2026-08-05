@@ -27,7 +27,7 @@ import {
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, FocusKeyManager, isNull, isSelectAll } from '@koobiq/components/core';
-import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KBQ_CLEANER_CONTEXT, KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
@@ -69,7 +69,11 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         }
     `,
     styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }],
+    providers: [
+        { provide: KbqFormFieldControl, useExisting: KbqTagList },
+        // Tag-list cleaners use consumer-provided click handlers; do not also reset the outer form control.
+        { provide: KBQ_CLEANER_CONTEXT, useValue: null }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -387,7 +391,7 @@ export class KbqTagList
     readonly change = output<KbqTagListChange>();
 
     /** @docs-private */
-    readonly cleaner = contentChild<KbqCleaner>('kbqTagListCleaner');
+    readonly cleaner = contentChild(KbqCleaner, { descendants: false });
 
     /**
      * The tag components contained within this tag list.

@@ -63,7 +63,7 @@ import {
     kbqErrorStateMatcherProvider,
     wrappedErrorMessage
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqCleaner, KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
@@ -305,7 +305,7 @@ const OPTIONS = [
                     </kbq-tag>
                 </ng-template>
 
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
@@ -2035,7 +2035,7 @@ class VirtualSelectWithScrolledToBottom {
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
                 }
-                <kbq-cleaner #kbqSelectCleaner />
+                <kbq-cleaner />
             </kbq-select>
         </kbq-form-field>
     `
@@ -2048,6 +2048,22 @@ class MultiSelectWithCleaner {
     ];
     control = new UntypedFormControl(['steak-0', 'pizza-1']);
     readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
+    selector: 'select-with-cleaner-without-template-ref',
+    imports: [KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select [formControl]="control">
+                <kbq-option value="pizza">Pizza</kbq-option>
+                <kbq-cleaner />
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithCleanerWithoutTemplateRef {
+    readonly control = new UntypedFormControl('pizza');
 }
 
 describe('KbqSelect', () => {
@@ -3422,7 +3438,7 @@ describe('KbqSelect', () => {
 
                 expect(value.nativeElement.textContent).toContain('Pizza');
 
-                cleaner = fixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
+                cleaner = fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement;
                 cleaner.click();
                 fixture.detectChanges();
                 flush();
@@ -3437,12 +3453,32 @@ describe('KbqSelect', () => {
 
                 expect(fixture.componentInstance.control.value).toBe('pizza-1');
 
-                cleaner = fixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
+                cleaner = fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement;
                 cleaner.click();
                 fixture.detectChanges();
                 flush();
 
                 expect(fixture.componentInstance.control.value).toBeUndefined();
+            }));
+
+            it('should discover cleaner by component type without a template reference', fakeAsync(() => {
+                const cleanerFixture = TestBed.createComponent(SelectWithCleanerWithoutTemplateRef);
+
+                cleanerFixture.detectChanges();
+                flush();
+                cleanerFixture.componentInstance.control.setValue('pizza');
+                cleanerFixture.detectChanges();
+                flush();
+
+                const cleaner = cleanerFixture.debugElement.query(By.directive(KbqCleaner));
+
+                expect(cleanerFixture.debugElement.query(By.directive(KbqCleaner))).not.toBeNull();
+                expect(cleaner).not.toBeNull();
+                cleaner.nativeElement.click();
+                cleanerFixture.detectChanges();
+                flush();
+
+                expect(cleanerFixture.componentInstance.control.value).toBeUndefined();
             }));
         });
 
@@ -3459,7 +3495,7 @@ describe('KbqSelect', () => {
             it('should update FormControl value to empty array after clear', fakeAsync(() => {
                 expect(multiFixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1']);
 
-                const multiCleaner = multiFixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
+                const multiCleaner = multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement;
 
                 multiCleaner.click();
                 multiFixture.detectChanges();
@@ -3483,7 +3519,7 @@ describe('KbqSelect', () => {
                 multiFixture.detectChanges();
                 flush();
 
-                multiFixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement.click();
+                multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
                 multiFixture.detectChanges();
                 flush();
 
