@@ -182,7 +182,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         const isSeparatorKey = this.isSeparatorKey(event);
 
         if (!this.inputElement.value) {
-            if (isSeparatorKey) {
+            if (isSeparatorKey && event.keyCode !== TAB) {
                 event.preventDefault();
             }
 
