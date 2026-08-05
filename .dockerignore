@@ -1,0 +1,47 @@
+# Build context for tools/e2e/Dockerfile, whose build context is the repository root.
+#
+# It lives here rather than beside the Dockerfile because BuildKit only reads
+# `<context>/.dockerignore` or `<dockerfile>.dockerignore`, and this is the location that works on
+# every toolchain. A plain `.dockerignore` next to the Dockerfile is read by nothing and fails
+# silently, shipping the entire working tree.
+#
+# Deliberately a denylist. An allowlist omits files silently: forgetting `tools/builders/` breaks
+# `yarn install`'s postinstall, and forgetting `packages/e2e/utils/` breaks deep inside `ng serve`
+# with an error that points nowhere near the cause.
+#
+# NOTE: these patterns are not recursive by default. A bare `node_modules` would match only the
+# repository root and miss `.opencode/node_modules` (56 MB, self-ignored so it never appears in
+# `git status`) — hence the `**/` prefixes.
+#
+# Verify with:
+#   docker build --progress=plain --no-cache -f tools/e2e/Dockerfile \
+#     --build-arg PLAYWRIGHT_VERSION=<version> . 2>&1 | grep "transferring context"
+# Expect roughly 57 MB. Substantially more means one of the patterns below stopped matching.
+
+**/node_modules
+**/dist
+**/*.log
+
+.git
+.angular
+.nx
+.yarn/cache
+.yarn/install-state.gz
+.yarn/unplugged
+
+# Playwright outputs. The container produces its own; the committed __screenshots__ baselines it
+# compares against are deliberately not excluded.
+blob-report
+playwright-report
+playwright-report-docs
+test-results
+.playwright-mcp
+
+# Editor, agent and local tooling state.
+.ai
+.claude
+.idea
+.opencode
+.vscode
+coverage
+tmp

@@ -1,0 +1,11 @@
+# Deliberately narrow. `* text=auto` is tempting but would renormalize every tracked file in a
+# single commit, so line endings are left alone except where they are load-bearing.
+
+# The Docker build inputs are consumed by a Linux shell. A contributor with core.autocrlf=true
+# would otherwise commit CRLF into the Dockerfile's `RUN` continuations and the yarn shim it
+# writes.
+tools/e2e/** text eol=lf
+
+# Git already detects these as binary; declaring it means no future filter or `text=auto` change
+# can start mangling the screenshot baselines, which are compared byte-for-byte at threshold: 0.
+*.png binary

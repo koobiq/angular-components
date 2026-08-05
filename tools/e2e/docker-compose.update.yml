@@ -1,0 +1,21 @@
+# Overlay applied only by `yarn run e2e:docker:update-snapshots` — see tools/e2e/run.js, which
+# adds this file when it sees --update-snapshots in the arguments.
+#
+# Every one of the __screenshots__ directories lives under packages/components, so a single mount
+# is enough for Playwright's --update-snapshots to write the new baselines back to the working
+# tree.
+#
+# Kept out of the base file on purpose. Two reasons, in order of weight: a plain test run has no
+# business being able to write into the working tree at all, and the mount puts the component
+# library on the Angular build's hot path, which costs about 5 seconds per run across the host
+# filesystem boundary (measured: 27s against 32s for the same spec). Updating snapshots is rare and
+# can afford both; a plain run should pay for neither.
+services:
+  e2e:
+    # The report mounts are repeated from the base file on purpose. Compose has merged sequences
+    # by mount target in some versions and replaced them wholesale in others; spelling all three
+    # out is correct either way, and a repeated identical target is a no-op when they are merged.
+    volumes:
+      - ../../packages/components:/app/packages/components
+      - ../../playwright-report:/app/playwright-report
+      - ../../test-results:/app/test-results
