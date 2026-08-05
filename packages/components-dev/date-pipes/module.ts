@@ -1,6 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, KbqFormattersModule, KbqLocaleService } from '@koobiq/components/core';
+import {
+    DateAdapter,
+    DateFormatter,
+    KBQ_LOCALE_SERVICE,
+    KbqFormattersModule,
+    KbqLocaleService
+} from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 
 @Component({
@@ -14,7 +20,9 @@ import { DateTime } from 'luxon';
 export class DevApp {
     protected readonly dateAdapter: DateAdapter<DateTime> = inject(DateAdapter<DateTime>);
     protected readonly formatter: DateFormatter<DateTime> = inject(DateFormatter<DateTime>);
-    protected readonly localeService: KbqLocaleService = inject(KbqLocaleService);
+    // The token, not the class: `KbqLuxonDateModule` provides it with `useClass`, so the `providedIn: 'root'`
+    // instance is a different object from the one the pipes and `DateFormatter` subscribe to.
+    protected readonly localeService: KbqLocaleService = inject(KBQ_LOCALE_SERVICE);
 
     obj: any = {
         absolute: {
@@ -100,6 +108,15 @@ export class DevApp {
                     endsNotCurrentYear: ''
                 }
             }
+        },
+        duration: {
+            seconds: '',
+            minutesSeconds: '',
+            hoursMinutes: '',
+            daysHours: '',
+            weeksDays: '',
+            monthsWeeks: '',
+            yearsMonths: ''
         }
     };
 
@@ -114,6 +131,30 @@ export class DevApp {
         this.populateRangeLong();
         this.populateRangeMiddle();
         this.populateRangeShort();
+        this.populateDuration();
+    }
+
+    /** Switches between the two locales so the difference between the pipe families is visible. */
+    toggleLocale() {
+        this.localeService.setLocale(this.localeService.id === 'ru-RU' ? 'en-US' : 'ru-RU');
+    }
+
+    populateDuration() {
+        const start = this.dateAdapter.today().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+        const ranges: Record<string, DateTime> = {
+            seconds: start.plus({ seconds: 21, milliseconds: 365 }),
+            minutesSeconds: start.plus({ minutes: 1, seconds: 25 }),
+            hoursMinutes: start.plus({ hours: 1, minutes: 21 }),
+            daysHours: start.plus({ days: 1, hours: 8, minutes: 25 }),
+            weeksDays: start.plus({ days: 15 }),
+            monthsWeeks: start.plus({ months: 1, days: 25 }),
+            yearsMonths: start.plus({ years: 3, months: 11 })
+        };
+
+        Object.entries(ranges).forEach(([key, end]) => {
+            this.obj.duration[key] = [start, end];
+            this.iso.duration[key] = [this.dateAdapter.toIso8601(start), this.dateAdapter.toIso8601(end)];
+        });
     }
 
     populateRangeShort() {

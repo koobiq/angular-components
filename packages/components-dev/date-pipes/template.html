@@ -3,6 +3,14 @@
     <br />
     <br />
     <header class="kbq-display-compact">pipe's</header>
+    <div class="dev-container">
+        <button (click)="toggleLocale()">Toggle locale (current: {{ localeService.id }})</button>
+        <p>
+            Only the
+            <code>kbq*</code>
+            pipes below re-render on a locale change. The unprefixed ones are pure and stay as they were rendered first.
+        </p>
+    </div>
     <br />
     <header class="kbq-display-compact">Absolute date</header>
     <div class="dev-container">
@@ -653,6 +661,129 @@
                 <div class="flex">
                     {{ obj.range.short.dateTime.endsNotCurrentYear | rangeShortDateTime: { milliseconds: true } }}
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <header class="kbq-display-compact">Duration</header>
+    <div class="dev-container">
+        <h3>Shortest format</h3>
+        <div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">Default locale</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShortest (seconds)</div>
+                <div class="flex">{{ obj.duration.seconds | kbqDurationShortest }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShortest (seconds) (with milliseconds)</div>
+                <div class="flex">
+                    {{ obj.duration.seconds | kbqDurationShortest: { seconds: true, milliseconds: true } }}
+                </div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShortest (minutes and seconds)</div>
+                <div class="flex">{{ obj.duration.minutesSeconds | kbqDurationShortest }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShortest (minutes and seconds) (without seconds)</div>
+                <div class="flex">{{ obj.duration.minutesSeconds | kbqDurationShortest: { seconds: false } }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShortest (days and hours)</div>
+                <div class="flex">{{ obj.duration.daysHours | kbqDurationShortest }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShortest (from ISO strings)</div>
+                <div class="flex">{{ iso.duration.daysHours | kbqDurationShortest }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="dev-container">
+        <h3>Long format</h3>
+        <div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">Default locale</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationLong (seconds)</div>
+                <div class="flex">{{ obj.duration.seconds | kbqDurationLong }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationLong (minutes and seconds)</div>
+                <div class="flex">{{ obj.duration.minutesSeconds | kbqDurationLong }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationLong (hours and minutes)</div>
+                <div class="flex">{{ obj.duration.hoursMinutes | kbqDurationLong }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationLong (days and hours)</div>
+                <div class="flex">{{ obj.duration.daysHours | kbqDurationLong }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationLong (days and hours) (only hours)</div>
+                <div class="flex">{{ obj.duration.daysHours | kbqDurationLong: ['hours'] }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationLong (weeks and days)</div>
+                <div class="flex">{{ obj.duration.weeksDays | kbqDurationLong }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationLong (months and weeks)</div>
+                <div class="flex">{{ obj.duration.monthsWeeks | kbqDurationLong }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationLong (years and months)</div>
+                <div class="flex">{{ obj.duration.yearsMonths | kbqDurationLong }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationLong (years and months) (only years, with fraction)</div>
+                <div class="flex">{{ obj.duration.yearsMonths | kbqDurationLong: ['years'] : true }}</div>
+            </div>
+            <div class="dev-row-border"></div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">durationLong (pure, stale after a locale change)</div>
+                <div class="flex">{{ obj.duration.yearsMonths | durationLong }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="dev-container">
+        <h3>Short format</h3>
+        <div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">Default locale</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShort (seconds)</div>
+                <div class="flex">{{ obj.duration.seconds | kbqDurationShort }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShort (seconds) (with milliseconds)</div>
+                <div class="flex">
+                    {{ obj.duration.seconds | kbqDurationShort: ['seconds', 'milliseconds'] }}
+                </div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShort (hours and minutes)</div>
+                <div class="flex">{{ obj.duration.hoursMinutes | kbqDurationShort }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShort (days and hours)</div>
+                <div class="flex">{{ obj.duration.daysHours | kbqDurationShort }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShort (weeks and days)</div>
+                <div class="flex">{{ obj.duration.weeksDays | kbqDurationShort }}</div>
+            </div>
+            <div class="layout-row dev-row-border">
+                <div class="flex">kbqDurationShort (years and months)</div>
+                <div class="flex">{{ obj.duration.yearsMonths | kbqDurationShort }}</div>
             </div>
         </div>
     </div>
