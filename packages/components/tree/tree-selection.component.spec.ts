@@ -15,6 +15,7 @@ import {
     DOWN_ARROW,
     KbqOptionActionComponent,
     KbqOptionModule,
+    LEFT_ARROW,
     SPACE,
     TAB
 } from '@koobiq/components/core';
@@ -887,6 +888,209 @@ describe('KbqTreeSelection', () => {
             }));
         });
 
+        describe('keyboard navigation with LEFT_ARROW', () => {
+            let fixture: ComponentFixture<KbqTreeAppDeepData>;
+            let component: KbqTreeAppDeepData;
+
+            const pressKey = (keyCode: number) => {
+                component.tree.onKeyDown(createKeyboardEvent('keydown', keyCode));
+                fixture.detectChanges();
+                flush();
+            };
+
+            const expandNode = (index: number) => {
+                (getNodes(treeElement)[index].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
+                fixture.detectChanges();
+                flush();
+            };
+
+            const getActiveValue = () => component.tree.keyManager.activeItem?.value;
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(KbqTreeAppDeepData);
+
+                component = fixture.componentInstance;
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                fixture.detectChanges();
+            });
+
+            it('should collapse an expanded option without moving the focus', fakeAsync(() => {
+                expandNode(1);
+
+                // docs, src, assets, cdk, README, tests
+                expect(getNodes(treeElement).length).toBe(6);
+
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('src');
+
+                pressKey(LEFT_ARROW);
+
+                expect(getNodes(treeElement).length).toBe(3);
+                expect(component.treeControl.expansionModel.selected.length).toBe(0);
+                expect(getActiveValue()).toBe('src');
+            }));
+
+            it('should move the focus to the parent when the active option is a leaf', fakeAsync(() => {
+                expandNode(1);
+
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('assets');
+
+                pressKey(LEFT_ARROW);
+
+                expect(getActiveValue()).toBe('src');
+                // the parent is only focused, not collapsed
+                expect(getNodes(treeElement).length).toBe(6);
+            }));
+
+            it('should move the focus to the parent when the active option is already collapsed', fakeAsync(() => {
+                expandNode(1);
+
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('cdk');
+
+                pressKey(LEFT_ARROW);
+
+                expect(getActiveValue()).toBe('src');
+                expect(getNodes(treeElement).length).toBe(6);
+            }));
+
+            it('should collapse the whole tree with repeated presses', fakeAsync(() => {
+                expandNode(1);
+                expandNode(3);
+
+                // docs, src, assets, cdk, a11y, keycodes, README, tests
+                expect(getNodes(treeElement).length).toBe(8);
+                expect(component.treeControl.expansionModel.selected.length).toBe(2);
+
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('cdk');
+
+                // expanded -> collapse, the focus stays put
+                pressKey(LEFT_ARROW);
+
+                expect(getNodes(treeElement).length).toBe(6);
+                expect(getActiveValue()).toBe('cdk');
+
+                // collapsed -> step up over the `assets` sibling to `src`
+                pressKey(LEFT_ARROW);
+
+                expect(getActiveValue()).toBe('src');
+
+                // expanded -> collapse
+                pressKey(LEFT_ARROW);
+
+                expect(getNodes(treeElement).length).toBe(3);
+                expect(component.treeControl.expansionModel.selected.length).toBe(0);
+
+                // `src` is a root, so the tree stays fully collapsed
+                pressKey(LEFT_ARROW);
+
+                expect(getNodes(treeElement).length).toBe(3);
+                expect(getActiveValue()).toBe('src');
+            }));
+
+            it('should do nothing on a root-level option', fakeAsync(() => {
+                pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('docs');
+
+                pressKey(LEFT_ARROW);
+
+                expect(component.tree.keyManager.activeItemIndex).toBe(0);
+                expect(getNodes(treeElement).length).toBe(3);
+            }));
+
+            it('should skip a disabled ancestor instead of landing on its sibling', fakeAsync(() => {
+                component.disabledNodes = ['cdk'];
+                fixture.detectChanges();
+
+                expandNode(1);
+                expandNode(3);
+
+                expect(getNodes(treeElement).length).toBe(8);
+
+                // DOWN_ARROW skips the disabled `cdk`, so the fourth press lands on `a11y`
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('a11y');
+
+                pressKey(LEFT_ARROW);
+
+                // `cdk` cannot take the focus, so the walk narrows to its level and reaches `src` —
+                // without narrowing it would stop on `assets`, a sibling of the parent
+                expect(getActiveValue()).toBe('src');
+            }));
+
+            it('should do nothing when every ancestor is disabled', fakeAsync(() => {
+                component.disabledNodes = ['src'];
+                fixture.detectChanges();
+
+                expandNode(1);
+
+                // DOWN_ARROW skips the disabled `src`, so the second press lands on `assets`
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                expect(getActiveValue()).toBe('assets');
+
+                pressKey(LEFT_ARROW);
+
+                expect(getActiveValue()).toBe('assets');
+            }));
+
+            it('should not change the selection when moving to the parent', fakeAsync(() => {
+                expandNode(1);
+
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                expect(component.modelValue).toBe('assets');
+
+                pressKey(LEFT_ARROW);
+
+                expect(getActiveValue()).toBe('src');
+                expect(component.modelValue).toBe('assets');
+            }));
+
+            it('should emit navigationChange when moving to the parent', fakeAsync(() => {
+                expandNode(1);
+
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+                pressKey(DOWN_ARROW);
+
+                const spy = jest.fn();
+                const subscription = component.tree.navigationChange.subscribe(spy);
+
+                pressKey(LEFT_ARROW);
+
+                expect(spy).toHaveBeenCalledTimes(1);
+                expect(spy.mock.calls[0][0].option.value).toBe('src');
+
+                subscription.unsubscribe();
+            }));
+        });
+
         // todo need recover
         xdescribe('with when node template', () => {
             let fixture: ComponentFixture<WhenNodeKbqTreeApp>;
@@ -1610,6 +1814,60 @@ class KbqTreeAppNonSelectableParents extends TreeParams {
         super();
 
         this.dataSource.data = this.treeData = buildFileTree(DEEP_DATA_OBJECT, 0);
+    }
+}
+
+// Unlike DEEP_DATA_OBJECT, `cdk` has a sibling before it, so a backwards ancestor scan that fails to
+// narrow the level while stepping over a disabled `cdk` lands on `assets` instead of on `src`.
+export const DEEP_DATA_OBJECT_WITH_SIBLINGS = {
+    docs: 'app',
+    src: {
+        assets: 'png',
+        cdk: {
+            a11y: 'ts',
+            keycodes: 'ts'
+        },
+        README: 'md'
+    },
+    tests: 'ts'
+};
+
+@Component({
+    imports: [
+        KbqTreeModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+                [disabled]="disabledNodes.includes(node.name)"
+            >
+                {{ node.name }}
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+                [disabled]="disabledNodes.includes(node.name)"
+            >
+                <kbq-tree-node-toggle [node]="node" />
+
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class KbqTreeAppDeepData extends TreeParams {
+    modelValue: any = '';
+    disabledNodes: string[] = [];
+    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+
+    constructor() {
+        super();
+
+        this.dataSource.data = this.treeData = buildFileTree(DEEP_DATA_OBJECT_WITH_SIBLINGS, 0);
     }
 }
 

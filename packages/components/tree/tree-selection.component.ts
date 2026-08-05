@@ -401,8 +401,14 @@ export class KbqTreeSelection
             this.keyManager.tabOut.next();
 
             return;
-        } else if (keyCode === LEFT_ARROW && this.keyManager.activeItem?.isExpandable) {
-            this.treeControl.collapse(this.keyManager.activeItem.data as KbqTreeOption);
+        } else if (keyCode === LEFT_ARROW && this.keyManager.activeItem) {
+            const activeItem = this.keyManager.activeItem;
+
+            if (activeItem.isExpandable && activeItem.isExpanded) {
+                this.treeControl.collapse(activeItem.data as KbqTreeOption);
+            } else {
+                this.setActiveParentOption(activeItem);
+            }
 
             return;
         } else if (keyCode === RIGHT_ARROW && this.keyManager.activeItem?.isExpandable) {
@@ -744,6 +750,41 @@ export class KbqTreeSelection
 
     private onCopyDefaultHandler(): void {
         this.clipboard?.copy(this.keyManager.activeItem!.value);
+    }
+
+    /**
+     * Moves focus to the closest enabled ancestor of the active option — ArrowLeft on a leaf, on an
+     * already-collapsed node, or on a node whose toggle is disabled.
+     *
+     * Ancestors are resolved against `renderedOptions` rather than `treeControl.dataNodes`: every
+     * ancestor of a visible option is itself visible, options are rendered depth-first, and these are
+     * the indices `keyManager` navigates. Scanning backwards, the first option with a smaller level is
+     * the parent.
+     *
+     * A disabled option cannot take focus (`KbqTreeOption.focus` refuses it), so the walk steps over a
+     * disabled ancestor and narrows `level` to that ancestor's level. Without narrowing, the scan would
+     * continue against the original level and land on a preceding sibling of the parent.
+     */
+    private setActiveParentOption(activeOption: KbqTreeOption): void {
+        const options = this.renderedOptions.toArray();
+
+        let level = activeOption.level;
+
+        for (let index = options.indexOf(activeOption) - 1; index >= 0; index--) {
+            const option = options[index];
+
+            if (option.level >= level) {
+                continue;
+            }
+
+            if (!option.disabled) {
+                this.keyManager.setActiveItem(index);
+
+                return;
+            }
+
+            level = option.level;
+        }
     }
 
     private getHeight(): number {
