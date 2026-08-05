@@ -103,7 +103,7 @@ export class BaseFormatterPipe<D> {
  */
 export abstract class BaseLocaleAwareFormatterPipe<
     D,
-    Value = D | string,
+    Value = D | string | null | undefined,
     Args extends unknown[] = unknown[]
 > extends BaseFormatterPipe<D> {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -162,8 +162,8 @@ export abstract class BaseLocaleAwareFormatterPipe<
     name: 'absoluteLongDate'
 })
 export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D | string, currYear?: boolean): string {
-        const date = this.adapter.deserialize(value);
+    transform(value: D | string | null | undefined, currYear?: boolean): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.absoluteLongDate(date, currYear) : '';
     }
@@ -175,7 +175,7 @@ export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {
-    transform(value: string | D, currYear?: boolean): string {
+    transform(value: D | string | null | undefined, currYear?: boolean): string {
         return super.transform(value, currYear);
     }
 }
@@ -184,8 +184,8 @@ export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPip
     name: 'absoluteLongDateTime'
 })
 export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D | string, options?: DateTimeOptions): string {
-        const date = this.adapter.deserialize(value);
+    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.absoluteLongDateTime(date, options) : '';
     }
@@ -197,7 +197,7 @@ export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeFormatterPipe<D> {
-    transform(value: string | D, options?: DateTimeOptions): string {
+    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -206,8 +206,8 @@ export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeForm
     name: 'absoluteShortDate'
 })
 export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D | string, currYear?: boolean): string {
-        const date = this.adapter.deserialize(value);
+    transform(value: D | string | null | undefined, currYear?: boolean): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.absoluteShortDate(date, currYear) : '';
     }
@@ -219,7 +219,7 @@ export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> impl
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFormatterPipe<D> {
-    transform(value: string | D, currYear?: boolean): string {
+    transform(value: D | string | null | undefined, currYear?: boolean): string {
         return super.transform(value, currYear);
     }
 }
@@ -228,8 +228,8 @@ export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFo
     name: 'absoluteShortDateTime'
 })
 export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D | string, options?: DateTimeOptions): string {
-        const date = this.adapter.deserialize(value);
+    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.absoluteShortDateTime(date, options) : '';
     }
@@ -241,7 +241,7 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDateTimeFormatterPipe<D> {
-    transform(value: string | D, options?: DateTimeOptions): string {
+    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -250,8 +250,8 @@ export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDa
     name: 'relativeLongDate'
 })
 export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D | string): string {
-        const date = this.adapter.deserialize(value);
+    transform(value: D | string | null | undefined): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.relativeLongDate(date) : '';
     }
@@ -263,7 +263,7 @@ export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPipe<D> {
-    transform(value: string | D): string {
+    transform(value: D | string | null | undefined): string {
         return super.transform(value);
     }
 }
@@ -272,8 +272,8 @@ export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPip
     name: 'relativeLongDateTime'
 })
 export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D | string, options?: DateTimeOptions): string {
-        const date = this.adapter.deserialize(value);
+    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.relativeLongDateTime(date, options) : '';
     }
@@ -285,7 +285,7 @@ export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeFormatterPipe<D> {
-    transform(value: string | D, options?: DateTimeOptions): string {
+    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -294,8 +294,8 @@ export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeForm
     name: 'relativeShortDate'
 })
 export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D | string): string {
-        const date = this.adapter.deserialize(value);
+    transform(value: D | string | null | undefined): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.relativeShortDate(date) : '';
     }
@@ -307,7 +307,7 @@ export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impl
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFormatterPipe<D> {
-    transform(value: string | D): string {
+    transform(value: D | string | null | undefined): string {
         return super.transform(value);
     }
 }
@@ -316,8 +316,8 @@ export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFo
     name: 'relativeShortDateTime'
 })
 export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D | string, options?: DateTimeOptions): string {
-        const date = this.adapter.deserialize(value);
+    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.relativeShortDateTime(date, options) : '';
     }
@@ -329,7 +329,7 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDateTimeFormatterPipe<D> {
-    transform(value: string | D, options?: DateTimeOptions): string {
+    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -338,7 +338,7 @@ export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDa
     name: 'rangeLongDate'
 })
 export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D[] | string[]): string {
+    transform(value: D[] | string[] | null | undefined): string {
         const range = toOpenedRange(this.adapter, value);
 
         if (!range) return '';
@@ -353,7 +353,7 @@ export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements P
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
-    transform(value: D[] | string[]): string {
+    transform(value: D[] | string[] | null | undefined): string {
         return super.transform(value);
     }
 }
@@ -362,7 +362,7 @@ export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
     name: 'rangeShortDate'
 })
 export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D[] | string[]): string {
+    transform(value: D[] | string[] | null | undefined): string {
         const range = toOpenedRange(this.adapter, value);
 
         if (!range) return '';
@@ -377,7 +377,7 @@ export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impleme
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatterPipe<D> {
-    transform(value: D[] | string[]): string {
+    transform(value: D[] | string[] | null | undefined): string {
         return super.transform(value);
     }
 }
@@ -386,7 +386,7 @@ export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatte
     name: 'rangeLongDateTime'
 })
 export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D[] | string[], options?: DateTimeOptions): string {
+    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         const range = toOpenedRange(this.adapter, value);
 
         if (!range) return '';
@@ -401,7 +401,7 @@ export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implemen
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterPipe<D> {
-    transform(value: D[] | string[], options?: DateTimeOptions): string {
+    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -410,7 +410,7 @@ export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterP
     name: 'rangeMiddleDateTime'
 })
 export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D[] | string[], options?: DateTimeOptions): string {
+    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         // Unlike the other range formats, the middle one has no opened-range template — both bounds required.
         const range = toClosedRange(this.adapter, value);
 
@@ -426,7 +426,7 @@ export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> im
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTimeFormatterPipe<D> {
-    transform(value: D[] | string[], options?: DateTimeOptions): string {
+    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -435,7 +435,7 @@ export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTi
     name: 'rangeShortDateTime'
 })
 export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D[] | string[], options?: DateTimeOptions): string {
+    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         const range = toOpenedRange(this.adapter, value);
 
         if (!range) return '';
@@ -450,7 +450,7 @@ export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imp
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTimeFormatterPipe<D> {
-    transform(value: D[] | string[], options?: DateTimeOptions): string {
+    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -459,7 +459,7 @@ export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTime
     name: 'durationShortest'
 })
 export class DurationShortestFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D[] | string[], options?: DateTimeOptions): string {
+    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         const range = toDurationRange(this.adapter, value);
 
         if (!range) return '';
@@ -474,7 +474,7 @@ export class DurationShortestFormatterPipe<D> extends BaseFormatterPipe<D> imple
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class DurationShortestFormatterImpurePipe<D> extends DurationShortestFormatterPipe<D> {
-    transform(value: D[] | string[], options?: DateTimeOptions): string {
+    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -483,7 +483,7 @@ export class DurationShortestFormatterImpurePipe<D> extends DurationShortestForm
     name: 'durationLong'
 })
 export class DurationLongFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D[] | string[], units?: DurationUnit[], fraction?: boolean): string {
+    transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         const range = toDurationRange(this.adapter, value);
 
         if (!range) return '';
@@ -498,7 +498,7 @@ export class DurationLongFormatterPipe<D> extends BaseFormatterPipe<D> implement
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class DurationLongFormatterImpurePipe<D> extends DurationLongFormatterPipe<D> {
-    transform(value: D[] | string[], units?: DurationUnit[], fraction?: boolean): string {
+    transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         return super.transform(value, units, fraction);
     }
 }
@@ -507,7 +507,7 @@ export class DurationLongFormatterImpurePipe<D> extends DurationLongFormatterPip
     name: 'durationShort'
 })
 export class DurationShortFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
-    transform(value: D[] | string[], units?: DurationUnit[], fraction?: boolean): string {
+    transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         const range = toDurationRange(this.adapter, value);
 
         if (!range) return '';
@@ -522,7 +522,7 @@ export class DurationShortFormatterPipe<D> extends BaseFormatterPipe<D> implemen
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class DurationShortFormatterImpurePipe<D> extends DurationShortFormatterPipe<D> {
-    transform(value: D[] | string[], units?: DurationUnit[], fraction?: boolean): string {
+    transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         return super.transform(value, units, fraction);
     }
 }
@@ -536,15 +536,15 @@ export class DurationShortFormatterImpurePipe<D> extends DurationShortFormatterP
     pure: false
 })
 export class KbqAbsoluteLongDatePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]>
     implements PipeTransform
 {
-    override transform(value: D | string, currYear?: boolean): string {
+    override transform(value: D | string | null | undefined, currYear?: boolean): string {
         return super.transform(value, currYear);
     }
 
-    protected format(value: D | string, currYear?: boolean): string {
-        const date = this.adapter.deserialize(value);
+    protected format(value: D | string | null | undefined, currYear?: boolean): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.absoluteLongDate(date, currYear) : '';
     }
@@ -555,15 +555,15 @@ export class KbqAbsoluteLongDatePipe<D>
     pure: false
 })
 export class KbqAbsoluteShortDatePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string, [currYear?: boolean]>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]>
     implements PipeTransform
 {
-    override transform(value: D | string, currYear?: boolean): string {
+    override transform(value: D | string | null | undefined, currYear?: boolean): string {
         return super.transform(value, currYear);
     }
 
-    protected format(value: D | string, currYear?: boolean): string {
-        const date = this.adapter.deserialize(value);
+    protected format(value: D | string | null | undefined, currYear?: boolean): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.absoluteShortDate(date, currYear) : '';
     }
@@ -574,15 +574,15 @@ export class KbqAbsoluteShortDatePipe<D>
     pure: false
 })
 export class KbqAbsoluteLongDateTimePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D | string, options?: DateTimeOptions): string {
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 
-    protected format(value: D | string, options?: DateTimeOptions): string {
-        const date = this.adapter.deserialize(value);
+    protected format(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.absoluteLongDateTime(date, options) : '';
     }
@@ -593,15 +593,15 @@ export class KbqAbsoluteLongDateTimePipe<D>
     pure: false
 })
 export class KbqAbsoluteShortDateTimePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D | string, options?: DateTimeOptions): string {
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 
-    protected format(value: D | string, options?: DateTimeOptions): string {
-        const date = this.adapter.deserialize(value);
+    protected format(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.absoluteShortDateTime(date, options) : '';
     }
@@ -612,15 +612,15 @@ export class KbqAbsoluteShortDateTimePipe<D>
     pure: false
 })
 export class KbqRelativeLongDatePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string, []>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []>
     implements PipeTransform
 {
-    override transform(value: D | string): string {
+    override transform(value: D | string | null | undefined): string {
         return super.transform(value);
     }
 
-    protected format(value: D | string): string {
-        const date = this.adapter.deserialize(value);
+    protected format(value: D | string | null | undefined): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.relativeLongDate(date) : '';
     }
@@ -631,15 +631,15 @@ export class KbqRelativeLongDatePipe<D>
     pure: false
 })
 export class KbqRelativeShortDatePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string, []>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []>
     implements PipeTransform
 {
-    override transform(value: D | string): string {
+    override transform(value: D | string | null | undefined): string {
         return super.transform(value);
     }
 
-    protected format(value: D | string): string {
-        const date = this.adapter.deserialize(value);
+    protected format(value: D | string | null | undefined): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.relativeShortDate(date) : '';
     }
@@ -650,15 +650,15 @@ export class KbqRelativeShortDatePipe<D>
     pure: false
 })
 export class KbqRelativeLongDateTimePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D | string, options?: DateTimeOptions): string {
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 
-    protected format(value: D | string, options?: DateTimeOptions): string {
-        const date = this.adapter.deserialize(value);
+    protected format(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.relativeLongDateTime(date, options) : '';
     }
@@ -669,15 +669,15 @@ export class KbqRelativeLongDateTimePipe<D>
     pure: false
 })
 export class KbqRelativeShortDateTimePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string, [options?: DateTimeOptions]>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D | string, options?: DateTimeOptions): string {
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 
-    protected format(value: D | string, options?: DateTimeOptions): string {
-        const date = this.adapter.deserialize(value);
+    protected format(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        const date = toValidDate(this.adapter, value);
 
         return date ? this.formatter.relativeShortDateTime(date, options) : '';
     }
@@ -688,14 +688,14 @@ export class KbqRelativeShortDateTimePipe<D>
     pure: false
 })
 export class KbqRangeLongDatePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], []>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, []>
     implements PipeTransform
 {
-    override transform(value: D[] | string[]): string {
+    override transform(value: D[] | string[] | null | undefined): string {
         return super.transform(value);
     }
 
-    protected format(value: D[] | string[]): string {
+    protected format(value: D[] | string[] | null | undefined): string {
         const range = toOpenedRange(this.adapter, value);
 
         if (!range) return '';
@@ -709,14 +709,14 @@ export class KbqRangeLongDatePipe<D>
     pure: false
 })
 export class KbqRangeShortDatePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], []>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, []>
     implements PipeTransform
 {
-    override transform(value: D[] | string[]): string {
+    override transform(value: D[] | string[] | null | undefined): string {
         return super.transform(value);
     }
 
-    protected format(value: D[] | string[]): string {
+    protected format(value: D[] | string[] | null | undefined): string {
         const range = toOpenedRange(this.adapter, value);
 
         if (!range) return '';
@@ -730,14 +730,14 @@ export class KbqRangeShortDatePipe<D>
     pure: false
 })
 export class KbqRangeLongDateTimePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D[] | string[], options?: DateTimeOptions): string {
+    override transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 
-    protected format(value: D[] | string[], options?: DateTimeOptions): string {
+    protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         const range = toOpenedRange(this.adapter, value);
 
         if (!range) return '';
@@ -751,14 +751,14 @@ export class KbqRangeLongDateTimePipe<D>
     pure: false
 })
 export class KbqRangeMiddleDateTimePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D[] | string[], options?: DateTimeOptions): string {
+    override transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 
-    protected format(value: D[] | string[], options?: DateTimeOptions): string {
+    protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         // Unlike the other range formats, the middle one has no opened-range template — both bounds required.
         const range = toClosedRange(this.adapter, value);
 
@@ -773,14 +773,14 @@ export class KbqRangeMiddleDateTimePipe<D>
     pure: false
 })
 export class KbqRangeShortDateTimePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D[] | string[], options?: DateTimeOptions): string {
+    override transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 
-    protected format(value: D[] | string[], options?: DateTimeOptions): string {
+    protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         const range = toOpenedRange(this.adapter, value);
 
         if (!range) return '';
@@ -795,7 +795,8 @@ export class KbqRangeShortDateTimePipe<D>
  * Takes a `[from, to]` tuple, like the range pipes. `options.seconds` defaults to `true` and
  * `options.milliseconds` to `false`; `options.currYear` is not used by this format.
  *
- * Renders an empty string when a bound is missing or invalid, or when `from` is later than `to`.
+ * Renders an empty string when the tuple itself or one of its bounds is missing or invalid, or when
+ * `from` is later than `to`.
  *
  * @example
  * ```html
@@ -808,14 +809,14 @@ export class KbqRangeShortDateTimePipe<D>
     pure: false
 })
 export class KbqDurationShortestPipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [options?: DateTimeOptions]>
+    extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D[] | string[], options?: DateTimeOptions): string {
+    override transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 
-    protected format(value: D[] | string[], options?: DateTimeOptions): string {
+    protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         const range = toDurationRange(this.adapter, value);
 
         if (!range) return '';
@@ -831,7 +832,8 @@ export class KbqDurationShortestPipe<D>
  * formatter picks them automatically when omitted), `fraction` adds a fractional part for years
  * and months.
  *
- * Renders an empty string when a bound is missing or invalid, or when `from` is later than `to`.
+ * Renders an empty string when the tuple itself or one of its bounds is missing or invalid, or when
+ * `from` is later than `to`.
  *
  * @example
  * ```html
@@ -845,14 +847,18 @@ export class KbqDurationShortestPipe<D>
     pure: false
 })
 export class KbqDurationLongPipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [units?: DurationUnit[], fraction?: boolean]>
+    extends BaseLocaleAwareFormatterPipe<
+        D,
+        D[] | string[] | null | undefined,
+        [units?: DurationUnit[], fraction?: boolean]
+    >
     implements PipeTransform
 {
-    override transform(value: D[] | string[], units?: DurationUnit[], fraction?: boolean): string {
+    override transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         return super.transform(value, units, fraction);
     }
 
-    protected format(value: D[] | string[], units?: DurationUnit[], fraction?: boolean): string {
+    protected format(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         const range = toDurationRange(this.adapter, value);
 
         if (!range) return '';
@@ -868,7 +874,8 @@ export class KbqDurationLongPipe<D>
  * formatter picks them automatically when omitted), `fraction` adds a fractional part for years
  * and months.
  *
- * Renders an empty string when a bound is missing or invalid, or when `from` is later than `to`.
+ * Renders an empty string when the tuple itself or one of its bounds is missing or invalid, or when
+ * `from` is later than `to`.
  *
  * @example
  * ```html
@@ -881,14 +888,18 @@ export class KbqDurationLongPipe<D>
     pure: false
 })
 export class KbqDurationShortPipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D[] | string[], [units?: DurationUnit[], fraction?: boolean]>
+    extends BaseLocaleAwareFormatterPipe<
+        D,
+        D[] | string[] | null | undefined,
+        [units?: DurationUnit[], fraction?: boolean]
+    >
     implements PipeTransform
 {
-    override transform(value: D[] | string[], units?: DurationUnit[], fraction?: boolean): string {
+    override transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         return super.transform(value, units, fraction);
     }
 
-    protected format(value: D[] | string[], units?: DurationUnit[], fraction?: boolean): string {
+    protected format(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         const range = toDurationRange(this.adapter, value);
 
         if (!range) return '';

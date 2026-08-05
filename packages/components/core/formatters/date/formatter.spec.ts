@@ -2,6 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, LOCALE_ID, signa
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { KbqLuxonDateModule, LuxonDateAdapter, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
+    AbsoluteDateFormatterPipe,
+    AbsoluteDateShortFormatterPipe,
+    AbsoluteDateTimeFormatterPipe,
+    AbsoluteShortDateTimeFormatterPipe,
     DateAdapter,
     DateFormatter,
     DurationLongFormatterImpurePipe,
@@ -36,7 +40,11 @@ import {
     RangeDateTimeFormatterPipe,
     RangeMiddleDateTimeFormatterPipe,
     RangeShortDateFormatterPipe,
-    RangeShortDateTimeFormatterPipe
+    RangeShortDateTimeFormatterPipe,
+    RelativeDateFormatterPipe,
+    RelativeDateTimeFormatterPipe,
+    RelativeShortDateFormatterPipe,
+    RelativeShortDateTimeFormatterPipe
 } from '@koobiq/components/core';
 import { DurationUnit } from '@koobiq/date-adapter';
 import { DateTime, DateTimeUnit } from 'luxon';
@@ -54,8 +62,11 @@ const refresh = (fixture: ComponentFixture<unknown>) => {
     fixture.detectChanges();
 };
 
-/** What the range and duration pipe hosts bind: a `[from, to]` tuple whose bounds may be absent or unparseable. */
-type RangeValue = (DateTime | string | null)[];
+/**
+ * What the range and duration pipe hosts bind, matching what the pipes accept: a `[from, to]` tuple whose
+ * bounds may be absent or unparseable, or no tuple at all for an input that has not been populated yet.
+ */
+type RangeValue = (DateTime | string | null)[] | null | undefined;
 
 describe('Date formatter', () => {
     let adapter: LuxonDateAdapter;
@@ -2524,8 +2535,8 @@ describe('Date formatter (imports and providing)', () => {
             changeDetection: ChangeDetectionStrategy.OnPush
         })
         class AllPipesHostComponent {
-            readonly value = signal<DateTime | null>(null);
-            readonly range = signal<DateTime[]>([]);
+            readonly value = signal<DateTime | string | null | undefined>(null);
+            readonly range = signal<RangeValue>([]);
         }
 
         let localeService: KbqLocaleService;
@@ -2572,6 +2583,9 @@ describe('Date formatter (imports and providing)', () => {
             }
         ));
 
+        const read = (fixture: ComponentFixture<unknown>, id: string): string =>
+            fixture.nativeElement.querySelector(`#${id}`).textContent.trim();
+
         it('renders every format and recomputes all of them on locale change', () => {
             const fixture = TestBed.createComponent(AllPipesHostComponent);
             const d1 = testAdapter.createDate(2024, 0, 15);
@@ -2580,24 +2594,43 @@ describe('Date formatter (imports and providing)', () => {
             fixture.componentInstance.value.set(d1);
             fixture.componentInstance.range.set([d1, d2]);
 
-            const read = (id: string): string => fixture.nativeElement.querySelector(`#${id}`).textContent.trim();
-
             // `dateFormatter` is the same instance the pipes use; it tracks the active locale itself.
             const assertMatchesActiveLocale = () => {
-                Object.entries(singleExpect).forEach(([id, fn]) => expect(read(id)).toBe(fn(dateFormatter, d1)));
-                Object.entries(rangeExpect).forEach(([id, fn]) => expect(read(id)).toBe(fn(dateFormatter, d1, d2)));
+                Object.entries(singleExpect).forEach(([id, fn]) =>
+                    expect(read(fixture, id)).toBe(fn(dateFormatter, d1))
+                );
+                Object.entries(rangeExpect).forEach(([id, fn]) =>
+                    expect(read(fixture, id)).toBe(fn(dateFormatter, d1, d2))
+                );
             };
 
             fixture.detectChanges();
             assertMatchesActiveLocale();
 
-            const ruAbsLong = read('absLong');
+            const ruAbsLong = read(fixture, 'absLong');
 
             localeService.setLocale('en-US');
             fixture.detectChanges();
             assertMatchesActiveLocale();
 
-            expect(read('absLong')).not.toBe(ruAbsLong);
+            expect(read(fixture, 'absLong')).not.toBe(ruAbsLong);
+        });
+
+        // The single-value pipes take a not-yet-populated input too, not just the tuple ones.
+        const emptyValues: [string, DateTime | string | null | undefined][] = [
+            ['null', null],
+            ['undefined', undefined],
+            ['an unparseable string', 'not-a-date']
+        ];
+
+        it.each(emptyValues)('renders an empty string for a value that is %s', (_, value) => {
+            const fixture = TestBed.createComponent(AllPipesHostComponent);
+
+            fixture.componentInstance.value.set(value);
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+
+            Object.keys(singleExpect).forEach((id) => expect(read(fixture, id)).toBe(''));
         });
     });
 
@@ -2823,7 +2856,7 @@ describe('Date formatter (imports and providing)', () => {
         describe('unformattable input', () => {
             // The last two cases are the tuple itself being missing rather than a bound inside it — what a
             // not-yet-populated input actually holds. `toDurationRange` used to destructure it and throw.
-            const cases: [string, (d: DateTime) => RangeValue | null | undefined][] = [
+            const cases: [string, (d: DateTime) => RangeValue][] = [
                 ['an empty tuple', () => []],
                 ['a missing start', (d) => [null, d]],
                 ['a missing end', (d) => [d, null]],
@@ -2838,8 +2871,8 @@ describe('Date formatter (imports and providing)', () => {
                 const fixture = TestBed.createComponent(DurationPipesHostComponent);
                 const legacyFixture = TestBed.createComponent(LegacyDurationPipesHostComponent);
 
-                fixture.componentInstance.range.set(makeRange(start) as RangeValue);
-                legacyFixture.componentInstance.range.set(makeRange(start) as RangeValue);
+                fixture.componentInstance.range.set(makeRange(start));
+                legacyFixture.componentInstance.range.set(makeRange(start));
 
                 expect(() => {
                     fixture.detectChanges();
@@ -2925,16 +2958,18 @@ describe('Date formatter (imports and providing)', () => {
         // whole host view — reachable from a template as soon as a range form control is left empty. The
         // last two cases are the tuple itself being missing rather than a bound inside it, which is what an
         // input that has not been populated yet actually holds.
-        it.each([
+        const emptyCases: [string, RangeValue][] = [
             ['an empty tuple', []],
             ['both bounds missing', [null, null]],
             ['both bounds unparseable', ['x', 'y']],
             ['the whole value missing', null],
             ['the whole value undefined', undefined]
-        ] as [string, RangeValue | null | undefined][])('renders an empty string for %s', (_, range) => {
+        ];
+
+        it.each(emptyCases)('renders an empty string for %s', (_, range) => {
             const fixture = TestBed.createComponent(RangeBoundsHostComponent);
 
-            fixture.componentInstance.range.set(range as RangeValue);
+            fixture.componentInstance.range.set(range);
 
             expect(() => fixture.detectChanges()).not.toThrow();
 
@@ -2961,6 +2996,82 @@ describe('Date formatter (imports and providing)', () => {
             // The middle format has no opened-range template, so it renders nothing instead of throwing.
             expect(read(fixture, 'kbqMidTime')).toBe('');
             expect(read(fixture, 'pureMidTime')).toBe('');
+        });
+    });
+
+    describe('Legacy single-value date pipes with missing values', () => {
+        @Component({
+            selector: 'kbq-legacy-value-host',
+            imports: [
+                AbsoluteDateFormatterPipe,
+                AbsoluteDateShortFormatterPipe,
+                AbsoluteDateTimeFormatterPipe,
+                AbsoluteShortDateTimeFormatterPipe,
+                RelativeDateFormatterPipe,
+                RelativeDateTimeFormatterPipe,
+                RelativeShortDateFormatterPipe,
+                RelativeShortDateTimeFormatterPipe
+            ],
+            template: `
+                <span id="absLong">{{ value() | absoluteLongDate }}</span>
+                <span id="absLongTime">{{ value() | absoluteLongDateTime }}</span>
+                <span id="absShort">{{ value() | absoluteShortDate }}</span>
+                <span id="absShortTime">{{ value() | absoluteShortDateTime }}</span>
+                <span id="relLong">{{ value() | relativeLongDate }}</span>
+                <span id="relLongTime">{{ value() | relativeLongDateTime }}</span>
+                <span id="relShort">{{ value() | relativeShortDate }}</span>
+                <span id="relShortTime">{{ value() | relativeShortDateTime }}</span>
+            `,
+            changeDetection: ChangeDetectionStrategy.OnPush
+        })
+        class LegacyValueHostComponent {
+            readonly value = signal<DateTime | string | null | undefined>(null);
+        }
+
+        const allIds = [
+            'absLong',
+            'absLongTime',
+            'absShort',
+            'absShortTime',
+            'relLong',
+            'relLongTime',
+            'relShort',
+            'relShortTime'
+        ];
+
+        const read = (fixture: ComponentFixture<unknown>, id: string): string =>
+            fixture.nativeElement.querySelector(`#${id}`).textContent.trim();
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [LegacyValueHostComponent, KbqFormattersModule, KbqLuxonDateModule],
+                providers: [
+                    { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
+                    { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
+                    { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
+                ]
+            });
+        });
+
+        // The `kbq*` family is covered above; these share the guard through `toValidDate`. An unparseable
+        // string is the interesting case: `deserialize` answers it with a truthy *invalid* date, which the
+        // formatter then refuses to format, so a plain truthiness check used to let it throw.
+        const emptyValues: [string, DateTime | string | null | undefined][] = [
+            ['null', null],
+            ['undefined', undefined],
+            ['an empty string', ''],
+            ['an unparseable string', 'not-a-date']
+        ];
+
+        it.each(emptyValues)('renders an empty string for a value that is %s', (_, value) => {
+            const fixture = TestBed.createComponent(LegacyValueHostComponent);
+
+            fixture.componentInstance.value.set(value);
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+
+            allIds.forEach((id) => expect(read(fixture, id)).toBe(''));
         });
     });
 
