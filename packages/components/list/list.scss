@@ -3,10 +3,10 @@
 @use '../core/styles/common/vendor-prefixes';
 @use './list-theme' as theme;
 
-@mixin _kbq-list-item-border-radius() {
+/// Squares off the corners between adjacent selected rows so a run of them reads as one block.
+/// Only `.kbq-list-option` is ever selectable, hence the option-only scope.
+@mixin _kbq-list-option-selected-border-radius() {
     $selectors: '.kbq-selected';
-
-    border-radius: var(--kbq-size-border-radius);
 
     &:is(#{$selectors}):has(+ :is(#{$selectors})) {
         border-bottom-left-radius: unset;
@@ -25,16 +25,51 @@
     outline: none;
 }
 
+// `horizontal` rebinds Left/Right arrows on the key manager; without a row layout the visual order
+// would disagree with the focus order.
+.kbq-list-selection_horizontal {
+    display: flex;
+    flex-direction: row;
+
+    .kbq-list-option {
+        flex: 0 0 auto;
+    }
+}
+
 .kbq-list-item,
 .kbq-list-option {
     @include vendor-prefixes.user-select(none);
     @include list.kbq-list-item-base();
-    @include _kbq-list-item-border-radius();
-    @include action-container.kbq-option-action-visibility('.kbq-list-selection.cdk-keyboard-focused');
+
+    // Re-declared on top of the shared base so the `--kbq-list-size-*` tokens become real override
+    // points. Both elements only ever render inside `.kbq-list` / `.kbq-list-selection`, which is
+    // where list-tokens.scss declares them, so no `var()` fallbacks are needed here.
+    // The horizontal padding subtracts the transparent focus border so the total stays on the grid.
+    border-width: var(--kbq-list-size-container-focus-outline-width);
+    border-radius: var(--kbq-size-border-radius);
+    gap: var(--kbq-list-size-container-content-gap-horizontal);
+    padding-top: var(--kbq-list-size-container-padding-vertical);
+    padding-right: calc(
+        var(--kbq-list-size-container-padding-right) - var(--kbq-list-size-container-focus-outline-width)
+    );
+    padding-bottom: var(--kbq-list-size-container-padding-vertical);
+    padding-left: calc(
+        var(--kbq-list-size-container-padding-left) - var(--kbq-list-size-container-focus-outline-width)
+    );
+
+    .kbq-list-option-caption {
+        padding-top: var(--kbq-list-size-container-content-gap-vertical);
+    }
 
     &:not(.kbq-disabled) {
         cursor: pointer;
     }
+}
+
+// Option-only: `.kbq-selected` never lands on `.kbq-list-item`, and only options host an action container.
+.kbq-list-option {
+    @include _kbq-list-option-selected-border-radius();
+    @include action-container.kbq-option-action-visibility('.kbq-list-selection.cdk-keyboard-focused');
 }
 
 @include theme.kbq-list-theme();
