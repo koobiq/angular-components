@@ -1,19 +1,88 @@
-﻿import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { Platform } from '@angular/cdk/platform';
+import { DOCUMENT } from '@angular/common';
 import {
-    afterNextRender,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     inject,
+    Injectable,
     NgZone,
     OnDestroy,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ENTER, KBQ_WINDOW, NUMPAD_DIVIDE, PopUpPlacements, SLASH, SPACE } from '@koobiq/components/core';
+import {
+    ENTER,
+    KBQ_WINDOW,
+    kbqInjectNativeElement,
+    NUMPAD_DIVIDE,
+    PopUpPlacements,
+    SLASH,
+    SPACE
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqVerticalNavbar } from './vertical-navbar.component';
+
+/**
+ * Dispatches the global `Ctrl+/` shortcut to exactly one navbar toggle.
+ *
+ * Every toggle used to bind its own window listener and call `toggle()` unconditionally, so a single keypress
+ * collapsed *every* vertical navbar on the page. One shared listener instead picks the toggle whose navbar
+ * currently holds focus, and falls back to the first registered one so the shortcut still works from anywhere.
+ * @docs-private
+ */
+@Injectable({ providedIn: 'root' })
+export class KbqNavbarToggleRegistry implements OnDestroy {
+    private readonly window = inject(KBQ_WINDOW);
+    private readonly document = inject(DOCUMENT);
+    private readonly ngZone = inject(NgZone);
+
+    private readonly toggles = new Set<KbqNavbarToggle>();
+
+    /** Starts listening for the shortcut on behalf of the given toggle. */
+    add(toggle: KbqNavbarToggle): void {
+        if (this.toggles.size === 0) {
+            this.ngZone.runOutsideAngular(() => this.window.addEventListener('keydown', this.handleKeydown));
+        }
+
+        this.toggles.add(toggle);
+    }
+
+    /** Stops dispatching the shortcut to the given toggle. */
+    remove(toggle: KbqNavbarToggle): void {
+        this.toggles.delete(toggle);
+
+        if (this.toggles.size === 0) {
+            this.window.removeEventListener('keydown', this.handleKeydown);
+        }
+    }
+
+    ngOnDestroy(): void {
+        this.window.removeEventListener('keydown', this.handleKeydown);
+
+        this.toggles.clear();
+    }
+
+    private handleKeydown = (event: KeyboardEvent): void => {
+        if (!event.ctrlKey || ![NUMPAD_DIVIDE, SLASH].includes(event.keyCode)) return;
+
+        const target = this.resolveTarget();
+
+        if (!target) return;
+
+        this.ngZone.run(() => target.toggle());
+    };
+
+    private resolveTarget(): KbqNavbarToggle | undefined {
+        const toggles = [...this.toggles];
+        const activeElement = this.document.activeElement;
+        const focused = activeElement && toggles.find((toggle) => toggle.contains(activeElement));
+
+        return focused || toggles[0];
+    }
+}
 
 @Component({
     selector: 'kbq-navbar-toggle, [kbq-navbar-toggle]',
@@ -25,8 +94,8 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
             <ng-content select="[kbq-icon]">
                 <i
                     kbq-icon
-                    [class.kbq-chevron-double-left-s_16]="navbar.expanded"
-                    [class.kbq-chevron-double-right-s_16]="!navbar.expanded"
+                    [class.kbq-chevron-double-left-s_16]="navbar.expanded()"
+                    [class.kbq-chevron-double-right-s_16]="!navbar.expanded()"
                 ></i>
             </ng-content>
         </span>
@@ -36,8 +105,16 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar-toggle kbq-vertical',
-        '[class.kbq-collapsed]': '!navbar.expanded',
-        '[class.kbq-expanded]': 'navbar.expanded',
+        '[class.kbq-collapsed]': '!navbar.expanded()',
+        '[class.kbq-expanded]': 'navbar.expanded()',
+
+        // The toggle is icon-only and its tooltip is a transient overlay, never an accessible name. Role, name
+        // and state are published on the host so assistive technology announces an expand/collapse control
+        // instead of an unlabelled element.
+        role: 'button',
+        '[attr.aria-expanded]': 'navbar.expanded()',
+        '[attr.aria-label]': 'label',
+        'aria-keyshortcuts': 'Control+/',
 
         '(keydown)': 'keydownHandler($event)',
         '(click)': 'toggle()'
@@ -45,19 +122,27 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
     hostDirectives: [CdkMonitorFocus, KbqTooltipTrigger]
 })
 export class KbqNavbarToggle implements OnDestroy {
-    private readonly window = inject(KBQ_WINDOW);
-    private readonly ngZone = inject(NgZone);
+    private readonly nativeElement = kbqInjectNativeElement();
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly registry = inject(KbqNavbarToggleRegistry);
+    private readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly tooltip = inject(KbqTooltipTrigger, { self: true });
 
     /** @docs-private */
     protected readonly navbar = inject(KbqVerticalNavbar);
 
+    /** Accessible name of the toggle; it names the action the toggle performs. @docs-private */
+    protected get label(): string {
+        return this.navbar.expanded()
+            ? this.navbar.configuration().toggle.collapse
+            : this.navbar.configuration().toggle.expand;
+    }
+
     constructor() {
-        afterNextRender(() => {
-            this.ngZone.runOutsideAngular(() => this.window.addEventListener('keydown', this.windowToggleHandler));
-        });
+        if (this.isBrowser) {
+            this.registry.add(this);
+        }
 
         this.tooltip.arrow = false;
         this.updateTooltipContent();
@@ -66,12 +151,26 @@ export class KbqNavbarToggle implements OnDestroy {
         this.tooltip.visibleChange.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipContent);
     }
 
+    /** @docs-private */
     ngOnDestroy(): void {
-        this.window.removeEventListener('keydown', this.windowToggleHandler);
+        this.registry.remove(this);
+    }
+
+    /** Whether the given element sits inside the navbar this toggle belongs to. @docs-private */
+    contains(element: Element): boolean {
+        return this.navbar.getNativeElement().contains(element) || this.nativeElement.contains(element);
+    }
+
+    /** toggles the state of the navbar */
+    toggle() {
+        this.navbar.toggle();
+        this.tooltip.hide();
+
+        this.changeDetectorRef.markForCheck();
     }
 
     /** @docs-private */
-    keydownHandler($event: KeyboardEvent) {
+    protected keydownHandler($event: KeyboardEvent) {
         if ([SPACE, ENTER].includes($event.keyCode)) {
             this.toggle();
 
@@ -80,23 +179,7 @@ export class KbqNavbarToggle implements OnDestroy {
         }
     }
 
-    /** toggles the state of the navbar */
-    toggle() {
-        this.navbar.toggle();
-        this.tooltip.hide();
-
-        this.changeDetectorRef.detectChanges();
-    }
-
     private updateTooltipContent = () => {
-        this.tooltip.content = this.navbar.expanded
-            ? this.navbar.configuration.toggle.collapse
-            : this.navbar.configuration.toggle.expand;
-    };
-
-    private windowToggleHandler = (event: KeyboardEvent) => {
-        if (event.ctrlKey && [NUMPAD_DIVIDE, SLASH].includes(event.keyCode)) {
-            this.ngZone.run(this.navbar.toggle);
-        }
+        this.tooltip.content = this.label;
     };
 }

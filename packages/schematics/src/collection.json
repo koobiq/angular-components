@@ -113,6 +113,11 @@
             "description": "Removes the `name` key from filter-bar locale configurations and reports the rename rework: renaming a filter no longer marks it saved, so it stops persisting the pending pipe edits",
             "factory": "./migrations/filter-bar-rename-action/index",
             "schema": "./migrations/filter-bar-rename-action/schema.json"
+        },
+        "navbar-signals-and-aria": {
+            "description": "Migrates navbar consumers to the signal-based API (expanded/configuration/isCollapsed/collapsable reads become calls, expanded/tabIndex writes become .set(), rectangle-element horizontal/vertical become orientation) and reports the removed tooltip inheritance, the removed disabled/hovered members and the new ARIA, keyboard and z-index behaviour",
+            "factory": "./migrations/navbar-signals-and-aria/index",
+            "schema": "./migrations/navbar-signals-and-aria/schema.json"
         }
     }
 }
