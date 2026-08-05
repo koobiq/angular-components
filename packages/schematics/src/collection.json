@@ -5,7 +5,9 @@
             "description": "Adds @koobiq/components library to the project and installs dependencies",
             "factory": "./ng-add/index",
             "schema": "./ng-add/schema.json",
-            "aliases": ["install"]
+            "aliases": [
+                "install"
+            ]
         },
         "new-icons-pack": {
             "description": "Updates prefixes and names of changed/removed icons",
@@ -106,6 +108,11 @@
             "description": "Rewrites @koobiq/components/scrollbar imports to @koobiq/components/scrollbar/deprecated — the overlayscrollbars-based implementation moved there when the dependency-free implementation was promoted to @koobiq/components/scrollbar",
             "factory": "./migrations/scrollbar-deprecated-path/index",
             "schema": "./migrations/scrollbar-deprecated-path/schema.json"
+        },
+        "navbar-signals-and-aria": {
+            "description": "Migrates navbar consumers to the signal-based API (expanded/configuration/isCollapsed/collapsable reads become calls, expanded/tabIndex writes become .set(), rectangle-element horizontal/vertical become orientation) and reports the removed tooltip inheritance, the removed disabled/hovered members and the new ARIA, keyboard and z-index behaviour",
+            "factory": "./migrations/navbar-signals-and-aria/index",
+            "schema": "./migrations/navbar-signals-and-aria/schema.json"
         }
     }
 }

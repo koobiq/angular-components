@@ -171,12 +171,12 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
-                            [class.kbq-button-icon]="!verticalNavbar.expanded"
+                            [class.kbq-button-icon]="!verticalNavbar.expanded()"
                             [color]="'contrast'"
                             [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
-                            @if (verticalNavbar.expanded) {
+                            @if (verticalNavbar.expanded()) {
                                 <span>Новый инцидент</span>
                             }
                         </button>
@@ -257,12 +257,12 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
-                            [class.kbq-button-icon]="!verticalNavbar_2.expanded"
+                            [class.kbq-button-icon]="!verticalNavbar_2.expanded()"
                             [color]="'contrast'"
                             [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
-                            @if (verticalNavbar_2.expanded) {
+                            @if (verticalNavbar_2.expanded()) {
                                 <span>Новый инцидент</span>
                             }
                         </button>
@@ -343,12 +343,12 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
-                            [class.kbq-button-icon]="!verticalNavbar_3.expanded"
+                            [class.kbq-button-icon]="!verticalNavbar_3.expanded()"
                             [color]="'contrast'"
                             [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
-                            @if (verticalNavbar_3.expanded) {
+                            @if (verticalNavbar_3.expanded()) {
                                 <span>Новый инцидент</span>
                             }
                         </button>
@@ -429,12 +429,12 @@ export class E2eHorizontalNavbarStates {}
                     <kbq-navbar-item>
                         <button
                             kbq-button
-                            [class.kbq-button-icon]="!verticalNavbar_4.expanded"
+                            [class.kbq-button-icon]="!verticalNavbar_4.expanded()"
                             [color]="'contrast'"
                             [kbqStyle]="'filled'"
                         >
                             <i kbq-icon="kbq-bell_16"></i>
-                            @if (verticalNavbar_4.expanded) {
+                            @if (verticalNavbar_4.expanded()) {
                                 <span>Новый инцидент</span>
                             }
                         </button>
@@ -551,6 +551,65 @@ export class E2eVerticalNavbarBrandAutoLongTitle {
         { title: 'Secret Notes', testId: 'horizontal-short' }
     ];
 }
+
+/**
+ * Interaction states the screenshot fixtures above cannot reach: an open dropdown, an expanded/collapsed
+ * toggle and roving keyboard focus, including the tooltip that stands in for a collapsed item's title.
+ *
+ * Kept a separate route so it owns no screenshot baseline of the settled states, and so the overlay it opens
+ * cannot leak into the other fixtures' screenshots.
+ */
+@Component({
+    selector: 'e2e-navbar-interactions',
+    imports: [KbqNavbarModule, KbqIconModule, KbqDropdownModule],
+    template: `
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>First action</button>
+            <button kbq-dropdown-item>Second action</button>
+        </kbq-dropdown>
+
+        <div data-testid="e2eScreenshotTarget" style="width: 700px; height: 420px; display: flex; gap: 20px">
+            <kbq-navbar aria-label="Horizontal" data-testid="horizontal">
+                <kbq-navbar-container>
+                    <kbq-navbar-item data-testid="horizontal-dropdown-trigger" [kbqDropdownTriggerFor]="dropdown">
+                        <kbq-navbar-title>Projects</kbq-navbar-title>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item data-testid="horizontal-first">
+                        <i kbq-icon="kbq-folder_16"></i>
+                        <kbq-navbar-title>Tasks</kbq-navbar-title>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item data-testid="horizontal-second">
+                        <i kbq-icon="kbq-gear_16"></i>
+                        <kbq-navbar-title>Settings</kbq-navbar-title>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+            </kbq-navbar>
+
+            <kbq-vertical-navbar aria-label="Vertical" data-testid="vertical">
+                <kbq-navbar-container>
+                    <kbq-navbar-item data-testid="vertical-first">
+                        <i kbq-icon="kbq-folder_16"></i>
+                        <kbq-navbar-title>Tasks</kbq-navbar-title>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item data-testid="vertical-second">
+                        <i kbq-icon="kbq-gear_16"></i>
+                        <kbq-navbar-title>Settings</kbq-navbar-title>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+
+                <button kbq-navbar-toggle data-testid="vertical-toggle"></button>
+            </kbq-vertical-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarInteractions'
+    }
+})
+export class E2eNavbarInteractions {}
 
 /**
  * Starts collapsed, which `E2eVerticalNavbarBrandAutoLongTitle` deliberately does not: a collapsed title is

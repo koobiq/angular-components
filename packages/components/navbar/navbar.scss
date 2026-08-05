@@ -1,10 +1,9 @@
 @use '../core/styles/common/tokens' as *;
-@use '../core/styles/common/overlay';
 
 @use './navbar-theme' as *;
 
 .kbq-navbar {
-    z-index: overlay.$overlay-z-index;
+    z-index: var(--kbq-navbar-z-index);
 
     display: flex;
     flex-direction: row;
