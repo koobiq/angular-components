@@ -19,8 +19,12 @@ export class KbqDdComponent {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDdComponent, never>;
 }
 
+// @public
+export type KbqDlAlign = 'start' | 'center' | 'end';
+
 // @public (undocumented)
 export class KbqDlComponent implements AfterContentInit, OnDestroy {
+    readonly horizontalAlign: i0.InputSignal<KbqDlAlign>;
     // (undocumented)
     readonly minWidth: i0.InputSignal<number>;
     // (undocumented)
@@ -31,10 +35,11 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     readonly resizeStream: Subject<Event>;
     // (undocumented)
     vertical: boolean | null;
+    readonly verticalAlign: i0.InputSignal<KbqDlAlign>;
     // (undocumented)
     readonly wide: i0.InputSignal<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDlComponent, never>;
 }

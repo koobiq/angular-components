@@ -13,6 +13,9 @@ import {
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 
+/** Supported alignment values for description list items. */
+export type KbqDlAlign = 'start' | 'center' | 'end';
+
 @Component({
     selector: 'kbq-dl',
     template: '<ng-content />',
@@ -22,12 +25,20 @@ import { debounceTime, startWith } from 'rxjs/operators';
         class: 'kbq-dl',
         '[class.kbq-dl_vertical]': 'vertical',
         '[class.kbq-dl_wide]': 'wide()',
+        '[class.kbq-dl_vertical-align-center]': "verticalAlign() === 'center'",
+        '[class.kbq-dl_vertical-align-end]': "verticalAlign() === 'end'",
+        '[class.kbq-dl_horizontal-align-center]': "horizontalAlign() === 'center'",
+        '[class.kbq-dl_horizontal-align-end]': "horizontalAlign() === 'end'",
         '(window:resize)': 'resizeStream.next($event)'
     }
 })
 export class KbqDlComponent implements AfterContentInit, OnDestroy {
     readonly minWidth = input<number>(400);
     readonly wide = input(false);
+    /** Vertical alignment of `kbq-dt` and `kbq-dd` items. */
+    readonly verticalAlign = input<KbqDlAlign>('start');
+    /** Horizontal alignment of `kbq-dt` and `kbq-dd` items. */
+    readonly horizontalAlign = input<KbqDlAlign>('start');
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input() vertical: boolean | null = null;
