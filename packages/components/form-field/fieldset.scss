@@ -20,6 +20,16 @@
     }
 
     .kbq-form-field {
+        // Force a single-token height, matching how the button computes its own height, so both
+        // round to the same pixel value. Without this, form-field's height is the sum of independently
+        // rounded border/padding/line-height values, which can drift 1px from the button's height after
+        // a resize-triggered subpixel layout recalculation, breaking the merged border line.
+        height: var(--kbq-form-field-size-height);
+
+        .kbq-form-field__content {
+            height: 100%;
+        }
+
         // set selector specifity to 0 , so focused state will override z-index
         :where(&.kbq-form-field_invalid, &.kbq-form-field_has-validate-directive.ng-invalid) {
             z-index: 2;
