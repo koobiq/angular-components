@@ -104,7 +104,7 @@
                             "path-normalize"
                         ],
                         "namedChunks": true,
-                        "browser": "apps/docs/src/main.ts",
+                        "browser": "apps/docs/src/main.browser.ts",
                         "server": "apps/docs/src/main.server.ts",
                         "prerender": {
                             "routesFile": "apps/docs/src/prerender-routes.txt"
