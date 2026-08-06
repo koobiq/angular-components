@@ -3980,6 +3980,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "modal-full-custom-example.ts"
     ],
+    "localImportFiles": [],
     "selector": "modal-full-custom-example",
     "additionalComponents": [
       "CustomModalComponent"
@@ -4791,6 +4792,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-add-new-option-example",
     "additionalComponents": [],
     "primaryFile": "select-add-new-option-example.ts",
+    "importPath": "components/select"
+  },
+  "select-auto-hide-scroll-strategy": {
+    "packagePath": "components/select/select-auto-hide-scroll-strategy",
+    "title": "select-auto-hide-scroll-strategy",
+    "componentName": "SelectAutoHideScrollStrategyExample",
+    "files": [
+      "select-auto-hide-scroll-strategy-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-auto-hide-scroll-strategy-example",
+    "additionalComponents": [],
+    "primaryFile": "select-auto-hide-scroll-strategy-example.ts",
     "importPath": "components/select"
   },
   "select-cleaner": {
@@ -8216,6 +8230,8 @@ return import('@koobiq/docs-examples/components/search-expandable');
   case 'search-expandable-overview':
 return import('@koobiq/docs-examples/components/search-expandable');
   case 'select-add-new-option':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-auto-hide-scroll-strategy':
 return import('@koobiq/docs-examples/components/select');
   case 'select-cleaner':
 return import('@koobiq/docs-examples/components/select');

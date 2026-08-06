@@ -116,11 +116,16 @@
 // `scrollbar.ts` (`wireTrackInteraction`) instead — the thumb's own listener no-ops, and the
 // pointerdown event bubbles to the track listener which excludes `event.target === thumb`, so
 // nothing happens on either path once even one side is genuinely disabled.
-.kbq-private-scrollbar_disable-drag.kbq-private-scrollbar_disable-click .kbq-private-scrollbar-track {
+// Child combinators (not descendant) throughout this file's modifier-class rules — the track is
+// always a direct child of its own host (see `buildTrack()`'s `appendChild(hostElement, track)`),
+// and a nested `kbqScrollbar` instance's content (including another track, deeper in its own
+// viewport) is still a *descendant* of the outer host. A plain descendant selector would leak the
+// outer instance's own state (visible, rtl, disabled) onto the inner instance's track too.
+.kbq-private-scrollbar_disable-drag.kbq-private-scrollbar_disable-click > .kbq-private-scrollbar-track {
     pointer-events: none;
 }
 
-.kbq-private-scrollbar_visible .kbq-private-scrollbar-track {
+.kbq-private-scrollbar_visible > .kbq-private-scrollbar-track {
     opacity: 1;
     visibility: visible;
 }
@@ -146,7 +151,7 @@
     width: var(--kbq-private-scrollbar-size-track-dimension);
 }
 
-.kbq-private-scrollbar_rtl .kbq-private-scrollbar-track_vertical {
+.kbq-private-scrollbar_rtl > .kbq-private-scrollbar-track_vertical {
     right: auto;
     left: var(--kbq-private-scrollbar-host-padding-left);
 }
@@ -169,7 +174,7 @@
     right: calc(var(--kbq-private-scrollbar-host-padding-right) + var(--kbq-private-scrollbar-size-track-dimension));
 }
 
-.kbq-private-scrollbar_rtl .kbq-private-scrollbar-track_horizontal.kbq-private-scrollbar-track_has-vertical {
+.kbq-private-scrollbar_rtl > .kbq-private-scrollbar-track_horizontal.kbq-private-scrollbar-track_has-vertical {
     right: var(--kbq-private-scrollbar-host-padding-right);
     left: calc(var(--kbq-private-scrollbar-host-padding-left) + var(--kbq-private-scrollbar-size-track-dimension));
 }

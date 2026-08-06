@@ -99,7 +99,7 @@ export type KbqScrollbarConfig = Partial<{
  */
 export const KBQ_SCROLLBAR_DEFAULT_CONFIG: Required<KbqScrollbarConfig> = {
     visibility: 'hover',
-    autoHideDelay: 100,
+    autoHideDelay: 300,
     floating: true,
     native: false,
     disableDrag: false,
@@ -171,12 +171,21 @@ export class KbqScrollbarVirtualViewport {
     readonly viewport = inject(CdkVirtualScrollViewport, { self: true });
 }
 
-/** Auto-created scroll wrapper for `KbqScrollbar` when there's no explicit `kbqScrollbarVirtualViewport`. */
+/**
+ * Auto-created scrolling wrapper for the host's own content when there's no explicit
+ * `kbqScrollbarVirtualViewport` — a real component (not a bare element) so it can carry
+ * `hostDirectives: [CdkScrollable]`, registering itself (the real scroll element) with
+ * `ScrollDispatcher` through Angular's own directive lifecycle.
+ * @docs-private
+ */
 @Component({
     selector: 'kbq-scrollbar-viewport',
     template: '<ng-content />',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'kbq-private-scrollbar-viewport' },
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-private-scrollbar-viewport'
+    },
     hostDirectives: [CdkScrollable]
 })
 class KbqScrollbarViewport {}
@@ -202,10 +211,11 @@ class KbqScrollbarViewport {}
         '[class.kbq-private-scrollbar_disable-drag]': 'disableDrag()',
         '[class.kbq-private-scrollbar_disable-click]': 'disableClick()'
     },
-    // Redundant (but harmless) whenever `scrollElement` resolves to a `kbqScrollbarVirtualViewport`
-    // or the auto-created viewport — both already provide their own `CdkScrollable`. Needed here
-    // for the remaining case: `native`/coarse pointer with no explicit viewport, where neither of
-    // those exists and the host itself becomes the real, scrolling element.
+    // Redundant (but harmless) whenever `scrollElement` resolves to an explicit
+    // `kbqScrollbarVirtualViewport` or the auto-created `KbqScrollbarViewport` — both already
+    // provide their own `CdkScrollable`. Needed here for the remaining case: `native`/coarse
+    // pointer with no explicit viewport, where the host itself becomes the real, scrolling element
+    // and nothing else registers it with `ScrollDispatcher`.
     hostDirectives: [CdkScrollable],
     exportAs: 'kbqScrollbar'
 })
@@ -366,40 +376,71 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
             this.isCoarsePointer = this.window.matchMedia?.('(pointer: coarse)').matches ?? false;
             this.readCssTokens();
 
-            const buildingCustomUi = !this.native && !this.isCoarsePointer;
-
-            this.zone.runOutsideAngular(() => {
-                if (buildingCustomUi && !this.viewport()) {
-                    this.autoViewport = this.createAutoViewport();
-                }
-
-                this.applyOverflow();
-                this.wireScroll();
-                this.wireResize();
-                this.wireDirectionality();
-
-                if (buildingCustomUi) {
-                    this.applyNativeHiding();
-                    this.wireGutterReservation();
-                    this.buildDom();
-                    this.wireGlobalDragListeners();
-                    this.wireVisibility();
-                }
-
-                // Runs even under `native`/coarse pointer — `isTopReached`-family signals and `reach*`
-                // outputs still need an initial measurement, not just the custom track/thumb.
-                this.recompute();
-
-                // A `kbqScrollbarVirtualViewport` (or any scroll element whose own layout isn't
-                // settled yet) can make the very first recompute
-                // under-measure — a 0-height track, or overflow that hasn't shown up yet. Its outer
-                // box may never resize again afterwards, so there's no guaranteed later trigger to
-                // correct it — retry once, next frame.
-                this.window.requestAnimationFrame?.(() => this.recompute());
-            });
-
-            this.emit(this.initialized, undefined);
+            this.setUp(!this.native && !this.isCoarsePointer);
         });
+    }
+
+    /**
+     * `createAutoViewport()` only captures the host's content that already exists at the moment it
+     * runs. A host composed via `hostDirectives` (unlike one that's a plain template attribute), or
+     * one whose own content simply renders in more than one pass (e.g. an `@if`/`@for`-gated block
+     * that resolves after `ngOnInit`, or async-loaded routed content), can still gain more *direct*
+     * children afterward — those would otherwise land as untouched siblings of the (now-built)
+     * viewport instead of inside it. Keeps relocating any such stray children into the viewport for
+     * the directive's lifetime, and re-measures afterward since new content can change the
+     * overflow/track state.
+     */
+    private wireLateContentRelocation(viewport: HTMLElement): void {
+        const isOwnChrome = (node: Node): boolean =>
+            node === viewport ||
+            (node instanceof HTMLElement && node.classList.contains('kbq-private-scrollbar-track'));
+
+        const observer = new MutationObserver(() => {
+            const strayNodes = Array.from(this.hostElement.childNodes).filter((node) => !isOwnChrome(node));
+
+            if (strayNodes.length === 0) return;
+
+            strayNodes.forEach((node) => this.renderer.appendChild(viewport, node));
+            this.recompute();
+        });
+
+        observer.observe(this.hostElement, { childList: true });
+        this.destroyRef.onDestroy(() => observer.disconnect());
+    }
+
+    private setUp(buildingCustomUi: boolean): void {
+        this.zone.runOutsideAngular(() => {
+            if (buildingCustomUi && !this.viewport()) {
+                this.autoViewport = this.createAutoViewport();
+                this.wireLateContentRelocation(this.autoViewport);
+            }
+
+            this.applyOverflow();
+            this.wireScroll();
+            this.wireResize();
+            this.wireDirectionality();
+
+            if (buildingCustomUi) {
+                this.applyNativeHiding();
+                this.wireGutterReservation();
+                this.buildDom();
+                this.wireGlobalDragListeners();
+                this.wireVisibility();
+            }
+
+            // Runs even under `native`/coarse pointer — `isTopReached`-family signals and `reach*`
+            // outputs still need an initial measurement, not just the custom track/thumb.
+            this.recompute();
+
+            // A `kbqScrollbarVirtualViewport` (or any scroll element whose own layout isn't
+            // settled yet) can make the very first recompute
+            // under-measure — a 0-height track, or overflow that hasn't shown up yet. Its outer
+            // box may never resize again afterwards, so there's no guaranteed later trigger to
+            // correct it — retry once, next frame.
+            this.window.requestAnimationFrame?.(() => this.recompute());
+        });
+
+        this.emit(this.initialized, undefined);
     }
 
     /**
@@ -877,7 +918,13 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
             .subscribe(() => {
                 this.isPointerOver = true;
 
-                if (this.visibility() === 'hover') this.setVisible(true);
+                if (this.visibility() === 'hover') {
+                    // Cancels a pending `scheduleHide()` from a just-preceding leave — otherwise
+                    // re-entering during the grace period would still hide it later, on the
+                    // original leave's schedule.
+                    clearTimeout(this.autoHideTimeoutId);
+                    this.setVisible(true);
+                }
             });
 
         fromEvent(this.hostElement, 'pointerleave')
@@ -885,7 +932,7 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
             .subscribe(() => {
                 this.isPointerOver = false;
 
-                if (this.visibility() === 'hover' && !this.isDragging) this.setVisible(false);
+                if (this.visibility() === 'hover' && !this.isDragging) this.scheduleHide();
             });
 
         // Reacts to `kbqScrollbarVisibility` changing at runtime, not just its value at first
@@ -917,21 +964,52 @@ export class KbqScrollbar implements KbqOverflowShadowSource, OnDestroy {
     private applySteadyVisibility(): void {
         const mode = this.visibility();
 
-        clearTimeout(this.autoHideTimeoutId);
-
         if (mode === 'always') {
+            clearTimeout(this.autoHideTimeoutId);
             this.setVisible(true);
         } else if (mode === 'hover') {
-            this.setVisible(this.isPointerOver);
+            if (this.isPointerOver) {
+                clearTimeout(this.autoHideTimeoutId);
+                this.setVisible(true);
+            } else {
+                // A drag can end (or the mode can switch to 'hover') with the pointer already
+                // away from the host — grace-period the hide via `autoHideDelay` instead of an
+                // abrupt snap-hide, same as leaving the host by itself does below.
+                this.scheduleHide();
+            }
         } else {
+            clearTimeout(this.autoHideTimeoutId);
             this.setVisible(false);
         }
+    }
+
+    // Hides after `autoHideDelay` instead of instantly, giving the user a moment after the pointer
+    // leaves (or a drag/mode-change lands with it already away) before the scrollbar disappears.
+    // Re-entering cancels this via its own `clearTimeout` in the `pointerenter` handler above.
+    private scheduleHide(): void {
+        clearTimeout(this.autoHideTimeoutId);
+        this.autoHideTimeoutId = setTimeout(() => {
+            if (!this.isDragging && !this.isPointerOver) this.setVisible(false);
+        }, this.autoHideDelay());
     }
 
     private onUserScroll(): void {
         this.emit(this.scrollChange, { top: this.scrollElement.scrollTop, left: this.scrollElement.scrollLeft });
 
-        if (this.visibility() === 'scroll') this.showTemporarily();
+        const mode = this.visibility();
+
+        // A keyboard user scrolling a focused-but-unhovered element (arrow keys, Page Up/Down,
+        // Space) has no hover affordance at all — without this, 'hover' mode's scrollbar would
+        // never reveal itself for them. Skipped while actually hovering: that already keeps it
+        // visible on its own (see `applySteadyVisibility`/`wireVisibility`), and starting the
+        // auto-hide timer here too would race it into hiding while still hovered.
+        if (mode === 'scroll' || (mode === 'hover' && !this.isPointerOver && this.isFocusWithinHost())) {
+            this.showTemporarily();
+        }
+    }
+
+    private isFocusWithinHost(): boolean {
+        return this.hostElement.contains(this.document.activeElement);
     }
 
     private showTemporarily(): void {

@@ -5,7 +5,6 @@ import {
     ChangeDetectorRef,
     Component,
     DestroyRef,
-    ElementRef,
     inject,
     ViewEncapsulation
 } from '@angular/core';
@@ -18,6 +17,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalService } from '@koobiq/components/modal';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import type { KbqIconsMetadata } from '@koobiq/icons/types/icons';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
@@ -50,8 +50,9 @@ const SEARCH_DEBOUNCE_TIME = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-icons-viewer kbq-scrollbar'
-    }
+        class: 'docs-icons-viewer'
+    },
+    hostDirectives: [KbqScrollbar]
 })
 export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly http = inject(HttpClient);
@@ -61,7 +62,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly location = inject(Location);
     private readonly docStates = inject(DocsDocStates);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly scrollbar = inject(KbqScrollbar, { self: true });
     private readonly destroyRef = inject(DestroyRef);
 
     readonly themePalette = ThemePalette;
@@ -101,7 +102,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
             this.queryParamMap = params;
         });
 
-        this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
+        this.scrollbar.initialized.subscribe(() => this.docStates.registerHeaderScrollContainer(this.scrollbar));
     }
 
     init() {

@@ -7,6 +7,7 @@ import {
     E2eScrollbarHostPadding,
     E2eScrollbarHoverVisibility,
     E2eScrollbarKeyboard,
+    E2eScrollbarNested,
     E2eScrollbarScrollTo,
     E2eScrollbarStateAndStyle
 } from 'packages/components/scrollbar/e2e';
@@ -226,6 +227,7 @@ const components = [
     E2eScrollbarContentMutation,
     E2eScrollbarHostPadding,
     E2eScrollbarKeyboard,
+    E2eScrollbarNested,
     E2eRadioStateAndStyle,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,

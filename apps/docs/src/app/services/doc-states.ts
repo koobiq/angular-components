@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, fromEvent, Observable, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export enum DocsNavbarState {
     Opened,
@@ -10,11 +10,8 @@ export enum DocsNavbarState {
 @Injectable({ providedIn: 'root' })
 export class DocsDocStates {
     readonly viewerTopOverflown = new BehaviorSubject<boolean>(false);
-    readonly navbarTopOverflown = new BehaviorSubject<boolean>(false);
 
     currentHeader?: HTMLElement;
-    currentHeaderScrollContainer?: HTMLElement;
-    navbarScrollContainer?: HTMLElement;
 
     isHeaderOverflown: boolean = false;
 
@@ -24,14 +21,11 @@ export class DocsDocStates {
 
     private _navbarMenu = new BehaviorSubject<DocsNavbarState>(DocsNavbarState.Closed);
 
-    /**
-     * Only the most recently registered scroll container is tracked. `register*` is a
-     * `providedIn: 'root'` singleton method that viewers call again on every client-side
-     * navigation, so the previous subscription must be torn down first — otherwise one live
-     * `scroll` listener leaks per navigation and keeps firing against a detached element.
-     */
-    private headerScrollSubscription?: Subscription;
-    private navbarScrollSubscription?: Subscription;
+    // The scrollbar whose `scrollUp()`/overflow state is currently tracked. No manual
+    // unsubscribe bookkeeping needed on re-registration (unlike a plain `fromEvent` subscription)
+    // — `OutputEmitterRef.subscribe()` is torn down automatically once the previous page's
+    // `KbqScrollbar` host directive is destroyed on navigation.
+    private headerScrollbar?: KbqScrollbar;
 
     openNavbarMenu() {
         this._navbarMenu.next(DocsNavbarState.Opened);
@@ -50,47 +44,33 @@ export class DocsDocStates {
     }
 
     scrollUp() {
-        this.currentHeaderScrollContainer?.scroll(0, 0);
+        this.headerScrollbar?.scrollToTop();
     }
 
     registerHeader(element: HTMLElement) {
         this.currentHeader = element;
     }
 
-    registerHeaderScrollContainer(element: HTMLElement) {
-        this.currentHeaderScrollContainer = element;
+    registerHeaderScrollContainer(scrollbar: KbqScrollbar) {
+        this.headerScrollbar = scrollbar;
 
-        this.headerScrollSubscription?.unsubscribe();
-        this.headerScrollSubscription = fromEvent(element, 'scroll')
-            .pipe(debounceTime(10))
-            .subscribe(this.checkHeaderOverflow);
+        scrollbar.scrollChange.subscribe(({ top }) => this.checkHeaderOverflow(scrollbar, top));
 
-        Promise.resolve().then(() => this.checkHeaderOverflow());
+        this.checkHeaderOverflow(scrollbar, scrollbar.getScrollElement()?.scrollTop ?? 0);
     }
 
-    checkHeaderOverflow = () => {
-        if (!this.currentHeaderScrollContainer || !this.currentHeader) {
+    /**
+     * `scrollTop` is only needed for `isHeaderOverflown` — a docs-specific threshold against
+     * `currentHeader`'s own height, which `KbqScrollbar` has no notion of. Whether the container
+     * is scrolled away from the top at all is already `scrollbar`'s own public `isTopReached`.
+     */
+    private checkHeaderOverflow(scrollbar: KbqScrollbar, scrollTop: number): void {
+        this.viewerTopOverflown.next(!scrollbar.isTopReached());
+
+        if (!this.currentHeader) {
             return;
         }
 
-        this.isHeaderOverflown = this.currentHeaderScrollContainer.scrollTop > this.currentHeader.offsetHeight;
-        this.viewerTopOverflown.next(this.currentHeaderScrollContainer.scrollTop > 0);
-    };
-
-    registerNavbarScrollContainer(element: HTMLElement) {
-        this.navbarScrollContainer = element;
-
-        this.navbarScrollSubscription?.unsubscribe();
-        this.navbarScrollSubscription = fromEvent(element, 'scroll')
-            .pipe(debounceTime(10))
-            .subscribe(this.checkNavbarOverflow);
+        this.isHeaderOverflown = scrollTop > this.currentHeader.offsetHeight;
     }
-
-    checkNavbarOverflow = () => {
-        if (!this.navbarScrollContainer) {
-            return;
-        }
-
-        this.navbarTopOverflown.next(this.navbarScrollContainer.scrollTop > 0);
-    };
 }

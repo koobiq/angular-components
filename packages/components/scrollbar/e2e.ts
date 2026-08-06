@@ -173,7 +173,7 @@ export class E2eScrollbarScrollTo {
     selector: 'e2e-scrollbar-hover-visibility',
     imports: [KbqScrollbar],
     template: `
-        <div class="e2e-scrollbar" kbqScrollbar data-testid="hover-visibility">
+        <div class="e2e-scrollbar" kbqScrollbar kbqScrollbarAutoHideDelay="400" data-testid="hover-visibility">
             <p>{{ content }}</p>
         </div>
     `,
@@ -360,5 +360,67 @@ export class E2eScrollbarHostPadding {
     }
 })
 export class E2eScrollbarKeyboard {
+    readonly content = `In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists of an attacker submitting many possible keys or passwords with the hope of eventually guessing correctly. This strategy can theoretically be used to break any form of encryption that is not information-theoretically secure.[1] However, in a properly designed cryptosystem the chance of successfully guessing the key is negligible.`;
+}
+
+/**
+ * A `kbqScrollbar` nested inside another one (e.g. a live docs example rendered inside
+ * `docs-component-viewer`, which composes `KbqScrollbar` via `hostDirectives`). The outer is
+ * `always` visible and RTL; the inner is `hidden` and LTR — each instance's own track state must
+ * stay independent of the other's, not leak in through the DOM ancestry between them.
+ */
+@Component({
+    selector: 'e2e-scrollbar-nested',
+    imports: [KbqScrollbar, Dir],
+    template: `
+        <div dir="rtl">
+            <div class="e2e-scrollbar-outer" kbqScrollbar kbqScrollbarVisibility="always" data-testid="nested-outer">
+                <p>{{ content }}</p>
+
+                <div dir="ltr">
+                    <div
+                        class="e2e-scrollbar-inner"
+                        kbqScrollbar
+                        kbqScrollbarVisibility="hidden"
+                        data-testid="nested-inner"
+                    >
+                        <p>{{ content }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-scrollbar-outer {
+            width: 300px;
+            height: 200px;
+            border-radius: var(--kbq-size-border-radius);
+            background-color: var(--kbq-background-bg-secondary);
+        }
+
+        .e2e-scrollbar-inner {
+            width: 200px;
+            height: 100px;
+            margin: var(--kbq-size-l);
+            border-radius: var(--kbq-size-border-radius);
+            background-color: var(--kbq-background-bg-primary);
+        }
+
+        p {
+            width: 150%;
+            margin: var(--kbq-size-l);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarNested'
+    }
+})
+export class E2eScrollbarNested {
     readonly content = `In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists of an attacker submitting many possible keys or passwords with the hope of eventually guessing correctly. This strategy can theoretically be used to break any form of encryption that is not information-theoretically secure.[1] However, in a properly designed cryptosystem the chance of successfully guessing the key is negligible.`;
 }

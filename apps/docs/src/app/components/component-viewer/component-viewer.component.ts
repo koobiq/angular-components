@@ -1,10 +1,8 @@
-import { CdkScrollable } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     Directive,
-    ElementRef,
     inject,
     viewChild,
     ViewEncapsulation
@@ -15,6 +13,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { filter } from 'rxjs';
@@ -58,10 +57,10 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-component-viewer kbq-scrollbar',
+        class: 'docs-component-viewer',
         '[attr.data-docsearch-category]': 'structureCategoryId'
     },
-    hostDirectives: [CdkScrollable]
+    hostDirectives: [KbqScrollbar]
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
     protected readonly structureItemTab = DocsStructureItemTab;
@@ -75,7 +74,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly modalService = inject(KbqModalService);
     private readonly docStates = inject(DocsDocStates);
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly scrollbar = inject(KbqScrollbar, { self: true });
 
     constructor() {
         super();
@@ -103,7 +102,10 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
                 this.structureCategoryId = docsGetCategoryById(this.structureItem.categoryId!)!.id;
             });
 
-        this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
+        // `kbqScrollbar`'s custom track/thumb wrap the host's content into its own scrolling
+        // element (see `KbqScrollbar`'s `autoViewport`); that only exists once its `afterNextRender`
+        // setup finishes, which lands after this constructor runs — wait for `initialized`.
+        this.scrollbar.initialized.subscribe(() => this.docStates.registerHeaderScrollContainer(this.scrollbar));
     }
 
     /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */
@@ -116,6 +118,11 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
 export class DocsOverviewComponentBase extends DocsLocaleState {
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    // The ancestor `docs-component-viewer`'s `hostDirectives: [KbqScrollbar]` instance — its own
+    // content is this component's routed content, but `KbqScrollbar` has no way to notice on its
+    // own when *that* changes size (only when its own outer box resizes, per `update()`'s docs), so
+    // `showView()` below has to trigger a fresh measurement explicitly.
+    private readonly scrollbar = inject(KbqScrollbar, { optional: true });
 
     componentDocItem: DocsStructureItem | null = null;
 
@@ -158,6 +165,7 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
         // The page title/meta are owned centrally by `DocsTitleStrategy`; here we only flush the
         // view once the document content has rendered.
         this.changeDetectorRef.detectChanges();
+        this.scrollbar?.update();
     }
 }
 

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Injector,
+    signal,
+    viewChild
+} from '@angular/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DocsLocaleState } from '../../services/locale';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
@@ -54,10 +63,20 @@ import { docsData } from './data/typography';
         class: 'kbq-markdown'
     }
 })
-export class DocsTypographyTable extends DocsLocaleState {
+export class DocsTypographyTable extends DocsLocaleState implements AfterViewInit {
     protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
 
     protected readonly tokensInfo = signal(docsData);
+
+    private readonly injector = inject(Injector);
+
+    ngAfterViewInit() {
+        // Defer to the next render so the wrapper view exists and its content has laid out. Also
+        // triggers the ancestor `docs-component-viewer`'s `KbqScrollbar.update()` (via
+        // `DocsOverviewComponentBase.showView()`) — without it, switching to this tab wouldn't
+        // re-measure and could leave a stale overflow state from whichever tab was open before.
+        afterNextRender(() => this.wrapper().scrollToSelectedContentSection(), { injector: this.injector });
+    }
 
     getClassName(text: string): string {
         return `kbq-${text}`;

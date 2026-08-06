@@ -1,7 +1,8 @@
+// No padding here — this is the `kbqScrollbar` host, so any padding on it insets the track/thumb
+// away from the real edge (see `syncHostPadding()`), instead of them sitting flush like
+// `docs-component-viewer`'s. The visual inset lives on `.docs-welcome__content` below instead.
 .docs-welcome {
-    display: flex;
-    flex-direction: column;
-
+    display: block;
     flex: 1;
 
     height: 100%;
@@ -9,6 +10,11 @@
     scroll-behavior: smooth;
 
     min-width: 0;
+}
+
+.docs-welcome__content {
+    display: flex;
+    flex-direction: column;
 
     padding-bottom: 160px;
     padding-left: 160px;
@@ -50,7 +56,7 @@
 }
 
 @media (width < 768px) {
-    .docs-welcome {
+    .docs-welcome__content {
         padding: var(--kbq-size-l) var(--kbq-size-l) 160px;
     }
 
@@ -64,13 +70,13 @@
 }
 
 @media (768px <= width < 1200px) {
-    .docs-welcome {
+    .docs-welcome__content {
         padding: 0 var(--kbq-size-xxl) 160px var(--kbq-size-xxl);
     }
 }
 
 @media (1200px <= width < 1920px) {
-    .docs-welcome {
+    .docs-welcome__content {
         padding: 0 var(--kbq-size-7xl) 160px var(--kbq-size-7xl);
     }
 }

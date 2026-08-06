@@ -294,6 +294,114 @@ test.describe('KbqScrollbar', () => {
             await page.mouse.move(0, 0);
             await expect(container).not.toHaveClass(visibleClass);
         });
+
+        // Regression test for a real bug: `pointerleave` used to call `setVisible(false)`
+        // directly, hiding the track instantly regardless of `kbqScrollbarAutoHideDelay` — the
+        // delay is only meaningful if leaving the host doesn't hide it immediately. The demo sets
+        // `kbqScrollbarAutoHideDelay="400"` specifically so the actual elapsed time can be checked
+        // against that number, not just "it hides eventually".
+        test("'hover' mode waits the full kbqScrollbarAutoHideDelay (400ms) before hiding after the pointer leaves, instead of an abrupt snap-hide", async ({
+            page
+        }) => {
+            await page.goto('/E2eScrollbarHoverVisibility');
+            const container = page.getByTestId('hover-visibility');
+            const visibleClass = /(?:^|\s)kbq-private-scrollbar_visible(?:\s|$)/;
+
+            await container.hover();
+            await expect(container).toHaveClass(visibleClass);
+
+            const leftAt = Date.now();
+
+            await page.mouse.move(0, 0);
+
+            // Read the class synchronously (not via an auto-retrying `expect`) — this must catch
+            // the state right after leaving, before any delay has had a chance to elapse.
+            const classNameRightAfterLeaving = await container.evaluate((el) => el.className);
+
+            expect(classNameRightAfterLeaving).toMatch(visibleClass);
+
+            await expect(container).not.toHaveClass(visibleClass);
+
+            const elapsed = Date.now() - leftAt;
+
+            // Not an exact match (real timers/CI scheduling add slack on top), but it must be at
+            // least the configured 400ms, and not drastically more than it either.
+            expect(elapsed).toBeGreaterThanOrEqual(400);
+            expect(elapsed).toBeLessThan(1500);
+        });
+
+        test("also reveals the custom track on a real keyboard scroll while focused but not hovered — the only affordance keyboard users have, since they can't hover", async ({
+            page
+        }) => {
+            await page.goto('/E2eScrollbarHoverVisibility');
+            const container = page.getByTestId('hover-visibility');
+            const visibleClass = /(?:^|\s)kbq-private-scrollbar_visible(?:\s|$)/;
+
+            await expect(container).not.toHaveClass(visibleClass);
+
+            // Same as `E2eScrollbarKeyboard`: no other focusable element on the page, so a single
+            // Tab lands directly on the scroll region — without moving the mouse over it, so this
+            // only exercises the focus+scroll path, not hover.
+            await page.keyboard.press('Tab');
+            await expect(container).not.toHaveClass(visibleClass);
+
+            await page.keyboard.press('ArrowDown');
+            await expect(container).toHaveClass(visibleClass);
+        });
+
+        // `beginInteraction()` calls `Element.setPointerCapture` specifically so a drag keeps
+        // tracking the pointer even once it physically leaves the host — jsdom doesn't implement
+        // `setPointerCapture` at all (the call is feature-detected and silently skipped in unit
+        // tests), so that guarantee is only checked here, against a real browser.
+        test('a real thumb drag keeps scrolling — and stays visible — even after the pointer moves outside the host, thanks to real pointer capture', async ({
+            page
+        }) => {
+            await page.goto('/E2eScrollbarHoverVisibility');
+            const container = page.getByTestId('hover-visibility');
+            const viewport = container.locator('.kbq-private-scrollbar-viewport');
+            const thumb = container.locator('.kbq-private-scrollbar-track_vertical .kbq-private-scrollbar-thumb');
+            const visibleClass = /(?:^|\s)kbq-private-scrollbar_visible(?:\s|$)/;
+
+            // The thumb is `pointer-events: none` while hidden (see `scrollbar.scss`) — a real
+            // browser enforces that hit-testing, unlike jsdom, so grabbing it for the first time
+            // requires actually hovering the host first, same as a real user would have to.
+            await container.hover();
+
+            const thumbBox = await thumb.boundingBox();
+            const containerBox = await container.boundingBox();
+
+            if (!thumbBox || !containerBox) throw new Error('bounding box is null');
+
+            await page.mouse.move(thumbBox.x + thumbBox.width / 2, thumbBox.y + thumbBox.height / 2);
+            await page.mouse.down();
+            await expect(container).toHaveClass(visibleClass);
+
+            const scrollTopBeforeLeaving = await viewport.evaluate((el) => el.scrollTop);
+
+            // Well outside the host's own box entirely, not just outside the thumb.
+            await page.mouse.move(
+                containerBox.x + containerBox.width + 200,
+                containerBox.y + containerBox.height + 200,
+                {
+                    steps: 5
+                }
+            );
+
+            await expect.poll(() => viewport.evaluate((el) => el.scrollTop)).toBeGreaterThan(scrollTopBeforeLeaving);
+
+            const scrollTopOutside = await viewport.evaluate((el) => el.scrollTop);
+
+            await page.mouse.up();
+
+            // Ended cleanly: no further scroll from a stray move once released, and back to hidden
+            // since the pointer isn't over the host.
+            await page.mouse.move(
+                containerBox.x + containerBox.width + 250,
+                containerBox.y + containerBox.height + 250
+            );
+            await expect.poll(() => viewport.evaluate((el) => el.scrollTop)).toBe(scrollTopOutside);
+            await expect(container).not.toHaveClass(visibleClass);
+        });
     });
 
     test.describe('E2eScrollbarKeyboard', () => {
@@ -325,6 +433,71 @@ test.describe('KbqScrollbar', () => {
 
             await page.keyboard.press('Home');
             await expect.poll(() => viewport.evaluate((el) => el.scrollTop)).toBe(0);
+        });
+    });
+
+    test.describe('E2eScrollbarNested', () => {
+        // `:scope >` (not a plain descendant match) — the inner instance's own track is also a
+        // descendant of the outer host, so a plain `.locator('.kbq-private-scrollbar-track_vertical')`
+        // scoped under the outer would ambiguously match both.
+        const getOwnVerticalTrack = (container: Locator) =>
+            container.evaluateHandle(
+                (el) => el.querySelector(':scope > .kbq-private-scrollbar-track_vertical') as HTMLElement
+            );
+
+        // Regression test for a real bug: several rules in `scrollbar.scss` matched their modifier
+        // class (`_visible`, `_rtl`) via a plain descendant combinator instead of `>` — so an outer
+        // `kbqScrollbar`'s own state leaked onto a nested inner `kbqScrollbar`'s track, since the
+        // inner track is still a DOM descendant of the outer host even though it belongs to a
+        // completely separate directive instance.
+        test("an inner kbqScrollbar's track stays hidden even though it's nested inside a fully visible outer one", async ({
+            page
+        }) => {
+            await page.goto('/E2eScrollbarNested');
+            const outer = page.getByTestId('nested-outer');
+            const inner = page.getByTestId('nested-inner');
+
+            const outerTrack = await getOwnVerticalTrack(outer);
+            const innerTrack = await getOwnVerticalTrack(inner);
+
+            // Outer is `always` visible.
+            await expect.poll(() => outerTrack.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
+
+            // Inner is `hidden` — must stay invisible despite being a CSS descendant of the outer's
+            // own visible host.
+            await expect.poll(() => innerTrack.evaluate((el) => getComputedStyle(el).opacity)).toBe('0');
+            expect(await innerTrack.evaluate((el) => getComputedStyle(el).visibility)).toBe('hidden');
+        });
+
+        test("an inner kbqScrollbar's RTL positioning stays independent of an outer RTL host", async ({ page }) => {
+            await page.goto('/E2eScrollbarNested');
+            const outer = page.getByTestId('nested-outer');
+            const inner = page.getByTestId('nested-inner');
+
+            // `getComputedStyle().right` resolves to a concrete pixel value for an absolutely
+            // positioned, fully-constrained box (not the literal `auto` keyword) regardless of
+            // which side was actually set in CSS — so check the rendered position instead.
+            const getOwnVerticalTrackRect = (container: Locator) =>
+                container.evaluate((el) => {
+                    const track = el.querySelector(':scope > .kbq-private-scrollbar-track_vertical') as HTMLElement;
+
+                    return track.getBoundingClientRect();
+                });
+
+            const outerBox = await outer.boundingBox();
+            const innerBox = await inner.boundingBox();
+            const outerTrackRect = await getOwnVerticalTrackRect(outer);
+            const innerTrackRect = await getOwnVerticalTrackRect(inner);
+
+            if (!outerBox || !innerBox) throw new Error('bounding box is null');
+
+            // Outer is RTL — its own vertical track hugs the physical-left edge (the logical
+            // start), not the right.
+            expect(outerTrackRect.left - outerBox.x).toBeLessThan(20);
+
+            // Inner is explicitly LTR, nested inside the RTL outer — its own vertical track must
+            // stay on the physical-right edge, not inherit the outer's RTL flip.
+            expect(innerBox.x + innerBox.width - innerTrackRect.right).toBeLessThan(20);
         });
     });
 });

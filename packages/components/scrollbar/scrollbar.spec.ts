@@ -6,13 +6,20 @@ import {
     Component,
     inject,
     Provider,
+    signal,
     Type,
     viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
-import { KBQ_SCROLLBAR_CONFIG, KbqScrollbar, KbqScrollbarVirtualViewport, KbqScrollbarVisibility } from './scrollbar';
+import {
+    KBQ_SCROLLBAR_CONFIG,
+    KBQ_SCROLLBAR_DEFAULT_CONFIG,
+    KbqScrollbar,
+    KbqScrollbarVirtualViewport,
+    KbqScrollbarVisibility
+} from './scrollbar';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers });
@@ -252,6 +259,49 @@ class TestScrollbarVirtualHorizontalHost {
 })
 class TestScrollbarComposedHost {}
 
+/**
+ * Renders no content initially — `showContent` flips to `true` only after the fixture is created,
+ * simulating a host whose own template content lands in a later render pass than the directive's
+ * `afterNextRender` (e.g. a `hostDirectives`-composed, router-created component).
+ */
+@Component({
+    selector: 'test-scrollbar-composed-empty-host',
+    template: `
+        @if (showContent()) {
+            <div style="height: 500px">content</div>
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [KbqScrollbar]
+})
+class TestScrollbarComposedEmptyHost {
+    readonly showContent = signal(false);
+}
+
+/**
+ * Renders content in two independent waves — e.g. a header that's unconditional plus a `@for`
+ * block populated later in `ngOnInit`, or a first fetch resolving before a second one. The
+ * auto-viewport must keep absorbing new content, not just whatever existed the first time
+ * something showed up.
+ */
+@Component({
+    selector: 'test-scrollbar-composed-two-wave-host',
+    template: `
+        @if (showFirst()) {
+            <div style="height: 100px">first wave</div>
+        }
+        @if (showSecond()) {
+            <div style="height: 500px">second wave</div>
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [KbqScrollbar]
+})
+class TestScrollbarComposedTwoWaveHost {
+    readonly showFirst = signal(false);
+    readonly showSecond = signal(false);
+}
+
 @Component({
     selector: 'test-scrollbar-initialized-host',
     imports: [KbqScrollbar],
@@ -288,6 +338,20 @@ class TestScrollbarInitializedHost {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestScrollbarScrollVisibilityHost {
+    readonly scrollbar = viewChild.required(KbqScrollbar);
+}
+
+@Component({
+    selector: 'test-scrollbar-focus-visibility-host',
+    imports: [KbqScrollbar],
+    template: `
+        <div kbqScrollbar kbqScrollbarAutoHideDelay="50" data-testid="host" style="height: 100px; overflow: auto">
+            <button data-testid="focusable" style="margin-top: 400px">focusable</button>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestScrollbarFocusVisibilityHost {
     readonly scrollbar = viewChild.required(KbqScrollbar);
 }
 
@@ -889,7 +953,7 @@ describe(KbqScrollbar.name, () => {
             expect(scrollEl.scrollTop).toBe(0);
         });
 
-        it("hides the scrollbar once a drag ends in 'hover' mode if the pointer already left the host mid-drag", () => {
+        it("hides the scrollbar (after the auto-hide delay) once a drag ends in 'hover' mode if the pointer already left the host mid-drag", () => {
             const fixture = createComponent(TestScrollbarHost);
             const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
             const scrollEl = getAutoViewport(host);
@@ -899,17 +963,26 @@ describe(KbqScrollbar.name, () => {
             setMetrics(scrollEl, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
             mockRects(track, thumb, 'vertical');
 
-            host.dispatchEvent(new Event('pointerenter'));
-            thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
-            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+            jest.useFakeTimers();
 
-            // Pointer leaves the host while still dragging — must not hide yet, a drag is active.
-            host.dispatchEvent(new Event('pointerleave'));
-            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+            try {
+                host.dispatchEvent(new Event('pointerenter'));
+                thumb.dispatchEvent(new MouseEvent('pointerdown', { clientY: 3, bubbles: true, cancelable: true }));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
 
-            document.dispatchEvent(new MouseEvent('pointerup', { cancelable: true }));
+                // Pointer leaves the host while still dragging — must not hide yet, a drag is active.
+                host.dispatchEvent(new Event('pointerleave'));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
 
-            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+                document.dispatchEvent(new MouseEvent('pointerup', { cancelable: true }));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                // Default `kbqScrollbarAutoHideDelay` — grace period before it actually disappears.
+                jest.advanceTimersByTime(KBQ_SCROLLBAR_DEFAULT_CONFIG.autoHideDelay);
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+            } finally {
+                jest.useRealTimers();
+            }
         });
 
         it("schedules the auto-hide once a drag ends in 'scroll' mode, instead of leaving the scrollbar visible forever", () => {
@@ -1306,17 +1379,85 @@ describe(KbqScrollbar.name, () => {
             expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
         });
 
-        it("'hover' mode (the default) shows on a real pointerenter and hides again on pointerleave", () => {
+        it("'hover' mode (the default) shows on a real pointerenter and hides again (after the auto-hide delay) on pointerleave", () => {
             const fixture = createComponent(TestScrollbarHost);
             const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
 
-            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+            jest.useFakeTimers();
 
-            host.dispatchEvent(new Event('pointerenter'));
-            expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+            try {
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
 
-            host.dispatchEvent(new Event('pointerleave'));
+                host.dispatchEvent(new Event('pointerenter'));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                host.dispatchEvent(new Event('pointerleave'));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                // Default `kbqScrollbarAutoHideDelay` — no longer an abrupt snap-hide.
+                jest.advanceTimersByTime(KBQ_SCROLLBAR_DEFAULT_CONFIG.autoHideDelay);
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+            } finally {
+                jest.useRealTimers();
+            }
+        });
+
+        it("'hover' mode also reveals temporarily on scroll while a focused descendant has no hover — a11y affordance for keyboard scrolling (arrow keys/Page Up/Down/Space)", () => {
+            const fixture = createComponent(TestScrollbarFocusVisibilityHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const focusable = host.querySelector('[data-testid="focusable"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            jest.useFakeTimers();
+
+            try {
+                focusable.focus();
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+
+                scrollEl.dispatchEvent(new Event('scroll'));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                jest.advanceTimersByTime(50);
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+            } finally {
+                jest.useRealTimers();
+            }
+        });
+
+        it("'hover' mode does not reveal on scroll when nothing inside the host is focused (not a keyboard-scroll scenario)", () => {
+            const fixture = createComponent(TestScrollbarFocusVisibilityHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            scrollEl.dispatchEvent(new Event('scroll'));
+
             expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+        });
+
+        it("'hover' mode skips the focused-scroll reveal while already hovering — hover alone keeps it visible, and starting the auto-hide timer here too would race it into hiding while still hovered", () => {
+            const fixture = createComponent(TestScrollbarFocusVisibilityHost);
+            const host = fixture.debugElement.nativeElement.querySelector('[data-testid="host"]') as HTMLElement;
+            const focusable = host.querySelector('[data-testid="focusable"]') as HTMLElement;
+            const scrollEl = getAutoViewport(host);
+
+            jest.useFakeTimers();
+
+            try {
+                host.dispatchEvent(new Event('pointerenter'));
+                focusable.focus();
+                scrollEl.dispatchEvent(new Event('scroll'));
+
+                jest.advanceTimersByTime(50);
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                host.dispatchEvent(new Event('pointerleave'));
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(true);
+
+                jest.advanceTimersByTime(50);
+                expect(host.classList.contains('kbq-private-scrollbar_visible')).toBe(false);
+            } finally {
+                jest.useRealTimers();
+            }
         });
 
         it("'scroll' mode temporarily reveals on a real scroll event and auto-hides after kbqScrollbarAutoHideDelay", () => {
@@ -1467,6 +1608,75 @@ describe(KbqScrollbar.name, () => {
             scrollbar.scrollTo({ top: 10 });
 
             expect(scrollEl.scrollTop).toBe(10);
+        });
+
+        it('builds the auto-viewport right away even while the host is still childless — nothing to move yet, but nothing to wait for either', () => {
+            const fixture = createComponent(TestScrollbarComposedEmptyHost);
+            const host = fixture.debugElement.nativeElement as HTMLElement;
+
+            expect(host.querySelector('.kbq-private-scrollbar-viewport')).toBeTruthy();
+        });
+
+        it(
+            'relocates the host content into the (already-built) auto-viewport once it actually ' +
+                'renders, rather than leaving it stranded as an untouched sibling',
+            async () => {
+                const fixture = createComponent(TestScrollbarComposedEmptyHost);
+                const host = fixture.debugElement.nativeElement as HTMLElement;
+
+                fixture.componentInstance.showContent.set(true);
+                fixture.detectChanges();
+
+                // `MutationObserver` callbacks run as a real microtask — not something
+                // `fakeAsync`/`flushMicrotasks` (zone-scheduled) drains, so an actual `await` is
+                // needed here.
+                await Promise.resolve();
+                await Promise.resolve();
+
+                const scrollEl = getAutoViewport(host);
+
+                expect(scrollEl).toBeTruthy();
+                expect(scrollEl.textContent).toContain('content');
+                expect(host.textContent).toBe(scrollEl.textContent);
+            }
+        );
+
+        it('emits kbqScrollbarInitialized synchronously, before any deferred content shows up', () => {
+            // Not the shared `createComponent()` helper — that also runs the first `detectChanges()`
+            // (via `autoDetectChanges()`), which is exactly the emission this test needs to catch by
+            // subscribing beforehand.
+            TestBed.configureTestingModule({ imports: [TestScrollbarComposedEmptyHost] });
+
+            const fixture = TestBed.createComponent(TestScrollbarComposedEmptyHost);
+            const scrollbar = fixture.debugElement.injector.get(KbqScrollbar);
+            const initializedSpy = jest.fn();
+
+            scrollbar.initialized.subscribe(initializedSpy);
+            fixture.detectChanges();
+
+            expect(initializedSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('keeps relocating content that arrives in a second, later wave into the same auto-viewport — not just whatever showed up first', async () => {
+            const fixture = createComponent(TestScrollbarComposedTwoWaveHost);
+            const host = fixture.debugElement.nativeElement as HTMLElement;
+
+            fixture.componentInstance.showFirst.set(true);
+            fixture.detectChanges();
+            await Promise.resolve();
+            await Promise.resolve();
+
+            const scrollEl = getAutoViewport(host);
+
+            expect(scrollEl.textContent).toContain('first wave');
+
+            fixture.componentInstance.showSecond.set(true);
+            fixture.detectChanges();
+            await Promise.resolve();
+            await Promise.resolve();
+
+            expect(scrollEl.textContent).toContain('second wave');
+            expect(host.textContent).toBe(scrollEl.textContent);
         });
     });
 

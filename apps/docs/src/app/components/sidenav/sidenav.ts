@@ -4,6 +4,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
     inject,
     Injector,
     model,
@@ -16,7 +17,7 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
@@ -87,7 +88,7 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
         KbqTreeModule,
         KbqDividerModule,
         DocsFooterComponent,
-        KbqScrollbarModule,
+        KbqScrollbar,
         RouterLink,
         KbqBadgeModule
     ],
@@ -110,6 +111,7 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
     protected readonly treeControl: FlatTreeControl<TreeFlatNode>;
     protected readonly dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
     protected readonly selectedNodeId = model(this.getSelectedNodeIdFromUrl());
+    protected readonly navbarTopOverflown = computed(() => !this.scrollbar().isTopReached());
 
     constructor() {
         super();
@@ -145,7 +147,6 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
 
     ngAfterViewInit() {
         this.treeControl.expandAll();
-        this.docStates.registerNavbarScrollContainer(this.scrollbar().contentElement().nativeElement);
         this.highlightSelectedOption();
     }
 

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router, UrlSegment } from '@angular/router';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { BehaviorSubject, map, of } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
@@ -112,10 +113,18 @@ describe(DocsOverviewComponentBase.name, () => {
         return { provide: ActivatedRoute, useValue: { url, fragment: of(null), parent: { url } } };
     };
 
-    const createHost = (withAnchors: boolean): ComponentFixture<DocsOverviewBaseHostComponent> => {
+    const createHost = (
+        withAnchors: boolean,
+        scrollbar?: Pick<KbqScrollbar, 'update'>
+    ): ComponentFixture<DocsOverviewBaseHostComponent> => {
         TestBed.configureTestingModule({
             imports: [DocsOverviewBaseHostComponent],
-            providers: [provideRouter([]), provideDocsLocale(DocsLocale.En), provideOverviewRoute()]
+            providers: [
+                provideRouter([]),
+                provideDocsLocale(DocsLocale.En),
+                provideOverviewRoute(),
+                ...(scrollbar ? [{ provide: KbqScrollbar, useValue: scrollbar }] : [])
+            ]
         });
 
         const fixture = TestBed.createComponent(DocsOverviewBaseHostComponent);
@@ -150,5 +159,23 @@ describe(DocsOverviewComponentBase.name, () => {
         expect(() => componentInstance.showDocumentLostAlert()).not.toThrow();
 
         expect(setScrollPosition).not.toHaveBeenCalled();
+    });
+
+    it("re-measures the ancestor docs-component-viewer's KbqScrollbar once the document content settles", () => {
+        const scrollbar: Pick<KbqScrollbar, 'update'> = { update: jest.fn() };
+        const { componentInstance } = createHost(true, scrollbar);
+
+        componentInstance.scrollToSelectedContentSection();
+        componentInstance.showDocumentLostAlert();
+
+        // `KbqScrollbar` only re-measures on its own outer resize, not on content-only changes (see
+        // its own `update()` docs) — nothing else would tell it this routed content just changed.
+        expect(scrollbar.update).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not throw when there is no ancestor KbqScrollbar to update (e.g. this base class used outside docs-component-viewer)', () => {
+        const { componentInstance } = createHost(true);
+
+        expect(() => componentInstance.scrollToSelectedContentSection()).not.toThrow();
     });
 });

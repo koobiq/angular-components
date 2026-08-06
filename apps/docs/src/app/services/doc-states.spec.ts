@@ -1,17 +1,46 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import type { KbqScrollbar, KbqScrollbarScrollChangeEvent } from '@koobiq/components/scrollbar';
+import { Subject } from 'rxjs';
 import { DocsDocStates } from './doc-states';
 
 /**
- * jsdom does not perform layout, so `scrollTop`/`offsetHeight` are hardcoded to 0 and are not
- * writable by default. This helper makes them mutable so overflow logic can be exercised.
+ * jsdom does not perform layout, so `offsetHeight` is hardcoded to 0 and is not writable by
+ * default. This helper makes it mutable so the header-overflow threshold can be exercised.
  */
-const createScrollable = (): HTMLElement => {
+const createHeader = (offsetHeight = 0): HTMLElement => {
     const element = document.createElement('div');
 
-    Object.defineProperty(element, 'scrollTop', { configurable: true, writable: true, value: 0 });
-    Object.defineProperty(element, 'offsetHeight', { configurable: true, writable: true, value: 0 });
+    Object.defineProperty(element, 'offsetHeight', { configurable: true, writable: true, value: offsetHeight });
 
     return element;
+};
+
+const createScrollElement = (scrollTop = 0): HTMLElement => {
+    const element = document.createElement('div');
+
+    Object.defineProperty(element, 'scrollTop', { configurable: true, writable: true, value: scrollTop });
+
+    return element;
+};
+
+/** Minimal `KbqScrollbar` stand-in — only the members `DocsDocStates` actually reads. */
+const createScrollbarStub = (scrollElement: HTMLElement | null = null) => {
+    const scrollChange = new Subject<KbqScrollbarScrollChangeEvent>();
+    let topReached = true;
+
+    const scrollbar = {
+        scrollChange,
+        scrollToTop: jest.fn(),
+        getScrollElement: () => scrollElement,
+        isTopReached: () => topReached
+    } as unknown as KbqScrollbar;
+
+    return {
+        scrollbar,
+        scrollChange,
+        setTopReached: (value: boolean) => {
+            topReached = value;
+        }
+    };
 };
 
 describe(DocsDocStates.name, () => {
@@ -25,65 +54,77 @@ describe(DocsDocStates.name, () => {
         expect(() => service.scrollUp()).not.toThrow();
     });
 
-    it('should not throw when checkHeaderOverflow runs before registration', () => {
-        expect(() => service.checkHeaderOverflow()).not.toThrow();
+    it('should not throw registering a scroll container before a header element is registered', () => {
+        expect(() => service.registerHeaderScrollContainer(createScrollbarStub().scrollbar)).not.toThrow();
     });
 
-    it('should not throw when checkNavbarOverflow runs before registration', () => {
-        expect(() => service.checkNavbarOverflow()).not.toThrow();
+    it('delegates scrollUp() to the most recently registered scrollbar', () => {
+        const first = createScrollbarStub();
+        const second = createScrollbarStub();
+
+        service.registerHeaderScrollContainer(first.scrollbar);
+        service.registerHeaderScrollContainer(second.scrollbar);
+
+        service.scrollUp();
+
+        expect(first.scrollbar.scrollToTop).not.toHaveBeenCalled();
+        expect(second.scrollbar.scrollToTop).toHaveBeenCalled();
     });
 
-    it('should stop reacting to scroll on the previous header container after re-registration', fakeAsync(() => {
-        service.registerHeader(createScrollable());
+    it("checks overflow immediately against the registered scrollbar's current state", () => {
+        service.registerHeader(createHeader(100));
 
-        const first = createScrollable();
-        const second = createScrollable();
+        const stub = createScrollbarStub(createScrollElement(200));
 
-        // Every viewer re-registers on navigation; only the latest container must stay subscribed.
-        service.registerHeaderScrollContainer(first);
-        service.registerHeaderScrollContainer(second);
+        stub.setTopReached(false);
+        service.registerHeaderScrollContainer(stub.scrollbar);
 
-        // Flush the `Promise.resolve().then(...)` initial checks queued by registration.
-        tick();
+        expect(service.isHeaderOverflown).toBe(true);
+
+        const spy = jest.fn();
+
+        service.viewerTopOverflown.subscribe(spy);
+        expect(spy).toHaveBeenCalledWith(true);
+    });
+
+    it("updates isHeaderOverflown/viewerTopOverflown from the registered scrollbar's scrollChange", () => {
+        service.registerHeader(createHeader(100));
+
+        const { scrollbar, scrollChange, setTopReached } = createScrollbarStub();
+
+        service.registerHeaderScrollContainer(scrollbar);
 
         const spy = jest.fn();
 
         service.viewerTopOverflown.subscribe(spy);
         spy.mockClear();
 
-        // The detached previous container's subscription was torn down — its scroll is ignored.
-        first.scrollTop = 500;
-        first.dispatchEvent(new Event('scroll'));
-        tick(10);
-        expect(spy).not.toHaveBeenCalled();
-
-        // The current container still drives updates.
-        second.scrollTop = 500;
-        second.dispatchEvent(new Event('scroll'));
-        tick(10);
+        setTopReached(false);
+        scrollChange.next({ top: 50, left: 0 });
+        expect(service.isHeaderOverflown).toBe(false);
         expect(spy).toHaveBeenCalledWith(true);
-    }));
 
-    it('should stop reacting to scroll on the previous navbar container after re-registration', fakeAsync(() => {
-        const first = createScrollable();
-        const second = createScrollable();
+        scrollChange.next({ top: 150, left: 0 });
+        expect(service.isHeaderOverflown).toBe(true);
+    });
 
-        service.registerNavbarScrollContainer(first);
-        service.registerNavbarScrollContainer(second);
+    it('only the most recently registered scrollbar drives overflow updates', () => {
+        service.registerHeader(createHeader(0));
+
+        const first = createScrollbarStub();
+        const second = createScrollbarStub();
+
+        service.registerHeaderScrollContainer(first.scrollbar);
+        service.registerHeaderScrollContainer(second.scrollbar);
 
         const spy = jest.fn();
 
-        service.navbarTopOverflown.subscribe(spy);
+        service.viewerTopOverflown.subscribe(spy);
         spy.mockClear();
 
-        first.scrollTop = 500;
-        first.dispatchEvent(new Event('scroll'));
-        tick(10);
-        expect(spy).not.toHaveBeenCalled();
+        second.setTopReached(false);
+        second.scrollChange.next({ top: 50, left: 0 });
 
-        second.scrollTop = 500;
-        second.dispatchEvent(new Event('scroll'));
-        tick(10);
         expect(spy).toHaveBeenCalledWith(true);
-    }));
+    });
 });
