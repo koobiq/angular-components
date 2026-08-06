@@ -87,6 +87,9 @@ let uniqueComponentIdSuffix: number = 0;
 const shortFormatSize: number = 5;
 const fullFormatSize: number = 8;
 
+/** Maximum number of digits in a single time part */
+const timePartLength: number = 2;
+
 @Directive({
     selector: 'input[kbqTimepicker]',
     providers: [
@@ -494,6 +497,23 @@ export class KbqTimepicker<D>
 
         this.lastValueValid = !!newTimeObj;
 
+        const selectionStart = this.selectionStart;
+        const selectionEnd = this.selectionEnd;
+        const nextViewValue = newTimeObj ? this.getTimeStringFromDate(newTimeObj, this.format) : formattedValue;
+        // A complete time is always rewritten, so that the caret keeps walking between the time parts.
+        // An incomplete one (e.g. `23:1`) is rewritten only when normalization trimmed it — otherwise
+        // the extra digits stay in the input and the value grows unbounded.
+        const shouldUpdateView = !!newTimeObj || nextViewValue !== this.viewValue;
+
+        if (shouldUpdateView) {
+            this.setViewValue(nextViewValue);
+
+            this.selectionStart = selectionStart;
+            this.selectionEnd = newTimeObj ? selectionEnd : selectionStart;
+
+            this.createSelectionOfTimeComponentInInput((selectionStart as number) + 1);
+        }
+
         if (!newTimeObj) {
             if (!this.viewValue) {
                 this.onChange(null);
@@ -501,16 +521,6 @@ export class KbqTimepicker<D>
 
             return;
         }
-
-        const selectionStart = this.selectionStart;
-        const selectionEnd = this.selectionEnd;
-
-        this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.format));
-
-        this.selectionStart = selectionStart;
-        this.selectionEnd = selectionEnd;
-
-        this.createSelectionOfTimeComponentInInput((selectionStart as number) + 1);
 
         this.value = newTimeObj;
         this.onChange(newTimeObj);
@@ -640,27 +650,34 @@ export class KbqTimepicker<D>
     private replaceNumbers(value: string): string {
         let formattedValue: string = value;
 
-        const match: RegExpMatchArray | null = value.match(
-            /^(?<hours>\d{0,4}):?(?<minutes>\d{0,4}):?(?<seconds>\d{0,4})$/
-        );
+        const match: RegExpMatchArray | null = value.match(/^(?<hours>\d*):?(?<minutes>\d*):?(?<seconds>\d*)$/);
 
         if (match?.groups) {
             const { hours, minutes, seconds } = match.groups;
 
-            if (hours.length && parseInt(hours) > HOURS_PER_DAY) {
-                formattedValue = formattedValue.replace(hours, HOURS_PER_DAY.toString());
+            if (hours.length) {
+                formattedValue = formattedValue.replace(hours, this.normalizeTimePart(hours, HOURS_PER_DAY));
             }
 
-            if (minutes.length && parseInt(minutes) > MINUTES_PER_HOUR) {
-                formattedValue = formattedValue.replace(minutes, MINUTES_PER_HOUR.toString());
+            if (minutes.length) {
+                formattedValue = formattedValue.replace(minutes, this.normalizeTimePart(minutes, MINUTES_PER_HOUR));
             }
 
-            if (seconds.length && parseInt(seconds) > SECONDS_PER_MINUTE) {
-                formattedValue = formattedValue.replace(seconds, SECONDS_PER_MINUTE.toString());
+            if (seconds.length) {
+                formattedValue = formattedValue.replace(seconds, this.normalizeTimePart(seconds, SECONDS_PER_MINUTE));
             }
         }
 
         return formattedValue;
+    }
+
+    /** Clamps a time part to the allowed maximum and trims it to two digits */
+    private normalizeTimePart(part: string, maxValue: number): string {
+        if (part.length <= timePartLength && parseInt(part) <= maxValue) {
+            return part;
+        }
+
+        return `${Math.min(parseInt(part), maxValue)}`.padStart(timePartLength, '0');
     }
 
     /** Checks whether the input is invalid based on the native validation. */
