@@ -1046,11 +1046,11 @@ export class KbqSelect
             ?.changes.pipe(
                 takeUntilDestroyed(this.destroyRef),
                 delay(0),
-                filter(() => {
-                    const activeItem = this.keyManager.activeItem as KbqOption | null;
-
-                    return !activeItem || !this.options.toArray().includes(activeItem);
-                })
+                // Only while the panel is open. `beforeOpened` gives consumers a chance to (re)load
+                // options, and with no options the panel itself opens with a delay, so search changes
+                // can land while the panel is still closed. Moving the highlight then is read as
+                // keyboard navigation of a closed select and silently overwrites the value.
+                filter(() => this.panelOpen && this.isActiveItemStale())
             )
             .subscribe(() => this.keyManager.setFirstItemActive());
     }
@@ -1752,6 +1752,13 @@ export class KbqSelect
         });
     }
 
+    /** Whether the key manager's active item is missing from the current options list. */
+    private isActiveItemStale(): boolean {
+        const activeItem = this.keyManager.activeItem as KbqOption | null;
+
+        return !activeItem || !this.options.toArray().includes(activeItem);
+    }
+
     /**
      * Sets the selected option based on a value.
      * If no option can be found with the designated value, the select trigger is cleared.
@@ -1774,7 +1781,11 @@ export class KbqSelect
 
             // Shift focus to the active item. Note that we shouldn't do this in multiple
             // mode, because we don't know what option the user interacted with last.
-            if (correspondingOption && !this.withVirtualScroll) {
+            // While the panel is open and the user is already navigating a still-present
+            // active item, keep it as is: `options.changes` re-runs this method on every
+            // appended chunk (e.g. paging), and re-activating the selected option would
+            // focus it and scroll the list back to it.
+            if (correspondingOption && !this.withVirtualScroll && (!this.panelOpen || this.isActiveItemStale())) {
                 this.keyManager.setActiveItem(correspondingOption);
             }
         }

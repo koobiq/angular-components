@@ -1892,6 +1892,75 @@ class SelectWithShowPreselectedValuesMultiple {
 }
 
 @Component({
+    selector: 'select-with-search-and-preselected-value',
+    imports: [KbqSelectModule, KbqInputModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select [showPreselectedValues]="true" [(value)]="value">
+                <kbq-form-field kbqSelectSearch>
+                    <input kbqInput type="text" [formControl]="searchCtrl" />
+                </kbq-form-field>
+
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithSearchAndPreselectedValue {
+    readonly select = viewChild.required(KbqSelect);
+
+    searchCtrl = new UntypedFormControl('');
+    options = ['One', 'Two', 'Three'];
+    /** Deliberately absent from `options`, as a value from an already unloaded page would be. */
+    value = 'Unknown';
+}
+
+const ASYNC_OPTIONS_PAGE_SIZE = 10;
+
+@Component({
+    selector: 'select-with-async-options',
+    imports: [KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select
+                [compareWith]="compareWith"
+                [showPreselectedValues]="true"
+                [value]="value"
+                [virtualOptionFactory]="virtualOptionFactory"
+            >
+                @for (option of options; track option.id) {
+                    <kbq-option [value]="option">{{ option.name }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithAsyncOptions {
+    readonly select = viewChild.required(KbqSelect);
+
+    /** Starts empty: options only arrive once a page has been loaded. */
+    options: CityOption[] = [];
+    value: CityOption = { id: 0, name: 'Option #0' };
+
+    compareWith = (a: CityOption | null, b: CityOption | null) => a?.id === b?.id;
+    virtualOptionFactory = (value: CityOption) => new KbqVirtualOption(value, false, value.name);
+
+    /** Appends a page of options, as an infinite-paging consumer would. */
+    loadPage(page: number): void {
+        this.options = [
+            ...this.options,
+            ...Array.from({ length: ASYNC_OPTIONS_PAGE_SIZE }).map((_, index) => {
+                const id = page * ASYNC_OPTIONS_PAGE_SIZE + index;
+
+                return { id, name: `Option #${id}` };
+            })
+        ];
+    }
+}
+
+@Component({
     selector: 'multi-select-with-trigger-values-limit',
     imports: [KbqSelectModule, ReactiveFormsModule, KbqIconModule, KbqTagsModule],
     template: `
@@ -6620,6 +6689,133 @@ describe('KbqSelect', () => {
                 expect(testInstance.select().empty).toBe(true);
             }));
         });
+    });
+
+    describe('with asynchronously loaded options', () => {
+        let fixture: ComponentFixture<SelectWithAsyncOptions>;
+        let testInstance: SelectWithAsyncOptions;
+
+        /** Opens the panel and loads the first page, as an infinite-paging consumer would. */
+        function openPanelWithFirstPage() {
+            testInstance.select().open();
+            fixture.detectChanges();
+            flush();
+
+            testInstance.loadPage(0);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        }
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([SelectWithAsyncOptions]);
+            fixture = TestBed.createComponent(SelectWithAsyncOptions);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        }));
+
+        it('should render the trigger label before any option is rendered', fakeAsync(() => {
+            const triggerText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement
+                .textContent;
+
+            expect(testInstance.select().selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
+            expect(triggerText.trim()).toBe('Option #0');
+        }));
+
+        it('should replace the preselected virtual option with the matching one once it is rendered', fakeAsync(() => {
+            openPanelWithFirstPage();
+
+            const selected = testInstance.select().selectionModel.selected[0];
+
+            expect(selected).not.toBeInstanceOf(KbqVirtualOption);
+            expect(selected.value.id).toBe(0);
+        }));
+
+        it('should keep the active item when options are appended while the panel is open', fakeAsync(() => {
+            openPanelWithFirstPage();
+
+            const activeOption = testInstance.select().options.toArray()[7];
+
+            testInstance.select().keyManager.setActiveItem(activeOption);
+            fixture.detectChanges();
+
+            testInstance.loadPage(1);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(testInstance.select().keyManager.activeItem === activeOption).toBe(true);
+            expect(testInstance.select().keyManager.activeItem!.value.id).toBe(7);
+            expect(testInstance.select().keyManager.activeItemIndex).toBe(7);
+        }));
+
+        it('should activate the selected option when the options list is replaced', fakeAsync(() => {
+            openPanelWithFirstPage();
+
+            testInstance.select().keyManager.setActiveItem(testInstance.select().options.toArray()[7]);
+            fixture.detectChanges();
+
+            // The active option is gone from the new list, so the highlight has to move to the selected one.
+            testInstance.options = [
+                { id: 100, name: 'Option #100' },
+                { id: 0, name: 'Option #0' }
+            ];
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(testInstance.select().keyManager.activeItem!.value.id).toBe(0);
+            expect(testInstance.select().keyManager.activeItemIndex).toBe(1);
+        }));
+    });
+
+    describe('with a search field on a closed panel', () => {
+        let fixture: ComponentFixture<SelectWithSearchAndPreselectedValue>;
+        let testInstance: SelectWithSearchAndPreselectedValue;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([SelectWithSearchAndPreselectedValue]);
+            fixture = TestBed.createComponent(SelectWithSearchAndPreselectedValue);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        }));
+
+        it('should not change the value when the search emits while the panel is closed', fakeAsync(() => {
+            expect(testInstance.select().panelOpen).toBe(false);
+
+            // `beforeOpened` consumers reset the search to reload options, and with no options
+            // the panel opens with a delay — so this lands while the panel is still closed.
+            testInstance.searchCtrl.setValue('');
+            fixture.detectChanges();
+            tick();
+            flush();
+            fixture.detectChanges();
+
+            const triggerText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement
+                .textContent;
+
+            expect(testInstance.select().value).toBe('Unknown');
+            expect(triggerText.trim()).toBe('Unknown');
+        }));
+
+        it('should highlight the first option when the search emits while the panel is open', fakeAsync(() => {
+            testInstance.select().open();
+            fixture.detectChanges();
+            flush();
+
+            testInstance.searchCtrl.setValue('');
+            fixture.detectChanges();
+            tick();
+            flush();
+            fixture.detectChanges();
+
+            expect(testInstance.select().keyManager.activeItemIndex).toBe(0);
+            expect(testInstance.select().value).toBe('Unknown');
+        }));
     });
 
     describe('with triggerValuesLimit', () => {
