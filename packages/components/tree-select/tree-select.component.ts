@@ -1333,7 +1333,17 @@ export class KbqTreeSelect
             this.close();
             this.focus();
         } else if (keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
-            return this.originalOnKeyDown.call(this.tree(), event);
+            this.originalOnKeyDown.call(tree, event);
+
+            // LEFT_ARROW moves focus to the parent option when the active one is already collapsed,
+            // so the search field has to be given the caret back, the same way the other keys do below.
+            const search = this.search();
+
+            if (search && this.shouldShowSearch()) {
+                search.focus();
+            }
+
+            return;
         } else if (keyCode === HOME) {
             event.preventDefault();
 
