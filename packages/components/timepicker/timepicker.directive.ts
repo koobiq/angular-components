@@ -508,10 +508,12 @@ export class KbqTimepicker<D>
         if (shouldUpdateView) {
             this.setViewValue(nextViewValue);
 
-            this.selectionStart = selectionStart;
-            this.selectionEnd = newTimeObj ? selectionEnd : selectionStart;
+            if (selectionStart !== null) {
+                this.selectionStart = selectionStart;
+                this.selectionEnd = newTimeObj ? selectionEnd : selectionStart;
 
-            this.createSelectionOfTimeComponentInInput((selectionStart as number) + 1);
+                this.createSelectionOfTimeComponentInInput(selectionStart + 1);
+            }
         }
 
         if (!newTimeObj) {
