@@ -4730,6 +4730,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "resizer-overview-example.ts",
     "importPath": "components/resizer"
   },
+  "private-scrollbar-scroll-to": {
+    "packagePath": "components/scrollbar/private-scrollbar-scroll-to",
+    "title": "Scrollbar scrollTo methods",
+    "componentName": "PrivateScrollbarScrollToExample",
+    "files": [
+      "private-scrollbar-scroll-to-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "private-scrollbar-scroll-to-example",
+    "additionalComponents": [],
+    "primaryFile": "private-scrollbar-scroll-to-example.ts",
+    "importPath": "components/scrollbar"
+  },
+  "private-scrollbar-virtual-scroll": {
+    "packagePath": "components/scrollbar/private-scrollbar-virtual-scroll",
+    "title": "Scrollbar with virtual scroll",
+    "componentName": "PrivateScrollbarVirtualScrollExample",
+    "files": [
+      "private-scrollbar-virtual-scroll-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "private-scrollbar-virtual-scroll-example",
+    "additionalComponents": [],
+    "primaryFile": "private-scrollbar-virtual-scroll-example.ts",
+    "importPath": "components/scrollbar"
+  },
+  "private-scrollbar-visibility": {
+    "packagePath": "components/scrollbar/private-scrollbar-visibility",
+    "title": "Scrollbar visibility",
+    "componentName": "PrivateScrollbarVisibilityExample",
+    "files": [
+      "private-scrollbar-visibility-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "private-scrollbar-visibility-example",
+    "additionalComponents": [],
+    "primaryFile": "private-scrollbar-visibility-example.ts",
+    "importPath": "components/scrollbar"
+  },
   "scrollbar-overview": {
     "packagePath": "components/scrollbar/scrollbar-overview",
     "title": "Scrollbar with options",
@@ -8248,6 +8287,12 @@ return import('@koobiq/docs-examples/components/radio');
 return import('@koobiq/docs-examples/components/radio');
   case 'resizer-overview':
 return import('@koobiq/docs-examples/components/resizer');
+  case 'private-scrollbar-scroll-to':
+return import('@koobiq/docs-examples/components/scrollbar');
+  case 'private-scrollbar-virtual-scroll':
+return import('@koobiq/docs-examples/components/scrollbar');
+  case 'private-scrollbar-visibility':
+return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-overview':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-scroll-to-top':

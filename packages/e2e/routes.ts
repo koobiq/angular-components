@@ -1,6 +1,15 @@
 import { Routes } from '@angular/router';
 import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
+import {
+    E2ePrivateScrollbarContentMutation,
+    E2ePrivateScrollbarDrag,
+    E2ePrivateScrollbarHostPadding,
+    E2ePrivateScrollbarHoverVisibility,
+    E2ePrivateScrollbarKeyboard,
+    E2ePrivateScrollbarScrollTo,
+    E2ePrivateScrollbarStateAndStyle
+} from 'packages/components/scrollbar/private/e2e';
 import { E2eAccordionStates } from '../components/accordion/e2e';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
@@ -212,7 +221,13 @@ const components = [
     E2eMarkdownStates,
     E2eSearchExpandableStates,
     E2eInputStateAndStyle,
-    E2eScrollbarStateAndStyle,
+    E2ePrivateScrollbarStateAndStyle,
+    E2ePrivateScrollbarDrag,
+    E2ePrivateScrollbarScrollTo,
+    E2ePrivateScrollbarHoverVisibility,
+    E2ePrivateScrollbarContentMutation,
+    E2ePrivateScrollbarHostPadding,
+    E2ePrivateScrollbarKeyboard,
     E2eRadioStateAndStyle,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,
@@ -276,7 +291,8 @@ const components = [
     E2eOverflowItemsHorizontal,
     E2eOverflowItemsVertical,
     E2eOverflowItemsOrdered,
-    E2eOverflowItemsDynamic
+    E2eOverflowItemsDynamic,
+    E2eScrollbarStateAndStyle
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {

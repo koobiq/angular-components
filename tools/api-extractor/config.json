@@ -41,6 +41,7 @@
         "radio",
         "resizer",
         "scrollbar",
+        "scrollbar/private",
         "select",
         "search-expandable",
         "sidebar",
