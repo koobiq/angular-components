@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, effect, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqThemeSelector, ThemeService } from '@koobiq/components/core';
+import { KbqThemeService } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 @Component({
@@ -18,14 +17,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     exportAs: 'devThemeToggle'
 })
 export class DevThemeToggle {
-    private readonly theme = inject(ThemeService);
-    readonly isDarkTheme = model(this.theme.current.value?.className === KbqThemeSelector.Dark);
+    private readonly theme = inject(KbqThemeService);
+    readonly isDarkTheme = model(this.theme.resolvedMode() === 'dark');
 
     constructor() {
-        toObservable(this.isDarkTheme)
-            .pipe(takeUntilDestroyed())
-            .subscribe((isDarkTheme) => {
-                this.theme.setTheme(isDarkTheme ? 1 : 0);
-            });
+        effect(() => this.theme.setMode(this.isDarkTheme() ? 'dark' : 'light'));
     }
 }
