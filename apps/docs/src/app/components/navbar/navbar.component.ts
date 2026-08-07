@@ -1,16 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import {
-    afterNextRender,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    inject,
-    OnDestroy,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KBQ_WINDOW, KbqTheme, KbqThemeSelector, ThemeService } from '@koobiq/components/core';
+import { KbqThemeMode, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -22,7 +14,12 @@ import { DOCS_TRANSLATIONS } from 'src/app/services/i18n';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocStates, DocsNavbarState } from '../../services/doc-states';
 import { DocsDocsearchDirective } from '../docsearch/docsearch.directive';
-import { DocsNavbarProperty } from './navbar-property';
+
+/** A theme mode selectable from the navbar's theme dropdown. */
+interface DocsThemeOption {
+    mode: KbqThemeMode;
+    title: Record<DocsLocale, string>;
+}
 
 @Component({
     selector: 'docs-navbar',
@@ -45,109 +42,30 @@ import { DocsNavbarProperty } from './navbar-property';
         class: 'docs-navbar'
     }
 })
-export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
-    private readonly window = inject(KBQ_WINDOW);
-    private readonly cdr = inject(ChangeDetectorRef);
-    private readonly themeService = inject(ThemeService);
+export class DocsNavbarComponent extends DocsLocaleState {
+    private readonly themeService = inject(KbqThemeService);
 
     readonly docStates = inject(DocsDocStates);
 
-    readonly themeSwitch: DocsNavbarProperty;
-
-    // To add for checking of current color theme of OS preferences
-    private readonly colorAutomaticTheme = this.window.matchMedia('(prefers-color-scheme: light)');
-
-    private readonly kbqThemes: (KbqTheme & { title: Record<DocsLocale, string> })[] = [
-        {
-            name: 'system',
-            className: this.colorAutomaticTheme.matches ? KbqThemeSelector.Default : KbqThemeSelector.Dark,
-            selected: false,
-            title: DOCS_TRANSLATIONS.themeSystem
-        },
-        {
-            name: 'light',
-            className: KbqThemeSelector.Default,
-            selected: false,
-            title: DOCS_TRANSLATIONS.themeLight
-        },
-        {
-            name: 'dark',
-            className: KbqThemeSelector.Dark,
-            selected: false,
-            title: DOCS_TRANSLATIONS.themeDark
-        }
+    /** Options shown in the theme dropdown. `auto` follows the OS color scheme, handled inside `KbqThemeService`. */
+    readonly themeOptions: DocsThemeOption[] = [
+        { mode: 'auto', title: DOCS_TRANSLATIONS.themeSystem },
+        { mode: 'light', title: DOCS_TRANSLATIONS.themeLight },
+        { mode: 'dark', title: DOCS_TRANSLATIONS.themeDark }
     ];
+
+    /** The currently selected mode — persistence and OS-preference resolution are handled by `KbqThemeService`. */
+    readonly mode = computed(() => this.themeService.mode());
 
     readonly opened$: Observable<boolean> = this.docStates.navbarMenu.pipe(
         map((state) => state === DocsNavbarState.Opened)
     );
 
-    constructor() {
-        super();
-
-        // set custom theme configs for light/dark themes
-        this.themeService.setThemes(this.kbqThemes);
-
-        this.themeSwitch = new DocsNavbarProperty({
-            property: 'docs_theme',
-            data: this.kbqThemes,
-            updateSelected: false
-        });
-
-        // set theme when retrieval from storage completed
-        afterNextRender(() => {
-            this.themeService.setTheme(this.themeSwitch.currentValue);
-            // prevent NG0100 error
-            this.cdr.markForCheck();
-        });
-
-        try {
-            // Chrome & Firefox
-            this.colorAutomaticTheme.addEventListener('change', this.setAutoTheme);
-        } catch {
-            try {
-                // Safari
-                this.colorAutomaticTheme.addListener(this.setAutoTheme);
-            } catch (errSafari) {
-                console.error(errSafari);
-            }
-        }
-    }
-
-    ngOnDestroy() {
-        // NOTE: `ThemeService` is a root singleton and owns its own lifecycle — the navbar must not
-        // tear it down. Only this component's own media-query listener is removed here.
-        try {
-            this.colorAutomaticTheme.removeEventListener('change', this.setAutoTheme);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     toggleMenu() {
         this.docStates.toggleNavbarMenu();
     }
 
-    setTheme(i: number) {
-        // should be set to keep theme index in storage
-        this.themeSwitch.setValue(i);
-        this.themeService.setTheme(i);
+    setTheme(mode: KbqThemeMode) {
+        this.themeService.setMode(mode);
     }
-
-    private setAutoTheme = (e: MediaQueryListEvent) => {
-        if (!this.themeService.themes[0]) return;
-
-        this.themeService.themes[0] = {
-            ...this.themeService.themes[0],
-            className: e.matches ? KbqThemeSelector.Default : KbqThemeSelector.Dark
-        };
-
-        if (this.themeService.themes[0].selected) {
-            this.setTheme(0);
-        }
-
-        // The media-query listener runs outside Angular's event bindings, so trigger a check
-        // explicitly for the OnPush theme dropdown.
-        this.cdr.markForCheck();
-    };
 }

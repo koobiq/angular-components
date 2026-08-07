@@ -34,7 +34,17 @@ describe('DocsTokensOverview token value caching (PERF-02)', () => {
                 provideDocsLocale(DocsLocale.En),
                 provideRouter([]),
                 { provide: ActivatedRoute, useValue: { url: of([{ path: DocsStructureTokensTab.Colors }]) } },
-                { provide: KBQ_WINDOW, useValue: { getComputedStyle: () => ({ getPropertyValue }) } }
+                {
+                    provide: KBQ_WINDOW,
+                    useValue: {
+                        getComputedStyle: () => ({ getPropertyValue }),
+                        matchMedia: () => ({
+                            matches: false,
+                            addEventListener: () => {},
+                            removeEventListener: () => {}
+                        })
+                    }
+                }
             ]
         });
 

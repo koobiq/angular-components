@@ -16,6 +16,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 10. **20.3.0**: button supported colors — a default color of its own per style.
 11. **20.3.0**: the button-toggle review — ARIA semantics, keyboard navigation and signal inputs.
 12. **20.3.0**: the form-field review — signals, accessibility and the removal of `mixinColor`.
+13. **20.3.0**: the theme service review — signals, `auto` mode and built-in persistence.
 
 ### 1. Upgrade to 18.5.3
 
@@ -740,6 +741,30 @@ A receiver is matched by its explicit type annotation (`KbqFormField`, `KbqHint`
 **Snapshot and DOM-query tests.** Beyond the ARIA attributes above, the generated id of `KbqPasswordHint` changed prefix from `kbq-hint-N` to `kbq-password-hint-N` so that it stops colliding with `KbqHint`. Nothing should depend on a generated id, but selectors keyed on it will stop matching.
 
 **Stylesheets that fought `!important`.** `.kbq-form-field_no-borders` and `.kbq-form-field_in-overlay` used `!important` to beat the state theme; they now override the `--kbq-form-field-*` tokens instead. The computed result is the same, but an override written specifically to outrank the old `!important` can be simplified.
+
+### 13. Theme service review (20.3.0)
+
+`ThemeService` moved to signals, gained a built-in `auto` mode that follows the OS color scheme, and now persists the selected mode to `localStorage` out of the box. `ThemeService` keeps working under its old name and the deprecated `KbqTheme.selected` field is still kept in sync — nothing is forced to change, but new code should move to `KbqThemeService`.
+
+**It's `KbqThemeService` now.** `ThemeService` is exported as a `@deprecated` alias of `KbqThemeService` and will be removed in a future major version. There is no `ng update` schematic for the rename — swap the import when convenient.
+
+**`current` (a `BehaviorSubject<KbqTheme | null>`) is deprecated in favor of two signals.** It still exists and stays in sync, so `current.value` and `current.pipe(...)` keep working. `mode()` is the selected mode (`'auto' | 'light' | 'dark'` or a custom theme name); `currentTheme()` is the resolved `KbqTheme` object, equivalent to `current.value`. `resolvedMode()` gives you `mode()` with `'auto'` already resolved to `'light'`/`'dark'`.
+
+```ts
+// Before
+themeService.current.pipe(map((theme) => theme?.className)).subscribe(...);
+
+// After
+themeService.currentTheme(); // read directly, or wrap with toObservable() if you need a stream
+```
+
+**`setTheme(index | theme)` is deprecated in favor of `setMode(name)`.** Selecting by array index was fragile once `auto` stopped being a regular registered theme. `setMode('light')` / `setMode('dark')` cover a fixed mode; `setAuto()` and `toggle()` are the two convenience methods kept for the common cases actually used in this library — there is no `setLight()`/`setDark()`.
+
+**`auto` mode is handled inside the service.** If you were reading `window.matchMedia('(prefers-color-scheme: …)')` yourself and rewriting a theme's `className` to fake a "system" option (as the docs app used to), call `themeService.setAuto()` instead and read `resolvedMode()` — the OS listener and the DOM update are both handled internally now.
+
+**Persistence is on by default.** The selected mode is now saved to `localStorage` (key `kbq-theme-mode` by default) and restored on init through the `KBQ_THEME_STORE` token, the same swappable-store pattern as `KBQ_ACCORDION_STATE_STORE`. If you rolled your own persistence under a different key (as the docs app did, under `docs_theme`), configure `kbqThemeProvider({ storageKey: '…' })` instead of dropping it — existing users keep their saved preference. Provide a custom `KbqThemeStore` if you need a different storage backend entirely.
+
+**Custom themes and DI-based setup.** `setThemes()` still accepts any array of `{ name, className }` objects. New: `kbqThemeProvider({ themes, mode, storageKey, autoLight, autoDark })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively. The active theme is always applied as a CSS class on `<body>` — the design tokens' `.kbq-light`/`.kbq-dark` styles depend on it, so there's no attribute-based alternative. `auto` mode resolves to the theme named `autoLight`/`autoDark` (`'light'`/`'dark'` by default) — set these if your custom theme set doesn't use those names, otherwise `auto` won't match any registered theme.
 
 ### After the migration
 

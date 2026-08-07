@@ -4,13 +4,14 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    effect,
     inject,
     Injector,
     input,
     signal,
     viewChild
 } from '@angular/core';
-import { KBQ_WINDOW, ThemeService } from '@koobiq/components/core';
+import { KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { DocsLocaleState } from '../../services/locale';
@@ -20,7 +21,7 @@ import { DocsComponentViewerWrapperComponent } from '../component-viewer/compone
 
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
-import { map, skip } from 'rxjs';
+import { map } from 'rxjs';
 
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { docsData as borderRadius } from './data/border-radius';
@@ -200,7 +201,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
     protected readonly anchors = viewChild.required(DocsAnchorsComponent);
 
-    protected readonly themeService = inject(ThemeService);
+    protected readonly themeService = inject(KbqThemeService);
     protected readonly window = inject(KBQ_WINDOW);
     protected readonly document = inject(DOCUMENT);
     protected readonly activatedRoute = inject(ActivatedRoute);
@@ -237,7 +238,8 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
 
     constructor() {
         super();
-        this.themeService.current.pipe(skip(1), takeUntilDestroyed()).subscribe(() => {
+        effect(() => {
+            this.themeService.resolvedMode();
             this.tokensInfo.set(this.calculateViewData());
         });
 
@@ -260,7 +262,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected calculateViewData(): DocsTokensInfo[] {
         const styles = this.window.getComputedStyle(this.document.body);
 
-        const themeKey = this.themeService.getTheme()?.className ?? 'default';
+        const themeKey = this.themeService.currentTheme()?.className ?? 'default';
         const themeCache = this.tokenValueCache.get(themeKey) ?? new Map<string, string>();
 
         this.tokenValueCache.set(themeKey, themeCache);
