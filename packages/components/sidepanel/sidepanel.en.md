@@ -21,6 +21,12 @@ When opening, the sidepanel slides in from the edge of the screen and dims the r
 
 <!-- example(sidepanel-overview) -->
 
+##### Disable close on backdrop click
+
+The `disableClose` option in `KbqSidepanelConfig` prevents the sidepanel from being closed by clicking the backdrop or pressing Escape. This is useful when the user must explicitly confirm or dismiss the sidepanel through an action inside it, for example, to avoid losing unsaved changes.
+
+<!-- example(sidepanel-disable-close) -->
+
 #### Non-modal mode (without page blocking)
 
 When opening, the sidepanel slides in from the edge of the screen without dimming the rest of the page, so all elements behind it remain interactive.
