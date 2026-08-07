@@ -3834,7 +3834,8 @@ export interface KbqTheme {
 
 // @public
 export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
-    attribute?: 'class' | 'data-theme';
+    autoDark?: string;
+    autoLight?: string;
     mode?: KbqThemeMode;
     storageKey?: string;
     themes?: T[];
