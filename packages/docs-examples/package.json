@@ -9,12 +9,17 @@
     ],
     "license": "MIT",
     "peerDependencies": {
+        "@angular/animations": "{{NG_VERSION}}",
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/common": "{{NG_VERSION}}",
-        "@koobiq/components": "{{VERSION}}",
-        "@koobiq/angular-moment-adapter": "{{VERSION}}",
-        "@koobiq/angular-luxon-adapter": "{{VERSION}}"
+        "@angular/forms": "{{NG_VERSION}}",
+        "@angular/platform-browser": "{{NG_VERSION}}",
+        "@angular/router": "{{NG_VERSION}}",
+        "@koobiq/components": "^{{VERSION}}",
+        "@koobiq/angular-moment-adapter": "^{{VERSION}}",
+        "@koobiq/angular-luxon-adapter": "^{{VERSION}}",
+        "highlight.js": "^11.11.1"
     },
     "dependencies": {
         "tslib": "^2.6.2"

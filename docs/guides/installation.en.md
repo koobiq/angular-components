@@ -11,8 +11,29 @@ ng add @koobiq/components
 Manual installation:
 
 ```bash
-npm install @koobiq/components @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
+npm install @koobiq/components @angular/cdk @angular/animations overlayscrollbars @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
 ```
+
+`@koobiq/angular-luxon-adapter` (or `@koobiq/angular-moment-adapter`) is only needed if you use the
+date components — [datepicker](/en/components/datepicker), [timepicker](/en/components/timepicker) or
+[filter-bar](/en/components/filter-bar). Install `marked` if you use
+[markdown](/en/components/markdown), and `highlight.js` if you use
+[code-block](/en/components/code-block).
+
+### Setting up animations
+
+The components use Angular animations, so the application must provide them:
+
+```typescript
+import { provideAnimations } from '@angular/platform-browser/animations';
+
+bootstrapApplication(AppComponent, {
+    providers: [provideAnimations()]
+});
+```
+
+Without this provider, opening a component that animates — dropdown, select, tooltip, toast,
+datepicker — fails with `NG05105: Unexpected synthetic property @state found`.
 
 ### Setting up styles
 
