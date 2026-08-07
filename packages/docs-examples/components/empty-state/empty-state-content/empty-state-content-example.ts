@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, ThemeService } from '@koobiq/components/core';
+import { KbqComponentColors, KbqThemeService } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 /**
  * @title Empty-state content
@@ -65,12 +62,8 @@ import { map } from 'rxjs/operators';
 export class EmptyStateContentExample {
     readonly colors = KbqComponentColors;
     readonly styles = KbqButtonStyles;
-    protected readonly currentTheme = toSignal(
-        inject(ThemeService, { optional: true })?.current.pipe(
-            map((theme) => theme && theme.className.replace('kbq-', ''))
-        ) || of('light'),
-        { initialValue: 'light' }
-    );
+    private readonly themeService = inject(KbqThemeService, { optional: true });
+    protected readonly currentTheme = computed(() => this.themeService?.resolvedMode() ?? 'light');
 
     protected readonly srcSet = computed(() => {
         const currentTheme = this.currentTheme();

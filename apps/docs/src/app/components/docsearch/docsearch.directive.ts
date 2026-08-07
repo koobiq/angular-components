@@ -1,7 +1,7 @@
 import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import docsearch, { DocSearchInstance, DocSearchProps } from '@docsearch/js';
-import { KBQ_WINDOW, ThemeService } from '@koobiq/components/core';
+import { KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { DocsLocale } from '../../constants/locale';
@@ -129,7 +129,11 @@ const TRANSLATIONS: Record<DocsLocale, DocSearchProps['translations']> = {
 export class DocsDocsearchDirective extends DocsLocaleState {
     private readonly window = inject(KBQ_WINDOW);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly theme = inject(ThemeService);
+    private readonly theme = inject(KbqThemeService);
+
+    // captured eagerly (in the constructor's injection context), since `toObservable()` can't be
+    // called lazily from the `afterNextRender()` callback in `init()`
+    private readonly resolvedMode$ = toObservable(this.theme.resolvedMode);
 
     private instance: DocSearchInstance | null = null;
 
@@ -148,13 +152,8 @@ export class DocsDocsearchDirective extends DocsLocaleState {
 
     private init(): void {
         combineLatest([
-            this.theme.current.pipe(
-                map(
-                    (theme) =>
-                        (theme?.className.replace('kbq-', '') === 'dark'
-                            ? 'dark'
-                            : 'light') satisfies DocSearchProps['theme']
-                ),
+            this.resolvedMode$.pipe(
+                map((mode) => (mode === 'dark' ? 'dark' : 'light') satisfies DocSearchProps['theme']),
                 distinctUntilChanged()
             ),
             this.docsLocaleService.changes.pipe(distinctUntilChanged())

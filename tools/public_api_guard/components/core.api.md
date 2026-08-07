@@ -51,7 +51,6 @@ import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -2426,6 +2425,12 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 
 // @public (undocumented)
+export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeConfig<KbqTheme>>;
+
+// @public
+export const KBQ_THEME_STORE: InjectionToken<KbqThemeStore>;
+
+// @public (undocumented)
 export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
 // @public
@@ -3819,20 +3824,73 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqTableNumberPipe>;
 }
 
-// @public (undocumented)
+// @public
 export interface KbqTheme {
-    // (undocumented)
     className: string;
-    // (undocumented)
     name: string;
-    // (undocumented)
-    selected: boolean;
+    // @deprecated (undocumented)
+    selected?: boolean;
 }
+
+// @public
+export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
+    attribute?: 'class' | 'data-theme';
+    mode?: KbqThemeMode;
+    storageKey?: string;
+    themes?: T[];
+}
+
+// @public
+export class KbqThemeLocalStorageStore implements KbqThemeStore {
+    // (undocumented)
+    getMode(): KbqThemeMode | string | null;
+    // (undocumented)
+    setMode(mode: KbqThemeMode | string): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeLocalStorageStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeLocalStorageStore>;
+}
+
+// @public
+export type KbqThemeMode = 'auto' | 'light' | 'dark';
+
+// @public
+export const kbqThemeProvider: (config: KbqThemeConfig) => Provider;
 
 // @public
 export enum KbqThemeSelector {
     Dark = "kbq-dark",
     Default = "kbq-light"
+}
+
+// @public
+export class KbqThemeService<T extends KbqTheme = KbqTheme> {
+    constructor();
+    // @deprecated (undocumented)
+    readonly current: BehaviorSubject<T | null>;
+    readonly currentTheme: i0.Signal<T | null>;
+    // @deprecated (undocumented)
+    getTheme(): T | null;
+    readonly mode: i0.WritableSignal<string>;
+    readonly resolvedMode: i0.Signal<string>;
+    setAuto(): void;
+    setMode(mode: KbqThemeMode | string): void;
+    // @deprecated (undocumented)
+    setTheme(value: T | number): void;
+    setThemes(items: T[]): void;
+    readonly themes: i0.WritableSignal<T[]>;
+    toggle(): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeService<any>, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeService<any>>;
+}
+
+// @public
+export interface KbqThemeStore {
+    getMode(): KbqThemeMode | string | null;
+    setMode(mode: KbqThemeMode | string): void;
 }
 
 // @public
@@ -5020,36 +5078,11 @@ export enum ThemePalette {
     Warning = "warning"
 }
 
-// @public (undocumented)
-export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDestroy {
-    constructor();
-    // (undocumented)
-    current: BehaviorSubject<T>;
-    // (undocumented)
-    protected readonly document: Document;
-    // (undocumented)
-    getTheme(): T;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    protected renderer: Renderer2;
-    // (undocumented)
-    protected readonly rendererFactory: RendererFactory2;
-    // (undocumented)
-    setTheme(value: T | number): void;
-    // (undocumented)
-    setThemes(items: T[]): void;
-    // (undocumented)
-    protected subscription: Subscription;
-    // (undocumented)
-    themes: T[];
-    // (undocumented)
-    protected update: (input: T[]) => void;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<ThemeService<any>, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ThemeService<any>>;
-}
+// @public @deprecated (undocumented)
+export type ThemeService<T extends KbqTheme = KbqTheme> = KbqThemeService<T>;
+
+// @public @deprecated (undocumented)
+export const ThemeService: typeof KbqThemeService;
 
 // @public (undocumented)
 export const THREE = 51;
