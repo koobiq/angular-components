@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
-import { KbqScrollbar, KbqScrollbarVirtualViewport } from './scrollbar';
+import { KbqScrollbar, KbqScrollbarScrollIntoView, KbqScrollbarTrack, KbqScrollbarViewport } from './scrollbar';
 
 const COMPONENTS = [
     KbqScrollbar,
-    KbqScrollbarVirtualViewport
+    KbqScrollbarViewport,
+    KbqScrollbarTrack,
+    KbqScrollbarScrollIntoView
 ];
 
-/**
- * NgModule wrapper for KbqScrollbar — for legacy (non-standalone) consumers.
- * @docs-private
- */
+/** @docs-private */
 @NgModule({
     imports: COMPONENTS,
     exports: COMPONENTS

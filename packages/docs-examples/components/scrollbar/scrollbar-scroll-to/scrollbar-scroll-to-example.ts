@@ -10,27 +10,19 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
     imports: [KbqScrollbar, KbqButtonModule],
     template: `
         <div class="example-buttons">
-            <button kbq-button [disabled]="scrollbar.isTopReached()" (click)="scrollbar.scrollToTop('smooth')">
-                Scroll top
-            </button>
-            <button kbq-button [disabled]="scrollbar.isBottomReached()" (click)="scrollbar.scrollToBottom('smooth')">
-                Scroll bottom
-            </button>
-            <button kbq-button [disabled]="scrollbar.isStartReached()" (click)="scrollbar.scrollStart('smooth')">
-                Scroll start
-            </button>
-            <button kbq-button [disabled]="scrollbar.isEndReached()" (click)="scrollbar.scrollEnd('smooth')">
-                Scroll end
-            </button>
+            <button kbq-button (click)="scrollbar.scrollToTop('smooth')">Scroll top</button>
+            <button kbq-button (click)="scrollbar.scrollToBottom('smooth')">Scroll bottom</button>
+            <button kbq-button (click)="scrollbar.scrollStart('smooth')">Scroll start</button>
+            <button kbq-button (click)="scrollbar.scrollEnd('smooth')">Scroll end</button>
             <button
                 kbq-button
-                (click)="scrollbar.scrollToElement(scrollTarget, { behavior: 'smooth', top: 16, left: 16 })"
+                (click)="scrollbar.scrollToElement(scrollToTarget, { behavior: 'smooth', top: 16, left: 16 })"
             >
                 Scroll to element
             </button>
         </div>
 
-        <div #scrollbar="kbqScrollbar" class="example-scrollbar" kbqScrollbar>
+        <kbq-scrollbar #scrollbar="kbqScrollbar" class="example-scrollbar">
             <p>
                 In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists
                 of an attacker submitting many possible keys or passwords with the hope of eventually guessing
@@ -44,7 +36,13 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
                 work to test each guess. One of the measures of the strength of an encryption system is how long it
                 would theoretically take an attacker to mount a successful brute-force attack against it.[3]
             </p>
-            <p #scrollTarget>
+            <p>
+                Brute-force attacks can be made less effective by implementing key stretching techniques making it more
+                difficult for an attacker to recognize when the code has been cracked or by making the attacker do more
+                work to test each guess. One of the measures of the strength of an encryption system is how long it
+                would theoretically take an attacker to mount a successful brute-force attack against it.[3]
+            </p>
+            <p #scrollToTarget>
                 <b>[Scroll target]</b>
                 When cracking passwords, this method is very fast when used to check all short passwords, but for longer
                 passwords other methods such as the dictionary attack are used because a brute-force search takes too
@@ -58,13 +56,19 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
                 would theoretically take an attacker to mount a successful brute-force attack against it.[3]
             </p>
             <p>
+                Brute-force attacks can be made less effective by implementing key stretching techniques making it more
+                difficult for an attacker to recognize when the code has been cracked or by making the attacker do more
+                work to test each guess. One of the measures of the strength of an encryption system is how long it
+                would theoretically take an attacker to mount a successful brute-force attack against it.[3]
+            </p>
+            <p>
                 In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that consists
                 of an attacker submitting many possible keys or passwords with the hope of eventually guessing
                 correctly. This strategy can theoretically be used to break any form of encryption that is not
                 information-theoretically secure.[1] However, in a properly designed cryptosystem the chance of
                 successfully guessing the key is negligible.
             </p>
-        </div>
+        </kbq-scrollbar>
     `,
     styles: `
         :host {

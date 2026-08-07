@@ -1,37 +1,50 @@
-<!-- Absent until the route resolves to a known item — and it never does for an unknown id, which
-     only redirects to /404 on a later tick. Rendering the header unguarded threw in between. -->
-@if (structureItem) {
-    <div class="docs-component-header">
-        <div docsRegisterHeader class="docs-component-name">
-            {{ structureItem.name[locale()!] }}
-        </div>
-        @if (!structureItem.isGuide) {
-            <div class="docs-component-navbar layout-row layout-align-space-between-center layout-padding-top-s">
-                <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
-                    <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Overview">
-                        {{ t('overviewTab') }}
-                    </a>
-                    @if (structureItem.hasApi) {
-                        <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Api">API</a>
-                    }
-                    @if (structureItem.hasExamples) {
-                        <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Examples">
-                            {{ t('examplesTab') }}
-                        </a>
-                    }
-                </nav>
+<div kbqScrollbar class="docs-component-viewer__scroll">
+    <div class="docs-component-viewer__content">
+        <!-- Absent until the route resolves to a known item — and it never does for an unknown id,
+             which only redirects to /404 on a later tick. Rendering the header unguarded threw in
+             between. -->
+        @if (structureItem) {
+            <div class="docs-component-header">
+                <div docsRegisterHeader class="docs-component-name">
+                    {{ structureItem.name[locale()!] }}
+                </div>
+                @if (!structureItem.isGuide) {
+                    <div
+                        class="docs-component-navbar layout-row layout-align-space-between-center layout-padding-top-s"
+                    >
+                        <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
+                            <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Overview">
+                                {{ t('overviewTab') }}
+                            </a>
+                            @if (structureItem.hasApi) {
+                                <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Api"
+                                    >API</a
+                                >
+                            }
+                            @if (structureItem.hasExamples) {
+                                <a
+                                    kbqTabLink
+                                    routerLinkActive="kbq-selected"
+                                    [routerLink]="structureItemTab.Examples"
+                                >
+                                    {{ t('examplesTab') }}
+                                </a>
+                            }
+                        </nav>
 
-                @if (githubSourceUrl) {
-                    <a kbq-link big target="_blank" rel="noopener noreferrer" [href]="githubSourceUrl">
-                        <i kbq-icon="kbq-code_16"></i>
-                        <span class="kbq-link__text">{{ t('viewSourceOnGitHub') }}</span>
-                    </a>
+                        @if (githubSourceUrl) {
+                            <a kbq-link big target="_blank" rel="noopener noreferrer" [href]="githubSourceUrl">
+                                <i kbq-icon="kbq-code_16"></i>
+                                <span class="kbq-link__text">{{ t('viewSourceOnGitHub') }}</span>
+                            </a>
+                        }
+                    </div>
                 }
             </div>
         }
-    </div>
-}
 
-<div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>
-    <router-outlet />
+        <div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>
+            <router-outlet />
+        </div>
+    </div>
 </div>

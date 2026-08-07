@@ -1,3 +1,6 @@
+// @deprecated The `.kbq-scrollbar` selector and related mixins are deprecated.
+// Use the `KbqScrollbar` component instead. Will be removed in the next major version.
+
 /* stylelint-disable selector-pseudo-class-no-unknown */
 
 @use '../common/tokens';
@@ -18,6 +21,8 @@
 }
 
 @mixin _kbq-scrollbar() {
+    @warn 'The `.kbq-scrollbar` selector and related mixins/tokens are deprecated. Use the `KbqScrollbar` component instead. Will be removed in the next major version.';
+
     // For Firefox compatibility
     @supports not selector(::-webkit-scrollbar) {
         /* stylelint-disable-next-line no-invalid-position-declaration */

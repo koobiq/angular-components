@@ -1,11 +1,13 @@
 import { AsyncPipe, Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     DestroyRef,
     inject,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -36,6 +38,7 @@ const SEARCH_DEBOUNCE_TIME = 300;
     selector: 'docs-icons-viewer',
     imports: [
         AsyncPipe,
+        KbqScrollbar,
         KbqFormFieldModule,
         KbqInputModule,
         DocsRegisterHeaderDirective,
@@ -51,10 +54,9 @@ const SEARCH_DEBOUNCE_TIME = 300;
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-icons-viewer'
-    },
-    hostDirectives: [KbqScrollbar]
+    }
 })
-export class DocsIconsViewerComponent extends DocsLocaleState {
+export class DocsIconsViewerComponent extends DocsLocaleState implements AfterViewInit {
     private readonly http = inject(HttpClient);
     private readonly modalService = inject(KbqModalService);
     private readonly activeRoute = inject(ActivatedRoute);
@@ -62,7 +64,10 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly location = inject(Location);
     private readonly docStates = inject(DocsDocStates);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly scrollbar = inject(KbqScrollbar, { self: true });
+    // `KbqScrollbar` is a component now (see `scrollbar.ts`), so it can no longer be composed via
+    // `hostDirectives` on this element — it lives on the `[kbqScrollbar]` div nested one level
+    // inside the template instead.
+    private readonly scrollbar = viewChild.required(KbqScrollbar);
     private readonly destroyRef = inject(DestroyRef);
 
     readonly themePalette = ThemePalette;
@@ -101,8 +106,10 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
             this.searchControl.setValue(params.s);
             this.queryParamMap = params;
         });
+    }
 
-        this.scrollbar.initialized.subscribe(() => this.docStates.registerHeaderScrollContainer(this.scrollbar));
+    ngAfterViewInit(): void {
+        this.scrollbar().initialized.subscribe(() => this.docStates.registerHeaderScrollContainer(this.scrollbar()));
     }
 
     init() {

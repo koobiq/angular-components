@@ -1,0 +1,19 @@
+.kbq-scrollbar-viewport_hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.kbq-scrollbar-viewport_hidden::-webkit-scrollbar,
+.kbq-scrollbar-viewport_hidden::-webkit-scrollbar-thumb {
+    display: none;
+}
+
+.kbq-scrollbar-track_hover:not(:active) {
+    transition: opacity 0.15s ease;
+    opacity: 0;
+}
+
+.kbq-scrollbar-viewport:hover > .kbq-scrollbar-track_hover {
+    transition: opacity 0.15s ease;
+    opacity: 1;
+}

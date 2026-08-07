@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -43,6 +44,7 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
 @Component({
     selector: 'docs-component-viewer',
     imports: [
+        KbqScrollbar,
         KbqTabsModule,
         KbqLinkModule,
         RouterOutlet,
@@ -59,10 +61,9 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
     host: {
         class: 'docs-component-viewer',
         '[attr.data-docsearch-category]': 'structureCategoryId'
-    },
-    hostDirectives: [KbqScrollbar]
+    }
 })
-export class DocsComponentViewerComponent extends DocsLocaleState {
+export class DocsComponentViewerComponent extends DocsLocaleState implements AfterViewInit {
     protected readonly structureItemTab = DocsStructureItemTab;
     // Stays `null` for an unknown id: the redirect to /404 is async, so the template renders at
     // least once with nothing resolved and has to tolerate it.
@@ -74,7 +75,11 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly modalService = inject(KbqModalService);
     private readonly docStates = inject(DocsDocStates);
-    private readonly scrollbar = inject(KbqScrollbar, { self: true });
+    // `KbqScrollbar` is a component now (see `scrollbar.ts`), so it can no longer be composed via
+    // `hostDirectives` on this element — it lives on the `[kbqScrollbar]` div nested one level
+    // inside the template instead, reached the same way `sidenav.ts`/`content-panel.ts` already
+    // reach their own attribute-form usages.
+    private readonly scrollbar = viewChild.required(KbqScrollbar);
 
     constructor() {
         super();
@@ -101,11 +106,13 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
                 this.structureItem = docItem;
                 this.structureCategoryId = docsGetCategoryById(this.structureItem.categoryId!)!.id;
             });
+    }
 
+    ngAfterViewInit(): void {
         // `kbqScrollbar`'s custom track/thumb wrap the host's content into its own scrolling
-        // element (see `KbqScrollbar`'s `autoViewport`); that only exists once its `afterNextRender`
-        // setup finishes, which lands after this constructor runs — wait for `initialized`.
-        this.scrollbar.initialized.subscribe(() => this.docStates.registerHeaderScrollContainer(this.scrollbar));
+        // element; that only exists once its `afterNextRender` setup finishes, which lands after
+        // this view has already initialized — wait for `initialized`.
+        this.scrollbar().initialized.subscribe(() => this.docStates.registerHeaderScrollContainer(this.scrollbar()));
     }
 
     /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */

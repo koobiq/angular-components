@@ -1,5 +1,13 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '@koobiq/components/core';
@@ -15,6 +23,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
 @Component({
     selector: 'docs-welcome',
     imports: [
+        KbqScrollbar,
         KbqIconModule,
         KbqLinkModule,
         RouterLink,
@@ -27,10 +36,9 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-welcome'
-    },
-    hostDirectives: [KbqScrollbar]
+    }
 })
-export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
+export class DocsWelcomeComponent extends DocsLocaleState implements OnInit, AfterViewInit {
     private readonly themeService = inject(ThemeService);
 
     protected structureCategories: DocsStructureCategory[];
@@ -40,15 +48,16 @@ export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     );
 
     private readonly docStates = inject(DocsDocStates);
-    private readonly scrollbar = inject(KbqScrollbar, { self: true });
-
-    constructor() {
-        super();
-
-        this.scrollbar.initialized.subscribe(() => this.docStates.registerHeaderScrollContainer(this.scrollbar));
-    }
+    // `KbqScrollbar` is a component now (see `scrollbar.ts`), so it can no longer be composed via
+    // `hostDirectives` on this element — it lives on the `[kbqScrollbar]` div nested one level
+    // inside the template instead.
+    private readonly scrollbar = viewChild.required(KbqScrollbar);
 
     ngOnInit(): void {
         this.structureCategories = docsGetCategories().filter((category) => category.isPreviewed);
+    }
+
+    ngAfterViewInit(): void {
+        this.scrollbar().initialized.subscribe(() => this.docStates.registerHeaderScrollContainer(this.scrollbar()));
     }
 }

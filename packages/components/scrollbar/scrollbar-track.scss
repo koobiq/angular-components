@@ -1,0 +1,102 @@
+:host {
+    position: sticky;
+    z-index: 1;
+    display: block;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    min-inline-size: calc(100% - 1px);
+    max-inline-size: calc(100% - 1px);
+    margin-inline-end: calc(-100% + 1px);
+    pointer-events: none;
+    overflow: hidden;
+    color: var(--kbq-scrollbar-color, currentColor);
+}
+
+@keyframes kbq-scrollbar-fade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.kbq-scrollbar-track__bar {
+    position: absolute;
+    inset-inline-end: 0;
+    pointer-events: auto;
+}
+
+.kbq-scrollbar-track__bar_enter,
+.kbq-scrollbar-track__bar_leave {
+    animation: kbq-scrollbar-fade 0.15s ease-in-out;
+}
+
+.kbq-scrollbar-track__bar_leave {
+    animation-direction: reverse;
+}
+
+.kbq-scrollbar-track__bar_vertical {
+    inset-block: 0.25rem;
+    inline-size: 0.875rem;
+}
+
+.kbq-scrollbar-track__bar_horizontal {
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    block-size: 0.875rem;
+}
+
+.kbq-scrollbar-track__bar_has-horizontal {
+    inset-block-end: 0.5rem;
+}
+
+.kbq-scrollbar-track__bar_has-vertical {
+    inset-inline-end: 0.5rem;
+}
+
+.kbq-scrollbar-track__thumb {
+    transition: all 0.15s ease;
+    transition-property: width, height, opacity;
+    position: absolute;
+    border: 0.25rem solid transparent;
+    border-radius: 6.25rem;
+    box-sizing: border-box;
+    background: currentColor;
+    background-clip: content-box;
+    cursor: pointer;
+    user-select: none;
+    pointer-events: auto;
+    opacity: 0.2;
+}
+
+.kbq-scrollbar-track__thumb:hover {
+    opacity: 0.24;
+}
+
+.kbq-scrollbar-track__thumb:active {
+    opacity: 0.48;
+}
+
+.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb {
+    inset-inline-end: 0;
+    inline-size: 0.75rem;
+    min-block-size: 1.25rem;
+}
+
+.kbq-scrollbar-track__bar_vertical:hover .kbq-scrollbar-track__thumb,
+.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb:active {
+    inline-size: 0.875rem;
+}
+
+.kbq-scrollbar-track__bar_horizontal .kbq-scrollbar-track__thumb {
+    inset-block-end: 0;
+    block-size: 0.75rem;
+    min-inline-size: 1.25rem;
+}
+
+.kbq-scrollbar-track__bar_horizontal:hover .kbq-scrollbar-track__thumb,
+.kbq-scrollbar-track__bar_horizontal .kbq-scrollbar-track__thumb:active {
+    block-size: 0.875rem;
+}

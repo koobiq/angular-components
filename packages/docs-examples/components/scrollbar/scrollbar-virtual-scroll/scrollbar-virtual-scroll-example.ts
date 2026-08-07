@@ -1,22 +1,21 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqScrollbar, KbqScrollbarVirtualViewport } from '@koobiq/components/scrollbar';
+import { KbqScrollbarTrack, KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 
 /**
  * @title Scrollbar with virtual scroll
  */
 @Component({
     selector: 'scrollbar-virtual-scroll-example',
-    imports: [KbqScrollbar, KbqScrollbarVirtualViewport, ScrollingModule, KbqButtonModule],
+    imports: [KbqScrollbarViewport, KbqScrollbarTrack, ScrollingModule, KbqButtonModule],
     template: `
         <button kbq-button (click)="addItems()">Add items</button>
 
-        <div class="example-scrollbar" kbqScrollbar>
-            <cdk-virtual-scroll-viewport kbqScrollbarVirtualViewport itemSize="32" [style.height.%]="100">
-                <div *cdkVirtualFor="let item of items()" class="example-item">{{ item }}</div>
-            </cdk-virtual-scroll-viewport>
-        </div>
+        <cdk-virtual-scroll-viewport kbqScrollbarViewport class="example-scrollbar" itemSize="32">
+            <kbq-scrollbar-track />
+            <div *cdkVirtualFor="let item of items()" class="example-item">{{ item }}</div>
+        </cdk-virtual-scroll-viewport>
     `,
     styles: `
         :host {
@@ -28,8 +27,8 @@ import { KbqScrollbar, KbqScrollbarVirtualViewport } from '@koobiq/components/sc
         }
 
         .example-scrollbar {
-            height: 200px;
-            width: 200px;
+            height: 320px;
+            width: 320px;
             border-radius: var(--kbq-size-border-radius);
             background-color: var(--kbq-background-bg-secondary);
         }
@@ -43,7 +42,7 @@ import { KbqScrollbar, KbqScrollbarVirtualViewport } from '@koobiq/components/sc
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScrollbarVirtualScrollExample {
-    protected readonly items = signal(Array.from({ length: 1000 }).map((_, i) => `Item #${i}`));
+    protected readonly items = signal(Array.from({ length: 100 }).map((_, i) => `Item #${i}`));
 
     protected addItems(): void {
         const nextIndex = this.items().length;

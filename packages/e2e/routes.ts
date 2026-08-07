@@ -3,6 +3,7 @@ import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
 import {
     E2eScrollbarContentMutation,
+    E2eScrollbarDefer,
     E2eScrollbarDrag,
     E2eScrollbarHostPadding,
     E2eScrollbarHoverVisibility,
@@ -228,6 +229,7 @@ const components = [
     E2eScrollbarHostPadding,
     E2eScrollbarKeyboard,
     E2eScrollbarNested,
+    E2eScrollbarDefer,
     E2eRadioStateAndStyle,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,

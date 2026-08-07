@@ -1,15 +1,19 @@
-// No padding here — this is the `kbqScrollbar` host, so any padding on it insets the track/thumb
-// away from the real edge (see `syncHostPadding()`), instead of them sitting flush like
-// `docs-component-viewer`'s. The visual inset lives on `.docs-welcome__content` below instead.
 .docs-welcome {
     display: block;
     flex: 1;
 
     height: 100%;
-    overflow-y: auto;
-    scroll-behavior: smooth;
-
     min-width: 0;
+}
+
+// The `[kbqScrollbar]` element — a component now (see `scrollbar.ts`), so it can no longer be
+// composed via `hostDirectives` onto `.docs-welcome` itself. No padding here — this is the real
+// scroll element, so any padding on it insets the track/thumb away from the real edge, instead of
+// them sitting flush like `docs-component-viewer`'s. The visual inset lives on
+// `.docs-welcome__content` below instead.
+.docs-welcome__scroll {
+    height: 100%;
+    scroll-behavior: smooth;
 }
 
 .docs-welcome__content {
