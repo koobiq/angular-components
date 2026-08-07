@@ -60,7 +60,6 @@ describe('KbqThemeService', () => {
 
     afterEach(() => {
         document.body.className = '';
-        document.body.removeAttribute('data-theme');
         localStorage.clear();
     });
 
@@ -133,6 +132,42 @@ describe('KbqThemeService', () => {
         expect(document.body.classList.contains('kbq-solarized')).toBe(true);
     });
 
+    it('resolves auto mode against custom theme names via autoLight/autoDark', () => {
+        const media = fakeMediaQueryList(true);
+
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                {
+                    provide: KBQ_THEME_CONFIG,
+                    useValue: {
+                        themes: [
+                            { name: 'sunrise', className: 'kbq-sunrise' },
+                            { name: 'midnight', className: 'kbq-midnight' }
+                        ],
+                        autoLight: 'sunrise',
+                        autoDark: 'midnight'
+                    }
+                },
+                { provide: KBQ_THEME_STORE, useValue: { getMode: () => null, setMode: () => {} } }
+            ]
+        });
+
+        const service = TestBed.inject(KbqThemeService);
+
+        TestBed.tick();
+
+        expect(service.mode()).toBe('auto');
+        expect(service.resolvedMode()).toBe('midnight');
+        expect(document.body.classList.contains('kbq-midnight')).toBe(true);
+
+        service.toggle();
+        TestBed.tick();
+
+        expect(service.resolvedMode()).toBe('sunrise');
+        expect(document.body.classList.contains('kbq-sunrise')).toBe(true);
+    });
+
     it('persists the selected mode via KBQ_THEME_STORE', () => {
         const { service } = setup(false);
 
@@ -169,24 +204,6 @@ describe('KbqThemeService', () => {
 
         expect(themes.find((theme) => theme.name === 'dark')?.selected).toBe(true);
         expect(themes.find((theme) => theme.name === 'light')?.selected).toBe(false);
-    });
-
-    it('supports data-theme attribute mode via KBQ_THEME_CONFIG', () => {
-        const media = fakeMediaQueryList(false);
-
-        TestBed.configureTestingModule({
-            providers: [
-                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
-                { provide: KBQ_THEME_CONFIG, useValue: { attribute: 'data-theme' } },
-                { provide: KBQ_THEME_STORE, useValue: { getMode: () => null, setMode: () => {} } }
-            ]
-        });
-
-        TestBed.inject(KbqThemeService);
-        TestBed.tick();
-
-        expect(document.body.getAttribute('data-theme')).toBe('light');
-        expect(document.body.classList.contains('kbq-light')).toBe(false);
     });
 
     it('exposes the deprecated `setTheme`/`getTheme` shims', () => {

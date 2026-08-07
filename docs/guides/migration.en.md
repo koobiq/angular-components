@@ -764,7 +764,7 @@ themeService.currentTheme(); // read directly, or wrap with toObservable() if yo
 
 **Persistence is on by default.** The selected mode is now saved to `localStorage` (key `kbq-theme-mode` by default) and restored on init through the `KBQ_THEME_STORE` token, the same swappable-store pattern as `KBQ_ACCORDION_STATE_STORE`. If you rolled your own persistence under a different key (as the docs app did, under `docs_theme`), configure `kbqThemeProvider({ storageKey: '…' })` instead of dropping it — existing users keep their saved preference. Provide a custom `KbqThemeStore` if you need a different storage backend entirely.
 
-**Custom themes and DI-based setup.** `setThemes()` still accepts any array of `{ name, className }` objects. New: `kbqThemeProvider({ themes, mode, attribute, storageKey })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively. `attribute: 'data-theme'` is a new opt-in that sets `data-theme="<name>"` on `<body>` instead of the default CSS class.
+**Custom themes and DI-based setup.** `setThemes()` still accepts any array of `{ name, className }` objects. New: `kbqThemeProvider({ themes, mode, storageKey, autoLight, autoDark })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively. The active theme is always applied as a CSS class on `<body>` — the design tokens' `.kbq-light`/`.kbq-dark` styles depend on it, so there's no attribute-based alternative. `auto` mode resolves to the theme named `autoLight`/`autoDark` (`'light'`/`'dark'` by default) — set these if your custom theme set doesn't use those names, otherwise `auto` won't match any registered theme.
 
 ### After the migration
 

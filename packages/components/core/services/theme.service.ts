@@ -60,17 +60,20 @@ export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
     themes?: T[];
     /** Initial mode, used only when nothing is persisted yet in the `KBQ_THEME_STORE`. @default 'auto' */
     mode?: KbqThemeMode;
-    /** How the active theme is applied to the document body. @default 'class' */
-    attribute?: 'class' | 'data-theme';
     /** `localStorage` key used to persist the selected mode. @default 'kbq-theme-mode' */
     storageKey?: string;
+    /** Theme `name` that `'auto'` resolves to when the OS prefers a light color scheme. @default 'light' */
+    autoLight?: string;
+    /** Theme `name` that `'auto'` resolves to when the OS prefers a dark color scheme. @default 'dark' */
+    autoDark?: string;
 }
 
 const KBQ_THEME_DEFAULT_CONFIG: Required<KbqThemeConfig> = {
     themes: KbqDefaultThemes,
     mode: 'auto',
-    attribute: 'class',
-    storageKey: 'kbq-theme-mode'
+    storageKey: 'kbq-theme-mode',
+    autoLight: 'light',
+    autoDark: 'dark'
 };
 
 export const KBQ_THEME_CONFIG = new InjectionToken<KbqThemeConfig>('KBQ_THEME_CONFIG', {
@@ -142,7 +145,7 @@ export const KBQ_THEME_STORE = new InjectionToken<KbqThemeStore>('KBQ_THEME_STOR
 
 /**
  * Manages the active Koobiq theme: resolves `auto` mode from the OS color scheme, applies the active theme's
- * class (or `data-theme` attribute) to the document body, and persists the selected mode via `KBQ_THEME_STORE`.
+ * class to the document body, and persists the selected mode via `KBQ_THEME_STORE`.
  *
  * @example
  * ```ts
@@ -170,11 +173,13 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
     /** Currently selected mode. `'auto'` resolves to `light`/`dark` based on the OS color scheme. */
     readonly mode = signal<KbqThemeMode | string>(this.store.getMode() ?? this.config.mode);
 
-    /** `mode()` resolved to a concrete theme name — never `'auto'`. */
+    /** `mode()` resolved to a concrete theme name — never `'auto'`. Uses `autoLight`/`autoDark` from `KBQ_THEME_CONFIG`. */
     readonly resolvedMode = computed(() => {
         const mode = this.mode();
 
-        return mode === 'auto' ? (this.systemPrefersDark() ? 'dark' : 'light') : mode;
+        if (mode !== 'auto') return mode;
+
+        return this.systemPrefersDark() ? this.config.autoDark : this.config.autoLight;
     });
 
     /** The theme object currently applied to the document, or `null` if `resolvedMode()` matches no registered theme. */
@@ -220,9 +225,9 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
         this.setMode('auto');
     }
 
-    /** Switches between `light` and `dark`, based on the currently resolved mode. */
+    /** Switches between `autoLight`/`autoDark` (`light`/`dark` by default), based on the currently resolved mode. */
     toggle() {
-        this.setMode(this.resolvedMode() === 'dark' ? 'light' : 'dark');
+        this.setMode(this.resolvedMode() === this.config.autoDark ? this.config.autoLight : this.config.autoDark);
     }
 
     /** @deprecated use `setMode()` with a theme `name` instead. */
@@ -250,20 +255,10 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
             // deprecated back-compat sync, remove together with `KbqTheme.selected`
             theme.selected = isActive;
 
-            if (this.config.attribute === 'class') {
-                if (isActive) {
-                    this.renderer.addClass(this.document.body, theme.className);
-                } else {
-                    this.renderer.removeClass(this.document.body, theme.className);
-                }
-            }
-        }
-
-        if (this.config.attribute === 'data-theme') {
-            if (current) {
-                this.renderer.setAttribute(this.document.body, 'data-theme', current.name);
+            if (isActive) {
+                this.renderer.addClass(this.document.body, theme.className);
             } else {
-                this.renderer.removeAttribute(this.document.body, 'data-theme');
+                this.renderer.removeClass(this.document.body, theme.className);
             }
         }
     }
