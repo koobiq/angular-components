@@ -580,6 +580,44 @@ describe(KbqTimepicker.name, () => {
             expect(inputElementDebug.nativeElement.value).toBe('23:00:59');
         }));
 
+        it('Should normalize incomplete value instead of letting it grow', fakeAsync(() => {
+            inputElementDebug.nativeElement.value = '911:1';
+            dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
+            tick(1);
+
+            expect(inputElementDebug.nativeElement.value).toBe('23:1');
+        }));
+
+        it('Should trim time part longer than two digits', fakeAsync(() => {
+            inputElementDebug.nativeElement.value = '0001:1';
+            dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
+            tick(1);
+
+            expect(inputElementDebug.nativeElement.value).toBe('01:1');
+        }));
+
+        it('Should normalize time part with more than four digits', fakeAsync(() => {
+            inputElementDebug.nativeElement.value = '123456';
+            dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
+            tick(1);
+
+            expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
+        }));
+
+        it('Should keep intermediate value untouched while typing', fakeAsync(() => {
+            inputElementDebug.nativeElement.value = '12:3';
+            dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
+            tick(1);
+
+            expect(inputElementDebug.nativeElement.value).toBe('12:3');
+
+            inputElementDebug.nativeElement.value = '1';
+            dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
+            tick(1);
+
+            expect(inputElementDebug.nativeElement.value).toBe('1');
+        }));
+
         it('Increase hours by ArrowUp key and cycle from max to min', fakeAsync(() => {
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
 

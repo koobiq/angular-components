@@ -19,7 +19,7 @@ import { DateTime } from 'luxon';
         <!-- empty state -->
         <kbq-form-field>
             <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-            <input kbqTimepicker [format]="timeFormats.HHmm" />
+            <input data-testid="e2eTimepickerShort" kbqTimepicker [format]="timeFormats.HHmm" />
             <kbq-hint>HH:mm</kbq-hint>
         </kbq-form-field>
 
@@ -30,7 +30,7 @@ import { DateTime } from 'luxon';
         </kbq-form-field>
         <kbq-form-field>
             <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-            <input kbqTimepicker [format]="timeFormats.HHmmss" [(ngModel)]="value" />
+            <input data-testid="e2eTimepickerFull" kbqTimepicker [format]="timeFormats.HHmmss" [(ngModel)]="value" />
             <kbq-hint>HH:mm:ss</kbq-hint>
         </kbq-form-field>
 
