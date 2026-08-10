@@ -418,6 +418,9 @@ export class KbqTagList
     /** True when the next `tags.changes` emission is triggered by a UI action, not programmatic update. */
     private pendingUIChange = false;
 
+    /** The tag from which the next range selection starts. */
+    private selectionAnchor: KbqTag | null = null;
+
     /**
      * When a tag is destroyed, we store the index of the destroyed tag until the tags
      * query list notifies about the update. This is necessary because we cannot determine an
@@ -475,6 +478,10 @@ export class KbqTagList
             .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
             .subscribe((currentTags: QueryList<KbqTag> | null) => {
                 this.resetTags();
+
+                if (this.selectionAnchor && !this.tags.toArray().includes(this.selectionAnchor)) {
+                    this.selectionAnchor = null;
+                }
 
                 // Check to see if we need to update our tab index
                 this.updateTabIndex();
@@ -617,6 +624,36 @@ export class KbqTagList
     }
 
     /**
+     * Toggles a tag or extends the selection from the previous interaction to the specified tag.
+     *
+     * @docs-private
+     */
+    handleSelectionInteraction(tag: KbqTag, extendRange: boolean): void {
+        const tags = this.tags.toArray();
+        const tagIndex = tags.indexOf(tag);
+        const anchorIndex = this.selectionAnchor ? tags.indexOf(this.selectionAnchor) : -1;
+
+        if (this.disabled || !tag.selectable || tag.disabled || !this.isValidIndex(tagIndex)) return;
+
+        if (!extendRange || !this.isValidIndex(anchorIndex) || anchorIndex === tagIndex) {
+            tag.toggleSelected(true);
+            this.selectionAnchor = tag;
+
+            return;
+        }
+
+        const selected = this.selectionAnchor!.selected;
+        const fromIndex = Math.min(anchorIndex, tagIndex);
+        const toIndex = Math.max(anchorIndex, tagIndex);
+
+        tags.slice(fromIndex, toIndex + 1)
+            .filter((item) => item.selectable && !item.disabled)
+            .forEach((item) => item.setSelectedState(selected, { isUserInput: true, emitEvent: true }));
+
+        this.selectionAnchor = tag;
+    }
+
+    /**
      * Pass events to the keyboard manager. Available here for tests.
      *
      * @docs-private
@@ -753,6 +790,14 @@ export class KbqTagList
 
     private selectAll(): void {
         this.tags.forEach((tag) => tag.selectViaInteraction());
+
+        this.selectionAnchor =
+            this.keyManager.activeItem ??
+            this.tags
+                .toArray()
+                .reverse()
+                .find((tag) => tag.selectable && !tag.disabled) ??
+            null;
     }
 
     /**
@@ -762,6 +807,7 @@ export class KbqTagList
      */
     unselectAll(): void {
         this.tags.forEach((tag) => tag.setSelectedState(false));
+        this.selectionAnchor = null;
     }
 
     /**
