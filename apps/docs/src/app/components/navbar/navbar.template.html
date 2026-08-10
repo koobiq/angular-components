@@ -81,7 +81,7 @@
     </div>
 
     @for (option of themeOptions; track option.mode) {
-        <button kbq-dropdown-item [class.kbq-selected]="option.mode === mode()" (click)="setTheme(option.mode)">
+        <button kbq-dropdown-item [class.kbq-selected]="option.mode === selection()" (click)="setTheme(option.mode)">
             {{ option.title[locale()] }}
         </button>
     }

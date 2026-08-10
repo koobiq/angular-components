@@ -3838,11 +3838,11 @@ export type KbqThemeColorScheme = 'light' | 'dark';
 
 // @public
 export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
-    autoDark?: string;
-    autoLight?: string;
-    mode?: KbqThemeMode;
-    storageKey?: string;
-    themes?: T[];
+    autoDark: string;
+    autoLight: string;
+    mode: KbqThemeMode;
+    storageKey: string;
+    themes: T[];
 }
 
 // @public
@@ -3870,13 +3870,13 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
 }
 
 // @public
-export type KbqThemeMode = 'auto' | 'light' | 'dark';
+export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
 
 // @public
 export type KbqThemeName = string & {};
 
 // @public
-export const kbqThemeProvider: (config: KbqThemeConfig) => Provider;
+export const kbqThemeProvider: (config: Partial<KbqThemeConfig>) => Provider;
 
 // @public
 export type KbqThemeSelection = 'auto' | KbqThemeName;
@@ -3897,7 +3897,7 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
     readonly currentTheme: i0.Signal<T | null>;
     // @deprecated (undocumented)
     getTheme(): T | null;
-    readonly mode: i0.Signal<KbqThemeSelection>;
+    readonly selection: i0.Signal<KbqThemeSelection>;
     selectTheme(name: KbqThemeName): void;
     setAuto(auto?: boolean): void;
     setMode(mode: KbqThemeMode): void;

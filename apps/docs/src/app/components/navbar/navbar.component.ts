@@ -55,7 +55,7 @@ export class DocsNavbarComponent extends DocsLocaleState {
     ];
 
     /** The currently selected mode — persistence and OS-preference resolution are handled by `KbqThemeService`. */
-    readonly mode = computed(() => this.themeService.mode());
+    readonly selection = computed(() => this.themeService.selection());
 
     readonly opened$: Observable<boolean> = this.docStates.navbarMenu.pipe(
         map((state) => state === DocsNavbarState.Opened)

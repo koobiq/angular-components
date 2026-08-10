@@ -34,7 +34,7 @@ export interface KbqTheme {
      */
     colorScheme?: KbqThemeColorScheme;
     /**
-     * @deprecated Selection state is now owned by `KbqThemeService` — read `currentTheme()` or `mode()` instead.
+     * @deprecated Selection state is now owned by `KbqThemeService` — read `currentTheme()` or `selection()` instead.
      * Kept in sync by the service for backward compatibility.
      */
     selected?: boolean;
@@ -44,12 +44,12 @@ export interface KbqTheme {
  * Value accepted by `setMode()`. `'auto'` follows the OS color scheme; `'light'`/`'dark'` select those themes
  * directly. To select a different registered theme by name, use `selectTheme()` instead.
  */
-export type KbqThemeMode = 'auto' | 'light' | 'dark';
+export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
 
 /** `string`, but keeps `KbqThemeMode`'s literals suggested in editors instead of collapsing to plain `string`. */
 export type KbqThemeName = string & {};
 
-/** What `mode()` returns and `KbqThemeStore` persists: `'auto'`, or the selected theme's `name`. */
+/** What `selection()` returns and `KbqThemeStore` persists: `'auto'`, or the selected theme's `name`. */
 export type KbqThemeSelection = 'auto' | KbqThemeName;
 
 /** CSS class names for `KbqDefaultThemes`, the built-in light/dark theme set. */
@@ -80,7 +80,7 @@ export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
     autoDark: string;
 }
 
-const KBQ_THEME_DEFAULT_CONFIG: Required<KbqThemeConfig> = {
+const KBQ_THEME_DEFAULT_CONFIG: KbqThemeConfig = {
     themes: KbqDefaultThemes,
     mode: 'auto',
     storageKey: 'kbq-theme-mode',
@@ -98,13 +98,13 @@ export const KBQ_THEME_CONFIG = new InjectionToken<KbqThemeConfig>('KBQ_THEME_CO
  * Configures `KbqThemeService` — registers custom themes, sets the initial mode, and how it's applied to the DOM.
  * Only the properties you pass are overridden; anything omitted keeps its `KBQ_THEME_DEFAULT_CONFIG` value.
  */
-export const kbqThemeProvider = (config: KbqThemeConfig): Provider => ({
+export const kbqThemeProvider = (config: Partial<KbqThemeConfig>): Provider => ({
     provide: KBQ_THEME_CONFIG,
     useValue: { ...KBQ_THEME_DEFAULT_CONFIG, ...config }
 });
 
 /**
- * Strategy used by `KbqThemeService` to persist and restore `mode()` — `'auto'` or a selected theme `name`,
+ * Strategy used by `KbqThemeService` to persist and restore `selection()` — `'auto'` or a selected theme `name`,
  * not a mode alone, hence "selection" rather than "mode" here.
  *
  * Provide a custom implementation through the `KBQ_THEME_STORE` token to change where it's stored
@@ -205,10 +205,10 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
     private readonly window = inject(KBQ_WINDOW);
     private readonly store = inject(KBQ_THEME_STORE);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly config: Required<KbqThemeConfig<T>> = {
+    private readonly config: KbqThemeConfig<T> = {
         ...KBQ_THEME_DEFAULT_CONFIG,
         ...inject(KBQ_THEME_CONFIG)
-    } as Required<KbqThemeConfig<T>>;
+    } as KbqThemeConfig<T>;
 
     private readonly renderer: Renderer2;
     private readonly media = this.window.matchMedia('(prefers-color-scheme: dark)');
@@ -219,10 +219,6 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
     private readonly theme = signal<KbqThemeName>(
         this.initialMode === 'auto' ? this.config.autoLight : this.initialMode
     );
-    /** The concrete theme name `mode()` resolves to when not `'auto'` — the lookup key for `currentTheme()`. */
-    private readonly resolvedMode = computed<KbqThemeName>(() =>
-        this.auto() ? (this.systemPrefersDark() ? this.config.autoDark : this.config.autoLight) : this.theme()
-    );
 
     /** Themes available to select from. Replace via `setThemes()` to register a fully custom set. */
     readonly themes = signal<T[]>(this.config.themes);
@@ -231,19 +227,20 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
     readonly auto = signal<boolean>(this.initialMode === 'auto');
 
     /** `'auto'` when `auto()` is on, otherwise `theme()`. A simpler view for a plain 3-way (auto/light/dark) UI. */
-    readonly mode = computed<KbqThemeSelection>(() => (this.auto() ? 'auto' : this.theme()));
+    readonly selection = computed<KbqThemeSelection>(() => (this.auto() ? 'auto' : this.theme()));
 
     /** The theme object currently applied to the document, or `null` if the resolved name matches none. */
     readonly currentTheme = computed<T | null>(() => {
-        const resolvedMode = this.resolvedMode();
+        const resolvedThemeName = this.auto()
+            ? this.systemPrefersDark()
+                ? this.config.autoDark
+                : this.config.autoLight
+            : this.theme();
 
-        return this.themes().find((theme) => theme.name === resolvedMode) ?? null;
+        return this.themes().find((theme) => theme.name === resolvedThemeName) ?? null;
     });
 
-    /**
-     * Light/dark polarity of `currentTheme()`. Falls back to the OS preference when `resolvedMode()`
-     * matches no registered theme, so this is always `'light'`/`'dark'` — never `null`.
-     */
+    /** Light/dark polarity of `currentTheme()`. Falls back to the OS preference. */
     readonly colorScheme = computed<KbqThemeColorScheme>(
         () => this.currentTheme()?.colorScheme ?? (this.systemPrefersDark() ? 'dark' : 'light')
     );
@@ -266,7 +263,7 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
             this.applyTheme(currentTheme, this.themes());
             this.current.next(currentTheme);
         });
-        effect(() => this.store.setSelection(this.mode()));
+        effect(() => this.store.setSelection(this.selection()));
     }
 
     /** Registers a custom set of themes. */
@@ -297,9 +294,9 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
     }
 
     /**
-     * Switches between `autoLight`/`autoDark` (`light`/`dark` by default), based on `colorScheme()` — the
-     * current theme's actual polarity, not its name. Unlike comparing `resolvedMode()` against `autoDark`,
-     * this also does the right thing when `currentTheme()` is some other, directly-selected theme.
+     * Switches between `autoLight`/`autoDark` (`light`/`dark` by default), based on `colorScheme()` — so
+     * it does the right thing even when `currentTheme()` is some other, directly-selected theme whose
+     * `name` doesn't match `light`/`dark`/`autoLight`/`autoDark`.
      */
     toggle() {
         this.selectTheme(this.colorScheme() === 'dark' ? this.config.autoLight : this.config.autoDark);

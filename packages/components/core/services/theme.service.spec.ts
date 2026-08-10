@@ -67,7 +67,7 @@ describe('KbqThemeService', () => {
     it('defaults to auto mode, resolving dark when the OS prefers dark', () => {
         const { service } = setup(true);
 
-        expect(service.mode()).toBe('auto');
+        expect(service.selection()).toBe('auto');
         expect(service.currentTheme()?.name).toBe('dark');
         expect(document.body.classList.contains('kbq-dark')).toBe(true);
     });
@@ -105,7 +105,7 @@ describe('KbqThemeService', () => {
 
         service.setAuto();
         TestBed.tick();
-        expect(service.mode()).toBe('auto');
+        expect(service.selection()).toBe('auto');
         expect(service.currentTheme()?.name).toBe('dark');
     });
 
@@ -174,7 +174,7 @@ describe('KbqThemeService', () => {
         service.toggle();
         TestBed.tick();
 
-        expect(service.mode()).toBe('light');
+        expect(service.selection()).toBe('light');
         expect(service.currentTheme()?.name).toBe('light');
     });
 
@@ -203,14 +203,14 @@ describe('KbqThemeService', () => {
 
         TestBed.tick();
 
-        expect(service.mode()).toBe('auto');
+        expect(service.selection()).toBe('auto');
         expect(service.currentTheme()?.name).toBe('midnight');
         expect(document.body.classList.contains('kbq-midnight')).toBe(true);
 
         service.toggle();
         TestBed.tick();
 
-        expect(service.mode()).not.toBe('auto');
+        expect(service.selection()).not.toBe('auto');
         expect(service.currentTheme()?.name).toBe('sunrise');
         expect(document.body.classList.contains('kbq-sunrise')).toBe(true);
     });
@@ -240,7 +240,7 @@ describe('KbqThemeService', () => {
 
         TestBed.tick();
 
-        expect(service.mode()).toBe('dark');
+        expect(service.selection()).toBe('dark');
         expect(service.currentTheme()?.name).toBe('dark');
     });
 
@@ -258,12 +258,12 @@ describe('KbqThemeService', () => {
 
         service.setTheme(1);
         TestBed.tick();
-        expect(service.mode()).toBe('dark');
+        expect(service.selection()).toBe('dark');
         expect(service.getTheme()).toBe(service.currentTheme());
 
         service.setTheme(KbqDefaultThemes[0]);
         TestBed.tick();
-        expect(service.mode()).toBe('light');
+        expect(service.selection()).toBe('light');
     });
 
     it('exports `ThemeService` as a deprecated alias of `KbqThemeService`', () => {
