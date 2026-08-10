@@ -63,8 +63,10 @@ const ignoredPackages: PackageID[] = [
     // https://github.com/soldair/node-gitconfiglocal?tab=BSD-3-Clause-1-ov-file
     'gitconfiglocal@1.0.0',
 
+    // CC BY-SA 4.0, declared as a non-SPDX string, so the expression cannot be parsed.
+    // Data-only dictionary pulled in by `cspell`, a devDependency, so it is never bundled into the published packages.
     // https://github.com/streetsidesoftware/cspell-dicts/blob/main/dictionaries/en-common-misspellings/LICENSE
-    '@cspell/dict-en-common-misspellings@2.0.11'
+    '@cspell/dict-en-common-misspellings@2.2.0'
 ];
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
