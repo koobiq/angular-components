@@ -1716,11 +1716,11 @@ export class KbqSelect
         });
     }
 
-    /** Whether the key manager's active item is missing from the current options list. */
+    /** Whether the key manager has no active item, or its active item is missing from the current options list. */
     private isActiveItemStale(): boolean {
         const activeItem = this.keyManager.activeItem as KbqOption | null;
 
-        return !activeItem || !this.options.toArray().includes(activeItem);
+        return !activeItem || !this.options.some((option) => option === activeItem);
     }
 
     /**
