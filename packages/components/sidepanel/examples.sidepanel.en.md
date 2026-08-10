@@ -1,5 +1,7 @@
 ### Dynamic configuration update
 
+`KbqSidepanelConfig` properties, such as `hasBackdrop` and `disableClose`, can also be changed after the sidepanel is already open, via `KbqSidepanelRef.config`.
+
 <!-- example(sidepanel-with-dynamic-config-update) -->
 
 ### Custom injector

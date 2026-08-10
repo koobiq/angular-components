@@ -14,6 +14,7 @@ import {
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import {
+    SidepanelDisableCloseExample,
     SidepanelNormalModeExample,
     SidepanelOverlayedExample,
     SidepanelOverviewExample,
@@ -30,7 +31,8 @@ import {
         SidepanelNormalModeExample,
         SidepanelOverlayedExample,
         SidepanelSizesExample,
-        SidepanelWithCustomInjectorExample
+        SidepanelWithCustomInjectorExample,
+        SidepanelDisableCloseExample
     ],
     template: `
         <sidepanel-overview-example />
@@ -44,6 +46,8 @@ import {
         <sidepanel-with-dynamic-config-update-example />
         <hr />
         <sidepanel-with-custom-injector-example />
+        <hr />
+        <sidepanel-disable-close-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

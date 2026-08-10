@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { SidepanelDisableCloseExample } from './sidepanel-disable-close/sidepanel-disable-close-example';
 import { SidepanelNormalModeExample } from './sidepanel-normal-mode/sidepanel-normal-mode-example';
 import { SidepanelOverlayedExample } from './sidepanel-overlayed/sidepanel-overlayed-example';
 import { SidepanelOverviewExample } from './sidepanel-overview/sidepanel-overview-example';
@@ -7,6 +8,7 @@ import { SidepanelWithCustomInjectorExample } from './sidepanel-with-custom-inje
 import { SidepanelWithDynamicConfigUpdateExample } from './sidepanel-with-dynamic-config-update/sidepanel-with-dynamic-config-update-example';
 
 export {
+    SidepanelDisableCloseExample,
     SidepanelNormalModeExample,
     SidepanelOverlayedExample,
     SidepanelOverviewExample,
@@ -21,7 +23,8 @@ const EXAMPLES = [
     SidepanelOverlayedExample,
     SidepanelSizesExample,
     SidepanelWithCustomInjectorExample,
-    SidepanelWithDynamicConfigUpdateExample
+    SidepanelWithDynamicConfigUpdateExample,
+    SidepanelDisableCloseExample
 ];
 
 @NgModule({
