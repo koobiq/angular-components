@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
+import { KbqHighlightBackgroundPipe, KbqVirtualOption } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -125,7 +125,14 @@ export class SelectFacade {
             </div>
 
             <kbq-form-field>
-                <kbq-select [value]="selectedOption" (beforeOpened)="loadOptions()" (closed)="resetOptions()">
+                <kbq-select
+                    [compareWith]="compareWith"
+                    [showPreselectedValues]="true"
+                    [value]="selectedOption"
+                    [virtualOptionFactory]="virtualOptionFactory"
+                    (beforeOpened)="loadOptions()"
+                    (closed)="resetOptions()"
+                >
                     <kbq-form-field noBorders kbqSelectSearch>
                         <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                         <input kbqInput type="text" autocomplete="off" [formControl]="searchControl" />
@@ -157,7 +164,7 @@ export class SelectFacade {
                             }
                             @case ('success') {
                                 @for (option of state.data; track option) {
-                                    <kbq-option [value]="option.id">
+                                    <kbq-option [value]="option">
                                         <span
                                             [innerHTML]="option.label | kbqHighlightBackground: searchControl.value"
                                         ></span>
@@ -184,7 +191,10 @@ export class SelectFacade {
 export class SelectLoadingExample {
     protected readonly facade = inject(SelectFacade);
 
-    protected selectedOption: Option = { id: 0, label: `Option 0` };
+    protected selectedOption: Option = { id: 0, label: `Option #0` };
+
+    protected readonly compareWith = (a: Option | null, b: Option | null) => a?.id === b?.id;
+    protected readonly virtualOptionFactory = (value: Option) => new KbqVirtualOption(value, false, value.label);
 
     readonly state$ = this.facade.state$;
     readonly searchControl = new FormControl('');
