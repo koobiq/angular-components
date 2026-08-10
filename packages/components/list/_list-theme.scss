@@ -54,6 +54,12 @@
         &.kbq-disabled {
             @include _kbq-list-item(states-disabled);
         }
+
+        &.kbq-selected.kbq-disabled {
+            --kbq-option-background: var(--kbq-list-states-selected-container-background);
+
+            background: var(--kbq-list-states-selected-container-background);
+        }
     }
 
     .kbq-list-option.kbq-list-option_multiple {
@@ -69,6 +75,12 @@
             &:active {
                 @include _kbq-list-item(multiple-states-selected-active);
             }
+        }
+
+        &.kbq-selected.kbq-disabled {
+            --kbq-option-background: var(--kbq-list-multiple-states-selected-container-background);
+
+            background: var(--kbq-list-multiple-states-selected-container-background);
         }
     }
 

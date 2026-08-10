@@ -102,6 +102,19 @@ test.describe('KbqSelectModule', () => {
         });
     });
 
+    test.describe('E2eSelectSelectionState', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eSelectSelectionState');
+
+        test('selected disabled option', async ({ page }) => {
+            await page.goto('/E2eSelectSelectionState');
+            const component = getComponent(page);
+
+            await component.getByTestId('e2eSelect').click();
+
+            await expect(component).toHaveScreenshot('05-light.png');
+        });
+    });
+
     test.describe('E2eSelectWithSearchAndFooter', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSelectWithSearchAndFooter');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');

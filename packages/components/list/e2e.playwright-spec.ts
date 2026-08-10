@@ -15,4 +15,15 @@ test.describe('KbqListModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
     });
+
+    test.describe('E2eListSelectionState', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eListSelectionState');
+
+        test('selected disabled option', async ({ page }) => {
+            await page.goto('/E2eListSelectionState');
+            const component = getComponent(page);
+
+            await expect(component).toHaveScreenshot('02-light.png');
+        });
+    });
 });

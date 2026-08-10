@@ -36,7 +36,7 @@ import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
 import { E2eInlineEditMenuButton, E2eInlineEditStates, E2eInlineEditTruncation } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eLinkStates } from '../components/link/e2e';
-import { E2eListStates } from '../components/list/e2e';
+import { E2eListSelectionState, E2eListStates } from '../components/list/e2e';
 import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eModalFullCustom, E2eModalStates } from '../components/modal/e2e';
@@ -64,6 +64,7 @@ import {
     E2eSelectLongOptionText,
     E2eSelectPositioning,
     E2eSelectRtlPositioning,
+    E2eSelectSelectionState,
     E2eSelectStates,
     E2eSelectWithGroupsPositioning,
     E2eSelectWithGroupsRtlPositioning,
@@ -155,6 +156,8 @@ const components = [
     E2eModalStates,
     E2eModalFullCustom,
     E2eListStates,
+    E2eListSelectionState,
+    E2eListOptionActionVisibility,
     E2eLoaderOverlayStates,
     E2eLoaderOverlayCard,
     E2eAutocompleteStates,
@@ -189,6 +192,7 @@ const components = [
     E2eSelectStates,
     E2eMultiSelectStates,
     E2eMultilineSelectStates,
+    E2eSelectSelectionState,
     E2eTreeStates,
     E2eTreeSelectStates,
     E2eMultiTreeSelectStates,
