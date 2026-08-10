@@ -5224,6 +5224,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidebar-with-splitter-example.ts",
     "importPath": "components/sidebar"
   },
+  "sidepanel-disable-close": {
+    "packagePath": "components/sidepanel/sidepanel-disable-close",
+    "title": "Sidepanel with disabled close on backdrop click",
+    "componentName": "SidepanelDisableCloseExample",
+    "files": [
+      "sidepanel-disable-close-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "sidepanel-disable-close-example",
+    "additionalComponents": [
+      "ExampleSidepanelDisableCloseContent"
+    ],
+    "primaryFile": "sidepanel-disable-close-example.ts",
+    "importPath": "components/sidepanel"
+  },
   "sidepanel-normal-mode": {
     "packagePath": "components/sidepanel/sidepanel-normal-mode",
     "title": "Sidepanel normal mode",
@@ -8324,6 +8339,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/sidebar');
   case 'sidebar-with-splitter':
 return import('@koobiq/docs-examples/components/sidebar');
+  case 'sidepanel-disable-close':
+return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-normal-mode':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-overlayed':
