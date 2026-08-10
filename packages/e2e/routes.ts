@@ -157,7 +157,6 @@ const components = [
     E2eModalFullCustom,
     E2eListStates,
     E2eListSelectionState,
-    E2eListOptionActionVisibility,
     E2eLoaderOverlayStates,
     E2eLoaderOverlayCard,
     E2eAutocompleteStates,
