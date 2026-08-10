@@ -159,7 +159,7 @@ export class NotificationCenterInfiniteScrollExample {
     });
 
     private readonly themeService = inject(KbqThemeService, { optional: true });
-    protected readonly currentTheme = computed(() => this.themeService?.resolvedMode() ?? 'light');
+    protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
 
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)

@@ -239,7 +239,7 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     constructor() {
         super();
         effect(() => {
-            this.themeService.resolvedMode();
+            this.themeService.currentTheme();
             this.tokensInfo.set(this.calculateViewData());
         });
 

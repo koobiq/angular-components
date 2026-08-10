@@ -133,7 +133,7 @@ export class DocsDocsearchDirective extends DocsLocaleState {
 
     // captured eagerly (in the constructor's injection context), since `toObservable()` can't be
     // called lazily from the `afterNextRender()` callback in `init()`
-    private readonly resolvedMode$ = toObservable(this.theme.resolvedMode);
+    private readonly colorScheme$ = toObservable(this.theme.colorScheme);
 
     private instance: DocSearchInstance | null = null;
 
@@ -152,8 +152,8 @@ export class DocsDocsearchDirective extends DocsLocaleState {
 
     private init(): void {
         combineLatest([
-            this.resolvedMode$.pipe(
-                map((mode) => (mode === 'dark' ? 'dark' : 'light') satisfies DocSearchProps['theme']),
+            this.colorScheme$.pipe(
+                map((colorScheme) => colorScheme satisfies DocSearchProps['theme']),
                 distinctUntilChanged()
             ),
             this.docsLocaleService.changes.pipe(distinctUntilChanged())

@@ -41,7 +41,7 @@ export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     private readonly themeService = inject(KbqThemeService);
 
     protected structureCategories: DocsStructureCategory[];
-    readonly currentTheme = computed(() => this.themeService.resolvedMode());
+    readonly currentTheme = computed(() => this.themeService.colorScheme());
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly docStates = inject(DocsDocStates);

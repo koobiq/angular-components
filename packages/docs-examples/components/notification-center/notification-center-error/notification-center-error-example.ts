@@ -69,7 +69,7 @@ export class NotificationCenterErrorExample {
     @ViewChild('actionsTemplate') actionsTemplateRef: TemplateRef<any>;
 
     private readonly themeService = inject(KbqThemeService, { optional: true });
-    protected readonly currentTheme = computed(() => this.themeService?.resolvedMode() ?? 'light');
+    protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
 
     protected readonly srcSet = computed(() => {
         const currentTheme = this.currentTheme();

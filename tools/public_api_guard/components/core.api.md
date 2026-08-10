@@ -2722,7 +2722,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
 // @public
 export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 
-// @public (undocumented)
+// @public
 export const KbqDefaultThemes: KbqTheme[];
 
 // @public
@@ -3827,26 +3827,42 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
 // @public
 export interface KbqTheme {
     className: string;
+    colorScheme: KbqThemeColorScheme;
     name: string;
     // @deprecated (undocumented)
     selected?: boolean;
 }
 
 // @public
+export type KbqThemeColorScheme = 'light' | 'dark';
+
+// @public
 export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
     autoDark?: string;
     autoLight?: string;
     mode?: KbqThemeMode;
-    storageKey?: string;
+    storageKey: string;
     themes?: T[];
+}
+
+// @public
+export class KbqThemeCookieStore implements KbqThemeStore {
+    // (undocumented)
+    getMode(): KbqThemeMode | KbqThemeName | null;
+    // (undocumented)
+    setMode(mode: KbqThemeMode | KbqThemeName): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeCookieStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeCookieStore>;
 }
 
 // @public
 export class KbqThemeLocalStorageStore implements KbqThemeStore {
     // (undocumented)
-    getMode(): KbqThemeMode | string | null;
+    getMode(): KbqThemeMode | KbqThemeName | null;
     // (undocumented)
-    setMode(mode: KbqThemeMode | string): void;
+    setMode(mode: KbqThemeMode | KbqThemeName): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeLocalStorageStore, never>;
     // (undocumented)
@@ -3855,6 +3871,9 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
 
 // @public
 export type KbqThemeMode = 'auto' | 'light' | 'dark';
+
+// @public
+export type KbqThemeName = string & {};
 
 // @public
 export const kbqThemeProvider: (config: KbqThemeConfig) => Provider;
@@ -3868,18 +3887,21 @@ export enum KbqThemeSelector {
 // @public
 export class KbqThemeService<T extends KbqTheme = KbqTheme> {
     constructor();
+    readonly auto: i0.WritableSignal<boolean>;
+    readonly colorScheme: i0.Signal<KbqThemeColorScheme>;
     // @deprecated (undocumented)
     readonly current: BehaviorSubject<T | null>;
     readonly currentTheme: i0.Signal<T | null>;
     // @deprecated (undocumented)
     getTheme(): T | null;
-    readonly mode: i0.WritableSignal<string>;
-    readonly resolvedMode: i0.Signal<string>;
-    setAuto(): void;
-    setMode(mode: KbqThemeMode | string): void;
+    readonly mode: i0.Signal<KbqThemeMode | KbqThemeName>;
+    readonly resolvedMode: i0.Signal<KbqThemeName>;
+    setAuto(auto?: boolean): void;
+    setMode(mode: KbqThemeMode | KbqThemeName): void;
     // @deprecated (undocumented)
     setTheme(value: T | number): void;
     setThemes(items: T[]): void;
+    readonly theme: i0.WritableSignal<KbqThemeName>;
     readonly themes: i0.WritableSignal<T[]>;
     toggle(): void;
     // (undocumented)
@@ -3890,8 +3912,8 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
 
 // @public
 export interface KbqThemeStore {
-    getMode(): KbqThemeMode | string | null;
-    setMode(mode: KbqThemeMode | string): void;
+    getMode(): KbqThemeMode | KbqThemeName | null;
+    setMode(mode: KbqThemeMode | KbqThemeName): void;
 }
 
 // @public
