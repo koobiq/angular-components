@@ -115,4 +115,12 @@ RUN node tools/e2e/assert-browsers.js
 
 COPY . .
 
+# tools/e2e/Dockerfile.dockerignore is an allowlist, and the failure mode of not reading it at all —
+# a builder that is not BuildKit, a rename that leaves the two names out of step — is that the whole
+# working tree lands in the image and everything still works, only slower and off a context nobody
+# reviewed. CHANGELOG.md is the sentinel because no e2e run will ever have a reason to want it, so
+# unlike a directory that might be allowlisted later this cannot quietly become a no-op.
+RUN test ! -e CHANGELOG.md \
+    || { echo 'tools/e2e/Dockerfile.dockerignore was not applied: the whole working tree is in the image.' >&2; exit 1; }
+
 CMD ["yarn", "run", "e2e:components"]

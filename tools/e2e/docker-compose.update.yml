@@ -10,6 +10,12 @@
 # library on the Angular build's hot path, which costs about 5 seconds per run across the host
 # filesystem boundary (measured: 27s against 32s for the same spec). Updating snapshots is rare and
 # can afford both; a plain run should pay for neither.
+#
+# This is an overlay, not a second configuration: `--file base --file this` merges the two, so
+# everything the base file sets and this one does not — `platform` above all, which is what ties the
+# baselines to x86-64 — carries over unchanged. Confirm with
+# `docker compose --file tools/e2e/docker-compose.yml --file tools/e2e/docker-compose.update.yml config`,
+# which prints what the run actually uses.
 services:
   e2e:
     # The report mounts are repeated from the base file on purpose. Compose has merged sequences

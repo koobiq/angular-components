@@ -3,11 +3,15 @@
  * playwright-core expects. Run at image build time by tools/e2e/Dockerfile.
  *
  * The image ships its browsers under /ms-playwright, so `playwright install` never runs in the
- * container. That only holds while the image tag matches @playwright/test exactly. When it does
- * not, nothing fails loudly: `playwright`'s postinstall quietly downloads a second browser set,
- * the tests run against a different build than CI, and the result is an unexplained diff in every
- * screenshot — the baselines are compared with `threshold: 0`, so a different browser build
- * invalidates all of them at once.
+ * container. That only holds while the image tag matches @playwright/test exactly — which is not
+ * something the Dockerfile can guarantee on its own. `FROM` carries both a tag derived from
+ * package.json and a digest, and a digest wins: bumping @playwright/test without bumping the digest
+ * in the same commit changes the tag, resolves the same old image, and leaves the browsers behind.
+ *
+ * When the two disagree, nothing fails loudly: `playwright`'s postinstall quietly downloads a
+ * second browser set, the tests run against a different build than CI, and the result is an
+ * unexplained diff in every screenshot — the baselines are compared with `threshold: 0`, so a
+ * different browser build invalidates all of them at once.
  *
  * This check turns all of that into one build failure with an actionable message.
  */
