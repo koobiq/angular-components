@@ -34,6 +34,10 @@ updates:
       # Angular 21 — so the major has to wait for the framework upgrade.
       - dependency-name: 'eslint'
         update-types: ['version-update:semver-major']
+      # Released in lockstep with eslint and consumed as `eslint.configs.recommended`, so it cannot
+      # cross a major on its own — see the `eslint` entry above.
+      - dependency-name: '@eslint/js'
+        update-types: ['version-update:semver-major']
       # Requires ESLint 10 since v4 — see the `eslint` entry above.
       - dependency-name: 'eslint-plugin-file-progress'
         update-types: ['version-update:semver-major']
