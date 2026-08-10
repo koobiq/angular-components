@@ -1,0 +1,69 @@
+# Build context for tools/e2e/Dockerfile, whose context is the repository root.
+#
+# Named after the Dockerfile rather than being a plain `.dockerignore` at the context root so that it
+# can live next to the thing it belongs to. BuildKit looks for `<dockerfile>.dockerignore` first and
+# only falls back to `<context>/.dockerignore`; Compose v2 always builds through BuildKit, so this is
+# the file that is read. A plain `.dockerignore` dropped into tools/e2e/ would be read by nothing.
+#
+# An allowlist: everything is excluded, then the paths the image actually needs are added back. That
+# is narrower than a denylist but it fails silently — a missing entry surfaces deep inside
+# `ng serve` or `yarn install`, pointing nowhere near the cause. Two things keep it honest: the
+# assertion in the Dockerfile that fires if this file is not applied at all, and the fact that the
+# list below is short enough to check against the imports it exists for.
+#
+# Verify with:
+#   docker build --progress=plain --no-cache -f tools/e2e/Dockerfile \
+#     --build-arg PLAYWRIGHT_VERSION=<version> . 2>&1 | grep "transferring context"
+# Expect roughly 28 MB. Substantially more means one of the patterns below stopped matching.
+
+**
+
+# Yarn 4 and the manifests. .yarn/releases holds the committed Yarn binary that .yarnrc.yml points
+# at; without it the image has only the base image's Yarn 1, which cannot read a Berry lockfile.
+!.nvmrc
+!.yarnrc.yml
+!package.json
+!yarn.lock
+!.yarn/releases/
+!.yarn/releases/**
+
+# Workspace and TypeScript configuration: the dev server builds `dev-e2e` out of angular.json, and
+# playwright.config.ts compiles the specs against tsconfig.playwright-spec.json.
+!angular.json
+!tsconfig.json
+!tsconfig.playwright-spec.json
+!playwright.config.ts
+
+# The library under test, the harness application that renders it, and the Luxon adapter — the e2e
+# pages of datepicker, timepicker, filter-bar and notification-center import
+# `@koobiq/angular-luxon-adapter/adapter`, so the suite does not start without it.
+#
+# The specs themselves import only `@playwright/test` and `packages/e2e/utils`, and the e2e pages
+# import only `@koobiq/components/*` and that one adapter.
+!packages/components/
+!packages/components/**
+!packages/e2e/
+!packages/e2e/**
+!packages/angular-luxon-adapter/
+!packages/angular-luxon-adapter/**
+
+# The one file the harness borrows from the dev applications: packages/e2e/module.ts puts
+# DevThemeToggle in the root component's imports. Listed as a single file rather than the directory
+# because the rest of packages/components-dev is ~2 MB of dev apps this image has no use for.
+# Without it `ng serve dev-e2e` fails with NG1010 on packages/e2e/module.ts:9 and the run dies at the
+# 10-minute webServer timeout.
+!packages/components-dev/
+!packages/components-dev/theme-toggle.ts
+
+# package.json's postinstall compiles tools/builders into node_modules/@koobiq/builders, which the
+# `dev-e2e` build then needs; tools/e2e carries assert-browsers.js, which runs during the build.
+!tools/builders/
+!tools/builders/**
+!tools/e2e/
+!tools/e2e/**
+
+# Last match wins, so these come after the rules above and take back anything that slipped through
+# them — a stray package-level node_modules, build output, or a log.
+**/node_modules
+**/dist
+**/*.log

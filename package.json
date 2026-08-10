@@ -290,6 +290,8 @@
         "dev:e2e": "ng serve dev-e2e",
         "e2e:setup": "playwright install chromium --with-deps && playwright install webkit --with-deps",
         "e2e:components": "playwright test packages/components",
+        "e2e:docker": "node tools/e2e/run.js",
+        "e2e:docker:update-snapshots": "node tools/e2e/run.js yarn run e2e:components --update-snapshots",
         "e2e:docs": "playwright test --config playwright.docs.config.ts",
         "serve:docs": "node tools/serve-docs.mjs",
         "-----API-----": "--------------------------------------------------------------------------------------------",
