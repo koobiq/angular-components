@@ -2,10 +2,13 @@ import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import {
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
+    KbqDecimalPipe,
     KbqFormattersModule,
     KbqLocaleService,
     KbqRoundDecimalPipe
 } from '@koobiq/components/core';
+import fc from 'fast-check';
+import { NUMBER_FORMAT_REGEXP } from './formatter';
 
 describe('KbqRoundDecimalPipe', () => {
     let pipe: KbqRoundDecimalPipe;
@@ -103,4 +106,54 @@ describe('KbqRoundDecimalPipe', () => {
         expect(pipe.transform(2800)).toBe('3K');
         expect(pipe.transform(1750)).toBe('2K');
     }));
+});
+
+// `digitsInfo` is a small language parsed with a regular expression, and the pipe is public API that
+// applications hand user-controlled values to. These two properties cover the halves of that contract:
+// a well-formed spec has to be honoured for any value, and a malformed one has to be rejected loudly
+// rather than silently formatted with the defaults.
+describe(`${KbqDecimalPipe.name} property-based`, () => {
+    let pipe: KbqDecimalPipe;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqFormattersModule],
+            providers: [{ provide: KBQ_LOCALE_ID, useValue: 'en-US' }]
+        }).compileComponents();
+
+        pipe = TestBed.inject(KbqDecimalPipe);
+    });
+
+    it('should honour the fraction digit bounds given in digitsInfo', () => {
+        fc.assert(
+            fc.property(
+                fc.double({ min: -1e15, max: 1e15, noNaN: true }),
+                fc.integer({ min: 0, max: 5 }),
+                fc.integer({ min: 0, max: 5 }),
+                (value, minFractionDigits, extraDigits) => {
+                    const maxFractionDigits = minFractionDigits + extraDigits;
+                    const formatted = pipe.transform(value, `1.${minFractionDigits}-${maxFractionDigits}`, 'en-US');
+                    // en-US groups with ',' and separates the fraction with '.', so this split is
+                    // unambiguous. It would not be for a locale that uses '.' as the group separator,
+                    // which is why the locale is pinned rather than generated.
+                    const fraction = formatted?.split('.')[1] ?? '';
+
+                    expect(fraction.length).toBeGreaterThanOrEqual(minFractionDigits);
+                    expect(fraction.length).toBeLessThanOrEqual(maxFractionDigits);
+                }
+            )
+        );
+    });
+
+    it('should reject a malformed digitsInfo instead of falling back to the defaults', () => {
+        fc.assert(
+            fc.property(fc.string(), (digitsInfo) => {
+                // An empty string is falsy and documented to mean "no digitsInfo", so it never reaches
+                // the parser and is not a malformed spec.
+                fc.pre(digitsInfo !== '' && !NUMBER_FORMAT_REGEXP.test(digitsInfo));
+
+                expect(() => pipe.transform(1234.5678, digitsInfo, 'en-US')).toThrow();
+            })
+        );
+    });
 });

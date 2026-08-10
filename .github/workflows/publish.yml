@@ -7,16 +7,20 @@ on:
       # - '[0-9]+.[0-9]+.[0-9]+'
       # - '*@*.*.*' for NX integration
 
+# Read-only default; the write scopes this workflow needs are granted on the job itself, so a
+# future job added here does not silently inherit them.
 permissions:
   contents: read
-  packages: write
-  id-token: write # needed for provenance data generation
 
 jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'koobiq' }}
+    permissions:
+      contents: read # for actions/checkout to read the repository
+      packages: write
+      id-token: write # needed for provenance data generation
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 

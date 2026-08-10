@@ -1,0 +1,45 @@
+name: CodeQL
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  # Advisories and query packs change without the code changing, so a scan that only ran on
+  # commits would go stale on a quiet week. Offset from the other scheduled workflows
+  # (scorecard.yml 02:31, audit-report.yml 05:17) rather than sharing a slot.
+  schedule:
+    - cron: 43 3 * * 1
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Uploading to code scanning only works against the repository that owns the alerts; on a
+    # fork the analyze step would fail at the upload rather than be skipped. Pull requests from
+    # forks still run, because `repository_owner` is the base repository's owner.
+    if: ${{ github.repository_owner == 'koobiq' }}
+    permissions:
+      contents: read # for actions/checkout to read the repository
+      security-events: write # for github/codeql-action/analyze to upload results
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # `javascript-typescript` is one language to CodeQL, not two: splitting it into a matrix
+      # would analyse the same files twice. build-mode `none` is what that language supports —
+      # nothing is compiled, the extractor reads the sources directly, so this needs neither
+      # setup-node nor a package install.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        with:
+          languages: javascript-typescript
+          build-mode: none
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        with:
+          category: /language:javascript-typescript
