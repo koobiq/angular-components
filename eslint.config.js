@@ -9,7 +9,8 @@ const promise = require('eslint-plugin-promise');
 // eslint-plugin-rxjs-x ships as transpiled ESM (the plugin object lives under `.default`)
 const rxjs = require('eslint-plugin-rxjs-x').default;
 const comments = require('@eslint-community/eslint-plugin-eslint-comments/configs');
-const progress = require('eslint-plugin-file-progress');
+// eslint-plugin-file-progress ships as ESM since v2 (the plugin object lives under `.default`)
+const progress = require('eslint-plugin-file-progress').default;
 const prettierRecommended = require('eslint-plugin-prettier/recommended');
 
 const isCI = !!process.env.CI;
