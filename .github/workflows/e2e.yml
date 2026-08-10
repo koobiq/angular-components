@@ -11,30 +11,49 @@ permissions:
   pull-requests: write
 
 jobs:
+  # Runs in the container built from tools/e2e/, not on the runner directly. The screenshots are
+  # compared with threshold: 0 against baselines that carry no {platform} suffix, so the thing that
+  # produces them has to be pinned; a bare runner is only pinned by whatever `ubuntu-latest` happens
+  # to mean this week. The same image is what `yarn run e2e:docker` gives a developer locally, which
+  # is the point — a failure here is reproducible off CI.
+  #
+  # Regeneration must go through the same image: see .github/workflows/e2e-approve-snapshots.yml.
   tests:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      contents: read # for actions/checkout to read the repository
+      pull-requests: write # for thollander/actions-comment-pull-request to comment on PRs
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ./.github/workflows/actions/setup-node
-      # e2e:setup deliberately omits --with-deps: that shells out to sudo apt-get to install the
-      # browser's system libraries, and the ubuntu-latest image already ships Chrome, Chromium,
-      # Edge and Firefox, so they are present before the job starts. Please do not add it back
-      # without checking the runner image first.
+      # No setup-node and no browser install: node is already on the runner, tools/e2e/run.js only
+      # reads package.json, and the browsers come baked into the image. That removes the ~174 MB
+      # `playwright install` download this job used to nurse through a timeout — but it is not a
+      # net time saving and should not be read as one. GitHub-hosted runners keep no Docker layer
+      # cache between runs, so every run rebuilds the image from scratch: the Node install, the
+      # font layer and `yarn install --immutable` all re-run, and the base image is pulled again
+      # (872 MB compressed, 3.6 GB on disk). Measured cold on a 64-core machine, the build alone is
+      # ~157s, and a 4-vCPU runner will be slower. Against the old job this is roughly a wash.
       #
-      # Capping the step means a stalled download fails fast instead of consuming the whole job
-      # budget and taking the test run down with it — which is what happened in run 30790866073,
-      # where the job hit the wall during setup and produced no report at all. The cap only bites
-      # while it stays below the job timeout.
+      # What is bought with that is reproducibility, not speed. If the wall clock ever does become
+      # the problem, the answer is a prebuilt image pulled from GHCR by tag — not
+      # `cache-to: type=gha`, which would push well over a gigabyte of layers into the same 10 GB
+      # Actions cache that every other job's yarn cache is competing for.
       #
-      # 8 minutes was too tight: the ~174 MB browser download alone has been overrunning it, so
-      # the cap was killing otherwise-healthy runs. Keep this comfortably above the observed
-      # duration — it is a guard against a hang, not a performance budget.
-      - run: yarn run e2e:setup
-        timeout-minutes: 20
+      # docker compose creates a missing bind-mount source as root. Creating them up front keeps
+      # the workspace owned by the runner user, which matters on self-hosted runners where the
+      # next job has to clean it up.
+      - run: mkdir -p playwright-report test-results
+      # npm rather than yarn: without setup-node the repository's Yarn 4 release is never put on
+      # PATH, and the runner's own `yarn` is v1, which cannot read this manifest. Nothing is
+      # installed here either — the container does its own yarn install.
       - id: run-e2e-tests
-        run: |
-          yarn run e2e:components
+        run: npm run e2e:docker
+        env:
+          # Back to the runner's own setting. The compose file caps workers for developer machines,
+          # where a container sees far more cores than one dev server can be driven from; a 4-vCPU
+          # runner has the opposite problem and wants all of them.
+          PLAYWRIGHT_WORKERS: 100%
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: ${{ always() }}
         id: upload-report
