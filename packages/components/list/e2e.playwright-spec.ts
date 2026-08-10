@@ -16,6 +16,17 @@ test.describe('KbqListModule', () => {
         });
     });
 
+    test.describe('E2eListSelectionState', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eListSelectionState');
+
+        test('selected disabled option', async ({ page }) => {
+            await page.goto('/E2eListSelectionState');
+            const component = getComponent(page);
+
+            await expect(component).toHaveScreenshot('02-light.png');
+        });
+    });
+
     test.describe('E2eListOptionActionVisibility', () => {
         const getOptionAction = (page: Page, option: string) =>
             page.getByTestId(option).locator('.kbq-action-container');

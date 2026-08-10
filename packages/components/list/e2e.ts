@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -220,6 +221,32 @@ import { KbqListModule } from '@koobiq/components/list';
     }
 })
 export class E2eListStates {}
+
+@Component({
+    selector: 'e2e-list-selection-state',
+    imports: [KbqListModule, FormsModule],
+    template: `
+        <kbq-list-selection multiple="checkbox" [(ngModel)]="selected">
+            <kbq-list-option [value]="1">Selected</kbq-list-option>
+            <kbq-list-option disabled [value]="2">Selected + Disabled</kbq-list-option>
+            <kbq-list-option [value]="3">Selected</kbq-list-option>
+        </kbq-list-selection>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 400px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eListSelectionState'
+    }
+})
+export class E2eListSelectionState {
+    protected readonly selected = [1, 2, 3];
+}
 
 /**
  * Unlike `E2eListStates`, this fixture forces no state classes at all — the option action must be
