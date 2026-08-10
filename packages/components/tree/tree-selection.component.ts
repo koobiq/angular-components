@@ -758,8 +758,8 @@ export class KbqTreeSelection
      *
      * Ancestors are resolved against `renderedOptions` rather than `treeControl.dataNodes`: every
      * ancestor of a visible option is itself visible, options are rendered depth-first, and these are
-     * the indices `keyManager` navigates. Scanning backwards, the first option with a smaller level is
-     * the parent.
+     * the indices `keyManager` navigates — so the walk starts from `keyManager.activeItemIndex`.
+     * Scanning backwards, the first option with a smaller level is the parent.
      *
      * A disabled option cannot take focus (`KbqTreeOption.focus` refuses it), so the walk steps over a
      * disabled ancestor and narrows `level` to that ancestor's level. Without narrowing, the scan would
@@ -770,7 +770,7 @@ export class KbqTreeSelection
 
         let level = activeOption.level;
 
-        for (let index = options.indexOf(activeOption) - 1; index >= 0; index--) {
+        for (let index = this.keyManager.activeItemIndex - 1; index >= 0; index--) {
             const option = options[index];
 
             if (option.level >= level) {
