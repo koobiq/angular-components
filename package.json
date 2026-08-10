@@ -153,6 +153,8 @@
         "diff@^4.0.1": "4.0.4",
         "diff@~8.0.2": "8.0.4",
         "http-proxy-middleware@3.0.5": "3.0.7",
+        "js-yaml@^4.1.0": "^4.3.1",
+        "nanoid": "^3.3.17",
         "postcss": "^8.5.25",
         "serialize-javascript": "^7.0.7",
         "uuid": "^11.1.1",
