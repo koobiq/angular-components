@@ -55,6 +55,12 @@ updates:
       eslint:
         patterns:
           - 'eslint*'
+          # `eslint*` does not match scoped names, so the scopes are listed separately. @eslint/js
+          # provides `eslint.configs.recommended` and @eslint-community/* plugs into the same core:
+          # both have to move in the same pull request as eslint itself, or the group lands a major
+          # where the config and the linter come from different versions.
+          - '@eslint/*'
+          - '@eslint-community/*'
           - '@typescript-eslint/*'
           - '@angular-eslint/*'
           - '@stylistic/*'
