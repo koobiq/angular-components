@@ -28,6 +28,15 @@ updates:
         update-types: ['version-update:semver-major']
       - dependency-name: 'angular-eslint'
         update-types: ['version-update:semver-major']
+      # ESLint is coupled to angular-eslint, and therefore to Angular: the template parser of
+      # angular-eslint 20.x builds a ScopeManager without a global scope, which makes ESLint 10
+      # crash on every template. ESLint 10 support lands in angular-eslint 21.4, which requires
+      # Angular 21 — so the major has to wait for the framework upgrade.
+      - dependency-name: 'eslint'
+        update-types: ['version-update:semver-major']
+      # Requires ESLint 10 since v4 — see the `eslint` entry above.
+      - dependency-name: 'eslint-plugin-file-progress'
+        update-types: ['version-update:semver-major']
       - dependency-name: 'jest-preset-angular'
         update-types: ['version-update:semver-major']
       - dependency-name: 'ng-packagr'
