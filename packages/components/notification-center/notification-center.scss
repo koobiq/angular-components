@@ -85,22 +85,25 @@
 }
 
 .kbq-notification-center-container {
+    // Overrides the default z-index of .kbq-scrollbar-viewport to ensure the scrollbar track is always above the .kbq-notification-center-sub-header content.
+    --kbq-scrollbar-track-z-index: 101;
+
     height: 100%;
+
+    overflow: auto;
 
     border-radius: inherit;
 
     padding-bottom: var(--kbq-size-xl);
 
     // Smoothly reveal the just-appended "load more" spinner / error row. The row is scrolled into
-    // view via KbqScrollbar.scrollTo(), which calls a behavior-less scroll on the overlayscrollbars
-    // viewport — so `scroll-behavior` on the viewport controls the animation. Disabled for users who
-    // prefer reduced motion.
-    & [data-overlayscrollbars-viewport] {
-        scroll-behavior: smooth;
+    // view via KbqScrollbarViewport.scrollTo(), which calls a behavior-less scroll on this element
+    // (it's the scroll container itself now that KbqScrollbarViewport is applied to it directly).
+    // Disabled for users who prefer reduced motion.
+    scroll-behavior: smooth;
 
-        @media (prefers-reduced-motion: reduce) {
-            scroll-behavior: auto;
-        }
+    @media (prefers-reduced-motion: reduce) {
+        scroll-behavior: auto;
     }
 
     & .kbq-loader-overlay_parent {

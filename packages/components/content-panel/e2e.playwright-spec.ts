@@ -25,7 +25,7 @@ test.describe('KbqContentPanelModule', () => {
         test('should show header shadow after scrolling down', async ({ page }) => {
             await page.goto('/E2eContentPanelScrollOverflow');
 
-            await page.locator('.kbq-content-panel-body [data-overlayscrollbars-contents]').evaluate((el) => {
+            await page.locator('.kbq-content-panel-body .kbq-scrollbar-viewport').evaluate((el) => {
                 el.scrollTop = 50;
             });
 
@@ -35,7 +35,7 @@ test.describe('KbqContentPanelModule', () => {
         test('should show both shadows when scrolled to the middle', async ({ page }) => {
             await page.goto('/E2eContentPanelScrollOverflow');
 
-            await page.locator('.kbq-content-panel-body [data-overlayscrollbars-contents]').evaluate((el) => {
+            await page.locator('.kbq-content-panel-body .kbq-scrollbar-viewport').evaluate((el) => {
                 el.scrollTop = Math.floor((el.scrollHeight - el.clientHeight) / 2);
             });
 

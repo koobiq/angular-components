@@ -95,11 +95,10 @@
 <div
     #tabPanel="kbqTabNavPanel"
     #codeBlockContent="kbqOverflowShadowContainer"
-    cdkMonitorElementFocus
-    cdkScrollable
     kbqOverflowShadowContainer
     kbqTabNavPanel
-    class="kbq-code-block__main kbq-scrollbar"
+    class="kbq-code-block__main"
+    kbqScrollbarViewport
     [style.max-height.px]="calculatedMaxHeight"
     [tabIndex]="codeContentTabIndex"
 >

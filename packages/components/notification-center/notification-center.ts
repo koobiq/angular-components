@@ -47,7 +47,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BehaviorSubject, Subject, Subscription, merge } from 'rxjs';
 import { auditTime, distinctUntilChanged, filter, map, pairwise } from 'rxjs/operators';
@@ -108,7 +108,7 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     imports: [
         KbqIconModule,
         KbqBadgeModule,
-        KbqScrollbarModule,
+        KbqScrollbarViewport,
         KbqButtonModule,
         KbqDividerModule,
         KbqDropdownModule,
@@ -177,7 +177,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     readonly switcher = viewChild.required<KbqButton>('notificationSwitcher');
 
     /** Scrollable list container; used to measure scroll position for infinite scroll. */
-    private readonly scrollContainer = viewChild.required(KbqScrollbar);
+    private readonly scrollContainer = viewChild.required(KbqScrollbarViewport);
 
     get popoverHeight(): string {
         return this._popoverHeight;
@@ -279,7 +279,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** Whether the list is scrolled to within `scrolledToBottomOffset` pixels of the bottom.
      * Sub-pixel measurement error is absorbed by `SCROLLED_TO_BOTTOM_TOLERANCE`. */
     private isScrolledToBottom(): boolean {
-        const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer().contentElement().nativeElement;
+        const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer().getNativeElement();
 
         return scrollHeight - scrollTop - clientHeight <= this.scrolledToBottomOffset + SCROLLED_TO_BOTTOM_TOLERANCE;
     }
@@ -315,13 +315,13 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
     /** Scrolls the list container to its bottom so a freshly-appended bottom row becomes visible. */
     private scrollToBottom(): void {
-        const { scrollHeight } = this.scrollContainer().contentElement().nativeElement;
+        const { scrollHeight } = this.scrollContainer().getNativeElement();
 
         this.scrollContainer().scrollTo({ top: scrollHeight });
     }
 
     private focusScrollContainer(): void {
-        const element = this.scrollContainer().contentElement().nativeElement;
+        const element = this.scrollContainer().getNativeElement();
 
         // tabindex -1 keeps the container out of the Tab order while allowing programmatic focus.
         element.setAttribute('tabindex', '-1');

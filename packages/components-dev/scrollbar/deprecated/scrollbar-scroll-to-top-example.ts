@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 
 /**
  * @title Scrollbar scroll to top
+ * @deprecated Should be removed in a future major version.
  */
 @Component({
-    selector: 'scrollbar-scroll-to-top-example',
+    selector: 'dev-scrollbar-scroll-to-example',
     imports: [
         KbqScrollbarModule,
         KbqButtonModule
@@ -28,7 +29,7 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrollbarScrollToTopExample {
+export class DevScrollbarScrollToTopExample {
     readonly items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
 
     onScroll(event): void {

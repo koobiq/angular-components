@@ -50,6 +50,10 @@ const createDefer = (): Defer => {
 };
 
 /**
+ * @deprecated Wraps `overlayscrollbars`. Superseded by the dependency-free
+ * `@koobiq/components/scrollbar`. Will be removed in a future major version.
+ * @docs-private
+ *
  * A directive for adding `overlayscrollbars` to an element.
  */
 @Directive({

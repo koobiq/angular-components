@@ -1,8 +1,8 @@
-import { A11yModule, FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { CdkScrollable, CdkScrollableModule, ExtendedScrollToOptions } from '@angular/cdk/scrolling';
+import { CdkScrollable, ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -43,6 +43,7 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { debounceTime, filter, fromEvent, map, merge, take } from 'rxjs';
@@ -105,13 +106,12 @@ export class KbqCodeBlockTabLinkContent {}
         KbqTabsModule,
         KbqButtonModule,
         KbqCodeBlockHighlight,
-        A11yModule,
-        CdkScrollableModule,
         KbqToolTipModule,
         KbqIconModule,
         NgTemplateOutlet,
         KbqOverflowShadowContainer,
-        KbqOverflowShadowTop
+        KbqOverflowShadowTop,
+        KbqScrollbarViewport
     ],
     templateUrl: './code-block.html',
     styleUrls: ['./code-block.scss', './code-block-tokens.scss'],

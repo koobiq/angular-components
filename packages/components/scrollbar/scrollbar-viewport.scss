@@ -1,0 +1,43 @@
+:where(.kbq-scrollbar-viewport) {
+    --kbq-scrollbar-thumb-min-size: var(--kbq-size-3xl);
+    --kbq-scrollbar-thumb-gap: 3px;
+    --kbq-scrollbar-track-size: 14px;
+    --kbq-scrollbar-track-z-index: 1;
+    --kbq-scrollbar-transition-duration: 0.15s;
+    --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-contrast-a3, var(--kbq-palette-grey-50-a32));
+    --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-contrast-a4, var(--kbq-palette-grey-50-a48));
+    --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-contrast-a5, var(--kbq-palette-grey-20-a55));
+    --kbq-scrollbar-track-background: transparent;
+}
+
+:where(.kbq-dark .kbq-scrollbar-viewport) {
+    --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-dark-contrast-a9, var(--kbq-palette-grey-50-a48));
+    --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-dark-contrast-a10, var(--kbq-palette-grey-50-a60));
+    --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-dark-contrast-a11, var(--kbq-palette-grey-50-a80));
+}
+
+.kbq-scrollbar-viewport_native-scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.kbq-scrollbar-viewport_native-scrollbar-hidden::-webkit-scrollbar,
+.kbq-scrollbar-viewport_native-scrollbar-hidden::-webkit-scrollbar-thumb {
+    display: none;
+}
+
+.kbq-scrollbar-track_hover:not(:active) {
+    transition: opacity var(--kbq-scrollbar-transition-duration) ease;
+    opacity: 0;
+}
+
+// `:focus-within` also matches DOM focus a mouse click leaves behind on a descendant (e.g. a dropdown
+// item) after the pointer leaves, keeping the track visible indefinitely. `cdk-keyboard-focused` is
+// scoped to keyboard-originated focus (`KbqScrollbarViewport` monitors its subtree via
+// `cdkMonitorSubtreeFocus`), so the track stays hidden for mouse focus but visible while, e.g., arrow
+// keys scroll the content.
+.kbq-scrollbar-viewport:hover > .kbq-scrollbar-track_hover,
+.kbq-scrollbar-viewport.cdk-keyboard-focused > .kbq-scrollbar-track_hover {
+    transition: opacity var(--kbq-scrollbar-transition-duration) ease;
+    opacity: 1;
+}

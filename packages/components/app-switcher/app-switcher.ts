@@ -60,7 +60,7 @@ import { KbqDropdown, KbqDropdownItem, KbqDropdownModule } from '@koobiq/compone
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { Subscription, merge } from 'rxjs';
 import { auditTime, distinctUntilChanged, startWith } from 'rxjs/operators';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
@@ -243,7 +243,7 @@ export function kbqAppSwitcherProvider(): Provider[] {
         KbqDividerModule,
         KbqBadgeModule,
         KbqDropdownModule,
-        KbqScrollbarModule,
+        KbqScrollbar,
         KbqOptionModule,
         KbqAppSwitcherDropdownApp,
         KbqAppSwitcherDropdownSite,

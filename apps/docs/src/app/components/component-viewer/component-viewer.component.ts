@@ -1,4 +1,3 @@
-import { CdkScrollable } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -15,6 +14,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { filter } from 'rxjs';
@@ -58,10 +58,10 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-component-viewer kbq-scrollbar',
+        class: 'docs-component-viewer',
         '[attr.data-docsearch-category]': 'structureCategoryId'
     },
-    hostDirectives: [CdkScrollable]
+    hostDirectives: [KbqScrollbarViewport]
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
     protected readonly structureItemTab = DocsStructureItemTab;

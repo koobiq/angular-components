@@ -4,7 +4,6 @@
     <router-outlet />
 } @else {
     <docs-sidenav
-        class="kbq-scrollbar"
         [class.docs-sidenav_closed]="!opened"
         [class.docs-sidenav_opened]="opened"
         [@openCloseSidenav]="opened ? 'open' : 'closed'"

@@ -72,7 +72,7 @@ type SelectionDto = {
         />
         <div class="ag-grid-infinite-selection-example-dto">
             <span>DTO sent to the backend:</span>
-            <pre class="kbq-scrollbar"><code>{{ selectionDto() | json }}</code></pre>
+            <pre><code>{{ selectionDto() | json }}</code></pre>
         </div>
     `,
     styles: `

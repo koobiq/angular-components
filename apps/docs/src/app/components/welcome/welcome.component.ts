@@ -13,6 +13,7 @@ import { RouterLink } from '@angular/router';
 import { KbqThemeService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { DocsDocStates } from 'src/app/services/doc-states';
@@ -34,8 +35,9 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-welcome kbq-scrollbar'
-    }
+        class: 'docs-welcome'
+    },
+    hostDirectives: [KbqScrollbarViewport]
 })
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     private readonly themeService = inject(KbqThemeService);
