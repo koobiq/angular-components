@@ -45,6 +45,7 @@ import {
     KbqPseudoCheckbox,
     KbqPseudoCheckboxModule,
     KbqPseudoCheckboxState,
+    LEFT_ARROW,
     RIGHT_ARROW,
     SPACE,
     ShowOnControlDirtyErrorStateMatcher,
@@ -3121,6 +3122,84 @@ describe('KbqTreeSelect', () => {
 
             const searchInput: HTMLElement = overlayContainerElement.querySelector('.search-input')!;
 
+            expect(document.activeElement).toBe(searchInput);
+        }));
+
+        it('should keep the caret in the search field when LEFT_ARROW moves to the parent option', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const searchInput: HTMLElement = overlayContainerElement.querySelector('.search-input')!;
+            const inputElementDebug = fixture.debugElement.query(By.css('.search-input'));
+
+            inputElementDebug.nativeElement.value = 'core';
+            inputElementDebug.triggerEventHandler('input', { target: inputElementDebug.nativeElement });
+            tick();
+            fixture.detectChanges();
+            flush();
+
+            const select = fixture.componentInstance.select();
+            const tree = select.tree()!;
+
+            const pressPanelKey = (keyCode: number) => {
+                select.panelKeydownHandler(createKeyboardEvent('keydown', keyCode));
+                fixture.detectChanges();
+                flush();
+            };
+
+            // the filter keeps the ancestors of the match: Documents > angular > src > core
+            expect(
+                fixture.debugElement
+                    .queryAll(By.css('kbq-tree-option'))
+                    .map((el) => el.nativeElement.textContent.trim())
+            ).toEqual(['Documents', 'angular', 'src', 'core']);
+
+            pressPanelKey(DOWN_ARROW);
+            pressPanelKey(DOWN_ARROW);
+            pressPanelKey(DOWN_ARROW);
+
+            expect(tree.keyManager.activeItem!.value).toBe('core');
+            expect(document.activeElement).toBe(searchInput);
+
+            // `core` is a leaf, so LEFT_ARROW takes the move-to-parent branch — the highlight moves
+            // up, but the caret must stay in the search field
+            pressPanelKey(LEFT_ARROW);
+
+            expect(tree.keyManager.activeItem!.value).toBe('src');
+            expect(document.activeElement).toBe(searchInput);
+        }));
+
+        it('should return the caret to the search field on RIGHT_ARROW', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const searchInput: HTMLElement = overlayContainerElement.querySelector('.search-input')!;
+
+            const select = fixture.componentInstance.select();
+            const tree = select.tree()!;
+
+            const pressPanelKey = (keyCode: number) => {
+                select.panelKeydownHandler(createKeyboardEvent('keydown', keyCode));
+                fixture.detectChanges();
+                flush();
+            };
+
+            pressPanelKey(DOWN_ARROW);
+
+            const activeOption = tree.keyManager.activeItem!;
+
+            // RIGHT_ARROW only expands and never moves the active item, so nothing takes the focus
+            // away from the search field on its own. Hand the focus to the option the way the key
+            // manager does, to prove the branch restores it rather than relying on it never moving.
+            activeOption.focus('keyboard');
+
+            expect(document.activeElement).not.toBe(searchInput);
+
+            pressPanelKey(RIGHT_ARROW);
+
+            expect(tree.keyManager.activeItem).toBe(activeOption);
             expect(document.activeElement).toBe(searchInput);
         }));
 

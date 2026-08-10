@@ -181,7 +181,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     }>;
     panelDoneAnimatingStream: Subject<string>;
     // (undocumented)
-    panelKeydownHandler(event: KeyboardEvent): any;
+    panelKeydownHandler(event: KeyboardEvent): void;
     readonly panelMaxHeight: _angular_core.InputSignalWithTransform<KbqPanelMaxHeight, unknown>;
     protected readonly panelMaxHeightToken: _angular_core.Signal<string | null>;
     readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
