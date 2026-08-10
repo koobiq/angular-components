@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { KbqThemeLocalStorageStore, KbqThemeMode, KbqThemeStore } from '@koobiq/components/core';
+import { KbqThemeLocalStorageStore, KbqThemeSelection, KbqThemeStore } from '@koobiq/components/core';
 
 /**
  * Maps the pre-DS-3003 navbar's dropdown index (`DocsNavbarProperty`, options ordered
  * system/light/dark) to the mode name `KbqThemeService` expects.
  */
-const LEGACY_INDEX_TO_MODE: Record<string, KbqThemeMode> = {
+const LEGACY_INDEX_TO_MODE: Record<string, KbqThemeSelection> = {
     '0': 'auto',
     '1': 'light',
     '2': 'dark'
@@ -20,13 +20,13 @@ const LEGACY_INDEX_TO_MODE: Record<string, KbqThemeMode> = {
 export class DocsThemeStore implements KbqThemeStore {
     private readonly delegate = inject(KbqThemeLocalStorageStore);
 
-    getMode(): KbqThemeMode | string | null {
-        const stored = this.delegate.getMode();
+    getSelection(): KbqThemeSelection | null {
+        const stored = this.delegate.getSelection();
 
         return stored === null ? null : (LEGACY_INDEX_TO_MODE[stored] ?? stored);
     }
 
-    setMode(mode: KbqThemeMode | string): void {
-        this.delegate.setMode(mode);
+    setSelection(selection: KbqThemeSelection): void {
+        this.delegate.setSelection(selection);
     }
 }

@@ -24,12 +24,15 @@ export type KbqThemeColorScheme = 'light' | 'dark';
 
 /** A theme registered with `KbqThemeService`. */
 export interface KbqTheme {
-    /** Unique name used to select the theme via `setMode()`. */
+    /** Unique name used to select the theme via `selectTheme()`. */
     name: string;
     /** CSS class applied to the document body when this theme is active. */
     className: string;
-    /** This theme's light/dark polarity. Several themes may share the same one (e.g. two dark themes). */
-    colorScheme: KbqThemeColorScheme;
+    /**
+     * This theme's light/dark polarity. Several themes may share the same one (e.g. two dark themes).
+     * Optional — when omitted, `colorScheme()` falls back to the OS preference instead of this theme's own value.
+     */
+    colorScheme?: KbqThemeColorScheme;
     /**
      * @deprecated Selection state is now owned by `KbqThemeService` — read `currentTheme()` or `mode()` instead.
      * Kept in sync by the service for backward compatibility.
@@ -38,33 +41,26 @@ export interface KbqTheme {
 }
 
 /**
- * Value accepted by `setMode()`/returned by `mode()`. `'auto'` follows the OS color scheme; `'light'`/`'dark'`
- * select the built-in themes. Any other registered theme's `name` also works — see `KbqThemeColorScheme`
- * for the value that's actually restricted to 2 options.
+ * Value accepted by `setMode()`. `'auto'` follows the OS color scheme; `'light'`/`'dark'` select those themes
+ * directly. To select a different registered theme by name, use `selectTheme()` instead.
  */
 export type KbqThemeMode = 'auto' | 'light' | 'dark';
 
 /** `string`, but keeps `KbqThemeMode`'s literals suggested in editors instead of collapsing to plain `string`. */
 export type KbqThemeName = string & {};
 
-/**
- * Enum representing the available themes for the Koobiq design system.
- * This enum is used to manage and switch between different visual themes.
- */
+/** What `mode()` returns and `KbqThemeStore` persists: `'auto'`, or the selected theme's `name`. */
+export type KbqThemeSelection = 'auto' | KbqThemeName;
+
+/** CSS class names for `KbqDefaultThemes`, the built-in light/dark theme set. */
 export enum KbqThemeSelector {
-    /**
-     * Represents the default light theme.
-     * This is the standard theme applied
-     * when the application is first loaded if nothing else provided
-     */
+    /** Class for the built-in light theme. */
     Default = 'kbq-light',
-    /**
-     * This theme is used to provide a darker visual experience, often preferred in low-light environments.
-     */
+    /** Class for the built-in dark theme. */
     Dark = 'kbq-dark'
 }
 
-/** @docs-private */
+/** The built-in light/dark theme set — `KBQ_THEME_CONFIG`'s default `themes`. @docs-private */
 export const KbqDefaultThemes: KbqTheme[] = [
     { name: 'light', className: KbqThemeSelector.Default, colorScheme: 'light' },
     { name: 'dark', className: KbqThemeSelector.Dark, colorScheme: 'dark' }
@@ -73,15 +69,15 @@ export const KbqDefaultThemes: KbqTheme[] = [
 /** Configuration accepted by `KBQ_THEME_CONFIG` / `kbqThemeProvider()`. */
 export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
     /** Themes available to the service. @default KbqDefaultThemes */
-    themes?: T[];
+    themes: T[];
     /** Initial mode, used only when nothing is persisted yet in the `KBQ_THEME_STORE`. @default 'auto' */
-    mode?: KbqThemeMode;
-    /** `localStorage` key used to persist the selected mode. @default 'kbq-theme-mode' */
+    mode: KbqThemeMode;
+    /** Key used to persist the selection — a `localStorage` key or cookie name, depending on `KBQ_THEME_STORE`. @default 'kbq-theme-mode' */
     storageKey: string;
     /** Theme `name` that `'auto'` resolves to when the OS prefers a light color scheme. @default 'light' */
-    autoLight?: string;
+    autoLight: string;
     /** Theme `name` that `'auto'` resolves to when the OS prefers a dark color scheme. @default 'dark' */
-    autoDark?: string;
+    autoDark: string;
 }
 
 const KBQ_THEME_DEFAULT_CONFIG: Required<KbqThemeConfig> = {
@@ -92,6 +88,7 @@ const KBQ_THEME_DEFAULT_CONFIG: Required<KbqThemeConfig> = {
     autoDark: 'dark'
 };
 
+/** Injection token for `KbqThemeService`'s configuration. Configure via `kbqThemeProvider()`, not this directly. */
 export const KBQ_THEME_CONFIG = new InjectionToken<KbqThemeConfig>('KBQ_THEME_CONFIG', {
     providedIn: 'root',
     factory: () => KBQ_THEME_DEFAULT_CONFIG
@@ -107,16 +104,17 @@ export const kbqThemeProvider = (config: KbqThemeConfig): Provider => ({
 });
 
 /**
- * Strategy used by `KbqThemeService` to persist and restore the selected theme mode.
+ * Strategy used by `KbqThemeService` to persist and restore `mode()` — `'auto'` or a selected theme `name`,
+ * not a mode alone, hence "selection" rather than "mode" here.
  *
- * Provide a custom implementation through the `KBQ_THEME_STORE` token to change where the mode is stored
+ * Provide a custom implementation through the `KBQ_THEME_STORE` token to change where it's stored
  * (e.g. `sessionStorage`, a backend), or to disable persistence entirely.
  */
 export interface KbqThemeStore {
-    /** Returns the previously saved mode, or `null` when nothing is stored/available. */
-    getMode(): KbqThemeMode | KbqThemeName | null;
-    /** Persists the mode. */
-    setMode(mode: KbqThemeMode | KbqThemeName): void;
+    /** Returns the previously saved selection, or `null` when nothing is stored/available. */
+    getSelection(): KbqThemeSelection | null;
+    /** Persists the selection. */
+    setSelection(selection: KbqThemeSelection): void;
 }
 
 /**
@@ -131,7 +129,7 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
     private readonly window = inject(KBQ_WINDOW);
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
 
-    getMode(): KbqThemeMode | KbqThemeName | null {
+    getSelection(): KbqThemeSelection | null {
         try {
             return this.window.localStorage.getItem(this.storageKey);
         } catch {
@@ -140,9 +138,9 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
         }
     }
 
-    setMode(mode: KbqThemeMode | KbqThemeName): void {
+    setSelection(selection: KbqThemeSelection): void {
         try {
-            this.window.localStorage.setItem(this.storageKey, mode);
+            this.window.localStorage.setItem(this.storageKey, selection);
         } catch {
             // Ignore storage write failures (server-side, quota exceeded, disabled/blocked storage, etc.).
         }
@@ -168,23 +166,23 @@ export class KbqThemeCookieStore implements KbqThemeStore {
     private readonly document = inject(DOCUMENT);
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
 
-    getMode(): KbqThemeMode | KbqThemeName | null {
+    getSelection(): KbqThemeSelection | null {
         const prefix = `${this.storageKey}=`;
         const cookie = this.document.cookie.split('; ').find((entry) => entry.startsWith(prefix));
 
         return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
     }
 
-    setMode(mode: KbqThemeMode | KbqThemeName): void {
+    setSelection(selection: KbqThemeSelection): void {
         // 1 year: matches the lifetime a persisted UI preference is expected to have. SameSite=Lax is
         // sent on the top-level navigation request that SSR needs it for, while still blocking
         // cross-site reads.
-        this.document.cookie = `${this.storageKey}=${encodeURIComponent(mode)}; path=/; max-age=31536000; SameSite=Lax`;
+        this.document.cookie = `${this.storageKey}=${encodeURIComponent(selection)}; path=/; max-age=31536000; SameSite=Lax`;
     }
 }
 
 /**
- * Injection token for the store used to persist the selected theme mode.
+ * Injection token for the store used to persist the current selection (see `KbqThemeStore`).
  * Defaults to a `localStorage`-backed implementation (`KbqThemeLocalStorageStore`).
  */
 export const KBQ_THEME_STORE = new InjectionToken<KbqThemeStore>('KBQ_THEME_STORE', {
@@ -215,27 +213,27 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
     private readonly renderer: Renderer2;
     private readonly media = this.window.matchMedia('(prefers-color-scheme: dark)');
     private readonly systemPrefersDark = signal(this.media.matches);
+    /** Seeds `auto`/`theme` below from persisted state, falling back to `config.mode` on first run. */
+    private readonly initialMode = this.store.getSelection() ?? this.config.mode;
+    /** Last explicitly selected theme name. Kept even while `auto()` is on, so turning it off restores it. */
+    private readonly theme = signal<KbqThemeName>(
+        this.initialMode === 'auto' ? this.config.autoLight : this.initialMode
+    );
+    /** The concrete theme name `mode()` resolves to when not `'auto'` — the lookup key for `currentTheme()`. */
+    private readonly resolvedMode = computed<KbqThemeName>(() =>
+        this.auto() ? (this.systemPrefersDark() ? this.config.autoDark : this.config.autoLight) : this.theme()
+    );
 
     /** Themes available to select from. Replace via `setThemes()` to register a fully custom set. */
     readonly themes = signal<T[]>(this.config.themes);
 
-    private readonly initialMode = this.store.getMode() ?? this.config.mode;
-
     /** Whether the theme follows the OS color scheme instead of `theme()`. */
     readonly auto = signal<boolean>(this.initialMode === 'auto');
 
-    /** Last explicitly selected theme name. Kept even while `auto()` is on, so turning it off restores it. */
-    readonly theme = signal<KbqThemeName>(this.initialMode === 'auto' ? this.config.autoLight : this.initialMode);
-
     /** `'auto'` when `auto()` is on, otherwise `theme()`. A simpler view for a plain 3-way (auto/light/dark) UI. */
-    readonly mode = computed<KbqThemeMode | KbqThemeName>(() => (this.auto() ? 'auto' : this.theme()));
+    readonly mode = computed<KbqThemeSelection>(() => (this.auto() ? 'auto' : this.theme()));
 
-    /** `mode()` resolved to a concrete theme name — never `'auto'`. Uses `autoLight`/`autoDark` from `KBQ_THEME_CONFIG`. */
-    readonly resolvedMode = computed<KbqThemeName>(() =>
-        this.auto() ? (this.systemPrefersDark() ? this.config.autoDark : this.config.autoLight) : this.theme()
-    );
-
-    /** The theme object currently applied to the document, or `null` if `resolvedMode()` matches no registered theme. */
+    /** The theme object currently applied to the document, or `null` if the resolved name matches none. */
     readonly currentTheme = computed<T | null>(() => {
         const resolvedMode = this.resolvedMode();
 
@@ -268,7 +266,7 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
             this.applyTheme(currentTheme, this.themes());
             this.current.next(currentTheme);
         });
-        effect(() => this.store.setMode(this.mode()));
+        effect(() => this.store.setSelection(this.mode()));
     }
 
     /** Registers a custom set of themes. */
@@ -276,16 +274,21 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
         this.themes.set(items);
     }
 
-    /** Selects a mode by theme `name`, or `'auto'` to follow the OS color scheme. */
-    setMode(mode: KbqThemeMode | KbqThemeName) {
+    /** Selects a specific registered theme directly by `name`, turning `auto()` off. */
+    selectTheme(name: KbqThemeName) {
+        this.auto.set(false);
+        this.theme.set(name);
+    }
+
+    /** Selects a fixed `'light'`/`'dark'` mode, or `'auto'` to follow the OS color scheme. */
+    setMode(mode: KbqThemeMode) {
         if (mode === 'auto') {
             this.auto.set(true);
 
             return;
         }
 
-        this.auto.set(false);
-        this.theme.set(mode);
+        this.selectTheme(mode);
     }
 
     /** Turns following the OS color scheme on or off. Turning it off restores the last selected `theme()`. */
@@ -299,17 +302,17 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
      * this also does the right thing when `currentTheme()` is some other, directly-selected theme.
      */
     toggle() {
-        this.setMode(this.colorScheme() === 'dark' ? this.config.autoLight : this.config.autoDark);
+        this.selectTheme(this.colorScheme() === 'dark' ? this.config.autoLight : this.config.autoDark);
     }
 
-    /** @deprecated use `setMode()` with a theme `name` instead. */
+    /** @deprecated use `selectTheme()` with a theme `name` instead. */
     setTheme(value: T | number) {
         if (typeof value === 'number') {
             const theme = this.themes()[value];
 
-            if (theme) this.setMode(theme.name);
+            if (theme) this.selectTheme(theme.name);
         } else if (typeof value === 'object' && value !== null && this.themes().includes(value)) {
-            this.setMode(value.name);
+            this.selectTheme(value.name);
         } else {
             throw Error(`value has unsupported type: ${typeof value}`);
         }

@@ -6,6 +6,7 @@ import {
     KbqDefaultThemes,
     KbqThemeCookieStore,
     KbqThemeLocalStorageStore,
+    kbqThemeProvider,
     KbqThemeService,
     KbqThemeStore,
     ThemeService
@@ -42,7 +43,7 @@ describe('KbqThemeService', () => {
     function setup(matches = false) {
         const media = fakeMediaQueryList(matches);
 
-        store = { getMode: jest.fn().mockReturnValue(null), setMode: jest.fn() };
+        store = { getSelection: jest.fn().mockReturnValue(null), setSelection: jest.fn() };
 
         TestBed.configureTestingModule({
             providers: [
@@ -67,7 +68,6 @@ describe('KbqThemeService', () => {
         const { service } = setup(true);
 
         expect(service.mode()).toBe('auto');
-        expect(service.resolvedMode()).toBe('dark');
         expect(service.currentTheme()?.name).toBe('dark');
         expect(document.body.classList.contains('kbq-dark')).toBe(true);
     });
@@ -75,19 +75,19 @@ describe('KbqThemeService', () => {
     it('defaults to auto mode, resolving light when the OS prefers light', () => {
         const { service } = setup(false);
 
-        expect(service.resolvedMode()).toBe('light');
+        expect(service.currentTheme()?.name).toBe('light');
         expect(document.body.classList.contains('kbq-light')).toBe(true);
     });
 
     it('follows OS color scheme changes while in auto mode', () => {
         const { service, media } = setup(false);
 
-        expect(service.resolvedMode()).toBe('light');
+        expect(service.currentTheme()?.name).toBe('light');
 
         media.emit(true);
         TestBed.tick();
 
-        expect(service.resolvedMode()).toBe('dark');
+        expect(service.currentTheme()?.name).toBe('dark');
         expect(document.body.classList.contains('kbq-dark')).toBe(true);
         expect(document.body.classList.contains('kbq-light')).toBe(false);
     });
@@ -97,16 +97,16 @@ describe('KbqThemeService', () => {
 
         service.setMode('light');
         TestBed.tick();
-        expect(service.resolvedMode()).toBe('light');
+        expect(service.currentTheme()?.name).toBe('light');
 
         service.setMode('dark');
         TestBed.tick();
-        expect(service.resolvedMode()).toBe('dark');
+        expect(service.currentTheme()?.name).toBe('dark');
 
         service.setAuto();
         TestBed.tick();
         expect(service.mode()).toBe('auto');
-        expect(service.resolvedMode()).toBe('dark');
+        expect(service.currentTheme()?.name).toBe('dark');
     });
 
     it('remembers the last selected theme across an auto toggle, within the session', () => {
@@ -117,13 +117,12 @@ describe('KbqThemeService', () => {
 
         service.setAuto();
         TestBed.tick();
-        expect(service.theme()).toBe('light');
-        expect(service.resolvedMode()).toBe('dark');
+        expect(service.currentTheme()?.name).toBe('dark');
 
         service.setAuto(false);
         TestBed.tick();
         expect(service.auto()).toBe(false);
-        expect(service.resolvedMode()).toBe('light');
+        expect(service.currentTheme()?.name).toBe('light');
     });
 
     it('toggle switches between light and dark', () => {
@@ -131,18 +130,18 @@ describe('KbqThemeService', () => {
 
         service.toggle();
         TestBed.tick();
-        expect(service.resolvedMode()).toBe('dark');
+        expect(service.currentTheme()?.name).toBe('dark');
 
         service.toggle();
         TestBed.tick();
-        expect(service.resolvedMode()).toBe('light');
+        expect(service.currentTheme()?.name).toBe('light');
     });
 
     it('supports registering a fully custom set of themes', () => {
         const { service } = setup(false);
 
         service.setThemes([{ name: 'solarized', className: 'kbq-solarized', colorScheme: 'dark' }]);
-        service.setMode('solarized');
+        service.selectTheme('solarized');
         TestBed.tick();
 
         expect(service.currentTheme()?.className).toBe('kbq-solarized');
@@ -153,7 +152,7 @@ describe('KbqThemeService', () => {
         const { service } = setup(false);
 
         service.setThemes([{ name: 'solarized', className: 'kbq-solarized', colorScheme: 'dark' }]);
-        service.setMode('solarized');
+        service.selectTheme('solarized');
         TestBed.tick();
 
         expect(service.colorScheme()).toBe('dark');
@@ -169,14 +168,14 @@ describe('KbqThemeService', () => {
             ...service.themes(),
             { name: 'solarized', className: 'kbq-solarized', colorScheme: 'dark' }
         ]);
-        service.setMode('solarized');
+        service.selectTheme('solarized');
         TestBed.tick();
 
         service.toggle();
         TestBed.tick();
 
         expect(service.mode()).toBe('light');
-        expect(service.resolvedMode()).toBe('light');
+        expect(service.currentTheme()?.name).toBe('light');
     });
 
     it('resolves auto mode against custom theme names via autoLight/autoDark', () => {
@@ -196,7 +195,7 @@ describe('KbqThemeService', () => {
                         autoDark: 'midnight'
                     }
                 },
-                { provide: KBQ_THEME_STORE, useValue: { getMode: () => null, setMode: () => {} } }
+                { provide: KBQ_THEME_STORE, useValue: { getSelection: () => null, setSelection: () => {} } }
             ]
         });
 
@@ -205,13 +204,14 @@ describe('KbqThemeService', () => {
         TestBed.tick();
 
         expect(service.mode()).toBe('auto');
-        expect(service.resolvedMode()).toBe('midnight');
+        expect(service.currentTheme()?.name).toBe('midnight');
         expect(document.body.classList.contains('kbq-midnight')).toBe(true);
 
         service.toggle();
         TestBed.tick();
 
-        expect(service.resolvedMode()).toBe('sunrise');
+        expect(service.mode()).not.toBe('auto');
+        expect(service.currentTheme()?.name).toBe('sunrise');
         expect(document.body.classList.contains('kbq-sunrise')).toBe(true);
     });
 
@@ -221,13 +221,13 @@ describe('KbqThemeService', () => {
         service.setMode('dark');
         TestBed.tick();
 
-        expect(store.setMode).toHaveBeenCalledWith('dark');
+        expect(store.setSelection).toHaveBeenCalledWith('dark');
     });
 
     it('restores the mode persisted in KBQ_THEME_STORE on init', () => {
         const media = fakeMediaQueryList(false);
 
-        store = { getMode: jest.fn().mockReturnValue('dark'), setMode: jest.fn() };
+        store = { getSelection: jest.fn().mockReturnValue('dark'), setSelection: jest.fn() };
 
         TestBed.configureTestingModule({
             providers: [
@@ -241,7 +241,7 @@ describe('KbqThemeService', () => {
         TestBed.tick();
 
         expect(service.mode()).toBe('dark');
-        expect(service.resolvedMode()).toBe('dark');
+        expect(service.currentTheme()?.name).toBe('dark');
     });
 
     it('keeps the deprecated `selected` field in sync for backward compatibility', () => {
@@ -300,11 +300,11 @@ describe('KbqThemeLocalStorageStore', () => {
     it('persists and restores the mode via localStorage in the browser', () => {
         const store = setup();
 
-        expect(store.getMode()).toBeNull();
+        expect(store.getSelection()).toBeNull();
 
-        store.setMode('dark');
+        store.setSelection('dark');
 
-        expect(store.getMode()).toBe('dark');
+        expect(store.getSelection()).toBe('dark');
     });
 
     it('is a no-op when `localStorage` is unavailable (e.g. on the server)', () => {
@@ -312,16 +312,16 @@ describe('KbqThemeLocalStorageStore', () => {
         // `localStorage` at all — accessing it throws, which the store must swallow.
         const store = setup({}, { localStorage: undefined });
 
-        store.setMode('dark');
+        store.setSelection('dark');
 
-        expect(store.getMode()).toBeNull();
+        expect(store.getSelection()).toBeNull();
         expect(localStorage.getItem('kbq-theme-mode')).toBeNull();
     });
 
     it('uses the storage key configured via KBQ_THEME_CONFIG', () => {
         const store = setup({ storageKey: 'docs_theme' });
 
-        store.setMode('dark');
+        store.setSelection('dark');
 
         expect(localStorage.getItem('docs_theme')).toBe('dark');
         expect(localStorage.getItem('kbq-theme-mode')).toBeNull();
@@ -350,18 +350,18 @@ describe('KbqThemeCookieStore', () => {
     it('persists and restores the mode via a cookie', () => {
         const store = setup();
 
-        expect(store.getMode()).toBeNull();
+        expect(store.getSelection()).toBeNull();
 
-        store.setMode('dark');
+        store.setSelection('dark');
 
-        expect(store.getMode()).toBe('dark');
+        expect(store.getSelection()).toBe('dark');
         expect(document.cookie).toContain('kbq-theme-mode=dark');
     });
 
     it('uses the storage key configured via KBQ_THEME_CONFIG', () => {
         const store = setup({ storageKey: 'docs_theme' });
 
-        store.setMode('dark');
+        store.setSelection('dark');
 
         expect(document.cookie).toContain('docs_theme=dark');
         expect(document.cookie).not.toContain('kbq-theme-mode=');
@@ -372,6 +372,19 @@ describe('KbqThemeCookieStore', () => {
 
         const store = setup();
 
-        expect(store.getMode()).toBeNull();
+        expect(store.getSelection()).toBeNull();
+    });
+});
+
+describe('kbqThemeProvider', () => {
+    it('merges a partial config with defaults, so omitted properties keep their default value', () => {
+        TestBed.configureTestingModule({
+            providers: [kbqThemeProvider({ mode: 'dark' })]
+        });
+
+        const config = TestBed.inject(KBQ_THEME_CONFIG);
+
+        expect(config.mode).toBe('dark');
+        expect(config.storageKey).toBe('kbq-theme-mode');
     });
 });

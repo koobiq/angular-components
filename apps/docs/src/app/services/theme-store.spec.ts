@@ -17,7 +17,7 @@ describe(DocsThemeStore.name, () => {
     afterEach(() => localStorage.clear());
 
     it('reads null when nothing is stored', () => {
-        expect(setup().getMode()).toBeNull();
+        expect(setup().getSelection()).toBeNull();
     });
 
     it.each([
@@ -27,19 +27,19 @@ describe(DocsThemeStore.name, () => {
     ])('migrates the legacy dropdown index %s to mode %s', (legacyIndex, mode) => {
         localStorage.setItem('docs_theme', legacyIndex);
 
-        expect(setup().getMode()).toBe(mode);
+        expect(setup().getSelection()).toBe(mode);
     });
 
     it('passes an already-migrated mode name through unchanged', () => {
         localStorage.setItem('docs_theme', 'dark');
 
-        expect(setup().getMode()).toBe('dark');
+        expect(setup().getSelection()).toBe('dark');
     });
 
     it('writes new mode names, not legacy indexes', () => {
         const store = setup();
 
-        store.setMode('dark');
+        store.setSelection('dark');
 
         expect(localStorage.getItem('docs_theme')).toBe('dark');
     });
