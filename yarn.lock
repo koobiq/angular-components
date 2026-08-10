@@ -7838,32 +7838,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ag-charts-types@npm:12.3.1":
-  version: 12.3.1
-  resolution: "ag-charts-types@npm:12.3.1"
-  checksum: 10c0/e2db0006ddb96f7d5766749cbfd15371725027dacd7fd516c511ad69e72acbbd6bca6ec96c445ca7c962c05e7d915503572a050f92485c6a8d3efaabbfcf0b59
+"ag-charts-types@npm:13.3.1":
+  version: 13.3.1
+  resolution: "ag-charts-types@npm:13.3.1"
+  checksum: 10c0/8b083402a3a2dc15c2fe005a2fa8d7c305ce0568ba4567dff266d34d1cc20dfa5a983822cbe37aa1aa7062c60f2c918f83b4416212109384f9ea9e014987f61b
   languageName: node
   linkType: hard
 
-"ag-grid-angular@npm:^34.3.1":
-  version: 34.3.1
-  resolution: "ag-grid-angular@npm:34.3.1"
+"ag-grid-angular@npm:^35.3.1":
+  version: 35.3.1
+  resolution: "ag-grid-angular@npm:35.3.1"
   dependencies:
-    ag-grid-community: "npm:34.3.1"
-    tslib: "npm:^2.3.0"
+    ag-grid-community: "npm:35.3.1"
+    tslib: "npm:^2.8.1"
   peerDependencies:
-    "@angular/common": ">= 17.0.0"
-    "@angular/core": ">= 17.0.0"
-  checksum: 10c0/792ed11b190992edb3e6b55c4a35a8070c16349824f288cbe12d6742703930a6b85c21017ee635513de85df2bfcacfc015abb2643d11a91e098addb1dbc01e27
+    "@angular/common": ">= 18.0.0"
+    "@angular/core": ">= 18.0.0"
+  checksum: 10c0/894b580bfde020bacadfaaaa7e0179ac131cf6707fda1a5b77cdbc17d15b106c99ff406bab967689fe289242f8c490d0693e1de1ea1fdd1f660c5d7a01b355dc
   languageName: node
   linkType: hard
 
-"ag-grid-community@npm:34.3.1, ag-grid-community@npm:^34.3.1":
-  version: 34.3.1
-  resolution: "ag-grid-community@npm:34.3.1"
+"ag-grid-community@npm:35.3.1, ag-grid-community@npm:^35.3.1":
+  version: 35.3.1
+  resolution: "ag-grid-community@npm:35.3.1"
   dependencies:
-    ag-charts-types: "npm:12.3.1"
-  checksum: 10c0/13e0ccaaac10dbbbb8fcee664e4bbb70cef14e84b662fa1c9e294993dd1fda857be9ff8c6e13d82550513816a62d528489b08c06add5d5b7f0344481301b79b9
+    ag-charts-types: "npm:13.3.1"
+  checksum: 10c0/65acd61236907b66133f464757fa5bb120c35b17fa30bd434cea15e59b948e211560890f19b864a07456b50bdb2e5bda4a8c1f85e715762492bcab803e7e1e9c
   languageName: node
   linkType: hard
 
@@ -13568,8 +13568,8 @@ __metadata:
     "@types/node": "npm:^24.10.4"
     "@types/nunjucks": "npm:^3.2.1"
     "@types/spdx-satisfies": "npm:^0.1.2"
-    ag-grid-angular: "npm:^34.3.1"
-    ag-grid-community: "npm:^34.3.1"
+    ag-grid-angular: "npm:^35.3.1"
+    ag-grid-community: "npm:^35.3.1"
     angular-eslint: "npm:^20.7.0"
     autoprefixer: "npm:^10.5.2"
     chalk: "npm:^6.0.0"
