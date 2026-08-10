@@ -9217,9 +9217,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "conventional-changelog@npm:8.1.0"
+"conventional-changelog@npm:^8.1.1":
+  version: 8.1.1
+  resolution: "conventional-changelog@npm:8.1.1"
   dependencies:
     "@conventional-changelog/git-client": "npm:^3.1.0"
     "@simple-libs/hosted-git-info": "npm:^2.0.0"
@@ -9227,11 +9227,11 @@ __metadata:
     argue-cli: "npm:^3.1.0"
     conventional-changelog-preset-loader: "npm:^6.0.1"
     conventional-changelog-writer: "npm:^9.2.0"
-    conventional-commits-parser: "npm:^7.1.0"
+    conventional-commits-parser: "npm:^7.1.2"
     fd-package-json: "npm:^2.0.0"
   bin:
     conventional-changelog: ./dist/cli/index.js
-  checksum: 10c0/f9bedd4fc8a91c3092abde678ac672dec85481ba68a83eada0b34550b91a06c1e9e80b0ae27381d010bed2aa1c38933468ccc3be08e249fae1d9c0fe54660514
+  checksum: 10c0/66719c990ff0ee1ce1bdc37d3237e66b5699f1c4e9d0a652b593112880a47a5d6336aa0b2743aa08d690f0cc2bc53c13373be0a01bb648c41f31205f07788993
   languageName: node
   linkType: hard
 
@@ -9242,7 +9242,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-commits-parser@npm:^7.0.0, conventional-commits-parser@npm:^7.1.0":
+"conventional-commits-parser@npm:^7.0.0, conventional-commits-parser@npm:^7.1.2":
   version: 7.1.2
   resolution: "conventional-commits-parser@npm:7.1.2"
   dependencies:
@@ -13574,7 +13574,7 @@ __metadata:
     autoprefixer: "npm:^10.5.2"
     chalk: "npm:^6.0.0"
     commander: "npm:^15.0.0"
-    conventional-changelog: "npm:^8.1.0"
+    conventional-changelog: "npm:^8.1.1"
     conventional-changelog-angular: "npm:^9.2.1"
     conventional-changelog-writer: "npm:^9.2.0"
     country-flag-icons: "npm:^1.6.20"
