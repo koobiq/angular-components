@@ -163,7 +163,10 @@ describe('KbqThemeService', () => {
                         ]
                     }
                 },
-                { provide: KBQ_THEME_STORE, useValue: { getSelection: () => null, setSelection: () => {} } }
+                {
+                    provide: KBQ_THEME_STORE,
+                    useValue: { getMode: () => null, setMode: () => {} } satisfies KbqThemeStore
+                }
             ]
         });
 
@@ -220,7 +223,7 @@ describe('KbqThemeService', () => {
         TestBed.configureTestingModule({
             providers: [
                 { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
-                { provide: KBQ_THEME_STORE, useValue: { getSelection: () => 'solarized', setSelection: () => {} } }
+                { provide: KBQ_THEME_STORE, useValue: { getMode: () => 'solarized', setMode: () => {} } }
             ]
         });
 
