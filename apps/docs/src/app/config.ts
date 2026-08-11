@@ -5,7 +5,6 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, TitleStrategy } from '@angular/router';
 import {
     KBQ_LOCALE_SERVICE,
-    KBQ_THEME_STORE,
     KbqLocaleService,
     kbqLocaleServiceLangAttrNameProvider,
     kbqThemeProvider
@@ -13,7 +12,6 @@ import {
 import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 import { DOCS_ROUTES } from './routes';
 import { docsProvideAnalytics } from './services/analytics';
-import { DocsThemeStore } from './services/theme-store';
 import { DocsTitleStrategy } from './services/title-strategy';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -23,8 +21,6 @@ export const appConfig: ApplicationConfig = {
         kbqLocaleServiceLangAttrNameProvider('examples-lang'),
         // keeps the pre-existing localStorage key so users who already picked a theme don't lose it
         kbqThemeProvider({ storageKey: 'docs_theme' }),
-        // that key held the old navbar's numeric dropdown index, not a mode name - translate it
-        { provide: KBQ_THEME_STORE, useClass: DocsThemeStore },
         kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(DOCS_ROUTES),

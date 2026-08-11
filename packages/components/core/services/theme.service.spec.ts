@@ -67,7 +67,7 @@ describe('KbqThemeService', () => {
     it('defaults to auto mode, resolving dark when the OS prefers dark', () => {
         const { service } = setup(true);
 
-        expect(service.selection()).toBe('auto');
+        expect(service.mode()).toBe('auto');
         expect(service.currentTheme()?.name).toBe('dark');
         expect(document.body.classList.contains('kbq-dark')).toBe(true);
     });
@@ -92,20 +92,20 @@ describe('KbqThemeService', () => {
         expect(document.body.classList.contains('kbq-light')).toBe(false);
     });
 
-    it('selectTheme/setAuto select a fixed theme or fall back to the OS preference', () => {
+    it('setMode selects a fixed mode or falls back to the OS preference', () => {
         const { service } = setup(true);
 
-        service.selectTheme('light');
+        service.mode.set('light');
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('light');
 
-        service.selectTheme('dark');
+        service.mode.set('dark');
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('dark');
 
-        service.setAuto();
+        service.mode.set('auto');
         TestBed.tick();
-        expect(service.selection()).toBe('auto');
+        expect(service.mode()).toBe('auto');
         expect(service.currentTheme()?.name).toBe('dark');
     });
 
@@ -121,48 +121,34 @@ describe('KbqThemeService', () => {
         expect(service.currentTheme()?.name).toBe('light');
     });
 
-    it('supports registering a fully custom set of themes', () => {
+    it('supports registering a fully custom set of themes, resolved by colorScheme', () => {
         const { service } = setup(false);
 
-        service.setThemes([{ name: 'solarized', className: 'kbq-solarized', colorScheme: 'dark' }]);
-        service.selectTheme('solarized');
+        service.themes.set([
+            { name: 'acme-light', className: 'kbq-acme-light', colorScheme: 'light' },
+            { name: 'acme-dark', className: 'kbq-acme-dark', colorScheme: 'dark' }
+        ]);
+        service.mode.set('dark');
         TestBed.tick();
 
-        expect(service.currentTheme()?.className).toBe('kbq-solarized');
-        expect(document.body.classList.contains('kbq-solarized')).toBe(true);
+        expect(service.currentTheme()?.className).toBe('kbq-acme-dark');
+        expect(document.body.classList.contains('kbq-acme-dark')).toBe(true);
     });
 
     it("exposes colorScheme as the current theme's own polarity, independent of its name", () => {
         const { service } = setup(false);
 
-        service.setThemes([{ name: 'solarized', className: 'kbq-solarized', colorScheme: 'dark' }]);
-        service.selectTheme('solarized');
+        service.themes.set([
+            { name: 'acme-light', className: 'kbq-acme-light', colorScheme: 'light' },
+            { name: 'acme-dark', className: 'kbq-acme-dark', colorScheme: 'dark' }
+        ]);
+        service.mode.set('dark');
         TestBed.tick();
 
         expect(service.colorScheme()).toBe('dark');
     });
 
-    it("toggle uses the current theme's colorScheme, not a name comparison against autoDark", () => {
-        const { service } = setup(false);
-
-        // A directly-selected theme whose name matches neither 'light'/'dark' nor autoLight/autoDark -
-        // comparing resolvedMode() to autoDark (the old implementation) would always toggle to 'dark'
-        // here, regardless of this theme's actual polarity.
-        service.setThemes([
-            ...service.themes(),
-            { name: 'solarized', className: 'kbq-solarized', colorScheme: 'dark' }
-        ]);
-        service.selectTheme('solarized');
-        TestBed.tick();
-
-        service.toggle();
-        TestBed.tick();
-
-        expect(service.selection()).toBe('light');
-        expect(service.currentTheme()?.name).toBe('light');
-    });
-
-    it('resolves auto mode against custom theme names via autoLight/autoDark', () => {
+    it('resolves auto mode against a custom theme set via colorScheme', () => {
         const media = fakeMediaQueryList(true);
 
         TestBed.configureTestingModule({
@@ -174,9 +160,7 @@ describe('KbqThemeService', () => {
                         themes: [
                             { name: 'sunrise', className: 'kbq-sunrise', colorScheme: 'light' },
                             { name: 'midnight', className: 'kbq-midnight', colorScheme: 'dark' }
-                        ],
-                        autoLight: 'sunrise',
-                        autoDark: 'midnight'
+                        ]
                     }
                 },
                 { provide: KBQ_THEME_STORE, useValue: { getSelection: () => null, setSelection: () => {} } }
@@ -187,14 +171,14 @@ describe('KbqThemeService', () => {
 
         TestBed.tick();
 
-        expect(service.selection()).toBe('auto');
+        expect(service.mode()).toBe('auto');
         expect(service.currentTheme()?.name).toBe('midnight');
         expect(document.body.classList.contains('kbq-midnight')).toBe(true);
 
         service.toggle();
         TestBed.tick();
 
-        expect(service.selection()).not.toBe('auto');
+        expect(service.mode()).toBe('light');
         expect(service.currentTheme()?.name).toBe('sunrise');
         expect(document.body.classList.contains('kbq-sunrise')).toBe(true);
     });
@@ -202,7 +186,7 @@ describe('KbqThemeService', () => {
     it('persists the selected mode via KBQ_THEME_STORE', () => {
         const { service } = setup(false);
 
-        service.selectTheme('dark');
+        service.mode.set('dark');
         TestBed.tick();
 
         expect(store.setSelection).toHaveBeenCalledWith('dark');
@@ -224,14 +208,64 @@ describe('KbqThemeService', () => {
 
         TestBed.tick();
 
-        expect(service.selection()).toBe('dark');
+        expect(service.mode()).toBe('dark');
         expect(service.currentTheme()?.name).toBe('dark');
+    });
+
+    it('falls back to config.mode when the persisted value is not a valid mode', () => {
+        const media = fakeMediaQueryList(false);
+
+        // Mimics a value persisted before mode-only selection existed (an arbitrary theme name), or any
+        // other foreign/stale value - `mode` is strictly closed now, so it can't be trusted as-is.
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_THEME_STORE, useValue: { getSelection: () => 'solarized', setSelection: () => {} } }
+            ]
+        });
+
+        const service = TestBed.inject(KbqThemeService);
+
+        TestBed.tick();
+
+        expect(service.mode()).toBe('auto');
+    });
+});
+
+describe('ThemeService', () => {
+    function setup(matches = false) {
+        const media = fakeMediaQueryList(matches);
+
+        TestBed.configureTestingModule({
+            providers: [{ provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } }]
+        });
+
+        const service = TestBed.inject(ThemeService);
+
+        TestBed.tick();
+
+        return { service, media };
+    }
+
+    afterEach(() => {
+        document.body.className = '';
+        localStorage.clear();
+    });
+
+    it('shares state with the injected KbqThemeService (single source of truth)', () => {
+        const { service } = setup(false);
+        const kbqThemeService = TestBed.inject(KbqThemeService);
+
+        kbqThemeService.mode.set('dark');
+        TestBed.tick();
+
+        expect(service.current.value?.name).toBe('dark');
     });
 
     it('keeps the deprecated `selected` field in sync for backward compatibility', () => {
         const { service } = setup(true);
 
-        const themes = service.themes();
+        const themes = service.themes;
 
         expect(themes.find((theme) => theme.name === 'dark')?.selected).toBe(true);
         expect(themes.find((theme) => theme.name === 'light')?.selected).toBe(false);
@@ -242,28 +276,23 @@ describe('KbqThemeService', () => {
 
         service.setTheme(1);
         TestBed.tick();
-        expect(service.selection()).toBe('dark');
-        expect(service.getTheme()).toBe(service.currentTheme());
+        expect(service.getTheme()?.name).toBe('dark');
 
         service.setTheme(KbqDefaultThemes[0]);
         TestBed.tick();
-        expect(service.selection()).toBe('light');
+        expect(service.getTheme()?.name).toBe('light');
     });
 
-    it('exports `ThemeService` as a deprecated alias of `KbqThemeService`', () => {
-        expect(ThemeService).toBe(KbqThemeService);
-    });
-
-    it('keeps the deprecated `current` BehaviorSubject in sync with `currentTheme()`', () => {
+    it('keeps the deprecated `current` BehaviorSubject in sync with `getTheme()`', () => {
         const { service } = setup(false);
 
         expect(service.current.value?.name).toBe('light');
 
-        service.selectTheme('dark');
+        service.setTheme(KbqDefaultThemes[1]);
         TestBed.tick();
 
         expect(service.current.value?.name).toBe('dark');
-        expect(service.current.value).toBe(service.currentTheme());
+        expect(service.current.value).toBe(service.getTheme());
     });
 });
 

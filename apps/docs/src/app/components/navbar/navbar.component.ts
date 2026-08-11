@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqThemeName, KbqThemeNames, KbqThemeService } from '@koobiq/components/core';
+import { KbqThemeMode, KbqThemeNames, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -17,7 +17,7 @@ import { DocsDocsearchDirective } from '../docsearch/docsearch.directive';
 
 /** A theme mode selectable from the navbar's theme dropdown. */
 interface DocsThemeOption {
-    mode: KbqThemeNames | KbqThemeName;
+    mode: KbqThemeMode;
     title: Record<DocsLocale, string>;
 }
 
@@ -55,7 +55,7 @@ export class DocsNavbarComponent extends DocsLocaleState {
     ];
 
     /** The currently selected mode — persistence and OS-preference resolution are handled by `KbqThemeService`. */
-    readonly selection = computed(() => this.themeService.selection());
+    readonly mode = computed(() => this.themeService.mode());
 
     readonly opened$: Observable<boolean> = this.docStates.navbarMenu.pipe(
         map((state) => state === DocsNavbarState.Opened)
@@ -66,6 +66,6 @@ export class DocsNavbarComponent extends DocsLocaleState {
     }
 
     setTheme(mode: DocsThemeOption['mode']) {
-        this.themeService.selectTheme(mode);
+        this.themeService.mode.set(mode);
     }
 }

@@ -2425,7 +2425,7 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 
 // @public
-export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeConfig<KbqTheme>>;
+export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeSettings<KbqThemeConfig>>;
 
 // @public
 export const KBQ_THEME_STORE: InjectionToken<KbqThemeStore>;
@@ -2723,7 +2723,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
 export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 
 // @public
-export const KbqDefaultThemes: KbqTheme[];
+export const KbqDefaultThemes: KbqThemeConfig[];
 
 // @public
 export class KbqDurationLongPipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [
@@ -3824,11 +3824,11 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqTableNumberPipe>;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export interface KbqTheme {
     className: string;
-    colorScheme?: KbqThemeColorScheme;
-    name: KbqThemeColorScheme | KbqThemeName;
+    // (undocumented)
+    name: string;
     // @deprecated (undocumented)
     selected?: boolean;
 }
@@ -3837,20 +3837,17 @@ export interface KbqTheme {
 export type KbqThemeColorScheme = 'light' | 'dark';
 
 // @public
-export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
-    autoDark: string;
-    autoLight: string;
-    mode: KbqThemeColorScheme | KbqThemeName;
-    storageKey: string;
-    themes: T[];
+export interface KbqThemeConfig extends KbqTheme {
+    // (undocumented)
+    colorScheme: KbqThemeColorScheme;
 }
 
 // @public
 export class KbqThemeCookieStore implements KbqThemeStore {
     // (undocumented)
-    getSelection(): KbqThemeName | null;
+    getSelection(): KbqThemeMode | null;
     // (undocumented)
-    setSelection(selection: KbqThemeName): void;
+    setSelection(mode: KbqThemeMode): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeCookieStore, never>;
     // (undocumented)
@@ -3860,9 +3857,9 @@ export class KbqThemeCookieStore implements KbqThemeStore {
 // @public
 export class KbqThemeLocalStorageStore implements KbqThemeStore {
     // (undocumented)
-    getSelection(): KbqThemeName | null;
+    getSelection(): KbqThemeMode | null;
     // (undocumented)
-    setSelection(selection: KbqThemeName): void;
+    setSelection(mode: KbqThemeMode): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeLocalStorageStore, never>;
     // (undocumented)
@@ -3870,7 +3867,7 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
 }
 
 // @public
-export type KbqThemeName = 'auto' | (string & {});
+export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
 
 // @public
 export enum KbqThemeNames {
@@ -3879,7 +3876,7 @@ export enum KbqThemeNames {
 }
 
 // @public
-export const kbqThemeProvider: (config: Partial<KbqThemeConfig>) => Provider;
+export const kbqThemeProvider: <T extends KbqThemeConfig = KbqThemeConfig>(config: Partial<KbqThemeSettings<T>>) => Provider;
 
 // @public
 export enum KbqThemeSelector {
@@ -3888,20 +3885,12 @@ export enum KbqThemeSelector {
 }
 
 // @public
-export class KbqThemeService<T extends KbqTheme = KbqTheme> {
+export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     constructor();
-    readonly auto: i0.Signal<boolean>;
     readonly colorScheme: i0.Signal<KbqThemeColorScheme>;
-    // @deprecated (undocumented)
-    readonly current: BehaviorSubject<T | null>;
     readonly currentTheme: i0.Signal<T | null>;
-    // @deprecated (undocumented)
-    getTheme(): T | null;
-    readonly selection: i0.WritableSignal<KbqThemeName>;
-    selectTheme(name: KbqThemeNames | KbqThemeName): void;
-    setAuto(): void;
-    // @deprecated (undocumented)
-    setTheme(value: T | number): void;
+    readonly mode: i0.WritableSignal<KbqThemeMode>;
+    setMode(mode: KbqThemeMode): void;
     setThemes(items: T[]): void;
     readonly themes: i0.WritableSignal<T[]>;
     toggle(): void;
@@ -3912,9 +3901,16 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
 }
 
 // @public
+export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
+    mode: KbqThemeMode;
+    storageKey: string;
+    themes: T[];
+}
+
+// @public
 export interface KbqThemeStore {
-    getSelection(): KbqThemeName | null;
-    setSelection(selection: KbqThemeName): void;
+    getSelection(): KbqThemeMode | null;
+    setSelection(mode: KbqThemeMode): void;
 }
 
 // @public
@@ -5103,10 +5099,24 @@ export enum ThemePalette {
 }
 
 // @public @deprecated (undocumented)
-export type ThemeService<T extends KbqTheme = KbqTheme> = KbqThemeService<T>;
-
-// @public @deprecated (undocumented)
-export const ThemeService: typeof KbqThemeService;
+export class ThemeService<T extends KbqThemeConfig = KbqThemeConfig> implements OnDestroy {
+    constructor();
+    // @deprecated (undocumented)
+    readonly current: BehaviorSubject<T | null>;
+    // @deprecated (undocumented)
+    getTheme(): T | null;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // @deprecated (undocumented)
+    setTheme(value: T | number): void;
+    // @deprecated (undocumented)
+    get themes(): T[];
+    set themes(items: T[]);
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<ThemeService<any>, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<ThemeService<any>>;
+}
 
 // @public (undocumented)
 export const THREE = 51;
