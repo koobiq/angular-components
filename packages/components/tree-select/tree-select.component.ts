@@ -381,8 +381,8 @@ export class KbqTreeSelect
     readonly selectionChange = output<KbqTreeSelectChange>();
 
     /**
-     * Event emitted when all options are selected or deselected via the Ctrl/Cmd + A shortcut.
-     * Not emitted when a custom `selectAllHandler` is supplied — the handler owns the behaviour then.
+     * Event emitted whenever the tree's `selectAllOptions()` runs — a click on the `selectAll` master
+     * checkbox, the Ctrl/Cmd + A shortcut, or a custom `selectAllHandler` that delegates to it.
      */
     readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect>>();
 
@@ -1437,9 +1437,11 @@ export class KbqTreeSelect
 
     /** @docs-private */
     protected shouldShowSearch(): boolean {
-        // `options` is the tree's rendered list, which leads with the "select all" row when it is on —
-        // the threshold counts real options, so it must not be tipped over by the row itself.
-        const optionsCount = this.options.length - (this.tree()?.selectAllOption() ? 1 : 0);
+        // `options`/`renderedOptions` leads with the "select all" row when it is on, and the row is
+        // added to it on a separate, later-processed reactive pass than the one behind `nodesCount` —
+        // reading the tree's own authoritative node count instead of subtracting from `options.length`
+        // sidesteps that race entirely, rather than risking the two going momentarily out of step.
+        const optionsCount = this.tree()?.nodesCount ?? this.options.length;
 
         return (
             isUndefined(this.searchMinOptionsThreshold) ||

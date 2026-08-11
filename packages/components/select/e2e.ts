@@ -710,3 +710,46 @@ export class E2eVirtualScrollSelectPanelMaxHeight {
     // Fewer options than the cap can show, so that the pinned viewport height is observable.
     readonly options = ['Abakan', 'Almetyevsk', 'Anadyr'];
 }
+
+@Component({
+    selector: 'e2e-select-select-all-states',
+    imports: [KbqSelectModule, FormsModule],
+    template: `
+        <div style="display: flex; gap: 16px;">
+            <kbq-form-field>
+                <kbq-select data-testid="e2eSelectEmpty" multiple selectAll placeholder="Empty">
+                    <kbq-option [value]="'a'">Option A</kbq-option>
+                    <kbq-option [value]="'b'">Option B</kbq-option>
+                    <kbq-option [value]="'c'">Option C</kbq-option>
+                </kbq-select>
+            </kbq-form-field>
+            <kbq-form-field>
+                <kbq-select data-testid="e2eSelectPartial" multiple selectAll placeholder="Partial" [value]="['a']">
+                    <kbq-option [value]="'a'">Option A</kbq-option>
+                    <kbq-option [value]="'b'">Option B</kbq-option>
+                    <kbq-option [value]="'c'">Option C</kbq-option>
+                </kbq-select>
+            </kbq-form-field>
+            <kbq-form-field>
+                <kbq-select data-testid="e2eSelectFull" multiple selectAll placeholder="Full" [value]="['a', 'b', 'c']">
+                    <kbq-option [value]="'a'">Option A</kbq-option>
+                    <kbq-option [value]="'b'">Option B</kbq-option>
+                    <kbq-option [value]="'c'">Option C</kbq-option>
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+            width: 700px;
+            height: 220px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectSelectAllStates'
+    }
+})
+export class E2eSelectSelectAllStates {}

@@ -360,7 +360,11 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** Ensures the option is selected when activated from the keyboard. */
     handleKeydown(event: KeyboardEvent): void {
-        if (event.keyCode === ENTER || event.keyCode === SPACE) {
+        // Only claim the event when the option is actually going to react to it: a non-selectable
+        // or disabled option has nothing to do with ENTER/SPACE, and swallowing the event anyway
+        // would stop it from reaching an ancestor that might (e.g. a custom row built on top of a
+        // non-selectable option, like a "select all" master checkbox).
+        if ((event.keyCode === ENTER || event.keyCode === SPACE) && !this.disabled && this.selectable()) {
             this.selectViaInteraction();
 
             // Prevent the page from scrolling down and form submits.

@@ -22,6 +22,12 @@ import { DEV_OPTIONS } from './mock';
         <select-select-all-example />
         <hr />
 
+        <select-select-all-search-example />
+        <hr />
+
+        <select-select-all-disabled-example />
+        <hr />
+
         <select-custom-tag-content-example />
         <hr />
 

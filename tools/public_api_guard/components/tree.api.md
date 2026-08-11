@@ -587,6 +587,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     ngOnDestroy(): void;
     // (undocumented)
     nodeOutlet: KbqTreeNodeOutlet;
+    get nodesCount(): number;
     // (undocumented)
     get noUnselectLast(): boolean;
     set noUnselectLast(value: boolean);
@@ -645,13 +646,13 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     setStateChildren(option: KbqTreeOption, state: boolean): void;
     // (undocumented)
     get showCheckbox(): boolean;
-    get showSelectAll(): boolean;
+    protected get showSelectAll(): boolean;
     // (undocumented)
     get tabIndex(): any;
     set tabIndex(value: any);
     // (undocumented)
     toggleFocusedOption(): void;
-    toggleSelectAll(): void;
+    protected toggleSelectAll(): void;
     // (undocumented)
     treeControl: FlatTreeControl<any>;
     // (undocumented)

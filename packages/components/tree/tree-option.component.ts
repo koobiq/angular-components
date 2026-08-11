@@ -367,7 +367,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     select(setFocus = true): void {
-        if (this._selected) {
+        if (this.selectAllRow() || this._selected) {
             return;
         }
 
@@ -383,7 +383,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     deselect(): void {
-        if (!this._selected) {
+        if (this.selectAllRow() || !this._selected) {
             return;
         }
 

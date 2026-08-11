@@ -38,6 +38,18 @@ describe('toggleSelectAll', () => {
         expect(changed.length).toBe(1);
     });
 
+    it('should complete the selection, not deselect, when only some are selected and allowDeselect is true', () => {
+        const items: TestItem[] = [
+            { disabled: false, selected: true },
+            { disabled: false, selected: false }
+        ];
+
+        const changed = toggleSelectAll(createAdapter(items), { allowDeselect: true });
+
+        expect(items.every((item) => item.selected)).toBe(true);
+        expect(changed.length).toBe(1);
+    });
+
     it('should deselect all items when every selectable item is already selected and allowDeselect is true', () => {
         const items: TestItem[] = [
             { disabled: false, selected: true },

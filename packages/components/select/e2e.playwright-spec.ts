@@ -148,6 +148,72 @@ test.describe('KbqSelectModule', () => {
         });
     });
 
+    test.describe('E2eSelectSelectAllStates', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eSelectSelectAllStates');
+
+        test('unchecked, indeterminate and checked', async ({ page }) => {
+            await page.goto('/E2eSelectSelectAllStates');
+            const component = getComponent(page);
+
+            await component.getByTestId('e2eSelectEmpty').click();
+            await component.getByTestId('e2eSelectPartial').click();
+            await component.getByTestId('e2eSelectFull').click();
+
+            await expect(component).toHaveScreenshot('06-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(component).toHaveScreenshot('06-dark.png');
+        });
+    });
+
+    test.describe('select-all keyboard activation (#DS-3969 regression)', () => {
+        test('toggles via Space/Enter when the row itself holds real focus, not just the search field', async ({
+            page
+        }) => {
+            await page.goto('/E2eSelectSelectAllStates');
+
+            const select = page.getByTestId('e2eSelectEmpty');
+
+            await select.click();
+
+            const row = page.locator('.cdk-overlay-pane .kbq-select__select-all');
+
+            await row.waitFor();
+            // A real click both toggles the row (once) and leaves genuine DOM focus on it —
+            // the exact focus position where `KbqOption.handleKeydown` used to swallow the
+            // keydown before it could reach `KbqSelect`'s own panel-level handler.
+            await row.click();
+
+            await expect(row).toHaveAttribute('aria-checked', 'true');
+
+            await page.keyboard.press('Space');
+            await expect(row).toHaveAttribute('aria-checked', 'false');
+
+            await page.keyboard.press('Enter');
+            await expect(row).toHaveAttribute('aria-checked', 'true');
+        });
+
+        test('PAGE_DOWN/PAGE_UP page past the row without skipping it', async ({ page }) => {
+            await page.goto('/E2eSelectSelectAllStates');
+
+            const select = page.getByTestId('e2eSelectEmpty');
+
+            await select.click();
+
+            const row = page.locator('.cdk-overlay-pane .kbq-select__select-all');
+            const options = page.locator('.cdk-overlay-pane kbq-option:not(.kbq-select__select-all)');
+
+            await row.waitFor();
+
+            // Real layout, unlike Jest/JSDOM: PAGE_DOWN's page size is derived from actual measured
+            // option/container heights, so this is the only environment that can exercise it for real.
+            await page.keyboard.press('PageDown');
+            await expect(options.last()).toHaveClass(/kbq-active/);
+
+            await page.keyboard.press('PageUp');
+            await expect(row).toHaveClass(/kbq-active/);
+        });
+    });
+
     test.describe('E2eSelectWithSearchAndFooter', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSelectWithSearchAndFooter');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');

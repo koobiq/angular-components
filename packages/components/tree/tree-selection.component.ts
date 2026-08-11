@@ -136,6 +136,8 @@ interface SelectionModelOption {
                 [selectAllRow]="true"
                 [selectable]="false"
                 [class.kbq-selected]="allOptionsSelected"
+                [attr.role]="'checkbox'"
+                [attr.aria-checked]="selectAllState === 'indeterminate' ? 'mixed' : selectAllState === 'checked'"
                 (click)="toggleSelectAll()"
             >
                 <kbq-pseudo-checkbox [state]="selectAllState" />
@@ -280,7 +282,7 @@ export class KbqTreeSelection
     private readonly selectAllEnabled = signal(false);
 
     /** Whether the "select all" row is currently rendered. */
-    get showSelectAll(): boolean {
+    protected get showSelectAll(): boolean {
         return this.selectAll && this.multiple && !this.isEmpty;
     }
 
@@ -308,6 +310,9 @@ export class KbqTreeSelection
      * is looking at, and selecting them would contradict a master checkbox that can only report on what
      * is on screen. Without a filter the whole data set qualifies, collapsed branches included.
      */
+    // `any`, not `unknown`: `treeControl`/`selectionModel` are themselves `any`-typed data-node generics
+    // pre-dating this feature (`KbqTreeBase<any>`, `SelectionModel<SelectionModelOption>`), so `unknown`
+    // here would only relocate the unsafety into a cast at every call site, not remove it.
     private get selectAllTargets(): any[] {
         const nonSelectableDataNodes = this.renderedOptions
             .filter((option) => option.disabled || !option.selectable())
@@ -377,6 +382,15 @@ export class KbqTreeSelection
         return this.sortedNodes.length === 0;
     }
 
+    /**
+     * Number of real, data-backed nodes currently rendered — unlike `renderedOptions.length`, never
+     * includes the "select all" row, which is appended to `renderedOptions` on its own, later-processed
+     * reactive pass and would otherwise make a consumer's own node count race against that pass.
+     */
+    get nodesCount(): number {
+        return this.sortedNodes.length;
+    }
+
     private optionFocusSubscription: Subscription | null;
 
     private optionBlurSubscription: Subscription | null;
@@ -423,7 +437,7 @@ export class KbqTreeSelection
     }
 
     /** Selects every node "select all" can act on, or deselects them all when they are already selected. */
-    toggleSelectAll(): void {
+    protected toggleSelectAll(): void {
         this.selectAllOptions(true);
     }
 
@@ -733,6 +747,11 @@ export class KbqTreeSelection
     }
 
     selectAllOptions(allowDeselect: boolean = this.selectAll || this.selectAllToggle()): void {
+        // The row's own `(click)` and the Ctrl/Cmd + A shortcut both funnel through here, so this is the
+        // single place to refuse acting while the whole tree is disabled — mirrors the guard every other
+        // row already gets via `KbqTreeOption.selectViaInteraction()`.
+        if (this.disabled) return;
+
         // Selection is applied at the data-node level (incl. collapsed/non-rendered nodes unless a filter
         // is active), while the emitted events carry the selectable rendered options.
         const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());

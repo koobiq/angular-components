@@ -25,7 +25,7 @@ export const ptBRLocaleData = {
     } satisfies KbqA11yLocaleConfiguration,
     select: {
         hiddenItemsText: '+{{ number }}',
-        selectAll: 'Selecionar todos'
+        selectAll: 'Selecionar tudo'
     } satisfies KbqSelectLocaleConfiguration,
     datepicker: {
         placeholder: 'dd/mm/yyyy'

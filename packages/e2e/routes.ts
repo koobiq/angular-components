@@ -86,6 +86,7 @@ import {
     E2eSelectPanelMaxHeight,
     E2eSelectPositioning,
     E2eSelectRtlPositioning,
+    E2eSelectSelectAllStates,
     E2eSelectSelectionState,
     E2eSelectStates,
     E2eSelectWithGroupsPositioning,
@@ -120,6 +121,7 @@ import { E2eTooltipArrowOffset, E2eTooltipStates } from '../components/tooltip/e
 import { E2eTopBarStates } from '../components/top-bar/e2e';
 import {
     E2eMultilineTreeSelectStates,
+    E2eMultiTreeSelectSelectAllStates,
     E2eMultiTreeSelectStates,
     E2eTreeSelectDataMutation,
     E2eTreeSelectFormControlDisabled,
@@ -240,9 +242,11 @@ const components = [
     E2eMultiSelectStates,
     E2eMultilineSelectStates,
     E2eSelectSelectionState,
+    E2eSelectSelectAllStates,
     E2eTreeStates,
     E2eTreeSelectStates,
     E2eMultiTreeSelectStates,
+    E2eMultiTreeSelectSelectAllStates,
     E2eMultilineTreeSelectStates,
     E2eTreeSelectPositioning,
     E2eTreeSelectRtlPositioning,

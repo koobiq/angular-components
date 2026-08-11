@@ -1923,7 +1923,13 @@ class SelectWithShowPreselectedValuesSingle {
     imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple multiline [formControl]="control" [showPreselectedValues]="showPreselectedValues">
+            <kbq-select
+                multiple
+                multiline
+                selectAll
+                [formControl]="control"
+                [showPreselectedValues]="showPreselectedValues"
+            >
                 <kbq-option value="steak">Steak</kbq-option>
                 <kbq-option value="pizza">Pizza</kbq-option>
             </kbq-select>
@@ -6733,6 +6739,15 @@ describe('KbqSelect', () => {
 
                 expect(testInstance.select().empty).toBe(true);
             }));
+
+            it('should not render the select-all row, since a preselected value may be invisible to it', fakeAsync(() => {
+                testInstance.select().open();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(document.querySelector('.kbq-select__select-all')).toBeNull();
+            }));
         });
     });
 
@@ -7603,6 +7618,41 @@ describe('KbqSelect', () => {
 
                 expect(select.keyManager.activeItem!.getHostElement().classList).toContain('kbq-select__select-all');
             }));
+
+            it('should land on the row when pressing HOME', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+                const selectElement = fixture.nativeElement.querySelector('kbq-select');
+
+                select.keyManager.setActiveItem(select.options.last!);
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(selectElement, 'keydown', HOME);
+                fixture.detectChanges();
+
+                expect(select.keyManager.activeItem).toBe(select.selectAllOption());
+            }));
+
+            it('should land on the true last option (not the row) when pressing END', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+                const selectElement = fixture.nativeElement.querySelector('kbq-select');
+
+                select.keyManager.setActiveItem(select.selectAllOption()!);
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(selectElement, 'keydown', END);
+                fixture.detectChanges();
+
+                expect(select.keyManager.activeItem).toBe(select.options.last);
+            }));
+
+            // PAGE_UP/PAGE_DOWN pagination size is derived from real option/container heights
+            // (`getHeightOfOptionsContainer`, `option.getHeight()`), which JSDOM never lays out — like this
+            // file's other layout-dependent behaviour, that combination can only be verified in a real
+            // browser (see e2e.playwright-spec.ts).
         });
 
         describe('checkbox state', () => {

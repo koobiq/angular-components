@@ -1,14 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqSelectAllEvent } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import {
-    FlatTreeControl,
-    KbqTreeFlatDataSource,
-    KbqTreeFlattener,
-    KbqTreeModule,
-    KbqTreeOption
-} from '@koobiq/components/tree';
-import { KbqTreeSelect, KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
     children: FileNode[];
@@ -53,25 +46,21 @@ export function buildFileTree(value: any, level: number): FileNode[] {
 }
 
 export const DATA_OBJECT = {
-    docs: 'app',
-    src: {
-        cdk: {
-            a11ly: 'ts',
-            'focus monitor': 'ts'
-        },
-        scripts: {
-            deploy: '',
-            build: ''
-        }
+    Documents: {
+        angular: 'ts',
+        material: 'ts'
     },
-    tests: ''
+    Downloads: {
+        Tutorial: 'html'
+    },
+    Applications: 'app'
 };
 
 /**
- * @title Tree-select select all
+ * @title Tree-select select all with disabled nodes
  */
 @Component({
-    selector: 'tree-select-select-all-example',
+    selector: 'tree-select-select-all-disabled-example',
     imports: [
         KbqTreeSelectModule,
         KbqTreeModule,
@@ -79,9 +68,13 @@ export const DATA_OBJECT = {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tree-select selectAll [multiple]="true" (onSelectAll)="onSelectAll($event)">
+            <kbq-tree-select selectAll [multiple]="true">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node"
+                        kbqTreeNodePadding
+                        [disabled]="node.name === 'Applications'"
+                    >
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
@@ -96,17 +89,11 @@ export const DATA_OBJECT = {
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-
-        @if (lastSelectAllEvent(); as event) {
-            <p>onSelectAll: {{ event.options.length }} nodes, selected = {{ event.selected }}</p>
-        }
     `,
     styles: `
         :host {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: var(--kbq-size-m);
+            justify-content: center;
             padding: var(--kbq-size-l);
         }
 
@@ -116,13 +103,11 @@ export const DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectSelectAllExample {
+export class TreeSelectSelectAllDisabledExample {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    readonly lastSelectAllEvent = signal<KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect> | null>(null);
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -140,10 +125,6 @@ export class TreeSelectSelectAllExample {
 
     hasChild(_: number, nodeData: FileFlatNode) {
         return nodeData.expandable;
-    }
-
-    onSelectAll(event: KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect>): void {
-        this.lastSelectAllEvent.set(event);
     }
 
     private transformer = (node: FileNode, level: number, parent: any) => {

@@ -1,48 +1,39 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqHighlightModule } from '@koobiq/components/core';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
+import { KbqOption, KbqSelectAllEvent } from '@koobiq/components/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { map, startWith } from 'rxjs/operators';
 
 /**
  * @title Select all
  */
 @Component({
     selector: 'select-select-all-example',
-    imports: [
-        KbqSelectModule,
-        KbqIconModule,
-        KbqInputModule,
-        AsyncPipe,
-        ReactiveFormsModule,
-        KbqHighlightModule
-    ],
+    imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple selectAll placeholder="Placeholder">
-                <kbq-form-field noBorders kbqSelectSearch>
-                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input kbqInput type="text" [formControl]="searchControl" />
-                    <kbq-cleaner />
-                </kbq-form-field>
-
-                <div kbq-select-search-empty-result>Nothing found</div>
-
-                @for (option of filteredOptions | async; track option) {
-                    <kbq-option [value]="option">
-                        <span [innerHTML]="option | kbqHighlightBackground: searchControl.value"></span>
-                    </kbq-option>
+            <kbq-select
+                multiple
+                selectAll
+                placeholder="Placeholder"
+                [formControl]="control"
+                (onSelectAll)="onSelectAll($event)"
+            >
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
         </kbq-form-field>
+
+        @if (lastSelectAllEvent(); as event) {
+            <p>onSelectAll: {{ event.options.length }} options, selected = {{ event.selected }}</p>
+        }
     `,
     styles: `
         :host {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--kbq-size-m);
             padding: var(--kbq-size-l);
         }
 
@@ -53,16 +44,12 @@ import { map, startWith } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectSelectAllExample {
-    readonly options = Array.from({ length: 20 }).map((_, i) => `Option #${i}`);
-    readonly searchControl = new FormControl();
-    readonly filteredOptions = this.searchControl.valueChanges.pipe(
-        startWith(''),
-        map((query) => this.search(query))
-    );
+    readonly options = Array.from({ length: 6 }).map((_, i) => `Option #${i}`);
+    readonly control = new FormControl();
 
-    private search(query: string | null): string[] {
-        return query
-            ? this.options.filter((option) => option.toLowerCase().includes(query.toLowerCase()))
-            : this.options;
+    readonly lastSelectAllEvent = signal<KbqSelectAllEvent<KbqOption> | null>(null);
+
+    onSelectAll(event: KbqSelectAllEvent<KbqOption>): void {
+        this.lastSelectAllEvent.set(event);
     }
 }

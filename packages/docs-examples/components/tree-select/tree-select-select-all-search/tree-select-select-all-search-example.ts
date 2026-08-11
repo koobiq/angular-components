@@ -1,14 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqSelectAllEvent } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import {
-    FlatTreeControl,
-    KbqTreeFlatDataSource,
-    KbqTreeFlattener,
-    KbqTreeModule,
-    KbqTreeOption
-} from '@koobiq/components/tree';
-import { KbqTreeSelect, KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { KbqInputModule } from '@koobiq/components/input';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
     children: FileNode[];
@@ -59,30 +55,57 @@ export const DATA_OBJECT = {
             a11ly: 'ts',
             'focus monitor': 'ts'
         },
-        scripts: {
-            deploy: '',
-            build: ''
+        documentation: {
+            source: '',
+            tools: ''
+        },
+        mosaic: {
+            autocomplete: '',
+            button: '',
+            'button-toggle': ''
+        }
+    },
+    scripts: {
+        deploy: {
+            'cleanup-preview': 'ts',
+            'publish-artifacts': 'sh'
         }
     },
     tests: ''
 };
 
 /**
- * @title Tree-select select all
+ * @title Tree-select select all with search
  */
 @Component({
-    selector: 'tree-select-select-all-example',
+    selector: 'tree-select-select-all-search-example',
     imports: [
         KbqTreeSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        KbqIconModule,
+        KbqInputModule,
         KbqTreeModule,
-        KbqIconModule
+        KbqHighlightModule
     ],
     template: `
         <kbq-form-field>
-            <kbq-tree-select selectAll [multiple]="true" (onSelectAll)="onSelectAll($event)">
+            <kbq-tree-select selectAll [multiple]="true">
+                <kbq-form-field noBorders kbqSelectSearch>
+                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+                    <input kbqInput type="text" [formControl]="searchControl" />
+                    <kbq-cleaner />
+                </kbq-form-field>
+
+                <div kbq-select-search-empty-result>Nothing found</div>
+
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
-                        {{ treeControl.getViewValue(node) }}
+                        <span
+                            [innerHTML]="
+                                treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
+                            "
+                        ></span>
                     </kbq-tree-option>
 
                     <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
@@ -91,38 +114,25 @@ export const DATA_OBJECT = {
                             kbqTreeNodeToggle
                             [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                         ></i>
-                        {{ treeControl.getViewValue(node) }}
+                        <span
+                            [innerHTML]="
+                                treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value
+                            "
+                        ></span>
                     </kbq-tree-option>
                 </kbq-tree-selection>
             </kbq-tree-select>
         </kbq-form-field>
-
-        @if (lastSelectAllEvent(); as event) {
-            <p>onSelectAll: {{ event.options.length }} nodes, selected = {{ event.selected }}</p>
-        }
-    `,
-    styles: `
-        :host {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: var(--kbq-size-m);
-            padding: var(--kbq-size-l);
-        }
-
-        .kbq-form-field-type-select {
-            width: 320px;
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectSelectAllExample {
+export class TreeSelectSelectAllSearchExample implements OnInit {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
-    readonly lastSelectAllEvent = signal<KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect> | null>(null);
+    searchControl: FormControl = new FormControl();
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -138,12 +148,12 @@ export class TreeSelectSelectAllExample {
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
     }
 
-    hasChild(_: number, nodeData: FileFlatNode) {
-        return nodeData.expandable;
+    ngOnInit(): void {
+        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
     }
 
-    onSelectAll(event: KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect>): void {
-        this.lastSelectAllEvent.set(event);
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
     }
 
     private transformer = (node: FileNode, level: number, parent: any) => {

@@ -12,7 +12,12 @@ export interface KbqSelectAllAdapter<T> {
     isSelectable: (item: T) => boolean;
     /** Current selected state of the item. */
     isSelected: (item: T) => boolean;
-    /** Applies the new selected state to the item. */
+    /**
+     * Applies the new selected state to the item. Must be idempotent — a no-op, with no further side
+     * effects (no emitted events, no notifications) — when `selected` already matches the item's current
+     * state: {@link toggleSelectAll} calls this for every selectable item, not just the ones whose state
+     * actually changes, and relies on implementations to absorb the redundant calls silently.
+     */
     setSelected: (item: T, selected: boolean) => void;
 }
 

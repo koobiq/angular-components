@@ -73,7 +73,9 @@ import {
     KbqTreeFlattener,
     KbqTreeModule,
     KbqTreeOption,
-    KbqTreeSelection
+    KbqTreeSelection,
+    defaultCompareValues,
+    defaultCompareViewValues
 } from '@koobiq/components/tree';
 import { Observable, Subject, map, of, timer } from 'rxjs';
 import { KbqTreeSelect, KbqTreeSelectChange, kbqTreeSelectOptionsProvider } from './tree-select.component';
@@ -654,8 +656,20 @@ class MultiTreeSelectWithSelectAll implements OnInit {
     control = new UntypedFormControl();
     multiple = true;
     selectAll = true;
+    // Consulted by `treeControl`'s `isDisabled`, not a per-node template binding: collapsed branches
+    // never get a rendered `KbqTreeOption` to bind `[disabled]` on, so this is the only way to mark a
+    // (possibly collapsed) node disabled for "select all" purposes.
+    disabledNodes: string[] = [];
 
-    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeControl = new FlatTreeControl<FileFlatNode>(
+        getLevel,
+        isExpandable,
+        getValue,
+        getValue,
+        defaultCompareValues,
+        defaultCompareViewValues,
+        (node) => this.disabledNodes.includes(node.name)
+    );
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
@@ -4783,6 +4797,27 @@ describe('KbqTreeSelect', () => {
                 expect(getTree().selectAllState).toBe('checked');
                 expect(getCheckbox().classList).toContain('kbq-checked');
             }));
+
+            it('should ignore disabled nodes', fakeAsync(() => {
+                testInstance.disabledNodes = ['Tutorial'];
+                testInstance.control.setValue(['Documents', 'angular', 'material', 'Downloads']);
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(getTree().selectAllState).toBe('checked');
+            }));
+
+            it('should be unchecked when every node is disabled, whatever is selected', fakeAsync(() => {
+                testInstance.disabledNodes = [...ALL_NODES];
+                testInstance.control.setValue(['Tutorial']);
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(getTree().selectAllState).toBe('unchecked');
+                expect(getTree().allOptionsSelected).toBe(false);
+            }));
         });
 
         describe('toggling', () => {
@@ -4818,6 +4853,36 @@ describe('KbqTreeSelect', () => {
                 expect(selectedValues()).toEqual(['Downloads', 'Tutorial']);
             }));
 
+            it('should re-expand to the full tree after the search query is cleared', fakeAsync(() => {
+                openPanel();
+                search('Tutorial');
+                search('');
+
+                clickSelectAll();
+
+                expect(selectedValues()).toEqual([...ALL_NODES].sort());
+            }));
+
+            it('should leave disabled nodes untouched on click', fakeAsync(() => {
+                testInstance.disabledNodes = ['angular'];
+                fixture.detectChanges();
+
+                openPanel();
+                clickSelectAll();
+
+                expect(selectedValues()).toEqual(['Documents', 'Downloads', 'Tutorial', 'material'].sort());
+            }));
+
+            it('should be a no-op when every node is disabled', fakeAsync(() => {
+                testInstance.disabledNodes = [...ALL_NODES];
+                fixture.detectChanges();
+
+                openPanel();
+                clickSelectAll();
+
+                expect(selectedValues()).toEqual([]);
+            }));
+
             it('should emit onSelectAll on click', fakeAsync(() => {
                 const onSelectAll = jest.fn();
 
@@ -4847,6 +4912,24 @@ describe('KbqTreeSelect', () => {
                 tick(1);
                 fixture.detectChanges();
             };
+
+            it('should select the search text on the first ctrl + a inside a non-empty search field', fakeAsync(() => {
+                openPanel();
+                search('Tutorial');
+
+                const input = getSearchInput();
+
+                input.setSelectionRange(0, 0);
+
+                const event = createKeyboardEvent('keydown', A, input);
+
+                Object.defineProperty(event, 'ctrlKey', { get: () => true });
+                dispatchEvent(input, event);
+                fixture.detectChanges();
+
+                expect(input.selectionEnd).toBe(input.value.length);
+                expect(selectedValues()).toEqual([]);
+            }));
 
             it('should toggle both ways with ctrl + a even though selectAllToggle is off', fakeAsync(() => {
                 openPanel();

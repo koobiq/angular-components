@@ -249,14 +249,14 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     setSelectedOptionsByClick(option: KbqOption): void;
     protected shouldShowSearch(): boolean;
     readonly showPreselectedValues: _angular_core.InputSignal<boolean>;
-    get showSelectAll(): boolean;
+    protected get showSelectAll(): boolean;
     readonly sortComparator: _angular_core.InputSignal<(a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number>;
     readonly stateChanges: Subject<void>;
     get tabIndex(): number;
     set tabIndex(value: number);
     tags: QueryList<KbqTag>;
     toggle(): void;
-    toggleSelectAll(): void;
+    protected toggleSelectAll(): void;
     transformOrigin: string;
     readonly trigger: _angular_core.Signal<ElementRef<any> | undefined>;
     triggerFontSize: number;

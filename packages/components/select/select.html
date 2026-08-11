@@ -132,6 +132,8 @@
                     class="kbq-select__select-all"
                     [selectable]="false"
                     [class.kbq-selected]="allOptionsSelected"
+                    [attr.role]="'checkbox'"
+                    [attr.aria-checked]="selectAllState === 'indeterminate' ? 'mixed' : selectAllState === 'checked'"
                     (click)="toggleSelectAll()"
                 >
                     <kbq-pseudo-checkbox [state]="selectAllState" />

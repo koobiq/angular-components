@@ -60,7 +60,7 @@ Search can be by first character or full match, depending on the specific task a
 
 ##### Master checkbox "Select all"
 
-If there are many values, the `selectAll` attribute adds a master checkbox above the list, so all values can be selected — or deselected — in one action. When searching, the master checkbox selects only the results that match the query. Multiple selection only.
+If there are many values, the `selectAll` attribute adds a master checkbox above the list, so all values can be selected — or deselected — in one action. Multiple selection only.
 
 <!-- prettier-ignore -->
 ```html
@@ -69,11 +69,21 @@ If there are many values, the `selectAll` attribute adds a master checkbox above
 </kbq-select>
 ```
 
-The checkbox ignores disabled options: it neither selects nor deselects them, and its own state reflects only the options the user can actually toggle. The label comes from the locale (`select.selectAll`).
+The checkbox has three states: unchecked when nothing is selected, indeterminate when only some options are, and checked when every option is. Clicking it while indeterminate completes the selection rather than clearing it. The label comes from the locale (`select.selectAll`).
 
-Every action on the row emits a single `selectionChange` for the whole batch, followed by `onSelectAll`.
+Every action on the row — a click, or the keyboard shortcut below — emits a single `selectionChange` for the whole batch, followed by `onSelectAll`.
+
+Not supported together with `withVirtualScroll` or `showPreselectedValues`: the row is not rendered when either is on, since "select all" can only act on the options currently rendered as `KbqOption`, not on the full virtualized or preselected data set.
 
 <!-- example(select-select-all) -->
+
+When searching, the master checkbox acts only on the results that match the query — options hidden by the filter are left untouched, and the checkbox state reflects only what is on screen.
+
+<!-- example(select-select-all-search) -->
+
+The checkbox ignores disabled options: it neither selects nor deselects them, and its own state reflects only the options the user can actually toggle.
+
+<!-- example(select-select-all-disabled) -->
 
 ##### Selecting everything from the keyboard
 

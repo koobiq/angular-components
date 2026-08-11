@@ -418,6 +418,7 @@ export class KbqSelect
      * Kept as a separate list rather than folded into `options` because `options` is public API — the
      * filter-bar pipes, `firstFiltered` and the tallies below all mean "the options the consumer
      * projected", and a synthetic entry there would quietly corrupt every one of them.
+     * @docs-private
      */
     readonly navigableOptions = new QueryList<KbqOption>();
 
@@ -896,9 +897,23 @@ export class KbqSelect
         return !!search && this.options?.filter((option) => option.selectable()).length === 0 && !!search.value();
     }
 
-    /** Whether the "select all" row is currently rendered. */
-    get showSelectAll(): boolean {
-        return this.selectAll() && this.multiSelection && !this.isEmptySearchResult;
+    /**
+     * Whether the "select all" row is currently rendered.
+     *
+     * Unsupported whenever a selected value can exist as a synthetic `KbqVirtualOption` instead of a
+     * real, projected `KbqOption` (see `selectValue`) — under `withVirtualScroll` or
+     * `showPreselectedValues`. `selectAllTargets` can only see `this.options`, the currently-rendered
+     * `KbqOption`s, so a checkbox built on top of it would misreport "everything selected" after only
+     * touching the values that happen to have a rendered option.
+     */
+    protected get showSelectAll(): boolean {
+        return (
+            this.selectAll() &&
+            this.multiSelection &&
+            !this.isEmptySearchResult &&
+            !this.withVirtualScroll &&
+            !this.showPreselectedValues()
+        );
     }
 
     /** Whether every option "select all" can act on is selected. */
@@ -1180,7 +1195,7 @@ export class KbqSelect
      * Backs both the master checkbox and Ctrl/Cmd + A while `selectAll` is on. Emits a single
      * `selectionChange` for the whole batch, followed by `onSelectAll`.
      */
-    toggleSelectAll(): void {
+    protected toggleSelectAll(): void {
         const targets = this.selectAllTargets;
 
         if (!targets.length) return;
@@ -1637,11 +1652,12 @@ export class KbqSelect
 
     /** Updates locale parameters from the locale service. */
     private updateLocaleParams = () => {
+        // A consumer-supplied locale (`KBQ_LOCALE_DATA`/`addLocale`) may predate the `select` section
+        // entirely, not just the `selectAll` key within it — guard the lookup itself, not just its fields.
         const params = this.localeService?.getParams('select');
 
-        this.hiddenItemsText = params.hiddenItemsText;
-        // Locale data registered by a consumer through `KBQ_LOCALE_DATA`/`addLocale` may predate this key.
-        this.selectAllText = params.selectAll ?? ruRULocaleData.select.selectAll;
+        this.hiddenItemsText = params?.hiddenItemsText ?? this.hiddenItemsText;
+        this.selectAllText = params?.selectAll ?? ruRULocaleData.select.selectAll;
 
         this._changeDetectorRef.markForCheck();
     };
