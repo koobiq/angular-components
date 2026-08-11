@@ -78,6 +78,9 @@ export class BlockCheckboxComponent {
     }
 }
 
+/**
+ * @title Custom checkbox block
+ */
 @Component({
     selector: 'block-checkbox-example',
     imports: [KbqIconModule, BlockCheckboxComponent, FormsModule],
