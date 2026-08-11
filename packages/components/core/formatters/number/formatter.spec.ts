@@ -8,7 +8,6 @@ import {
     KbqRoundDecimalPipe
 } from '@koobiq/components/core';
 import fc from 'fast-check';
-import { NUMBER_FORMAT_REGEXP } from './formatter';
 
 describe('KbqRoundDecimalPipe', () => {
     let pipe: KbqRoundDecimalPipe;
@@ -109,11 +108,53 @@ describe('KbqRoundDecimalPipe', () => {
 });
 
 // `digitsInfo` is a small language parsed with a regular expression, and the pipe is public API that
-// applications hand user-controlled values to. These two properties cover the halves of that contract:
-// a well-formed spec has to be honoured for any value, and a malformed one has to be rejected loudly
-// rather than silently formatted with the defaults.
+// applications hand user-controlled values to. These properties cover both halves of that contract:
+// a well-formed spec has to be accepted and honoured for any value, and a malformed one has to be
+// rejected loudly rather than silently formatted with the defaults.
 describe(`${KbqDecimalPipe.name} property-based`, () => {
     let pipe: KbqDecimalPipe;
+
+    // The grammar as documented on `transform`: `{minIntegerDigits}.{minFractionDigits}-{maxFractionDigits}`,
+    // followed by an optional `-{useGrouping}` flag. It is spelled out here instead of being derived from
+    // the parser's own regexp: a test that asked the regexp what counts as malformed would broaden in
+    // lockstep with an accidentally broadened parser and never fail. Digit counts are kept small so that
+    // `Intl.NumberFormat` accepts every generated spec.
+    const wellFormedDigitsInfo = fc
+        .record({
+            minIntegerDigits: fc.integer({ min: 1, max: 5 }),
+            minFractionDigits: fc.integer({ min: 0, max: 5 }),
+            extraFractionDigits: fc.integer({ min: 0, max: 5 }),
+            useGrouping: fc.option(fc.boolean(), { nil: undefined })
+        })
+        .map(({ minIntegerDigits, minFractionDigits, extraFractionDigits, useGrouping }) => {
+            const spec = `${minIntegerDigits}.${minFractionDigits}-${minFractionDigits + extraFractionDigits}`;
+
+            return useGrouping === undefined ? spec : `${spec}-${useGrouping}`;
+        });
+
+    // Each mutation breaks exactly one rule of that grammar, so the result is malformed according to the
+    // documentation rather than according to the implementation.
+    const malformations: ((spec: string) => string)[] = [
+        // the `.` separator is mandatory...
+        (spec) => spec.replace('.', ''),
+        // ...and occurs exactly once
+        (spec) => spec.replace('.', '..'),
+        // digit counts are unsigned integers, written without a sign, surrounding space or letters
+        (spec) => `-${spec}`,
+        (spec) => ` ${spec}`,
+        (spec) => spec.replace(/\d/, '$&x'),
+        // the range separator needs an upper bound after it
+        (spec) => `${spec}-`,
+        // the grouping flag is spelled `true` or `false`
+        (spec) => `${spec}-yes`
+    ];
+
+    const malformedDigitsInfo = fc.oneof(
+        fc.tuple(wellFormedDigitsInfo, fc.constantFrom(...malformations)).map(([spec, mutate]) => mutate(spec)),
+        // Free-form strings keep their turn, characterised independently of the parser as well: with no
+        // separator in it, a non-empty string cannot be a spec.
+        fc.string({ minLength: 1 }).filter((value) => !value.includes('.'))
+    );
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -145,14 +186,22 @@ describe(`${KbqDecimalPipe.name} property-based`, () => {
         );
     });
 
+    // Guards the property below: the malformed specs are built by breaking a well-formed one, which only
+    // means anything for as long as the well-formed ones are themselves accepted.
+    it('should accept every digitsInfo the documented grammar allows', () => {
+        fc.assert(
+            fc.property(wellFormedDigitsInfo, (digitsInfo) => {
+                expect(() => pipe.transform(1234.5678, digitsInfo, 'en-US')).not.toThrow();
+            })
+        );
+    });
+
     it('should reject a malformed digitsInfo instead of falling back to the defaults', () => {
         fc.assert(
-            fc.property(fc.string(), (digitsInfo) => {
-                // An empty string is falsy and documented to mean "no digitsInfo", so it never reaches
-                // the parser and is not a malformed spec.
-                fc.pre(digitsInfo !== '' && !NUMBER_FORMAT_REGEXP.test(digitsInfo));
-
-                expect(() => pipe.transform(1234.5678, digitsInfo, 'en-US')).toThrow();
+            fc.property(malformedDigitsInfo, (digitsInfo) => {
+                // Matching on the parser's own message, so that a spec slipping through to `Intl` and
+                // failing there for an unrelated reason does not read as a rejection.
+                expect(() => pipe.transform(1234.5678, digitsInfo, 'en-US')).toThrow('is not a valid digit info');
             })
         );
     });
