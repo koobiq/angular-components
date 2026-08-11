@@ -40,6 +40,9 @@ import {
     ESCAPE,
     ErrorStateMatcher,
     HOME,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqLocaleServiceModule,
     KbqOption,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
@@ -2198,7 +2201,7 @@ describe('KbqSelect', () => {
      * overall test time.
      * @param declarations Components to declare for this block
      */
-    function configureKbqSelectTestingModule(declarations: any[]) {
+    function configureKbqSelectTestingModule(declarations: any[], extraImports: any[] = []) {
         TestBed.configureTestingModule({
             imports: [
                 KbqFormFieldModule,
@@ -2209,6 +2212,7 @@ describe('KbqSelect', () => {
                 FormsModule,
                 NoopAnimationsModule,
                 ScrollingModule,
+                ...extraImports,
                 ...declarations
             ],
             providers: [
@@ -7925,6 +7929,32 @@ describe('KbqSelect', () => {
             fixture.destroy();
 
             expect(() => tick(1)).not.toThrow();
+        }));
+    });
+
+    describe('locale subscription teardown', () => {
+        let fixture: ComponentFixture<MultiSelect>;
+        let localeService: KbqLocaleService;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelect], [KbqLocaleServiceModule]);
+            localeService = TestBed.inject(KBQ_LOCALE_SERVICE);
+            fixture = TestBed.createComponent(MultiSelect);
+            fixture.detectChanges();
+            flush();
+        }));
+
+        // Regression: `localeService.changes` is a long-lived BehaviorSubject on a root service, so
+        // subscribing without a teardown kept every destroyed select alive and let `updateLocaleParams`
+        // run — and `markForCheck` a dead view — on the next locale switch.
+        it('should stop reacting to locale changes once destroyed', fakeAsync(() => {
+            fixture.destroy();
+
+            const getParams = jest.spyOn(localeService, 'getParams');
+
+            localeService.setLocale('en-US');
+
+            expect(getParams.mock.calls.filter(([componentName]) => componentName === 'select')).toEqual([]);
         }));
     });
 

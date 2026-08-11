@@ -1049,7 +1049,7 @@ export class KbqSelect
     constructor() {
         super();
 
-        this.localeService?.changes.subscribe(this.updateLocaleParams);
+        this.localeService?.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateLocaleParams);
 
         // The "select all" row only exists while the panel is attached, so the key manager's list has to
         // be rebuilt whenever the view query resolves or drops it — `options.changes` alone never fires
