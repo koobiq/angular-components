@@ -101,6 +101,12 @@ export class KbqNavbarTitle implements AfterViewInit {
         return this.nativeElement.scrollHeight > this.nativeElement.clientHeight;
     }
 
+    /**
+     * Outer width of the title: its border box plus horizontal margins.
+     *
+     * Measured with `getBoundingClientRect()` rather than `getComputedStyle().width`, which resolves
+     * to the used content-box width whatever `box-sizing` says and would drop the title's padding.
+     */
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
 
