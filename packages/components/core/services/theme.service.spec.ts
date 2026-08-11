@@ -43,7 +43,7 @@ describe('KbqThemeService', () => {
     function setup(matches = false) {
         const media = fakeMediaQueryList(matches);
 
-        store = { getSelection: jest.fn().mockReturnValue(null), setSelection: jest.fn() };
+        store = { getMode: jest.fn().mockReturnValue(null), setMode: jest.fn() };
 
         TestBed.configureTestingModule({
             providers: [
@@ -189,13 +189,13 @@ describe('KbqThemeService', () => {
         service.mode.set('dark');
         TestBed.tick();
 
-        expect(store.setSelection).toHaveBeenCalledWith('dark');
+        expect(store.setMode).toHaveBeenCalledWith('dark');
     });
 
     it('restores the mode persisted in KBQ_THEME_STORE on init', () => {
         const media = fakeMediaQueryList(false);
 
-        store = { getSelection: jest.fn().mockReturnValue('dark'), setSelection: jest.fn() };
+        store = { getMode: jest.fn().mockReturnValue('dark'), setMode: jest.fn() };
 
         TestBed.configureTestingModule({
             providers: [
@@ -313,11 +313,11 @@ describe('KbqThemeLocalStorageStore', () => {
     it('persists and restores the mode via localStorage in the browser', () => {
         const store = setup();
 
-        expect(store.getSelection()).toBeNull();
+        expect(store.getMode()).toBeNull();
 
-        store.setSelection('dark');
+        store.setMode('dark');
 
-        expect(store.getSelection()).toBe('dark');
+        expect(store.getMode()).toBe('dark');
     });
 
     it('is a no-op when `localStorage` is unavailable (e.g. on the server)', () => {
@@ -325,16 +325,16 @@ describe('KbqThemeLocalStorageStore', () => {
         // `localStorage` at all — accessing it throws, which the store must swallow.
         const store = setup({}, { localStorage: undefined });
 
-        store.setSelection('dark');
+        store.setMode('dark');
 
-        expect(store.getSelection()).toBeNull();
+        expect(store.getMode()).toBeNull();
         expect(localStorage.getItem('kbq-theme-mode')).toBeNull();
     });
 
     it('uses the storage key configured via KBQ_THEME_CONFIG', () => {
         const store = setup({ storageKey: 'docs_theme' });
 
-        store.setSelection('dark');
+        store.setMode('dark');
 
         expect(localStorage.getItem('docs_theme')).toBe('dark');
         expect(localStorage.getItem('kbq-theme-mode')).toBeNull();
@@ -363,18 +363,18 @@ describe('KbqThemeCookieStore', () => {
     it('persists and restores the mode via a cookie', () => {
         const store = setup();
 
-        expect(store.getSelection()).toBeNull();
+        expect(store.getMode()).toBeNull();
 
-        store.setSelection('dark');
+        store.setMode('dark');
 
-        expect(store.getSelection()).toBe('dark');
+        expect(store.getMode()).toBe('dark');
         expect(document.cookie).toContain('kbq-theme-mode=dark');
     });
 
     it('uses the storage key configured via KBQ_THEME_CONFIG', () => {
         const store = setup({ storageKey: 'docs_theme' });
 
-        store.setSelection('dark');
+        store.setMode('dark');
 
         expect(document.cookie).toContain('docs_theme=dark');
         expect(document.cookie).not.toContain('kbq-theme-mode=');
@@ -385,7 +385,7 @@ describe('KbqThemeCookieStore', () => {
 
         const store = setup();
 
-        expect(store.getSelection()).toBeNull();
+        expect(store.getMode()).toBeNull();
     });
 });
 

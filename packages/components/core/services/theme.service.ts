@@ -112,9 +112,9 @@ export const kbqThemeProvider = <T extends KbqThemeConfig = KbqThemeConfig>(
  */
 export interface KbqThemeStore {
     /** Returns the previously saved mode, or `null` when nothing is stored/available. */
-    getSelection(): KbqThemeMode | null;
+    getMode(): KbqThemeMode | null;
     /** Persists the mode. */
-    setSelection(mode: KbqThemeMode): void;
+    setMode(mode: KbqThemeMode): void;
 }
 
 /**
@@ -129,7 +129,7 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
     private readonly window = inject(KBQ_WINDOW);
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
 
-    getSelection(): KbqThemeMode | null {
+    getMode(): KbqThemeMode | null {
         try {
             return this.window.localStorage.getItem(this.storageKey) as KbqThemeMode | null;
         } catch {
@@ -138,7 +138,7 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
         }
     }
 
-    setSelection(mode: KbqThemeMode): void {
+    setMode(mode: KbqThemeMode): void {
         try {
             this.window.localStorage.setItem(this.storageKey, mode);
         } catch {
@@ -158,14 +158,14 @@ export class KbqThemeCookieStore implements KbqThemeStore {
     private readonly document = inject(DOCUMENT);
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
 
-    getSelection(): KbqThemeMode | null {
+    getMode(): KbqThemeMode | null {
         const prefix = `${this.storageKey}=`;
         const cookie = this.document.cookie.split('; ').find((entry) => entry.startsWith(prefix));
 
         return cookie ? (decodeURIComponent(cookie.slice(prefix.length)) as KbqThemeMode) : null;
     }
 
-    setSelection(mode: KbqThemeMode): void {
+    setMode(mode: KbqThemeMode): void {
         // 1 year: matches the lifetime a persisted UI preference is expected to have. SameSite=Lax is
         // sent on the top-level navigation request that SSR needs it for, while still blocking
         // cross-site reads.
@@ -236,7 +236,7 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
             .subscribe((event) => this.systemPrefersDark.set(event.matches));
 
         effect(() => this.applyTheme(this.currentTheme(), this.themes()));
-        effect(() => this.store.setSelection(this.mode()));
+        effect(() => this.store.setMode(this.mode()));
     }
 
     /** Switches between `'light'`/`'dark'`, based on `colorScheme()` — the current theme's actual polarity. */
@@ -245,7 +245,7 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     }
 
     private readInitialMode(): KbqThemeMode {
-        const stored = this.store.getSelection();
+        const stored = this.store.getMode();
 
         return stored === 'auto' || stored === 'light' || stored === 'dark' ? stored : this.config.mode;
     }

@@ -3850,9 +3850,9 @@ export interface KbqThemeConfig {
 // @public
 export class KbqThemeCookieStore implements KbqThemeStore {
     // (undocumented)
-    getSelection(): KbqThemeMode | null;
+    getMode(): KbqThemeMode | null;
     // (undocumented)
-    setSelection(mode: KbqThemeMode): void;
+    setMode(mode: KbqThemeMode): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeCookieStore, never>;
     // (undocumented)
@@ -3862,9 +3862,9 @@ export class KbqThemeCookieStore implements KbqThemeStore {
 // @public
 export class KbqThemeLocalStorageStore implements KbqThemeStore {
     // (undocumented)
-    getSelection(): KbqThemeMode | null;
+    getMode(): KbqThemeMode | null;
     // (undocumented)
-    setSelection(mode: KbqThemeMode): void;
+    setMode(mode: KbqThemeMode): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeLocalStorageStore, never>;
     // (undocumented)
@@ -3912,8 +3912,8 @@ export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
 
 // @public
 export interface KbqThemeStore {
-    getSelection(): KbqThemeMode | null;
-    setSelection(mode: KbqThemeMode): void;
+    getMode(): KbqThemeMode | null;
+    setMode(mode: KbqThemeMode): void;
 }
 
 // @public
