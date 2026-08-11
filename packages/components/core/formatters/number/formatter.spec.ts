@@ -2,10 +2,12 @@ import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import {
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
+    KbqDecimalPipe,
     KbqFormattersModule,
     KbqLocaleService,
     KbqRoundDecimalPipe
 } from '@koobiq/components/core';
+import fc from 'fast-check';
 
 describe('KbqRoundDecimalPipe', () => {
     let pipe: KbqRoundDecimalPipe;
@@ -103,4 +105,104 @@ describe('KbqRoundDecimalPipe', () => {
         expect(pipe.transform(2800)).toBe('3K');
         expect(pipe.transform(1750)).toBe('2K');
     }));
+});
+
+// `digitsInfo` is a small language parsed with a regular expression, and the pipe is public API that
+// applications hand user-controlled values to. These properties cover both halves of that contract:
+// a well-formed spec has to be accepted and honoured for any value, and a malformed one has to be
+// rejected loudly rather than silently formatted with the defaults.
+describe(`${KbqDecimalPipe.name} property-based`, () => {
+    let pipe: KbqDecimalPipe;
+
+    // The grammar as documented on `transform`: `{minIntegerDigits}.{minFractionDigits}-{maxFractionDigits}`,
+    // followed by an optional `-{useGrouping}` flag. It is spelled out here instead of being derived from
+    // the parser's own regexp: a test that asked the regexp what counts as malformed would broaden in
+    // lockstep with an accidentally broadened parser and never fail. Digit counts are kept small so that
+    // `Intl.NumberFormat` accepts every generated spec.
+    const wellFormedDigitsInfo = fc
+        .record({
+            minIntegerDigits: fc.integer({ min: 1, max: 5 }),
+            minFractionDigits: fc.integer({ min: 0, max: 5 }),
+            extraFractionDigits: fc.integer({ min: 0, max: 5 }),
+            useGrouping: fc.option(fc.boolean(), { nil: undefined })
+        })
+        .map(({ minIntegerDigits, minFractionDigits, extraFractionDigits, useGrouping }) => {
+            const spec = `${minIntegerDigits}.${minFractionDigits}-${minFractionDigits + extraFractionDigits}`;
+
+            return useGrouping === undefined ? spec : `${spec}-${useGrouping}`;
+        });
+
+    // Each mutation breaks exactly one rule of that grammar, so the result is malformed according to the
+    // documentation rather than according to the implementation.
+    const malformations: ((spec: string) => string)[] = [
+        // the `.` separator is mandatory...
+        (spec) => spec.replace('.', ''),
+        // ...and occurs exactly once
+        (spec) => spec.replace('.', '..'),
+        // digit counts are unsigned integers, written without a sign, surrounding space or letters
+        (spec) => `-${spec}`,
+        (spec) => ` ${spec}`,
+        (spec) => spec.replace(/\d/, '$&x'),
+        // the range separator needs an upper bound after it
+        (spec) => `${spec}-`,
+        // the grouping flag is spelled `true` or `false`
+        (spec) => `${spec}-yes`
+    ];
+
+    const malformedDigitsInfo = fc.oneof(
+        fc.tuple(wellFormedDigitsInfo, fc.constantFrom(...malformations)).map(([spec, mutate]) => mutate(spec)),
+        // Free-form strings keep their turn, characterised independently of the parser as well: with no
+        // separator in it, a non-empty string cannot be a spec.
+        fc.string({ minLength: 1 }).filter((value) => !value.includes('.'))
+    );
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqFormattersModule],
+            providers: [{ provide: KBQ_LOCALE_ID, useValue: 'en-US' }]
+        }).compileComponents();
+
+        pipe = TestBed.inject(KbqDecimalPipe);
+    });
+
+    it('should honour the fraction digit bounds given in digitsInfo', () => {
+        fc.assert(
+            fc.property(
+                fc.double({ min: -1e15, max: 1e15, noNaN: true }),
+                fc.integer({ min: 0, max: 5 }),
+                fc.integer({ min: 0, max: 5 }),
+                (value, minFractionDigits, extraDigits) => {
+                    const maxFractionDigits = minFractionDigits + extraDigits;
+                    const formatted = pipe.transform(value, `1.${minFractionDigits}-${maxFractionDigits}`, 'en-US');
+                    // en-US groups with ',' and separates the fraction with '.', so this split is
+                    // unambiguous. It would not be for a locale that uses '.' as the group separator,
+                    // which is why the locale is pinned rather than generated.
+                    const fraction = formatted?.split('.')[1] ?? '';
+
+                    expect(fraction.length).toBeGreaterThanOrEqual(minFractionDigits);
+                    expect(fraction.length).toBeLessThanOrEqual(maxFractionDigits);
+                }
+            )
+        );
+    });
+
+    // Guards the property below: the malformed specs are built by breaking a well-formed one, which only
+    // means anything for as long as the well-formed ones are themselves accepted.
+    it('should accept every digitsInfo the documented grammar allows', () => {
+        fc.assert(
+            fc.property(wellFormedDigitsInfo, (digitsInfo) => {
+                expect(() => pipe.transform(1234.5678, digitsInfo, 'en-US')).not.toThrow();
+            })
+        );
+    });
+
+    it('should reject a malformed digitsInfo instead of falling back to the defaults', () => {
+        fc.assert(
+            fc.property(malformedDigitsInfo, (digitsInfo) => {
+                // Matching on the parser's own message, so that a spec slipping through to `Intl` and
+                // failing there for an unrelated reason does not read as a rejection.
+                expect(() => pipe.transform(1234.5678, digitsInfo, 'en-US')).toThrow('is not a valid digit info');
+            })
+        );
+    });
 });

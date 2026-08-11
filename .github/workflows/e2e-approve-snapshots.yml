@@ -9,15 +9,19 @@ on:
   issue_comment:
     types: [created]
 
+# Read-only default; the write scopes this workflow needs are granted on the job itself, so a
+# future job added here does not silently inherit them.
 permissions:
-  contents: write # for stefanzweifel/git-auto-commit-action to push changes
-  pull-requests: write # for thollander/actions-comment-pull-request to comment on PRs
+  contents: read
 
 jobs:
   approve_snapshots:
     if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/approve-snapshots') && contains(fromJSON('["OWNER", "MEMBER"]'), github.event.comment.author_association) }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      contents: write # for stefanzweifel/git-auto-commit-action to push changes
+      pull-requests: write # for thollander/actions-comment-pull-request to comment on PRs
     steps:
       - uses: xt0rted/pull-request-comment-branch@e8b8daa837e8ea7331c0003c9c316a64c6d8b0b1 # v3.0.0
         id: comment-branch

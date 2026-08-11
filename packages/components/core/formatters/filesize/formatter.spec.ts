@@ -11,7 +11,8 @@ import {
     KbqSizeUnitsConfig,
     ruRUFormattersData
 } from '@koobiq/components/core';
-import { KBQ_SIZE_UNITS_DEFAULT_CONFIG, KbqMeasurementSystem } from './config';
+import fc from 'fast-check';
+import { KBQ_SIZE_UNITS_DEFAULT_CONFIG, KbqMeasurementSystem, KbqUnitSystem } from './config';
 import { getFormattedSizeParts, getHumanizedBytes } from './size';
 
 describe('Filesize formatter', () => {
@@ -59,6 +60,17 @@ describe('Filesize formatter', () => {
             expect(result).toBe(expectedResult);
             expect(unit).toBe(expectedUnit);
         });
+
+        it.each([
+            ['NaN', NaN],
+            ['Infinity', Infinity],
+            ['-Infinity', -Infinity]
+        ])('should throw for a value that is %s', (_, value) => {
+            const wrapper = () =>
+                getHumanizedBytes(value, KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC]);
+
+            expect(wrapper).toThrow(KBQ_INVALID_VALUE_ERROR);
+        });
     });
 
     describe(getFormattedSizeParts.name, () => {
@@ -77,6 +89,75 @@ describe('Filesize formatter', () => {
             const { value } = getFormattedSizeParts(raw, selectedUnitSystem);
 
             expect(value).toMatchSnapshot();
+        });
+    });
+
+    // Property-based tests: the cases above pin down specific inputs, these state invariants and let
+    // fast-check search for a counterexample across the whole numeric range. The bug class they exist
+    // to catch is the one that keeps showing up in the dependency advisories this repository tracks —
+    // an input nobody wrote a test for driving a loop that never terminates or a value that is not a
+    // number any more. `getHumanizedBytes` is the natural place to start: it is pure, it takes an
+    // unbounded double, and it loops.
+    //
+    // On failure fast-check shrinks the input to the smallest reproducing value and prints the seed;
+    // re-run a specific failure with `fc.assert(..., { seed: <seed>, path: '<path>' })`.
+    describe('property-based', () => {
+        const systems = [
+            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.SI],
+            KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC]
+        ];
+        const anySystem = fc.constantFrom(...systems);
+        const stepOf = (system: KbqUnitSystem, unit: string) => system.abbreviations.indexOf(unit);
+        const largestScale = (system: KbqUnitSystem) =>
+            Math.pow(Math.pow(system.base, system.power), system.abbreviations.length - 1);
+        // Explicit finite bounds are what keeps ±Infinity out; noNaN covers the remaining non-finite
+        // value. All three are the documented throw case, asserted by `should throw for a value that
+        // is ...` above, so the properties here only have to hold over finite input.
+        const anyByteCount = fc.double({ min: 0, max: Number.MAX_VALUE, noNaN: true });
+        // Same range, minus the topmost unit step, for the one property that has to scale the result
+        // back up: `Number.MAX_VALUE / 1e12 * 1e12` overflows to `Infinity`, so within one step of the
+        // top of the double range that check cannot represent its own inverse. `getHumanizedBytes`
+        // itself only ever divides and stays exact there — the properties around it still cover it.
+        const scalableByteCount = fc.double({
+            min: 0,
+            max: Number.MAX_VALUE / Math.max(...systems.map(largestScale)),
+            noNaN: true
+        });
+
+        it('should return a finite value and a unit belonging to the system', () => {
+            fc.assert(
+                fc.property(anyByteCount, anySystem, (value, system) => {
+                    const { result, unit } = getHumanizedBytes(value, system);
+
+                    expect(Number.isFinite(result)).toBe(true);
+                    expect(system.abbreviations).toContain(unit);
+                })
+            );
+        });
+
+        it('should preserve the input once the result is scaled back by its unit', () => {
+            fc.assert(
+                fc.property(scalableByteCount, anySystem, (value, system) => {
+                    const { result, unit } = getHumanizedBytes(value, system);
+                    const restored = result * Math.pow(Math.pow(system.base, system.power), stepOf(system, unit));
+
+                    // Relative, not absolute: the value spans the whole double range, so a fixed
+                    // epsilon would be meaningless at both ends.
+                    expect(Math.abs(restored - value)).toBeLessThanOrEqual(Math.abs(value) * 1e-9);
+                })
+            );
+        });
+
+        it('should never pick a smaller unit for a larger byte count', () => {
+            fc.assert(
+                fc.property(anyByteCount, anyByteCount, anySystem, (a, b, system) => {
+                    const [smaller, larger] = a <= b ? [a, b] : [b, a];
+
+                    expect(stepOf(system, getHumanizedBytes(smaller, system).unit)).toBeLessThanOrEqual(
+                        stepOf(system, getHumanizedBytes(larger, system).unit)
+                    );
+                })
+            );
         });
     });
 

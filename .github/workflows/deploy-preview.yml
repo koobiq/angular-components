@@ -3,15 +3,19 @@ name: Deploy documentation preview
 on:
   pull_request:
 
+# Read-only default; the write scopes this workflow needs are granted on the job itself, so a
+# future job added here does not silently inherit them.
 permissions:
-  checks: write # for FirebaseExtended/action-hosting-deploy to create a check run
-  contents: read # for actions/checkout to read the repository
-  pull-requests: write # for FirebaseExtended/action-hosting-deploy to comment on PRs
+  contents: read
 
 jobs:
   deploy:
     if: ${{ github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository && contains(fromJSON('["OWNER", "MEMBER", "CONTRIBUTOR"]'), github.event.pull_request.author_association) }}
     runs-on: ubuntu-latest
+    permissions:
+      checks: write # for FirebaseExtended/action-hosting-deploy to create a check run
+      contents: read # for actions/checkout to read the repository
+      pull-requests: write # for FirebaseExtended/action-hosting-deploy to comment on PRs
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/workflows/actions/setup-node

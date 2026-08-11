@@ -6,9 +6,10 @@ on:
       - main
   pull_request:
 
+# Read-only default. Every job below narrows or raises this for itself, and a job-level block
+# replaces this one wholesale rather than adding to it.
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   # Runs in the container built from tools/e2e/, not on the runner directly. The screenshots are
