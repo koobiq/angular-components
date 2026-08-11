@@ -1367,6 +1367,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "content-panel-with-grid-example.ts",
     "importPath": "components/content-panel"
   },
+  "theme-static-selection": {
+    "packagePath": "components/core/theme-static-selection",
+    "title": "Theme static selection",
+    "componentName": "ThemeStaticSelectionExample",
+    "files": [
+      "theme-static-selection-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "theme-static-selection-example",
+    "additionalComponents": [],
+    "primaryFile": "theme-static-selection-example.ts",
+    "importPath": "components/core"
+  },
   "absolute-date-formatter": {
     "packagePath": "components/date-formatter/absolute-date-formatter",
     "title": "Absolute date-formatter",
@@ -7759,6 +7772,8 @@ return import('@koobiq/docs-examples/components/code-block');
 return import('@koobiq/docs-examples/components/content-panel');
   case 'content-panel-with-grid':
 return import('@koobiq/docs-examples/components/content-panel');
+  case 'theme-static-selection':
+return import('@koobiq/docs-examples/components/core');
   case 'absolute-date-formatter':
 return import('@koobiq/docs-examples/components/date-formatter');
   case 'date-formatter-special-use':

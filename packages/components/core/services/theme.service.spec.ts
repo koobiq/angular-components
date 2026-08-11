@@ -43,7 +43,12 @@ describe('KbqThemeService', () => {
     function setup(matches = false) {
         const media = fakeMediaQueryList(matches);
 
-        store = { getMode: jest.fn().mockReturnValue(null), setMode: jest.fn() };
+        store = {
+            getMode: jest.fn().mockReturnValue(null),
+            setMode: jest.fn(),
+            getPinnedTheme: jest.fn().mockReturnValue(null),
+            setPinnedTheme: jest.fn()
+        };
 
         TestBed.configureTestingModule({
             providers: [
@@ -92,7 +97,7 @@ describe('KbqThemeService', () => {
         expect(document.body.classList.contains('kbq-light')).toBe(false);
     });
 
-    it('setMode selects a fixed mode or falls back to the OS preference', () => {
+    it('mode.set() selects a fixed mode or falls back to the OS preference', () => {
         const { service } = setup(true);
 
         service.mode.set('light');
@@ -106,6 +111,21 @@ describe('KbqThemeService', () => {
         service.mode.set('auto');
         TestBed.tick();
         expect(service.mode()).toBe('auto');
+        expect(service.currentTheme()?.name).toBe('dark');
+    });
+
+    it('setMode() sets mode and clears an active pin, unlike mode.set() alone', () => {
+        const { service } = setup(false);
+
+        service.pinnedTheme.set('dark');
+        TestBed.tick();
+        expect(service.currentTheme()?.name).toBe('dark');
+
+        service.setMode('dark');
+        TestBed.tick();
+
+        expect(service.pinnedTheme()).toBeNull();
+        expect(service.mode()).toBe('dark');
         expect(service.currentTheme()?.name).toBe('dark');
     });
 
@@ -165,7 +185,12 @@ describe('KbqThemeService', () => {
                 },
                 {
                     provide: KBQ_THEME_STORE,
-                    useValue: { getMode: () => null, setMode: () => {} } satisfies KbqThemeStore
+                    useValue: {
+                        getMode: () => null,
+                        setMode: () => {},
+                        getPinnedTheme: () => null,
+                        setPinnedTheme: () => {}
+                    }
                 }
             ]
         });
@@ -198,7 +223,12 @@ describe('KbqThemeService', () => {
     it('restores the mode persisted in KBQ_THEME_STORE on init', () => {
         const media = fakeMediaQueryList(false);
 
-        store = { getMode: jest.fn().mockReturnValue('dark'), setMode: jest.fn() };
+        store = {
+            getMode: jest.fn().mockReturnValue('dark'),
+            setMode: jest.fn(),
+            getPinnedTheme: jest.fn().mockReturnValue('dark'),
+            setPinnedTheme: jest.fn()
+        };
 
         TestBed.configureTestingModule({
             providers: [
@@ -223,7 +253,15 @@ describe('KbqThemeService', () => {
         TestBed.configureTestingModule({
             providers: [
                 { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
-                { provide: KBQ_THEME_STORE, useValue: { getMode: () => 'solarized', setMode: () => {} } }
+                {
+                    provide: KBQ_THEME_STORE,
+                    useValue: {
+                        getMode: () => 'solarized',
+                        setMode: () => {},
+                        getPinnedTheme: () => null,
+                        setPinnedTheme: () => {}
+                    }
+                }
             ]
         });
 
@@ -232,6 +270,130 @@ describe('KbqThemeService', () => {
         TestBed.tick();
 
         expect(service.mode()).toBe('auto');
+    });
+
+    it('pinnedTheme defaults to null, resolving currentTheme via mode as usual', () => {
+        const { service } = setup(true);
+
+        expect(service.pinnedTheme()).toBeNull();
+        expect(service.currentTheme()?.name).toBe('dark');
+    });
+
+    it('pinning a theme overrides mode-based resolution, even against a mismatched colorScheme', () => {
+        const { service } = setup(false);
+
+        service.themes.set([
+            { name: 'acme-light', className: 'kbq-acme-light', colorScheme: 'light' },
+            { name: 'acme-dark', className: 'kbq-acme-dark', colorScheme: 'dark' }
+        ]);
+        service.pinnedTheme.set('acme-dark');
+        TestBed.tick();
+
+        expect(service.currentTheme()?.name).toBe('acme-dark');
+        expect(service.colorScheme()).toBe('dark');
+        expect(document.body.classList.contains('kbq-acme-dark')).toBe(true);
+        expect(document.body.classList.contains('kbq-acme-light')).toBe(false);
+    });
+
+    it('clearing the pin returns resolution to mode()', () => {
+        const { service } = setup(false);
+
+        service.pinnedTheme.set('dark');
+        TestBed.tick();
+        expect(service.currentTheme()?.name).toBe('dark');
+
+        service.pinnedTheme.set(null);
+        TestBed.tick();
+        expect(service.currentTheme()?.name).toBe('light');
+    });
+
+    it("toggle clears an active pin and flips relative to the pinned theme's actual colorScheme", () => {
+        const { service } = setup(false);
+
+        service.mode.set('light');
+        service.pinnedTheme.set('dark');
+        TestBed.tick();
+        expect(service.colorScheme()).toBe('dark');
+
+        service.toggle();
+        TestBed.tick();
+
+        expect(service.pinnedTheme()).toBeNull();
+        expect(service.mode()).toBe('light');
+        expect(service.currentTheme()?.name).toBe('light');
+    });
+
+    it('currentTheme is null when the pinned name has no matching registered theme', () => {
+        const { service } = setup(false);
+
+        expect(service.currentTheme()?.name).toBe('light');
+
+        service.pinnedTheme.set('unknown');
+        TestBed.tick();
+
+        expect(service.currentTheme()).toBeNull();
+        expect(document.body.classList.contains('kbq-light')).toBe(false);
+    });
+
+    it('persists the pinned theme via KBQ_THEME_STORE', () => {
+        const { service } = setup(false);
+
+        service.pinnedTheme.set('dark');
+        TestBed.tick();
+
+        expect(store.setPinnedTheme).toHaveBeenCalledWith('dark');
+    });
+
+    it('restores the theme pinned in KBQ_THEME_STORE on init, taking priority over config.mode', () => {
+        const media = fakeMediaQueryList(false);
+
+        store = {
+            getMode: jest.fn().mockReturnValue(null),
+            setMode: jest.fn(),
+            getPinnedTheme: jest.fn().mockReturnValue('dark'),
+            setPinnedTheme: jest.fn()
+        };
+
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_THEME_STORE, useValue: store }
+            ]
+        });
+
+        const service = TestBed.inject(KbqThemeService);
+
+        TestBed.tick();
+
+        expect(service.pinnedTheme()).toBe('dark');
+        expect(service.currentTheme()?.name).toBe('dark');
+    });
+
+    it('falls back to config.theme when nothing is persisted yet', () => {
+        const media = fakeMediaQueryList(false);
+
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
+                { provide: KBQ_THEME_CONFIG, useValue: { theme: 'dark' } },
+                {
+                    provide: KBQ_THEME_STORE,
+                    useValue: {
+                        getMode: () => null,
+                        setMode: () => {},
+                        getPinnedTheme: () => null,
+                        setPinnedTheme: () => {}
+                    }
+                }
+            ]
+        });
+
+        const service = TestBed.inject(KbqThemeService);
+
+        TestBed.tick();
+
+        expect(service.pinnedTheme()).toBe('dark');
+        expect(service.currentTheme()?.name).toBe('dark');
     });
 });
 
@@ -342,6 +504,42 @@ describe('KbqThemeLocalStorageStore', () => {
         expect(localStorage.getItem('docs_theme')).toBe('dark');
         expect(localStorage.getItem('kbq-theme-mode')).toBeNull();
     });
+
+    it('persists and restores the pinned theme name via localStorage', () => {
+        const store = setup();
+
+        expect(store.getPinnedTheme()).toBeNull();
+
+        store.setPinnedTheme('acme-dark');
+
+        expect(store.getPinnedTheme()).toBe('acme-dark');
+    });
+
+    it('stores the pin under a key derived from storageKey, distinct from the mode key', () => {
+        const store = setup({ storageKey: 'docs_theme' });
+
+        store.setPinnedTheme('acme-dark');
+
+        expect(localStorage.getItem('docs_theme-pinned')).toBe('acme-dark');
+        expect(localStorage.getItem('docs_theme')).toBeNull();
+    });
+
+    it('clears the persisted pin when setPinnedTheme is called with null', () => {
+        const store = setup();
+
+        store.setPinnedTheme('acme-dark');
+        store.setPinnedTheme(null);
+
+        expect(store.getPinnedTheme()).toBeNull();
+    });
+
+    it('is a no-op for the pin when localStorage is unavailable (e.g. on the server)', () => {
+        const store = setup({}, { localStorage: undefined });
+
+        store.setPinnedTheme('acme-dark');
+
+        expect(store.getPinnedTheme()).toBeNull();
+    });
 });
 
 describe('KbqThemeCookieStore', () => {
@@ -390,6 +588,26 @@ describe('KbqThemeCookieStore', () => {
 
         expect(store.getMode()).toBeNull();
     });
+
+    it('persists and restores the pinned theme name via a cookie, under a key derived from storageKey', () => {
+        const store = setup();
+
+        expect(store.getPinnedTheme()).toBeNull();
+
+        store.setPinnedTheme('acme-dark');
+
+        expect(store.getPinnedTheme()).toBe('acme-dark');
+        expect(document.cookie).toContain('kbq-theme-mode-pinned=acme-dark');
+    });
+
+    it('clears the persisted pin when setPinnedTheme is called with null', () => {
+        const store = setup();
+
+        store.setPinnedTheme('acme-dark');
+        store.setPinnedTheme(null);
+
+        expect(store.getPinnedTheme()).toBeNull();
+    });
 });
 
 describe('kbqThemeProvider', () => {
@@ -401,6 +619,7 @@ describe('kbqThemeProvider', () => {
         const config = TestBed.inject(KBQ_THEME_CONFIG);
 
         expect(config.mode).toBe('dark');
+        expect(config.theme).toBeNull();
         expect(config.storageKey).toBe('kbq-theme-mode');
     });
 });
