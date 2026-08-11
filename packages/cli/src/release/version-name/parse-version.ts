@@ -1,5 +1,11 @@
-/** Regular expression that matches version names and the individual version segments. */
-const versionNameRegex = /^(\d+)\.(\d+)\.(\d+)(?:-(alpha|beta|rc)\.(\d+)+)?$/;
+/**
+ * Regular expression that matches version names and the individual version segments.
+ *
+ * The pre-release number is `(\d+)`, not `(\d+)+`: the outer repetition made the digits ambiguous
+ * to split between the two quantifiers, so a near-miss such as `0.0.0-rc.000000000000000000000000!`
+ * cost hundreds of milliseconds of backtracking and grew fourfold with every two digits added.
+ */
+const versionNameRegex = /^(\d+)\.(\d+)\.(\d+)(?:-(alpha|beta|rc)\.(\d+))?$/;
 
 export class Version {
     constructor(
