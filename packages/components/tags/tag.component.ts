@@ -547,18 +547,24 @@ export class KbqTag
         }
 
         if (
-            // We should toggle selection only if tag inside of a tag list.
+            // We should handle modifier-based selection only if tag is inside of a tag list.
             // Single tag can only be toggled on focus or blur.
             this.tagList &&
             this.selectable &&
             hasModifierKey(event, 'metaKey', 'ctrlKey', 'shiftKey')
         ) {
-            this.toggleSelected(true);
+            if (!event.shiftKey) this.toggleSelected(true);
+
+            this.tagList.handleSelectionInteraction(this, event.shiftKey);
 
             // We should stop event propagation to prevent the tag list from handling the click event.
             event.stopPropagation();
 
             return;
+        }
+
+        if (this.tagList && this.selectable) {
+            this.tagList.handleSelectionInteraction(this, false);
         }
 
         if (!this.tagList && this.selectable) {
@@ -585,7 +591,13 @@ export class KbqTag
                 break;
             }
             case SPACE: {
-                this.toggleSelected(true);
+                if (this.tagList) {
+                    this.toggleSelected(true);
+                    this.tagList.handleSelectionInteraction(this, false);
+                } else {
+                    this.toggleSelected(true);
+                }
+
                 this.focusMonitor.focusVia(this.elementRef, 'keyboard');
 
                 // Always prevent space from scrolling the page since the list has focus

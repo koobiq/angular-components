@@ -2,7 +2,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
-import { BACKSPACE, END, HOME, LEFT_ARROW, TAB } from '@angular/cdk/keycodes';
+import { BACKSPACE, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -418,6 +418,9 @@ export class KbqTagList
     /** True when the next `tags.changes` emission is triggered by a UI action, not programmatic update. */
     private pendingUIChange = false;
 
+    /** Shared range selection state used by pointer and keyboard interactions. */
+    private rangeSelection: { anchor: KbqTag; activeEnd: KbqTag } | null = null;
+
     /**
      * When a tag is destroyed, we store the index of the destroyed tag until the tags
      * query list notifies about the update. This is necessary because we cannot determine an
@@ -475,6 +478,14 @@ export class KbqTagList
             .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
             .subscribe((currentTags: QueryList<KbqTag> | null) => {
                 this.resetTags();
+
+                if (this.rangeSelection) {
+                    const tags = this.tags.toArray();
+
+                    if (!tags.includes(this.rangeSelection.anchor) || !tags.includes(this.rangeSelection.activeEnd)) {
+                        this.rangeSelection = null;
+                    }
+                }
 
                 // Check to see if we need to update our tab index
                 this.updateTabIndex();
@@ -617,6 +628,26 @@ export class KbqTagList
     }
 
     /**
+     * Establishes a range origin or extends the current range to the specified tag.
+     *
+     * @docs-private
+     */
+    handleSelectionInteraction(tag: KbqTag, extendRange: boolean): void {
+        const tags = this.tags.toArray();
+        const tagIndex = tags.indexOf(tag);
+
+        if (this.disabled || !tag.selectable || tag.disabled || !this.isValidIndex(tagIndex)) return;
+
+        if (extendRange) {
+            this.extendSelectionTo(tag);
+
+            return;
+        }
+
+        this.setRangeOrigin(tag);
+    }
+
+    /**
      * Pass events to the keyboard manager. Available here for tests.
      *
      * @docs-private
@@ -627,6 +658,14 @@ export class KbqTagList
         if (this.disabled || isNull(target)) return;
 
         const shouldSelectAll = this.selectable() && isSelectAll(event);
+        const shouldUpdateKeyboardRange =
+            this.selectable() &&
+            this.isTagElement(target) &&
+            event.shiftKey &&
+            !event.altKey &&
+            !event.ctrlKey &&
+            !event.metaKey &&
+            [LEFT_ARROW, RIGHT_ARROW].includes(event.keyCode);
 
         if (this.isInputEmpty(target)) {
             if (
@@ -650,16 +689,30 @@ export class KbqTagList
         } else if (this.isTagElement(target)) {
             if (event.keyCode === HOME) {
                 this.keyManager.setFirstItemActive();
+                this.setRangeOrigin(this.keyManager.activeItem);
                 event.preventDefault();
             } else if (event.keyCode === END) {
                 this.keyManager.setLastItemActive();
+                this.setRangeOrigin(this.keyManager.activeItem);
                 event.preventDefault();
             } else if (shouldSelectAll) {
                 this.selectAll();
                 this.keyManager.setLastItemActive();
                 event.preventDefault();
             } else {
+                const previousActiveIndex = this.keyManager.activeItemIndex;
+
                 this.keyManager.onKeydown(event);
+
+                if (previousActiveIndex !== this.keyManager.activeItemIndex) {
+                    if (shouldUpdateKeyboardRange) {
+                        if (!this.rangeSelection) this.setRangeOrigin(this.tags.get(previousActiveIndex));
+
+                        this.extendSelectionTo(this.keyManager.activeItem);
+                    } else {
+                        this.setRangeOrigin(this.keyManager.activeItem);
+                    }
+                }
             }
 
             this.stateChanges.next();
@@ -753,6 +806,14 @@ export class KbqTagList
 
     private selectAll(): void {
         this.tags.forEach((tag) => tag.selectViaInteraction());
+
+        this.setRangeOrigin(
+            this.keyManager.activeItem ??
+                this.tags
+                    .toArray()
+                    .reverse()
+                    .find((tag) => tag.selectable && !tag.disabled)
+        );
     }
 
     /**
@@ -762,6 +823,7 @@ export class KbqTagList
      */
     unselectAll(): void {
         this.tags.forEach((tag) => tag.setSelectedState(false));
+        this.rangeSelection = null;
     }
 
     /**
@@ -870,5 +932,51 @@ export class KbqTagList
         this.focusMonitor.monitor(this.elementRef, true).subscribe((origin) => {
             if (!origin) this.unselectAll();
         });
+    }
+
+    private extendSelectionTo(activeEnd: KbqTag | null): void {
+        const tags = this.tags.toArray();
+        const activeEndIndex = activeEnd ? tags.indexOf(activeEnd) : -1;
+
+        if (!activeEnd || !this.isValidIndex(activeEndIndex)) return;
+
+        if (!this.rangeSelection) {
+            activeEnd.setSelectedState(true, { isUserInput: true, emitEvent: true });
+            this.setRangeOrigin(activeEnd);
+
+            return;
+        }
+
+        const anchorIndex = tags.indexOf(this.rangeSelection.anchor);
+        const previousActiveEndIndex = tags.indexOf(this.rangeSelection.activeEnd);
+
+        if (!this.isValidIndex(anchorIndex) || !this.isValidIndex(previousActiveEndIndex)) {
+            this.rangeSelection = null;
+            this.extendSelectionTo(activeEnd);
+
+            return;
+        }
+
+        const previousFromIndex = Math.min(anchorIndex, previousActiveEndIndex);
+        const previousToIndex = Math.max(anchorIndex, previousActiveEndIndex);
+        const fromIndex = Math.min(anchorIndex, activeEndIndex);
+        const toIndex = Math.max(anchorIndex, activeEndIndex);
+
+        tags.forEach((tag, index) => {
+            if (tag.disabled || !tag.selectable) return;
+
+            const belongsToRange = index >= fromIndex && index <= toIndex;
+            const belongedToPreviousRange = index >= previousFromIndex && index <= previousToIndex;
+
+            if (belongsToRange || belongedToPreviousRange) {
+                tag.setSelectedState(belongsToRange, { isUserInput: true, emitEvent: true });
+            }
+        });
+
+        this.rangeSelection = { ...this.rangeSelection, activeEnd };
+    }
+
+    private setRangeOrigin(anchor: KbqTag | null | undefined): void {
+        this.rangeSelection = anchor ? { anchor, activeEnd: anchor } : null;
     }
 }
