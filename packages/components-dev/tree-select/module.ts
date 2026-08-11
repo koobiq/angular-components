@@ -33,10 +33,7 @@ import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from 
         <tree-select-select-all-example />
         <hr />
 
-        <tree-select-select-all-search-example />
-        <hr />
-
-        <tree-select-select-all-disabled-example />
+        <tree-select-select-all-label-example />
         <hr />
 
         <tree-select-two-line-option-example />

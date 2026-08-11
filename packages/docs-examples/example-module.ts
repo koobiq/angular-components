@@ -5094,30 +5094,17 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-search-example.ts",
     "importPath": "components/select"
   },
-  "select-select-all-disabled": {
-    "packagePath": "components/select/select-select-all-disabled",
-    "title": "Select all with disabled options",
-    "componentName": "SelectSelectAllDisabledExample",
+  "select-select-all-label": {
+    "packagePath": "components/select/select-select-all-label",
+    "title": "Select all label",
+    "componentName": "SelectSelectAllLabelExample",
     "files": [
-      "select-select-all-disabled-example.ts"
+      "select-select-all-label-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "select-select-all-disabled-example",
+    "selector": "select-select-all-label-example",
     "additionalComponents": [],
-    "primaryFile": "select-select-all-disabled-example.ts",
-    "importPath": "components/select"
-  },
-  "select-select-all-search": {
-    "packagePath": "components/select/select-select-all-search",
-    "title": "Select all with search",
-    "componentName": "SelectSelectAllSearchExample",
-    "files": [
-      "select-select-all-search-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "select-select-all-search-example",
-    "additionalComponents": [],
-    "primaryFile": "select-select-all-search-example.ts",
+    "primaryFile": "select-select-all-label-example.ts",
     "importPath": "components/select"
   },
   "select-select-all": {
@@ -7113,30 +7100,17 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-search-overview-example.ts",
     "importPath": "components/tree-select"
   },
-  "tree-select-select-all-disabled": {
-    "packagePath": "components/tree-select/tree-select-select-all-disabled",
-    "title": "Tree-select select all with disabled nodes",
-    "componentName": "TreeSelectSelectAllDisabledExample",
+  "tree-select-select-all-label": {
+    "packagePath": "components/tree-select/tree-select-select-all-label",
+    "title": "Tree-select select all label",
+    "componentName": "TreeSelectSelectAllLabelExample",
     "files": [
-      "tree-select-select-all-disabled-example.ts"
+      "tree-select-select-all-label-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "tree-select-select-all-disabled-example",
+    "selector": "tree-select-select-all-label-example",
     "additionalComponents": [],
-    "primaryFile": "tree-select-select-all-disabled-example.ts",
-    "importPath": "components/tree-select"
-  },
-  "tree-select-select-all-search": {
-    "packagePath": "components/tree-select/tree-select-select-all-search",
-    "title": "Tree-select select all with search",
-    "componentName": "TreeSelectSelectAllSearchExample",
-    "files": [
-      "tree-select-select-all-search-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "tree-select-select-all-search-example",
-    "additionalComponents": [],
-    "primaryFile": "tree-select-select-all-search-example.ts",
+    "primaryFile": "tree-select-select-all-label-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-select-all": {
@@ -8397,9 +8371,7 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-search':
 return import('@koobiq/docs-examples/components/select');
-  case 'select-select-all-disabled':
-return import('@koobiq/docs-examples/components/select');
-  case 'select-select-all-search':
+  case 'select-select-all-label':
 return import('@koobiq/docs-examples/components/select');
   case 'select-select-all':
 return import('@koobiq/docs-examples/components/select');
@@ -8701,9 +8673,7 @@ return import('@koobiq/docs-examples/components/tree-select');
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-search-overview':
 return import('@koobiq/docs-examples/components/tree-select');
-  case 'tree-select-select-all-disabled':
-return import('@koobiq/docs-examples/components/tree-select');
-  case 'tree-select-select-all-search':
+  case 'tree-select-select-all-label':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-select-all':
 return import('@koobiq/docs-examples/components/tree-select');

@@ -314,6 +314,14 @@ export class KbqTreeSelection
     // pre-dating this feature (`KbqTreeBase<any>`, `SelectionModel<SelectionModelOption>`), so `unknown`
     // here would only relocate the unsafety into a cast at every call site, not remove it.
     private get selectAllTargets(): any[] {
+        // `treeControl` is an `@Input`, so it is still unset on the change-detection pass that sets it:
+        // a consumer reading `allOptionsSelected`/`selectAllState` off a template reference — which is
+        // exactly how the docs suggest swapping the trigger label — would otherwise get a TypeError
+        // before the tree is wired up. Nothing is selectable yet at that point, so an empty set is right.
+        if (!this.treeControl) {
+            return [];
+        }
+
         const nonSelectableDataNodes = this.renderedOptions
             .filter((option) => option.disabled || !option.selectable())
             .map((option) => option.data);

@@ -2,15 +2,19 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title Select all
+ * @title Select all label
  */
 @Component({
-    selector: 'select-select-all-example',
+    selector: 'select-select-all-label-example',
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple selectAll placeholder="Placeholder" [value]="selected">
-                <kbq-cleaner />
+            <kbq-select #select="kbqSelect" multiple selectAll placeholder="Placeholder" [value]="selected">
+                <!-- Projected only while everything is selected, so the rest of the time the select falls
+                     back to its default trigger and lists the selected options as usual. -->
+                @if (select.allOptionsSelected) {
+                    <ng-container kbq-select-trigger>All options</ng-container>
+                }
 
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
@@ -31,7 +35,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectSelectAllExample {
+export class SelectSelectAllLabelExample {
     readonly options = Array.from({ length: 6 }).map((_, i) => `Option ${i + 1}`);
-    readonly selected = [this.options[1]];
+    readonly selected = [...this.options];
 }

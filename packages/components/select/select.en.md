@@ -58,9 +58,9 @@ Search can be by first character or full match, depending on the specific task a
 
 <!-- example(select-search) -->
 
-##### Master checkbox "Select all"
+##### Select all
 
-If there are many values, the `selectAll` attribute adds a master checkbox above the list, so all values can be selected — or deselected — in one action. Multiple selection only.
+In multiple selection mode all the values can be selected at once. The feature is off by default — turn it on with the `selectAll` attribute, and a master checkbox appears above the list.
 
 <!-- prettier-ignore -->
 ```html
@@ -69,21 +69,17 @@ If there are many values, the `selectAll` attribute adds a master checkbox above
 </kbq-select>
 ```
 
-The checkbox has three states: unchecked when nothing is selected, indeterminate when only some options are, and checked when every option is. Clicking it while indeterminate completes the selection rather than clearing it. The label comes from the locale (`select.selectAll`).
+The checkbox has three states: unchecked when nothing is selected, indeterminate when only some options are, and checked when every option is. Clicking it while indeterminate selects the remaining options rather than clearing the selection. The label comes from the locale (`select.selectAll`).
 
-Every action on the row — a click, or the keyboard shortcut below — emits a single `selectionChange` for the whole batch, followed by `onSelectAll`.
+Disabled options are ignored — they are neither selected nor deselected, and the checkbox state reflects only the options the user can actually toggle. When searching, the checkbox acts only on the results that match the query. Every action on the row emits a single `selectionChange` for the whole batch, followed by `onSelectAll`.
 
 Not supported together with `withVirtualScroll` or `showPreselectedValues`: the row is not rendered when either is on, since "select all" can only act on the options currently rendered as `KbqOption`, not on the full virtualized or preselected data set.
 
 <!-- example(select-select-all) -->
 
-When searching, the master checkbox acts only on the results that match the query — options hidden by the filter are left untouched, and the checkbox state reflects only what is on screen.
+Once everything is selected, the control can show a label of its own instead of literally listing the selected options. Project a `kbq-select-trigger` while `allOptionsSelected` is `true` — without it the select falls back to its default trigger.
 
-<!-- example(select-select-all-search) -->
-
-The checkbox ignores disabled options: it neither selects nor deselects them, and its own state reflects only the options the user can actually toggle.
-
-<!-- example(select-select-all-disabled) -->
+<!-- example(select-select-all-label) -->
 
 ##### Selecting everything from the keyboard
 

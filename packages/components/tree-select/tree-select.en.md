@@ -18,9 +18,9 @@
 
 <!-- example(tree-select-search-overview) -->
 
-### Master checkbox "Select all"
+### Select all
 
-If there are many nodes, the `selectAll` attribute adds a master checkbox above the tree, so all of them can be selected — or deselected — in one action. Multiple selection only.
+In multiple selection mode all the nodes can be selected at once. The feature is off by default — turn it on with the `selectAll` attribute, and a master checkbox appears above the tree.
 
 <!-- prettier-ignore -->
 ```html
@@ -33,17 +33,13 @@ If there are many nodes, the `selectAll` attribute adds a master checkbox above 
 </kbq-tree-select>
 ```
 
-Without a search query the checkbox covers the whole data set, collapsed branches included: the checkbox has three states — unchecked, indeterminate, and checked — and clicking it while indeterminate completes the selection rather than clearing it. The row takes part in keyboard navigation as the first item of the tree, and every action on it — a click, or the keyboard shortcut below — emits `onSelectAll`. The label comes from the locale (`select.selectAll`).
+The checkbox has three states: unchecked, indeterminate, and checked — clicking it while indeterminate selects the remaining nodes rather than clearing the selection. Without a search query it covers the whole data set, collapsed branches included; while a query is active it covers only the nodes on screen — the matches and the ancestors kept visible for them. Disabled nodes are ignored. The row takes part in keyboard navigation as the first item of the tree, and every action on it emits `onSelectAll`. The label comes from the locale (`select.selectAll`).
 
 <!-- example(tree-select-select-all) -->
 
-While a search query is active, the checkbox covers only the nodes on screen — the matches and the ancestors kept visible for them.
+Once everything is selected, the control can show a label of its own instead of literally listing the selected nodes. Project a `kbq-select-trigger` while the tree's `allOptionsSelected` is `true` — without it the tree-select falls back to its default trigger.
 
-<!-- example(tree-select-select-all-search) -->
-
-Disabled nodes are ignored: they are neither selected nor deselected, and the checkbox state reflects only the nodes the user can actually toggle.
-
-<!-- example(tree-select-select-all-disabled) -->
+<!-- example(tree-select-select-all-label) -->
 
 ### Selecting everything from the keyboard
 

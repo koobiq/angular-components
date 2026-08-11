@@ -1517,6 +1517,17 @@ describe('KbqTreeSelection', () => {
                 expect(component.tree.selectAllState).toBe('unchecked');
             });
 
+            it('should report an empty state instead of throwing before treeControl is assigned', () => {
+                // `treeControl` is an `@Input`, so a consumer reading these off a template reference —
+                // e.g. to swap the trigger for a "select all" label — gets here on the very pass that
+                // assigns it, while it is still undefined.
+                const uninitialized = Object.create(KbqTreeSelection.prototype) as KbqTreeSelection;
+
+                expect(() => uninitialized.allOptionsSelected).not.toThrow();
+                expect(uninitialized.allOptionsSelected).toBe(false);
+                expect(uninitialized.selectAllState).toBe('unchecked');
+            });
+
             it('should be indeterminate when only some nodes are selected', () => {
                 component.tree.selectionModel.select(component.tree.treeControl.hasValue('Sun'));
                 fixture.detectChanges();
