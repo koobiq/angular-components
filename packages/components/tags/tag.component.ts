@@ -553,12 +553,18 @@ export class KbqTag
             this.selectable &&
             hasModifierKey(event, 'metaKey', 'ctrlKey', 'shiftKey')
         ) {
+            if (!event.shiftKey) this.toggleSelected(true);
+
             this.tagList.handleSelectionInteraction(this, event.shiftKey);
 
             // We should stop event propagation to prevent the tag list from handling the click event.
             event.stopPropagation();
 
             return;
+        }
+
+        if (this.tagList && this.selectable) {
+            this.tagList.handleSelectionInteraction(this, false);
         }
 
         if (!this.tagList && this.selectable) {
@@ -586,6 +592,7 @@ export class KbqTag
             }
             case SPACE: {
                 if (this.tagList) {
+                    this.toggleSelected(true);
                     this.tagList.handleSelectionInteraction(this, false);
                 } else {
                     this.toggleSelected(true);
