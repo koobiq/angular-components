@@ -68,10 +68,15 @@ RUN apt-get update \
 # manifests, so that editing package.json does not reinstall Node.
 # `n` keeps every version it fetches under /usr/local/n, which is 202 MB of no use once the binary
 # is in place. Dropped in the same layer, so the bytes are never committed in the first place.
+#
+# `n` is version-pinned because an unpinned global install is a hole in an otherwise reproducible
+# image: the base image is digest-pinned and Node comes from .nvmrc, but `npm install --global n`
+# would resolve to whatever is latest on the day the layer is built. Nothing here reads it after
+# the Node binary is in place, so bumping it is routine — it does not move the Node version.
 COPY .nvmrc ./
 RUN set -eux; \
     node_version="$(tr -d '\r\n' < .nvmrc)"; \
-    npm install --global n; \
+    npm install --global n@10.2.0; \
     n "$node_version"; \
     npm remove --global n; \
     rm -rf /usr/local/n; \
