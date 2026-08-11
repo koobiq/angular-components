@@ -3828,6 +3828,8 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
 export interface KbqTheme {
     className: string;
     // (undocumented)
+    colorScheme?: KbqThemeColorScheme;
+    // (undocumented)
     name: string;
     // @deprecated (undocumented)
     selected?: boolean;
@@ -3837,9 +3839,12 @@ export interface KbqTheme {
 export type KbqThemeColorScheme = 'light' | 'dark';
 
 // @public
-export interface KbqThemeConfig extends KbqTheme {
+export interface KbqThemeConfig {
+    className: string;
     // (undocumented)
     colorScheme: KbqThemeColorScheme;
+    // (undocumented)
+    name: string;
 }
 
 // @public
@@ -3890,8 +3895,6 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     readonly colorScheme: i0.Signal<KbqThemeColorScheme>;
     readonly currentTheme: i0.Signal<T | null>;
     readonly mode: i0.WritableSignal<KbqThemeMode>;
-    setMode(mode: KbqThemeMode): void;
-    setThemes(items: T[]): void;
     readonly themes: i0.WritableSignal<T[]>;
     toggle(): void;
     // (undocumented)
@@ -5099,7 +5102,7 @@ export enum ThemePalette {
 }
 
 // @public @deprecated (undocumented)
-export class ThemeService<T extends KbqThemeConfig = KbqThemeConfig> implements OnDestroy {
+export class ThemeService<T extends KbqTheme = KbqTheme> implements OnDestroy {
     constructor();
     // @deprecated (undocumented)
     readonly current: BehaviorSubject<T | null>;
