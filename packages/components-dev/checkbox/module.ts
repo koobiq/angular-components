@@ -18,6 +18,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <pseudo-checkbox-example />
         <hr />
         <checkbox-multiline-example />
+        <hr />
+        <block-checkbox-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

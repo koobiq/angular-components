@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterViewInit,
@@ -18,8 +18,15 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqCheckedState, KbqColorDirective } from '@koobiq/components/core';
+import { KbqCheckable, KbqCheckedState, KbqColorDirective, TransitionCheckState } from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
+
+/**
+ * Represents the different states that require custom transitions between them.
+ * @docs-private
+ * @deprecated Use `TransitionCheckState` from `@koobiq/components/core` instead.
+ */
+export { TransitionCheckState };
 
 // Increasing integer for generating unique ids for checkbox components.
 let nextUniqueId = 0;
@@ -28,27 +35,13 @@ let nextUniqueId = 0;
  * Provider Expression that allows kbq-checkbox to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)].
  * @docs-private
+ * @deprecated Unused - the `ControlValueAccessor` is now registered by the `KbqCheckable` host directive.
  */
 export const KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqCheckbox),
     multi: true
 };
-
-/**
- * Represents the different states that require custom transitions between them.
- * @docs-private
- */
-export enum TransitionCheckState {
-    /** The initial state of the component before any user interaction. */
-    Init = 'init',
-    /** The state representing the component when it's becoming checked. */
-    Checked = 'checked',
-    /** The state representing the component when it's becoming unchecked. */
-    Unchecked = 'unchecked',
-    /** The state representing the component when it's becoming indeterminate. */
-    Indeterminate = 'indeterminate'
-}
 
 /** Change event object emitted by KbqCheckbox. */
 export class KbqCheckboxChange {
@@ -72,7 +65,6 @@ export class KbqCheckboxChange {
     ],
     templateUrl: 'checkbox.html',
     styleUrls: ['checkbox.scss', 'checkbox-tokens.scss'],
-    providers: [KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -86,11 +78,12 @@ export class KbqCheckboxChange {
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-checkbox_label-before]': 'labelPosition() == "before"'
     },
+    hostDirectives: [KbqCheckable],
     exportAs: 'kbqCheckbox'
 })
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
-    private changeDetectorRef = inject(ChangeDetectorRef);
-    private focusMonitor = inject(FocusMonitor);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly checkable = inject(KbqCheckable, { self: true });
 
     readonly big = input<boolean>(false);
 
@@ -137,47 +130,35 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get checked(): boolean {
-        return this._checked;
+        return this.checkable.checked();
     }
 
     set checked(value: boolean) {
-        if (value !== this.checked) {
-            this._checked = value;
-            this.changeDetectorRef.markForCheck();
-        }
+        this.checkable.checked.set(value);
     }
-
-    private _checked: boolean = false;
 
     /** Whether the checkbox is disabled. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled;
+        return this.checkable.disabled();
     }
 
     set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-            this.changeDetectorRef.markForCheck();
-        }
+        this.checkable.disabled.set(value);
     }
-
-    private _disabled: boolean = false;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
-        return this.disabled ? -1 : this._tabIndex;
+        return this.checkable.effectiveTabIndex();
     }
 
     set tabIndex(value: number) {
-        this._tabIndex = value;
+        this.checkable.tabIndex.set(value);
     }
-
-    private _tabIndex = 0;
 
     /**
      * Whether the checkbox is indeterminate. This is also known as "mixed" mode and can be used to
@@ -189,32 +170,28 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get indeterminate(): boolean {
-        return this._indeterminate;
+        return this.checkable.indeterminate();
     }
 
     set indeterminate(value: boolean) {
-        const changed = value !== this._indeterminate;
+        const changed = value !== this.checkable.indeterminate();
 
-        this._indeterminate = value;
+        this.checkable.indeterminate.set(value);
 
         if (changed) {
-            if (this._indeterminate) {
-                this.transitionCheckState(TransitionCheckState.Indeterminate);
-            } else {
-                this.transitionCheckState(this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
-            }
+            this.checkable.transitionCheckState(
+                this.checkable.indeterminate()
+                    ? TransitionCheckState.Indeterminate
+                    : this.checked
+                      ? TransitionCheckState.Checked
+                      : TransitionCheckState.Unchecked
+            );
 
-            this.indeterminateChange.emit(this._indeterminate);
+            this.indeterminateChange.emit(value);
         }
     }
 
-    private _indeterminate: boolean = false;
-
     private uniqueId: string = `kbq-checkbox-${++nextUniqueId}`;
-
-    private currentAnimationClass: string = '';
-
-    private currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
     constructor() {
         super();
@@ -229,13 +206,13 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     onTouched: () => any = () => {};
 
     ngAfterViewInit() {
-        this.focusMonitor
-            .monitor(this.inputElement().nativeElement)
+        this.checkable
+            .monitorFocus(this.inputElement())
             .subscribe((focusOrigin) => this.onInputFocusChange(focusOrigin));
     }
 
     ngOnDestroy() {
-        this.focusMonitor.stopMonitoring(this.inputElement().nativeElement);
+        this.checkable.stopMonitoringFocus(this.inputElement());
     }
 
     /** Method being called whenever the label text changes. */
@@ -253,12 +230,12 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     // Implemented as part of ControlValueAccessor.
     registerOnChange(fn: (value: any) => void) {
-        this.controlValueAccessorChangeFn = fn;
+        this.checkable.registerOnChange(fn);
     }
 
     // Implemented as part of ControlValueAccessor.
     registerOnTouched(fn: any) {
-        this.onTouched = fn;
+        this.checkable.registerOnTouched(fn);
     }
 
     // Implemented as part of ControlValueAccessor.
@@ -267,12 +244,12 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     }
 
     getAriaChecked(): KbqCheckedState {
-        return this.checked ? 'true' : this.indeterminate ? 'mixed' : 'false';
+        return this.checkable.getAriaChecked();
     }
 
     /** Toggles the `checked` state of the checkbox. */
     toggle(): void {
-        this.checked = !this.checked;
+        this.checkable.toggle();
     }
 
     /**
@@ -292,36 +269,36 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
         // Preventing bubbling for the second event will solve that issue.
         event.stopPropagation();
 
-        // If resetIndeterminate is false, and the current state is indeterminate, do nothing on click
-        if (!this.disabled && this.clickAction !== 'noop') {
+        const { shouldToggle, shouldClearIndeterminate } = this.checkable.resolveClick(this.clickAction);
+
+        if (shouldToggle) {
             // When user manually click on the checkbox, `indeterminate` is set to false.
-            if (this.indeterminate && this.clickAction !== 'check') {
+            if (shouldClearIndeterminate) {
                 Promise.resolve().then(() => {
-                    this._indeterminate = false;
-                    this.indeterminateChange.emit(this._indeterminate);
+                    this.checkable.indeterminate.set(false);
+                    this.indeterminateChange.emit(false);
                 });
             }
 
             this.toggle();
-            this.transitionCheckState(this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+            this.checkable.transitionCheckState(
+                this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked
+            );
 
             // Emit our custom change event if the native input emitted one.
             // It is important to only emit it, if the native input triggered one, because
             // we don't want to trigger a change event, when the `checked` variable changes for example.
             this.emitChangeEvent();
-        } else if (!this.disabled && this.clickAction === 'noop') {
+        } else if (!this.disabled) {
             // Reset native input when clicked with noop. The native checkbox becomes checked after
             // click, reset it to be align with `checked` value of `kbq-checkbox`.
-            const inputElement = this.inputElement();
-
-            inputElement.nativeElement.checked = this.checked;
-            inputElement.nativeElement.indeterminate = this.indeterminate;
+            this.checkable.resetNativeInput(this.inputElement().nativeElement);
         }
     }
 
     /** Focuses the checkbox. */
     focus(): void {
-        this.focusMonitor.focusVia(this.inputElement().nativeElement, 'keyboard');
+        this.checkable.focusVia(this.inputElement());
     }
 
     onInteractionEvent(event: Event) {
@@ -330,26 +307,6 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
         // emit its event object to the `change` output.
         event.stopPropagation();
     }
-    private controlValueAccessorChangeFn: (value: any) => void = () => {};
-
-    private transitionCheckState(newState: TransitionCheckState) {
-        const oldState = this.currentCheckState;
-        const element: HTMLElement = this.elementRef.nativeElement;
-
-        if (oldState === newState) {
-            return;
-        }
-
-        if (this.currentAnimationClass.length > 0) {
-            element.classList.remove(this.currentAnimationClass);
-        }
-
-        this.currentCheckState = newState;
-
-        if (this.currentAnimationClass.length > 0) {
-            element.classList.add(this.currentAnimationClass);
-        }
-    }
 
     private emitChangeEvent() {
         const event = new KbqCheckboxChange();
@@ -357,14 +314,14 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
         event.source = this;
         event.checked = this.checked;
 
-        this.controlValueAccessorChangeFn(this.checked);
+        this.checkable.notifyFormValueChange(this.checked);
         this.change.emit(event);
     }
 
     /** Function is called whenever the focus changes for the input element. */
     private onInputFocusChange(focusOrigin: FocusOrigin) {
         if (focusOrigin) {
-            this.onTouched();
+            this.checkable.onTouched();
         }
     }
 }

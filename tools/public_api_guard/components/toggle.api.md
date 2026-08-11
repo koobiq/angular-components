@@ -8,12 +8,13 @@ import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
-import { KbqCheckboxClickAction } from '@koobiq/components/checkbox';
+import * as i1$1 from '@angular/cdk/a11y';
+import * as i1 from '@koobiq/components/core';
+import { KbqCheckableClickAction } from '@koobiq/components/core';
 import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
-import { TransitionCheckState } from '@koobiq/components/checkbox';
+import { TransitionCheckState } from '@koobiq/components/core';
 
 // @public (undocumented)
 export class KbqToggleChange {
@@ -22,6 +23,9 @@ export class KbqToggleChange {
     // (undocumented)
     source: KbqToggleComponent;
 }
+
+// @public
+export type KbqToggleClickAction = KbqCheckableClickAction;
 
 // @public (undocumented)
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
@@ -37,7 +41,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     // (undocumented)
     get checked(): boolean;
     set checked(value: boolean);
-    clickAction: KbqCheckboxClickAction;
+    clickAction: KbqToggleClickAction;
     protected currentCheckState: TransitionCheckState;
     // (undocumented)
     get disabled(): any;
@@ -90,7 +94,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "loading": { "alias": "loading"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "loading": { "alias": "loading"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, [{ directive: typeof i1.KbqCheckable; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqToggleComponent, never>;
 }
@@ -102,7 +106,7 @@ export class KbqToggleModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqToggleModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqToggleModule, never, [typeof i1.A11yModule, typeof KbqToggleComponent], [typeof KbqToggleComponent]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqToggleModule, never, [typeof i1$1.A11yModule, typeof KbqToggleComponent], [typeof KbqToggleComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)

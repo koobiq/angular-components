@@ -8,6 +8,7 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_cdk_focus_monitor_d from '@angular/cdk/focus-monitor.d';
 import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
@@ -20,6 +21,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { ConnectionPositionPair } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
 import { DateFormats } from '@koobiq/date-adapter';
 import { DateFormatter as DateFormatter_2 } from '@koobiq/date-formatter';
@@ -53,6 +55,7 @@ import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
+import * as rxjs from 'rxjs';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
@@ -1133,6 +1136,12 @@ export const K = 75;
 
 // @public
 export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
+
+// @public
+export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
+
+// @public
+export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: any;
 
 // @public
 export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";
@@ -2615,6 +2624,51 @@ export interface KbqBaseFileUploadLocaleConfig {
     captionTextOnlyFolder: string;
     // (undocumented)
     captionTextWithFolder: string;
+}
+
+// @public
+export class KbqCheckable implements ControlValueAccessor, OnDestroy {
+    // (undocumented)
+    readonly checked: i0.ModelSignal<boolean>;
+    readonly currentCheckState: i0.WritableSignal<TransitionCheckState>;
+    // (undocumented)
+    readonly disabled: i0.ModelSignal<boolean>;
+    readonly effectiveTabIndex: i0.Signal<number>;
+    focusVia(elementRef: ElementRef<HTMLElement>): void;
+    getAriaChecked(): KbqCheckedState;
+    // (undocumented)
+    readonly indeterminate: i0.ModelSignal<boolean>;
+    monitorFocus(elementRef: ElementRef<HTMLElement>, checkChildren?: boolean): rxjs.Observable<_angular_cdk_focus_monitor_d.FocusOrigin>;
+    // (undocumented)
+    ngOnDestroy(): void;
+    notifyFormValueChange(value: boolean): void;
+    onTouched: () => any;
+    registerOnChange(fn: (value: any) => void): void;
+    // (undocumented)
+    registerOnTouched(fn: any): void;
+    resetNativeInput(nativeInput: HTMLInputElement): void;
+    resolveClick(clickAction: KbqCheckableClickAction): KbqCheckableClickResult;
+    // (undocumented)
+    setDisabledState(isDisabled: boolean): void;
+    stopMonitoringFocus(elementRef: ElementRef<HTMLElement>): void;
+    readonly tabIndex: i0.ModelSignal<number>;
+    toggle(): void;
+    transitionCheckState(newState: TransitionCheckState): void;
+    // (undocumented)
+    writeValue(value: any): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCheckable, "[kbqCheckable]", ["kbqCheckable"], { "checked": { "alias": "checked"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "indeterminate": { "alias": "indeterminate"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, { "checked": "checkedChange"; "disabled": "disabledChange"; "indeterminate": "indeterminateChange"; "tabIndex": "tabIndexChange"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckable, never>;
+}
+
+// @public
+export type KbqCheckableClickAction = 'noop' | 'check' | 'check-indeterminate' | undefined;
+
+// @public
+export interface KbqCheckableClickResult {
+    readonly shouldClearIndeterminate: boolean;
+    readonly shouldToggle: boolean;
 }
 
 // @public
@@ -5310,6 +5364,14 @@ export const TOP_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public (undocumented)
 export const TOP_RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
+
+// @public
+export enum TransitionCheckState {
+    Checked = "checked",
+    Indeterminate = "indeterminate",
+    Init = "init",
+    Unchecked = "unchecked"
+}
 
 // @public (undocumented)
 export const TWO = 50;
