@@ -104,9 +104,12 @@ export class KbqNavbarTitle implements AfterViewInit {
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
 
-        const { width, marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
+        const { marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
 
-        return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item) || 0, 0);
+        return [marginLeft, marginRight].reduce(
+            (acc, item) => acc + (parseFloat(item) || 0),
+            this.nativeElement.getBoundingClientRect().width
+        );
     }
 
     ngAfterViewInit(): void {
@@ -354,12 +357,24 @@ export class KbqNavbarRectangleElement {
 
     readonly button = contentChild(KbqButtonCssStyler);
 
+    /**
+     * Outer width of the item: its border box plus horizontal margins.
+     *
+     * Measured with `getBoundingClientRect()` rather than `getComputedStyle().width`, which resolves
+     * to the used content-box width whatever `box-sizing` says. `.kbq-navbar-item` is `border-box`
+     * with horizontal padding, so the computed value dropped that padding from every item, while
+     * `KbqNavbar.width` — the figure this sum is compared against — has always been a border box.
+     * The navbar therefore under-counted its own content and collapsed later than it should.
+     */
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
 
-        const { width, marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
+        const { marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
 
-        return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item), 0);
+        return [marginLeft, marginRight].reduce(
+            (acc, item) => acc + (parseFloat(item) || 0),
+            this.nativeElement.getBoundingClientRect().width
+        );
     }
 }
 

@@ -1641,15 +1641,21 @@ export class KbqSelect
 
     /**
      * Calculates the width of a single item including margins.
+     *
+     * The elements measured here are `kbq-tag`s, which are `border-box` and carry horizontal
+     * padding. `getComputedStyle().width` resolves to the used content-box width whatever
+     * `box-sizing` says, so it dropped that padding from every tag and the matcher believed more
+     * tags fit than actually do. `getBoundingClientRect()` is always the border box — the same fix
+     * `kbqGetPanelWidthOrigin()` carries for the dropdown trigger.
      * @param element The DOM element to measure.
      * @returns Total width including margins and gap.
      */
     private getItemWidth(element: HTMLElement): number {
         const computedStyle = this.window.getComputedStyle(element);
 
-        const width: number = parseInt(computedStyle.width);
-        const marginLeft: number = parseInt(computedStyle.marginLeft);
-        const marginRight: number = parseInt(computedStyle.marginRight);
+        const width: number = element.getBoundingClientRect().width;
+        const marginLeft: number = parseFloat(computedStyle.marginLeft) || 0;
+        const marginRight: number = parseFloat(computedStyle.marginRight) || 0;
 
         return width + marginLeft + marginRight + parseInt(SelectSizeMultipleContentGap);
     }

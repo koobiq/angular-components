@@ -1489,12 +1489,18 @@ export class KbqTreeSelect
         return triggerClone;
     }
 
+    /**
+     * Width of a single `kbq-tag` in the matcher, including margins and the inter-tag gap.
+     *
+     * Tags are `border-box` and carry horizontal padding, which `getComputedStyle().width` — always
+     * the used content-box width — leaves out. See the twin in `KbqSelect`.
+     */
     private getItemWidth(element: HTMLElement): number {
         const computedStyle = this.window.getComputedStyle(element);
 
-        const width: number = parseInt(computedStyle.width as string);
-        const marginLeft: number = parseInt(computedStyle.marginLeft as string);
-        const marginRight: number = parseInt(computedStyle.marginRight as string);
+        const width: number = element.getBoundingClientRect().width;
+        const marginLeft: number = parseFloat(computedStyle.marginLeft as string) || 0;
+        const marginRight: number = parseFloat(computedStyle.marginRight as string) || 0;
 
         return width + marginLeft + marginRight + parseInt(SelectSizeMultipleContentGap);
     }

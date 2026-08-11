@@ -29,11 +29,22 @@ export class KbqRectangleItem {
 
     private _collapsed: boolean;
 
+    /**
+     * Outer width of the item: its border box plus horizontal margins.
+     *
+     * `getComputedStyle().width` resolves to the used content-box width whatever `box-sizing` says,
+     * so it silently drops padding and borders on the `border-box` elements this measures, and the
+     * result would change again under a consuming application's global reset.
+     * `getBoundingClientRect()` is always the border box, which makes it host-independent.
+     */
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
 
-        const { width, marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
+        const { marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
 
-        return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item), 0);
+        return [marginLeft, marginRight].reduce(
+            (acc, item) => acc + (parseFloat(item) || 0),
+            this.nativeElement.getBoundingClientRect().width
+        );
     }
 }
