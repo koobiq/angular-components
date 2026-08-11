@@ -38,9 +38,13 @@ The removal option is configured using the `removable` attribute (enabled by def
 Tags can be selected in several ways:
 
 - Click on a tag while holding `Ctrl`.
+- Click on a tag while holding `Shift` to change the selection range from the anchor tag to the clicked tag.
+- Press `Shift` + `←` / `→` to expand or shrink the range.
 - Press `Ctrl+A` key combination.
 - `Space` when the tag is focused.
 - Programmatic selection through the component [API](/en/components/tag/api).
+
+Pointer and keyboard interactions change the same range relative to its initial tag. When the range shrinks, tags outside it are deselected. Disabled tags remain unchanged.
 
 The selection option is configured using the `selectable` attribute (enabled by default).
 
@@ -84,14 +88,15 @@ To enable tag reordering, you need to set the `draggable` property for `kbq-tag-
 
 #### Focus on tag
 
-| <div style="min-width: 270px;">Key</div>                                                             | Action                           |
-| ---------------------------------------------------------------------------------------------------- | -------------------------------- |
-| <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span>              | Move focus to previous/next tag. |
-| <span class="docs-hot-key-button">Space</span>                                                       | Select/deselect tag.             |
-| <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span> | Remove tag.                      |
-| <span class="docs-hot-key-button">F2</span> / <span class="docs-hot-key-button">Enter</span>         | Start editing.                   |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>           | Select all tags.                 |
-| <span class="docs-hot-key-button">Home</span> / <span class="docs-hot-key-button">End</span>         | Move focus to first/last tag.    |
+| <div style="min-width: 270px;">Key</div>                                                                                                 | Action                           |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span>                                                  | Move focus to previous/next tag. |
+| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span> | Change the range and move focus. |
+| <span class="docs-hot-key-button">Space</span>                                                                                           | Select/deselect tag.             |
+| <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span>                                     | Remove tag.                      |
+| <span class="docs-hot-key-button">F2</span> / <span class="docs-hot-key-button">Enter</span>                                             | Start editing.                   |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>                                               | Select all tags.                 |
+| <span class="docs-hot-key-button">Home</span> / <span class="docs-hot-key-button">End</span>                                             | Move focus to first/last tag.    |
 
 #### Tag editing mode
 

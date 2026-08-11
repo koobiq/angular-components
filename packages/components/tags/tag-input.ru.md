@@ -22,9 +22,13 @@
 Теги можно выбрать несколькими способами:
 
 - Клик по тегу при зажатом `Ctrl`.
+- Клик по тегу при зажатом `Shift`, чтобы изменить выбор диапазона от якорного тега до нажатого.
+- Нажатие `Shift` + `←` / `→`, чтобы расширить или сузить диапазон.
 - Нажатие комбинации клавиш `Ctrl+A`.
 - `Space` при фокусе на теге.
 - Программный выбор через [API](/ru/components/tag/api) компонента.
+
+Мышь и клавиатура изменяют один диапазон относительно его начального тега. При сужении диапазона выбор лишних тегов снимается. Недоступные теги не изменяются.
 
 Опция выбора настраивается при помощи атрибута `selectable` (по умолчанию включена).
 
@@ -68,14 +72,15 @@
 
 #### Фокус на теге
 
-| <div style="min-width: 270px;">Клавиша</div>                                                         | Действие                                       |
-| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span>              | Переместить фокус на предыдущий/следующий тег. |
-| <span class="docs-hot-key-button">Space</span>                                                       | Выбрать/снять выбор тега.                      |
-| <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span> | Удалить тег.                                   |
-| <span class="docs-hot-key-button">F2</span> / <span class="docs-hot-key-button">Enter</span>         | Начать редактирование.                         |
-| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>           | Выделить все теги.                             |
-| <span class="docs-hot-key-button">Home</span> / <span class="docs-hot-key-button">End</span>         | Переместить фокус на первый/последний тег.     |
+| <div style="min-width: 270px;">Клавиша</div>                                                                                             | Действие                                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span>                                                  | Переместить фокус на предыдущий/следующий тег. |
+| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span> | Изменить диапазон и переместить фокус.         |
+| <span class="docs-hot-key-button">Space</span>                                                                                           | Выбрать/снять выбор тега.                      |
+| <span class="docs-hot-key-button">Delete</span> / <span class="docs-hot-key-button">Backspace</span>                                     | Удалить тег.                                   |
+| <span class="docs-hot-key-button">F2</span> / <span class="docs-hot-key-button">Enter</span>                                             | Начать редактирование.                         |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>                                               | Выделить все теги.                             |
+| <span class="docs-hot-key-button">Home</span> / <span class="docs-hot-key-button">End</span>                                             | Переместить фокус на первый/последний тег.     |
 
 #### Режим редактирования тега
 

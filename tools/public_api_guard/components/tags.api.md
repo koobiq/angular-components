@@ -243,6 +243,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     focus(): void;
     get focused(): boolean;
     focusInput(): void;
+    handleSelectionInteraction(tag: KbqTag, extendRange: boolean): void;
     get id(): string;
     keydown(event: KeyboardEvent): void;
     keyManager: FocusKeyManager<KbqTag>;
