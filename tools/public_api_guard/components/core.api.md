@@ -3852,7 +3852,11 @@ export class KbqThemeCookieStore implements KbqThemeStore {
     // (undocumented)
     getMode(): KbqThemeMode | null;
     // (undocumented)
+    getPinnedTheme(): string | null;
+    // (undocumented)
     setMode(mode: KbqThemeMode): void;
+    // (undocumented)
+    setPinnedTheme(name: string | null): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeCookieStore, never>;
     // (undocumented)
@@ -3864,7 +3868,11 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
     // (undocumented)
     getMode(): KbqThemeMode | null;
     // (undocumented)
+    getPinnedTheme(): string | null;
+    // (undocumented)
     setMode(mode: KbqThemeMode): void;
+    // (undocumented)
+    setPinnedTheme(name: string | null): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeLocalStorageStore, never>;
     // (undocumented)
@@ -3895,6 +3903,8 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     readonly colorScheme: i0.Signal<KbqThemeColorScheme>;
     readonly currentTheme: i0.Signal<T | null>;
     readonly mode: i0.WritableSignal<KbqThemeMode>;
+    readonly pinnedTheme: i0.WritableSignal<string | null>;
+    setMode(mode: KbqThemeMode): void;
     readonly themes: i0.WritableSignal<T[]>;
     toggle(): void;
     // (undocumented)
@@ -3907,13 +3917,16 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
 export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
     mode: KbqThemeMode;
     storageKey: string;
+    theme: string | null;
     themes: T[];
 }
 
 // @public
 export interface KbqThemeStore {
     getMode(): KbqThemeMode | null;
+    getPinnedTheme(): string | null;
     setMode(mode: KbqThemeMode): void;
+    setPinnedTheme(name: string | null): void;
 }
 
 // @public
