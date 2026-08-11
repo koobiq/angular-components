@@ -9,6 +9,13 @@ type MattermostConfig = {
     channel: string;
 };
 
+// The webhook host serves a TLS chain rooted in a private CA that Node does not trust, so CI opts
+// out of verification for this one request. Off by default on purpose: @koobiq/cli is published, and
+// skipping certificate checks must never be something a consumer gets without asking for it.
+function allowsUntrustedTls(): boolean {
+    return process.env['MATTERMOST_ALLOW_UNTRUSTED_TLS'] === 'true';
+}
+
 function getMattermostConfig(): MattermostConfig | null {
     const url = process.env['MATTERMOST_WEBHOOK_URL'];
     const channel = process.env['MATTERMOST_CHANNEL'];
@@ -39,6 +46,12 @@ async function sendNotification(url: string, body: object): Promise<void> {
         body: payload
     });
 
+    const rejectUnauthorized = !allowsUntrustedTls();
+
+    if (!rejectUnauthorized) {
+        console.info(cyan('  [DEBUG] TLS certificate verification is disabled for this request.'));
+    }
+
     const parsed = new URL(url);
     const { statusCode, statusMessage, responseBody } = await new Promise<{
         statusCode: number;
@@ -51,7 +64,8 @@ async function sendNotification(url: string, body: object): Promise<void> {
                 hostname: parsed.hostname,
                 port: parsed.port || undefined,
                 path: parsed.pathname + parsed.search,
-                headers
+                headers,
+                rejectUnauthorized
             },
             (res) => {
                 let data = '';

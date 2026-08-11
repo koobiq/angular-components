@@ -34,3 +34,8 @@ jobs:
           NPM_TOKEN_KOOBIQ: ${{ secrets.NPM_PUBLISH_TOKEN }}
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MM_WEBHOOK_URL }}
           MATTERMOST_CHANNEL: ${{ secrets.MM_CHANNEL_NAME }}
+          # Same untrusted webhook chain as pr-notify.yml. Deliberately not
+          # NODE_TLS_REJECT_UNAUTHORIZED: that would also cover the `npm publish` in this step and
+          # send NPM_TOKEN_KOOBIQ over an unverified connection. This flag reaches only the
+          # notification request in packages/cli/src/release/notify-release.ts.
+          MATTERMOST_ALLOW_UNTRUSTED_TLS: 'true'

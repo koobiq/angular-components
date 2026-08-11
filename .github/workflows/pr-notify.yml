@@ -11,6 +11,12 @@ jobs:
   notify:
     name: Pull Request Notification
     runs-on: ubuntu-latest
+    env:
+      # The webhook host serves a chain rooted in a private CA that Node does not trust, so the
+      # action fails with SELF_SIGNED_CERT_IN_CHAIN before the request ever leaves the runner.
+      # Accepting the chain unverified is a deliberate trade-off: the webhook URL then travels over
+      # a connection nobody authenticated. Scoped to this job, which does nothing but notify.
+      NODE_TLS_REJECT_UNAUTHORIZED: '0'
     steps:
       - name: Notification
         if: ${{ github.actor != 'dependabot[bot]' && github.base_ref == 'main' }}
