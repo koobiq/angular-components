@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, model, output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqCheckable } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import {FormsModule} from "@angular/forms";
 
 /**
  * EXAMPLE ONLY - not a published Koobiq component.
@@ -77,7 +77,6 @@ export class BlockCheckboxComponent {
         }
     }
 }
-
 
 @Component({
     selector: 'block-checkbox-example',
