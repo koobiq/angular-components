@@ -9,6 +9,13 @@ type MattermostConfig = {
     channel: string;
 };
 
+// The webhook host serves a TLS chain rooted in a private CA that Node does not trust, so CI opts
+// out of verification for this one request. Off by default on purpose: @koobiq/cli is published, and
+// skipping certificate checks must never be something a consumer gets without asking for it.
+function allowsUntrustedTls(): boolean {
+    return process.env['MATTERMOST_ALLOW_UNTRUSTED_TLS'] === 'true';
+}
+
 function getMattermostConfig(): MattermostConfig | null {
     const url = process.env['MATTERMOST_WEBHOOK_URL'];
     const channel = process.env['MATTERMOST_CHANNEL'];
@@ -25,6 +32,15 @@ function getMattermostConfig(): MattermostConfig | null {
 // (HTTP/1.1 + standard TLS) is the same one @actions/http-client uses and passes
 // the WAF. Don't "modernize" this back to fetch without re-checking the WAF.
 async function sendNotification(url: string, body: object): Promise<void> {
+    const parsed = new URL(url);
+
+    // Everything below assumes TLS: https.request would meet an http: URL with an opaque handshake
+    // error, and the rejectUnauthorized toggle would be describing a connection that has no
+    // certificate to reject. Say what is actually wrong instead.
+    if (parsed.protocol !== 'https:') {
+        throw new Error(`Mattermost webhook URL must use https, got "${parsed.protocol}".`);
+    }
+
     const payload = JSON.stringify(body);
     const headers: Record<string, string> = {
         'Content-Type': 'application/json; charset=utf-8',
@@ -39,7 +55,12 @@ async function sendNotification(url: string, body: object): Promise<void> {
         body: payload
     });
 
-    const parsed = new URL(url);
+    const rejectUnauthorized = !allowsUntrustedTls();
+
+    if (!rejectUnauthorized) {
+        console.info(cyan('  [DEBUG] TLS certificate verification is disabled for this request.'));
+    }
+
     const { statusCode, statusMessage, responseBody } = await new Promise<{
         statusCode: number;
         statusMessage: string;
@@ -51,7 +72,8 @@ async function sendNotification(url: string, body: object): Promise<void> {
                 hostname: parsed.hostname,
                 port: parsed.port || undefined,
                 path: parsed.pathname + parsed.search,
-                headers
+                headers,
+                rejectUnauthorized
             },
             (res) => {
                 let data = '';
