@@ -32,6 +32,15 @@ function getMattermostConfig(): MattermostConfig | null {
 // (HTTP/1.1 + standard TLS) is the same one @actions/http-client uses and passes
 // the WAF. Don't "modernize" this back to fetch without re-checking the WAF.
 async function sendNotification(url: string, body: object): Promise<void> {
+    const parsed = new URL(url);
+
+    // Everything below assumes TLS: https.request would meet an http: URL with an opaque handshake
+    // error, and the rejectUnauthorized toggle would be describing a connection that has no
+    // certificate to reject. Say what is actually wrong instead.
+    if (parsed.protocol !== 'https:') {
+        throw new Error(`Mattermost webhook URL must use https, got "${parsed.protocol}".`);
+    }
+
     const payload = JSON.stringify(body);
     const headers: Record<string, string> = {
         'Content-Type': 'application/json; charset=utf-8',
@@ -52,7 +61,6 @@ async function sendNotification(url: string, body: object): Promise<void> {
         console.info(cyan('  [DEBUG] TLS certificate verification is disabled for this request.'));
     }
 
-    const parsed = new URL(url);
     const { statusCode, statusMessage, responseBody } = await new Promise<{
         statusCode: number;
         statusMessage: string;
