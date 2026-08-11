@@ -5,6 +5,7 @@ import {
     KbqClampedTextLocaleConfig,
     KbqCodeBlockLocaleConfiguration,
     KbqFileUploadLocaleConfig,
+    KbqSelectLocaleConfiguration,
     KbqTimeRangeLocaleConfig
 } from './types';
 
@@ -22,7 +23,10 @@ export const ptBRLocaleData = {
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha'
     } satisfies KbqA11yLocaleConfiguration,
-    select: { hiddenItemsText: '+{{ number }}' },
+    select: {
+        hiddenItemsText: '+{{ number }}',
+        selectAll: 'Selecionar todos'
+    } satisfies KbqSelectLocaleConfiguration,
     datepicker: {
         placeholder: 'dd/mm/yyyy'
     },

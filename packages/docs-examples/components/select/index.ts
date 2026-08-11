@@ -22,6 +22,7 @@ import { SelectPreselectedValuesExample } from './select-preselected-values/sele
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
 import { SelectScrollingAndLayeringExample } from './select-scrolling-and-layering/select-scrolling-and-layering-example';
 import { SelectSearchExample } from './select-search/select-search-example';
+import { SelectSelectAllExample } from './select-select-all/select-select-all-example';
 import { SelectTwoLineOptionExample } from './select-two-line-option/select-two-line-option-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
@@ -55,6 +56,7 @@ export {
     SelectPrioritizedSelectedExample,
     SelectScrollingAndLayeringExample,
     SelectSearchExample,
+    SelectSelectAllExample,
     SelectTwoLineOptionExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
@@ -72,6 +74,7 @@ const EXAMPLES = [
     SelectOverviewExample,
     SelectMultipleExample,
     SelectSearchExample,
+    SelectSelectAllExample,
     SelectPreselectedValuesExample,
     SelectGroupsExample,
     SelectHeightExample,

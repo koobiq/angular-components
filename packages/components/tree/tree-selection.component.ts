@@ -10,6 +10,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     ContentChildren,
+    effect,
     ElementRef,
     EventEmitter,
     forwardRef,
@@ -22,6 +23,8 @@ import {
     Output,
     output,
     QueryList,
+    signal,
+    viewChild,
     ViewChild,
     ViewContainerRef,
     ViewEncapsulation
@@ -34,16 +37,23 @@ import {
     ENTER,
     FocusKeyManager,
     getKbqSelectNonArrayValueError,
+    getSelectAllState,
     hasModifierKey,
     HOME,
     isCopy,
     isSelectAll,
     isVerticalMovement,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqPseudoCheckbox,
+    KbqPseudoCheckboxState,
+    KbqSelectAllAdapter,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
+    ruRULocaleData,
     SPACE,
     TAB,
     toggleSelectAll,
@@ -55,6 +65,7 @@ import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay } from 'rxjs/operators';
 import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeNodeOutlet } from './outlet';
+import { KbqTreeNodePadding } from './padding.directive';
 import { KbqTreeBase } from './tree-base';
 import { KBQ_TREE_OPTION_PARENT_COMPONENT, KbqTreeOption, KbqTreeOptionEvent } from './tree-option.component';
 
@@ -110,9 +121,29 @@ interface SelectionModelOption {
 @Component({
     selector: 'kbq-tree-selection',
     imports: [
-        KbqTreeNodeOutlet
+        KbqTreeNodeOutlet,
+        KbqTreeOption,
+        KbqTreeNodePadding,
+        KbqPseudoCheckbox
     ],
-    template: '<ng-container kbqTreeNodeOutlet />',
+    // `kbqTreeNodePadding` on the "select all" row falls back to level 0 when the option has no `data`,
+    // which is exactly where the row belongs: aligned with the root nodes below it.
+    template: `
+        @if (showSelectAll) {
+            <kbq-tree-option
+                class="kbq-tree-option_select-all"
+                kbqTreeNodePadding
+                [selectAllRow]="true"
+                [selectable]="false"
+                [class.kbq-selected]="allOptionsSelected"
+                (click)="toggleSelectAll()"
+            >
+                <kbq-pseudo-checkbox [state]="selectAllState" />
+                {{ selectAllText }}
+            </kbq-tree-option>
+        }
+        <ng-container kbqTreeNodeOutlet />
+    `,
     styleUrls: ['./tree-selection.scss', 'tree-tokens.scss'],
     providers: [
         KBQ_SELECTION_TREE_VALUE_ACCESSOR,
@@ -166,6 +197,9 @@ export class KbqTreeSelection
     optionShouldHoldFocusOnBlur: boolean = false;
 
     @ViewChild(KbqTreeNodeOutlet, { static: true }) declare nodeOutlet: KbqTreeNodeOutlet;
+
+    /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
+    readonly selectAllOption = viewChild(KbqTreeOption);
 
     @ContentChildren(KbqTreeOption) unorderedOptions: QueryList<KbqTreeOption>;
 
@@ -226,6 +260,82 @@ export class KbqTreeSelection
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
+    /**
+     * Whether to render the "select all" master checkbox above the nodes. Multiple selection only.
+     *
+     * Enabling it also makes Ctrl/Cmd + A a two-way toggle, so the shortcut and the checkbox never
+     * disagree (`selectAllToggle` is implied).
+     */
+    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`, so it cannot be a
+    // signal input; the signal behind it is what keeps the template in step.
+    @Input({ transform: booleanAttribute })
+    get selectAll(): boolean {
+        return this.selectAllEnabled();
+    }
+
+    set selectAll(value: boolean) {
+        this.selectAllEnabled.set(value);
+    }
+
+    private readonly selectAllEnabled = signal(false);
+
+    /** Whether the "select all" row is currently rendered. */
+    get showSelectAll(): boolean {
+        return this.selectAll && this.multiple && !this.isEmpty;
+    }
+
+    /** Whether every node "select all" can act on is selected. */
+    get allOptionsSelected(): boolean {
+        const targets = this.selectAllTargets;
+
+        // `[].every()` is `true`: with nothing for "select all" to act on, claiming "all selected" would
+        // send the toggle down the deselect branch and check the master checkbox over an untouchable tree.
+        return targets.length > 0 && targets.every((node) => this.selectionModel.isSelected(node));
+    }
+
+    /** State of the "select all" master checkbox. */
+    get selectAllState(): KbqPseudoCheckboxState {
+        return getSelectAllState(this.selectAllAdapter);
+    }
+
+    /** Label of the "select all" row. Kept in step with the locale service. */
+    protected selectAllText: string = ruRULocaleData.select.selectAll;
+
+    /**
+     * Data nodes "select all" acts on, and the ones its checkbox state is derived from.
+     *
+     * While a filter is active only the rendered nodes qualify — the hidden ones are not what the user
+     * is looking at, and selecting them would contradict a master checkbox that can only report on what
+     * is on screen. Without a filter the whole data set qualifies, collapsed branches included.
+     */
+    private get selectAllTargets(): any[] {
+        const nonSelectableDataNodes = this.renderedOptions
+            .filter((option) => option.disabled || !option.selectable())
+            .map((option) => option.data);
+
+        const candidates = this.treeControl.filterValue.value?.length
+            ? this.renderedOptions.map((option) => option.data)
+            : (this.treeControl.dataNodes ?? []);
+
+        // The `includes` check comes first on purpose: the "select all" row is itself a non-selectable
+        // rendered option with no `data`, and `isDisabled` belongs to the consumer — it must never be
+        // handed a node their data source has never seen.
+        return candidates.filter(
+            (node) => !nonSelectableDataNodes.includes(node) && !this.treeControl.isDisabled(node)
+        );
+    }
+
+    /** Adapter shared by the master checkbox and the Ctrl/Cmd + A handler, so the two cannot drift apart. */
+    private get selectAllAdapter(): KbqSelectAllAdapter<any> {
+        return {
+            items: this.selectAllTargets,
+            isSelectable: () => true,
+            isSelected: (node) => this.selectionModel.isSelected(node),
+            setSelected: (node, selected) =>
+                selected ? this.selectionModel.select(node) : this.selectionModel.deselect(node)
+        };
+    }
+
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
@@ -271,6 +381,16 @@ export class KbqTreeSelection
 
     private optionBlurSubscription: Subscription | null;
 
+    private readonly localeService? = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
+
+    /** Updates locale parameters from the locale service. */
+    private updateLocaleParams = () => {
+        // Locale data registered by a consumer through `KBQ_LOCALE_DATA`/`addLocale` may predate this key.
+        this.selectAllText = this.localeService?.getParams('select')?.selectAll ?? ruRULocaleData.select.selectAll;
+
+        this.changeDetectorRef.markForCheck();
+    };
+
     constructor() {
         const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
 
@@ -288,6 +408,23 @@ export class KbqTreeSelection
         }
 
         this.selectionModel = new SelectionModel<SelectionModelOption>(this.multiple);
+
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+
+        // `unorderedOptions.changes` never fires for the "select all" row — it is a view child — so the
+        // rendered list has to be rebuilt whenever the view query resolves or drops it.
+        effect(() => {
+            this.selectAllOption();
+
+            if (this.renderedOptions) {
+                this.updateRenderedOptions();
+            }
+        });
+    }
+
+    /** Selects every node "select all" can act on, or deselects them all when they are already selected. */
+    toggleSelectAll(): void {
+        this.selectAllOptions(true);
     }
 
     ngAfterContentInit(): void {
@@ -535,6 +672,14 @@ export class KbqTreeSelection
     toggleFocusedOption(): void {
         const focusedOption = this.keyManager.activeItem;
 
+        // The row is not selectable, so nothing below would act on it. Handling it here covers both focus
+        // positions — the row itself and the search field a wrapping select keeps focus in.
+        if (focusedOption && focusedOption === this.selectAllOption()) {
+            this.toggleSelectAll();
+
+            return;
+        }
+
         if (!focusedOption?.selectable()) return;
 
         if (focusedOption && (!focusedOption.selected || this.canDeselectLast(focusedOption))) {
@@ -587,31 +732,14 @@ export class KbqTreeSelection
         tree.selectAllOptions();
     }
 
-    selectAllOptions(allowDeselect: boolean = this.selectAllToggle()): void {
-        const nonSelectableDataNodes = this.renderedOptions
-            .filter((option) => option.disabled || !option.selectable())
-            .map((option) => option.data);
-
-        // Selection is applied at the data-node level (incl. collapsed/non-rendered nodes),
-        // while the emitted events carry the selectable rendered options.
-        const dataNodes = this.treeControl.dataNodes.filter(
-            (node) => !this.treeControl.isDisabled(node) && !nonSelectableDataNodes.includes(node)
-        );
-
+    selectAllOptions(allowDeselect: boolean = this.selectAll || this.selectAllToggle()): void {
+        // Selection is applied at the data-node level (incl. collapsed/non-rendered nodes unless a filter
+        // is active), while the emitted events carry the selectable rendered options.
         const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());
 
         // `toggleSelectAll` returns the data nodes whose selection actually flipped — the source of
         // truth, unlike the cached `option.selected` which lags until change detection.
-        const changed = toggleSelectAll(
-            {
-                items: dataNodes,
-                isSelectable: () => true,
-                isSelected: (node) => this.selectionModel.isSelected(node),
-                setSelected: (node, selected) =>
-                    selected ? this.selectionModel.select(node) : this.selectionModel.deselect(node)
-            },
-            { allowDeselect }
-        );
+        const changed = toggleSelectAll(this.selectAllAdapter, { allowDeselect });
 
         const changedData = new Set(changed);
         const changedOptions = selectableOptions.filter((option) => changedData.has(option.data));
@@ -797,6 +925,15 @@ export class KbqTreeSelection
 
     private updateRenderedOptions = () => {
         const orderedOptions: KbqTreeOption[] = [];
+
+        // The "select all" row is rendered by this component's own template, so it never reaches the
+        // `unorderedOptions` content query — but it is the first thing on screen and has to lead the
+        // list the key manager navigates.
+        const selectAllOption = this.selectAllOption();
+
+        if (selectAllOption) {
+            orderedOptions.push(selectAllOption);
+        }
 
         this.sortedNodes.forEach((node) => {
             const found = this.unorderedOptions.find((option) => option.value === this.treeControl.getValue(node));

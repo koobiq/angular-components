@@ -18,6 +18,33 @@
 
 <!-- example(tree-select-search-overview) -->
 
+### Master checkbox "Select all"
+
+If there are many nodes, the `selectAll` attribute adds a master checkbox above the tree, so all of them can be selected — or deselected — in one action. Multiple selection only.
+
+<!-- prettier-ignore -->
+```html
+<kbq-tree-select multiple selectAll>
+    <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+        <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            {{ treeControl.getViewValue(node) }}
+        </kbq-tree-option>
+    </kbq-tree-selection>
+</kbq-tree-select>
+```
+
+Without a search query the checkbox covers the whole data set, collapsed branches included. While a query is active it covers only the nodes on screen — the matches and the ancestors kept visible for them. Disabled nodes are ignored: they are neither selected nor deselected, and the checkbox state reflects only the nodes the user can actually toggle. The label comes from the locale (`select.selectAll`).
+
+The row takes part in keyboard navigation as the first item of the tree, and every action on it emits `onSelectAll`.
+
+<!-- example(tree-select-select-all) -->
+
+### Selecting everything from the keyboard
+
+`Ctrl`/`Cmd` + `A` selects all nodes in multiple selection mode. By default a repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. With `selectAll` the shortcut always toggles both ways, so it and the master checkbox cannot disagree.
+
+Inside a non-empty search field the first press selects the text of the field; the next one falls through to the nodes. The behaviour can be replaced wholesale with the `selectAllHandler` input.
+
 ### Lazy loading tree-select
 
 <!-- example(tree-select-lazyload) -->

@@ -58,6 +58,29 @@ Search can be by first character or full match, depending on the specific task a
 
 <!-- example(select-search) -->
 
+##### Master checkbox "Select all"
+
+If there are many values, the `selectAll` attribute adds a master checkbox above the list, so all values can be selected — or deselected — in one action. When searching, the master checkbox selects only the results that match the query. Multiple selection only.
+
+<!-- prettier-ignore -->
+```html
+<kbq-select multiple selectAll placeholder="Placeholder">
+    <kbq-option [value]="option">{{ option }}</kbq-option>
+</kbq-select>
+```
+
+The checkbox ignores disabled options: it neither selects nor deselects them, and its own state reflects only the options the user can actually toggle. The label comes from the locale (`select.selectAll`).
+
+Every action on the row emits a single `selectionChange` for the whole batch, followed by `onSelectAll`.
+
+<!-- example(select-select-all) -->
+
+##### Selecting everything from the keyboard
+
+`Ctrl`/`Cmd` + `A` selects all options in multiple selection mode. By default a repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. With `selectAll` the shortcut always toggles both ways, so it and the master checkbox cannot disagree.
+
+Inside a non-empty search field the first press selects the text of the field; the next one falls through to the options. The behaviour can be replaced wholesale with the `selectAllHandler` input — `onSelectAll` is then not emitted for the shortcut, as the handler owns the behaviour.
+
 ##### Footer List
 
 If additional controls need to be arranged, you can enable the display of a footer. You can display various auxiliary controls in the footer: buttons, links, tooltips.

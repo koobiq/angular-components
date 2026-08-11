@@ -1442,6 +1442,18 @@ describe('KbqTreeSelection', () => {
                 expect(component.modelValue.length).toBe(0);
             }));
 
+            it('should select only the matches while a filter is active', fakeAsync(() => {
+                component.treeControl.filterNodes('Sun');
+                tick();
+                fixture.detectChanges();
+
+                component.tree.onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                // `FilterParentsForNodes` keeps the match's ancestors visible, so they take part too.
+                expect(component.modelValue).toEqual(['Pictures', 'Sun']);
+            }));
+
             it('should not emit selectionChange with an undefined option on a no-op CTRL + A (default)', fakeAsync(() => {
                 // first press selects everything (default: selectAllToggle off)
                 component.tree.onKeyDown(selectAllKeyEvent);

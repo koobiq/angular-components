@@ -448,6 +448,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     get isExpandable(): boolean;
     // (undocumented)
     get isToggleInDefaultPlace(): boolean;
+    get level(): number;
     // (undocumented)
     markForCheck(): void;
     // (undocumented)
@@ -470,6 +471,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     select(setFocus?: boolean): void;
     readonly selectable: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly selectAllRow: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get selected(): boolean;
     set selected(value: boolean);
@@ -504,7 +506,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeOption, "kbq-tree-option", ["kbqTreeOption"], { "checkboxThirdState": { "alias": "checkboxThirdState"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, ["toggleElementDirective", "toggleElementComponent", "pseudoCheckbox", "actionButton", "tooltipTrigger", "dropdownTrigger"], ["kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]", "kbq-pseudo-checkbox", "kbq-checkbox", "[kbq-icon]", "kbq-progress-spinner", "*", "kbq-option-action"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeOption, "kbq-tree-option", ["kbqTreeOption"], { "checkboxThirdState": { "alias": "checkboxThirdState"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "selectAllRow": { "alias": "selectAllRow"; "required": false; "isSignal": true; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, ["toggleElementDirective", "toggleElementComponent", "pseudoCheckbox", "actionButton", "tooltipTrigger", "dropdownTrigger"], ["kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]", "kbq-pseudo-checkbox", "kbq-checkbox", "[kbq-icon]", "kbq-progress-spinner", "*", "kbq-option-action"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeOption, never>;
 }
@@ -539,6 +541,7 @@ export const kbqTreeSelectAllValue = "selectAll";
 // @public (undocumented)
 export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
     constructor();
+    get allOptionsSelected(): boolean;
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
@@ -574,6 +577,8 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     multipleMode: MultipleMode | null;
     // (undocumented)
     readonly navigationChange: i0.OutputEmitterRef<KbqTreeNavigationChange<KbqTreeOption>>;
+    // (undocumented)
+    static ngAcceptInputType_selectAll: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -611,10 +616,15 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     resetFocusedItemOnBlur: boolean;
     // (undocumented)
     selectActiveOptions(): void;
+    get selectAll(): boolean;
+    set selectAll(value: boolean);
     get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, tree: KbqTreeSelection) => void);
+    readonly selectAllOption: i0.Signal<KbqTreeOption | undefined>;
     // (undocumented)
     selectAllOptions(allowDeselect?: boolean): void;
+    get selectAllState(): KbqPseudoCheckboxState;
+    protected selectAllText: string;
     readonly selectAllToggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>;
@@ -635,11 +645,13 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     setStateChildren(option: KbqTreeOption, state: boolean): void;
     // (undocumented)
     get showCheckbox(): boolean;
+    get showSelectAll(): boolean;
     // (undocumented)
     get tabIndex(): any;
     set tabIndex(value: any);
     // (undocumented)
     toggleFocusedOption(): void;
+    toggleSelectAll(): void;
     // (undocumented)
     treeControl: FlatTreeControl<any>;
     // (undocumented)
@@ -651,7 +663,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelection, never>;
 }

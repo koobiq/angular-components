@@ -608,6 +608,75 @@ class MultipleTreeSelectWithSearch implements OnInit {
     }
 }
 
+/** Small tree so "select all" assertions can list every node: 2 parents, 3 leaves. */
+const SELECT_ALL_TREE_DATA = {
+    Documents: {
+        angular: 'ts',
+        material: 'ts'
+    },
+    Downloads: {
+        Tutorial: 'html'
+    }
+};
+
+@Component({
+    selector: 'multi-tree-select-with-select-all',
+    imports: [
+        KbqTreeModule,
+        KbqInputModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [formControl]="control" [multiple]="multiple" [selectAll]="selectAll">
+                <kbq-form-field noBorders kbqSelectSearch>
+                    <input class="search-input" kbqInput type="text" [formControl]="searchControl" />
+                </kbq-form-field>
+
+                <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class MultiTreeSelectWithSelectAll implements OnInit {
+    control = new UntypedFormControl();
+    multiple = true;
+    selectAll = true;
+
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+    searchControl: UntypedFormControl = new UntypedFormControl();
+
+    readonly select = viewChild.required(KbqTreeSelect);
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(SELECT_ALL_TREE_DATA, 0);
+    }
+
+    ngOnInit(): void {
+        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+    }
+
+    hasChild(_: number, nodeData: FileFlatNode) {
+        return nodeData.expandable;
+    }
+}
+
 @Component({
     selector: 'select-with-change-event',
     imports: [
@@ -4585,6 +4654,224 @@ describe('KbqTreeSelect', () => {
 
             expect(onSelectAll).toHaveBeenCalledTimes(2);
             expect(onSelectAll.mock.calls[1][0].selected).toBe(true);
+        });
+    });
+
+    describe('selectAll', () => {
+        let fixture: ComponentFixture<MultiTreeSelectWithSelectAll>;
+        let testInstance: MultiTreeSelectWithSelectAll;
+
+        /** Every node of `SELECT_ALL_TREE_DATA`. The branches start out collapsed, so only 2 are rendered. */
+        const ALL_NODES = ['Documents', 'angular', 'material', 'Downloads', 'Tutorial'];
+        const RENDERED_NODES = ['Documents', 'Downloads'];
+
+        const getTree = () => testInstance.select().tree()!;
+
+        const getSelectAllRow = (): HTMLElement | null =>
+            overlayContainerElement.querySelector('.kbq-tree-option_select-all');
+
+        const getSearchInput = (): HTMLInputElement =>
+            overlayContainerElement.querySelector('.search-input') as HTMLInputElement;
+
+        const openPanel = () => {
+            testInstance.select().open();
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        };
+
+        const search = (query: string) => {
+            testInstance.searchControl.setValue(query);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        };
+
+        const clickSelectAll = () => {
+            getSelectAllRow()!.click();
+            fixture.detectChanges();
+            tick(1);
+            fixture.detectChanges();
+        };
+
+        const selectedValues = (): string[] => [...(testInstance.control.value ?? [])].sort();
+
+        beforeEach(fakeAsync(() => {
+            configureKbqTreeSelectTestingModule([MultiTreeSelectWithSelectAll]);
+            fixture = TestBed.createComponent(MultiTreeSelectWithSelectAll);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        describe('rendering', () => {
+            it('should render the row above the nodes', fakeAsync(() => {
+                openPanel();
+
+                const rows = Array.from(overlayContainerElement.querySelectorAll('kbq-tree-option'));
+
+                expect(rows[0].classList).toContain('kbq-tree-option_select-all');
+                expect(rows[0].textContent!.trim()).toBe('Выбрать все');
+            }));
+
+            it('should not render the row when selectAll is off', fakeAsync(() => {
+                testInstance.selectAll = false;
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(getSelectAllRow()).toBeNull();
+            }));
+
+            it('should not render the row in single-selection mode', fakeAsync(() => {
+                fixture.destroy();
+                fixture = TestBed.createComponent(MultiTreeSelectWithSelectAll);
+                testInstance = fixture.componentInstance;
+                testInstance.multiple = false;
+                fixture.detectChanges();
+                flush();
+
+                openPanel();
+
+                expect(getSelectAllRow()).toBeNull();
+            }));
+
+            it('should not render the row when the search returns no results', fakeAsync(() => {
+                openPanel();
+                search('no such node');
+
+                expect(getSelectAllRow()).toBeNull();
+            }));
+
+            it('should lead the list the key manager navigates', fakeAsync(() => {
+                openPanel();
+
+                const tree = getTree();
+
+                expect(tree.renderedOptions.first).toBe(tree.selectAllOption());
+                expect(tree.renderedOptions.length).toBe(RENDERED_NODES.length + 1);
+            }));
+        });
+
+        describe('checkbox state', () => {
+            const getCheckbox = (): HTMLElement => getSelectAllRow()!.querySelector('.kbq-pseudo-checkbox')!;
+
+            it('should be unchecked when nothing is selected', fakeAsync(() => {
+                openPanel();
+
+                expect(getTree().selectAllState).toBe('unchecked');
+                expect(getCheckbox().classList).not.toContain('kbq-checked');
+                expect(getCheckbox().classList).not.toContain('kbq-indeterminate');
+            }));
+
+            it('should be indeterminate when only some nodes are selected', fakeAsync(() => {
+                testInstance.control.setValue(['Tutorial']);
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(getTree().selectAllState).toBe('indeterminate');
+                expect(getCheckbox().classList).toContain('kbq-indeterminate');
+            }));
+
+            it('should be checked when every node is selected', fakeAsync(() => {
+                testInstance.control.setValue([...ALL_NODES]);
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(getTree().selectAllState).toBe('checked');
+                expect(getCheckbox().classList).toContain('kbq-checked');
+            }));
+        });
+
+        describe('toggling', () => {
+            it('should select every node, collapsed branches included', fakeAsync(() => {
+                openPanel();
+
+                testInstance.treeControl.collapse(testInstance.treeControl.dataNodes[0]);
+                fixture.detectChanges();
+                flush();
+
+                clickSelectAll();
+
+                expect(selectedValues()).toEqual([...ALL_NODES].sort());
+            }));
+
+            it('should deselect every node on a second click', fakeAsync(() => {
+                openPanel();
+
+                clickSelectAll();
+                expect(selectedValues()).toEqual([...ALL_NODES].sort());
+
+                clickSelectAll();
+                expect(selectedValues()).toEqual([]);
+            }));
+
+            it('should toggle only the search results while a query is active', fakeAsync(() => {
+                openPanel();
+                search('Tutorial');
+
+                clickSelectAll();
+
+                // `FilterParentsForNodes` keeps the matched node's ancestors visible, so they take part too.
+                expect(selectedValues()).toEqual(['Downloads', 'Tutorial']);
+            }));
+
+            it('should emit onSelectAll on click', fakeAsync(() => {
+                const onSelectAll = jest.fn();
+
+                testInstance.select().onSelectAll.subscribe(onSelectAll);
+
+                openPanel();
+                clickSelectAll();
+
+                expect(onSelectAll).toHaveBeenCalledTimes(1);
+                expect(onSelectAll.mock.calls[0][0].selected).toBe(true);
+
+                clickSelectAll();
+
+                expect(onSelectAll).toHaveBeenCalledTimes(2);
+                expect(onSelectAll.mock.calls[1][0].selected).toBe(false);
+            }));
+        });
+
+        describe('keyboard', () => {
+            const pressCtrlA = () => {
+                const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
+                const event = createKeyboardEvent('keydown', A, selectElement);
+
+                Object.defineProperty(event, 'ctrlKey', { get: () => true });
+                dispatchEvent(selectElement, event);
+                fixture.detectChanges();
+                tick(1);
+                fixture.detectChanges();
+            };
+
+            it('should toggle both ways with ctrl + a even though selectAllToggle is off', fakeAsync(() => {
+                openPanel();
+
+                pressCtrlA();
+                expect(selectedValues()).toEqual([...ALL_NODES].sort());
+
+                pressCtrlA();
+                expect(selectedValues()).toEqual([]);
+            }));
+
+            it('should toggle on enter while the row is active and focus is in the search field', fakeAsync(() => {
+                openPanel();
+
+                const tree = getTree();
+
+                tree.keyManager.setActiveItem(tree.selectAllOption()!);
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(getSearchInput(), 'keydown', ENTER);
+                fixture.detectChanges();
+                tick(1);
+
+                expect(selectedValues()).toEqual([...ALL_NODES].sort());
+            }));
         });
     });
 

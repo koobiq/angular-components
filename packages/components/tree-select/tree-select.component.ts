@@ -32,6 +32,7 @@ import {
     booleanAttribute,
     computed,
     contentChild,
+    effect,
     inject,
     input,
     numberAttribute,
@@ -520,6 +521,16 @@ export class KbqTreeSelect
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
+    /**
+     * Whether to render the "select all" master checkbox above the tree. Multiple selection only.
+     *
+     * The row acts on the nodes the user can actually toggle — enabled and selectable. Without a search
+     * query that covers the whole data set, collapsed branches included; while a query is active it
+     * covers only the matches. Enabling it also makes Ctrl/Cmd + A a two-way toggle, so the shortcut and
+     * the checkbox never disagree (`selectAllToggle` is implied).
+     */
+    readonly selectAll = input(false, { transform: booleanAttribute });
+
     get value(): any {
         return this.tree()!.getSelectedValues();
     }
@@ -625,16 +636,10 @@ export class KbqTreeSelect
 
         event.preventDefault();
 
-        const tree = select.tree()!;
-
-        tree.selectAllOptions(select.selectAllToggle());
-
-        const options = tree.renderedOptions.filter((option) => !option.disabled && option.selectable());
-        // `selected` per the KbqSelectAllEvent contract: `true` only when every selectable option is
-        // now selected, `false` otherwise (deselected or partial); guarded for the empty-options case.
-        const selected = options.length > 0 && options.every((option) => tree.selectionModel.isSelected(option.data));
-
-        select.onSelectAll.emit(new KbqSelectAllEvent(select, options, selected));
+        // With the master checkbox on screen the shortcut has to behave exactly like clicking it,
+        // otherwise the same action would leave the checkbox showing something the selection contradicts.
+        // `onSelectAll` is emitted by the tree subscription set up in `ngAfterContentInit`.
+        select.tree()!.selectAllOptions(select.selectAll() || select.selectAllToggle());
     }
 
     /** Whether the select is focused. */
@@ -778,6 +783,17 @@ export class KbqTreeSelect
 
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
+        // The tree owns the "select all" row — it is the only place that can put it in front of the nodes
+        // and into the key manager's list. Mirrored through an effect rather than assigned once in
+        // `ngAfterContentInit` so a `[selectAll]` bound to a changing expression keeps working.
+        effect(() => {
+            const tree = this.tree();
+
+            if (tree) {
+                tree.selectAll = this.selectAll();
+            }
+        });
+
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
@@ -862,6 +878,14 @@ export class KbqTreeSelect
 
         this.options = tree.renderedOptions;
         tree.autoSelect = this.autoSelect;
+
+        // Single place the event is raised, so a click on the master checkbox and Ctrl/Cmd + A — which
+        // both go through `selectAllOptions` — emit exactly once and with the same payload.
+        outputToObservable(tree.onSelectAll)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(({ options }) =>
+                this.onSelectAll.emit(new KbqSelectAllEvent(this, options, tree.allOptionsSelected))
+            );
 
         // Tree lives inside the select panel: enable hover-to-focus on options even without a
         // wrapping form-field (e.g. filter-bar pipes render the tree-select bare).
@@ -1413,10 +1437,14 @@ export class KbqTreeSelect
 
     /** @docs-private */
     protected shouldShowSearch(): boolean {
+        // `options` is the tree's rendered list, which leads with the "select all" row when it is on —
+        // the threshold counts real options, so it must not be tipped over by the row itself.
+        const optionsCount = this.options.length - (this.tree()?.selectAllOption() ? 1 : 0);
+
         return (
             isUndefined(this.searchMinOptionsThreshold) ||
             !!this.search()?.value() ||
-            this.options.length >= this.searchMinOptionsThreshold
+            optionsCount >= this.searchMinOptionsThreshold
         );
     }
 

@@ -30,6 +30,9 @@ import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from 
     selector: 'dev-examples',
     imports: [TreeSelectExamplesModule],
     template: `
+        <tree-select-select-all-example />
+        <hr />
+
         <tree-select-two-line-option-example />
         <hr />
 

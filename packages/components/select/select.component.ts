@@ -34,6 +34,7 @@ import {
     computed,
     contentChild,
     contentChildren,
+    effect,
     inject,
     input,
     isDevMode,
@@ -73,6 +74,9 @@ import {
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
+    KbqPseudoCheckbox,
+    KbqPseudoCheckboxState,
+    KbqSelectAllAdapter,
     KbqSelectAllEvent,
     KbqSelectFooter,
     KbqSelectMatcher,
@@ -92,12 +96,14 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
+    getSelectAllState,
     isInput,
     isSelectAll,
     isUndefined,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
+    ruRULocaleData,
     shouldSelectSearchText,
     toggleSelectAll
 } from '@koobiq/components/core';
@@ -197,7 +203,9 @@ export const minimumTimeToDisplayLoading = 300;
         NgTemplateOutlet,
         CdkMonitorFocus,
         CdkConnectedOverlay,
-        KbqIconModule
+        KbqIconModule,
+        KbqOption,
+        KbqPseudoCheckbox
     ],
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
@@ -367,6 +375,9 @@ export class KbqSelect
     /** Reference to the container element that holds the options. */
     readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
 
+    /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
+    readonly selectAllOption = viewChild(KbqOption);
+
     /** Reference to the CDK connected overlay directive. */
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
@@ -400,6 +411,16 @@ export class KbqSelect
     /** All of the defined select options. */
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
 
+    /**
+     * Everything the key manager navigates: the built-in "select all" row first, then `options`.
+     *
+     * The row is rendered by the select's own template, so it never reaches the `options` content query.
+     * Kept as a separate list rather than folded into `options` because `options` is public API — the
+     * filter-bar pipes, `firstFiltered` and the tallies below all mean "the options the consumer
+     * projected", and a synthetic entry there would quietly corrupt every one of them.
+     */
+    readonly navigableOptions = new QueryList<KbqOption>();
+
     /** All of the defined groups of options. */
     readonly optionGroups = contentChildren(KbqOptgroup);
 
@@ -413,6 +434,9 @@ export class KbqSelect
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input() hiddenItemsText: string = '+{{ number }}';
+
+    /** Label of the "select all" row. Kept in step with the locale service. */
+    protected selectAllText: string = ruRULocaleData.select.selectAll;
 
     /** Determines whether preselected values are displayed. */
     readonly showPreselectedValues = input<boolean>(false);
@@ -681,6 +705,16 @@ export class KbqSelect
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
     /**
+     * Whether to render the "select all" master checkbox above the options. Multiple selection only.
+     *
+     * The row acts on the options the user can actually toggle — rendered, enabled and selectable. Since
+     * search filtering removes options from the DOM, "select all" under an active query selects only the
+     * matches. Enabling it also makes Ctrl/Cmd + A a two-way toggle, so the shortcut and the checkbox
+     * never disagree (`selectAllToggle` is implied).
+     */
+    readonly selectAll = input(false, { transform: booleanAttribute });
+
+    /**
      * Function for handling the Ctrl + A (select all) keyboard combination.
      * By default, the internal handler selects all options.
      * @param event The keyboard event that triggered the handler.
@@ -862,6 +896,45 @@ export class KbqSelect
         return !!search && this.options?.filter((option) => option.selectable()).length === 0 && !!search.value();
     }
 
+    /** Whether the "select all" row is currently rendered. */
+    get showSelectAll(): boolean {
+        return this.selectAll() && this.multiSelection && !this.isEmptySearchResult;
+    }
+
+    /** Whether every option "select all" can act on is selected. */
+    get allOptionsSelected(): boolean {
+        const targets = this.selectAllTargets;
+
+        // `[].every()` is `true`: with nothing for "select all" to act on, claiming "all selected" would
+        // send the toggle down the deselect branch and check the master checkbox over an untouchable list.
+        return targets.length > 0 && targets.every((option) => option.selected);
+    }
+
+    /** State of the "select all" master checkbox. */
+    get selectAllState(): KbqPseudoCheckboxState {
+        return getSelectAllState(this.selectAllAdapter);
+    }
+
+    /**
+     * Options "select all" acts on, and the ones its checkbox state is derived from.
+     *
+     * `KbqOption.select()` and `deselect()` do not consult `disabled` or `selectable()`, so the
+     * filtering has to happen here rather than being left to the options themselves.
+     */
+    private get selectAllTargets(): KbqOption[] {
+        return this.options?.filter((option) => option.selectable() && !option.disabled) ?? [];
+    }
+
+    /** Adapter shared by the master checkbox and the Ctrl/Cmd + A handler, so the two cannot drift apart. */
+    private get selectAllAdapter(): KbqSelectAllAdapter<KbqOption> {
+        return {
+            items: this.selectAllTargets,
+            isSelectable: () => true,
+            isSelected: (option) => option.selected,
+            setSelected: (option, selected) => (selected ? option.select() : option.deselect())
+        };
+    }
+
     /**
      * Whether the cleaner (clear button) should be shown.
      * @docs-private
@@ -935,6 +1008,9 @@ export class KbqSelect
         return this.multiple || this.multiline();
     }
 
+    /** Whether a "select all" batch is running, so the per-option changes propagate only once. */
+    private selectAllInProgress = false;
+
     /** Subscription to the close event of the overlay. */
     private closeSubscription = Subscription.EMPTY;
 
@@ -959,6 +1035,15 @@ export class KbqSelect
         super();
 
         this.localeService?.changes.subscribe(this.updateLocaleParams);
+
+        // The "select all" row only exists while the panel is attached, so the key manager's list has to
+        // be rebuilt whenever the view query resolves or drops it — `options.changes` alone never fires
+        // for it.
+        effect(() => {
+            this.selectAllOption();
+
+            this.syncNavigableOptions();
+        });
 
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
@@ -1038,6 +1123,7 @@ export class KbqSelect
         });
 
         this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.syncNavigableOptions();
             this.resetOptions();
             this.initializeSelection();
         });
@@ -1086,6 +1172,34 @@ export class KbqSelect
     @Input()
     hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string {
         return hiddenItemsText.replace('{{ number }}', hiddenItems.toString());
+    }
+
+    /**
+     * Selects every option "select all" can act on, or deselects them all when they are already selected.
+     *
+     * Backs both the master checkbox and Ctrl/Cmd + A while `selectAll` is on. Emits a single
+     * `selectionChange` for the whole batch, followed by `onSelectAll`.
+     */
+    toggleSelectAll(): void {
+        const targets = this.selectAllTargets;
+
+        if (!targets.length) return;
+
+        // The per-option selection events are what keep `selectionModel` in step, but each of them would
+        // otherwise propagate a value of its own. Suppressing that and propagating once at the end turns
+        // N events into the single change the user actually performed.
+        this.selectAllInProgress = true;
+
+        try {
+            toggleSelectAll(this.selectAllAdapter, { allowDeselect: true });
+        } finally {
+            this.selectAllInProgress = false;
+        }
+
+        this.propagateChanges();
+        this.stateChanges.next();
+
+        this.onSelectAll.emit(new KbqSelectAllEvent(this, targets, this.allOptionsSelected));
     }
 
     /**
@@ -1479,11 +1593,13 @@ export class KbqSelect
 
         if (this.multiple || this.multiline()) {
             this.keyManager.setActiveItem(option);
-            const options = this.options.toArray();
+            // The key manager's list, not `options`: with the "select all" row rendered the two are offset
+            // by one, and a range read off `options` would land on the wrong options entirely.
+            const options = this.navigableOptions.toArray();
 
             let fromIndex = this.keyManager.previousActiveItemIndex;
             let toIndex = (this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex);
-            const selectedOptionState = options[fromIndex].selected;
+            const selectedOptionState = options[fromIndex]?.selected;
 
             if (toIndex === fromIndex) {
                 this.selectionModel.toggle(option);
@@ -1521,7 +1637,11 @@ export class KbqSelect
 
     /** Updates locale parameters from the locale service. */
     private updateLocaleParams = () => {
-        this.hiddenItemsText = this.localeService?.getParams('select').hiddenItemsText;
+        const params = this.localeService?.getParams('select');
+
+        this.hiddenItemsText = params.hiddenItemsText;
+        // Locale data registered by a consumer through `KBQ_LOCALE_DATA`/`addLocale` may predate this key.
+        this.selectAllText = params.selectAll ?? ruRULocaleData.select.selectAll;
 
         this._changeDetectorRef.markForCheck();
     };
@@ -1703,7 +1823,15 @@ export class KbqSelect
             this.keyManager.setNextPageItemActive();
         } else if ((keyCode === ENTER || keyCode === SPACE) && this.keyManager.activeItem) {
             event.preventDefault();
-            this.keyManager.activeItem.selectViaInteraction();
+
+            // The row is not selectable, so `selectViaInteraction()` would be a no-op on it. Handling it
+            // here covers both focus positions — the row itself and the search field the panel keeps
+            // focus in while the row is merely active.
+            if (this.keyManager.activeItem === this.selectAllOption()) {
+                this.toggleSelectAll();
+            } else {
+                this.keyManager.activeItem.selectViaInteraction();
+            }
         } else if (this.multiSelection && isSelectAll(event)) {
             this.selectAllHandler(event, this);
         } else {
@@ -1756,7 +1884,16 @@ export class KbqSelect
     private isActiveItemStale(): boolean {
         const activeItem = this.keyManager.activeItem as KbqOption | null;
 
-        return !activeItem || !this.options.some((option) => option === activeItem);
+        return !activeItem || !this.navigableOptions.some((option) => option === activeItem);
+    }
+
+    /** Rebuilds the key manager's list: the "select all" row first, then the projected options. */
+    private syncNavigableOptions(): void {
+        const selectAllOption = this.selectAllOption();
+        const options = this.options?.toArray() ?? [];
+
+        this.navigableOptions.reset(selectAllOption ? [selectAllOption, ...options] : options);
+        this.navigableOptions.notifyOnChanges();
     }
 
     /**
@@ -1858,7 +1995,7 @@ export class KbqSelect
     private initKeyManager() {
         const typeAheadDebounce = 200;
 
-        this.keyManager = new ActiveDescendantKeyManager<KbqOption>(this.options)
+        this.keyManager = new ActiveDescendantKeyManager<KbqOption>(this.navigableOptions)
             .withTypeAhead(typeAheadDebounce, this.search() ? -1 : 0)
             .withVerticalOrientation()
             .withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
@@ -1921,7 +2058,8 @@ export class KbqSelect
             }
         }
 
-        if (wasSelected !== this.selectionModel.isSelected(option)) {
+        // `toggleSelectAll` propagates once for the whole batch instead.
+        if (!this.selectAllInProgress && wasSelected !== this.selectionModel.isSelected(option)) {
             this.propagateChanges();
         }
 
@@ -1994,13 +2132,23 @@ export class KbqSelect
 
         event.preventDefault();
 
+        // With the master checkbox on screen the shortcut has to behave exactly like clicking it,
+        // otherwise the same action would leave the checkbox showing something the selection contradicts.
+        if (select.selectAll()) {
+            select.toggleSelectAll();
+
+            return;
+        }
+
         const options = select.options.toArray();
-        const selectableOptions = options.filter((option) => !option.disabled);
+        const selectableOptions = options.filter((option) => !option.disabled && option.selectable());
 
         toggleSelectAll<KbqOption>(
             {
                 items: options,
-                isSelectable: (option) => !option.disabled,
+                // A non-selectable option is not one the user could ever toggle by hand — sweeping it up
+                // here would select the consumer's own "select all" row along with the real options.
+                isSelectable: (option) => !option.disabled && option.selectable(),
                 isSelected: (option) => option.selected,
                 setSelected: (option, selected) => (selected ? option.select() : option.deselect())
             },

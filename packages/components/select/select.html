@@ -127,6 +127,17 @@
             @if (isEmptySearchResult) {
                 <ng-content select="[kbq-select-search-empty-result]" />
             }
+            @if (showSelectAll) {
+                <kbq-option
+                    class="kbq-select__select-all"
+                    [selectable]="false"
+                    [class.kbq-selected]="allOptionsSelected"
+                    (click)="toggleSelectAll()"
+                >
+                    <kbq-pseudo-checkbox [state]="selectAllState" />
+                    {{ selectAllText }}
+                </kbq-option>
+            }
             <ng-content />
         </div>
 
