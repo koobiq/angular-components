@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqThemeMode, KbqThemeService } from '@koobiq/components/core';
+import { KbqThemeName, KbqThemeNames, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -17,7 +17,7 @@ import { DocsDocsearchDirective } from '../docsearch/docsearch.directive';
 
 /** A theme mode selectable from the navbar's theme dropdown. */
 interface DocsThemeOption {
-    mode: KbqThemeMode;
+    mode: KbqThemeNames | KbqThemeName;
     title: Record<DocsLocale, string>;
 }
 
@@ -50,8 +50,8 @@ export class DocsNavbarComponent extends DocsLocaleState {
     /** Options shown in the theme dropdown. `auto` follows the OS color scheme, handled inside `KbqThemeService`. */
     readonly themeOptions: DocsThemeOption[] = [
         { mode: 'auto', title: DOCS_TRANSLATIONS.themeSystem },
-        { mode: 'light', title: DOCS_TRANSLATIONS.themeLight },
-        { mode: 'dark', title: DOCS_TRANSLATIONS.themeDark }
+        { mode: KbqThemeNames.Default, title: DOCS_TRANSLATIONS.themeLight },
+        { mode: KbqThemeNames.Dark, title: DOCS_TRANSLATIONS.themeDark }
     ];
 
     /** The currently selected mode — persistence and OS-preference resolution are handled by `KbqThemeService`. */
@@ -65,7 +65,7 @@ export class DocsNavbarComponent extends DocsLocaleState {
         this.docStates.toggleNavbarMenu();
     }
 
-    setTheme(mode: KbqThemeMode) {
-        this.themeService.setMode(mode);
+    setTheme(mode: DocsThemeOption['mode']) {
+        this.themeService.selectTheme(mode);
     }
 }

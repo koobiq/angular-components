@@ -3828,7 +3828,7 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
 export interface KbqTheme {
     className: string;
     colorScheme?: KbqThemeColorScheme;
-    name: string;
+    name: KbqThemeColorScheme | KbqThemeName;
     // @deprecated (undocumented)
     selected?: boolean;
 }
@@ -3840,7 +3840,7 @@ export type KbqThemeColorScheme = 'light' | 'dark';
 export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
     autoDark: string;
     autoLight: string;
-    mode: KbqThemeMode;
+    mode: KbqThemeColorScheme | KbqThemeName;
     storageKey: string;
     themes: T[];
 }
@@ -3848,9 +3848,9 @@ export interface KbqThemeConfig<T extends KbqTheme = KbqTheme> {
 // @public
 export class KbqThemeCookieStore implements KbqThemeStore {
     // (undocumented)
-    getSelection(): KbqThemeSelection | null;
+    getSelection(): KbqThemeName | null;
     // (undocumented)
-    setSelection(selection: KbqThemeSelection): void;
+    setSelection(selection: KbqThemeName): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeCookieStore, never>;
     // (undocumented)
@@ -3860,9 +3860,9 @@ export class KbqThemeCookieStore implements KbqThemeStore {
 // @public
 export class KbqThemeLocalStorageStore implements KbqThemeStore {
     // (undocumented)
-    getSelection(): KbqThemeSelection | null;
+    getSelection(): KbqThemeName | null;
     // (undocumented)
-    setSelection(selection: KbqThemeSelection): void;
+    setSelection(selection: KbqThemeName): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeLocalStorageStore, never>;
     // (undocumented)
@@ -3870,16 +3870,16 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
 }
 
 // @public
-export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
+export type KbqThemeName = 'auto' | (string & {});
 
 // @public
-export type KbqThemeName = string & {};
+export enum KbqThemeNames {
+    Dark = "dark",
+    Default = "light"
+}
 
 // @public
 export const kbqThemeProvider: (config: Partial<KbqThemeConfig>) => Provider;
-
-// @public
-export type KbqThemeSelection = 'auto' | KbqThemeName;
 
 // @public
 export enum KbqThemeSelector {
@@ -3890,17 +3890,16 @@ export enum KbqThemeSelector {
 // @public
 export class KbqThemeService<T extends KbqTheme = KbqTheme> {
     constructor();
-    readonly auto: i0.WritableSignal<boolean>;
+    readonly auto: i0.Signal<boolean>;
     readonly colorScheme: i0.Signal<KbqThemeColorScheme>;
     // @deprecated (undocumented)
     readonly current: BehaviorSubject<T | null>;
     readonly currentTheme: i0.Signal<T | null>;
     // @deprecated (undocumented)
     getTheme(): T | null;
-    readonly selection: i0.Signal<KbqThemeSelection>;
-    selectTheme(name: KbqThemeName): void;
-    setAuto(auto?: boolean): void;
-    setMode(mode: KbqThemeMode): void;
+    readonly selection: i0.WritableSignal<KbqThemeName>;
+    selectTheme(name: KbqThemeNames | KbqThemeName): void;
+    setAuto(): void;
     // @deprecated (undocumented)
     setTheme(value: T | number): void;
     setThemes(items: T[]): void;
@@ -3914,8 +3913,8 @@ export class KbqThemeService<T extends KbqTheme = KbqTheme> {
 
 // @public
 export interface KbqThemeStore {
-    getSelection(): KbqThemeSelection | null;
-    setSelection(selection: KbqThemeSelection): void;
+    getSelection(): KbqThemeName | null;
+    setSelection(selection: KbqThemeName): void;
 }
 
 // @public

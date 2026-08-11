@@ -92,14 +92,14 @@ describe('KbqThemeService', () => {
         expect(document.body.classList.contains('kbq-light')).toBe(false);
     });
 
-    it('setMode/setAuto select a fixed mode or fall back to the OS preference', () => {
+    it('selectTheme/setAuto select a fixed theme or fall back to the OS preference', () => {
         const { service } = setup(true);
 
-        service.setMode('light');
+        service.selectTheme('light');
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('light');
 
-        service.setMode('dark');
+        service.selectTheme('dark');
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('dark');
 
@@ -107,22 +107,6 @@ describe('KbqThemeService', () => {
         TestBed.tick();
         expect(service.selection()).toBe('auto');
         expect(service.currentTheme()?.name).toBe('dark');
-    });
-
-    it('remembers the last selected theme across an auto toggle, within the session', () => {
-        const { service } = setup(true);
-
-        service.setMode('light');
-        TestBed.tick();
-
-        service.setAuto();
-        TestBed.tick();
-        expect(service.currentTheme()?.name).toBe('dark');
-
-        service.setAuto(false);
-        TestBed.tick();
-        expect(service.auto()).toBe(false);
-        expect(service.currentTheme()?.name).toBe('light');
     });
 
     it('toggle switches between light and dark', () => {
@@ -218,7 +202,7 @@ describe('KbqThemeService', () => {
     it('persists the selected mode via KBQ_THEME_STORE', () => {
         const { service } = setup(false);
 
-        service.setMode('dark');
+        service.selectTheme('dark');
         TestBed.tick();
 
         expect(store.setSelection).toHaveBeenCalledWith('dark');
@@ -275,7 +259,7 @@ describe('KbqThemeService', () => {
 
         expect(service.current.value?.name).toBe('light');
 
-        service.setMode('dark');
+        service.selectTheme('dark');
         TestBed.tick();
 
         expect(service.current.value?.name).toBe('dark');
