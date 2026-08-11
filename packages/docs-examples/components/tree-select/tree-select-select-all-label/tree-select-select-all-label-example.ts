@@ -78,7 +78,7 @@ export const DATA_OBJECT = {
                 <!-- Projected only while every node is selected, so the rest of the time the tree-select
                      falls back to its default trigger and lists the selected nodes as usual. -->
                 @if (tree.allOptionsSelected) {
-                    <ng-container kbq-select-trigger>All nodes</ng-container>
+                    <kbq-select-trigger>All nodes</kbq-select-trigger>
                 }
 
                 <kbq-tree-selection #tree="kbqTreeSelection" [dataSource]="dataSource" [treeControl]="treeControl">

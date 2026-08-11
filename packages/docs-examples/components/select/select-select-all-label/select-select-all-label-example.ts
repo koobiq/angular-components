@@ -13,7 +13,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 <!-- Projected only while everything is selected, so the rest of the time the select falls
                      back to its default trigger and lists the selected options as usual. -->
                 @if (select.allOptionsSelected) {
-                    <ng-container kbq-select-trigger>All options</ng-container>
+                    <kbq-select-trigger>All options</kbq-select-trigger>
                 }
 
                 @for (option of options; track option) {

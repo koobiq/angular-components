@@ -77,7 +77,7 @@ Not supported together with `withVirtualScroll` or `showPreselectedValues`: the 
 
 <!-- example(select-select-all) -->
 
-Once everything is selected, the control can show a label of its own instead of literally listing the selected options. Project a `kbq-select-trigger` while `allOptionsSelected` is `true` — without it the select falls back to its default trigger.
+Once everything is selected, the control can show a label of its own instead of literally listing the selected options. Project a `<kbq-select-trigger>` while `allOptionsSelected` is `true` — without it the select falls back to its default trigger. Use the element (or an element carrying the `kbq-select-trigger` attribute) rather than an `<ng-container>`: the trigger is stretched to the full width of the control by a rule on that element, and an `ng-container` leaves nothing for it to apply to, so the label and the arrow end up bunched together.
 
 <!-- example(select-select-all-label) -->
 

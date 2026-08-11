@@ -37,7 +37,7 @@ The checkbox has three states: unchecked, indeterminate, and checked — clickin
 
 <!-- example(tree-select-select-all) -->
 
-Once everything is selected, the control can show a label of its own instead of literally listing the selected nodes. Project a `kbq-select-trigger` while the tree's `allOptionsSelected` is `true` — without it the tree-select falls back to its default trigger.
+Once everything is selected, the control can show a label of its own instead of literally listing the selected nodes. Project a `<kbq-select-trigger>` while the tree's `allOptionsSelected` is `true` — without it the tree-select falls back to its default trigger. Use the element (or an element carrying the `kbq-select-trigger` attribute) rather than an `<ng-container>`: the trigger is stretched to the full width of the control by a rule on that element, and an `ng-container` leaves nothing for it to apply to, so the label and the arrow end up bunched together.
 
 <!-- example(tree-select-select-all-label) -->
 
