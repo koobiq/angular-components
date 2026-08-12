@@ -11,6 +11,13 @@
 
     outline: none;
 
+    // The transparent border reserves the focus ring, and the size token below is the icon box
+    // without it: 20px + 2 * 2px comes out at the 24px the action actually occupies. Declared so a
+    // global `border-box` reset in a consuming application cannot pull the ring inside and leave the
+    // icon box at 16px. Note that `.kbq-option` next to it uses the same transparent-border trick
+    // the other way round — it is `border-box`, and its 32px is the whole row.
+    box-sizing: content-box;
+
     border: var(--kbq-size-3xs) solid transparent;
     border-radius: var(--kbq-size-xs);
 

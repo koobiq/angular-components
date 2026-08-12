@@ -2869,7 +2869,6 @@ export class KbqRectangleItem {
     // (undocumented)
     get collapsed(): boolean;
     set collapsed(value: boolean);
-    // (undocumented)
     getOuterElementWidth(): number;
     // (undocumented)
     protected readonly isBrowser: boolean;
