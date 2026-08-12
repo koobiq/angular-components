@@ -155,7 +155,7 @@ export class NotificationCenterInfiniteScrollExample {
     protected readonly srcSet = computed(() => {
         const currentTheme = this.currentTheme();
 
-        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.png 1x, assets/images/${currentTheme}/empty_192@2x.png 2x`;
+        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.png 1x, https://koobiq.io/assets/images/${currentTheme}/empty_192@2x.png 2x`;
     });
 
     private readonly themeService = inject(KbqThemeService, { optional: true });
