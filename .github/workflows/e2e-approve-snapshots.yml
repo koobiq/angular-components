@@ -17,7 +17,9 @@ jobs:
   approve_snapshots:
     if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/approve-snapshots') && contains(fromJSON('["OWNER", "MEMBER"]'), github.event.comment.author_association) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Same as e2e.yml: the container is rebuilt from scratch on every run, so the old 30-minute
+    # budget no longer covers a cold start.
+    timeout-minutes: 60
     steps:
       - uses: xt0rted/pull-request-comment-branch@e8b8daa837e8ea7331c0003c9c316a64c6d8b0b1 # v3.0.0
         id: comment-branch
@@ -27,11 +29,23 @@ jobs:
       - uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
         with:
           message: 🔄 [Updating](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) snapshots.
-      - uses: ./.github/workflows/actions/setup-node
-      - run: yarn run e2e:setup
+      # Regenerated in the same container that e2e.yml compares against. Doing it on the bare
+      # runner instead would mean the baselines are written by one renderer and checked by another,
+      # and this workflow would happily commit screenshots that fail the very next run.
+      #
+      # docker compose creates a missing bind-mount source as root; packages/components already
+      # exists from the checkout, so only the report directories need creating up front.
+      - run: mkdir -p playwright-report test-results
+      # npm rather than yarn: no setup-node here, so the repository's Yarn 4 release is not on
+      # PATH. The container does its own install. e2e:docker:update-snapshots additionally mounts
+      # packages/components, which is how the rewritten PNGs reach the working tree for the commit
+      # step below.
       - id: update-snapshots
-        run: |
-          yarn run e2e:components --update-snapshots
+        run: npm run e2e:docker:update-snapshots
+        env:
+          # As in e2e.yml: the compose default is tuned for developer machines, the runner wants
+          # its own core count.
+          PLAYWRIGHT_WORKERS: 100%
       - uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         id: commit-and-push
         with:

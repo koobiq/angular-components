@@ -6749,7 +6749,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.55.0":
+"@playwright/test@npm:1.55.0":
   version: 1.55.0
   resolution: "@playwright/test@npm:1.55.0"
   dependencies:
@@ -17316,7 +17316,7 @@ __metadata:
     "@messageformat/core": "npm:^3.4.0"
     "@microsoft/api-extractor": "npm:7.56.0"
     "@octokit/rest": "npm:^18.9.1"
-    "@playwright/test": "npm:^1.55.0"
+    "@playwright/test": "npm:1.55.0"
     "@prettier/plugin-xml": "npm:^3.4.2"
     "@rollup/plugin-commonjs": "npm:^24.0.0"
     "@rollup/plugin-json": "npm:^6.0.0"

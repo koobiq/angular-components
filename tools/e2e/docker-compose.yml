@@ -1,0 +1,54 @@
+# Runs the Playwright component suite in the image built from tools/e2e/Dockerfile.
+#
+# Invoke it through `yarn run e2e:docker` (tools/e2e/run.js), which supplies PLAYWRIGHT_VERSION
+# from package.json and checks it is an exact version. Running `docker compose` against this file
+# directly leaves that build argument empty, so the tag half of the image reference becomes
+# `v-noble`; the pinned digest still resolves the correct image, but the tag no longer records
+# which @playwright/test the browsers belong to, and nothing then verifies the two agree.
+
+# Named explicitly because Compose otherwise derives the project name from this file's directory,
+# which is just `e2e` — shared with every other repository that puts its compose file in tools/e2e,
+# and enough for two projects to start reusing each other's containers and networks.
+name: koobiq-e2e
+
+services:
+  e2e:
+    # The committed baselines are x86-64. Pinning the platform stops an arm64 machine from quietly
+    # producing renders that differ from CI in a way no diff explains; on Apple Silicon that means
+    # emulation, which is slow but correct. Override only if you know why.
+    platform: ${E2E_PLATFORM:-linux/amd64}
+    build:
+      context: ../..
+      dockerfile: tools/e2e/Dockerfile
+      args:
+        - PLAYWRIGHT_VERSION
+    # Reaps the Chromium processes that would otherwise pile up under PID 1.
+    init: true
+    # Recommended upstream for Chromium. Note that the usual justification — Docker's 64 MB
+    # /dev/shm — does not apply here: Playwright passes --disable-dev-shm-usage unconditionally, so
+    # Chromium uses /tmp regardless. Kept because upstream still recommends it and it costs nothing.
+    ipc: host
+    environment:
+      # A container resolves `localhost` to both 127.0.0.1 and ::1, and Node >= 17 does not reorder
+      # them. If the Angular dev server binds v4 only and Playwright's readiness probe tries ::1
+      # first, the run dies after the 10-minute webServer timeout with nothing useful in the log.
+      # Both variables are read by playwright.config.ts.
+      BASE_URL: http://127.0.0.1:4200
+      WEB_SERVER_COMMAND: yarn run dev:e2e --configuration=production --host 127.0.0.1
+      # A container reports every core on the host — Playwright reads os.cpus(), which no cgroup or
+      # cpuset limit affects — so playwright.config.ts's '100%' would mean 64 browsers against one
+      # dev server on a 32-core machine, and every test times out. Measured on such a machine: 64
+      # workers gave 255 failures and 802 timeouts, 8 workers gave zero of either. CI overrides this
+      # back to '100%', which on a 4-vCPU runner is 4.
+      #
+      # 8 rather than a higher guess because it is the value that was actually measured clean; the
+      # ceiling is the single dev server, not the core count, so raising it buys little.
+      PLAYWRIGHT_WORKERS: ${PLAYWRIGHT_WORKERS:-8}
+    # Outputs only — the source tree comes from the image, deliberately, so a plain run cannot write
+    # anywhere near the working tree. Mounting the sources as well costs about 5 seconds per run
+    # (measured: 27s against 32s for the same spec), because `ng serve dev-e2e` compiles the whole
+    # component library and those ~3200 files then cross the host filesystem boundary. Writing
+    # updated baselines back is docker-compose.update.yml's job instead.
+    volumes:
+      - ../../playwright-report:/app/playwright-report
+      - ../../test-results:/app/test-results
