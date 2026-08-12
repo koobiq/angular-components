@@ -1812,7 +1812,7 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer?.ngOnDestroy());
 
-        it('unsubscribes the inner-scroll guard when the host is destroyed while open', fakeAsync(() => {
+        it('excludes scrolls originating inside the popup from its closing actions', fakeAsync(() => {
             const fixture = createComponent(AppSwitcherMultiSite);
 
             overlayContainer = TestBed.inject(OverlayContainer);
@@ -1823,13 +1823,31 @@ describe('KbqAppSwitcher', () => {
             tick();
             fixture.detectChanges();
 
-            const guard = trigger['preventClosingByInnerScrollSubscription'];
+            // The popup wraps its menu in `<kbq-scrollbar>`, whose viewport is a registered `CdkScrollable`.
+            const innerViewport = overlayContainer
+                .getContainerElement()
+                .querySelector('.kbq-app-switcher .kbq-scrollbar-viewport') as HTMLElement;
 
-            expect(guard.closed).toBe(false);
+            expect(innerViewport).toBeTruthy();
 
+            const emissions: unknown[] = [];
+            const subscription = trigger.closingActions().subscribe((event) => emissions.push(event));
+
+            // Scrolling the popup's own scrollbar viewport (as keyboard navigation does when it scrolls
+            // the focused item into view) must not count as a closing action.
+            innerViewport.dispatchEvent(new Event('scroll'));
+            tick(50);
+
+            expect(emissions).toHaveLength(0);
+
+            // A window/ancestor scroll — one that could move the popup out of view — still is one.
+            window.document.dispatchEvent(new Event('scroll'));
+            tick(50);
+
+            expect(emissions.length).toBeGreaterThan(0);
+
+            subscription.unsubscribe();
             fixture.destroy();
-
-            expect(guard.closed).toBe(true);
         }));
 
         it('does not throw when the popup reports hidden before it was ever shown', fakeAsync(() => {
