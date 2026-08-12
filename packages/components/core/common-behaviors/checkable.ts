@@ -8,6 +8,7 @@ import {
     InjectionToken,
     model,
     OnDestroy,
+    Provider,
     signal
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -18,7 +19,7 @@ import { KbqCheckedState } from './checkbox';
  * applying it via `hostDirectives` gets `[(ngModel)]`/`formControl` support without wiring up its own.
  * @docs-private
  */
-export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: any = {
+export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqCheckable),
     multi: true
@@ -129,9 +130,10 @@ export class KbqCheckable implements ControlValueAccessor, OnDestroy {
         return this.checked() ? 'true' : this.indeterminate() ? 'mixed' : 'false';
     }
 
-    /** Toggles the `checked` state. */
+    /** Toggles the `checked` state and notifies the registered `ControlValueAccessor` change handler. */
     toggle(): void {
         this.checked.update((value) => !value);
+        this.notifyFormValueChange(this.checked());
     }
 
     /**

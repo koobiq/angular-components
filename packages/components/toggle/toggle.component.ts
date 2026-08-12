@@ -6,6 +6,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    effect,
     ElementRef,
     inject,
     Input,
@@ -53,7 +54,7 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
     providers: [
         // Falls back to `KBQ_CHECKBOX_CLICK_ACTION` for backwards compatibility with apps that already
         // configure it globally to control click behavior for both checkbox and toggle.
-        { provide: KBQ_CHECKABLE_CLICK_ACTION, useExisting: KBQ_CHECKBOX_CLICK_ACTION }
+        { provide: KBQ_CHECKABLE_CLICK_ACTION, useFactory: () => inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -198,6 +199,10 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         super();
 
         this.id = this.uniqueId;
+
+        // `writeValue` (ngModel/formControl) now runs on `KbqCheckable`, bypassing the `checked`/`indeterminate`
+        // setters below, so this keeps the `[@switch]` animation state in sync for form-driven value changes too.
+        effect(() => this.setTransitionCheckState());
     }
 
     ngAfterViewInit(): void {
@@ -291,12 +296,12 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     private emitChangeEvent() {
+        // Note: `toggle()` already notifies the ControlValueAccessor change handler via `KbqCheckable.toggle()`.
         const event = new KbqToggleChange();
 
         event.source = this;
         event.checked = this.checked;
 
-        this.checkable.notifyFormValueChange(this.checked);
         this.change.emit(event);
     }
 }

@@ -1141,7 +1141,7 @@ export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfigur
 export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
 
 // @public
-export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: any;
+export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider;
 
 // @public
 export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";

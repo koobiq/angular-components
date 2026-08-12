@@ -22,7 +22,8 @@ import { KbqCheckable, KbqCheckedState, KbqColorDirective, TransitionCheckState 
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
 /**
- * Represents the different states that require custom transitions between them.
+ * Re-exported for backwards compatibility - `TransitionCheckState` moved to `@koobiq/components/core`
+ * so it can be shared with `KbqToggleComponent`. Existing code importing it from here keeps working.
  * @docs-private
  * @deprecated Use `TransitionCheckState` from `@koobiq/components/core` instead.
  */
@@ -309,12 +310,12 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     }
 
     private emitChangeEvent() {
+        // Note: `toggle()` already notifies the ControlValueAccessor change handler via `KbqCheckable.toggle()`.
         const event = new KbqCheckboxChange();
 
         event.source = this;
         event.checked = this.checked;
 
-        this.checkable.notifyFormValueChange(this.checked);
         this.change.emit(event);
     }
 
