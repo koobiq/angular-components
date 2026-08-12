@@ -50,7 +50,6 @@
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__download-button"
-                    [attr.aria-label]="localeConfiguration.downloadTooltip"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="localeConfiguration.downloadTooltip"
@@ -65,7 +64,6 @@
                     <button
                         kbq-button
                         class="kbq-code-block__actionbar__copy-button"
-                        [attr.aria-label]="localeConfiguration.copyTooltip"
                         [color]="componentColor.Contrast"
                         [kbqStyle]="buttonStyle.Transparent"
                         (click)="copyCode()"
@@ -79,7 +77,6 @@
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__link-button"
-                    [attr.aria-label]="localeConfiguration.openExternalSystemTooltip"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="localeConfiguration.openExternalSystemTooltip"
@@ -95,10 +92,11 @@
 <div
     #tabPanel="kbqTabNavPanel"
     #codeBlockContent="kbqOverflowShadowContainer"
+    cdkMonitorElementFocus
+    cdkScrollable
     kbqOverflowShadowContainer
     kbqTabNavPanel
-    class="kbq-code-block__main"
-    kbqScrollbarViewport
+    class="kbq-code-block__main kbq-scrollbar"
     [style.max-height.px]="calculatedMaxHeight"
     [tabIndex]="codeContentTabIndex"
 >
