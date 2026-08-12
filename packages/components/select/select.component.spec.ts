@@ -2035,7 +2035,7 @@ const ASYNC_OPTIONS_PAGE_SIZE = 10;
         <kbq-form-field>
             <kbq-select
                 [compareWith]="compareWith"
-                [showPreselectedValues]="true"
+                [showPreselectedValues]="showPreselectedValues"
                 [value]="value"
                 [virtualOptionFactory]="virtualOptionFactory"
             >
@@ -2052,6 +2052,7 @@ class SelectWithAsyncOptions {
     /** Starts empty: options only arrive once a page has been loaded. */
     options: CityOption[] = [];
     value: CityOption = { id: 0, name: 'Option #0' };
+    showPreselectedValues = true;
 
     compareWith = (a: CityOption | null, b: CityOption | null) => a?.id === b?.id;
     virtualOptionFactory = (value: CityOption) => new KbqVirtualOption(value, false, value.name);
@@ -7031,6 +7032,20 @@ describe('KbqSelect', () => {
 
             expect(testInstance.select().selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
             expect(triggerText.trim()).toBe('Option #0');
+        }));
+
+        it('should not keep an unmatched value without showPreselectedValues, even with a factory', fakeAsync(() => {
+            // The factory only says *how* to render an unresolved value. Without virtual scroll the whole
+            // list is rendered, so `showPreselectedValues` stays the opt-in for *whether* to render it.
+            testInstance.showPreselectedValues = false;
+            fixture.detectChanges();
+            testInstance.value = { id: 100, name: 'Option #100' };
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(testInstance.select().empty).toBe(true);
+            expect(fixture.debugElement.query(By.css('.kbq-select__placeholder'))).toBeTruthy();
         }));
 
         it('should replace the preselected virtual option with the matching one once it is rendered', fakeAsync(() => {

@@ -1835,7 +1835,7 @@ export class KbqSelect
     }
 
     /**
-     * Finds and selects and option based on its value.
+     * Finds and selects an option based on its value.
      * @returns Option that has the corresponding value, when it is currently rendered.
      */
     private selectValue(value: any): KbqOption | undefined {
@@ -1874,13 +1874,15 @@ export class KbqSelect
             if (correspondingOptionVirtual) {
                 return this.createVirtualOption(correspondingOptionVirtual);
             }
+
+            // The value is missing from the currently loaded data (server-side search, a narrowed down
+            // source) — it can still be rendered when a `virtualOptionFactory` maps it to a label.
+            return this.virtualOptionFactory() ? this.createVirtualOption(value) : undefined;
         }
 
-        // The value is not resolvable against any list — it can still be rendered from the raw value
-        // when a `virtualOptionFactory` maps it to a label, or when preselected values are opted into.
-        return this.virtualOptionFactory() || this.showPreselectedValues()
-            ? this.createVirtualOption(value)
-            : undefined;
+        // Without virtual scroll the whole list is rendered, so a value that matched nothing is only
+        // kept in the selection when the consumer opted into unresolved values.
+        return this.showPreselectedValues() ? this.createVirtualOption(value) : undefined;
     }
 
     /**
