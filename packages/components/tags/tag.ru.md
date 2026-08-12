@@ -12,6 +12,8 @@
 
 ### Иконка
 
+Используйте `kbqTagPrefix` и `kbqTagSuffix`, чтобы явно расположить контент до или после текста тега. `kbqTagRemove` и `kbqTagEditSubmit` уже являются suffix-контролами: не комбинируйте их с `kbqTagSuffix`, поскольку эта директива подключается через их `hostDirectives`.
+
 <!-- example(tag-with-icon) -->
 
 ### Длинный текст

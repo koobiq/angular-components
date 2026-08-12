@@ -17,6 +17,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 11. **20.3.0**: the button-toggle review — ARIA semantics, keyboard navigation and signal inputs.
 12. **20.3.0**: the form-field review — signals, accessibility and the removal of `mixinColor`.
 13. **20.3.0**: the theme service review — signals, `auto` mode and built-in persistence.
+13. **20.3.0**: explicit prefix and suffix slots for tag content.
 
 ### 1. Upgrade to 18.5.3
 
@@ -765,6 +766,74 @@ themeService.currentTheme(); // read directly, or wrap with toObservable() if yo
 **Persistence is on by default.** The selection is now saved to `localStorage` (key `kbq-theme-mode` by default) and restored on init through the `KBQ_THEME_STORE` token, the same swappable-store pattern as `KBQ_ACCORDION_STATE_STORE`. If you rolled your own persistence under a different key (as the docs app did, under `docs_theme`), configure `kbqThemeProvider({ storageKey: '…' })` instead of dropping it — existing users keep their saved preference, **provided the old value was already a mode/theme name**. If your old storage held something else (an index, a boolean, …), write a small `KbqThemeStore` wrapping `KbqThemeLocalStorageStore` that translates `getSelection()`'s return value before handing it back — see `DocsThemeStore` in the docs app's own `apps/docs/src/app/services/theme-store.ts` for the pattern. `KbqThemeCookieStore` is also available for apps that render with live Angular SSR and want the initial server-rendered HTML to already reflect the visitor's saved selection — read its doc comment first, since it doesn't help a build-time prerendered/static site.
 
 **Custom themes and DI-based setup.** `setThemes()` still accepts any array of `{ name, className, colorScheme? }` objects — `colorScheme` (`'light' | 'dark'`) is optional: when set, it's each theme's own polarity, independent of its `name`, and is what `colorScheme()` (and `toggle()`) key off; when omitted, `colorScheme()` falls back to the OS preference for that theme. New: `kbqThemeProvider({ themes, mode, storageKey, autoLight, autoDark })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively. The active theme is always applied as a CSS class on `<body>` — the design tokens' `.kbq-light`/`.kbq-dark` styles depend on it, so there's no attribute-based alternative. `auto` resolves to the theme named `autoLight`/`autoDark` (`'light'`/`'dark'` by default) — set these if your custom theme set doesn't use those names, otherwise `auto` won't match any registered theme.
+
+### 13. Explicit tag content slots (20.3.0)
+
+Until 20.3.0 every directly projected element with `kbq-icon` was placed before the tag text, regardless of its position in the template. This implicit rule made icon placement depend on the component's projection selector and made the markup easy to break. Tag content now has explicit `kbqTagPrefix` and `kbqTagSuffix` slots:
+
+```html
+<kbq-tag>
+    <i kbqTagPrefix kbq-icon="kbq-circle-info_16"></i>
+    Tag
+    <i kbqTagSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+</kbq-tag>
+```
+
+`kbqTagRemove` and `kbqTagEditSubmit` are suffix controls already: `KbqTagSuffix` is attached to them through `hostDirectives`. Do not add `kbqTagSuffix` to the same element explicitly, because that applies the directive twice.
+
+#### Running the migration
+
+The `tag-slots` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually — for example, if you have already upgraded to 20.3.0:
+
+```bash
+ng g @koobiq/components:tag-slots --project <your project>
+```
+
+To preview the changes without writing them, use `--fix=false`:
+
+```bash
+ng g @koobiq/components:tag-slots --project <your project> --fix=false
+```
+
+#### What is fixed automatically
+
+The schematic adds `kbqTagPrefix` to every legacy, directly projected `kbq-icon` that is not already assigned to a slot and is not a remove or edit-submit control:
+
+```html
+<!-- Before: the info icon rendered before the text despite its source position. -->
+<kbq-tag>
+    Tag
+    <i kbq-icon="kbq-circle-info_16"></i>
+    <i kbqTagRemove kbq-icon="kbq-xmark-s_16"></i>
+</kbq-tag>
+
+<!-- After: rendering is preserved by an explicit slot. -->
+<kbq-tag>
+    Tag
+    <i kbqTagPrefix kbq-icon="kbq-circle-info_16"></i>
+    <i kbqTagRemove kbq-icon="kbq-xmark-s_16"></i>
+</kbq-tag>
+```
+
+Source order is not used to infer a suffix: under the old projection rule all such icons were prefixes. Existing `kbqTagPrefix`, `kbqTagSuffix`, `kbqTagRemove` and `kbqTagEditSubmit` attributes are left unchanged, so the migration is idempotent.
+
+#### What you need to fix manually
+
+**Intentional trailing content.** Add `kbqTagSuffix` yourself when an icon or another element should follow the label. The schematic cannot infer a new visual intent from markup whose old rendering always placed `kbq-icon` before the label.
+
+**Content outside the legacy icon selector.** Elements with only `kbq-icon-button` or `kbq-icon-item`, nested consumer wrappers and nodes with `ngProjectAs` are left unchanged because they were not directly matched by the old `kbq-icon` slot. Review them only if you want to move them to one of the new slots.
+
+**Standalone imports.** `KbqTagsModule` exports both slot directives. If a standalone component imports `KbqTag` directly instead of the module, also import `KbqTagPrefix` and/or `KbqTagSuffix` when using them; otherwise their host classes and slot spacing are not applied.
+
+<!-- cspell:ignore addClassModificatorForIcons -->
+
+**Deprecated imperative placement and styles.** Replace calls to `addClassModificatorForIcons()` with explicit slot directives, and migrate custom selectors from `.kbq-icon_left` to `.kbq-tag-prefix`. The method and the old selector are deprecated and will be removed in the next major version.
 
 ### After the migration
 

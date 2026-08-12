@@ -12,6 +12,8 @@ Tags are used within the [`Tag list`](/en/components/tag-list) component in inpu
 
 ### Icon
 
+Use `kbqTagPrefix` and `kbqTagSuffix` to explicitly place content before or after the tag text. `kbqTagRemove` and `kbqTagEditSubmit` are suffix controls already; do not combine them with `kbqTagSuffix`, because it is supplied through their host directives.
+
 <!-- example(tag-with-icon) -->
 
 ### “Remove” Button

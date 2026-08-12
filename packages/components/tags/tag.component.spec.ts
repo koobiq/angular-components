@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { createKeyboardEvent, dispatchFakeEvent } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { KbqTagList } from './tag-list.component';
 import {
@@ -15,7 +16,8 @@ import {
     KbqTagEditSubmit,
     KbqTagEvent,
     KbqTagRemove,
-    KbqTagSelectionChange
+    KbqTagSelectionChange,
+    KbqTagSuffix
 } from './tag.component';
 import { KbqTagsModule } from './tag.module';
 
@@ -1030,6 +1032,42 @@ describe(KbqTag.name, () => {
     });
 });
 
+describe('Tag content slots', () => {
+    it('should project explicit prefix and suffix independently of their source order', () => {
+        const fixture = createComponent(TagSlotsTest);
+        const wrapper = fixture.nativeElement.querySelector('.kbq-tag__wrapper') as HTMLElement;
+
+        expect(Array.from(wrapper.children, (element) => (element as HTMLElement).id || null)).toEqual([
+            'prefix',
+            null,
+            'remove',
+            'suffix'
+        ]);
+        expect(wrapper.querySelector('#prefix')?.classList).toContain('kbq-tag-prefix');
+        expect(wrapper.querySelector('#suffix')?.classList).toContain('kbq-tag-suffix');
+        expect(wrapper.querySelector('#remove')?.classList).not.toContain('kbq-icon_left');
+        expect(wrapper.querySelector('.kbq-tag__text #label')).not.toBeNull();
+    });
+
+    it('should apply the suffix host directive to remove and edit-submit controls', () => {
+        const fixture = createComponent(TagSlotsTest);
+        const remove = fixture.debugElement.query(By.directive(KbqTagRemove));
+
+        expect(remove.injector.get(KbqTagSuffix)).toBeInstanceOf(KbqTagSuffix);
+        expect(remove.nativeElement.classList).toContain('kbq-tag-suffix');
+
+        getTagElement(fixture.debugElement).dispatchEvent(new MouseEvent('dblclick'));
+        fixture.detectChanges();
+
+        const editSubmit = fixture.debugElement.query(By.directive(KbqTagEditSubmit));
+
+        expect(editSubmit.injector.get(KbqTagSuffix)).toBeInstanceOf(KbqTagSuffix);
+        expect(editSubmit.nativeElement.classList).toContain('kbq-tag-suffix');
+        expect(fixture.nativeElement.querySelector('.kbq-tag__wrapper #remove')).toBeNull();
+        expect(fixture.nativeElement.querySelector('.kbq-tag__wrapper #edit-submit')).not.toBeNull();
+    });
+});
+
 @Component({
     imports: [KbqTagsModule],
     template: `
@@ -1078,3 +1116,18 @@ class SingleTag {
     `
 })
 class BasicTag {}
+
+@Component({
+    imports: [KbqTagsModule, KbqIconModule],
+    template: `
+        <kbq-tag editable>
+            <i id="suffix" kbqTagSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+            <span id="label">Tag</span>
+            <i id="remove" kbqTagRemove kbq-icon="kbq-xmark-s_16"></i>
+            <i id="prefix" kbqTagPrefix kbq-icon="kbq-circle-info_16"></i>
+            <input kbqTagEditInput />
+            <i id="edit-submit" kbqTagEditSubmit kbq-icon="kbq-check-s_16"></i>
+        </kbq-tag>
+    `
+})
+class TagSlotsTest {}

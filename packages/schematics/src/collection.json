@@ -82,6 +82,11 @@
             "factory": "./migrations/button-truncation/index",
             "schema": "./migrations/button-truncation/schema.json"
         },
+        "tag-slots": {
+            "description": "Marks legacy implicit kbq-icon content in tags with kbqTagPrefix so tags can use explicit content slots",
+            "factory": "./migrations/tag-slots/index",
+            "schema": "./migrations/tag-slots/schema.json"
+        },
         "button-supported-colors": {
             "description": "Removes button colors outside theme/theme-fade/contrast/contrast-fade from templates and warns about the ones it cannot resolve, plus the transparent default color change",
             "factory": "./migrations/button-supported-colors/index",

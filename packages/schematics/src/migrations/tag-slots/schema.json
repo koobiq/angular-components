@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-tag-slots",
+    "title": "Koobiq components tag slots migration",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project to migrate. If omitted, the migration runs over the whole tree.",
+            "$default": {
+                "$source": "projectName"
+            }
+        },
+        "fix": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true, marks legacy kbq-icon content in tags with kbqTagPrefix. When false, prints what would change without writing."
+        }
+    }
+}

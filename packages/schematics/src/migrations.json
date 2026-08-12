@@ -56,6 +56,11 @@
             "description": "Adds the packages that became mandatory peerDependencies of @koobiq/components — @angular/animations (at the range the project uses for @angular/core, because every animations release pins core exactly), overlayscrollbars and @koobiq/date-adapter — and schedules an install. npm adds a newly mandatory peer on upgrade by itself, but Yarn does not and pnpm only does with auto-install-peers, so those projects would otherwise upgrade into 'Cannot find module' at build time. Warns when @koobiq/date-adapter is already present, since an existing entry is left untouched and anything below 3.4.0 lacks the addCalendarUnits()/startOf() the date components call.",
             "factory": "./migrations/mandatory-peer-dependencies/index"
         },
+        "tag-slots": {
+            "version": "20.3.0-0",
+            "description": "Migrates KbqTag consumers from the legacy implicit icon placement to explicit content slots. Adds kbqTagPrefix to every directly projected kbq-icon that is not already a prefix/suffix, remove control, or edit-submit control. The migration preserves current rendering even when the icon is written after the label, because the old component always projected such icons before the label; kbq-icon-button and kbq-icon-item without kbq-icon remain unchanged because they were not part of the legacy slot.",
+            "factory": "./migrations/tag-slots/index"
+        },
         "button-supported-colors": {
             "version": "20.3.0-0",
             "description": "Migrates consumers to the narrowed button color set. `color` on KbqButton, KbqButtonGroupRoot and KbqSplitButton (and `kbqOkType` on KbqModalComponent / ModalOptions) now accepts theme, theme-fade, contrast and contrast-fade only — every other value matched no rule in kbq-button-theme() and rendered the button as a native one. Removes such a color written as a literal from templates, which is appearance-preserving now that each style falls back to its own default color, and warns about the ones it cannot resolve (enum members, programmatic assignment, members still typed KbqComponentColors / ThemePalette). Also flags the silent part: a transparent button with no explicit color now defaults to contrast instead of contrast-fade, so a `.kbq-button_transparent.kbq-contrast-fade` override stops matching.",
