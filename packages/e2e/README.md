@@ -43,6 +43,6 @@ yarn run e2e:docker
 yarn run e2e:docker:update-snapshots
 ```
 
-Requires Docker with Compose v2. On Windows, Docker Engine installed inside WSL puts no `docker.exe` on
-the Windows PATH, so run these from inside the WSL distribution. Without a local Docker install,
-comment `/approve-snapshots` on a pull request to regenerate the baselines in CI.
+Requires Docker with Compose v2 — see [Testing → Visual regression tests and Docker](../../docs/guides/06-testing.md#visual-regression-tests-and-docker)
+for what the wrapper does on Windows when Docker only runs inside WSL. Without a local Docker
+install, comment `/approve-snapshots` on a pull request to regenerate the baselines in CI.
