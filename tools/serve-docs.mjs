@@ -46,6 +46,14 @@ const app = express();
 // would bounce every unknown URL to the default locale).
 const csrShell = resolve(root, 'index.csr.html');
 const shell = existsSync(csrShell) ? csrShell : resolve(root, 'index.html');
+
+// Reading the shell up front means a root without one fails here rather than on the first request,
+// so say which file is missing instead of letting a raw ENOENT stack trace stand as the explanation.
+if (!existsSync(shell)) {
+    console.error(`[serve-docs] No index.csr.html or index.html in ${root}. Run "yarn run docs:build" first.`);
+    process.exit(1);
+}
+
 // Held in memory rather than re-read per request. Nothing below this line touches the file system
 // on behalf of a request except `express.static`, which is the one thing here built to: a handler of
 // our own that reads a file is an unmetered amount of I/O per request, which is what CodeQL reports
