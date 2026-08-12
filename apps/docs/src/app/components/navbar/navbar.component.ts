@@ -50,7 +50,7 @@ export class DocsNavbarComponent extends DocsLocaleState {
     /** Options shown in the theme dropdown. `auto` follows the OS color scheme, handled inside `KbqThemeService`. */
     readonly themeOptions: DocsThemeOption[] = [
         { mode: 'auto', title: DOCS_TRANSLATIONS.themeSystem },
-        { mode: KbqThemeNames.Default, title: DOCS_TRANSLATIONS.themeLight },
+        { mode: KbqThemeNames.Light, title: DOCS_TRANSLATIONS.themeLight },
         { mode: KbqThemeNames.Dark, title: DOCS_TRANSLATIONS.themeDark }
     ];
 
@@ -66,6 +66,6 @@ export class DocsNavbarComponent extends DocsLocaleState {
     }
 
     setTheme(mode: DocsThemeOption['mode']) {
-        this.themeService.mode.set(mode);
+        this.themeService.setMode(mode);
     }
 }

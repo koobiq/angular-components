@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { KBQ_WINDOW } from '../tokens/window';
 import {
+    KBQ_DEFAULT_THEMES,
     KBQ_THEME_CONFIG,
     KBQ_THEME_STORE,
-    KbqDefaultThemes,
     KbqThemeCookieStore,
     KbqThemeLocalStorageStore,
     kbqThemeProvider,
@@ -46,8 +46,8 @@ describe('KbqThemeService', () => {
         store = {
             getMode: jest.fn().mockReturnValue(null),
             setMode: jest.fn(),
-            getPinnedTheme: jest.fn().mockReturnValue(null),
-            setPinnedTheme: jest.fn()
+            getStaticTheme: jest.fn().mockReturnValue(null),
+            setStaticTheme: jest.fn()
         };
 
         TestBed.configureTestingModule({
@@ -97,34 +97,34 @@ describe('KbqThemeService', () => {
         expect(document.body.classList.contains('kbq-light')).toBe(false);
     });
 
-    it('mode.set() selects a fixed mode or falls back to the OS preference', () => {
+    it('setMode selects a fixed mode or falls back to the OS preference', () => {
         const { service } = setup(true);
 
-        service.mode.set('light');
+        service.setMode('light');
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('light');
 
-        service.mode.set('dark');
+        service.setMode('dark');
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('dark');
 
-        service.mode.set('auto');
+        service.setMode('auto');
         TestBed.tick();
         expect(service.mode()).toBe('auto');
         expect(service.currentTheme()?.name).toBe('dark');
     });
 
-    it('setMode() sets mode and clears an active pin, unlike mode.set() alone', () => {
+    it('setMode clears an active static theme', () => {
         const { service } = setup(false);
 
-        service.pinnedTheme.set('dark');
+        service.selectTheme('dark');
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('dark');
 
         service.setMode('dark');
         TestBed.tick();
 
-        expect(service.pinnedTheme()).toBeNull();
+        expect(service.staticTheme()).toBeNull();
         expect(service.mode()).toBe('dark');
         expect(service.currentTheme()?.name).toBe('dark');
     });
@@ -144,11 +144,11 @@ describe('KbqThemeService', () => {
     it('supports registering a fully custom set of themes, resolved by colorScheme', () => {
         const { service } = setup(false);
 
-        service.themes.set([
+        service.setThemes([
             { name: 'acme-light', className: 'kbq-acme-light', colorScheme: 'light' },
             { name: 'acme-dark', className: 'kbq-acme-dark', colorScheme: 'dark' }
         ]);
-        service.mode.set('dark');
+        service.setMode('dark');
         TestBed.tick();
 
         expect(service.currentTheme()?.className).toBe('kbq-acme-dark');
@@ -158,11 +158,11 @@ describe('KbqThemeService', () => {
     it("exposes colorScheme as the current theme's own polarity, independent of its name", () => {
         const { service } = setup(false);
 
-        service.themes.set([
+        service.setThemes([
             { name: 'acme-light', className: 'kbq-acme-light', colorScheme: 'light' },
             { name: 'acme-dark', className: 'kbq-acme-dark', colorScheme: 'dark' }
         ]);
-        service.mode.set('dark');
+        service.setMode('dark');
         TestBed.tick();
 
         expect(service.colorScheme()).toBe('dark');
@@ -174,22 +174,19 @@ describe('KbqThemeService', () => {
         TestBed.configureTestingModule({
             providers: [
                 { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
-                {
-                    provide: KBQ_THEME_CONFIG,
-                    useValue: {
-                        themes: [
-                            { name: 'sunrise', className: 'kbq-sunrise', colorScheme: 'light' },
-                            { name: 'midnight', className: 'kbq-midnight', colorScheme: 'dark' }
-                        ]
-                    }
-                },
+                kbqThemeProvider({
+                    themes: [
+                        { name: 'sunrise', className: 'kbq-sunrise', colorScheme: 'light' },
+                        { name: 'midnight', className: 'kbq-midnight', colorScheme: 'dark' }
+                    ]
+                }),
                 {
                     provide: KBQ_THEME_STORE,
                     useValue: {
                         getMode: () => null,
                         setMode: () => {},
-                        getPinnedTheme: () => null,
-                        setPinnedTheme: () => {}
+                        getStaticTheme: () => null,
+                        setStaticTheme: () => {}
                     }
                 }
             ]
@@ -214,7 +211,7 @@ describe('KbqThemeService', () => {
     it('persists the selected mode via KBQ_THEME_STORE', () => {
         const { service } = setup(false);
 
-        service.mode.set('dark');
+        service.setMode('dark');
         TestBed.tick();
 
         expect(store.setMode).toHaveBeenCalledWith('dark');
@@ -226,8 +223,8 @@ describe('KbqThemeService', () => {
         store = {
             getMode: jest.fn().mockReturnValue('dark'),
             setMode: jest.fn(),
-            getPinnedTheme: jest.fn().mockReturnValue('dark'),
-            setPinnedTheme: jest.fn()
+            getStaticTheme: jest.fn().mockReturnValue('dark'),
+            setStaticTheme: jest.fn()
         };
 
         TestBed.configureTestingModule({
@@ -258,8 +255,8 @@ describe('KbqThemeService', () => {
                     useValue: {
                         getMode: () => 'solarized',
                         setMode: () => {},
-                        getPinnedTheme: () => null,
-                        setPinnedTheme: () => {}
+                        getStaticTheme: () => null,
+                        setStaticTheme: () => {}
                     }
                 }
             ]
@@ -272,21 +269,21 @@ describe('KbqThemeService', () => {
         expect(service.mode()).toBe('auto');
     });
 
-    it('pinnedTheme defaults to null, resolving currentTheme via mode as usual', () => {
+    it('staticTheme defaults to null, resolving currentTheme via mode as usual', () => {
         const { service } = setup(true);
 
-        expect(service.pinnedTheme()).toBeNull();
+        expect(service.staticTheme()).toBeNull();
         expect(service.currentTheme()?.name).toBe('dark');
     });
 
-    it('pinning a theme overrides mode-based resolution, even against a mismatched colorScheme', () => {
+    it('selecting a static theme overrides mode-based resolution, even against a mismatched colorScheme', () => {
         const { service } = setup(false);
 
-        service.themes.set([
+        service.setThemes([
             { name: 'acme-light', className: 'kbq-acme-light', colorScheme: 'light' },
             { name: 'acme-dark', className: 'kbq-acme-dark', colorScheme: 'dark' }
         ]);
-        service.pinnedTheme.set('acme-dark');
+        service.selectTheme('acme-dark');
         TestBed.tick();
 
         expect(service.currentTheme()?.name).toBe('acme-dark');
@@ -295,63 +292,63 @@ describe('KbqThemeService', () => {
         expect(document.body.classList.contains('kbq-acme-light')).toBe(false);
     });
 
-    it('clearing the pin returns resolution to mode()', () => {
+    it('clearing the static theme returns resolution to mode()', () => {
         const { service } = setup(false);
 
-        service.pinnedTheme.set('dark');
+        service.selectTheme('dark');
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('dark');
 
-        service.pinnedTheme.set(null);
+        service.selectTheme(null);
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('light');
     });
 
-    it("toggle clears an active pin and flips relative to the pinned theme's actual colorScheme", () => {
+    it('toggle clears an active static theme and flips relative to its actual colorScheme', () => {
         const { service } = setup(false);
 
-        service.mode.set('light');
-        service.pinnedTheme.set('dark');
+        service.setMode('light');
+        service.selectTheme('dark');
         TestBed.tick();
         expect(service.colorScheme()).toBe('dark');
 
         service.toggle();
         TestBed.tick();
 
-        expect(service.pinnedTheme()).toBeNull();
+        expect(service.staticTheme()).toBeNull();
         expect(service.mode()).toBe('light');
         expect(service.currentTheme()?.name).toBe('light');
     });
 
-    it('currentTheme is null when the pinned name has no matching registered theme', () => {
+    it('currentTheme is null when the static theme name has no matching registered theme', () => {
         const { service } = setup(false);
 
         expect(service.currentTheme()?.name).toBe('light');
 
-        service.pinnedTheme.set('unknown');
+        service.selectTheme('unknown');
         TestBed.tick();
 
         expect(service.currentTheme()).toBeNull();
         expect(document.body.classList.contains('kbq-light')).toBe(false);
     });
 
-    it('persists the pinned theme via KBQ_THEME_STORE', () => {
+    it('persists the static theme via KBQ_THEME_STORE', () => {
         const { service } = setup(false);
 
-        service.pinnedTheme.set('dark');
+        service.selectTheme('dark');
         TestBed.tick();
 
-        expect(store.setPinnedTheme).toHaveBeenCalledWith('dark');
+        expect(store.setStaticTheme).toHaveBeenCalledWith('dark');
     });
 
-    it('restores the theme pinned in KBQ_THEME_STORE on init, taking priority over config.mode', () => {
+    it('restores the static theme persisted in KBQ_THEME_STORE on init, taking priority over config.mode', () => {
         const media = fakeMediaQueryList(false);
 
         store = {
             getMode: jest.fn().mockReturnValue(null),
             setMode: jest.fn(),
-            getPinnedTheme: jest.fn().mockReturnValue('dark'),
-            setPinnedTheme: jest.fn()
+            getStaticTheme: jest.fn().mockReturnValue('dark'),
+            setStaticTheme: jest.fn()
         };
 
         TestBed.configureTestingModule({
@@ -365,7 +362,7 @@ describe('KbqThemeService', () => {
 
         TestBed.tick();
 
-        expect(service.pinnedTheme()).toBe('dark');
+        expect(service.staticTheme()).toBe('dark');
         expect(service.currentTheme()?.name).toBe('dark');
     });
 
@@ -375,14 +372,14 @@ describe('KbqThemeService', () => {
         TestBed.configureTestingModule({
             providers: [
                 { provide: KBQ_WINDOW, useValue: { ...window, matchMedia: () => media.mql } },
-                { provide: KBQ_THEME_CONFIG, useValue: { theme: 'dark' } },
+                kbqThemeProvider({ theme: 'dark' }),
                 {
                     provide: KBQ_THEME_STORE,
                     useValue: {
                         getMode: () => null,
                         setMode: () => {},
-                        getPinnedTheme: () => null,
-                        setPinnedTheme: () => {}
+                        getStaticTheme: () => null,
+                        setStaticTheme: () => {}
                     }
                 }
             ]
@@ -392,7 +389,7 @@ describe('KbqThemeService', () => {
 
         TestBed.tick();
 
-        expect(service.pinnedTheme()).toBe('dark');
+        expect(service.staticTheme()).toBe('dark');
         expect(service.currentTheme()?.name).toBe('dark');
     });
 });
@@ -421,7 +418,7 @@ describe('ThemeService', () => {
         const { service } = setup(false);
         const kbqThemeService = TestBed.inject(KbqThemeService);
 
-        kbqThemeService.mode.set('dark');
+        kbqThemeService.setMode('dark');
         TestBed.tick();
 
         expect(service.current.value?.name).toBe('dark');
@@ -443,7 +440,7 @@ describe('ThemeService', () => {
         TestBed.tick();
         expect(service.getTheme()?.name).toBe('dark');
 
-        service.setTheme(KbqDefaultThemes[0]);
+        service.setTheme(KBQ_DEFAULT_THEMES[0]);
         TestBed.tick();
         expect(service.getTheme()?.name).toBe('light');
     });
@@ -453,7 +450,7 @@ describe('ThemeService', () => {
 
         expect(service.current.value?.name).toBe('light');
 
-        service.setTheme(KbqDefaultThemes[1]);
+        service.setTheme(KBQ_DEFAULT_THEMES[1]);
         TestBed.tick();
 
         expect(service.current.value?.name).toBe('dark');
@@ -466,7 +463,7 @@ describe('KbqThemeLocalStorageStore', () => {
         TestBed.configureTestingModule({
             providers: [
                 { provide: KBQ_WINDOW, useValue: { ...window, ...windowOverrides } },
-                { provide: KBQ_THEME_CONFIG, useValue: config }
+                kbqThemeProvider(config)
             ]
         });
 
@@ -505,47 +502,50 @@ describe('KbqThemeLocalStorageStore', () => {
         expect(localStorage.getItem('kbq-theme-mode')).toBeNull();
     });
 
-    it('persists and restores the pinned theme name via localStorage', () => {
+    it('persists and restores the static theme name via localStorage', () => {
         const store = setup();
 
-        expect(store.getPinnedTheme()).toBeNull();
+        expect(store.getStaticTheme()).toBeNull();
 
-        store.setPinnedTheme('acme-dark');
+        store.setStaticTheme('acme-dark');
 
-        expect(store.getPinnedTheme()).toBe('acme-dark');
+        expect(store.getStaticTheme()).toBe('acme-dark');
     });
 
-    it('stores the pin under a key derived from storageKey, distinct from the mode key', () => {
+    it('stores the static theme under a key derived from storageKey, distinct from the mode key', () => {
         const store = setup({ storageKey: 'docs_theme' });
 
-        store.setPinnedTheme('acme-dark');
+        store.setStaticTheme('acme-dark');
 
-        expect(localStorage.getItem('docs_theme-pinned')).toBe('acme-dark');
+        expect(localStorage.getItem('docs_theme-static')).toBe('acme-dark');
         expect(localStorage.getItem('docs_theme')).toBeNull();
     });
 
-    it('clears the persisted pin when setPinnedTheme is called with null', () => {
-        const store = setup();
+    it('clears the persisted static theme when setStaticTheme is called with null, by storing an empty string', () => {
+        const store = setup({ storageKey: 'docs_theme' });
 
-        store.setPinnedTheme('acme-dark');
-        store.setPinnedTheme(null);
+        store.setStaticTheme('acme-dark');
+        store.setStaticTheme(null);
 
-        expect(store.getPinnedTheme()).toBeNull();
+        expect(store.getStaticTheme()).toBeNull();
+        // Empty, not absent — `setStaticTheme(null)` never removes the key, it stores `''` (see the store's
+        // own comment for why: `''` is unambiguous, since no real theme has an empty `name`).
+        expect(localStorage.getItem('docs_theme-static')).toBe('');
     });
 
-    it('is a no-op for the pin when localStorage is unavailable (e.g. on the server)', () => {
+    it('is a no-op for the static theme when localStorage is unavailable (e.g. on the server)', () => {
         const store = setup({}, { localStorage: undefined });
 
-        store.setPinnedTheme('acme-dark');
+        store.setStaticTheme('acme-dark');
 
-        expect(store.getPinnedTheme()).toBeNull();
+        expect(store.getStaticTheme()).toBeNull();
     });
 });
 
 describe('KbqThemeCookieStore', () => {
     function setup(config: { storageKey?: string } = {}) {
         TestBed.configureTestingModule({
-            providers: [{ provide: KBQ_THEME_CONFIG, useValue: { storageKey: 'kbq-theme-mode', ...config } }]
+            providers: [kbqThemeProvider(config)]
         });
 
         return TestBed.inject(KbqThemeCookieStore);
@@ -589,24 +589,43 @@ describe('KbqThemeCookieStore', () => {
         expect(store.getMode()).toBeNull();
     });
 
-    it('persists and restores the pinned theme name via a cookie, under a key derived from storageKey', () => {
+    it('persists and restores the static theme name via a cookie, under a key derived from storageKey', () => {
         const store = setup();
 
-        expect(store.getPinnedTheme()).toBeNull();
+        expect(store.getStaticTheme()).toBeNull();
 
-        store.setPinnedTheme('acme-dark');
+        store.setStaticTheme('acme-dark');
 
-        expect(store.getPinnedTheme()).toBe('acme-dark');
-        expect(document.cookie).toContain('kbq-theme-mode-pinned=acme-dark');
+        expect(store.getStaticTheme()).toBe('acme-dark');
+        expect(document.cookie).toContain('kbq-theme-mode-static=acme-dark');
     });
 
-    it('clears the persisted pin when setPinnedTheme is called with null', () => {
+    it('clears the persisted static theme when setStaticTheme is called with null, by writing an empty value', () => {
         const store = setup();
 
-        store.setPinnedTheme('acme-dark');
-        store.setPinnedTheme(null);
+        store.setStaticTheme('acme-dark');
+        store.setStaticTheme(null);
 
-        expect(store.getPinnedTheme()).toBeNull();
+        expect(store.getStaticTheme()).toBeNull();
+        // Empty, not absent — same reasoning as `KbqThemeLocalStorageStore`, and lets this go through the
+        // same `writeCookie()` path (and its skip-if-unchanged check) as every other value.
+        expect(document.cookie.split('; ')).toContain('kbq-theme-mode-static=');
+    });
+
+    it('skips writing the cookie again when the value is unchanged, so its expiry is not reset', () => {
+        const store = setup();
+
+        store.setMode('dark');
+
+        const cookieSetter = jest.spyOn(document, 'cookie', 'set');
+
+        store.setMode('dark');
+
+        expect(cookieSetter).not.toHaveBeenCalled();
+
+        store.setMode('light');
+
+        expect(cookieSetter).toHaveBeenCalledWith(expect.stringContaining('kbq-theme-mode=light'));
     });
 });
 
