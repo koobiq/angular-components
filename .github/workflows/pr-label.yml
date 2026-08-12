@@ -2,7 +2,7 @@ name: Label PR
 
 # pull_request_target so pull requests opened from a fork are labeled too: the pull_request token
 # is read-only for them. Nothing is checked out and no pull-request-controlled code runs here —
-# only the title is read, and it reaches the script through the environment.
+# only the title and body are read, and they reach the script through the environment.
 on:
   pull_request_target:
     types:
@@ -18,7 +18,13 @@ jobs:
     name: Label
     runs-on: ubuntu-latest
     # Dependabot applies `dependencies` to its own pull requests.
-    if: ${{ github.repository_owner == 'koobiq' && github.actor != 'dependabot[bot]' }}
+    # `edited` fires for body/base edits too, not just the title. `changes.title` only exists (and
+    # is truthy) when the title itself changed; it's simply absent — not an error — on `opened` and
+    # `reopened`, which have no `changes` object at all, so checking `action != 'edited'` first
+    # covers those without needing to read it.
+    if: >-
+      ${{ github.repository_owner == 'koobiq' && github.actor != 'dependabot[bot]'
+      && (github.event.action != 'edited' || github.event.changes.title) }}
     permissions:
       pull-requests: write # to add labels to the pull request
     steps:
@@ -30,6 +36,9 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           # Already shaped by commitlint.yml, but still untrusted text: keep it out of the script.
           PR_TITLE: ${{ github.event.pull_request.title }}
+          # Free-form text with no validation at all (commitlint only checks PR_TITLE) — kept out
+          # of the script the same way.
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           set -euo pipefail
 
@@ -41,12 +50,30 @@ jobs:
             feat*) labels+=(enhancement) ;;
             fix*) labels+=(bug) ;;
             docs*) labels+=(documentation) ;;
+          esac
+
+          # A separate, independent check: `case` only fires its first match, and a dependency
+          # bump commonly carries a type prefix too (e.g. `fix(deps): bump x`). release.yml lists
+          # Dependencies above Bug Fixes specifically to handle a PR that carries both labels.
+          case "$PR_TITLE" in
             *'(deps)'*|*'(deps-dev)'*) labels+=(dependencies) ;;
           esac
 
           # `feat(scope)!:` — the conventional-commit marker for a breaking change.
           case "$PR_TITLE" in
             *'!:'*) labels+=('breaking changes') ;;
+          esac
+
+          # The footer form, per the conventional-commits spec — checked separately since it lives
+          # in the description, not the title.
+          case "$PR_BODY" in
+            *'BREAKING CHANGE:'*|*'BREAKING-CHANGE:'*)
+              # Title and body can both flag it — guard against adding the label twice.
+              case "${labels[*]-}" in
+                *'breaking changes'*) ;;
+                *) labels+=('breaking changes') ;;
+              esac
+              ;;
           esac
 
           if [ ${#labels[@]} -eq 0 ]; then
@@ -57,6 +84,9 @@ jobs:
           # Re-adding a label the pull request already carries is a no-op, so the `edited` and
           # `reopened` re-runs are free. Labels are only ever added: a title corrected from `feat:`
           # to `fix:` keeps the stale `enhancement` until someone removes it by hand.
+          add_label_flags=()
           for label in "${labels[@]}"; do
-            gh pr edit "$PR_NUMBER" --add-label "$label"
+            add_label_flags+=(--add-label "$label")
           done
+
+          gh pr edit "$PR_NUMBER" "${add_label_flags[@]}"

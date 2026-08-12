@@ -63,13 +63,19 @@ jobs:
     name: GitHub Release
     runs-on: ubuntu-latest
     needs: publish
-    # `always()` lets the manual path run while `publish` is skipped; the result check keeps a tag
-    # push from announcing a version that never reached npm. Kept a separate job so the write scope
-    # below never shares a process with NPM_PUBLISH_TOKEN, and nothing is checked out here, so no
-    # repository code runs with it either.
-    if: >-
-      ${{ always() && github.repository_owner == 'koobiq'
-      && (needs.publish.result == 'success' || needs.publish.result == 'skipped') }}
+    # Two near-simultaneous tag pushes (e.g. 20.5.0 and 19.9.0) would otherwise both read the same
+    # "current latest release" (below) before either finishes creating its own, and the Latest
+    # badge could land on whichever finishes last — even the older release train. One queued run
+    # at a time closes that window. The group is a fixed string, never templated with the ref/tag:
+    # the whole point is serializing across DIFFERENT tags, not the same one.
+    concurrency:
+      group: github-release-latest-badge
+      cancel-in-progress: false # queue, never cancel a release that's already being created
+    # `!cancelled() && !failure()` lets the manual path run while `publish` is skipped, but not if
+    # `publish` failed or the run was cancelled. Kept a separate job so the write scope below never
+    # shares a process with NPM_PUBLISH_TOKEN, and nothing is checked out here, so no repository
+    # code runs with it either.
+    if: ${{ !cancelled() && !failure() && github.repository_owner == 'koobiq' }}
     permissions:
       contents: write # for `gh release create` to publish the release
     steps:
@@ -92,9 +98,16 @@ jobs:
           fi
 
           # A re-run, or a dispatch for a tag already handled, must neither fail nor duplicate.
-          if gh release view "$TAG" > /dev/null 2>&1; then
+          # `gh release view` prints exactly "release not found" (exit 1) when the tag has no
+          # release yet — verified against this repo with `gh` 2.97.0. Any other failure (auth,
+          # rate limit, a transient GitHub outage) also exits 1 but with different text, and must
+          # not be silently treated as "go ahead and create it".
+          if release_error=$(gh release view "$TAG" 2>&1 1>/dev/null); then
             echo "Release $TAG already exists — nothing to do."
             exit 0
+          elif [ "$release_error" != "release not found" ]; then
+            echo "::error::gh release view \"$TAG\" failed: $release_error"
+            exit 1
           fi
 
           # `make_latest` defaults to true on the REST API and gh sends nothing when --latest is
