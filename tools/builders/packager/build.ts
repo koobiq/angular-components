@@ -7,6 +7,7 @@ import { execSync } from 'child_process';
 import { promises as fs, writeFileSync } from 'fs';
 import { dirname, join, resolve } from 'path';
 import { IPackagerOptions } from './schema';
+import { assertNoPlaceholders, IPackageJson, syncComponentsVersion, syncNgVersion } from './version-placeholders';
 
 const { green } = chalk;
 
@@ -88,6 +89,8 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
         context.logger.info('Syncing Angular dependency versions for releasing...');
         releasePackageJson = syncNgVersion(releasePackageJson, packageJson, options.ngVersionPlaceholder, context);
 
+        assertNoPlaceholders(releasePackageJson, releasePackageJsonPath);
+
         writeFileSync(join(libraryDestination, 'package.json'), JSON.stringify(releasePackageJson, null, 4), {
             encoding: 'utf-8'
         });
@@ -121,57 +124,6 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
 interface INgPackagerJson {
     dest: string;
-}
-
-interface IPackageJson {
-    version?: string;
-    requiredAngularVersion: string;
-    peerDependencies: {
-        [key: string]: string;
-    };
-    dependencies: {
-        [key: string]: string;
-    };
-}
-
-function syncComponentsVersion(
-    releaseJson: IPackageJson,
-    rootPackageJson: IPackageJson,
-    placeholder: string,
-    context: BuilderContext
-): IPackageJson {
-    const newPackageJson = { ...releaseJson };
-
-    if (rootPackageJson.version && (!newPackageJson.version || newPackageJson.version.trim() === placeholder)) {
-        newPackageJson.version = rootPackageJson.version;
-
-        for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
-            if (value.includes(placeholder)) {
-                context.logger.info(`${key}: ${newPackageJson.version}`);
-                newPackageJson.peerDependencies![key] = `${newPackageJson.version}`;
-            }
-        }
-    }
-
-    return newPackageJson;
-}
-
-function syncNgVersion(
-    releaseJson: IPackageJson,
-    rootPackageJson: IPackageJson,
-    placeholder: string,
-    context: BuilderContext
-): IPackageJson {
-    const updatedJson = { ...releaseJson };
-
-    for (const [key, value] of Object.entries(releaseJson.peerDependencies!)) {
-        if (value.includes(placeholder)) {
-            context.logger.info(`${key}: ${rootPackageJson.requiredAngularVersion}`);
-            updatedJson.peerDependencies![key] = `${rootPackageJson.requiredAngularVersion}`;
-        }
-    }
-
-    return updatedJson;
 }
 
 async function tryJsonParse<T>(path: string): Promise<T> {

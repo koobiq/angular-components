@@ -13,7 +13,7 @@
         "url": "https://github.com/koobiq/angular-components.git"
     },
     "packageManager": "yarn@4.1.1",
-    "requiredAngularVersion": ">=20.0.0",
+    "requiredAngularVersion": "^20.0.0",
     "engines": {
         "node": ">=24.16"
     },
@@ -92,6 +92,7 @@
         "@types/merge2": "^0.3.30",
         "@types/node": "^24.10.4",
         "@types/nunjucks": "^3.2.1",
+        "@types/semver": "^7.7.1",
         "@types/spdx-satisfies": "^0.1.2",
         "angular-eslint": "^20.7.0",
         "autoprefixer": "^10.5.2",
@@ -138,6 +139,7 @@
         "rollup-plugin-terser": "^7.0.2",
         "rollup-plugin-typescript2": "^0.37.0",
         "sass": "^1.93.3",
+        "semver": "^7.8.1",
         "spdx-satisfies": "^5.0.1",
         "style-dictionary": "^3.7.1",
         "stylelint": "^17.14.1",
@@ -301,6 +303,8 @@
         "approve-api": "ts-node --project tools/api-extractor/tsconfig.json tools/api-extractor/api-extractor.ts",
         "check-api": "yarn run approve-api onlyCheck",
         "-----LINTERS-----": "----------------------------------------------------------------------------------------",
+        "check-peer-deps": "ts-node --project tools/check-peer-deps/tsconfig.json tools/check-peer-deps",
+        "check-npm-resolution": "ts-node --project tools/check-npm-resolution/tsconfig.json tools/check-npm-resolution",
         "eslint": "eslint .",
         "eslint:fix": "yarn run eslint --fix",
         "stylelint": "stylelint '**/*.{css,scss}'",

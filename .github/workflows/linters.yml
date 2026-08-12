@@ -20,3 +20,4 @@ jobs:
           yarn run prettier
           yarn run stylelint --max-warnings=0
           yarn run eslint --max-warnings=0
+          yarn run check-peer-deps
