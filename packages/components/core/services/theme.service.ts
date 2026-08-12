@@ -77,6 +77,11 @@ export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
     themes: T[];
     /** Initial mode, used only when nothing is persisted yet in the `KBQ_THEME_STORE`. @default 'auto' */
     mode: KbqThemeMode;
+    /**
+     * Name of the theme pinned initially, overriding `mode` resolution — see `KbqThemeService.pinnedTheme`.
+     * Used only when nothing is persisted yet in the `KBQ_THEME_STORE`. @default null
+     */
+    theme: string | null;
     /** Key used to persist the selection — a `localStorage` key or cookie name, depending on `KBQ_THEME_STORE`. @default 'kbq-theme-mode' */
     storageKey: string;
 }
@@ -84,6 +89,7 @@ export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
 const KBQ_THEME_DEFAULT_SETTINGS: KbqThemeSettings = {
     themes: KbqDefaultThemes,
     mode: 'auto',
+    theme: null,
     storageKey: 'kbq-theme-mode'
 };
 
@@ -115,6 +121,10 @@ export interface KbqThemeStore {
     getMode(): KbqThemeMode | null;
     /** Persists the mode. */
     setMode(mode: KbqThemeMode): void;
+    /** Returns the previously saved pinned theme name, or `null` when nothing is pinned/stored/available. */
+    getPinnedTheme(): string | null;
+    /** Persists the pinned theme name, or clears it when `null`. */
+    setPinnedTheme(name: string | null): void;
 }
 
 /**
@@ -128,6 +138,7 @@ export interface KbqThemeStore {
 export class KbqThemeLocalStorageStore implements KbqThemeStore {
     private readonly window = inject(KBQ_WINDOW);
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
+    private readonly pinnedStorageKey = `${this.storageKey}-pinned`;
 
     getMode(): KbqThemeMode | null {
         try {
@@ -145,6 +156,26 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
             // Ignore storage write failures (server-side, quota exceeded, disabled/blocked storage, etc.).
         }
     }
+
+    getPinnedTheme(): string | null {
+        try {
+            return this.window.localStorage.getItem(this.pinnedStorageKey);
+        } catch {
+            return null;
+        }
+    }
+
+    setPinnedTheme(name: string | null): void {
+        try {
+            if (name === null) {
+                this.window.localStorage.removeItem(this.pinnedStorageKey);
+            } else {
+                this.window.localStorage.setItem(this.pinnedStorageKey, name);
+            }
+        } catch {
+            // Ignore storage write failures (server-side, quota exceeded, disabled/blocked storage, etc.).
+        }
+    }
 }
 
 /**
@@ -157,19 +188,40 @@ export class KbqThemeLocalStorageStore implements KbqThemeStore {
 export class KbqThemeCookieStore implements KbqThemeStore {
     private readonly document = inject(DOCUMENT);
     private readonly storageKey = inject(KBQ_THEME_CONFIG).storageKey;
+    private readonly pinnedStorageKey = `${this.storageKey}-pinned`;
 
     getMode(): KbqThemeMode | null {
-        const prefix = `${this.storageKey}=`;
-        const cookie = this.document.cookie.split('; ').find((entry) => entry.startsWith(prefix));
-
-        return cookie ? (decodeURIComponent(cookie.slice(prefix.length)) as KbqThemeMode) : null;
+        return this.readCookie(this.storageKey) as KbqThemeMode | null;
     }
 
     setMode(mode: KbqThemeMode): void {
+        this.writeCookie(this.storageKey, mode);
+    }
+
+    getPinnedTheme(): string | null {
+        return this.readCookie(this.pinnedStorageKey);
+    }
+
+    setPinnedTheme(name: string | null): void {
+        if (name === null) {
+            this.document.cookie = `${this.pinnedStorageKey}=; path=/; max-age=0`;
+        } else {
+            this.writeCookie(this.pinnedStorageKey, name);
+        }
+    }
+
+    private readCookie(key: string): string | null {
+        const prefix = `${key}=`;
+        const cookie = this.document.cookie.split('; ').find((entry) => entry.startsWith(prefix));
+
+        return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+    }
+
+    private writeCookie(key: string, value: string): void {
         // 1 year: matches the lifetime a persisted UI preference is expected to have. SameSite=Lax is
         // sent on the top-level navigation request that SSR needs it for, while still blocking
         // cross-site reads.
-        this.document.cookie = `${this.storageKey}=${encodeURIComponent(mode)}; path=/; max-age=31536000; SameSite=Lax`;
+        this.document.cookie = `${key}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`;
     }
 }
 
@@ -210,8 +262,14 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     /** Themes available to select from. Replace via `setThemes()` to register a fully custom set. */
     readonly themes = signal<T[]>(this.config.themes);
 
-    /** Selected fixed `'light'`/`'dark'` mode, or `'auto'` to follow the OS color scheme. */
+    /** Selected fixed `'light'`/`'dark'` mode, or `'auto'` to follow the OS color scheme. Prefer `setMode()` over setting this directly if a pin might be active. */
     readonly mode = signal<KbqThemeMode>(this.readInitialMode());
+
+    /**
+     * Name of a theme pinned out of `themes()`, overriding `mode` resolution in `currentTheme()` until
+     * cleared (`pinnedTheme.set(null)`) or `setMode()`/`toggle()` is called. `null` when nothing is pinned.
+     */
+    readonly pinnedTheme = signal<string | null>(this.readInitialPin());
 
     /** `mode()` resolved to a concrete `'light'`/`'dark'` target — never `'auto'`. */
     private readonly resolvedMode = computed<KbqThemeColorScheme>(() => {
@@ -220,10 +278,16 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
         return mode === 'auto' ? (this.systemPrefersDark() ? 'dark' : 'light') : mode;
     });
 
-    /** The theme whose `colorScheme` matches `resolvedMode()`, or `null` if none is registered for it. */
-    readonly currentTheme = computed<T | null>(
-        () => this.themes().find((theme) => theme.colorScheme === this.resolvedMode()) ?? null
-    );
+    /** The pinned theme if `pinnedTheme()` is set, otherwise the theme whose `colorScheme` matches `resolvedMode()`. */
+    readonly currentTheme = computed<T | null>(() => {
+        const pinned = this.pinnedTheme();
+
+        if (pinned !== null) {
+            return this.themes().find((theme) => theme.name === pinned) ?? null;
+        }
+
+        return this.themes().find((theme) => theme.colorScheme === this.resolvedMode()) ?? null;
+    });
 
     /** `currentTheme()`'s polarity, falling back to `resolvedMode()` if nothing matched. */
     readonly colorScheme = computed<KbqThemeColorScheme>(() => this.currentTheme()?.colorScheme ?? this.resolvedMode());
@@ -237,17 +301,32 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
 
         effect(() => this.applyTheme(this.currentTheme(), this.themes()));
         effect(() => this.store.setMode(this.mode()));
+        effect(() => this.store.setPinnedTheme(this.pinnedTheme()));
+    }
+
+    /**
+     * Sets a fixed `'light'`/`'dark'` mode, or `'auto'` to follow the OS color scheme — clearing an active
+     * pin first, so this always hands control back to dynamic resolution. Prefer this over `mode.set()`
+     * directly when a pin might be active; `mode.set()` alone doesn't clear `pinnedTheme()`.
+     */
+    setMode(mode: KbqThemeMode) {
+        this.pinnedTheme.set(null);
+        this.mode.set(mode);
     }
 
     /** Switches between `'light'`/`'dark'`, based on `colorScheme()` — the current theme's actual polarity. */
     toggle() {
-        this.mode.set(this.colorScheme() === 'dark' ? 'light' : 'dark');
+        this.setMode(this.colorScheme() === 'dark' ? 'light' : 'dark');
     }
 
     private readInitialMode(): KbqThemeMode {
         const stored = this.store.getMode();
 
         return stored === 'auto' || stored === 'light' || stored === 'dark' ? stored : this.config.mode;
+    }
+
+    private readInitialPin(): string | null {
+        return this.store.getPinnedTheme() ?? this.config.theme ?? null;
     }
 
     private applyTheme(current: T | null, themes: T[]) {
