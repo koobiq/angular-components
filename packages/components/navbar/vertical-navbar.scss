@@ -26,6 +26,12 @@
     }
 
     & .kbq-vertical-navbar__container {
+        // The 1px `border-right` the theme adds belongs inside these widths, not beside them: the
+        // collapsed rail is `--kbq-size-6xl`, the same token this component's own `min-width` above
+        // is written in, so rendering it a pixel wider overshot that contract. Under `content-box`
+        // it measured 57px collapsed and 241px expanded.
+        box-sizing: border-box;
+
         position: relative;
 
         display: flex;

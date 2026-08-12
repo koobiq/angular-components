@@ -122,6 +122,13 @@
         overflow: hidden;
 
         & .kbq-select__match-hidden-text {
+            // This is the box the matcher reserves for the "+N" counter, and `flex-basis` obeys
+            // `box-sizing` exactly as `width` does. Under a global `border-box` reset in a consuming
+            // application the padding would come out of the reserved width, so the counter would get
+            // 8px less room than `KbqSelect` measured for it and the tag count would be off by one
+            // at the boundary.
+            box-sizing: content-box;
+
             flex: 0 0 var(--kbq-form-field-size-addon-width);
             align-self: center;
             padding-left: var(--kbq-size-xxs);

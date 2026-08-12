@@ -302,7 +302,6 @@ export class KbqNavbarRectangleElement {
     // (undocumented)
     get collapsed(): boolean;
     set collapsed(value: boolean);
-    // (undocumented)
     getOuterElementWidth(): number;
     // (undocumented)
     get horizontal(): boolean;
@@ -324,7 +323,6 @@ export class KbqNavbarRectangleElement {
 
 // @public (undocumented)
 export class KbqNavbarTitle implements AfterViewInit {
-    // (undocumented)
     getOuterElementWidth(): number;
     // (undocumented)
     readonly hovered: Subject<boolean>;

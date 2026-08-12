@@ -28,6 +28,12 @@
 .kbq-notification-item__icon-container {
     flex-shrink: 0;
 
+    // The size below is the icon itself and the padding only positions it, so the two must not share
+    // a box. Under a global `border-box` reset in a consuming application the padding would be
+    // subtracted from the icon instead of added around it, and `max-width`/`max-height` would clamp
+    // what is left — a 16px icon squeezed into 4px wide and 2px tall.
+    box-sizing: content-box;
+
     width: var(--kbq-size-l);
     max-width: var(--kbq-size-l);
 

@@ -3,6 +3,8 @@
     --kbq-button-toggle-size-container-padding-horizontal: var(--kbq-size-xxs);
     --kbq-button-toggle-size-container-padding-vertical: var(--kbq-size-xxs);
     --kbq-button-toggle-size-container-content-gap-horizontal: var(--kbq-size-xxs);
+    // 22px, not the design's 24px: the item's 1px border is outside this height. See the
+    // `box-sizing: content-box` in button-toggle.scss, which is what keeps that arithmetic true.
     --kbq-button-toggle-size-item-height: 22px;
     --kbq-button-toggle-size-item-border-radius: var(--kbq-size-xxs);
     --kbq-button-toggle-size-item-padding-horizontal: var(--kbq-size-s);

@@ -12,7 +12,7 @@ import {
     Renderer2
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { kbqInjectNativeElement } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
 import { fromEvent } from 'rxjs';
 
 /**
@@ -81,6 +81,7 @@ export class KbqResizer {
     private readonly document = inject<Document>(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
     private readonly renderer = inject(Renderer2);
+    private readonly window = inject(KBQ_WINDOW);
 
     private x = NaN;
     private y = NaN;
@@ -136,10 +137,32 @@ export class KbqResizer {
         this.x = event.x;
         this.y = event.y;
 
-        const { clientWidth, clientHeight } = this.resizable.element;
+        const { width, height } = this.getResizableSize();
 
-        this.width = clientWidth;
-        this.height = clientHeight;
+        this.width = width;
+        this.height = height;
+    }
+
+    /**
+     * Reads the resizable element in whichever box model `style.width`/`style.height` will be
+     * interpreted in when `updateSize()` writes them back.
+     *
+     * `clientWidth`/`clientHeight` are the padding box, so feeding them straight into `style.width`
+     * made the element jump on the first pointer-down — outward by its padding under the default
+     * `content-box`, inward by its border under a consuming application's `border-box` reset. The
+     * directive ships no stylesheet of its own, so it inherits whatever the host sets and has to ask
+     * rather than assume. Same branch as `KbqFieldSizingContent.calculateWidth()`.
+     */
+    private getResizableSize(): { width: number; height: number } {
+        const style = this.window.getComputedStyle(this.resizable.element);
+
+        if (style.boxSizing === 'border-box') {
+            const { width, height } = this.resizable.element.getBoundingClientRect();
+
+            return { width, height };
+        }
+
+        return { width: parseFloat(style.width) || 0, height: parseFloat(style.height) || 0 };
     }
 
     private handleDocumentPointerMove(event: PointerEvent): void {
