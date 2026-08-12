@@ -21,12 +21,17 @@
 
 const { spawnSync } = require('node:child_process');
 const { existsSync } = require('node:fs');
-const { join } = require('node:path');
+const { basename, join } = require('node:path');
 const { devDependencies } = require('../../package.json');
 
 const TIME_LABEL = 'Runtime';
 const COMPOSE_FILE = join(__dirname, 'docker-compose.yml');
 const COMPOSE_UPDATE_FILE = join(__dirname, 'docker-compose.update.yml');
+
+const fail = (message) => {
+    console.error(message);
+    process.exit(1);
+};
 
 // Read straight from the manifest rather than from node_modules: CI runs this without an install
 // step, so the packages are not on disk.
@@ -35,18 +40,29 @@ const version = devDependencies['@playwright/test'];
 // The tag has to be exact. A range would either not resolve to a tag at all or, worse, resolve to
 // an image whose browsers differ from the ones the lockfile installs.
 if (!/^\d+\.\d+\.\d+$/.test(version)) {
-    console.error(
+    fail(
         `Expected devDependencies["@playwright/test"] in package.json to be an exact version, got ${JSON.stringify(version)}.`
     );
-    process.exit(1);
 }
 
 // How `docker` is reached. Normally the CLI is on PATH and this is all there is to it; the win32
 // branch below can replace it with a hop through WSL.
 let docker = { command: 'docker', prefix: [] };
+let isForwardedToWsl = false;
 
+// `wsl.exe -e` alone always targets whichever distribution is current default, and there is no way
+// to detect the right one automatically when Docker lives in a different one.
+const wslDistro = process.env.WSL_DISTRIBUTION;
+const wslArgs = (exe) => [...(wslDistro ? ['-d', wslDistro] : []), '-e', exe];
+
+// encoding rather than stdio: 'ignore' so a failure can be explained with the command's own stderr
+// instead of a guess. Neither probe prints anything unless something goes wrong: spawnSync only
+// pipes, it does not inherit.
 const probeCompose = (runner) =>
-    spawnSync(runner.command, [...runner.prefix, 'compose', 'version'], { stdio: 'ignore' });
+    spawnSync(runner.command, [...runner.prefix, 'compose', 'version'], { encoding: 'utf8' });
+
+const describeFailure = (result) =>
+    result.error ? result.error.message : (result.stderr || '').trim() || `exited with status ${result.status}`;
 
 // Both prerequisites are checked up front, because neither fails in a way that explains itself.
 // A missing `docker` surfaces as a bare ENOENT from spawn; a Docker CLI without the v2 compose
@@ -54,66 +70,81 @@ const probeCompose = (runner) =>
 // non-zero, which is indistinguishable from a genuine test failure further down.
 let compose = probeCompose(docker);
 
-// Windows with Docker Engine inside WSL rather than Docker Desktop. There is no docker.exe for
-// Win32 to find — /usr/bin/docker is a Linux ELF binary, and while WSL projects Windows executables
-// into the distribution, nothing does the reverse — so wsl.exe is the only bridge. Try the same
-// probe through it before giving up.
+// On Windows, retry through WSL whenever the direct probe did not cleanly succeed — not only on
+// ENOENT. `docker.exe` can also be present but broken (a stale Docker Desktop install, a CLI
+// without the compose v2 plugin), and that deserves the same chance to fall through to a working
+// WSL-hosted Engine as a missing binary does.
 //
-// A `docker.cmd` shim on PATH would not work here: Node does not resolve .bat/.cmd from a non-shell
-// spawn, so the call above would report the same ENOENT it reports for a missing Docker. Neither
+// There is no docker.exe for Win32 to find in the WSL-only case — /usr/bin/docker is a Linux ELF
+// binary, and while WSL projects Windows executables into the distribution, nothing does the
+// reverse — so wsl.exe is the only bridge. A `docker.cmd` shim on PATH would not help either: Node
+// does not resolve .bat/.cmd from a non-shell spawn, so the probe above would still ENOENT. Neither
 // would a native Windows CLI talking to the WSL daemon over TCP — it resolves the compose file's
 // relative volumes into Windows paths and hands them to a Linux daemon, which cannot bind-mount
-// `C:\...`. Translating at the wsl.exe boundary keeps every path Linux-side, where compose expects
-// them.
-if (compose.error?.code === 'ENOENT' && process.platform === 'win32') {
-    const viaWsl = { command: 'wsl.exe', prefix: ['-e', 'docker'] };
+// `C:\...`. Translating at the wsl.exe boundary (see toDockerPath below) keeps every path
+// Linux-side, where compose expects them.
+if ((compose.error || compose.status !== 0) && process.platform === 'win32') {
+    const viaWsl = { command: 'wsl.exe', prefix: wslArgs('docker') };
     const probe = probeCompose(viaWsl);
 
-    // Left alone when the hop fails, so the diagnostics below still describe the original problem.
     if (!probe.error && probe.status === 0) {
         docker = viaWsl;
         compose = probe;
+        isForwardedToWsl = true;
+    } else {
+        fail(
+            'Could not run `docker compose version`:\n' +
+                `  docker: ${describeFailure(compose)}\n` +
+                `  wsl.exe ${wslArgs('docker').join(' ')}: ${describeFailure(probe)}` +
+                (wslDistro
+                    ? ''
+                    : '\nIf Docker lives in a non-default WSL distribution, set WSL_DISTRIBUTION to its name.')
+        );
     }
 }
 
-const isForwardedToWsl = docker.command === 'wsl.exe';
-
-if (compose.error?.code === 'ENOENT') {
-    console.error(
-        'Could not find `docker` on PATH.' +
-            (process.platform === 'win32'
-                ? '\nWith Docker Engine installed inside WSL there is no docker.exe on the Windows PATH. ' +
-                  'Falling back to `wsl.exe -e docker` did not work either — check that the default ' +
-                  'distribution starts and that its user can reach the daemon, with `wsl -e docker version`.'
-                : '')
-    );
-    process.exit(1);
+// Not folded into the block above: on Windows a missing `docker` already got a chance via WSL, so
+// by this point it either forwarded successfully or exited with the combined diagnosis. Off
+// Windows there is nothing to fall back to, so a plain ENOENT is reported directly.
+if (process.platform !== 'win32' && compose.error?.code === 'ENOENT') {
+    fail('Could not find `docker` on PATH.');
 }
 
 if (compose.error || compose.status !== 0) {
-    console.error(
+    fail(
         '`docker compose` is unavailable. These scripts need Compose v2, which ships as a Docker\n' +
             'CLI plugin; the standalone `docker-compose` v1 binary cannot read this configuration.'
     );
-    process.exit(1);
+}
+
+if (isForwardedToWsl) {
+    console.info(
+        `Forwarding through wsl.exe to a Docker Engine inside WSL${wslDistro ? ` (distribution: ${wslDistro})` : ''}.`
+    );
 }
 
 // In forwarded mode every path on the command line is read by a Linux process, so the Win32 paths
 // join() produced have to be translated. wslpath rather than a string replacement, because the mount
-// root is configurable — automount.root in wsl.conf — and need not be /mnt.
+// root is configurable — automount.root in wsl.conf — and need not be /mnt. COMPOSE_FILE and
+// COMPOSE_UPDATE_FILE are both direct children of __dirname (see above), so translating that
+// directory once and joining the statically-known filename covers both without a second wsl.exe
+// round trip.
+let translatedDir;
+
 const toDockerPath = (path) => {
     if (!isForwardedToWsl) return path;
 
-    const translated = spawnSync('wsl.exe', ['-e', 'wslpath', '-u', path], { encoding: 'utf8' });
+    if (translatedDir === undefined) {
+        const translated = spawnSync('wsl.exe', [...wslArgs('wslpath'), '-u', __dirname], { encoding: 'utf8' });
 
-    if (translated.error || translated.status !== 0) {
-        console.error(
-            `Could not translate ${path} into a WSL path: ` + (translated.error?.message ?? translated.stderr.trim())
-        );
-        process.exit(1);
+        if (translated.error || translated.status !== 0) {
+            fail(`Could not translate ${__dirname} into a WSL path: ${describeFailure(translated)}`);
+        }
+
+        translatedDir = translated.stdout.trim();
     }
 
-    return translated.stdout.trim();
+    return `${translatedDir}/${basename(path)}`;
 };
 
 const args = process.argv.slice(2);
@@ -125,10 +156,6 @@ const isUpdatingSnapshots = args.some(
 );
 
 console.info(`Playwright version: ${version}`);
-
-if (isForwardedToWsl) {
-    console.info('No docker.exe on the Windows PATH; forwarding to the Docker Engine inside WSL.');
-}
 
 if (isUpdatingSnapshots) {
     console.info('Mounting packages/components so updated baselines land in the working tree.');
@@ -171,8 +198,7 @@ const result = spawnSync(
 console.timeEnd(TIME_LABEL);
 
 if (result.error) {
-    console.error(`Failed to run docker: ${result.error.message}`);
-    process.exit(1);
+    fail(`Failed to run \`${docker.command}\`: ${result.error.message}`);
 }
 
 // Only when there is something to open: the run can also fail before any test executes — a build
