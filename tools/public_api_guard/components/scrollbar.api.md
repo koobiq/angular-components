@@ -22,7 +22,6 @@ export const KBQ_SCROLLBAR_VIEWPORT: InjectionToken<ElementRef<HTMLElement>>;
 // @public
 export class KbqScrollbar {
     getNativeElement(): HTMLElement;
-    // (undocumented)
     readonly mode: i0.InputSignal<KbqScrollbarMode>;
     get scrollChanges(): Observable<Event>;
     scrollEnd(behavior?: ScrollBehavior): void;
@@ -38,7 +37,7 @@ export class KbqScrollbar {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbar, never>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqScrollbarMode = 'always' | 'hidden' | 'hover' | 'native';
 
 // @public
@@ -60,27 +59,10 @@ export type KbqScrollbarScrollToElementOptions = {
 export type KbqScrollbarScrollToOptions = ExtendedScrollToOptions;
 
 // @public
-export class KbqScrollbarThumb {
-    constructor();
-    // Warning: (ae-forgotten-export) The symbol "Orientation" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    readonly orientation: i0.InputSignal<Orientation>;
-    protected readonly viewport: ElementRef<HTMLElement>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarThumb, "[kbqScrollbarThumb]", ["kbqScrollbarThumb"], { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbarThumb, never>;
-}
-
-// @public
 export class KbqScrollbarViewport {
     constructor();
-    // (undocumented)
     getNativeElement(): HTMLElement;
-    // (undocumented)
     protected readonly id: string;
-    // (undocumented)
     readonly mode: i0.InputSignal<KbqScrollbarMode>;
     get scrollChanges(): Observable<Event>;
     scrollEnd(behavior?: ScrollBehavior): void;

@@ -127,6 +127,13 @@ export const KBQ_SCROLLBAR_VIEWPORT = new InjectionToken<ElementRef<HTMLElement>
     factory: () => new ElementRef(inject(DOCUMENT).documentElement)
 });
 
+/**
+ * How the scrollbar is presented:
+ * - `hover` — track appears on pointer hover or keyboard focus (default);
+ * - `always` — track is always visible while the content overflows;
+ * - `native` — the browser's native scrollbar is used;
+ * - `hidden` — no scrollbar is shown, but the content stays scrollable.
+ */
 export type KbqScrollbarMode = 'always' | 'hidden' | 'hover' | 'native';
 
 /** Configuration for {@link KbqScrollbar}. */
@@ -228,8 +235,10 @@ export class KbqScrollbarViewport {
     private readonly injector = inject(Injector);
     private readonly idGenerator = inject(_IdGenerator);
 
+    /** Stable id on the viewport element, used as the `aria-controls` target for the scrollbar thumb. */
     protected readonly id = this.getNativeElement().id || this.idGenerator.getId('kbq-scrollbar-viewport-');
 
+    /** Visibility mode for this viewport's scrollbar. Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}. */
     readonly mode = input<KbqScrollbarMode>(inject(KBQ_SCROLLBAR_OPTIONS).mode);
 
     // Owns the {@link KbqScrollbarTrack} instance instead of requiring consumers to declare
@@ -259,6 +268,7 @@ export class KbqScrollbarViewport {
         });
     }
 
+    /** The viewport's native scrollable element — the host this directive is applied to. */
     getNativeElement(): HTMLElement {
         return this.scrollable.getElementRef().nativeElement;
     }
@@ -341,7 +351,10 @@ export class KbqScrollbarViewport {
     }
 }
 
-/** Draggable thumb element: turns drags/track clicks into scroll positions of {@link KBQ_SCROLLBAR_VIEWPORT}, and mirrors its scroll position/size back onto its own CSS position. */
+/**
+ * Draggable thumb element: turns drags/track clicks into scroll positions of
+ * {@link KBQ_SCROLLBAR_VIEWPORT}, and mirrors its scroll position/size back onto its own CSS position.
+ */
 @Directive({
     selector: '[kbqScrollbarThumb]',
     host: {
@@ -353,12 +366,13 @@ export class KbqScrollbarViewport {
     },
     exportAs: 'kbqScrollbarThumb'
 })
-export class KbqScrollbarThumb {
+class KbqScrollbarThumb {
     /** @docs-private */
     protected readonly viewport = inject(KBQ_SCROLLBAR_VIEWPORT);
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly style = this.nativeElement.style;
 
+    /** Axis the thumb scrolls along — `'vertical'` (default) or `'horizontal'`. */
     readonly orientation = input<Orientation>('vertical');
 
     constructor() {
@@ -572,6 +586,7 @@ class KbqScrollbarTrack {
         { requireSync: true }
     );
 
+    /** Visibility mode, forwarded from the owning {@link KbqScrollbarViewport}; only `hover`/`always` reach the track. */
     readonly mode = input.required<KbqScrollbarMode>();
 
     private get scrollbars(): ScrollbarVisibility {
@@ -601,6 +616,7 @@ export class KbqScrollbar {
     private readonly options = inject(KBQ_SCROLLBAR_OPTIONS);
     private readonly viewport = inject(KbqScrollbarViewport);
 
+    /** Visibility mode for the scrollbar. Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}. */
     readonly mode = input<KbqScrollbarMode>(this.options.mode);
 
     /** The scrollbar's native scrollable element. */
