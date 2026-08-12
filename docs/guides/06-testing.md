@@ -85,9 +85,11 @@ a path and `-g` instead of `test.only`:
 yarn run e2e:docker yarn playwright test packages/components/select -g "single select"
 ```
 
-Requires Docker with Compose v2. On Windows, Docker Engine installed inside WSL puts no `docker.exe`
-on the Windows PATH, so run these commands from inside the WSL distribution rather than from
-PowerShell.
+Requires Docker with Compose v2. On Windows carrying Docker Engine inside WSL rather than Docker
+Desktop there is no `docker.exe` on the Windows PATH at all, because the Linux binary cannot be
+projected onto it. The wrapper detects that, forwards the run through `wsl.exe` and translates the
+paths it passes, so the commands above work unchanged from PowerShell — the distribution's default
+user just has to be able to reach the daemon, which `wsl -e docker version` confirms.
 
 ### Worker count
 
