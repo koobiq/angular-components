@@ -25,7 +25,9 @@ function createTagNameStringAliaser(classPrefix: string) {
 
         MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
             str = str.replace(
-                new RegExp(`<${tag}\s*>`, 'g'),
+                // `\\s`, because a template literal eats the backslash first: `\s` would reach the
+                // constructor as a bare `s` and match `<pss>` rather than `<p >`.
+                new RegExp(`<${tag}\\s*>`, 'g'),
                 (_match: string) => `<${tag} class="${classPrefix}__${tag}">`
             );
         });

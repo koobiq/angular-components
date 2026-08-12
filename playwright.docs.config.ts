@@ -17,7 +17,10 @@ const viewport: ViewportSize = {
     width: 1280,
     height: 900
 };
-const baseURL = process.env.DOCS_BASE_URL || 'http://localhost:4300';
+// The literal address, not `localhost`: tools/serve-docs.mjs binds loopback by literal for the same
+// reason. Resolving the name leaves it to chance whether the two ends pick ::1 or 127.0.0.1, and a
+// disagreement shows up here as `webServer` timing out with a server that is running fine.
+const baseURL = process.env.DOCS_BASE_URL || 'http://127.0.0.1:4300';
 
 export default defineConfig({
     ...baseConfig,

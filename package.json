@@ -286,6 +286,7 @@
         "unit:angular-moment-adapter": "ng test angular-moment-adapter",
         "unit:angular-luxon-adapter": "ng test angular-luxon-adapter",
         "unit:schematics": "jest --roots packages/schematics",
+        "unit:cli": "jest --roots packages/cli",
         "unit:koobiq-docs": "ng test koobiq-docs",
         "unit:api-gen": "jest --roots tools/api-gen",
         "unit:tools": "jest --roots tools",
