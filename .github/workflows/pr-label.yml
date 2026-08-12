@@ -1,0 +1,62 @@
+name: Label PR
+
+# pull_request_target so pull requests opened from a fork are labeled too: the pull_request token
+# is read-only for them. Nothing is checked out and no pull-request-controlled code runs here —
+# only the title is read, and it reaches the script through the environment.
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - reopened
+
+permissions:
+  contents: read
+
+jobs:
+  label:
+    name: Label
+    runs-on: ubuntu-latest
+    # Dependabot applies `dependencies` to its own pull requests.
+    if: ${{ github.repository_owner == 'koobiq' && github.actor != 'dependabot[bot]' }}
+    permissions:
+      pull-requests: write # to add labels to the pull request
+    steps:
+      - name: Apply the labels matching the conventional-commit type
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # Nothing is checked out here, and gh does not fall back to GITHUB_REPOSITORY.
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          # Already shaped by commitlint.yml, but still untrusted text: keep it out of the script.
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+
+          # These feed the categories in .github/release.yml. The scope is what separates a
+          # dependency bump from an ordinary chore.
+          labels=()
+
+          case "$PR_TITLE" in
+            feat*) labels+=(enhancement) ;;
+            fix*) labels+=(bug) ;;
+            docs*) labels+=(documentation) ;;
+            *'(deps)'*|*'(deps-dev)'*) labels+=(dependencies) ;;
+          esac
+
+          # `feat(scope)!:` — the conventional-commit marker for a breaking change.
+          case "$PR_TITLE" in
+            *'!:'*) labels+=('breaking changes') ;;
+          esac
+
+          if [ ${#labels[@]} -eq 0 ]; then
+            echo "No label maps to \"$PR_TITLE\"."
+            exit 0
+          fi
+
+          # Re-adding a label the pull request already carries is a no-op, so the `edited` and
+          # `reopened` re-runs are free. Labels are only ever added: a title corrected from `feat:`
+          # to `fix:` keeps the stale `enhancement` until someone removes it by hand.
+          for label in "${labels[@]}"; do
+            gh pr edit "$PR_NUMBER" --add-label "$label"
+          done
