@@ -879,7 +879,11 @@ export class KbqSelect
 
     /** Returns the currently selected option(s). Single value or array for multiple selection. */
     get selected(): KbqOptionBase | KbqOptionBase[] {
-        return this.multiSelection ? this.selectionModel.selected : this.selectionModel.selected[0];
+        const selected = this.selectionModel.selected;
+
+        return this.multiSelection
+            ? selected.map((option) => this.resolveSelectedOption(option))
+            : selected[0] && this.resolveSelectedOption(selected[0]);
     }
 
     /** Returns the display value for the trigger element. */
@@ -916,7 +920,11 @@ export class KbqSelect
 
     /** Returns the first selected option that is not disabled. */
     get firstSelected(): KbqOptionBase | null {
-        return this.selectionModel.selected.filter((option) => !option.disabled)[0] || null;
+        return (
+            this.selectionModel.selected
+                .map((option) => this.resolveSelectedOption(option))
+                .find((option) => !option.disabled) || null
+        );
     }
 
     /** Whether the first selected option is filtered (not visible in the list). */
@@ -1900,7 +1908,21 @@ export class KbqSelect
     private resolveSelectedOption(option: KbqOptionBase): KbqOptionBase {
         const copy = this.selectedOptionCopies.get(option);
 
-        return copy && !this.compareWith(option.value, copy.value) ? copy : option;
+        if (!copy) return option;
+
+        try {
+            // A value that no longer matches the copy means the view was recycled for another item.
+            return this.compareWith(option.value, copy.value) ? option : copy;
+        } catch (error) {
+            if (isDevMode()) {
+                // Notify developers of errors in their comparator.
+                // eslint-disable-next-line no-console
+                console.warn(error);
+            }
+
+            // The comparator cannot tell the two apart, so fall back to the value that was actually selected.
+            return copy;
+        }
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */

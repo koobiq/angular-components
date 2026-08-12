@@ -6565,22 +6565,6 @@ describe('KbqSelect', () => {
                 expect(instance.select().empty).toBe(false);
             }));
 
-            it('should keep the trigger label when no virtualOptionFactory is provided', fakeAsync(() => {
-                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
-                const instance = fixture.componentInstance;
-
-                // Without a factory the label can only come from the option that was rendered at selection time.
-                instance.virtualOptionFactory = undefined;
-                finishInit(fixture);
-                instance.control.setValue(instance.options[2]);
-                finishInit(fixture);
-
-                filterOut(instance);
-                finishInit(fixture);
-
-                expect(getMatcherText(fixture)).toBe(instance.options[2].name);
-            }));
-
             it('should render the custom trigger while the selected option is filtered out', fakeAsync(() => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelectWithCustomTrigger);
                 const instance = fixture.componentInstance;
@@ -6630,6 +6614,57 @@ describe('KbqSelect', () => {
                 expect(getMatcherText(fixture)).toBe(instance.options[2].name);
 
                 flush();
+            }));
+
+            it('should report the selected option, not the recycled one, while option views are recycled', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue(instance.options[2]);
+                finishInit(fixture);
+
+                filterOut(instance);
+                // Same window as above: the views already belong to other items, the selection is
+                // only re-resolved in a microtask. Consumers read these getters synchronously.
+                fixture.detectChanges();
+
+                expect((instance.select().selected as KbqVirtualOption).value).toBe(instance.options[2]);
+                expect(instance.select().firstSelected!.value).toBe(instance.options[2]);
+                // The selected option is no longer rendered, so the key manager must not activate it.
+                expect(instance.select().firstFiltered).toBe(true);
+
+                flush();
+            }));
+
+            it('should keep rendering the selected label when compareWith throws for a recycled view', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue(instance.options[2]);
+                finishInit(fixture);
+
+                const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+                // A comparator that only handles the values it considers equal, like a consumer
+                // reading a field that is absent on some of the items.
+                instance.select().compareWith = (a: CityOption, b: CityOption) => {
+                    if (a.id !== b.id) {
+                        throw new Error('unsupported pair');
+                    }
+
+                    return true;
+                };
+
+                filterOut(instance);
+
+                expect(() => fixture.detectChanges()).not.toThrow();
+                expect(getMatcherText(fixture)).toBe(instance.options[2].name);
+                expect(warnSpy).toHaveBeenCalled();
+
+                flush();
+                warnSpy.mockRestore();
             }));
 
             it('should reselect the rendered option when the filter is cleared', fakeAsync(() => {
@@ -6683,6 +6718,23 @@ describe('KbqSelect', () => {
                 finishInit(fixture);
 
                 expect(getMatcherText(fixture)).toBe(instance.options[100].name);
+            }));
+
+            it('should not select a value missing from the source when no virtualOptionFactory is provided', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                // Nothing can resolve the value: it was never rendered, it is absent from the source,
+                // and there is neither a factory nor `showPreselectedValues` to build a label from it.
+                instance.virtualOptionFactory = undefined;
+                instance.visible = instance.options.slice(0, 20);
+                finishInit(fixture);
+
+                instance.control.setValue(instance.options[100]);
+                finishInit(fixture);
+
+                expect(instance.select().empty).toBe(true);
+                expect(isPlaceholderRendered(fixture)).toBe(true);
             }));
         });
     });
