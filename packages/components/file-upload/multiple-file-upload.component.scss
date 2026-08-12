@@ -205,6 +205,12 @@
     }
 
     .kbq-file-upload__list {
+        // Content-box so that the height cap counts rows and is not eaten by the 27px of padding
+        // below — the same reasoning, and the same wording, as `%kbq-select-content` in
+        // `core/styles/common/_select.scss`. A global `border-box` reset in a consuming application
+        // would otherwise shorten the scroll viewport by that padding.
+        box-sizing: content-box;
+
         min-height: var(--kbq-file-upload-size-multiple-min-height);
         max-height: var(--kbq-file-upload-size-multiple-max-height);
 
@@ -236,6 +242,14 @@
         }
 
         .kbq-file-upload__size {
+            // Pinned to the box model the column width was measured against: the cell inherits
+            // horizontal padding from `.kbq-file-upload__grid-cell` above, and under a global
+            // `border-box` reset that padding would come out of the column instead of sitting beside
+            // it, narrowing the size cell by 16px and handing the space to the file-name cell.
+            // Whether the token means the column or its content is a design question — see the
+            // audit; this only makes the answer stop depending on the consuming application.
+            box-sizing: content-box;
+
             width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
             min-width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
             max-width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);

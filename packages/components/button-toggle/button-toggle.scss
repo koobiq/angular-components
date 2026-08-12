@@ -23,6 +23,15 @@
         justify-content: flex-start;
         align-items: center;
 
+        // Content-box on purpose, and load-bearing. `--kbq-button-toggle-size-item-height` is 22px,
+        // not the 24px of the design's `--kbq-size-xxl`: DS-3136 subtracted the border it added here
+        // from the token rather than from the rendered box, so the item only reaches its designed
+        // 24px while the border sits outside the declared height. A global `border-box` reset in a
+        // consuming application would pull the border back inside and leave the item 2px short —
+        // and the inner button, which is sized from the same token, would overflow the shrunken
+        // content box and be clipped by `overflow: hidden` above.
+        box-sizing: content-box;
+
         height: var(--kbq-button-toggle-size-item-height);
         min-height: var(--kbq-button-toggle-size-item-height);
 

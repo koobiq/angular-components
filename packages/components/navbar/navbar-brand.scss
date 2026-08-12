@@ -46,6 +46,12 @@ a.kbq-navbar-brand {
     }
 
     & .kbq-navbar-title {
+        // 154px is a raw number, and it caps the text rather than the box: the padding beside it is
+        // spacing towards the collapse control, not part of the budget. Under a global `border-box`
+        // reset in a consuming application the cap would absorb the padding and a long brand title
+        // would start truncating 12px earlier.
+        box-sizing: content-box;
+
         max-width: 154px;
 
         padding-right: var(--kbq-size-m);
