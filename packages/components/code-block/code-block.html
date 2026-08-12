@@ -50,6 +50,7 @@
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__download-button"
+                    [attr.aria-label]="localeConfiguration.downloadTooltip"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="localeConfiguration.downloadTooltip"
@@ -64,6 +65,7 @@
                     <button
                         kbq-button
                         class="kbq-code-block__actionbar__copy-button"
+                        [attr.aria-label]="localeConfiguration.copyTooltip"
                         [color]="componentColor.Contrast"
                         [kbqStyle]="buttonStyle.Transparent"
                         (click)="copyCode()"
@@ -77,6 +79,7 @@
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__link-button"
+                    [attr.aria-label]="localeConfiguration.openExternalSystemTooltip"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="localeConfiguration.openExternalSystemTooltip"
