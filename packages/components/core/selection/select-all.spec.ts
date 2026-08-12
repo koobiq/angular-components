@@ -1,4 +1,4 @@
-import { KbqSelectAllAdapter, shouldSelectSearchText, toggleSelectAll } from './select-all';
+import { getSelectAllState, KbqSelectAllAdapter, shouldSelectSearchText, toggleSelectAll } from './select-all';
 
 interface TestItem {
     disabled: boolean;
@@ -35,6 +35,18 @@ describe('toggleSelectAll', () => {
 
         expect(items.every((item) => item.selected)).toBe(true);
         // only the previously-unselected item flips
+        expect(changed.length).toBe(1);
+    });
+
+    it('should complete the selection, not deselect, when only some are selected and allowDeselect is true', () => {
+        const items: TestItem[] = [
+            { disabled: false, selected: true },
+            { disabled: false, selected: false }
+        ];
+
+        const changed = toggleSelectAll(createAdapter(items), { allowDeselect: true });
+
+        expect(items.every((item) => item.selected)).toBe(true);
         expect(changed.length).toBe(1);
     });
 
@@ -101,6 +113,57 @@ describe('toggleSelectAll', () => {
 
     it('should return an empty array when items is empty', () => {
         expect(toggleSelectAll(createAdapter([]))).toEqual([]);
+    });
+});
+
+describe('getSelectAllState', () => {
+    it('should be unchecked when there are no items', () => {
+        expect(getSelectAllState(createAdapter([]))).toBe('unchecked');
+    });
+
+    it('should be unchecked when nothing is selected', () => {
+        const items: TestItem[] = [
+            { disabled: false, selected: false },
+            { disabled: false, selected: false }
+        ];
+
+        expect(getSelectAllState(createAdapter(items))).toBe('unchecked');
+    });
+
+    it('should be indeterminate when only some items are selected', () => {
+        const items: TestItem[] = [
+            { disabled: false, selected: true },
+            { disabled: false, selected: false }
+        ];
+
+        expect(getSelectAllState(createAdapter(items))).toBe('indeterminate');
+    });
+
+    it('should be checked when every selectable item is selected', () => {
+        const items: TestItem[] = [
+            { disabled: false, selected: true },
+            { disabled: false, selected: true }
+        ];
+
+        expect(getSelectAllState(createAdapter(items))).toBe('checked');
+    });
+
+    it('should ignore non-selectable items when deciding the state', () => {
+        const items: TestItem[] = [
+            { disabled: true, selected: false },
+            { disabled: false, selected: true }
+        ];
+
+        expect(getSelectAllState(createAdapter(items))).toBe('checked');
+    });
+
+    it('should be unchecked when every item is non-selectable, whatever their selected state', () => {
+        const items: TestItem[] = [
+            { disabled: true, selected: true },
+            { disabled: true, selected: false }
+        ];
+
+        expect(getSelectAllState(createAdapter(items))).toBe('unchecked');
     });
 });
 

@@ -40,6 +40,9 @@ import {
     ESCAPE,
     ErrorStateMatcher,
     HOME,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqLocaleServiceModule,
     KbqOption,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
@@ -543,6 +546,51 @@ class MultipleSelectWithSearch {
 
     searchCtrl: UntypedFormControl = new UntypedFormControl();
     options: string[] = ['One', 'Two', 'Three', 'Four'];
+}
+
+@Component({
+    selector: 'multi-select-with-select-all',
+    imports: [
+        KbqSelectModule,
+        KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select #select [formControl]="control" [multiple]="multiple" [selectAll]="selectAll">
+                <kbq-form-field kbqSelectSearch>
+                    <input class="search-input" kbqInput type="text" [formControl]="searchCtrl" />
+                </kbq-form-field>
+
+                <div kbq-select-search-empty-result>Nothing found</div>
+
+                @for (option of filteredOptions; track option) {
+                    <kbq-option [value]="option" [disabled]="disabledOptions.includes(option)">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithSelectAll {
+    readonly select = viewChild.required(KbqSelect);
+    /** Only the projected options — the built-in row lives in the select's own view. */
+    readonly options = viewChildren(KbqOption);
+
+    multiple = true;
+    selectAll = true;
+    disabledOptions: string[] = [];
+
+    control: UntypedFormControl = new UntypedFormControl();
+    searchCtrl: UntypedFormControl = new UntypedFormControl();
+    allOptions: string[] = ['One', 'Two', 'Three', 'Four'];
+
+    get filteredOptions(): string[] {
+        const query = this.searchCtrl.value;
+
+        return query
+            ? this.allOptions.filter((option) => option.toLowerCase().includes(query.toLowerCase()))
+            : this.allOptions;
+    }
 }
 
 @Component({
@@ -1878,7 +1926,13 @@ class SelectWithShowPreselectedValuesSingle {
     imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple multiline [formControl]="control" [showPreselectedValues]="showPreselectedValues">
+            <kbq-select
+                multiple
+                multiline
+                selectAll
+                [formControl]="control"
+                [showPreselectedValues]="showPreselectedValues"
+            >
                 <kbq-option value="steak">Steak</kbq-option>
                 <kbq-option value="pizza">Pizza</kbq-option>
             </kbq-select>
@@ -2147,7 +2201,7 @@ describe('KbqSelect', () => {
      * overall test time.
      * @param declarations Components to declare for this block
      */
-    function configureKbqSelectTestingModule(declarations: any[]) {
+    function configureKbqSelectTestingModule(declarations: any[], extraImports: any[] = []) {
         TestBed.configureTestingModule({
             imports: [
                 KbqFormFieldModule,
@@ -2158,6 +2212,7 @@ describe('KbqSelect', () => {
                 FormsModule,
                 NoopAnimationsModule,
                 ScrollingModule,
+                ...extraImports,
                 ...declarations
             ],
             providers: [
@@ -6688,6 +6743,15 @@ describe('KbqSelect', () => {
 
                 expect(testInstance.select().empty).toBe(true);
             }));
+
+            it('should not render the select-all row, since a preselected value may be invisible to it', fakeAsync(() => {
+                testInstance.select().open();
+                fixture.detectChanges();
+                flush();
+                fixture.detectChanges();
+
+                expect(document.querySelector('.kbq-select__select-all')).toBeNull();
+            }));
         });
     });
 
@@ -7456,6 +7520,395 @@ describe('KbqSelect', () => {
         });
     });
 
+    describe('selectAll', () => {
+        let fixture: ComponentFixture<MultiSelectWithSelectAll>;
+        let testInstance: MultiSelectWithSelectAll;
+
+        const getSelectAllRow = (): HTMLElement | null =>
+            overlayContainerElement.querySelector('.kbq-select__select-all');
+
+        const getSearchInput = (): HTMLInputElement =>
+            overlayContainerElement.querySelector('.search-input') as HTMLInputElement;
+
+        const search = (query: string) => {
+            testInstance.searchCtrl.setValue(query);
+            fixture.detectChanges();
+            tick(1);
+            fixture.detectChanges();
+        };
+
+        const openPanel = () => {
+            testInstance.select().open();
+            fixture.detectChanges();
+            tick(1);
+            fixture.detectChanges();
+        };
+
+        /** Recreates the fixture so inputs that cannot change after init (`multiple`) can be set. */
+        const recreate = (setup: (instance: MultiSelectWithSelectAll) => void) => {
+            fixture.destroy();
+            fixture = TestBed.createComponent(MultiSelectWithSelectAll);
+            testInstance = fixture.componentInstance;
+            setup(testInstance);
+            fixture.detectChanges();
+            flush();
+        };
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithSelectAll]);
+            fixture = TestBed.createComponent(MultiSelectWithSelectAll);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            flush();
+        }));
+
+        describe('rendering', () => {
+            it('should render the row above the options', fakeAsync(() => {
+                openPanel();
+
+                const rows = Array.from(overlayContainerElement.querySelectorAll('.kbq-option'));
+
+                expect(rows.length).toBe(testInstance.allOptions.length + 1);
+                expect(rows[0].classList).toContain('kbq-select__select-all');
+                expect(rows[0].textContent!.trim()).toBe('Выбрать все');
+            }));
+
+            it('should not render the row when selectAll is off', fakeAsync(() => {
+                testInstance.selectAll = false;
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(getSelectAllRow()).toBeNull();
+            }));
+
+            it('should not render the row in single-selection mode', fakeAsync(() => {
+                recreate((instance) => (instance.multiple = false));
+
+                openPanel();
+
+                expect(getSelectAllRow()).toBeNull();
+            }));
+
+            it('should not render the row when the search returns no results', fakeAsync(() => {
+                openPanel();
+                search('no such option');
+
+                expect(getSelectAllRow()).toBeNull();
+            }));
+
+            it('should lead the list the key manager navigates', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+
+                expect(select.navigableOptions.first).toBe(select.selectAllOption());
+                expect(select.navigableOptions.length).toBe(testInstance.allOptions.length + 1);
+                // `options` stays the projected options only.
+                expect(select.options.length).toBe(testInstance.allOptions.length);
+            }));
+
+            it('should be the active item right after the panel opens', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+
+                expect(select.keyManager.activeItemIndex).toBe(0);
+                expect(select.keyManager.activeItem!.getHostElement().classList).toContain('kbq-select__select-all');
+            }));
+
+            it('should become the active item when arrowing up from the first option', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+                const selectElement = fixture.nativeElement.querySelector('kbq-select');
+
+                select.keyManager.setActiveItem(select.options.first);
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(selectElement, 'keydown', UP_ARROW);
+                fixture.detectChanges();
+
+                expect(select.keyManager.activeItem!.getHostElement().classList).toContain('kbq-select__select-all');
+            }));
+
+            it('should land on the row when pressing HOME', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+                const selectElement = fixture.nativeElement.querySelector('kbq-select');
+
+                select.keyManager.setActiveItem(select.options.last!);
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(selectElement, 'keydown', HOME);
+                fixture.detectChanges();
+
+                expect(select.keyManager.activeItem).toBe(select.selectAllOption());
+            }));
+
+            it('should land on the true last option (not the row) when pressing END', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+                const selectElement = fixture.nativeElement.querySelector('kbq-select');
+
+                select.keyManager.setActiveItem(select.selectAllOption()!);
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(selectElement, 'keydown', END);
+                fixture.detectChanges();
+
+                expect(select.keyManager.activeItem).toBe(select.options.last);
+            }));
+
+            // PAGE_UP/PAGE_DOWN pagination size is derived from real option/container heights
+            // (`getHeightOfOptionsContainer`, `option.getHeight()`), which JSDOM never lays out — like this
+            // file's other layout-dependent behaviour, that combination can only be verified in a real
+            // browser (see e2e.playwright-spec.ts).
+        });
+
+        describe('checkbox state', () => {
+            const getCheckbox = (): HTMLElement => getSelectAllRow()!.querySelector('.kbq-pseudo-checkbox')!;
+
+            it('should be unchecked when nothing is selected', fakeAsync(() => {
+                openPanel();
+
+                expect(testInstance.select().selectAllState).toBe('unchecked');
+                expect(getCheckbox().classList).not.toContain('kbq-checked');
+                expect(getCheckbox().classList).not.toContain('kbq-indeterminate');
+            }));
+
+            it('should be indeterminate when only some options are selected', fakeAsync(() => {
+                testInstance.control.setValue(['One']);
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(testInstance.select().selectAllState).toBe('indeterminate');
+                expect(getCheckbox().classList).toContain('kbq-indeterminate');
+            }));
+
+            it('should be checked when every option is selected', fakeAsync(() => {
+                testInstance.control.setValue([...testInstance.allOptions]);
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(testInstance.select().selectAllState).toBe('checked');
+                expect(getCheckbox().classList).toContain('kbq-checked');
+            }));
+
+            it('should ignore disabled options', fakeAsync(() => {
+                testInstance.disabledOptions = ['Four'];
+                testInstance.control.setValue(['One', 'Two', 'Three']);
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(testInstance.select().selectAllState).toBe('checked');
+            }));
+
+            it('should be unchecked when every option is disabled, whatever is selected', fakeAsync(() => {
+                testInstance.disabledOptions = [...testInstance.allOptions];
+                testInstance.control.setValue(['One']);
+                fixture.detectChanges();
+
+                openPanel();
+
+                expect(testInstance.select().selectAllState).toBe('unchecked');
+                expect(testInstance.select().allOptionsSelected).toBe(false);
+            }));
+        });
+
+        describe('toggling', () => {
+            it('should select every option on click', fakeAsync(() => {
+                openPanel();
+
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+
+                expect(testInstance.control.value).toEqual(['One', 'Two', 'Three', 'Four']);
+                expect(testInstance.select().selectAllState).toBe('checked');
+            }));
+
+            it('should deselect every option on a second click', fakeAsync(() => {
+                openPanel();
+
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+
+                expect(testInstance.control.value).toEqual([]);
+                expect(testInstance.select().selectAllState).toBe('unchecked');
+            }));
+
+            it('should leave disabled options untouched', fakeAsync(() => {
+                testInstance.disabledOptions = ['Two'];
+                fixture.detectChanges();
+
+                openPanel();
+
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+
+                expect(testInstance.control.value).toEqual(['One', 'Three', 'Four']);
+            }));
+
+            it('should be a no-op when every option is disabled', fakeAsync(() => {
+                testInstance.disabledOptions = [...testInstance.allOptions];
+                fixture.detectChanges();
+
+                openPanel();
+
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+
+                expect(testInstance.control.value).toBeFalsy();
+            }));
+
+            it('should toggle only the search results while a query is active', fakeAsync(() => {
+                openPanel();
+                search('o');
+
+                // "One", "Two" and "Four" match; "Three" does not.
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+
+                expect(testInstance.control.value).toEqual(['One', 'Two', 'Four']);
+                expect(testInstance.select().selectAllState).toBe('checked');
+            }));
+
+            it('should keep the options filtered out by the search selected when deselecting', fakeAsync(() => {
+                testInstance.control.setValue([...testInstance.allOptions]);
+                fixture.detectChanges();
+
+                openPanel();
+                search('three');
+
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+
+                expect(testInstance.control.value).toEqual(['One', 'Two', 'Four']);
+            }));
+
+            it('should emit a single selectionChange for the whole batch', fakeAsync(() => {
+                const selectionChange = jest.fn();
+
+                testInstance.select().selectionChange.subscribe(selectionChange);
+
+                openPanel();
+
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+
+                expect(selectionChange).toHaveBeenCalledTimes(1);
+                expect(selectionChange.mock.calls[0][0].value).toEqual(['One', 'Two', 'Three', 'Four']);
+            }));
+
+            it('should emit onSelectAll on click', fakeAsync(() => {
+                const onSelectAll = jest.fn();
+
+                testInstance.select().onSelectAll.subscribe(onSelectAll);
+
+                openPanel();
+
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+
+                expect(onSelectAll).toHaveBeenCalledTimes(1);
+                expect(onSelectAll.mock.calls[0][0].selected).toBe(true);
+                expect(onSelectAll.mock.calls[0][0].options.length).toBe(testInstance.allOptions.length);
+
+                getSelectAllRow()!.click();
+                fixture.detectChanges();
+
+                expect(onSelectAll).toHaveBeenCalledTimes(2);
+                expect(onSelectAll.mock.calls[1][0].selected).toBe(false);
+            }));
+        });
+
+        describe('keyboard', () => {
+            const pressCtrlA = () => {
+                const selectElement = fixture.nativeElement.querySelector('kbq-select');
+                const event = createKeyboardEvent('keydown', A, selectElement);
+
+                Object.defineProperty(event, 'ctrlKey', { get: () => true });
+                dispatchEvent(selectElement, event);
+                fixture.detectChanges();
+            };
+
+            it('should toggle both ways with ctrl + a even though selectAllToggle is off', fakeAsync(() => {
+                openPanel();
+
+                pressCtrlA();
+                expect(testInstance.control.value).toEqual(['One', 'Two', 'Three', 'Four']);
+
+                pressCtrlA();
+                expect(testInstance.control.value).toEqual([]);
+            }));
+
+            it('should emit onSelectAll on ctrl + a', fakeAsync(() => {
+                const onSelectAll = jest.fn();
+
+                testInstance.select().onSelectAll.subscribe(onSelectAll);
+
+                openPanel();
+                pressCtrlA();
+
+                expect(onSelectAll).toHaveBeenCalledTimes(1);
+                expect(onSelectAll.mock.calls[0][0].selected).toBe(true);
+            }));
+
+            it('should select the search text on the first ctrl + a inside a non-empty search field', fakeAsync(() => {
+                openPanel();
+                search('o');
+
+                const input = getSearchInput();
+
+                input.setSelectionRange(0, 0);
+
+                const event = createKeyboardEvent('keydown', A, input);
+
+                Object.defineProperty(event, 'ctrlKey', { get: () => true });
+                dispatchEvent(input, event);
+                fixture.detectChanges();
+
+                expect(input.selectionEnd).toBe(input.value.length);
+                expect(testInstance.control.value).toBeFalsy();
+            }));
+
+            it('should toggle on enter while the row is active and focus is in the search field', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+
+                select.keyManager.setActiveItem(select.selectAllOption()!);
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(getSearchInput(), 'keydown', ENTER);
+                fixture.detectChanges();
+
+                expect(testInstance.control.value).toEqual(['One', 'Two', 'Three', 'Four']);
+            }));
+
+            it('should select a single option on enter while a regular option is active', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+
+                select.keyManager.setActiveItem(select.options.first);
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(getSearchInput(), 'keydown', ENTER);
+                fixture.detectChanges();
+
+                expect(testInstance.control.value).toEqual(['One']);
+            }));
+        });
+    });
+
     describe('overlay teardown', () => {
         let fixture: ComponentFixture<MultiSelect>;
         let testInstance: MultiSelect;
@@ -7485,6 +7938,32 @@ describe('KbqSelect', () => {
             fixture.destroy();
 
             expect(() => tick(1)).not.toThrow();
+        }));
+    });
+
+    describe('locale subscription teardown', () => {
+        let fixture: ComponentFixture<MultiSelect>;
+        let localeService: KbqLocaleService;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelect], [KbqLocaleServiceModule]);
+            localeService = TestBed.inject(KBQ_LOCALE_SERVICE);
+            fixture = TestBed.createComponent(MultiSelect);
+            fixture.detectChanges();
+            flush();
+        }));
+
+        // Regression: `localeService.changes` is a long-lived BehaviorSubject on a root service, so
+        // subscribing without a teardown kept every destroyed select alive and let `updateLocaleParams`
+        // run — and `markForCheck` a dead view — on the next locale switch.
+        it('should stop reacting to locale changes once destroyed', fakeAsync(() => {
+            fixture.destroy();
+
+            const getParams = jest.spyOn(localeService, 'getParams');
+
+            localeService.setLocale('en-US');
+
+            expect(getParams.mock.calls.filter(([componentName]) => componentName === 'select')).toEqual([]);
         }));
     });
 

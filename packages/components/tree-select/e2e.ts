@@ -721,3 +721,41 @@ export class E2eTreeSelectPanelWidthAuto extends BaseTreeSelectStates {}
     }
 })
 export class E2eTreeSelectPanelMaxHeight extends BaseTreeSelectStates {}
+
+@Component({
+    selector: 'e2e-multi-tree-select-select-all-states',
+    imports: [
+        FormsModule,
+        KbqTreeModule,
+        KbqTreeSelectModule
+    ],
+    template: `
+        <kbq-form-field style="width: 250px;">
+            <kbq-tree-select data-testid="e2eTreeSelect" selectAll [multiple]="true">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <kbq-tree-node-toggle [node]="node" />
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 320px;
+            height: 320px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eMultiTreeSelectSelectAllStates'
+    }
+})
+export class E2eMultiTreeSelectSelectAllStates extends BaseTreeSelectStates {}

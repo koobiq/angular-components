@@ -54,6 +54,18 @@ export type KbqActionsPanelLocaleConfiguration = {
     closeTooltip: string;
 };
 
+/**
+ * Locale configuration shared by `KbqSelectModule` and `KbqTreeModule`: `hiddenItemsText` is read by
+ * `KbqSelectModule` (`kbq-select`) only, while `selectAll` is read by both `KbqSelectModule` and
+ * `KbqTreeModule` (`kbq-tree-selection`, including standalone usage outside `KbqTreeSelectModule`).
+ */
+export type KbqSelectLocaleConfiguration = {
+    /** Counter of the selected values that did not fit into the trigger. Supports the `{{ number }}` placeholder. */
+    hiddenItemsText: string;
+    /** Label of the "select all" master checkbox rendered by the `selectAll` input. */
+    selectAll: string;
+};
+
 /** Locale configuration for `KbqAppSwitcherModule`: the strings rendered by the app-switcher popup. */
 export type KbqAppSwitcherConfiguration = {
     /** Placeholder and accessible name of the search field. */

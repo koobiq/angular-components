@@ -89,6 +89,14 @@
             max-width: 100%;
         }
 
+        // The rule above drops the indent because the tags carry one of their own. A custom trigger
+        // replaces the tag list entirely, so nothing is left to provide it and the projected content
+        // would sit tighter to the border than a single select's value — put the indent back.
+        // Same specificity as the rule above, so it has to stay after it.
+        &:has(.kbq-select_multiple, .kbq-select_multiline):has(kbq-select-trigger, [kbq-select-trigger]) {
+            padding-left: var(--kbq-form-field-size-infix-left-padding);
+        }
+
         & .kbq-input,
         & .kbq-tag-input {
             padding-right: var(--kbq-form-field-size-infix-right-padding);

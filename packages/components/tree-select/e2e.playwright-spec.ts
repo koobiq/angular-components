@@ -745,4 +745,46 @@ test.describe('KbqTreeSelectModule', () => {
             await expect(page.getByTestId('e2eTreeSelect')).not.toContainText('Pictures');
         });
     });
+
+    test.describe('E2eMultiTreeSelectSelectAllStates', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eMultiTreeSelectSelectAllStates');
+
+        test('unchecked, then indeterminate after selecting one node', async ({ page }) => {
+            await page.goto('/E2eMultiTreeSelectSelectAllStates');
+            const component = getComponent(page);
+
+            await component.getByTestId('e2eTreeSelect').click();
+            await page.locator('.kbq-tree-select__panel').waitFor();
+
+            await expect(component).toHaveScreenshot('unchecked-light.png');
+
+            await page.locator('.cdk-overlay-pane kbq-tree-option').nth(1).click();
+
+            await expect(component).toHaveScreenshot('indeterminate-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(component).toHaveScreenshot('indeterminate-dark.png');
+        });
+    });
+
+    test.describe('select-all keyboard activation (#DS-3969 regression)', () => {
+        test('toggles via Space/Enter when the row itself holds real focus', async ({ page }) => {
+            await page.goto('/E2eMultiTreeSelectSelectAllStates');
+
+            await page.getByTestId('e2eTreeSelect').click();
+
+            const row = page.locator('.cdk-overlay-pane .kbq-tree-option_select-all');
+
+            await row.waitFor();
+            // A real click both toggles the row (once) and leaves genuine DOM focus on it.
+            await row.click();
+
+            await expect(row).toHaveAttribute('aria-checked', 'true');
+
+            await page.keyboard.press('Space');
+            await expect(row).toHaveAttribute('aria-checked', 'false');
+
+            await page.keyboard.press('Enter');
+            await expect(row).toHaveAttribute('aria-checked', 'true');
+        });
+    });
 });

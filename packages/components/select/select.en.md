@@ -58,6 +58,35 @@ Search can be by first character or full match, depending on the specific task a
 
 <!-- example(select-search) -->
 
+##### Select all
+
+In multiple selection mode all the values can be selected at once. The feature is off by default — turn it on with the `selectAll` attribute, and a master checkbox appears above the list.
+
+<!-- prettier-ignore -->
+```html
+<kbq-select multiple selectAll placeholder="Placeholder">
+    <kbq-option [value]="option">{{ option }}</kbq-option>
+</kbq-select>
+```
+
+The checkbox has three states: unchecked when nothing is selected, indeterminate when only some options are, and checked when every option is. Clicking it while indeterminate selects the remaining options rather than clearing the selection. The label comes from the locale (`select.selectAll`).
+
+Disabled options are ignored — they are neither selected nor deselected, and the checkbox state reflects only the options the user can actually toggle. When searching, the checkbox acts only on the results that match the query. Every action on the row emits a single `selectionChange` for the whole batch, followed by `onSelectAll`.
+
+Not supported together with `withVirtualScroll` or `showPreselectedValues`: the row is not rendered when either is on, since "select all" can only act on the options currently rendered as `KbqOption`, not on the full virtualized or preselected data set.
+
+<!-- example(select-select-all) -->
+
+Once everything is selected, the control can show a label of its own instead of literally listing the selected options. Project a `<kbq-select-trigger>` while `allOptionsSelected` is `true` — without it the select falls back to its default trigger. Use the element (or an element carrying the `kbq-select-trigger` attribute) rather than an `<ng-container>`: the trigger is stretched to the full width of the control by a rule on that element, and an `ng-container` leaves nothing for it to apply to, so the label and the arrow end up bunched together.
+
+<!-- example(select-select-all-label) -->
+
+##### Selecting everything from the keyboard
+
+`Ctrl`/`Cmd` + `A` selects all options in multiple selection mode. By default a repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. With `selectAll` the shortcut always toggles both ways, so it and the master checkbox cannot disagree.
+
+Inside a non-empty search field the first press selects the text of the field; the next one falls through to the options. The behaviour can be replaced wholesale with the `selectAllHandler` input — `onSelectAll` is then not emitted for the shortcut, as the handler owns the behaviour.
+
 ##### Footer List
 
 If additional controls need to be arranged, you can enable the display of a footer. You can display various auxiliary controls in the footer: buttons, links, tooltips.
