@@ -17,7 +17,8 @@ incompatible with the Angular the project is on, and `npm install` fails with `E
 
 An entry the project already declares is left untouched, so a `@koobiq/date-adapter` pinned below `3.4.0` keeps
 its version. That one is not an install error but a `TypeError: this.dateAdapter.addCalendarUnits is not a
-function` inside `kbq-time-range`, so the schematic warns about it instead.
+function` inside `kbq-time-range`, so the schematic warns about it instead. The warning is only printed for a
+project that brought its own range — one that had no entry at all just received the current one.
 
 [Params](schema.ts)
 
@@ -69,7 +70,7 @@ ng g ./dist/components/schematics/collection.json:mandatory-peer-dependencies --
         "@angular/core": "^20.3.0",
         "@koobiq/components": "^20.3.0",
         "@koobiq/date-adapter": "^3.5.1",
-        "overlayscrollbars": "^2.7.3"
+        "overlayscrollbars": "2.7.3"
     }
 }
 ```

@@ -59,12 +59,16 @@ module.exports = [
                 'VERSIONS.ANGULAR_CDK': version(pkg.dependencies['@angular/cdk']),
                 'VERSIONS.KOOBIQ_CDK': version(pkg.version),
                 'VERSIONS.KOOBIQ_ANGULAR_LUXON_ADAPTER': version(pkg.version),
+                'VERSIONS.KOOBIQ_LUXON_DATE_ADAPTER': version(pkg.devDependencies['@koobiq/luxon-date-adapter']),
                 'VERSIONS.KOOBIQ_DATE_FORMATTER': version(pkg.dependencies['@koobiq/date-formatter']),
                 'VERSIONS.KOOBIQ_DATE_ADAPTER': version(pkg.dependencies['@koobiq/date-adapter']),
                 'VERSIONS.KOOBIQ_DESIGN_TOKENS': version(pkg.devDependencies['@koobiq/design-tokens']),
                 'VERSIONS.KOOBIQ_ICONS': version(pkg.dependencies['@koobiq/icons']),
                 'VERSIONS.LUXON': version(pkg.devDependencies.luxon),
-                'VERSIONS.OVERLAYSCROLLBARS': version(pkg.dependencies.overlayscrollbars)
+                // The scrollbar relies on a specific `overlayscrollbars` build, so this one is
+                // injected exactly as the root manifest pins it — no caret. Widening it here would
+                // let `ng add` install a version the design system has never been tested against.
+                'VERSIONS.OVERLAYSCROLLBARS': JSON.stringify(pkg.dependencies.overlayscrollbars)
             }),
             typescript({
                 tsconfig: path.join(__dirname, 'tsconfig.rollup.json')

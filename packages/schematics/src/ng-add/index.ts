@@ -10,6 +10,7 @@ const VERSIONS = {
     ANGULAR_ANIMATIONS: '^0.0.0',
     ANGULAR_CDK: '^0.0.0',
     KOOBIQ_ANGULAR_LUXON_ADAPTER: '^0.0.0',
+    KOOBIQ_LUXON_DATE_ADAPTER: '^0.0.0',
     KOOBIQ_DATE_FORMATTER: '^0.0.0',
     KOOBIQ_DATE_ADAPTER: '^0.0.0',
     KOOBIQ_ICONS: '^0.0.0',
@@ -49,6 +50,11 @@ export default function ngAdd(options: Schema): Rule {
         addPackageToPackageJson(tree, '@angular/animations', angularCoreRange || VERSIONS.ANGULAR_ANIMATIONS);
         addPackageToPackageJson(tree, '@angular/cdk', VERSIONS.ANGULAR_CDK);
         addPackageToPackageJson(tree, '@koobiq/angular-luxon-adapter', VERSIONS.KOOBIQ_ANGULAR_LUXON_ADAPTER);
+        // `@koobiq/angular-luxon-adapter` is a wrapper: it extends `LuxonDateAdapter` from the base
+        // package and re-exports its formats, both as value imports. That makes the base a mandatory
+        // peer of the wrapper, and installing a package without its mandatory peers only works on
+        // npm — Yarn leaves them out, so the application ends up unable to resolve the adapter.
+        addPackageToPackageJson(tree, '@koobiq/luxon-date-adapter', VERSIONS.KOOBIQ_LUXON_DATE_ADAPTER);
         addPackageToPackageJson(tree, '@koobiq/date-formatter', VERSIONS.KOOBIQ_DATE_FORMATTER);
         addPackageToPackageJson(tree, '@koobiq/date-adapter', VERSIONS.KOOBIQ_DATE_ADAPTER);
         addPackageToPackageJson(tree, '@koobiq/icons', VERSIONS.KOOBIQ_ICONS);

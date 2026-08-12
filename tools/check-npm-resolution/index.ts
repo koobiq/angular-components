@@ -91,12 +91,14 @@ const ngAddInstalls = [
     // Derived from the application's own `@angular/core`, not from this repository.
     `@angular/animations@${angularRange}`,
     `@angular/cdk@${caret(cdkVersion)}`,
+    `@koobiq/luxon-date-adapter@${caret(rootPackageJson.devDependencies!['@koobiq/luxon-date-adapter'])}`,
     `@koobiq/date-formatter@${caret(rootPackageJson.dependencies!['@koobiq/date-formatter'])}`,
     `@koobiq/date-adapter@${caret(rootPackageJson.dependencies!['@koobiq/date-adapter'])}`,
     `@koobiq/icons@${caret(rootPackageJson.dependencies!['@koobiq/icons'])}`,
     `@koobiq/design-tokens@${caret(rootPackageJson.devDependencies!['@koobiq/design-tokens'])}`,
     `luxon@${caret(rootPackageJson.devDependencies!.luxon)}`,
-    `overlayscrollbars@${caret(rootPackageJson.dependencies!.overlayscrollbars)}`
+    // Pinned rather than widened: the schematic injects the root pin verbatim for this one.
+    `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`
 ];
 
 /**
@@ -110,11 +112,13 @@ const ngAddInstalls = [
 const documentedInstalls = [
     `@angular/cdk@${ngNewRange(cdkVersion)}`,
     `@angular/animations@${angularRange}`,
-    'overlayscrollbars',
+    // The guide pins this one, because the scrollbar relies on a specific build of it.
+    `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`,
     '@koobiq/icons',
     '@koobiq/design-tokens',
     '@koobiq/date-adapter',
     '@koobiq/date-formatter',
+    '@koobiq/luxon-date-adapter',
     'luxon'
 ];
 

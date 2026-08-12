@@ -15,6 +15,7 @@ exports[`ng add '@koobiq/components' should add missing dependencies to 'package
   "@koobiq/date-formatter": "^0.0.0",
   "@koobiq/design-tokens": "^0.0.0",
   "@koobiq/icons": "^0.0.0",
+  "@koobiq/luxon-date-adapter": "^0.0.0",
   "luxon": "^0.0.0",
   "overlayscrollbars": "^0.0.0",
   "rxjs": "~7.8.0",

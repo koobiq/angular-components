@@ -24,6 +24,9 @@ export default function migrate(): Rule {
         // from the application being upgraded rather than from the version this repository builds
         // with — anything else resolves to a version incompatible with the application's Angular.
         const angularCoreRange = getPackageVersionFromPackageJson(tree, '@angular/core');
+        // Read before the entry is added: `addPackageToPackageJson` leaves one that is already
+        // there untouched, so this is the last moment the project's own range is still visible.
+        const dateAdapterRange = getPackageVersionFromPackageJson(tree, '@koobiq/date-adapter');
 
         addPackageToPackageJson(tree, '@angular/animations', angularCoreRange || VERSIONS.ANGULAR_ANIMATIONS);
         addPackageToPackageJson(tree, 'overlayscrollbars', VERSIONS.OVERLAYSCROLLBARS);
@@ -31,14 +34,17 @@ export default function migrate(): Rule {
 
         context.addTask(new NodePackageInstallTask());
 
-        // `addPackageToPackageJson` leaves an entry that is already there untouched, so a project
-        // pinned below the new floor keeps its version — and that one is not an install error but a
+        // Only when the project brought its own range, which the call above kept: one pinned below
+        // the new floor is not an install error but a
         // `TypeError: this.dateAdapter.addCalendarUnits is not a function` inside `kbq-time-range`.
-        logMessage(context.logger, [
-            '`@koobiq/date-adapter` must be 3.4.0 or newer.',
-            'If your project already depends on an older one, upgrade it together with the adapter',
-            'you use (`@koobiq/luxon-date-adapter` or `@koobiq/moment-date-adapter`): the date',
-            'components call `addCalendarUnits()` and `startOf()`, which 3.4.0 was the first to add.'
-        ]);
+        // A project that had no entry just got the current range and has nothing to act on.
+        if (dateAdapterRange) {
+            logMessage(context.logger, [
+                `\`@koobiq/date-adapter\` is declared as "${dateAdapterRange}" and was left untouched.`,
+                'It has to be 3.4.0 or newer — upgrade it together with the adapter you use',
+                '(`@koobiq/luxon-date-adapter` or `@koobiq/moment-date-adapter`): the date components',
+                'call `addCalendarUnits()` and `startOf()`, which 3.4.0 was the first to add.'
+            ]);
+        }
     };
 }

@@ -8,12 +8,12 @@ const getPackageJsonDependencies = (tree: UnitTestTree) => {
 };
 
 /**
- * The peers `@koobiq/components` cannot run without, read from the manifest rather than listed here,
- * so a peer added there without teaching `ng add` about it fails this suite instead of the consumer.
+ * The peers the given package cannot run without, read from its manifest rather than listed here, so
+ * a peer added there without teaching `ng add` about it fails this suite instead of the consumer.
  */
-const getMandatoryPeers = (): string[] => {
+const getMandatoryPeers = (packageName: string): string[] => {
     const manifest = JSON.parse(
-        readFileSync(join(__dirname, '..', '..', '..', 'components', 'package.json'), { encoding: 'utf-8' })
+        readFileSync(join(__dirname, '..', '..', '..', packageName, 'package.json'), { encoding: 'utf-8' })
     );
 
     return Object.keys(manifest.peerDependencies).filter((peer) => !manifest.peerDependenciesMeta?.[peer]?.optional);
@@ -43,7 +43,22 @@ describe(`ng add '@koobiq/components'`, () => {
         // "Module not found" — so each one has to be either shipped by `ng new` or added here. The
         // versions themselves are injected by rollup at build time, so they read as the `^0.0.0`
         // source default in this suite; only the presence of the entry is meaningful.
-        expect(getMandatoryPeers().filter((peer) => dependencies[peer] === undefined)).toEqual([]);
+        expect(getMandatoryPeers('components').filter((peer) => dependencies[peer] === undefined)).toEqual([]);
+    });
+
+    it(`should install the mandatory peers of every package it adds`, async () => {
+        const tree = await runner.runSchematic('ng-add', {}, appTree);
+        const dependencies = getPackageJsonDependencies(tree);
+
+        // Adding a package is not enough: npm installs its mandatory peers on its own, Yarn and
+        // pnpm do not, so a peer of `@koobiq/angular-luxon-adapter` that this schematic skips leaves
+        // those consumers with an adapter they cannot resolve. `@koobiq/components` is excluded
+        // because the CLI installs it before running this schematic, not the schematic itself.
+        const missing = getMandatoryPeers('angular-luxon-adapter')
+            .filter((peer) => peer !== '@koobiq/components')
+            .filter((peer) => dependencies[peer] === undefined);
+
+        expect(missing).toEqual([]);
     });
 
     it(`should install '@angular/animations' at the range the application uses for '@angular/core'`, async () => {

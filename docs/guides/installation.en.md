@@ -20,12 +20,17 @@ npm install @angular/animations@^20.3.0 @angular/cdk@^20.2.0
 Then install the library and the rest of its dependencies:
 
 ```bash
-npm install @koobiq/components overlayscrollbars @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
+npm install @koobiq/components overlayscrollbars@2.7.3 @koobiq/icons @koobiq/design-tokens @koobiq/angular-luxon-adapter @koobiq/luxon-date-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
 ```
+
+`overlayscrollbars` is pinned to an exact version rather than a range: the scrollbar is built against
+that specific release, and this is the version `ng add` installs too.
 
 `@koobiq/angular-luxon-adapter` (or `@koobiq/angular-moment-adapter`) is only needed if you use the
 date components — [datepicker](/en/components/datepicker), [timepicker](/en/components/timepicker) or
-[filter-bar](/en/components/filter-bar). Install `marked` if you use
+[filter-bar](/en/components/filter-bar). Either one is a wrapper around a base adapter that has to be
+installed next to it — `@koobiq/luxon-date-adapter` or `@koobiq/moment-date-adapter`. npm adds that
+base package on its own, Yarn and pnpm do not, so install it explicitly. Install `marked` if you use
 [markdown](/en/components/markdown), `highlight.js` if you use
 [code-block](/en/components/code-block), and `@angular/router` if you use
 [breadcrumbs](/en/components/breadcrumbs).

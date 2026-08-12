@@ -84,12 +84,15 @@ const schematicInjectedRanges: Record<string, string | null> = {
     '@angular/animations': null,
     '@angular/cdk': caret(rootPackageJson.dependencies!['@angular/cdk']),
     '@koobiq/angular-luxon-adapter': caret(rootPackageJson.version!),
+    '@koobiq/luxon-date-adapter': caret(rootPackageJson.devDependencies!['@koobiq/luxon-date-adapter']),
     '@koobiq/date-formatter': caret(rootPackageJson.dependencies!['@koobiq/date-formatter']),
     '@koobiq/date-adapter': caret(rootPackageJson.dependencies!['@koobiq/date-adapter']),
     '@koobiq/icons': caret(rootPackageJson.dependencies!['@koobiq/icons']),
     '@koobiq/design-tokens': caret(rootPackageJson.devDependencies!['@koobiq/design-tokens']),
     luxon: caret(rootPackageJson.devDependencies!.luxon),
-    overlayscrollbars: caret(rootPackageJson.dependencies!.overlayscrollbars)
+    // No caret: the scrollbar relies on a specific `overlayscrollbars` build, so the schematic
+    // injects the root pin verbatim. See packages/schematics/rollup.config.js.
+    overlayscrollbars: rootPackageJson.dependencies!.overlayscrollbars
 };
 
 for (const pkg of publishedPackages) {
@@ -288,6 +291,11 @@ const entryPointsReachableFromOthers = (records: ImportRecord[], packageName: st
 
     for (const record of records) {
         if (record.packageName !== packageName) continue;
+        // Only a static value import drags another entry point in. `import type` is erased before
+        // the consumer loads anything, and a dynamic import is the very "import it lazily" escape
+        // hatch the optional-peer rule below points at — counting either would let this check
+        // reject an optional peer that consumers really can avoid.
+        if (record.kind !== 'value') continue;
 
         const from = entryPointOf(record.file);
         const to = record.specifier.slice(packageName.length).replace(/^\//, '').split('/')[0];
