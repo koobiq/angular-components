@@ -121,6 +121,13 @@ module.exports = tseslint.config(
             '**/dist',
             '**/node_modules',
             '**/coverage',
+            // Playwright's output, for the same reason as dist: the HTML report embeds the trace
+            // viewer, which is minified vendor code, and linting it produces ~90 errors and ~700
+            // warnings about someone else's bundle. Both directories are mounted out of the
+            // container by tools/e2e/docker-compose.yml, so they appear as soon as anyone runs the
+            // suite locally — and, like dist, never on the fresh checkout CI lints.
+            '**/playwright-report',
+            '**/test-results',
             // ignore Yarn's bundled release/plugin binaries (flat config lints .cjs by default,
             // unlike the previous `--ext=.js,.ts,.html`)
             '.yarn',
