@@ -3,13 +3,7 @@ import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core'
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchMouseEvent, KbqOverflowShadowContainer } from '@koobiq/components/core';
-import {
-    KbqScrollbar,
-    KbqScrollbarMode,
-    kbqScrollbarOptionsProvider,
-    KbqScrollbarThumb,
-    KbqScrollbarViewport
-} from './scrollbar';
+import { KbqScrollbar, KbqScrollbarMode, kbqScrollbarOptionsProvider, KbqScrollbarViewport } from './scrollbar';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers });
@@ -314,113 +308,129 @@ describe(KbqScrollbar.name, () => {
         });
     });
 
-    describe(KbqScrollbarThumb.name, () => {
+    describe('KbqScrollbarThumb', () => {
         @Component({
             selector: 'test-scrollbar-thumb',
-            imports: [KbqScrollbarViewport, KbqScrollbarThumb],
+            imports: [KbqScrollbarViewport],
             template: `
-                <div #viewport kbqScrollbarViewport>
-                    <div #bar>
-                        <div #thumb kbqScrollbarThumb [orientation]="orientation"></div>
-                    </div>
-                </div>
+                <div #viewport kbqScrollbarViewport mode="always"></div>
             `
         })
         class TestScrollbarThumb {
-            orientation: 'vertical' | 'horizontal' = 'vertical';
             readonly viewport = viewChild.required<ElementRef<HTMLElement>>('viewport');
-            readonly bar = viewChild.required<ElementRef<HTMLElement>>('bar');
-            readonly thumb = viewChild.required<ElementRef<HTMLElement>>('thumb');
         }
 
-        it('applies top/height to a vertical thumb, not insetInlineStart/width', () => {
-            const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, thumb } = fixture.componentInstance;
+        type ThumbOrientation = 'vertical' | 'horizontal';
 
-            setMetrics(viewport().nativeElement, { scrollTop: 50, scrollHeight: 200, clientHeight: 100 });
-            viewport().nativeElement.dispatchEvent(new Event('scroll'));
+        const getThumbElements = (
+            fixture: ComponentFixture<TestScrollbarThumb>,
+            orientation: ThumbOrientation
+        ): { viewport: HTMLElement; bar: HTMLElement; thumb: HTMLElement } => {
+            const viewport = fixture.componentInstance.viewport().nativeElement;
 
-            expect(thumb().nativeElement.style.top).not.toBe('');
-            expect(thumb().nativeElement.style.height).not.toBe('');
-            expect(thumb().nativeElement.style.insetInlineStart).toBe('');
-        });
+            setMetrics(viewport, {
+                clientHeight: 100,
+                scrollHeight: 300,
+                clientWidth: 100,
+                scrollWidth: 300
+            });
 
-        it('applies insetInlineStart/width to a horizontal thumb, not top/height (orientation forwarding)', () => {
-            const fixture = createComponent(TestScrollbarThumb);
-
-            fixture.componentInstance.orientation = 'horizontal';
+            tick(300);
             fixture.detectChanges();
 
-            const { viewport, thumb } = fixture.componentInstance;
+            const bar = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+                `.kbq-scrollbar-track__bar_${orientation}`
+            );
+            const thumb = bar?.querySelector<HTMLElement>('.kbq-scrollbar-track__thumb');
 
-            setMetrics(viewport().nativeElement, { scrollLeft: 50, scrollWidth: 200, clientWidth: 100 });
-            viewport().nativeElement.dispatchEvent(new Event('scroll'));
+            if (!bar || !thumb) {
+                throw new Error(`Expected the ${orientation} scrollbar thumb to be rendered`);
+            }
 
-            expect(thumb().nativeElement.style.insetInlineStart).not.toBe('');
-            expect(thumb().nativeElement.style.width).not.toBe('');
-            expect(thumb().nativeElement.style.top).toBe('');
-        });
+            return { viewport, bar, thumb };
+        };
+
+        it('applies top/height to a vertical thumb, not insetInlineStart/width', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarThumb);
+            const { viewport, thumb } = getThumbElements(fixture, 'vertical');
+
+            setMetrics(viewport, { scrollTop: 50, scrollHeight: 200, clientHeight: 100 });
+            viewport.dispatchEvent(new Event('scroll'));
+
+            expect(thumb.style.top).not.toBe('');
+            expect(thumb.style.height).not.toBe('');
+            expect(thumb.style.insetInlineStart).toBe('');
+
+            discardPeriodicTasks();
+        }));
+
+        it('applies insetInlineStart/width to a horizontal thumb, not top/height (orientation forwarding)', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarThumb);
+            const { viewport, thumb } = getThumbElements(fixture, 'horizontal');
+
+            setMetrics(viewport, { scrollLeft: 50, scrollWidth: 200, clientWidth: 100 });
+            viewport.dispatchEvent(new Event('scroll'));
+
+            expect(thumb.style.insetInlineStart).not.toBe('');
+            expect(thumb.style.width).not.toBe('');
+            expect(thumb.style.top).toBe('');
+
+            discardPeriodicTasks();
+        }));
 
         it('drags the vertical thumb to update the viewport scrollTop, not scrollLeft', fakeAsync(() => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, bar, thumb } = fixture.componentInstance;
+            const { viewport, bar, thumb } = getThumbElements(fixture, 'vertical');
 
-            setMetrics(viewport().nativeElement, { scrollHeight: 300, scrollWidth: 300 });
-            setMetrics(thumb().nativeElement, { offsetHeight: 0, offsetWidth: 0 });
-            setRect(thumb().nativeElement, { top: 0, left: 0, height: 1, width: 1 });
-            setRect(bar().nativeElement, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
+            setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
+            setRect(thumb, { top: 0, left: 0, height: 1, width: 1 });
+            setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
-            dispatchMouseEvent(thumb().nativeElement, 'mousedown', 0, 0);
+            dispatchMouseEvent(thumb, 'mousedown', 0, 0);
             tick();
             dispatchMouseEvent(document, 'mousemove', 50, 50);
             tick();
             dispatchMouseEvent(document, 'mouseup');
             tick();
 
-            expect(viewport().nativeElement.scrollTop).toBe(100);
-            expect(viewport().nativeElement.scrollLeft).toBe(0);
+            expect(viewport.scrollTop).toBe(100);
+            expect(viewport.scrollLeft).toBe(0);
 
             discardPeriodicTasks();
         }));
 
         it('jumps to the click position when clicking the track, not the thumb', fakeAsync(() => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, bar, thumb } = fixture.componentInstance;
+            const { viewport, bar, thumb } = getThumbElements(fixture, 'vertical');
 
-            setMetrics(viewport().nativeElement, { scrollHeight: 300, scrollWidth: 300 });
-            setMetrics(thumb().nativeElement, { offsetHeight: 0, offsetWidth: 0 });
-            setRect(bar().nativeElement, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
+            setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
+            setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
-            dispatchMouseEvent(bar().nativeElement, 'mousedown', 50, 50);
+            dispatchMouseEvent(bar, 'mousedown', 50, 50);
             tick();
 
-            expect(viewport().nativeElement.scrollTop).toBe(100);
+            expect(viewport.scrollTop).toBe(100);
 
             discardPeriodicTasks();
         }));
 
         it('drags the horizontal thumb to update the viewport scrollLeft, not scrollTop', fakeAsync(() => {
             const fixture = createComponent(TestScrollbarThumb);
+            const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
 
-            fixture.componentInstance.orientation = 'horizontal';
-            fixture.detectChanges();
+            setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
+            setRect(thumb, { top: 0, left: 0, height: 1, width: 1 });
+            setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
-            const { viewport, bar, thumb } = fixture.componentInstance;
-
-            setMetrics(viewport().nativeElement, { scrollHeight: 300, scrollWidth: 300 });
-            setMetrics(thumb().nativeElement, { offsetHeight: 0, offsetWidth: 0 });
-            setRect(thumb().nativeElement, { top: 0, left: 0, height: 1, width: 1 });
-            setRect(bar().nativeElement, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
-
-            dispatchMouseEvent(thumb().nativeElement, 'mousedown', 0, 0);
+            dispatchMouseEvent(thumb, 'mousedown', 0, 0);
             tick();
             dispatchMouseEvent(document, 'mousemove', 50, 50);
             tick();
             dispatchMouseEvent(document, 'mouseup');
             tick();
 
-            expect(viewport().nativeElement.scrollLeft).toBe(100);
-            expect(viewport().nativeElement.scrollTop).toBe(0);
+            expect(viewport.scrollLeft).toBe(100);
+            expect(viewport.scrollTop).toBe(0);
 
             discardPeriodicTasks();
         }));
@@ -428,129 +438,132 @@ describe(KbqScrollbar.name, () => {
         it('negates the horizontal offset in RTL when clicking the track', fakeAsync(() => {
             @Component({
                 selector: 'test-scrollbar-thumb-rtl',
-                imports: [KbqScrollbarViewport, KbqScrollbarThumb],
+                imports: [KbqScrollbarViewport],
                 template: `
-                    <div dir="rtl">
-                        <div #viewport kbqScrollbarViewport>
-                            <div #bar>
-                                <div #thumb kbqScrollbarThumb orientation="horizontal"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <div #viewport kbqScrollbarViewport mode="always" dir="rtl"></div>
                 `
             })
-            class TestScrollbarThumbRtl {
-                readonly viewport = viewChild.required<ElementRef<HTMLElement>>('viewport');
-                readonly bar = viewChild.required<ElementRef<HTMLElement>>('bar');
-                readonly thumb = viewChild.required<ElementRef<HTMLElement>>('thumb');
-            }
+            class TestScrollbarThumbRtl extends TestScrollbarThumb {}
 
             const fixture = createComponent(TestScrollbarThumbRtl);
-            const { viewport, bar, thumb } = fixture.componentInstance;
+            const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
 
             // jsdom's `.matches()` doesn't support `:scope` combined with a descendant combinator
             // (confirmed: `el.matches('[dir="rtl"] :scope')` returns false even with a real dir="rtl"
             // ancestor, while `el.closest('[dir="rtl"]')` correctly finds it) — so the `dir="rtl"`
             // wrapper above only documents intent; the RTL branch itself has to be forced here.
-            jest.spyOn(thumb().nativeElement, 'matches').mockReturnValue(true);
+            jest.spyOn(thumb, 'matches').mockReturnValue(true);
 
-            setMetrics(viewport().nativeElement, { scrollHeight: 300, scrollWidth: 300 });
-            setMetrics(thumb().nativeElement, { offsetHeight: 0, offsetWidth: 0 });
-            setRect(bar().nativeElement, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
+            setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
+            setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
-            dispatchMouseEvent(bar().nativeElement, 'mousedown', 50, 50);
+            dispatchMouseEvent(bar, 'mousedown', 50, 50);
             tick();
 
             // Mirrors the LTR "jumps to the click position" test's +100, negated: RTL measures the
             // click offset from the track's right edge instead of its left.
-            expect(viewport().nativeElement.scrollLeft).toBe(-100);
+            expect(viewport.scrollLeft).toBe(-100);
 
             discardPeriodicTasks();
         }));
 
-        it('reserves top-offset room for the CSS-enforced min thumb size on very long content', () => {
+        it('reserves top-offset room for the CSS-enforced min thumb size on very long content', fakeAsync(() => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, thumb } = fixture.componentInstance;
+            const { viewport, thumb } = getThumbElements(fixture, 'vertical');
 
             // Content is long enough that the natural view fraction (1%) is far below what the
             // CSS-enforced min thumb box size (32px min-size + 3px gap on each side = 38px) would
             // need — the compensation formula should reserve 38% of top-offset room so the
             // min-size thumb still reaches the track's bottom edge instead of overhanging it.
-            setMetrics(viewport().nativeElement, { scrollTop: 9900, scrollHeight: 10000, clientHeight: 100 });
-            viewport().nativeElement.dispatchEvent(new Event('scroll'));
+            setMetrics(viewport, { scrollTop: 9900, scrollHeight: 10000, clientHeight: 100 });
+            viewport.dispatchEvent(new Event('scroll'));
 
-            expect(parseFloat(thumb().nativeElement.style.top)).toBeCloseTo(62, 5);
-        });
+            expect(parseFloat(thumb.style.top)).toBeCloseTo(62, 5);
+
+            discardPeriodicTasks();
+        }));
 
         describe('ARIA', () => {
-            it('marks the thumb with role="scrollbar"', () => {
+            it('marks the thumb with role="scrollbar"', fakeAsync(() => {
                 const fixture = createComponent(TestScrollbarThumb);
+                const { thumb } = getThumbElements(fixture, 'vertical');
 
-                expect(fixture.componentInstance.thumb().nativeElement.getAttribute('role')).toBe('scrollbar');
-            });
+                expect(thumb.getAttribute('role')).toBe('scrollbar');
+
+                discardPeriodicTasks();
+            }));
 
             it.each<['vertical' | 'horizontal']>([['vertical'], ['horizontal']])(
                 'sets aria-orientation to the current orientation: %s',
-                (orientation) => {
+                fakeAsync((orientation) => {
                     const fixture = createComponent(TestScrollbarThumb);
+                    const { thumb } = getThumbElements(fixture, orientation);
 
-                    fixture.componentInstance.orientation = orientation;
-                    fixture.detectChanges();
+                    expect(thumb.getAttribute('aria-orientation')).toBe(orientation);
 
-                    expect(fixture.componentInstance.thumb().nativeElement.getAttribute('aria-orientation')).toBe(
-                        orientation
-                    );
-                }
+                    discardPeriodicTasks();
+                })
             );
 
-            it('points aria-controls at the viewport element', () => {
+            it('points aria-controls at the viewport element', fakeAsync(() => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { viewport, thumb } = fixture.componentInstance;
+                const { viewport, thumb } = getThumbElements(fixture, 'vertical');
 
-                expect(viewport().nativeElement.id).not.toBe('');
-                expect(thumb().nativeElement.getAttribute('aria-controls')).toBe(viewport().nativeElement.id);
-            });
+                expect(viewport.id).not.toBe('');
+                expect(thumb.getAttribute('aria-controls')).toBe(viewport.id);
 
-            it('sets a fixed 0/100 aria-valuemin/aria-valuemax percentage range', () => {
+                discardPeriodicTasks();
+            }));
+
+            it('sets a fixed 0/100 aria-valuemin/aria-valuemax percentage range', fakeAsync(() => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { thumb } = fixture.componentInstance;
+                const { thumb } = getThumbElements(fixture, 'vertical');
 
-                expect(thumb().nativeElement.getAttribute('aria-valuemin')).toBe('0');
-                expect(thumb().nativeElement.getAttribute('aria-valuemax')).toBe('100');
-            });
+                expect(thumb.getAttribute('aria-valuemin')).toBe('0');
+                expect(thumb.getAttribute('aria-valuemax')).toBe('100');
 
-            it('sets aria-valuenow synchronously at creation, before any scroll or animation frame', () => {
+                discardPeriodicTasks();
+            }));
+
+            it('sets aria-valuenow when the thumb is created', fakeAsync(() => {
                 const fixture = createComponent(TestScrollbarThumb);
+                const { thumb } = getThumbElements(fixture, 'vertical');
 
-                expect(fixture.componentInstance.thumb().nativeElement.getAttribute('aria-valuenow')).not.toBeNull();
-            });
+                expect(thumb.getAttribute('aria-valuenow')).not.toBeNull();
 
-            it('reflects the scrolled percentage in aria-valuenow', () => {
+                discardPeriodicTasks();
+            }));
+
+            it('reflects the scrolled percentage in aria-valuenow', fakeAsync(() => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { viewport, thumb } = fixture.componentInstance;
+                const { viewport, thumb } = getThumbElements(fixture, 'vertical');
 
-                setMetrics(viewport().nativeElement, { scrollTop: 0, scrollHeight: 300, clientHeight: 100 });
-                viewport().nativeElement.dispatchEvent(new Event('scroll'));
-                expect(thumb().nativeElement.getAttribute('aria-valuenow')).toBe('0');
+                setMetrics(viewport, { scrollTop: 0, scrollHeight: 300, clientHeight: 100 });
+                viewport.dispatchEvent(new Event('scroll'));
+                expect(thumb.getAttribute('aria-valuenow')).toBe('0');
 
-                setMetrics(viewport().nativeElement, { scrollTop: 100, scrollHeight: 300, clientHeight: 100 });
-                viewport().nativeElement.dispatchEvent(new Event('scroll'));
-                expect(thumb().nativeElement.getAttribute('aria-valuenow')).toBe('50');
+                setMetrics(viewport, { scrollTop: 100, scrollHeight: 300, clientHeight: 100 });
+                viewport.dispatchEvent(new Event('scroll'));
+                expect(thumb.getAttribute('aria-valuenow')).toBe('50');
 
-                setMetrics(viewport().nativeElement, { scrollTop: 200, scrollHeight: 300, clientHeight: 100 });
-                viewport().nativeElement.dispatchEvent(new Event('scroll'));
-                expect(thumb().nativeElement.getAttribute('aria-valuenow')).toBe('100');
-            });
+                setMetrics(viewport, { scrollTop: 200, scrollHeight: 300, clientHeight: 100 });
+                viewport.dispatchEvent(new Event('scroll'));
+                expect(thumb.getAttribute('aria-valuenow')).toBe('100');
 
-            it('defaults aria-valuenow to 0 rather than NaN when there is nothing to scroll', () => {
+                discardPeriodicTasks();
+            }));
+
+            it('defaults aria-valuenow to 0 rather than NaN when there is nothing to scroll', fakeAsync(() => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { viewport, thumb } = fixture.componentInstance;
+                const { viewport, thumb } = getThumbElements(fixture, 'vertical');
 
-                setMetrics(viewport().nativeElement, { scrollTop: 0, scrollHeight: 100, clientHeight: 100 });
-                viewport().nativeElement.dispatchEvent(new Event('scroll'));
+                setMetrics(viewport, { scrollTop: 0, scrollHeight: 100, clientHeight: 100 });
+                viewport.dispatchEvent(new Event('scroll'));
 
-                expect(thumb().nativeElement.getAttribute('aria-valuenow')).toBe('0');
-            });
+                expect(thumb.getAttribute('aria-valuenow')).toBe('0');
+
+                discardPeriodicTasks();
+            }));
         });
     });
 
