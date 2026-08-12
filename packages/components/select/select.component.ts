@@ -1903,13 +1903,28 @@ export class KbqSelect
         return !activeItem || !this.navigableOptions.some((option) => option === activeItem);
     }
 
-    /** Rebuilds the key manager's list: the "select all" row first, then the projected options. */
+    /**
+     * Rebuilds the key manager's list — the "select all" row first, then the projected options — and
+     * re-applies the panel's initial highlight whenever the row is what just joined that list.
+     *
+     * Both callers have to be able to do the second part: whichever of the view query and
+     * `options.changes` runs first is the one that brings the row in, and the other then sees a list
+     * it is already part of.
+     */
     private syncNavigableOptions(): void {
         const selectAllOption = this.selectAllOption();
         const options = this.options?.toArray() ?? [];
+        // The row is created together with the overlay, so the highlight `openPanel()` applies is
+        // computed against a list that does not hold it yet and lands on the option below it instead.
+        // Re-apply it the moment the row takes the lead — the call is idempotent for every other case.
+        const selectAllOptionAppeared = !!selectAllOption && this.navigableOptions.first !== selectAllOption;
 
         this.navigableOptions.reset(selectAllOption ? [selectAllOption, ...options] : options);
         this.navigableOptions.notifyOnChanges();
+
+        if (selectAllOptionAppeared && this.panelOpen) {
+            this.highlightCorrectOption();
+        }
     }
 
     /**

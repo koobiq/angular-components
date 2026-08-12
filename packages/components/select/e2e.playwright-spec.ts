@@ -192,6 +192,24 @@ test.describe('KbqSelectModule', () => {
             await expect(row).toHaveAttribute('aria-checked', 'true');
         });
 
+        test('is the active item when the panel is opened from the keyboard', async ({ page }) => {
+            await page.goto('/E2eSelectSelectAllStates');
+
+            const select = page.getByTestId('e2eSelectEmpty');
+
+            await select.focus();
+            await page.keyboard.press('Enter');
+
+            const row = page.locator('.cdk-overlay-pane .kbq-select__select-all');
+
+            await row.waitFor();
+
+            // The row only exists once the overlay renders, so the highlight `openPanel()` applies is
+            // computed without it and used to come to rest on the first projected option instead.
+            await expect(row).toHaveClass(/kbq-active/);
+            await expect(page.locator('.cdk-overlay-pane kbq-option.kbq-active')).toHaveCount(1);
+        });
+
         test('PAGE_DOWN/PAGE_UP page past the row without skipping it', async ({ page }) => {
             await page.goto('/E2eSelectSelectAllStates');
 

@@ -7608,6 +7608,15 @@ describe('KbqSelect', () => {
                 expect(select.options.length).toBe(testInstance.allOptions.length);
             }));
 
+            it('should be the active item right after the panel opens', fakeAsync(() => {
+                openPanel();
+
+                const select = testInstance.select();
+
+                expect(select.keyManager.activeItemIndex).toBe(0);
+                expect(select.keyManager.activeItem!.getHostElement().classList).toContain('kbq-select__select-all');
+            }));
+
             it('should become the active item when arrowing up from the first option', fakeAsync(() => {
                 openPanel();
 
