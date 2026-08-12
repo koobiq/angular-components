@@ -22,6 +22,7 @@ jobs:
           yarn run unit:angular-moment-adapter
           yarn run unit:angular-luxon-adapter
           yarn run unit:schematics
+          yarn run unit:cli
           yarn run unit:koobiq-docs
           yarn run unit:tools
           yarn run unit:components-experimental

@@ -895,9 +895,11 @@ export class KbqDatepickerInput<D>
     }
 
     private setFormat(format: string): void {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this.separator = format.match(/[aA-zZ]+(?<separator>\W|\D)[aA-zZ]+/).groups.separator;
+        // `[a-zA-Z]`, not `[aA-zZ]`: the latter reads as `a`, the range `A-z` and `Z`, and that range
+        // takes in the six characters ASCII puts between the two alphabets — opening bracket,
+        // backslash, closing bracket, caret, underscore and backtick. A format escaping a literal in
+        // brackets could therefore have had that bracket counted as part of a placeholder.
+        this.separator = format.match(/[a-zA-Z]+(?<separator>\W|\D)[a-zA-Z]+/)!.groups!.separator;
 
         this.separatorPositions = format
             .split('')
