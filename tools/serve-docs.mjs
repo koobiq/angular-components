@@ -8,7 +8,7 @@
  * Usage: node tools/serve-docs.mjs [root] with PORT (default 4300).
  */
 import express from 'express';
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { posix, relative, resolve, sep } from 'node:path';
 
 const DEFAULT_ROOT = 'dist/releases/koobiq-docs/browser';
@@ -46,23 +46,24 @@ const app = express();
 // would bounce every unknown URL to the default locale).
 const csrShell = resolve(root, 'index.csr.html');
 const shell = existsSync(csrShell) ? csrShell : resolve(root, 'index.html');
-
-app.use(express.static(root, { index: 'index.html', redirect: false }));
+// Held in memory rather than re-read per request. Nothing below this line touches the file system
+// on behalf of a request except `express.static`, which is the one thing here built to: a handler of
+// our own that reads a file is an unmetered amount of I/O per request, which is what CodeQL reports
+// as `js/missing-rate-limiting`, and rate-limiting a fixture nobody can reach would be theatre.
+const shellHtml = readFileSync(shell, 'utf8');
 
 // A prerendered route is a directory holding its own index.html, and the build has finished before
 // this process starts, so the whole set can be enumerated once instead of being probed per request.
 //
-// Enumerating also settles path traversal by construction: the request only ever picks a key out of
-// this map, and every value in it came from walking `root`. Joining the request path onto `root` by
+// Enumerating also settles path traversal by construction: the request only ever looks itself up in
+// this set, and every key in it came from walking `root`. Joining the request path onto `root` by
 // hand — even behind a `path.relative` check — leaves the burden of proof on the check.
-const prerenderedRoutes = new Map();
+const prerenderedRoutes = new Set();
 
 for (const entry of readdirSync(root, { recursive: true, withFileTypes: true })) {
     if (!entry.isFile() || entry.name !== 'index.html') continue;
 
-    const route = relative(root, entry.parentPath).split(sep).join('/');
-
-    prerenderedRoutes.set(`/${route}`, resolve(entry.parentPath, entry.name));
+    prerenderedRoutes.add(`/${relative(root, entry.parentPath).split(sep).join('/')}`);
 }
 
 // Malformed percent-encoding (`/%E0%`) makes `decodeURIComponent` throw. Express would turn that
@@ -75,9 +76,9 @@ const decodePath = (path) => {
     }
 };
 
-// The map holds one canonical key per directory, so a trailing slash or a doubled separator has to
+// The set holds one canonical key per directory, so a trailing slash or a doubled separator has to
 // be folded away before the lookup. `normalize` resolves `..` too, but only to build the key: a
-// route that climbs out of the tree is simply not in the map, and lands on the shell like any other
+// route that climbs out of the tree is simply not in the set, and lands on the shell like any other
 // unknown URL.
 const routeKey = (path) => {
     const normalized = posix.normalize(path);
@@ -85,14 +86,27 @@ const routeKey = (path) => {
     return normalized.length > 1 && normalized.endsWith('/') ? normalized.slice(0, -1) : normalized;
 };
 
-app.use((request, response) => {
+// `express.static` already serves a directory's own index.html — but only for a URL that carries the
+// trailing slash, and the docs app links to these routes without one. Appending it internally hands
+// the request to the static middleware instead of reading the file in a handler of ours. Letting
+// `express.static` redirect instead (its default) is the thing this avoids: that would move the app
+// to a URL it never links to, in the browser, mid-suite.
+app.use((request, _response, next) => {
     const path = decodePath(request.path);
-    const prerendered = path === null ? undefined : prerenderedRoutes.get(routeKey(path));
 
-    // Serve the prerendered index.html directly rather than letting `express.static` bounce the
-    // request to a trailing-slash URL the app never links to.
-    response.sendFile(prerendered ?? shell);
+    if (path !== null && !request.path.endsWith('/') && prerenderedRoutes.has(routeKey(path))) {
+        // Slash onto the raw path, so percent-encoding survives, and ahead of any query string.
+        request.url = `${request.path}/${request.url.slice(request.path.length)}`;
+    }
+
+    next();
 });
+
+app.use(express.static(root, { index: 'index.html', redirect: false }));
+
+// Anything the static middleware passed on — an unprerendered route, a malformed escape, a path that
+// tried to climb out of the tree — is a client-side route as far as this server is concerned.
+app.use((_request, response) => response.type('html').send(shellHtml));
 
 const server = app.listen(port, HOST, () =>
     console.log(`[serve-docs] Serving ${root} on http://${HOST}:${port} (${prerenderedRoutes.size} prerendered routes)`)
