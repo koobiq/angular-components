@@ -130,17 +130,24 @@ interface SelectionModelOption {
     // which is exactly where the row belongs: aligned with the root nodes below it.
     template: `
         @if (showSelectAll) {
+            <!-- Every read of selectAllState re-filters the rendered nodes against the data set, and
+                 allOptionsSelected is that same walk asking whether the state is "checked" — one read
+                 covers all four. -->
+            @let selectAllCheckboxState = selectAllState;
+
             <kbq-tree-option
                 class="kbq-tree-option_select-all"
                 kbqTreeNodePadding
                 [selectAllRow]="true"
                 [selectable]="false"
-                [class.kbq-selected]="allOptionsSelected"
+                [class.kbq-selected]="selectAllCheckboxState === 'checked'"
                 [attr.role]="'checkbox'"
-                [attr.aria-checked]="selectAllState === 'indeterminate' ? 'mixed' : selectAllState === 'checked'"
+                [attr.aria-checked]="
+                    selectAllCheckboxState === 'indeterminate' ? 'mixed' : selectAllCheckboxState === 'checked'
+                "
                 (click)="toggleSelectAll()"
             >
-                <kbq-pseudo-checkbox [state]="selectAllState" />
+                <kbq-pseudo-checkbox [state]="selectAllCheckboxState" />
                 {{ selectAllText }}
             </kbq-tree-option>
         }

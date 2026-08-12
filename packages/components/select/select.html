@@ -128,15 +128,21 @@
                 <ng-content select="[kbq-select-search-empty-result]" />
             }
             @if (showSelectAll) {
+                <!-- Every read of selectAllState re-filters the whole option list, and allOptionsSelected
+                     is that same walk asking whether the state is "checked" — one read covers all four. -->
+                @let selectAllCheckboxState = selectAllState;
+
                 <kbq-option
                     class="kbq-select__select-all"
                     [selectable]="false"
-                    [class.kbq-selected]="allOptionsSelected"
+                    [class.kbq-selected]="selectAllCheckboxState === 'checked'"
                     [attr.role]="'checkbox'"
-                    [attr.aria-checked]="selectAllState === 'indeterminate' ? 'mixed' : selectAllState === 'checked'"
+                    [attr.aria-checked]="
+                        selectAllCheckboxState === 'indeterminate' ? 'mixed' : selectAllCheckboxState === 'checked'
+                    "
                     (click)="toggleSelectAll()"
                 >
-                    <kbq-pseudo-checkbox [state]="selectAllState" />
+                    <kbq-pseudo-checkbox [state]="selectAllCheckboxState" />
                     {{ selectAllText }}
                 </kbq-option>
             }
