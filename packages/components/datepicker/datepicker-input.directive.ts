@@ -899,9 +899,7 @@ export class KbqDatepickerInput<D>
         // takes in the six characters ASCII puts between the two alphabets — opening bracket,
         // backslash, closing bracket, caret, underscore and backtick. A format escaping a literal in
         // brackets could therefore have had that bracket counted as part of a placeholder.
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this.separator = format.match(/[a-zA-Z]+(?<separator>\W|\D)[a-zA-Z]+/).groups.separator;
+        this.separator = format.match(/[a-zA-Z]+(?<separator>\W|\D)[a-zA-Z]+/)!.groups!.separator;
 
         this.separatorPositions = format
             .split('')

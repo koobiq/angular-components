@@ -10,6 +10,10 @@ describe(parseVersionName.name, () => {
         expect(parseVersionName('18.10.0-alpha.12')).toEqual(new Version(18, 10, 0, 'alpha', 12));
     });
 
+    it('should parse the zeroth pre-release of a series', () => {
+        expect(parseVersionName('18.10.0-rc.0')).toEqual(new Version(18, 10, 0, 'rc', 0));
+    });
+
     it.each(['18.10', '18.10.0-rc', '18.10.0-gamma.1', 'v18.10.0'])('should not parse %p', (version) => {
         expect(parseVersionName(version)).toBeNull();
     });
@@ -31,7 +35,7 @@ describe(parseVersionName.name, () => {
 });
 
 describe(serializeVersion.name, () => {
-    it.each(['18.10.0', '18.10.0-rc.4'])('should round-trip %p', (version) => {
+    it.each(['18.10.0', '18.10.0-rc.4', '18.10.0-rc.0'])('should round-trip %p', (version) => {
         expect(serializeVersion(parseVersionName(version)!)).toBe(version);
     });
 });

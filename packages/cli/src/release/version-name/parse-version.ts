@@ -52,12 +52,15 @@ export function parseVersionName(version: string): Version | null {
         return null;
     }
 
+    // The pre-release number is compared against `undefined` rather than taken for its truthiness:
+    // the first pre-release of a series is numbered `0`, and a falsy check would read that as an
+    // absent number and serialize the version back without its pre-release part.
     return new Version(
         Number(matches[1]),
         Number(matches[2]),
         Number(matches[3]),
         matches[4] || null,
-        Number(matches[5]) || null
+        matches[5] === undefined ? null : Number(matches[5])
     );
 }
 
