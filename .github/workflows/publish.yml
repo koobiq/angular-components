@@ -121,7 +121,21 @@ jobs:
               prerelease=(--prerelease) # a prerelease can never be latest
               ;;
             *)
-              current=$(gh release view --json tagName --jq .tagName 2> /dev/null || true)
+              # Same distinction as above, and the same message: a repository with no releases at
+              # all answers "release not found" too — verified against github/gitignore with `gh`
+              # 2.97.0 — and there the first release does take the badge. Any other failure would
+              # otherwise read as "nothing holds the badge" and move it here, so it fails instead.
+              # The two streams stay separate: stdout carries the tag name, stderr the message.
+              if ! current=$(gh release view --json tagName --jq .tagName 2> "$RUNNER_TEMP/latest-release.err"); then
+                latest_error=$(cat "$RUNNER_TEMP/latest-release.err")
+
+                if [ "$latest_error" != "release not found" ]; then
+                  echo "::error::gh release view --json tagName failed: $latest_error"
+                  exit 1
+                fi
+
+                current=''
+              fi
 
               if [ -z "$current" ] || [ "$(printf '%s\n%s\n' "$TAG" "$current" | sort -V | tail -1)" = "$TAG" ]; then
                 latest=true
