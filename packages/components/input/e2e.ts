@@ -30,7 +30,16 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 @for (state of states; track $index) {
                     <div class="e2e__row">
                         @for (cell of state; track $index) {
-                            <div class="e2e__cell" [class.has_ellipsis]="cell.state.includes('ellipsis')">
+                            <!--
+                                Named after the state so the autofill spec can force ':autofill' on a
+                                specific cell without counting rows. Attributes do not render, so the
+                                screenshot baselines are unaffected.
+                            -->
+                            <div
+                                class="e2e__cell"
+                                [attr.data-testid]="cellTestId(cell)"
+                                [class.has_ellipsis]="cell.state.includes('ellipsis')"
+                            >
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
@@ -189,11 +198,11 @@ export class E2eInputStateAndStyle {
         [{ state: ['error'] }],
         [{ state: ['error', 'focused'] }],
         [{ state: ['disabled'] }],
-        // Autofill is faked through `kbq-form-field_autofilled`, the class that `AutofillMonitor` adds at
-        // runtime — `:autofill` cannot be triggered synthetically. That covers the state half: which
-        // background wins when autofill meets focus, error or disabled. The rest of the styling — the
-        // `:has()` arm that paints the same tint, and the suppression of the browser's own background and
-        // text colour — is keyed on the real pseudo-class and stays outside this grid.
+        // Autofill is faked here through `kbq-form-field_autofilled`, the class `AutofillMonitor` adds at
+        // runtime, which is what the screenshots capture: which background wins when autofill meets
+        // focus, error or disabled. The other half of the implementation — the `:has(…:autofill…)` arm
+        // and the suppression of the browser's own background — is keyed on the real pseudo-class and is
+        // asserted in the `autofill` block of e2e.playwright-spec.ts, which forces `:autofill` over CDP.
         [{ state: ['autofill'] }],
         [{ state: ['autofill', 'focused'] }],
         [{ state: ['autofill', 'error'] }],
@@ -201,4 +210,13 @@ export class E2eInputStateAndStyle {
     ];
 
     protected readonly passwordRules = PasswordRules;
+
+    /**
+     * Test id for a grid cell, named after the state it renders, so the autofill spec can address one
+     * without counting rows. Built here rather than in the template: the template is a template literal,
+     * so a backtick inside it would end the string.
+     */
+    protected cellTestId({ state }: InputStates): string {
+        return `e2eInputCell_${state.join('-')}`;
+    }
 }
