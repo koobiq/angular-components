@@ -29,6 +29,7 @@ import {
 } from '@angular/forms';
 import {
     BACKSPACE,
+    DateAdapter,
     DELETE,
     DOWN_ARROW,
     END,
@@ -247,7 +248,7 @@ export class KbqDatepickerInput<D>
 {
     elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
-    readonly adapter = injectRequiredDateAdapter<D>();
+    readonly adapter: DateAdapter<D> = injectRequiredDateAdapter<D>();
     private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true });
     /** @docs-private */
     protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
