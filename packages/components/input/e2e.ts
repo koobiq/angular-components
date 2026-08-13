@@ -189,7 +189,7 @@ export class E2eInputStateAndStyle {
         [{ state: ['error'] }],
         [{ state: ['error', 'focused'] }],
         [{ state: ['disabled'] }],
-        // Autofill is faked through `kbq-form-field_autofilled`, the class `AutofillMonitor` drives at
+        // Autofill is faked through `kbq-form-field_autofilled`, the class that `AutofillMonitor` adds at
         // runtime — `:autofill` cannot be triggered synthetically. That covers the state half: which
         // background wins when autofill meets focus, error or disabled. The mask that repaints over the
         // browser's own background is keyed on the real pseudo-class and stays outside this grid.

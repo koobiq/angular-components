@@ -69,8 +69,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         </kbq-form-field>
 
         <!--
-            Autofill is faked through the class AutofillMonitor drives at runtime — ':autofill' cannot be
-            triggered synthetically. This covers the state half only: which background wins when autofill
+            Autofill is faked through the class that AutofillMonitor adds at runtime — ':autofill' cannot
+            be triggered synthetically. This covers the state half only: which background wins when autofill
             meets an error or a disabled control. The mask that repaints over the browser's own
             background is keyed on the real pseudo-class and cannot be captured here.
         -->

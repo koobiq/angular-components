@@ -40,9 +40,11 @@ export abstract class KbqFormFieldControl<T> {
     /**
      * Whether the control's value was filled in by the browser.
      *
-     * Implement it only on controls that can actually be autofilled — text inputs and textareas. It is a
-     * signal rather than a plain property because the form field reads it from a host binding and runs
-     * `OnPush`: a signal read there marks the form field dirty on its own.
+     * Implement it only where autofill is reachable: on a control that is itself a text input or a
+     * textarea, or — like `KbqTagList` — on a wrapper that forwards the state of the input it hosts.
+     * Leave it out on controls the browser never fills. It is a signal rather than a plain property
+     * because the form field reads it from a host binding and runs `OnPush`: a signal read there marks
+     * the form field dirty on its own.
      */
     readonly autofilled?: Signal<boolean>;
 

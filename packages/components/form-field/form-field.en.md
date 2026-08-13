@@ -106,7 +106,7 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-fiel
 
 When the browser fills a field in, `<kbq-form-field>` gets the `kbq-form-field_autofilled` class and the field is tinted with `--kbq-form-field-states-autofill-background`. The browser's own background and text color are painted over, so an autofilled field looks the same in every browser.
 
-The tint is the weakest state: `focused`, an error, `disabled` and `inOverlay` all win over it. `noBorders` is not a state and does not — it only makes the border transparent, so an autofilled `noBorders` field keeps the tint. The state is detected through the CDK's `AutofillMonitor`, so it is also readable from code — `KbqInput`, `KbqInputPassword`, `KbqTextarea` and `KbqTagInput` (forwarded by `KbqTagList`) expose an `autofilled` signal:
+The tint is the weakest state: `focused`, an error, `disabled` and `inOverlay` all win over it. `noBorders` does not win over it, because it is not a state — it only makes the border transparent, so an autofilled `noBorders` field keeps the tint. The state is detected through the CDK's `AutofillMonitor`, so it is also readable from code — `KbqInput`, `KbqInputPassword`, `KbqTextarea` and `KbqTagInput` (forwarded by `KbqTagList`) expose an `autofilled` signal:
 
 ```ts
 @ViewChild(KbqInput) input: KbqInput;

@@ -113,7 +113,7 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-fiel
 
 Когда браузер заполняет поле, `<kbq-form-field>` получает класс `kbq-form-field_autofilled`, а поле подсвечивается цветом `--kbq-form-field-states-autofill-background`. Собственные фон и цвет текста браузера закрашиваются, поэтому поле с автозаполнением выглядит одинаково во всех браузерах.
 
-Подсветка — самое слабое состояние: `focused`, ошибка, `disabled` и `inOverlay` перекрывают её. `noBorders` — не состояние и не перекрывает: он лишь делает рамку прозрачной, поэтому поле с `noBorders` сохраняет подсветку. Состояние определяется через `AutofillMonitor` из CDK, поэтому оно доступно и из кода — `KbqInput`, `KbqInputPassword`, `KbqTextarea` и `KbqTagInput` (доступен через `KbqTagList`) предоставляют сигнал `autofilled`:
+Подсветка — самое слабое состояние: `focused`, ошибка, `disabled` и `inOverlay` перекрывают её. `noBorders` подсветку не перекрывает, потому что это не состояние: он лишь делает рамку прозрачной, поэтому поле с `noBorders` сохраняет подсветку. Состояние определяется через `AutofillMonitor` из CDK, поэтому оно доступно и из кода — `KbqInput`, `KbqInputPassword`, `KbqTextarea` и `KbqTagInput` (доступен через `KbqTagList`) предоставляют сигнал `autofilled`:
 
 ```ts
 @ViewChild(KbqInput) input: KbqInput;

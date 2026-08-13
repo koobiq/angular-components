@@ -261,8 +261,8 @@ export class E2eTagListStates {}
         </kbq-form-field>
 
         <!--
-            Autofill is faked through the class AutofillMonitor drives at runtime — ':autofill' cannot be
-            triggered synthetically, and no 'autocomplete="off"' here so the field stays a real autofill
+            Autofill is faked through the class that AutofillMonitor adds at runtime — ':autofill' cannot
+            be triggered synthetically, and no 'autocomplete="off"' here so the field stays a real autofill
             target when the e2e app is opened by hand. This covers the state half only; the mask that
             repaints over the browser's own background is keyed on the real pseudo-class.
         -->
