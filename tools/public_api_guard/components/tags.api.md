@@ -172,7 +172,7 @@ export type KbqTagFocusEvent = KbqTagEvent & {
 // Warning: (ae-forgotten-export) The symbol "KbqTagTextControl" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class KbqTagInput implements KbqTagTextControl, OnChanges, OnDestroy {
+export class KbqTagInput implements KbqTagTextControl, OnChanges {
     constructor();
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
@@ -195,8 +195,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, OnDestroy {
     ngControl: NgControl;
     // (undocumented)
     ngOnChanges(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     onFocus(): void;
     // (undocumented)
     onInput(): void;

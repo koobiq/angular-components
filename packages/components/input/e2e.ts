@@ -105,6 +105,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
+                                    [class.kbq-form-field_autofilled]="cell.state.includes('autofill')"
                                     [class.kbq-disabled]="cell.state.includes('disabled')"
                                 >
                                     <input

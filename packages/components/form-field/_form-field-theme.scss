@@ -142,10 +142,13 @@
         // Both read back what the state cascade resolved above, so this block never competes with a
         // state and needs neither `!important` nor `:has()`.
         // The (0,3,0) specificity is deliberate: it has to stay above `input.kbq-input:invalid`
-        // (0,2,1) in ../input/input.scss and `.kbq-textarea:invalid` (0,1,1) in
+        // (0,2,1) in ../input/input.scss and `.kbq-textarea:invalid` (0,2,0) in
         // ../textarea/textarea.scss, both of which reset `box-shadow` and are emitted after this file
         // (see `styleUrls` in form-field.ts). Wrapping this block in `:where()` would silently drop the
         // mask on any HTML5-invalid autofilled control — an autofilled `type="email"`, for instance.
+        // The margin over `.kbq-textarea:invalid` is a single class: give that selector one more class
+        // or pseudo-class and it ties (0,3,0), at which point source order hands it the win and the mask
+        // silently disappears on invalid autofilled textareas. Widen this block if that ever happens.
         & .kbq-input,
         & .kbq-tag-input,
         & .kbq-textarea {

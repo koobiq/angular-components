@@ -106,7 +106,7 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-fiel
 
 When the browser fills a field in, `<kbq-form-field>` gets the `kbq-form-field_autofilled` class and the field is tinted with `--kbq-form-field-states-autofill-background`. The browser's own background and text color are painted over, so an autofilled field looks the same in every browser.
 
-The tint is the weakest state: `focused`, an error, `disabled`, `inOverlay` and `noBorders` all win over it. The state is detected through the CDK's `AutofillMonitor`, so it is also readable from code — every control that can be autofilled exposes an `autofilled` signal:
+The tint is the weakest state: `focused`, an error, `disabled` and `inOverlay` all win over it. `noBorders` is not a state and does not — it only makes the border transparent, so an autofilled `noBorders` field keeps the tint. The state is detected through the CDK's `AutofillMonitor`, so it is also readable from code — `KbqInput`, `KbqInputPassword`, `KbqTextarea` and `KbqTagInput` (forwarded by `KbqTagList`) expose an `autofilled` signal:
 
 ```ts
 @ViewChild(KbqInput) input: KbqInput;
@@ -126,12 +126,12 @@ To change the tint or switch it off, override the tokens on the field — no `!i
 }
 ```
 
-| Token                                           | Applies to                                                     |
-| ----------------------------------------------- | -------------------------------------------------------------- |
-| `--kbq-form-field-states-autofill-background`   | field background                                               |
-| `--kbq-form-field-states-autofill-border-color` | field border, the same as the default border unless overridden |
-| `--kbq-form-field-states-autofill-text`         | value text and caret                                           |
-| `--kbq-form-field-states-autofill-placeholder`  | placeholder — never visible, an autofilled field has a value   |
+| Token                                           | Applies to                                                                                                                                                                                                                                                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--kbq-form-field-states-autofill-background`   | field background                                                                                                                                                                                                                                              |
+| `--kbq-form-field-states-autofill-border-color` | field border, the same as the default border unless overridden                                                                                                                                                                                                |
+| `--kbq-form-field-states-autofill-text`         | value text and caret                                                                                                                                                                                                                                          |
+| `--kbq-form-field-states-autofill-placeholder`  | placeholder — normally hidden, since an autofilled field has a value. It shows if the value is cleared programmatically (for example by `<kbq-cleaner>`) while the browser still marks the field autofilled, so keep it as legible as the default placeholder |
 
 ### Password input field
 
