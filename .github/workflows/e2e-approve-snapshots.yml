@@ -33,13 +33,11 @@ jobs:
       # runner instead would mean the baselines are written by one renderer and checked by another,
       # and this workflow would happily commit screenshots that fail the very next run.
       #
-      # docker compose creates a missing bind-mount source as root; packages/components already
-      # exists from the checkout, so only the report directories need creating up front.
-      - run: mkdir -p playwright-report test-results
       # npm rather than yarn: no setup-node here, so the repository's Yarn 4 release is not on
       # PATH. The container does its own install. e2e:docker:update-snapshots additionally mounts
       # packages/components, which is how the rewritten PNGs reach the working tree for the commit
-      # step below.
+      # step below — and which already exists from the checkout, unlike the report directories that
+      # tools/e2e/run.js creates.
       - id: update-snapshots
         run: npm run e2e:docker:update-snapshots
         env:

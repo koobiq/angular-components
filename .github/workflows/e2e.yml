@@ -39,13 +39,12 @@ jobs:
       # `cache-to: type=gha`, which would push well over a gigabyte of layers into the same 10 GB
       # Actions cache that every other job's yarn cache is competing for.
       #
-      # docker compose creates a missing bind-mount source as root. Creating them up front keeps
-      # the workspace owned by the runner user, which matters on self-hosted runners where the
-      # next job has to clean it up.
-      - run: mkdir -p playwright-report test-results
       # npm rather than yarn: without setup-node the repository's Yarn 4 release is never put on
       # PATH, and the runner's own `yarn` is v1, which cannot read this manifest. Nothing is
       # installed here either — the container does its own yarn install.
+      #
+      # The bind-mount targets are created by tools/e2e/run.js rather than by a step here, so that a
+      # local run gets the same treatment; see the comment there.
       - id: run-e2e-tests
         run: npm run e2e:docker
         env:

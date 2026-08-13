@@ -20,13 +20,17 @@
  */
 
 const { spawnSync } = require('node:child_process');
-const { existsSync } = require('node:fs');
+const { existsSync, mkdirSync } = require('node:fs');
 const { basename, join } = require('node:path');
 const { devDependencies } = require('../../package.json');
 
 const TIME_LABEL = 'Runtime';
+const REPOSITORY_ROOT = join(__dirname, '../..');
 const COMPOSE_FILE = join(__dirname, 'docker-compose.yml');
 const COMPOSE_UPDATE_FILE = join(__dirname, 'docker-compose.update.yml');
+
+// The two directories docker-compose.yml bind-mounts out of the container for their reports.
+const OUTPUT_DIRECTORIES = ['playwright-report', 'test-results'];
 
 const fail = (message) => {
     console.error(message);
@@ -173,6 +177,18 @@ if (isForwardedToWsl) {
     env.WSLENV = [env.WSLENV, ...forwarded.map((name) => `${name}/u`)].filter(Boolean).join(':');
 }
 
+// Compose creates a missing bind-mount source itself, but the daemon does it — so against a rootful
+// daemon these land in the working tree owned by root, and the developer's next run cannot write into
+// them. It is not self-healing either: the ownership survives until someone with sudo removes the
+// directories, and the failure it eventually produces is a permission error from inside the container,
+// pointing nowhere near the cause. Creating them here, as whoever invoked the script, is the whole fix.
+//
+// This belongs in the wrapper rather than in the CI workflows that used to carry it: every supported
+// entry point goes through this file, so covering it here covers a plain local run too.
+for (const directory of OUTPUT_DIRECTORIES) {
+    mkdirSync(join(REPOSITORY_ROOT, directory), { recursive: true });
+}
+
 console.time(TIME_LABEL);
 
 const result = spawnSync(
@@ -204,7 +220,7 @@ if (result.error) {
 // Only when there is something to open: the run can also fail before any test executes — a build
 // error, or an image that cannot be pulled — and pointing at a report that was never written sends
 // whoever is debugging in the wrong direction.
-if (result.status !== 0 && existsSync(join(__dirname, '../../playwright-report/index.html'))) {
+if (result.status !== 0 && existsSync(join(REPOSITORY_ROOT, 'playwright-report/index.html'))) {
     console.info('To view the test report, run: `npx playwright show-report`');
 }
 
