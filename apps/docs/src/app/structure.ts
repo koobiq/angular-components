@@ -417,7 +417,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'checkbox',
                     hasApi: true,
                     apiId: 'checkbox',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.ClampedList,

@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
+export * from './checkable';
 export * from './checkbox';
 export * from './clipboard';
 export { CanColor, CanColorCtor, KbqColorDirective, KbqComponentColors, mixinColor, ThemePalette } from './color';
