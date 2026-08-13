@@ -25,6 +25,13 @@
         // Must not clip: the button's hit area below reaches outside this box. Not `overflow: clip` with
         // an `overflow-clip-margin` — Chromium rejects math functions there, so the margin cannot follow
         // the tokens the offsets come from and computes to `0px`, clipping the hit area away.
+
+        // What the item stops containing, and why nothing here takes it back: a toggle projects its
+        // content into the button's own `.kbq-button-text`, which keeps the `overflow: hidden` of
+        // `kbq-truncate-line()`, so content still cannot spill sideways past the button's content box.
+        // Content *taller* than the fixed item height no longer is — and cannot be re-clipped from
+        // inside the button, since the only boxes there with a definite height are the button itself,
+        // whose `::before` this exists for, and the label box, which would clip its own descenders.
         overflow: visible;
 
         // What that clip used to give for free: a flex item's automatic minimum size is zero only while
@@ -68,10 +75,15 @@
                 );
 
             // Hit area over the gutters the group's `gap` and `padding` leave around the pill this button
-            // paints, so the highlight does not drop out between segments — the same split as the navbar
-            // item (DS-2558). On the button, not the item host, so pointer events resolve to it and the
-            // gutter is clickable too. `::before` because `::after` is the `.kbq-progress` shimmer.
-            // Offsets are per orientation, below.
+            // paints, so the highlight does not drop out between segments. On the button, not the item
+            // host, so pointer events resolve to it and the gutter is clickable too. `::before` because
+            // `::after` is the `.kbq-progress` shimmer. Offsets are per orientation, below.
+
+            // The third place this repo extends a hit area with a transparent pseudo-element, after
+            // `.kbq-navbar-item`'s `:before` (DS-2558) and `select.item-active-area()`. Neither is
+            // reusable here: the mixin claims a fixed strip on one side of a plain vertical list, with
+            // no gap to tile between two neighbours, no group padding at the ends, and no orientation
+            // to swap the axes for.
             &:before {
                 content: '';
                 position: absolute;
@@ -138,6 +150,12 @@
     // swapped. The gap is split at its midline so two neighbours tile it rather than overlap, which would
     // hand the whole gutter to whichever paints last; the outermost sides have no neighbour to share with
     // and take the group's padding instead, leaving no point inside the group unclaimed.
+
+    // `:first-of-type`/`:last-of-type`, not `:first-child`/`:last-child`: the group is a bare directive
+    // with no template, so a consumer's own element — a divider, a leading icon — is rendered as a real
+    // child among the toggles and would take the positional match away from the toggle that actually sits
+    // at the edge, putting the dead zone back. The class only ever lands on a `kbq-button-toggle` element,
+    // so matching by type reads the toggles alone.
     &:not(.kbq-button-toggle_vertical) {
         .kbq-button-toggle {
             > .kbq-button,
@@ -152,11 +170,11 @@
                 }
             }
 
-            &:first-child > :is(.kbq-button, .kbq-button-icon):before {
+            &:first-of-type > :is(.kbq-button, .kbq-button-icon):before {
                 inset-inline-start: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
             }
 
-            &:last-child > :is(.kbq-button, .kbq-button-icon):before {
+            &:last-of-type > :is(.kbq-button, .kbq-button-icon):before {
                 inset-inline-end: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
             }
         }
@@ -172,11 +190,11 @@
                 }
             }
 
-            &:first-child > :is(.kbq-button, .kbq-button-icon):before {
+            &:first-of-type > :is(.kbq-button, .kbq-button-icon):before {
                 inset-block-start: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
             }
 
-            &:last-child > :is(.kbq-button, .kbq-button-icon):before {
+            &:last-of-type > :is(.kbq-button, .kbq-button-icon):before {
                 inset-block-end: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
             }
         }

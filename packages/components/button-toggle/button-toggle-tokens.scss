@@ -13,7 +13,9 @@
     --kbq-button-toggle-size-item-focus-outline-width: var(--kbq-size-3xs);
     // How far an item's hit area reaches past the pill it paints. Measured from the inner button's
     // border box, one item border inside the item's own — hence the border-width term in each. `-gap` is
-    // the half of the inter-item gap an item claims; the other two cover the group's padding.
+    // the half of the inter-item gap an item claims; the other two cover the group's padding. The
+    // pseudo-element they offset is in button-toggle.scss, next to the note on the two other places
+    // this repo extends a hit area the same way.
     --kbq-button-toggle-size-item-hit-area-gap: calc(
         var(--kbq-size-border-width) + var(--kbq-button-toggle-size-container-content-gap-horizontal) / 2
     );
