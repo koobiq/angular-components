@@ -61,20 +61,21 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     // (undocumented)
     onInteractionEvent(event: Event): void;
     onLabelTextChange(): void;
+    // @deprecated
     onTouched: () => any;
-    // (undocumented)
+    // @deprecated
     registerOnChange(fn: (value: any) => void): void;
-    // (undocumented)
+    // @deprecated
     registerOnTouched(fn: any): void;
     readonly required: _angular_core.InputSignalWithTransform<boolean | undefined, unknown>;
-    // (undocumented)
+    // @deprecated
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     toggle(): void;
     readonly value: _angular_core.InputSignal<string>;
-    // (undocumented)
+    // @deprecated
     writeValue(value: any): void;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, [{ directive: typeof i1.KbqCheckable; inputs: {}; outputs: {}; }]>;

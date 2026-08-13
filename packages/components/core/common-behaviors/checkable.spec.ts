@@ -1,7 +1,6 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, ElementRef, inject, OnDestroy, Provider, Type, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqCheckable, KbqCheckableClickAction, TransitionCheckState } from './checkable';
 
@@ -35,28 +34,12 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
         { directive: KbqCheckable, inputs: ['checked', 'disabled', 'indeterminate', 'tabIndex'] }
     ]
 })
-class TestCheckable implements AfterViewInit, OnDestroy {
+class TestCheckable {
     protected readonly checkable = inject(KbqCheckable, { self: true });
 
     private readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
     clickAction: KbqCheckableClickAction;
-
-    ngAfterViewInit(): void {
-        this.checkable.monitorFocus(this.input()).subscribe((focusOrigin) => {
-            if (focusOrigin) {
-                this.checkable.onTouched();
-            }
-        });
-    }
-
-    ngOnDestroy(): void {
-        this.checkable.stopMonitoringFocus(this.input());
-    }
-
-    focus(): void {
-        this.checkable.focusVia(this.input());
-    }
 
     onInputClick(event: Event): void {
         event.stopPropagation();
@@ -326,28 +309,6 @@ describe(KbqCheckable.name, () => {
             expect(checkable.disabled()).toBe(true);
         });
     });
-
-    describe('focus', () => {
-        it('focusVia should move focus to the given element with a keyboard origin', fakeAsync(() => {
-            expect(document.activeElement).not.toBe(inputElement);
-
-            hostInstance.focus();
-            tick();
-            fixture.detectChanges();
-
-            expect(document.activeElement).toBe(inputElement);
-            expect(inputElement.classList).toContain('cdk-keyboard-focused');
-        }));
-
-        it('stopMonitoringFocus should stop tracking the element', fakeAsync(() => {
-            const focusMonitor = TestBed.inject(FocusMonitor);
-            const stopSpy = jest.spyOn(focusMonitor, 'stopMonitoring');
-
-            checkable.stopMonitoringFocus({ nativeElement: inputElement } as ElementRef<HTMLElement>);
-
-            expect(stopSpy).toHaveBeenCalledWith(inputElement);
-        }));
-    });
 });
 
 describe(`${KbqCheckable.name} integration with ngModel`, () => {
@@ -359,7 +320,6 @@ describe(`${KbqCheckable.name} integration with ngModel`, () => {
 
     it('should support two-way binding through the KbqCheckable ControlValueAccessor', fakeAsync(() => {
         const testInput = ngModelFixture.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
-        const ngModel = ngModelFixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
 
         tick();
 
@@ -370,13 +330,5 @@ describe(`${KbqCheckable.name} integration with ngModel`, () => {
         tick();
 
         expect(ngModelFixture.componentInstance.checked).toBe(true);
-        expect(ngModel.touched).toBe(false);
-
-        testInput.dispatchEvent(new FocusEvent('focus'));
-        tick();
-        testInput.dispatchEvent(new FocusEvent('blur'));
-        tick();
-
-        expect(ngModel.touched).toBe(true);
     }));
 });

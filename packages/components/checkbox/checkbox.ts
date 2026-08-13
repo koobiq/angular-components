@@ -1,4 +1,4 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterViewInit,
@@ -84,6 +84,7 @@ export class KbqCheckboxChange {
 })
 export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
 
     readonly big = input<boolean>(false);
@@ -203,17 +204,19 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     /**
      * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
      * @docs-private
+     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
+     * so this is never called by Angular forms. Will be removed in the next major version.
      */
     onTouched: () => any = () => {};
 
     ngAfterViewInit() {
-        this.checkable
-            .monitorFocus(this.inputElement())
+        this.focusMonitor
+            .monitor(this.inputElement().nativeElement)
             .subscribe((focusOrigin) => this.onInputFocusChange(focusOrigin));
     }
 
     ngOnDestroy() {
-        this.checkable.stopMonitoringFocus(this.inputElement());
+        this.focusMonitor.stopMonitoring(this.inputElement().nativeElement);
     }
 
     /** Method being called whenever the label text changes. */
@@ -224,22 +227,38 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
         this.changeDetectorRef.markForCheck();
     }
 
-    // Implemented as part of ControlValueAccessor.
+    /**
+     * Implemented as part of ControlValueAccessor.
+     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
+     * so this is never called by Angular forms. Will be removed in the next major version.
+     */
     writeValue(value: any) {
         this.checked = !!value;
     }
 
-    // Implemented as part of ControlValueAccessor.
+    /**
+     * Implemented as part of ControlValueAccessor.
+     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
+     * so this is never called by Angular forms. Will be removed in the next major version.
+     */
     registerOnChange(fn: (value: any) => void) {
         this.checkable.registerOnChange(fn);
     }
 
-    // Implemented as part of ControlValueAccessor.
+    /**
+     * Implemented as part of ControlValueAccessor.
+     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
+     * so this is never called by Angular forms. Will be removed in the next major version.
+     */
     registerOnTouched(fn: any) {
         this.checkable.registerOnTouched(fn);
     }
 
-    // Implemented as part of ControlValueAccessor.
+    /**
+     * Implemented as part of ControlValueAccessor.
+     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
+     * so this is never called by Angular forms. Will be removed in the next major version.
+     */
     setDisabledState(isDisabled: boolean) {
         this.disabled = isDisabled;
     }
@@ -299,7 +318,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     /** Focuses the checkbox. */
     focus(): void {
-        this.checkable.focusVia(this.inputElement());
+        this.focusMonitor.focusVia(this.inputElement().nativeElement, 'keyboard');
     }
 
     onInteractionEvent(event: Event) {

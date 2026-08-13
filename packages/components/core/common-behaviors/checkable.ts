@@ -1,16 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import {
-    computed,
-    Directive,
-    ElementRef,
-    forwardRef,
-    inject,
-    InjectionToken,
-    model,
-    OnDestroy,
-    Provider,
-    signal
-} from '@angular/core';
+import { computed, Directive, forwardRef, InjectionToken, model, Provider, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqCheckedState } from './checkbox';
 
@@ -62,23 +50,19 @@ export interface KbqCheckableClickResult {
 
 /**
  * Shared behavior for checkbox-like controls: checked/disabled/indeterminate/tabIndex state, the click-to-toggle
- * algorithm, ARIA-checked computation, `ControlValueAccessor` change plumbing, and `FocusMonitor` wiring.
+ * algorithm, ARIA-checked computation, and `ControlValueAccessor` change plumbing.
  *
  * Meant to be applied via `hostDirectives` by components that render their own native `<input type="checkbox">`
  * and markup (e.g. `KbqCheckbox`, `KbqToggleComponent`, or custom checkbox-like primitives). Hosts stay
- * responsible for their own public inputs/outputs and for emitting their own typed `change` event - this
- * directive only centralizes the state and decisions behind them.
+ * responsible for their own public inputs/outputs, `FocusMonitor` wiring, and emitting their own typed
+ * `change` event - this directive only centralizes the state and decisions behind them.
  */
 @Directive({
     selector: '[kbqCheckable]',
     providers: [KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR],
     exportAs: 'kbqCheckable'
 })
-export class KbqCheckable implements ControlValueAccessor, OnDestroy {
-    private readonly focusMonitor = inject(FocusMonitor);
-
-    private monitoredElement: ElementRef<HTMLElement> | null = null;
-
+export class KbqCheckable implements ControlValueAccessor {
     private controlValueAccessorChangeFn: (value: any) => void = () => {};
 
     /**
@@ -101,29 +85,6 @@ export class KbqCheckable implements ControlValueAccessor, OnDestroy {
 
     /** The tab index actually applied to the native input: forced to `-1` while disabled. */
     readonly effectiveTabIndex = computed(() => (this.disabled() ? -1 : this.tabIndex()));
-
-    ngOnDestroy(): void {
-        if (this.monitoredElement) {
-            this.focusMonitor.stopMonitoring(this.monitoredElement.nativeElement);
-        }
-    }
-
-    /** Starts tracking the focus origin for `elementRef`, so CDK's `.cdk-*-focused` classes are applied to it. */
-    monitorFocus(elementRef: ElementRef<HTMLElement>, checkChildren = false) {
-        this.monitoredElement = elementRef;
-
-        return this.focusMonitor.monitor(elementRef.nativeElement, checkChildren);
-    }
-
-    /** Stops tracking the focus origin for `elementRef`. */
-    stopMonitoringFocus(elementRef: ElementRef<HTMLElement>): void {
-        this.focusMonitor.stopMonitoring(elementRef.nativeElement);
-    }
-
-    /** Focuses `elementRef` with a keyboard focus origin. */
-    focusVia(elementRef: ElementRef<HTMLElement>): void {
-        this.focusMonitor.focusVia(elementRef.nativeElement, 'keyboard');
-    }
 
     /** Returns the ARIA-checked value: `'true'`, `'false'`, or `'mixed'` when indeterminate. */
     getAriaChecked(): KbqCheckedState {

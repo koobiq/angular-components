@@ -1,4 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterViewInit,
@@ -92,6 +93,7 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
 })
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
 
     readonly big = input<boolean>(false);
@@ -206,15 +208,15 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     ngAfterViewInit(): void {
-        this.checkable.monitorFocus(this.elementRef, true);
+        this.focusMonitor.monitor(this.elementRef.nativeElement, true);
     }
 
     ngOnDestroy() {
-        this.checkable.stopMonitoringFocus(this.elementRef);
+        this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
     }
 
     focus(): void {
-        this.checkable.focusVia(this.inputElement());
+        this.focusMonitor.focusVia(this.inputElement().nativeElement, 'keyboard');
     }
 
     getAriaChecked(): KbqCheckedState {
@@ -265,18 +267,38 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         }
     }
 
+    /**
+     * Implemented as part of ControlValueAccessor.
+     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
+     * so this is never called by Angular forms. Will be removed in the next major version.
+     */
     writeValue(value: any) {
         this.checked = !!value;
     }
 
+    /**
+     * Implemented as part of ControlValueAccessor.
+     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
+     * so this is never called by Angular forms. Will be removed in the next major version.
+     */
     registerOnChange(fn: any) {
         this.checkable.registerOnChange(fn);
     }
 
+    /**
+     * Implemented as part of ControlValueAccessor.
+     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
+     * so this is never called by Angular forms. Will be removed in the next major version.
+     */
     registerOnTouched(fn: any) {
         this.checkable.registerOnTouched(fn);
     }
 
+    /**
+     * Implemented as part of ControlValueAccessor.
+     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
+     * so this is never called by Angular forms. Will be removed in the next major version.
+     */
     setDisabledState(isDisabled: boolean) {
         this.disabled = isDisabled;
     }

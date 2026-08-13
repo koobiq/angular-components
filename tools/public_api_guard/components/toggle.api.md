@@ -80,18 +80,18 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     onInputClick(event: MouseEvent): void;
     // (undocumented)
     onLabelTextChange(): void;
-    // (undocumented)
+    // @deprecated
     registerOnChange(fn: any): void;
-    // (undocumented)
+    // @deprecated
     registerOnTouched(fn: any): void;
-    // (undocumented)
+    // @deprecated
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
     readonly value: _angular_core.InputSignal<string>;
-    // (undocumented)
+    // @deprecated
     writeValue(value: any): void;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "loading": { "alias": "loading"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, [{ directive: typeof i1.KbqCheckable; inputs: {}; outputs: {}; }]>;

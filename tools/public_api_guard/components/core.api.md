@@ -8,7 +8,6 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import * as _angular_cdk_focus_monitor_d from '@angular/cdk/focus-monitor.d';
 import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
@@ -55,7 +54,6 @@ import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
-import * as rxjs from 'rxjs';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
@@ -2627,20 +2625,16 @@ export interface KbqBaseFileUploadLocaleConfig {
 }
 
 // @public
-export class KbqCheckable implements ControlValueAccessor, OnDestroy {
+export class KbqCheckable implements ControlValueAccessor {
     // (undocumented)
     readonly checked: i0.ModelSignal<boolean>;
     readonly currentCheckState: i0.WritableSignal<TransitionCheckState>;
     // (undocumented)
     readonly disabled: i0.ModelSignal<boolean>;
     readonly effectiveTabIndex: i0.Signal<number>;
-    focusVia(elementRef: ElementRef<HTMLElement>): void;
     getAriaChecked(): KbqCheckedState;
     // (undocumented)
     readonly indeterminate: i0.ModelSignal<boolean>;
-    monitorFocus(elementRef: ElementRef<HTMLElement>, checkChildren?: boolean): rxjs.Observable<_angular_cdk_focus_monitor_d.FocusOrigin>;
-    // (undocumented)
-    ngOnDestroy(): void;
     notifyFormValueChange(value: boolean): void;
     onTouched: () => any;
     registerOnChange(fn: (value: any) => void): void;
@@ -2650,7 +2644,6 @@ export class KbqCheckable implements ControlValueAccessor, OnDestroy {
     resolveClick(clickAction: KbqCheckableClickAction): KbqCheckableClickResult;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
-    stopMonitoringFocus(elementRef: ElementRef<HTMLElement>): void;
     readonly tabIndex: i0.ModelSignal<number>;
     toggle(): void;
     transitionCheckState(newState: TransitionCheckState): void;
