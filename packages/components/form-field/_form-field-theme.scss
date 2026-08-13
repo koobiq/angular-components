@@ -15,23 +15,17 @@
 
 @mixin _kbq-form-field-state($state-name) {
     .kbq-form-field__container {
-        // Published for the autofill mask at the bottom of this file. The browser paints its own
-        // background on the control with a UA `!important` rule, and the mask has to repaint whatever
-        // background *this* state resolved to. Reading the winner back through a variable is what keeps
-        // the mask from ever drifting away from the container — including for `_in-overlay`, `_no-borders`
-        // and consumer token overrides. Declared in the same rule as the `background-color` that reads
-        // it, so one cascade decides both and they cannot drift apart.
-        --kbq-form-field-current-background: var(--kbq-form-field-#{$state-name}-background);
-
         border-color: var(--kbq-form-field-#{$state-name}-border-color);
-        background-color: var(--kbq-form-field-current-background);
+        background-color: var(--kbq-form-field-#{$state-name}-background);
     }
 
     .kbq-input,
     .kbq-tag-input,
     .kbq-textarea {
-        // Same contract for the text: the UA forces `color` on an autofilled control, so the mask
-        // repaints through `-webkit-text-fill-color` and needs to know what this state wanted.
+        // Published for the autofill block at the bottom of this file. The browser forces `color` on an
+        // autofilled control with a UA `!important` rule, so that block repaints through
+        // `-webkit-text-fill-color` and has to know what *this* state wanted. Declared in the same rule
+        // as the `color` that reads it, so one cascade decides both and they cannot drift apart.
         --kbq-form-field-current-text: var(--kbq-form-field-#{$state-name}-text);
 
         color: var(--kbq-form-field-current-text);
@@ -60,7 +54,17 @@
         // and below `states-error` / `states-disabled` (0,3,0) and `states-focused` (0,5,0), which beat
         // it on specificity alone. No `!important` anywhere, and no other state has to know autofill
         // exists. Keep this block directly after `default`.
-        &:where(.kbq-form-field_autofilled) {
+        // Two arms on purpose. `:has()` is what users see: it matches in the same style pass the browser
+        // fills the field, so the tint appears with the value. `kbq-form-field_autofilled` arrives a
+        // frame or two later — `AutofillMonitor` waits for `animationstart`, then a change-detection
+        // pass — which is too late to paint but is what carries the state into TypeScript and is the
+        // only handle a test has, since `:autofill` cannot be triggered synthetically. Both arms set the
+        // same declarations, so the late one is a no-op repaint.
+        // `:where()` is forgiving, so a browser without `:has()` silently keeps the class arm.
+        &:where(
+            .kbq-form-field_autofilled,
+            :has(:is(.kbq-input, .kbq-tag-input, .kbq-textarea):is(:autofill, :-webkit-autofill))
+        ) {
             @include _kbq-form-field-state(states-autofill);
         }
 
@@ -132,31 +136,35 @@
             @include kbq-form-field-hint-theme();
         }
 
-        // The browser paints the autofill background with a UA `!important` declaration and forces
-        // `color` the same way. An author declaration cannot outrank either — important-author sits
-        // *below* important-UA in the cascade — so both are painted over instead: an `inset` shadow
-        // covers the background (the UA sets no `box-shadow`, and inset shadows paint above the
-        // background and below the content) and `-webkit-text-fill-color` wins over `color` when glyphs
-        // are painted (the UA sets no such property). See
+        // The browser paints its own background and forces `color` on an autofilled control, both with
+        // UA `!important` declarations that an author declaration cannot outrank — important-author sits
+        // *below* important-UA in the cascade. See
         // https://css-tricks.com/almanac/selectors/a/autofill/
-        // Both read back what the state cascade resolved above, so this block never competes with a
-        // state and needs neither `!important` nor `:has()`.
-        // The (0,3,0) specificity is deliberate: it has to stay above `input.kbq-input:invalid`
-        // (0,2,1) in ../input/input.scss and `.kbq-textarea:invalid` (0,2,0) in
-        // ../textarea/textarea.scss, both of which reset `box-shadow` and are emitted after this file
-        // (see `styleUrls` in form-field.ts). Wrapping this block in `:where()` would silently drop the
-        // mask on any HTML5-invalid autofilled control — an autofilled `type="email"`, for instance.
-        // The margin over `.kbq-textarea:invalid` is a single class: give that selector one more class
-        // or pseudo-class and it ties (0,3,0), at which point source order hands it the win and the mask
-        // silently disappears on invalid autofilled textareas. Widen this block if that ever happens.
+        // The background is suppressed rather than painted over. A transition wins where an author
+        // declaration cannot, because transitions sit *above* important-UA, so animating the property
+        // over an absurd duration parks its used value at the control's own transparent background and
+        // the container's tint shows through untouched.
+        // Painting over it — the usual `inset 0 0 0 40rem` trick — is wrong here: the state tokens are
+        // translucent (`--kbq-background-theme-less` is 10% opaque in the light theme), so an inset
+        // shadow in the same colour would land the tint a second time on top of the container's, making
+        // the control's rectangle visibly darker than the container's padding around it, and would still
+        // not hide the UA colour underneath. Keep the control transparent.
+        // The text does have to be repainted, and `-webkit-text-fill-color` can do it: it wins over
+        // `color` when glyphs are painted and the UA sets no such property. It reads back what the state
+        // cascade resolved above, so an autofilled control that is also disabled or invalid still gets
+        // that state's text colour.
         & .kbq-input,
         & .kbq-tag-input,
         & .kbq-textarea {
             // `:is()` takes a forgiving selector list, so every browser keeps whichever of the two it
             // knows. A plain comma list would not: one unknown pseudo-class invalidates the whole list.
             &:is(:autofill, :-webkit-autofill) {
-                box-shadow: inset 0 0 0 40rem
-                    var(--kbq-form-field-current-background, var(--kbq-form-field-default-background));
+                // Longhands rather than the shorthand: the shorthand would also reset `transition-delay`
+                // and `transition-timing-function` on the control. Nothing transitions on these controls
+                // today, but the next thing that does should not break here.
+                transition-property: background-color;
+                transition-duration: 600000s;
+
                 -webkit-text-fill-color: var(--kbq-form-field-current-text, var(--kbq-form-field-default-text));
                 caret-color: var(--kbq-form-field-current-text, var(--kbq-form-field-default-text));
             }

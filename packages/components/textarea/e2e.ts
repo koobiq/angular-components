@@ -71,8 +71,9 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         <!--
             Autofill is faked through the class that AutofillMonitor adds at runtime — ':autofill' cannot
             be triggered synthetically. This covers the state half only: which background wins when autofill
-            meets an error or a disabled control. The mask that repaints over the browser's own
-            background is keyed on the real pseudo-class and cannot be captured here.
+            meets an error or a disabled control. The rest — the ':has()' arm that paints the same tint, and
+            the suppression of the browser's own background — is keyed on the real pseudo-class and cannot
+            be captured here.
         -->
         <kbq-form-field class="kbq-form-field_autofilled">
             <kbq-label>Label | autofilled</kbq-label>

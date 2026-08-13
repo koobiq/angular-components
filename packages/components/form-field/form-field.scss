@@ -117,33 +117,11 @@
         z-index: 3;
     }
 
-    // The autofill mask in `_form-field-theme.scss` fills the control's padding box, and the focus ring
-    // is an inset shadow on the container — part of the container's background layer, which every
-    // descendant paints over. So a control that reaches the container's padding box hides the ring.
-    // Give those controls a transparent border the width of the ring and take the same amount off their
-    // padding: the mask is clipped to the padding box, the ring stays visible, and the content box is
-    // unchanged, so nothing moves. This replaces the min-height/padding/margin recalculation this block
-    // used to carry (DS-4950), which shifted the text on focus and covered only `.kbq-input`.
-    // `.kbq-tag-input` is deliberately absent: `.kbq-tag-list` is `min-height: var(--kbq-size-xxl)`
-    // inside a taller container, so a tag input never reaches the ring — and it carries
-    // `field-sizing: content`, where adding a border would change its width.
-    .kbq-input:not(.kbq-tag-input):is(:autofill, :-webkit-autofill) {
-        // Vertical only: horizontally the container's own padding already keeps the input off the ring.
-        border-top: var(--kbq-form-field-size-focus-outline-width) solid transparent;
-        border-bottom: var(--kbq-form-field-size-focus-outline-width) solid transparent;
-
-        padding-top: calc(var(--kbq-input-size-padding-vertical) - var(--kbq-form-field-size-focus-outline-width));
-        padding-bottom: calc(var(--kbq-input-size-padding-vertical) - var(--kbq-form-field-size-focus-outline-width));
-    }
-
-    .kbq-textarea:is(:autofill, :-webkit-autofill) {
-        // All four sides: the container drops its horizontal padding when it holds a textarea, so the
-        // textarea spans the padding box edge to edge.
-        border: var(--kbq-form-field-size-focus-outline-width) solid transparent;
-
-        padding: calc(var(--kbq-textarea-size-padding-vertical) - var(--kbq-form-field-size-focus-outline-width))
-            calc(var(--kbq-textarea-size-padding-horizontal) - var(--kbq-form-field-size-focus-outline-width));
-    }
+    // No autofill geometry here on purpose. An autofilled control keeps its transparent background (see
+    // the autofill block in `_form-field-theme.scss`), so it cannot cover the focus ring the container
+    // draws as an inset shadow, and nothing has to be shrunk to make room for it. The
+    // min-height/padding/margin recalculation this block used to carry (DS-4950) existed only to keep an
+    // opaque mask off that ring; it shifted the text on focus and covered `.kbq-input` alone.
 
     // The state theme resolves the border and the background through tokens, so overriding the tokens beats
     // the more specific state selectors without `!important`.
