@@ -1,0 +1,27 @@
+# Categorization for the auto-generated release notes — both the `--generate-notes` call in the
+# GitHub Release job of workflows/publish.yml and the "Generate release notes" button.
+#
+# Categories match on labels, which workflows/pr-label.yml derives from the conventional-commit
+# type in the pull request title. Order matters: the first matching category wins, so a dependency
+# bump that also carries a hand-applied `bug` label is listed above Bug Fixes on purpose.
+changelog:
+  categories:
+    - title: ⚠️ Breaking Changes
+      labels:
+        - breaking changes
+    - title: 📦 Dependencies
+      labels:
+        - dependencies
+    - title: 🚀 Features
+      labels:
+        - enhancement
+    - title: 🐛 Bug Fixes
+      labels:
+        - bug
+    - title: 📖 Documentation
+      labels:
+        - documentation
+    # chore, build, refactor, test — everything the labeler does not classify.
+    - title: 🧰 Other Changes
+      labels:
+        - '*'
