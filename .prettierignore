@@ -25,3 +25,7 @@ apps/docs/src/app/components/design-tokens-viewers/data/*.ts
 
 # ignore mocks
 **/mock.ts
+
+# ignore Playwright's output — see .eslintignore
+/playwright-report/
+/test-results/

@@ -82,7 +82,16 @@ npx jest <TEST_PATH_PATTERN>       # Run specific Jest tests (e.g., npx jest pac
 yarn run e2e:setup                      # Install Playwright browsers (run once)
 yarn run e2e:components                 # Run all E2E tests
 npx playwright test <TEST_PATH_PATTERN> # Run specific E2E tests (e.g., npx playwright test packages/components/button/e2e.playwright-spec.ts)
+
+# Screenshots differ across operating systems — always use Docker for anything visual:
+yarn run e2e:docker                     # Run E2E tests in Docker (matches CI)
+yarn run e2e:docker:update-snapshots    # Run E2E tests in Docker and update the baselines
 ```
+
+The committed baselines under `__screenshots__` are compared with `threshold: 0` and have no
+platform suffix, so a native run outside Linux fails on font rasterization alone. `e2e:components`
+is still useful for the assertion-based specs; use `e2e:docker` whenever screenshots are involved,
+and never regenerate a baseline any other way.
 
 ### Linting
 

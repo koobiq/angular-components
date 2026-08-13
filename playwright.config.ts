@@ -8,6 +8,49 @@ const viewport: ViewportSize = {
 const baseURL = process.env.BASE_URL || 'http://localhost:4200';
 const webServerCommand = process.env.WEB_SERVER_COMMAND || 'yarn run dev:e2e --configuration=production';
 
+/**
+ * Every worker drives its own browser against one shared Angular dev server, so the useful ceiling
+ * comes from that server rather than from the core count. '100%' suits a 4-vCPU CI runner, but not
+ * Docker: a container reports every core on the host (Playwright reads `os.cpus()`, which no cgroup
+ * or cpuset limit affects), so on a 32-core machine it means 64 browsers and the suite collapses
+ * into timeouts. tools/e2e's compose file caps it via PLAYWRIGHT_WORKERS and CI sets it back.
+ *
+ * Playwright only accepts a string when it is a percentage, so anything else has to become a number.
+ * With the variable unset this behaves exactly as it did before.
+ *
+ * The value is validated rather than passed through, because Playwright's own guard only rejects
+ * `workers <= 0` — and `NaN <= 0` is false. A typo like `PLAYWRIGHT_WORKERS=amx` would therefore
+ * reach the dispatcher's `for (i = 0; i < workers; i++)` loop, spawn zero workers, run zero tests,
+ * write no report, and still exit 0: a green suite that tested nothing.
+ */
+const resolveWorkers = () => {
+    const override = process.env.PLAYWRIGHT_WORKERS?.trim();
+
+    if (!override) {
+        return isCI ? '100%' : undefined;
+    }
+
+    if (override.endsWith('%')) {
+        const percentage = Number(override.slice(0, -1));
+
+        if (!Number.isFinite(percentage) || percentage <= 0) {
+            throw new Error(`PLAYWRIGHT_WORKERS must be a positive percentage, got ${JSON.stringify(override)}.`);
+        }
+
+        return override;
+    }
+
+    const workers = Number(override);
+
+    if (!Number.isInteger(workers) || workers <= 0) {
+        throw new Error(
+            `PLAYWRIGHT_WORKERS must be a positive integer or a percentage, got ${JSON.stringify(override)}.`
+        );
+    }
+
+    return workers;
+};
+
 /** @see https://playwright.dev/docs/test-configuration */
 export default defineConfig({
     testDir: __dirname,
@@ -17,7 +60,7 @@ export default defineConfig({
     fullyParallel: true,
     forbidOnly: isCI,
     retries: isCI ? 2 : 0,
-    workers: isCI ? '100%' : undefined,
+    workers: resolveWorkers(),
     reporter: [
         ['list', { printSteps: true }],
         ['html', { open: 'never' }]
@@ -32,6 +75,11 @@ export default defineConfig({
         }
     ],
     expect: {
+        // These baselines are compared with threshold: 0, so they are tied to one exact browser
+        // build. @playwright/test is pinned to an exact version in package.json for that reason:
+        // even a patch release can bump the bundled Chromium — 1.55.0 shipped build 1187 and
+        // 1.55.1 shipped 1193 — and that invalidates every screenshot. Upgrade it on its own
+        // branch and refresh the baselines with /approve-snapshots in the same pull request.
         toHaveScreenshot: {
             pathTemplate: '{testFileDir}/__screenshots__/{arg}{ext}',
             threshold: 0,
