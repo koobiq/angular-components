@@ -10,6 +10,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     ContentChild,
     DestroyRef,
     Directive,
@@ -22,7 +23,6 @@ import {
     numberAttribute,
     output,
     Provider,
-    Renderer2,
     SecurityContext,
     signal,
     TemplateRef,
@@ -44,7 +44,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, EMPTY, filter, fromEvent, merge, startWith, switchMap, take } from 'rxjs';
+import { debounceTime, filter, fromEvent, map, merge, of, startWith, switchMap, take } from 'rxjs';
 import { KbqCodeBlockHighlight } from './code-block-highlight';
 import { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
 
@@ -109,6 +109,7 @@ export class KbqCodeBlockTabLinkContent {}
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers()',
         '[class.kbq-code-block_hide-tabs]': 'hideTabs',
         '[class.kbq-code-block_no-border]': 'noBorder() || filled()',
+        '[class.kbq-code-block_show-actionbar]': 'actionbarVisible()',
         '[class.kbq-code-block_soft-wrap]': 'softWrap',
         '[class.kbq-code-block_view-all]': 'viewAll'
     },
@@ -203,6 +204,9 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Added copy code button. */
     readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
 
+    /** Whether the actionbar should remain visible when tabs are hidden. */
+    readonly alwaysShowActionbar = input<boolean, unknown>(false, { transform: booleanAttribute });
+
     /**
      * @deprecated Will be removed in next major release, use `files` instead.
      */
@@ -261,16 +265,16 @@ export class KbqCodeBlock implements AfterViewInit {
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get hideTabs(): boolean {
-        return this._hideTabs;
+        return this._hideTabs();
     }
 
     set hideTabs(value: boolean) {
-        this._hideTabs = value;
+        this._hideTabs.set(value);
         this.hideTabsChange.emit(value);
-        this.setupActionbarDisplay();
     }
 
-    private _hideTabs: boolean = false;
+    private readonly _hideTabs = signal(false);
+    private readonly actionbarHovered = signal(false);
 
     /**
      * Output to support two-way binding on `[(hideTabs)]` property.
@@ -325,7 +329,6 @@ export class KbqCodeBlock implements AfterViewInit {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
-    private readonly renderer = inject(Renderer2);
     private readonly platform = inject(Platform);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly clipboard = inject(Clipboard);
@@ -338,6 +341,16 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly fallbackFileName = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_NAME);
     private readonly window = inject(KBQ_WINDOW);
 
+    /** @docs-private */
+    protected readonly actionbarVisible = computed(
+        () =>
+            this.alwaysShowActionbar() ||
+            this.platform.IOS ||
+            this.platform.ANDROID ||
+            !this._hideTabs() ||
+            this.actionbarHovered()
+    );
+
     constructor() {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
     }
@@ -345,9 +358,6 @@ export class KbqCodeBlock implements AfterViewInit {
     ngAfterViewInit(): void {
         this.trackHoverState();
         this.setupContentOverflowDetection();
-
-        // Setup initial actionbar display state
-        this.setupActionbarDisplay();
 
         this.copyButtonTooltip()
             ?.visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
@@ -434,19 +444,19 @@ export class KbqCodeBlock implements AfterViewInit {
     private trackHoverState(): void {
         outputToObservable(this.hideTabsChange)
             .pipe(
-                startWith(this._hideTabs),
+                startWith(this._hideTabs()),
                 switchMap((hideTabs) => {
-                    if (!hideTabs) return EMPTY;
+                    if (!hideTabs) return of(false);
 
                     return merge(
-                        fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseenter'),
-                        fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseleave')
-                    ).pipe(debounceTime(100));
+                        fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseenter').pipe(map(() => true)),
+                        fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseleave').pipe(map(() => false))
+                    ).pipe(debounceTime(100), startWith(false));
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe((event) => {
-                this.setupActionbarDisplay(event?.type === 'mouseenter');
+            .subscribe((isHovered) => {
+                this.actionbarHovered.set(isHovered);
             });
     }
 
@@ -476,42 +486,6 @@ export class KbqCodeBlock implements AfterViewInit {
             .observe(this.preElementRef().nativeElement)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(checkOverflow);
-    }
-
-    /**
-     * Adds or removes the actionbar display class from the code block based on the specified condition.
-     *
-     * The actionbar is always visible on mobile devices and when the tabs are visible.
-     * Otherwise, the actionbar is only visible when the mouse is hovered over the code block.
-     *
-     * @param shouldShowActionbar - A boolean indicating whether the actionbar should be visible.
-     */
-    private setupActionbarDisplay(shouldShowActionbar?: boolean): void {
-        const className = 'kbq-code-block_show-actionbar';
-
-        // Should always show actionbar on Mobile devices
-        if (this.platform.IOS || this.platform.ANDROID) {
-            this.renderer.addClass(this.elementRef.nativeElement, className);
-
-            return;
-        }
-
-        // Should always show actionbar when tabs are visible
-        if (!this.hideTabs) {
-            this.renderer.addClass(this.elementRef.nativeElement, className);
-
-            return;
-        }
-
-        if (typeof shouldShowActionbar === 'undefined') {
-            return;
-        }
-
-        if (shouldShowActionbar) {
-            this.renderer.addClass(this.elementRef.nativeElement, className);
-        } else {
-            this.renderer.removeClass(this.elementRef.nativeElement, className);
-        }
     }
 
     /** Whether the element has scroll. */
