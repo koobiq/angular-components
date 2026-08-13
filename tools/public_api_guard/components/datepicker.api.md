@@ -23,6 +23,7 @@ import * as i5 from '@koobiq/components/select';
 import * as i6 from '@koobiq/components/icon';
 import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { KbqDatepickerLocaleConfiguration } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -40,7 +41,7 @@ import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
 
 // @public
-export const KBQ_DATEPICKER_CONFIGURATION: InjectionToken<unknown>;
+export const KBQ_DATEPICKER_CONFIGURATION: InjectionToken<KbqDatepickerLocaleConfiguration>;
 
 // @public
 export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION: {
@@ -280,7 +281,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     calendar: KbqCalendar<D>;
     // (undocumented)
-    protected configuration: any;
+    protected configuration: KbqDatepickerLocaleConfiguration;
     // (undocumented)
     controlType: string;
     readonly dateChange: _angular_core.OutputEmitterRef<KbqDatepickerInputEvent<D>>;
@@ -303,7 +304,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set errorState(value: boolean);
     get errorStateMatcher(): ErrorStateMatcher;
     set errorStateMatcher(value: ErrorStateMatcher);
-    protected readonly externalConfiguration: unknown;
+    protected readonly externalConfiguration: KbqDatepickerLocaleConfiguration | null;
     // (undocumented)
     focus(): void;
     // (undocumented)

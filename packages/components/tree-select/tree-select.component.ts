@@ -1451,7 +1451,7 @@ export class KbqTreeSelect
     }
 
     private updateLocaleParams = () => {
-        this.hiddenItemsText = this.localeService?.getParams('select').hiddenItemsText;
+        this.hiddenItemsText = this.localeService?.getParams('select').hiddenItemsText ?? this.hiddenItemsText;
 
         this.changeDetectorRef.markForCheck();
     };

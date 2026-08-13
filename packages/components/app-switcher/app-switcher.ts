@@ -37,7 +37,7 @@ import {
     ESCAPE,
     FocusKeyManager,
     KBQ_LOCALE_SERVICE,
-    KbqAppSwitcherConfiguration,
+    KbqAppSwitcherLocaleConfiguration,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpPlacementValues,
@@ -205,11 +205,11 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 /** default configuration of app-switcher */
 /** @docs-private */
-export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherConfiguration = ruRULocaleData.appSwitcher;
+export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherLocaleConfiguration = ruRULocaleData.appSwitcher;
 
 /** Injection Token for providing configuration of app-switcher */
 /** @docs-private */
-export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken<KbqAppSwitcherConfiguration>(
+export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken<KbqAppSwitcherLocaleConfiguration>(
     'KbqAppSwitcherConfiguration'
 );
 
@@ -270,11 +270,11 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     readonly externalConfiguration = inject(KBQ_APP_SWITCHER_CONFIGURATION, { optional: true });
 
     /** Strings currently rendered by the popup. */
-    configuration: KbqAppSwitcherConfiguration = KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
+    configuration: KbqAppSwitcherLocaleConfiguration = KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
 
     /** localized data
      * @docs-private */
-    get localeData(): KbqAppSwitcherConfiguration {
+    get localeData(): KbqAppSwitcherLocaleConfiguration {
         return this.configuration;
     }
 
@@ -611,8 +611,8 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
 
     private updateLocaleParams = () => {
         this.configuration =
-            this.externalConfiguration ||
-            (this.localeService?.getParams('appSwitcher') as KbqAppSwitcherConfiguration) ||
+            this.externalConfiguration ??
+            this.localeService?.getParams('appSwitcher') ??
             KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
 
         this.changeDetectorRef.markForCheck();

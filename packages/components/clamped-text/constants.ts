@@ -1,7 +1,10 @@
-import { inject, InjectionToken, Provider, Signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_LOCALE_SERVICE, KbqClampedTextLocaleConfig, ruRULocaleData } from '@koobiq/components/core';
-import { map, of } from 'rxjs';
+import { InjectionToken, Provider, Signal } from '@angular/core';
+import {
+    KbqClampedTextLocaleConfiguration,
+    KbqDeepPartial,
+    kbqInjectLocaleConfiguration,
+    ruRULocaleData
+} from '@koobiq/components/core';
 
 /**
  * Default maximum number of visible rows for the clamped text component
@@ -10,7 +13,7 @@ import { map, of } from 'rxjs';
 export const kbqClampedTextDefaultMaxRows = 5;
 
 /** Localization configuration provider. */
-export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION = new InjectionToken<KbqClampedTextLocaleConfig>(
+export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION = new InjectionToken<KbqClampedTextLocaleConfiguration>(
     'KbqClampedTextLocaleConfig',
     {
         factory: () => ruRULocaleData.clampedText
@@ -18,12 +21,15 @@ export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION = new InjectionToken<KbqClamp
 );
 
 /**
- * Utility provider.
+ * Utility provider. Only the strings you pass are overridden; the rest keep their `ru-RU` defaults.
+ *
  * @see KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION
  */
-export const kbqClampedTextLocaleConfigurationProvider = (configuration: KbqClampedTextLocaleConfig): Provider => ({
+export const kbqClampedTextLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqClampedTextLocaleConfiguration>
+): Provider => ({
     provide: KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION,
-    useValue: configuration
+    useValue: { ...ruRULocaleData.clampedText, ...configuration }
 });
 
 export const KbqClampedRoot = new InjectionToken<KbqClamped>('KbqClampedRoot');
@@ -37,7 +43,7 @@ export interface KbqClamped {
     /** Whether the toggle trigger should be shown. */
     hasToggle: Signal<boolean>;
     /** Reactive locale strings for open/close labels. */
-    localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
+    localeConfiguration: Signal<KbqClampedTextLocaleConfiguration>;
     /** Toggles the collapsed state of the list. Stops event propagation. */
     toggle(event: Event): void;
 }
@@ -47,16 +53,12 @@ export interface KbqClamped {
  * @see {KbqClampedText, KbqClampedList}
  * @docs-private
  */
-export function kbqInjectKbqClampedLocaleConfiguration(): Signal<KbqClampedTextLocaleConfig> {
-    const localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    const initialValue = inject(KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION);
-    const config = localeService
-        ? localeService.changes.pipe(
-              map<string, KbqClampedTextLocaleConfig>(
-                  () => localeService.getParams('clampedText') satisfies KbqClampedTextLocaleConfig
-              )
-          )
-        : of(initialValue);
-
-    return toSignal(config, { initialValue });
+export function kbqInjectClampedTextLocaleConfiguration(): Signal<KbqClampedTextLocaleConfiguration> {
+    return kbqInjectLocaleConfiguration('clampedText', KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION);
 }
+
+/**
+ * @deprecated Use {@link kbqInjectClampedTextLocaleConfiguration}.
+ * @docs-private
+ */
+export const kbqInjectKbqClampedLocaleConfiguration = kbqInjectClampedTextLocaleConfiguration;

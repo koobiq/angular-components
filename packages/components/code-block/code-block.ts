@@ -34,10 +34,11 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
-    KBQ_LOCALE_SERVICE,
     KBQ_WINDOW,
     KbqCodeBlockLocaleConfiguration,
     KbqComponentColors,
+    KbqDeepPartial,
+    kbqInjectLocaleConfiguration,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
     ruRULocaleData
@@ -55,10 +56,15 @@ export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION = new InjectionToken<KbqCodeBlo
     { factory: () => ruRULocaleData.codeBlock }
 );
 
-/** Utility provider for `KBQ_CODE_BLOCK_LOCALE_CONFIGURATION`. */
-export const kbqCodeBlockLocaleConfigurationProvider = (configuration: KbqCodeBlockLocaleConfiguration): Provider => ({
+/**
+ * Utility provider for `KBQ_CODE_BLOCK_LOCALE_CONFIGURATION`. Only the strings you pass are overridden;
+ * the rest keep their `ru-RU` defaults.
+ */
+export const kbqCodeBlockLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqCodeBlockLocaleConfiguration>
+): Provider => ({
     provide: KBQ_CODE_BLOCK_LOCALE_CONFIGURATION,
-    useValue: configuration
+    useValue: { ...ruRULocaleData.codeBlock, ...configuration }
 });
 
 /** Fallback file name for code block if file name is not specified. */
@@ -308,10 +314,16 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration {
-        return this._localeConfiguration;
+        return this._localeConfiguration();
     }
 
-    private _localeConfiguration: KbqCodeBlockLocaleConfiguration = inject(KBQ_CODE_BLOCK_LOCALE_CONFIGURATION);
+    // A getter over the signal rather than `localeConfiguration()`: every read site — template and the
+    // imperative tooltip updates alike — keeps its current shape, while the template read now registers
+    // the locale dependency on this view and re-renders on `setLocale()` without a `markForCheck`.
+    private readonly _localeConfiguration = kbqInjectLocaleConfiguration(
+        'codeBlock',
+        KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
+    );
 
     /**
      * Code content tab index.
@@ -348,7 +360,6 @@ export class KbqCodeBlock implements AfterViewInit {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly platform = inject(Platform);
     private readonly focusMonitor = inject(FocusMonitor);
@@ -374,7 +385,6 @@ export class KbqCodeBlock implements AfterViewInit {
 
     constructor() {
         this.trackHoverState();
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
     }
 
     ngAfterViewInit(): void {
@@ -531,12 +541,6 @@ export class KbqCodeBlock implements AfterViewInit {
             this.focusMonitor.focusVia(this.scrollableCodeContent().getElementRef().nativeElement, 'keyboard');
         }
     }
-
-    private updateLocaleParams = (): void => {
-        this._localeConfiguration = this.localeService?.getParams('codeBlock');
-
-        this.changeDetectorRef.markForCheck();
-    };
 
     /**
      * Copies the file code to the clipboard.

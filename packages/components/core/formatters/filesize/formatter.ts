@@ -52,6 +52,7 @@ export class KbqDataSizePipe implements PipeTransform {
     }
 
     private updateLocaleParams = () => {
-        this.config = this.externalConfig || this.localeService?.getParams('sizeUnits');
+        this.config =
+            this.externalConfig ?? this.localeService?.getParams('sizeUnits') ?? KBQ_SIZE_UNITS_DEFAULT_CONFIG;
     };
 }

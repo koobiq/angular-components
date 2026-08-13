@@ -6,6 +6,7 @@ export enum DocsStructureItemId {
     Installation = 'installation',
     Versioning = 'versioning',
     Theming = 'theming',
+    Localization = 'localization',
     Typography = 'typography',
     DesignTokens = 'design-tokens',
     Schematics = 'schematics',
@@ -221,6 +222,17 @@ const structure: DocsStructure = makeStructure({
                         en: 'Theming'
                     },
                     svgPreview: 'themes',
+                    isGuide: true,
+                    hasApi: false,
+                    hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.Localization,
+                    name: {
+                        ru: 'Локализация',
+                        en: 'Localization'
+                    },
+                    svgPreview: '',
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false

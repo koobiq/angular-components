@@ -558,7 +558,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     }
 
     private updateLocaleParams = () => {
-        this.config = this.localeService!.getParams('input').number;
+        this.config = this.localeService?.getParams('input').number ?? KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION;
 
         this.setViewValue(this.formatNumber(this.value));
     };

@@ -20,6 +20,7 @@ import {
     isHorizontalMovement,
     isVerticalMovement,
     KBQ_LOCALE_SERVICE,
+    KbqNavbarLocaleConfiguration,
     ruRULocaleData,
     TAB,
     UP_ARROW
@@ -29,21 +30,15 @@ import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navb
 import { KbqFocusableComponent } from './navbar.component';
 
 /** Localizable strings of the vertical navbar. */
-export interface KbqVerticalNavbarConfiguration {
-    /** Labels of the expand/collapse toggle, used for its tooltip and its accessible name. */
-    toggle: {
-        expand: string;
-        collapse: string;
-    };
-}
+export type KbqVerticalNavbarConfiguration = KbqNavbarLocaleConfiguration;
 
 /** default configuration of navbar */
 /** @docs-private */
-export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqVerticalNavbarConfiguration = ruRULocaleData.navbar;
+export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqNavbarLocaleConfiguration = ruRULocaleData.navbar;
 
 /** Injection Token for providing configuration of navbar */
 /** @docs-private */
-export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqVerticalNavbarConfiguration>(
+export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqNavbarLocaleConfiguration>(
     'KbqVerticalNavbarConfiguration'
 );
 
@@ -100,7 +95,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
      * Seeded here rather than from the locale subscription alone: the locale service is optional, and without
      * it an externally provided configuration would never be applied at all.
      */
-    readonly configuration = signal<KbqVerticalNavbarConfiguration>(
+    readonly configuration = signal<KbqNavbarLocaleConfiguration>(
         this.externalConfiguration || KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION
     );
 
@@ -206,8 +201,10 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     }
 
     private updateLocaleParams = () => {
-        const fromLocale = this.localeService?.getParams('navbar') as KbqVerticalNavbarConfiguration | undefined;
-
-        this.configuration.set(this.externalConfiguration || fromLocale || KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION);
+        this.configuration.set(
+            this.externalConfiguration ??
+                this.localeService?.getParams('navbar') ??
+                KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION
+        );
     };
 }

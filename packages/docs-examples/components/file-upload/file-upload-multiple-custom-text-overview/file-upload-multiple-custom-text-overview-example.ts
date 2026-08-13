@@ -1,20 +1,27 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService, KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
+import {
+    KBQ_DEFAULT_LOCALE_ID,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqMultipleFileUploadLocaleConfiguration
+} from '@koobiq/components/core';
 import { KBQ_FILE_UPLOAD_CONFIGURATION, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { enUSLocaleData } from '../en-US';
-import { esLALocaleData } from '../es-LA';
-import { ptBRLocaleData } from '../pt-BR';
-import { ruRULocaleData } from '../ru-RU';
+import { enUSFileUploadLocaleData } from '../en-US';
+import { esLAFileUploadLocaleData } from '../es-LA';
+import { ptBRFileUploadLocaleData } from '../pt-BR';
+import { ruRUFileUploadLocaleData } from '../ru-RU';
+import { tkTMFileUploadLocaleData } from '../tk-TM';
 
-const localeData = {
-    'en-US': enUSLocaleData,
-    'es-LA': esLALocaleData,
-    'pt-BR': ptBRLocaleData,
-    'ru-RU': ruRULocaleData
+const localeData: Record<string, KbqMultipleFileUploadLocaleConfiguration> = {
+    'en-US': enUSFileUploadLocaleData,
+    'es-LA': esLAFileUploadLocaleData,
+    'pt-BR': ptBRFileUploadLocaleData,
+    'ru-RU': ruRUFileUploadLocaleData,
+    'tk-TM': tkTMFileUploadLocaleData
 };
 
-class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfig {
+class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfiguration {
     [k: string | number | symbol]: unknown;
     captionText: string;
     captionTextOnlyFolder: string;
@@ -30,7 +37,8 @@ class FileUploadConfiguration implements KbqMultipleFileUploadLocaleConfig {
     }
 
     update = (locale: string) => {
-        const data: KbqMultipleFileUploadLocaleConfig = localeData[locale];
+        // A consumer can register a locale this example knows nothing about.
+        const data = localeData[locale] ?? localeData[KBQ_DEFAULT_LOCALE_ID];
 
         this.captionText = data.captionText;
         this.captionTextOnlyFolder = data.captionTextOnlyFolder;

@@ -43,3 +43,17 @@ export function isMac(): boolean {
 /** Converts an enumeration (enum) type into a string literal type containing
  * all possible string representations of the values. */
 export type KbqEnumValues<T extends string | number> = `${T}`;
+
+/**
+ * Recursive counterpart of `Partial<T>`: every property at every depth becomes optional.
+ *
+ * Arrays and functions are passed through unchanged — making the elements of `string[]` optional
+ * would turn it into `{ 0?: string }`, which is never what a partial override means.
+ */
+export type KbqDeepPartial<T> = T extends (...args: never[]) => unknown
+    ? T
+    : T extends readonly unknown[]
+      ? T
+      : T extends object
+        ? { [K in keyof T]?: KbqDeepPartial<T[K]> }
+        : T;

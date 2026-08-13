@@ -1,6 +1,6 @@
-import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
 
-export const ruRULocaleData: KbqMultipleFileUploadLocaleConfig = {
+export const ruRUFileUploadLocaleData: KbqMultipleFileUploadLocaleConfiguration = {
     captionText: 'или {{ browseLink }}',
     captionTextOnlyFolder: 'или {{ browseLinkFolder }}',
     captionTextWithFolder: 'или {{ browseLink }} или {{ browseLinkFolderMixed }}',

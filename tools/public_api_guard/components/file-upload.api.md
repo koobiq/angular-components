@@ -64,7 +64,7 @@ export const KBQ_DROPZONE_DATA: InjectionToken<Partial<{
 }>>;
 
 // @public (undocumented)
-export const KBQ_FILE_UPLOAD_CONFIGURATION: InjectionToken<KbqBaseFileUploadLocaleConfig | KbqMultipleFileUploadLocaleConfig>;
+export const KBQ_FILE_UPLOAD_CONFIGURATION: InjectionToken<_koobiq_components_core.KbqBaseFileUploadLocaleConfiguration | _koobiq_components_core.KbqMultipleFileUploadLocaleConfiguration>;
 
 // @public (undocumented)
 export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfig;
@@ -94,7 +94,7 @@ export class KbqDropzoneContent {
         autoCapture: boolean;
     }> | null;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
-    protected readonly title: _angular_core.Signal<any>;
+    protected readonly title: _angular_core.Signal<string>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropzoneContent, "kbq-dropzone-content", never, {}, {}, never, never, true, [{ directive: typeof i1.CdkTrapFocus; inputs: {}; outputs: {}; }]>;
     // (undocumented)
@@ -314,7 +314,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     allowed: _angular_core.InputSignal<"file" | "folder" | "mixed">;
     protected readonly captionContext: _angular_core.Signal<KbqFileUploadCaptionContext>;
     protected get captionTextWhenSelected(): string;
-    readonly configuration: KbqMultipleFileUploadLocaleConfig | null;
+    readonly configuration: _koobiq_components_core.KbqMultipleFileUploadLocaleConfiguration | null;
     protected readonly customFileIcon: _angular_core.Signal<TemplateRef<any> | undefined>;
     cvaOnChange: (_: KbqFileItem[]) => void;
     deleteFile(index: number, event?: MouseEvent, origin?: FocusOrigin): void;
@@ -341,7 +341,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     get input(): ElementRef<HTMLInputElement> | undefined;
     readonly inputId: _angular_core.InputSignal<string>;
     get invalid(): boolean;
-    readonly localeConfig: _angular_core.InputSignal<Partial<KbqMultipleFileUploadLocaleConfig> | undefined>;
+    readonly localeConfig: _angular_core.InputSignal<Partial<_koobiq_components_core.KbqMultipleFileUploadLocaleConfiguration> | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -352,7 +352,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     readonly progressMode: _angular_core.InputSignal<ProgressSpinnerMode>;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
-    readonly resolvedLocaleConfig: _angular_core.Signal<KbqMultipleFileUploadLocaleConfig>;
+    readonly resolvedLocaleConfig: _angular_core.Signal<_koobiq_components_core.KbqMultipleFileUploadLocaleConfiguration>;
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     readonly size: _angular_core.InputSignal<"compact" | "default">;
@@ -392,7 +392,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     // (undocumented)
     readonly inputId: _angular_core.InputSignal<string>;
     get invalid(): boolean;
-    readonly localeConfig: _angular_core.InputSignal<Partial<KbqBaseFileUploadLocaleConfig> | undefined>;
+    readonly localeConfig: _angular_core.InputSignal<Partial<_koobiq_components_core.KbqBaseFileUploadLocaleConfiguration> | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -403,7 +403,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     readonly progressMode: _angular_core.InputSignal<ProgressSpinnerMode>;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
-    readonly resolvedLocaleConfig: _angular_core.Signal<KbqBaseFileUploadLocaleConfig>;
+    readonly resolvedLocaleConfig: _angular_core.Signal<_koobiq_components_core.KbqBaseFileUploadLocaleConfiguration>;
     setDisabledState(isDisabled: boolean): void;
     readonly showFileSize: _angular_core.InputSignalWithTransform<boolean, unknown>;
     writeValue(file: File | KbqFileItem | null): void;

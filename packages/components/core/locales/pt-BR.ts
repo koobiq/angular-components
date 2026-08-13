@@ -1,13 +1,4 @@
-import {
-    KbqA11yLocaleConfiguration,
-    KbqActionsPanelLocaleConfiguration,
-    KbqAppSwitcherConfiguration,
-    KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration,
-    KbqFileUploadLocaleConfig,
-    KbqSelectLocaleConfiguration,
-    KbqTimeRangeLocaleConfig
-} from './types';
+import { KbqLocaleStringsData } from './types';
 
 export const ptBRLocaleData = {
     a11y: {
@@ -22,11 +13,11 @@ export const ptBRLocaleData = {
         clear: 'Apagar',
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha'
-    } satisfies KbqA11yLocaleConfiguration,
+    },
     select: {
         hiddenItemsText: '+{{ number }}',
         selectAll: 'Selecionar tudo'
-    } satisfies KbqSelectLocaleConfiguration,
+    },
     datepicker: {
         placeholder: 'dd/mm/yyyy'
     },
@@ -56,7 +47,7 @@ export const ptBRLocaleData = {
             browseLinkFolderMixed: 'pasta',
             title: 'Carregar arquivos'
         }
-    } satisfies KbqFileUploadLocaleConfig,
+    },
     codeBlock: {
         softWrapOnTooltip: 'Ativar quebra de linha',
         softWrapOffTooltip: 'Desativar quebra de linha',
@@ -66,13 +57,13 @@ export const ptBRLocaleData = {
         viewAllText: 'Mostrar todos',
         viewLessText: 'Mostrar menos',
         openExternalSystemTooltip: 'Abrir em sistema externo'
-    } satisfies KbqCodeBlockLocaleConfiguration,
+    },
     timezone: {
         searchPlaceholder: 'Cidade ou fuso horário'
     },
     actionsPanel: {
         closeTooltip: 'Desmarcar'
-    } satisfies KbqActionsPanelLocaleConfiguration,
+    },
     filterBar: {
         reset: {
             buttonName: 'Reconfigurar'
@@ -128,7 +119,7 @@ export const ptBRLocaleData = {
         closeText: 'Recolher',
         showMoreText: 'Mostrar mais {exceededItemCount}',
         moreText: 'mais'
-    } satisfies KbqClampedTextLocaleConfig,
+    },
     navbarIc: {
         toggle: {
             pinButton: 'Deixar expandido',
@@ -150,7 +141,7 @@ export const ptBRLocaleData = {
         searchEmptyResult: 'Nada encontrado',
         sitesHeader: 'Outros sites',
         clearSearch: 'Limpar a pesquisa'
-    } satisfies KbqAppSwitcherConfiguration,
+    },
     timeRange: {
         title: {
             for: 'para',
@@ -239,7 +230,7 @@ export const ptBRLocaleData = {
                 MONTHS_FRACTION: `{months} meses`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig,
+    },
     notificationCenter: {
         notifications: 'Notificações',
         remove: 'Remover',
@@ -251,4 +242,4 @@ export const ptBRLocaleData = {
         repeat: 'Repetir',
         loadingMore: 'Carregando mais notificações'
     }
-};
+} satisfies KbqLocaleStringsData;

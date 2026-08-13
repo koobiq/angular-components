@@ -1,13 +1,4 @@
-import {
-    KbqA11yLocaleConfiguration,
-    KbqActionsPanelLocaleConfiguration,
-    KbqAppSwitcherConfiguration,
-    KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration,
-    KbqFileUploadLocaleConfig,
-    KbqSelectLocaleConfiguration,
-    KbqTimeRangeLocaleConfig
-} from './types';
+import { KbqLocaleStringsData } from './types';
 
 export const ruRULocaleData = {
     a11y: {
@@ -22,8 +13,8 @@ export const ruRULocaleData = {
         clear: 'Очистить',
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль'
-    } satisfies KbqA11yLocaleConfiguration,
-    select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' } satisfies KbqSelectLocaleConfiguration,
+    },
+    select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' },
     datepicker: {
         placeholder: 'дд.мм.гггг',
         dateInput: 'dd.MM.yyyy'
@@ -54,7 +45,7 @@ export const ruRULocaleData = {
             browseLinkFolderMixed: 'папку',
             title: 'Перетащите сюда'
         }
-    } satisfies KbqFileUploadLocaleConfig,
+    },
     codeBlock: {
         softWrapOnTooltip: 'Включить перенос по словам',
         softWrapOffTooltip: 'Выключить перенос по словам',
@@ -64,13 +55,13 @@ export const ruRULocaleData = {
         viewAllText: 'Показать все',
         viewLessText: 'Свернуть',
         openExternalSystemTooltip: 'Открыть во внешней системе'
-    } satisfies KbqCodeBlockLocaleConfiguration,
+    },
     timezone: {
         searchPlaceholder: 'Город или часовой пояс'
     },
     actionsPanel: {
         closeTooltip: 'Отменить выбор'
-    } satisfies KbqActionsPanelLocaleConfiguration,
+    },
     filterBar: {
         reset: {
             buttonName: 'Сбросить'
@@ -126,7 +117,7 @@ export const ruRULocaleData = {
         closeText: 'Свернуть',
         showMoreText: 'Показать еще {exceededItemCount}',
         moreText: 'еще'
-    } satisfies KbqClampedTextLocaleConfig,
+    },
     navbarIc: {
         toggle: {
             pinButton: 'Оставить развернутым',
@@ -148,7 +139,7 @@ export const ruRULocaleData = {
         searchEmptyResult: 'Ничего не найдено',
         sitesHeader: 'Другие площадки',
         clearSearch: 'Очистить поиск'
-    } satisfies KbqAppSwitcherConfiguration,
+    },
     timeRange: {
         title: {
             for: 'за',
@@ -251,7 +242,7 @@ export const ruRULocaleData = {
                 MONTHS_FRACTION: `{months} месяцев`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig,
+    },
     notificationCenter: {
         notifications: 'Уведомления',
         remove: 'Удалить',
@@ -263,4 +254,4 @@ export const ruRULocaleData = {
         repeat: 'Повторить',
         loadingMore: 'Загрузка уведомлений'
     }
-};
+} satisfies KbqLocaleStringsData;

@@ -1,4 +1,5 @@
 import { Injectable, InjectionToken, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { MomentDateAdapter as BaseMomentDateAdapter, MomentDateAdapterOptions } from '@koobiq/moment-date-adapter';
 import { Observable, Subject } from 'rxjs';
@@ -37,7 +38,7 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
 
         this.setLocale(this.localeService?.id || dateLocale);
 
-        this.localeService?.changes.subscribe(this.setLocale);
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.setLocale);
     }
 
     /** A stream that emits when the locale changes. */

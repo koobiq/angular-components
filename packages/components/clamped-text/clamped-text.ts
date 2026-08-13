@@ -25,7 +25,7 @@ import {
     KbqClamped,
     KbqClampedRoot,
     kbqClampedTextDefaultMaxRows,
-    kbqInjectKbqClampedLocaleConfiguration
+    kbqInjectClampedTextLocaleConfiguration
 } from './constants';
 
 @Component({
@@ -117,7 +117,7 @@ export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
      * Clamped text locale configuration.
      * @docs-private
      */
-    readonly localeConfiguration = kbqInjectKbqClampedLocaleConfiguration();
+    readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();
 
     /**
      * This flag is used to prevent trigger resize observer on toggle click.

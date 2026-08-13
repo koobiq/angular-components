@@ -23,6 +23,7 @@ import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqNavbarLocaleConfiguration } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
@@ -32,7 +33,7 @@ import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
-export const KBQ_VERTICAL_NAVBAR_CONFIGURATION: InjectionToken<KbqVerticalNavbarConfiguration>;
+export const KBQ_VERTICAL_NAVBAR_CONFIGURATION: InjectionToken<KbqNavbarLocaleConfiguration>;
 
 // @public
 export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqVerticalNavbarConfiguration;
@@ -290,9 +291,9 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     constructor();
     readonly animationDone: Subject<void>;
     readonly bento: i0.Signal<KbqNavbarBento | undefined>;
-    readonly configuration: i0.WritableSignal<KbqVerticalNavbarConfiguration>;
+    readonly configuration: i0.WritableSignal<KbqNavbarLocaleConfiguration>;
     readonly expanded: i0.ModelSignal<boolean>;
-    readonly externalConfiguration: KbqVerticalNavbarConfiguration | null;
+    readonly externalConfiguration: KbqNavbarLocaleConfiguration | null;
     readonly items: i0.Signal<readonly KbqNavbarItem[]>;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     ngAfterContentInit(): void;
@@ -307,12 +308,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 }
 
 // @public
-export interface KbqVerticalNavbarConfiguration {
-    toggle: {
-        expand: string;
-        collapse: string;
-    };
-}
+export type KbqVerticalNavbarConfiguration = KbqNavbarLocaleConfiguration;
 
 // (No @packageDocumentation comment for this package)
 
