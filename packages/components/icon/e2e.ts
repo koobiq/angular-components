@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule, PasswordRules } from '@koobiq/components/form-field';
 import {
@@ -170,7 +169,6 @@ export class E2eIconStateAndStyle {
         KbqTagsModule,
         KbqButtonModule,
         KbqSplitButtonModule,
-        KbqDropdownModule,
         KbqFileUploadModule,
         KbqLinkModule,
         KbqFormFieldModule,
@@ -351,21 +349,9 @@ export class E2eIconStateAndStyle {
                         <kbq-cleaner />
                     </kbq-form-field>
                 </div>
-
-                <div>
-                    <button kbq-dropdown-item>
-                        <i kbq-icon="kbq-circle-check_16"></i>
-                        Item with icon
-                    </button>
-                </div>
             </div>
         </div>
     `,
-    // The dropdown item above is rendered inline rather than inside an open kbq-dropdown, so it never
-    // receives the panel's styles through the overlay. Pulling them in here is what keeps it looking
-    // like a dropdown item — which is the point of the capture, since the icon inside it is what is
-    // being checked.
-    styleUrls: ['../dropdown/dropdown-tokens.scss', '../dropdown/dropdown.scss'],
     styles: `
         :host {
             height: 570px;
