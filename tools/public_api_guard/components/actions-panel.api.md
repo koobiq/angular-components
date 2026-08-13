@@ -15,6 +15,7 @@ import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqActionsPanelLocaleConfiguration } from '@koobiq/components/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
@@ -72,7 +73,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     protected readonly config: KbqActionsPanelConfig<any>;
     protected _contentAttached(): void;
     protected handleEscape(event: KeyboardEvent): void;
-    protected readonly localeConfiguration: i0.Signal<KbqActionsPanelLocaleConfiguration | undefined>;
+    protected readonly localeConfiguration: i0.Signal<KbqActionsPanelLocaleConfiguration>;
     // (undocumented)
     ngOnDestroy(): void;
     protected onAnimationDone(event: AnimationEvent_2): void;
@@ -89,7 +90,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
 export const kbqActionsPanelDefaultConfigProvider: <D>(config: KbqActionsPanelConfig<D>) => Provider;
 
 // @public
-export const kbqActionsPanelLocaleConfigurationProvider: (configuration: KbqActionsPanelLocaleConfiguration) => Provider;
+export const kbqActionsPanelLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqActionsPanelLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqActionsPanelModule {

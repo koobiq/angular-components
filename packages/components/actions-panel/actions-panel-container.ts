@@ -22,19 +22,18 @@ import {
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KBQ_LOCALE_SERVICE,
     KbqActionsPanelLocaleConfiguration,
     KbqAnimationCurves,
     KbqAnimationDurations,
+    KbqDeepPartial,
+    kbqInjectLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { map, of } from 'rxjs';
 import { KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig } from './actions-panel-config';
 
@@ -44,12 +43,15 @@ export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION = new InjectionToken<KbqActi
     { factory: () => ruRULocaleData.actionsPanel }
 );
 
-/** Utility provider for `KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION`. */
+/**
+ * Utility provider for `KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION`. Only the strings you pass are
+ * overridden; the rest keep their `ru-RU` defaults.
+ */
 export const kbqActionsPanelLocaleConfigurationProvider = (
-    configuration: KbqActionsPanelLocaleConfiguration
+    configuration: KbqDeepPartial<KbqActionsPanelLocaleConfiguration>
 ): Provider => ({
     provide: KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION,
-    useValue: configuration
+    useValue: { ...ruRULocaleData.actionsPanel, ...configuration }
 });
 
 /**
@@ -98,8 +100,8 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
                 class="kbq-actions-panel-container__close-button"
                 color="contrast"
                 kbq-button
-                [attr.aria-label]="localeConfiguration()!.closeTooltip"
-                [kbqTooltip]="localeConfiguration()!.closeTooltip"
+                [attr.aria-label]="localeConfiguration().closeTooltip"
+                [kbqTooltip]="localeConfiguration().closeTooltip"
                 [kbqTooltipOffset]="16"
                 (click)="close()"
             >
@@ -152,17 +154,14 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
 
     private readonly actionsPanel = inject(KbqActionsPanel);
     private readonly renderer = inject(Renderer2);
-    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
     /**
      * Actions panel locale configuration.
      *
      * @docs-private
      */
-    protected readonly localeConfiguration = toSignal<KbqActionsPanelLocaleConfiguration>(
-        this.localeService
-            ? this.localeService.changes.pipe(map(() => this.localeService!.getParams('actionsPanel')))
-            : of(inject(KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION))
+    protected readonly localeConfiguration = kbqInjectLocaleConfiguration(
+        'actionsPanel',
+        KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION
     );
 
     override ngOnDestroy() {

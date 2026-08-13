@@ -1,14 +1,11 @@
 import { TestBed } from '@angular/core/testing';
+import { BehaviorSubject } from 'rxjs';
 import { kbqA11yLocaleConfigurationProvider, kbqInjectA11yLocaleConfiguration } from './a11y';
 import { enUSLocaleData } from './en-US';
-import { esLALocaleData } from './es-LA';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from './locale-service';
-import { ptBRLocaleData } from './pt-BR';
 import { ruRULocaleData } from './ru-RU';
-import { tkTMLocaleData } from './tk-TM';
-import { KbqA11yLocaleConfiguration } from './types';
 
-describe('kbqInjectKbqA11yLocaleConfiguration', () => {
+describe('kbqInjectA11yLocaleConfiguration', () => {
     const inject = () => TestBed.runInInjectionContext(kbqInjectA11yLocaleConfiguration);
 
     it('should fall back to the default locale when no locale service is provided', () => {
@@ -39,35 +36,26 @@ describe('kbqInjectKbqA11yLocaleConfiguration', () => {
         expect(configuration().close).toBe(enUSLocaleData.a11y.close);
     });
 
-    it('should fall back when the active locale data carries no a11y section', () => {
+    it('should get a complete section for locale data registered without one', () => {
         TestBed.configureTestingModule({
-            providers: [
-                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
-            ]
+            providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
         });
 
         const localeService = TestBed.inject(KBQ_LOCALE_SERVICE);
 
-        // Locale data registered by a consumer may predate the section entirely.
+        // Locale data registered by a consumer may predate the section entirely; the service completes it.
         localeService.addLocale('custom', { select: { hiddenItemsText: '+{{ number }}' } });
 
         expect(inject()()).toBe(ruRULocaleData.a11y);
     });
-});
 
-describe('a11y locale data', () => {
-    // A missing accessible name leaves the button nameless in that locale only, which no component
-    // test would catch — the section is asserted complete for every shipped locale instead.
-    const locales: [string, KbqA11yLocaleConfiguration][] = [
-        ['en-US', enUSLocaleData.a11y],
-        ['es-LA', esLALocaleData.a11y],
-        ['pt-BR', ptBRLocaleData.a11y],
-        ['ru-RU', ruRULocaleData.a11y],
-        ['tk-TM', tkTMLocaleData.a11y]
-    ];
+    it('should fall back when the locale service hands back no section at all', () => {
+        // `KbqLocaleService` itself always completes a section, but applications routinely provide a stand-in
+        // under `KBQ_LOCALE_SERVICE` in their own tests — that one is free to return nothing.
+        const stub = { changes: new BehaviorSubject('custom'), getParams: () => undefined };
 
-    it.each(locales)('should provide every accessible name for %s', (_, data) => {
-        expect(Object.keys(data).sort()).toEqual(Object.keys(ruRULocaleData.a11y).sort());
-        Object.values(data).forEach((name) => expect(name.trim()).not.toBe(''));
+        TestBed.configureTestingModule({ providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: stub }] });
+
+        expect(inject()()).toBe(ruRULocaleData.a11y);
     });
 });

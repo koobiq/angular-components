@@ -303,6 +303,8 @@
         "-----API-----": "--------------------------------------------------------------------------------------------",
         "approve-api": "ts-node --project tools/api-extractor/tsconfig.json tools/api-extractor/api-extractor.ts",
         "check-api": "yarn run approve-api onlyCheck",
+        "check-public-api-any": "ts-node --project tools/check-public-api-any/tsconfig.json tools/check-public-api-any",
+        "approve-public-api-any": "ts-node --project tools/check-public-api-any/tsconfig.json tools/check-public-api-any --approve",
         "-----LINTERS-----": "----------------------------------------------------------------------------------------",
         "check-peer-deps": "ts-node --project tools/check-peer-deps/tsconfig.json tools/check-peer-deps",
         "check-npm-resolution": "ts-node --project tools/check-npm-resolution/tsconfig.json tools/check-npm-resolution",

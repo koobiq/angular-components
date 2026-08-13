@@ -15,6 +15,7 @@ import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
+import { KbqNotificationCenterLocaleConfiguration } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
@@ -33,7 +34,7 @@ import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 
 // @public
-export const KBQ_NOTIFICATION_CENTER_CONFIGURATION: InjectionToken<unknown>;
+export const KBQ_NOTIFICATION_CENTER_CONFIGURATION: InjectionToken<KbqNotificationCenterLocaleConfiguration>;
 
 // @public
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: {
@@ -68,13 +69,13 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    configuration: any;
+    configuration: KbqNotificationCenterLocaleConfiguration;
     protected readonly dateAdapter: DateAdapter<any>;
     escapeHandler(): void;
     // (undocumented)
-    readonly externalConfiguration: unknown;
+    readonly externalConfiguration: KbqNotificationCenterLocaleConfiguration | null;
     isTrapFocus: boolean;
-    get localeData(): any;
+    get localeData(): KbqNotificationCenterLocaleConfiguration;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     // (undocumented)
     ngAfterViewInit(): void;

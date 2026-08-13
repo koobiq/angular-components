@@ -26,6 +26,7 @@ import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
     KBQ_LOCALE_SERVICE,
+    KbqNotificationCenterLocaleConfiguration,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
@@ -79,7 +80,9 @@ const SCROLLED_TO_BOTTOM_TOLERANCE = 2;
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION = ruRULocaleData.notificationCenter;
 
 /** Injection Token for providing configuration of notification-center */
-export const KBQ_NOTIFICATION_CENTER_CONFIGURATION = new InjectionToken('KbqNotificationCenterConfiguration');
+export const KBQ_NOTIFICATION_CENTER_CONFIGURATION = new InjectionToken<KbqNotificationCenterLocaleConfiguration>(
+    'KbqNotificationCenterConfiguration'
+);
 
 /** @docs-private */
 export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -149,7 +152,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * @docs-private */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
-    configuration;
+    configuration: KbqNotificationCenterLocaleConfiguration;
 
     /** @docs-private */
     protected popoverMode: boolean;
@@ -344,7 +347,10 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     }
 
     private updateLocaleParams = () => {
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('notificationCenter');
+        this.configuration =
+            this.externalConfiguration ??
+            this.localeService?.getParams('notificationCenter') ??
+            KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION;
 
         this.changeDetectorRef.markForCheck();
     };

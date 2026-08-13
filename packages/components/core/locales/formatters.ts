@@ -1,5 +1,4 @@
-import { KbqSizeUnitsConfig } from '../formatters';
-import { KbqNumberFormatOptions, KbqNumberInputLocaleConfig, KbqNumberRoundingLocaleConfig } from './types';
+import { KbqLocaleFormattersData } from './types';
 
 export const enUSFormattersData = {
     formatters: {
@@ -11,14 +10,14 @@ export const enUSFormattersData = {
                 million: 'M',
                 billion: 'B',
                 trillion: 'T'
-            } satisfies KbqNumberRoundingLocaleConfig
+            }
         }
     },
     input: {
         number: {
             groupSeparator: [','],
             fractionSeparator: '.'
-        } satisfies KbqNumberInputLocaleConfig
+        }
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -35,8 +34,8 @@ export const enUSFormattersData = {
                 power: 10
             }
         }
-    } satisfies KbqSizeUnitsConfig
-};
+    }
+} satisfies KbqLocaleFormattersData;
 
 export const esLAFormattersData = {
     formatters: {
@@ -48,10 +47,10 @@ export const esLAFormattersData = {
                 million: 'M',
                 billion: 'MRD',
                 trillion: 'B'
-            } satisfies KbqNumberRoundingLocaleConfig,
+            },
             decimal: {
                 viewGroupSeparator: '\u2009'
-            } satisfies KbqNumberFormatOptions
+            }
         }
     },
     input: {
@@ -60,7 +59,7 @@ export const esLAFormattersData = {
             groupSeparator: [' ', ' ', '\u2009'],
             fractionSeparator: ',',
             viewGroupSeparator: '\u2009'
-        } satisfies KbqNumberInputLocaleConfig
+        }
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -78,7 +77,7 @@ export const esLAFormattersData = {
             }
         }
     }
-};
+} satisfies KbqLocaleFormattersData;
 
 export const ptBRFormattersData = {
     formatters: {
@@ -90,14 +89,14 @@ export const ptBRFormattersData = {
                 million: 'mi',
                 billion: 'bi',
                 trillion: 'tri'
-            } satisfies KbqNumberRoundingLocaleConfig
+            }
         }
     },
     input: {
         number: {
             groupSeparator: ['.'],
             fractionSeparator: ','
-        } satisfies KbqNumberInputLocaleConfig
+        }
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -115,7 +114,7 @@ export const ptBRFormattersData = {
             }
         }
     }
-};
+} satisfies KbqLocaleFormattersData;
 
 export const ruRUFormattersData = {
     formatters: {
@@ -128,10 +127,10 @@ export const ruRUFormattersData = {
                 // Latin `B` (U+0042) according to UX Guidelines.
                 billion: 'B',
                 trillion: 'Т'
-            } satisfies KbqNumberRoundingLocaleConfig,
+            },
             decimal: {
                 viewGroupSeparator: '\u2009'
-            } satisfies KbqNumberFormatOptions
+            }
         }
     },
     input: {
@@ -141,7 +140,7 @@ export const ruRUFormattersData = {
             fractionSeparator: ',',
             startFormattingFrom: 4,
             viewGroupSeparator: '\u2009'
-        } satisfies KbqNumberInputLocaleConfig
+        }
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -159,7 +158,7 @@ export const ruRUFormattersData = {
             }
         }
     }
-};
+} satisfies KbqLocaleFormattersData;
 
 export const tkTMFormattersData = {
     formatters: {
@@ -171,7 +170,7 @@ export const tkTMFormattersData = {
                 million: 'Mn',
                 billion: 'Mr',
                 trillion: 'Tn'
-            } satisfies KbqNumberRoundingLocaleConfig
+            }
         }
     },
     input: {
@@ -179,7 +178,7 @@ export const tkTMFormattersData = {
             groupSeparator: [' ', ' ', '\u2009'],
             fractionSeparator: ',',
             viewGroupSeparator: '\u2009'
-        } satisfies KbqNumberInputLocaleConfig
+        }
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -197,4 +196,4 @@ export const tkTMFormattersData = {
             }
         }
     }
-};
+} satisfies KbqLocaleFormattersData;

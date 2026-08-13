@@ -1,13 +1,4 @@
-import {
-    KbqA11yLocaleConfiguration,
-    KbqActionsPanelLocaleConfiguration,
-    KbqAppSwitcherConfiguration,
-    KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration,
-    KbqFileUploadLocaleConfig,
-    KbqSelectLocaleConfiguration,
-    KbqTimeRangeLocaleConfig
-} from './types';
+import { KbqLocaleStringsData } from './types';
 
 export const esLALocaleData = {
     a11y: {
@@ -22,11 +13,11 @@ export const esLALocaleData = {
         clear: 'Borrar',
         showPassword: 'Mostrar la contraseña',
         hidePassword: 'Ocultar la contraseña'
-    } satisfies KbqA11yLocaleConfiguration,
+    },
     select: {
         hiddenItemsText: '+{{ number }}',
         selectAll: 'Seleccionar todo'
-    } satisfies KbqSelectLocaleConfiguration,
+    },
     datepicker: {
         placeholder: 'dd/mm/aaaa'
     },
@@ -56,7 +47,7 @@ export const esLALocaleData = {
             browseLinkFolderMixed: 'carpeta',
             title: 'Cargue los archivos'
         }
-    } satisfies KbqFileUploadLocaleConfig,
+    },
     codeBlock: {
         softWrapOnTooltip: 'Activar el ajuste de texto',
         softWrapOffTooltip: 'Desactivar el ajuste de texto',
@@ -66,13 +57,13 @@ export const esLALocaleData = {
         viewAllText: 'Mostrar todo',
         viewLessText: 'Mostrar menos',
         openExternalSystemTooltip: 'Abrir en el sistema externo'
-    } satisfies KbqCodeBlockLocaleConfiguration,
+    },
     timezone: {
         searchPlaceholder: 'Ciudad o zona horaria'
     },
     actionsPanel: {
         closeTooltip: 'Desmarque'
-    } satisfies KbqActionsPanelLocaleConfiguration,
+    },
     filterBar: {
         reset: {
             buttonName: 'Restablecer'
@@ -129,7 +120,7 @@ export const esLALocaleData = {
         closeText: 'Contraer',
         showMoreText: 'Mostrar {exceededItemCount} más',
         moreText: 'más'
-    } satisfies KbqClampedTextLocaleConfig,
+    },
     navbarIc: {
         toggle: {
             pinButton: 'Expandir el menú',
@@ -151,7 +142,7 @@ export const esLALocaleData = {
         searchEmptyResult: 'No se encontró nada',
         sitesHeader: 'Otros sitios',
         clearSearch: 'Borrar la búsqueda'
-    } satisfies KbqAppSwitcherConfiguration,
+    },
     timeRange: {
         title: {
             for: 'para',
@@ -240,7 +231,7 @@ export const esLALocaleData = {
                 MONTHS_FRACTION: `{months} meses`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig,
+    },
     notificationCenter: {
         notifications: 'Notificaciones',
         remove: 'Eliminar',
@@ -251,4 +242,4 @@ export const esLALocaleData = {
         repeat: 'Repetir',
         loadingMore: 'Cargando más notificaciones'
     }
-};
+} satisfies KbqLocaleStringsData;

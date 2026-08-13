@@ -21,6 +21,7 @@ import {
     isHorizontalMovement,
     isVerticalMovement,
     KBQ_LOCALE_SERVICE,
+    KbqNavbarLocaleConfiguration,
     ruRULocaleData,
     TAB,
     UP_ARROW
@@ -35,7 +36,9 @@ export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION = ruRULocaleData.navbar;
 
 /** Injection Token for providing configuration of navbar */
 /** @docs-private */
-export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken('KbqVerticalNavbarConfiguration');
+export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqNavbarLocaleConfiguration>(
+    'KbqVerticalNavbarConfiguration'
+);
 
 @Component({
     selector: 'kbq-vertical-navbar',
@@ -74,7 +77,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true });
-    configuration;
+    configuration: KbqNavbarLocaleConfiguration;
 
     rectangleElements = contentChildren(
         forwardRef(() => KbqNavbarRectangleElement),
@@ -183,7 +186,10 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     };
 
     private updateLocaleParams = () => {
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('navbar');
+        this.configuration =
+            this.externalConfiguration ??
+            this.localeService?.getParams('navbar') ??
+            KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
 
         this.changeDetectorRef.markForCheck();
     };

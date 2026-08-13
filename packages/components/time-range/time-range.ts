@@ -18,8 +18,9 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KBQ_LOCALE_SERVICE,
-    KbqTimeRangeLocaleConfig,
+    KbqDeepPartial,
+    kbqInjectLocaleConfiguration,
+    KbqTimeRangeLocaleConfiguration,
     PopUpPlacements,
     PopUpSizes,
     ruRULocaleData
@@ -37,15 +38,20 @@ import {
 } from './types';
 
 /** Localization configuration provider. */
-export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRangeLocaleConfig>(
+export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRangeLocaleConfiguration>(
     'KBQ_TIME_RANGE_LOCALE_CONFIGURATION',
     { factory: () => ruRULocaleData.timeRange }
 );
 
-/** Utility provider for `KBQ_TIME_RANGE_LOCALE_CONFIGURATION`. */
-export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRangeLocaleConfig): Provider => ({
+/**
+ * Utility provider for `KBQ_TIME_RANGE_LOCALE_CONFIGURATION`. Only the strings you pass are overridden;
+ * the rest keep their `ru-RU` defaults.
+ */
+export const kbqTimeRangeLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqTimeRangeLocaleConfiguration>
+): Provider => ({
     provide: KBQ_TIME_RANGE_LOCALE_CONFIGURATION,
-    useValue: configuration
+    useValue: { ...ruRULocaleData.timeRange, ...configuration }
 });
 
 @Component({
@@ -113,7 +119,6 @@ export const kbqTimeRangeLocaleConfigurationProvider = (configuration: KbqTimeRa
 })
 export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     private readonly timeRangeService = inject<KbqTimeRangeService<T>>(KbqTimeRangeService);
-    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     /** @docs-private */
     readonly ngControl = inject(NgControl, { optional: true, self: true });
 
@@ -161,7 +166,10 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     protected readonly popupPlacement = PopUpPlacements.BottomLeft;
 
     /** @docs-private */
-    protected readonly localeConfiguration = signal(inject(KBQ_TIME_RANGE_LOCALE_CONFIGURATION));
+    protected readonly localeConfiguration = kbqInjectLocaleConfiguration(
+        'timeRange',
+        KBQ_TIME_RANGE_LOCALE_CONFIGURATION
+    );
 
     constructor() {
         if (this.ngControl) {
@@ -175,10 +183,6 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
 
         this.titleValue = signal(this.nonNullable() ? defaultValue : null);
         this.rangeEditorControl = new FormControl<KbqTimeRangeRange>(defaultValue, { nonNullable: true });
-
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => {
-            this.localeConfiguration.set(this.localeService?.getParams('timeRange') ?? ruRULocaleData.timeRange);
-        });
 
         toObservable(this.availableTimeRangeTypes)
             .pipe(takeUntilDestroyed())

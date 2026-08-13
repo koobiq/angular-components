@@ -22,7 +22,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
-import { KBQ_LOCALE_SERVICE, ruRULocaleData } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KbqSearchExpandableLocaleConfiguration, ruRULocaleData } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -33,7 +33,9 @@ import { map } from 'rxjs/operators';
 export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION = ruRULocaleData.searchExpandable;
 
 /** Injection Token for providing configuration of search-expandable */
-export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION = new InjectionToken('KbqSearchExpandableConfiguration');
+export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION = new InjectionToken<KbqSearchExpandableLocaleConfiguration>(
+    'KbqSearchExpandableConfiguration'
+);
 
 export const defaultValue = '';
 export const defaultEmitValueTimeout = 200;
@@ -77,7 +79,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     @ViewChildren(KbqButton) private button: QueryList<KbqButton>;
     private readonly tooltip = viewChild(KbqTooltipTrigger);
 
-    configuration;
+    configuration: KbqSearchExpandableLocaleConfiguration;
 
     /** Current value in input. */
     value = new BehaviorSubject(defaultValue);
@@ -307,7 +309,10 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     }
 
     private updateLocaleParams = () => {
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('searchExpandable');
+        this.configuration =
+            this.externalConfiguration ??
+            this.localeService?.getParams('searchExpandable') ??
+            KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION;
 
         this.changeDetectorRef.markForCheck();
     };

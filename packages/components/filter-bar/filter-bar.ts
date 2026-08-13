@@ -223,7 +223,10 @@ export class KbqFilterBar implements KbqFilterBarHost {
     }
 
     private updateLocaleParams = () => {
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('filterBar');
+        this.configuration =
+            this.externalConfiguration ??
+            this.localeService?.getParams('filterBar') ??
+            KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
 
         this.changeDetectorRef.markForCheck();
     };

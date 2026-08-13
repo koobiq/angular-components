@@ -43,6 +43,7 @@ import {
     KBQ_DATE_FORMATS,
     KBQ_LOCALE_SERVICE,
     KbqDateFormats,
+    KbqDatepickerLocaleConfiguration,
     KbqErrorStateTracker,
     LEFT_ARROW,
     PAGE_DOWN,
@@ -186,7 +187,9 @@ export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = ruRULocaleData.datepicker;
 
 /** Injection Token for providing configuration of datepicker */
 /** @docs-private */
-export const KBQ_DATEPICKER_CONFIGURATION = new InjectionToken('KbqDatepickerConfiguration');
+export const KBQ_DATEPICKER_CONFIGURATION = new InjectionToken<KbqDatepickerLocaleConfiguration>(
+    'KbqDatepickerConfiguration'
+);
 
 /**
  * An event used for datepicker input and change events. We don't always have access to a native
@@ -256,7 +259,7 @@ export class KbqDatepickerInput<D>
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     /** @docs-private */
     protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true });
-    protected configuration;
+    protected configuration: KbqDatepickerLocaleConfiguration;
 
     readonly stateChanges: Subject<void> = new Subject<void>();
 
@@ -881,7 +884,10 @@ export class KbqDatepickerInput<D>
     private updateLocaleParams = () => {
         this.setFormat(this.dateInputFormat);
 
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('datepicker');
+        this.configuration =
+            this.externalConfiguration ??
+            this.localeService?.getParams('datepicker') ??
+            KBQ_DATEPICKER_DEFAULT_CONFIGURATION;
 
         this.value = this.value;
     };

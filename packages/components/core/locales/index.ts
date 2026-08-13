@@ -1,4 +1,5 @@
 export * from './a11y';
+export * from './configuration';
 export * from './en-US';
 export * from './es-LA';
 export * from './pt-BR';

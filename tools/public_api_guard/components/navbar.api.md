@@ -22,6 +22,7 @@ import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqNavbarLocaleConfiguration } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
@@ -30,7 +31,7 @@ import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
-export const KBQ_VERTICAL_NAVBAR_CONFIGURATION: InjectionToken<unknown>;
+export const KBQ_VERTICAL_NAVBAR_CONFIGURATION: InjectionToken<KbqNavbarLocaleConfiguration>;
 
 // @public
 export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: {
@@ -366,14 +367,14 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     readonly bento: i0.Signal<any>;
     // (undocumented)
-    configuration: any;
+    configuration: KbqNavbarLocaleConfiguration;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     get expanded(): boolean;
     set expanded(value: boolean);
     // (undocumented)
-    readonly externalConfiguration: unknown;
+    readonly externalConfiguration: KbqNavbarLocaleConfiguration | null;
     // (undocumented)
     readonly items: i0.Signal<readonly any[]>;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;

@@ -12,6 +12,7 @@ import { DestroyRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { KbqSearchExpandableLocaleConfiguration } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -23,7 +24,7 @@ export const defaultEmitValueTimeout = 200;
 export const defaultValue = "";
 
 // @public
-export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION: InjectionToken<unknown>;
+export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION: InjectionToken<KbqSearchExpandableLocaleConfiguration>;
 
 // @public
 export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: {
@@ -36,21 +37,21 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    configuration: any;
+    configuration: KbqSearchExpandableLocaleConfiguration;
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly emitValueTimeout: i0.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    readonly externalConfiguration: unknown;
+    readonly externalConfiguration: KbqSearchExpandableLocaleConfiguration | null;
     protected readonly focusMonitor: FocusMonitor;
     readonly isEmitValueByEnterEnabled: i0.InputSignal<boolean>;
     isOpened: boolean;
     readonly isOpenedChange: i0.OutputEmitterRef<boolean>;
     // (undocumented)
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
-    get localeData(): any;
+    get localeData(): KbqSearchExpandableLocaleConfiguration;
     protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     protected readonly nativeElement: HTMLElement;
     // (undocumented)

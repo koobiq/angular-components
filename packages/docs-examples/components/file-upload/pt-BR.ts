@@ -1,6 +1,6 @@
-import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
 
-export const ptBRLocaleData: KbqMultipleFileUploadLocaleConfig = {
+export const ptBRFileUploadLocaleData: KbqMultipleFileUploadLocaleConfiguration = {
     captionText: 'Arrastar aqui ou {{ browseLink }}',
     captionTextWhenSelected: 'Arrastar arquivos ou {{ browseLink }}',
     captionTextWithFolder: 'Arrastar aqui ou {{ browseLink }} ou {{ browseLinkFolderMixed }}',
