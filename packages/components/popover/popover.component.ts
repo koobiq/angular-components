@@ -132,7 +132,10 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected readonly componentColors = KbqComponentColors;
 }
 
-export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy');
+export const KBQ_POPOVER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-popover-scroll-strategy', {
+    providedIn: 'root',
+    factory: () => kbqPopoverScrollStrategyFactory(inject(Overlay))
+});
 
 /** @docs-private */
 export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {

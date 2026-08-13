@@ -49,8 +49,14 @@ import { KbqDropdownItem } from './dropdown-item.component';
 import { KbqDropdown } from './dropdown.component';
 import { DropdownCloseReason, KbqDropdownPanel, KbqDropdownPositionX, KbqDropdownPositionY } from './dropdown.types';
 
-/** Injection token that determines the scroll handling while the dropdown is open. */
-export const KBQ_DROPDOWN_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-dropdown-scroll-strategy');
+/**
+ * Injection token that determines the scroll handling while the dropdown is open. The root default keeps the
+ * trigger usable outside `KbqDropdownModule`'s injector; providing the token anywhere still wins over it.
+ */
+export const KBQ_DROPDOWN_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-dropdown-scroll-strategy', {
+    providedIn: 'root',
+    factory: () => KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(inject(Overlay))
+});
 
 /** @docs-private */
 export function KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {

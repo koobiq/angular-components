@@ -10,9 +10,8 @@ import {
     output,
     viewChild
 } from '@angular/core';
-import { DateAdapter } from '@koobiq/components/core';
 import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
-import { createMissingDateImplError } from './datepicker-errors';
+import { injectRequiredDateAdapter } from './datepicker-errors';
 
 const DAYS_PER_WEEK = 7;
 
@@ -32,7 +31,7 @@ const DAYS_PER_WEEK = 7;
 })
 export class KbqMonthView<D> implements AfterContentInit {
     private changeDetectorRef = inject(ChangeDetectorRef);
-    adapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
+    adapter = injectRequiredDateAdapter<D>();
 
     /**
      * The date to display in this month view (everything other than the month and year is ignored).
@@ -114,10 +113,6 @@ export class KbqMonthView<D> implements AfterContentInit {
     weekdays: { long: string; narrow: string }[];
 
     constructor() {
-        if (!this.adapter) {
-            throw createMissingDateImplError('DateAdapter');
-        }
-
         const firstDayOfWeek = this.adapter.getFirstDayOfWeek();
         const narrowWeekdays = this.adapter.getDayOfWeekNames('short');
         const longWeekdays = this.adapter.getDayOfWeekNames('long');

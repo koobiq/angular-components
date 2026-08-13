@@ -29,7 +29,6 @@ import {
 } from '@angular/forms';
 import {
     BACKSPACE,
-    DateAdapter,
     DELETE,
     DOWN_ARROW,
     END,
@@ -59,7 +58,7 @@ import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-fie
 import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { KbqCalendar } from './calendar.component';
-import { createMissingDateImplError } from './datepicker-errors';
+import { injectRequiredDateAdapter } from './datepicker-errors';
 import { KbqDatepicker } from './datepicker.component';
 
 enum DateParts {
@@ -248,7 +247,7 @@ export class KbqDatepickerInput<D>
 {
     elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
-    readonly adapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
+    readonly adapter = injectRequiredDateAdapter<D>();
     private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true });
     /** @docs-private */
     protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
@@ -564,10 +563,6 @@ export class KbqDatepickerInput<D>
             this.maxValidator,
             this.filterValidator
         ]);
-
-        if (!this.adapter) {
-            throw createMissingDateImplError('DateAdapter');
-        }
 
         this.errorStateTracker = new KbqErrorStateTracker(
             inject(ErrorStateMatcher),

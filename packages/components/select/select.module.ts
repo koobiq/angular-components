@@ -3,7 +3,6 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
-    KBQ_SELECT_SCROLL_STRATEGY_PROVIDER,
     KbqOptionModule,
     KbqSelectFooter,
     KbqSelectMatcher,
@@ -40,7 +39,6 @@ import { KbqSelect } from './select.component';
         KbqSelectNoOptions,
         KbqSelectErrorText
     ],
-    providers: [KBQ_SELECT_SCROLL_STRATEGY_PROVIDER],
     exports: [
         KbqSelect,
         KbqOptionTooltip,
