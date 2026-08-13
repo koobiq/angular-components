@@ -35,7 +35,7 @@ npm install @messageformat/core
 
 #### Новая темизация
 
-Теперь темизация более простая и строится на основе CSS-переменных. [Темизация. Как использовать](https://koobiq.io/ru/main/theming/overview#как-использовать?).
+Теперь темизация более простая и строится на основе CSS-переменных. [Темизация](https://koobiq.io/ru/main/theming/overview).
 
 Примеры:
 

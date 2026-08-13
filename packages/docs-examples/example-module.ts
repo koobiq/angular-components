@@ -1090,6 +1090,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "button-overview-example.ts",
     "importPath": "components/button"
   },
+  "block-checkbox": {
+    "packagePath": "components/checkbox/block-checkbox",
+    "title": "Custom checkbox block",
+    "componentName": "BlockCheckboxExample",
+    "files": [
+      "block-checkbox-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "block-checkbox-example",
+    "additionalComponents": [
+      "BlockCheckboxComponent"
+    ],
+    "primaryFile": "block-checkbox-example.ts",
+    "importPath": "components/checkbox"
+  },
   "checkbox-indeterminate": {
     "packagePath": "components/checkbox/checkbox-indeterminate",
     "title": "Checkbox indeterminate",
@@ -1366,6 +1381,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "primaryFile": "content-panel-with-grid-example.ts",
     "importPath": "components/content-panel"
+  },
+  "theme-css-variables": {
+    "packagePath": "components/core/theme-css-variables",
+    "title": "Theme values in your own styles",
+    "componentName": "ThemeCssVariablesExample",
+    "files": [
+      "theme-css-variables-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "theme-css-variables-example",
+    "additionalComponents": [],
+    "primaryFile": "theme-css-variables-example.ts",
+    "importPath": "components/core"
   },
   "theme-static-selection": {
     "packagePath": "components/core/theme-static-selection",
@@ -7782,6 +7810,8 @@ return import('@koobiq/docs-examples/components/button');
 return import('@koobiq/docs-examples/components/button');
   case 'button-overview':
 return import('@koobiq/docs-examples/components/button');
+  case 'block-checkbox':
+return import('@koobiq/docs-examples/components/checkbox');
   case 'checkbox-indeterminate':
 return import('@koobiq/docs-examples/components/checkbox');
   case 'checkbox-multiline':
@@ -7824,6 +7854,8 @@ return import('@koobiq/docs-examples/components/code-block');
 return import('@koobiq/docs-examples/components/content-panel');
   case 'content-panel-with-grid':
 return import('@koobiq/docs-examples/components/content-panel');
+  case 'theme-css-variables':
+return import('@koobiq/docs-examples/components/core');
   case 'theme-static-selection':
 return import('@koobiq/docs-examples/components/core');
   case 'absolute-date-formatter':
