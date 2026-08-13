@@ -8,7 +8,7 @@ import { KbqDlModule } from './dl.module';
     template: `
         <div>
             <!-- Base -->
-            <kbq-dl [minWidth]="150">
+            <kbq-dl [verticalBreakpoint]="150">
                 <kbq-dt>dt</kbq-dt>
                 <kbq-dd>dd</kbq-dd>
                 <kbq-dt>dt</kbq-dt>
@@ -22,7 +22,7 @@ import { KbqDlModule } from './dl.module';
 
         <div>
             <!-- Wide -->
-            <kbq-dl [minWidth]="150" [wide]="true">
+            <kbq-dl [verticalBreakpoint]="150" [wide]="true">
                 <kbq-dt>dt</kbq-dt>
                 <kbq-dd>dd</kbq-dd>
                 <kbq-dt>dt</kbq-dt>
@@ -36,7 +36,7 @@ import { KbqDlModule } from './dl.module';
 
         <div>
             <!-- Vertical alignment: center -->
-            <kbq-dl verticalAlign="center" [minWidth]="150">
+            <kbq-dl verticalAlign="center" [verticalBreakpoint]="150">
                 <kbq-dt>center</kbq-dt>
                 <kbq-dd>
                     <kbq-badge badgeColor="fade-theme">Badge</kbq-badge>
@@ -48,7 +48,7 @@ import { KbqDlModule } from './dl.module';
 
         <div>
             <!-- Vertical alignment: end -->
-            <kbq-dl verticalAlign="end" [minWidth]="150">
+            <kbq-dl verticalAlign="end" [verticalBreakpoint]="150">
                 <kbq-dt>Multiline description term</kbq-dt>
                 <kbq-dd>end</kbq-dd>
                 <kbq-dt>end</kbq-dt>
@@ -58,7 +58,7 @@ import { KbqDlModule } from './dl.module';
 
         <div>
             <!-- Horizontal alignment: center -->
-            <kbq-dl horizontalAlign="center" [minWidth]="150">
+            <kbq-dl horizontalAlign="center" [verticalBreakpoint]="150">
                 <kbq-dt>center</kbq-dt>
                 <kbq-dd>dd</kbq-dd>
                 <kbq-dt>center</kbq-dt>
@@ -68,7 +68,7 @@ import { KbqDlModule } from './dl.module';
 
         <div>
             <!-- Horizontal alignment: end -->
-            <kbq-dl horizontalAlign="end" [minWidth]="150">
+            <kbq-dl horizontalAlign="end" [verticalBreakpoint]="150">
                 <kbq-dt>end</kbq-dt>
                 <kbq-dd>definition</kbq-dd>
                 <kbq-dt>end</kbq-dt>
@@ -112,3 +112,30 @@ import { KbqDlModule } from './dl.module';
     }
 })
 export class E2eDlStates {}
+
+@Component({
+    selector: 'e2e-dl-resizable',
+    imports: [KbqDlModule],
+    template: `
+        <kbq-dl columnResizable [columnMinWidth]="120" [remainingColumnMinWidth]="160">
+            <kbq-dt>Incident type</kbq-dt>
+            <kbq-dd>Malware infection</kbq-dd>
+            <kbq-dt>Identifier</kbq-dt>
+            <kbq-dd>INC-2026-125-78253</kbq-dd>
+            <kbq-dt>Description</kbq-dt>
+            <kbq-dd>A long description that keeps the second column filled while the first one is resized.</kbq-dd>
+        </kbq-dl>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 600px;
+            padding: var(--kbq-size-m);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDlResizable'
+    }
+})
+export class E2eDlResizable {}
