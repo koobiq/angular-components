@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { ENTER, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
 
 @Component({
     selector: 'e2e-tag-state-and-style',
@@ -353,3 +353,54 @@ export class E2eTagInputStates {}
     }
 })
 export class E2eTagAutocompleteStates {}
+
+/**
+ * Demonstrates `KbqTagSeparator.appliesTo` scoping: `Enter` creates a tag both while typing and
+ * on paste, while a keyless whitespace separator (`/\s+/`) only splits pasted text — typing a
+ * space does not end the current tag.
+ */
+@Component({
+    selector: 'e2e-tag-input-separators',
+    imports: [KbqTagsModule, KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList="kbqTagList">
+                @for (tag of tags(); track tag) {
+                    <kbq-tag>{{ tag }}</kbq-tag>
+                }
+
+                <input
+                    data-testid="e2eTagInputSeparatorsInput"
+                    autocomplete="off"
+                    kbqInput
+                    placeholder="New tag"
+                    [kbqTagInputFor]="tagList"
+                    (kbqTagInputTokenEnd)="add($event)"
+                />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `,
+    providers: [
+        kbqTagsDefaultOptionsProvider({
+            separatorKeyCodes: [ENTER],
+            separators: [
+                { symbol: /\r?\n/, key: 'Enter', keyCode: ENTER, appliesTo: ['input', 'paste'] },
+                { symbol: /\s+/, appliesTo: ['paste'] }
+            ]
+        })
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTagInputSeparators'
+    }
+})
+export class E2eTagInputSeparators {
+    readonly tags = signal<string[]>([]);
+
+    add({ input, value }: KbqTagInputEvent): void {
+        if (value) {
+            this.tags.update((tags) => [...tags, value]);
+            input.value = '';
+        }
+    }
+}

@@ -67,4 +67,56 @@ test.describe('KbqTagModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('05-dark.png');
         });
     });
+
+    test.describe('E2eTagInputSeparators', () => {
+        test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
+
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eTagInputSeparators');
+        const getInput = (page: Page): Locator => page.getByTestId('e2eTagInputSeparatorsInput');
+        const getTags = (component: Locator): Locator => component.locator('kbq-tag');
+
+        const pasteFromClipboard = async (page: Page, target: Locator, text: string) => {
+            await page.evaluate((value) => navigator.clipboard.writeText(value), text);
+            await target.click();
+            await page.keyboard.press('ControlOrMeta+v');
+        };
+
+        test('creates a tag on Enter while typing', async ({ page }) => {
+            await page.goto('/E2eTagInputSeparators');
+            const input = getInput(page);
+
+            await input.fill('typed-tag');
+            await input.press('Enter');
+
+            await expect(getTags(getComponent(page))).toHaveText(['typed-tag']);
+        });
+
+        test('does not end the tag on Space while typing, since it is a paste-only separator', async ({ page }) => {
+            await page.goto('/E2eTagInputSeparators');
+            const input = getInput(page);
+
+            await input.pressSequentially('two words');
+
+            await expect(getTags(getComponent(page))).toHaveCount(0);
+            await expect(input).toHaveValue('two words');
+        });
+
+        test('splits pasted text on whitespace, via the keyless `appliesTo: paste` separator', async ({ page }) => {
+            await page.goto('/E2eTagInputSeparators');
+            const input = getInput(page);
+
+            await pasteFromClipboard(page, input, 'alpha beta\tgamma\ndelta');
+
+            await expect(getTags(getComponent(page))).toHaveText(['alpha', 'beta', 'gamma', 'delta']);
+        });
+
+        test('splits pasted text on Enter, a separator shared by both contexts', async ({ page }) => {
+            await page.goto('/E2eTagInputSeparators');
+            const input = getInput(page);
+
+            await pasteFromClipboard(page, input, 'first\nsecond');
+
+            await expect(getTags(getComponent(page))).toHaveText(['first', 'second']);
+        });
+    });
 });

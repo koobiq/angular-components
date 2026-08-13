@@ -1,30 +1,31 @@
-﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     booleanAttribute,
     Directive,
     ElementRef,
     EventEmitter,
     inject,
+    InjectionToken,
     Input,
     input,
     OnChanges,
-    output
+    output,
+    Provider
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import { COMMA, ENTER, hasModifierKey, KbqFieldSizingContent, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
-import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagList } from './tag-list.component';
 import { KbqTagTextControl } from './tag-text-control';
 
-const KBQ_TAG_INPUT_DEFAULT_SEPARATORS: { [key: number]: KbqTagSeparator } = {
-    [ENTER]: { symbol: /\r?\n/, key: 'Enter' },
-    [TAB]: { symbol: /\t/, key: 'Tab' },
-    [SPACE]: { symbol: / /, key: ' ' },
-    [COMMA]: { symbol: /,/, key: ',' },
-    [SEMICOLON]: { symbol: /;/, key: ';' }
-};
+const KBQ_TAG_INPUT_DEFAULT_SEPARATORS: KbqTagSeparator[] = [
+    { symbol: /\r?\n/, key: 'Enter', keyCode: ENTER },
+    { symbol: /\t/, key: 'Tab', keyCode: TAB },
+    { symbol: / /, key: ' ', keyCode: SPACE },
+    { symbol: /,/, key: ',', keyCode: COMMA },
+    { symbol: /;/, key: ';', keyCode: SEMICOLON }
+];
 
 /** Represents an input event on a `kbqTagInput`. */
 export interface KbqTagInputEvent {
@@ -35,10 +36,57 @@ export interface KbqTagInputEvent {
     value: string;
 }
 
+/** Contexts a `KbqTagSeparator` can be active in. */
+export type KbqTagSeparatorContext = 'input' | 'paste';
+
+/** Defines a character or pattern that ends a tag, and the contexts in which it applies. */
 export interface KbqTagSeparator {
+    /** Regular expression used to match/split this separator in text. */
     symbol: RegExp;
-    key: string;
+
+    /**
+     * `KeyboardEvent.key` that triggers this separator while typing.
+     * Omit for separators with no single-keystroke equivalent (e.g. a run of whitespace) —
+     * those are implicitly paste-only, since they can never match a `keydown`.
+     */
+    key?: string;
+
+    /**
+     * Numeric key code gating whether this separator is enabled, set via `kbqTagInputSeparatorKeyCodes`.
+     * Omit together with `key` for separators that should always be active regardless of that input.
+     */
+    keyCode?: number;
+
+    /**
+     * Contexts this separator applies to.
+     * @default ['input', 'paste']
+     */
+    appliesTo?: KbqTagSeparatorContext[];
 }
+
+/** Default options, for the chips module, that can be overridden. */
+export interface KbqTagsDefaultOptions {
+    /** The list of key codes that will trigger a chipEnd event. */
+    separatorKeyCodes: number[];
+
+    /** Custom separator definitions to use instead of the built-in defaults. */
+    separators?: KbqTagSeparator[];
+
+    /** Whether the tagEnd event will be emitted when text is pasted. */
+    addOnPaste?: boolean;
+}
+
+/** Injection token to be used to override the default options for the chips module. */
+export const KBQ_TAGS_DEFAULT_OPTIONS = new InjectionToken<KbqTagsDefaultOptions>('kbq-tags-default-options');
+
+const KBQ_TAGS_DEFAULT_OPTIONS_CONFIG: KbqTagsDefaultOptions = { separatorKeyCodes: [ENTER] };
+
+/** Utility provider for `KBQ_TAGS_DEFAULT_OPTIONS`. */
+export const kbqTagsDefaultOptionsProvider = (options: Partial<KbqTagsDefaultOptions>): Provider => ({
+    provide: KBQ_TAGS_DEFAULT_OPTIONS,
+    useValue: { ...KBQ_TAGS_DEFAULT_OPTIONS_CONFIG, ...options }
+});
+
 // Increasing integer for generating unique ids.
 let nextUniqueId = 0;
 
@@ -66,9 +114,20 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private defaultOptions = inject<KbqTagsDefaultOptions>(KBQ_TAGS_DEFAULT_OPTIONS);
     private trimDirective = inject(KbqTrim, { optional: true, self: true });
+    /**
+     * The form control instance bound to the input, if any.
+     * @docs-private
+     */
     ngControl = inject(NgControl, { optional: true, self: true })!;
+    /**
+     * The autocomplete trigger attached to the input, if any.
+     * @docs-private
+     */
     autocompleteTrigger? = inject(KbqAutocompleteTrigger, { optional: true, self: true });
-    /** Whether the control is focused. */
+    /**
+     * Whether the control is focused.
+     * @docs-private
+     */
     focused: boolean = false;
 
     /**
@@ -85,16 +144,19 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     private _separatorKeyCodes: number[] = this.defaultOptions.separatorKeyCodes;
 
-    /** @docs-private */
+    /**
+     * The effective set of separators: entries gated by `keyCode` are included only when that
+     * code is present in `separatorKeyCodes`; entries without a `keyCode` (no single-keystroke
+     * equivalent, e.g. a run of whitespace) are always included.
+     * @docs-private
+     */
     get separators(): KbqTagSeparator[] {
-        return this._separatorKeyCodes.reduce((acc: any, key) => {
-            const separator = this.getSeparatorByKeyCode(key);
-
-            return separator ? [...acc, separator] : acc;
-        }, []);
+        return this._separators.filter(
+            (separator) => separator.keyCode === undefined || this._separatorKeyCodes.includes(separator.keyCode)
+        );
     }
 
-    private _separators = this.defaultOptions.separators || KBQ_TAG_INPUT_DEFAULT_SEPARATORS;
+    private _separators: KbqTagSeparator[] = this.defaultOptions.separators || KBQ_TAG_INPUT_DEFAULT_SEPARATORS;
 
     /** Emitted when a tag is to be added. */
     readonly tagEnd = output<KbqTagInputEvent>({ alias: 'kbqTagInputTokenEnd' });
@@ -178,13 +240,13 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
     }
 
-    ngOnChanges() {
+    ngOnChanges(): void {
         this._tagList.stateChanges.next();
     }
 
     /** @docs-private */
-    onKeydown(event: KeyboardEvent) {
-        const isSeparatorKey = this.isSeparatorKey(event);
+    onKeydown(event: KeyboardEvent): void {
+        const isSeparatorKey = this.matchesInputSeparator(event);
 
         if (!this.inputElement.value) {
             if (isSeparatorKey && event.keyCode !== TAB) {
@@ -212,8 +274,11 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         }
     }
 
-    /** Checks to see if the blur should emit the (tagEnd) event. */
-    blur(event: FocusEvent) {
+    /**
+     * Checks to see if the blur should emit the (tagEnd) event.
+     * @docs-private
+     */
+    blur(event: FocusEvent): void {
         this.focused = false;
 
         // Blur the tag list if it is not focused
@@ -230,7 +295,11 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         this._tagList.stateChanges.next();
     }
 
-    triggerValidation() {
+    /**
+     * Notifies the associated NgControl of a validation status change.
+     * @docs-private
+     */
+    triggerValidation(): void {
         if (!this.hasControl()) {
             return;
         }
@@ -238,8 +307,11 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         (this.ngControl.statusChanges as EventEmitter<string | null>).emit(this.ngControl.status);
     }
 
-    /** Checks to see if the (tagEnd) event needs to be emitted. */
-    emitTagEnd() {
+    /**
+     * Checks to see if the (tagEnd) event needs to be emitted.
+     * @docs-private
+     */
+    emitTagEnd(): void {
         if (!this.hasControl() || (this.hasControl() && !this.ngControl.invalid)) {
             if (this.distinct() && this.hasDuplicates) return;
 
@@ -248,18 +320,24 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         }
     }
 
+    /**
+     * Whether the current input value duplicates an existing tag.
+     * @docs-private
+     */
     get hasDuplicates(): boolean {
         return this._tagList.tags
             .map(({ value }) => value)
             .some((tagValue) => tagValue === this.trimValue(this.inputElement.value));
     }
 
-    onInput() {
+    /** @docs-private */
+    onInput(): void {
         // Let tag list know whenever the value changes.
         this._tagList.stateChanges.next();
     }
 
-    onPaste($event: ClipboardEvent) {
+    /** @docs-private */
+    onPaste($event: ClipboardEvent): void {
         if (!$event.clipboardData) {
             return;
         }
@@ -270,7 +348,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
             return;
         }
 
-        const separatorsInString = this.getSeparatorsForString(data);
+        const separatorsInString = this.getPasteSeparatorPatterns(data);
 
         // prettier-ignore
         const dividedString: string[] = separatorsInString.length > 0 ?
@@ -311,9 +389,13 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         this.inputElement.focus();
     }
 
-    private getSeparatorsForString(value: string): string[] {
+    private getPasteSeparatorPatterns(value: string): string[] {
         return this.separators
-            .filter((separator) => value.search(separator.symbol) > -1)
+            .filter(
+                (separator) =>
+                    (!separator.appliesTo || separator.appliesTo.includes('paste')) &&
+                    value.search(separator.symbol) > -1
+            )
             .map((separator) => separator.symbol.source);
     }
 
@@ -321,22 +403,17 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         return this.trimDirective ? this.trimDirective.trim(value) : value;
     }
 
-    private getSeparatorByKeyCode(keyCode: number): KbqTagSeparator | null {
-        const sep = this._separators[keyCode];
-
-        if (sep) {
-            return sep;
-        }
-
-        return null;
-    }
-
     private hasControl(): boolean {
         return !!this.ngControl;
     }
 
-    /** Checks whether a keycode is one of the configured separators. */
-    private isSeparatorKey(event: KeyboardEvent) {
-        return this.separators.some((separator) => separator.key === event.key && !hasModifierKey(event));
+    /** Checks whether a keydown event matches a separator that applies to typed input. */
+    private matchesInputSeparator(event: KeyboardEvent): boolean {
+        return this.separators.some(
+            (separator) =>
+                separator.key === event.key &&
+                !hasModifierKey(event) &&
+                (!separator.appliesTo || separator.appliesTo.includes('input'))
+        );
     }
 }

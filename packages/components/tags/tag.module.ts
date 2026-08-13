@@ -1,8 +1,7 @@
 ﻿import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
 import { ENTER } from '@koobiq/components/core';
-import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
-import { KbqTagInput } from './tag-input';
+import { KbqTagInput, kbqTagsDefaultOptionsProvider } from './tag-input';
 import { KbqTagList } from './tag-list.component';
 import {
     KbqTag,
@@ -33,12 +32,7 @@ const COMPONENTS = [
         KbqTagAvatar,
         KbqTagRemove
     ],
-    providers: [
-        {
-            provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            useValue: { separatorKeyCodes: [ENTER] } as KbqTagsDefaultOptions
-        }
-    ],
+    providers: [kbqTagsDefaultOptionsProvider({ separatorKeyCodes: [ENTER] })],
     exports: [
         KbqTagList,
         KbqTag,

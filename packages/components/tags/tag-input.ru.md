@@ -61,6 +61,31 @@
 
 <!-- example(tag-input-draggable) -->
 
+### Разделители
+
+По умолчанию тег создаётся по `Enter`. Дополнительные клавиши-разделители задаются через `kbqTagInputSeparatorKeyCodes` и работают как при наборе текста, так и при вставке из буфера обмена.
+
+Если разделитель нужен только при вставке (например, пробел — обычный символ внутри тега), укажите для него `appliesTo: ['paste']`. Разделители без `key` (например, `/\s+/` для любой последовательности пробельных символов) вставочные по умолчанию, так как им не может соответствовать нажатие клавиши.
+
+Настройки по умолчанию для приложения или модуля задаются через `kbqTagsDefaultOptionsProvider`:
+
+```ts
+import { ENTER } from '@koobiq/components/core';
+import { kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
+
+@NgModule({
+    providers: [
+        kbqTagsDefaultOptionsProvider({
+            separatorKeyCodes: [ENTER],
+            separators: [
+                { symbol: /\r?\n/, key: 'Enter', keyCode: ENTER, appliesTo: ['input', 'paste'] },
+                { symbol: /\s+/, appliesTo: ['paste'] } // только при вставке — разделяет по любым пробельным символам
+            ]
+        })
+    ]
+})
+```
+
 ### Навигация с клавиатуры
 
 #### Фокус в пустой области ввода
