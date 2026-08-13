@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import { KbqCheckableClickAction } from '@koobiq/components/core';
 
 /**
  * Checkbox click action when user click on input element.
@@ -7,7 +8,7 @@ import { InjectionToken } from '@angular/core';
  * check-indeterminate: Toggle checked status, set indeterminate to false. Default behavior.
  * undefined: Same as `check-indeterminate`.
  */
-export type KbqCheckboxClickAction = 'noop' | 'check' | 'check-indeterminate' | undefined;
+export type KbqCheckboxClickAction = KbqCheckableClickAction;
 
 /**
  * Injection token that can be used to specify the checkbox click behavior.

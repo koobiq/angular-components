@@ -1,5 +1,5 @@
-🚧 **Documentation in progress** 🚧
+### Block checkbox
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+A custom checkbox-like "card" control built on the shared `KbqCheckable` primitive (`@koobiq/components/core`), showing how to reuse checkbox's click/form/a11y behavior with your own markup and styling.
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(block-checkbox) -->
