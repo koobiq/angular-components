@@ -312,6 +312,13 @@ export class KbqSelect
     /** Previously selected options before the current selection was made. */
     previousSelectionModelSelected: KbqOptionBase[] = [];
 
+    /**
+     * Detached copies of the selected options, captured while the option was still rendered.
+     * `cdk-virtual-scroll` recycles option views, so a `KbqOption` kept in `selectionModel` can
+     * silently start carrying another item's value and label — the copy preserves the original ones.
+     */
+    private readonly selectedOptionCopies = new WeakMap<KbqOptionBase, KbqVirtualOption>();
+
     /** Manages keyboard events for options in the panel. */
     keyManager: ActiveDescendantKeyManager<KbqOption>;
 
@@ -960,14 +967,18 @@ export class KbqSelect
 
     /** Returns the currently selected option(s). Single value or array for multiple selection. */
     get selected(): KbqOptionBase | KbqOptionBase[] {
-        return this.multiSelection ? this.selectionModel.selected : this.selectionModel.selected[0];
+        const selected = this.selectionModel.selected;
+
+        return this.multiSelection
+            ? selected.map((option) => this.resolveSelectedOption(option))
+            : selected[0] && this.resolveSelectedOption(selected[0]);
     }
 
     /** Returns the display value for the trigger element. */
     get triggerValue(): string {
         if (this.empty) return '';
 
-        return this.selectionModel.selected[0].viewValue;
+        return this.resolveSelectedOption(this.selectionModel.selected[0]).viewValue;
     }
 
     /** Returns all selected options in display order. */
@@ -976,7 +987,7 @@ export class KbqSelect
             return [];
         }
 
-        const selectedOptions = this.selectionModel.selected;
+        const selectedOptions = this.selectionModel.selected.map((option) => this.resolveSelectedOption(option));
 
         if (this.isRtl()) {
             selectedOptions.reverse();
@@ -997,7 +1008,11 @@ export class KbqSelect
 
     /** Returns the first selected option that is not disabled. */
     get firstSelected(): KbqOptionBase | null {
-        return this.selectionModel.selected.filter((option) => !option.disabled)[0] || null;
+        return (
+            this.selectionModel.selected
+                .map((option) => this.resolveSelectedOption(option))
+                .find((option) => !option.disabled) || null
+        );
     }
 
     /** Whether the first selected option is filtered (not visible in the list). */
@@ -1975,7 +1990,7 @@ export class KbqSelect
     private getCorrespondOption(value: any): KbqOptionBase | undefined {
         return [
             ...this.options.toArray(),
-            ...this.previousSelectionModelSelected
+            ...this.previousSelectionModelSelected.map((option) => this.resolveSelectedOption(option))
         ].find((option: KbqOptionBase) => {
             try {
                 // Treat null as a special reset value.
@@ -1994,27 +2009,54 @@ export class KbqSelect
     }
 
     /**
-     * Finds and selects and option based on its value.
-     * @returns Option that has the corresponding value.
+     * Finds and selects an option based on its value.
+     * @returns Option that has the corresponding value, when it is currently rendered.
      */
     private selectValue(value: any): KbqOption | undefined {
         const correspondingOption = this.getCorrespondOption(value);
 
         if (correspondingOption) {
             this.selectionModel.select(correspondingOption);
-        } else if (this.withVirtualScroll) {
+            this.captureSelectedOptionCopy(correspondingOption);
+
+            // Only a currently rendered option can be activated in the key manager.
+            return this.options.find((option) => option === correspondingOption);
+        }
+
+        const virtualOption = this.createVirtualOptionForValue(value);
+
+        if (virtualOption) {
+            this.selectionModel.select(virtualOption);
+        }
+
+        return undefined;
+    }
+
+    /**
+     * Builds a detached option for a value whose `KbqOption` is not rendered, or returns `undefined`
+     * when the value cannot be resolved and the consumer gave no way to render it.
+     */
+    private createVirtualOptionForValue(value: any): KbqVirtualOption | undefined {
+        // Treat null as a special reset value, the same way `getCorrespondOption` does.
+        if (value == null) return undefined;
+
+        if (this.withVirtualScroll) {
             const source = this.cdkVirtualForOf()?.cdkVirtualForOf;
             const correspondingOptionVirtual =
                 source instanceof Array ? source.find((item) => this.compareWith(item, value)) : undefined;
 
             if (correspondingOptionVirtual) {
-                this.selectionModel.select(this.createVirtualOption(correspondingOptionVirtual));
+                return this.createVirtualOption(correspondingOptionVirtual);
             }
-        } else if (this.showPreselectedValues()) {
-            this.selectionModel.select(this.createVirtualOption(value));
+
+            // The value is missing from the currently loaded data (server-side search, a narrowed down
+            // source) — it can still be rendered when a `virtualOptionFactory` maps it to a label.
+            return this.virtualOptionFactory() ? this.createVirtualOption(value) : undefined;
         }
 
-        return correspondingOption as KbqOption;
+        // Without virtual scroll the whole list is rendered, so a value that matched nothing is only
+        // kept in the selection when the consumer opted into unresolved values.
+        return this.showPreselectedValues() ? this.createVirtualOption(value) : undefined;
     }
 
     /**
@@ -2026,6 +2068,37 @@ export class KbqSelect
         const virtualOptionFactory = this.virtualOptionFactory();
 
         return virtualOptionFactory ? virtualOptionFactory(value) : new KbqVirtualOption(value, this.disabled);
+    }
+
+    /**
+     * Remembers the value and the label of a selected option while its view is still live, so that the
+     * selection survives the view being recycled by `cdk-virtual-scroll` for another item.
+     */
+    private captureSelectedOptionCopy(option: KbqOptionBase): void {
+        if (option instanceof KbqVirtualOption) return;
+
+        this.selectedOptionCopies.set(option, new KbqVirtualOption(option.value, option.disabled, option.viewValue));
+    }
+
+    /** Copy of `option` when its view has been recycled for another item, otherwise `option` itself. */
+    private resolveSelectedOption(option: KbqOptionBase): KbqOptionBase {
+        const copy = this.selectedOptionCopies.get(option);
+
+        if (!copy) return option;
+
+        try {
+            // A value that no longer matches the copy means the view was recycled for another item.
+            return this.compareWith(option.value, copy.value) ? option : copy;
+        } catch (error) {
+            if (isDevMode()) {
+                // Notify developers of errors in their comparator.
+                // eslint-disable-next-line no-console
+                console.warn(error);
+            }
+
+            // The comparator cannot tell the two apart, so fall back to the value that was actually selected.
+            return copy;
+        }
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */
@@ -2082,6 +2155,7 @@ export class KbqSelect
         } else {
             if (option.selected) {
                 this.selectionModel.select(option);
+                this.captureSelectedOptionCopy(option);
             } else {
                 this.selectionModel.deselect(option);
             }

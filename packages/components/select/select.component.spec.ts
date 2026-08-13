@@ -1682,6 +1682,115 @@ class CdkVirtualScrollMultipleWithFactory {
     readonly viewport = viewChild.required(CdkVirtualScrollViewport);
 }
 
+/**
+ * Virtual scroll over a source the consumer narrows down (search). Unlike the fixtures above, `*cdkVirtualFor`
+ * keeps its default template cache: recycled option views are exactly what makes a selected `KbqOption` start
+ * carrying another item's value once the source is filtered.
+ */
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        ReactiveFormsModule,
+        ScrollingModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select
+                placeholder="Placeholder"
+                [compareWith]="compareWith"
+                [formControl]="control"
+                [virtualOptionFactory]="virtualOptionFactory"
+            >
+                <cdk-virtual-scroll-viewport [itemSize]="32" [minBufferPx]="100" [maxBufferPx]="200">
+                    <kbq-option *cdkVirtualFor="let option of visible" [value]="option">
+                        {{ option.name }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class CdkVirtualScrollFilteredSelect {
+    readonly options: CityOption[] = OPTIONS.map((name, id) => ({ id, name }));
+
+    visible: CityOption[] = [...this.options];
+    control = new FormControl<CityOption | null>(null);
+    compareWith = (a: CityOption | null, b: CityOption | null) => a?.id === b?.id;
+    virtualOptionFactory: ((value: CityOption) => KbqVirtualOption) | undefined = (value) =>
+        new KbqVirtualOption(value, false, value.name);
+
+    readonly select = viewChild.required(KbqSelect);
+}
+
+/** Same as `CdkVirtualScrollFilteredSelect`, but the trigger is rendered by the consumer. */
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        ReactiveFormsModule,
+        ScrollingModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select
+                #select="kbqSelect"
+                placeholder="Placeholder"
+                [compareWith]="compareWith"
+                [formControl]="control"
+                [virtualOptionFactory]="virtualOptionFactory"
+            >
+                <ng-container kbq-select-trigger>Custom: {{ select.triggerValue }}</ng-container>
+
+                <cdk-virtual-scroll-viewport [itemSize]="32" [minBufferPx]="100" [maxBufferPx]="200">
+                    <kbq-option *cdkVirtualFor="let option of visible" [value]="option">
+                        {{ option.name }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class CdkVirtualScrollFilteredSelectWithCustomTrigger extends CdkVirtualScrollFilteredSelect {}
+
+/** Multiple selection over a source the consumer narrows down (search). */
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        ScrollingModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select
+                multiple
+                placeholder="Placeholder"
+                [compareWith]="compareWith"
+                [formControl]="control"
+                [virtualOptionFactory]="virtualOptionFactory"
+            >
+                <cdk-virtual-scroll-viewport [itemSize]="32" [minBufferPx]="100" [maxBufferPx]="200">
+                    <kbq-option *cdkVirtualFor="let option of visible" [value]="option">
+                        {{ option.name }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class CdkVirtualScrollFilteredMultiSelect {
+    readonly options: CityOption[] = OPTIONS.map((name, id) => ({ id, name }));
+
+    visible: CityOption[] = [...this.options];
+    control = new FormControl<CityOption[]>([]);
+    compareWith = (a: CityOption | null, b: CityOption | null) => a?.id === b?.id;
+    virtualOptionFactory = (value: CityOption) => new KbqVirtualOption(value, false, value.name);
+
+    readonly select = viewChild.required(KbqSelect);
+}
+
 @Component({
     imports: [KbqSelectModule, ReactiveFormsModule],
     template: `
@@ -1980,7 +2089,7 @@ const ASYNC_OPTIONS_PAGE_SIZE = 10;
         <kbq-form-field>
             <kbq-select
                 [compareWith]="compareWith"
-                [showPreselectedValues]="true"
+                [showPreselectedValues]="showPreselectedValues"
                 [value]="value"
                 [virtualOptionFactory]="virtualOptionFactory"
             >
@@ -1997,6 +2106,7 @@ class SelectWithAsyncOptions {
     /** Starts empty: options only arrive once a page has been loaded. */
     options: CityOption[] = [];
     value: CityOption = { id: 0, name: 'Option #0' };
+    showPreselectedValues = true;
 
     compareWith = (a: CityOption | null, b: CityOption | null) => a?.id === b?.id;
     virtualOptionFactory = (value: CityOption) => new KbqVirtualOption(value, false, value.name);
@@ -6483,6 +6593,206 @@ describe('KbqSelect', () => {
                 expect(renderedOption.viewValue).toBe(instance.options[renderedOption.value.id].name);
             }));
         });
+
+        describe('filtering the data source', () => {
+            const getMatcherText = (componentFixture: ComponentFixture<unknown>): string =>
+                componentFixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement.textContent.trim();
+
+            const isPlaceholderRendered = (componentFixture: ComponentFixture<unknown>): boolean =>
+                !!componentFixture.debugElement.query(By.css('.kbq-select__placeholder'));
+
+            /** Narrows the source down to a window that excludes the selected option and recycles its view. */
+            const filterOut = (instance: CdkVirtualScrollFilteredSelect | CdkVirtualScrollFilteredMultiSelect) => {
+                instance.visible = instance.options.slice(60, 100);
+            };
+
+            it('should keep the trigger label when the selected option is filtered out', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue(instance.options[2]);
+                finishInit(fixture);
+
+                filterOut(instance);
+                finishInit(fixture);
+
+                expect(getMatcherText(fixture)).toBe(instance.options[2].name);
+                expect(instance.select().empty).toBe(false);
+            }));
+
+            it('should render the custom trigger while the selected option is filtered out', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelectWithCustomTrigger);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue(instance.options[2]);
+                finishInit(fixture);
+
+                filterOut(instance);
+                finishInit(fixture);
+
+                expect(getMatcherText(fixture)).toBe(`Custom: ${instance.options[2].name}`);
+                expect(isPlaceholderRendered(fixture)).toBe(false);
+            }));
+
+            it('should keep tags when the selected options are filtered out', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredMultiSelect);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue([instance.options[2], instance.options[5]]);
+                finishInit(fixture);
+
+                filterOut(instance);
+                finishInit(fixture);
+
+                const tagTexts = Array.from(
+                    fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement.querySelectorAll('kbq-tag')
+                ).map((tag) => (tag as HTMLElement).textContent!.trim());
+
+                expect(tagTexts).toEqual([instance.options[2].name, instance.options[5].name]);
+            }));
+
+            it('should not show another item label while option views are recycled', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue(instance.options[2]);
+                finishInit(fixture);
+
+                filterOut(instance);
+                // The very first pass after the source changed: the option views have been re-bound to other
+                // items, while the selection is only re-resolved in a microtask.
+                fixture.detectChanges();
+
+                expect(getMatcherText(fixture)).toBe(instance.options[2].name);
+
+                flush();
+            }));
+
+            it('should report the selected option, not the recycled one, while option views are recycled', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue(instance.options[2]);
+                finishInit(fixture);
+
+                filterOut(instance);
+                // Same window as above: the views already belong to other items, the selection is
+                // only re-resolved in a microtask. Consumers read these getters synchronously.
+                fixture.detectChanges();
+
+                expect((instance.select().selected as KbqVirtualOption).value).toBe(instance.options[2]);
+                expect(instance.select().firstSelected!.value).toBe(instance.options[2]);
+                // The selected option is no longer rendered, so the key manager must not activate it.
+                expect(instance.select().firstFiltered).toBe(true);
+
+                flush();
+            }));
+
+            it('should keep rendering the selected label when compareWith throws for a recycled view', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue(instance.options[2]);
+                finishInit(fixture);
+
+                const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+                // A comparator that only handles the values it considers equal, like a consumer
+                // reading a field that is absent on some of the items.
+                instance.select().compareWith = (a: CityOption, b: CityOption) => {
+                    if (a.id !== b.id) {
+                        throw new Error('unsupported pair');
+                    }
+
+                    return true;
+                };
+
+                filterOut(instance);
+
+                expect(() => fixture.detectChanges()).not.toThrow();
+                expect(getMatcherText(fixture)).toBe(instance.options[2].name);
+                expect(warnSpy).toHaveBeenCalled();
+
+                flush();
+                warnSpy.mockRestore();
+            }));
+
+            it('should reselect the rendered option when the filter is cleared', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue(instance.options[2]);
+                finishInit(fixture);
+
+                filterOut(instance);
+                finishInit(fixture);
+
+                instance.visible = [...instance.options];
+                finishInit(fixture);
+
+                const selected = instance.select().selectionModel.selected;
+
+                expect(selected.length).toBe(1);
+                expect(selected[0]).toBeInstanceOf(KbqOption);
+                expect(selected[0].value).toBe(instance.options[2]);
+            }));
+
+            it('should clear the trigger when the value is reset while the source is filtered', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                finishInit(fixture);
+                instance.control.setValue(instance.options[2]);
+                finishInit(fixture);
+
+                filterOut(instance);
+                finishInit(fixture);
+
+                instance.control.setValue(null);
+                finishInit(fixture);
+
+                expect(instance.select().empty).toBe(true);
+                expect(isPlaceholderRendered(fixture)).toBe(true);
+            }));
+
+            it('should render the label via factory for a value missing from the filtered source', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                // Server-side search: the value was never part of the currently loaded page of data.
+                instance.visible = instance.options.slice(0, 20);
+                finishInit(fixture);
+
+                instance.control.setValue(instance.options[100]);
+                finishInit(fixture);
+
+                expect(getMatcherText(fixture)).toBe(instance.options[100].name);
+            }));
+
+            it('should not select a value missing from the source when no virtualOptionFactory is provided', fakeAsync(() => {
+                const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
+                const instance = fixture.componentInstance;
+
+                // Nothing can resolve the value: it was never rendered, it is absent from the source,
+                // and there is neither a factory nor `showPreselectedValues` to build a label from it.
+                instance.virtualOptionFactory = undefined;
+                instance.visible = instance.options.slice(0, 20);
+                finishInit(fixture);
+
+                instance.control.setValue(instance.options[100]);
+                finishInit(fixture);
+
+                expect(instance.select().empty).toBe(true);
+                expect(isPlaceholderRendered(fixture)).toBe(true);
+            }));
+        });
     });
 
     describe('ErrorStateMatcher', () => {
@@ -6786,6 +7096,20 @@ describe('KbqSelect', () => {
 
             expect(testInstance.select().selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
             expect(triggerText.trim()).toBe('Option #0');
+        }));
+
+        it('should not keep an unmatched value without showPreselectedValues, even with a factory', fakeAsync(() => {
+            // The factory only says *how* to render an unresolved value. Without virtual scroll the whole
+            // list is rendered, so `showPreselectedValues` stays the opt-in for *whether* to render it.
+            testInstance.showPreselectedValues = false;
+            fixture.detectChanges();
+            testInstance.value = { id: 100, name: 'Option #100' };
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            expect(testInstance.select().empty).toBe(true);
+            expect(fixture.debugElement.query(By.css('.kbq-select__placeholder'))).toBeTruthy();
         }));
 
         it('should replace the preselected virtual option with the matching one once it is rendered', fakeAsync(() => {
