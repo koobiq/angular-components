@@ -1,6 +1,8 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { getSupportedInputTypes } from '@angular/cdk/platform';
-import { Directive, DoCheck, ElementRef, Input, OnChanges, OnDestroy, inject } from '@angular/core';
+import { AutofillMonitor } from '@angular/cdk/text-field';
+import { Directive, DoCheck, ElementRef, Input, OnChanges, OnDestroy, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -49,6 +51,7 @@ export class KbqInput
     implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
 {
     protected elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    private readonly autofillMonitor = inject(AutofillMonitor);
     ngControl = inject(NgControl, { optional: true, self: true });
     numberInput = inject(KbqNumberInput, { optional: true, self: true });
     parentForm = inject(NgForm, { optional: true });
@@ -69,6 +72,14 @@ export class KbqInput
      * @docs-private
      */
     focused: boolean = false;
+
+    private readonly autofilledState = signal(false);
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     * @docs-private
+     */
+    readonly autofilled = this.autofilledState.asReadonly();
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -216,6 +227,12 @@ export class KbqInput
 
         // Force setter to be called in case id was not specified.
         this.id = this.id;
+
+        // `monitor()` returns EMPTY off the browser platform, so this needs no `Platform` guard.
+        this.autofillMonitor
+            .monitor(this.elementRef)
+            .pipe(takeUntilDestroyed())
+            .subscribe(({ isAutofilled }) => this.autofilledState.set(isAutofilled));
     }
 
     ngOnChanges() {
@@ -223,6 +240,7 @@ export class KbqInput
     }
 
     ngOnDestroy() {
+        this.autofillMonitor.stopMonitoring(this.elementRef);
         this.stateChanges.complete();
     }
 

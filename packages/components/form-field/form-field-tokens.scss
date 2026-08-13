@@ -36,7 +36,9 @@
     --kbq-form-field-states-error-placeholder: var(--kbq-foreground-error-tertiary);
     --kbq-form-field-states-error-text: var(--kbq-foreground-error);
     --kbq-form-field-states-error-focused-focus-outline: var(--kbq-states-line-focus-error);
-    --kbq-form-field-states-autofill-border-color: var(--kbq-states-line-focus-theme);
+    /* Autofill only tints the background: it is a hint that the browser filled the field, not a state of
+       its own, and a themed border would be read as focus. The token is kept so it can be turned on. */
+    --kbq-form-field-states-autofill-border-color: var(--kbq-line-contrast-fade);
     --kbq-form-field-states-autofill-background: var(--kbq-background-theme-less);
     --kbq-form-field-states-autofill-placeholder: var(--kbq-foreground-contrast-tertiary);
     --kbq-form-field-states-autofill-text: var(--kbq-foreground-contrast);

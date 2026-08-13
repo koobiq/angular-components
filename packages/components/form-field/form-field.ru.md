@@ -109,6 +109,37 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-fiel
 })
 ```
 
+### Автозаполнение
+
+Когда браузер заполняет поле, `<kbq-form-field>` получает класс `kbq-form-field_autofilled`, а поле подсвечивается цветом `--kbq-form-field-states-autofill-background`. Собственные фон и цвет текста браузера закрашиваются, поэтому поле с автозаполнением выглядит одинаково во всех браузерах.
+
+Подсветка — самое слабое состояние: `focused`, ошибка, `disabled`, `inOverlay` и `noBorders` перекрывают её. Состояние определяется через `AutofillMonitor` из CDK, поэтому оно доступно и из кода — каждый контрол, который браузер может заполнить, предоставляет сигнал `autofilled`:
+
+```ts
+@ViewChild(KbqInput) input: KbqInput;
+
+// ...
+
+const filledByBrowser = this.input.autofilled();
+```
+
+Чтобы изменить или отключить подсветку, переопределите токены на поле — `!important` не нужен:
+
+```css
+.my-form-field {
+    /* выглядит так же, как обычное заполненное поле */
+    --kbq-form-field-states-autofill-background: var(--kbq-form-field-default-background);
+    --kbq-form-field-states-autofill-text: var(--kbq-form-field-default-text);
+}
+```
+
+| Токен                                           | На что влияет                                                                 |
+| ----------------------------------------------- | ----------------------------------------------------------------------------- |
+| `--kbq-form-field-states-autofill-background`   | фон поля                                                                      |
+| `--kbq-form-field-states-autofill-border-color` | рамка поля, по умолчанию совпадает с обычной                                  |
+| `--kbq-form-field-states-autofill-text`         | текст значения и каретка                                                      |
+| `--kbq-form-field-states-autofill-placeholder`  | плейсхолдер — никогда не виден, у поля с автозаполнением всегда есть значение |
+
 ### Поле для ввода пароля
 
 `<kbq-password-toggle>` - это компонент, который добавляет кнопку _"Показать пароль"_ для **заполненного** поля

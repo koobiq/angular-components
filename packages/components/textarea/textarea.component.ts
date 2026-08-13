@@ -1,5 +1,6 @@
 import { coerceBooleanProperty, coerceCssPixelValue } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
+import { AutofillMonitor } from '@angular/cdk/text-field';
 import {
     booleanAttribute,
     Directive,
@@ -14,7 +15,8 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Renderer2
+    Renderer2,
+    signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -53,6 +55,7 @@ export class KbqTextarea
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
     protected elementRef = inject<ElementRef<HTMLTextAreaElement>>(ElementRef);
+    private readonly autofillMonitor = inject(AutofillMonitor);
     ngControl = inject(NgControl, { optional: true, self: true });
     parentForm = inject(NgForm, { optional: true });
     parentFormGroup = inject(FormGroupDirective, { optional: true });
@@ -96,6 +99,14 @@ export class KbqTextarea
      * @docs-private
      */
     focused: boolean = false;
+
+    private readonly autofilledState = signal(false);
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     * @docs-private
+     */
+    readonly autofilled = this.autofilledState.asReadonly();
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -229,6 +240,12 @@ export class KbqTextarea
         this.parent?.animationDone.subscribe(() => this.ngOnInit());
 
         this.stateChanges.pipe(observeOn(asapScheduler), takeUntilDestroyed()).subscribe(() => this.grow());
+
+        // `monitor()` returns EMPTY off the browser platform, so this needs no `Platform` guard.
+        this.autofillMonitor
+            .monitor(this.elementRef)
+            .pipe(takeUntilDestroyed())
+            .subscribe(({ isAutofilled }) => this.autofilledState.set(isAutofilled));
     }
 
     ngOnInit() {
@@ -255,6 +272,7 @@ export class KbqTextarea
     }
 
     ngOnDestroy() {
+        this.autofillMonitor.stopMonitoring(this.elementRef);
         this.stateChanges.complete();
     }
 

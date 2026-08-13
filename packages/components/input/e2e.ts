@@ -34,6 +34,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
+                                    [class.kbq-form-field_autofilled]="cell.state.includes('autofill')"
                                 >
                                     <input
                                         kbqInput
@@ -50,6 +51,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
+                                    [class.kbq-form-field_autofilled]="cell.state.includes('autofill')"
                                 >
                                     <input
                                         kbqInput
@@ -67,6 +69,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
+                                    [class.kbq-form-field_autofilled]="cell.state.includes('autofill')"
                                 >
                                     <input
                                         kbqNormalizeWhitespace
@@ -184,7 +187,15 @@ export class E2eInputStateAndStyle {
         [{ state: ['focused'] }],
         [{ state: ['error'] }],
         [{ state: ['error', 'focused'] }],
-        [{ state: ['disabled'] }]
+        [{ state: ['disabled'] }],
+        // Autofill is faked through `kbq-form-field_autofilled`, the class `AutofillMonitor` drives at
+        // runtime — `:autofill` cannot be triggered synthetically. That covers the state half: which
+        // background wins when autofill meets focus, error or disabled. The mask that repaints over the
+        // browser's own background is keyed on the real pseudo-class and stays outside this grid.
+        [{ state: ['autofill'] }],
+        [{ state: ['autofill', 'focused'] }],
+        [{ state: ['autofill', 'error'] }],
+        [{ state: ['autofill', 'disabled'] }]
     ];
 
     protected readonly passwordRules = PasswordRules;

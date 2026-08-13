@@ -34,6 +34,7 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
@@ -171,13 +172,14 @@ export type KbqTagFocusEvent = KbqTagEvent & {
 // Warning: (ae-forgotten-export) The symbol "KbqTagTextControl" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class KbqTagInput implements KbqTagTextControl, OnChanges {
+export class KbqTagInput implements KbqTagTextControl, OnChanges, OnDestroy {
     constructor();
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
     readonly addOnPaste: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     autocompleteTrigger?: KbqAutocompleteTrigger | null | undefined;
+    readonly autofilled: _angular_core.Signal<boolean>;
     blur(event: FocusEvent): void;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -193,6 +195,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     ngControl: NgControl;
     // (undocumented)
     ngOnChanges(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     onFocus(): void;
     // (undocumented)
     onInput(): void;
@@ -221,6 +225,7 @@ export interface KbqTagInputEvent {
 // @public (undocumented)
 export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
     constructor();
+    readonly autofilled: _angular_core.Signal<boolean>;
     blur(): void;
     get canShowCleaner(): boolean;
     readonly change: _angular_core.OutputEmitterRef<KbqTagListChange>;

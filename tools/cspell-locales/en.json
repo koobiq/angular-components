@@ -6,6 +6,8 @@
     "caseSensitive": false,
     "words": [
         "actionbar",
+        "autofilled",
+        "autofills",
         "autoselect",
         "autotable",
         "behaviour",
@@ -51,6 +53,7 @@
         "stackblitz",
         "stylelintrc",
         "subfolders",
+        "textareas",
         "timepicker",
         "Topbar",
         "unclickable",

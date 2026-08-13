@@ -102,6 +102,37 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-fiel
 })
 ```
 
+### Autofill
+
+When the browser fills a field in, `<kbq-form-field>` gets the `kbq-form-field_autofilled` class and the field is tinted with `--kbq-form-field-states-autofill-background`. The browser's own background and text color are painted over, so an autofilled field looks the same in every browser.
+
+The tint is the weakest state: `focused`, an error, `disabled`, `inOverlay` and `noBorders` all win over it. The state is detected through the CDK's `AutofillMonitor`, so it is also readable from code — every control that can be autofilled exposes an `autofilled` signal:
+
+```ts
+@ViewChild(KbqInput) input: KbqInput;
+
+// ...
+
+const filledByBrowser = this.input.autofilled();
+```
+
+To change the tint or switch it off, override the tokens on the field — no `!important` needed:
+
+```css
+.my-form-field {
+    /* look exactly like a normally filled field */
+    --kbq-form-field-states-autofill-background: var(--kbq-form-field-default-background);
+    --kbq-form-field-states-autofill-text: var(--kbq-form-field-default-text);
+}
+```
+
+| Token                                           | Applies to                                                     |
+| ----------------------------------------------- | -------------------------------------------------------------- |
+| `--kbq-form-field-states-autofill-background`   | field background                                               |
+| `--kbq-form-field-states-autofill-border-color` | field border, the same as the default border unless overridden |
+| `--kbq-form-field-states-autofill-text`         | value text and caret                                           |
+| `--kbq-form-field-states-autofill-placeholder`  | placeholder — never visible, an autofilled field has a value   |
+
 ### Password input field
 
 `<kbq-password-toggle>` is a component that adds a _"Show password"_ button for **filled** `<input kbqInputPassword />` fields inside the `<kbq-form-field>` component.

@@ -151,6 +151,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 
         '[class.kbq-form-field_invalid]': 'invalid',
         '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-form-field_autofilled]': 'autofilled',
         '[class.kbq-form-field_no-borders]': 'noBorders()',
         '[class.kbq-form-field_in-overlay]': 'inOverlay()',
         '[class.kbq-form-field_horizontal]': 'horizontal()',
@@ -363,6 +364,14 @@ export class KbqFormField
     /** Whether the form field is disabled. */
     get disabled(): boolean {
         return !!this.control()?.disabled;
+    }
+
+    /**
+     * Whether the form field control's value was filled in by the browser. Controls that cannot be
+     * autofilled do not implement `autofilled`, and report `false` here.
+     */
+    get autofilled(): boolean {
+        return !!this.control()?.autofilled?.();
     }
 
     /** Ids last written to the control's `aria-describedby`, to skip redundant DOM writes. */

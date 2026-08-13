@@ -1,4 +1,5 @@
 ﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { AutofillMonitor } from '@angular/cdk/text-field';
 import {
     booleanAttribute,
     Directive,
@@ -8,8 +9,11 @@ import {
     Input,
     input,
     OnChanges,
-    output
+    OnDestroy,
+    output,
+    signal
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import { COMMA, ENTER, hasModifierKey, KbqFieldSizingContent, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
@@ -62,14 +66,20 @@ let nextUniqueId = 0;
     hostDirectives: [KbqFieldSizingContent],
     exportAs: 'kbqTagInput, kbqTagInputFor'
 })
-export class KbqTagInput implements KbqTagTextControl, OnChanges {
+export class KbqTagInput implements KbqTagTextControl, OnChanges, OnDestroy {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private defaultOptions = inject<KbqTagsDefaultOptions>(KBQ_TAGS_DEFAULT_OPTIONS);
     private trimDirective = inject(KbqTrim, { optional: true, self: true });
+    private readonly autofillMonitor = inject(AutofillMonitor);
     ngControl = inject(NgControl, { optional: true, self: true })!;
     autocompleteTrigger? = inject(KbqAutocompleteTrigger, { optional: true, self: true });
     /** Whether the control is focused. */
     focused: boolean = false;
+
+    private readonly autofilledState = signal(false);
+
+    /** Whether the control's value was filled in by the browser. */
+    readonly autofilled = this.autofilledState.asReadonly();
 
     /**
      * The list of key codes that will trigger a tagEnd event.
@@ -176,10 +186,20 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     constructor() {
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
+
+        // `monitor()` returns EMPTY off the browser platform, so this needs no `Platform` guard.
+        this.autofillMonitor
+            .monitor(this.elementRef)
+            .pipe(takeUntilDestroyed())
+            .subscribe(({ isAutofilled }) => this.autofilledState.set(isAutofilled));
     }
 
     ngOnChanges() {
         this._tagList.stateChanges.next();
+    }
+
+    ngOnDestroy() {
+        this.autofillMonitor.stopMonitoring(this.elementRef);
     }
 
     /** @docs-private */

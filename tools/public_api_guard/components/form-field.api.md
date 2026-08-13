@@ -114,6 +114,7 @@ export class KbqFieldsetItem {
 
 // @public
 export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
+    get autofilled(): boolean;
     // @deprecated
     canCleanerClearByEsc: boolean;
     get canShowCleaner(): boolean;
@@ -174,6 +175,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
 
 // @public
 export abstract class KbqFormFieldControl<T> {
+    readonly autofilled?: Signal<boolean>;
     readonly controlType?: string;
     readonly disabled: boolean;
     readonly empty: boolean;

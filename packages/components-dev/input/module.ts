@@ -30,6 +30,7 @@ import {
 } from 'packages/docs-examples/components/input';
 import { startWith } from 'rxjs';
 import { DevThemeToggle } from '../theme-toggle';
+import { DevAutofill } from './autofill';
 
 @Component({
     selector: 'dev-examples',
@@ -68,7 +69,8 @@ export class DevDocsExamples {}
         DevDocsExamples,
         KbqNormalizeWhitespace,
         DevThemeToggle,
-        KbqToggleComponent
+        KbqToggleComponent,
+        DevAutofill
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],

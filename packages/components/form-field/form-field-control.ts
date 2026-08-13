@@ -1,3 +1,4 @@
+import { Signal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -35,6 +36,15 @@ export abstract class KbqFormFieldControl<T> {
 
     /** Whether the control is in an error state. */
     readonly errorState: boolean;
+
+    /**
+     * Whether the control's value was filled in by the browser.
+     *
+     * Implement it only on controls that can actually be autofilled — text inputs and textareas. It is a
+     * signal rather than a plain property because the form field reads it from a host binding and runs
+     * `OnPush`: a signal read there marks the form field dirty on its own.
+     */
+    readonly autofilled?: Signal<boolean>;
 
     /**
      * An optional name for the control type that can be used to distinguish `kbq-form-field` elements

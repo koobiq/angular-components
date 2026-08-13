@@ -1,6 +1,12 @@
 <dev-theme-toggle />
 <hr />
 
+<div class="dev-container">
+    <dev-autofill />
+</div>
+
+<hr />
+
 <div>
     <kbq-toggle [(ngModel)]="disabled" (ngModelChange)="$event ? control.disable() : control.enable()">
         make all controls disabled
