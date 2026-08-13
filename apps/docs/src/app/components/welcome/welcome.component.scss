@@ -74,3 +74,38 @@
         padding: 0 var(--kbq-size-7xl) 160px var(--kbq-size-7xl);
     }
 }
+
+.docs-welcome__category-item-title {
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-welcome__category-item {
+    border-radius: var(--kbq-size-border-radius);
+
+    &:hover,
+    &:focus-visible {
+        .docs-welcome__category-item-title {
+            color: var(--kbq-states-foreground-theme-hover);
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--kbq-states-foreground-theme-hover);
+    }
+}
+
+.docs-welcome__category-item:focus {
+    border-color: var(--kbq-states-line-focus-theme);
+}
+
+.docs-welcome__header {
+    font-family: Inter;
+    font-size: 36px;
+    line-height: 44px;
+    letter-spacing: normal;
+    font-weight: 700;
+    text-transform: none;
+    font-feature-settings:
+        'ss01' on,
+        'ss04' on;
+}

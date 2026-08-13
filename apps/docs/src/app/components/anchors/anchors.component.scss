@@ -30,3 +30,33 @@
 .docs-anchors__element_2 {
     padding-left: 48px;
 }
+
+.docs-anchors {
+    background-color: var(--kbq-background-bg);
+}
+
+.docs-anchors__link {
+    outline: none;
+    text-decoration: none;
+    color: inherit;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.docs-anchors__element {
+    &:first-child {
+        padding: 0 0 0 var(--kbq-size-l);
+        margin: 0;
+
+        & .docs-anchors__link {
+            padding: var(--kbq-size-xs) var(--kbq-size-l) var(--kbq-size-xs) 0;
+        }
+    }
+
+    &.docs-anchors__element_active {
+        box-shadow: inset 3px 0 0 var(--kbq-foreground-contrast-secondary);
+    }
+}

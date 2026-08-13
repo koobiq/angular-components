@@ -1,3 +1,5 @@
+@use '../dist/components/core/styles/common/tokens';
+
 .docs-icon-preview-modal .kbq-modal-body {
     display: flex;
     flex-direction: column;
@@ -12,6 +14,8 @@
     padding-bottom: 40px;
 
     text-align: center;
+
+    background: var(--kbq-background-bg-secondary);
 
     --icon-accent-color: var(--kbq-foreground-error);
 }
@@ -64,4 +68,17 @@
     .kbq-badge {
         cursor: pointer;
     }
+}
+
+.docs-icon-preview-modal__content .kbq-select,
+.docs-icon-preview-modal__buttons .kbq-button,
+.kbq-select-overlay .docs-icon-preview-modal__select-option,
+.docs-icon-preview-modal__description .kbq-badge {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+}
+
+// `.kbq-dl` is in the selector for weight: `__description` is itself the `kbq-dl` element, and the
+// library sets the term typography as `.kbq-dl .kbq-dd`, so two class names here would only tie with it.
+.kbq-dl.docs-icon-preview-modal__description .kbq-dd {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
 }

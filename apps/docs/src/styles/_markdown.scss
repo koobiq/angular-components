@@ -16,3 +16,7 @@
         margin-bottom: 0 !important;
     }
 }
+
+.docs-markdown__a:focus {
+    outline: var(--kbq-link-state-focused-outline) solid;
+}

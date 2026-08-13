@@ -1,4 +1,5 @@
 @use '../dist/components/core/styles/common/select';
+@use '../dist/components/core/styles/common/tokens';
 
 .docs-sidenav {
     position: sticky;
@@ -23,6 +24,10 @@
 
     gap: var(--kbq-size-m);
     padding: var(--kbq-size-xl) var(--kbq-size-l) var(--kbq-size-xl) var(--kbq-size-xxl);
+
+    &.docs-top-overflown {
+        box-shadow: 0 9px 8px -12px #6c739480;
+    }
 }
 
 .docs-sidenav__menu {
@@ -140,5 +145,39 @@
         .docs-sidenav__header {
             padding-right: var(--kbq-size-xxl);
         }
+    }
+}
+
+.docs-sidenav {
+    background-color: var(--kbq-background-bg-secondary);
+
+    .docs-sidenav__header-text path {
+        fill: var(--kbq-foreground-contrast);
+    }
+
+    .kbq-tree-option:hover {
+        background: var(--kbq-states-background-transparent-hover);
+    }
+
+    .kbq-tree-option.kbq-selected,
+    .kbq-tree-option.kbq-selected:hover {
+        background: var(--kbq-states-background-transparent-active);
+    }
+
+    .kbq-option-text > .docs-sidenav__category-text {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
+    }
+}
+
+@media (width <= 768px) {
+    .docs-sidenav {
+        background-color: var(--kbq-background-bg);
+    }
+}
+
+@media (width <= 768px) {
+    // Level switches with the viewport, so it can't be a class on the element.
+    .docs-sidenav__category {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
     }
 }
