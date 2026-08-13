@@ -155,6 +155,23 @@ describe('KbqThemeService', () => {
         expect(document.body.classList.contains('kbq-acme-dark')).toBe(true);
     });
 
+    it('keeps the class applied when two registered themes share a className, regardless of array order', () => {
+        const { service } = setup(false);
+
+        // A named theme layered onto the same class as an existing entry — e.g. a custom name pinned to
+        // the built-in light class, appended after it, exactly as a consumer registering extra named
+        // pins onto the default set would do.
+        service.setThemes([
+            { name: 'light', className: 'kbq-light', colorScheme: 'light' },
+            { name: 'dark', className: 'kbq-dark', colorScheme: 'dark' },
+            { name: 'Day', className: 'kbq-light', colorScheme: 'light' }
+        ]);
+        TestBed.tick();
+
+        expect(service.currentTheme()?.name).toBe('light');
+        expect(document.body.classList.contains('kbq-light')).toBe(true);
+    });
+
     it("exposes colorScheme as the current theme's own polarity, independent of its name", () => {
         const { service } = setup(false);
 

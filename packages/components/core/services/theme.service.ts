@@ -357,11 +357,16 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     }
 
     private applyTheme(current: T | null, themes: T[]) {
-        for (const theme of themes) {
-            if (theme === current) {
-                this.renderer.addClass(this.document.body, theme.className);
+        // By `className`, not by theme object identity — multiple registered themes (e.g. a custom set of
+        // names layered onto the same built-in light/dark classes) can share a `className`. Comparing by
+        // object would remove a class that another, differently-named entry just added for the same reason.
+        const classNames = new Set(themes.map((theme) => theme.className));
+
+        for (const className of classNames) {
+            if (className === current?.className) {
+                this.renderer.addClass(this.document.body, className);
             } else {
-                this.renderer.removeClass(this.document.body, theme.className);
+                this.renderer.removeClass(this.document.body, className);
             }
         }
     }
