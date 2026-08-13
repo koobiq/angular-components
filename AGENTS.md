@@ -122,7 +122,7 @@ yarn run approve-api               # Approve API changes (updates tools/public_a
 
 ## Best Practices
 
-<!-- Based on Angular team recommendations: https://angular.dev/assets/context/best-practices.md -->
+<!-- Adapted from Angular team recommendations: https://v20.angular.dev/assets/context/best-practices.md -->
 
 You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
@@ -133,7 +133,6 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Avoid the `any` type; use `unknown` when type is uncertain
 - Prefer `readonly` where appropriate (e.g., signals, injections)
 - Use `protected` for template bindings
-- All `public` methods and properties MUST have a comment describing their purpose (JSDoc format is optional)
 
 ### Angular Best Practices
 
@@ -142,18 +141,23 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use signals for state management
 - Implement lazy loading for feature routes
 - Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
-- Use `NgOptimizedImage` for all static images.
-- `NgOptimizedImage` does not work for inline base64 images.
+- Use `NgOptimizedImage` for all static images (does not work for inline base64 images).
+
+### Server Side Rendering (SSR)
+
+- Use `inject(KBQ_WINDOW)` instead of the global `window`
 
 ### Accessibility Requirements
 
 - It MUST pass all AXE checks.
 - It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+- Source all component-provided default ARIA text from `kbqInjectA11yLocaleConfiguration()`
 
 ### Components
 
 - Keep components small and focused on a single responsibility
 - Use `input()` and `output()` functions instead of decorators
+- Use `model()` for two-way bound properties with `[(prop)]` syntax instead of pairing `input()` with `output()`
 - Use `computed()` for derived state
 - Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
 - Prefer inline templates for small components
@@ -180,10 +184,16 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
 - Use the async pipe to handle observables
 - Do not assume globals like (`new Date()`) are available.
-- Do not write arrow functions in templates (they are not supported).
 
 ### Services
 
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
+
+### Comments
+
+- Prefer clear naming and structure over comments. Add concise comments only to explain non-obvious rationale or constraints; never restate the code
+- Use `/** JSDoc */` for user-facing public API documentation and `//` for implementation comments. Omit details apparent from names, types, or signatures
+- Do NOT commit commented-out code or comments describing change history
+- Update or remove comments that become outdated because of your changes
