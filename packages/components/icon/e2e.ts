@@ -353,21 +353,19 @@ export class E2eIconStateAndStyle {
                 </div>
 
                 <div>
-                    <button kbq-button data-testid="e2eIconSvgDropdownTrigger" [kbqDropdownTriggerFor]="dropdown">
-                        Dropdown
-                        <i kbq-icon="kbq-chevron-down-s_16"></i>
+                    <button kbq-dropdown-item>
+                        <i kbq-icon="kbq-circle-check_16"></i>
+                        Item with icon
                     </button>
-
-                    <kbq-dropdown #dropdown="kbqDropdown">
-                        <button kbq-dropdown-item>
-                            <i kbq-icon="kbq-circle-check_16"></i>
-                            Item with icon
-                        </button>
-                    </kbq-dropdown>
                 </div>
             </div>
         </div>
     `,
+    // The dropdown item above is rendered inline rather than inside an open kbq-dropdown, so it never
+    // receives the panel's styles through the overlay. Pulling them in here is what keeps it looking
+    // like a dropdown item — which is the point of the capture, since the icon inside it is what is
+    // being checked.
+    styleUrls: ['../dropdown/dropdown-tokens.scss', '../dropdown/dropdown.scss'],
     styles: `
         :host {
             height: 570px;
