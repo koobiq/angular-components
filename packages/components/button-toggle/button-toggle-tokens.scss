@@ -11,6 +11,18 @@
     --kbq-button-toggle-size-item-padding-vertical: var(--kbq-size-3xs);
     --kbq-button-toggle-size-item-content-gap-horizontal: var(--kbq-size-xxs);
     --kbq-button-toggle-size-item-focus-outline-width: var(--kbq-size-3xs);
+    // How far an item's hit area reaches past the pill it paints. Measured from the inner button's
+    // border box, one item border inside the item's own — hence the border-width term in each. `-gap` is
+    // the half of the inter-item gap an item claims; the other two cover the group's padding.
+    --kbq-button-toggle-size-item-hit-area-gap: calc(
+        var(--kbq-size-border-width) + var(--kbq-button-toggle-size-container-content-gap-horizontal) / 2
+    );
+    --kbq-button-toggle-size-item-hit-area-horizontal: calc(
+        var(--kbq-size-border-width) + var(--kbq-button-toggle-size-container-padding-horizontal)
+    );
+    --kbq-button-toggle-size-item-hit-area-vertical: calc(
+        var(--kbq-size-border-width) + var(--kbq-button-toggle-size-container-padding-vertical)
+    );
     /* THEME TOKENS */
     --kbq-button-toggle-container-background: var(--kbq-background-contrast-fade);
     --kbq-button-toggle-item-default-background: var(--kbq-background-transparent);

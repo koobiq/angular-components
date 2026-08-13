@@ -179,6 +179,166 @@ test.describe('KbqButtonToggleModule', () => {
 
             await expectIconsCentred(locator);
         });
+
+        /**
+         * An item paints a pill smaller than the space the group gives it, and the `gap` and `padding`
+         * around it answer the pointer too — see the `::before` in button-toggle.scss. Nothing about the
+         * rendered pixels changes, so a baseline cannot cover any of this.
+         */
+        test.describe('hit area', () => {
+            /**
+             * The `normal` column of one orientation: the only one in a row whose items carry neither a
+             * faked state class nor `disabled`, `role` telling the exclusive rows from the `multiple` ones.
+             * Scrolled into view because `elementFromPoint` answers `null` outside the viewport, and this
+             * harness lays every state of every orientation out in one oversized table.
+             */
+            const openPlainGroup = async (page: Page, vertical: boolean) => {
+                await page.goto('/E2eButtonToggleStates');
+
+                const group = getScreenshotTarget(getComponent(page))
+                    .locator(
+                        `kbq-button-toggle-group[role="radiogroup"][aria-orientation="${
+                            vertical ? 'vertical' : 'horizontal'
+                        }"]`
+                    )
+                    .filter({ has: page.locator('button[aria-label="normal"]') });
+
+                await group.scrollIntoViewIfNeeded();
+
+                return group;
+            };
+
+            /** Border boxes of the buttons that paint the pills, in document order. */
+            const getPillBoxes = (group: Locator) =>
+                group.evaluate((element) =>
+                    Array.from(element.querySelectorAll(':scope > kbq-button-toggle > button')).map((button) => {
+                        const { x, y, width, height } = button.getBoundingClientRect();
+
+                        return { x, y, width, height };
+                    })
+                );
+
+            /**
+             * Which item owns a viewport point, as the browser's own hit testing resolves it. The tag must
+             * come back `button` rather than the item host: the button is what carries the click handler.
+             */
+            const getOwnerAt = (page: Page, x: number, y: number) =>
+                page.evaluate(
+                    ([pointX, pointY]) => {
+                        const element = document.elementFromPoint(pointX, pointY);
+                        const toggle = element?.closest('kbq-button-toggle');
+
+                        return {
+                            tag: element ? element.tagName.toLowerCase() : null,
+                            index: toggle ? Array.from(toggle.parentElement!.children).indexOf(toggle) : -1
+                        };
+                    },
+                    [x, y]
+                );
+
+            type Box = { x: number; y: number; width: number; height: number };
+
+            /** `along` is the axis the items run on, `across` the other, so both orientations read alike. */
+            const getAxes = (page: Page, vertical: boolean) => ({
+                at: (along: number, across: number) =>
+                    vertical ? getOwnerAt(page, across, along) : getOwnerAt(page, along, across),
+                along: (box: Box) => (vertical ? [box.y, box.y + box.height] : [box.x, box.x + box.width]),
+                across: (box: Box) => (vertical ? [box.x, box.x + box.width] : [box.y, box.y + box.height]),
+                alongCentre: (box: Box) => (vertical ? box.y + box.height / 2 : box.x + box.width / 2),
+                acrossCentre: (box: Box) => (vertical ? box.x + box.width / 2 : box.y + box.height / 2),
+                alongEnd: (box: Box) => (vertical ? box.y + box.height : box.x + box.width)
+            });
+
+            for (const vertical of [false, true]) {
+                const orientation = vertical ? 'vertical' : 'horizontal';
+
+                test(`hands the gap between two items over at its midline, ${orientation}`, async ({ page }) => {
+                    const axes = getAxes(page, vertical);
+                    const [first, second] = await getPillBoxes(await openPlainGroup(page, vertical));
+                    const gapMid = (axes.alongEnd(first) + axes.along(second)[0]) / 2;
+                    const across = axes.acrossCentre(first);
+
+                    // no dead strip in between, and no overlap either
+                    expect(await axes.at(gapMid - 1, across)).toEqual({ tag: 'button', index: 0 });
+                    expect(await axes.at(gapMid + 1, across)).toEqual({ tag: 'button', index: 1 });
+                });
+
+                test(`reaches into the padding the group frames its items with, ${orientation}`, async ({ page }) => {
+                    const axes = getAxes(page, vertical);
+                    const group = await openPlainGroup(page, vertical);
+                    const box = (await group.boundingBox())!;
+                    const pills = await getPillBoxes(group);
+                    const last = pills.length - 1;
+                    const [alongStart, alongEnd] = axes.along(box);
+                    const [acrossStart, acrossEnd] = axes.across(box);
+
+                    // the outermost items have no neighbour to share with, so they take the padding whole
+                    expect(await axes.at(alongStart + 1, axes.acrossCentre(pills[0]))).toEqual({
+                        tag: 'button',
+                        index: 0
+                    });
+                    expect(await axes.at(alongEnd - 1, axes.acrossCentre(pills[last]))).toEqual({
+                        tag: 'button',
+                        index: last
+                    });
+
+                    // and on the cross axis every item does, on both sides
+                    expect(await axes.at(axes.alongCentre(pills[0]), acrossStart + 1)).toEqual({
+                        tag: 'button',
+                        index: 0
+                    });
+                    expect(await axes.at(axes.alongCentre(pills[0]), acrossEnd - 1)).toEqual({
+                        tag: 'button',
+                        index: 0
+                    });
+                });
+            }
+
+            test('paints the hover state from a pointer in the gap', async ({ page }) => {
+                const group = await openPlainGroup(page, false);
+                const second = group.locator('kbq-button-toggle').nth(1).locator('button');
+                const [first, secondBox] = await getPillBoxes(group);
+                const getBackground = () =>
+                    second.evaluate((element: HTMLElement) => getComputedStyle(element).backgroundColor);
+
+                const before = await getBackground();
+
+                // 1px past the midline, i.e. still outside the pill this must light up
+                await page.mouse.move((first.x + first.width + secondBox.x) / 2 + 1, first.y + first.height / 2);
+
+                expect(await getBackground()).not.toBe(before);
+            });
+
+            test('activates a toggle from a click in the gap', async ({ page }) => {
+                const group = await openPlainGroup(page, false);
+                const second = group.locator('kbq-button-toggle').nth(1).locator('button');
+                const [first, secondBox] = await getPillBoxes(group);
+
+                await expect(second).toHaveAttribute('aria-checked', 'false');
+
+                await page.mouse.click((first.x + first.width + secondBox.x) / 2 + 1, first.y + first.height / 2);
+
+                await expect(second).toHaveAttribute('aria-checked', 'true');
+            });
+
+            test('mirrors the outermost offsets under dir="rtl"', async ({ page }) => {
+                const group = await openPlainGroup(page, false);
+
+                await page.evaluate(() => document.documentElement.setAttribute('dir', 'rtl'));
+
+                const box = (await group.boundingBox())!;
+                const pills = await getPillBoxes(group);
+                const across = box.y + box.height / 2;
+
+                // the first item is laid out at the trailing edge now, so it claims the padding there
+                expect(pills[0].x).toBeGreaterThan(pills[pills.length - 1].x);
+                expect(await getOwnerAt(page, box.x + box.width - 1, across)).toEqual({ tag: 'button', index: 0 });
+                expect(await getOwnerAt(page, box.x + 1, across)).toEqual({
+                    tag: 'button',
+                    index: pills.length - 1
+                });
+            });
+        });
     });
 
     test.describe('E2eButtonToggleStatesStretched', () => {

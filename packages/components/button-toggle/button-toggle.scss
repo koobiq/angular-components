@@ -19,17 +19,24 @@
 
     .kbq-button-toggle {
         display: flex;
-        overflow: hidden;
         justify-content: flex-start;
         align-items: center;
+
+        // Must not clip: the button's hit area below reaches outside this box. Not `overflow: clip` with
+        // an `overflow-clip-margin` — Chromium rejects math functions there, so the margin cannot follow
+        // the tokens the offsets come from and computes to `0px`, clipping the hit area away.
+        overflow: visible;
+
+        // What that clip used to give for free: a flex item's automatic minimum size is zero only while
+        // its `overflow` is non-`visible`, and that is what lets the label truncate.
+        min-width: 0;
 
         // Content-box on purpose, and load-bearing. `--kbq-button-toggle-size-item-height` is 22px,
         // not the 24px of the design's `--kbq-size-xxl`: DS-3136 subtracted the border it added here
         // from the token rather than from the rendered box, so the item only reaches its designed
         // 24px while the border sits outside the declared height. A global `border-box` reset in a
         // consuming application would pull the border back inside and leave the item 2px short —
-        // and the inner button, which is sized from the same token, would overflow the shrunken
-        // content box and be clipped by `overflow: hidden` above.
+        // and the inner button, which is sized from the same token, would then spill past it.
         box-sizing: content-box;
 
         height: var(--kbq-button-toggle-size-item-height);
@@ -59,6 +66,16 @@
                     [button-toggle-size-item-padding-horizontal,
                     button-toggle-size-item-focus-outline-width]
                 );
+
+            // Hit area over the gutters the group's `gap` and `padding` leave around the pill this button
+            // paints, so the highlight does not drop out between segments — the same split as the navbar
+            // item (DS-2558). On the button, not the item host, so pointer events resolve to it and the
+            // gutter is clickable too. `::before` because `::after` is the `.kbq-progress` shimmer.
+            // Offsets are per orientation, below.
+            &:before {
+                content: '';
+                position: absolute;
+            }
 
             & .kbq-button-wrapper {
                 width: 100%;
@@ -117,6 +134,10 @@
         }
     }
 
+    // Hit-area offsets, one orientation each — the vertical block below is this one with the axes
+    // swapped. The gap is split at its midline so two neighbours tile it rather than overlap, which would
+    // hand the whole gutter to whichever paints last; the outermost sides have no neighbour to share with
+    // and take the group's padding instead, leaving no point inside the group unclaimed.
     &:not(.kbq-button-toggle_vertical) {
         .kbq-button-toggle {
             > .kbq-button,
@@ -124,6 +145,39 @@
                 max-width: 100%;
 
                 height: var(--kbq-button-toggle-size-item-height);
+
+                &:before {
+                    inset-block: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
+                    inset-inline: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-gap));
+                }
+            }
+
+            &:first-child > :is(.kbq-button, .kbq-button-icon):before {
+                inset-inline-start: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
+            }
+
+            &:last-child > :is(.kbq-button, .kbq-button-icon):before {
+                inset-inline-end: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
+            }
+        }
+    }
+
+    &.kbq-button-toggle_vertical {
+        .kbq-button-toggle {
+            > .kbq-button,
+            > .kbq-button-icon {
+                &:before {
+                    inset-inline: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-horizontal));
+                    inset-block: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-gap));
+                }
+            }
+
+            &:first-child > :is(.kbq-button, .kbq-button-icon):before {
+                inset-block-start: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
+            }
+
+            &:last-child > :is(.kbq-button, .kbq-button-icon):before {
+                inset-block-end: calc(-1 * var(--kbq-button-toggle-size-item-hit-area-vertical));
             }
         }
     }
