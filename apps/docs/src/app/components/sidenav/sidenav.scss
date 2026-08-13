@@ -108,8 +108,8 @@
 
             .kbq-tree-option {
                 border-radius: 0;
-                font-size: 16px;
-                line-height: 24px;
+                font-size: var(--kbq-typography-text-big-font-size);
+                line-height: var(--kbq-typography-text-big-line-height);
                 min-height: 48px;
                 padding: calc(var(--kbq-size-m) - var(--kbq-size-3xs)) calc(var(--kbq-size-l) - var(--kbq-size-3xs));
 
@@ -131,8 +131,9 @@
         }
 
         .docs-sidenav__category-text {
-            font-size: 16px !important;
-            line-height: 24px !important;
+            // `!important` stays: this has to beat the `subheading` level set outside the media query.
+            font-size: var(--kbq-typography-text-big-font-size) !important;
+            line-height: var(--kbq-typography-text-big-line-height) !important;
         }
     }
 }

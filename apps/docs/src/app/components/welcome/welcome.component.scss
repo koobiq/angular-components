@@ -1,3 +1,5 @@
+@use '../dist/components/core/styles/common/tokens';
+
 .docs-welcome {
     display: flex;
     flex-direction: column;
@@ -99,13 +101,5 @@
 }
 
 .docs-welcome__header {
-    font-family: Inter;
-    font-size: 36px;
-    line-height: 44px;
-    letter-spacing: normal;
-    font-weight: 700;
-    text-transform: none;
-    font-feature-settings:
-        'ss01' on,
-        'ss04' on;
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
 }
