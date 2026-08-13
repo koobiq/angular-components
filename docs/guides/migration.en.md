@@ -17,7 +17,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 11. **20.3.0**: the button-toggle review — ARIA semantics, keyboard navigation and signal inputs.
 12. **20.3.0**: the form-field review — signals, accessibility and the removal of `mixinColor`.
 13. **20.3.0**: the theme service review — signals, `auto` mode and built-in persistence.
-13. **20.3.0**: explicit prefix and suffix slots for tag content.
+14. **20.3.0**: explicit prefix and suffix slots for tag content.
 
 ### 1. Upgrade to 18.5.3
 
@@ -767,7 +767,7 @@ themeService.currentTheme(); // read directly, or wrap with toObservable() if yo
 
 **Custom themes and DI-based setup.** `setThemes()` still accepts any array of `{ name, className, colorScheme? }` objects — `colorScheme` (`'light' | 'dark'`) is optional: when set, it's each theme's own polarity, independent of its `name`, and is what `colorScheme()` (and `toggle()`) key off; when omitted, `colorScheme()` falls back to the OS preference for that theme. New: `kbqThemeProvider({ themes, mode, storageKey, autoLight, autoDark })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively. The active theme is always applied as a CSS class on `<body>` — the design tokens' `.kbq-light`/`.kbq-dark` styles depend on it, so there's no attribute-based alternative. `auto` resolves to the theme named `autoLight`/`autoDark` (`'light'`/`'dark'` by default) — set these if your custom theme set doesn't use those names, otherwise `auto` won't match any registered theme.
 
-### 13. Explicit tag content slots (20.3.0)
+### 14. Explicit tag content slots (20.3.0)
 
 Until 20.3.0 every directly projected element with `kbq-icon` was placed before the tag text, regardless of its position in the template. This implicit rule made icon placement depend on the component's projection selector and made the markup easy to break. Tag content now has explicit `kbqTagPrefix` and `kbqTagSuffix` slots:
 
