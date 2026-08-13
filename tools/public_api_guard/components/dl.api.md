@@ -4,62 +4,72 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
-import * as i0 from '@angular/core';
+import * as _angular_core from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
-import { OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { KbqResizerDirection } from '@koobiq/components/resizer';
+import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 
 // @public (undocumented)
 export class KbqDdComponent {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDdComponent, "kbq-dd", never, {}, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDdComponent, "kbq-dd", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDdComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDdComponent, never>;
 }
 
 // @public
 export type KbqDlAlign = 'start' | 'center' | 'end';
 
 // @public (undocumented)
-export class KbqDlComponent implements AfterContentInit, OnDestroy {
-    readonly horizontalAlign: i0.InputSignal<KbqDlAlign>;
+export class KbqDlComponent {
+    constructor();
+    readonly columnMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly columnResizable: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly columnWidth: _angular_core.ModelSignal<number | null>;
     // (undocumented)
-    readonly minWidth: i0.InputSignal<number>;
+    protected get currentColumnWidth(): number;
+    protected handleColumnResize(input: KbqResizerSizeChangeEvent): void;
+    protected handleResizeDblClick(event: MouseEvent): void;
+    protected handleResizeKeydown(event: KeyboardEvent): void;
+    readonly horizontalAlign: _angular_core.InputSignal<KbqDlAlign>;
+    protected readonly isVertical: _angular_core.Signal<boolean>;
     // (undocumented)
-    ngAfterContentInit(): void;
+    protected get maxColumnWidth(): number;
+    // @deprecated
+    readonly minWidth: _angular_core.InputSignal<number | undefined>;
+    protected readonly normalizedColumnMinWidth: _angular_core.Signal<number>;
+    readonly remainingColumnMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
+    protected readonly resizeDirection: _angular_core.WritableSignal<KbqResizerDirection>;
+    readonly resizerAriaLabel: _angular_core.InputSignal<string | undefined>;
+    protected readonly resizerVisible: _angular_core.Signal<boolean>;
+    protected readonly resolvedResizerAriaLabel: _angular_core.Signal<string>;
+    readonly vertical: _angular_core.InputSignal<boolean | null>;
+    readonly verticalAlign: _angular_core.InputSignal<KbqDlAlign>;
+    readonly verticalBreakpoint: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly wide: _angular_core.InputSignal<boolean>;
     // (undocumented)
-    ngOnDestroy(): void;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "verticalBreakpoint": { "alias": "verticalBreakpoint"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "columnResizable": { "alias": "columnResizable"; "required": false; "isSignal": true; }; "columnWidth": { "alias": "columnWidth"; "required": false; "isSignal": true; }; "columnMinWidth": { "alias": "columnMinWidth"; "required": false; "isSignal": true; }; "remainingColumnMinWidth": { "alias": "remainingColumnMinWidth"; "required": false; "isSignal": true; }; "resizerAriaLabel": { "alias": "resizerAriaLabel"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; }, { "columnWidth": "columnWidthChange"; }, never, ["*"], true, never>;
     // (undocumented)
-    readonly resizeStream: Subject<Event>;
-    // (undocumented)
-    vertical: boolean | null;
-    readonly verticalAlign: i0.InputSignal<KbqDlAlign>;
-    // (undocumented)
-    readonly wide: i0.InputSignal<boolean>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; }; }, {}, never, ["*"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDlComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDlComponent, never>;
 }
 
 // @public (undocumented)
 export class KbqDlModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDlModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDlModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqDlModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDlModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent], [typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent], [typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent]>;
 }
 
 // @public (undocumented)
 export class KbqDtComponent {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDtComponent, "kbq-dt", never, {}, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDtComponent, "kbq-dt", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDtComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDtComponent, never>;
 }
 
 // (No @packageDocumentation comment for this package)

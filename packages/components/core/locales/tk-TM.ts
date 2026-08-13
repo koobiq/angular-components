@@ -12,7 +12,8 @@ export const tkTMLocaleData = {
         nextMonth: 'Indiki aý',
         clear: 'Arassala',
         showPassword: 'Paroly görkez',
-        hidePassword: 'Paroly gizle'
+        hidePassword: 'Paroly gizle',
+        resizeColumns: 'Sütünleriň giňligini üýtget'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

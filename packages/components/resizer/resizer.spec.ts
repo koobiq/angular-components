@@ -51,7 +51,7 @@ const windowStub = (boxSizing: 'content-box' | 'border-box'): Provider => ({
     standalone: true,
     template: `
         <div kbqResizable>
-            <div [kbqResizer]="direction()" (sizeChange)="sizeChange($event)"></div>
+            <div [kbqResizer]="direction()" [cursor]="cursor()" (sizeChange)="sizeChange($event)"></div>
         </div>
     `
 })
@@ -60,6 +60,7 @@ export class TestResizer {
     readonly resizable = viewChild.required(KbqResizable);
 
     readonly direction = signal<KbqResizerDirection>([1, 0]);
+    readonly cursor = signal<string | null>(null);
 
     readonly sizeChange = jest.fn();
 }
@@ -82,6 +83,31 @@ describe(KbqResizer.name, () => {
         fixture.detectChanges();
 
         expect(getResizerElement(fixture).style.cursor).toBe(cursor);
+    });
+
+    it('should override the direction-derived cursor with the `cursor` input', () => {
+        const fixture = createComponent(TestResizer);
+
+        fixture.componentInstance.direction.set([1, 0]);
+        fixture.componentInstance.cursor.set('col-resize');
+        fixture.detectChanges();
+
+        expect(getResizerElement(fixture).style.cursor).toBe('col-resize');
+    });
+
+    it('should fall back to the direction-derived cursor when the `cursor` input is empty', () => {
+        const fixture = createComponent(TestResizer);
+
+        fixture.componentInstance.direction.set([0, 1]);
+        fixture.componentInstance.cursor.set('col-resize');
+        fixture.detectChanges();
+
+        expect(getResizerElement(fixture).style.cursor).toBe('col-resize');
+
+        fixture.componentInstance.cursor.set(null);
+        fixture.detectChanges();
+
+        expect(getResizerElement(fixture).style.cursor).toBe('ns-resize');
     });
 
     it('should emit sizeChange event when resizing', async () => {

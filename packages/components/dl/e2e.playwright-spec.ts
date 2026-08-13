@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 test.describe('KbqDlModule', () => {
@@ -10,6 +10,71 @@ test.describe('KbqDlModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
+        });
+    });
+
+    test.describe('E2eDlResizable', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eDlResizable');
+        const getList = (block: Locator) => block.locator('.kbq-dl');
+        const getSeparator = (block: Locator) => block.getByRole('separator');
+        const getFirstTerm = (block: Locator) => block.locator('.kbq-dt').first();
+
+        const resizedClass = /(?:^|\s)kbq-dl_resized(?:\s|$)/;
+
+        test('should widen the first column when the separator is dragged to the right', async ({ page }) => {
+            await page.goto('/E2eDlResizable');
+
+            const block = getComponent(page);
+            const separator = getSeparator(block);
+            const term = getFirstTerm(block);
+
+            const startWidth = (await term.boundingBox())!.width;
+
+            await separator.hover();
+            const box = (await separator.boundingBox())!;
+            const startX = box.x + box.width / 2;
+            const startY = box.y + box.height / 2;
+            const dragOffset = 60;
+
+            await page.mouse.down();
+            await page.mouse.move(startX + dragOffset, startY, { steps: 5 });
+            await page.mouse.up();
+
+            const endWidth = (await term.boundingBox())!.width;
+
+            expect(endWidth).toBeGreaterThan(startWidth);
+            expect(endWidth).toBeCloseTo(startWidth + dragOffset, 0);
+            await expect(getList(block)).toHaveClass(resizedClass);
+        });
+
+        test('should collapse to the minimum on double click and reset on the second', async ({ page }) => {
+            await page.goto('/E2eDlResizable');
+
+            const block = getComponent(page);
+            const separator = getSeparator(block);
+
+            await separator.dblclick();
+            await expect(getList(block)).toHaveClass(resizedClass);
+            await expect(separator).toHaveAttribute('aria-valuenow', '120');
+
+            await separator.dblclick();
+            await expect(getList(block)).not.toHaveClass(resizedClass);
+        });
+
+        test('should resize the first column with the keyboard', async ({ page }) => {
+            await page.goto('/E2eDlResizable');
+
+            const block = getComponent(page);
+            const separator = getSeparator(block);
+            const term = getFirstTerm(block);
+
+            const startWidth = (await term.boundingBox())!.width;
+
+            await separator.focus();
+            await page.keyboard.press('ArrowRight');
+
+            await expect(getList(block)).toHaveClass(resizedClass);
+            expect((await term.boundingBox())!.width).toBeGreaterThanOrEqual(startWidth);
         });
     });
 });

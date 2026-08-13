@@ -32,6 +32,8 @@ export type KbqA11yLocaleConfiguration = {
     showPassword: string;
     /** Password form field button that masks the password. */
     hidePassword: string;
+    /** Separator that resizes the columns of a description list. */
+    resizeColumns: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */

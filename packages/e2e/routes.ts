@@ -35,7 +35,7 @@ import { E2eCodeBlockStates } from '../components/code-block/e2e';
 import { E2eContentPanelScrollOverflow, E2eContentPanelState } from '../components/content-panel/e2e';
 import { E2eDatepickerPositioning, E2eDatepickerStates } from '../components/datepicker/e2e';
 import { E2eDividerStateAndStyle } from '../components/divider/e2e';
-import { E2eDlStates } from '../components/dl/e2e';
+import { E2eDlResizable, E2eDlStates } from '../components/dl/e2e';
 import {
     E2eDropdownNestedLtr,
     E2eDropdownNestedRtl,
@@ -179,6 +179,7 @@ const components = [
     E2eEmptyStateStateAndStyle,
     E2eCodeBlockStates,
     E2eDlStates,
+    E2eDlResizable,
     E2eAlertStateAndStyle,
     E2eDividerStateAndStyle,
     E2eButtonToggleStates,

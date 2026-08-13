@@ -1,15 +1,21 @@
-### Default (adaptive)
+### По умолчанию (адаптивный)
 
 <!-- example(dl-overview) -->
 
-### Small (adaptive)
+### Изменение ширины колонок
+
+Включается флагом `columnResizable`. На границе колонок появляется разделитель: тяните его мышью или клавишами (стрелки, `Home`/`End`); двойной клик сворачивает первую колонку до минимума, повторный — сбрасывает к раскладке по умолчанию. Ширину можно контролировать через `[(columnWidth)]`, а границы задать через `columnMinWidth` и `remainingColumnMinWidth`.
+
+<!-- example(dl-resizable) -->
+
+### Компактный (адаптивный)
 
 <!-- example(dl-small) -->
 
-### Horizontal
+### Горизонтальный
 
 <!-- example(dl-horizontal-overview) -->
 
-### Vertical
+### Вертикальный
 
 <!-- example(dl-vertical-overview) -->
