@@ -1,4 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
+import { e2eEnableDarkTheme, e2eForceAutofillAll } from '../../e2e/utils';
 
 test.describe('KbqFormFieldModule', () => {
     test.describe('E2eFormFieldAddons', () => {
@@ -91,5 +92,89 @@ test.describe('KbqFormFieldModule', () => {
                 });
             });
         }
+    });
+
+    test.describe('E2eFormFieldAutofill', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFormFieldAutofill');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eFormFieldAutofillTable');
+
+        /** How many rendered boxes stick out of the screenshot target, and would therefore be cropped. */
+        const countOutsideTheTable = (target: Locator): Promise<number> =>
+            target.evaluate((table: HTMLElement) => {
+                const box = table.getBoundingClientRect();
+
+                return Array.from(table.querySelectorAll('*'))
+                    .map((el) => el.getBoundingClientRect())
+                    .filter(({ width, height }) => width > 0 && height > 0)
+                    .filter(
+                        ({ left, top, right, bottom }) =>
+                            left < box.left - 0.5 ||
+                            top < box.top - 0.5 ||
+                            right > box.right + 0.5 ||
+                            bottom > box.bottom + 0.5
+                    ).length;
+            });
+
+        /** `rgb(…)` carries no alpha and is opaque; `rgba(…)` puts it fourth. */
+        const controlBackgroundAlpha = (page: Page): Promise<number> =>
+            page.evaluate(() => {
+                const background = getComputedStyle(document.querySelector('.kbq-input')!).backgroundColor;
+                const parts = background.match(/rgba?\(([^)]+)\)/)?.[1].split(',') ?? [];
+
+                return parts.length === 4 ? Number(parts[3]) : 1;
+            });
+
+        // The browser paints its own background on an autofilled control and the design system suppresses
+        // it with a 600000s `background-color` transition, because a transition is the only thing in the
+        // cascade that outranks the UA's `!important`. `animations: 'disabled'` — the project default —
+        // calls `finish()` on every animation with a finite end time, and 600000s is finite: the
+        // suppression would be fast-forwarded to its end value and every shot below would capture Chrome's
+        // own blue instead of the design system's tint. Measured, not guessed. Do not remove.
+        const screenshot = { animations: 'allow' } as const;
+
+        const ROWS = 8;
+        const CONTROLS_PER_ROW = 5;
+
+        // The selector the stylesheet itself keys on, not one that happens to fit the fixture: the tag
+        // input's host class is `kbq-tag-input` alone, and it only carries `kbq-input` here because the
+        // fixture writes `kbqInput` next to `kbqTagInputFor`. Drop that attribute and a fixture-shaped
+        // selector would silently stop forcing the tag column.
+        const CONTROLS = '[data-testid="e2eFormFieldAutofill"] :is(.kbq-input, .kbq-tag-input, .kbq-textarea)';
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eFormFieldAutofill');
+            const component = getComponent(page);
+            const target = getScreenshotTarget(component);
+
+            // The route is derived from the class name, so a rename yields a blank page and a perfectly
+            // stable, perfectly meaningless baseline. And a cell that falls outside the table's box is
+            // cropped by the locator without failing, so containment is asserted rather than assumed.
+            await expect(component).toBeVisible();
+            await expect(target.locator('tbody > tr')).toHaveCount(ROWS);
+            await expect(target.locator('tbody > tr > td')).toHaveCount(ROWS * (CONTROLS_PER_ROW + 1));
+            expect(await countOutsideTheTable(target)).toBe(0);
+
+            await expect(target).toHaveScreenshot('04-light.png', screenshot);
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('04-dark.png', screenshot);
+        });
+
+        test('autofilled states', async ({ page, context }) => {
+            await page.goto('/E2eFormFieldAutofill');
+            const target = getScreenshotTarget(getComponent(page));
+
+            // Absolute, not a count of the same selector on the other side of CDP — that would only
+            // catch zero, and the dangerous number is 39.
+            expect(await e2eForceAutofillAll(page, context, CONTROLS)).toBe(ROWS * CONTROLS_PER_ROW);
+
+            await expect(target).toHaveScreenshot('05-light.png', screenshot);
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('05-dark.png', screenshot);
+
+            // Self-check, after the last shot: the suppression is a *running* transition, so if anything
+            // ever finishes it — `animations: 'disabled'` above all — this reads 1 and both screenshots
+            // above captured Chrome's opaque autofill blue instead of the design system's tint.
+            expect(await controlBackgroundAlpha(page)).toBe(0);
+        });
     });
 });

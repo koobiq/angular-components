@@ -67,38 +67,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             <textarea kbqTextarea placeholder="Placeholder" [canGrow]="true" [(ngModel)]="longValue"></textarea>
             <kbq-hint>Hint</kbq-hint>
         </kbq-form-field>
-
-        <!--
-            Autofill is faked through the class that AutofillMonitor adds at runtime — ':autofill' cannot
-            be triggered synthetically. This covers the state half only: which background wins when autofill
-            meets an error or a disabled control. The other half — the ':has()' arm and the suppression of
-            the browser's own background — is keyed on the real pseudo-class; the input package asserts it
-            by forcing ':autofill' over CDP, and the selectors are shared, so it is not repeated here.
-        -->
-        <kbq-form-field class="kbq-form-field_autofilled">
-            <kbq-label>Label | autofilled</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [(ngModel)]="value"></textarea>
-            <kbq-hint>Hint</kbq-hint>
-        </kbq-form-field>
-
-        <kbq-form-field class="kbq-form-field_autofilled">
-            <kbq-label>Label | autofilled invalid</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [formControl]="invalidControl"></textarea>
-            <kbq-hint>Hint</kbq-hint>
-            <kbq-error>Error</kbq-error>
-        </kbq-form-field>
-
-        <kbq-form-field class="kbq-form-field_autofilled">
-            <kbq-label>Label | autofilled disabled</kbq-label>
-            <textarea
-                kbqTextarea
-                placeholder="Placeholder"
-                canGrow="false"
-                [disabled]="true"
-                [(ngModel)]="value"
-            ></textarea>
-            <kbq-hint>Hint</kbq-hint>
-        </kbq-form-field>
     `,
     styles: `
         :host {

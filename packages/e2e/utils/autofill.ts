@@ -39,3 +39,30 @@ export const e2eForceAutofill = async (page: Page, context: BrowserContext, sele
 
     await session.send('CSS.forcePseudoState', { nodeId, forcedPseudoClasses: ['autofill'] });
 };
+
+/**
+ * The same, for every element matching `selector` — one session for all of them, since each node has to
+ * be forced individually and a session per node would be both slow and easy to leak.
+ *
+ * Throws when nothing matches: a screenshot of a matrix where the forcing quietly reached nothing looks
+ * exactly like a correct one, and would pass forever.
+ */
+export const e2eForceAutofillAll = async (page: Page, context: BrowserContext, selector: string): Promise<number> => {
+    const session = await context.newCDPSession(page);
+
+    await session.send('DOM.enable');
+    await session.send('CSS.enable');
+
+    const { root } = await session.send('DOM.getDocument');
+    const { nodeIds } = await session.send('DOM.querySelectorAll', { nodeId: root.nodeId, selector });
+
+    if (!nodeIds.length) {
+        throw new Error(`e2eForceAutofillAll: nothing matches ${selector}`);
+    }
+
+    for (const nodeId of nodeIds) {
+        await session.send('CSS.forcePseudoState', { nodeId, forcedPseudoClasses: ['autofill'] });
+    }
+
+    return nodeIds.length;
+};

@@ -20,10 +20,10 @@ test.describe('KbqInputModule', () => {
         });
 
         /**
-         * The grid rows above fake autofill with `kbq-form-field_autofilled`, the class
-         * `AutofillMonitor` adds — which is only half the implementation. These assert the other half:
-         * the `:has(:is(…):is(:autofill, :-webkit-autofill))` arm that paints the tint in the same style
-         * pass the browser fills the value, without waiting for change detection.
+         * Assertion-level cover for the `:has(:is(…):is(:autofill, :-webkit-autofill))` arm, which paints
+         * the tint in the same style pass the browser fills the value rather than waiting for change
+         * detection. The visual side of the same behaviour, across every control and every field state,
+         * lives in `E2eFormFieldAutofill` (form-field/e2e.playwright-spec.ts).
          *
          * Colours are compared against the same cell before forcing rather than hardcoded, so the tests
          * survive a token change and only fail when the *relationship* between states breaks.
@@ -70,8 +70,6 @@ test.describe('KbqInputModule', () => {
                 const after = await readStyles(page, 'default');
 
                 expect(after.containerBackground).not.toBe(before.containerBackground);
-                // The faked row must land on exactly the same tint as the forced pseudo-class.
-                expect(after.containerBackground).toBe((await readStyles(page, 'autofill')).containerBackground);
             });
 
             test('holds the browser background at zero alpha and paints nothing on the control', async ({

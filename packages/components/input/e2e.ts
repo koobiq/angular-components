@@ -5,7 +5,7 @@ import { PasswordRules } from '@koobiq/components/form-field';
 import { KbqInputModule } from './input.module';
 
 type InputStates = {
-    state: ('default' | 'focused' | 'disabled' | 'placeholder' | 'invalid' | 'autofill' | 'error' | 'ellipsis')[];
+    state: ('default' | 'focused' | 'disabled' | 'placeholder' | 'invalid' | 'error' | 'ellipsis')[];
     inputNumberHasSeparator?: boolean;
 };
 
@@ -43,7 +43,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
-                                    [class.kbq-form-field_autofilled]="cell.state.includes('autofill')"
                                 >
                                     <input
                                         kbqInput
@@ -60,7 +59,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
-                                    [class.kbq-form-field_autofilled]="cell.state.includes('autofill')"
                                 >
                                     <input
                                         kbqInput
@@ -78,7 +76,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
-                                    [class.kbq-form-field_autofilled]="cell.state.includes('autofill')"
                                 >
                                     <input
                                         kbqNormalizeWhitespace
@@ -114,7 +111,6 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                                 <kbq-form-field
                                     [class.cdk-keyboard-focused]="cell.state.includes('focused')"
                                     [class.cdk-focused]="cell.state.includes('focused')"
-                                    [class.kbq-form-field_autofilled]="cell.state.includes('autofill')"
                                     [class.kbq-disabled]="cell.state.includes('disabled')"
                                 >
                                     <input
@@ -197,16 +193,7 @@ export class E2eInputStateAndStyle {
         [{ state: ['focused'] }],
         [{ state: ['error'] }],
         [{ state: ['error', 'focused'] }],
-        [{ state: ['disabled'] }],
-        // Autofill is faked here through `kbq-form-field_autofilled`, the class `AutofillMonitor` adds at
-        // runtime, which is what the screenshots capture: which background wins when autofill meets
-        // focus, error or disabled. The other half of the implementation — the `:has(…:autofill…)` arm
-        // and the suppression of the browser's own background — is keyed on the real pseudo-class and is
-        // asserted in the `autofill` block of e2e.playwright-spec.ts, which forces `:autofill` over CDP.
-        [{ state: ['autofill'] }],
-        [{ state: ['autofill', 'focused'] }],
-        [{ state: ['autofill', 'error'] }],
-        [{ state: ['autofill', 'disabled'] }]
+        [{ state: ['disabled'] }]
     ];
 
     protected readonly passwordRules = PasswordRules;
