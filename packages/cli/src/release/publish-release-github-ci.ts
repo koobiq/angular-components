@@ -79,8 +79,6 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
             console.info(green(bold(`  ✓   Notification to Mattermost, version: ${newVersionName}`)));
             await notify(extractedReleaseNotes);
         }
-
-        console.info(green(`  ✓   Github release is posted.`));
     }
 
     /** Publishes the specified package within the given NPM dist tag. */
