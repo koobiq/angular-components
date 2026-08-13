@@ -13,7 +13,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqFormattersModule, PopUpPlacements, ThemeService } from '@koobiq/components/core';
+import { KbqComponentColors, KbqFormattersModule, KbqThemeService, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -22,7 +22,6 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 type ExampleAction = {
@@ -75,17 +74,13 @@ export class NotificationCenterOverviewExample implements AfterViewInit {
     @ViewChild('actionsTemplate') actionsTemplateRef!: TemplateRef<any>;
     @ViewChild('captionTemplate') captionTemplateRef: TemplateRef<any>;
 
-    protected readonly currentTheme = toSignal(
-        inject(ThemeService, { optional: true })?.current.pipe(
-            map((theme) => theme && theme.className.replace('kbq-', ''))
-        ) || of('light'),
-        { initialValue: 'light' }
-    );
+    private readonly themeService = inject(KbqThemeService, { optional: true });
+    protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
 
     protected readonly srcSet = computed(() => {
         const currentTheme = this.currentTheme();
 
-        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.png 1x, assets/images/${currentTheme}/empty_192@2x.png 2x`;
+        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.png 1x, https://koobiq.io/assets/images/${currentTheme}/empty_192@2x.png 2x`;
     });
 
     readonly isDesktop = toSignal(

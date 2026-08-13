@@ -1,12 +1,20 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    ElementRef,
+    inject,
+    OnInit,
+    ViewEncapsulation
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { ThemeService } from '@koobiq/components/core';
+import { KbqThemeService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { fromEvent } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { DocsDocStates } from 'src/app/services/doc-states';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { docsGetCategories, DocsStructureCategory } from '../../structure';
@@ -30,13 +38,10 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     }
 })
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
-    private readonly themeService = inject(ThemeService);
+    private readonly themeService = inject(KbqThemeService);
 
     protected structureCategories: DocsStructureCategory[];
-    readonly currentTheme = toSignal(
-        this.themeService.current.pipe(map((theme) => theme?.className.replace('kbq-', '') ?? 'light')),
-        { initialValue: 'light' }
-    );
+    readonly currentTheme = computed(() => this.themeService.colorScheme());
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly docStates = inject(DocsDocStates);

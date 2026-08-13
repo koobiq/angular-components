@@ -80,9 +80,9 @@
         <span class="kbq-caps-compact-strong">{{ t('themeGroupHeader') }}</span>
     </div>
 
-    @for (theme of themeSwitch.data; track theme) {
-        <button kbq-dropdown-item [class.kbq-selected]="theme.selected" (click)="setTheme($index)">
-            {{ theme.title[locale()] }}
+    @for (option of themeOptions; track option.mode) {
+        <button kbq-dropdown-item [class.kbq-selected]="option.mode === mode()" (click)="setTheme(option.mode)">
+            {{ option.title[locale()] }}
         </button>
     }
 </kbq-dropdown>
