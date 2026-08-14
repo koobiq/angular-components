@@ -249,6 +249,14 @@
     padding: var(--kbq-size-xxs) var(--kbq-size-l);
 }
 
+// Extends an item's hit area past the box it paints, with a transparent pseudo-element on the element
+// that owns the click handler — a pseudo-element is hit-tested as part of that element, so hover and
+// click both reach the gutter with no TS and no `z-index`. This one claims a fixed strip either side of
+// a plain vertical list. The same technique, sized differently, is hand-rolled where the geometry does
+// not fit: `.kbq-navbar-item`'s `:before` cancels the item's own margin (DS-2558), and
+// `--kbq-button-toggle-size-item-hit-area-*` tiles a group's `gap` between two neighbours and hands the
+// group's padding to the outermost items, per orientation (DS-4164). Any clipping ancestor eats all of
+// them — see the note on `.kbq-button-toggle`'s `overflow`.
 @mixin item-active-area($outline) {
     position: relative;
 
