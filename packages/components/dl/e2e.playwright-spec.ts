@@ -14,7 +14,8 @@ test.describe('KbqDlModule', () => {
     });
 
     test.describe('E2eDlResizable', () => {
-        const getComponent = (page: Page) => page.getByTestId('e2eDlResizable');
+        const getComponent = (page: Page) => page.getByTestId('e2eDlResizableConfigured');
+        const getAutoComponent = (page: Page) => page.getByTestId('e2eDlResizableAuto');
         const getList = (block: Locator) => block.locator('.kbq-dl');
         const getSeparator = (block: Locator) => block.getByRole('separator');
         const getFirstTerm = (block: Locator) => block.locator('.kbq-dt').first();
@@ -75,6 +76,22 @@ test.describe('KbqDlModule', () => {
 
             await expect(getList(block)).toHaveClass(resizedClass);
             expect((await term.boundingBox())!.width).toBeGreaterThanOrEqual(startWidth);
+        });
+
+        test('should default the column minimums to the measured term width when they are not set', async ({
+            page
+        }) => {
+            await page.goto('/E2eDlResizable');
+
+            const block = getAutoComponent(page);
+            const separator = getSeparator(block);
+            const termWidth = Math.round((await getFirstTerm(block).boundingBox())!.width);
+
+            // With no `columnMinWidth`/`remainingColumnMinWidth`, the resizer falls back to the measured term width.
+            const ariaValueMin = Number(await separator.getAttribute('aria-valuemin'));
+
+            expect(ariaValueMin).toBeGreaterThan(0);
+            expect(ariaValueMin).toBeCloseTo(termWidth, 0);
         });
     });
 });

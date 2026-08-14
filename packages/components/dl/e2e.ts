@@ -117,14 +117,27 @@ export class E2eDlStates {}
     selector: 'e2e-dl-resizable',
     imports: [KbqDlModule],
     template: `
-        <kbq-dl columnResizable [columnMinWidth]="120" [remainingColumnMinWidth]="160">
-            <kbq-dt>Incident type</kbq-dt>
-            <kbq-dd>Malware infection</kbq-dd>
-            <kbq-dt>Identifier</kbq-dt>
-            <kbq-dd>INC-2026-125-78253</kbq-dd>
-            <kbq-dt>Description</kbq-dt>
-            <kbq-dd>A long description that keeps the second column filled while the first one is resized.</kbq-dd>
-        </kbq-dl>
+        <div data-testid="e2eDlResizableConfigured">
+            <kbq-dl columnResizable [columnMinWidth]="120" [remainingColumnMinWidth]="160">
+                <kbq-dt>Incident type</kbq-dt>
+                <kbq-dd>Malware infection</kbq-dd>
+                <kbq-dt>Identifier</kbq-dt>
+                <kbq-dd>INC-2026-125-78253</kbq-dd>
+                <kbq-dt>Description</kbq-dt>
+                <kbq-dd>A long description that keeps the second column filled while the first one is resized.</kbq-dd>
+            </kbq-dl>
+        </div>
+
+        <div data-testid="e2eDlResizableAuto">
+            <kbq-dl columnResizable>
+                <kbq-dt>Incident type</kbq-dt>
+                <kbq-dd>Malware infection</kbq-dd>
+                <kbq-dt>Identifier</kbq-dt>
+                <kbq-dd>INC-2026-125-78253</kbq-dd>
+                <kbq-dt>Description</kbq-dt>
+                <kbq-dd>A long description that keeps the second column filled while the first one is resized.</kbq-dd>
+            </kbq-dl>
+        </div>
     `,
     styles: `
         :host {

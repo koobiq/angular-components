@@ -8,6 +8,7 @@ import {
     ChangeDetectorRef,
     Component,
     computed,
+    contentChildren,
     DestroyRef,
     ElementRef,
     inject,
@@ -25,6 +26,26 @@ import { debounceTime, startWith } from 'rxjs/operators';
 
 /** Supported alignment values for description list items. */
 export type KbqDlAlign = 'start' | 'center' | 'end';
+
+@Component({
+    selector: 'kbq-dt',
+    template: '<ng-content />',
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-dt'
+    }
+})
+export class KbqDtComponent {}
+
+@Component({
+    selector: 'kbq-dd',
+    template: '<ng-content />',
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-dd'
+    }
+})
+export class KbqDdComponent {}
 
 @Component({
     selector: 'kbq-dl',
@@ -96,11 +117,11 @@ export class KbqDlComponent {
     /** Current width of the first (resizable) column in pixels; `null` restores the default column ratio. */
     readonly columnWidth = model<number | null>(null);
 
-    /** Minimum width of the first (resizable) column in pixels. */
-    readonly columnMinWidth = input(96, { transform: numberAttribute });
+    /** Minimum width of the first (resizable) column in pixels; defaults to the term width measured after render. */
+    readonly columnMinWidth = input<number | undefined>(undefined);
 
-    /** Minimum width retained for the remaining column in pixels. */
-    readonly remainingColumnMinWidth = input(160, { transform: numberAttribute });
+    /** Minimum width retained for the remaining column in pixels; defaults to the term width measured after render. */
+    readonly remainingColumnMinWidth = input<number | undefined>(undefined);
 
     /** Accessible name of the column resize separator; falls back to the localized default when omitted. */
     readonly resizerAriaLabel = input<string | undefined>(undefined);
@@ -126,8 +147,19 @@ export class KbqDlComponent {
     /** @docs-private Whether the column resize separator is currently rendered. */
     protected readonly resizerVisible = computed(() => this.columnResizable() && !this.isVertical());
 
+    /** Term column width measured after the first render; the default minimum for both columns when unset. */
+    private readonly measuredColumnWidth = signal(0);
+
+    /** Effective minimum width of the first column: the input, or the measured term width when not provided. */
+    private readonly resolvedColumnMinWidth = computed(() => this.columnMinWidth() ?? this.measuredColumnWidth());
+
+    /** Effective minimum width of the remaining column: the input, or the measured term width when not provided. */
+    private readonly resolvedRemainingColumnMinWidth = computed(
+        () => this.remainingColumnMinWidth() ?? this.measuredColumnWidth()
+    );
+
     /** @docs-private Term column minimum width, clamped to a non-negative value. */
-    protected readonly normalizedColumnMinWidth = computed(() => Math.max(0, this.columnMinWidth()));
+    protected readonly normalizedColumnMinWidth = computed(() => Math.max(0, this.resolvedColumnMinWidth()));
 
     protected get maxColumnWidth(): number {
         if (!this.platform.isBrowser) return this.normalizedColumnMinWidth();
@@ -137,7 +169,7 @@ export class KbqDlComponent {
 
         return Math.max(
             this.normalizedColumnMinWidth(),
-            hostWidth - columnGap - Math.max(0, this.remainingColumnMinWidth())
+            hostWidth - columnGap - Math.max(0, this.resolvedRemainingColumnMinWidth())
         );
     }
 
@@ -159,6 +191,7 @@ export class KbqDlComponent {
     private readonly directionality = inject(Directionality, { optional: true });
     private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
     private readonly resizeTrack = viewChild<ElementRef<HTMLElement>>('resizeTrack');
+    private readonly terms = contentChildren(KbqDtComponent, { read: ElementRef });
 
     /** @docs-private Resolved accessible name of the resize separator. */
     protected readonly resolvedResizerAriaLabel = computed(
@@ -173,11 +206,20 @@ export class KbqDlComponent {
 
         // `afterNextRender` runs in the browser only, so no explicit platform guard is needed here.
         afterNextRender(() => {
+            this.measureColumnWidth();
+
             this.resizeObserver
                 .observe(this.nativeElement)
                 .pipe(startWith(null), debounceTime(this.resizeDebounceInterval), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.updateLayout());
         });
+    }
+
+    /** Captures the rendered width of the term column, used as the default minimum when no widths are provided. */
+    private measureColumnWidth(): void {
+        const term = this.terms()[0]?.nativeElement;
+
+        if (term) this.measuredColumnWidth.set(Math.round(term.getBoundingClientRect().width));
     }
 
     /** @docs-private */
@@ -249,23 +291,3 @@ export class KbqDlComponent {
         this.resizeDirection.set(direction === 'rtl' ? [-1, 0] : [1, 0]);
     }
 }
-
-@Component({
-    selector: 'kbq-dt',
-    template: '<ng-content />',
-    encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'kbq-dt'
-    }
-})
-export class KbqDtComponent {}
-
-@Component({
-    selector: 'kbq-dd',
-    template: '<ng-content />',
-    encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'kbq-dd'
-    }
-})
-export class KbqDdComponent {}
