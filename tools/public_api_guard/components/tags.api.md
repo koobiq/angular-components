@@ -175,7 +175,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     constructor();
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
-    readonly addOnPaste: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly addOnPaste: i0.InputSignalWithTransform<boolean, unknown>;
     autocompleteTrigger?: KbqAutocompleteTrigger | null | undefined;
     blur(event: FocusEvent): void;
     get disabled(): boolean;
