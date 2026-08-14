@@ -19,6 +19,11 @@
 
     justify-content: center;
 
+    // Hit area over the margin this item is spaced with, so the highlight does not drop out between
+    // items (DS-2558) — the transparent pseudo-element is hit-tested as part of the item, so hover and
+    // click both reach it. `:after` below paints the highlight, at the item's own box. The same
+    // technique is written twice more: `select.item-active-area()` for a plain vertical list, and
+    // `--kbq-button-toggle-size-item-hit-area-*` for a group whose `gap` two neighbours have to tile.
     &:before {
         top: calc(-1 * #{var(--kbq-size-s)});
         left: calc(-1 * #{var(--kbq-size-s)});
