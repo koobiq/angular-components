@@ -86,7 +86,21 @@ When the code block should fill an entire container or screen, it is best to use
 
 ### Action panel
 
-The action panel is located in the upper right corner of the block, visible on hover or when one of the buttons is focused, and stays fixed during scrolling. The component configuration determines which actions are available.
+The action panel is located in the upper-right corner of the block and remains fixed while scrolling. The component configuration determines which actions are available.
+
+The panel is always visible when tabs are shown, as well as on iOS and Android devices. When tabs are hidden, it appears on hover on other devices.
+
+The `alwaysShowActionbar` attribute keeps the panel visible regardless of tabs or hover. It is disabled by default.
+
+```html
+<kbq-code-block [files]="files" canCopy alwaysShowActionbar />
+```
+
+To enable the option for all code blocks within an injector scope, use the provider:
+
+```typescript
+providers: [kbqCodeBlockDefaultOptionsProvider({ alwaysShowActionbar: true })];
+```
 
 #### Changing wrap mode
 
