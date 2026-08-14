@@ -154,10 +154,7 @@ export class DevDocsExamples {}
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
     providers: [
-        // {
-        //     provide: KBQ_TAGS_DEFAULT_OPTIONS,
-        //     useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } satisfies KbqTagsDefaultOptions
-        // }
+        // kbqTagsDefaultOptionsProvider({ separatorKeyCodes: [ENTER], addOnPaste: false })
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None

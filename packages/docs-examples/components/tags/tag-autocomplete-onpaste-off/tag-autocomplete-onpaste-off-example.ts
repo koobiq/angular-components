@@ -6,12 +6,11 @@ import { ENTER, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
-    KBQ_TAGS_DEFAULT_OPTIONS,
     KbqTagInput,
     KbqTagInputEvent,
     KbqTagList,
-    KbqTagsDefaultOptions,
-    KbqTagsModule
+    KbqTagsModule,
+    kbqTagsDefaultOptionsProvider
 } from '@koobiq/components/tags';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -43,12 +42,7 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
         }
     `,
     // turn off tag add on paste with InjectionToken
-    providers: [
-        {
-            provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
-        }
-    ],
+    providers: [kbqTagsDefaultOptionsProvider({ separatorKeyCodes: [ENTER], addOnPaste: false })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteOnpasteOffExample implements AfterViewInit {

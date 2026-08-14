@@ -15,8 +15,7 @@ import { COMMA, createKeyboardEvent, dispatchFakeEvent, ENTER, SEMICOLON, SPACE,
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KbqTagsModule } from './index';
-import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
-import { KbqTagInput, KbqTagInputEvent } from './tag-input';
+import { KbqTagInput, KbqTagInputEvent, kbqTagsDefaultOptionsProvider } from './tag-input';
 import { KbqTagList } from './tag-list.component';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
@@ -81,6 +80,22 @@ class TestTagInputDefaultSeparators {
 }
 
 @Component({
+    // Deliberately importing the standalone directive/component directly, without KbqTagsModule
+    // (the only place that provides KBQ_TAGS_DEFAULT_OPTIONS), to verify the token's own
+    // `providedIn: 'root'` factory default keeps KbqTagInput usable on its own.
+    imports: [KbqTagInput, KbqTagList],
+    template: `
+        <kbq-tag-list #tagList>
+            <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+        </kbq-tag-list>
+    `
+})
+class TestTagInputStandaloneWithoutModule {
+    readonly tagInput = viewChild.required(KbqTagInput);
+    readonly add = jest.fn();
+}
+
+@Component({
     imports: [KbqTagsModule],
     template: `
         <kbq-tag-list #tagList>
@@ -88,17 +103,60 @@ class TestTagInputDefaultSeparators {
         </kbq-tag-list>
     `,
     providers: [
-        {
-            provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            useValue: {
-                separatorKeyCodes: [DASH],
-                separators: { [DASH]: { symbol: /-/, key: '-' } },
-                addOnPaste: true
-            } as KbqTagsDefaultOptions
-        }
+        kbqTagsDefaultOptionsProvider({
+            separatorKeyCodes: [DASH],
+            separators: [{ symbol: /-/, key: '-', keyCode: DASH }],
+            addOnPaste: true
+        })
     ]
 })
 class TestTagInputWithDashSeparator {
+    readonly tagInput = viewChild.required(KbqTagInput);
+    readonly add = jest.fn();
+}
+
+@Component({
+    imports: [KbqTagsModule],
+    template: `
+        <kbq-tag-list #tagList>
+            <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+        </kbq-tag-list>
+    `,
+    providers: [
+        kbqTagsDefaultOptionsProvider({
+            separatorKeyCodes: [ENTER, SPACE],
+            separators: [
+                { symbol: /\r?\n/, key: 'Enter', keyCode: ENTER },
+                { symbol: / /, key: ' ', keyCode: SPACE, appliesTo: ['paste'] }
+            ],
+            addOnPaste: true
+        })
+    ]
+})
+class TestTagInputWithPasteOnlySpace {
+    readonly tagInput = viewChild.required(KbqTagInput);
+    readonly add = jest.fn();
+}
+
+@Component({
+    imports: [KbqTagsModule],
+    template: `
+        <kbq-tag-list #tagList>
+            <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+        </kbq-tag-list>
+    `,
+    providers: [
+        kbqTagsDefaultOptionsProvider({
+            separatorKeyCodes: [ENTER],
+            separators: [
+                { symbol: /\r?\n/, key: 'Enter', keyCode: ENTER },
+                { symbol: /\s+/, appliesTo: ['paste'] }
+            ],
+            addOnPaste: true
+        })
+    ]
+})
+class TestTagInputWithKeylessWhitespaceSeparator {
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly add = jest.fn();
 }
@@ -246,6 +304,16 @@ describe(KbqTagInput.name, () => {
         expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'tag' }));
     });
 
+    it('works standalone without KbqTagsModule providing KBQ_TAGS_DEFAULT_OPTIONS', () => {
+        const fixture = createComponent(TestTagInputStandaloneWithoutModule);
+        const inputElement = getInputElement(fixture);
+
+        inputElement.value = 'tag';
+        fixture.componentInstance.tagInput().onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
+
+        expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'tag' }));
+    });
+
     it('should kbqTagInputAddOnPaste by default', () => {
         const fixture = createComponent(TestTagInputWithDashSeparator);
         const directive = fixture.componentInstance.tagInput();
@@ -385,6 +453,65 @@ describe(KbqTagInput.name, () => {
         expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'a' }));
         expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'b' }));
         expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: '' }));
+    });
+
+    describe('separator `appliesTo` scoping', () => {
+        it('should NOT split on keydown when a separator is scoped to `paste` only', () => {
+            const fixture = createComponent(TestTagInputWithPasteOnlySpace);
+            const directive = fixture.componentInstance.tagInput();
+            const inputElement = getInputElement(fixture);
+
+            inputElement.value = 'New York';
+            directive.onKeydown(createKeyboardEvent('keydown', SPACE, inputElement, ' '));
+
+            expect(fixture.componentInstance.add).not.toHaveBeenCalled();
+        });
+
+        it('should still split on paste when a separator is scoped to `paste` only', () => {
+            const fixture = createComponent(TestTagInputWithPasteOnlySpace);
+            const directive = fixture.componentInstance.tagInput();
+
+            directive.onPaste(createPasteEvent('New York Boston'));
+
+            expect(fixture.componentInstance.add).toHaveBeenCalledTimes(3);
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'New' }));
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'York' }));
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'Boston' }));
+        });
+
+        it('should still trigger tagEnd on Enter keydown, which is not restricted to `paste`', () => {
+            const fixture = createComponent(TestTagInputWithPasteOnlySpace);
+            const directive = fixture.componentInstance.tagInput();
+            const inputElement = getInputElement(fixture);
+
+            inputElement.value = 'tag';
+            directive.onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
+
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'tag' }));
+        });
+
+        it('should split pasted text using a keyless regex separator regardless of separatorKeyCodes', () => {
+            const fixture = createComponent(TestTagInputWithKeylessWhitespaceSeparator);
+            const directive = fixture.componentInstance.tagInput();
+
+            directive.onPaste(createPasteEvent('a b\tc'));
+
+            expect(fixture.componentInstance.add).toHaveBeenCalledTimes(3);
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'a' }));
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'b' }));
+            expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'c' }));
+        });
+
+        it('should not let a keyless separator affect keydown, since it can never match a KeyboardEvent.key', () => {
+            const fixture = createComponent(TestTagInputWithKeylessWhitespaceSeparator);
+            const directive = fixture.componentInstance.tagInput();
+            const inputElement = getInputElement(fixture);
+
+            inputElement.value = 'tag';
+            directive.onKeydown(createKeyboardEvent('keydown', SPACE, inputElement, ' '));
+
+            expect(fixture.componentInstance.add).not.toHaveBeenCalled();
+        });
     });
 
     it('should emit the whole pasted string as a single tag when no separator is found', () => {
