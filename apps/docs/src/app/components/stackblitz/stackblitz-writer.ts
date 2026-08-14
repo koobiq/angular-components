@@ -56,6 +56,9 @@ const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
     // `writeFile`, whose API is unchanged between the two, so the sandbox still works.
     xlsx: {
         xlsx: '^0.18'
+    },
+    '@koobiq/components/scrollbar/deprecated': {
+        overlayscrollbars: '2.7.3'
     }
 } as const;
 
@@ -250,7 +253,6 @@ export class DocsStackblitzWriter {
             '@koobiq/icons': '^11.2.0',
             '@messageformat/core': '^3.4.0',
             luxon: '^3.7.2',
-            overlayscrollbars: '2.7.3',
             rxjs: '^7.8.2',
             tslib: '^2.8.1',
             'zone.js': '~0.15.0'

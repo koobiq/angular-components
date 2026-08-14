@@ -101,6 +101,11 @@
             "description": "Migrates KbqButtonToggleGroup consumers to its signal inputs (vertical/multiple reads become calls) and reports the ARIA, tab-order and keyboard changes of the button-toggle review, including icon-only toggles left without an accessible name",
             "factory": "./migrations/button-toggle-signals-and-aria/index",
             "schema": "./migrations/button-toggle-signals-and-aria/schema.json"
+        },
+        "scrollbar-deprecated-path": {
+            "description": "Rewrites @koobiq/components/scrollbar imports to @koobiq/components/scrollbar/deprecated — the overlayscrollbars-based implementation moved there when the dependency-free implementation was promoted to @koobiq/components/scrollbar",
+            "factory": "./migrations/scrollbar-deprecated-path/index",
+            "schema": "./migrations/scrollbar-deprecated-path/schema.json"
         }
     }
 }

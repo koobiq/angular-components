@@ -1,37 +1,40 @@
-`<kbq-scrollbar>` - это компонент который используется для настройки параметров скроллбара.
+`KbqScrollbar` добавляет настраиваемый скроллбар к области с прокручиваемым содержимым. Прокрутка выполняется нативным механизмом браузера, поэтому сохраняется управление колёсиком мыши, жестами и клавиатурой.
 
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Обрати внимание</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+## Режим отображения
 
-Для работы компонента, необходимо наличие [`overlayscrollbars@2.7.3`](https://github.com/KingSora/OverlayScrollbars/tree/v2.7.0) зависимости:
+Режим задаётся входным параметром `kbqScrollbarMode`:
 
-```bash
-npm install overlayscrollbars@2.7.3
-```
+- `hover` — скроллбар появляется при наведении указателя или клавиатурном фокусе. Используется по умолчанию.
+- `always` — скроллбар отображается постоянно, если содержимое выходит за границы области.
+- `native` — отображается системный скроллбар браузера.
+- `hidden` — скроллбар скрыт, но содержимое можно прокручивать.
 
-</div>
-</div>
-
-## Настройка и передача параметров:
-
-- для определенного скроллбара, при помощи атрибута `options`:
+Режим по умолчанию для приложения или отдельной области DI можно изменить с помощью `kbqScrollbarOptionsProvider`.
 
 <!-- example(scrollbar-overview) -->
 
-- для всех скроллбаров в модуле, при помощи _Dependency Injection_ c использованием `KBQ_SCROLLBAR_CONFIG` токена:
+## Виртуальный скролл
 
-<!-- example(scrollbar-with-custom-config) -->
+Чтобы добавить кастомный скроллбар к `cdk-virtual-scroll-viewport`, примените к нему директиву `kbqScrollbarViewport`. Директива поддерживает те же режимы отображения.
 
-### Обработка событий:
+<!-- example(scrollbar-virtual-scroll) -->
 
-```ts
-<kbq-scrollbar
-    (onInitialize)="onInitialize($event)"
-    (onDestroy)="onDestroy($event)"
-    (onScroll)="onScroll($event)"
-    (onUpdate)="onUpdate($event)"
->
-    ...
-</kbq-scrollbar>
-```
+## Программное управление прокруткой
+
+Получите компонент через экспорт `kbqScrollbar` и используйте его публичные методы:
+
+- `scrollTo` — прокрутить до заданных координат;
+- `scrollToTop` и `scrollToBottom` — прокрутить к началу или концу вертикальной оси;
+- `scrollStart` и `scrollEnd` — прокрутить к логическому началу или концу горизонтальной оси с учётом RTL;
+- `scrollToElement` — прокрутить до элемента или CSS-селектора с необязательными отступами;
+- `scrollIntoView` — расположить элемент в центре области просмотра.
+
+В методах с параметром `behavior` можно выбрать нативное поведение прокрутки `auto` или `smooth`. События прокрутки доступны через `scrollChanges`.
+
+<!-- example(scrollbar-scroll-to) -->
+
+## Браузерный скроллбар
+
+Используйте `kbqNativeScrollbar`, чтобы настроить только нативный скроллбар. Добавьте `kbqNativeScrollbarDescendants`, чтобы применить кастомизацию к дочерним элементам.
+
+<!-- example(native-scrollbar) -->

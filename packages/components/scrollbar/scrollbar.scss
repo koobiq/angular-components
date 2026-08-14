@@ -1,0 +1,24 @@
+:host {
+    position: relative;
+    display: flex;
+    // Lets the host fill available space along whichever axis is the parent's main axis
+    // (cross-axis sizing is already handled by the parent's default `align-items: stretch`),
+    // so it behaves like a block element regardless of the parent's layout mode.
+    flex: 1;
+    min-inline-size: 0;
+    min-block-size: 0;
+    max-block-size: 100%;
+    isolation: isolate;
+    overflow: auto;
+}
+
+.kbq-scrollbar__content {
+    isolation: isolate;
+    flex: 1;
+    flex-basis: auto;
+    inline-size: 100%;
+    // A hard 100% (not `min-block-size`) so a `height: 100%` chain inside projected content (e.g. a
+    // grid that needs a definite pixel height to render at all) resolves correctly — content taller
+    // than the host still overflows past it normally and is measured via `scrollHeight` regardless.
+    block-size: 100%;
+}

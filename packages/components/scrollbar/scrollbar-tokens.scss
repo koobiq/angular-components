@@ -1,24 +1,16 @@
-:where(.kbq-scrollbar-component) {
-    --kbq-scrollbar-size-track-dimension: var(--kbq-size-l);
-    --kbq-scrollbar-size-track-padding-vertical: var(--kbq-size-3xs);
-    --kbq-scrollbar-size-track-padding-horizontal: var(--kbq-size-3xs);
-    --kbq-scrollbar-size-thumb-width: var(--kbq-size-s);
-    --kbq-scrollbar-size-thumb-min-size: var(--kbq-size-xl);
-    --kbq-scrollbar-size-thumb-border-radius: var(--kbq-size-s);
-    /* THEME TOKENS */
+:where(.kbq-scrollbar-viewport, .kbq-native-scrollbar) {
+    --kbq-scrollbar-thumb-min-size: var(--kbq-size-3xl);
+    --kbq-scrollbar-thumb-gap: 3px;
+    --kbq-scrollbar-track-size: 14px;
+    --kbq-scrollbar-track-z-index: 1;
+    --kbq-scrollbar-transition-duration: 0.15s;
     --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-contrast-a3, var(--kbq-palette-grey-50-a32));
     --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-contrast-a4, var(--kbq-palette-grey-50-a48));
     --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-contrast-a5, var(--kbq-palette-grey-20-a55));
-    --kbq-scrollbar-thumb-disabled-background: var(--kbq-states-icon-disabled);
-    --kbq-scrollbar-track-default-border: transparent;
-    --kbq-scrollbar-track-default-background: transparent;
-    --kbq-scrollbar-track-hover-border: transparent;
-    --kbq-scrollbar-track-hover-background: transparent;
-    --kbq-scrollbar-track-active-border: transparent;
-    --kbq-scrollbar-track-active-background: transparent;
+    --kbq-scrollbar-track-background: transparent;
 }
 
-:where(.kbq-dark .kbq-scrollbar-component) {
+:where(.kbq-dark .kbq-scrollbar-viewport, .kbq-dark .kbq-native-scrollbar) {
     --kbq-scrollbar-thumb-default-background: var(--kbq-semantic-dark-contrast-a9, var(--kbq-palette-grey-50-a48));
     --kbq-scrollbar-thumb-hover-background: var(--kbq-semantic-dark-contrast-a10, var(--kbq-palette-grey-50-a60));
     --kbq-scrollbar-thumb-active-background: var(--kbq-semantic-dark-contrast-a11, var(--kbq-palette-grey-50-a80));

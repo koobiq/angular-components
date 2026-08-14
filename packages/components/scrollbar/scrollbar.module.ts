@@ -1,16 +1,15 @@
 import { NgModule } from '@angular/core';
-import { KbqScrollbar } from './scrollbar.component';
-import { KbqScrollbarDirective } from './scrollbar.directive';
-import { KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER } from './scrollbar.types';
+import { KbqNativeScrollbar, KbqScrollbar, KbqScrollbarViewport } from './scrollbar';
 
 const COMPONENTS = [
+    KbqNativeScrollbar,
     KbqScrollbar,
-    KbqScrollbarDirective
+    KbqScrollbarViewport
 ];
 
+/** @docs-private */
 @NgModule({
     imports: COMPONENTS,
-    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER],
     exports: COMPONENTS
 })
 export class KbqScrollbarModule {}

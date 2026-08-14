@@ -1,6 +1,16 @@
 import { Routes } from '@angular/router';
 import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
+import {
+    E2eNativeScrollbar,
+    E2eScrollbarHover,
+    E2eScrollbarMode,
+    E2eScrollbarNested,
+    E2eScrollbarScrollTo,
+    E2eScrollbarStateAndStyle,
+    E2eScrollbarTrack,
+    E2eScrollbarVirtualScroll
+} from 'packages/components/scrollbar/e2e';
 import { E2eAccordionStates } from '../components/accordion/e2e';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
@@ -74,7 +84,7 @@ import { E2ePopoverPositioning, E2ePopoverStates, E2ePopoverWithTooltip } from '
 import { E2eProgressBarStateAndStyle } from '../components/progress-bar/e2e';
 import { E2eProgressSpinnerStates } from '../components/progress-spinner/e2e';
 import { E2eRadioStateAndStyle } from '../components/radio/e2e';
-import { E2eScrollbarStateAndStyle } from '../components/scrollbar/e2e';
+import { E2eDeprecatedScrollbarStateAndStyle } from '../components/scrollbar/deprecated/e2e';
 import { E2eSearchExpandableStates } from '../components/search-expandable/e2e';
 import {
     E2eMultilineSelectStates,
@@ -219,6 +229,12 @@ const components = [
     E2eSearchExpandableStates,
     E2eInputStateAndStyle,
     E2eScrollbarStateAndStyle,
+    E2eScrollbarHover,
+    E2eScrollbarMode,
+    E2eScrollbarScrollTo,
+    E2eScrollbarVirtualScroll,
+    E2eScrollbarNested,
+    E2eNativeScrollbar,
     E2eRadioStateAndStyle,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,
@@ -285,7 +301,9 @@ const components = [
     E2eOverflowItemsHorizontal,
     E2eOverflowItemsVertical,
     E2eOverflowItemsOrdered,
-    E2eOverflowItemsDynamic
+    E2eOverflowItemsDynamic,
+    E2eDeprecatedScrollbarStateAndStyle,
+    E2eScrollbarTrack
 ];
 
 export const e2eRoutes: Routes = components.map((component) => {

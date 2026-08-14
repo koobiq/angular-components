@@ -42,7 +42,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-component-viewer kbq-scrollbar',
+        class: 'docs-component-viewer',
         '[attr.data-docsearch-category]': 'structureItem.id'
     }
 })

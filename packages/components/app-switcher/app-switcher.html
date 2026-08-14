@@ -23,7 +23,7 @@
     the panel styling) would otherwise break that ownership chain. The scrollbar host cannot carry the menu
     role for the same reason - it injects its own focusable viewport element in between.
 -->
-<div kbq-scrollbar>
+<kbq-scrollbar>
     @if (!searchControl.getRawValue()) {
         <div role="menu" aria-orientation="vertical">
             <div class="kbq-app-switcher__app-container" role="none" (mouseenter)="otherSites()?.close()">
@@ -193,4 +193,4 @@
             </div>
         </div>
     }
-</div>
+</kbq-scrollbar>
