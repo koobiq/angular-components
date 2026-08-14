@@ -66,12 +66,18 @@ import { kbqCodeBlockLocaleConfigurationProvider } from '@koobiq/components/code
 providers: [kbqCodeBlockLocaleConfigurationProvider({ copyTooltip: 'Copy the snippet' })];
 ```
 
-Because these tokens are element-injector friendly, providing one on a component scopes the override to
+Because these providers are element-injector friendly, providing one on a component scopes the override to
 that component's subtree.
 
-Note the precedence: the locale service wins over the token. If you provide both, register the override as
-a locale instead (see below), or drop the service for that subtree with
-`{ provide: KBQ_LOCALE_SERVICE, useValue: null }`.
+Each helper ships from its own component's package. The exception is `kbqSelectLocaleConfigurationProvider`,
+which ships from `@koobiq/components/core`: the `select` section is rendered by three packages that do not
+depend on one another — `kbq-select`, `kbq-tree-select` and `kbq-tree-selection`.
+
+An override is applied on top of whatever is active — the locale service when the application provides one,
+the token's defaults otherwise. So the keys you pass stay pinned across a runtime `setLocale()`, while every
+key you did not pass follows the locale. Override a whole section if you want it to stop following the
+locale entirely; register your own locale (see below) if you want the override to switch along with the
+others.
 
 ### Registering your own locale
 

@@ -874,6 +874,7 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 **Moving to the new implementation** is a separate, manual migration, not just an import path change: the new component uses the `<kbq-scrollbar>` selector and does not support the `[kbq-scrollbar]` or `[kbqScrollbar]` attribute selectors. Its public API differs from the previous implementation — see the [Scrollbar component documentation](/en/components/scrollbar) for details.
 
 **Do not import both the old and the new implementation into the same standalone component.** Both use the `kbq-scrollbar` element selector, so Angular cannot choose a component unambiguously. During a gradual manual migration, keep old and new usage in separate components.
+
 ### 16. Locale layer typing (20.3.0)
 
 The locale layer is fully typed now, and every localized component takes its strings through one shared
@@ -901,10 +902,27 @@ deprecated in favour of `localeId()` and `data()`. Prefer the signals: a signal 
 registers on the reading view, so a runtime `setLocale()` reaches `OnPush` children that a subscription in
 the parent never marked dirty.
 
-**Configuration providers accept a partial.** `kbqA11yLocaleConfigurationProvider`,
-`kbqCodeBlockLocaleConfigurationProvider`, `kbqClampedTextLocaleConfigurationProvider`,
-`kbqActionsPanelLocaleConfigurationProvider` and `kbqTimeRangeLocaleConfigurationProvider` now take only the
-keys you want to change and merge them over the `ru-RU` defaults. Passing a full object still works.
+**Configuration providers accept a partial, and now apply on top of the active locale.**
+`kbqA11yLocaleConfigurationProvider`, `kbqCodeBlockLocaleConfigurationProvider`,
+`kbqClampedTextLocaleConfigurationProvider`, `kbqActionsPanelLocaleConfigurationProvider` and
+`kbqTimeRangeLocaleConfigurationProvider` now take only the keys you want to change. Previously the locale
+service took precedence over them, so an application that provided `KBQ_LOCALE_SERVICE` saw these providers
+ignored entirely; the keys you pass are now merged over the active locale and stay pinned across a runtime
+`setLocale()`, while the keys you leave out keep following it. Passing a full object still works and pins
+the whole section.
+
+**Component configuration tokens now supply defaults, not overrides.** `KBQ_VERTICAL_NAVBAR_CONFIGURATION`,
+`KBQ_NOTIFICATION_CENTER_CONFIGURATION`, `KBQ_APP_SWITCHER_CONFIGURATION`,
+`KBQ_SEARCH_EXPANDABLE_CONFIGURATION`, `KBQ_DATEPICKER_CONFIGURATION` and `KBQ_FILTER_BAR_CONFIGURATION` used
+to beat the locale service outright. Every one of those components now reads the shared
+`kbqInjectLocaleConfiguration` helper, where the token carries the defaults and the active locale wins, so
+`{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` is silently ignored in any application that provides
+`KBQ_LOCALE_SERVICE`. Replace it with the matching `kbq<X>LocaleConfigurationProvider(…)`, which registers a
+real override — `ng update` rewrites it for you. The same conversion dropped the `externalConfiguration`
+member from those components and made `configuration` read-only, and gave `kbq-select`, `kbq-tree-select`,
+`kbq-tree-selection`, `kbq-timepicker`, `kbq-timezone-select` and the number input the token-and-provider
+pair they never had. One behaviour fix rides along: an explicit `[hiddenItemsText]` binding on `kbq-select`
+and `kbq-tree-select` is no longer wiped by the next `setLocale()`.
 
 **Type names were normalized to `Kbq<X>LocaleConfiguration`.** The old names — `KbqAppSwitcherConfiguration`,
 `KbqClampedTextLocaleConfig`, `KbqTimeRangeLocaleConfig`, `KbqNumberInputLocaleConfig`,

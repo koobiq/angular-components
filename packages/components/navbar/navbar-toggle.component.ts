@@ -5,6 +5,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    effect,
     inject,
     Injectable,
     NgZone,
@@ -149,6 +150,11 @@ export class KbqNavbarToggle implements OnDestroy {
         this.tooltip.tooltipPlacement = PopUpPlacements.Right;
 
         this.tooltip.visibleChange.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipContent);
+
+        // `content` is a plain property, so a tooltip that is already open keeps the string it was given.
+        // Reading the navbar's signal-backed configuration here re-applies it on a locale change instead
+        // of leaving the previous locale on screen until the next show.
+        effect(() => this.updateTooltipContent());
     }
 
     /** @docs-private */

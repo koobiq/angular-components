@@ -61,6 +61,7 @@ import {
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KBQ_PARENT_POPUP,
+    KBQ_SELECT_LOCALE_CONFIGURATION,
     KBQ_SELECT_SCROLL_STRATEGY,
     KBQ_WINDOW,
     KbqAbstractSelect,
@@ -100,10 +101,10 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
-    ruRULocaleData,
     shouldSelectSearchText,
     toggleSelectAll
 } from '@koobiq/components/core';
@@ -277,7 +278,15 @@ export class KbqSelect
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true })!;
     ngControl = inject(NgControl, { self: true, optional: true });
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
+    /**
+     * The select reads its own strings from `localeConfiguration`; this stays because `KbqTimezoneSelect`
+     * resolves the `timezone` section through it.
+     */
     protected localeService? = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
+
+    /** Localized strings of the select, following the active locale. */
+    private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
+
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
 
@@ -438,13 +447,28 @@ export class KbqSelect
     /** Reference to the optional empty search result component. */
     readonly searchEmpty = contentChild(KbqSelectSearchEmptyResult);
 
-    /** Template string for hidden items text. Supports {{ number }} placeholder. */
+    /**
+     * Template string for hidden items text. Supports {{ number }} placeholder.
+     *
+     * Follows the active locale while unset; a value assigned here takes precedence over every locale.
+     */
     // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() hiddenItemsText: string = '+{{ number }}';
+    //  Accessor inputs cannot be migrated as they are too complex.
+    @Input()
+    get hiddenItemsText(): string {
+        return this._hiddenItemsText ?? this.localeConfiguration().hiddenItemsText;
+    }
 
-    /** Label of the "select all" row. Kept in step with the locale service. */
-    protected selectAllText: string = ruRULocaleData.select.selectAll;
+    set hiddenItemsText(value: string) {
+        this._hiddenItemsText = value;
+    }
+
+    private _hiddenItemsText?: string;
+
+    /** Label of the "select all" row. Follows the active locale. */
+    protected get selectAllText(): string {
+        return this.localeConfiguration().selectAll;
+    }
 
     /** Determines whether preselected values are displayed. */
     readonly showPreselectedValues = input<boolean>(false);
@@ -1064,8 +1088,6 @@ export class KbqSelect
     constructor() {
         super();
 
-        this.localeService?.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateLocaleParams);
-
         // The "select all" row only exists while the panel is attached, so the key manager's list has to
         // be rebuilt whenever the view query resolves or drops it — `options.changes` alone never fires
         // for it.
@@ -1664,18 +1686,6 @@ export class KbqSelect
             this.options.length >= this.searchMinOptionsThreshold
         );
     }
-
-    /** Updates locale parameters from the locale service. */
-    private updateLocaleParams = () => {
-        // A consumer-supplied locale (`KBQ_LOCALE_DATA`/`addLocale`) may predate the `select` section
-        // entirely, not just the `selectAll` key within it — guard the lookup itself, not just its fields.
-        const params = this.localeService?.getParams('select');
-
-        this.hiddenItemsText = params?.hiddenItemsText ?? this.hiddenItemsText;
-        this.selectAllText = params?.selectAll ?? ruRULocaleData.select.selectAll;
-
-        this._changeDetectorRef.markForCheck();
-    };
 
     /** Checks if the component is currently visible in the viewport. */
     private isVisible(): boolean {

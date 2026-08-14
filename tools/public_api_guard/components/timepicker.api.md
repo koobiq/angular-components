@@ -14,9 +14,13 @@ import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/forms';
 import * as i5 from '@koobiq/components/form-field';
+import { InjectionToken } from '@angular/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqTimepickerLocaleConfiguration } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
@@ -38,6 +42,12 @@ export const HOURS_ONLY_REGEXP: RegExp;
 
 // @public (undocumented)
 export const HOURS_PER_DAY: number;
+
+// @public
+export const KBQ_TIMEPICKER_CONFIGURATION: InjectionToken<KbqTimepickerLocaleConfiguration>;
+
+// @public
+export const KBQ_TIMEPICKER_DEFAULT_CONFIGURATION: KbqTimepickerLocaleConfiguration;
 
 // @public
 export const KBQ_TIMEPICKER_VALIDATORS: any;
@@ -138,6 +148,9 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimepicker<any>, never>;
 }
+
+// @public
+export const kbqTimepickerLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqTimepickerLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqTimepickerModule {

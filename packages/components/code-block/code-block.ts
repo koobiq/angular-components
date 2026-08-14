@@ -39,6 +39,7 @@ import {
     KbqComponentColors,
     KbqDeepPartial,
     kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
     ruRULocaleData
@@ -58,14 +59,11 @@ export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION = new InjectionToken<KbqCodeBlo
 
 /**
  * Utility provider for `KBQ_CODE_BLOCK_LOCALE_CONFIGURATION`. Only the strings you pass are overridden;
- * the rest keep their `ru-RU` defaults.
+ * the rest keep following the active locale.
  */
 export const kbqCodeBlockLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqCodeBlockLocaleConfiguration>
-): Provider => ({
-    provide: KBQ_CODE_BLOCK_LOCALE_CONFIGURATION,
-    useValue: { ...ruRULocaleData.codeBlock, ...configuration }
-});
+): Provider => kbqLocaleConfigurationOverrideProvider('codeBlock', configuration);
 
 /** Fallback file name for code block if file name is not specified. */
 export const KBQ_CODE_BLOCK_FALLBACK_FILE_NAME = new InjectionToken<string>('KBQ_CODE_BLOCK_FALLBACK_FILE_NAME', {

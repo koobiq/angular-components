@@ -171,6 +171,56 @@ describe('KbqLocaleService', () => {
             expect(service.items()).toBe(service.locales.items);
         });
     });
+
+    describe('locale registry', () => {
+        // Any locale a picker can offer must have data behind it: `data()` promises a complete locale, and
+        // consumers index `locales[id]` directly — `KbqDataSizePipe` reads `locales[locale].sizeUnits`.
+        it('should register every locale the picker offers when KBQ_LOCALE_DATA patches a single one', () => {
+            const service = createService([
+                {
+                    provide: KBQ_LOCALE_DATA,
+                    useValue: { 'ru-RU': { select: { selectAll: 'Everything' } } }
+                }
+            ]);
+
+            expect(service.items().map(({ id }) => id)).toContain('en-US');
+            expect(service.items().filter(({ id }) => !service.locales[id])).toEqual([]);
+
+            service.setLocale('en-US');
+
+            expect(service.data()).toBe(service.locales['en-US']);
+            expect(service.getParams('a11y')).toBe(enUSLocaleData.a11y);
+            expect(service.getParams('select').selectAll).toBe(enUSLocaleData.select.selectAll);
+        });
+
+        it('should register a locale offered only through a custom items list', () => {
+            const service = createService([
+                {
+                    provide: KBQ_LOCALE_DATA,
+                    useValue: { items: [{ id: 'de-DE', name: 'Deutsch' }] }
+                }
+            ]);
+
+            expect(service.items().map(({ id }) => id)).toEqual(['de-DE']);
+            expect(service.locales['de-DE']).toBeDefined();
+
+            service.setLocale('de-DE');
+
+            expect(service.data().a11y).toBe(ruRULocaleData.a11y);
+            expect(service.data().sizeUnits).toBe(ruRUFormattersData.sizeUnits);
+        });
+
+        it('should register an unknown id passed to setLocale', () => {
+            const service = createService();
+
+            service.setLocale('de-DE');
+
+            expect(service.data()).toBeDefined();
+            expect(service.locales['de-DE']).toBe(service.data());
+            expect(service.data().a11y).toBe(ruRULocaleData.a11y);
+            expect(service.data().sizeUnits).toBe(ruRUFormattersData.sizeUnits);
+        });
+    });
 });
 
 describe('locale data completeness', () => {

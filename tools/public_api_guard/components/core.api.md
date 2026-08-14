@@ -2390,6 +2390,9 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 // @public (undocumented)
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
+// @public
+export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[]>;
+
 // @public (undocumented)
 export const KBQ_LOCALE_DATA: InjectionToken<KbqLocaleDataInput>;
 
@@ -2427,6 +2430,12 @@ export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 
 // @public
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
+
+// @public
+export const KBQ_SELECT_DEFAULT_LOCALE_CONFIGURATION: KbqSelectLocaleConfiguration;
+
+// @public
+export const KBQ_SELECT_LOCALE_CONFIGURATION: InjectionToken<KbqSelectLocaleConfiguration>;
 
 // @public
 export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
@@ -2804,6 +2813,9 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
 }
 
 // @public
+export const kbqDeepMerge: <T>(base: T, patch: NoInfer<KbqDeepPartial<T>> | undefined) => T;
+
+// @public
 export type KbqDeepPartial<T> = T extends (...args: never[]) => unknown ? T : T extends readonly unknown[] ? T : T extends object ? {
     [K in keyof T]?: KbqDeepPartial<T[K]>;
 } : T;
@@ -3117,6 +3129,9 @@ export class KbqLine {
 export class KbqLineSetter {
     constructor(_lines: QueryList<KbqLine>, _element: ElementRef);
 }
+
+// @public
+export const kbqLocaleConfigurationOverrideProvider: <K extends KbqLocaleSection>(section: K, configuration: KbqDeepPartial<KbqLocaleData[K]>) => Provider;
 
 // @public
 export interface KbqLocaleData extends KbqLocaleStringsData, KbqLocaleFormattersData {
@@ -4008,6 +4023,9 @@ export type KbqSelectLocaleConfiguration = {
     hiddenItemsText: string;
     selectAll: string;
 };
+
+// @public
+export const kbqSelectLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqSelectLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqSelectMatcher {

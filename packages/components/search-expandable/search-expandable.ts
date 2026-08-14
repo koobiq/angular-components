@@ -14,6 +14,7 @@ import {
     numberAttribute,
     OnDestroy,
     output,
+    Provider,
     QueryList,
     viewChild,
     ViewChildren,
@@ -22,7 +23,13 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
-import { KBQ_LOCALE_SERVICE, KbqSearchExpandableLocaleConfiguration, ruRULocaleData } from '@koobiq/components/core';
+import {
+    KbqDeepPartial,
+    kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
+    KbqSearchExpandableLocaleConfiguration,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -34,8 +41,17 @@ export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION = ruRULocaleData.search
 
 /** Injection Token for providing configuration of search-expandable */
 export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION = new InjectionToken<KbqSearchExpandableLocaleConfiguration>(
-    'KbqSearchExpandableConfiguration'
+    'KbqSearchExpandableConfiguration',
+    { factory: () => KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION }
 );
+
+/**
+ * Utility provider for `KBQ_SEARCH_EXPANDABLE_CONFIGURATION`. Only the strings you pass are overridden; the
+ * rest keep following the active locale.
+ */
+export const kbqSearchExpandableLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqSearchExpandableLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('searchExpandable', configuration);
 
 export const defaultValue = '';
 export const defaultEmitValueTimeout = 200;
@@ -65,21 +81,25 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** @docs-private */
     protected readonly focusMonitor = inject(FocusMonitor);
     /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly nativeElement: HTMLElement = inject(ElementRef).nativeElement;
 
-    readonly externalConfiguration = inject(KBQ_SEARCH_EXPANDABLE_CONFIGURATION, { optional: true });
-
     @ViewChildren(KbqInput) private input: QueryList<KbqInput>;
     @ViewChildren(KbqButton) private button: QueryList<KbqButton>;
     private readonly tooltip = viewChild(KbqTooltipTrigger);
 
-    configuration: KbqSearchExpandableLocaleConfiguration;
+    /** Strings currently rendered by the component. */
+    get configuration(): KbqSearchExpandableLocaleConfiguration {
+        return this._configuration();
+    }
+
+    private readonly _configuration = kbqInjectLocaleConfiguration(
+        'searchExpandable',
+        KBQ_SEARCH_EXPANDABLE_CONFIGURATION
+    );
 
     /** Current value in input. */
     value = new BehaviorSubject(defaultValue);
@@ -124,7 +144,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         this._placeholder = value;
     }
 
-    private _placeholder: string | null = this.localeData?.placeholder;
+    private _placeholder: string | null;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -177,12 +197,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         this.ngControl.valueAccessor = this;
 
         this.ngControl.valueChanges?.pipe(takeUntilDestroyed()).subscribe((value) => this.value.next(value));
-
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
 
         this.value
             .pipe(
@@ -306,19 +320,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         // component's own template (e.g. a parent-owned button), whose click marks the parent —
         // not this component — dirty.
         this.changeDetectorRef.markForCheck();
-    }
-
-    private updateLocaleParams = () => {
-        this.configuration =
-            this.externalConfiguration ??
-            this.localeService?.getParams('searchExpandable') ??
-            KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION;
-
-        this.changeDetectorRef.markForCheck();
-    };
-
-    private initDefaultParams() {
-        this.configuration = KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION;
     }
 
     private emitValue = (value: string, forced = false): void => {

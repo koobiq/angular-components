@@ -21,13 +21,14 @@ import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonCssStyler } from '@koobiq/components/button';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqNavbarLocaleConfiguration } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -291,11 +292,9 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     constructor();
     readonly animationDone: Subject<void>;
     readonly bento: i0.Signal<KbqNavbarBento | undefined>;
-    readonly configuration: i0.WritableSignal<KbqNavbarLocaleConfiguration>;
+    readonly configuration: i0.Signal<KbqNavbarLocaleConfiguration>;
     readonly expanded: i0.ModelSignal<boolean>;
-    readonly externalConfiguration: KbqNavbarLocaleConfiguration | null;
     readonly items: i0.Signal<readonly KbqNavbarItem[]>;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     ngAfterContentInit(): void;
     protected onKeyDown(event: KeyboardEvent): void;
     readonly openOver: i0.InputSignal<boolean>;
@@ -309,6 +308,9 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
 // @public
 export type KbqVerticalNavbarConfiguration = KbqNavbarLocaleConfiguration;
+
+// @public
+export const kbqVerticalNavbarLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>) => Provider;
 
 // (No @packageDocumentation comment for this package)
 
