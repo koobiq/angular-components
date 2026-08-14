@@ -96,6 +96,12 @@ The `alwaysShowActionbar` attribute keeps the panel visible regardless of tabs o
 <kbq-code-block [files]="files" canCopy alwaysShowActionbar />
 ```
 
+To enable the option for all code blocks within an injector scope, use the provider:
+
+```typescript
+providers: [kbqCodeBlockDefaultOptionsProvider({ alwaysShowActionbar: true })];
+```
+
 #### Changing wrap mode
 
 The user can toggle the wrap mode using a toggle button; this option is disabled by default and can be configured using the `canToggleSoftWrap` attribute.

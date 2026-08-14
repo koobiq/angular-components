@@ -96,6 +96,12 @@ providers: [
 <kbq-code-block [files]="files" canCopy alwaysShowActionbar />
 ```
 
+Чтобы включить настройку для всех блоков кода, зарегистрируйте провайдер:
+
+```typescript
+providers: [kbqCodeBlockDefaultOptionsProvider({ alwaysShowActionbar: true })];
+```
+
 #### Изменение режима переноса
 
 Пользователь может изменять режим переноса при помощи кнопки-переключателя, по умолчанию эта возможность выключена, настраивается при помощи атрибута `canToggleSoftWrap`.

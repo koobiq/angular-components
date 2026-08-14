@@ -14,6 +14,7 @@ import {
     ContentChild,
     DestroyRef,
     Directive,
+    effect,
     ElementRef,
     inject,
     InjectionToken,
@@ -29,7 +30,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
@@ -44,7 +45,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, filter, fromEvent, map, merge, of, startWith, switchMap, take } from 'rxjs';
+import { debounceTime, filter, fromEvent, map, merge, take } from 'rxjs';
 import { KbqCodeBlockHighlight } from './code-block-highlight';
 import { KbqCodeBlockFile, KbqTabLinkTemplateContext } from './types';
 
@@ -69,6 +70,23 @@ export const KBQ_CODE_BLOCK_FALLBACK_FILE_NAME = new InjectionToken<string>('KBQ
 export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider => ({
     provide: KBQ_CODE_BLOCK_FALLBACK_FILE_NAME,
     useValue: fileName
+});
+
+/** Default options for `kbq-code-block`. */
+export type KbqCodeBlockDefaultOptions = Partial<{
+    /** Whether the actionbar should remain visible when tabs are hidden. */
+    alwaysShowActionbar: boolean;
+}>;
+
+/** Injection token used to configure the default options for all `kbq-code-block` components. */
+export const KBQ_CODE_BLOCK_DEFAULT_OPTIONS = new InjectionToken<KbqCodeBlockDefaultOptions>(
+    'KBQ_CODE_BLOCK_DEFAULT_OPTIONS'
+);
+
+/** Utility provider for `KBQ_CODE_BLOCK_DEFAULT_OPTIONS`. */
+export const kbqCodeBlockDefaultOptionsProvider = (options: KbqCodeBlockDefaultOptions): Provider => ({
+    provide: KBQ_CODE_BLOCK_DEFAULT_OPTIONS,
+    useValue: options
 });
 
 /** Marks a template as a custom tab link. */
@@ -117,6 +135,7 @@ export class KbqCodeBlockTabLinkContent {}
 })
 export class KbqCodeBlock implements AfterViewInit {
     private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
+    private readonly defaultOptions = inject(KBQ_CODE_BLOCK_DEFAULT_OPTIONS, { optional: true });
     /**
      * Reference to the scrollable code content.
      *
@@ -205,7 +224,9 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /** Whether the actionbar should remain visible when tabs are hidden. */
-    readonly alwaysShowActionbar = input<boolean, unknown>(false, { transform: booleanAttribute });
+    readonly alwaysShowActionbar = input<boolean, unknown>(this.defaultOptions?.alwaysShowActionbar ?? false, {
+        transform: booleanAttribute
+    });
 
     /**
      * @deprecated Will be removed in next major release, use `files` instead.
@@ -352,11 +373,11 @@ export class KbqCodeBlock implements AfterViewInit {
     );
 
     constructor() {
+        this.trackHoverState();
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
     }
 
     ngAfterViewInit(): void {
-        this.trackHoverState();
         this.setupContentOverflowDetection();
 
         this.copyButtonTooltip()
@@ -437,27 +458,30 @@ export class KbqCodeBlock implements AfterViewInit {
         }
     }
 
-    /**
-     * Tracks hover events to show/hide the actionbar when `hideTabs` is `true`.
-     * Reacts to `hideTabs` changes dynamically.
-     */
+    /** Tracks hover when tabs are hidden and `alwaysShowActionbar` is disabled. */
     private trackHoverState(): void {
-        outputToObservable(this.hideTabsChange)
-            .pipe(
-                startWith(this._hideTabs()),
-                switchMap((hideTabs) => {
-                    if (!hideTabs) return of(false);
+        effect(
+            (onCleanup) => {
+                const hideTabs = this._hideTabs();
+                const alwaysShowActionbar = this.alwaysShowActionbar();
 
-                    return merge(
-                        fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseenter').pipe(map(() => true)),
-                        fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseleave').pipe(map(() => false))
-                    ).pipe(debounceTime(100), startWith(false));
-                }),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((isHovered) => {
-                this.actionbarHovered.set(isHovered);
-            });
+                this.actionbarHovered.set(false);
+
+                if (!hideTabs || alwaysShowActionbar || this.platform.IOS || this.platform.ANDROID) return;
+
+                const subscription = merge(
+                    fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseenter').pipe(map(() => true)),
+                    fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseleave').pipe(map(() => false))
+                )
+                    .pipe(debounceTime(100))
+                    .subscribe((isHovered) => {
+                        this.actionbarHovered.set(isHovered);
+                    });
+
+                onCleanup(() => subscription.unsubscribe());
+            },
+            { injector: this.injector }
+        );
     }
 
     private setupContentOverflowDetection(): void {

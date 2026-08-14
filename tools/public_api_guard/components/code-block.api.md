@@ -18,6 +18,11 @@ import { Provider } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
+export const KBQ_CODE_BLOCK_DEFAULT_OPTIONS: InjectionToken<Partial<{
+    alwaysShowActionbar: boolean;
+}>>;
+
+// @public
 export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE: InjectionToken<string>;
 
 // @public
@@ -100,6 +105,14 @@ export class KbqCodeBlock implements AfterViewInit {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
 }
+
+// @public
+export type KbqCodeBlockDefaultOptions = Partial<{
+    alwaysShowActionbar: boolean;
+}>;
+
+// @public
+export const kbqCodeBlockDefaultOptionsProvider: (options: KbqCodeBlockDefaultOptions) => Provider;
 
 // @public
 export const kbqCodeBlockFallbackFileLanguageProvider: (language: string) => Provider;
