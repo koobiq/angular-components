@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 
+/**
+ * @title Native scrollbar example
+ */
 @Component({
     selector: 'native-scrollbar-example',
     imports: [KbqNativeScrollbar],

@@ -1090,6 +1090,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "button-overview-example.ts",
     "importPath": "components/button"
   },
+  "block-checkbox": {
+    "packagePath": "components/checkbox/block-checkbox",
+    "title": "Custom checkbox block",
+    "componentName": "BlockCheckboxExample",
+    "files": [
+      "block-checkbox-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "block-checkbox-example",
+    "additionalComponents": [
+      "BlockCheckboxComponent"
+    ],
+    "primaryFile": "block-checkbox-example.ts",
+    "importPath": "components/checkbox"
+  },
   "checkbox-indeterminate": {
     "packagePath": "components/checkbox/checkbox-indeterminate",
     "title": "Checkbox indeterminate",
@@ -4743,6 +4758,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "resizer-overview-example.ts",
     "importPath": "components/resizer"
   },
+  "native-scrollbar": {
+    "packagePath": "components/scrollbar/native-scrollbar",
+    "title": "Native scrollbar example",
+    "componentName": "NativeScrollbarExample",
+    "files": [
+      "native-scrollbar-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "native-scrollbar-example",
+    "additionalComponents": [],
+    "primaryFile": "native-scrollbar-example.ts",
+    "importPath": "components/scrollbar"
+  },
   "scrollbar-overview": {
     "packagePath": "components/scrollbar/scrollbar-overview",
     "title": "Scrollbar overview example",
@@ -7782,6 +7810,8 @@ return import('@koobiq/docs-examples/components/button');
 return import('@koobiq/docs-examples/components/button');
   case 'button-overview':
 return import('@koobiq/docs-examples/components/button');
+  case 'block-checkbox':
+return import('@koobiq/docs-examples/components/checkbox');
   case 'checkbox-indeterminate':
 return import('@koobiq/docs-examples/components/checkbox');
   case 'checkbox-multiline':
@@ -8330,6 +8360,8 @@ return import('@koobiq/docs-examples/components/radio');
 return import('@koobiq/docs-examples/components/radio');
   case 'resizer-overview':
 return import('@koobiq/docs-examples/components/resizer');
+  case 'native-scrollbar':
+return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-overview':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-scroll-to':
