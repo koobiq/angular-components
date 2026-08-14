@@ -4,6 +4,22 @@ import { e2eEnableDarkTheme } from 'packages/e2e/utils';
 test.describe('KbqScrollbar', () => {
     test.describe('E2eScrollbarStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eScrollbarStateAndStyle');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eScrollbarStateAndStyle');
+        });
+
+        test('renders scrollbar variants', async ({ page }) => {
+            const component = getComponent(page);
+
+            await expect(component).toHaveScreenshot('01-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(component).toHaveScreenshot('01-dark.png');
+        });
+    });
+
+    test.describe('E2eScrollbarHover', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eScrollbarHover');
         const getScrollbar = (page: Page) => getComponent(page).locator('kbq-scrollbar');
         const getThumb = (page: Page) =>
             getComponent(page).locator('.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb');
@@ -29,17 +45,7 @@ test.describe('KbqScrollbar', () => {
             }, variableName);
 
         test.beforeEach(async ({ page }) => {
-            await page.goto('/E2eScrollbarStateAndStyle');
-        });
-
-        test('shows the track on hover', async ({ page }) => {
-            const component = getComponent(page);
-
-            await getScrollbar(page).hover();
-
-            await expect(component).toHaveScreenshot('01-light.png');
-            await e2eEnableDarkTheme(page);
-            await expect(component).toHaveScreenshot('01-dark.png');
+            await page.goto('/E2eScrollbarHover');
         });
 
         test('hovering the thumb applies --kbq-scrollbar-thumb-hover-background', async ({ page }) => {
@@ -412,6 +418,48 @@ test.describe('KbqScrollbar', () => {
 
             await expect.poll(() => innerScrollTop(page)).toBe(600);
             expect(await outerScrollTop(page)).toBe(0);
+        });
+    });
+
+    test.describe('E2eNativeScrollbar', () => {
+        type NativeScrollbarStyle = {
+            scrollbarWidth: string;
+            thumbColor: string;
+        };
+
+        const nativeScrollbarStyle = (locator: Locator): Promise<NativeScrollbarStyle> =>
+            locator.evaluate((el) => ({
+                scrollbarWidth: getComputedStyle(el, '::-webkit-scrollbar').width,
+                thumbColor: getComputedStyle(el, '::-webkit-scrollbar-thumb').backgroundColor
+            }));
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eNativeScrollbar');
+        });
+
+        test('customizes only the host scrollbar by default', async ({ page }) => {
+            const hostStyle = await nativeScrollbarStyle(page.getByTestId('e2eNativeScrollbarSelf'));
+            const nestedStyle = await nativeScrollbarStyle(page.getByTestId('e2eNativeScrollbarSelfNested'));
+
+            expect(hostStyle.scrollbarWidth).toBe('14px');
+            expect(nestedStyle.scrollbarWidth).not.toBe('14px');
+            expect(nestedStyle.thumbColor).not.toBe(hostStyle.thumbColor);
+        });
+
+        test('customizes descendant scrollbars when explicitly enabled', async ({ page }) => {
+            const hostStyle = await nativeScrollbarStyle(page.getByTestId('e2eNativeScrollbarDescendants'));
+            const nestedStyle = await nativeScrollbarStyle(page.getByTestId('e2eNativeScrollbarDescendantsNested'));
+
+            expect(hostStyle.scrollbarWidth).toBe('14px');
+            expect(nestedStyle).toEqual(hostStyle);
+        });
+
+        test('customizes KbqScrollbarViewport in native mode without rendering a custom track', async ({ page }) => {
+            const viewport = page.getByTestId('e2eNativeScrollbarViewport');
+
+            expect((await nativeScrollbarStyle(viewport)).scrollbarWidth).toBe('14px');
+            await expect(viewport.locator('kbq-scrollbar-track')).not.toBeAttached();
+            await expect(viewport).not.toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
         });
     });
 });

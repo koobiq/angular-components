@@ -19,7 +19,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </kbq-form-field>
 
         <div class="example-scrollbar">
-            <kbq-scrollbar [mode]="mode()">
+            <kbq-scrollbar [kbqScrollbarMode]="mode()">
                 <p>
                     In cryptography, a brute-force attack or exhaustive key search is a cryptanalytic attack that
                     consists of an attacker submitting many possible keys or passwords with the hope of eventually
@@ -53,7 +53,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
             flex-direction: column;
             align-items: center;
             gap: var(--kbq-size-l);
-            overflow: hidden;
             padding: var(--kbq-size-l);
         }
 

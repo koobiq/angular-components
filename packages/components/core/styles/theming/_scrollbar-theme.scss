@@ -1,5 +1,7 @@
 // @deprecated The `.kbq-scrollbar` selector and related mixins are deprecated.
-// Use the `KbqScrollbar` component instead. Will be removed in the next major version.
+// Will be removed in the next major version.
+// Use `[kbqNativeScrollbar]` to customize the browser-rendered scrollbar, or `<kbq-scrollbar>`
+// when a custom track and thumb, visibility modes, or programmatic scrolling are required.
 
 /* stylelint-disable selector-pseudo-class-no-unknown */
 
@@ -21,7 +23,7 @@
 }
 
 @mixin _kbq-scrollbar() {
-    @warn 'The `.kbq-scrollbar` selector and related mixins/tokens are deprecated. Use the `KbqScrollbar` component instead. Will be removed in the next major version.';
+    @warn 'The `.kbq-scrollbar` selector and related mixins/tokens are deprecated. Will be removed in the next major version. Use `[kbqNativeScrollbar]` to customize the browser-rendered scrollbar, or `<kbq-scrollbar>` when a custom track and thumb, visibility modes, or programmatic scrolling are required.';
 
     // For Firefox compatibility
     @supports not selector(::-webkit-scrollbar) {

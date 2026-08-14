@@ -1,9 +1,52 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqScrollbar, KbqScrollbarMode, KbqScrollbarViewport } from './scrollbar';
+import { KbqNativeScrollbar, KbqScrollbar, KbqScrollbarMode, KbqScrollbarViewport } from './scrollbar';
 
 @Component({
     selector: 'e2e-scrollbar-state-and-style',
+    imports: [KbqScrollbar, KbqNativeScrollbar, KbqScrollbarViewport],
+    template: `
+        <kbq-scrollbar kbqScrollbarMode="always" class="e2e-scrollbar">
+            <p>KbqScrollbar</p>
+        </kbq-scrollbar>
+
+        <div kbqScrollbarViewport kbqScrollbarMode="always" class="e2e-scrollbar" [style.overflow]="'scroll'">
+            <p>KbqScrollbarViewport</p>
+        </div>
+
+        <div kbqNativeScrollbar class="e2e-scrollbar" [style.overflow]="'scroll'">
+            <p>KbqNativeScrollbar</p>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: inline-grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--kbq-size-m);
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-scrollbar {
+            width: 125px;
+            height: 125px;
+            background-color: var(--kbq-background-bg-secondary);
+        }
+
+        p {
+            width: 200%;
+            height: 200%;
+            margin: var(--kbq-size-l);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarStateAndStyle'
+    }
+})
+export class E2eScrollbarStateAndStyle {}
+
+@Component({
+    selector: 'e2e-scrollbar-hover',
     imports: [KbqScrollbar],
     template: `
         <kbq-scrollbar class="e2e-scrollbar">
@@ -31,24 +74,24 @@ import { KbqScrollbar, KbqScrollbarMode, KbqScrollbarViewport } from './scrollba
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'data-testid': 'e2eScrollbarStateAndStyle'
+        'data-testid': 'e2eScrollbarHover'
     }
 })
-export class E2eScrollbarStateAndStyle {}
+export class E2eScrollbarHover {}
 
 @Component({
     selector: 'e2e-scrollbar-track',
     imports: [KbqScrollbar],
     template: `
-        <kbq-scrollbar mode="always" class="e2e-scrollbar" data-testid="e2eScrollbarTrackY">
+        <kbq-scrollbar kbqScrollbarMode="always" class="e2e-scrollbar" data-testid="e2eScrollbarTrackY">
             <p [style.height.%]="200">track Y</p>
         </kbq-scrollbar>
 
-        <kbq-scrollbar mode="always" class="e2e-scrollbar" data-testid="e2eScrollbarTrackX">
+        <kbq-scrollbar kbqScrollbarMode="always" class="e2e-scrollbar" data-testid="e2eScrollbarTrackX">
             <p [style.width.%]="200">track X</p>
         </kbq-scrollbar>
 
-        <kbq-scrollbar mode="always" class="e2e-scrollbar" data-testid="e2eScrollbarTrackXY">
+        <kbq-scrollbar kbqScrollbarMode="always" class="e2e-scrollbar" data-testid="e2eScrollbarTrackXY">
             <p [style.width.%]="200" [style.height.%]="200">track X and Y</p>
         </kbq-scrollbar>
     `,
@@ -89,7 +132,7 @@ export class E2eScrollbarTrack {}
             }
         </div>
 
-        <kbq-scrollbar class="e2e-scrollbar" data-testid="e2eScrollbarModeTarget" [mode]="mode()">
+        <kbq-scrollbar class="e2e-scrollbar" data-testid="e2eScrollbarModeTarget" [kbqScrollbarMode]="mode()">
             <p>content</p>
             <!-- Plain, unmonitored content — the viewport's own subtree focus monitoring covers it
                  without needing a per-element cdkMonitorElementFocus opt-in. -->
@@ -145,7 +188,7 @@ export class E2eScrollbarMode {
 
         <kbq-scrollbar
             #scrollbar="kbqScrollbar"
-            mode="always"
+            kbqScrollbarMode="always"
             class="e2e-scrollbar"
             data-testid="e2eScrollbarScrollToTarget"
         >
@@ -195,7 +238,7 @@ export class E2eScrollbarScrollTo {}
 
         <cdk-virtual-scroll-viewport
             kbqScrollbarViewport
-            mode="always"
+            kbqScrollbarMode="always"
             class="e2e-scrollbar"
             itemSize="32"
             data-testid="e2eScrollbarVirtualScrollTarget"
@@ -245,10 +288,10 @@ export class E2eScrollbarVirtualScroll {
     selector: 'e2e-scrollbar-nested',
     imports: [KbqScrollbar],
     template: `
-        <kbq-scrollbar mode="always" class="e2e-outer" data-testid="e2eScrollbarNestedOuter">
+        <kbq-scrollbar kbqScrollbarMode="always" class="e2e-outer" data-testid="e2eScrollbarNestedOuter">
             <div class="e2e-outer-spacer"></div>
 
-            <kbq-scrollbar mode="always" class="e2e-inner" data-testid="e2eScrollbarNestedInner">
+            <kbq-scrollbar kbqScrollbarMode="always" class="e2e-inner" data-testid="e2eScrollbarNestedInner">
                 <div class="e2e-inner-block">1</div>
                 <div class="e2e-inner-block">2</div>
                 <div class="e2e-inner-block">3</div>
@@ -295,3 +338,68 @@ export class E2eScrollbarVirtualScroll {
     }
 })
 export class E2eScrollbarNested {}
+
+@Component({
+    selector: 'e2e-native-scrollbar',
+    imports: [KbqNativeScrollbar, KbqScrollbar],
+    template: `
+        <div kbqNativeScrollbar class="e2e-native-scrollbar" data-testid="e2eNativeScrollbarSelf">
+            <div class="e2e-native-scrollbar__content">
+                <div class="e2e-native-scrollbar__nested" data-testid="e2eNativeScrollbarSelfNested">
+                    <div class="e2e-native-scrollbar__content"></div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            kbqNativeScrollbar
+            kbqNativeScrollbarDescendants
+            class="e2e-native-scrollbar"
+            data-testid="e2eNativeScrollbarDescendants"
+        >
+            <div class="e2e-native-scrollbar__content">
+                <div class="e2e-native-scrollbar__nested" data-testid="e2eNativeScrollbarDescendantsNested">
+                    <div class="e2e-native-scrollbar__content"></div>
+                </div>
+            </div>
+        </div>
+
+        <kbq-scrollbar
+            kbqNativeScrollbar
+            kbqScrollbarMode="native"
+            class="e2e-native-scrollbar"
+            data-testid="e2eNativeScrollbarViewport"
+        >
+            <div class="e2e-native-scrollbar__content"></div>
+        </kbq-scrollbar>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-m);
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-native-scrollbar {
+            width: 120px;
+            height: 80px;
+            overflow: scroll;
+        }
+
+        .e2e-native-scrollbar__content {
+            width: 240px;
+            height: 160px;
+        }
+
+        .e2e-native-scrollbar__nested {
+            width: 60px;
+            height: 40px;
+            overflow: scroll;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNativeScrollbar'
+    }
+})
+export class E2eNativeScrollbar {}

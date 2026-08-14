@@ -3,7 +3,13 @@ import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core'
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchMouseEvent, KbqOverflowShadowContainer } from '@koobiq/components/core';
-import { KbqScrollbar, KbqScrollbarMode, kbqScrollbarOptionsProvider, KbqScrollbarViewport } from './scrollbar';
+import {
+    KbqNativeScrollbar,
+    KbqScrollbar,
+    KbqScrollbarMode,
+    kbqScrollbarOptionsProvider,
+    KbqScrollbarViewport
+} from './scrollbar';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers });
@@ -53,6 +59,67 @@ const setRect = (el: HTMLElement, rect: Partial<DOMRect>): void => {
     } as DOMRect);
 };
 
+describe(KbqNativeScrollbar.name, () => {
+    @Component({
+        selector: 'test-native-scrollbar',
+        imports: [KbqNativeScrollbar],
+        template: `
+            <div kbqNativeScrollbar [kbqNativeScrollbarDescendants]="includeDescendants"></div>
+        `
+    })
+    class TestNativeScrollbar {
+        includeDescendants: unknown = false;
+        readonly directive = viewChild.required(KbqNativeScrollbar);
+        readonly host = viewChild.required(KbqNativeScrollbar, { read: ElementRef<HTMLElement> });
+    }
+
+    it('customizes only its host by default', () => {
+        const fixture = createComponent(TestNativeScrollbar);
+        const host = fixture.componentInstance.host().nativeElement;
+
+        expect(fixture.componentInstance.directive().descendants()).toBe(false);
+        expect(host.classList).toContain('kbq-native-scrollbar');
+        expect(host.classList).not.toContain('kbq-native-scrollbar_descendants');
+        expect(host.querySelector('kbq-scrollbar-track')).toBeNull();
+    });
+
+    it('coerces kbqNativeScrollbarDescendants and updates the descendants modifier', () => {
+        const fixture = createComponent(TestNativeScrollbar);
+        const host = fixture.componentInstance.host().nativeElement;
+
+        fixture.componentInstance.includeDescendants = '';
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.directive().descendants()).toBe(true);
+        expect(host.classList).toContain('kbq-native-scrollbar_descendants');
+
+        fixture.componentInstance.includeDescendants = 'false';
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.directive().descendants()).toBe(false);
+        expect(host.classList).not.toContain('kbq-native-scrollbar_descendants');
+    });
+
+    it('customizes the browser scrollbar when combined with KbqScrollbar in native mode', () => {
+        @Component({
+            selector: 'test-native-scrollbar-with-viewport',
+            imports: [KbqNativeScrollbar, KbqScrollbar],
+            template: `
+                <kbq-scrollbar kbqNativeScrollbar kbqScrollbarMode="native">content</kbq-scrollbar>
+            `
+        })
+        class TestNativeScrollbarWithViewport {}
+
+        const fixture = createComponent(TestNativeScrollbarWithViewport);
+        const host: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar');
+
+        expect(host.classList).toContain('kbq-native-scrollbar');
+        expect(host.classList).toContain('kbq-scrollbar-viewport');
+        expect(host.classList).not.toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
+        expect(host.querySelector('kbq-scrollbar-track')).toBeNull();
+    });
+});
+
 describe(KbqScrollbar.name, () => {
     describe('options', () => {
         @Component({
@@ -80,12 +147,12 @@ describe(KbqScrollbar.name, () => {
             expect(fixture.componentInstance.scrollbar().mode()).toBe('always');
         });
 
-        it('lets a per-instance [mode] override the injected default', () => {
+        it('lets a per-instance [kbqScrollbarMode] override the injected default', () => {
             @Component({
                 selector: 'test-scrollbar-mode-override',
                 imports: [KbqScrollbar],
                 template: `
-                    <kbq-scrollbar mode="native">content</kbq-scrollbar>
+                    <kbq-scrollbar kbqScrollbarMode="native">content</kbq-scrollbar>
                 `
             })
             class TestScrollbarModeOverride {
@@ -105,7 +172,7 @@ describe(KbqScrollbar.name, () => {
             selector: 'test-scrollbar-mode',
             imports: [KbqScrollbar],
             template: `
-                <kbq-scrollbar [mode]="mode">content</kbq-scrollbar>
+                <kbq-scrollbar [kbqScrollbarMode]="mode">content</kbq-scrollbar>
             `
         })
         class TestScrollbarMode {
@@ -201,7 +268,7 @@ describe(KbqScrollbar.name, () => {
             selector: 'test-scrollbar-track-visibility',
             imports: [KbqScrollbar],
             template: `
-                <kbq-scrollbar mode="always">content</kbq-scrollbar>
+                <kbq-scrollbar kbqScrollbarMode="always">content</kbq-scrollbar>
             `
         })
         class TestScrollbarTrackVisibility {
@@ -313,7 +380,7 @@ describe(KbqScrollbar.name, () => {
             selector: 'test-scrollbar-thumb',
             imports: [KbqScrollbarViewport],
             template: `
-                <div #viewport kbqScrollbarViewport mode="always"></div>
+                <div #viewport kbqScrollbarViewport kbqScrollbarMode="always"></div>
             `
         })
         class TestScrollbarThumb {
@@ -440,7 +507,7 @@ describe(KbqScrollbar.name, () => {
                 selector: 'test-scrollbar-thumb-rtl',
                 imports: [KbqScrollbarViewport],
                 template: `
-                    <div #viewport kbqScrollbarViewport mode="always" dir="rtl"></div>
+                    <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
                 `
             })
             class TestScrollbarThumbRtl extends TestScrollbarThumb {}
@@ -572,7 +639,7 @@ describe(KbqScrollbar.name, () => {
             selector: 'test-scrollbar-scroll-to',
             imports: [KbqScrollbar],
             template: `
-                <kbq-scrollbar mode="always" style="height: 100px">
+                <kbq-scrollbar kbqScrollbarMode="always" style="height: 100px">
                     <div #target style="margin-top: 40px">target</div>
                 </kbq-scrollbar>
             `
@@ -700,7 +767,7 @@ describe(KbqScrollbar.name, () => {
             selector: 'test-scrollbar-scroll-changes',
             imports: [KbqScrollbar],
             template: `
-                <kbq-scrollbar mode="always">content</kbq-scrollbar>
+                <kbq-scrollbar kbqScrollbarMode="always">content</kbq-scrollbar>
             `
         })
         class TestScrollbarScrollChanges {
@@ -725,7 +792,11 @@ describe(KbqScrollbar.name, () => {
                 selector: 'test-scrollbar-overflow-shadow-container',
                 imports: [KbqScrollbar, KbqOverflowShadowContainer],
                 template: `
-                    <kbq-scrollbar #container="kbqOverflowShadowContainer" mode="always" kbqOverflowShadowContainer>
+                    <kbq-scrollbar
+                        #container="kbqOverflowShadowContainer"
+                        kbqOverflowShadowContainer
+                        kbqScrollbarMode="always"
+                    >
                         content
                     </kbq-scrollbar>
                 `
@@ -755,7 +826,7 @@ describe(KbqScrollbar.name, () => {
             selector: 'test-standalone-viewport',
             imports: [KbqScrollbarViewport],
             template: `
-                <div kbqScrollbarViewport style="height: 100px" [mode]="mode">
+                <div kbqScrollbarViewport style="height: 100px" [kbqScrollbarMode]="mode">
                     <div #target style="margin-top: 40px">target</div>
                 </div>
             `
@@ -829,7 +900,7 @@ describe(KbqScrollbar.name, () => {
         });
 
         it('defaults mode from KBQ_SCROLLBAR_OPTIONS when used standalone', () => {
-            // No [mode] binding at all here — even binding to `undefined` counts as "a value was
+            // No [kbqScrollbarMode] binding at all here — even binding to `undefined` counts as "a value was
             // provided" and would bypass input()'s default-value fallback.
             @Component({
                 selector: 'test-standalone-viewport-default-mode',

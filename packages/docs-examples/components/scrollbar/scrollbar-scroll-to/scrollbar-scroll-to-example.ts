@@ -93,7 +93,6 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
             flex-direction: column;
             align-items: center;
             gap: var(--kbq-size-l);
-            overflow: hidden;
             padding: var(--kbq-size-l);
         }
 
@@ -104,14 +103,8 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
         }
 
         .example-scrollbar {
-            overflow: auto;
-            resize: both;
-            height: 200px;
-            min-height: 200px;
-            max-height: 400px;
+            max-height: 200px;
             width: 100%;
-            min-width: 200px;
-            max-width: 100%;
             border-radius: var(--kbq-size-border-radius);
             background-color: var(--kbq-background-bg-secondary);
         }

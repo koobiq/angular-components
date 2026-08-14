@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { KbqScrollbar, KbqScrollbarViewport } from './scrollbar';
+import { KbqNativeScrollbar, KbqScrollbar, KbqScrollbarViewport } from './scrollbar';
 
 const COMPONENTS = [
+    KbqNativeScrollbar,
     KbqScrollbar,
     KbqScrollbarViewport
 ];

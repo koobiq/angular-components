@@ -4,6 +4,7 @@ import { CdkScrollable, type ExtendedScrollToOptions } from '@angular/cdk/scroll
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     Directive,
@@ -182,14 +183,37 @@ type Dimension = Pick<
 /** `[vertical, horizontal]` overflow flags. */
 type ScrollbarVisibility = readonly [boolean, boolean];
 
-/** Loads the global `.kbq-scrollbar-viewport_native-scrollbar-hidden` utility class once per app (see {@link KbqScrollbarViewport}). */
+/** Loads the shared scrollbar tokens and global native/viewport styles once per app. */
 @Component({
-    selector: 'scrollbar-viewport-style-loader',
+    selector: 'scrollbar-style-loader',
     template: '',
-    styleUrl: './scrollbar-viewport.scss',
+    styleUrls: ['./scrollbar-tokens.scss', './native-scrollbar.scss', './scrollbar-viewport.scss'],
     encapsulation: ViewEncapsulation.None
 })
-class ScrollbarViewportStyleLoader {}
+class ScrollbarStyleLoader {}
+
+/** Customizes the browser-rendered scrollbar of its host without replacing native scrolling. */
+@Directive({
+    selector: '[kbqNativeScrollbar]',
+    host: {
+        class: 'kbq-native-scrollbar',
+        '[class.kbq-native-scrollbar_descendants]': 'descendants()'
+    },
+    exportAs: 'kbqNativeScrollbar'
+})
+export class KbqNativeScrollbar {
+    private readonly styleLoader = inject(_CdkPrivateStyleLoader);
+
+    /** Whether browser-rendered scrollbars of descendant elements should also be customized. */
+    readonly descendants = input(false, {
+        alias: 'kbqNativeScrollbarDescendants',
+        transform: booleanAttribute
+    });
+
+    constructor() {
+        this.styleLoader.load(ScrollbarStyleLoader);
+    }
+}
 
 /** Options accepted by {@link KbqScrollbarViewport.scrollTo}/{@link KbqScrollbar.scrollTo} — RTL-normalized, see `CdkScrollable.scrollTo`. */
 export type KbqScrollbarScrollToOptions = ExtendedScrollToOptions;
@@ -235,14 +259,14 @@ export class KbqScrollbarViewport {
     protected readonly id = this.getNativeElement().id || this.idGenerator.getId('kbq-scrollbar-viewport-');
 
     /** Visibility mode for this viewport's scrollbar. Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}. */
-    readonly mode = input<KbqScrollbarMode>(inject(KBQ_SCROLLBAR_OPTIONS).mode);
+    readonly mode = input<KbqScrollbarMode>(inject(KBQ_SCROLLBAR_OPTIONS).mode, { alias: 'kbqScrollbarMode' });
 
     // Reference to the dynamically created track, used to update its mode and destroy it when custom
     // scrollbars are disabled.
     private trackRef: ComponentRef<KbqScrollbarTrack> | null = null;
 
     constructor() {
-        this.styleLoader.load(ScrollbarViewportStyleLoader);
+        this.styleLoader.load(ScrollbarStyleLoader);
 
         effect(() => {
             const mode = this.mode();
@@ -259,7 +283,7 @@ export class KbqScrollbarViewport {
                 this.trackRef = this.createTrack();
             }
 
-            this.trackRef.setInput('mode', mode);
+            this.trackRef.setInput('kbqScrollbarMode', mode);
         });
     }
 
@@ -368,7 +392,7 @@ class KbqScrollbarThumb {
     private readonly style = this.nativeElement.style;
 
     /** Axis the thumb scrolls along — `'vertical'` (default) or `'horizontal'`. */
-    readonly orientation = input<Orientation>('vertical');
+    readonly orientation = input.required<Orientation>({ alias: 'kbqScrollbarThumbOrientation' });
 
     constructor() {
         merge(
@@ -518,7 +542,7 @@ class KbqScrollbarThumb {
  * Renders the visual scroll bars/thumbs for {@link KBQ_SCROLLBAR_VIEWPORT}.
  *
  * Created and positioned exclusively by `KbqScrollbarViewport` — not exported, never place this
- * directly in a template. It only ever exists for `mode="hover"`/`"always"` (`KbqScrollbarViewport`
+ * directly in a template. It only ever exists for `kbqScrollbarMode="hover"`/`"always"` (`KbqScrollbarViewport`
  * destroys it instead for `"native"`/`"hidden"`), so it carries no native/hidden handling itself.
  */
 @Component({
@@ -533,7 +557,7 @@ class KbqScrollbarThumb {
                 [class.kbq-scrollbar-track__bar_has-horizontal]="visibility()[1]"
                 (mousedown)="$event.preventDefault()"
             >
-                <div kbqScrollbarThumb orientation="vertical" class="kbq-scrollbar-track__thumb"></div>
+                <div kbqScrollbarThumb kbqScrollbarThumbOrientation="vertical" class="kbq-scrollbar-track__thumb"></div>
             </div>
         }
         @if (visibility()[1]) {
@@ -544,7 +568,11 @@ class KbqScrollbarThumb {
                 [class.kbq-scrollbar-track__bar_has-vertical]="visibility()[0]"
                 (mousedown)="$event.preventDefault()"
             >
-                <div kbqScrollbarThumb orientation="horizontal" class="kbq-scrollbar-track__thumb"></div>
+                <div
+                    kbqScrollbarThumb
+                    kbqScrollbarThumbOrientation="horizontal"
+                    class="kbq-scrollbar-track__thumb"
+                ></div>
             </div>
         }
     `,
@@ -587,7 +615,7 @@ class KbqScrollbarTrack {
     );
 
     /** Visibility mode, forwarded from the owning {@link KbqScrollbarViewport}; only `hover`/`always` reach the track. */
-    readonly mode = input.required<KbqScrollbarMode>();
+    readonly mode = input.required<KbqScrollbarMode>({ alias: 'kbqScrollbarMode' });
 
     private get scrollbars(): ScrollbarVisibility {
         const { clientHeight, scrollHeight, clientWidth, scrollWidth } = this.viewport.nativeElement;
@@ -609,7 +637,7 @@ class KbqScrollbarTrack {
     `,
     styleUrl: './scrollbar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    hostDirectives: [{ directive: KbqScrollbarViewport, inputs: ['mode'] }],
+    hostDirectives: [{ directive: KbqScrollbarViewport, inputs: ['kbqScrollbarMode'] }],
     exportAs: 'kbqScrollbar'
 })
 export class KbqScrollbar {
@@ -617,7 +645,7 @@ export class KbqScrollbar {
     private readonly viewport = inject(KbqScrollbarViewport);
 
     /** Visibility mode for the scrollbar. Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}. */
-    readonly mode = input<KbqScrollbarMode>(this.options.mode);
+    readonly mode = input<KbqScrollbarMode>(this.options.mode, { alias: 'kbqScrollbarMode' });
 
     /** The scrollbar's native scrollable element. */
     getNativeElement(): HTMLElement {

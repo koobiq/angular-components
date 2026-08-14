@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
 import {
+    E2eNativeScrollbar,
+    E2eScrollbarHover,
     E2eScrollbarMode,
     E2eScrollbarNested,
     E2eScrollbarScrollTo,
@@ -227,10 +229,12 @@ const components = [
     E2eSearchExpandableStates,
     E2eInputStateAndStyle,
     E2eScrollbarStateAndStyle,
+    E2eScrollbarHover,
     E2eScrollbarMode,
     E2eScrollbarScrollTo,
     E2eScrollbarVirtualScroll,
     E2eScrollbarNested,
+    E2eNativeScrollbar,
     E2eRadioStateAndStyle,
     E2eProgressBarStateAndStyle,
     E2eProgressSpinnerStates,

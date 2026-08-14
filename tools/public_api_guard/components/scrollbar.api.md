@@ -20,6 +20,16 @@ export const KBQ_SCROLLBAR_OPTIONS: InjectionToken<KbqScrollbarOptions>;
 export const KBQ_SCROLLBAR_VIEWPORT: InjectionToken<ElementRef<HTMLElement>>;
 
 // @public
+export class KbqNativeScrollbar {
+    constructor();
+    readonly descendants: i0.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNativeScrollbar, "[kbqNativeScrollbar]", ["kbqNativeScrollbar"], { "descendants": { "alias": "kbqNativeScrollbarDescendants"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNativeScrollbar, never>;
+}
+
+// @public
 export class KbqScrollbar {
     getNativeElement(): HTMLElement;
     readonly mode: i0.InputSignal<KbqScrollbarMode>;
@@ -32,7 +42,7 @@ export class KbqScrollbar {
     scrollToElement(target: HTMLElement | string, options?: KbqScrollbarScrollToElementOptions): void;
     scrollToTop(behavior?: ScrollBehavior): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqScrollbar, "kbq-scrollbar", ["kbqScrollbar"], { "mode": { "alias": "mode"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof KbqScrollbarViewport; inputs: { "mode": "mode"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqScrollbar, "kbq-scrollbar", ["kbqScrollbar"], { "mode": { "alias": "kbqScrollbarMode"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof KbqScrollbarViewport; inputs: { "kbqScrollbarMode": "kbqScrollbarMode"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbar, never>;
 }
@@ -73,7 +83,7 @@ export class KbqScrollbarViewport {
     scrollToElement(target: HTMLElement | string, options?: KbqScrollbarScrollToElementOptions): void;
     scrollToTop(behavior?: ScrollBehavior): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarViewport, "[kbqScrollbarViewport]", never, { "mode": { "alias": "mode"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }, { directive: typeof i2.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarViewport, "[kbqScrollbarViewport]", never, { "mode": { "alias": "kbqScrollbarMode"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }, { directive: typeof i2.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbarViewport, never>;
 }

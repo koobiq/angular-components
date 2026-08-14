@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
+    NativeScrollbarExample,
     ScrollbarOverviewExample,
     ScrollbarScrollToExample,
     ScrollbarVirtualScrollExample
@@ -11,7 +12,8 @@ import { DevThemeToggle } from '../theme-toggle';
     imports: [
         ScrollbarOverviewExample,
         ScrollbarVirtualScrollExample,
-        ScrollbarScrollToExample
+        ScrollbarScrollToExample,
+        NativeScrollbarExample
     ],
     template: `
         <scrollbar-overview-example />
@@ -20,6 +22,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <scrollbar-scroll-to-example />
         <hr />
+        <native-scrollbar-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -2,7 +2,7 @@
 
 ## Display mode
 
-The `mode` input controls how the scrollbar is displayed:
+The `kbqScrollbarMode` input controls how the scrollbar is displayed:
 
 - `hover` — shows the scrollbar on pointer hover or keyboard focus. This is the default mode.
 - `always` — always shows the scrollbar when the content overflows its container.
@@ -32,3 +32,9 @@ Access the component through its `kbqScrollbar` export and use its public method
 Methods that accept a `behavior` parameter support the native `auto` and `smooth` scrolling behaviors. Scroll events are available through `scrollChanges`.
 
 <!-- example(scrollbar-scroll-to) -->
+
+## Browser scrollbar
+
+Use `kbqNativeScrollbar` to customize only the native scrollbar. Add `kbqNativeScrollbarDescendants` to apply the customization to descendant elements.
+
+<!-- example(native-scrollbar) -->
