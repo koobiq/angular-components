@@ -24,7 +24,7 @@ export type KbqDlAlign = 'start' | 'center' | 'end';
 // @public (undocumented)
 export class KbqDlComponent {
     constructor();
-    readonly columnMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly columnMinWidth: _angular_core.InputSignal<number | undefined>;
     readonly columnResizable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly columnWidth: _angular_core.ModelSignal<number | null>;
     // (undocumented)
@@ -39,7 +39,7 @@ export class KbqDlComponent {
     // @deprecated
     readonly minWidth: _angular_core.InputSignal<number | undefined>;
     protected readonly normalizedColumnMinWidth: _angular_core.Signal<number>;
-    readonly remainingColumnMinWidth: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly remainingColumnMinWidth: _angular_core.InputSignal<number | undefined>;
     protected readonly resizeDirection: _angular_core.WritableSignal<KbqResizerDirection>;
     readonly resizerAriaLabel: _angular_core.InputSignal<string | undefined>;
     protected readonly resizerVisible: _angular_core.Signal<boolean>;
@@ -49,7 +49,7 @@ export class KbqDlComponent {
     readonly verticalBreakpoint: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly wide: _angular_core.InputSignal<boolean>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "verticalBreakpoint": { "alias": "verticalBreakpoint"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "columnResizable": { "alias": "columnResizable"; "required": false; "isSignal": true; }; "columnWidth": { "alias": "columnWidth"; "required": false; "isSignal": true; }; "columnMinWidth": { "alias": "columnMinWidth"; "required": false; "isSignal": true; }; "remainingColumnMinWidth": { "alias": "remainingColumnMinWidth"; "required": false; "isSignal": true; }; "resizerAriaLabel": { "alias": "resizerAriaLabel"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; }, { "columnWidth": "columnWidthChange"; }, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "verticalBreakpoint": { "alias": "verticalBreakpoint"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "columnResizable": { "alias": "columnResizable"; "required": false; "isSignal": true; }; "columnWidth": { "alias": "columnWidth"; "required": false; "isSignal": true; }; "columnMinWidth": { "alias": "columnMinWidth"; "required": false; "isSignal": true; }; "remainingColumnMinWidth": { "alias": "remainingColumnMinWidth"; "required": false; "isSignal": true; }; "resizerAriaLabel": { "alias": "resizerAriaLabel"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; }, { "columnWidth": "columnWidthChange"; }, ["terms"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDlComponent, never>;
 }

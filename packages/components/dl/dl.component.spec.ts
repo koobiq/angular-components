@@ -145,6 +145,7 @@ describe(KbqDlComponent.name, () => {
 
         fixture.componentRef.setInput('columnResizable', true);
         fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('columnMinWidth', 96);
         fixture.detectChanges();
 
         const resizeHandle = getResizeHandle(fixture)!;
@@ -152,6 +153,7 @@ describe(KbqDlComponent.name, () => {
         resizeHandle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
         fixture.detectChanges();
 
+        // The configured min width (96) is also the max here (host width is 0 in jsdom), so it clamps to 96.
         expect(fixture.componentInstance.columnWidth()).toBe(96);
         expect(resizeHandle.getAttribute('role')).toBe('separator');
         expect(resizeHandle.getAttribute('aria-orientation')).toBe('vertical');
@@ -190,11 +192,16 @@ describe(KbqDlComponent.name, () => {
         fixture.componentRef.setInput('vertical', false);
         fixture.detectChanges();
 
-        const resizeTrack = getDlElement(fixture).querySelector('.kbq-dl__resize-track')!;
+        const resizeTrack = getDlElement(fixture).querySelector<HTMLElement>('.kbq-dl__resize-track')!;
         const resizeHandle = getResizeHandle(fixture)!;
 
         Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
-        Object.defineProperty(resizeTrack, 'clientWidth', { configurable: true, value: 120 });
+        // The resizer captures the base size via `getResizableSize()`; force its border-box branch to report 120.
+        resizeTrack.style.boxSizing = 'border-box';
+        Object.defineProperty(resizeTrack, 'getBoundingClientRect', {
+            configurable: true,
+            value: () => ({ width: 120, height: 0 }) as DOMRect
+        });
 
         resizeHandle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 120 }));
         document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 200 }));

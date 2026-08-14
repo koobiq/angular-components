@@ -9,7 +9,7 @@ import { KbqDlModule } from '@koobiq/components/dl';
     selector: 'dl-resizable-example',
     imports: [KbqDlModule, KbqBadgeModule],
     template: `
-        <kbq-dl columnResizable [remainingColumnMinWidth]="150" [columnMinWidth]="150">
+        <kbq-dl columnResizable>
             <kbq-dt>Incident type</kbq-dt>
             <kbq-dd>
                 <kbq-badge badgeColor="fade-error">DDoS</kbq-badge>
