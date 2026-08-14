@@ -27,7 +27,7 @@ import {
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
-import { KbqFileItem } from './file-upload';
+import { KbqFileItem, KbqFileUploadAddStrategy, KbqFileUploadAddStrategyValues } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqFileDropDirective } from './primitives/file-drop';
@@ -326,6 +326,69 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 component.fileUpload().deleteFile(0, event);
                 fixture.detectChanges();
             }).not.toThrow();
+        });
+    });
+
+    describe('with addStrategy input', () => {
+        // Same object reused across dispatches so name/size/type/lastModified are guaranteed
+        // identical, instead of relying on two `new File(...)` calls landing in the same millisecond.
+        const duplicateFile: Partial<File> = { name: FILE_NAME, size: 4, type: '', lastModified: 1700000000000 };
+        const otherFile: Partial<File> = { name: 'other.file', size: 4, type: '', lastModified: 1700000000000 };
+
+        // The native input is inside the `@if (!files.length) {...} @else {...}` branch of the
+        // template, so it gets destroyed/recreated when the file count crosses zero — must be
+        // re-queried before every dispatch rather than cached once.
+        const dispatchChange = (file: Partial<File>) => {
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(file));
+            fixture.detectChanges();
+        };
+
+        it('should default to concat strategy', () => {
+            expect(component.fileUpload().addStrategy()).toBe(KbqFileUploadAddStrategy.Concat);
+        });
+
+        describe('concat strategy (default)', () => {
+            it('should skip a file that duplicates one already in the list', () => {
+                dispatchChange(duplicateFile);
+                dispatchChange(duplicateFile);
+
+                expect(component.files).toHaveLength(1);
+            });
+
+            it('should still add files that are genuinely different', () => {
+                dispatchChange(duplicateFile);
+                dispatchChange(otherFile);
+
+                expect(component.files).toHaveLength(2);
+            });
+
+            it('should not emit filesAdded for a skipped duplicate', () => {
+                const filesAddedSpy = jest.fn();
+                const subscription = component.fileUpload().filesAdded.subscribe(filesAddedSpy);
+
+                dispatchChange(duplicateFile);
+                dispatchChange(duplicateFile);
+
+                subscription.unsubscribe();
+
+                expect(filesAddedSpy).toHaveBeenCalledTimes(2);
+                expect(filesAddedSpy.mock.calls[1][0]).toHaveLength(0);
+            });
+        });
+
+        describe('replace strategy', () => {
+            beforeEach(() => {
+                component.addStrategy.set(KbqFileUploadAddStrategy.Replace);
+                fixture.detectChanges();
+            });
+
+            it('should replace the list instead of appending on a new selection', () => {
+                dispatchChange(duplicateFile);
+                dispatchChange(otherFile);
+
+                expect(component.files).toHaveLength(1);
+                expect(component.files[0].file.name).toBe('other.file');
+            });
         });
     });
 
@@ -1764,6 +1827,7 @@ class ControlValueAccessorSingleFileUpload {
                 [disabled]="disabled"
                 [fullScreenDropZone]="fullScreenDropZone()"
                 [localeConfig]="localeConfig()"
+                [addStrategy]="addStrategy()"
                 (fileQueueChanged)="onChange($event)"
             />
         </div>
@@ -1777,6 +1841,7 @@ class BasicMultipleFileUpload {
     disabled: boolean;
     files: KbqFileItem[];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
+    addStrategy = signal<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
     localeConfig = signal<Partial<KbqBaseFileUploadLocaleConfig>>({});
 

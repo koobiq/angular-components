@@ -65,3 +65,11 @@ The user can drag files onto the page, and at that moment a full-screen upload o
 ### Upload area
 
 The drag-and-drop area can be not only the entire screen or the File Upload component itself within a form, but also a separate part of the screen.
+
+### Files adding
+
+By default, every new selection is added to the files you already have — this makes it easy to build up a list over several picks.
+
+If you want a new selection to replace the previous one instead — the way a regular system file dialog works — use `addStrategy="replace"`.
+
+<!-- example(file-upload-multiple-add-strategy) -->
