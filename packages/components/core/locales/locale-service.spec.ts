@@ -210,6 +210,16 @@ describe('KbqLocaleService', () => {
             expect(service.data().sizeUnits).toBe(ruRUFormattersData.sizeUnits);
         });
 
+        it('should register an unknown id provided through KBQ_LOCALE_ID', () => {
+            // `KBQ_LOCALE_ID` takes any string, and the constructor activates it without going through
+            // `setLocale` — the id has to be registered there too, or `data()` starts out undefined.
+            const service = createService([{ provide: KBQ_LOCALE_ID, useValue: 'de-DE' }]);
+
+            expect(service.data()).toBeDefined();
+            expect(service.data()).toBe(service.locales['de-DE']);
+            expect(service.data().a11y).toBe(ruRULocaleData.a11y);
+        });
+
         it('should register an unknown id passed to setLocale', () => {
             const service = createService();
 
