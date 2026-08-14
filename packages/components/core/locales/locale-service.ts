@@ -176,24 +176,16 @@ export class KbqLocaleService {
         this.items = this._items.asReadonly();
 
         this._localeId.set(id || KBQ_DEFAULT_LOCALE_ID);
-        this._data.set(this.locales[this._localeId()]);
+        this._data.set(this.register(this._localeId()));
         this._items.set(this.locales.items);
 
         this.changes = new BehaviorSubject(this._localeId());
     }
 
-    /**
-     * Activates a locale.
-     *
-     * An id that was never registered is registered on the fly, completed from the shipped locale of that
-     * id or from the default locale: {@link data} promises a complete locale, and code reading
-     * `locales[id]` directly would otherwise be handed `undefined`.
-     */
+    /** Activates a locale. */
     setLocale(id: KbqLocaleIdLike) {
-        this.locales[id] ??= resolveLocaleData(id, undefined);
-
         this._localeId.set(id);
-        this._data.set(this.locales[id]);
+        this._data.set(this.register(id));
 
         this.document.documentElement.setAttribute(this.langAttrName, id);
 
@@ -228,6 +220,17 @@ export class KbqLocaleService {
     /** Reactive counterpart of {@link getParams}: re-emits whenever the locale changes. */
     params<K extends KbqLocaleSection>(section: K): Signal<KbqLocaleData[K]> {
         return computed(() => this.getParams(section));
+    }
+
+    /**
+     * Registers `id` unless the registry already holds it, and returns its complete data.
+     *
+     * Both the constructor and {@link setLocale} activate a locale, and either can be handed an id the
+     * registry does not know — `KBQ_LOCALE_ID` accepts any string. {@link data} promises a complete locale,
+     * and code reading `locales[id]` directly would otherwise be handed `undefined`.
+     */
+    private register(id: KbqLocaleIdLike): KbqLocaleData {
+        return (this.locales[id] ??= resolveLocaleData(id, undefined));
     }
 }
 
