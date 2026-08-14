@@ -72,13 +72,21 @@ const ngNewApp = () => ({
     }
 });
 
-/** An application that already depends on the Angular packages `@koobiq/components` peers on. */
+/**
+ * An application that already depends on the Angular packages `@koobiq/components` peers on.
+ *
+ * The two extra peers carry the same range shape as the rest of the fixture, not this repository's
+ * exact pins. Mixing the two makes the fixture contradict itself the moment Angular publishes a
+ * patch: everything inherited from `ngNewApp()` floats to the new version, while an exact
+ * `@angular/animations` holds `@angular/core` back — `@angular/animations@x.y.z` peers on
+ * `@angular/core@x.y.z` exactly — and npm fails on a conflict no `@koobiq/*` package takes part in.
+ */
 const angularAppWithPeers = () => ({
     ...ngNewApp(),
     dependencies: {
         ...ngNewApp().dependencies,
-        '@angular/animations': angularVersion,
-        '@angular/cdk': cdkVersion
+        '@angular/animations': angularRange,
+        '@angular/cdk': ngNewRange(cdkVersion)
     }
 });
 
