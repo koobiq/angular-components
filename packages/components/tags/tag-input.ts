@@ -64,7 +64,7 @@ export interface KbqTagSeparator {
     appliesTo?: KbqTagSeparatorContext[];
 }
 
-/** Default options, for the chips module, that can be overridden. */
+/** Default options for the tags module that can be overridden. */
 export interface KbqTagsDefaultOptions {
     /** The list of key codes that will trigger a chipEnd event. */
     separatorKeyCodes: number[];
