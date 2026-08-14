@@ -437,6 +437,21 @@ describe('KbqFileList', () => {
         });
     });
 
+    describe('replace', () => {
+        it('should replace the list with the specified items and emit event', () => {
+            directive.addArray([file1, file3]);
+            directive.replace([file1, file2, file3]);
+            expect(directive.list()).toEqual([file1, file2, file3]);
+            expect(component.itemsAddedEvent).toEqual([file1, file2, file3]);
+        });
+
+        it('should emit itemsAdded event with added items', () => {
+            directive.replace([file1, file2]);
+            fixture.detectChanges();
+            expect(component.itemsAddedEvent).toEqual([file1, file2]);
+        });
+    });
+
     describe('remove', () => {
         beforeEach(() => {
             directive.list.set([]);

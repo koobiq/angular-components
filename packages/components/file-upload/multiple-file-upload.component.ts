@@ -401,7 +401,7 @@ export class KbqMultipleFileUploadComponent
 
     private onFileAdded(filesToAdd: KbqFileItem[]) {
         if (this.addStrategy() === KbqFileUploadAddStrategy.Replace) {
-            this.fileList.list.set(filesToAdd);
+            this.fileList.replace(filesToAdd);
         } else {
             filesToAdd = filesToAdd.filter((fileToAdd) => !this.isDuplicate(fileToAdd.file, this.files));
             this.fileList.addArray(filesToAdd);
