@@ -36,6 +36,10 @@
             @include kbq-option(states-disabled);
         }
 
+        &.kbq-selected.kbq-disabled {
+            background: var(--kbq-list-states-selected-container-background);
+        }
+
         &:is(.kbq-selected, .kbq-active):has(+ :is(.kbq-selected, .kbq-active)) {
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
@@ -54,6 +58,10 @@
             &.kbq-active {
                 @include kbq-option(multiple-states-selected-hover);
             }
+        }
+
+        &.kbq-selected.kbq-disabled {
+            background: var(--kbq-list-multiple-states-selected-container-background);
         }
     }
 }

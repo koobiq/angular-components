@@ -2,6 +2,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, signal, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
@@ -127,6 +128,44 @@ export class E2eMultiSelectStates {}
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class E2eMultilineSelectStates {}
+
+@Component({
+    selector: 'e2e-select-selection-state',
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select
+                data-testid="e2eSelect"
+                placeholder="Placeholder"
+                [multiline]="true"
+                [panelWidth]="400"
+                [value]="selected"
+            >
+                <kbq-option [value]="1">Selected</kbq-option>
+                <kbq-option disabled [value]="2">Selected + Disabled</kbq-option>
+                <kbq-option [value]="3">Selected</kbq-option>
+                <kbq-option [value]="4">Option</kbq-option>
+
+                <kbq-cleaner />
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 440px;
+            height: 180px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectSelectionState'
+    }
+})
+export class E2eSelectSelectionState {
+    protected readonly selected = [1, 2, 3];
+}
 
 @Component({
     selector: 'e2e-select-with-search-and-footer',
