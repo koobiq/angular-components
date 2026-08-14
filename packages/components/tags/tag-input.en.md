@@ -61,6 +61,31 @@ To enable tag reordering, you need to set the `draggable` property for `kbq-tag-
 
 <!-- example(tag-input-draggable) -->
 
+### Separators
+
+By default, a tag is created on `Enter`. Additional separator keys are set via `kbqTagInputSeparatorKeyCodes` and apply both while typing and when pasting from the clipboard.
+
+If a separator should only apply on paste (e.g. a space, which is a common character inside a tag), mark it with `appliesTo: ['paste']`. Separators without a `key` (e.g. `/\s+/` for any run of whitespace) are paste-only by default, since no keystroke can ever match them.
+
+Application- or module-wide defaults are set via `kbqTagsDefaultOptionsProvider`:
+
+```ts
+import { ENTER } from '@koobiq/components/core';
+import { kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
+
+@NgModule({
+    providers: [
+        kbqTagsDefaultOptionsProvider({
+            separatorKeyCodes: [ENTER],
+            separators: [
+                { symbol: /\r?\n/, key: 'Enter', keyCode: ENTER, appliesTo: ['input', 'paste'] },
+                { symbol: /\s+/, appliesTo: ['paste'] } // paste-only — splits on any whitespace
+            ]
+        })
+    ]
+})
+```
+
 ### Keyboard navigation
 
 #### Focus in empty input area

@@ -103,6 +103,7 @@ import { E2eTabNavBar, E2eTabsStates } from '../components/tabs/e2e';
 import {
     E2eTagAutocompleteStates,
     E2eTagEditable,
+    E2eTagInputSeparators,
     E2eTagInputStates,
     E2eTagListStates,
     E2eTagStateAndStyle
@@ -196,6 +197,7 @@ const components = [
     E2eLinkStates,
     E2eLinkWithCaption,
     E2eTagInputStates,
+    E2eTagInputSeparators,
     E2eModalStates,
     E2eModalFullCustom,
     E2eListStates,
