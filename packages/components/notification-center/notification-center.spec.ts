@@ -11,7 +11,6 @@ import {
     KbqNotificationCenterTrigger,
     KbqNotificationItem
 } from '@koobiq/components/notification-center';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqToastService } from '@koobiq/components/toast';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
@@ -46,7 +45,7 @@ describe('KbqNotificationCenter', () => {
 
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
-            imports: [component, NoopAnimationsModule, KbqLuxonDateModule, KbqFormattersModule, KbqScrollbarModule],
+            imports: [component, NoopAnimationsModule, KbqLuxonDateModule, KbqFormattersModule],
             providers: [
                 { provide: AsyncScheduler, useValue: testScheduler },
                 ...providers
@@ -60,11 +59,12 @@ describe('KbqNotificationCenter', () => {
     };
 
     describe('Check test cases', () => {
-        // jsdom does not implement Element.prototype.scroll; the container reveal calls it via
-        // KbqScrollbar.scrollTo. Stub it only when it's missing so a real implementation is never shadowed.
+        // jsdom does not implement Element.prototype.scrollTo; the container reveal calls it via
+        // KbqScrollbarViewport.scrollTo (CdkScrollable). Stub it only when it's missing so a real
+        // implementation is never shadowed.
         beforeAll(() => {
-            if (!HTMLElement.prototype.scroll) {
-                Object.defineProperty(HTMLElement.prototype, 'scroll', { configurable: true, value: () => {} });
+            if (!HTMLElement.prototype.scrollTo) {
+                Object.defineProperty(HTMLElement.prototype, 'scrollTo', { configurable: true, value: () => {} });
             }
         });
 
@@ -115,7 +115,7 @@ describe('KbqNotificationCenter', () => {
                     componentInstance.trigger() as unknown as {
                         instance: {
                             scrollContainer: () => {
-                                contentElement: () => { nativeElement: HTMLElement };
+                                getNativeElement: () => HTMLElement;
                                 scrollTo: (options?: ScrollToOptions) => void;
                             };
                             onContainerScroll: () => void;
@@ -123,10 +123,10 @@ describe('KbqNotificationCenter', () => {
                     }
                 ).instance;
 
-            // Fakes the container geometry. Both `scrollContainer` and `contentElement` are signal
-            // queries, so they must be called to reach the native element.
+            // Fakes the container geometry. `scrollContainer` is a signal query, so it must be called
+            // to reach the native element.
             const setGeometry = (geometry: { scrollHeight: number; clientHeight: number; scrollTop: number }) => {
-                const element = getCenter().scrollContainer().contentElement().nativeElement;
+                const element = getCenter().scrollContainer().getNativeElement();
 
                 Object.defineProperty(element, 'scrollHeight', { configurable: true, value: geometry.scrollHeight });
                 Object.defineProperty(element, 'clientHeight', { configurable: true, value: geometry.clientHeight });

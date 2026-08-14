@@ -1,0 +1,102 @@
+:host {
+    position: sticky;
+    z-index: var(--kbq-scrollbar-track-z-index, 1);
+    display: block;
+    // When the viewport host is a flex container, the track is a flex sibling of the (typically tall)
+    // content. Without this it keeps `flex-shrink: 1` and, having no intrinsic min-height, absorbs all
+    // the container's negative free space — collapsing to 0 height so the bar/thumb never render. The
+    // negative `margin-inline-end`/`margin-block-end` already cancels its layout contribution, so
+    // pinning shrink to 0 is layout-neutral (and ignored entirely in a block container).
+    flex-shrink: 0;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    min-inline-size: calc(100% - 1px);
+    max-inline-size: calc(100% - 1px);
+    margin-inline-end: calc(-100% + 1px);
+    pointer-events: none;
+    overflow: hidden;
+    // Lets a consumer theme one scrollbar instance without a class hook to target — the track may be
+    // created dynamically (see KbqScrollbarViewport) rather than declared in a consumer's own template.
+    color: var(--kbq-scrollbar-color, currentColor);
+}
+
+@keyframes kbq-scrollbar-fade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.kbq-scrollbar-track__bar {
+    position: absolute;
+    inset-inline-end: 0;
+    background: var(--kbq-scrollbar-track-background, transparent);
+    pointer-events: auto;
+}
+
+.kbq-scrollbar-track__bar_enter,
+.kbq-scrollbar-track__bar_leave {
+    animation: kbq-scrollbar-fade var(--kbq-scrollbar-transition-duration) ease-in-out;
+}
+
+.kbq-scrollbar-track__bar_leave {
+    animation-direction: reverse;
+}
+
+.kbq-scrollbar-track__bar_vertical {
+    inset-block: 0;
+    inline-size: var(--kbq-scrollbar-track-size);
+}
+
+.kbq-scrollbar-track__bar_horizontal {
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    block-size: var(--kbq-scrollbar-track-size);
+}
+
+.kbq-scrollbar-track__bar_has-horizontal {
+    inset-block-end: var(--kbq-scrollbar-track-size);
+}
+
+.kbq-scrollbar-track__bar_has-vertical {
+    inset-inline-end: var(--kbq-scrollbar-track-size);
+}
+
+.kbq-scrollbar-track__thumb {
+    transition: background-color var(--kbq-scrollbar-transition-duration) ease;
+    position: absolute;
+    // The thumb has no explicit cross-axis size of its own: `inset-inline: 0`/`inset-block: 0` below
+    // stretch it to fill the bar's `--kbq-scrollbar-track-size` cross-axis, border-box included.
+    // Transparent border (not margin) carves out the gap from the bar's edges — box-sizing: border-box
+    // keeps the border inside the thumb's own hit area, and background-clip: content-box keeps the
+    // visible fill out of it, so the painted thumb is smaller than its clickable/draggable box.
+    border: var(--kbq-scrollbar-thumb-gap) solid transparent;
+    border-radius: var(--kbq-size-border-radius);
+    box-sizing: border-box;
+    background-color: var(--kbq-scrollbar-thumb-default-background);
+    background-clip: content-box;
+    cursor: default;
+    user-select: none;
+    pointer-events: auto;
+}
+
+.kbq-scrollbar-track__thumb:hover {
+    background-color: var(--kbq-scrollbar-thumb-hover-background);
+}
+
+.kbq-scrollbar-track__thumb:active {
+    background-color: var(--kbq-scrollbar-thumb-active-background);
+}
+
+.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb {
+    inset-inline: 0;
+    min-block-size: calc(var(--kbq-scrollbar-thumb-min-size) + var(--kbq-scrollbar-thumb-gap) * 2);
+}
+
+.kbq-scrollbar-track__bar_horizontal .kbq-scrollbar-track__thumb {
+    inset-block: 0;
+    min-inline-size: calc(var(--kbq-scrollbar-thumb-min-size) + var(--kbq-scrollbar-thumb-gap) * 2);
+}

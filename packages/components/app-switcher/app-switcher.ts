@@ -60,9 +60,9 @@ import { KbqDropdown, KbqDropdownItem, KbqDropdownModule } from '@koobiq/compone
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
-import { Subscription, merge } from 'rxjs';
-import { auditTime, distinctUntilChanged, startWith } from 'rxjs/operators';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
+import { merge } from 'rxjs';
+import { auditTime, distinctUntilChanged, filter, startWith } from 'rxjs/operators';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
@@ -243,7 +243,7 @@ export function kbqAppSwitcherProvider(): Provider[] {
         KbqDividerModule,
         KbqBadgeModule,
         KbqDropdownModule,
-        KbqScrollbarModule,
+        KbqScrollbar,
         KbqOptionModule,
         KbqAppSwitcherDropdownApp,
         KbqAppSwitcherDropdownSite,
@@ -801,9 +801,6 @@ export class KbqAppSwitcherTrigger
         };
     }
 
-    /** @docs-private */
-    protected preventClosingByInnerScrollSubscription: Subscription;
-
     private readonly originalSitesSignal = signal<KbqAppSwitcherSite[]>([]);
     private readonly groupBySignal = signal<KbqAppSwitcherGroupBy>(defaultGroupBy);
 
@@ -869,23 +866,11 @@ export class KbqAppSwitcherTrigger
                 }
             });
 
+        // On close, return focus to the trigger. Inner-scroll close suppression lives in
+        // `closingActions()` (it filters scrolls originating inside the popup), so no per-visibility
+        // subscription is needed here.
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible: boolean) => {
-            if (visible) {
-                // Scrolling inside the popup reaches the root `ScrollDispatcher` and would otherwise be
-                // treated as a closing action; flag those events instead of closing.
-                // `takeUntilDestroyed` covers the case where the host is removed while the popup is open,
-                // which the `else` branch below never sees.
-                this.preventClosingByInnerScrollSubscription = this.closingActions()
-                    .pipe(takeUntilDestroyed(this.destroyRef))
-                    // eslint-disable-next-line rxjs-x/no-nested-subscribe
-                    .subscribe((event) => {
-                        if (event['scrollDispatcher']) {
-                            event['kbqPopoverPreventHide'] = true;
-                            event['type'] = 'click';
-                        }
-                    });
-            } else {
-                this.preventClosingByInnerScrollSubscription?.unsubscribe();
+            if (!visible) {
                 this.focus();
             }
         });
@@ -922,7 +907,19 @@ export class KbqAppSwitcherTrigger
         return merge(
             this.overlayRef!.outsidePointerEvents(),
             this.overlayRef!.backdropClick(),
-            this.scrollDispatcher.scrolled()
+            // Only an outer/ancestor scroll that moves the popup out of view should close it. Scrolling
+            // the popup's own content must not: its `KbqScrollbar` viewport is a `CdkScrollable`, so it
+            // reaches the root `ScrollDispatcher`, and keyboard navigation scrolls the focused item into
+            // view through that viewport - without this filter every arrow key would close the panel.
+            this.scrollDispatcher.scrolled().pipe(filter((scrollable) => !this.isInnerScroll(scrollable)))
+        );
+    }
+
+    /** Whether a `ScrollDispatcher` emission originates from inside this popup's own scrollable content. */
+    private isInnerScroll(scrollable: CdkScrollable | void): boolean {
+        return (
+            scrollable instanceof CdkScrollable &&
+            !!scrollable.getElementRef().nativeElement.closest('.kbq-app-switcher, .kbq-app-switcher-sites')
         );
     }
 

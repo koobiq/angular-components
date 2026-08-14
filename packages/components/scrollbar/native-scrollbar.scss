@@ -1,0 +1,68 @@
+/* stylelint-disable selector-pseudo-class-no-unknown */
+
+// `scrollbar-color` is inherited. Reset it on descendants unless the directive explicitly opts into
+// styling them; the zero-specificity selector lets a descendant's own scrollbar styles override this.
+@supports not selector(::-webkit-scrollbar) {
+    :where(.kbq-native-scrollbar:not(.kbq-native-scrollbar_descendants) *) {
+        scrollbar-color: auto;
+    }
+
+    .kbq-native-scrollbar,
+    .kbq-native-scrollbar_descendants * {
+        scrollbar-color: var(--kbq-scrollbar-thumb-default-background) var(--kbq-scrollbar-track-background);
+        // The standardized API only supports `auto`, `thin`, and `none`, so an exact token-based size
+        // is available only through the WebKit pseudo-elements below.
+        scrollbar-width: auto;
+    }
+}
+
+.kbq-native-scrollbar::-webkit-scrollbar,
+.kbq-native-scrollbar_descendants ::-webkit-scrollbar {
+    width: var(--kbq-scrollbar-track-size);
+    height: var(--kbq-scrollbar-track-size);
+    background-color: var(--kbq-scrollbar-track-background);
+    cursor: default;
+}
+
+.kbq-native-scrollbar::-webkit-scrollbar-track,
+.kbq-native-scrollbar::-webkit-scrollbar-corner,
+.kbq-native-scrollbar::-webkit-resizer,
+.kbq-native-scrollbar_descendants ::-webkit-scrollbar-track,
+.kbq-native-scrollbar_descendants ::-webkit-scrollbar-corner,
+.kbq-native-scrollbar_descendants ::-webkit-resizer {
+    background-color: var(--kbq-scrollbar-track-background);
+}
+
+.kbq-native-scrollbar::-webkit-scrollbar-thumb,
+.kbq-native-scrollbar_descendants ::-webkit-scrollbar-thumb {
+    box-sizing: border-box;
+    border: var(--kbq-scrollbar-thumb-gap) solid transparent;
+    border-radius: var(--kbq-size-border-radius);
+    background-color: var(--kbq-scrollbar-thumb-default-background);
+    background-clip: content-box;
+}
+
+.kbq-native-scrollbar::-webkit-scrollbar-thumb:vertical,
+.kbq-native-scrollbar_descendants ::-webkit-scrollbar-thumb:vertical {
+    min-height: calc(var(--kbq-scrollbar-thumb-min-size) + var(--kbq-scrollbar-thumb-gap) * 2);
+}
+
+.kbq-native-scrollbar::-webkit-scrollbar-thumb:horizontal,
+.kbq-native-scrollbar_descendants ::-webkit-scrollbar-thumb:horizontal {
+    min-width: calc(var(--kbq-scrollbar-thumb-min-size) + var(--kbq-scrollbar-thumb-gap) * 2);
+}
+
+.kbq-native-scrollbar::-webkit-scrollbar-thumb:hover,
+.kbq-native-scrollbar_descendants ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--kbq-scrollbar-thumb-hover-background);
+}
+
+.kbq-native-scrollbar::-webkit-scrollbar-thumb:active,
+.kbq-native-scrollbar_descendants ::-webkit-scrollbar-thumb:active {
+    background-color: var(--kbq-scrollbar-thumb-active-background);
+}
+
+.kbq-native-scrollbar::-webkit-scrollbar-button,
+.kbq-native-scrollbar_descendants ::-webkit-scrollbar-button {
+    display: none;
+}

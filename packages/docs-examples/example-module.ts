@@ -4771,9 +4771,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "resizer-overview-example.ts",
     "importPath": "components/resizer"
   },
+  "native-scrollbar": {
+    "packagePath": "components/scrollbar/native-scrollbar",
+    "title": "Native scrollbar example",
+    "componentName": "NativeScrollbarExample",
+    "files": [
+      "native-scrollbar-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "native-scrollbar-example",
+    "additionalComponents": [],
+    "primaryFile": "native-scrollbar-example.ts",
+    "importPath": "components/scrollbar"
+  },
   "scrollbar-overview": {
     "packagePath": "components/scrollbar/scrollbar-overview",
-    "title": "Scrollbar with options",
+    "title": "Scrollbar overview example",
     "componentName": "ScrollbarOverviewExample",
     "files": [
       "scrollbar-overview-example.ts"
@@ -4784,30 +4797,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "scrollbar-overview-example.ts",
     "importPath": "components/scrollbar"
   },
-  "scrollbar-scroll-to-top": {
-    "packagePath": "components/scrollbar/scrollbar-scroll-to-top",
-    "title": "Scrollbar scroll to top",
-    "componentName": "ScrollbarScrollToTopExample",
+  "scrollbar-scroll-to": {
+    "packagePath": "components/scrollbar/scrollbar-scroll-to",
+    "title": "Scrollbar scrollTo methods",
+    "componentName": "ScrollbarScrollToExample",
     "files": [
-      "scrollbar-scroll-to-top-example.ts"
+      "scrollbar-scroll-to-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "scrollbar-scroll-to-top-example",
+    "selector": "scrollbar-scroll-to-example",
     "additionalComponents": [],
-    "primaryFile": "scrollbar-scroll-to-top-example.ts",
+    "primaryFile": "scrollbar-scroll-to-example.ts",
     "importPath": "components/scrollbar"
   },
-  "scrollbar-with-custom-config": {
-    "packagePath": "components/scrollbar/scrollbar-with-custom-config",
-    "title": "Scrollbar with custom KBQ_SCROLLBAR_CONFIG",
-    "componentName": "ScrollbarWithCustomConfigExample",
+  "scrollbar-virtual-scroll": {
+    "packagePath": "components/scrollbar/scrollbar-virtual-scroll",
+    "title": "Scrollbar with virtual scroll",
+    "componentName": "ScrollbarVirtualScrollExample",
     "files": [
-      "scrollbar-with-custom-config-example.ts"
+      "scrollbar-virtual-scroll-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "scrollbar-with-custom-config-example",
+    "selector": "scrollbar-virtual-scroll-example",
     "additionalComponents": [],
-    "primaryFile": "scrollbar-with-custom-config-example.ts",
+    "primaryFile": "scrollbar-virtual-scroll-example.ts",
     "importPath": "components/scrollbar"
   },
   "search-expandable-in-header": {
@@ -8362,11 +8375,13 @@ return import('@koobiq/docs-examples/components/radio');
 return import('@koobiq/docs-examples/components/radio');
   case 'resizer-overview':
 return import('@koobiq/docs-examples/components/resizer');
+  case 'native-scrollbar':
+return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-overview':
 return import('@koobiq/docs-examples/components/scrollbar');
-  case 'scrollbar-scroll-to-top':
+  case 'scrollbar-scroll-to':
 return import('@koobiq/docs-examples/components/scrollbar');
-  case 'scrollbar-with-custom-config':
+  case 'scrollbar-virtual-scroll':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'search-expandable-in-header':
 return import('@koobiq/docs-examples/components/search-expandable');

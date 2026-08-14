@@ -1,29 +1,4 @@
-.dev-container {
-    padding: 24px;
-}
-
-textarea {
-    margin: 10px;
+dev-app {
+    max-width: 608px;
     display: block;
-}
-
-.dev-with-horizontal {
-    white-space: nowrap;
-    overflow-x: visible;
-}
-
-.dev-with-buttons {
-    white-space: nowrap;
-    overflow: visible;
-}
-
-.dev-nested-scroll {
-    width: 200px;
-    height: 200px;
-    overflow: auto;
-    margin: 10px;
-}
-
-.dev-nested-scroll__content {
-    width: 800px;
 }

@@ -25,7 +25,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
-import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
 
 const KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION = trigger('contentAnimation', [
@@ -139,14 +139,12 @@ export class KbqContentPanelHeader {
 
 @Component({
     selector: 'kbq-content-panel-body',
-    imports: [KbqScrollbarModule, KbqOverflowShadowContainer],
+    imports: [KbqScrollbar, KbqOverflowShadowContainer],
     template: `
-        <kbq-scrollbar
-            #overflowContainer="kbqOverflowShadowContainer"
-            kbqOverflowShadowContainer
-            class="kbq-content-panel-body__content"
-        >
-            <ng-content />
+        <kbq-scrollbar #overflowContainer="kbqOverflowShadowContainer" kbqOverflowShadowContainer>
+            <div class="kbq-content-panel-body__content">
+                <ng-content />
+            </div>
         </kbq-scrollbar>
     `,
     styleUrl: './content-panel-body.scss',
@@ -206,7 +204,10 @@ export class KbqContentPanelFooter {
 export class KbqContentPanel {
     private readonly contentPanelBody = contentChild(KbqContentPanelBody);
 
-    /** Current body overflow state. Read by the header and footer to render their `box-shadow`. */
+    /**
+     * Current body overflow state. Read by the header and footer to render their `box-shadow`.
+     * @docs-private
+     */
     readonly bodyOverflow = computed(
         () => this.contentPanelBody()?.overflowContainer().overflow() ?? { top: false, bottom: false }
     );
@@ -214,10 +215,12 @@ export class KbqContentPanel {
 
 @Component({
     selector: 'kbq-content-panel-container',
-    imports: [KbqResizable, KbqResizer, KbqScrollbarModule],
+    imports: [KbqResizable, KbqResizer, KbqScrollbar],
     template: `
-        <kbq-scrollbar class="kbq-content-panel-container__content" [@contentAnimation]="contentAnimationState()">
-            <ng-content />
+        <kbq-scrollbar [@contentAnimation]="contentAnimationState()">
+            <div class="kbq-content-panel-container__content">
+                <ng-content />
+            </div>
         </kbq-scrollbar>
         @if (openedState()) {
             <div

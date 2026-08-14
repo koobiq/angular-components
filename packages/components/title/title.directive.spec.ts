@@ -6,14 +6,13 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchMouseEvent, KBQ_TITLE_TEXT_REF, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import { KbqTitleDirective } from './title.directive';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
         imports: [component, NoopAnimationsModule],
-        providers: [KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER, ...providers]
+        providers
     }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
 

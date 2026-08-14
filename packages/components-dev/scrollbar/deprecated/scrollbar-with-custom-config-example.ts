@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scrollbar';
+import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scrollbar/deprecated';
 
 /**
  * @title Scrollbar with custom KBQ_SCROLLBAR_CONFIG
+ * @deprecated Should be removed in a future major version.
  */
 @Component({
-    selector: 'scrollbar-with-custom-config-example',
+    selector: 'dev-scrollbar-with-custom-config-example',
     imports: [KbqScrollbarModule],
     template: `
         <div kbq-scrollbar style="width: 200px; height: 200px;">
@@ -27,6 +28,6 @@ import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrollbarWithCustomConfigExample {
+export class DevScrollbarWithCustomConfigExample {
     readonly items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
 }

@@ -33,6 +33,7 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -175,7 +176,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
     readonly addOnPaste: i0.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
     autocompleteTrigger?: KbqAutocompleteTrigger | null | undefined;
     blur(event: FocusEvent): void;
     get disabled(): boolean;
@@ -185,25 +185,20 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     get empty(): boolean;
     focus(): void;
     focused: boolean;
-    // (undocumented)
     get hasDuplicates(): boolean;
     id: string;
-    // (undocumented)
     ngControl: NgControl;
     // (undocumented)
     ngOnChanges(): void;
     onFocus(): void;
-    // (undocumented)
     onInput(): void;
     onKeydown(event: KeyboardEvent): void;
-    // (undocumented)
     onPaste($event: ClipboardEvent): void;
     placeholder: string;
     set separatorKeyCodes(value: number[]);
     get separators(): KbqTagSeparator[];
     readonly tagEnd: i0.OutputEmitterRef<KbqTagInputEvent>;
     set tagList(value: KbqTagList);
-    // (undocumented)
     triggerValidation(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, true, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
@@ -347,14 +342,13 @@ export class KbqTagRemove {
 
 // @public
 export interface KbqTagsDefaultOptions {
-    // (undocumented)
     addOnPaste?: boolean;
     separatorKeyCodes: number[];
-    // (undocumented)
-    separators?: {
-        [key: number]: KbqTagSeparator;
-    };
+    separators?: KbqTagSeparator[];
 }
+
+// @public
+export const kbqTagsDefaultOptionsProvider: (options: Partial<KbqTagsDefaultOptions>) => Provider;
 
 // @public
 export class KbqTagSelectionChange {
@@ -367,13 +361,16 @@ export class KbqTagSelectionChange {
     source: KbqTag;
 }
 
-// @public (undocumented)
+// @public
 export interface KbqTagSeparator {
-    // (undocumented)
-    key: string;
-    // (undocumented)
+    appliesTo?: KbqTagSeparatorContext[];
+    key?: string;
+    keyCode?: number;
     symbol: RegExp;
 }
+
+// @public
+export type KbqTagSeparatorContext = 'input' | 'paste';
 
 // @public (undocumented)
 export class KbqTagsModule {

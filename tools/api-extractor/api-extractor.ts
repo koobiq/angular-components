@@ -34,7 +34,13 @@ function runExtractor(folder: string, component: string): ExtractorResult {
         .replace('components', folder)
         .replace('button', component);
     const reportFolder = configObject!.apiReport!.reportFolder!.replace('components', folder);
-    const reportFileName = configObject!.apiReport!.reportFileName!.replace('<unscopedPackageName>', component);
+    // `reportFileName` must be a plain filename — api-extractor rejects path separators — so a
+    // nested entry point like "scrollbar/deprecated" flattens to "scrollbar-deprecated.api.md" here,
+    // while `mainEntryPointFilePath` above keeps the real nested dist path unchanged.
+    const reportFileName = configObject!.apiReport!.reportFileName!.replace(
+        '<unscopedPackageName>',
+        component.replace('/', '-')
+    );
 
     configObject.mainEntryPointFilePath = mainEntryPointFilePath;
     configObject!.apiReport!.reportFolder = reportFolder;

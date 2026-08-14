@@ -11,6 +11,13 @@
     scroll-behavior: smooth;
 
     min-width: 0;
+}
+
+// Padding lives on the inner wrapper, not on the scroll host, so the custom scrollbar track hugs the
+// right edge instead of being pushed inward by the host's horizontal padding.
+.docs-welcome__content {
+    display: flex;
+    flex-direction: column;
 
     padding-bottom: 160px;
     padding-left: 160px;
@@ -52,7 +59,7 @@
 }
 
 @media (width < 768px) {
-    .docs-welcome {
+    .docs-welcome__content {
         padding: var(--kbq-size-l) var(--kbq-size-l) 160px;
     }
 
@@ -66,13 +73,13 @@
 }
 
 @media (768px <= width < 1200px) {
-    .docs-welcome {
+    .docs-welcome__content {
         padding: 0 var(--kbq-size-xxl) 160px var(--kbq-size-xxl);
     }
 }
 
 @media (1200px <= width < 1920px) {
-    .docs-welcome {
+    .docs-welcome__content {
         padding: 0 var(--kbq-size-7xl) 160px var(--kbq-size-7xl);
     }
 }

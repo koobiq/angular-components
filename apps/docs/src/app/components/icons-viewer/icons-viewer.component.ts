@@ -19,6 +19,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalService } from '@koobiq/components/modal';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import type { KbqIconsMetadata } from '@koobiq/icons/types/icons';
 import { auditTime, BehaviorSubject, combineLatest, distinctUntilChanged, map, startWith } from 'rxjs';
@@ -52,8 +53,9 @@ const SEARCH_DEBOUNCE_TIME = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-icons-viewer kbq-scrollbar'
-    }
+        class: 'docs-icons-viewer'
+    },
+    hostDirectives: [KbqScrollbarViewport]
 })
 export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly http = inject(HttpClient);

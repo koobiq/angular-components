@@ -21,26 +21,29 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    DateAdapter,
-    KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
-    KBQ_CONNECTED_OVERLAY_BELOW_CLASS
-} from '@koobiq/components/core';
+import { KBQ_CONNECTED_OVERLAY_ABOVE_CLASS, KBQ_CONNECTED_OVERLAY_BELOW_CLASS } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendar } from './calendar.component';
 import { kbqDatepickerAnimations } from './datepicker-animations';
-import { createMissingDateImplError } from './datepicker-errors';
+import { injectRequiredDateAdapter } from './datepicker-errors';
 import { KbqDatepickerInput } from './datepicker-input.directive';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
 
-/** Injection token that determines the scroll handling while the calendar is open. */
+/**
+ * Injection token that determines the scroll handling while the calendar is open. The root default keeps the
+ * datepicker usable outside `KbqDatepickerModule`'s injector; providing the token anywhere still wins over it.
+ */
 export const KBQ_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
-    'kbq-datepicker-scroll-strategy'
+    'kbq-datepicker-scroll-strategy',
+    {
+        providedIn: 'root',
+        factory: () => KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY(inject(Overlay))
+    }
 );
 
 /** @docs-private */
@@ -134,7 +137,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     private overlay = inject(Overlay);
     private ngZone = inject(NgZone);
     private viewContainerRef = inject(ViewContainerRef);
-    private readonly dateAdapter = inject<DateAdapter<D>>(DateAdapter, { optional: true })!;
+    private readonly dateAdapter = injectRequiredDateAdapter<D>();
     private dir = inject(Directionality, { optional: true })!;
 
     protected readonly document = inject<Document>(DOCUMENT);
@@ -295,13 +298,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     private closeSubscription = Subscription.EMPTY;
 
     constructor() {
-        const scrollStrategy = inject(KBQ_DATEPICKER_SCROLL_STRATEGY);
-
-        if (!this.dateAdapter) {
-            throw createMissingDateImplError('DateAdapter');
-        }
-
-        this.scrollStrategy = scrollStrategy;
+        this.scrollStrategy = inject(KBQ_DATEPICKER_SCROLL_STRATEGY);
     }
 
     ngOnDestroy() {

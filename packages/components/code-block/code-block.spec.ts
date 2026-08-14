@@ -7,7 +7,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqTabNavBar } from '@koobiq/components/tabs';
 import { HLJSApi } from 'highlight.js';
 import { Observable, Subject } from 'rxjs';
-import { KBQ_CODE_BLOCK_FALLBACK_FILE_NAME, KbqCodeBlock, kbqCodeBlockLocaleConfigurationProvider } from './code-block';
+import {
+    KBQ_CODE_BLOCK_FALLBACK_FILE_NAME,
+    KbqCodeBlock,
+    kbqCodeBlockDefaultOptionsProvider,
+    kbqCodeBlockLocaleConfigurationProvider
+} from './code-block';
 import {
     KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE,
     KbqCodeBlockHighlight,
@@ -92,6 +97,7 @@ const mockPreHeight = (debugElement: DebugElement, height: number): void => {
             [canDownload]="canDownload"
             [noBorder]="noBorder"
             [hideTabs]="hideTabs"
+            [alwaysShowActionbar]="alwaysShowActionbar"
             [canCopy]="canCopy"
             [maxHeight]="maxHeight"
             [(activeFileIndex)]="activeFileIndex"
@@ -126,8 +132,20 @@ class BaseCodeBlock {
     activeFileIndex: number = 0;
     noBorder: boolean = false;
     hideTabs: boolean = false;
+    alwaysShowActionbar: boolean = false;
     softWrap: boolean = false;
     maxHeight: number | undefined = undefined;
+}
+
+@Component({
+    imports: [KbqCodeBlockModule],
+    template: `
+        <kbq-code-block hideTabs [files]="files" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class CodeBlockWithDefaultOptions {
+    readonly files: KbqCodeBlockFile[] = [{ language: 'typescript', filename: 'main.ts', content: 'const value = 1;' }];
 }
 
 @Component({
@@ -513,6 +531,107 @@ describe(KbqCodeBlock.name, () => {
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
         tick(HOVER_DEBOUNCE_TIME);
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
+    }));
+
+    it('should always show actionbar when alwaysShowActionbar is enabled', fakeAsync(() => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(debugElement);
+
+        componentInstance.hideTabs = true;
+        componentInstance.alwaysShowActionbar = true;
+        fixture.detectChanges();
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
+
+        codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
+        tick(HOVER_DEBOUNCE_TIME);
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
+    }));
+
+    it('should use alwaysShowActionbar from default options', () => {
+        const { debugElement } = createComponent(CodeBlockWithDefaultOptions, [
+            kbqCodeBlockDefaultOptionsProvider({ alwaysShowActionbar: true })
+        ]);
+        const codeBlock = geCodeBlockDebugElement(debugElement);
+
+        expect(codeBlock.componentInstance.alwaysShowActionbar()).toBeTruthy();
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
+    });
+
+    it('should override alwaysShowActionbar from default options with input', () => {
+        const fixture = createComponent(BaseCodeBlock, [
+            kbqCodeBlockDefaultOptionsProvider({ alwaysShowActionbar: true })
+        ]);
+        const { debugElement, componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(debugElement);
+
+        componentInstance.hideTabs = true;
+        fixture.detectChanges();
+
+        expect(codeBlock.componentInstance.alwaysShowActionbar()).toBeFalsy();
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
+    });
+
+    it('should not track hover when alwaysShowActionbar is enabled', () => {
+        const addEventListenerSpy = jest.spyOn(HTMLElement.prototype, 'addEventListener');
+
+        try {
+            TestBed.configureTestingModule({ imports: [BaseCodeBlock, NoopAnimationsModule] });
+            const fixture = TestBed.createComponent(BaseCodeBlock);
+
+            fixture.componentInstance.hideTabs = true;
+            fixture.componentInstance.alwaysShowActionbar = true;
+            fixture.detectChanges();
+
+            const codeBlockElement = geCodeBlockDebugElement(fixture.debugElement).nativeElement;
+            const hostHoverListeners = addEventListenerSpy.mock.calls.filter(
+                ([eventName], index) =>
+                    addEventListenerSpy.mock.contexts[index] === codeBlockElement &&
+                    (eventName === 'mouseenter' || eventName === 'mouseleave')
+            );
+
+            expect(hostHoverListeners).toHaveLength(0);
+        } finally {
+            addEventListenerSpy.mockRestore();
+        }
+    });
+
+    it('should start tracking hover when alwaysShowActionbar is disabled', fakeAsync(() => {
+        TestBed.configureTestingModule({ imports: [BaseCodeBlock, NoopAnimationsModule] });
+        const fixture = TestBed.createComponent(BaseCodeBlock);
+
+        fixture.componentInstance.hideTabs = true;
+        fixture.componentInstance.alwaysShowActionbar = true;
+        fixture.detectChanges();
+
+        fixture.componentInstance.alwaysShowActionbar = false;
+        fixture.detectChanges();
+
+        const codeBlock = geCodeBlockDebugElement(fixture.debugElement);
+
+        codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
+        tick(HOVER_DEBOUNCE_TIME);
+        fixture.detectChanges();
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
+    }));
+
+    it('should restore hover behavior when alwaysShowActionbar is disabled', fakeAsync(() => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(debugElement);
+
+        componentInstance.hideTabs = true;
+        componentInstance.alwaysShowActionbar = true;
+        fixture.detectChanges();
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
+
+        componentInstance.alwaysShowActionbar = false;
+        fixture.detectChanges();
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
+
+        codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
+        tick(HOVER_DEBOUNCE_TIME);
+        expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
     }));
 
     it('should stop tracking hover when hideTabs changes to false', fakeAsync(() => {

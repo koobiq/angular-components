@@ -32,7 +32,6 @@ import { QueryList } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 
@@ -225,7 +224,6 @@ export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcherCompone
     readonly parsedSelectedSite: i0.Signal<KbqAppSwitcherSite | undefined>;
     placement: KbqPopUpPlacementValues;
     readonly placementChange: EventEmitter<any>;
-    protected preventClosingByInnerScrollSubscription: Subscription;
     protected scrollStrategy: () => ScrollStrategy;
     readonly selectedApp: i0.ModelSignal<KbqAppSwitcherApp | undefined>;
     readonly selectedSite: i0.ModelSignal<KbqAppSwitcherSite | undefined>;

@@ -18,6 +18,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 12. **20.3.0**: the form-field review — signals, accessibility and the removal of `mixinColor`.
 13. **20.3.0**: the theme service review — signals, `auto` mode and built-in persistence.
 14. **20.3.0**: explicit prefix and suffix slots for tag content.
+15. **20.3.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
 
 ### 1. Upgrade to 18.5.3
 
@@ -835,6 +836,50 @@ Source order is not used to infer a suffix: under the old projection rule all su
 
 **Deprecated imperative placement and styles.** Replace calls to `addClassModificatorForIcons()` with explicit slot directives, and migrate custom selectors from `.kbq-icon_left` to `.kbq-tag-prefix`. The method and the old selector are deprecated and will be removed in the next major version.
 
+### 15. Scrollbar overlayscrollbars implementation deprecation (20.3.0)
+
+Until 20.3.0, `@koobiq/components/scrollbar` wrapped the third-party `overlayscrollbars` library: the `KbqScrollbar` component (`kbq-scrollbar` / `[kbq-scrollbar]`) and the low-level `KbqScrollbarDirective` (`[kbqScrollbar]`), with `options`, `events`, `defer` inputs and raw access to `scrollbarInstance`.
+
+As of 20.3.0, `@koobiq/components/scrollbar` provides a new dependency-free `KbqScrollbar` component with the `<kbq-scrollbar>` selector and a different public API. The previous implementation has not gone away — it moved, unchanged, to `@koobiq/components/scrollbar/deprecated` and will be removed in a future major version.
+
+#### Running the migration
+
+The `scrollbar-deprecated-path` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:scrollbar-deprecated-path --project <your project>
+```
+
+#### What is fixed automatically
+
+**The `@koobiq/components/scrollbar` import path is rewritten to `@koobiq/components/scrollbar/deprecated`** — in every `.ts` file, in both single- and double-quoted specifiers. The implementation itself and its public API (`options` / `events` / `defer` / `scrollbarInstance`, the `kbq-scrollbar` / `[kbq-scrollbar]` / `[kbqScrollbar]` selectors) are unchanged — only where you import them from changes.
+
+```ts
+// Before
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+
+// After
+import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
+```
+
+#### What you need to fix manually
+
+**Moving to the new implementation** is a separate, manual migration, not just an import path change: the new component uses the `<kbq-scrollbar>` selector and does not support the `[kbq-scrollbar]` or `[kbqScrollbar]` attribute selectors. Its public API differs from the previous implementation — see the [Scrollbar component documentation](/en/components/scrollbar) for details.
+
+**Do not import both the old and the new implementation into the same standalone component.** Both use the `kbq-scrollbar` element selector, so Angular cannot choose a component unambiguously. During a gradual manual migration, keep old and new usage in separate components.
+
 ### After the migration
+
+After fully moving to the new component and removing imports from `@koobiq/components/scrollbar/deprecated`, the `overlayscrollbars` dependency is no longer needed and can be removed:
+
+```bash
+npm uninstall overlayscrollbars
+```
 
 The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full list of breaking changes is on the [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) page.

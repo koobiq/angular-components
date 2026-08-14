@@ -38,6 +38,7 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { DateTime } from 'luxon';
 import { map, Observable, timer } from 'rxjs';
 import { KbqInputModule } from '../input/index';
@@ -1488,6 +1489,48 @@ describe('KbqDatepicker', () => {
         });
     });
 
+    // `KbqModalService` builds the modal content from the root injector, so `KbqDatepickerModule`'s own
+    // providers are out of reach there — `KBQ_DATEPICKER_SCROLL_STRATEGY` has to carry a root default for the
+    // calendar to open at all. Every suite above pulls the module into the TestBed root, which hides the gap.
+    describe('inside a modal', () => {
+        beforeEach(() => {
+            // Only the app-level date wiring is registered here. `KbqDatepickerModule` deliberately stays a
+            // standalone import of the modal content component, which is where the reported app had it.
+            TestBed.configureTestingModule({
+                imports: [KbqLuxonDateModule, NoopAnimationsModule, DatepickerInModalHost],
+                providers: [{ provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS }]
+            });
+        });
+
+        it('should open the calendar', fakeAsync(() => {
+            const overlayContainer = TestBed.inject(OverlayContainer);
+            const fixture = TestBed.createComponent(DatepickerInModalHost);
+
+            fixture.detectChanges();
+
+            expect(() => {
+                fixture.componentInstance.open();
+                fixture.detectChanges();
+                flush();
+            }).not.toThrow();
+
+            const toggle = overlayContainer
+                .getContainerElement()
+                .querySelector<HTMLElement>('kbq-datepicker-toggle-icon');
+
+            expect(toggle).not.toBeNull();
+
+            expect(() => {
+                toggle!.click();
+                fixture.detectChanges();
+                tick(500);
+                flush();
+            }).not.toThrow();
+
+            expect(overlayContainer.getContainerElement().querySelector('kbq-datepicker__content')).not.toBeNull();
+        }));
+    });
+
     // TODO Fix it with (use Moment)
     xdescribe('internationalization', () => {
         let fixture: ComponentFixture<DatepickerWithi18n>;
@@ -1785,4 +1828,34 @@ class DelayedDatepicker {
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
     date: DateTime | null;
     assignedDatepicker: KbqDatepicker<DateTime>;
+}
+
+@Component({
+    imports: [
+        KbqDatepickerModule,
+        KbqFormFieldModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input [kbqDatepicker]="d" [ngModel]="null" />
+            <kbq-datepicker-toggle-icon kbqSuffix [for]="d" />
+            <kbq-datepicker #d />
+        </kbq-form-field>
+    `
+})
+class DatepickerInModalContent {}
+
+@Component({
+    imports: [
+        KbqModalModule
+    ],
+    template: ''
+})
+class DatepickerInModalHost {
+    readonly modalService = inject_1(KbqModalService);
+
+    open() {
+        return this.modalService.open({ kbqComponent: DatepickerInModalContent });
+    }
 }

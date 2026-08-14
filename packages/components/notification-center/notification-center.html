@@ -50,13 +50,13 @@
 
 <div
     #notificationCenterContainer="kbqOverflowShadowContainer"
-    kbq-scrollbar
+    kbqScrollbarViewport
     kbqOverflowShadowContainer
     class="kbq-notification-center-container"
     data-testid="kbq-notification-center-container"
     [kbqOverflowShadowBottom]="notificationCenterContainer"
     [shadow]="'var(--kbq-shadow-overflow-normal-bottom)'"
-    (onScroll)="onContainerScroll()"
+    (scroll)="onContainerScroll()"
 >
     @if (!service.errorMode.value) {
         @if (!service.loadingMode.value) {

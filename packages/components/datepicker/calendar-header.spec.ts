@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
+import { KbqCalendarHeader } from './calendar-header.component';
 import { KbqCalendar } from './calendar.component';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqDatepickerModule } from './datepicker-module';
@@ -65,6 +66,17 @@ describe('KbqCalendarHeader', () => {
             fixture.detectChanges();
 
             expect(adapter.format(calendarInstance.activeDate, 'yyyyMMdd')).toEqual('20170128');
+        });
+    });
+
+    describe('without a DateAdapter', () => {
+        it('should say which provider is missing', () => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({ imports: [KbqCalendarHeader] });
+
+            expect(() => TestBed.createComponent(KbqCalendarHeader)).toThrow(
+                /KbqDatepicker: No provider found for DateAdapter/
+            );
         });
     });
 });

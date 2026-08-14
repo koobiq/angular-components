@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
-import { KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER } from '@koobiq/components/scrollbar';
+import { NativeScrollbarExample } from './native-scrollbar/native-scrollbar-example';
 import { ScrollbarOverviewExample } from './scrollbar-overview/scrollbar-overview-example';
-import { ScrollbarScrollToTopExample } from './scrollbar-scroll-to-top/scrollbar-scroll-to-top-example';
-import { ScrollbarWithCustomConfigExample } from './scrollbar-with-custom-config/scrollbar-with-custom-config-example';
+import { ScrollbarScrollToExample } from './scrollbar-scroll-to/scrollbar-scroll-to-example';
+import { ScrollbarVirtualScrollExample } from './scrollbar-virtual-scroll/scrollbar-virtual-scroll-example';
 
-export { ScrollbarOverviewExample, ScrollbarScrollToTopExample, ScrollbarWithCustomConfigExample };
+export { NativeScrollbarExample, ScrollbarOverviewExample, ScrollbarScrollToExample, ScrollbarVirtualScrollExample };
 
 const EXAMPLES = [
-    ScrollbarScrollToTopExample,
     ScrollbarOverviewExample,
-    ScrollbarWithCustomConfigExample
+    ScrollbarVirtualScrollExample,
+    ScrollbarScrollToExample,
+    NativeScrollbarExample
 ];
 
 @NgModule({
     imports: EXAMPLES,
-    providers: [KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER],
     exports: EXAMPLES
 })
 export class ScrollbarExamplesModule {}

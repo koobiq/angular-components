@@ -1,4 +1,4 @@
-import { Location, ViewportScroller } from '@angular/common';
+import { AsyncPipe, Location, ViewportScroller } from '@angular/common';
 import {
     afterNextRender,
     AfterViewInit,
@@ -16,7 +16,7 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
@@ -87,9 +87,10 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
         KbqTreeModule,
         KbqDividerModule,
         DocsFooterComponent,
-        KbqScrollbarModule,
+        KbqScrollbarViewport,
         RouterLink,
-        KbqBadgeModule
+        KbqBadgeModule,
+        AsyncPipe
     ],
     templateUrl: './sidenav.html',
     styleUrl: './sidenav.scss',
@@ -100,7 +101,7 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
     }
 })
 export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
-    private readonly scrollbar = viewChild.required(KbqScrollbar);
+    private readonly scrollbar = viewChild.required(KbqScrollbarViewport);
     private readonly tree = viewChild.required(KbqTreeSelection);
     private readonly viewportScroller = inject(ViewportScroller);
     private readonly router = inject(Router);
@@ -145,7 +146,7 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
 
     ngAfterViewInit() {
         this.treeControl.expandAll();
-        this.docStates.registerNavbarScrollContainer(this.scrollbar().contentElement().nativeElement);
+        this.docStates.registerNavbarScrollContainer(this.scrollbar().getNativeElement());
         this.highlightSelectedOption();
     }
 
