@@ -151,6 +151,7 @@ export class KbqFileList<T> {
     readonly list: _angular_core.ModelSignal<T[]>;
     remove(item: T): T[];
     removeAt(index: number): T[];
+    replace(items: T[]): void;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqFileList<any>, "[kbqFileList]", ["kbqFileList"], { "list": { "alias": "list"; "required": false; "isSignal": true; }; }, { "list": "listChange"; "itemRemoved": "itemRemoved"; "itemsAdded": "itemsAdded"; }, never, never, true, never>;
     // (undocumented)

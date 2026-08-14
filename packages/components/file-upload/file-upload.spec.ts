@@ -362,7 +362,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 expect(component.files).toHaveLength(2);
             });
 
-            it('should not emit filesAdded for a skipped duplicate', () => {
+            it('should emit filesAdded with an empty array for a skipped duplicate', () => {
                 const filesAddedSpy = jest.fn();
                 const subscription = component.fileUpload().filesAdded.subscribe(filesAddedSpy);
 
