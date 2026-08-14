@@ -18,7 +18,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 12. **20.3.0**: the form-field review — signals, accessibility and the removal of `mixinColor`.
 13. **20.3.0**: the theme service review — signals, `auto` mode and built-in persistence.
 14. **20.3.0**: explicit prefix and suffix slots for tag content.
-13. **20.3.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
+15. **20.3.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
 
 ### 1. Upgrade to 18.5.3
 
@@ -836,7 +836,7 @@ Source order is not used to infer a suffix: under the old projection rule all su
 
 **Deprecated imperative placement and styles.** Replace calls to `addClassModificatorForIcons()` with explicit slot directives, and migrate custom selectors from `.kbq-icon_left` to `.kbq-tag-prefix`. The method and the old selector are deprecated and will be removed in the next major version.
 
-### 13. Scrollbar overlayscrollbars implementation deprecation (20.3.0)
+### 15. Scrollbar overlayscrollbars implementation deprecation (20.3.0)
 
 Until 20.3.0, `@koobiq/components/scrollbar` wrapped the third-party `overlayscrollbars` library: the `KbqScrollbar` component (`kbq-scrollbar` / `[kbq-scrollbar]`) and the low-level `KbqScrollbarDirective` (`[kbqScrollbar]`), with `options`, `events`, `defer` inputs and raw access to `scrollbarInstance`.
 

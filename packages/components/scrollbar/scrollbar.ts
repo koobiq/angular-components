@@ -174,14 +174,10 @@ const THUMB_GAP = 3;
 // and the thumb overhangs the track's trailing edge at the very end of the scroll range.
 const MIN_THUMB_BOX_SIZE = MIN_THUMB_SIZE + THUMB_GAP * 2;
 
-type Dimension = {
-    scrollTop: number;
-    scrollHeight: number;
-    clientHeight: number;
-    scrollLeft: number;
-    scrollWidth: number;
-    clientWidth: number;
-};
+type Dimension = Pick<
+    HTMLElement,
+    'scrollTop' | 'scrollHeight' | 'clientHeight' | 'scrollLeft' | 'scrollWidth' | 'clientWidth'
+>;
 
 /** `[vertical, horizontal]` overflow flags. */
 type ScrollbarVisibility = readonly [boolean, boolean];
@@ -241,9 +237,8 @@ export class KbqScrollbarViewport {
     /** Visibility mode for this viewport's scrollbar. Defaults to the app-wide {@link KBQ_SCROLLBAR_OPTIONS}. */
     readonly mode = input<KbqScrollbarMode>(inject(KBQ_SCROLLBAR_OPTIONS).mode);
 
-    // Owns the {@link KbqScrollbarTrack} instance instead of requiring consumers to declare
-    // `<kbq-scrollbar-track />` by hand, so `{@link KbqScrollbar}` and standalone
-    // `[kbqScrollbarViewport]` usage share one creation path.
+    // Reference to the dynamically created track, used to update its mode and destroy it when custom
+    // scrollbars are disabled.
     private trackRef: ComponentRef<KbqScrollbarTrack> | null = null;
 
     constructor() {
@@ -558,8 +553,8 @@ class KbqScrollbarThumb {
     host: {
         class: 'kbq-scrollbar-track',
         '[class.kbq-scrollbar-track_hover]': "mode() === 'hover'",
-        '[style.block-size.px]': 'hostBlockSize() - 1',
-        '[style.margin-block-end.px]': '-(hostBlockSize() - 1)'
+        '[style.block-size.px]': 'viewportBlockSize() - 1',
+        '[style.margin-block-end.px]': '-(viewportBlockSize() - 1)'
     }
 })
 class KbqScrollbarTrack {
@@ -574,8 +569,13 @@ class KbqScrollbarTrack {
         ),
         { requireSync: true }
     );
-    /** The scroll container's own pixel height — percentage-based `margin-block-end` can't cancel a sticky element's height contribution (percentages in the block direction resolve against width, not height, per the CSS spec), so we track and apply the cancellation in exact pixels instead. */
-    protected readonly hostBlockSize = toSignal(
+    /**
+     * The scroll viewport's pixel height. The sticky track remains in normal flow, so an equal negative
+     * `margin-block-end` cancels its height without shifting content or increasing the scrollable area.
+     * Both values must use pixels because percentage block margins resolve against the viewport's inline
+     * size rather than its block size.
+     */
+    protected readonly viewportBlockSize = toSignal(
         animationFrame().pipe(
             throttleTime(300, zoneFreeScheduler()),
             map(() => this.viewport.nativeElement.clientHeight),

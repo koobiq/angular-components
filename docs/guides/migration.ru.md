@@ -18,7 +18,7 @@
 12. **20.3.0**: ревью поля формы — сигналы, доступность и удаление `mixinColor`.
 13. **20.3.0**: ревью сервиса темизации — сигналы, режим `auto` и сохранение выбора из коробки.
 14. **20.3.0**: явные prefix- и suffix-слоты для содержимого тегов.
-13. **20.3.0**: устаревание overlayscrollbars-реализации Scrollbar.
+15. **20.3.0**: устаревание overlayscrollbars-реализации Scrollbar.
 
 ### 1. Обновление до 18.5.3
 
@@ -836,7 +836,7 @@ ng g @koobiq/components:tag-slots --project <your project> --fix=false
 
 **Устаревшее императивное расположение и стили.** Замените вызовы `addClassModificatorForIcons()` явными slot-директивами, а пользовательские селекторы `.kbq-icon_left` — на `.kbq-tag-prefix`. Метод и старый селектор устарели и будут удалены в следующей мажорной версии.
 
-### 13. Устаревание overlayscrollbars-реализации Scrollbar (20.3.0)
+### 15. Устаревание overlayscrollbars-реализации Scrollbar (20.3.0)
 
 До 20.3.0 `@koobiq/components/scrollbar` оборачивал стороннюю библиотеку `overlayscrollbars`: компонент `KbqScrollbar` (`kbq-scrollbar` / `[kbq-scrollbar]`) и низкоуровневая директива `KbqScrollbarDirective` (`[kbqScrollbar]`) со входами `options`, `events`, `defer` и сырым доступом к `scrollbarInstance`.
 
