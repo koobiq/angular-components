@@ -3,7 +3,6 @@ import { Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { KbqToastService } from '@koobiq/components/toast';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER } from '@koobiq/components/tooltip';
 import { BehaviorSubject, map } from 'rxjs';
 import { DocsCopyButtonComponent } from '../components/copy-button/copy-button';
 import { DocsTokensTable } from '../components/design-tokens-viewers/tokens-overview';
@@ -86,7 +85,7 @@ describe('docs i18n strings (characterization)', () => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
                 imports: [DocsTokensTable],
-                providers: [provideDocsLocale(locale), provideRouter([]), KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER]
+                providers: [provideDocsLocale(locale), provideRouter([])]
             });
 
             const fixture = TestBed.createComponent(DocsTokensTable);

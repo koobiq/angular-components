@@ -4,12 +4,9 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqButtonToggle, KbqButtonToggleGroup } from './button-toggle.component';
 
 /**
- * Entry point for `KbqButtonToggleGroup`/`KbqButtonToggle`.
- *
- * Both are standalone, but importing them directly is not enough: a toggle renders `kbq-title` in its
- * own template, and the tooltip behind it resolves `KBQ_TOOLTIP_SCROLL_STRATEGY` and
- * `KBQ_TOOLTIP_OPEN_TIME` from the module injector, where only `KbqTitleModule` puts them. Import
- * this module — a bare `imports: [KbqButtonToggle]` throws NG0201 the moment a label is truncated.
+ * Entry point for `KbqButtonToggleGroup`/`KbqButtonToggle`. Both are standalone, so a bare
+ * `imports: [KbqButtonToggle]` works; this module is the convenience bundle that also pulls in
+ * `KbqButtonModule`/`KbqTitleModule` and re-exports the slot markers.
  */
 @NgModule({
     imports: [KbqButtonModule, KbqTitleModule, KbqButtonToggleGroup, KbqButtonToggle],

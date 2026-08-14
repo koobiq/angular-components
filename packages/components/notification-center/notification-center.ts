@@ -83,7 +83,11 @@ export const KBQ_NOTIFICATION_CENTER_CONFIGURATION = new InjectionToken('KbqNoti
 
 /** @docs-private */
 export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
-    'kbq-notification-center-scroll-strategy'
+    'kbq-notification-center-scroll-strategy',
+    {
+        providedIn: 'root',
+        factory: () => kbqNotificationCenterScrollStrategyFactory(inject(Overlay))
+    }
 );
 
 /** @docs-private */
