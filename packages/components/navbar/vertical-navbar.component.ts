@@ -13,6 +13,7 @@ import {
     InjectionToken,
     Input,
     input,
+    Provider,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -20,7 +21,9 @@ import {
     DOWN_ARROW,
     isHorizontalMovement,
     isVerticalMovement,
-    KBQ_LOCALE_SERVICE,
+    KbqDeepPartial,
+    kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     KbqNavbarLocaleConfiguration,
     ruRULocaleData,
     TAB,
@@ -37,8 +40,17 @@ export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION = ruRULocaleData.navbar;
 /** Injection Token for providing configuration of navbar */
 /** @docs-private */
 export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqNavbarLocaleConfiguration>(
-    'KbqVerticalNavbarConfiguration'
+    'KbqVerticalNavbarConfiguration',
+    { factory: () => KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION }
 );
+
+/**
+ * Utility provider for `KBQ_VERTICAL_NAVBAR_CONFIGURATION`. Only the strings you pass are overridden; the
+ * rest keep following the active locale.
+ */
+export const kbqVerticalNavbarLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('navbar', configuration);
 
 @Component({
     selector: 'kbq-vertical-navbar',
@@ -74,10 +86,18 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqNavbarLoc
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
     protected elementRef: ElementRef<HTMLElement>;
 
-    /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true });
-    configuration: KbqNavbarLocaleConfiguration;
+    /**
+     * Localized strings of the collapse toggle.
+     *
+     * A getter over the signal the helper returns, so that a runtime `setLocale()` stays observable from
+     * outside this component: `KbqNavbarToggle` reads it in an `effect` to refresh its tooltip, which a
+     * `markForCheck()` here could never have reached in that separate `OnPush` view.
+     */
+    get configuration(): KbqNavbarLocaleConfiguration {
+        return this._configuration();
+    }
+
+    private readonly _configuration = kbqInjectLocaleConfiguration('navbar', KBQ_VERTICAL_NAVBAR_CONFIGURATION);
 
     rectangleElements = contentChildren(
         forwardRef(() => KbqNavbarRectangleElement),
@@ -119,12 +139,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
 
         effect(() => this.setItemsVerticalStateAndUpdateExpandedState(this.rectangleElements()));
-
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
     }
 
     ngAfterContentInit(): void {
@@ -184,17 +198,4 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         item.collapsed = !this.expanded;
         setTimeout(() => item.button()?.updateClassModifierForIcons());
     };
-
-    private updateLocaleParams = () => {
-        this.configuration =
-            this.externalConfiguration ??
-            this.localeService?.getParams('navbar') ??
-            KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
-
-        this.changeDetectorRef.markForCheck();
-    };
-
-    private initDefaultParams() {
-        this.configuration = KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION;
-    }
 }

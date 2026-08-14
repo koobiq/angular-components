@@ -5,14 +5,26 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateFormatter, KbqFormattersModule } from '@koobiq/components/core';
+import {
+    DateFormatter,
+    enUSLocaleData,
+    KBQ_LOCALE_SERVICE,
+    KbqFormattersModule,
+    kbqInjectLocaleConfiguration,
+    KbqLocaleService,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverComponent } from '@koobiq/components/popover';
 import { KbqRadioButton } from '@koobiq/components/radio';
 import { KBQ_CUSTOM_TIME_RANGE_TYPES, KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
 import { KbqTimeRangeModule } from './module';
-import { KbqTimeRange } from './time-range';
+import {
+    KBQ_TIME_RANGE_LOCALE_CONFIGURATION,
+    KbqTimeRange,
+    kbqTimeRangeLocaleConfigurationProvider
+} from './time-range';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqCustomTimeRangeType, KbqTimeRangeRange, KbqTimeRangeType } from './types';
 
@@ -161,6 +173,48 @@ describe('KbqTimeRange', () => {
                 popoverElement.queryAll(By.css('.kbq-radio__text')).map((element) => element.nativeElement.textContent)
             ).toMatchSnapshot();
         }));
+    });
+
+    describe('kbqTimeRangeLocaleConfigurationProvider', () => {
+        const apply = '*unit_test* Apply';
+
+        const injectConfiguration = (providers: unknown[]) => {
+            TestBed.configureTestingModule({ providers: providers as [] });
+
+            return TestBed.runInInjectionContext(() =>
+                kbqInjectLocaleConfiguration('timeRange', KBQ_TIME_RANGE_LOCALE_CONFIGURATION)
+            );
+        };
+
+        it('should override a nested key while keeping the rest at the defaults', () => {
+            const { timeRange } = ruRULocaleData;
+
+            const { editor, title } = injectConfiguration([
+                kbqTimeRangeLocaleConfigurationProvider({ editor: { apply } })
+            ])();
+
+            expect(editor.apply).toBe(apply);
+            // The siblings of the overridden key are what a shallow merge of the section would drop.
+            expect(editor.cancel).toBe(timeRange.editor.cancel);
+            expect(editor.from).toBe(timeRange.editor.from);
+            expect(editor.to).toBe(timeRange.editor.to);
+            expect(title).toBe(timeRange.title);
+        });
+
+        it('should apply the override on top of the active locale', () => {
+            const configuration = injectConfiguration([
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+                kbqTimeRangeLocaleConfigurationProvider({ editor: { apply } })
+            ]);
+
+            expect(configuration().editor.apply).toBe(apply);
+
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+
+            // The overridden key stays pinned, everything else follows the locale.
+            expect(configuration().editor.apply).toBe(apply);
+            expect(configuration().editor.cancel).toBe(enUSLocaleData.timeRange.editor.cancel);
+        });
     });
 });
 

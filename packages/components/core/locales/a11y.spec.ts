@@ -1,9 +1,12 @@
+import { InjectionToken } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
 import { kbqA11yLocaleConfigurationProvider, kbqInjectA11yLocaleConfiguration } from './a11y';
+import { kbqInjectLocaleConfiguration, kbqLocaleConfigurationOverrideProvider } from './configuration';
 import { enUSLocaleData } from './en-US';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from './locale-service';
 import { ruRULocaleData } from './ru-RU';
+import { KbqSelectLocaleConfiguration } from './types';
 
 describe('kbqInjectA11yLocaleConfiguration', () => {
     const inject = () => TestBed.runInInjectionContext(kbqInjectA11yLocaleConfiguration);
@@ -20,6 +23,45 @@ describe('kbqInjectA11yLocaleConfiguration', () => {
         TestBed.configureTestingModule({ providers: [kbqA11yLocaleConfigurationProvider(configuration)] });
 
         expect(inject()().close).toBe('Custom close');
+    });
+
+    it('should apply the override on top of the active locale', () => {
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+                kbqA11yLocaleConfigurationProvider({ close: 'Dismiss' })
+            ]
+        });
+
+        const configuration = inject();
+
+        expect(configuration().close).toBe('Dismiss');
+
+        TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+
+        // The overridden name stays pinned; the rest of the section follows the locale.
+        expect(configuration().close).toBe('Dismiss');
+        expect(configuration().save).toBe(enUSLocaleData.a11y.save);
+    });
+
+    it('should apply every section overridden in the same providers array', () => {
+        // The realistic case is two components' providers side by side, which is why the overrides token is
+        // `multi`: a single-value one would let the second provider drop the first.
+        const selectConfiguration = new InjectionToken<KbqSelectLocaleConfiguration>('SelectLocaleConfiguration', {
+            factory: () => ruRULocaleData.select
+        });
+
+        TestBed.configureTestingModule({
+            providers: [
+                kbqA11yLocaleConfigurationProvider({ close: 'Dismiss' }),
+                kbqLocaleConfigurationOverrideProvider('select', { selectAll: 'Everything' })
+            ]
+        });
+
+        const select = TestBed.runInInjectionContext(() => kbqInjectLocaleConfiguration('select', selectConfiguration));
+
+        expect(inject()().close).toBe('Dismiss');
+        expect(select().selectAll).toBe('Everything');
     });
 
     it('should follow the locale service', () => {

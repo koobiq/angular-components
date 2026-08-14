@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { computed, inject, Injectable, InjectionToken, Provider, Signal, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { kbqDeepMerge } from '../utils';
 import { enUSLocaleData } from './en-US';
 import { esLALocaleData } from './es-LA';
 import {
@@ -68,49 +69,27 @@ const { items: shippedLocaleItems, ...shippedLocales } = KBQ_DEFAULT_LOCALE_DATA
  */
 const SHIPPED_LOCALE_DATA = asLocaleDataMap(shippedLocales, shippedLocaleItems);
 
-const isMergeableObject = (value: unknown): value is Record<string, unknown> =>
-    !!value && typeof value === 'object' && !Array.isArray(value);
-
-/**
- * Recursively completes `patch` from `base`.
- *
- * Returns `base` itself whenever the patch adds nothing, so that a locale which overrides one section
- * leaves every other section referentially identical to the shipped data.
- */
-const completeFrom = <T>(base: T, patch: unknown): T => {
-    if (patch === undefined) return base;
-    if (!isMergeableObject(base) || !isMergeableObject(patch)) return patch as T;
-
-    const result: Record<string, unknown> = { ...base };
-    let changed = false;
-
-    for (const key of Object.keys(patch)) {
-        const merged = completeFrom(base[key], patch[key]);
-
-        if (merged !== result[key]) {
-            result[key] = merged;
-            changed = true;
-        }
-    }
-
-    return (changed ? result : base) as T;
-};
-
 /** Completes one locale from the shipped locale of the same id, falling back to the default locale. */
 const resolveLocaleData = (id: KbqLocaleIdLike, data: KbqPartialLocaleData | undefined): KbqLocaleData =>
-    completeFrom(SHIPPED_LOCALE_DATA[id] ?? SHIPPED_LOCALE_DATA[KBQ_DEFAULT_LOCALE_ID], data);
+    kbqDeepMerge(SHIPPED_LOCALE_DATA[id] ?? SHIPPED_LOCALE_DATA[KBQ_DEFAULT_LOCALE_ID], data);
 
 const resolveLocaleDataMap = (input: KbqLocaleDataInput | null): KbqLocaleDataMap => {
     const source = input ?? SHIPPED_LOCALE_DATA;
+    const items = source.items ?? SHIPPED_LOCALE_DATA.items;
     const locales: Record<string, KbqLocaleData> = {};
 
-    for (const id of Object.keys(source)) {
+    // Every shipped locale and every offered `items` entry is registered, not just the ids the input
+    // happens to patch: a partial input leaves `items` at the full shipped list, and a locale a picker
+    // can activate must have data behind it — `setLocale` would otherwise leave `data()` undefined.
+    const ids = new Set([...Object.keys(SHIPPED_LOCALE_DATA), ...Object.keys(source), ...items.map(({ id }) => id)]);
+
+    for (const id of ids) {
         if (id === 'items') continue;
 
         locales[id] = resolveLocaleData(id, source[id] as KbqPartialLocaleData);
     }
 
-    return asLocaleDataMap(locales, source.items ?? SHIPPED_LOCALE_DATA.items);
+    return asLocaleDataMap(locales, items);
 };
 
 export const KBQ_LOCALE_SERVICE = new InjectionToken<KbqLocaleService>('KBQ_LOCALE_SERVICE');
@@ -203,8 +182,16 @@ export class KbqLocaleService {
         this.changes = new BehaviorSubject(this._localeId());
     }
 
-    /** Activates a registered locale. */
+    /**
+     * Activates a locale.
+     *
+     * An id that was never registered is registered on the fly, completed from the shipped locale of that
+     * id or from the default locale: {@link data} promises a complete locale, and code reading
+     * `locales[id]` directly would otherwise be handed `undefined`.
+     */
     setLocale(id: KbqLocaleIdLike) {
+        this.locales[id] ??= resolveLocaleData(id, undefined);
+
         this._localeId.set(id);
         this._data.set(this.locales[id]);
 

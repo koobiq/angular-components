@@ -1,6 +1,6 @@
 import { InjectionToken, Provider, Signal } from '@angular/core';
 import { KbqDeepPartial } from '../utils';
-import { kbqInjectLocaleConfiguration } from './configuration';
+import { kbqInjectLocaleConfiguration, kbqLocaleConfigurationOverrideProvider } from './configuration';
 import { ruRULocaleData } from './ru-RU';
 import { KbqA11yLocaleConfiguration } from './types';
 
@@ -13,16 +13,13 @@ export const KBQ_A11Y_LOCALE_CONFIGURATION = new InjectionToken<KbqA11yLocaleCon
 );
 
 /**
- * Utility provider. Only the names you pass are overridden; the rest keep their `ru-RU` defaults.
+ * Utility provider. Only the names you pass are overridden; the rest keep following the active locale.
  *
  * @see KBQ_A11Y_LOCALE_CONFIGURATION
  */
 export const kbqA11yLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqA11yLocaleConfiguration>
-): Provider => ({
-    provide: KBQ_A11Y_LOCALE_CONFIGURATION,
-    useValue: { ...ruRULocaleData.a11y, ...configuration }
-});
+): Provider => kbqLocaleConfigurationOverrideProvider('a11y', configuration);
 
 /**
  * Injection function that creates a reactive locale configuration signal with the accessible names

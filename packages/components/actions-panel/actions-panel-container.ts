@@ -29,6 +29,7 @@ import {
     KbqAnimationDurations,
     KbqDeepPartial,
     kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -45,14 +46,11 @@ export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION = new InjectionToken<KbqActi
 
 /**
  * Utility provider for `KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION`. Only the strings you pass are
- * overridden; the rest keep their `ru-RU` defaults.
+ * overridden; the rest keep following the active locale.
  */
 export const kbqActionsPanelLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqActionsPanelLocaleConfiguration>
-): Provider => ({
-    provide: KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION,
-    useValue: { ...ruRULocaleData.actionsPanel, ...configuration }
-});
+): Provider => kbqLocaleConfigurationOverrideProvider('actionsPanel', configuration);
 
 /**
  * Animation that shows and hides the actions panel.

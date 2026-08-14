@@ -3,6 +3,7 @@ import {
     AfterContentInit,
     Directive,
     DoCheck,
+    effect,
     ElementRef,
     EventEmitter,
     forwardRef,
@@ -11,9 +12,9 @@ import {
     Input,
     OnDestroy,
     output,
+    Provider,
     Renderer2
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -41,10 +42,12 @@ import {
     isLetterKey,
     isVerticalMovement,
     KBQ_DATE_FORMATS,
-    KBQ_LOCALE_SERVICE,
     KbqDateFormats,
     KbqDatepickerLocaleConfiguration,
+    KbqDeepPartial,
     KbqErrorStateTracker,
+    kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
@@ -188,8 +191,17 @@ export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = ruRULocaleData.datepicker;
 /** Injection Token for providing configuration of datepicker */
 /** @docs-private */
 export const KBQ_DATEPICKER_CONFIGURATION = new InjectionToken<KbqDatepickerLocaleConfiguration>(
-    'KbqDatepickerConfiguration'
+    'KbqDatepickerConfiguration',
+    { factory: () => KBQ_DATEPICKER_DEFAULT_CONFIGURATION }
 );
+
+/**
+ * Utility provider for `KBQ_DATEPICKER_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * keep following the active locale.
+ */
+export const kbqDatepickerLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqDatepickerLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('datepicker', configuration);
 
 /**
  * An event used for datepicker input and change events. We don't always have access to a native
@@ -255,11 +267,12 @@ export class KbqDatepickerInput<D>
     private readonly dateFormats = inject<KbqDateFormats>(KBQ_DATE_FORMATS, { optional: true });
     /** @docs-private */
     protected readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
-    /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    /** @docs-private */
-    protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true });
-    protected configuration: KbqDatepickerLocaleConfiguration;
+
+    protected get configuration(): KbqDatepickerLocaleConfiguration {
+        return this._configuration();
+    }
+
+    private readonly _configuration = kbqInjectLocaleConfiguration('datepicker', KBQ_DATEPICKER_CONFIGURATION);
 
     readonly stateChanges: Subject<void> = new Subject<void>();
 
@@ -579,11 +592,25 @@ export class KbqDatepickerInput<D>
 
         this.setFormat(this.dateInputFormat);
 
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+        let isFirstRun = true;
 
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
+        effect(() => {
+            this._configuration();
+
+            // Nothing to re-format on the first run: `setFormat` above already ran against the active
+            // locale, while re-assigning `value` here would emit `valueChange` at a point where the
+            // datepicker and the calendar are already subscribed to it.
+            if (isFirstRun) {
+                isFirstRun = false;
+
+                return;
+            }
+
+            // The date adapter follows the same locale, so its input format may have changed with it: the
+            // digit layout has to be re-derived and the rendered value re-formatted.
+            this.setFormat(this.dateInputFormat);
+            this.value = this.value;
+        });
     }
 
     ngDoCheck() {
@@ -879,21 +906,6 @@ export class KbqDatepickerInput<D>
         const milliseconds = this.adapter.getMilliseconds(this.value);
 
         return this.adapter.createDateTime(years, month, day, hours, minutes, seconds, milliseconds);
-    }
-
-    private updateLocaleParams = () => {
-        this.setFormat(this.dateInputFormat);
-
-        this.configuration =
-            this.externalConfiguration ??
-            this.localeService?.getParams('datepicker') ??
-            KBQ_DATEPICKER_DEFAULT_CONFIGURATION;
-
-        this.value = this.value;
-    };
-
-    private initDefaultParams() {
-        this.configuration = this.externalConfiguration || KBQ_DATEPICKER_DEFAULT_CONFIGURATION;
     }
 
     private setFormat(format: string): void {

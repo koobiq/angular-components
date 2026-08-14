@@ -20,6 +20,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqDeepPartial,
     kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     KbqTimeRangeLocaleConfiguration,
     PopUpPlacements,
     PopUpSizes,
@@ -45,14 +46,11 @@ export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimeRan
 
 /**
  * Utility provider for `KBQ_TIME_RANGE_LOCALE_CONFIGURATION`. Only the strings you pass are overridden;
- * the rest keep their `ru-RU` defaults.
+ * the rest keep following the active locale.
  */
 export const kbqTimeRangeLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqTimeRangeLocaleConfiguration>
-): Provider => ({
-    provide: KBQ_TIME_RANGE_LOCALE_CONFIGURATION,
-    useValue: { ...ruRULocaleData.timeRange, ...configuration }
-});
+): Provider => kbqLocaleConfigurationOverrideProvider('timeRange', configuration);
 
 @Component({
     selector: 'kbq-time-range',

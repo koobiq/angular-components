@@ -3,6 +3,7 @@ import {
     KbqClampedTextLocaleConfiguration,
     KbqDeepPartial,
     kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
 
@@ -21,16 +22,13 @@ export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION = new InjectionToken<KbqClamp
 );
 
 /**
- * Utility provider. Only the strings you pass are overridden; the rest keep their `ru-RU` defaults.
+ * Utility provider. Only the strings you pass are overridden; the rest keep following the active locale.
  *
  * @see KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION
  */
 export const kbqClampedTextLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqClampedTextLocaleConfiguration>
-): Provider => ({
-    provide: KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION,
-    useValue: { ...ruRULocaleData.clampedText, ...configuration }
-});
+): Provider => kbqLocaleConfigurationOverrideProvider('clampedText', configuration);
 
 export const KbqClampedRoot = new InjectionToken<KbqClamped>('KbqClampedRoot');
 

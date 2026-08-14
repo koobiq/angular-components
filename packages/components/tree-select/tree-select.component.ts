@@ -51,14 +51,13 @@ import {
     HOME,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
-    KBQ_LOCALE_SERVICE,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KBQ_PARENT_POPUP,
+    KBQ_SELECT_LOCALE_CONFIGURATION,
     KBQ_SELECT_SCROLL_STRATEGY,
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
-    KbqLocaleService,
     KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
@@ -83,6 +82,7 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqInjectLocaleConfiguration,
     kbqResolvePanelMaxHeightToken,
     kbqSelectAnimations,
     kbqSiblingPopupProvider,
@@ -246,7 +246,6 @@ export class KbqTreeSelect
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true })!;
     ngControl = inject(NgControl, { optional: true, self: true });
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
@@ -354,8 +353,19 @@ export class KbqTreeSelect
     readonly search = contentChild(KbqSelectSearch);
 
     // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() hiddenItemsText: string = '+{{ number }}';
+    //  Accessor inputs cannot be migrated as they are too complex.
+    @Input()
+    get hiddenItemsText(): string {
+        return this._hiddenItemsText ?? this.localeConfiguration().hiddenItemsText;
+    }
+
+    set hiddenItemsText(value: string) {
+        this._hiddenItemsText = value;
+    }
+
+    private _hiddenItemsText?: string;
+
+    private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
 
     /**
      * Event emitted when the select panel has been toggled.
@@ -780,8 +790,6 @@ export class KbqTreeSelect
 
     constructor() {
         super();
-
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
         // The tree owns the "select all" row — it is the only place that can put it in front of the nodes
         // and into the key manager's list. Mirrored through an effect rather than assigned once in
@@ -1449,12 +1457,6 @@ export class KbqTreeSelect
             optionsCount >= this.searchMinOptionsThreshold
         );
     }
-
-    private updateLocaleParams = () => {
-        this.hiddenItemsText = this.localeService?.getParams('select').hiddenItemsText ?? this.hiddenItemsText;
-
-        this.changeDetectorRef.markForCheck();
-    };
 
     private closingActions() {
         const backdrop = this.overlayDir.overlayRef!.backdropClick();

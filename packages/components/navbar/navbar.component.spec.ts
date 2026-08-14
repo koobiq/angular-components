@@ -5,7 +5,17 @@ import { Component } from '@angular/core';
 import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { dispatchKeyboardEvent, LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/components/core';
+import {
+    dispatchKeyboardEvent,
+    enUSLocaleData,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    ruRULocaleData,
+    TAB
+} from '@koobiq/components/core';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable, Subject } from 'rxjs';
 import { KbqIconModule } from './../icon/icon.module';
 import {
@@ -17,7 +27,9 @@ import {
     KbqNavbarModule,
     KbqNavbarRectangleElement,
     KbqNavbarTitle,
-    KbqVerticalNavbar
+    KbqNavbarToggle,
+    KbqVerticalNavbar,
+    kbqVerticalNavbarLocaleConfigurationProvider
 } from './index';
 
 const FONT_RENDER_TIMEOUT_MS = 10;
@@ -73,7 +85,8 @@ describe('KbqNavbar', () => {
                 TestVerticalApp,
                 TestBrandApp,
                 TestBrandLongTitleApp,
-                TestBrandHorizontalApp
+                TestBrandHorizontalApp,
+                TestToggleApp
             ]
         }).compileComponents();
     });
@@ -577,6 +590,54 @@ describe('KbqNavbar', () => {
         }));
     });
 
+    describe('KbqNavbarToggle', () => {
+        it('tooltip content should follow a runtime locale change', () => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
+            });
+
+            const fixture = TestBed.createComponent(TestToggleApp);
+
+            fixture.detectChanges();
+
+            const tooltip = fixture.debugElement.query(By.directive(KbqNavbarToggle)).injector.get(KbqTooltipTrigger);
+
+            expect(tooltip.content).toBe(ruRULocaleData.navbar.toggle.expand);
+
+            // The tooltip is deliberately never shown nor hidden here: `visibleChange` would refresh the
+            // content on its own and hide a toggle that never reacts to the locale itself.
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+            fixture.detectChanges();
+
+            expect(tooltip.content).toBe(enUSLocaleData.navbar.toggle.expand);
+        });
+
+        it('tooltip content should follow an override registered through the provider', () => {
+            const expand = '*unit_test* Open the menu';
+
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+                    kbqVerticalNavbarLocaleConfigurationProvider({ toggle: { expand } })
+                ]
+            });
+
+            const fixture = TestBed.createComponent(TestToggleApp);
+
+            fixture.detectChanges();
+
+            const tooltip = fixture.debugElement.query(By.directive(KbqNavbarToggle)).injector.get(KbqTooltipTrigger);
+
+            expect(tooltip.content).toBe(expand);
+
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+            fixture.detectChanges();
+
+            // An override outranks the locale — that is what distinguishes it from a default.
+            expect(tooltip.content).toBe(expand);
+        });
+    });
+
     describe('KbqNavbarRectangleElement', () => {
         it('setting horizontal=true should add kbq-horizontal and remove kbq-vertical', fakeAsync(() => {
             const fixture = TestBed.createComponent(TestItemApp);
@@ -1037,3 +1098,14 @@ class TestBrandHorizontalApp {}
     `
 })
 class TestVerticalApp {}
+
+@Component({
+    selector: 'test-toggle-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-vertical-navbar>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+    `
+})
+class TestToggleApp {}
