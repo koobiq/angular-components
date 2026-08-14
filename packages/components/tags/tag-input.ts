@@ -1,4 +1,4 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+﻿import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     booleanAttribute,
     Directive,
@@ -66,7 +66,7 @@ export interface KbqTagSeparator {
 
 /** Default options for the tags module that can be overridden. */
 export interface KbqTagsDefaultOptions {
-    /** The list of key codes that will trigger a chipEnd event. */
+    /** The list of key codes that will trigger a tagEnd event. */
     separatorKeyCodes: number[];
 
     /** Custom separator definitions to use instead of the built-in defaults. */
@@ -76,10 +76,13 @@ export interface KbqTagsDefaultOptions {
     addOnPaste?: boolean;
 }
 
-/** Injection token to be used to override the default options for the chips module. */
-export const KBQ_TAGS_DEFAULT_OPTIONS = new InjectionToken<KbqTagsDefaultOptions>('kbq-tags-default-options');
-
 const KBQ_TAGS_DEFAULT_OPTIONS_CONFIG: KbqTagsDefaultOptions = { separatorKeyCodes: [ENTER] };
+
+/** Injection token to be used to override the default options. */
+export const KBQ_TAGS_DEFAULT_OPTIONS = new InjectionToken<KbqTagsDefaultOptions>('kbq-tags-default-options', {
+    providedIn: 'root',
+    factory: () => KBQ_TAGS_DEFAULT_OPTIONS_CONFIG
+});
 
 /** Utility provider for `KBQ_TAGS_DEFAULT_OPTIONS`. */
 export const kbqTagsDefaultOptionsProvider = (options: Partial<KbqTagsDefaultOptions>): Provider => ({

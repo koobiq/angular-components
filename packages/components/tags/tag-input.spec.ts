@@ -80,6 +80,22 @@ class TestTagInputDefaultSeparators {
 }
 
 @Component({
+    // Deliberately importing the standalone directive/component directly, without KbqTagsModule
+    // (the only place that provides KBQ_TAGS_DEFAULT_OPTIONS), to verify the token's own
+    // `providedIn: 'root'` factory default keeps KbqTagInput usable on its own.
+    imports: [KbqTagInput, KbqTagList],
+    template: `
+        <kbq-tag-list #tagList>
+            <input [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+        </kbq-tag-list>
+    `
+})
+class TestTagInputStandaloneWithoutModule {
+    readonly tagInput = viewChild.required(KbqTagInput);
+    readonly add = jest.fn();
+}
+
+@Component({
     imports: [KbqTagsModule],
     template: `
         <kbq-tag-list #tagList>
@@ -284,6 +300,16 @@ describe(KbqTagInput.name, () => {
 
         inputElement.value = 'tag';
         directive.onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
+
+        expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'tag' }));
+    });
+
+    it('works standalone without KbqTagsModule providing KBQ_TAGS_DEFAULT_OPTIONS', () => {
+        const fixture = createComponent(TestTagInputStandaloneWithoutModule);
+        const inputElement = getInputElement(fixture);
+
+        inputElement.value = 'tag';
+        fixture.componentInstance.tagInput().onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
 
         expect(fixture.componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'tag' }));
     });
