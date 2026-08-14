@@ -18,6 +18,11 @@ import { Provider } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
+export const KBQ_CODE_BLOCK_DEFAULT_OPTIONS: InjectionToken<Partial<{
+    alwaysShowActionbar: boolean;
+}>>;
+
+// @public
 export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE: InjectionToken<string>;
 
 // @public
@@ -39,8 +44,10 @@ export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLoc
 // @public
 export class KbqCodeBlock implements AfterViewInit {
     constructor();
+    protected readonly actionbarVisible: _angular_core.Signal<boolean>;
     activeFileIndex: number;
     readonly activeFileIndexChange: _angular_core.OutputEmitterRef<number>;
+    readonly alwaysShowActionbar: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly buttonStyle: typeof KbqButtonStyles;
     protected get calculatedMaxHeight(): number | null;
     readonly canCopy: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -94,10 +101,18 @@ export class KbqCodeBlock implements AfterViewInit {
     viewAll: boolean;
     readonly viewAllChange: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; "isSignal": true; }; "filled": { "alias": "filled"; "required": false; "isSignal": true; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; "isSignal": true; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; "isSignal": true; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; "isSignal": true; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; "isSignal": true; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; "isSignal": true; }; "filled": { "alias": "filled"; "required": false; "isSignal": true; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; "isSignal": true; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; "isSignal": true; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; "isSignal": true; }; "alwaysShowActionbar": { "alias": "alwaysShowActionbar"; "required": false; "isSignal": true; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; "isSignal": true; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; "hideTabsChange": "hideTabsChange"; }, ["tabLinkTemplate"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
 }
+
+// @public
+export type KbqCodeBlockDefaultOptions = Partial<{
+    alwaysShowActionbar: boolean;
+}>;
+
+// @public
+export const kbqCodeBlockDefaultOptionsProvider: (options: KbqCodeBlockDefaultOptions) => Provider;
 
 // @public
 export const kbqCodeBlockFallbackFileLanguageProvider: (language: string) => Provider;
