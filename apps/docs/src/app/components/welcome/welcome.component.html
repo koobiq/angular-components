@@ -3,29 +3,29 @@
         {{ t('welcomeTitle') }}
     </header>
 
-  <div class="docs-welcome__description kbq-text-big">
-      {{ t('welcomeDescription') }}
-  </div>
+    <div class="docs-welcome__description kbq-text-big">
+        {{ t('welcomeDescription') }}
+    </div>
 
-  @for (category of structureCategories; track category) {
-      <div class="docs-welcome__category">
-          <div class="docs-welcome__category-title kbq-title">{{ category.name[locale()] }}</div>
-          <div class="docs-welcome__category-items layout-row layout-margin-top-l">
-              @let theme = currentTheme();
+    @for (category of structureCategories; track category) {
+        <div class="docs-welcome__category">
+            <div class="docs-welcome__category-title kbq-title">{{ category.name[locale()] }}</div>
+            <div class="docs-welcome__category-items layout-row layout-margin-top-l">
+                @let theme = currentTheme();
 
-              @for (item of category.items; track item) {
-                  <a class="docs-welcome__category-item" [routerLink]="[category.id, item.id]">
-                      <img
-                          class="docs-welcome__category-item-preview"
-                          width="200"
-                          height="140"
-                          [ngSrc]="`/assets/images/welcome/${item.svgPreview || 'generic'}-${theme}.png`"
-                          [alt]="item.id"
-                      />
-                      <div class="docs-welcome__category-item-title kbq-text-big">{{ item.name[locale()] }}</div>
-                  </a>
-              }
-          </div>
-      </div>
+                @for (item of category.items; track item) {
+                    <a class="docs-welcome__category-item" [routerLink]="[category.id, item.id]">
+                        <img
+                            class="docs-welcome__category-item-preview"
+                            width="200"
+                            height="140"
+                            [ngSrc]="`/assets/images/welcome/${item.svgPreview || 'generic'}-${theme}.png`"
+                            [alt]="item.id"
+                        />
+                        <div class="docs-welcome__category-item-title kbq-text-big">{{ item.name[locale()] }}</div>
+                    </a>
+                }
+            </div>
+        </div>
     }
 </div>
