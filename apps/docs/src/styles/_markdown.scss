@@ -16,3 +16,10 @@
         margin-bottom: 0 !important;
     }
 }
+
+.docs-markdown__a:focus {
+    outline-style: solid;
+    outline-width: var(--kbq-link-size-state-focused-outline-width, 2px);
+    outline-color: var(--kbq-link-state-focused-outline);
+    outline-offset: var(--kbq-link-size-state-focused-outline-offset, 0px);
+}

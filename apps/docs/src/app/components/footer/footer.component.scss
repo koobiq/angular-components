@@ -1,3 +1,5 @@
+@use '../dist/components/core/styles/common/tokens';
+
 .docs-footer {
     box-sizing: border-box;
     display: flex;
@@ -28,5 +30,22 @@
         .docs-footer__label {
             margin-bottom: var(--kbq-size-3xs);
         }
+    }
+}
+
+.docs-footer__label,
+.kbq-dropdown__group-header .kbq-caps-compact-strong {
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-dropdown {
+    .kbq-dropdown-item__text {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+    }
+
+    // `.kbq-dropdown-item` is in the selector for weight: the library sets the caption's typography as
+    // `.kbq-dropdown-item .kbq-dropdown-item__caption`, so two class names here would only tie with it.
+    .kbq-dropdown-item .kbq-dropdown-item__caption {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

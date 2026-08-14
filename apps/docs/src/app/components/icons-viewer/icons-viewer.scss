@@ -1,3 +1,5 @@
+@use '../dist/components/core/styles/common/tokens';
+
 .docs-icons-viewer {
     overflow-y: auto;
 
@@ -63,6 +65,16 @@
 
     width: 100%;
     height: 44px;
+
+    font-family: var(--kbq-font-family-base);
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: normal;
+    font-weight: 600;
+    text-transform: none;
+    font-feature-settings:
+        'ss01' on,
+        'ss04' on;
 }
 
 .docs-icons-viewer__table-row {
@@ -162,4 +174,41 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.docs-icons-viewer__header {
+    background: var(--kbq-background-bg);
+}
+
+.docs-icons-viewer__header-text {
+    color: var(--kbq-foreground-contrast);
+
+    // Duplicated from `component-viewer.scss`: the icons page is its own lazy route and never loads that
+    // component's stylesheet.
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
+}
+
+.docs-icons-viewer__table-cell {
+    background: var(--kbq-background-bg);
+    border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
+
+    > .docs-icons-viewer__table-cell-name {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    &:focus {
+        outline: 2px solid var(--kbq-theme-default);
+    }
+
+    &:hover {
+        background: var(--kbq-states-background-transparent-hover);
+    }
+
+    &:active {
+        background: var(--kbq-states-background-transparent-active);
+    }
+}
+
+.docs-icons-viewer__header .kbq-input {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
 }

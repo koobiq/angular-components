@@ -1,3 +1,5 @@
+@use '../dist/components/core/styles/common/tokens';
+
 .kbq-docs-pre {
     position: relative;
 }
@@ -249,5 +251,115 @@
         .docs-component-viewer__article {
             width: 650px;
         }
+    }
+}
+
+.docs-component-header {
+    background: var(--kbq-background-bg);
+}
+
+.docs-api__section {
+    border-color: var(--kbq-background-contrast-fade);
+}
+
+.docs-api__section_directive .docs-api_method-name {
+    color: var(--kbq-line-warning) !important;
+}
+
+.docs-api__input-marker {
+    color: var(--kbq-line-success) !important;
+}
+
+.docs-api__output-marker {
+    color: var(--kbq-foreground-theme) !important;
+}
+
+.kbq-docs-table {
+    & .kbq-markdown__code {
+        background: transparent !important;
+    }
+
+    &.kbq-table > tbody > tr:hover {
+        background: none;
+    }
+}
+
+// header
+.docs-component-name {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
+}
+
+.docs-api__class-name {
+    font-family: var(--kbq-font-family-mono);
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: normal;
+    font-weight: 700;
+    text-transform: none;
+    font-feature-settings: initial;
+}
+
+.docs-component-overview {
+    // first level
+    & .docs-header-link.kbq-markdown__h3 {
+        font-family: var(--kbq-font-family-base);
+        font-size: 24px;
+        line-height: 32px;
+        letter-spacing: normal;
+        font-weight: 700;
+        text-transform: none;
+        font-feature-settings:
+            'ss01' on,
+            'ss04' on;
+    }
+
+    // second level
+    & .docs-api__section_method .docs-api_method-name,
+    & .docs-header-link.kbq-markdown__h4 {
+        font-family: var(--kbq-font-family-base);
+        font-size: 20px;
+        line-height: 28px;
+        letter-spacing: normal;
+        font-weight: 600;
+        text-transform: none;
+        font-feature-settings:
+            'ss01' on,
+            'ss04' on;
+    }
+
+    // third level
+    & .docs-header-link.kbq-markdown__h5 {
+        font-family: var(--kbq-font-family-base);
+        font-size: 17px;
+        line-height: 20px;
+        letter-spacing: normal;
+        font-weight: 600;
+        text-transform: none;
+        font-feature-settings:
+            'ss01' on,
+            'ss04' on;
+    }
+}
+
+// `.kbq-tab-nav-bar` is in the selector for weight: the library sets `.kbq-tab-link` typography from
+// `koobiq-typography()`, which is emitted inside `.docs`, so two class names here would only tie with it.
+.docs-component-navbar .kbq-tab-nav-bar .kbq-tab-link {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+}
+
+.docs-api__class-selector-name,
+.docs-api__input-marker,
+.docs-api__output-marker,
+.docs-api_property-name {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
+}
+
+.docs-api_method-name {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big-strong);
+}
+
+.docs-api {
+    .kbq-markdown__code {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
     }
 }

@@ -1,3 +1,5 @@
+@use '../dist/components/core/styles/common/tokens';
+
 .docs-welcome {
     display: flex;
     flex-direction: column;
@@ -80,4 +82,27 @@
     .docs-welcome__content {
         padding: 0 var(--kbq-size-7xl) 160px var(--kbq-size-7xl);
     }
+}
+
+.docs-welcome__category-item-title {
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-welcome__category-item {
+    border-radius: var(--kbq-size-border-radius);
+
+    &:hover,
+    &:focus-visible {
+        .docs-welcome__category-item-title {
+            color: var(--kbq-states-foreground-theme-hover);
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--kbq-states-foreground-theme-hover);
+    }
+}
+
+.docs-welcome__header {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
 }

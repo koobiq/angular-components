@@ -1,27 +1,28 @@
-### What's new?
+A theme in Koobiq is a set of CSS variables. Switching a theme swaps the values; nothing else has to change. This guide shows how to plug a theme in, how to switch it, and how to use its values in your own styles.
 
-Using components is now simpler! We are moving toward full component isolation, making it easy to plug in and use components.
+### How theming works
 
-- You no longer need to import separate SCSS files to change component colors, sizes, and fonts.
-- Almost all components define their styles using CSS variables that are already included in the component code. This makes styles more transparent and easier to understand.
-- A few small components cannot load styles on their own, so those styles need to be included globally.
-- We use global design-system CSS variables for colors, sizes, and fonts. This makes the code more readable and simplifies application theming — improving both code readability and the theming process significantly.
+There are three layers.
 
-### How to use
+**Global variables** describe the design system: colors, sizes, fonts. They come from the `@koobiq/design-tokens` package and are declared under the theme selector — `.kbq-light` or `.kbq-dark`. These are the values you reach for in your own styles.
 
-1. [Install the Koobiq design system package](/main/installation).
-2. Include the `css-tokens.css`, `css-tokens-light.css`, and `css-tokens-dark.css` files to use the global design-system values such as colors, sizes, and font settings.
-3. [Include the prebuilt styles file](#including-the-prebuilt-styles-file) in your main styles file. This step is required for components and overlays (e.g. popups) to render correctly.
-4. Add the `kbq-light` selector to the `<body>` element of your HTML document for the light theme, or `kbq-dark` for the dark theme.
-5. Import a component and use it in your markup! 🚀
+**Component variables** are used inside Koobiq components. Each one is named after its component (`--kbq-button-*`, `--kbq-alert-*`) and points to a global variable. The component declares them itself, so nothing extra has to be included.
 
-#### Including the prebuilt styles file
+**Your styles** use the global variables directly. No imports, no mixins, no registration in a single theme entry point.
+
+Adding a theme to the page means putting a class on `<body>`. Everything below it — components and your own markup alike — picks up the new values automatically, because all of it reads the same variables.
+
+### Setup
+
+- [Install the Koobiq package](/main/installation).
+- Include `css-tokens.css`, `css-tokens-light.css` and `css-tokens-dark.css` — these hold the global values.
+- Include the prebuilt styles in your main stylesheet. Components and overlays (popups, dropdowns) need this to render correctly:
 
 ```sass
 @use '@koobiq/components/prebuilt-themes/theme.css';
 ```
 
-Here is what the `body` tag in `index.html` looks like after adding the required classes:
+- Add the theme class to `<body>`:
 
 ```html
 <body class="kbq-app-background kbq-light">
@@ -29,98 +30,165 @@ Here is what the `body` tag in `index.html` looks like after adding the required
 </body>
 ```
 
-The `kbq-app-background` class applies the base theme styles to the application — background and text colors.
+`kbq-app-background` paints the page itself — background and text color.
+
+- Import a component and use it. 🚀
 
 ### Switching themes
 
-To switch themes, simply change the corresponding selector to go from dark to light (or vice versa), for example from `kbq-dark` to `kbq-light`.
-Color values will be automatically adapted to the selected theme.
+Use `KbqThemeService`. It puts the right class on `<body>`, remembers the choice, and in `'auto'` mode follows the system color scheme.
 
-Use [ThemeService](https://github.com/koobiq/angular-components/tree/main/packages/components/core/services/theme.service.ts) to switch themes. Example:
+There are three modes: `'light'`, `'dark'` and `'auto'`. **`'auto'` is the default.** The system color scheme is supported out of the box: no `matchMedia` subscription of your own.
+
+The service exposes its current state as signals, so you can read it straight from a template:
 
 ```ts
-import { ThemeService } from '@koobiq/components/core';
-import { Component } from '@angular/core';
-
-@Component()
-class AppComponent {
-    constructor(private themeService: ThemeService) {
-        /* the light theme will become active, and the class `kbq-light` will be added to the `body` tag */
-        this.themeService.setTheme(0);
-    }
-}
+protected readonly themeService = inject(KbqThemeService);
 ```
+
+```html
+<button kbq-button (click)="themeService.toggle()">
+    {{ themeService.colorScheme() === 'dark' ? 'Light theme' : 'Dark theme' }}
+</button>
+```
+
+If you have more than two themes and need a list rather than a light/dark switch, you can pin one by name. See [Core](/components/core) for the details and a live example.
 
 #### Theme selectors
 
-Available selectors for the dark and light themes:
+| Theme | Selector   |
+| ----- | ---------- |
+| Light | .kbq-light |
+| Dark  | .kbq-dark  |
 
-| Theme | Selectors                                  |
-| ----- | ------------------------------------------ |
-| Dark  | .kbq-dark, .theme-dark, .kbq-theme-dark    |
-| Light | .kbq-light, .theme-light, .kbq-theme-light |
+#### Settings
 
-We recommend using the selectors defined in `ThemeService` (`kbq-dark` for dark and `kbq-light` for light).
+Pass the settings when the app starts:
 
-#### Switching based on the OS theme
+```ts
+import { kbqThemeProvider } from '@koobiq/components/core';
 
-This can be implemented using [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia).
-
-To switch the theme based on the operating system setting, three steps are required:
-
-- Define a media query to detect the user's preferred theme:
-
-```javascript
-colorAutomaticTheme = window.matchMedia('(prefers-color-scheme: light)');
+bootstrapApplication(AppComponent, {
+    providers: [kbqThemeProvider({ mode: 'auto', storageKey: 'my-app-theme' })]
+});
 ```
 
-- Add a theme object to the themes array that is passed to `ThemeService` during application initialization. In this object, the `className` property is set conditionally:
+The choice is saved between visits — in `localStorage` by default. Apps rendered on the server can store it in a cookie instead, so the server already knows which theme to render: provide `KbqThemeCookieStore` through the `KBQ_THEME_STORE` token.
 
-```javascript
-{
-    name: 'Match system',
-    className: this.colorAutomaticTheme.matches ? Themes.Default : Themes.Dark,
-    selected: false
-},
-```
+### Using theme values in your own styles
 
-- Subscribe to user theme updates and set the active theme whenever it changes:
-
-```javascript
-this.colorAutomaticTheme.addEventListener('change', this.setAutoTheme);
-```
-
-An example implementation of theme switching in the Koobiq documentation can be found [here.](https://github.com/koobiq/angular-components/blob/main/apps/docs/src/app/components/navbar/navbar.component.ts)
-
-### Component customization
-
-You can change colors, sizes, and fonts by overriding the component's CSS variables with the desired values. For example:
+Write the variable where you need the value:
 
 ```css
-.kbq-dark .kbq-alert {
-    --kbq-alert-default-contrast-container-background: var(--kbq-foreground-contrast-secondary);
-    --kbq-alert-default-contrast-container-title: var(--kbq-background-contrast-fade);
+.my-component-text {
+    color: var(--kbq-foreground-contrast-secondary);
 }
 ```
 
-### Compatibility
+Nothing to import, no mixin to write, nothing to register in a single theme entry point. The value resolves in the browser, so it changes on its own when the theme changes.
 
-Stable with `@koobiq/design-tokens@3.5.1`.
+<!-- example(theme-css-variables) -->
 
-### Using CSS variables
+The full list of global variables is on the [Design tokens](/main/design-tokens/colors) page.
 
-If you are already using CSS variables from the `@koobiq/design-tokens` package, you need to remove the CSS variables for all components included in the design system.
-They now have default values built in, so you no longer need them.
+### Overriding a component's variables
 
-Files that need to be updated:
+When a component's default look doesn't fit, change the values of its variables rather than its styles. Start by knowing where those variables are declared, because that determines how you reach them. Every component sets them on its own selector, in a file next to itself:
 
-- css-tokens.css — component sizes
-- css-tokens-light.css — component colors for the light theme
-- css-tokens-dark.css — component colors for the dark theme
-- css-tokens-font.css — font, its sizes, and parameters for the component. This file can be removed.
+```css
+/* button-tokens.scss */
+.kbq-button,
+.kbq-button-icon {
+    --kbq-button-filled-contrast-fade-off-background: var(--kbq-background-contrast);
+}
+```
+
+The button sets the variable on itself, so a blanket declaration in `:root` simply won't be seen. For an override to work, you have to hit that same element.
+
+That leaves two approaches.
+
+**Change a single instance.** Give it a class of your own and set the variable there. The class lands on the same element as the default value and, coming later, wins:
+
+```html
+<button kbq-button class="my-danger-button">Delete</button>
+
+<style>
+    .my-danger-button {
+        --kbq-button-filled-contrast-fade-off-background: var(--kbq-background-error);
+    }
+</style>
+```
+
+**Change every component of that type in the app.** This needs a selector that outranks the component's own. The simplest one to add is the theme selector — which also lets you give light and dark different values, when one color won't do for both:
+
+```css
+.kbq-light .kbq-button {
+    --kbq-button-filled-contrast-fade-off-background: var(--kbq-background-error);
+}
+
+.kbq-dark .kbq-button {
+    --kbq-button-filled-contrast-fade-off-background: var(--kbq-background-error-fade);
+}
+```
+
+Rules like these are worth keeping in one file, loaded after the design system's styles — then all of the app's overrides live in one place instead of scattering across components.
+
+### Building your own component
+
+Your component reads the same global variables the library reads. Give it a stylesheet and turn off style encapsulation — that is the whole setup:
+
+```ts
+@Component({
+    selector: 'my-card',
+    templateUrl: './my-card.html',
+    styleUrl: './my-card.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class MyCard {}
+```
+
+```scss
+.my-card {
+    padding: var(--kbq-size-l);
+    border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-border-radius);
+
+    background: var(--kbq-background-card);
+    color: var(--kbq-foreground-contrast);
+}
+```
+
+There is **no** need to write a separate `_my-card-theme.scss` mixin and then register it in a single theme entry point.
+
+### Rebranding with a single file
+
+You can restyle the whole app by overriding CSS variables in one place:
+
+```css
+.kbq-light {
+    --kbq-background-contrast: #1a3a6b;
+    --kbq-foreground-contrast: #0d1b2a;
+}
+
+.kbq-dark {
+    --kbq-background-contrast: #7ba7e8;
+    --kbq-foreground-contrast: #e8eef7;
+}
+```
+
+Load that file after the design system's own, and every component follows.
+
+One honest limitation: this works at the global layer. Component variables are declared on the component's selector, so a single global file can't reach them — you would need a rule per component, as shown above.
+
+### Where to find the variables
+
+Global variables, with their values and previews: [Design tokens](/main/design-tokens/colors).
+
+Component variables don't have a rendered reference page yet — a proper one is on the way. Until then, read them from the source:
 
 <details>
-  <summary><span class="kbq-markdown__p">List of design system components with links to their CSS variables:</span></summary>
+  <summary><span class="kbq-markdown__p">Component variables, by component</span></summary>
     <ul>
         <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/accordion/accordion-tokens.scss">accordion</a></li>
         <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/alert/alert-tokens.scss">alert</a></li>
@@ -173,26 +241,17 @@ Files that need to be updated:
     </ul>
 </details>
 
-### Token value sources
+### Where the values come from
 
-**Design system tokens** are a set of values that define the visual style of our components.
-They are stored in the [@koobiq/design-tokens](https://github.com/koobiq/design-tokens) package and allow us to easily manage and maintain consistent styles across all components.
+**Design system tokens** are the values that define how our components look. They live in the [@koobiq/design-tokens](https://github.com/koobiq/design-tokens) package.
 
-**Component CSS variables** are a set of values used in component styles. They are derived from design tokens and live in the `@koobiq/components` repository.
-This makes it easy to use tokens in component styles and speeds up development, including design reviews.
+**Component variables** are the values used inside component styles. They are derived from the design tokens and live in the `@koobiq/components` repository, next to the components themselves.
 
 <div class="kbq-callout kbq-callout_warning">
 <div class="kbq-callout__header">Note</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Component tokens in the `@koobiq/design-tokens` package are no longer being updated.
+Component tokens in the `@koobiq/design-tokens` package are no longer updated and will be removed in version 4.0.0. If you still have them in your own copies of `css-tokens.css`, `css-tokens-light.css`, `css-tokens-dark.css` or `css-tokens-font.css`, delete them — components carry their own defaults now.
 
 </div>
 </div>
-
-### Roadmap
-
-- We will update our component CSS variables and replace them with direct references to global design-system CSS variables where applicable.
-- Component tokens will be removed from the `@koobiq/design-tokens` package in version 4.0.0.
-- We will create a page displaying all global design-system tokens with their visual representations.
-- Component tokens in CSS variable format will be stored in the Angular components repository `@koobiq/components`.

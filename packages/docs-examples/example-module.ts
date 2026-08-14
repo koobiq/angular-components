@@ -1382,6 +1382,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "content-panel-with-grid-example.ts",
     "importPath": "components/content-panel"
   },
+  "theme-css-variables": {
+    "packagePath": "components/core/theme-css-variables",
+    "title": "Theme values in your own styles",
+    "componentName": "ThemeCssVariablesExample",
+    "files": [
+      "theme-css-variables-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "theme-css-variables-example",
+    "additionalComponents": [],
+    "primaryFile": "theme-css-variables-example.ts",
+    "importPath": "components/core"
+  },
   "theme-static-selection": {
     "packagePath": "components/core/theme-static-selection",
     "title": "Theme static selection",
@@ -7854,6 +7867,8 @@ return import('@koobiq/docs-examples/components/code-block');
 return import('@koobiq/docs-examples/components/content-panel');
   case 'content-panel-with-grid':
 return import('@koobiq/docs-examples/components/content-panel');
+  case 'theme-css-variables':
+return import('@koobiq/docs-examples/components/core');
   case 'theme-static-selection':
 return import('@koobiq/docs-examples/components/core');
   case 'absolute-date-formatter':

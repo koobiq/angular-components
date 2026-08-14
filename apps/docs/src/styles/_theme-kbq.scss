@@ -6,18 +6,6 @@
 
 @use '../dist/components/core/styles/koobiq-theme' as *;
 
-@use '../app/app-theme';
-@use '../app/components/icons-viewer/icons-viewer-theme';
-@use '../app/components/component-viewer/component-viewer-theme';
-@use '../app/components/anchors/anchors-theme';
-@use '../app/components/footer/footer-theme';
-@use '../app/components/sidenav/sidenav-theme';
-@use '../app/components/welcome/welcome-theme';
-@use '../app/components/live-example-viewer/live-example-viewer-theme';
-@use '../app/components/page-not-found/page-not-found-theme';
-
-@use '../styles/hot-keys';
-
 @include components.kbq-core();
 
 @include visual.body-html();
@@ -28,32 +16,10 @@
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
     @include koobiq-typography();
-
-    @include component-viewer-theme.kbq-docs-component-viewer-typography();
-    @include footer-theme.kbq-docs-footer-typography();
-    @include sidenav-theme.kbq-docs-sidenav-typography();
-    @include icons-viewer-theme.kbq-docs-icons-viewer-typography();
-    @include welcome-theme.kbq-docs-welcome-typography();
-    @include live-example-viewer-theme.kbq-docs-live-example-viewer-typography();
-}
-
-// Include all theme styles for the components.
-@mixin docs-components-theme() {
-    @include app-theme.kbq-docs-app-theme();
-    @include component-viewer-theme.kbq-docs-component-viewer-theme();
-    @include anchors-theme.kbq-docs-anchors-theme();
-    @include footer-theme.kbq-docs-footer-theme();
-    @include sidenav-theme.kbq-docs-sidenav-theme();
-    @include icons-viewer-theme.kbq-docs-icons-viewer-theme();
-    @include live-example-viewer-theme.kbq-docs-live-example-viewer-theme();
-    @include hot-keys.docs-hot-key-button-theme();
-    @include page-not-found-theme.kbq-docs-page-not-found-theme();
-    @include welcome-theme.kbq-docs-welcome-theme();
 }
 
 @mixin kbq-docs-theme() {
     @include koobiq-theme();
-    @include docs-components-theme();
 
     & {
         background: var(--kbq-background-bg);

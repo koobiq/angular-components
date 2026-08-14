@@ -3,13 +3,13 @@
         {{ t('welcomeTitle') }}
     </header>
 
-    <div class="docs-welcome__description">
+    <div class="docs-welcome__description kbq-text-big">
         {{ t('welcomeDescription') }}
     </div>
 
     @for (category of structureCategories; track category) {
         <div class="docs-welcome__category">
-            <div class="docs-welcome__category-title">{{ category.name[locale()] }}</div>
+            <div class="docs-welcome__category-title kbq-title">{{ category.name[locale()] }}</div>
             <div class="docs-welcome__category-items layout-row layout-margin-top-l">
                 @let theme = currentTheme();
 
@@ -22,7 +22,7 @@
                             [ngSrc]="`/assets/images/welcome/${item.svgPreview || 'generic'}-${theme}.png`"
                             [alt]="item.id"
                         />
-                        <div class="docs-welcome__category-item-title">{{ item.name[locale()] }}</div>
+                        <div class="docs-welcome__category-item-title kbq-text-big">{{ item.name[locale()] }}</div>
                     </a>
                 }
             </div>

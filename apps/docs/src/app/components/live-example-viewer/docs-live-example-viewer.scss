@@ -1,3 +1,5 @@
+@use '../dist/components/core/styles/common/tokens';
+
 .docs-live-example__example:not(.docs-live-example__example_notification-center-popover) {
     padding: var(--kbq-size-xl);
 
@@ -41,4 +43,20 @@
 .docs-example-vertical-margin {
     margin-top: var(--kbq-size-l);
     margin-bottom: var(--kbq-size-l);
+}
+
+.docs-live-example__container {
+    border: 1px solid var(--kbq-background-contrast-fade);
+}
+
+.docs-live-example__footer {
+    border-top: 1px solid var(--kbq-background-contrast-fade);
+}
+
+// The footer itself carries `kbq-text-big` in the template; the link is `kbq-link`'s own element,
+// so its typography has to be overridden from here. `.kbq-link_pseudo` is in the selector for weight:
+// the library sets `.kbq-link` typography from `koobiq-typography()`, emitted inside `.docs`, so two
+// class names here would only tie with it.
+.docs-live-example__footer .kbq-link.kbq-link_pseudo {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
 }
