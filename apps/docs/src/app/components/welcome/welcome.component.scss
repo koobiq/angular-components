@@ -96,10 +96,6 @@
     }
 }
 
-.docs-welcome__category-item:focus {
-    border-color: var(--kbq-states-line-focus-theme);
-}
-
 .docs-welcome__header {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
 }
