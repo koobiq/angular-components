@@ -1575,7 +1575,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
                         @if (!option.disabled && !select.disabled) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
-                                mcTagRemove
+                                kbqTagRemove
                                 (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }

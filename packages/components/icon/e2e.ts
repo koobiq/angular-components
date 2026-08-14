@@ -197,12 +197,12 @@ export class E2eIconStateAndStyle {
         <div class="layout-column layout-gap-xs">
             <div class="layout-row layout-gap-xs">
                 <kbq-tag>
-                    <i kbq-icon="kbq-circle-check_16"></i>
+                    <i kbqTagPrefix kbq-icon="kbq-circle-check_16"></i>
                     Tag
                     <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>
                 <kbq-tag>
-                    <i kbq-icon="kbq-circle-check_16"></i>
+                    <i kbqTagPrefix kbq-icon="kbq-circle-check_16"></i>
                     Tag
                     <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>

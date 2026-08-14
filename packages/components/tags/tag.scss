@@ -48,6 +48,20 @@
         margin: 0 var(--kbq-tag-size-content-gap-horizontal);
     }
 
+    & .kbq-tag-prefix {
+        flex-shrink: 0;
+        margin-inline-start: var(--kbq-tag-size-icon-margin-left);
+    }
+
+    & .kbq-tag-suffix {
+        flex-shrink: 0;
+    }
+
+    & .kbq-tag-suffix:not(.kbq-tag-remove, .kbq-tag-edit-submit) {
+        margin-inline-end: var(--kbq-tag-size-close-button-margin-right);
+    }
+
+    // @deprecated Use `.kbq-tag-prefix` (`kbqTagPrefix`) instead. Will be removed in the next major version.
     & .kbq-icon_left {
         margin-left: var(--kbq-tag-size-icon-margin-left);
     }

@@ -32,7 +32,7 @@
 <kbq-tag-list>
     @for (tag of simpleTags; track tag) {
         <kbq-tag [value]="tag" (removed)="onRemoveTag(tag)">
-            <i kbq-icon="kbq-magnifying-glass_16"></i>
+            <i kbqTagPrefix kbq-icon="kbq-magnifying-glass_16"></i>
             {{ tag }}
             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
@@ -50,7 +50,7 @@
     }
     @for (tag of simpleTags; track tag) {
         <kbq-tag [value]="tag" (removed)="onRemoveTag(tag)">
-            <i kbq-icon="kbq-magnifying-glass_16"></i>
+            <i kbqTagPrefix kbq-icon="kbq-magnifying-glass_16"></i>
             {{ tag }}
         </kbq-tag>
     }

@@ -24,7 +24,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
                                         [class.cdk-keyboard-focused]="state === 'focused'"
                                         [disabled]="state === 'disabled'"
                                     >
-                                        <i kbq-icon="kbq-circle-check_16"></i>
+                                        <i kbqTagPrefix kbq-icon="kbq-circle-check_16"></i>
                                         Tag
                                         <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                                     </kbq-tag>
@@ -67,7 +67,7 @@ export class E2eTagStateAndStyle {
     imports: [KbqTagsModule, KbqIconModule, FormsModule],
     template: `
         <kbq-tag editable>
-            <i kbq-icon="kbq-circle-check_16"></i>
+            <i kbqTagPrefix kbq-icon="kbq-circle-check_16"></i>
             {{ tag() }}
             <input kbqInput kbqTagEditInput [(ngModel)]="tag" />
             @if (tag().length > 0) {
@@ -78,7 +78,7 @@ export class E2eTagStateAndStyle {
             <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
         </kbq-tag>
         <kbq-tag editable>
-            <i kbq-icon="kbq-circle-check_16"></i>
+            <i kbqTagPrefix kbq-icon="kbq-circle-check_16"></i>
             {{ tag() }}
             <input kbqInput kbqTagEditInput [(ngModel)]="tag" />
             @if (tag().length > 0) {

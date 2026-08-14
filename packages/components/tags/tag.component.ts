@@ -2,7 +2,6 @@
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
-    AfterContentInit,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -105,6 +104,24 @@ export class KbqTagAvatar {}
 })
 export class KbqTagTrailingIcon {}
 
+/** Marks content to be projected into the prefix (leading) slot of a tag. */
+@Directive({
+    selector: '[kbqTagPrefix]',
+    host: {
+        class: 'kbq-tag-prefix'
+    }
+})
+export class KbqTagPrefix {}
+
+/** Marks content to be projected into the suffix (trailing) slot of a tag. */
+@Directive({
+    selector: '[kbqTagSuffix]',
+    host: {
+        class: 'kbq-tag-suffix'
+    }
+})
+export class KbqTagSuffix {}
+
 /**
  * Directive to add submit behavior for the editable tag.
  */
@@ -116,6 +133,7 @@ export class KbqTagTrailingIcon {}
 
         '(click)': 'tag.submitEditing("click")'
     },
+    hostDirectives: [KbqTagSuffix],
     exportAs: 'kbqTagEditSubmit'
 })
 export class KbqTagEditSubmit {
@@ -176,7 +194,7 @@ export class KbqTagEditInput {
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     template: `
         <div class="kbq-tag__wrapper">
-            <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
+            <ng-content select="[kbqTagPrefix]" />
             <span #kbqTitleText class="kbq-tag__text">
                 @if (editing()) {
                     <ng-content select="[kbqTagEditInput]" />
@@ -191,6 +209,7 @@ export class KbqTagEditInput {
                     <ng-content select="[kbqTagRemove]" />
                 }
             }
+            <ng-content select="[kbqTagSuffix]" />
         </div>
     `,
     styleUrls: ['./tag.scss'],
@@ -218,10 +237,7 @@ export class KbqTagEditInput {
     hostDirectives: [CdkDrag],
     exportAs: 'kbqTag'
 })
-export class KbqTag
-    extends KbqColorDirective
-    implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit
-{
+export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterViewInit {
     changeDetectorRef = inject(ChangeDetectorRef);
 
     private readonly focusMonitor = inject(FocusMonitor);
@@ -425,10 +441,6 @@ export class KbqTag
         this.setupDragInitialProperties();
     }
 
-    ngAfterContentInit() {
-        this.addClassModificatorForIcons();
-    }
-
     ngAfterViewInit(): void {
         this.setupFocusMonitor();
     }
@@ -439,8 +451,13 @@ export class KbqTag
         this.destroyed.emit({ tag: this });
     }
 
-    /** @docs-private */
-    addClassModificatorForIcons() {
+    /**
+     * Adds the legacy positional classes inferred from projected icons.
+     *
+     * @deprecated Use `KbqTagPrefix` and `KbqTagSuffix` to declare the position explicitly.
+     * @docs-private
+     */
+    addClassModificatorForIcons(): void {
         const icons = this.contentChildren().map((item) => item.elementRef.nativeElement);
 
         if (icons.length === 1) {
@@ -738,7 +755,8 @@ export class KbqTag
         '[attr.tabindex]': '-1',
         '(click)': 'handleClick($event)',
         '(focus)': 'focus($event)'
-    }
+    },
+    hostDirectives: [KbqTagSuffix]
 })
 export class KbqTagRemove {
     protected parentTag = inject(KbqTag);

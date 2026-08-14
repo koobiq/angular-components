@@ -14,8 +14,9 @@ import { KbqTagsModule } from '@koobiq/components/tags';
     ],
     template: `
         <kbq-tag [color]="colors.ContrastFade">
-            <i kbq-icon="kbq-diamond-o_16"></i>
+            <i kbqTagPrefix kbq-icon="kbq-diamond-o_16"></i>
             Tag
+            <i kbqTagSuffix kbq-icon="kbq-diamond_16"></i>
         </kbq-tag>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

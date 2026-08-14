@@ -9,13 +9,17 @@ import {
     KbqTagAvatar,
     KbqTagEditInput,
     KbqTagEditSubmit,
+    KbqTagPrefix,
     KbqTagRemove,
+    KbqTagSuffix,
     KbqTagTrailingIcon
 } from './tag.component';
 
 const COMPONENTS = [
     KbqTagEditSubmit,
-    KbqTagEditInput
+    KbqTagEditInput,
+    KbqTagPrefix,
+    KbqTagSuffix
 ];
 
 @NgModule({
