@@ -69,7 +69,7 @@
         "@koobiq/design-tokens": "^3.19.0",
         "@koobiq/luxon-date-adapter": "^3.5.1",
         "@koobiq/moment-date-adapter": "^3.5.1",
-        "@koobiq/tokens-builder": "^3.17.2",
+        "@koobiq/tokens-builder": "^3.19.0",
         "@messageformat/core": "^3.4.0",
         "@microsoft/api-extractor": "7.58.9",
         "@octokit/rest": "^22.0.1",
