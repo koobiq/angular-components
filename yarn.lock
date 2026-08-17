@@ -4931,10 +4931,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/tokens-builder@npm:^3.17.2":
-  version: 3.17.2
-  resolution: "@koobiq/tokens-builder@npm:3.17.2"
-  checksum: 10c0/4ac487753071f44bfaa472fd0f846aaa2ea537625a356d847c7980f73d009dcbeb2d895a2170ca4245f961335b7386bcc560782f48610a9db2f76bbb9d3949d9
+"@koobiq/tokens-builder@npm:^3.19.0":
+  version: 3.19.0
+  resolution: "@koobiq/tokens-builder@npm:3.19.0"
+  checksum: 10c0/5f629a5c7b6e77b6200c91ad976a4b070522b21b426af4c118730d4ae7b97ef7294653e3bf2cddca1aee28ababdd9230b7c84a80e6142b67f682814108d2a5ee
   languageName: node
   linkType: hard
 
@@ -13671,7 +13671,7 @@ __metadata:
     "@koobiq/icons": "npm:^12.1.1"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"
     "@koobiq/moment-date-adapter": "npm:^3.5.1"
-    "@koobiq/tokens-builder": "npm:^3.17.2"
+    "@koobiq/tokens-builder": "npm:^3.19.0"
     "@maskito/angular": "npm:^5.1.0"
     "@maskito/core": "npm:^5.1.0"
     "@maskito/kit": "npm:^5.3.1"
