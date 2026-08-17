@@ -119,7 +119,7 @@ To change the tint or switch it off, override the token on the field — no `!im
 }
 ```
 
-The state is also tracked in TypeScript. The CDK's `AutofillMonitor` adds `kbq-form-field_autofilled` on `<kbq-form-field>`, and `KbqInput`, `KbqInputPassword`, `KbqTextarea` and `KbqTagInput` (forwarded by `KbqTagList`) expose an `autofilled` signal:
+The state is also tracked in TypeScript. `KbqInput`, `KbqInputPassword`, `KbqTextarea` and `KbqTagInput` (forwarded by `KbqTagList`) each wrap the CDK's `AutofillMonitor` around their own element and expose the result as an `autofilled` signal, which `<kbq-form-field>` reflects as the `kbq-form-field_autofilled` class:
 
 ```ts
 @ViewChild(KbqInput) input: KbqInput;

@@ -135,9 +135,9 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-fiel
 }
 ```
 
-Состояние также отслеживается в TypeScript. `AutofillMonitor` из CDK добавляет класс `kbq-form-field_autofilled` на
-`<kbq-form-field>`, а `KbqInput`, `KbqInputPassword`, `KbqTextarea` и `KbqTagInput` (проброшенный через `KbqTagList`)
-отдают сигнал `autofilled`:
+Состояние также отслеживается в TypeScript. `KbqInput`, `KbqInputPassword`, `KbqTextarea` и `KbqTagInput` (проброшенный
+через `KbqTagList`) оборачивают `AutofillMonitor` из CDK вокруг собственного элемента и отдают результат сигналом
+`autofilled`, а `<kbq-form-field>` отражает его классом `kbq-form-field_autofilled`:
 
 ```ts
 @ViewChild(KbqInput) input: KbqInput;

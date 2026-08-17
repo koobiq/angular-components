@@ -150,7 +150,12 @@ type AutofillState = {
     name: string;
     /** `FocusMonitor` writes this in real use; the matrix needs it without stealing focus. */
     focused?: boolean;
-    /** The second branch of the same selector in `form-field.scss`, which has to be covered too. */
+    /**
+     * The second branch of `form-field.scss`'s `&.cdk-focused, &.kbq-focused` — where DS-4950's
+     * autofill geometry lived until this ticket deleted it. Nothing autofill-specific keys on the
+     * class today, and the row exists so that reinstating any of it moves the control and fails the
+     * state-matrix baseline.
+     */
     kbqFocused?: boolean;
     error?: boolean;
     disabled?: boolean;

@@ -156,8 +156,10 @@
         // Painting `background-color` instead is what DS-4060 did, and it needed `!important` to
         // land — which is exactly why it then out-ranked error, disabled and the overlay.
 
-        // One arm, not three: the `:hover` and `:focus` variants exist on the control below to
-        // match the UA's own selectors, and nothing in the UA styles this container.
+        // One arm, not three. The rule this replaces spelled out `:-webkit-autofill`,
+        // `:-webkit-autofill:hover` and `:-webkit-autofill:focus`, mirroring the UA's own selector
+        // list — but the extra two match the same elements as the bare pseudo-class, and nothing in
+        // the UA styles this container. The control rule above dropped them for the same reason.
         &
             .kbq-form-field__container:has(
                 :is(.kbq-input, .kbq-tag-input, .kbq-textarea):is(:autofill, :-webkit-autofill)
