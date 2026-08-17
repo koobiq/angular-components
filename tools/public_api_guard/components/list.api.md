@@ -7,13 +7,15 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/components/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
+import * as i1$1 from '@angular/cdk/a11y';
+import * as i1 from '@angular/cdk/drag-drop';
 import * as i2 from '@koobiq/components/core';
 import * as i3 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/components/core';
@@ -80,11 +82,12 @@ export class KbqListModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqListModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1.A11yModule, typeof i2.KbqPseudoCheckboxModule, typeof i2.KbqLine, typeof i2.KbqOptionModule, typeof i2.KbqActionContainer, typeof i3.KbqIconModule, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption], [typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption, typeof i2.KbqOptionModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1$1.A11yModule, typeof i2.KbqPseudoCheckboxModule, typeof i2.KbqLine, typeof i2.KbqOptionModule, typeof i2.KbqActionContainer, typeof i3.KbqIconModule, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption], [typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption, typeof i2.KbqOptionModule]>;
 }
 
 // @public
 export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
+    constructor();
     // (undocumented)
     readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
     blur(): void;
@@ -92,6 +95,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     readonly checkboxPosition: i0.InputSignal<"before" | "after">;
     get disabled(): boolean;
     set disabled(value: boolean);
+    protected get draggable(): boolean;
     // (undocumented)
     dropdownTrigger?: KbqDropdownTrigger;
     // (undocumented)
@@ -130,6 +134,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     setSelected(selected: boolean): void;
     get showCheckbox(): boolean;
     set showCheckbox(value: BooleanInput);
+    syncDraggableState(): void;
     // (undocumented)
     get tabIndex(): number | null;
     // (undocumented)
@@ -141,7 +146,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     get value(): T;
     set value(newValue: T);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOption<any>, never>;
 }
@@ -153,6 +158,11 @@ export class KbqListOptionCaption {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOptionCaption, never>;
 }
+
+// @public
+export type KbqListOptionDragData = {
+    option: KbqListOption;
+};
 
 // @public (undocumented)
 export class KbqListSelectAllEvent<T> {
@@ -166,20 +176,28 @@ export class KbqListSelectAllEvent<T> {
 // @public (undocumented)
 export class KbqListSelection<T = any> implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     constructor();
+    protected readonly announcement: i0.WritableSignal<string>;
+    get ariaKeyShortcuts(): string;
+    // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
     blur(): void;
     canDeselectLast(listOption: KbqListOption<T>): boolean;
     readonly compareWith: i0.InputSignal<(o1: T, o2: T) => boolean>;
+    readonly connectedTo: i0.InputSignal<string | KbqListSelection | readonly (string | KbqListSelection)[]>;
     deselectAll(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
+    get draggable(): boolean;
+    set draggable(value: boolean);
+    readonly dropped: i0.OutputEmitterRef<KbqListSelectionDroppedEvent>;
     // (undocumented)
     emitChangeEvent(option: KbqListOption<T>): void;
     // (undocumented)
     focus(): void;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
+    focusOptionByValue(value: unknown): boolean;
     getHeight(): number;
     getSelectedOptionValues(): T[];
     // (undocumented)
@@ -192,6 +210,8 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     multipleMode: MultipleMode | null;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_draggable: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -253,7 +273,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     writeValue(values: T[] | T | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "connectedTo": { "alias": "connectedTo"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "dropped": "dropped"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, [{ directive: typeof i1.CdkDropList; inputs: { "id": "id"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListSelection<any>, never>;
 }
@@ -266,6 +286,14 @@ export class KbqListSelectionChange<T = any> {
     // (undocumented)
     source: KbqListSelection<T>;
 }
+
+// @public
+export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<unknown>, 'previousIndex' | 'currentIndex'> & {
+    option: KbqListOption;
+    container: KbqListSelection;
+    previousContainer: KbqListSelection;
+    event: MouseEvent | TouchEvent | KeyboardEvent;
+};
 
 // @public (undocumented)
 export interface KbqOptionEvent<T = any> {

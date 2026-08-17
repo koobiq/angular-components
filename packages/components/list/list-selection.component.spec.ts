@@ -1,5 +1,6 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -7,6 +8,7 @@ import {
     DebugElement,
     inject,
     Provider,
+    signal,
     Type,
     viewChild,
     viewChildren
@@ -19,6 +21,7 @@ import {
     A,
     C,
     createKeyboardEvent,
+    createMouseEvent,
     D,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
@@ -47,7 +50,8 @@ import {
     KbqListOption,
     KbqListSelectAllEvent,
     KbqListSelection,
-    KbqListSelectionChange
+    KbqListSelectionChange,
+    KbqListSelectionDroppedEvent
 } from './index';
 
 const getFocusMonitor = () => TestBed.inject(FocusMonitor);
@@ -1603,6 +1607,357 @@ describe('KbqListSelection accessibility', () => {
     });
 });
 
+describe('KbqListSelection drag and drop', () => {
+    const getDropList = (fixture: ComponentFixture<unknown>) =>
+        fixture.debugElement.query(By.directive(KbqListSelection)).injector.get(CdkDropList);
+
+    const getDrags = (fixture: ComponentFixture<unknown>) =>
+        fixture.debugElement.queryAll(By.directive(KbqListOption)).map((option) => option.injector.get(CdkDrag));
+
+    /** CDK keeps a single live region on `<body>` — the list has none of its own. */
+    const liveRegionText = () =>
+        document.body.querySelector('.cdk-live-announcer-element')!.textContent!.trim();
+
+    const getLabels = (fixture: ComponentFixture<unknown>) =>
+        Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('kbq-list-option .kbq-list-text')).map(
+            (element) => element.textContent!.trim()
+        );
+
+    const altKeydown = (list: KbqListSelection, keyCode: number) => {
+        const event = createKeyboardEvent('keydown', keyCode);
+
+        Object.defineProperty(event, 'altKey', { get: () => true });
+        list.onKeyDown(event);
+
+        return event;
+    };
+
+    describe('opt-in wiring', () => {
+        it('should not be draggable by default', () => {
+            // A list with no `draggable` binding at all — the only way to exercise the real default.
+            const fixture = setup(SelectionListWithListOptions);
+
+            expect(fixture.nativeElement.querySelector('.kbq-list-selection_draggable')).toBeNull();
+            expect(fixture.nativeElement.querySelector('.kbq-list-option_draggable')).toBeNull();
+            expect(getDropList(fixture).disabled).toBe(true);
+            expect(getDrags(fixture).every((drag) => drag.disabled)).toBe(true);
+        });
+
+        it('should stop being draggable once the input is set back to false', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.draggable.set(false);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.kbq-list-selection_draggable')).toBeNull();
+            expect(fixture.nativeElement.querySelector('.kbq-list-option_draggable')).toBeNull();
+            expect(getDropList(fixture).disabled).toBe(true);
+            expect(getDrags(fixture).every((drag) => drag.disabled)).toBe(true);
+        });
+
+        it('should enable the underlying CDK directives when draggable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            expect(fixture.nativeElement.querySelector('.kbq-list-selection_draggable')).not.toBeNull();
+            expect(getDropList(fixture).disabled).toBe(false);
+            expect(getDrags(fixture).every((drag) => drag.disabled)).toBe(false);
+        });
+
+        it('should not be draggable while the list is disabled', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.disabled.set(true);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.list().draggable).toBe(false);
+            expect(getDropList(fixture).disabled).toBe(true);
+            expect(getDrags(fixture).every((drag) => drag.disabled)).toBe(true);
+        });
+
+        it('should not drag a disabled option while the rest stay draggable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.disabledItem.set(fixture.componentInstance.items()[1]);
+            fixture.detectChanges();
+
+            expect(getDrags(fixture).map((drag) => drag.disabled)).toEqual([false, true, false, false]);
+        });
+
+        it('should delay a touch drag so that the list stays scrollable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            expect(getDrags(fixture)[0].dragStartDelay).toEqual({ touch: 300, mouse: 0 });
+        });
+
+        it('should connect the drop list to the lists passed to connectedTo', () => {
+            const fixture = setup(ConnectedSelectionLists);
+            const [first, second] = fixture.debugElement
+                .queryAll(By.directive(KbqListSelection))
+                .map((list) => list.injector.get(CdkDropList));
+
+            expect(first.connectedTo).toEqual([second]);
+            expect(second.connectedTo).toEqual([first]);
+        });
+
+        it('should connect the drop list by id and keep the consumer-set id', () => {
+            const fixture = setup(IdConnectedSelectionLists);
+            const [source, target] = fixture.debugElement
+                .queryAll(By.directive(KbqListSelection))
+                .map((list) => list.injector.get(CdkDropList));
+
+            // The id has to survive `CdkDropList`'s own `[attr.id]` binding to stay referenceable.
+            expect(source.id).toBe('source-list');
+            expect(target.id).toBe('target-list');
+            expect(source.connectedTo).toEqual(['target-list']);
+        });
+    });
+
+    describe('dropped output', () => {
+        it('should re-emit a CDK drop as a KbqListSelectionDroppedEvent', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = fixture.debugElement.queryAll(By.directive(KbqListOption))[0].componentInstance;
+            const dropList = getDropList(fixture);
+            const nativeEvent = createMouseEvent('mouseup');
+
+            dropList.dropped.emit({
+                previousIndex: 0,
+                currentIndex: 2,
+                item: { data: { option } } as any,
+                container: dropList,
+                previousContainer: dropList,
+                isPointerOverContainer: true,
+                distance: { x: 0, y: 0 },
+                dropPoint: { x: 0, y: 0 },
+                event: nativeEvent
+            });
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dropped).toEqual({
+                previousIndex: 0,
+                currentIndex: 2,
+                option,
+                container: list,
+                previousContainer: list,
+                event: nativeEvent
+            });
+        });
+    });
+
+    describe('keyboard reordering', () => {
+        it('should move the active option down on ALT + DOWN_ARROW', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            list.keyManager.setActiveItem(0);
+            altKeydown(list, DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(getLabels(fixture)).toEqual(['Item 1', 'Item 0', 'Item 2', 'Item 3']);
+        });
+
+        it('should move the active option up on ALT + UP_ARROW', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            list.keyManager.setActiveItem(2);
+            altKeydown(list, UP_ARROW);
+            fixture.detectChanges();
+
+            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 2', 'Item 1', 'Item 3']);
+        });
+
+        it('should not move past the edges of the list', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            list.keyManager.setActiveItem(0);
+            altKeydown(list, UP_ARROW);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dropped).toBeNull();
+            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 1', 'Item 2', 'Item 3']);
+        });
+
+        it('should ignore ALT + arrow while not draggable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.draggable.set(false);
+            fixture.detectChanges();
+
+            const list = fixture.componentInstance.list();
+
+            list.keyManager.setActiveItem(0);
+            altKeydown(list, DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dropped).toBeNull();
+            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 1', 'Item 2', 'Item 3']);
+        });
+
+        it('should reorder without changing the selection', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            list.keyManager.setActiveItem(0);
+            altKeydown(list, DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(list.selectionModel.selected).toEqual([]);
+        });
+
+        it('should announce the new position once the move has been applied', fakeAsync(() => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            list.keyManager.setActiveItem(0);
+            altKeydown(list, DOWN_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            expect(liveRegionText()).toBe('Item 0, позиция 2 из 4');
+        }));
+
+        it('should not announce a move the consumer has not applied', fakeAsync(() => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            fixture.componentInstance.applyMove = false;
+            list.keyManager.setActiveItem(0);
+            altKeydown(list, DOWN_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            expect(liveRegionText()).toBe('');
+        }));
+
+        it('should move the active option into the connected list on ALT + RIGHT_ARROW', () => {
+            const fixture = setup(ConnectedSelectionLists);
+            const [source, target] = fixture.debugElement
+                .queryAll(By.directive(KbqListSelection))
+                .map((list) => list.componentInstance as KbqListSelection);
+
+            source.keyManager.setActiveItem(0);
+            altKeydown(source, RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dropped!.previousContainer).toBe(source);
+            expect(fixture.componentInstance.dropped!.container).toBe(target);
+            expect(fixture.componentInstance.leftItems()).toEqual(['left 1']);
+            expect(fixture.componentInstance.rightItems()).toEqual(['right 0', 'left 0']);
+        });
+
+        it('should move the active option into the connected list on ALT + LEFT_ARROW', () => {
+            const fixture = setup(ConnectedSelectionLists);
+            const [target, source] = fixture.debugElement
+                .queryAll(By.directive(KbqListSelection))
+                .map((list) => list.componentInstance as KbqListSelection);
+
+            source.keyManager.setActiveItem(0);
+            altKeydown(source, LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dropped!.previousContainer).toBe(source);
+            expect(fixture.componentInstance.dropped!.container).toBe(target);
+            expect(fixture.componentInstance.rightItems()).toEqual([]);
+            expect(fixture.componentInstance.leftItems()).toEqual(['left 0', 'left 1', 'right 0']);
+        });
+
+        it('should ignore ALT + RIGHT_ARROW without a connected list', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            list.keyManager.setActiveItem(0);
+            altKeydown(list, RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dropped).toBeNull();
+        });
+
+        it('should not reach a list connected by id', () => {
+            const fixture = setup(IdConnectedSelectionLists);
+            const source = fixture.debugElement.queryAll(By.directive(KbqListSelection))[0]
+                .componentInstance as KbqListSelection;
+
+            source.keyManager.setActiveItem(0);
+            altKeydown(source, RIGHT_ARROW);
+            fixture.detectChanges();
+
+            // An id cannot be resolved back to a list instance, so the transfer has no target.
+            expect(fixture.componentInstance.dropped).toBeNull();
+            expect(fixture.componentInstance.sourceItems()).toEqual(['source 0', 'source 1']);
+        });
+
+        it('should keep the shift-range anchor in sync after a reorder', fakeAsync(() => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            // Anchor the range on the first option, then move it down: the anchor must follow the option,
+            // otherwise the range below spans the wrong items.
+            list.keyManager.setActiveItem(0);
+            altKeydown(list, DOWN_ARROW);
+            fixture.detectChanges();
+            flush();
+
+            expect(list.keyManager.previousActiveItemIndex).toBe(list.keyManager.activeItemIndex);
+        }));
+    });
+
+    describe('accessibility (axe)', () => {
+        afterEach(() => {
+            if (document.body.contains(fixtureElement!)) {
+                document.body.removeChild(fixtureElement!);
+            }
+        });
+
+        let fixtureElement: HTMLElement | null = null;
+
+        it('has no axe violations while draggable', async () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixtureElement = fixture.nativeElement;
+            document.body.appendChild(fixture.nativeElement);
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('has no axe violations once the live region carries an announcement', async () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            fixtureElement = fixture.nativeElement;
+            document.body.appendChild(fixture.nativeElement);
+
+            list.keyManager.setActiveItem(0);
+            altKeydown(list, DOWN_ARROW);
+            fixture.detectChanges();
+            // `LiveAnnouncer` fills its region 100ms after the move has been applied.
+            await new Promise((resolve) => setTimeout(resolve, 150));
+            fixture.detectChanges();
+
+            expect(liveRegionText()).not.toBe('');
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        const getShortcuts = (fixture: ComponentFixture<unknown>) =>
+            (fixture.nativeElement as HTMLElement).querySelector('kbq-list-option')!.getAttribute('aria-keyshortcuts');
+
+        it('advertises the reordering shortcuts on a draggable option', () => {
+            expect(getShortcuts(setup(SelectionListWithDragAndDrop))).toBe('Alt+ArrowUp Alt+ArrowDown');
+        });
+
+        it('advertises the transfer shortcuts once a connected list can be reached', () => {
+            expect(getShortcuts(setup(ConnectedSelectionLists))).toBe(
+                'Alt+ArrowUp Alt+ArrowDown Alt+ArrowLeft Alt+ArrowRight'
+            );
+        });
+
+        it('advertises no shortcuts while the list is not draggable', () => {
+            expect(getShortcuts(setup(SelectionListWithListOptions))).toBeNull();
+        });
+    });
+});
+
 @Component({
     imports: [
         KbqListModule,
@@ -1997,3 +2352,127 @@ class SelectionListGroupedForA11y {}
     `
 })
 class SelectionListDisabledForA11y {}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection
+            aria-label="Items"
+            [disabled]="disabled()"
+            [draggable]="draggable()"
+            (dropped)="handleDropped($event)"
+        >
+            @for (item of items(); track item) {
+                <kbq-list-option [disabled]="item === disabledItem()" [value]="item">{{ item }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithDragAndDrop {
+    readonly list = viewChild.required(KbqListSelection);
+    readonly items = signal(Array.from({ length: 4 }, (_, i) => `Item ${i}`));
+
+    readonly draggable = signal(true);
+    readonly disabled = signal(false);
+    readonly disabledItem = signal<string | null>(null);
+    /** Lets a test assert what happens when the consumer ignores the event. */
+    applyMove = true;
+    dropped: KbqListSelectionDroppedEvent | null = null;
+
+    handleDropped(event: KbqListSelectionDroppedEvent): void {
+        this.dropped = event;
+
+        if (!this.applyMove) {
+            return;
+        }
+
+        const items = [...this.items()];
+
+        moveItemInArray(items, event.previousIndex, event.currentIndex);
+        this.items.set(items);
+    }
+}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection
+            #left="kbqListSelection"
+            [connectedTo]="[right]"
+            [draggable]="true"
+            (dropped)="handleDropped($event)"
+        >
+            @for (item of leftItems(); track item) {
+                <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+        <kbq-list-selection
+            #right="kbqListSelection"
+            [connectedTo]="[left]"
+            [draggable]="true"
+            (dropped)="handleDropped($event)"
+        >
+            @for (item of rightItems(); track item) {
+                <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ConnectedSelectionLists {
+    readonly leftItems = signal(['left 0', 'left 1']);
+    readonly rightItems = signal(['right 0']);
+
+    dropped: KbqListSelectionDroppedEvent | null = null;
+
+    handleDropped(event: KbqListSelectionDroppedEvent): void {
+        this.dropped = event;
+
+        const fromLeft = this.leftItems().includes(event.option.value);
+        const source = fromLeft ? this.leftItems : this.rightItems;
+
+        if (event.previousContainer === event.container) {
+            const items = [...source()];
+
+            moveItemInArray(items, event.previousIndex, event.currentIndex);
+            source.set(items);
+
+            return;
+        }
+
+        const target = fromLeft ? this.rightItems : this.leftItems;
+        const from = [...source()];
+        const to = [...target()];
+
+        transferArrayItem(from, to, event.previousIndex, event.currentIndex);
+
+        source.set(from);
+        target.set(to);
+    }
+}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection
+            id="source-list"
+            [connectedTo]="'target-list'"
+            [draggable]="true"
+            (dropped)="dropped = $event"
+        >
+            @for (item of sourceItems(); track item) {
+                <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+        <kbq-list-selection id="target-list" [draggable]="true">
+            <kbq-list-option [value]="'target 0'">target 0</kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IdConnectedSelectionLists {
+    readonly sourceItems = signal(['source 0', 'source 1']);
+
+    dropped: KbqListSelectionDroppedEvent | null = null;
+}

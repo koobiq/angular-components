@@ -3671,6 +3671,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "list-action-button-example.ts",
     "importPath": "components/list"
   },
+  "list-draggable-connected": {
+    "packagePath": "components/list/list-draggable-connected",
+    "title": "Draggable list with transfer between lists",
+    "componentName": "ListDraggableConnectedExample",
+    "files": [
+      "list-draggable-connected-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "list-draggable-connected-example",
+    "additionalComponents": [],
+    "primaryFile": "list-draggable-connected-example.ts",
+    "importPath": "components/list"
+  },
+  "list-draggable": {
+    "packagePath": "components/list/list-draggable",
+    "title": "Draggable list",
+    "componentName": "ListDraggableExample",
+    "files": [
+      "list-draggable-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "list-draggable-example",
+    "additionalComponents": [],
+    "primaryFile": "list-draggable-example.ts",
+    "importPath": "components/list"
+  },
   "list-groups": {
     "packagePath": "components/list/list-groups",
     "title": "List groups",
@@ -8238,6 +8264,10 @@ return import('@koobiq/docs-examples/components/link');
   case 'link-with-caption':
 return import('@koobiq/docs-examples/components/link');
   case 'list-action-button':
+return import('@koobiq/docs-examples/components/list');
+  case 'list-draggable-connected':
+return import('@koobiq/docs-examples/components/list');
+  case 'list-draggable':
 return import('@koobiq/docs-examples/components/list');
   case 'list-groups':
 return import('@koobiq/docs-examples/components/list');

@@ -22,6 +22,41 @@
 
 <!-- example(list-virtual-scroll) -->
 
+### Drag and drop
+
+Set the `draggable` property on `kbq-list-selection` to let the user reorder options.
+
+The list never changes the data itself — it reports the move through the `dropped` event and you
+apply it, usually with `moveItemInArray` from `@angular/cdk/drag-drop`. Track the options by their
+identity (`track item.id`): with a positional key such as `track $index` the option at a given
+position is kept and rebound to a different value, and an option drops its selection when its value
+changes.
+
+<!-- example(list-draggable) -->
+
+Options can also be moved into another list. Pass the other `kbq-list-selection` through `connectedTo`
+on both lists, and apply the move with `transferArrayItem`. An option arrives in the target list
+unselected unless the target's own value already contains it.
+
+<!-- example(list-draggable-connected) -->
+
+Dragging is not supported inside `kbq-optgroup` or `cdk-virtual-scroll-viewport`: the indices reported
+by `dropped` count only the rendered options, or are relative to the group rather than to the list, so
+applying the move to the backing array silently affects the wrong item. Both combinations log a warning
+in development mode.
+
+#### Keyboard
+
+Dragging always has a keyboard equivalent, so the feature stays usable without a pointer.
+
+| <div style="min-width: 270px;">Key</div>                                                                                               | Action                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| <span class="docs-hot-key-button">Alt</span> + <span class="docs-hot-key-button">↑</span> / <span class="docs-hot-key-button">↓</span> | Move the focused option one position.          |
+| <span class="docs-hot-key-button">Alt</span> + <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span> | Move the focused option into a connected list. |
+
+The new position is announced through a live region. Lists connected by `id` rather than by a
+component reference cannot be reached with the keyboard.
+
 ### Accessibility
 
 `kbq-list-selection` is announced as a `listbox` and every `kbq-list-option` as an `option` carrying its own `aria-selected`. With `multiple` the list is additionally marked `aria-multiselectable`, and with `horizontal` it reports `aria-orientation="horizontal"` and moves the active option with the Left/Right arrows. The list is a single tab stop; roving focus moves between the options. A disabled list or option is reported through `aria-disabled`. The built-in pseudo-checkbox is decorative and stays out of the accessibility tree; if you project your own `kbq-pseudo-checkbox` instead (`externalPseudoCheckbox`), mark it `aria-hidden="true"` too — the option's own `aria-selected` already carries the selected state.

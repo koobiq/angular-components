@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqListModule } from '@koobiq/components/list';
+import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
 
 @Component({
     selector: 'e2e-list-states',
@@ -278,4 +279,78 @@ export class E2eListSelectionState {
 })
 export class E2eListOptionActionVisibility {
     protected readonly options = ['option-1', 'option-2', 'option-3'];
+}
+
+/**
+ * Two connected draggable lists. Reordering never mutates the data on its own, so the fixture applies
+ * every `dropped` event itself — exactly what a consumer has to do.
+ */
+@Component({
+    selector: 'e2e-list-drag-and-drop',
+    imports: [KbqListModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="display: flex; gap: 16px; width: 400px">
+            <kbq-list-selection
+                #source="kbqListSelection"
+                data-testid="e2eSourceList"
+                style="flex: 1"
+                [connectedTo]="[target]"
+                [draggable]="true"
+                (dropped)="handleDropped($event)"
+            >
+                @for (item of sourceItems(); track item) {
+                    <kbq-list-option [attr.data-testid]="item" [value]="item">{{ item }}</kbq-list-option>
+                }
+            </kbq-list-selection>
+            <kbq-list-selection
+                #target="kbqListSelection"
+                data-testid="e2eTargetList"
+                style="flex: 1"
+                [connectedTo]="[source]"
+                [draggable]="true"
+                (dropped)="handleDropped($event)"
+            >
+                @for (item of targetItems(); track item) {
+                    <kbq-list-option [attr.data-testid]="item" [value]="item">{{ item }}</kbq-list-option>
+                }
+            </kbq-list-selection>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eListDragAndDrop'
+    }
+})
+export class E2eListDragAndDrop {
+    protected readonly sourceItems = signal(['source-1', 'source-2', 'source-3']);
+    protected readonly targetItems = signal(['target-1']);
+
+    protected handleDropped({
+        previousIndex,
+        currentIndex,
+        previousContainer,
+        container,
+        option
+    }: KbqListSelectionDroppedEvent): void {
+        const fromSource = this.sourceItems().includes(option.value);
+        const source = fromSource ? this.sourceItems : this.targetItems;
+
+        if (previousContainer === container) {
+            const items = [...source()];
+
+            moveItemInArray(items, previousIndex, currentIndex);
+            source.set(items);
+
+            return;
+        }
+
+        const target = fromSource ? this.targetItems : this.sourceItems;
+        const from = [...source()];
+        const to = [...target()];
+
+        transferArrayItem(from, to, previousIndex, currentIndex);
+
+        source.set(from);
+        target.set(to);
+    }
 }

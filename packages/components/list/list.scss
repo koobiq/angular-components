@@ -73,11 +73,46 @@
     }
 }
 
+// Gated on the placeholder rather than on `.cdk-drop-list-dragging`: that class is an Angular host
+// binding, so it survives until the next change detection — long enough for CDK to clear the sort
+// transforms while this transition is still live. The reset would then animate on top of the DOM
+// order the consumer has already applied, and every option below the dropped one visibly slides
+// into place. CDK removes the placeholder from the DOM synchronously, before that reset.
+.kbq-list-selection:has(.cdk-drag-placeholder) .cdk-drag {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+// We should apply `cursor: grabbing` to the body, not to the dragged element itself.
+// Reason: https://github.com/angular/components/blob/18.2.14/src/cdk/drag-drop/resets.scss#L14-L15
+body:has(.kbq-list-selection.cdk-drop-list-dragging) {
+    cursor: grabbing;
+}
+
 // Option-only: `.kbq-selected` never lands on `.kbq-list-item`, and only options host an action container.
 .kbq-list-option {
     @include _kbq-list-option-selected-border-radius();
     @include action-container.kbq-option-action-visibility('.kbq-list-selection.cdk-keyboard-focused');
+
+    &.kbq-list-option_draggable {
+        cursor: grab;
+    }
+
+    &.cdk-drag-placeholder {
+        opacity: var(--kbq-opacity-disabled);
+    }
+
+    &.cdk-drag-animating {
+        transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+    }
 }
 
 @include theme.kbq-list-theme();
 @include theme.kbq-list-typography();
+
+// Declared after the theme so it outranks the default state, whose background is `transparent`
+// because an option normally sits on the surface of its list. The dragged clone has no such surface.
+// Selected states carry a higher specificity and deliberately keep their own background.
+.kbq-list-option.cdk-drag-preview {
+    background: var(--kbq-list-states-dragged-container-background);
+    box-shadow: var(--kbq-list-states-dragged-container-shadow);
+}

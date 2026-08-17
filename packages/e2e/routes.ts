@@ -67,7 +67,12 @@ import {
 } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eLinkStates, E2eLinkWithCaption } from '../components/link/e2e';
-import { E2eListOptionActionVisibility, E2eListSelectionState, E2eListStates } from '../components/list/e2e';
+import {
+    E2eListDragAndDrop,
+    E2eListOptionActionVisibility,
+    E2eListSelectionState,
+    E2eListStates
+} from '../components/list/e2e';
 import { E2eLoaderOverlayCard, E2eLoaderOverlayStates } from '../components/loader-overlay/e2e';
 import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eModalFullCustom, E2eModalStates } from '../components/modal/e2e';
@@ -221,6 +226,7 @@ const components = [
     E2eListStates,
     E2eListSelectionState,
     E2eListOptionActionVisibility,
+    E2eListDragAndDrop,
     E2eLoaderOverlayStates,
     E2eLoaderOverlayCard,
     E2eAutocompleteStates,
