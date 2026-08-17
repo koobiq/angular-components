@@ -74,7 +74,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
      * called automatically and is kept only for callers that already hold a container reference — the instance
      * created by `KbqToastService` is not exposed.
      */
-    dispatchScrollEvent = () => {
-        this.elementRef.nativeElement.dispatchEvent(new CustomEvent('scroll'));
+dispatchScrollEvent = () => {
+        this.elementRef.nativeElement.dispatchEvent(new Event('scroll'));
     };
 }
