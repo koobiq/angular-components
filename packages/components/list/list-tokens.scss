@@ -27,10 +27,16 @@
     --kbq-list-states-disabled-icon-color: var(--kbq-states-icon-disabled);
     --kbq-list-states-disabled-icon-button-color: var(--kbq-states-icon-disabled);
     --kbq-list-states-disabled-caption-color: var(--kbq-states-foreground-disabled);
+    // The dragged clone floats over the page, so unlike an option in place it needs an opaque surface.
+    --kbq-list-states-dragged-container-background: var(--kbq-background-card);
+    --kbq-list-states-dragged-container-shadow: var(--kbq-shadow-popup);
 }
 
 .kbq-list,
-.kbq-list-selection {
+.kbq-list-selection,
+// The drag preview is a clone of the option inserted into `<body>`, outside any list, so it has to
+// carry the tokens itself — otherwise every themed color below resolves to nothing.
+.kbq-list-option.cdk-drag-preview {
     --kbq-list-size-container-padding-left: var(--kbq-size-m);
     --kbq-list-size-container-padding-right: var(--kbq-size-m);
     --kbq-list-size-container-padding-vertical: var(--kbq-size-xs);

@@ -21,7 +21,8 @@ export const enUSLocaleData = {
         nextMonth: 'Next month',
         clear: 'Clear',
         showPassword: 'Show password',
-        hidePassword: 'Hide password'
+        hidePassword: 'Hide password',
+        listOptionMoved: '{{ label }}, position {{ index }} of {{ total }}'
     } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' } satisfies KbqSelectLocaleConfiguration,
     datepicker: {

@@ -21,7 +21,8 @@ export const esLALocaleData = {
         nextMonth: 'Mes siguiente',
         clear: 'Borrar',
         showPassword: 'Mostrar la contraseña',
-        hidePassword: 'Ocultar la contraseña'
+        hidePassword: 'Ocultar la contraseña',
+        listOptionMoved: '{{ label }}, posición {{ index }} de {{ total }}'
     } satisfies KbqA11yLocaleConfiguration,
     select: {
         hiddenItemsText: '+{{ number }}',
