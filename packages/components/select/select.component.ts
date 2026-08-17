@@ -57,7 +57,6 @@ import {
     HOME,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
-    KBQ_LOCALE_SERVICE,
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KBQ_PARENT_POPUP,
@@ -66,7 +65,6 @@ import {
     KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
-    KbqLocaleService,
     KbqOptgroup,
     KbqOption,
     KbqOptionBase,
@@ -278,11 +276,6 @@ export class KbqSelect
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true })!;
     ngControl = inject(NgControl, { self: true, optional: true });
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
-    /**
-     * The select reads its own strings from `localeConfiguration`; this stays because `KbqTimezoneSelect`
-     * resolves the `timezone` section through it.
-     */
-    protected localeService? = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
 
     /** Localized strings of the select, following the active locale. */
     private readonly localeConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);

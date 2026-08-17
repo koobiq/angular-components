@@ -1467,6 +1467,8 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             const tooltip = getToggle(fixture).injector.get(KbqTooltipTrigger);
+            const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
+                .componentInstance as KbqVerticalNavbar;
 
             expect(tooltip.content).toBe(expand);
 
@@ -1475,6 +1477,15 @@ describe('KbqNavbar', () => {
 
             // An override outranks the locale — that is what distinguishes it from a default.
             expect(tooltip.content).toBe(expand);
+
+            // The strings the override does not mention keep following the locale. Expanding first swaps the
+            // tooltip onto one of them: asserting only the pinned string above would pass just as well
+            // against a tooltip frozen at construction.
+            navbar.expanded.set(true);
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('ru-RU');
+            fixture.detectChanges();
+
+            expect(tooltip.content).toBe(ruRULocaleData.navbar.toggle.collapse);
         }));
     });
 

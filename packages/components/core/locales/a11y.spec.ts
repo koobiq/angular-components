@@ -1,5 +1,6 @@
-import { InjectionToken } from '@angular/core';
+import { Component, InjectionToken } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
 import { kbqA11yLocaleConfigurationProvider, kbqInjectA11yLocaleConfiguration } from './a11y';
 import { kbqInjectLocaleConfiguration, kbqLocaleConfigurationOverrideProvider } from './configuration';
@@ -62,6 +63,44 @@ describe('kbqInjectA11yLocaleConfiguration', () => {
 
         expect(inject()().close).toBe('Dismiss');
         expect(select().selectAll).toBe('Everything');
+    });
+
+    it('should apply sections overridden at different levels of the injector tree', () => {
+        // Scoping an override to a component is what the localization guide recommends, and every section
+        // shares one `multi` token — which Angular resolves from the nearest injector that has any entry
+        // for it, without merging the levels above.
+        const selectConfiguration = new InjectionToken<KbqSelectLocaleConfiguration>('SelectLocaleConfiguration', {
+            factory: () => ruRULocaleData.select
+        });
+
+        @Component({
+            selector: 'scoped-override',
+            template: '',
+            providers: [kbqLocaleConfigurationOverrideProvider('select', { selectAll: 'Everything' })]
+        })
+        class ScopedOverride {
+            readonly a11y = kbqInjectA11yLocaleConfiguration();
+            readonly select = kbqInjectLocaleConfiguration('select', selectConfiguration);
+        }
+
+        @Component({
+            selector: 'root-override',
+            imports: [ScopedOverride],
+            template: '<scoped-override />',
+            providers: [kbqA11yLocaleConfigurationProvider({ close: 'Dismiss' })]
+        })
+        class RootOverride {}
+
+        TestBed.configureTestingModule({});
+
+        const fixture = TestBed.createComponent(RootOverride);
+
+        fixture.detectChanges();
+
+        const scoped: ScopedOverride = fixture.debugElement.query(By.directive(ScopedOverride)).componentInstance;
+
+        expect(scoped.select().selectAll).toBe('Everything');
+        expect(scoped.a11y().close).toBe('Dismiss');
     });
 
     it('should follow the locale service', () => {

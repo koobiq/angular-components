@@ -230,6 +230,29 @@ describe(SCHEMATIC_NAME, () => {
             );
         });
 
+        it('adds the helper to the value clause when a type-only clause of the same module precedes it', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "import type { KbqFilterBarConfiguration } from '@koobiq/components/filter-bar';\n" +
+                    'import { KBQ_FILTER_BAR_CONFIGURATION, KbqFilterBarModule } from ' +
+                    "'@koobiq/components/filter-bar';\n" +
+                    'const providers = [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: strings }];\n'
+            );
+
+            const updated = (await run(first)).readText(ts);
+
+            // The helper is called as a value, so landing it in the type-only clause would be a compile error.
+            expect(updated).toBe(
+                "import type { KbqFilterBarConfiguration } from '@koobiq/components/filter-bar';\n" +
+                    'import { KbqFilterBarModule, kbqFilterBarLocaleConfigurationProvider } from ' +
+                    "'@koobiq/components/filter-bar';\n" +
+                    'const providers = [kbqFilterBarLocaleConfigurationProvider(strings)];\n'
+            );
+        });
+
         it('inserts a new import when the module is not imported by name', async () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);

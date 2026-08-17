@@ -203,7 +203,9 @@ function ensureImport(content: string, symbol: string, from: string): string {
 
     if (alreadyImported.test(content)) return content;
 
-    const sameModule = new RegExp(`(import\\s*(?:type\\s*)?\\{)([^}]*)(\\}\\s*from\\s*['"]${escapeRegExp(from)}['"])`);
+    // Deliberately matches a value clause only: a file may carry a separate `import type { … }` clause for
+    // the same module, and splicing a helper that is called as a value into that one is a compile error.
+    const sameModule = new RegExp(`(import\\s*\\{)([^}]*)(\\}\\s*from\\s*['"]${escapeRegExp(from)}['"])`);
 
     if (sameModule.test(content)) {
         return content.replace(sameModule, (_full, open: string, body: string, close: string) => {
