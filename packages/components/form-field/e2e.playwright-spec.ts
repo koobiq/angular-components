@@ -302,7 +302,7 @@ test.describe('KbqFormFieldModule', () => {
                 // Chrome paints its own background on an autofilled control with a UA `!important`
                 // rule that an author declaration cannot out-rank. What does out-rank it is a
                 // running transition, which is why the stylesheet parks `background-color` on a
-                // 5000s one. The used value is Chrome's `rgb(232, 240, 254)` held at alpha 0 — so
+                // 600000s one. The used value is Chrome's `rgb(232, 240, 254)` held at alpha 0 — so
                 // assert the alpha, not the colour: immediately after forcing it still reads
                 // `rgba(0, 0, 0, 0)` and only settles on the blue a frame later.
                 expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
@@ -311,7 +311,7 @@ test.describe('KbqFormFieldModule', () => {
             test('the suppression is a running transition, not a finished one', async ({ page }) => {
                 const { control } = await autofill(page, 'state_default');
 
-                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 5_000_000]]);
+                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 600_000_000]]);
             });
 
             for (const [state, token] of [
@@ -412,7 +412,7 @@ test.describe('KbqFormFieldModule', () => {
                 // painted Chrome's raw opaque blue, which in the dark theme was a near-white block
                 // with dark text. It is now suppressed the same way as the others.
                 expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
-                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 5_000_000]]);
+                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 600_000_000]]);
                 await expect(getContainer(field)).toHaveCSS('background-image', await tintLayer(field));
             });
 
@@ -526,21 +526,45 @@ test.describe('KbqFormFieldModule', () => {
             const findRule = (rules: Rule[], match: (selector: string) => boolean): Rule | undefined =>
                 rules.find((rule) => match(rule.selector));
 
-            test('the suppression block covers all three controls', async ({ page }) => {
+            test('the control block suppresses the background and repaints the text', async ({ page }) => {
                 const rules = await readRules(page);
-                // Keyed on the declaration, not the selector: `_kbq-form-field-state()` now emits a
-                // `:-webkit-autofill` text rule per state, and those match every selector-shaped
-                // predicate for this block while carrying none of its declarations.
                 const block = rules.find((rule) => rule.text.includes('transition-property: background-color'));
 
                 expect(block).toBeDefined();
-                expect(block!.selector).toContain('.kbq-input:-webkit-autofill');
-                expect(block!.selector).toContain('.kbq-tag-input:-webkit-autofill');
-                expect(block!.selector).toContain('.kbq-textarea:-webkit-autofill');
-                // Suppression and nothing else. The text is repainted per state by
-                // `_kbq-form-field-state()`, and the tint belongs to the container.
+
+                for (const control of ['.kbq-input', '.kbq-tag-input', '.kbq-textarea']) {
+                    expect(block!.selector).toContain(control);
+                }
+
+                // Both spellings, through a forgiving list: a plain comma list would be invalidated
+                // whole by whichever of the two a browser does not know.
+                expect(block!.selector).toContain(':autofill');
+                expect(block!.selector).toContain(':-webkit-autofill');
+                // The tint belongs to the container, and nothing paints the control itself.
                 expect(block!.text).not.toContain('box-shadow');
                 expect(block!.text).not.toContain('background-color:');
+            });
+
+            test('the text repaint is one low-specificity rule, not one per state', async ({ page }) => {
+                const rules = await readRules(page);
+                // Scoped to autofill: the error and disabled states also repaint an icon through
+                // `-webkit-text-fill-color`, and those have nothing to do with this.
+                const repaints = rules.filter(
+                    (rule) => rule.text.includes('-webkit-text-fill-color') && rule.selector.includes('autofill')
+                );
+
+                // Emitting the repaint inside `_kbq-form-field-state()` compiled to 84 selectors —
+                // the mixin runs five times, once nested under eight `kbq-form-field-type-*`
+                // classes — and gave a text colour a specificity of (0,7,0), which a consumer could
+                // only override with `!important`. One rule reading a variable the state publishes
+                // does the same job at (0,3,0). The bound is what this test is for; the exact count
+                // is allowed to grow a little, three orders of magnitude is not.
+                expect(repaints.length).toBeLessThanOrEqual(2);
+
+                const classesInSelector = (selector: string) => (selector.match(/\.[a-z][\w-]*/gi) ?? []).length;
+                const worst = Math.max(...repaints.flatMap((rule) => rule.selector.split(',').map(classesInSelector)));
+
+                expect(worst).toBeLessThanOrEqual(3);
             });
 
             test('no rule gives an autofilled control its own geometry', async ({ page }) => {
@@ -607,16 +631,21 @@ test.describe('KbqFormFieldModule', () => {
                 expect(reads('--kbq-form-field-states-autofill-background').length).toBeGreaterThan(0);
             });
 
-            test('the stylesheet uses only the legacy spelling of the pseudo-class', async ({ page }) => {
+            test('every autofill selector carries both spellings', async ({ page }) => {
                 const rules = await readRules(page);
-                const standardSpelling = rules.filter(
-                    (rule) => /(^|[^-]):autofill\b/.test(rule.selector) && rule.selector.includes('kbq-')
+                const autofillRules = rules.filter(
+                    (rule) => rule.selector.includes('autofill') && rule.selector.includes('kbq-')
                 );
 
-                // A fix that adds `:is(:autofill, :-webkit-autofill)` has to update this test — which
-                // is the point of having it, since the two spellings are not interchangeable for
-                // `CSS.forcePseudoState` and the helper forces the standard one.
-                expect(standardSpelling).toEqual([]);
+                expect(autofillRules.length).toBeGreaterThan(0);
+
+                // The legacy spelling is what browsers implement today and the standard one is where
+                // they are going; a forgiving `:is()` list keeps whichever a given browser knows,
+                // where a plain comma list would be invalidated whole by the other.
+                for (const rule of autofillRules) {
+                    expect(rule.selector).toMatch(/(^|[^-]):autofill\b/);
+                    expect(rule.selector).toContain(':-webkit-autofill');
+                }
             });
 
             test('nothing drives autofill from TypeScript', async ({ page }) => {
@@ -638,7 +667,7 @@ test.describe('KbqFormFieldModule', () => {
         test.describe('screenshots', () => {
             /**
              * The project default is `animations: 'disabled'`, which calls `finish()` on every
-             * animation with a finite end time — and the 5000s `background-color` transition that
+             * animation with a finite end time — and the 600000s `background-color` transition that
              * hides Chrome's autofill background is finite. Fast-forwarding it makes every control
              * paint Chrome's opaque blue instead of the design system's tint, and it does not come
              * back: once finished the transition is gone, so a later capture with 'allow' still
@@ -656,7 +685,7 @@ test.describe('KbqFormFieldModule', () => {
             const expectStillSuppressed = async (page: Page, cell: string) => {
                 const control = getField(page, cell).locator('.kbq-input');
 
-                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 5_000_000]]);
+                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 600_000_000]]);
             };
 
             /**

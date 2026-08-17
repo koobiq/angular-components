@@ -22,21 +22,18 @@
     .kbq-input,
     .kbq-tag-input,
     .kbq-textarea {
-        color: var(--kbq-form-field-#{$state-name}-text);
+        // Private, and only for the autofill rule near the bottom of this file. The browser forces
+        // `color` on an autofilled control with a UA `!important` rule, so that rule has to repaint
+        // through `-webkit-text-fill-color` — and to do that it has to know what *this* state
+        // wanted. Declared in the same rule as the `color` that reads it, so one cascade decides
+        // both and they cannot drift apart.
+        // Published as a variable rather than emitting an autofill rule per state: this mixin runs
+        // five times, once of them nested under eight `kbq-form-field-type-*` classes, so the
+        // per-state form compiled to 84 selectors for two declarations — and gave a text colour a
+        // specificity of (0,7,0), which no consumer could override without `!important`.
+        --kbq-form-field-resolved-text: var(--kbq-form-field-#{$state-name}-text);
 
-        // The browser forces `color` on an autofilled control with a UA `!important` rule, and an
-        // important author declaration sits *below* important-UA in the cascade, so `color` alone
-        // cannot repaint it. `-webkit-text-fill-color` can: the UA sets no such property, and it
-        // wins over `color` when glyphs are painted.
-
-        // Emitted per state rather than once, so the state each field is actually in decides the
-        // colour through ordinary specificity — an autofilled field that is also invalid keeps the
-        // error text. Scoped to `:-webkit-autofill` on purpose: declared unconditionally it would
-        // override a `color` a consumer set on the control.
-        &:-webkit-autofill {
-            -webkit-text-fill-color: var(--kbq-form-field-#{$state-name}-text);
-            caret-color: var(--kbq-form-field-#{$state-name}-text);
-        }
+        color: var(--kbq-form-field-resolved-text);
 
         &::placeholder {
             color: var(--kbq-form-field-#{$state-name}-placeholder);
@@ -89,12 +86,26 @@
         & .kbq-input,
         & .kbq-tag-input,
         & .kbq-textarea {
-            &:-webkit-autofill {
+            // `:is()` takes a forgiving selector list, so every browser keeps whichever of the two
+            // spellings it knows. A plain comma list would not: one unknown pseudo-class
+            // invalidates the whole list.
+            &:is(:autofill, :-webkit-autofill) {
                 // Longhands rather than the shorthand, which would also reset `transition-delay`
                 // and `transition-timing-function`. Nothing transitions on these controls today,
                 // but the next thing that does should not break here.
+                // The duration has to outlast the page, not merely be large: a transition that
+                // *finishes* lands on its end value, which is the browser's own background, and
+                // there is no recovering it without a reload. At 5000s that happened after 83
+                // minutes — a dashboard left open over lunch.
                 transition-property: background-color;
-                transition-duration: 5000s;
+                transition-duration: 600000s;
+
+                // Repaints what the state cascade resolved above, so an autofilled control that is
+                // also invalid or disabled still gets that state's text colour. The fallback covers
+                // a control outside any state block, which cannot happen today because `default`
+                // always runs.
+                -webkit-text-fill-color: var(--kbq-form-field-resolved-text, var(--kbq-form-field-default-text));
+                caret-color: var(--kbq-form-field-resolved-text, var(--kbq-form-field-default-text));
             }
         }
 
@@ -159,7 +170,10 @@
 
         // One arm, not three: the `:hover` and `:focus` variants exist on the control below to
         // match the UA's own selectors, and nothing in the UA styles this container.
-        & .kbq-form-field__container:has(:is(.kbq-input, .kbq-tag-input, .kbq-textarea):-webkit-autofill) {
+        &
+            .kbq-form-field__container:has(
+                :is(.kbq-input, .kbq-tag-input, .kbq-textarea):is(:autofill, :-webkit-autofill)
+            ) {
             background-image: linear-gradient(
                 var(--kbq-form-field-states-autofill-background),
                 var(--kbq-form-field-states-autofill-background)
