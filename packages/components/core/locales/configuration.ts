@@ -10,15 +10,17 @@ import { KbqLocaleData, KbqLocaleSection, KbqPartialLocaleData } from './types';
  * `kbq<Component>LocaleConfigurationProvider`.
  *
  * `multi` because overriding several sections in one `providers` array is the common case: a single-value
- * token would let the last provider silently drop every other one.
+ * token would let the last provider silently drop every other one. Each entry is a batch rather than a
+ * single override, so that a provider can also re-contribute what it inherited — see
+ * {@link kbqLocaleConfigurationOverrideProvider}.
  *
  * @docs-private
  */
 // The annotation is load-bearing: `KbqPartialLocaleData` resolves to a conditional type, which TypeScript
 // evaluates when emitting an unannotated declaration — inlining 250 lines of expanded shape into the
 // public API report.
-export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[]> = new InjectionToken<
-    KbqPartialLocaleData[]
+export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[][]> = new InjectionToken<
+    KbqPartialLocaleData[][]
 >('KBQ_LOCALE_CONFIGURATION_OVERRIDES');
 
 /**
@@ -33,13 +35,24 @@ export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocale
 export const kbqLocaleConfigurationOverrideProvider = <K extends KbqLocaleSection>(
     section: K,
     configuration: KbqDeepPartial<KbqLocaleData[K]>
-): Provider => ({
-    provide: KBQ_LOCALE_CONFIGURATION_OVERRIDES,
-    // A computed key widens to an index signature, and `section` is the type parameter itself — this is the
-    // single place that has to assert the shape, in exchange for a precisely typed call site.
-    useValue: { [section]: configuration } as KbqPartialLocaleData,
-    multi: true
-});
+): Provider => [
+    {
+        provide: KBQ_LOCALE_CONFIGURATION_OVERRIDES,
+        // Angular resolves a `multi` token from the nearest injector holding any entry for it and never
+        // merges the levels above. Without re-contributing them here, scoping one section to a component —
+        // which is exactly what the localization guide recommends — would hide every section an ancestor
+        // overrode from that whole subtree.
+        useFactory: () => (inject(KBQ_LOCALE_CONFIGURATION_OVERRIDES, { skipSelf: true, optional: true }) ?? []).flat(),
+        multi: true
+    },
+    {
+        provide: KBQ_LOCALE_CONFIGURATION_OVERRIDES,
+        // A computed key widens to an index signature, and `section` is the type parameter itself — this is the
+        // single place that has to assert the shape, in exchange for a precisely typed call site.
+        useValue: [{ [section]: configuration } as KbqPartialLocaleData],
+        multi: true
+    }
+];
 
 /**
  * Reactive localized strings for one section of the active locale.
@@ -58,7 +71,10 @@ export function kbqInjectLocaleConfiguration<K extends KbqLocaleSection>(
     token: InjectionToken<KbqLocaleData[K]>
 ): Signal<KbqLocaleData[K]> {
     const localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    const overrides = inject(KBQ_LOCALE_CONFIGURATION_OVERRIDES, { optional: true }) || [];
+    // Every provider at this level re-contributes the inherited batch, so an ancestor's override arrives
+    // once per provider. `Set` keeps the first occurrence of each, which is the one that preserves
+    // ancestor-before-descendant precedence.
+    const overrides = [...new Set((inject(KBQ_LOCALE_CONFIGURATION_OVERRIDES, { optional: true }) || []).flat())];
     const defaultValue = inject(token);
     // `kbqDeepMerge` returns its base untouched when a patch adds nothing, so an unoverridden section stays
     // referentially identical to the data the locale service holds.

@@ -35,7 +35,6 @@ import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionBase } from '@koobiq/components/core';
@@ -164,7 +163,6 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get isEmptySearchResult(): boolean;
     isRtl(): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
-    protected localeService?: KbqLocaleService | null | undefined;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get multiple(): boolean;
     set multiple(value: boolean);

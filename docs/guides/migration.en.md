@@ -937,8 +937,23 @@ kept.
 type-checked for the first time. And `defaultUnitSystem` on the exported `*FormattersData` constants is now
 the literal `'SI'` rather than `string`; only code that assigns to it is affected.
 
-There is no `ng update` migration for this change — every failure it can cause is a compile error whose
-message already names the fix.
+#### Running the migration
+
+The `locale-configuration-providers` schematic rewrites the configuration providers automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:locale-configuration-providers --project <your project>
+```
+
+Run it even if you upgrade by hand: a `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` left behind is
+silently ignored at runtime rather than reported as a compile error. The rest of this section — the renamed
+types and the two narrowed ones — surfaces as compile errors whose messages already name the fix.
 
 ### After the migration
 

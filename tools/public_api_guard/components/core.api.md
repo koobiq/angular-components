@@ -2382,7 +2382,7 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
 // @public
-export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[]>;
+export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[][]>;
 
 // @public (undocumented)
 export const KBQ_LOCALE_DATA: InjectionToken<KbqLocaleDataInput>;
