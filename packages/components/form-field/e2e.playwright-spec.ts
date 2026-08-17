@@ -187,6 +187,42 @@ test.describe('KbqFormFieldModule', () => {
             return { field, container: getContainer(field), control: getControl(field), forced };
         };
 
+        type Rule = { index: number; selector: string; text: string };
+
+        /**
+         * Every style rule in document order, flattened across all stylesheets.
+         *
+         * `adoptedStyleSheets` as well as `document.styleSheets`: a rule that was never found reads
+         * exactly like a rule that does not exist, so anything asserting "no rule does X" has to
+         * look everywhere a rule can live — and has to assert it found the rules at all before the
+         * negative means anything.
+         */
+        const readRules = (page: Page): Promise<Rule[]> =>
+            page.evaluate(() => {
+                const rules: { index: number; selector: string; text: string }[] = [];
+                const sheets = [...Array.from(document.styleSheets), ...document.adoptedStyleSheets];
+
+                for (const sheet of sheets) {
+                    // A cross-origin stylesheet throws on access; none is expected here, but one
+                    // would otherwise take the whole group down with a security error.
+                    let cssRules: CSSRuleList;
+
+                    try {
+                        cssRules = sheet.cssRules;
+                    } catch {
+                        continue;
+                    }
+
+                    for (const rule of Array.from(cssRules)) {
+                        if (rule instanceof CSSStyleRule) {
+                            rules.push({ index: rules.length, selector: rule.selectorText, text: rule.cssText });
+                        }
+                    }
+                }
+
+                return rules;
+            });
+
         test.beforeEach(async ({ page }) => page.goto('/E2eFormFieldAutofill'));
 
         test('the matrix renders every cell the tests address', async ({ page }) => {
@@ -250,23 +286,15 @@ test.describe('KbqFormFieldModule', () => {
                 // state. Nothing about the layer approach needs it back.
                 await autofill(page, 'state_error');
 
-                const important = await page.evaluate(() =>
-                    Array.from(document.styleSheets)
-                        .flatMap((sheet) => {
-                            try {
-                                return Array.from(sheet.cssRules);
-                            } catch {
-                                return [];
-                            }
-                        })
-                        .filter(
-                            (rule): rule is CSSStyleRule =>
-                                rule instanceof CSSStyleRule && rule.selectorText.includes('autofill')
-                        )
-                        .filter((rule) => rule.cssText.includes('!important'))
-                        .map((rule) => rule.selectorText)
-                );
+                const autofillRules = (await readRules(page)).filter((rule) => rule.selector.includes('autofill'));
+                const important = autofillRules
+                    .filter((rule) => rule.text.includes('!important'))
+                    .map((rule) => rule.selector);
 
+                // The negative below is only worth anything once the rules have been found: an
+                // empty set — a future bundler moving the styles somewhere `readRules` does not
+                // look — reports "no `!important`" exactly as loudly as a clean stylesheet does.
+                expect(autofillRules.length).toBeGreaterThan(0);
                 expect(important).toEqual([]);
             });
 
@@ -519,35 +547,6 @@ test.describe('KbqFormFieldModule', () => {
          * sits relative to the state blocks it competes with.
          */
         test.describe('the rules themselves', () => {
-            type Rule = { index: number; selector: string; text: string };
-
-            /** Every style rule in document order, flattened across all stylesheets. */
-            const readRules = (page: Page): Promise<Rule[]> =>
-                page.evaluate(() => {
-                    const rules: { index: number; selector: string; text: string }[] = [];
-                    const sheets = [...Array.from(document.styleSheets), ...document.adoptedStyleSheets];
-
-                    for (const sheet of sheets) {
-                        // A cross-origin stylesheet throws on access; none is expected here, but one
-                        // would otherwise take the whole group down with a security error.
-                        let cssRules: CSSRuleList;
-
-                        try {
-                            cssRules = sheet.cssRules;
-                        } catch {
-                            continue;
-                        }
-
-                        for (const rule of Array.from(cssRules)) {
-                            if (rule instanceof CSSStyleRule) {
-                                rules.push({ index: rules.length, selector: rule.selectorText, text: rule.cssText });
-                            }
-                        }
-                    }
-
-                    return rules;
-                });
-
             const findRule = (rules: Rule[], match: (selector: string) => boolean): Rule | undefined =>
                 rules.find((rule) => match(rule.selector));
 
@@ -586,10 +585,37 @@ test.describe('KbqFormFieldModule', () => {
                 // is allowed to grow a little, three orders of magnitude is not.
                 expect(repaints.length).toBeLessThanOrEqual(2);
 
-                const classesInSelector = (selector: string) => (selector.match(/\.[a-z][\w-]*/gi) ?? []).length;
-                const worst = Math.max(...repaints.flatMap((rule) => rule.selector.split(',').map(classesInSelector)));
+                /**
+                 * The worst class-level specificity — the `b` of (a,b,c) — across one selector list.
+                 *
+                 * Counting `.class` tokens alone, as this once did, could not see the pseudo-class
+                 * the whole rule turns on: `.kbq-form-field .kbq-input:is(:autofill,
+                 * :-webkit-autofill)` is (0,3,0), not the (0,2,0) a class count reports, and a bound
+                 * blind to pseudo-classes cannot refuse a `:hover` or a second `:is()` being
+                 * appended — which is the shape it exists to refuse.
+                 *
+                 * The arguments of a functional pseudo-class are dropped first: it takes the
+                 * specificity of its most specific argument, a single class or pseudo-class in
+                 * everything this component emits, so the `:is()` counts once and its arguments do
+                 * not count again. That also gets the commas inside it out of the way of the split.
+                 */
+                const worstSpecificity = (selectorList: string): number => {
+                    let flattened = selectorList;
 
-                expect(worst).toBeLessThanOrEqual(3);
+                    while (/\([^()]*\)/.test(flattened)) {
+                        flattened = flattened.replace(/\([^()]*\)/g, '');
+                    }
+
+                    return Math.max(
+                        ...flattened
+                            .split(',')
+                            .map(
+                                (selector) => (selector.match(/\.[-\w]+|\[[^\]]*\]|(?<!:):[-a-z][\w-]*/gi) ?? []).length
+                            )
+                    );
+                };
+
+                expect(Math.max(...repaints.map((rule) => worstSpecificity(rule.selector)))).toBeLessThanOrEqual(3);
             });
 
             test('no rule gives an autofilled control its own geometry', async ({ page }) => {
