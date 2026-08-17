@@ -349,6 +349,10 @@ test.describe('KbqFormFieldModule', () => {
                     // palette, which is how a dark-themed field ends up with a light autofill
                     // highlight and black text the moment the autofill popup reopens.
                     //
+                    // Declared for the whole theme in `kbq-core-theme()` and reaching the control by
+                    // inheritance, so this asserts the property where it matters rather than where
+                    // it is written.
+                    //
                     // `color` is the readout: the UA forces it on an autofilled control, and which
                     // colour it forces comes from the used `color-scheme`. It is the one thing here
                     // that reflects the palette Chrome would paint with, since that paint never
@@ -357,6 +361,23 @@ test.describe('KbqFormFieldModule', () => {
                     await expect(control).toHaveCSS('color', uaColor);
                 });
             }
+
+            test('a light subtree inside a dark application stays light', async ({ page }) => {
+                await e2eEnableDarkTheme(page);
+
+                const { field, control } = await autofill(page, 'state_default');
+
+                await expect(control).toHaveCSS('color-scheme', 'dark');
+
+                // The regression this guards: scoped to the component, the base and the dark rule
+                // landed on the same specificity, so the dark one won on source order under any
+                // `.kbq-dark` ancestor however near a `.kbq-light` was. Declared once per theme
+                // class, inheritance picks the nearest instead. Nested themes are a supported
+                // scenario — filter-bar and the shadow-DOM toast dev app both do it.
+                await field.evaluate((el) => el.classList.add('kbq-light'));
+
+                await expect(control).toHaveCSS('color-scheme', 'light');
+            });
 
             test('paints nothing of its own on the control', async ({ page }) => {
                 const { control } = await autofill(page, 'state_default');
