@@ -24,6 +24,20 @@
     .kbq-textarea {
         color: var(--kbq-form-field-#{$state-name}-text);
 
+        // The browser forces `color` on an autofilled control with a UA `!important` rule, and an
+        // important author declaration sits *below* important-UA in the cascade, so `color` alone
+        // cannot repaint it. `-webkit-text-fill-color` can: the UA sets no such property, and it
+        // wins over `color` when glyphs are painted.
+
+        // Emitted per state rather than once, so the state each field is actually in decides the
+        // colour through ordinary specificity — an autofilled field that is also invalid keeps the
+        // error text. Scoped to `:-webkit-autofill` on purpose: declared unconditionally it would
+        // override a `color` a consumer set on the control.
+        &:-webkit-autofill {
+            -webkit-text-fill-color: var(--kbq-form-field-#{$state-name}-text);
+            caret-color: var(--kbq-form-field-#{$state-name}-text);
+        }
+
         &::placeholder {
             color: var(--kbq-form-field-#{$state-name}-placeholder);
         }
@@ -42,21 +56,27 @@
     .kbq-form-field {
         @include _kbq-form-field-state(default);
 
-        & .kbq-input,
-        & .kbq-tag-input {
-            //https://css-tricks.com/almanac/selectors/a/autofill/
-            &:-webkit-autofill,
-            &:-webkit-autofill:hover,
-            &:-webkit-autofill:focus {
-                // set as transparent to not override container background-color;
-                --kbq-form-field-states-autofill-background: var(--kbq-background-transparent);
-                -webkit-box-shadow: inset 0 0 0 40rem var(--kbq-form-field-states-autofill-background);
-                -webkit-text-fill-color: var(--kbq-form-field-states-autofill-text);
-                caret-color: var(--kbq-form-field-states-autofill-text);
+        // The browser paints its own background on an autofilled control with a UA `!important`
+        // declaration that no author rule can out-rank. It is suppressed rather than painted over:
+        // a running transition sits *above* important-UA in the cascade, so animating
+        // `background-color` over an absurd duration parks its used value at the control's own
+        // transparent background — every control here is already transparent, `.kbq-input` and
+        // `.kbq-tag-input` through `kbq-reset-input`, `.kbq-textarea` in its own stylesheet — and
+        // the container's tint shows through untouched.
+        // https://css-tricks.com/almanac/selectors/a/autofill/
 
-                /* hide browser default autofill background, no matter what background color set */
-                transition: background-color 5000s ease-in-out;
-                background-color: var(--kbq-background-transparent) !important;
+        // Painting over it instead would be wrong: the tint token is translucent, so a second coat
+        // on the control would make its rectangle visibly darker than the container's padding
+        // around it, and would still not hide the UA colour underneath.
+        & .kbq-input,
+        & .kbq-tag-input,
+        & .kbq-textarea {
+            &:-webkit-autofill {
+                // Longhands rather than the shorthand, which would also reset `transition-delay`
+                // and `transition-timing-function`. Nothing transitions on these controls today,
+                // but the next thing that does should not break here.
+                transition-property: background-color;
+                transition-duration: 5000s;
             }
         }
 
@@ -108,11 +128,24 @@
             color: var(--kbq-form-field-label-color);
         }
 
-        // todo quick fix for bug DS-4060. Technical debt DS-4096
-        & .kbq-form-field__container:has(:is(.kbq-input, .kbq-tag-input):-webkit-autofill),
-        & .kbq-form-field__container:has(:is(.kbq-input, .kbq-tag-input):-webkit-autofill:hover),
-        & .kbq-form-field__container:has(:is(.kbq-input, .kbq-tag-input):-webkit-autofill:focus) {
-            background-color: var(--kbq-form-field-states-autofill-background) !important;
+        // Autofill says "the browser filled this in" and nothing more, so it contributes a tint and
+        // leaves every other channel — border, focus ring, text colour — to the state the field is
+        // actually in.
+
+        // The tint goes into `background-image` rather than `background-color`, and that is what
+        // makes the sentence above true. The state keeps ownership of `background-color`, the tint
+        // composites over whatever it resolved, and no priority conflict is possible: an invalid
+        // field stays error-red *and* tinted, a field in an overlay keeps its card background.
+        // Painting `background-color` instead is what DS-4060 did, and it needed `!important` to
+        // land — which is exactly why it then out-ranked error, disabled and the overlay.
+
+        // One arm, not three: the `:hover` and `:focus` variants exist on the control below to
+        // match the UA's own selectors, and nothing in the UA styles this container.
+        & .kbq-form-field__container:has(:is(.kbq-input, .kbq-tag-input, .kbq-textarea):-webkit-autofill) {
+            background-image: linear-gradient(
+                var(--kbq-form-field-states-autofill-background),
+                var(--kbq-form-field-states-autofill-background)
+            );
         }
 
         &.kbq-disabled {

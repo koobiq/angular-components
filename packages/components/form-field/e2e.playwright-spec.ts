@@ -157,6 +157,19 @@ test.describe('KbqFormFieldModule', () => {
             e2eResolveCssValue(field, 'background-color', `var(${token})`);
 
         /**
+         * The tint as the browser renders it.
+         *
+         * It is painted into `background-image` rather than `background-color` so that the state
+         * keeps ownership of the latter — which is what makes autofill impossible to put in
+         * conflict with error, disabled or the overlay.
+         */
+        const tintLayer = async (field: Locator): Promise<string> => {
+            const tint = await resolveToken(field, '--kbq-form-field-states-autofill-background');
+
+            return `linear-gradient(${tint}, ${tint})`;
+        };
+
+        /**
          * Forces autofill on one cell's control and hands back the pieces every test needs.
          *
          * Scoped to the cell rather than the page: the matrix renders the same control in eight
@@ -190,71 +203,82 @@ test.describe('KbqFormFieldModule', () => {
 
         test.describe('container background', () => {
             for (const state of STATES) {
-                test(`is the autofill tint in the ${state} state`, async ({ page }) => {
+                test(`is tinted in the ${state} state`, async ({ page }) => {
                     const { field, container } = await autofill(page, `state_${state}`);
 
-                    await expect(container).toHaveCSS(
-                        'background-color',
-                        await resolveToken(field, '--kbq-form-field-states-autofill-background')
-                    );
+                    await expect(container).toHaveCSS('background-image', await tintLayer(field));
                 });
             }
 
-            // The four below are the ticket. `_form-field-theme.scss:111-116` paints the container
-            // with `!important`, and an important author declaration out-ranks every normal one the
-            // state themes make — regardless of the source order that would otherwise decide it.
-            // The tint is translucent (10% in the light theme, 21% in the dark), so it composites
-            // over the state's own background rather than replacing it; the state is still lost.
-            //
-            // `disabled` is worth a word, because the obvious objection is that a disabled control
-            // cannot be autofilled — and it cannot: Chrome skips disabled fields when it fills. The
-            // combination is reached from the other side, by filling first and disabling after,
-            // which is what conditional forms do all the time ("same as billing address", "use the
-            // saved card"). The pseudo-class is cleared when the value changes, not when the
-            // control is disabled, so it survives. Reasoned rather than measured: real autofill
-            // cannot be driven here at all, and forcing says nothing about persistence.
-            //
-            // It is also the worst of the four. The tint eats the disabled background and
-            // `-webkit-text-fill-color` eats the grey disabled text, so an autofilled disabled
-            // field reads as an editable one — a lost affordance, not a cosmetic slip.
+            // The tint is a layer, so every state keeps the background it resolved and the tint
+            // composites over it. That is the whole of the DS-4096 fix: painting into
+            // `background-image` leaves `background-color` to the state, which makes the two
+            // impossible to put in conflict — where the old rule needed `!important` to land, and
+            // then out-ranked error, disabled and the overlay with it.
             for (const [state, token] of [
+                ['default', '--kbq-form-field-default-background'],
+                ['focused', '--kbq-form-field-states-focused-background'],
                 ['error', '--kbq-form-field-states-error-background'],
-                ['disabled', '--kbq-form-field-states-disabled-background'],
-                ['focused', '--kbq-form-field-states-focused-background']
+                ['errorFocused', '--kbq-form-field-states-error-background'],
+                ['disabled', '--kbq-form-field-states-disabled-background']
             ] as const) {
-                test(`DS-4096: autofill out-ranks the ${state} background`, async ({ page }) => {
+                test(`keeps the ${state} background under the tint`, async ({ page }) => {
                     const { field, container } = await autofill(page, `state_${state}`);
 
-                    // Should become: the container keeps the state's own background, because
-                    // autofill is the weakest state there is.
-                    await expect(container).not.toHaveCSS('background-color', await resolveToken(field, token));
+                    await expect(container).toHaveCSS('background-color', await resolveToken(field, token));
                 });
             }
 
-            test('DS-4096: autofill out-ranks the in-overlay background', async ({ page }) => {
+            test('keeps the card background in an overlay', async ({ page }) => {
                 const { field, container } = await autofill(page, 'state_inOverlay');
 
-                // `form-field.scss:153-158` remaps four backgrounds for `_in-overlay` and not this
-                // one, so a field in an overlay loses its card background the moment it is filled.
-                await expect(container).not.toHaveCSS(
+                // `form-field.scss` remaps the state backgrounds to the card colour for
+                // `_in-overlay` and never had to know autofill exists.
+                await expect(container).toHaveCSS(
                     'background-color',
                     await resolveToken(field, '--kbq-background-card')
                 );
+                await expect(container).toHaveCSS('background-image', await tintLayer(field));
             });
 
-            test('DS-4096: the autofill border-color token is declared and never read', async ({ page }) => {
-                const { field, container } = await autofill(page, 'state_default');
+            test('no autofill rule declares !important', async ({ page }) => {
+                // The `!important` at the heart of DS-4060 is what made autofill out-rank every
+                // state. Nothing about the layer approach needs it back.
+                await autofill(page, 'state_error');
 
-                // `_kbq-form-field-state()` is never invoked with `states-autofill`, so the mixin
-                // that would consume `-border-color` and `-placeholder` never runs for it. The
-                // container keeps the default border while the token sits there looking applied.
-                await expect(container).toHaveCSS(
-                    'border-top-color',
-                    await resolveToken(field, '--kbq-form-field-default-border-color')
+                const important = await page.evaluate(() =>
+                    Array.from(document.styleSheets)
+                        .flatMap((sheet) => {
+                            try {
+                                return Array.from(sheet.cssRules);
+                            } catch {
+                                return [];
+                            }
+                        })
+                        .filter(
+                            (rule): rule is CSSStyleRule =>
+                                rule instanceof CSSStyleRule && rule.selectorText.includes('autofill')
+                        )
+                        .filter((rule) => rule.cssText.includes('!important'))
+                        .map((rule) => rule.selectorText)
                 );
-                await expect(container).not.toHaveCSS(
+
+                expect(important).toEqual([]);
+            });
+
+            test('leaves the border to the state', async ({ page }) => {
+                // Autofill contributes no border of its own — the token that would have given it
+                // one aliased the focus colour, which made a merely filled field read as focused.
+                const plain = await autofill(page, 'state_default');
+                const invalid = await autofill(page, 'state_error');
+
+                await expect(plain.container).toHaveCSS(
                     'border-top-color',
-                    await resolveToken(field, '--kbq-form-field-states-autofill-border-color')
+                    await resolveToken(plain.field, '--kbq-form-field-default-border-color')
+                );
+                await expect(invalid.container).toHaveCSS(
+                    'border-top-color',
+                    await resolveToken(invalid.field, '--kbq-form-field-states-error-border-color')
                 );
             });
 
@@ -290,139 +314,83 @@ test.describe('KbqFormFieldModule', () => {
                 expect(await e2eRunningAnimations(control)).toEqual([['background-color', 5_000_000]]);
             });
 
-            test('the text and caret are repainted through -webkit-text-fill-color', async ({ page }) => {
-                const { field, control } = await autofill(page, 'state_default');
-                const expected = await resolveToken(field, '--kbq-form-field-states-autofill-text');
-
-                // `color` is forced by the UA on an autofilled control, so the stylesheet repaints
-                // through `-webkit-text-fill-color`, which wins over `color` when glyphs are drawn.
-                await expect(control).toHaveCSS('-webkit-text-fill-color', expected);
-                // No baseline can show this one: `toHaveScreenshot` defaults to `caret: 'hide'`,
-                // which sets `caret-color: transparent !important` inline for the capture.
-                await expect(control).toHaveCSS('caret-color', expected);
-            });
-
-            test('DS-4096: the inset box-shadow paints nothing', async ({ page }) => {
-                const { control } = await autofill(page, 'state_default');
-
-                // `_form-field-theme.scss:52` re-declares the token as transparent *on the control*
-                // and line 53 then spreads that transparent colour over 40rem. The declaration is
-                // dead: the whole of the suppression is the transition above. Should become: the
-                // line is deleted.
-                await expect(control).toHaveCSS('box-shadow', 'rgba(0, 0, 0, 0) 0px 0px 0px 640px inset');
-            });
-
-            test('DS-4096: the same token reads differently on the control and the container', async ({ page }) => {
-                const { field, container, control } = await autofill(page, 'state_default');
-
-                // The local re-declaration shadows the token for the control's subtree only, so
-                // `--kbq-form-field-states-autofill-background` means two different things a single
-                // element apart. Reading it off the wrong node is a silent way to write a test that
-                // proves nothing.
-                expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
-                await expect(container).toHaveCSS(
-                    'background-color',
-                    await resolveToken(field, '--kbq-form-field-states-autofill-background')
-                );
-            });
-
             for (const [state, token] of [
+                ['default', '--kbq-form-field-default-text'],
                 ['error', '--kbq-form-field-states-error-text'],
                 ['disabled', '--kbq-form-field-states-disabled-text']
             ] as const) {
-                test(`DS-4096: the ${state} text colour is lost when the field is autofilled`, async ({ page }) => {
+                test(`repaints the text in the ${state} colour`, async ({ page }) => {
                     const { field, control } = await autofill(page, `state_${state}`);
+                    const expected = await resolveToken(field, token);
 
-                    // `-webkit-text-fill-color` is a flat `--kbq-foreground-contrast` with no idea
-                    // which state the field is in. Should become: the repaint reads back whatever
-                    // the state cascade resolved.
-                    await expect(control).not.toHaveCSS('-webkit-text-fill-color', await resolveToken(field, token));
+                    // The UA forces `color` on an autofilled control, so the state repaints through
+                    // `-webkit-text-fill-color`, which wins over `color` when glyphs are drawn. The
+                    // rule is emitted once per state inside `_kbq-form-field-state()`, so the
+                    // ordinary cascade picks the right one and an autofilled invalid field still
+                    // prints its error colour.
+                    await expect(control).toHaveCSS('-webkit-text-fill-color', expected);
+                    // No baseline can show the caret: `toHaveScreenshot` defaults to `caret: 'hide'`
+                    // and sets `caret-color: transparent !important` inline for the capture.
+                    await expect(control).toHaveCSS('caret-color', expected);
                 });
             }
-        });
 
-        test.describe('focus geometry', () => {
-            // `--kbq-size-3xl` is 32px, `--kbq-size-xs` 6px, the border 1px and the focus outline
-            // 1px, so `form-field.scss:123-134` shrinks the control from 30px to 28px and moves the
-            // 2px it took back out into the margin.
-            test('an autofilled input shrinks to clear the focus ring', async ({ page }) => {
-                const { control } = await autofill(page, 'state_focused');
-
-                await expect(control).toHaveCSS('min-height', '28px');
-                await expect(control).toHaveCSS('margin-top', '1px');
-                await expect(control).toHaveCSS('padding-top', '4px');
-            });
-
-            test('the same input keeps its full height when it is not focused', async ({ page }) => {
+            test('paints nothing of its own on the control', async ({ page }) => {
                 const { control } = await autofill(page, 'state_default');
 
-                await expect(control).toHaveCSS('min-height', '30px');
-                await expect(control).toHaveCSS('margin-top', '0px');
-                await expect(control).toHaveCSS('padding-top', '5px');
+                // The control contributes no background and no inset shadow — the tint belongs to
+                // the container. A second, translucent coat here would make the control's rectangle
+                // visibly darker than the container's padding around it.
+                await expect(control).toHaveCSS('box-shadow', 'none');
+                expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
+            });
+        });
+
+        test.describe('focus ring', () => {
+            test('survives an autofilled control', async ({ page }) => {
+                const { container, control } = await autofill(page, 'state_focused');
+
+                // DS-4950 shrank the autofilled control by twice the outline width because its
+                // background painted over the ring. Nothing paints over it now: the control is
+                // transparent and the ring is an inset shadow on the container, drawn above the
+                // tint. The geometry compensation is gone, and this is what replaces it.
+                expect(await container.evaluate((el) => getComputedStyle(el).boxShadow)).not.toBe('none');
+                expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
             });
 
-            test('the kbq-focused branch of the selector behaves identically', async ({ page }) => {
-                const { control } = await autofill(page, 'state_kbqFocused');
-
-                await expect(control).toHaveCSS('min-height', '28px');
-                await expect(control).toHaveCSS('margin-top', '1px');
-            });
-
-            test('the 2px the control gives up is returned as margin', async ({ page }) => {
+            test('the control keeps one height focused or not', async ({ page }) => {
                 const focused = await autofill(page, 'state_focused');
                 const plain = await autofill(page, 'state_default');
 
-                // The control shrinks by exactly the focus outline on both edges...
-                expect((await focused.control.boundingBox())!.height).toBeCloseTo(
-                    (await plain.control.boundingBox())!.height - 2,
-                    1
-                );
-                // ...and `margin: 1px 0` hands those 2px straight back, so the field around it does
-                // not move. That is the whole point of the block: make room for the ring the
-                // container draws as an inset shadow without the field changing size on focus.
+                // With the compensation deleted there is nothing left to compensate for, so the
+                // control no longer resizes on focus and the text no longer has to be nudged back.
+                for (const { control } of [focused, plain]) {
+                    await expect(control).toHaveCSS('min-height', '30px');
+                    await expect(control).toHaveCSS('margin-top', '0px');
+                    await expect(control).toHaveCSS('padding-top', '5px');
+                }
+
                 expect((await focused.container.boundingBox())!.height).toBeCloseTo(
                     (await plain.container.boundingBox())!.height,
                     1
                 );
             });
-
-            test('DS-4096: no tag input gets the geometry, canonical or bare', async ({ page }) => {
-                const canonical = await autofill(page, 'control_tagInput_focused');
-                const bare = await autofill(page, 'control_tagInputBare_focused');
-
-                // Two different reasons, same outcome, and neither is intended. The canonical
-                // markup does carry `.kbq-input`, so `form-field.scss:123` matches it — but
-                // `tag-list.scss:37` declares `min-height: unset !important` on
-                // `.kbq-tag-input.kbq-input`, and an important declaration out-ranks the plain one
-                // in the autofill block. The bare input never had `.kbq-input` to begin with, which
-                // is what DS-4958 missed when it widened the two theme blocks and left this one on
-                // `.kbq-input` alone.
-                //
-                // Should become: the autofill geometry covers tag inputs, which means
-                // `form-field.scss:119` widening *and* something giving on the `!important`.
-                await expect(canonical.control).toHaveCSS('min-height', 'auto');
-                await expect(bare.control).toHaveCSS('min-height', 'auto');
-            });
         });
 
-        test.describe('controls the stylesheet does not reach', () => {
-            test('DS-4096: an autofilled textarea shows Chromes own background', async ({ page }) => {
+        test.describe('controls the stylesheet reaches', () => {
+            test('a textarea is treated like every other control', async ({ page }) => {
                 const field = getField(page, 'control_textarea_default');
                 const control = getControl(field);
 
                 await e2eForceAutofill(page, '[data-testid="control_textarea_default"] .kbq-textarea');
 
-                // `.kbq-textarea` appears in `_kbq-form-field-state()`'s colour list but in none of
-                // the three autofill blocks, so nothing suppresses the UA background and nothing
-                // tints the container. The result is not "no highlight" but Chrome's raw opaque
-                // blue inside an otherwise untouched field.
-                expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(1);
-                await expect(control).toHaveCSS('box-shadow', 'none');
-                expect(await e2eRunningAnimations(control)).toEqual([]);
-                await expect(getContainer(field)).not.toHaveCSS(
-                    'background-color',
-                    await resolveToken(field, '--kbq-form-field-states-autofill-background')
-                );
+                // `.kbq-textarea` was in `_kbq-form-field-state()`'s colour list and in none of the
+                // autofill rules, so nothing suppressed the UA background: an autofilled textarea
+                // painted Chrome's raw opaque blue, which in the dark theme was a near-white block
+                // with dark text. It is now suppressed the same way as the others.
+                expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
+                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 5_000_000]]);
+                await expect(getContainer(field)).toHaveCSS('background-image', await tintLayer(field));
             });
 
             test('a select has no native control to autofill', async ({ page }) => {
@@ -456,7 +424,12 @@ test.describe('KbqFormFieldModule', () => {
                     locator.evaluate((el) => {
                         const style = getComputedStyle(el);
 
-                        return [style.backgroundColor, style.boxShadow, style.webkitTextFillColor].join(' | ');
+                        return [
+                            style.backgroundColor,
+                            style.backgroundImage,
+                            style.boxShadow,
+                            style.webkitTextFillColor
+                        ].join(' | ');
                     });
 
                 const { field, container, control } = await autofill(page, 'state_default');
@@ -464,28 +437,24 @@ test.describe('KbqFormFieldModule', () => {
 
                 await control.hover();
 
-                // `:-webkit-autofill:hover` repeats the base block's declarations verbatim; it
-                // exists to out-rank UA rules, not to change anything.
+                // Nothing in the autofill rules keys on `:hover`; the state does, and the state is
+                // what owns every channel except the tint.
                 expect(await paint(control)).toBe(before.control);
                 expect(await paint(container)).toBe(before.container);
-                await expect(container).toHaveCSS(
-                    'background-color',
-                    await resolveToken(field, '--kbq-form-field-states-autofill-background')
-                );
+                await expect(container).toHaveCSS('background-image', await tintLayer(field));
             });
 
             test('clearing the forced state puts the field back', async ({ page }) => {
                 const { field, container } = await autofill(page, 'state_default');
-                const tint = await resolveToken(field, '--kbq-form-field-states-autofill-background');
 
-                await expect(container).toHaveCSS('background-color', tint);
+                await expect(container).toHaveCSS('background-image', await tintLayer(field));
 
                 await e2eClearForcedAutofill(page);
 
                 // Guards the helper itself: a forced state is keyed to the node id it was set on,
                 // and `DOM.getDocument` re-issues ids, so a clear that addresses a fresh id looks
                 // like it worked and changes nothing.
-                await expect(container).not.toHaveCSS('background-color', tint);
+                await expect(container).toHaveCSS('background-image', 'none');
                 await expect(container).toHaveCSS(
                     'background-color',
                     await resolveToken(field, '--kbq-form-field-default-background')
@@ -534,53 +503,57 @@ test.describe('KbqFormFieldModule', () => {
             const findRule = (rules: Rule[], match: (selector: string) => boolean): Rule | undefined =>
                 rules.find((rule) => match(rule.selector));
 
-            test('the suppression block covers .kbq-input and .kbq-tag-input in all three variants', async ({
-                page
-            }) => {
+            test('the suppression block covers all three controls', async ({ page }) => {
                 const rules = await readRules(page);
-                // Keyed on the tag-input arm on purpose: the focus-geometry block below also
-                // matches `.kbq-input:-webkit-autofill` and comes first in document order, so a
-                // looser predicate silently finds that one instead.
-                const block = findRule(rules, (selector) => selector.includes('.kbq-tag-input:-webkit-autofill'));
+                // Keyed on the declaration, not the selector: `_kbq-form-field-state()` now emits a
+                // `:-webkit-autofill` text rule per state, and those match every selector-shaped
+                // predicate for this block while carrying none of its declarations.
+                const block = rules.find((rule) => rule.text.includes('transition-property: background-color'));
 
                 expect(block).toBeDefined();
                 expect(block!.selector).toContain('.kbq-input:-webkit-autofill');
-                expect(block!.selector).toContain(':-webkit-autofill:hover');
-                expect(block!.selector).toContain(':-webkit-autofill:focus');
-                expect(block!.text).toContain('-webkit-text-fill-color');
-                // DS-4096: `.kbq-textarea` belongs in this list and is not in it, which is why an
-                // autofilled textarea paints Chrome's own background.
-                expect(block!.selector).not.toContain('.kbq-textarea');
+                expect(block!.selector).toContain('.kbq-tag-input:-webkit-autofill');
+                expect(block!.selector).toContain('.kbq-textarea:-webkit-autofill');
+                // Suppression and nothing else. The text is repainted per state by
+                // `_kbq-form-field-state()`, and the tint belongs to the container.
+                expect(block!.text).not.toContain('box-shadow');
+                expect(block!.text).not.toContain('background-color:');
             });
 
-            test('the focus-geometry block is a separate rule covering .kbq-input alone', async ({ page }) => {
+            test('no rule gives an autofilled control its own geometry', async ({ page }) => {
                 const rules = await readRules(page);
-                const block = findRule(rules, (selector) =>
-                    selector.includes('.cdk-focused .kbq-input:-webkit-autofill')
-                );
 
-                expect(block).toBeDefined();
-                expect(block!.selector).toContain('.kbq-focused .kbq-input:-webkit-autofill');
-                expect(block!.text).toContain('min-height');
-                // DS-4958 widened the two theme blocks and left this one behind.
-                expect(block!.selector).not.toContain('.kbq-tag-input');
-                expect(block!.selector).not.toContain('.kbq-textarea');
+                // DS-4950's compensation is gone with the background it was compensating for. If it
+                // ever comes back, the control resizes on focus again and tag inputs are excluded
+                // from it again by `tag-list.scss`.
+                expect(
+                    rules.filter((rule) => rule.selector.includes('autofill') && /min-height|margin/.test(rule.text))
+                ).toEqual([]);
             });
 
-            test('DS-4096: the container block paints with !important', async ({ page }) => {
+            test('the container block lays the tint over the state background', async ({ page }) => {
                 const rules = await readRules(page);
+                // Both halves are load-bearing. `:has(` alone also matches the focused state's text
+                // rule, nested under `:not(:has(.cdk-keyboard-focused, .kbq-focused))`; the
+                // container prefix alone also matches the padding rule keyed on
+                // `__container:has(.kbq-textarea)`. Both come first in document order.
                 const block = findRule(
                     rules,
-                    (selector) => selector.includes(':has(') && selector.includes('autofill')
+                    (selector) => selector.includes('.kbq-form-field__container:has(') && selector.includes('autofill')
                 );
 
                 expect(block).toBeDefined();
-                // The `!important` is the ticket in one token: it is what lets autofill out-rank
-                // error, disabled and focused, none of which use it.
-                expect(block!.text).toContain('!important');
+                expect(block!.selector).toContain('.kbq-textarea');
+                // The tint is a layer, so `background-color` stays with the state and no
+                // `!important` is needed to make it land. Both halves matter: painting
+                // `background-color` here is what DS-4060 did, and it is what out-ranked error,
+                // disabled and the overlay.
+                expect(block!.text).toContain('background-image');
+                expect(block!.text).not.toContain('background-color:');
+                expect(block!.text).not.toContain('!important');
             });
 
-            test('DS-4096: no rule remaps the autofill background for no-borders or in-overlay', async ({ page }) => {
+            test('no modifier has to remap the autofill background', async ({ page }) => {
                 const rules = await readRules(page);
                 const remaps = rules.filter(
                     (rule) =>
@@ -588,22 +561,27 @@ test.describe('KbqFormFieldModule', () => {
                         rule.text.includes('--kbq-form-field-states-autofill-background')
                 );
 
-                // `form-field.scss:143-158` remaps the other four backgrounds for both modifiers and
-                // skips this one, which is why an autofilled field in an overlay loses its card
-                // background. Pinned structurally so it survives the forcing being unavailable.
+                // `_in-overlay` remaps the four state backgrounds and never mentions autofill. Under
+                // the old rule that was the bug; under a layer it is the correct amount of work —
+                // the tint composites over whatever the modifier left behind.
                 expect(remaps).toEqual([]);
             });
 
-            test('DS-4096: the two dead autofill tokens are declared and never read', async ({ page }) => {
+            test('background is the only autofill token anything reads', async ({ page }) => {
                 const rules = await readRules(page);
-                const readsToken = (token: string) => rules.filter((rule) => rule.text.includes(`var(${token})`));
+                const reads = (token: string) => rules.filter((rule) => rule.text.includes(`var(${token})`));
 
-                expect(readsToken('--kbq-form-field-states-autofill-border-color')).toEqual([]);
-                expect(readsToken('--kbq-form-field-states-autofill-placeholder')).toEqual([]);
-                // Both are declared, so this is dead weight rather than a missing token.
-                expect(
-                    rules.filter((rule) => rule.text.includes('--kbq-form-field-states-autofill-border-color:')).length
-                ).toBeGreaterThan(0);
+                // Reads rather than declarations: `@koobiq/design-tokens` still publishes all four
+                // names on `.kbq-light`/`.kbq-dark` — it deprecates them upstream, on its own
+                // schedule — so what the component dropped can only be seen from the consuming side.
+                //
+                // `-border-color` aliased the focus colour and made a merely filled field read as
+                // focused, `-placeholder` could never be seen because an autofilled field has a
+                // value, and `-text` forced one colour on every state.
+                expect(reads('--kbq-form-field-states-autofill-border-color')).toEqual([]);
+                expect(reads('--kbq-form-field-states-autofill-placeholder')).toEqual([]);
+                expect(reads('--kbq-form-field-states-autofill-text')).toEqual([]);
+                expect(reads('--kbq-form-field-states-autofill-background').length).toBeGreaterThan(0);
             });
 
             test('the stylesheet uses only the legacy spelling of the pseudo-class', async ({ page }) => {
