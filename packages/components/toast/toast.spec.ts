@@ -16,6 +16,7 @@ import { dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/compone
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastModule } from './toast.module';
 import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
@@ -346,7 +347,7 @@ class ToastTooltipWrapper {
 class ToastOverlayContent {}
 
 describe('ToastService: global scroll notifications', () => {
-    // `KbqPopUpTrigger` default enter delay (400ms) plus a buffer for the deferred show.
+    // `KbqTooltipTrigger` default enter delay (400ms) plus a buffer for the deferred show.
     const tooltipEnterDelay = 410;
 
     let service: KbqToastService;
@@ -447,5 +448,20 @@ describe('ToastService: global scroll notifications', () => {
         overlayContainerElement.querySelector('kbq-toast-container')!.dispatchEvent(new Event('scroll'));
 
         expect(scrolled).toHaveBeenCalled();
+    });
+
+    it('dispatches a scroll event on the container element when `dispatchScrollEvent` is called explicitly', () => {
+        const fixture = TestBed.createComponent(KbqToastContainerComponent);
+        const onScroll = jest.fn();
+
+        fixture.detectChanges();
+        fixture.nativeElement.addEventListener('scroll', onScroll);
+
+        // Called detached, because the deprecated API is documented as a callback and must stay bound.
+        const { dispatchScrollEvent } = fixture.componentInstance;
+
+        dispatchScrollEvent();
+
+        expect(onScroll).toHaveBeenCalled();
     });
 });

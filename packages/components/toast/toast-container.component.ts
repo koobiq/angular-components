@@ -71,7 +71,8 @@ export class KbqToastContainerComponent extends CdkScrollable {
      *
      * @deprecated The container is a registered `CdkScrollable`, so this reaches the application-wide
      * `ScrollDispatcher` and closes every unrelated overlay that uses a close-on-scroll strategy. It is no longer
-     * called automatically; subscribe to `KbqToastService.animation` and call it explicitly if you need it.
+     * called automatically and is kept only for callers that already hold a container reference — the instance
+     * created by `KbqToastService` is not exposed.
      */
     dispatchScrollEvent = () => {
         this.elementRef.nativeElement.dispatchEvent(new CustomEvent('scroll'));
