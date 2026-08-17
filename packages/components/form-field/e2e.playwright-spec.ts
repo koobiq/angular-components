@@ -205,6 +205,18 @@ test.describe('KbqFormFieldModule', () => {
             // state themes make — regardless of the source order that would otherwise decide it.
             // The tint is translucent (10% in the light theme, 21% in the dark), so it composites
             // over the state's own background rather than replacing it; the state is still lost.
+            //
+            // `disabled` is worth a word, because the obvious objection is that a disabled control
+            // cannot be autofilled — and it cannot: Chrome skips disabled fields when it fills. The
+            // combination is reached from the other side, by filling first and disabling after,
+            // which is what conditional forms do all the time ("same as billing address", "use the
+            // saved card"). The pseudo-class is cleared when the value changes, not when the
+            // control is disabled, so it survives. Reasoned rather than measured: real autofill
+            // cannot be driven here at all, and forcing says nothing about persistence.
+            //
+            // It is also the worst of the four. The tint eats the disabled background and
+            // `-webkit-text-fill-color` eats the grey disabled text, so an autofilled disabled
+            // field reads as an editable one — a lost affordance, not a cosmetic slip.
             for (const [state, token] of [
                 ['error', '--kbq-form-field-states-error-background'],
                 ['disabled', '--kbq-form-field-states-disabled-background'],
