@@ -13,7 +13,7 @@ component together with `KbqScrollbarDirective` — moved to
 
 Nothing about that implementation changed: `initializationTarget`, `options`, `events`, `defer`,
 `scrollbarInstance`, the `onInitialize` / `onUpdate` / `onDestroy` / `onScroll` outputs and the
-`kbq-scrollbar` element selector all behave exactly as before at the new path. Repointing the
+`kbq-scrollbar` element selector all behave exactly as before at the new path. Rewriting the
 import is the whole migration — adopting the new scrollbar is a separate, manual step.
 
 ## Behaviour change
