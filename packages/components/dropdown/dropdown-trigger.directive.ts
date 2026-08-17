@@ -32,6 +32,7 @@ import {
     defaultOffsetY,
     DOWN_ARROW,
     ENTER,
+    getSafeTriangleVertices,
     kbqGetPanelWidthOrigin,
     KbqPanelWidthOrigin,
     KbqResolvedPanelWidth,
@@ -122,6 +123,7 @@ const positionMap = {
         // attribute themselves.
         '[attr.aria-expanded]': 'opened',
         '(mousedown)': 'handleMousedown($event)',
+        '(mouseleave)': 'handleMouseLeave($event)',
         '(keydown)': 'handleKeydown($event)',
         '(click)': 'handleClick($event)'
     },
@@ -372,6 +374,21 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         }
     }
 
+    /**
+     * Starts safe-triangle protection when the pointer leaves a trigger whose submenu is open, so a
+     * sibling item crossed on the way to the submenu doesn't prematurely close it.
+     */
+    handleMouseLeave(event: MouseEvent): void {
+        if (!this.isNested() || !this._opened || !this.isBrowser || !this.parent.safeTriangle() || !this.overlayRef) {
+            return;
+        }
+
+        const panelRect = this.overlayRef.overlayElement.getBoundingClientRect();
+        const triangle = getSafeTriangleVertices({ x: event.clientX, y: event.clientY }, panelRect);
+
+        this.parent.activateSafeTriangle(triangle, panelRect, () => this.close());
+    }
+
     /** Handles key presses on the trigger. */
     handleKeydown(event: KeyboardEvent) {
         const keyCode = event.keyCode;
@@ -428,6 +445,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         }
 
         this.lastDestroyReason = reason;
+
+        if (this.isNested()) {
+            this.parent.deactivateSafeTriangle();
+        }
 
         this.dropdown.resetActiveItem();
 
@@ -671,7 +692,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         const hover = this.parent
             ? this.parent.hovered().pipe(
                   filter((active) => active !== this.dropdownItemInstance),
-                  filter(() => this._opened)
+                  filter(() => this._opened),
+                  // A protected safe triangle handles closing itself once the pointer actually
+                  // leaves it — see `handleMouseLeave()`.
+                  filter(() => !this.parent.isSafeTriangleActive())
               )
             : observableOf();
 
@@ -698,9 +722,17 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             // it won't be closed immediately after it is opened.
             .pipe(
                 filter((active) => active === this.dropdownItemInstance && !active.disabled),
+                // Suppress opening while a sibling's safe triangle is being protected — otherwise this
+                // dropdown could open before the protected one has had a chance to close, leaving two
+                // submenus open at once.
+                filter(() => !this.parent.isSafeTriangleActive()),
                 delay(0, asapScheduler)
             )
             .subscribe(() => {
+                // Coming back to this trigger cancels any safe-triangle protection left over from a
+                // previous `mouseleave`.
+                this.parent.deactivateSafeTriangle();
+
                 this.openedBy = 'mouse';
 
                 // If the same dropdown is used between multiple triggers, it might still be animating

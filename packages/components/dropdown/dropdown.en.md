@@ -28,6 +28,17 @@ You can place auxiliary elements in the footer: [buttons](en/components/button),
 
 <!-- example(dropdown-nested) -->
 
+### Safe Area
+
+This mechanism prevents an open nested submenu from closing prematurely while the pointer is moving.
+The submenu stays open even if the pointer touches sibling items along the way, as long as the
+movement stays within the designated area. It can be configured in two ways:
+
+- locally — for a specific nested dropdown through the `safeTriangle` property;
+- globally — through `KBQ_DROPDOWN_DEFAULT_OPTIONS`.
+
+<!-- example(dropdown-safe-triangle) -->
+
 ### Navigation Wrap
 
 A "cyclic navigation" mode where reaching one end of the list loops back to the other end.

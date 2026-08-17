@@ -3,6 +3,8 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { DOWN_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
+import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -21,6 +23,7 @@ import {
     TemplateRef,
     ViewChild,
     ViewEncapsulation,
+    booleanAttribute,
     computed,
     contentChild,
     inject,
@@ -34,8 +37,12 @@ import {
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
     KbqPanelWidth,
+    KbqPoint,
+    KbqTriangle,
     LEFT_ARROW,
-    RIGHT_ARROW
+    RIGHT_ARROW,
+    isPointInRect,
+    isPointInTriangle
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
@@ -52,6 +59,9 @@ import {
     KbqDropdownPositionX,
     KbqDropdownPositionY
 } from './dropdown.types';
+
+/** Options for binding a passive event listener. */
+const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;
 
 @Directive({
     selector: '[kbqDropdownStaticContent]'
@@ -89,6 +99,7 @@ export class KbqDropdownFooter {}
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private ngZone = inject(NgZone);
+    private document = inject(DOCUMENT);
     private defaultOptions = inject<KbqDropdownDefaultOptions>(KBQ_DROPDOWN_DEFAULT_OPTIONS);
 
     private readonly search = contentChild(KbqFormField);
@@ -260,6 +271,13 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     );
 
     /**
+     * Whether nested dropdowns opened from this dropdown's items use a "safe triangle": while the
+     * pointer moves from a trigger toward its open submenu, sibling items it crosses over on the way
+     * don't prematurely close the submenu.
+     */
+    readonly safeTriangle = input(this.defaultOptions.safeTriangle ?? false, { transform: booleanAttribute });
+
+    /**
      * `panelMinWidth` rendered as a CSS length for the `--kbq-dropdown-size-container-width-min`
      * token, so the panel's CSS `min-width` floor tracks the input — mirroring how `panelMaxWidth`
      * drives `max-width`. Non-finite input (e.g. `null`) leaves the token's static default in place.
@@ -298,6 +316,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     /** Subscription to tab events on the dropdown panel */
     private tabSubscription = Subscription.EMPTY;
 
+    /** Cleans up the safe-triangle `mousemove` listener. `null` when no triangle is being tracked. */
+    private safeTriangleCleanup: (() => void) | null = null;
+
     ngOnInit() {
         this.setPositionClasses();
     }
@@ -330,6 +351,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         this.directDescendantItems.destroy();
         this.tabSubscription.unsubscribe();
         this.closed.complete();
+        this.deactivateSafeTriangle();
     }
 
     /** Stream that emits whenever the hovered dropdown item changes. */
@@ -340,6 +362,55 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
             startWith(this.directDescendantItems),
             switchMap((items) => merge(...items.map((item: KbqDropdownItem) => item.hovered)))
         ) as Observable<KbqDropdownItem>;
+    }
+
+    /**
+     * Starts tracking the pointer against `triangle` (see `getSafeTriangleVertices`). While the
+     * pointer stays inside the triangle, the submenu it protects is kept open; `onExit` runs once the
+     * pointer either leaves the triangle or, failing that protection, lands inside `panelRect` (the
+     * submenu itself, which needs no further tracking). Replaces any triangle already being tracked.
+     * @docs-private
+     */
+    activateSafeTriangle(triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void {
+        this.deactivateSafeTriangle();
+
+        this.safeTriangleCleanup = this.ngZone.runOutsideAngular(() => {
+            const listener = (event: MouseEvent) => {
+                const point: KbqPoint = { x: event.clientX, y: event.clientY };
+
+                if (isPointInRect(point, panelRect)) {
+                    this.deactivateSafeTriangle();
+
+                    return;
+                }
+
+                if (!isPointInTriangle(point, triangle)) {
+                    this.deactivateSafeTriangle();
+                    this.ngZone.run(onExit);
+                }
+            };
+
+            this.document.addEventListener('mousemove', listener, passiveEventListenerOptions);
+
+            return () => this.document.removeEventListener('mousemove', listener, passiveEventListenerOptions);
+        });
+    }
+
+    /**
+     * Stops tracking the current safe triangle, if any.
+     * @docs-private
+     */
+    deactivateSafeTriangle(): void {
+        this.safeTriangleCleanup?.();
+        this.safeTriangleCleanup = null;
+    }
+
+    /**
+     * Whether a safe triangle is currently being tracked.
+     * @docs-private
+     */
+    isSafeTriangleActive(): boolean {
+        return this.safeTriangleCleanup !== null;
     }
 
     /** Handle a keyboard event from the dropdown, delegating to the appropriate action. */

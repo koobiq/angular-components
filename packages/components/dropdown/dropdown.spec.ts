@@ -1404,6 +1404,127 @@ describe('KbqDropdown', () => {
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
         }));
 
+        describe('safe triangle', () => {
+            /**
+             * Opens the level-one nested dropdown with `safeTriangle` enabled and mocks its overlay
+             * pane's rect to a fixed, predictable box (jsdom otherwise reports an all-zero rect).
+             */
+            const openLevelOneWithSafeTriangle = (): HTMLElement => {
+                compileTestComponent();
+                instance.safeTriangleEnabled = true;
+                fixture.detectChanges();
+
+                instance.rootTriggerEl().nativeElement.click();
+                fixture.detectChanges();
+
+                const levelOneTrigger = overlay.querySelector('#level-one-trigger')! as HTMLElement;
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseenter');
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+
+                const overlayPanes = overlay.querySelectorAll('.cdk-overlay-pane');
+                const nestedPane = overlayPanes[overlayPanes.length - 1] as HTMLElement;
+
+                jest.spyOn(nestedPane, 'getBoundingClientRect').mockReturnValue({
+                    left: 300,
+                    right: 500,
+                    top: 50,
+                    bottom: 250,
+                    width: 200,
+                    height: 200,
+                    x: 300,
+                    y: 50,
+                    toJSON: () => ({})
+                } as DOMRect);
+
+                return levelOneTrigger;
+            };
+
+            it('should close immediately on a sibling hover when disabled (default)', fakeAsync(() => {
+                compileTestComponent();
+                instance.rootTriggerEl().nativeElement.click();
+                fixture.detectChanges();
+
+                const items = Array.from(overlay.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
+                const levelOneTrigger = overlay.querySelector('#level-one-trigger')! as HTMLElement;
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseenter');
+                fixture.detectChanges();
+                tick();
+
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
+                fixture.detectChanges();
+                tick(500);
+
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
+            }));
+
+            it('should keep the submenu open while a sibling crossed en route is hovered', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeTriangle();
+                const items = Array.from(overlay.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
+
+                // Leaves roughly level with the panel's top, heading toward it.
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                fixture.detectChanges();
+
+                // Crossing the next sibling row on the way to the submenu no longer closes it.
+                dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
+                fixture.detectChanges();
+                tick();
+
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+
+                // Still heading toward the submenu (inside the triangle formed by the leave point and
+                // the panel's near-top/near-bottom corners at x=300).
+                dispatchMouseEvent(document, 'mousemove', 200, 125);
+                fixture.detectChanges();
+                tick();
+
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+            }));
+
+            it('should close once the pointer leaves the safe triangle', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeTriangle();
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                fixture.detectChanges();
+
+                // Well outside the triangle — the user gave up on the submenu.
+                dispatchMouseEvent(document, 'mousemove', 150, 400);
+                fixture.detectChanges();
+                tick(500);
+
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
+            }));
+
+            it('should keep the submenu open and stop tracking once the pointer reaches the panel', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeTriangle();
+                const items = Array.from(overlay.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                fixture.detectChanges();
+
+                dispatchMouseEvent(document, 'mousemove', 400, 150);
+                fixture.detectChanges();
+                tick();
+
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+
+                // Tracking stopped once the pointer reached the panel, so a sibling hover now closes
+                // the submenu immediately again, same as when the triangle was never activated.
+                dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
+                fixture.detectChanges();
+                tick(500);
+
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
+            }));
+        });
+
         it('should open and close a nested dropdown with arrow keys in ltr', fakeAsync(() => {
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
@@ -2097,6 +2218,21 @@ describe('KbqDropdown default overrides', () => {
     });
 });
 
+describe('KbqDropdown safe triangle default override', () => {
+    it('should honor a `safeTriangle: true` default without setting the input explicitly', () => {
+        TestBed.configureTestingModule({
+            imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown],
+            providers: [{ provide: KBQ_DROPDOWN_DEFAULT_OPTIONS, useValue: { safeTriangle: true } }]
+        }).compileComponents();
+
+        const fixture = TestBed.createComponent(SimpleDropdown);
+
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.dropdown().safeTriangle()).toBe(true);
+    });
+});
+
 @Component({
     imports: [KbqDropdownModule],
     template: `
@@ -2279,7 +2415,12 @@ class CustomDropdown {
             Toggle alternate dropdown
         </button>
 
-        <kbq-dropdown #root="kbqDropdown" [hasBackdrop]="true" (closed)="rootCloseCallback($event)">
+        <kbq-dropdown
+            #root="kbqDropdown"
+            [hasBackdrop]="true"
+            [safeTriangle]="safeTriangleEnabled"
+            (closed)="rootCloseCallback($event)"
+        >
             <button
                 #levelOneTrigger="kbqDropdownTrigger"
                 id="level-one-trigger"
@@ -2345,6 +2486,8 @@ class NestedDropdown {
     readonly lazyDropdown = viewChild.required<KbqDropdown>('lazy');
     readonly lazyTrigger = viewChild.required<KbqDropdownTrigger>('lazyTrigger');
     showLazy = false;
+
+    safeTriangleEnabled = false;
 }
 
 @Component({
