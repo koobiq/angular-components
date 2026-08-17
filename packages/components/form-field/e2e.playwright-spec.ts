@@ -335,6 +335,29 @@ test.describe('KbqFormFieldModule', () => {
                 });
             }
 
+            for (const [theme, scheme, uaColor] of [
+                ['light', 'light', 'rgb(0, 0, 0)'],
+                ['dark', 'dark', 'rgb(255, 255, 255)']
+            ] as const) {
+                test(`tells the browser the palette is ${theme}`, async ({ page }) => {
+                    if (theme === 'dark') await e2eEnableDarkTheme(page);
+
+                    const { control } = await autofill(page, 'state_default');
+
+                    // The theme is a class, and a class tells the browser nothing. Without
+                    // `color-scheme` Chrome renders every surface it paints itself from the light
+                    // palette, which is how a dark-themed field ends up with a light autofill
+                    // highlight and black text the moment the autofill popup reopens.
+                    //
+                    // `color` is the readout: the UA forces it on an autofilled control, and which
+                    // colour it forces comes from the used `color-scheme`. It is the one thing here
+                    // that reflects the palette Chrome would paint with, since that paint never
+                    // goes through the cascade and nothing else in the CSSOM shows it.
+                    await expect(control).toHaveCSS('color-scheme', scheme);
+                    await expect(control).toHaveCSS('color', uaColor);
+                });
+            }
+
             test('paints nothing of its own on the control', async ({ page }) => {
                 const { control } = await autofill(page, 'state_default');
 

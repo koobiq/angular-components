@@ -56,6 +56,24 @@
     .kbq-form-field {
         @include _kbq-form-field-state(default);
 
+        // Which palette the browser paints *its own* surfaces with. The theme is a class, and a
+        // class tells the browser nothing, so without this Chrome renders every UA surface in a
+        // dark-themed app from the light palette.
+        // Autofill is where that shows: refocusing a filled field reopens the autofill popup, and
+        // in that state Chrome paints the highlight and the text itself, over the author styles
+        // that normally hide it — a light block with black text in the middle of a dark form. The
+        // suppression below is untouched and still running at that moment; there is nothing to
+        // out-rank, because the paint never goes through the cascade.
+        // Declared here rather than on the root on purpose: `color-scheme` inherits, so the form
+        // field is enough to cover every control inside it, and the scrollbars and native controls
+        // of the surrounding application are left alone. Whether the app opts in globally is the
+        // app's decision, not this component's.
+        color-scheme: light;
+
+        :where(.kbq-dark) & {
+            color-scheme: dark;
+        }
+
         // The browser paints its own background on an autofilled control with a UA `!important`
         // declaration that no author rule can out-rank. It is suppressed rather than painted over:
         // a running transition sits *above* important-UA in the cascade, so animating
