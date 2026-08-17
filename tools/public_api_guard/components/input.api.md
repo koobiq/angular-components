@@ -67,6 +67,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any;
 // @public (undocumented)
 export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
     constructor();
+    readonly autofilled: i0.Signal<boolean>;
     controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -146,6 +147,7 @@ export class KbqInputMono {
 // @public (undocumented)
 export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
     constructor();
+    readonly autofilled: i0.Signal<boolean>;
     // (undocumented)
     readonly checkRule: Subject<void>;
     // (undocumented)

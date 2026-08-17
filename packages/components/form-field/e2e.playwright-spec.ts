@@ -103,18 +103,22 @@ test.describe('KbqFormFieldModule', () => {
     /**
      * Browser autofill (#DS-4096).
      *
-     * Autofill in `kbq-form-field` is entirely CSS — three rule blocks and four tokens, no
-     * TypeScript anywhere — and jsdom implements neither `:-webkit-autofill` nor CSS animations, so
-     * none of it can be reached from a unit test. It has also regressed five times (DS-2873,
-     * DS-4060, DS-4667, DS-4950, DS-4958) with no automated coverage at all.
+     * The appearance of an autofilled field is entirely CSS, and jsdom implements neither
+     * `:-webkit-autofill` nor CSS animations, so none of it can be reached from a unit test. It had
+     * also regressed five times (DS-2873, DS-4060, DS-4667, DS-4950, DS-4958) with no automated
+     * coverage at all. The `autofilled` signal is the one part that unit-tests cleanly, in
+     * `autofill.spec.ts`.
      *
      * `:-webkit-autofill` cannot be produced synthetically — choosing a suggestion happens in
-     * browser chrome, and the CDP `Autofill` domain is Chrome-branded only — so these tests force
-     * the pseudo-class over CDP. Chrome applies its own autofill background to a forced element
-     * too, so the design system's suppression of that background is genuinely exercised.
+     * browser chrome, and the CDP `Autofill` domain is Chrome-branded only, absent from the
+     * Chromium Playwright bundles — so these tests force the pseudo-class over CDP. Chrome applies
+     * its own autofill background to a forced element too, so the suppression of that background is
+     * genuinely exercised, and the CDK's detection keyframe keys on the same pseudo-class, so the
+     * signal is live here as well.
      *
-     * Several assertions below pin behaviour that is wrong. They are marked, and they say what the
-     * value should become; DS-4096 is the ticket that will change them.
+     * What forcing does *not* reproduce is the browser repainting its own autofill popup over the
+     * author styles, which is why `color-scheme` matters and why it is asserted here rather than
+     * assumed.
      */
     test.describe('E2eFormFieldAutofill', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFormFieldAutofill');
@@ -311,7 +315,7 @@ test.describe('KbqFormFieldModule', () => {
             test('the suppression is a running transition, not a finished one', async ({ page }) => {
                 const { control } = await autofill(page, 'state_default');
 
-                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 600_000_000]]);
+                expect(await e2eRunningAnimations(control)).toContainEqual(['background-color', 600_000_000]);
             });
 
             for (const [state, token] of [
@@ -433,7 +437,7 @@ test.describe('KbqFormFieldModule', () => {
                 // painted Chrome's raw opaque blue, which in the dark theme was a near-white block
                 // with dark text. It is now suppressed the same way as the others.
                 expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
-                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 600_000_000]]);
+                expect(await e2eRunningAnimations(control)).toContainEqual(['background-color', 600_000_000]);
                 await expect(getContainer(field)).toHaveCSS('background-image', await tintLayer(field));
             });
 
@@ -669,12 +673,25 @@ test.describe('KbqFormFieldModule', () => {
                 }
             });
 
-            test('nothing drives autofill from TypeScript', async ({ page }) => {
-                // No `AutofillMonitor`, no `kbq-form-field_autofilled`. If a fix introduces one, the
-                // suite above keeps passing while testing only half the mechanism, so pin it here.
-                await e2eForceAutofill(page, '[data-testid="state_default"] .kbq-input');
+            test('the TypeScript hook observes, and no rule paints from it', async ({ page }) => {
+                const rules = await readRules(page);
 
-                expect(await page.locator('[class*="autofill"]').count()).toBe(0);
+                // The class is an API for application code and a marker in the DOM. Nothing in the
+                // stylesheet keys on it, and that is deliberate: the tint has exactly one source,
+                // so a class left behind by a detached or re-attached control cannot tint a field
+                // the browser no longer considers autofilled. Two arms that must agree is how the
+                // earlier attempt at this ticket could drift.
+                expect(rules.filter((rule) => rule.selector.includes('kbq-form-field_autofilled'))).toEqual([]);
+
+                const { field } = await autofill(page, 'state_default');
+
+                // Forcing does reach the monitor, which was worth discovering: the CDK keys its
+                // detection keyframe on `:-webkit-autofill` itself, so the same CDP call that lights
+                // the CSS also fires `animationstart` and feeds the signal. Both halves are live
+                // here even though only one of them paints.
+                await expect(field).toHaveClass(/kbq-form-field_autofilled/);
+                await expect(getControl(field)).toHaveClass(/cdk-text-field-autofill-monitored/);
+                await expect(getContainer(field)).toHaveCSS('background-image', await tintLayer(field));
             });
         });
 
@@ -706,7 +723,7 @@ test.describe('KbqFormFieldModule', () => {
             const expectStillSuppressed = async (page: Page, cell: string) => {
                 const control = getField(page, cell).locator('.kbq-input');
 
-                expect(await e2eRunningAnimations(control)).toEqual([['background-color', 600_000_000]]);
+                expect(await e2eRunningAnimations(control)).toContainEqual(['background-color', 600_000_000]);
             };
 
             /**

@@ -1,7 +1,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, DoCheck, ElementRef, Input, OnChanges, OnDestroy, inject } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher, kbqInjectAutofilled } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
@@ -55,6 +55,12 @@ export class KbqInputPassword
      * @docs-private
      */
     focused: boolean = false;
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     * @docs-private
+     */
+    readonly autofilled = kbqInjectAutofilled();
 
     /**
      * Implemented as part of KbqFormFieldControl.
