@@ -1,13 +1,11 @@
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ComponentRef,
-    ElementRef,
     EmbeddedViewRef,
     Injector,
-    NgZone,
     TemplateRef,
     ViewContainerRef,
     ViewEncapsulation,
@@ -34,16 +32,6 @@ export class KbqToastContainerComponent extends CdkScrollable {
     readonly service = inject(KbqToastService);
 
     readonly viewContainer = viewChild.required('container', { read: ViewContainerRef });
-
-    constructor() {
-        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-        const scrollDispatcher = inject(ScrollDispatcher);
-        const ngZone = inject(NgZone);
-
-        super(elementRef, scrollDispatcher, ngZone);
-
-        this.service.animation.subscribe(this.dispatchScrollEvent);
-    }
 
     createToast<C>(data: KbqToastData, componentType, onTop: boolean): ComponentRef<C> {
         const injector = this.getInjector(data);
@@ -77,7 +65,16 @@ export class KbqToastContainerComponent extends CdkScrollable {
         });
     }
 
-    dispatchScrollEvent = () => {
-        this.elementRef.nativeElement.dispatchEvent(new CustomEvent('scroll'));
+    /**
+     * Fakes a scroll on the container so that overlays anchored inside a toast are repositioned by their
+     * `RepositionScrollStrategy` when the stack shifts.
+     *
+     * @deprecated The container is a registered `CdkScrollable`, so this reaches the application-wide
+     * `ScrollDispatcher` and closes every unrelated overlay that uses a close-on-scroll strategy. It is no longer
+     * called automatically and is kept only for callers that already hold a container reference — the instance
+     * created by `KbqToastService` is not exposed.
+     */
+dispatchScrollEvent = () => {
+        this.elementRef.nativeElement.dispatchEvent(new Event('scroll'));
     };
 }

@@ -108,12 +108,11 @@ export const kbqToastConfigurationProvider: (configuration: Partial<KbqToastConf
 
 // @public (undocumented)
 export class KbqToastContainerComponent extends CdkScrollable {
-    constructor();
     // (undocumented)
     createTemplate<C>(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<C>;
     // (undocumented)
     createToast<C>(data: KbqToastData, componentType: any, onTop: boolean): ComponentRef<C>;
-    // (undocumented)
+    // @deprecated
     dispatchScrollEvent: () => void;
     // (undocumented)
     getInjector(data: KbqToastData): Injector;

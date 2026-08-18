@@ -1,10 +1,22 @@
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, NgZone, TemplateRef, inject as inject_1, viewChild } from '@angular/core';
+import { AnimationEvent } from '@angular/animations';
+import { Overlay, OverlayContainer, OverlayRef, ScrollDispatcher } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import {
+    ApplicationRef,
+    Component,
+    ElementRef,
+    NgZone,
+    TemplateRef,
+    inject as inject_1,
+    viewChild
+} from '@angular/core';
 import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
-import { Subject } from 'rxjs';
+import { dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/components/core';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastModule } from './toast.module';
 import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
@@ -314,5 +326,142 @@ describe('ToastService in a Shadow DOM overlay container', () => {
         // ...and so does the toast (querying the shadow root finds it, the light-DOM body does not).
         expect(shadowRoot.querySelectorAll('kbq-toast').length).toBe(1);
         expect(document.body.querySelectorAll('kbq-toast').length).toBe(0);
+    });
+});
+
+@Component({
+    selector: 'toast-tooltip-wrapper',
+    imports: [KbqToolTipModule],
+    template: `
+        <button [kbqTooltip]="'TOOLTIP_CONTENT'">Trigger</button>
+    `
+})
+class ToastTooltipWrapper {
+    readonly triggerElementRef = viewChild.required(KbqTooltipTrigger, { read: ElementRef });
+}
+
+@Component({
+    selector: 'toast-overlay-content',
+    template: 'OVERLAY_CONTENT'
+})
+class ToastOverlayContent {}
+
+describe('ToastService: global scroll notifications', () => {
+    // `KbqTooltipTrigger` default enter delay (400ms) plus a buffer for the deferred show.
+    const tooltipEnterDelay = 410;
+
+    let service: KbqToastService;
+    let overlayContainer: OverlayContainer;
+    let overlayContainerElement: HTMLElement;
+    let scrolled: jest.Mock;
+    let scrollSubscription: Subscription;
+
+    /** Emulates what the animation callbacks of every toast push into `KbqToastService.animation`. */
+    const emitToastAnimationEvent = () =>
+        service.animation.next({
+            fromState: 'void',
+            toState: 'visible',
+            totalTime: 0,
+            phaseName: 'done',
+            element: document.createElement('div'),
+            triggerName: 'state',
+            disabled: false
+        } satisfies AnimationEvent);
+
+    /** Renders the toast container and the toast itself — the container registers as a scrollable in `ngOnInit`. */
+    const renderToast = () => {
+        const { id } = service.show(MOCK_TOAST_DATA, 0);
+
+        TestBed.inject(ApplicationRef).tick();
+
+        return id;
+    };
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqToastModule, NoopAnimationsModule, ToastTooltipWrapper]
+        }).compileComponents();
+
+        service = TestBed.inject(KbqToastService);
+        overlayContainer = TestBed.inject(OverlayContainer);
+        overlayContainerElement = overlayContainer.getContainerElement();
+        scrolled = jest.fn();
+        scrollSubscription = TestBed.inject(ScrollDispatcher).scrolled(0).subscribe(scrolled);
+    });
+
+    afterEach(() => {
+        scrollSubscription.unsubscribe();
+        overlayContainer.ngOnDestroy();
+    });
+
+    it('does not notify the global ScrollDispatcher when a toast is shown, animated and hidden', () => {
+        const id = renderToast();
+
+        emitToastAnimationEvent();
+        service.hide(id);
+
+        expect(scrolled).not.toHaveBeenCalled();
+    });
+
+    it('keeps an overlay with the close-on-scroll strategy attached when a toast appears', () => {
+        // Models a third-party overlay (the reported case is a Mosaic popover in a micro-frontend):
+        // `CloseScrollStrategy` detaches on any emission that did not originate inside its own overlay.
+        const overlay = TestBed.inject(Overlay);
+        const overlayRef: OverlayRef = overlay.create({ scrollStrategy: overlay.scrollStrategies.close() });
+
+        overlayRef.attach(new ComponentPortal(ToastOverlayContent));
+        expect(overlayRef.hasAttached()).toBe(true);
+
+        renderToast();
+        emitToastAnimationEvent();
+
+        expect(overlayRef.hasAttached()).toBe(true);
+
+        overlayRef.dispose();
+    });
+
+    it('keeps an open tooltip open when a toast appears', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ToastTooltipWrapper);
+
+        fixture.detectChanges();
+
+        dispatchMouseEvent(fixture.componentInstance.triggerElementRef().nativeElement, 'mouseenter');
+        fixture.detectChanges();
+        tick(tooltipEnterDelay);
+        fixture.detectChanges();
+        expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeTruthy();
+
+        renderToast();
+        emitToastAnimationEvent();
+        tick();
+        fixture.detectChanges();
+
+        expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeTruthy();
+
+        flush();
+        discardPeriodicTasks();
+    }));
+
+    it('keeps the container registered as a scrollable, so a real scroll still reaches the dispatcher', () => {
+        renderToast();
+
+        overlayContainerElement.querySelector('kbq-toast-container')!.dispatchEvent(new Event('scroll'));
+
+        expect(scrolled).toHaveBeenCalled();
+    });
+
+    it('dispatches a scroll event on the container element when `dispatchScrollEvent` is called explicitly', () => {
+        const fixture = TestBed.createComponent(KbqToastContainerComponent);
+        const onScroll = jest.fn();
+
+        fixture.detectChanges();
+        fixture.nativeElement.addEventListener('scroll', onScroll);
+
+        // Called detached, because the deprecated API is documented as a callback and must stay bound.
+        const { dispatchScrollEvent } = fixture.componentInstance;
+
+        dispatchScrollEvent();
+
+        expect(onScroll).toHaveBeenCalled();
     });
 });
