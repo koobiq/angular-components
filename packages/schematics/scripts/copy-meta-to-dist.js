@@ -49,10 +49,16 @@ const init = async () => {
             resolvePath(`../src/migrations/${migration}/schema.json`),
             join(migrationPath, 'schema.json')
         );
-        await copyFileWrapper(
-            resolvePath(`../src/migrations/${migration}/README.md`),
-            join(migrationPath, 'README.md')
-        );
+        // Optional, like `data.js` below. A migration that never got one must not abort the loop: the
+        // copies that follow it include `utils/`, which every built migration requires at runtime.
+        const migrationReadme = resolvePath(`../src/migrations/${migration}/README.md`);
+
+        if (statSync(migrationReadme, { throwIfNoEntry: false })) {
+            await copyFileWrapper(migrationReadme, join(migrationPath, 'README.md'));
+        } else {
+            console.warn(`No README.md for the "${migration}" migration — it ships without one.`);
+        }
+
         await copyFileWrapper(resolvePath(`../dist/migrations/${migration}/index.js`), join(migrationPath, 'index.js'));
         const optionalMigrationData = resolvePath(`../dist/migrations/${migration}/data.js`);
         const fileExists = statSync(optionalMigrationData, { throwIfNoEntry: false });
@@ -78,4 +84,10 @@ const init = async () => {
     await copyFileWrapper(resolvePath('../dist/utils/angular-parsing.js'), join(utilsPath, 'angular-parsing.js'));
 };
 
-init().catch((error) => console.error(`Failed to initialize directories and copy files: ${error.message}`));
+// A non-zero exit is what keeps a half-copied `schematics/` from shipping: the files this script places
+// are what `ng update` loads, and a build that only logged the failure stayed green while the published
+// package could no longer run a single migration.
+init().catch((error) => {
+    console.error(`Failed to initialize directories and copy files: ${error.message}`);
+    process.exitCode = 1;
+});

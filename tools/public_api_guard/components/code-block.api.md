@@ -13,6 +13,7 @@ import { InjectionToken } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import { LanguageFn } from 'highlight.js';
 import { Provider } from '@angular/core';
 import { TemplateRef } from '@angular/core';
@@ -154,7 +155,7 @@ export type KbqCodeBlockHighlightJsConfig = Partial<{
 export const kbqCodeBlockHighlightJsConfigProvider: (options: KbqCodeBlockHighlightJsConfig) => Provider;
 
 // @public
-export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqCodeBlockLocaleConfiguration) => Provider;
+export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqCodeBlockLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqCodeBlockModule {

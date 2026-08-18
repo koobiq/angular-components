@@ -70,6 +70,11 @@
             "version": "20.3.0-0",
             "description": "Rewrites `@koobiq/components/scrollbar` imports to `@koobiq/components/scrollbar/deprecated`. `@koobiq/components/scrollbar` now resolves to a new, dependency-free scrollbar directive; the previous `overlayscrollbars`-based component/directive (`options`/`events`/`defer`/`scrollbarInstance`, the `kbq-scrollbar` element selector) moved to `@koobiq/components/scrollbar/deprecated` unchanged and will be removed in a future major version.",
             "factory": "./migrations/scrollbar-deprecated-path/index"
+        },
+        "locale-configuration-providers": {
+            "version": "20.3.0-0",
+            "description": "Migrates consumers of the six components whose locale resolution was inverted — kbq-vertical-navbar, kbq-notification-center, kbq-app-switcher, kbq-search-expandable, the datepicker input and kbq-filter-bar. A value provided for KBQ_<X>_CONFIGURATION used to beat KBQ_LOCALE_SERVICE outright; the token now supplies the defaults only, the active locale wins, and consumer overrides are merged on top from a separate multi token, so such a provider silently stops taking effect. Rewrites `{ provide: KBQ_<X>_CONFIGURATION, useValue: <expr> }` entries of a provider array to `kbq<X>LocaleConfigurationProvider(<expr>)`, adding the helper to the module's existing import clause and dropping the token from it once nothing else refers to it. Warns — without rewriting — on the same provider written with useFactory/useClass/useExisting (the helper takes a value), on a provider object that is not an array element (replacing it would change what the name it is bound to means), on every token reference left after the rewrite pass, and on reads of the removed externalConfiguration member and assignments to the now read-only configuration getter.",
+            "factory": "./migrations/locale-configuration-providers/index"
         }
     }
 }

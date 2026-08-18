@@ -43,8 +43,8 @@ import {
     isCopy,
     isSelectAll,
     isVerticalMovement,
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
+    KBQ_SELECT_LOCALE_CONFIGURATION,
+    kbqInjectLocaleConfiguration,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
     KbqSelectAllAdapter,
@@ -53,7 +53,6 @@ import {
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
-    ruRULocaleData,
     SPACE,
     TAB,
     toggleSelectAll,
@@ -307,8 +306,12 @@ export class KbqTreeSelection
         return getSelectAllState(this.selectAllAdapter);
     }
 
-    /** Label of the "select all" row. Kept in step with the locale service. */
-    protected selectAllText: string = ruRULocaleData.select.selectAll;
+    /** Label of the "select all" row. Follows the active locale. */
+    protected get selectAllText(): string {
+        return this.selectConfiguration().selectAll;
+    }
+
+    private readonly selectConfiguration = kbqInjectLocaleConfiguration('select', KBQ_SELECT_LOCALE_CONFIGURATION);
 
     /**
      * Data nodes "select all" acts on, and the ones its checkbox state is derived from.
@@ -410,16 +413,6 @@ export class KbqTreeSelection
 
     private optionBlurSubscription: Subscription | null;
 
-    private readonly localeService? = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-
-    /** Updates locale parameters from the locale service. */
-    private updateLocaleParams = () => {
-        // Locale data registered by a consumer through `KBQ_LOCALE_DATA`/`addLocale` may predate this key.
-        this.selectAllText = this.localeService?.getParams('select')?.selectAll ?? ruRULocaleData.select.selectAll;
-
-        this.changeDetectorRef.markForCheck();
-    };
-
     constructor() {
         const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
 
@@ -437,8 +430,6 @@ export class KbqTreeSelection
         }
 
         this.selectionModel = new SelectionModel<SelectionModelOption>(this.multiple);
-
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
         // `unorderedOptions.changes` never fires for the "select all" row — it is a view child — so the
         // rendered list has to be rebuilt whenever the view query resolves or drops it.

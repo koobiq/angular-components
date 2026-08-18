@@ -10,6 +10,7 @@ import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarConfiguration,
+    kbqFilterBarLocaleConfigurationProvider,
     KbqFilterBarModule,
     KbqPipe,
     KbqPipeTemplate,
@@ -631,10 +632,11 @@ describe('KbqFilterBar', () => {
         });
     });
 
-    // Precedence implemented by KbqFilterBar.updateLocaleParams:
-    //   configuration = externalConfiguration (KBQ_FILTER_BAR_CONFIGURATION) || localeService.getParams('filterBar')
-    // The subscription to KBQ_LOCALE_SERVICE.changes re-runs updateLocaleParams on every locale emission.
-    describe('locale-change / externalConfiguration precedence', () => {
+    // Precedence implemented by `kbqInjectLocaleConfiguration`:
+    //   configuration = overrides (kbqFilterBarLocaleConfigurationProvider) merged on top of
+    //   localeService.getParams('filterBar'), falling back to KBQ_FILTER_BAR_CONFIGURATION when no locale
+    //   service is provided. The configuration signal re-emits on every KBQ_LOCALE_SERVICE.changes emission.
+    describe('locale-change / configuration-override precedence', () => {
         // Minimal stand-in for KbqLocaleService: a BehaviorSubject-backed `changes` stream plus
         // `getParams`, returning a distinct configuration per locale id so swaps are observable.
         class MockLocaleService {
@@ -686,20 +688,20 @@ describe('KbqFilterBar', () => {
             // Initial locale ('locale-a') is applied via the BehaviorSubject's replayed value.
             expect(filterBar.configuration.filters.defaultName).toBe('Locale A name');
 
-            // Switching the locale must re-run updateLocaleParams and swap the configuration.
+            // Switching the locale must re-emit the configuration signal.
             localeService.setLocale('locale-b');
 
             expect(filterBar.configuration.filters.defaultName).toBe('Locale B name');
         });
 
-        it('should let externalConfiguration win over the locale service', () => {
+        it('should let a registered override win over the locale service', () => {
             const localeService = new MockLocaleService();
 
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
                 providers: [
                     { provide: KBQ_LOCALE_SERVICE, useValue: localeService },
-                    { provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: externalConfiguration }
+                    kbqFilterBarLocaleConfigurationProvider({ filters: { defaultName: 'External name' } })
                 ]
             });
 
@@ -710,11 +712,29 @@ describe('KbqFilterBar', () => {
             const filterBar = localFixture.debugElement.query(By.directive(KbqFilterBar))
                 .componentInstance as KbqFilterBar;
 
-            // externalConfiguration takes precedence over the locale-provided params.
+            // The override is merged on top of the locale-provided params.
             expect(filterBar.configuration.filters.defaultName).toBe('External name');
+            expect(filterBar.configuration.reset.buttonName).toBe('Locale A reset');
 
-            // A locale change must NOT override the external configuration.
+            // A locale change must NOT drop the override, and must still move everything it left alone.
             localeService.setLocale('locale-b');
+
+            expect(filterBar.configuration.filters.defaultName).toBe('External name');
+            expect(filterBar.configuration.reset.buttonName).toBe('Locale B reset');
+        });
+
+        it('should take the strings from KBQ_FILTER_BAR_CONFIGURATION when no locale service is provided', () => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                providers: [{ provide: KBQ_FILTER_BAR_CONFIGURATION, useValue: externalConfiguration }]
+            });
+
+            const localFixture = TestBed.createComponent(TestComponent);
+
+            localFixture.detectChanges();
+
+            const filterBar = localFixture.debugElement.query(By.directive(KbqFilterBar))
+                .componentInstance as KbqFilterBar;
 
             expect(filterBar.configuration.filters.defaultName).toBe('External name');
         });

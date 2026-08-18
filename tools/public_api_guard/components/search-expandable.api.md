@@ -12,9 +12,11 @@ import { DestroyRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
+import { KbqSearchExpandableLocaleConfiguration } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
+import { Provider } from '@angular/core';
 
 // @public (undocumented)
 export const defaultEmitValueTimeout = 200;
@@ -23,7 +25,7 @@ export const defaultEmitValueTimeout = 200;
 export const defaultValue = "";
 
 // @public
-export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION: InjectionToken<unknown>;
+export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION: InjectionToken<KbqSearchExpandableLocaleConfiguration>;
 
 // @public
 export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: {
@@ -35,23 +37,19 @@ export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: {
 export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, OnDestroy {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    configuration: any;
+    get configuration(): KbqSearchExpandableLocaleConfiguration;
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly emitValueTimeout: i0.InputSignalWithTransform<number, unknown>;
-    // (undocumented)
-    readonly externalConfiguration: unknown;
     protected readonly focusMonitor: FocusMonitor;
     readonly isEmitValueByEnterEnabled: i0.InputSignal<boolean>;
     isOpened: boolean;
     readonly isOpenedChange: i0.OutputEmitterRef<boolean>;
     // (undocumented)
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
-    get localeData(): any;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
+    get localeData(): KbqSearchExpandableLocaleConfiguration;
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -85,6 +83,9 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSearchExpandable, never>;
 }
+
+// @public
+export const kbqSearchExpandableLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqSearchExpandableLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqSearchExpandableModule {

@@ -19,6 +19,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 13. **20.3.0**: the theme service review — signals, `auto` mode and built-in persistence.
 14. **20.3.0**: explicit prefix and suffix slots for tag content.
 15. **20.3.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
+16. **20.3.0**: the locale layer typing — a typed `getParams`, partial locale data and signals.
 
 ### 1. Upgrade to 18.5.3
 
@@ -873,6 +874,86 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 **Moving to the new implementation** is a separate, manual migration, not just an import path change: the new component uses the `<kbq-scrollbar>` selector and does not support the `[kbq-scrollbar]` or `[kbqScrollbar]` attribute selectors. Its public API differs from the previous implementation — see the [Scrollbar component documentation](/en/components/scrollbar) for details.
 
 **Do not import both the old and the new implementation into the same standalone component.** Both use the `kbq-scrollbar` element selector, so Angular cannot choose a component unambiguously. During a gradual manual migration, keep old and new usage in separate components.
+
+### 16. Locale layer typing (20.3.0)
+
+The locale layer is fully typed now, and every localized component takes its strings through one shared
+mechanism. Nothing was removed and no signature was narrowed in a way that rejects code which used to
+compile — this section is here so you know what became possible, and which two narrowed types could surface a
+latent mistake in your own code.
+
+**`getParams()` resolves the section type.** A known section name returns its configuration type instead of
+`any`; a dynamically-built string still returns `any`, so existing call sites keep working.
+
+```ts
+const { selectAll } = localeService.getParams('select'); // KbqSelectLocaleConfiguration
+localeService.getParams('selection'); // not a section - now a compile error
+```
+
+**Custom locale data may be partial.** `addLocale()` and `KBQ_LOCALE_DATA` accept any subset of
+`KbqLocaleData` and complete it from the shipped locale of the same id, or from `KBQ_DEFAULT_LOCALE_ID` for
+a new id. You no longer have to restate a whole locale to change one string, and a section you leave out
+can no longer surface as `undefined` at runtime. The two earlier notes about custom locale data needing an
+`a11y` section no longer apply — a missing section is filled in for you.
+
+**Signals alongside the observable.** `localeId()`, `data()` and `items()` join `changes`, and
+`params(section)` returns a `Signal` of one section. `changes` keeps working; `id` and `current` are
+deprecated in favour of `localeId()` and `data()`. Prefer the signals: a signal read from a template
+registers on the reading view, so a runtime `setLocale()` reaches `OnPush` children that a subscription in
+the parent never marked dirty.
+
+**Configuration providers accept a partial, and now apply on top of the active locale.**
+`kbqA11yLocaleConfigurationProvider`, `kbqCodeBlockLocaleConfigurationProvider`,
+`kbqClampedTextLocaleConfigurationProvider`, `kbqActionsPanelLocaleConfigurationProvider` and
+`kbqTimeRangeLocaleConfigurationProvider` now take only the keys you want to change. Previously the locale
+service took precedence over them, so an application that provided `KBQ_LOCALE_SERVICE` saw these providers
+ignored entirely; the keys you pass are now merged over the active locale and stay pinned across a runtime
+`setLocale()`, while the keys you leave out keep following it. Passing a full object still works and pins
+the whole section.
+
+**Component configuration tokens now supply defaults, not overrides.** `KBQ_VERTICAL_NAVBAR_CONFIGURATION`,
+`KBQ_NOTIFICATION_CENTER_CONFIGURATION`, `KBQ_APP_SWITCHER_CONFIGURATION`,
+`KBQ_SEARCH_EXPANDABLE_CONFIGURATION`, `KBQ_DATEPICKER_CONFIGURATION` and `KBQ_FILTER_BAR_CONFIGURATION` used
+to beat the locale service outright. Every one of those components now reads the shared
+`kbqInjectLocaleConfiguration` helper, where the token carries the defaults and the active locale wins, so
+`{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` is silently ignored in any application that provides
+`KBQ_LOCALE_SERVICE`. Replace it with the matching `kbq<X>LocaleConfigurationProvider(…)`, which registers a
+real override — `ng update` rewrites it for you. The same conversion dropped the `externalConfiguration`
+member from those components and made `configuration` read-only, and gave `kbq-select`, `kbq-tree-select`,
+`kbq-tree-selection`, `kbq-timepicker`, `kbq-timezone-select` and the number input the token-and-provider
+pair they never had. One behaviour fix rides along: an explicit `[hiddenItemsText]` binding on `kbq-select`
+and `kbq-tree-select` is no longer wiped by the next `setLocale()`.
+
+**Type names were normalized to `Kbq<X>LocaleConfiguration`.** The old names — `KbqAppSwitcherConfiguration`,
+`KbqClampedTextLocaleConfig`, `KbqTimeRangeLocaleConfig`, `KbqNumberInputLocaleConfig`,
+`KbqNumberRoundingLocaleConfig`, `KbqFileUploadLocaleConfig`, `KbqBaseFileUploadLocaleConfig` and
+`KbqMultipleFileUploadLocaleConfig` — remain as deprecated aliases. Likewise
+`kbqInjectKbqClampedLocaleConfiguration` is now `kbqInjectClampedTextLocaleConfiguration`, with the old name
+kept.
+
+**Two narrowed types worth checking.** `KBQ_DATEPICKER_CONFIGURATION`, `KBQ_VERTICAL_NAVBAR_CONFIGURATION`,
+`KBQ_NOTIFICATION_CENTER_CONFIGURATION` and `KBQ_SEARCH_EXPANDABLE_CONFIGURATION` used to be
+`InjectionToken<unknown>` and now carry their real type, so a value you provide for one of them is
+type-checked for the first time. And `defaultUnitSystem` on the exported `*FormattersData` constants is now
+the literal `'SI'` rather than `string`; only code that assigns to it is affected.
+
+#### Running the migration
+
+The `locale-configuration-providers` schematic rewrites the configuration providers automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:locale-configuration-providers --project <your project>
+```
+
+Run it even if you upgrade by hand: a `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` left behind is
+silently ignored at runtime rather than reported as a compile error. The rest of this section — the renamed
+types and the two narrowed ones — surfaces as compile errors whose messages already name the fix.
 
 ### After the migration
 

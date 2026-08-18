@@ -625,7 +625,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     selectAllOptions(allowDeselect?: boolean): void;
     get selectAllState(): KbqPseudoCheckboxState;
-    protected selectAllText: string;
+    protected get selectAllText(): string;
     readonly selectAllToggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>;

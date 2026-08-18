@@ -2,17 +2,20 @@
 import {
     booleanAttribute,
     Directive,
+    effect,
     ElementRef,
     EventEmitter,
     forwardRef,
     HostAttributeToken,
     inject,
+    InjectionToken,
     Input,
     input,
     OnDestroy,
-    Renderer2
+    Provider,
+    Renderer2,
+    untracked
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     BACKSPACE,
@@ -33,6 +36,10 @@ import {
     isSelectAll,
     KBQ_DEFAULT_PRECISION_SEPARATOR,
     KBQ_LOCALE_SERVICE,
+    KbqDeepPartial,
+    kbqInjectLocaleConfiguration,
+    KbqInputLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     KbqLocaleService,
     KbqNumberInputLocaleConfig,
     LEFT_ARROW,
@@ -50,6 +57,26 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 
 export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION = ruRUFormattersData.input.number;
+
+/**
+ * Default configuration of `KbqNumberInput`: the whole `input` locale section, of which the number input
+ * reads `number`.
+ */
+export const KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION: KbqInputLocaleConfiguration = ruRUFormattersData.input;
+
+/** Injection token for providing the default configuration of `KbqNumberInput`. */
+export const KBQ_NUMBER_INPUT_CONFIGURATION = new InjectionToken<KbqInputLocaleConfiguration>(
+    'KbqNumberInputConfiguration',
+    { factory: () => KBQ_NUMBER_INPUT_DEFAULT_CONFIGURATION }
+);
+
+/**
+ * Utility provider for `KBQ_NUMBER_INPUT_CONFIGURATION`. Only the values you pass are overridden; the rest
+ * keep following the active locale.
+ */
+export const kbqNumberInputLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqInputLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('input', configuration);
 
 export const BIG_STEP = 10;
 export const SMALL_STEP = 1;
@@ -232,7 +259,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private control: AbstractControl;
 
-    private config: KbqNumberInputLocaleConfig;
+    private get config() {
+        return this._configuration().number;
+    }
+
+    private readonly _configuration = kbqInjectLocaleConfiguration('input', KBQ_NUMBER_INPUT_CONFIGURATION);
 
     private valueFromPaste: number | null;
 
@@ -241,7 +272,6 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const bigStep = inject(new HostAttributeToken('big-step'), { optional: true })!;
         const min = inject(new HostAttributeToken('min'), { optional: true })!;
         const max = inject(new HostAttributeToken('max'), { optional: true })!;
-        const localeService = this.localeService;
 
         this.step = isDigit(step) ? parseFloat(step) : SMALL_STEP;
         this.bigStep = isDigit(bigStep) ? parseFloat(bigStep) : BIG_STEP;
@@ -258,11 +288,14 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             });
         }
 
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+        // Re-render the value in the separators of the new locale. `untracked` keeps the configuration the
+        // only dependency: formatting also reads the `withThousandSeparator` input, which must not rewrite
+        // what the user is typing on its own.
+        effect(() => {
+            this._configuration();
 
-        if (!localeService) {
-            this.initDefaultParams();
-        }
+            untracked(() => this.setViewValue(this.formatNumber(this.value)));
+        });
     }
 
     ngOnDestroy(): void {
@@ -450,10 +483,6 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         this.valueChange.emit(res);
     }
 
-    private initDefaultParams() {
-        this.config = KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION;
-    }
-
     private isCtrlV = (event: KeyboardEvent) => {
         return event.keyCode === V && (event.ctrlKey || event.metaKey);
     };
@@ -556,10 +585,4 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
         return `${formattedIntPart}${this.fractionSeparator}${formattedFractionPart}`;
     }
-
-    private updateLocaleParams = () => {
-        this.config = this.localeService!.getParams('input').number;
-
-        this.setViewValue(this.formatNumber(this.value));
-    };
 }

@@ -19,6 +19,7 @@
 13. **20.3.0**: ревью сервиса темизации — сигналы, режим `auto` и сохранение выбора из коробки.
 14. **20.3.0**: явные prefix- и suffix-слоты для содержимого тегов.
 15. **20.3.0**: устаревание overlayscrollbars-реализации Scrollbar.
+16. **20.3.0**: типизация слоя локализации — типизированный `getParams`, частичные данные локали и сигналы.
 
 ### 1. Обновление до 18.5.3
 
@@ -873,6 +874,90 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 **Переход на новую реализацию** — это отдельная, ручная миграция, а не просто смена пути импорта: новый компонент использует селектор `<kbq-scrollbar>`, а атрибутные селекторы `[kbq-scrollbar]` и `[kbqScrollbar]` не поддерживает. Его публичный API отличается от прежнего — подробности смотрите в [документации компонента Scrollbar](/ru/components/scrollbar).
 
 **Не импортируйте старую и новую реализацию в одном standalone-компоненте одновременно.** Обе используют элементный селектор `kbq-scrollbar`, поэтому Angular не сможет однозначно выбрать компонент. При постепенном ручном переходе держите старое и новое использование в разных компонентах.
+
+### 16. Типизация слоя локализации (20.3.0)
+
+Слой локализации полностью типизирован, а строки всех локализованных компонентов проходят через один общий
+механизм. Ничего не удалено, и ни одна сигнатура не сужена так, чтобы отвергнуть ранее компилировавшийся
+код — раздел нужен, чтобы вы знали, что стало возможно и какие два сужения могут вскрыть уже существующую
+ошибку в вашем коде.
+
+**`getParams()` выводит тип секции.** Известное название секции возвращает её тип конфигурации вместо
+`any`; строка, собранная динамически, по-прежнему возвращает `any`, поэтому существующие вызовы продолжают
+работать.
+
+```ts
+const { selectAll } = localeService.getParams('select'); // KbqSelectLocaleConfiguration
+localeService.getParams('selection'); // не секция - теперь ошибка компиляции
+```
+
+**Свои данные локали могут быть частичными.** `addLocale()` и `KBQ_LOCALE_DATA` принимают любое подмножество
+`KbqLocaleData` и дополняют его из поставляемой локали с тем же идентификатором, а для нового
+идентификатора — из `KBQ_DEFAULT_LOCALE_ID`. Больше не нужно повторять всю локаль ради одной строки, а
+пропущенная секция не может появиться как `undefined` во время работы. Две прежние заметки о том, что своим
+данным локали нужна секция `a11y`, больше неактуальны — недостающая секция подставляется автоматически.
+
+**Сигналы рядом с observable.** К `changes` добавились `localeId()`, `data()` и `items()`, а
+`params(section)` возвращает `Signal` одной секции. `changes` продолжает работать; `id` и `current`
+объявлены устаревшими в пользу `localeId()` и `data()`. Используйте сигналы: чтение сигнала в шаблоне
+регистрируется на читающем представлении, поэтому `setLocale()` доходит до `OnPush`-потомков, которые
+подписка в родителе никогда не помечала как изменённые.
+
+**Провайдеры конфигурации принимают частичный объект и теперь применяются поверх активной локали.**
+`kbqA11yLocaleConfigurationProvider`, `kbqCodeBlockLocaleConfigurationProvider`,
+`kbqClampedTextLocaleConfigurationProvider`, `kbqActionsPanelLocaleConfigurationProvider` и
+`kbqTimeRangeLocaleConfigurationProvider` теперь принимают только те ключи, которые вы хотите изменить.
+Раньше сервис локали имел приоритет над ними, поэтому в приложении, предоставляющем `KBQ_LOCALE_SERVICE`,
+эти провайдеры игнорировались полностью; теперь переданные ключи накладываются на активную локаль и остаются
+закреплёнными при вызове `setLocale()` во время работы, а не переданные — продолжают следовать за локалью.
+Передача полного объекта по-прежнему работает и закрепляет секцию целиком.
+
+**Токены конфигурации компонентов задают значения по умолчанию, а не переопределение.**
+`KBQ_VERTICAL_NAVBAR_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_CONFIGURATION`,
+`KBQ_APP_SWITCHER_CONFIGURATION`, `KBQ_SEARCH_EXPANDABLE_CONFIGURATION`, `KBQ_DATEPICKER_CONFIGURATION` и
+`KBQ_FILTER_BAR_CONFIGURATION` раньше побеждали сервис локали. Теперь все эти компоненты читают общую
+функцию `kbqInjectLocaleConfiguration`, где токен несёт значения по умолчанию, а побеждает активная локаль,
+поэтому
+`{ provide: KBQ_<X>_CONFIGURATION, useValue: … }` молча игнорируется в приложении, предоставляющем
+`KBQ_LOCALE_SERVICE`. Замените его на соответствующий `kbq<X>LocaleConfigurationProvider(…)`, который
+регистрирует настоящее переопределение, — `ng update` перепишет это за вас. Та же конверсия убрала из этих
+компонентов член `externalConfiguration` и сделала `configuration` доступным только для чтения, а
+`kbq-select`, `kbq-tree-select`, `kbq-tree-selection`, `kbq-timepicker`, `kbq-timezone-select` и числовой
+инпут получили пару «токен и провайдер», которой у них не было. Попутно исправлено поведение: явная привязка
+`[hiddenItemsText]` у `kbq-select` и `kbq-tree-select` больше не затирается следующим `setLocale()`.
+
+**Названия типов приведены к виду `Kbq<X>LocaleConfiguration`.** Прежние имена —
+`KbqAppSwitcherConfiguration`, `KbqClampedTextLocaleConfig`, `KbqTimeRangeLocaleConfig`,
+`KbqNumberInputLocaleConfig`, `KbqNumberRoundingLocaleConfig`, `KbqFileUploadLocaleConfig`,
+`KbqBaseFileUploadLocaleConfig` и `KbqMultipleFileUploadLocaleConfig` — сохранены как устаревшие
+псевдонимы. Так же `kbqInjectKbqClampedLocaleConfiguration` стал `kbqInjectClampedTextLocaleConfiguration`,
+старое имя сохранено.
+
+**Два сужения, которые стоит проверить.** `KBQ_DATEPICKER_CONFIGURATION`,
+`KBQ_VERTICAL_NAVBAR_CONFIGURATION`, `KBQ_NOTIFICATION_CENTER_CONFIGURATION` и
+`KBQ_SEARCH_EXPANDABLE_CONFIGURATION` были `InjectionToken<unknown>`, а теперь несут свой настоящий тип,
+поэтому предоставляемое для них значение впервые проверяется типами. А `defaultUnitSystem` в экспортируемых
+константах `*FormattersData` теперь литерал `'SI'`, а не `string`; это затрагивает только код, который в
+него присваивает.
+
+#### Запуск миграции
+
+Схематик `locale-configuration-providers` переписывает провайдеры конфигурации автоматически:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Или вручную:
+
+```bash
+ng g @koobiq/components:locale-configuration-providers --project <your project>
+```
+
+Запустите его, даже если обновляетесь вручную: оставшийся `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }`
+молча игнорируется во время работы, а не сообщается как ошибка компиляции. Остальная часть этого раздела —
+переименованные типы и два сужения — проявляется ошибками компиляции, сообщения которых сами называют
+исправление.
 
 ### После миграции
 

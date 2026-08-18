@@ -17,3 +17,4 @@ jobs:
       - uses: ./.github/workflows/actions/setup-node
       - uses: ./.github/workflows/actions/build-packages
       - run: yarn run check-api
+      - run: yarn run check-public-api-any

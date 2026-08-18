@@ -22,6 +22,7 @@ import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
@@ -35,7 +36,6 @@ import { KbqTreeFlattener } from '@koobiq/components/tree';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import { KbqTreeSelection } from '@koobiq/components/tree';
-import * as _koobiq_components_core from '@koobiq/components/core';
 import { ModelSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
@@ -237,63 +237,9 @@ export interface KbqFilter {
 // @public (undocumented)
 export class KbqFilterBar implements KbqFilterBarHost {
     constructor();
-    protected readonly changeDetectorRef: ChangeDetectorRef;
     // @deprecated
     readonly changes: BehaviorSubject<void>;
     get configuration(): KbqFilterBarConfiguration;
-    set configuration(value: KbqFilterBarConfiguration);
-    // (undocumented)
-    readonly externalConfiguration: {
-        reset: {
-            buttonName: string;
-        };
-        search: {
-            tooltip: string;
-            placeholder: string;
-        };
-        filters: {
-            defaultName: string;
-            saveNewFilterTooltip: string;
-            searchPlaceholder: string;
-            searchEmptyResult: string;
-            saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
-            change: string;
-            resetChanges: string;
-            remove: string;
-            name: string;
-            error: string;
-            errorHint: string;
-            saveButton: string;
-            cancelButton: string;
-            actionsTooltip: string;
-        };
-        add: {
-            tooltip: string;
-            addedAnnouncement: string;
-        };
-        refresher: {
-            refresh: string;
-            settings: string;
-        };
-        pipe: {
-            clearButtonTooltip: string;
-            removeButtonTooltip: string;
-            applyButton: string;
-            emptySearchResult: string;
-            selectAll: string;
-        };
-        datePipe: {
-            customPeriod: string;
-            customPeriodFrom: string;
-            customPeriodTo: string;
-            customPeriodErrorHint: string;
-            customPeriodMinIntervalErrorHint: string;
-            customPeriodMaxIntervalErrorHint: string;
-            backToPeriodSelection: string;
-        };
-    } | null;
     readonly filter: _angular_core.ModelSignal<KbqFilter | null>;
     readonly filterReset: _angular_core.Signal<KbqFilterReset | undefined>;
     readonly filters: _angular_core.Signal<KbqFilters | undefined>;
@@ -304,7 +250,6 @@ export class KbqFilterBar implements KbqFilterBarHost {
     readonly isReadOnly: _angular_core.Signal<boolean>;
     readonly isSaved: _angular_core.Signal<boolean>;
     readonly isSavedAndChanged: _angular_core.Signal<boolean>;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
     readonly onChangePipe: _angular_core.OutputEmitterRef<KbqPipe>;
     readonly onClearPipe: _angular_core.OutputEmitterRef<KbqPipe>;
     readonly onClosePipe: _angular_core.OutputEmitterRef<KbqPipe>;
@@ -339,7 +284,7 @@ export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURAT
 
 // @public
 export interface KbqFilterBarHost {
-    configuration: KbqFilterBarConfiguration;
+    readonly configuration: KbqFilterBarConfiguration;
     readonly filter: ModelSignal<KbqFilter | null>;
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
@@ -357,6 +302,9 @@ export interface KbqFilterBarHost {
     resetFilterChangedState(): void;
     readonly selectedAllEqualsSelectedNothing: Signal<boolean>;
 }
+
+// @public
+export const kbqFilterBarLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqFilterBarConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqFilterBarModule {

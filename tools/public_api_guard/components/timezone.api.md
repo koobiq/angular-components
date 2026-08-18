@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -17,17 +16,27 @@ import * as i5 from '@koobiq/components/tags';
 import * as i6 from '@koobiq/components/tooltip';
 import * as i7 from '@angular/common';
 import * as i8 from '@angular/cdk/a11y';
+import { InjectionToken } from '@angular/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
+import { KbqTimezoneLocaleConfiguration } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
 
 // @public
 export function filterCitiesBySearchString(cities: string, searchPattern?: string): string;
 
 // @public
 export function getZonesGroupedByCountry(data: KbqTimezoneZone[], otherCountriesLabel?: string, priorityCountry?: string): KbqTimezoneGroup[];
+
+// @public
+export const KBQ_TIMEZONE_CONFIGURATION: InjectionToken<KbqTimezoneLocaleConfiguration>;
+
+// @public
+export const KBQ_TIMEZONE_DEFAULT_CONFIGURATION: KbqTimezoneLocaleConfiguration;
 
 // @public (undocumented)
 export interface KbqTimezoneGroup {
@@ -38,6 +47,9 @@ export interface KbqTimezoneGroup {
     // (undocumented)
     zones: KbqTimezoneZone[];
 }
+
+// @public
+export const kbqTimezoneLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqTimezoneLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqTimezoneModule {
@@ -95,11 +107,11 @@ export interface KbqTimezonesByCountry {
 }
 
 // @public (undocumented)
-export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
+export class KbqTimezoneSelect extends KbqSelect {
+    constructor();
+    get configuration(): KbqTimezoneLocaleConfiguration;
     // (undocumented)
     readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], true, never>;
     // (undocumented)

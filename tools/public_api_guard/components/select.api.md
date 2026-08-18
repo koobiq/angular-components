@@ -35,7 +35,6 @@ import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionBase } from '@koobiq/components/core';
@@ -153,7 +152,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     set hasBackdrop(value: boolean);
     // (undocumented)
     hiddenItems: number;
-    hiddenItemsText: string;
+    get hiddenItemsText(): string;
+    set hiddenItemsText(value: string);
     hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string;
     get id(): string;
     set id(value: string);
@@ -163,8 +163,6 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     get isEmptySearchResult(): boolean;
     isRtl(): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
-    // (undocumented)
-    protected localeService?: KbqLocaleService | null | undefined;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get multiple(): boolean;
     set multiple(value: boolean);
@@ -240,7 +238,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void);
     readonly selectAllOption: _angular_core.Signal<KbqOption | undefined>;
     get selectAllState(): KbqPseudoCheckboxState;
-    protected selectAllText: string;
+    protected get selectAllText(): string;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selected(): KbqOptionBase | KbqOptionBase[];
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqSelectChange>;

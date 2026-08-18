@@ -1,12 +1,14 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { Injectable, InjectionToken, Pipe, PipeTransform, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqNumberFormatOptions,
-    KbqNumberRoundingLocaleConfig
+    KbqNumberRoundingLocaleConfiguration,
+    ruRUFormattersData
 } from '../../locales';
 
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>('KbqNumberFormatterOptions');
@@ -68,7 +70,7 @@ const minFractionGroupPosition = 3;
 const maxFractionGroupPosition = 5;
 const useGroupingPosition = 7;
 
-type RoundDecimalOptions = KbqNumberRoundingLocaleConfig & {
+type RoundDecimalOptions = KbqNumberRoundingLocaleConfiguration & {
     /** Label for the ten-thousand unit. */
     tenThousand?: string;
     /** Label for the one-hundred-millions unit. */
@@ -85,7 +87,7 @@ const ROUNDING_UNITS = {
     trillion: 1e12
 };
 
-/** Rounding units that carry a localized label in `KbqNumberRoundingLocaleConfig`. */
+/** Rounding units that carry a localized label in `KbqNumberRoundingLocaleConfiguration`. */
 type RoundingUnit = keyof RoundDecimalOptions & keyof typeof ROUNDING_UNITS;
 
 const intervalsConfig = {
@@ -155,7 +157,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
-        this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe((newId: string) => (this.id = newId));
     }
 
     /**
@@ -228,7 +230,7 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     constructor() {
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
-        this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe((newId: string) => (this.id = newId));
     }
 
     /**
@@ -292,7 +294,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     roundingOptions: RoundDecimalOptions;
 
     constructor() {
-        this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe((newId: string) => (this.id = newId));
     }
 
     // @TODO: update returned type to string | null. Breaking change
@@ -303,7 +305,11 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 
         const currentLocale: string = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
-        this.roundingOptions = this.localeService?.locales[currentLocale].formatters.number.rounding;
+        // A locale id that was never registered has no entry at all — guard the lookup, not just the
+        // service, the way the decimal pipes above already do.
+        this.roundingOptions =
+            this.localeService?.locales[currentLocale]?.formatters.number.rounding ??
+            ruRUFormattersData.formatters.number.rounding;
 
         try {
             const num = strToNumber(value);

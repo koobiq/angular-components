@@ -1,26 +1,22 @@
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     contentChild,
     effect,
     forwardRef,
-    inject,
     input,
     model,
     output,
-    signal,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { kbqInjectLocaleConfiguration } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject } from 'rxjs';
 import {
     KBQ_FILTER_BAR_CONFIGURATION,
-    KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
     KbqFilter,
     KbqFilterBarConfiguration,
@@ -60,23 +56,17 @@ import { KbqFilters } from './filters';
     }
 })
 export class KbqFilterBar implements KbqFilterBarHost {
-    /** @docs-private */
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
-    readonly externalConfiguration = inject(KBQ_FILTER_BAR_CONFIGURATION, { optional: true });
-
-    /** Localized strings and configuration for the filter-bar and its pipes. */
+    /**
+     * Localized strings and configuration for the filter-bar and its pipes.
+     *
+     * Read through a signal so that a runtime `setLocale()` reaches the pipes and the projected
+     * sub-components, which render these strings from their own `OnPush` views.
+     */
     get configuration(): KbqFilterBarConfiguration {
         return this._configuration();
     }
 
-    set configuration(value: KbqFilterBarConfiguration) {
-        this._configuration.set(value);
-    }
-
-    private readonly _configuration = signal(KBQ_FILTER_BAR_DEFAULT_CONFIGURATION);
+    private readonly _configuration = kbqInjectLocaleConfiguration('filterBar', KBQ_FILTER_BAR_CONFIGURATION);
 
     /** @docs-private */
     readonly filters = contentChild(KbqFilters);
@@ -152,12 +142,6 @@ export class KbqFilterBar implements KbqFilterBarHost {
             this.filter.set(filter);
         });
 
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
-
         // A pipe value change marks the current filter as "changed". Produce a new filter reference (not an
         // in-place mutation) so the `filter` model — and every `computed()`/`effect()` reading it — reacts.
         // `removePipe` owns its own `changed` flag in a single `set` (one `filterChange` emission), so only
@@ -220,15 +204,5 @@ export class KbqFilterBar implements KbqFilterBarHost {
         if (!current) return;
 
         this.filter.set({ ...current, changed: false });
-    }
-
-    private updateLocaleParams = () => {
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('filterBar');
-
-        this.changeDetectorRef.markForCheck();
-    };
-
-    private initDefaultParams() {
-        this.configuration = KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
     }
 }
