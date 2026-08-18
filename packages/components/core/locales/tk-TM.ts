@@ -21,7 +21,8 @@ export const tkTMLocaleData = {
         nextMonth: 'Indiki aý',
         clear: 'Arassala',
         showPassword: 'Paroly görkez',
-        hidePassword: 'Paroly gizle'
+        hidePassword: 'Paroly gizle',
+        listOptionMoved: '{{ label }}, {{ total }} ýerden {{ index }}-nji ýer'
     } satisfies KbqA11yLocaleConfiguration,
     select: {
         hiddenItemsText: '+{{ number }}',

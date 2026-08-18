@@ -25,6 +25,11 @@
     outline: none;
 }
 
+// Positioning context for the drop indicator, which is the list's own last child.
+.kbq-list-selection {
+    position: relative;
+}
+
 .kbq-list-item,
 .kbq-list-option {
     @include vendor-prefixes.user-select(none);
@@ -37,5 +42,66 @@
     }
 }
 
+.kbq-list-option {
+    &.kbq-list-option_draggable {
+        cursor: grab;
+    }
+
+    // The row the drag started from keeps its slot. `cdk-drag-anchor` is the clone CDK leaves behind
+    // once the option has been dragged into a connected list.
+    &.cdk-drag-placeholder,
+    &.cdk-drag-anchor {
+        opacity: var(--kbq-opacity-disabled);
+    }
+
+    // Hidden while the placeholder sits in a list the option was not dragged from, so that list keeps
+    // its layout. Toggled from `KbqListSelection` on `cdkDropListEntered`.
+    &.kbq-list-option_foreign-placeholder {
+        display: none;
+    }
+
+    // No `.cdk-drag-animating` transition on purpose. CDK animates the preview onto the placeholder,
+    // which — with sorting disabled — never leaves the slot the drag started from, so the preview
+    // would fly back to the origin and read as a rejected drop. With no transition declared the
+    // duration is 0 and CDK disposes of the preview without animating it anywhere.
+}
+
+// Marks the gap the dragged option would land in. Sorting is disabled, so the list never opens a gap
+// of its own and this line is the only feedback about the target position.
+.kbq-list-selection__drop-indicator {
+    position: absolute;
+    background: var(--kbq-list-states-dragged-indicator-color);
+    pointer-events: none;
+}
+
+.kbq-list-selection:not(.kbq-list-selection_horizontal) .kbq-list-selection__drop-indicator {
+    left: 0;
+    right: 0;
+    // The line straddles the gap instead of sitting below it, so it reads as "between these two rows".
+    top: calc(var(--kbq-list-drop-indicator-offset, 0px) - var(--kbq-list-size-dragged-indicator-thickness) / 2);
+    block-size: var(--kbq-list-size-dragged-indicator-thickness);
+}
+
+.kbq-list-selection_horizontal .kbq-list-selection__drop-indicator {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--kbq-list-drop-indicator-offset, 0px) - var(--kbq-list-size-dragged-indicator-thickness) / 2);
+    inline-size: var(--kbq-list-size-dragged-indicator-thickness);
+}
+
+// We should apply `cursor: grabbing` to the body, not to the dragged element itself.
+// Reason: https://github.com/angular/components/blob/18.2.14/src/cdk/drag-drop/resets.scss#L14-L15
+body:has(.kbq-list-selection.cdk-drop-list-dragging) {
+    cursor: grabbing;
+}
+
 @include theme.kbq-list-theme();
 @include theme.kbq-list-typography();
+
+// Declared after the theme so it outranks the default state, whose background is `transparent`
+// because an option normally sits on the surface of its list. The dragged clone has no such surface.
+// Selected states carry a higher specificity and deliberately keep their own background.
+.kbq-list-option.cdk-drag-preview {
+    background: var(--kbq-list-states-dragged-container-background);
+    box-shadow: var(--kbq-list-states-dragged-container-shadow);
+}

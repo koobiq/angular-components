@@ -21,7 +21,8 @@ export const ptBRLocaleData = {
         nextMonth: 'Próximo mês',
         clear: 'Apagar',
         showPassword: 'Mostrar a senha',
-        hidePassword: 'Ocultar a senha'
+        hidePassword: 'Ocultar a senha',
+        listOptionMoved: '{{ label }}, posição {{ index }} de {{ total }}'
     } satisfies KbqA11yLocaleConfiguration,
     select: {
         hiddenItemsText: '+{{ number }}',

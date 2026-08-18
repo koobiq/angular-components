@@ -1,4 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
+import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
@@ -6,13 +7,18 @@ import { FormsModule, UntypedFormControl } from '@angular/forms';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqListModule, KbqListSelectionChange } from '@koobiq/components/list';
+import { KbqListModule, KbqListSelectionChange, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ListExamplesModule } from 'packages/docs-examples/components/list';
 import { of } from 'rxjs';
 import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
+
+type DevItem = { id: number; label: string };
+
+const devItems = (prefix: string, offset: number, length: number): DevItem[] =>
+    Array.from({ length }, (_, i) => ({ id: offset + i, label: `${prefix} #${offset + i}` }));
 
 @Component({
     selector: 'dev-examples',
@@ -28,6 +34,12 @@ import { DevThemeToggle } from '../theme-toggle';
         <br />
         <br />
         <list-multiple-checkbox-example />
+        <br />
+        <br />
+        <list-draggable-example />
+        <br />
+        <br />
+        <list-draggable-connected-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -57,6 +69,12 @@ export class DevApp {
     private clipboard = inject(Clipboard);
 
     list = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
+
+    readonly draggableItems = signal(devItems('Task', 0, 5));
+    draggableSelected: DevItem[] = [];
+
+    readonly availableItems = signal(devItems('Available', 0, 4));
+    readonly chosenItems = signal(devItems('Chosen', 10, 3));
 
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({
         id: i,
@@ -96,5 +114,36 @@ export class DevApp {
 
     onRemove(item: string) {
         this.list.update((list) => list.filter((listItem) => listItem !== item));
+    }
+
+    onDropped({ previousIndex, currentIndex }: KbqListSelectionDroppedEvent) {
+        const items = [...this.draggableItems()];
+
+        moveItemInArray(items, previousIndex, currentIndex);
+
+        this.draggableItems.set(items);
+    }
+
+    onTransferred({ previousIndex, currentIndex, previousContainer, container, option }: KbqListSelectionDroppedEvent) {
+        const fromAvailable = this.availableItems().includes(option.value);
+        const source = fromAvailable ? this.availableItems : this.chosenItems;
+
+        if (previousContainer === container) {
+            const items = [...source()];
+
+            moveItemInArray(items, previousIndex, currentIndex);
+            source.set(items);
+
+            return;
+        }
+
+        const target = fromAvailable ? this.chosenItems : this.availableItems;
+        const from = [...source()];
+        const to = [...target()];
+
+        transferArrayItem(from, to, previousIndex, currentIndex);
+
+        source.set(from);
+        target.set(to);
     }
 }

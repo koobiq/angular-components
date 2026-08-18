@@ -2,6 +2,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
@@ -15,6 +16,7 @@ import {
     ContentChildren,
     DestroyRef,
     Directive,
+    effect,
     ElementRef,
     EventEmitter,
     forwardRef,
@@ -22,12 +24,14 @@ import {
     inject,
     Input,
     input,
+    isDevMode,
     NgZone,
     OnDestroy,
     OnInit,
     Output,
     output,
     QueryList,
+    signal,
     ViewChild,
     viewChild,
     ViewEncapsulation
@@ -49,6 +53,7 @@ import {
     KBQ_TITLE_TEXT_REF,
     KbqActionContainer,
     kbqFocusOptionActionOnTab,
+    kbqInjectA11yLocaleConfiguration,
     KbqOptgroup,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
@@ -107,10 +112,48 @@ export class KbqListCopyEvent<T> {
     ) {}
 }
 
+/**
+ * Data attached to the underlying `CdkDrag` while a list option is being dragged. Kept unexported:
+ * `dropped` already hands the option over, so nothing outside this file has to read `CdkDrag.data`.
+ */
+type KbqListOptionDragData = { option: KbqListOption };
+
+/** Event emitted when an option changes its position by dragging or by keyboard. */
+export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<unknown>, 'previousIndex' | 'currentIndex'> & {
+    /** Option that has been moved. */
+    option: KbqListOption;
+    /** List the option has been moved into. */
+    container: KbqListSelection;
+    /** List the option has been taken from. Equal to `container` when reordering within a single list. */
+    previousContainer: KbqListSelection;
+    /** Pointer event for dragging, keyboard event for `Alt` + arrow reordering. */
+    event: MouseEvent | TouchEvent | KeyboardEvent;
+};
+
+/**
+ * Whether `Alt` is the only modifier held. `hasModifierKey` matches any of the listed modifiers,
+ * which would also swallow combinations already bound to selection (`Ctrl`/`Shift` + arrow).
+ */
+const isAltOnly = (event: KeyboardEvent): boolean =>
+    event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey;
+
 @Component({
     selector: 'kbq-list-selection',
     template: `
         <ng-content />
+        @if (dropIndicatorOffset() !== null) {
+            <!-- Purely decorative: the move itself is announced through the live region below. -->
+            <div
+                class="kbq-list-selection__drop-indicator"
+                aria-hidden="true"
+                [style.--kbq-list-drop-indicator-offset.px]="dropIndicatorOffset()"
+            ></div>
+        }
+        <!-- Announces a reordered option to assistive tech (WCAG 4.1.3). Kept last so that it does not
+             break the adjacent-sibling rules that merge the corners of selected options, and kept
+             unconditional: a move is announced only once the consumer applies it, which may land after
+             dragging has been turned off again, and a live region has to pre-exist its own text. -->
+        <div class="cdk-visually-hidden" aria-live="polite" aria-atomic="true">{{ announcement() }}</div>
     `,
     styleUrls: ['./list.scss', 'list-tokens.scss'],
     providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
@@ -118,6 +161,8 @@ export class KbqListCopyEvent<T> {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-list-selection',
+        '[class.kbq-list-selection_draggable]': 'draggable',
+        '[class.kbq-list-selection_horizontal]': 'horizontal()',
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
         '(keydown)': 'onKeyDown($event)',
@@ -125,6 +170,9 @@ export class KbqListCopyEvent<T> {
         '(blur)': 'blur()',
         '(window:resize)': 'updateScrollSize()'
     },
+    // `id` is exposed so that a consumer-set id survives `CdkDropList`'s own `[attr.id]` host binding
+    // and can be used as a `connectedTo` reference.
+    hostDirectives: [{ directive: CdkDropList, inputs: ['id'] }],
     exportAs: 'kbqListSelection',
     preserveWhitespaces: false
 })
@@ -168,6 +216,44 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     private _noUnselectLast: boolean = true;
 
+    /**
+     * Whether options can be reordered by dragging them or by pressing `Alt` + arrow keys.
+     * Reordering never mutates the data — handle the `dropped` event and move the item yourself.
+     */
+    @Input({ transform: booleanAttribute })
+    get draggable(): boolean {
+        return this._draggable && !this.disabled;
+    }
+
+    set draggable(value: boolean) {
+        this._draggable = value;
+        this.syncDraggableState();
+    }
+
+    private _draggable: boolean = false;
+
+    /**
+     * Lists that options of this list can be moved into. Accepts `KbqListSelection` instances or the
+     * `id` of another list. `cdkDropListGroup` on a common ancestor connects lists automatically.
+     */
+    readonly connectedTo = input<KbqListSelection | string | readonly (KbqListSelection | string)[]>([]);
+
+    /** Emits when an option changes its position by dragging or by `Alt` + arrow keys. */
+    readonly dropped = output<KbqListSelectionDroppedEvent>();
+
+    /**
+     * Reordering shortcuts advertised on a draggable option, so that the keyboard alternative to
+     * dragging is discoverable without the documentation. Transfer shortcuts are left out when no
+     * connected list can be reached by keyboard.
+     *
+     * @docs-private
+     */
+    get ariaKeyShortcuts(): string {
+        const reorder = 'Alt+ArrowUp Alt+ArrowDown';
+
+        return this.getAdjacentList('next') ? `${reorder} Alt+ArrowLeft Alt+ArrowRight` : reorder;
+    }
+
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
@@ -203,6 +289,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     set disabled(value: boolean) {
         if (value !== this.disabled) {
             this._disabled = value;
+            this.syncDraggableState();
         }
     }
 
@@ -238,10 +325,28 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly platform = inject(Platform);
+    private readonly dropList = inject<CdkDropList<KbqListSelection>>(CdkDropList, { host: true });
+    private readonly a11yLocale = kbqInjectA11yLocaleConfiguration();
+
+    /** Message read out by assistive tech after an option has been reordered. */
+    protected readonly announcement = signal('');
+
+    /**
+     * Distance from the list's content box to the gap the dragged option would land in, or `null`
+     * while no drag is hovering this list. Drives the insertion indicator.
+     */
+    protected readonly dropIndicatorOffset = signal<number | null>(null);
+
+    /** Gap the indicator currently marks, used as `currentIndex` when the drag is dropped here. */
+    private dropIndex: number | null = null;
 
     private optionFocusSubscription: Subscription | null;
 
     private optionBlurSubscription: Subscription | null;
+
+    private pendingMoveSubscription: Subscription | null;
+
+    private hasWarnedOnDragContainer = false;
 
     constructor() {
         const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
@@ -258,6 +363,8 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         }
 
         this.selectionModel = new SelectionModel<KbqListOption>(this.multiple);
+
+        this.setupDropListInitialProperties();
     }
 
     ngAfterContentInit(): void {
@@ -298,6 +405,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
         if (!this.platform.isBrowser) return;
 
+        this.warnOnUnsupportedDragContainer();
         this.updateScrollSize();
     }
 
@@ -319,6 +427,25 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         } else {
             this.keyManager.setFirstItemActive();
         }
+    }
+
+    /**
+     * Moves keyboard focus to the option matching `value` through `compareWith`. Use it to restore
+     * focus after a `dropped` event has moved an option into another list, where the original option
+     * instance no longer exists.
+     *
+     * @returns whether a matching option was found.
+     */
+    focusOptionByValue(value: unknown): boolean {
+        const index = this.options.toArray().findIndex((option) => this.compareWith()(option.value, value));
+
+        if (index === -1) {
+            return false;
+        }
+
+        this.keyManager.setActiveItem(index);
+
+        return true;
     }
 
     blur() {
@@ -392,11 +519,14 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         const options = this.options.toArray();
         let fromIndex = this.keyManager.previousActiveItemIndex;
         let toIndex = (this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex);
-        const selectedOptionState = options[fromIndex].selected;
 
-        if (toIndex === fromIndex) {
+        // `previousActiveItemIndex` is -1 until the list has been navigated, so a shift+click without
+        // prior keyboard navigation has no range to extend.
+        if (toIndex === fromIndex || !this.isValidIndex(fromIndex)) {
             return;
         }
+
+        const selectedOptionState = options[fromIndex].selected;
 
         if (fromIndex > toIndex) {
             [fromIndex, toIndex] = [toIndex, fromIndex];
@@ -495,6 +625,12 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
         if ([SPACE, ENTER, LEFT_ARROW, RIGHT_ARROW].includes(keyCode) || isVerticalMovement(event)) {
             event.preventDefault();
+        }
+
+        if (this.draggable && isAltOnly(event) && [UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(keyCode)) {
+            this.moveActiveOptionByKey(event);
+
+            return;
         }
 
         if (this.multiple && isSelectAll(event)) {
@@ -607,7 +743,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     // Returns the option with the specified value.
     private getOptionByValue(value: string): KbqListOption | undefined {
-        return this.options.find((option) => option.value === value);
+        return this.options.find((option) => this.compareWith()(option.value, value));
     }
 
     // Sets the selected options based on the specified values.
@@ -632,6 +768,316 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     // Returns the index of the specified list option.
     private getOptionIndex(option: KbqListOption): number {
         return this.options.toArray().indexOf(option);
+    }
+
+    private setupDropListInitialProperties(): void {
+        // Lets the `dropped` handler map a `CdkDropList` back to the list that owns it.
+        this.dropList.data = this;
+        // The drop position is shown by an insertion indicator instead of by opening a gap, so CDK must
+        // not sort: the options stay put and the dragged one keeps its slot as a faded placeholder.
+        // Both flags are re-read from the directive on every drag start, so assigning once is enough.
+        this.dropList.sortingDisabled = true;
+        // Without an anchor the placeholder follows the option into the connected list, leaving the
+        // origin list with a hole instead of the faded row.
+        this.dropList.hasAnchor = true;
+        this.syncDraggableState();
+
+        effect(() => {
+            this.dropList.orientation = this.horizontal() ? 'horizontal' : 'vertical';
+            // `CdkDropList` resolves its siblings on every drag start, so a late assignment is picked up.
+            this.dropList.connectedTo = this.resolveConnectedDropLists();
+        });
+
+        // `enter()` is not gated on `sortingDisabled`, so the placeholder follows the option into
+        // whichever list it is dragged over and pushes that list's options apart. Only the list the
+        // drag started in may show it — there it is the faded row left behind. Toggled imperatively
+        // because the placeholder is already in the DOM by the time this runs, and waiting for change
+        // detection would let the shifted layout paint for a frame.
+        this.dropList.entered.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ item }) => {
+            item.getPlaceholderElement().classList.toggle(
+                'kbq-list-option_foreign-placeholder',
+                item.dropContainer.data !== this
+            );
+        });
+
+        this.dropList.dropped
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(({ previousIndex, previousContainer, container, item, event }) => {
+                const { option }: KbqListOptionDragData = item.data;
+                const target: KbqListSelection = container.data;
+                // Sorting is disabled, so CDK reports the untouched starting index. The gap the indicator
+                // marked is the real target; without one the pointer was outside every list we know, which
+                // resolves to a move that changes nothing.
+                const currentIndex = target.dropIndex ?? previousIndex;
+
+                this.clearDropIndicators(option);
+
+                this.emitDropped({
+                    option,
+                    previousIndex,
+                    currentIndex,
+                    previousContainer: previousContainer.data,
+                    container: target,
+                    event
+                });
+            });
+    }
+
+    /**
+     * Both containers break the index space `dropped` reports: `CdkDropList` numbers only the options
+     * it has rendered, and an option inside a group is numbered within that group. Either way the
+     * indices do not address the consumer's backing array and the move silently lands on the wrong
+     * item, so warn instead of letting it pass unnoticed.
+     */
+    private warnOnUnsupportedDragContainer(): void {
+        // Runs on every `draggable`/`disabled` change as well as on init, so it has to tolerate being
+        // called before the content children exist and to stay quiet once it has had its say.
+        if (this.hasWarnedOnDragContainer || !isDevMode() || !this.draggable || !this.platform.isBrowser) {
+            return;
+        }
+
+        const insideVirtualScroll = !!this.elementRef.nativeElement.querySelector('cdk-virtual-scroll-viewport');
+        const insideOptgroup = !!this.options?.some((option) => !!option.group);
+
+        if (insideVirtualScroll) {
+            // eslint-disable-next-line no-console
+            console.warn(
+                'KbqListSelection: `draggable` is not supported inside `cdk-virtual-scroll-viewport`. The ' +
+                    'indices reported by `dropped` count only the rendered options.'
+            );
+        }
+
+        if (insideOptgroup) {
+            // eslint-disable-next-line no-console
+            console.warn(
+                'KbqListSelection: `draggable` is not supported inside `kbq-optgroup`. The indices reported ' +
+                    'by `dropped` are relative to the group, not to the list.'
+            );
+        }
+
+        this.hasWarnedOnDragContainer = insideVirtualScroll || insideOptgroup;
+    }
+
+    /** Keeps the underlying CDK directives in sync with the resolved `draggable` state. */
+    private syncDraggableState(): void {
+        this.dropList.disabled = !this.draggable;
+        this.options?.forEach((option) => option.syncDraggableState());
+        this.warnOnUnsupportedDragContainer();
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private normalizeConnectedTo(): readonly (KbqListSelection | string)[] {
+        const connectedTo = this.connectedTo();
+
+        return Array.isArray(connectedTo) ? connectedTo : [connectedTo as KbqListSelection | string];
+    }
+
+    private resolveConnectedLists(): KbqListSelection[] {
+        return this.normalizeConnectedTo().filter((item): item is KbqListSelection => typeof item !== 'string');
+    }
+
+    private resolveConnectedDropLists(): (CdkDropList<KbqListSelection> | string)[] {
+        return this.normalizeConnectedTo().map((item) => (typeof item === 'string' ? item : item.dropList));
+    }
+
+    /**
+     * Tracks the dragged option and paints the insertion indicator in whichever list the pointer is
+     * over. Lists connected by `id` alone cannot be resolved to an instance, so they never light up —
+     * the same limitation that keeps them out of reach of the keyboard.
+     *
+     * @docs-private
+     */
+    onOptionDragMoved(option: KbqListOption, pointer: { x: number; y: number }): void {
+        const lists = [this, ...this.resolveConnectedLists()];
+        const hovered = lists.find((list) => list.containsPoint(pointer));
+
+        for (const list of lists) {
+            if (list !== hovered) {
+                list.clearDropIndicator();
+            }
+        }
+
+        hovered?.showDropIndicator(option, pointer);
+    }
+
+    /**
+     * Drops the indicator in every list that could be showing one for this drag.
+     *
+     * @docs-private
+     */
+    clearDropIndicators(option: KbqListOption): void {
+        for (const list of [this, ...this.resolveConnectedLists(), option.listSelection]) {
+            list.clearDropIndicator();
+        }
+    }
+
+    private clearDropIndicator(): void {
+        this.dropIndex = null;
+        this.dropIndicatorOffset.set(null);
+    }
+
+    private containsPoint({ x, y }: { x: number; y: number }): boolean {
+        if (!this.draggable) {
+            return false;
+        }
+
+        const { top, right, bottom, left } = this.elementRef.nativeElement.getBoundingClientRect();
+
+        return x >= left && x <= right && y >= top && y <= bottom;
+    }
+
+    /**
+     * Resolves the gap the pointer sits in and positions the indicator on it. Geometry is read on every
+     * move rather than cached at drag start: nothing in the list reflows while dragging, but CDK
+     * auto-scrolls near the edges, which would silently invalidate a cache.
+     */
+    private showDropIndicator(dragged: KbqListOption, pointer: { x: number; y: number }): void {
+        const horizontal = this.horizontal();
+        // The dragged option is left out on purpose: CDK pulls its host element out of the flow, and
+        // excluding it makes the resulting gap index directly usable as `currentIndex` — that is exactly
+        // the index space `moveItemInArray` and `transferArrayItem` expect.
+        const rects = this.options
+            .filter((option) => option !== dragged)
+            .map((option) => option.getHostElement().getBoundingClientRect());
+
+        const startOf = (rect: DOMRect) => (horizontal ? rect.left : rect.top);
+        const endOf = (rect: DOMRect) => (horizontal ? rect.right : rect.bottom);
+        const midpointOf = (rect: DOMRect) => (startOf(rect) + endOf(rect)) / 2;
+
+        const position = horizontal ? pointer.x : pointer.y;
+        const index = rects.filter((rect) => position >= midpointOf(rect)).length;
+
+        const container = this.elementRef.nativeElement.getBoundingClientRect();
+        const scrolled = horizontal
+            ? this.elementRef.nativeElement.scrollLeft
+            : this.elementRef.nativeElement.scrollTop;
+
+        // The gap sits before the first option, or right after the one that precedes it. An empty list
+        // has no options to measure, so the indicator goes to the top of its content box.
+        let boundary = startOf(container);
+
+        if (rects.length) {
+            boundary = index === 0 ? startOf(rects[0]) : endOf(rects[index - 1]);
+        }
+
+        this.dropIndex = index;
+        this.dropIndicatorOffset.set(boundary - startOf(container) + scrolled);
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Moves the active option one position with `Alt` + up/down, or into the previous/next connected
+     * list with `Alt` + left/right.
+     */
+    private moveActiveOptionByKey(event: KeyboardEvent): void {
+        const option = this.keyManager.activeItem;
+
+        if (!option || option.disabled) {
+            return;
+        }
+
+        const previousIndex = this.getOptionIndex(option);
+
+        if ([UP_ARROW, DOWN_ARROW].includes(event.keyCode)) {
+            const currentIndex = previousIndex + (event.keyCode === UP_ARROW ? -1 : 1);
+
+            if (!this.isValidIndex(currentIndex)) {
+                return;
+            }
+
+            this.emitDropped({
+                option,
+                previousIndex,
+                currentIndex,
+                previousContainer: this,
+                container: this,
+                event
+            });
+
+            return;
+        }
+
+        const container = this.getAdjacentList(event.keyCode === LEFT_ARROW ? 'previous' : 'next');
+
+        if (!container) {
+            return;
+        }
+
+        this.emitDropped({
+            option,
+            previousIndex,
+            currentIndex: container.options.length,
+            previousContainer: this,
+            container,
+            event
+        });
+    }
+
+    /**
+     * Target of a keyboard transfer: the first connected list for `Alt` + right, the last one for
+     * `Alt` + left. Lists connected by `id` cannot be resolved and are therefore keyboard-unreachable.
+     */
+    private getAdjacentList(direction: 'previous' | 'next'): KbqListSelection | undefined {
+        const lists = this.resolveConnectedLists().filter((list) => list.draggable);
+
+        return direction === 'next' ? lists.at(0) : lists.at(-1);
+    }
+
+    private emitDropped(event: KbqListSelectionDroppedEvent): void {
+        this.dropped.emit(event);
+
+        // Positional state does not survive a reorder: the key manager re-syncs `activeItemIndex` from
+        // `options.changes`, but `previousActiveItemIndex` (the anchor of shift-range selection) does not.
+        this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex;
+
+        this.announceMove(event.option, event.container);
+    }
+
+    /**
+     * Announces the option's new position, but only once the consumer has actually applied the move —
+     * the list never reorders its own content, so nothing is announced if `dropped` is left unhandled.
+     */
+    private announceMove(option: KbqListOption, container: KbqListSelection): void {
+        const { value } = option;
+        const label = option.getLabel();
+
+        // Tracked on the list the move is awaited on, so that a move into a connected list does not
+        // cancel one still pending here. A move that is never applied leaves its subscription pending,
+        // so drop the previous one first.
+        container.pendingMoveSubscription?.unsubscribe();
+
+        container.pendingMoveSubscription = container.options.changes
+            .pipe(take(1), takeUntilDestroyed(container.destroyRef))
+            .subscribe(() => {
+                const options = container.options.toArray();
+                // Reordering within a list keeps the instance; moving between lists recreates it.
+                const index = options.includes(option)
+                    ? options.indexOf(option)
+                    : options.findIndex((item) => container.compareWith()(item.value, value));
+
+                if (index === -1) {
+                    return;
+                }
+
+                const values: Record<string, string> = {
+                    label,
+                    index: `${index + 1}`,
+                    total: `${options.length}`
+                };
+                // Single pass over the template: a label that itself contains `{{ index }}` must not be
+                // rescanned and consume the substitution meant for the real placeholder.
+                const message = container
+                    .a11yLocale()
+                    .listOptionMoved.replace(/{{ (label|index|total) }}/g, (_, name: string) => values[name]);
+
+                // Empty then re-fill on the next tick so an identical consecutive message still changes the
+                // live-region text node and is re-announced (a same-string `set` would be an `Object.is`
+                // no-op that assistive tech never picks up).
+                container.announcement.set('');
+                setTimeout(() => container.announcement.set(message));
+
+                container.keyManager.setActiveItem(index);
+            });
     }
 
     // View to model callback that should be called whenever the selected options change.
@@ -728,16 +1174,19 @@ export class KbqListOptionCaption {}
         class: 'kbq-list-option',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-list-option_multiple]': 'listSelection.multiple',
+        '[class.kbq-list-option_draggable]': 'draggable',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-action-button-focused]': 'actionButton()?.active',
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
+        '[attr.aria-keyshortcuts]': 'draggable ? listSelection.ariaKeyShortcuts : null',
         '(focusin)': 'focus()',
         '(blur)': 'blur()',
         '(click)': 'handleClick($event)',
         '(keydown)': 'onKeydown($event)'
     },
+    hostDirectives: [CdkDrag],
     exportAs: 'kbqListOption',
     preserveWhitespaces: false
 })
@@ -745,6 +1194,8 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetector = inject(ChangeDetectorRef);
     private ngZone = inject(NgZone);
+    private readonly drag = inject<CdkDrag<KbqListOptionDragData>>(CdkDrag, { host: true });
+    private readonly destroyRef = inject(DestroyRef);
     listSelection = inject(KbqListSelection);
     readonly group = inject(KbqOptgroup, { optional: true });
     hasFocus: boolean = false;
@@ -805,11 +1256,16 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     set disabled(value: boolean) {
         if (value !== this._disabled) {
             this._disabled = value;
-            this.changeDetector.markForCheck();
+            this.syncDraggableState();
         }
     }
 
     private _disabled = false;
+
+    /** Whether this option can be dragged. Driven by the list — options have no `draggable` input. */
+    protected get draggable(): boolean {
+        return this.listSelection.draggable && !this.disabled;
+    }
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -845,6 +1301,38 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     get externalPseudoCheckbox(): boolean {
         return !!this.pseudoCheckbox();
+    }
+
+    constructor() {
+        this.syncDraggableState();
+
+        // The whole row is the drag handle, so a touch drag has to lose to a scroll gesture.
+        this.drag.dragStartDelay = { touch: 300, mouse: 0 };
+
+        // Assigned lazily: referencing `this` while the host directive is still being constructed
+        // would capture a half-initialized option.
+        // Nothing is cleared on `ended`: it fires *before* `dropped`, so tearing the indicator down
+        // there would take the resolved target index with it and turn every drop into a no-op.
+        this.drag.started.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.drag.data = { option: this };
+            this.listSelection.clearDropIndicators(this);
+        });
+
+        // Sorting is disabled, so CDK gives no running feedback about where the option would land —
+        // the owning list derives it from the pointer and paints the insertion indicator itself.
+        this.drag.moved.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ pointerPosition }) => {
+            this.listSelection.onOptionDragMoved(this, pointerPosition);
+        });
+    }
+
+    /**
+     * Keeps the underlying `CdkDrag` in sync with the resolved `draggable` state.
+     *
+     * @docs-private
+     */
+    syncDraggableState(): void {
+        this.drag.disabled = !this.draggable;
+        this.changeDetector.markForCheck();
     }
 
     ngOnInit() {

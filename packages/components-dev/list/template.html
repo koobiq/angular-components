@@ -4,6 +4,48 @@
 <dev-examples />
 <hr />
 
+<h5>draggable — reorder within one list</h5>
+<kbq-list-selection
+    multiple="checkbox"
+    [draggable]="true"
+    [(ngModel)]="draggableSelected"
+    (dropped)="onDropped($event)"
+>
+    @for (item of draggableItems(); track item.id) {
+        <kbq-list-option [value]="item">{{ item.label }}</kbq-list-option>
+    }
+</kbq-list-selection>
+<div>order: {{ draggableItems() | json }}</div>
+
+<h5>draggable — transfer between connected lists</h5>
+<div style="display: flex; gap: 16px">
+    <kbq-list-selection
+        #available="kbqListSelection"
+        style="flex: 1"
+        multiple="checkbox"
+        [connectedTo]="[chosen]"
+        [draggable]="true"
+        (dropped)="onTransferred($event)"
+    >
+        @for (item of availableItems(); track item.id) {
+            <kbq-list-option [value]="item">{{ item.label }}</kbq-list-option>
+        }
+    </kbq-list-selection>
+    <kbq-list-selection
+        #chosen="kbqListSelection"
+        style="flex: 1"
+        multiple="checkbox"
+        [connectedTo]="[available]"
+        [draggable]="true"
+        (dropped)="onTransferred($event)"
+    >
+        @for (item of chosenItems(); track item.id) {
+            <kbq-list-option [value]="item">{{ item.label }}</kbq-list-option>
+        }
+    </kbq-list-selection>
+</div>
+<hr />
+
 <h5>single selection</h5>
 <kbq-list-selection [(ngModel)]="selected" (onCopy)="onCopy($event)">
     <kbq-list-option [disabled]="true" [value]="'Disabled'">

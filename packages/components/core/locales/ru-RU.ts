@@ -21,7 +21,8 @@ export const ruRULocaleData = {
         nextMonth: 'Следующий месяц',
         clear: 'Очистить',
         showPassword: 'Показать пароль',
-        hidePassword: 'Скрыть пароль'
+        hidePassword: 'Скрыть пароль',
+        listOptionMoved: '{{ label }}, позиция {{ index }} из {{ total }}'
     } satisfies KbqA11yLocaleConfiguration,
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' } satisfies KbqSelectLocaleConfiguration,
     datepicker: {

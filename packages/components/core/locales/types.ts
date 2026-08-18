@@ -1,10 +1,11 @@
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 
 /**
- * Accessible names for the icon-only buttons the library renders itself.
+ * Text the library exposes to assistive tech only: accessible names for the icon-only buttons it
+ * renders itself, and live-region announcements.
  *
  * An icon carries no text, so without one of these a button has no accessible name at all (AXE
- * `button-name`). They are announced by assistive tech and are never displayed.
+ * `button-name`). None of these strings are ever displayed.
  */
 export type KbqA11yLocaleConfiguration = {
     /** Close button of a modal, popover, sidepanel, content panel or notification center. */
@@ -29,6 +30,11 @@ export type KbqA11yLocaleConfiguration = {
     showPassword: string;
     /** Password form field button that masks the password. */
     hidePassword: string;
+    /**
+     * Announced after an option of a draggable `kbq-list-selection` has been reordered.
+     * Supports the `{{ label }}`, `{{ index }}` and `{{ total }}` placeholders.
+     */
+    listOptionMoved: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */
