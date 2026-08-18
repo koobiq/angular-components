@@ -398,11 +398,11 @@ export class FilterBarUniqPipesExample {
     saveCurrentFilterWithNewName(filter: KbqFilter, filterBar: KbqFilterBar) {
         // This logic simulates the behavior of the backend
         if (filterBar.filter()?.name !== filter.name) {
-            this.filters.splice(
-                this.filters.findIndex(({ name }) => name === filterBar.filter()?.name),
-                1,
-                filter!
-            );
+            const index = this.filters.findIndex(({ name }) => name === filterBar.filter()?.name);
+
+            // Renaming writes the name only: the stored pipes stay as they were saved, so unsaved changes
+            // in the bar are not persisted along with the new name.
+            this.filters.splice(index, 1, { ...this.filters[index], name: filter.name });
 
             this.activeFilter = filter;
 

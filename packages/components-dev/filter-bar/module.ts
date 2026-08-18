@@ -1036,6 +1036,13 @@ export class DevApp implements AfterViewInit {
 
         if (status === KbqSaveFilterStatuses.NewFilter) {
             this.filters.push(filter);
+        } else if (status === KbqSaveFilterStatuses.NewName) {
+            const index = this.filters.findIndex(({ name }) => name === filterBar.filter()?.name);
+
+            // Renaming writes the name only, leaving the stored pipes as they were saved.
+            this.filters.splice(index, 1, { ...this.filters[index], name: filter.name });
+
+            this.activeFilter = filter;
         } else {
             this.filters.splice(
                 this.filters.findIndex(({ name }) => name === filter?.name),
