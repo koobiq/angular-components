@@ -87,7 +87,6 @@ export class KbqListModule {
 export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     // (undocumented)
     readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
-    // (undocumented)
     blur(): void;
     // (undocumented)
     readonly checkboxPosition: i0.InputSignal<"before" | "after">;
@@ -97,10 +96,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     dropdownTrigger?: KbqDropdownTrigger;
     // (undocumented)
     protected get externalPseudoCheckbox(): boolean;
-    // (undocumented)
     focus(): void;
     getHeight(): number;
-    // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
     getLabel(): string;
@@ -130,7 +127,6 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     readonly pseudoCheckbox: i0.Signal<KbqPseudoCheckbox | undefined>;
     get selected(): boolean;
     set selected(value: boolean);
-    // (undocumented)
     setSelected(selected: boolean): void;
     get showCheckbox(): boolean;
     set showCheckbox(value: BooleanInput);
@@ -139,7 +135,6 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     // (undocumented)
     readonly text: i0.Signal<ElementRef<any>>;
     textElement: ElementRef;
-    // (undocumented)
     toggle(): void;
     // (undocumented)
     tooltipTrigger?: KbqTooltipTrigger;
@@ -173,12 +168,9 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     constructor();
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
-    // (undocumented)
     blur(): void;
-    // (undocumented)
     canDeselectLast(listOption: KbqListOption<T>): boolean;
     readonly compareWith: i0.InputSignal<(o1: T, o2: T) => boolean>;
-    // (undocumented)
     deselectAll(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -189,7 +181,6 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     getHeight(): number;
-    // (undocumented)
     getSelectedOptionValues(): T[];
     // (undocumented)
     readonly horizontal: i0.InputSignalWithTransform<boolean, unknown>;
@@ -231,7 +222,6 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     reportValueChange(): void;
     // (undocumented)
     selectActiveOptions(): void;
-    // (undocumented)
     selectAll(): void;
     get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection<T>) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection<T>) => void);

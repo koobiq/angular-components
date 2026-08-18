@@ -14,6 +14,8 @@ let uniqueOptgroupIdCounter = 0;
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-optgroup',
+        role: 'group',
+        '[attr.aria-labelledby]': 'labelId',
         '[class.kbq-disabled]': 'disabled'
     },
     exportAs: 'kbqOptgroup'

@@ -355,6 +355,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         }
     }
 
+    /** Clears the active key-manager item (unless an option is still focused) and marks the list as touched. */
     blur(): void {
         if (!this.hasFocusedOption()) {
             this.keyManager.setActiveItem(-1);
@@ -364,12 +365,14 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Selects every non-disabled option and reports the new value to the `ControlValueAccessor`. */
     selectAll(): void {
         this.options.forEach((option) => option.setSelected(true));
 
         this.reportValueChange();
     }
 
+    /** Deselects every option and reports the new value to the `ControlValueAccessor`. */
     deselectAll(): void {
         this.options.forEach((option) => option.setSelected(false));
 
@@ -488,6 +491,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Values of the currently selected options. */
     getSelectedOptionValues(): T[] {
         return this.options.filter((option) => option.selected).map((option) => option.value);
     }
@@ -509,6 +513,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         }
     }
 
+    /** Whether `listOption` is allowed to be deselected, given {@link noUnselectLast}. */
     canDeselectLast(listOption: KbqListOption<T>): boolean {
         return !(this.noUnselectLast && this.selectionModel.selected.length === 1 && listOption.selected);
     }
@@ -564,9 +569,9 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             this.keyManager.tabOut.next();
 
             return;
-        } else if (keyCode === DOWN_ARROW || (this.horizontal() && keyCode === RIGHT_ARROW)) {
+        } else if (this.horizontal() ? keyCode === RIGHT_ARROW : keyCode === DOWN_ARROW) {
             this.keyManager.setNextItemActive();
-        } else if (keyCode === UP_ARROW || (this.horizontal() && keyCode === LEFT_ARROW)) {
+        } else if (this.horizontal() ? keyCode === LEFT_ARROW : keyCode === UP_ARROW) {
             this.keyManager.setPreviousItemActive();
         } else if (keyCode === HOME) {
             this.keyManager.setFirstItemActive();
@@ -930,7 +935,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     ngOnInit(): void {
         const list = this.listSelection;
 
-        if (list._value && list._value.some((value) => list.compareWith()(value, this._value))) {
+        if (list._value && list._value.some((value) => list.compareWith()(this._value, value))) {
             this.setSelected(true);
         }
 
@@ -961,6 +966,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         this.listSelection.removeOptionFromList(this);
     }
 
+    /** Toggles the selected state of this option. */
     toggle(): void {
         this.selected = !this.selected;
     }
@@ -971,6 +977,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         return text ? (text.nativeElement.textContent ?? '') : '';
     }
 
+    /** Sets the selected state directly on the list's `SelectionModel`, bypassing the `selected` input setter. */
     setSelected(selected: boolean): void {
         if (this._selected === selected || !this.listSelection.selectionModel) {
             return;
@@ -1014,6 +1021,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         kbqFocusOptionActionOnTab($event, this.actionButton());
     }
 
+    /** Moves DOM focus to this option, unless it is disabled or already focused. */
     focus(): void {
         if (this.disabled || this.hasFocus || this.actionButton()?.hasFocus) {
             return;
@@ -1030,6 +1038,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         });
     }
 
+    /** Marks this option as blurred once the zone stabilizes, unless {@link preventBlur} is set. */
     blur(): void {
         if (this.preventBlur) {
             return;
@@ -1055,6 +1064,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
             });
     }
 
+    /** The option's host DOM element. */
     getHostElement(): HTMLElement {
         return this.elementRef.nativeElement;
     }

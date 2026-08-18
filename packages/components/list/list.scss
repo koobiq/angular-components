@@ -42,23 +42,30 @@
     @include list.kbq-list-item-base();
 
     // Re-declared on top of the shared base so the `--kbq-list-size-*` tokens become real override
-    // points. Both elements only ever render inside `.kbq-list` / `.kbq-list-selection`, which is
-    // where list-tokens.scss declares them, so no `var()` fallbacks are needed here.
+    // points. `.kbq-list-option` is guaranteed to be inside `.kbq-list-selection` (it injects it),
+    // but `.kbq-list-item`/`a[kbq-list-item]` has no such enforcement, so every token here falls back
+    // to the shared base mixin's own value in case it's ever rendered outside `.kbq-list`.
     // The horizontal padding subtracts the transparent focus border so the total stays on the grid.
-    border-width: var(--kbq-list-size-container-focus-outline-width);
+    border-width: var(--kbq-list-size-container-focus-outline-width, var(--kbq-size-3xs));
     border-radius: var(--kbq-size-border-radius);
-    gap: var(--kbq-list-size-container-content-gap-horizontal);
-    padding-top: var(--kbq-list-size-container-padding-vertical);
+    gap: var(--kbq-list-size-container-content-gap-horizontal, var(--kbq-size-s));
+    padding-top: var(--kbq-list-size-container-padding-vertical, var(--kbq-size-xxs));
     padding-right: calc(
-        var(--kbq-list-size-container-padding-right) - var(--kbq-list-size-container-focus-outline-width)
+        var(--kbq-list-size-container-padding-right, var(--kbq-size-m)) - var(
+                --kbq-list-size-container-focus-outline-width,
+                var(--kbq-size-3xs)
+            )
     );
-    padding-bottom: var(--kbq-list-size-container-padding-vertical);
+    padding-bottom: var(--kbq-list-size-container-padding-vertical, var(--kbq-size-xxs));
     padding-left: calc(
-        var(--kbq-list-size-container-padding-left) - var(--kbq-list-size-container-focus-outline-width)
+        var(--kbq-list-size-container-padding-left, var(--kbq-size-m)) - var(
+                --kbq-list-size-container-focus-outline-width,
+                var(--kbq-size-3xs)
+            )
     );
 
     .kbq-list-option-caption {
-        padding-top: var(--kbq-list-size-container-content-gap-vertical);
+        padding-top: var(--kbq-list-size-container-content-gap-vertical, var(--kbq-size-3xs));
     }
 
     &:not(.kbq-disabled) {

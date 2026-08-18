@@ -1331,17 +1331,19 @@ describe('KbqListSelection range selection', () => {
         listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption));
     });
 
-    // `keyManager.previousActiveItemIndex` is -1 until the first keyboard move, so the range has no
-    // anchor to read a selection state from.
+    // A real mouse click focuses the option first, which routes through `listenToOptionsFocus` ->
+    // `keyManager.updateActiveItem`, not `setActiveItem` — so `activeItemIndex` becomes a real index
+    // while `previousActiveItemIndex` stays -1 (only `setActiveItem` touches it). That asymmetric
+    // fromIndex=-1/toIndex=valid state is exactly what the `isValidIndex` guards in
+    // `selectActiveOptions` exist for.
     it('should not throw on shift + click before any keyboard navigation', () => {
+        list.keyManager.updateActiveItem(2);
+
         expect(list.keyManager.previousActiveItemIndex).toBe(-1);
+        expect(list.keyManager.activeItemIndex).toBe(2);
 
         expect(() => list.setSelectedOptionsByClick(listOptions[2].componentInstance, true, false)).not.toThrow();
         expect(list.selectionModel.selected.length).toBe(0);
-    });
-
-    it('should not throw when selectActiveOptions runs without an anchor', () => {
-        expect(() => list.selectActiveOptions()).not.toThrow();
     });
 
     it('should extend the range from the anchor once the keyboard has moved', fakeAsync(() => {
@@ -1467,6 +1469,23 @@ describe('KbqListSelection layout measurement', () => {
 
         expect(withScrollSize).toHaveBeenCalledWith(3);
     });
+
+    // Mirrors `RESIZE_AUDIT_TIME` in list-selection.component.ts, not exported since it's an
+    // implementation detail of the resize listener, not public API.
+    const RESIZE_AUDIT_TIME = 100;
+
+    it('should recompute the scroll size on window resize, debounced', fakeAsync(() => {
+        const updateScrollSizeSpy = jest.spyOn(list, 'updateScrollSize');
+
+        window.dispatchEvent(new Event('resize'));
+        window.dispatchEvent(new Event('resize'));
+
+        expect(updateScrollSizeSpy).not.toHaveBeenCalled();
+
+        tick(RESIZE_AUDIT_TIME);
+
+        expect(updateScrollSizeSpy).toHaveBeenCalledTimes(1);
+    }));
 });
 
 describe('KbqListSelection accessibility', () => {
