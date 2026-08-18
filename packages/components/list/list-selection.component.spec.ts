@@ -1295,6 +1295,55 @@ describe('KbqListSelection drag and drop', () => {
         return event;
     };
 
+    const getOptions = (fixture: ComponentFixture<unknown>): KbqListOption[] =>
+        fixture.debugElement.queryAll(By.directive(KbqListOption)).map((option) => option.componentInstance);
+
+    /**
+     * jsdom performs no layout, so every rect is empty and the gap the indicator marks cannot be
+     * resolved. Stacks the options 20px apart, which puts their midpoints at 10, 30, 50, 70.
+     */
+    const stubVerticalLayout = (fixture: ComponentFixture<unknown>, optionHeight = 20) => {
+        fixture.debugElement.queryAll(By.directive(KbqListSelection)).forEach(({ nativeElement }) => {
+            jest.spyOn(nativeElement as HTMLElement, 'getBoundingClientRect').mockReturnValue({
+                top: 0,
+                bottom: 1000,
+                left: 0,
+                right: 100
+            } as DOMRect);
+        });
+
+        getOptions(fixture).forEach((option, index) => {
+            jest.spyOn(option.getHostElement(), 'getBoundingClientRect').mockReturnValue({
+                top: index * optionHeight,
+                bottom: (index + 1) * optionHeight,
+                left: 0,
+                right: 100
+            } as DOMRect);
+        });
+    };
+
+    /** Replays what `CdkDropList` emits on drop; its own `currentIndex` is stale by design. */
+    const emitCdkDrop = (
+        fixture: ComponentFixture<unknown>,
+        option: KbqListOption,
+        event = createMouseEvent('mouseup')
+    ) => {
+        const dropList = getDropList(fixture);
+
+        dropList.dropped.emit({
+            previousIndex: 0,
+            currentIndex: 0,
+            item: { data: { option } } as any,
+            container: dropList,
+            previousContainer: dropList,
+            isPointerOverContainer: true,
+            distance: { x: 0, y: 0 },
+            dropPoint: { x: 0, y: 0 },
+            event
+        });
+        fixture.detectChanges();
+    };
+
     describe('opt-in wiring', () => {
         it('should not be draggable by default', () => {
             // A list with no `draggable` binding at all — the only way to exercise the real default.
@@ -1379,22 +1428,13 @@ describe('KbqListSelection drag and drop', () => {
         it('should re-emit a CDK drop as a KbqListSelectionDroppedEvent', () => {
             const fixture = setup(SelectionListWithDragAndDrop);
             const list = fixture.componentInstance.list();
-            const option = fixture.debugElement.queryAll(By.directive(KbqListOption))[0].componentInstance;
-            const dropList = getDropList(fixture);
+            const option = getOptions(fixture)[0];
             const nativeEvent = createMouseEvent('mouseup');
 
-            dropList.dropped.emit({
-                previousIndex: 0,
-                currentIndex: 2,
-                item: { data: { option } } as any,
-                container: dropList,
-                previousContainer: dropList,
-                isPointerOverContainer: true,
-                distance: { x: 0, y: 0 },
-                dropPoint: { x: 0, y: 0 },
-                event: nativeEvent
-            });
-            fixture.detectChanges();
+            stubVerticalLayout(fixture);
+            // Pointer past the midpoint of the third option, i.e. into the gap that follows it.
+            list.onOptionDragMoved(option, { x: 50, y: 55 });
+            emitCdkDrop(fixture, option, nativeEvent);
 
             expect(fixture.componentInstance.dropped).toEqual({
                 previousIndex: 0,
@@ -1404,6 +1444,118 @@ describe('KbqListSelection drag and drop', () => {
                 previousContainer: list,
                 event: nativeEvent
             });
+        });
+
+        it('should survive the ended event that CDK fires before the drop', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[0];
+
+            stubVerticalLayout(fixture);
+            list.onOptionDragMoved(option, { x: 50, y: 55 });
+
+            // `DragRef` emits `ended` immediately before `dropped`. Tearing the indicator down there
+            // would discard the resolved target index and silently turn every drag into a no-op.
+            getDrags(fixture)[0].ended.emit({
+                source: null!,
+                distance: { x: 0, y: 0 },
+                dropPoint: { x: 0, y: 0 },
+                event: createMouseEvent('mouseup')
+            });
+            emitCdkDrop(fixture, option);
+
+            expect(fixture.componentInstance.dropped!.currentIndex).toBe(2);
+            expect(getLabels(fixture)).toEqual(['Item 1', 'Item 2', 'Item 0', 'Item 3']);
+        });
+
+        it('should report a move that changes nothing when the pointer never entered a list', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const option = getOptions(fixture)[0];
+
+            // Sorting is disabled, so CDK itself has no target index to offer — dropping outside every
+            // known list has to resolve to a no-op rather than to CDK's stale starting index.
+            emitCdkDrop(fixture, option);
+
+            expect(fixture.componentInstance.dropped!.currentIndex).toBe(0);
+            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 1', 'Item 2', 'Item 3']);
+        });
+    });
+
+    describe('drop indicator', () => {
+        const getIndicator = (fixture: ComponentFixture<unknown>) =>
+            (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.kbq-list-selection__drop-indicator');
+
+        const getIndicatorOffset = (fixture: ComponentFixture<unknown>) =>
+            getIndicator(fixture)!.style.getPropertyValue('--kbq-list-drop-indicator-offset');
+
+        it('should not be rendered until a drag hovers the list', () => {
+            expect(getIndicator(setup(SelectionListWithDragAndDrop))).toBeNull();
+        });
+
+        it('should sit on the gap the pointer is closest to', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[0];
+
+            stubVerticalLayout(fixture);
+            // Above every midpoint: the option would land before the first one.
+            list.onOptionDragMoved(option, { x: 50, y: 5 });
+            fixture.detectChanges();
+
+            expect(getIndicatorOffset(fixture)).toBe('20px');
+
+            // Past the last midpoint: the option would land at the very end.
+            list.onOptionDragMoved(option, { x: 50, y: 95 });
+            fixture.detectChanges();
+
+            expect(getIndicatorOffset(fixture)).toBe('80px');
+        });
+
+        it('should disappear once the option has been dropped', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[0];
+
+            stubVerticalLayout(fixture);
+            list.onOptionDragMoved(option, { x: 50, y: 55 });
+            fixture.detectChanges();
+
+            expect(getIndicator(fixture)).not.toBeNull();
+
+            emitCdkDrop(fixture, option);
+
+            expect(getIndicator(fixture)).toBeNull();
+        });
+
+        it('should follow the pointer into the connected list and leave the source', () => {
+            const fixture = setup(ConnectedSelectionLists);
+            const [sourceElement, targetElement] = fixture.debugElement
+                .queryAll(By.directive(KbqListSelection))
+                .map(({ nativeElement }) => nativeElement as HTMLElement);
+            const source = fixture.debugElement.queryAll(By.directive(KbqListSelection))[0]
+                .componentInstance as KbqListSelection;
+            const option = getOptions(fixture)[0];
+
+            stubVerticalLayout(fixture);
+            // `stubVerticalLayout` stacks both lists on the same box, so separate them along x and aim
+            // the pointer at the second one.
+            jest.spyOn(targetElement, 'getBoundingClientRect').mockReturnValue({
+                top: 0,
+                bottom: 1000,
+                left: 200,
+                right: 300
+            } as DOMRect);
+
+            source.onOptionDragMoved(option, { x: 250, y: 5 });
+            fixture.detectChanges();
+
+            const indicators = (fixture.nativeElement as HTMLElement).querySelectorAll(
+                '.kbq-list-selection__drop-indicator'
+            );
+
+            expect(indicators.length).toBe(1);
+            expect(targetElement.contains(indicators[0])).toBe(true);
+            expect(sourceElement.querySelector('.kbq-list-selection__drop-indicator')).toBeNull();
         });
     });
 

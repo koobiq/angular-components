@@ -25,6 +25,11 @@
     outline: none;
 }
 
+// Positioning context for the drop indicator, which is the list's own last child.
+.kbq-list-selection {
+    position: relative;
+}
+
 .kbq-list-item,
 .kbq-list-option {
     @include vendor-prefixes.user-select(none);
@@ -37,26 +42,72 @@
     }
 }
 
-// Gated on the placeholder rather than on `.cdk-drop-list-dragging`: that class is an Angular host
-// binding, so it survives until the next change detection — long enough for CDK to clear the sort
-// transforms while this transition is still live. The reset would then animate on top of the DOM
-// order the consumer has already applied, and every option below the dropped one visibly slides
-// into place. CDK removes the placeholder from the DOM synchronously, before that reset.
-.kbq-list-selection:has(.cdk-drag-placeholder) .cdk-drag {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
 .kbq-list-option {
     &.kbq-list-option_draggable {
         cursor: grab;
     }
 
-    &.cdk-drag-placeholder {
+    // The row the drag started from keeps its slot. `cdk-drag-anchor` is the clone CDK leaves behind
+    // once the option has been dragged into a connected list.
+    &.cdk-drag-placeholder,
+    &.cdk-drag-anchor {
         opacity: var(--kbq-opacity-disabled);
     }
 
-    &.cdk-drag-animating {
-        transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+    // Hidden while the placeholder sits in a list the option was not dragged from, so that list keeps
+    // its layout. Toggled from `KbqListSelection` on `cdkDropListEntered`.
+    &.kbq-list-option_foreign-placeholder {
+        display: none;
+    }
+
+    // No `.cdk-drag-animating` transition on purpose. CDK animates the preview onto the placeholder,
+    // which — with sorting disabled — never leaves the slot the drag started from, so the preview
+    // would fly back to the origin and read as a rejected drop. With no transition declared the
+    // duration is 0 and CDK disposes of the preview without animating it anywhere.
+}
+
+// Marks the gap the dragged option would land in. Sorting is disabled, so the list never opens a gap
+// of its own and this line is the only feedback about the target position.
+.kbq-list-selection__drop-indicator {
+    position: absolute;
+    background: var(--kbq-list-states-dragged-indicator-color);
+    pointer-events: none;
+
+    // The dot that caps the line: at its left end in a vertical list, at its top in a horizontal one.
+    &::before {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        background: var(--kbq-list-states-dragged-indicator-color);
+        block-size: var(--kbq-list-size-dragged-indicator-point-size);
+        inline-size: var(--kbq-list-size-dragged-indicator-point-size);
+    }
+}
+
+.kbq-list-selection:not(.kbq-list-selection_horizontal) .kbq-list-selection__drop-indicator {
+    left: 0;
+    right: 0;
+    // The line straddles the gap instead of sitting below it, so it reads as "between these two rows".
+    top: calc(var(--kbq-list-drop-indicator-offset, 0px) - var(--kbq-list-size-dragged-indicator-thickness) / 2);
+    block-size: var(--kbq-list-size-dragged-indicator-thickness);
+
+    &::before {
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.kbq-list-selection_horizontal .kbq-list-selection__drop-indicator {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--kbq-list-drop-indicator-offset, 0px) - var(--kbq-list-size-dragged-indicator-thickness) / 2);
+    inline-size: var(--kbq-list-size-dragged-indicator-thickness);
+
+    &::before {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
 

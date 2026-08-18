@@ -52,3 +52,12 @@
     /* THEME TOKENS */
     @include list-theme-tokens;
 }
+
+// Declared here rather than in `list-theme-tokens`, which is also included by the option and dropdown
+// token files: the insertion indicator only ever exists on `kbq-list-selection`. The colour still
+// follows the theme, because the global token it points at does.
+.kbq-list-selection {
+    --kbq-list-size-dragged-indicator-thickness: var(--kbq-size-3xs);
+    --kbq-list-size-dragged-indicator-point-size: var(--kbq-size-xs);
+    --kbq-list-states-dragged-indicator-color: var(--kbq-line-theme);
+}

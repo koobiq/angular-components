@@ -119,16 +119,14 @@ test.describe('KbqListModule', () => {
     });
 
     test.describe('E2eListDragAndDrop', () => {
-        // The suite runs with `reducedMotion: 'reduce'`, which would make the settling assertion below
-        // pass without ever exercising a transition.
-        test.use({ reducedMotion: 'no-preference' });
-
         const getLabels = (page: Page, list: string) =>
             page.getByTestId(list).locator('kbq-list-option .kbq-list-text').allInnerTexts();
 
         /**
-         * CDK only starts a drag past its 5px threshold, and only sorts once the pointer actually
-         * moves — hence the stepped move rather than a single jump.
+         * CDK only starts a drag past its 5px threshold, hence the stepped move rather than a single
+         * jump. The pointer stops past the target's midpoint rather than on it: the midpoint is exactly
+         * the boundary between the gap above the target and the gap below it, so aiming at the centre
+         * would leave the resulting position ambiguous.
          */
         const pressAndMoveOnto = async (page: Page, from: string, to: string) => {
             const sourceBox = (await page.getByTestId(from).boundingBox())!;
@@ -136,7 +134,7 @@ test.describe('KbqListModule', () => {
             const startX = sourceBox.x + sourceBox.width / 2;
             const startY = sourceBox.y + sourceBox.height / 2;
             const endX = targetBox.x + targetBox.width / 2;
-            const endY = targetBox.y + targetBox.height / 2;
+            const endY = targetBox.y + targetBox.height * 0.75;
 
             await page.mouse.move(startX, startY);
             await page.mouse.down();
@@ -157,6 +155,19 @@ test.describe('KbqListModule', () => {
             await page.mouse.up();
             await expect(page.locator('.cdk-drag-preview')).toHaveCount(0);
         };
+
+        /** Reads `label@top` of every option in the list — the layout the drag must never disturb. */
+        const readLayout = (page: Page, list: string) =>
+            page
+                .getByTestId(list)
+                .evaluate((container) =>
+                    [...container.querySelectorAll('kbq-list-option')]
+                        .map(
+                            (option) =>
+                                `${option.textContent!.trim()}@${Math.round(option.getBoundingClientRect().top)}`
+                        )
+                        .join(' ')
+                );
 
         /** Samples `label@top` of every option once per animation frame for `duration` ms. */
         const sampleFrames = (page: Page, list: string, duration: number) =>
@@ -185,13 +196,6 @@ test.describe('KbqListModule', () => {
                 [list, duration] as const
             );
 
-        /**
-         * Has to outlast both drag transitions declared in `list.scss` — the 250ms sort transition and
-         * the 300ms `.cdk-drag-animating` reset — with room to spare on a frame-throttled CI machine.
-         * Keep in sync with those durations.
-         */
-        const settlingDuration = 700;
-
         test.beforeEach(async ({ page }) => {
             await page.goto('/E2eListDragAndDrop');
         });
@@ -204,23 +208,60 @@ test.describe('KbqListModule', () => {
             expect(await getLabels(page, 'e2eSourceList')).toEqual(['source-2', 'source-3', 'source-1']);
         });
 
-        test('settles into the new order without sliding into place', async ({ page }) => {
+        test('never moves the surrounding options while dragging', async ({ page }) => {
+            const atRest = await readLayout(page, 'e2eSourceList');
+
+            const sampling = sampleFrames(page, 'e2eSourceList', 400);
+
             await pressAndMoveOnto(page, 'source-1', 'source-3');
 
-            const sampling = sampleFrames(page, 'e2eSourceList', settlingDuration);
+            // The target position is shown by the indicator, so the list itself must stay perfectly
+            // still: no option may be nudged aside to open a gap at any point during the drag.
+            expect([...new Set(await sampling)]).toEqual([atRest]);
 
             await page.mouse.up();
+        });
 
-            const frames = await sampling;
-            const settled = frames.at(-1)!;
-            // Once the consumer has applied the move, the options are already where they belong. If the
-            // sort transforms are reset with a transition still live, the reset animates on top of the
-            // new DOM order and every option below the dropped one visibly slides — those frames carry
-            // the new order but the old offsets.
-            const reordered = frames.filter((frame) => frame.startsWith('source-2'));
+        test('marks the drop target with the insertion indicator', async ({ page }) => {
+            const indicator = page.getByTestId('e2eSourceList').locator('.kbq-list-selection__drop-indicator');
 
-            expect(reordered.length).toBeGreaterThan(0);
-            expect([...new Set(reordered)]).toEqual([settled]);
+            await expect(indicator).toHaveCount(0);
+
+            await pressAndMoveOnto(page, 'source-1', 'source-3');
+
+            await expect(indicator).toBeVisible();
+
+            // Dropping past the midpoint of the last option puts the indicator at the list's end.
+            const lastOption = (await page.getByTestId('source-3').boundingBox())!;
+            const indicatorBox = (await indicator.boundingBox())!;
+
+            expect(Math.abs(indicatorBox.y - (lastOption.y + lastOption.height))).toBeLessThanOrEqual(2);
+
+            await page.mouse.up();
+            await expect(indicator).toHaveCount(0);
+        });
+
+        test('keeps the dragged option in place, faded, instead of removing it', async ({ page }) => {
+            await pressAndMoveOnto(page, 'source-1', 'source-3');
+
+            // The row stays where it was so the list does not jump when the drag begins.
+            expect(await getLabels(page, 'e2eSourceList')).toEqual(['source-1', 'source-2', 'source-3']);
+            await expect(page.getByTestId('e2eSourceList').locator('.cdk-drag-placeholder')).toHaveCount(1);
+
+            await page.mouse.up();
+        });
+
+        test('moves the indicator into the connected list when hovering it', async ({ page }) => {
+            await pressAndMoveOnto(page, 'source-1', 'target-1');
+
+            await expect(
+                page.getByTestId('e2eTargetList').locator('.kbq-list-selection__drop-indicator')
+            ).toBeVisible();
+            await expect(page.getByTestId('e2eSourceList').locator('.kbq-list-selection__drop-indicator')).toHaveCount(
+                0
+            );
+
+            await page.mouse.up();
         });
 
         test('does not select the option that was dragged', async ({ page }) => {
