@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAccordionModule } from '@koobiq/components/accordion';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { KbqAccordionModule, KbqAccordionType } from '@koobiq/components/accordion';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 
 /**
@@ -11,4 +11,6 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
     templateUrl: 'accordion-sections-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionSectionsExample {}
+export class AccordionSectionsExample {
+    readonly type = signal<KbqAccordionType>('single');
+}

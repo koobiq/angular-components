@@ -180,7 +180,10 @@ describe('KbqButtonToggle without forms', () => {
                 FalsyButtonTogglesInsideButtonToggleGroupMultiple,
                 ButtonToggleGroupWithInitialValue,
                 StandaloneButtonToggle,
-                RepeatedButtonTogglesWithPreselectedValue
+                RepeatedButtonTogglesWithPreselectedValue,
+                ButtonToggleGroupWithValueReadBeforeIt,
+                MultipleButtonToggleGroupWithValueReadBeforeIt,
+                UnmatchedButtonToggleGroupWithValueReadBeforeIt
             ]
         }).compileComponents();
     });
@@ -394,6 +397,50 @@ describe('KbqButtonToggle without forms', () => {
 
             expect(!!testComponent.lastEvent).toBe(false);
             expect(groupInstance.value).toBe('green');
+        });
+    });
+
+    describe('with a value read before the group is bound', () => {
+        it('should preserve a two-way bound value', () => {
+            const fixture = TestBed.createComponent(ButtonToggleGroupWithValueReadBeforeIt);
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            expect(fixture.componentInstance.value).toBe('green');
+            expect(fixture.componentInstance.group().value).toBe('green');
+            expect(fixture.nativeElement.querySelector('span').title).toBe('green');
+        });
+
+        it('should not report the empty selection while the toggles have not been matched against the value', () => {
+            const fixture = TestBed.createComponent(ButtonToggleGroupWithValueReadBeforeIt);
+            const group = fixture.debugElement
+                .query(By.directive(KbqButtonToggleGroup))
+                .injector.get(KbqButtonToggleGroup);
+            const values: unknown[] = [];
+
+            group.valueChange.subscribe((value) => values.push(value));
+
+            fixture.detectChanges();
+
+            // An `undefined` here is the unresolved selection, which `[(value)]` writes back out.
+            expect(values.length).toBeGreaterThan(0);
+            expect(new Set(values)).toEqual(new Set(['green']));
+        });
+
+        it('should stabilize an array value in multiple selection mode', () => {
+            const fixture = TestBed.createComponent(MultipleButtonToggleGroupWithValueReadBeforeIt);
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            expect(fixture.componentInstance.group().value).toEqual(['one', 'two']);
+            expect(fixture.nativeElement.querySelector('span').title).toBe('one,two');
+        });
+
+        it('should stabilize an unmatched value before resolving to an empty selection', () => {
+            const fixture = TestBed.createComponent(UnmatchedButtonToggleGroupWithValueReadBeforeIt);
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            expect(fixture.componentInstance.value).toBe('missing');
+            expect(fixture.componentInstance.group().value).toBeUndefined();
+            expect(fixture.nativeElement.querySelector('span').hasAttribute('data-value')).toBe(false);
         });
     });
 
@@ -1351,6 +1398,51 @@ class StandaloneButtonToggle {
 })
 class ButtonToggleGroupWithInitialValue {
     lastEvent: KbqButtonToggleChange;
+}
+
+// The group is read by a binding that runs before the one assigning its value.
+@Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
+    template: `
+        <span [title]="group.value"></span>
+        <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
+            <kbq-button-toggle [value]="'red'">Value Red</kbq-button-toggle>
+            <kbq-button-toggle [value]="'green'">Value Green</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    `
+})
+class ButtonToggleGroupWithValueReadBeforeIt {
+    readonly group = viewChild.required(KbqButtonToggleGroup);
+    value = 'green';
+}
+
+@Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
+    template: `
+        <span [title]="group.value"></span>
+        <kbq-button-toggle-group #group="kbqButtonToggleGroup" multiple [value]="values">
+            <kbq-button-toggle [value]="'one'">Value One</kbq-button-toggle>
+            <kbq-button-toggle [value]="'two'">Value Two</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    `
+})
+class MultipleButtonToggleGroupWithValueReadBeforeIt {
+    readonly group = viewChild.required(KbqButtonToggleGroup);
+    readonly values = ['one', 'two'];
+}
+
+@Component({
+    imports: [KbqButtonModule, KbqButtonToggleModule],
+    template: `
+        <span [attr.data-value]="group.value"></span>
+        <kbq-button-toggle-group #group="kbqButtonToggleGroup" [(value)]="value">
+            <kbq-button-toggle [value]="'one'">Value One</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    `
+})
+class UnmatchedButtonToggleGroupWithValueReadBeforeIt {
+    readonly group = viewChild.required(KbqButtonToggleGroup);
+    value = 'missing';
 }
 
 @Component({

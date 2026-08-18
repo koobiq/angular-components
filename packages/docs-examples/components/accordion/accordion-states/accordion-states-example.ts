@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqAccordionModule, KbqAccordionVariant } from '@koobiq/components/accordion';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 
@@ -17,4 +17,6 @@ export class AccordionStatesExample {
         hug: 'hug',
         hugSpaceBetween: 'hugSpaceBetween'
     };
+
+    readonly variant = signal<KbqAccordionVariant>(this.accordionVariant.fill);
 }
