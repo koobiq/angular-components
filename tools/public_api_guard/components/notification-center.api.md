@@ -39,6 +39,7 @@ export const KBQ_NOTIFICATION_CENTER_CONFIGURATION: InjectionToken<unknown>;
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: {
     notifications: string;
     remove: string;
+    removeAll: string;
     doNotDisturb: string;
     showPopUpNotifications: string;
     noNotifications: string;

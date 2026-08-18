@@ -522,7 +522,6 @@ export const enUSLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -632,6 +631,7 @@ export const enUSLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -786,7 +786,6 @@ export const esLALocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -896,6 +895,7 @@ export const esLALocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -1294,7 +1294,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -1404,6 +1403,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1533,7 +1533,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -1643,6 +1642,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1768,7 +1768,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -1878,6 +1877,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -2009,7 +2009,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -2119,6 +2118,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -2246,7 +2246,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                name: string;
                 error: string;
                 errorHint: string;
                 saveButton: string;
@@ -2356,6 +2355,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -4525,7 +4525,6 @@ export const ptBRLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -4635,6 +4634,7 @@ export const ptBRLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -4976,7 +4976,6 @@ export const ruRULocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -5086,6 +5085,7 @@ export const ruRULocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -5337,7 +5337,6 @@ export const tkTMLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -5447,6 +5446,7 @@ export const tkTMLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;

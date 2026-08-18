@@ -215,13 +215,13 @@ describe('KbqFilters', () => {
                 expect(component.popoverHeader).toBe(component.localeData.saveAsNew);
             });
 
-            it('should return saveChanges text when saveNewFilter is false', () => {
+            it('should return saveAsNew text when saveNewFilter is false', () => {
                 initFixture();
                 const component = getFiltersComponent();
 
                 component.saveNewFilter = false;
 
-                expect(component.popoverHeader).toBe(component.localeData.saveChanges);
+                expect(component.popoverHeader).toBe(component.localeData.saveAsNew);
             });
         });
 
@@ -474,6 +474,49 @@ describe('KbqFilters', () => {
                 expect(fixture.componentInstance.onSaveSpy).toHaveBeenCalledWith(
                     expect.objectContaining({ status: KbqSaveFilterStatuses.NewName })
                 );
+            }));
+
+            it('should rename without clearing the pending changes of a dirty filter', fakeAsync(() => {
+                const filter = createFilter([], { name: 'Existing', saved: true, changed: true });
+
+                initFixture(filter);
+
+                const component = getFiltersComponent();
+
+                component.openChangeFilterNamePopover();
+                fixture.detectChanges();
+                flush();
+
+                component.filterName.setValue('Renamed');
+                component.saveAsNew();
+
+                const emittedEvent = fixture.componentInstance.onSaveSpy.mock.calls[0][0];
+
+                expect(emittedEvent.filter.name).toBe('Renamed');
+                expect(emittedEvent.filter.changed).toBe(true);
+                expect(emittedEvent.filter.saved).toBe(true);
+            }));
+
+            it('should leave the "save changes" action available after a rename', fakeAsync(() => {
+                const filter = createFilter([], { name: 'Existing', saved: true, changed: true });
+
+                initFixture(filter);
+
+                const component = getFiltersComponent();
+
+                component.openChangeFilterNamePopover();
+                fixture.detectChanges();
+                flush();
+
+                component.filterName.setValue('Renamed');
+                component.saveAsNew();
+
+                const emittedEvent = fixture.componentInstance.onSaveSpy.mock.calls[0][0];
+
+                fixture.componentInstance.activeFilter = emittedEvent.filter;
+                fixture.detectChanges();
+
+                expect(getFilterBar().isSavedAndChanged()).toBe(true);
             }));
         });
     });
@@ -1258,7 +1301,7 @@ describe('KbqFilters', () => {
             const items = document.querySelectorAll('.kbq-dropdown-item');
 
             expect(items.length).toBe(filtersList.length + 1);
-            expect(items[items.length - 1].textContent).toContain(getFiltersComponent().localeData.saveAsNew);
+            expect(items[items.length - 1].textContent).toContain(getFiltersComponent().localeData.saveAsNewFilter);
         }));
     });
 

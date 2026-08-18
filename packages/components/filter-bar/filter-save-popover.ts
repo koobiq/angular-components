@@ -55,14 +55,12 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
             }
             <div class="kbq-form-vertical">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">{{ localeData.name }}</label>
-
                     <kbq-form-field class="kbq-form__control">
                         <input
                             #newFilterName
                             kbqInput
                             type="text"
-                            [attr.aria-label]="localeData.name"
+                            [attr.aria-label]="localeData.saveAsNew"
                             [formControl]="filterName"
                             (keydown.enter)="saveAsNew($event)"
                         />
@@ -158,9 +156,12 @@ export class KbqFilterSavePopover implements AfterViewInit {
         return this.customErrorText ?? this.localeData.errorHint;
     }
 
-    /** header of popover. Depends on the mode */
+    /**
+     * Header of the popover. Both modes ask for a name — a new filter's or a replacement for the current
+     * one — so both show the same caption, which doubles as the caption of the unlabelled name field.
+     */
     get popoverHeader(): string {
-        return this.saveNewFilter ? this.localeData.saveAsNew : this.localeData.saveChanges;
+        return this.localeData.saveAsNew;
     }
 
     ngAfterViewInit(): void {
@@ -199,18 +200,24 @@ export class KbqFilterSavePopover implements AfterViewInit {
             : ({ pipes: [] } as unknown as KbqFilter);
 
         filter.name = name;
-        filter.saved = true;
-        filter.changed = false;
+
+        // Renaming only relabels the filter: its `saved`/`changed` flags (and therefore the pending
+        // "save changes" action) are left untouched, so a dirty filter stays dirty under its new name.
+        // Creating a filter is the opposite — the current pipe values become its initial saved state.
+        if (this.saveNewFilter) {
+            filter.saved = true;
+            filter.changed = false;
+        }
 
         this.isSaving = true;
         this.popoverTrigger().preventClose = true;
         this.filterName.disable();
 
-        if (this.saveNewFilter) {
-            this.save.emit({ filter, filterBar: this.filterBar(), status: KbqSaveFilterStatuses.NewFilter });
-        } else {
-            this.save.emit({ filter, filterBar: this.filterBar(), status: KbqSaveFilterStatuses.NewName });
-        }
+        this.save.emit({
+            filter,
+            filterBar: this.filterBar(),
+            status: this.saveNewFilter ? KbqSaveFilterStatuses.NewFilter : KbqSaveFilterStatuses.NewName
+        });
 
         event?.preventDefault();
     }
