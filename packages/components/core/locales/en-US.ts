@@ -241,6 +241,7 @@ export const enUSLocaleData = {
     notificationCenter: {
         notifications: 'Notifications',
         remove: 'Remove',
+        removeAll: 'Remove all',
         doNotDisturb: 'Do not disturb',
         showPopUpNotifications: 'Show pop-up notifications',
         noNotifications: 'No notifications',

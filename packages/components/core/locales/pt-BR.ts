@@ -243,6 +243,7 @@ export const ptBRLocaleData = {
     notificationCenter: {
         notifications: 'Notificações',
         remove: 'Remover',
+        removeAll: 'Remover tudo',
         doNotDisturb: 'Não perturbe',
         showPopUpNotifications: 'Mostrar notificações pop-up',
         noNotifications: 'Sem notificações',

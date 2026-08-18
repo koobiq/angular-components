@@ -244,6 +244,7 @@ export const tkTMLocaleData = {
     notificationCenter: {
         notifications: 'Duýduryşlar',
         remove: 'Aýyr',
+        removeAll: 'Ählisini aýyr',
         doNotDisturb: 'Alada etme',
         showPopUpNotifications: 'Açylýan bildirişleri görkeziň',
         noNotifications: 'Duýduryş ýok',

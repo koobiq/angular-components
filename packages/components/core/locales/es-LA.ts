@@ -243,6 +243,7 @@ export const esLALocaleData = {
     notificationCenter: {
         notifications: 'Notificaciones',
         remove: 'Eliminar',
+        removeAll: 'Eliminar todo',
         doNotDisturb: 'No molestar',
         showPopUpNotifications: 'Mostrar notificaciones emergentes',
         noNotifications: 'Sin notificaciones',

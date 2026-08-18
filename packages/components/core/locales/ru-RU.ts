@@ -255,6 +255,7 @@ export const ruRULocaleData = {
     notificationCenter: {
         notifications: 'Уведомления',
         remove: 'Удалить',
+        removeAll: 'Удалить все',
         doNotDisturb: 'Не беспокоить',
         showPopUpNotifications: 'Показывать всплывающие уведомления',
         noNotifications: 'Нет уведомлений',

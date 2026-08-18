@@ -631,6 +631,7 @@ export const enUSLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -894,6 +895,7 @@ export const esLALocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -1401,6 +1403,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1639,6 +1642,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -1873,6 +1877,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -2113,6 +2118,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -2349,6 +2355,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         notificationCenter: {
             notifications: string;
             remove: string;
+            removeAll: string;
             doNotDisturb: string;
             showPopUpNotifications: string;
             noNotifications: string;
@@ -4627,6 +4634,7 @@ export const ptBRLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -5077,6 +5085,7 @@ export const ruRULocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
@@ -5437,6 +5446,7 @@ export const tkTMLocaleData: {
     notificationCenter: {
         notifications: string;
         remove: string;
+        removeAll: string;
         doNotDisturb: string;
         showPopUpNotifications: string;
         noNotifications: string;
