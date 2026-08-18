@@ -1501,6 +1501,25 @@ describe('KbqNavbar', () => {
             expect(item.getAttribute('role')).toBe('button');
         }));
 
+        /**
+         * An icon-only item (no projected `kbq-navbar-title`) has no visible label of its own in either
+         * state, collapsed or not — unlike a titled item, whose title text names it while expanded and is
+         * published as `aria-label` only once collapsed. The `aria-label` input is the only way to name it.
+         */
+        it('an icon-only item needs its own aria-label to be an accessible button', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const items = fixture.nativeElement.querySelectorAll('kbq-navbar-item');
+            const iconOnlyItem = items[1] as HTMLElement;
+
+            expect(iconOnlyItem.getAttribute('role')).toBe('button');
+            expect(iconOnlyItem.getAttribute('aria-label')).toBe('Play');
+        }));
+
         it('an item wrapping a native control should keep its own semantics', fakeAsync(() => {
             const fixture = TestBed.createComponent(TestCollapseApp);
 
@@ -1599,6 +1618,17 @@ describe('KbqNavbar', () => {
             fixture.nativeElement.remove();
         });
 
+        it('has no axe violations for a titled and an icon-only item', async () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            document.body.appendChild(fixture.nativeElement);
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+
+            fixture.nativeElement.remove();
+        });
+
         it('has no axe violations for a collapsed vertical navbar', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
@@ -1683,7 +1713,7 @@ class TestApp {
                     <i kbq-icon="kbq-circle-info_16"></i>
                     <kbq-navbar-title>Item with title</kbq-navbar-title>
                 </kbq-navbar-item>
-                <kbq-navbar-item>
+                <kbq-navbar-item aria-label="Play">
                     <i kbq-icon="kbq-play_16"></i>
                 </kbq-navbar-item>
             </kbq-navbar-container>

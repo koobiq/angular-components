@@ -46,6 +46,12 @@
 
         gap: var(--kbq-size-m);
 
+        // The shared `.kbq-navbar-item .kbq-badge` rule takes the badge out of flow for the icon-corner
+        // overlay used when collapsed; expanded, it stays a normal flex child laid out after the title.
+        & .kbq-badge {
+            position: static;
+        }
+
         &.kbq-navbar-item_has-nested {
             align-items: center;
 

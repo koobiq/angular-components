@@ -351,16 +351,25 @@ class NavbarRefCollector implements Visitor {
 }
 
 /**
- * Matches `<ref>.<member>` where the access is neither already a call nor a signal-API call. `\b` after the
- * member keeps `expanded` from matching inside `expandedChange`.
+ * Matches `<ref>.<member>` where the access is neither already a call, a signal-API call, nor the left-hand
+ * side of an assignment (`\b` after the member keeps `expanded` from matching inside `expandedChange`).
+ *
+ * A template can only *read* a signal member this way — rewriting `ref.expanded = value` blindly into
+ * `ref.expanded() = value` would replace a valid assignment with invalid syntax, since a call expression is
+ * not assignable. Such assignments are reported separately (see `collectRefWriteWarnings`) instead of touched.
  */
 function memberAccessPattern(ref: string, members: readonly string[]): RegExp {
     const methods = [...SIGNAL_API_METHODS].join('|');
 
     return new RegExp(
-        `\\b(${escapeRegExp(ref)})\\.(${members.join('|')})\\b(?!\\s*\\()(?!\\s*\\.\\s*(?:${methods})\\b)`,
+        `\\b(${escapeRegExp(ref)})\\.(${members.join('|')})\\b(?!\\s*\\()(?!\\s*\\.\\s*(?:${methods})\\b)(?!\\s*=(?!=))`,
         'g'
     );
+}
+
+/** Matches a plain assignment `<ref>.<member> =` (not `==`/`===`) to one of the ref's writable members. */
+function refAssignmentPattern(ref: string, members: readonly string[]): RegExp {
+    return new RegExp(`\\b${escapeRegExp(ref)}\\.(${members.join('|')})\\b\\s*=(?!=)`, 'g');
 }
 
 /** Rewrites `ref.expanded` reads to `ref.expanded()` for every navbar reference variable. */
@@ -384,6 +393,28 @@ function rewriteRefReads(template: string, refs: ReadonlyMap<string, string>): {
     return { content, changed };
 }
 
+/**
+ * Writable-member assignments made through a template reference variable: `ref.expanded = value`. Unlike a
+ * programmatic write (rewritten to `.set(…)` by `classifySignalAccess`), a template can only bind or read
+ * through a ref — there is no single-expression rewrite of an assignment target into a call — so these are
+ * left untouched and reported for manual migration instead.
+ */
+function collectRefWriteWarnings(template: string, refs: ReadonlyMap<string, string>): Set<string> {
+    const found = new Set<string>();
+
+    for (const [ref, typeName] of refs) {
+        const writable = receiverTypeOf(typeName)?.writableMembers;
+
+        if (!writable?.length) continue;
+
+        for (const match of template.matchAll(refAssignmentPattern(ref, writable))) {
+            found.add(match[1]);
+        }
+    }
+
+    return found;
+}
+
 /** Members needing manual migration, read through a navbar reference variable in a template. */
 function collectRefManualMembers(template: string, refs: ReadonlyMap<string, string>): Set<string> {
     const members = [...MANUAL_MEMBERS.keys()];
@@ -405,6 +436,8 @@ interface TemplateResult {
     content: string;
     changed: boolean;
     manual: Set<string>;
+    /** Writable members assigned through a ref, left untouched — see `collectRefWriteWarnings`. */
+    writeWarnings: Set<string>;
     /** The template names a navbar but could not be parsed, so nothing was inspected or rewritten. */
     unparseable: boolean;
 }
@@ -413,6 +446,7 @@ const untouched = (template: string): TemplateResult => ({
     content: template,
     changed: false,
     manual: new Set(),
+    writeWarnings: new Set(),
     unparseable: false
 });
 
@@ -436,6 +470,7 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
     return {
         ...rewriteRefReads(template, collector.refs),
         manual: collectRefManualMembers(template, collector.refs),
+        writeWarnings: collectRefWriteWarnings(template, collector.refs),
         unparseable: false
     };
 }
@@ -444,9 +479,10 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
 async function migrateInlineTemplates(
     content: string,
     fileName: string
-): Promise<{ content: string; manual: Set<string>; unparseable: boolean }> {
+): Promise<{ content: string; manual: Set<string>; writeWarnings: Set<string>; unparseable: boolean }> {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const manual = new Set<string>();
+    const writeWarnings = new Set<string>();
     let result = content;
     let unparseable = false;
 
@@ -455,6 +491,7 @@ async function migrateInlineTemplates(
         const migrated = await migrateTemplate(result.slice(start, end));
 
         migrated.manual.forEach((member) => manual.add(member));
+        migrated.writeWarnings.forEach((member) => writeWarnings.add(member));
         unparseable ||= migrated.unparseable;
 
         if (migrated.changed) {
@@ -462,7 +499,7 @@ async function migrateInlineTemplates(
         }
     }
 
-    return { content: result, manual, unparseable };
+    return { content: result, manual, writeWarnings, unparseable };
 }
 
 function logPatternWarnings(
@@ -481,6 +518,16 @@ function logPatternWarnings(
 function logManualMembers(context: SchematicContext, filePath: string, members: Set<string>): void {
     for (const member of members) {
         logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${MANUAL_MEMBERS.get(member)}`]);
+    }
+}
+
+function logRefWriteWarnings(context: SchematicContext, filePath: string, members: Set<string>): void {
+    for (const member of members) {
+        logMessage(context.logger, [
+            `${LABEL} ${filePath}`,
+            `  Assigning to \`${member}\` through a template reference variable was left untouched — a template ` +
+                `can only rewrite a read this way. Change \`ref.${member} = value\` to \`ref.${member}.set(value)\`.`
+        ]);
     }
 }
 
@@ -541,6 +588,7 @@ export default function navbarSignalsAndAria(options: Schema): Rule {
             logPatternWarnings(context, filePath, reported, tsWarnPatterns);
             logManualMembers(context, filePath, collectManualMembers(reported, filePath));
             logManualMembers(context, filePath, inline.manual);
+            logRefWriteWarnings(context, filePath, inline.writeWarnings);
 
             if (inline.unparseable) {
                 logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${UNPARSEABLE_TEMPLATE_MESSAGE}`]);
@@ -557,6 +605,7 @@ export default function navbarSignalsAndAria(options: Schema): Rule {
             const migrated = await migrateTemplate(original);
 
             logManualMembers(context, filePath, migrated.manual);
+            logRefWriteWarnings(context, filePath, migrated.writeWarnings);
 
             if (migrated.unparseable) {
                 logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${UNPARSEABLE_TEMPLATE_MESSAGE}`]);
