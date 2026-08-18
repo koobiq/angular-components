@@ -151,6 +151,7 @@ export class KbqFileList<T> {
     readonly list: _angular_core.ModelSignal<T[]>;
     remove(item: T): T[];
     removeAt(index: number): T[];
+    replace(items: T[]): void;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqFileList<any>, "[kbqFileList]", ["kbqFileList"], { "list": { "alias": "list"; "required": false; "isSignal": true; }; }, { "list": "listChange"; "itemRemoved": "itemRemoved"; "itemsAdded": "itemsAdded"; }, never, never, true, never>;
     // (undocumented)
@@ -176,6 +177,15 @@ export class KbqFileLoader {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFileLoader, never>;
 }
+
+// @public
+export enum KbqFileUploadAddStrategy {
+    Concat = "concat",
+    Replace = "replace"
+}
+
+// @public
+export type KbqFileUploadAddStrategyValues = KbqEnumValues<KbqFileUploadAddStrategy>;
 
 // @public
 export enum KbqFileUploadAllowedType {
@@ -300,6 +310,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     constructor();
     readonly accept: _angular_core.InputSignal<string[] | undefined>;
     get acceptedFiles(): string;
+    readonly addStrategy: _angular_core.InputSignal<"concat" | "replace">;
     allowed: _angular_core.InputSignal<"file" | "folder" | "mixed">;
     protected readonly captionContext: _angular_core.Signal<KbqFileUploadCaptionContext>;
     protected get captionTextWhenSelected(): string;
@@ -347,7 +358,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     readonly size: _angular_core.InputSignal<"compact" | "default">;
     writeValue(files: FileList | KbqFileItem[] | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "filesChange"; "fileQueueChanged": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, [{ directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: { "itemsAdded": "itemsAdded"; "itemRemoved": "itemRemoved"; }; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; "isSignal": true; }; "accept": { "alias": "accept"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "inputId": { "alias": "inputId"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; "allowed": { "alias": "allowed"; "required": false; "isSignal": true; }; "fullScreenDropZone": { "alias": "fullScreenDropZone"; "required": false; "isSignal": true; }; "addStrategy": { "alias": "addStrategy"; "required": false; "isSignal": true; }; "localeConfig": { "alias": "localeConfig"; "required": false; "isSignal": true; }; }, { "filesChange": "filesChange"; "fileQueueChanged": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], true, [{ directive: typeof KbqFileUploadContext; inputs: { "id": "id"; "disabled": "disabled"; }; outputs: {}; }, { directive: typeof KbqFileList; inputs: {}; outputs: { "itemsAdded": "itemsAdded"; "itemRemoved": "itemRemoved"; }; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqMultipleFileUploadComponent, never>;
 }

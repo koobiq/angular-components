@@ -41,6 +41,8 @@ import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
+    KbqFileUploadAddStrategy,
+    KbqFileUploadAddStrategyValues,
     KbqFileUploadAllowedType,
     KbqFileUploadBase,
     KbqFileUploadCaptionContext
@@ -132,6 +134,13 @@ export class KbqMultipleFileUploadComponent
      * Provide configuration object to enable, or undefined to disable.
      */
     fullScreenDropZone = input<KbqDropzoneData | boolean>();
+    /**
+     * Controls how newly selected/dropped files are merged into the existing list.
+     * `concat` accumulates files across interactions, skipping files that duplicate ones already present.
+     * `replace` discards the previous selection, mirroring native input file multiple behavior.
+     * @default concat
+     */
+    readonly addStrategy = input<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
     /** Optional configuration to override default labels with localized text.*/
     readonly localeConfig = input<Partial<KbqMultipleFileUploadLocaleConfig>>();
@@ -391,7 +400,12 @@ export class KbqMultipleFileUploadComponent
     }
 
     private onFileAdded(filesToAdd: KbqFileItem[]) {
-        this.fileList.addArray(filesToAdd);
+        if (this.addStrategy() === KbqFileUploadAddStrategy.Replace) {
+            this.fileList.replace(filesToAdd);
+        } else {
+            filesToAdd = filesToAdd.filter((fileToAdd) => !this.isDuplicate(fileToAdd.file, this.files));
+            this.fileList.addArray(filesToAdd);
+        }
 
         this.cvaOnChange(this.files);
 
@@ -399,5 +413,15 @@ export class KbqMultipleFileUploadComponent
         this.filesChange.emit(this.files);
         this.fileQueueChanged.emit(this.files);
         this.onTouched();
+    }
+
+    private isDuplicate(candidate: File, existing: KbqFileItem[]): boolean {
+        return existing.some(
+            ({ file }) =>
+                file.name === candidate.name &&
+                file.size === candidate.size &&
+                file.lastModified === candidate.lastModified &&
+                file.type === candidate.type
+        );
     }
 }

@@ -6,6 +6,7 @@ import { FileUploadDropzoneExample } from './file-upload-dropzone/file-upload-dr
 import { FileUploadIndeterminateLoadingOverviewExample } from './file-upload-indeterminate-loading-overview/file-upload-indeterminate-loading-overview-example';
 import { FileUploadLocalDropzoneExample } from './file-upload-local-dropzone/file-upload-local-dropzone-example';
 import { FileUploadMultipleAcceptValidationExample } from './file-upload-multiple-accept-validation/file-upload-multiple-accept-validation-example';
+import { FileUploadMultipleAddStrategyExample } from './file-upload-multiple-add-strategy/file-upload-multiple-add-strategy-example';
 import { FileUploadMultipleCompactOverviewExample } from './file-upload-multiple-compact-overview/file-upload-multiple-compact-overview-example';
 import { FileUploadMultipleCustomTextOverviewExample } from './file-upload-multiple-custom-text-overview/file-upload-multiple-custom-text-overview-example';
 import { FileUploadMultipleDefaultOverviewExample } from './file-upload-multiple-default-overview/file-upload-multiple-default-overview-example';
@@ -36,6 +37,7 @@ export {
     FileUploadIndeterminateLoadingOverviewExample,
     FileUploadLocalDropzoneExample,
     FileUploadMultipleAcceptValidationExample,
+    FileUploadMultipleAddStrategyExample,
     FileUploadMultipleCompactOverviewExample,
     FileUploadMultipleCustomTextOverviewExample,
     FileUploadMultipleDefaultOverviewExample,
@@ -74,6 +76,7 @@ const EXAMPLES = [
     FileUploadMultipleDefaultValidationReactiveFormsOverviewExample,
     FileUploadMultipleDefaultOverviewExample,
     FileUploadMultipleCustomTextOverviewExample,
+    FileUploadMultipleAddStrategyExample,
     FileUploadIndeterminateLoadingOverviewExample,
     FileUploadMultipleCompactOverviewExample,
     FileUploadSingleRequiredReactiveValidationExample,
