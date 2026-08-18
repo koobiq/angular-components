@@ -3,6 +3,16 @@ const { resolve, join } = require('path');
 const { getMigrations } = require('../src/utils/migrations');
 const { statSync } = require('fs');
 
+/** Files every migration directory has to provide; they ship next to the compiled rule. */
+const MIGRATION_META_FILES = ['schema.json', 'README.md'];
+
+/**
+ * Everything that could not be copied. Collected rather than thrown so that one missing file
+ * neither hides the ones after it nor leaves the remaining copies undone — an aborted run used
+ * to publish a truncated `dist/components/schematics`.
+ */
+const failures = [];
+
 const resolvePath = (...segments) => resolve(__dirname, ...segments);
 
 const ensureDirectoryExistence = async (filePath) => {
@@ -17,8 +27,20 @@ const copyFileWrapper = async (src, dest) => {
     try {
         await copyFile(src, dest);
     } catch (error) {
-        console.error(`Failed to copy file from ${src} to ${dest}: ${error.message}`);
-        throw error;
+        failures.push(`Failed to copy file from ${src} to ${dest}: ${error.message}`);
+    }
+};
+
+/** Copies the meta files of one migration, naming the migration instead of reporting a bare ENOENT path. */
+const copyMigrationMeta = async (migration, migrationPath) => {
+    for (const file of MIGRATION_META_FILES) {
+        const src = resolvePath(`../src/migrations/${migration}/${file}`);
+
+        if (statSync(src, { throwIfNoEntry: false })) {
+            await copyFileWrapper(src, join(migrationPath, file));
+        } else {
+            failures.push(`No ${file} for the ${migration} migration`);
+        }
     }
 };
 
@@ -45,14 +67,8 @@ const init = async () => {
 
         await ensureDirectoryExistence(migrationPath);
 
-        await copyFileWrapper(
-            resolvePath(`../src/migrations/${migration}/schema.json`),
-            join(migrationPath, 'schema.json')
-        );
-        await copyFileWrapper(
-            resolvePath(`../src/migrations/${migration}/README.md`),
-            join(migrationPath, 'README.md')
-        );
+        await copyMigrationMeta(migration, migrationPath);
+
         await copyFileWrapper(resolvePath(`../dist/migrations/${migration}/index.js`), join(migrationPath, 'index.js'));
         const optionalMigrationData = resolvePath(`../dist/migrations/${migration}/data.js`);
         const fileExists = statSync(optionalMigrationData, { throwIfNoEntry: false });
@@ -76,6 +92,15 @@ const init = async () => {
     await copyFileWrapper(resolvePath('../dist/utils/typescript.js'), join(utilsPath, 'typescript.js'));
     await copyFileWrapper(resolvePath('../dist/utils/ast.js'), join(utilsPath, 'ast.js'));
     await copyFileWrapper(resolvePath('../dist/utils/angular-parsing.js'), join(utilsPath, 'angular-parsing.js'));
+
+    if (failures.length > 0) {
+        throw new Error([`${failures.length} file(s) missing from the package:`, ...failures].join('\n  '));
+    }
 };
 
-init().catch((error) => console.error(`Failed to initialize directories and copy files: ${error.message}`));
+init().catch((error) => {
+    console.error(`Failed to initialize directories and copy files: ${error.message}`);
+    // Without this the rejection is swallowed, the build stays green, and an incomplete
+    // dist/components/schematics gets published.
+    process.exitCode = 1;
+});
