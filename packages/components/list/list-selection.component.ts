@@ -113,11 +113,10 @@ export class KbqListCopyEvent<T> {
 }
 
 /**
- * Data attached to the underlying `CdkDrag` while a list option is being dragged.
- *
- * @docs-private
+ * Data attached to the underlying `CdkDrag` while a list option is being dragged. Kept unexported:
+ * `dropped` already hands the option over, so nothing outside this file has to read `CdkDrag.data`.
  */
-export type KbqListOptionDragData = { option: KbqListOption };
+type KbqListOptionDragData = { option: KbqListOption };
 
 /** Event emitted when an option changes its position by dragging or by keyboard. */
 export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<unknown>, 'previousIndex' | 'currentIndex'> & {
@@ -328,6 +327,8 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     private optionBlurSubscription: Subscription | null;
 
     private pendingMoveSubscription: Subscription | null;
+
+    private hasWarnedOnDragContainer = false;
 
     constructor() {
         const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
@@ -785,11 +786,16 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
      * item, so warn instead of letting it pass unnoticed.
      */
     private warnOnUnsupportedDragContainer(): void {
-        if (!isDevMode() || !this.draggable) {
+        // Runs on every `draggable`/`disabled` change as well as on init, so it has to tolerate being
+        // called before the content children exist and to stay quiet once it has had its say.
+        if (this.hasWarnedOnDragContainer || !isDevMode() || !this.draggable || !this.platform.isBrowser) {
             return;
         }
 
-        if (this.elementRef.nativeElement.querySelector('cdk-virtual-scroll-viewport')) {
+        const insideVirtualScroll = !!this.elementRef.nativeElement.querySelector('cdk-virtual-scroll-viewport');
+        const insideOptgroup = !!this.options?.some((option) => !!option.group);
+
+        if (insideVirtualScroll) {
             // eslint-disable-next-line no-console
             console.warn(
                 'KbqListSelection: `draggable` is not supported inside `cdk-virtual-scroll-viewport`. The ' +
@@ -797,19 +803,22 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
             );
         }
 
-        if (this.options.some((option) => !!option.group)) {
+        if (insideOptgroup) {
             // eslint-disable-next-line no-console
             console.warn(
                 'KbqListSelection: `draggable` is not supported inside `kbq-optgroup`. The indices reported ' +
                     'by `dropped` are relative to the group, not to the list.'
             );
         }
+
+        this.hasWarnedOnDragContainer = insideVirtualScroll || insideOptgroup;
     }
 
     /** Keeps the underlying CDK directives in sync with the resolved `draggable` state. */
     private syncDraggableState(): void {
         this.dropList.disabled = !this.draggable;
         this.options?.forEach((option) => option.syncDraggableState());
+        this.warnOnUnsupportedDragContainer();
         this.changeDetectorRef.markForCheck();
     }
 
