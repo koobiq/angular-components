@@ -16,6 +16,10 @@ permissions:
 
 jobs:
   analyze:
+    # `Analyze` is a required status check on main, so the job name is part of the merge gate:
+    # renaming it renames the check run, and branch protection then waits forever for a context
+    # nothing reports. A `paths:` filter would deadlock the same way, because a filtered-out run
+    # creates no check run at all.
     name: Analyze
     runs-on: ubuntu-latest
     timeout-minutes: 30
