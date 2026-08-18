@@ -42,12 +42,12 @@ the module specifier `@koobiq/components/scrollbar` to `@koobiq/components/scrol
 The match is quote-anchored (`(['"])@koobiq/components/scrollbar\1`), so only the exact, bare
 specifier is taken, in the quote style it was written in:
 
-| Specifier                                   | Result                                      |
-| ------------------------------------------- | ------------------------------------------- |
-| `'@koobiq/components/scrollbar'`            | rewritten, still single-quoted              |
-| `"@koobiq/components/scrollbar"`            | rewritten, still double-quoted              |
-| `'@koobiq/components/scrollbar/deprecated'` | untouched — the migration is idempotent     |
-| `'@koobiq/components/scrollbar-x'`          | untouched — a sibling package, not a prefix |
+| Specifier                                         | Result                                                                                 |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `'@koobiq/components/scrollbar'`                  | rewritten, still single-quoted                                                         |
+| `"@koobiq/components/scrollbar"`                  | rewritten, still double-quoted                                                         |
+| `'@koobiq/components/scrollbar/deprecated'`       | untouched — the migration is idempotent                                                |
+| `'@koobiq/components/scrollbar-x'` (hypothetical) | untouched — the closing quote is required, so a longer specifier is not a prefix match |
 
 It is a textual replacement rather than an AST rewrite, so an `import`, an `export … from`, a
 dynamic `import()` and a specifier handed to something like `jest.mock()` are all covered by the
