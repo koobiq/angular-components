@@ -72,16 +72,6 @@
     position: absolute;
     background: var(--kbq-list-states-dragged-indicator-color);
     pointer-events: none;
-
-    // The dot that caps the line: at its left end in a vertical list, at its top in a horizontal one.
-    &::before {
-        content: '';
-        position: absolute;
-        border-radius: 50%;
-        background: var(--kbq-list-states-dragged-indicator-color);
-        block-size: var(--kbq-list-size-dragged-indicator-point-size);
-        inline-size: var(--kbq-list-size-dragged-indicator-point-size);
-    }
 }
 
 .kbq-list-selection:not(.kbq-list-selection_horizontal) .kbq-list-selection__drop-indicator {
@@ -90,12 +80,6 @@
     // The line straddles the gap instead of sitting below it, so it reads as "between these two rows".
     top: calc(var(--kbq-list-drop-indicator-offset, 0px) - var(--kbq-list-size-dragged-indicator-thickness) / 2);
     block-size: var(--kbq-list-size-dragged-indicator-thickness);
-
-    &::before {
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-    }
 }
 
 .kbq-list-selection_horizontal .kbq-list-selection__drop-indicator {
@@ -103,12 +87,6 @@
     bottom: 0;
     left: calc(var(--kbq-list-drop-indicator-offset, 0px) - var(--kbq-list-size-dragged-indicator-thickness) / 2);
     inline-size: var(--kbq-list-size-dragged-indicator-thickness);
-
-    &::before {
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-    }
 }
 
 // We should apply `cursor: grabbing` to the body, not to the dragged element itself.
