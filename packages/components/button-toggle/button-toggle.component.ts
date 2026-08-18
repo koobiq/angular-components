@@ -164,8 +164,19 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
      */
     private readonly selectedToggles = signal<readonly KbqButtonToggle[]>([]);
 
+    /** Whether the toggles have been matched against the assigned value at least once. */
+    private readonly selectionResolved = signal(false);
+
     /** Computed once per selection change, so a repeated read hands back the same array reference. */
     private readonly currentValue = computed(() => {
+        // Until the toggles are matched, the empty selection says nothing about the assignment:
+        // reporting it would push `undefined` back through a `[(value)]` binding.
+        if (!this.selectionResolved()) {
+            const assigned = this.rawValue();
+
+            return this.multiple() ? (Array.isArray(assigned) ? assigned : []) : assigned;
+        }
+
         const selected = this.selectedToggles();
 
         if (this.multiple()) {
@@ -204,12 +215,11 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     private destroyed = false;
 
     /**
-     * Reference to the raw value that the consumer tried to assign. The real
-     * value will exclude any values from this one that don't correspond to a
-     * toggle. Useful for the cases where the value is assigned before the toggles
-     * have been initialized or at the same that they're being swapped out.
+     * Raw value the consumer assigned. Reported as is until the toggles have been matched against
+     * it; from there on the real value excludes whatever corresponds to no toggle. Also covers the
+     * toggles being swapped out under an assigned value.
      */
-    private rawValue: unknown;
+    private readonly rawValue = signal<unknown>(undefined);
 
     /**
      * The method to be called in order to update ngModel.
@@ -227,6 +237,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     ngAfterContentInit() {
         this.selectionModel.select(...this.buttonToggles().filter((toggle) => toggle.checked));
         this.publishSelection();
+        this.selectionResolved.set(true);
     }
 
     ngOnDestroy() {
@@ -328,15 +339,17 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
     /** Determines whether a button toggle should be checked on init. */
     isPrechecked(toggle: KbqButtonToggle) {
-        if (this.rawValue === undefined) {
+        const rawValue = this.rawValue();
+
+        if (rawValue === undefined) {
             return false;
         }
 
-        if (this.multiple() && Array.isArray(this.rawValue)) {
-            return this.rawValue.some((value) => toggle.value != null && value === toggle.value);
+        if (this.multiple() && Array.isArray(rawValue)) {
+            return rawValue.some((value) => toggle.value != null && value === toggle.value);
         }
 
-        return toggle.value === this.rawValue;
+        return toggle.value === rawValue;
     }
 
     /** Mirrors the selection model into the signal the toggles derive their state from. */
@@ -346,7 +359,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
     /** Updates the selection state of the toggles in the group based on a value. */
     private setSelectionByValue(value: any | any[]) {
-        this.rawValue = value;
+        this.rawValue.set(value);
 
         if (!this.selectionModel) {
             return;
