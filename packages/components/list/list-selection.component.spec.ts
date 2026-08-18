@@ -1956,6 +1956,47 @@ describe('KbqListSelection drag and drop', () => {
             expect(getShortcuts(setup(SelectionListWithListOptions))).toBeNull();
         });
     });
+
+    describe('unsupported containers', () => {
+        let warn: jest.SpyInstance;
+
+        beforeEach(() => {
+            warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        });
+
+        afterEach(() => warn.mockRestore());
+
+        it('should warn about an optgroup once the list becomes draggable', () => {
+            const fixture = setup(SelectionListInOptgroup);
+
+            expect(warn).not.toHaveBeenCalled();
+
+            // Enabled after init: the warning has to survive a late toggle, not only the first render.
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('kbq-optgroup'));
+        });
+
+        it('should warn about an optgroup only once', () => {
+            const fixture = setup(SelectionListInOptgroup);
+
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+            fixture.componentInstance.draggable.set(false);
+            fixture.detectChanges();
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+
+            expect(warn).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not warn about a plain draggable list', () => {
+            setup(SelectionListWithDragAndDrop);
+
+            expect(warn).not.toHaveBeenCalled();
+        });
+    });
 });
 
 @Component({
@@ -2475,4 +2516,20 @@ class IdConnectedSelectionLists {
     readonly sourceItems = signal(['source 0', 'source 1']);
 
     dropped: KbqListSelectionDroppedEvent | null = null;
+}
+
+@Component({
+    imports: [KbqListModule, KbqOptionModule],
+    template: `
+        <kbq-list-selection [draggable]="draggable()">
+            <kbq-optgroup label="Group">
+                <kbq-list-option [value]="'Item 0'">Item 0</kbq-list-option>
+                <kbq-list-option [value]="'Item 1'">Item 1</kbq-list-option>
+            </kbq-optgroup>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListInOptgroup {
+    readonly draggable = signal(false);
 }

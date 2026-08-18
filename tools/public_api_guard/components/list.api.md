@@ -159,11 +159,6 @@ export class KbqListOptionCaption {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOptionCaption, never>;
 }
 
-// @public
-export type KbqListOptionDragData = {
-    option: KbqListOption;
-};
-
 // @public (undocumented)
 export class KbqListSelectAllEvent<T> {
     constructor(source: KbqListSelection, options: T[]);
