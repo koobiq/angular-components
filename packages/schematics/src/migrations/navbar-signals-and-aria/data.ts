@@ -55,6 +55,19 @@ export const RECEIVER_TYPES: readonly NavbarReceiverType[] = [
         exportAs: 'kbqNavbarBrand',
         signalMembers: ['collapsed', 'collapsedText'],
         writableMembers: []
+    },
+    // No signal members of their own — listed so a `hovered` access on a receiver typed as one of these (e.g.
+    // `@ViewChild(KbqNavbarLogo) logo: KbqNavbarLogo`) is recognized by `collectManualMembers` and warned about.
+    // Neither directive declares an `exportAs`, so there is no template-reference-variable path to cover.
+    {
+        type: 'KbqNavbarLogo',
+        signalMembers: [],
+        writableMembers: []
+    },
+    {
+        type: 'KbqNavbarTitle',
+        signalMembers: [],
+        writableMembers: []
     }
 ];
 

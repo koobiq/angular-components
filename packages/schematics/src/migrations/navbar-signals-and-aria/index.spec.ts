@@ -185,6 +185,23 @@ describe(SCHEMATIC_NAME, () => {
 
             expect(tree.read(ts)!.toString()).toContain('{{ item.isCollapsed() }}');
         });
+
+        it('leaves a write through a ref untouched instead of producing invalid syntax, and warns', async () => {
+            const { name, html } = firstProject();
+            const messages = collectLogs();
+            const source =
+                '<kbq-vertical-navbar #nav="KbqVerticalNavbar">' +
+                '<button (click)="nav.expanded = true">Toggle</button>' +
+                '</kbq-vertical-navbar>';
+
+            appTree.overwrite(html, source);
+
+            const tree = await run(name);
+
+            // Not `nav.expanded() = true` — a call expression cannot be assigned to.
+            expect(tree.read(html)!.toString()).toBe(source);
+            expect(messages.join('\n')).toContain('ref.expanded = value');
+        });
     });
 
     describe('warnings', () => {
@@ -197,6 +214,17 @@ describe(SCHEMATIC_NAME, () => {
             await run(name);
 
             expect(messages.join('\n')).toContain('navbarFocusableItem.disabled');
+        });
+
+        it('warns about the removed hovered member on KbqNavbarLogo', async () => {
+            const { name, ts } = firstProject();
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, withReceiver('KbqNavbarLogo', 'this.navbar.hovered.subscribe(() => {});'));
+
+            await run(name);
+
+            expect(messages.join('\n')).toContain('KbqNavbarLogo.hovered');
         });
 
         it('warns about the removed KbqNavbarContainerPositionType', async () => {

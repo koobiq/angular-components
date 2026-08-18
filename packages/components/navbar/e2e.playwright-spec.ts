@@ -148,7 +148,7 @@ test.describe('KbqNavbarModule', () => {
 
             await trigger.click();
 
-            await expect(page.locator('.kbq-dropdown')).toBeVisible();
+            await expect(page.locator('.kbq-dropdown__panel')).toBeVisible();
             await expect(trigger).toHaveAttribute('aria-expanded', 'true');
 
             await expect(page).toHaveScreenshot('04-dropdown-open-light.png');
@@ -184,7 +184,10 @@ test.describe('KbqNavbarModule', () => {
         test('arrow keys should move the roving focus between items', async ({ page }) => {
             await page.goto('/E2eNavbarInteractions');
 
-            await page.getByTestId('horizontal').focus();
+            // A scripted `.focus()` carries no keyboard origin, and the navbar only moves real DOM focus onto
+            // an item — and shows its `cdk-keyboard-focused` class — for a focus event CDK attributes to the
+            // keyboard. A real Tab press is what the roving-tabindex container actually reacts to.
+            await page.keyboard.press('Tab');
 
             await expect(page.getByTestId('horizontal-dropdown-trigger')).toHaveClass(/cdk-keyboard-focused/);
 
@@ -206,7 +209,11 @@ test.describe('KbqNavbarModule', () => {
 
             await expect(item).toHaveAttribute('aria-label', 'Tasks');
 
-            await page.getByTestId('vertical').focus();
+            // Same keyboard-origin requirement as the roving-focus test above: a real Tab press, not
+            // `.focus()`. The first Tab lands on the horizontal navbar before it in the DOM; the second
+            // reaches the vertical one.
+            await page.keyboard.press('Tab');
+            await page.keyboard.press('Tab');
 
             await expect(page.locator('.kbq-tooltip')).toContainText('Tasks');
             await expect(page).toHaveScreenshot('07-collapsed-tooltip-light.png');

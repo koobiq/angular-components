@@ -88,8 +88,8 @@
     // Position and stacking come from the shared `.kbq-navbar-item .kbq-badge` rule; only the offsets are
     // orientation-specific.
     .kbq-badge {
-        top: calc(-1 * var(--kbq-size-4xs));
-        right: calc(-1 * var(--kbq-size-4xs));
+        top: calc(-1 * var(--kbq-size-3xs));
+        right: calc(-1 * var(--kbq-size-3xs));
     }
 
     &.kbq-navbar-item_has-nested {
