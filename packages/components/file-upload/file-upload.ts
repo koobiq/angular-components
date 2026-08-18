@@ -42,6 +42,17 @@ export enum KbqFileUploadAllowedType {
 /** Allowed upload modes for the upload component. */
 export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedType>;
 
+/** Strategy for merging newly selected/dropped files into the existing file list. */
+export enum KbqFileUploadAddStrategy {
+    /** Accumulates files across interactions, skipping files that duplicate ones already present. */
+    Concat = 'concat',
+    /** Discards the previous selection, mirroring native `<input multiple>` behavior. */
+    Replace = 'replace'
+}
+
+/** Allowed add strategies for the upload component. */
+export type KbqFileUploadAddStrategyValues = KbqEnumValues<KbqFileUploadAddStrategy>;
+
 /** @docs-private */
 export type KbqFileUploadCaptionContext = {
     captionText: string;

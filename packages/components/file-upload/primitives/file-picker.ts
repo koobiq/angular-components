@@ -131,6 +131,12 @@ export class KbqFileList<T> {
         this.itemsAdded.emit(items);
     }
 
+    /** Replaces the current list with the specified items and emits event. */
+    replace(items: T[]): void {
+        this.update(() => items);
+        this.itemsAdded.emit(items);
+    }
+
     /** Removes the first occurrence of the specified item. Returns removed items and emits event. */
     remove(item: T): T[] {
         const removed: T[] = [];
