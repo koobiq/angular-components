@@ -693,9 +693,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             ? this.parent.hovered().pipe(
                   filter((active) => active !== this.dropdownItemInstance),
                   filter(() => this._opened),
-                  // A protected safe triangle handles closing itself once the pointer actually
-                  // leaves it — see `handleMouseLeave()`.
-                  filter(() => !this.parent.isSafeTriangleActive())
+                  // A protected safe triangle only guards against closing while the pointer grazes a
+                  // plain sibling row en route to the submenu (it handles closing itself once the
+                  // pointer actually leaves it — see `handleMouseLeave()`). Hovering another *nested*
+                  // trigger is a real intent change and should switch immediately.
+                  filter((active) => active.isNested || !this.parent.isSafeTriangleActive())
               )
             : observableOf();
 
@@ -722,10 +724,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             // it won't be closed immediately after it is opened.
             .pipe(
                 filter((active) => active === this.dropdownItemInstance && !active.disabled),
-                // Suppress opening while a sibling's safe triangle is being protected — otherwise this
-                // dropdown could open before the protected one has had a chance to close, leaving two
-                // submenus open at once.
-                filter(() => !this.parent.isSafeTriangleActive()),
                 delay(0, asapScheduler)
             )
             .subscribe(() => {

@@ -1523,6 +1523,28 @@ describe('KbqDropdown', () => {
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
             }));
+
+            it('should switch immediately when hovering another nested trigger while a triangle is active', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeTriangle();
+
+                instance.showLazy = true;
+                fixture.detectChanges();
+
+                const lazyTrigger = overlay.querySelector('#lazy-trigger')! as HTMLElement;
+
+                // Leaves heading toward level-one's submenu, arming its triangle, but lands directly
+                // on another nested trigger — a real intent change, not a graze — so it must not get
+                // stuck waiting for the triangle to resolve.
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                dispatchMouseEvent(lazyTrigger, 'mouseenter');
+                fixture.detectChanges();
+                tick(500);
+                fixture.detectChanges();
+
+                expect(instance.levelOneTrigger().opened).toBe(false);
+                expect(instance.lazyTrigger().opened).toBe(true);
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+            }));
         });
 
         it('should open and close a nested dropdown with arrow keys in ltr', fakeAsync(() => {
