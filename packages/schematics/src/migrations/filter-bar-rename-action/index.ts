@@ -7,7 +7,9 @@ import {
     BEHAVIOUR_NOTE,
     FINGERPRINT_KEYS,
     MIN_FINGERPRINT_MATCHES,
+    NAME_MEMBER_PATTERN,
     REMOVED_KEY,
+    SHORTHAND_MESSAGE,
     templateWarnPatterns,
     tsWarnPatterns,
     WarnPattern
@@ -36,16 +38,23 @@ function propertyName(property: ts.ObjectLiteralElementLike): string | null {
     return property.name.text;
 }
 
+/** What the AST pass found in one file. */
+interface Findings {
+    /** Spans of the `name` properties to delete. */
+    spans: Span[];
+    /** Whether a matched literal carries `name` as a shorthand, which the fix leaves alone. */
+    shorthand: boolean;
+}
+
 /**
- * The `name` property of an object literal that is recognisably a filter-bar `filters` locale
+ * The `name` member of an object literal that is recognisably a filter-bar `filters` locale
  * section — one carrying enough of the sibling keys listed in {@link FINGERPRINT_KEYS}.
  *
- * A shorthand `name` is deliberately skipped: deleting it would drop a reference to a variable the
- * file still declares, which is a different edit from removing a dead string. Those are reported by
- * the leftover warning instead.
+ * A shorthand `name` is reported rather than deleted: dropping it would also drop a reference to a
+ * variable the file still declares, which is a different edit from removing a dead string.
  */
-function findRemovedProperty(node: ts.ObjectLiteralExpression): ts.PropertyAssignment | null {
-    let removed: ts.PropertyAssignment | null = null;
+function findNameMember(node: ts.ObjectLiteralExpression): ts.ObjectLiteralElementLike | null {
+    let member: ts.ObjectLiteralElementLike | null = null;
     let fingerprint = 0;
 
     for (const property of node.properties) {
@@ -53,22 +62,26 @@ function findRemovedProperty(node: ts.ObjectLiteralExpression): ts.PropertyAssig
 
         if (name === null) continue;
 
-        if (name === REMOVED_KEY && ts.isPropertyAssignment(property)) removed = property;
+        if (name === REMOVED_KEY) member = property;
         else if (FINGERPRINT_KEYS.includes(name)) fingerprint++;
     }
 
-    return fingerprint >= MIN_FINGERPRINT_MATCHES ? removed : null;
+    return fingerprint >= MIN_FINGERPRINT_MATCHES ? member : null;
 }
 
-/** Spans of every removable `name` property across the file. */
-function collectRemovedPropertySpans(sourceFile: ts.SourceFile): Span[] {
-    const spans: Span[] = [];
+/** Every removable `name` property across the file, plus whether a shorthand one was left behind. */
+function collectFindings(sourceFile: ts.SourceFile): Findings {
+    const findings: Findings = { spans: [], shorthand: false };
 
     const visit = (node: ts.Node) => {
         if (ts.isObjectLiteralExpression(node)) {
-            const property = findRemovedProperty(node);
+            const member = findNameMember(node);
 
-            if (property) spans.push({ start: property.getStart(sourceFile), end: property.getEnd() });
+            if (member && ts.isPropertyAssignment(member)) {
+                findings.spans.push({ start: member.getStart(sourceFile), end: member.getEnd() });
+            } else if (member) {
+                findings.shorthand = true;
+            }
         }
 
         ts.forEachChild(node, visit);
@@ -76,7 +89,7 @@ function collectRemovedPropertySpans(sourceFile: ts.SourceFile): Span[] {
 
     ts.forEachChild(sourceFile, visit);
 
-    return spans;
+    return findings;
 }
 
 /** A comma and the whitespace — at most one line break — that separates two members. */
@@ -147,10 +160,14 @@ export default function filterBarRenameAction(options: Schema): Rule {
 
             let content = originalContent;
 
-            // Parsing every .ts of the project is not free, and a file that never mentions the
-            // removed key cannot hold a literal to fix.
-            if (filePath.endsWith(TS_EXT) && content.includes(REMOVED_KEY)) {
-                content = removeProperties(content, collectRemovedPropertySpans(createSourceFile(filePath, content)));
+            // Parsing every .ts of the project is not free, and a file that carries no `name` member
+            // at all cannot hold a literal to fix.
+            if (filePath.endsWith(TS_EXT) && NAME_MEMBER_PATTERN.test(content)) {
+                const { spans, shorthand } = collectFindings(createSourceFile(filePath, content));
+
+                content = removeProperties(content, spans);
+
+                if (shorthand) logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${SHORTHAND_MESSAGE}`]);
             }
 
             // Warn on what is left over, so an auto-fixed literal does not also produce a

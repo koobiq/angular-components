@@ -333,19 +333,29 @@ export class FilterBarOverviewExample {
 
     saveCurrentFilterWithNewName(filter: KbqFilter, filterBar: KbqFilterBar) {
         // This logic simulates the behavior of the backend
-        if (filterBar.filter()?.name !== filter.name) {
-            const index = this.filters.findIndex(({ name }) => name === filterBar.filter()?.name);
-
-            // Renaming writes the name only: the stored pipes stay as they were saved, so unsaved changes
-            // in the bar are not persisted along with the new name.
-            this.filters.splice(index, 1, { ...this.filters[index], name: filter.name });
-
-            this.activeFilter = filter;
-
-            filterBar.filters()?.filterSavedSuccessfully();
-        } else {
+        if (filterBar.filter()?.name === filter.name) {
             filterBar.filters()?.filterSavedUnsuccessfully({ nameAlreadyExists: true });
+
+            return;
         }
+
+        const index = this.filters.findIndex(({ name }) => name === filterBar.filter()?.name);
+
+        // A filter the store does not know about cannot be renamed. Without this guard the splice
+        // below would rewrite the last entry instead, since findIndex returns -1.
+        if (index === -1) {
+            filterBar.filters()?.filterSavedUnsuccessfully();
+
+            return;
+        }
+
+        // Renaming writes the name only: the stored pipes stay as they were saved, so unsaved changes
+        // in the bar are not persisted along with the new name.
+        this.filters.splice(index, 1, { ...this.filters[index], name: filter.name });
+
+        this.activeFilter = filter;
+
+        filterBar.filters()?.filterSavedSuccessfully();
     }
 
     saveCurrentFilterWithChangesInPipes(filter: KbqFilter, filterBar: KbqFilterBar) {

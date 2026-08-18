@@ -138,6 +138,7 @@ describe(SCHEMATIC_NAME, () => {
         it('leaves a shorthand name alone and reports it', async () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
             const source =
                 "const name = 'Name';\n" +
                 'export const filters = {\n' +
@@ -150,6 +151,19 @@ describe(SCHEMATIC_NAME, () => {
             appTree.overwrite(ts, source);
 
             expect((await run(first)).readText(ts)).toBe(source);
+            expect(messages.join('\n')).toContain('carries `name` as a shorthand property');
+        });
+
+        it('does not report a shorthand name outside a filters literal', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, "const name = 'Ada';\nexport const user = { name, id: 1 };\n");
+
+            await run(first);
+
+            expect(messages.join('\n')).not.toContain('shorthand property');
         });
     });
 

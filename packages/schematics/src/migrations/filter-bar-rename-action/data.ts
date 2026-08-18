@@ -17,6 +17,22 @@ export interface WarnPattern {
 export const REMOVED_KEY = 'name';
 
 /**
+ * Cheap pre-check gating the AST parse.
+ *
+ * Searching for `name` alone would match `className`, `fileName` and most of a project, so the parse
+ * is gated on the shapes the key can take inside an object literal: `name:`, a quoted `'name':`, and
+ * the shorthand `name` standing between a brace or comma and the next one. A preceding word
+ * character or dot rules out both longer identifiers and property reads, which are warn-only.
+ */
+export const NAME_MEMBER_PATTERN = /(?:^|[^.\w])(['"]?)name\1\s*[:,}]/;
+
+/** Reported for a shorthand `name` the fix deliberately leaves in place. */
+export const SHORTHAND_MESSAGE =
+    'This filter-bar locale literal carries `name` as a shorthand property. It was left in place — ' +
+    'deleting it would drop a reference to a variable the file still declares — so remove it by hand, ' +
+    'together with the variable if nothing else reads it.';
+
+/**
  * Sibling keys that identify a `filters` locale literal.
  *
  * `KBQ_FILTER_BAR_CONFIGURATION` is typed as the full configuration (not a `Partial`), so a

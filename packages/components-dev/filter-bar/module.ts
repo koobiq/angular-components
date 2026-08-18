@@ -1039,6 +1039,14 @@ export class DevApp implements AfterViewInit {
         } else if (status === KbqSaveFilterStatuses.NewName) {
             const index = this.filters.findIndex(({ name }) => name === filterBar.filter()?.name);
 
+            // A filter the store does not know about cannot be renamed. Without this guard the splice
+            // below would rewrite the last entry instead, since findIndex returns -1.
+            if (index === -1) {
+                filterBar.filters()?.filterSavedUnsuccessfully();
+
+                return;
+            }
+
             // Renaming writes the name only, leaving the stored pipes as they were saved.
             this.filters.splice(index, 1, { ...this.filters[index], name: filter.name });
 

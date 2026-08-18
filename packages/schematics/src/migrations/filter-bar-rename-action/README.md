@@ -61,13 +61,19 @@ keeps its shape and nothing else in the file is reformatted.
 
 A shorthand `name` (`{ name, saveChanges: … }`) is deliberately left alone:
 deleting it would drop a reference to a variable the file still declares, which
-is a different edit from removing a dead string. It is warned about instead.
+is a different edit from removing a dead string. The literal is reported instead,
+so the key does not go unnoticed.
+
+The AST parse is gated on a cheap pre-check for a `name` member (`name:`,
+`'name':`, or the shorthand between two separators) rather than on the bare word
+`name`, which would match `className`, `fileName` and most of a project.
 
 ## What it does _not_ do (warn-only)
 
 | Pattern                                          | Manual migration                                                                             |
 | ------------------------------------------------ | -------------------------------------------------------------------------------------------- |
 | `filters.name` in `.ts`                          | A read (or a literal the fingerprint did not match) — drop it                                |
+| A shorthand `name` in a matched literal          | Remove it by hand, together with the variable if nothing else reads it                       |
 | `filters.name` / `localeData.name` in a template | Drop the binding, or bind your own string if the field still needs a visible caption         |
 | `KbqSaveFilterStatuses.NewName`                  | Review the handler: persist the name only, or the rename keeps saving the pending pipe edits |
 | `popoverHeader`                                  | No longer varies by mode; nothing reads `saveChanges` as a popover header any more           |
