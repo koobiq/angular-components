@@ -1,5 +1,5 @@
 <div class="layout-column layout-fill layout-align-center-center docs-example-vertical-margin">
-    <kbq-accordion useStateSaving style="width: 300px" [variant]="group1.value">
+    <kbq-accordion useStateSaving style="width: 300px" [variant]="variant()">
         <kbq-accordion-item>
             <button kbq-accordion-trigger type="button">Text</button>
             <kbq-accordion-content>
@@ -39,7 +39,7 @@
         >
             Trigger Position
         </div>
-        <kbq-button-toggle-group #group1="kbqButtonToggleGroup" class="layout-margin-s" [value]="accordionVariant.fill">
+        <kbq-button-toggle-group class="layout-margin-s" [value]="variant()" (change)="variant.set($event.value)">
             <kbq-button-toggle [value]="accordionVariant.fill">Before Title</kbq-button-toggle>
             <kbq-button-toggle [value]="accordionVariant.hug">After Title</kbq-button-toggle>
             <kbq-button-toggle [value]="accordionVariant.hugSpaceBetween">Separately</kbq-button-toggle>
