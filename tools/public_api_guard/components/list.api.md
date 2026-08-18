@@ -171,20 +171,20 @@ export class KbqListSelectAllEvent<T> {
 // @public (undocumented)
 export class KbqListSelection<T = any> implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     constructor();
-    protected readonly announcement: i0.WritableSignal<string>;
     get ariaKeyShortcuts(): string;
-    // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
     blur(): void;
     canDeselectLast(listOption: KbqListOption<T>): boolean;
+    clearDropIndicators(option: KbqListOption): void;
     readonly compareWith: i0.InputSignal<(o1: T, o2: T) => boolean>;
-    readonly connectedTo: i0.InputSignal<string | KbqListSelection | readonly (string | KbqListSelection)[]>;
+    readonly connectedTo: i0.InputSignal<string | KbqListSelection<T> | readonly (string | KbqListSelection<T>)[]>;
     deselectAll(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
     get draggable(): boolean;
     set draggable(value: boolean);
+    protected readonly dropIndicatorOffset: i0.WritableSignal<number | null>;
     readonly dropped: i0.OutputEmitterRef<KbqListSelectionDroppedEvent>;
     // (undocumented)
     emitChangeEvent(option: KbqListOption<T>): void;
@@ -192,7 +192,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     focus(): void;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
-    focusOptionByValue(value: unknown): boolean;
+    focusOptionByValue(value: T): boolean;
     getHeight(): number;
     getSelectedOptionValues(): T[];
     // (undocumented)
@@ -217,6 +217,10 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     set noUnselectLast(value: boolean);
     readonly onCopy: EventEmitter<KbqListCopyEvent<KbqListOption<T>>>;
     onKeyDown(event: KeyboardEvent): void;
+    onOptionDragMoved(option: KbqListOption, pointer: {
+        x: number;
+        y: number;
+    }): void;
     // (undocumented)
     readonly onSelectAll: i0.OutputEmitterRef<KbqListSelectAllEvent<KbqListOption<T>>>;
     // (undocumented)
@@ -283,7 +287,7 @@ export class KbqListSelectionChange<T = any> {
 }
 
 // @public
-export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<unknown>, 'previousIndex' | 'currentIndex'> & {
+export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<KbqListSelection>, 'previousIndex' | 'currentIndex'> & {
     option: KbqListOption;
     container: KbqListSelection;
     previousContainer: KbqListSelection;

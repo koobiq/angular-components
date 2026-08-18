@@ -26,6 +26,10 @@
 
 Set the `draggable` property on `kbq-list-selection` to let the user reorder options.
 
+The list does not open a gap while an option is being dragged: the surrounding options stay put, the
+dragged one keeps its place as a faded row, and a line with a dot marks the position the option would
+land in.
+
 The list never changes the data itself — it reports the move through the `dropped` event and you
 apply it, usually with `moveItemInArray` from `@angular/cdk/drag-drop`. Track the options by their
 identity (`track item.id`): with a positional key such as `track $index` the option at a given
@@ -55,7 +59,8 @@ Dragging always has a keyboard equivalent, so the feature stays usable without a
 | <span class="docs-hot-key-button">Alt</span> + <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span> | Move the focused option into a connected list. |
 
 The new position is announced through a live region. Lists connected by `id` rather than by a
-component reference cannot be reached with the keyboard.
+component reference cannot be reached with the keyboard, and they show no drop indicator — an `id`
+cannot be resolved back to the list instance that would have to draw it.
 
 ### Accessibility
 
