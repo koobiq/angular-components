@@ -53,6 +53,26 @@
                 <ng-container *ngTemplateOutlet="navbarItem; context: { $implicit: item }" />
             }
 
+            <ng-template #actionButton>
+                <kbq-navbar-item>
+                    <button
+                        kbq-button
+                        [class.kbq-button-icon]="!verticalNavbar.expanded"
+                        [color]="colors.Contrast"
+                        [kbqPlacement]="popUpPlacements.Right"
+                        [kbqStyle]="'filled'"
+                        [kbqTooltip]="'Новая задача'"
+                        [kbqTooltipDisabled]="verticalNavbar.expanded"
+                    >
+                        <i kbq-icon="kbq-plus_16" [color]="'empty'"></i>
+                        @if (verticalNavbar.expanded) {
+                            <span>Новая задача</span>
+                        }
+                    </button>
+                </kbq-navbar-item>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="actionButton" />
+
             <ng-template #moreTrigger>
                 <kbq-navbar-item
                     #moreDropdownTrigger="kbqDropdownTrigger"
@@ -64,26 +84,6 @@
                 </kbq-navbar-item>
             </ng-template>
             <ng-container *ngTemplateOutlet="moreTrigger" />
-
-            <ng-template #actionButton>
-                <kbq-navbar-item>
-                    <button
-                        kbq-button
-                        [class.kbq-button-icon]="!verticalNavbar.expanded"
-                        [color]="colors.Contrast"
-                        [kbqPlacement]="popUpPlacements.Right"
-                        [kbqStyle]="'filled'"
-                        [kbqTooltip]="'Новый инцидент'"
-                        [kbqTooltipDisabled]="verticalNavbar.expanded"
-                    >
-                        <i kbq-icon="kbq-plus_16" [color]="'empty'"></i>
-                        @if (verticalNavbar.expanded) {
-                            <span>Новая задача</span>
-                        }
-                    </button>
-                </kbq-navbar-item>
-            </ng-template>
-            <ng-container *ngTemplateOutlet="actionButton" />
         </kbq-navbar-container>
 
         <kbq-navbar-container>
