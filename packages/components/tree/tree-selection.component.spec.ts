@@ -20,6 +20,7 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -1579,6 +1580,47 @@ describe('KbqTreeSelection', () => {
             });
         });
     });
+
+    describe('kbq-title', () => {
+        let fixture: ComponentFixture<KbqTreeAppWithTitle>;
+        let titleDirective: KbqTitleDirective;
+        let optionElement: HTMLElement;
+        let containerElement: HTMLElement;
+
+        beforeEach(() => {
+            configureKbqTreeTestingModule();
+            fixture = TestBed.createComponent(KbqTreeAppWithTitle);
+            fixture.detectChanges();
+
+            const optionDebugElement = fixture.debugElement.query(By.directive(KbqTitleDirective));
+
+            titleDirective = optionDebugElement.injector.get(KbqTitleDirective);
+            optionElement = optionDebugElement.nativeElement;
+            containerElement = optionElement.querySelector('.kbq-option-text')!;
+        });
+
+        it('should measure the clipping container, not the option host', () => {
+            // The host is always wider and taller than the container it wraps (padding, border, checkbox),
+            // so measuring the container against the host reported every option as truncated.
+            jest.spyOn(optionElement, 'scrollWidth', 'get').mockReturnValue(296);
+            jest.spyOn(optionElement, 'scrollHeight', 'get').mockReturnValue(28);
+            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(232);
+            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(232);
+            jest.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
+            jest.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(20);
+
+            expect(titleDirective.isOverflown).toBe(false);
+        });
+
+        it('should report overflow when the container is clipped', () => {
+            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(28);
+            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(70);
+            jest.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
+            jest.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(20);
+
+            expect(titleDirective.isOverflown).toBe(true);
+        });
+    });
 });
 
 export const DATA_OBJECT = {
@@ -1796,6 +1838,19 @@ abstract class TreeParams {
         return flatNode;
     };
 }
+
+@Component({
+    imports: [
+        KbqTreeModule,
+        KbqTitleModule
+    ],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbq-title kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class KbqTreeAppWithTitle extends TreeParams {}
 
 @Component({
     imports: [KbqTreeModule, FormsModule],
