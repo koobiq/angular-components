@@ -31,6 +31,7 @@ export const KBQ_TEXTAREA_VALUE_ACCESSOR: InjectionToken<{
 // @public (undocumented)
 export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState {
     constructor();
+    readonly autofilled: i0.Signal<boolean>;
     get canGrow(): boolean;
     set canGrow(value: boolean);
     controlType: string;

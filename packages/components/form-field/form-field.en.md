@@ -102,6 +102,35 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-fiel
 })
 ```
 
+### Autofill
+
+When the browser fills a field in, `<kbq-form-field>` tints it with `--kbq-form-field-states-autofill-background`, so an autofilled field looks the same in every browser: the browser's own background is suppressed and its text color is repainted. The tint goes on the field, never on the control itself, so it is never applied twice.
+
+The tint is a layer rather than a state. It composites over whatever background the field's state resolved, which means nothing is lost and nothing has to be arbitrated: an invalid field stays red **and** shows the tint, a field inside an overlay keeps its card background, a disabled field keeps the gray that says it cannot be edited. Border, focus ring and text color all stay with the state — an autofilled invalid field prints its error color, not a flat autofill color.
+
+`kbq-form-field` also declares `color-scheme` for the active theme. Without it the browser paints every surface it owns from the light palette however dark the application looks, and an autofilled field in a dark theme ends up a light block with black text the moment the browser reopens its autofill popup. Note that this popup is drawn by the browser over author styles; `color-scheme` is the only thing that influences it.
+
+To change the tint or switch it off, override the token on the field — no `!important` needed:
+
+```css
+.my-form-field {
+    /* look exactly like a normally filled field */
+    --kbq-form-field-states-autofill-background: transparent;
+}
+```
+
+The state is also tracked in TypeScript. `KbqInput`, `KbqInputPassword`, `KbqTextarea` and `KbqTagInput` (forwarded by `KbqTagList`) each wrap the CDK's `AutofillMonitor` around their own element and expose the result as an `autofilled` signal, which `<kbq-form-field>` reflects as the `kbq-form-field_autofilled` class:
+
+```ts
+@ViewChild(KbqInput) input: KbqInput;
+
+// ...
+
+const filledByBrowser = this.input.autofilled();
+```
+
+The signal is a hook for application code, not the mechanism behind the styling: it arrives a frame or two after the browser paints, where the CSS matches in the same style pass.
+
 ### Password input field
 
 `<kbq-password-toggle>` is a component that adds a _"Show password"_ button for **filled** `<input kbqInputPassword />` fields inside the `<kbq-form-field>` component.
