@@ -1130,6 +1130,40 @@ describe('KbqNavbar', () => {
 
             expect(navbar.keyManager.activeItem).toBe(items[1]);
         }));
+
+        /**
+         * The host owns the tab stop and hands focus straight to an item, which reads as the host being
+         * blurred unless the focus monitor watches its children too. Losing the keyboard origin there left
+         * every later arrow key moving the key manager's active item while nothing moved in the DOM — the
+         * item only takes focus for a keyboard origin.
+         */
+        it('arrow keys should keep moving real focus after the hand-off to the first item', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+
+            const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
+            const navbar = navbarDebugEl.componentInstance as KbqNavbar;
+            const focusMonitor = TestBed.inject(FocusMonitor);
+
+            focusMonitor.focusVia(navbarDebugEl.nativeElement, 'keyboard');
+            tick();
+
+            const first = navbar.keyManager.activeItem;
+
+            expect(first?.hasFocus).toBe(true);
+
+            dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', RIGHT_ARROW, navbarDebugEl.nativeElement);
+            fixture.detectChanges();
+            tick();
+
+            const next = navbar.keyManager.activeItem;
+
+            expect(next).not.toBe(first);
+            expect(next?.hasFocus).toBe(true);
+        }));
     });
 
     describe('KbqVerticalNavbar', () => {

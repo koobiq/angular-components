@@ -111,12 +111,22 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
         });
     }
 
-    /** @docs-private */
+    /**
+     * Monitored with `checkChildren`, because the navbar is one composite widget: the host owns the tab stop
+     * but hands focus straight to an item, and without it that hand-off reads as the navbar being blurred.
+     * The origin would reset to `null` on the very first item, leaving every later arrow key with no keyboard
+     * origin to pass on — the key manager would move its active item while nothing moved in the DOM.
+     * @docs-private
+     */
     ngAfterViewInit(): void {
         this.focusMonitor
-            .monitor(this.elementRef)
+            .monitor(this.elementRef, true)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((focusOrigin) => {
+                // A child losing focus to another child reports `null` in between; keep the origin the arrow
+                // keys travel on, and let a real blur of the whole navbar be handled by `blur()`.
+                if (focusOrigin === null) return;
+
                 this.lastFocusOrigin = focusOrigin;
                 this.keyManager.setFocusOrigin(focusOrigin);
             });
