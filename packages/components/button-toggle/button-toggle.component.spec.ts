@@ -748,8 +748,8 @@ describe('KbqButtonToggle label', () => {
             // Measuring the label against the whole button would leave a band as wide as an icon plus
             // its gap where the label is already clipped but the tooltip stays silent. Measured
             // against itself, the comparison is exactly `clientWidth < scrollWidth`.
-            expect(title.child).toBe(label);
-            expect(title.parent).toBe(label);
+            expect(title['child']).toBe(label);
+            expect(title['parent']).toBe(label);
         });
 
         it('should enable the tooltip only while the label is clipped', () => {
@@ -765,13 +765,13 @@ describe('KbqButtonToggle label', () => {
             };
 
             setWidths(100, 200);
-            title.handleElementEnter();
+            title['handleElementEnter']();
 
             expect(title.disabled).toBe(false);
             expect(title.content).toBe('Label');
 
             setWidths(100, 100);
-            title.handleElementEnter();
+            title['handleElementEnter']();
 
             expect(title.disabled).toBe(true);
         });

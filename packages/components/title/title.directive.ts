@@ -1,16 +1,17 @@
 import { ContentObserver } from '@angular/cdk/observers';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
     AfterViewInit,
-    ContentChild,
-    ContentChildren,
+    contentChild,
+    contentChildren,
     Directive,
     ElementRef,
     inject,
     input,
-    OnDestroy,
-    QueryList,
+    Signal,
     TemplateRef
 } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
     KBQ_TITLE_TEXT_REF,
     KBQ_WINDOW,
@@ -20,13 +21,12 @@ import {
     PopUpTriggers
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject, Subscription, throttleTime } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, skip, throttleTime } from 'rxjs';
 
 /**
  * Shows a tooltip with the full text of the host element, but only when that text is truncated —
  * i.e. it overflows horizontally, or vertically when clamped to several lines. The tooltip opens on
- * hover and on keyboard focus, and hides on blur, mouse leave, or window resize.
+ * hover and on keyboard focus, and hides on blur, mouse leave, or a resize of the measured container.
  *
  * By default, the tooltip content is the trimmed `textContent` of the host. Provide explicit content
  * with `[kbq-title]="stringOrTemplateRef"`. For nested markup, mark the measured container with the
@@ -40,14 +40,13 @@ import { debounceTime } from 'rxjs/operators';
     selector: '[kbq-title]',
     host: {
         '(mouseenter)': 'handleElementEnter()',
-        '(mouseleave)': 'hideTooltip()',
-        '(window:resize)': 'resizeStream.next($event)'
+        '(mouseleave)': 'hideTooltip()'
     },
     exportAs: 'kbqTitle'
 })
-export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit {
     /** Optional host component that exposes the measured text/parent elements via `KBQ_TITLE_TEXT_REF`. */
-    private componentInstance = inject<KbqTitleTextRef>(KBQ_TITLE_TEXT_REF, { host: true, optional: true });
+    private readonly componentInstance = inject<KbqTitleTextRef>(KBQ_TITLE_TEXT_REF, { host: true, optional: true });
 
     /** Host native element the directive is attached to. */
     private readonly nativeElement = kbqInjectNativeElement();
@@ -56,24 +55,37 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     private readonly window = inject(KBQ_WINDOW);
 
     /** Observes host content mutations to re-evaluate overflow and refresh the resolved tooltip content. */
-    private contentObserver = inject(ContentObserver);
+    private readonly contentObserver = inject(ContentObserver);
+
+    /**
+     * Application-wide `ResizeObserver` shared by every consumer. One directive instance therefore adds no
+     * listener of its own — which matters because `kbq-title` sits on every dropdown item, list option and
+     * tree option — and, unlike a `window:resize` listener, it also reacts to container-only resizes
+     * (splitter drag, sidebar collapse) that leave the window untouched.
+     */
+    private readonly resizeObserver = inject(SharedResizeObserver);
 
     /**
      * Optional explicit tooltip content. Accepts a `TemplateRef` (rendered as rich tooltip content) or a string.
      * When omitted (a bare `kbq-title` attribute resolves to an empty string), the directive falls back to the
      * trimmed `textContent` of the host (`viewValue`), preserving the default behavior.
      */
-    readonly titleContent = input<TemplateRef<any> | string>('', { alias: 'kbq-title' });
+    readonly titleContent = input<TemplateRef<unknown> | string>('', { alias: 'kbq-title' });
 
-    // todo need rename kbqTrigger in popover, tooltip and title. Here workaround for kbq-title and popover on one button
+    /**
+     * `kbqTrigger` is a single input alias shared by the tooltip, the popover and this directive, so a host
+     * carrying both `kbq-title` and `kbqPopover` feeds one value to both. The title tooltip ignores it and
+     * always behaves as hover + keyboard focus; the setter exists only so such a host keeps working.
+     *
+     * Unifying the alias family is a breaking change owned by the pop-up base, not a title-local fix.
+     */
     set trigger(value: string) {
         super.trigger = value;
     }
 
     /**
      * The pop-up trigger. Always reports `PopUpTriggers.Hover`, so the title tooltip reacts to hover and
-     * keyboard focus regardless of the assigned value. The setter is kept only as a no-op workaround so a
-     * host that also uses a popover can assign a trigger without breaking `kbq-title`.
+     * keyboard focus regardless of the assigned value.
      */
     get trigger(): string {
         return PopUpTriggers.Hover;
@@ -85,112 +97,58 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * special case, and both horizontal and vertical overflow.
      */
     get isOverflown(): boolean {
-        const children = this.childElements;
-
-        /** Multiple text elements (e.g. filter-bar pipe with a name and a value): overflown if any of them overflows. */
-        if (children.length > 1) {
-            return children.some(
-                (element) =>
-                    this.parent?.offsetWidth < element.scrollWidth || this.parent?.offsetHeight < element.scrollHeight
-            );
-        }
-
-        /** For special cases where the difference is a fraction of a pixel */
-        if (
-            !this.isVerticalOverflown &&
-            (this.child.scrollWidth === 0 || this.parent?.offsetWidth === this.child.scrollWidth)
-        ) {
-            if (this.hasOnlyText) {
-                const wrapper = this.renderer.createElement('span');
-
-                wrapper.innerText = this.child.innerText;
-                this.parent.appendChild(wrapper);
-
-                const result = this.isWidthOverflown(
-                    this.parent.getBoundingClientRect().width,
-                    wrapper.getBoundingClientRect().width
-                );
-
-                wrapper.remove();
-
-                return result;
-            }
-
-            return this.isWidthOverflown(
-                this.parent.getBoundingClientRect().width,
-                this.child.getBoundingClientRect().width
-            );
-        }
-
-        return this.isHorizontalOverflown || this.isVerticalOverflown;
-    }
-
-    /** Whether the text is clipped horizontally: the parent `offsetWidth` is smaller than the child `scrollWidth`. */
-    get isHorizontalOverflown(): boolean {
-        return this.parent?.offsetWidth < this.child.scrollWidth;
-    }
-
-    /** Whether the text is clipped vertically: the parent `offsetHeight` is smaller than the child `scrollHeight`. */
-    get isVerticalOverflown(): boolean {
-        return this.parent?.offsetHeight < this.child.scrollHeight;
+        return this.childElements.some((element) => this.isElementOverflown(element));
     }
 
     /**
-     * Compares measured widths, treating only *visible* clipping as overflow. With `text-overflow: ellipsis`
-     * any positive difference counts (even a sub-pixel overflow shows `…`). With `text-overflow: clip` the
-     * widths are rounded to whole CSS pixels first — mirroring the integer `offsetWidth`/`scrollWidth` path —
-     * so an imperceptible sub-pixel clip is not treated as truncation.
+     * Whether the text is clipped horizontally: the parent `offsetWidth` is smaller than the child `scrollWidth`.
      * @docs-private */
-    private isWidthOverflown(parentWidth: number, childWidth: number): boolean {
-        return this.hasEllipsis ? parentWidth < childWidth : Math.round(parentWidth) < Math.round(childWidth);
+    protected get isHorizontalOverflown(): boolean {
+        const child = this.child;
+
+        return !!child && this.parent.offsetWidth < child.scrollWidth;
+    }
+
+    /**
+     * Whether the text is clipped vertically: the parent `offsetHeight` is smaller than the child `scrollHeight`.
+     * @docs-private */
+    protected get isVerticalOverflown(): boolean {
+        const child = this.child;
+
+        return !!child && this.parent.offsetHeight < child.scrollHeight;
     }
 
     /** Trimmed `textContent` of the measured parent, used as the default tooltip content. */
     get viewValue(): string {
-        return (this.parent?.textContent || '').trim();
+        return (this.parent.textContent || '').trim();
     }
 
     /**
      * Measured container element. Resolved as the projected `#kbqTitleContainer`, otherwise the
-     * `KBQ_TITLE_TEXT_REF` host's `parentTextElement`, otherwise the host element itself.
+     * `KBQ_TITLE_TEXT_REF` host's `parentTextElement`, otherwise the host element itself. Never falsy.
      * @docs-private */
-    get parent(): HTMLElement {
+    protected get parent(): HTMLElement {
         return (
-            this.parentContainer?.nativeElement ||
+            this.parentContainer()?.nativeElement ||
             this.componentInstance?.parentTextElement?.nativeElement ||
             this.elementRef.nativeElement
         );
     }
 
-    /** First effective text element used for overflow detection (the first entry of `childElements`).
+    /**
+     * First effective text element used for overflow detection (the first entry of `childElements`).
+     * `undefined` only if the `#kbqTitleText` query is emptied at runtime.
      * @docs-private */
-    get child(): HTMLElement {
+    protected get child(): HTMLElement | undefined {
         return this.childElements[0];
     }
 
-    /** Whether the host element contains exactly one child node and that node is a text node. */
-    get hasOnlyText(): boolean {
+    /** Whether the host element contains exactly one child node and that node is a text node.
+     * @docs-private */
+    private get hasOnlyText(): boolean {
         return (
             this.nativeElement.childNodes.length === 1 && this.nativeElement.childNodes[0].nodeType === Node.TEXT_NODE
         );
-    }
-
-    /**
-     * Whether the measured text truncates with an ellipsis on either the child text element or its
-     * wrapping container. Only then is a sub-pixel overflow actually visible (the trailing glyph is
-     * replaced by `…`); with the default `text-overflow: clip` a sub-pixel clip is imperceptible, so
-     * it must not be reported as truncation. Both elements are checked because `text-overflow` is not
-     * inherited and consumers place it differently: `KbqOption`/`KbqDropdownItem` style the measured
-     * `child`, whereas `KbqTreeOption` styles the `parent` container that wraps the child.
-     * @docs-private */
-    private get hasEllipsis(): boolean {
-        return this.elementHasEllipsis(this.child) || this.elementHasEllipsis(this.parent);
-    }
-
-    /** Whether the element's computed `text-overflow` renders an ellipsis.
-     * @docs-private */
-    private elementHasEllipsis(element: HTMLElement): boolean {
-        return this.window.getComputedStyle(element).textOverflow.includes('ellipsis');
     }
 
     /**
@@ -199,8 +157,10 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * Always contains at least one element.
      * @docs-private */
     private get childElements(): HTMLElement[] {
-        if (this.childContainer?.length) {
-            return this.childContainer.map(({ nativeElement }) => nativeElement);
+        const projected = this.childContainer();
+
+        if (projected.length) {
+            return projected.map(({ nativeElement }) => nativeElement);
         }
 
         return [this.componentInstance?.textElement?.nativeElement ?? this.elementRef.nativeElement];
@@ -208,35 +168,42 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
     /** Resolved tooltip content: the explicit `titleContent` input when provided, otherwise the host text.
      * @docs-private */
-    private get resolvedContent(): string | TemplateRef<any> {
+    private get resolvedContent(): string | TemplateRef<unknown> {
         return this.titleContent() || this.viewValue;
     }
-
-    /** Emits `window:resize` events; subscribed to re-evaluate overflow after the viewport changes.
-     * @docs-private */
-    readonly resizeStream = new Subject<Event>();
 
     /** Debounce/throttle interval (ms) applied to the resize and content-observer streams. */
     private readonly debounceInterval: number = 100;
 
-    /** Subscription to `resizeStream`, torn down in `ngOnDestroy`. */
-    private resizeSubscription = Subscription.EMPTY;
-    /** Subscription to the content observer, torn down in `ngOnDestroy`. */
-    private contentObserverSubscription = Subscription.EMPTY;
-    /** Subscription to the focus monitor, torn down in `ngOnDestroy`. */
-    private focusMonitorSubscription = Subscription.EMPTY;
-
     /** Projected text elements marked with the `#kbqTitleText` template reference. */
-    @ContentChildren('kbqTitleText', { descendants: true })
-    private childContainer: QueryList<ElementRef>;
+    private readonly childContainer: Signal<readonly ElementRef<HTMLElement>[]> = contentChildren('kbqTitleText', {
+        descendants: true,
+        read: ElementRef
+    });
 
     /** Projected container element marked with the `#kbqTitleContainer` template reference. */
-    @ContentChild('kbqTitleContainer')
-    private parentContainer: ElementRef;
+    private readonly parentContainer: Signal<ElementRef<HTMLElement> | undefined> = contentChild('kbqTitleContainer', {
+        read: ElementRef
+    });
+
+    constructor() {
+        super();
+
+        // The input is otherwise read only on hover and on host mutations, neither of which a programmatic
+        // rebind triggers: without this, changing `[kbq-title]` while the tooltip is open leaves the overlay
+        // showing the previous text, and `disabled` keeps the verdict computed for the old content. The
+        // initial value is skipped — `ngAfterViewInit` seeds the content once the queries are resolved.
+        toObservable(this.titleContent)
+            .pipe(skip(1), takeUntilDestroyed())
+            .subscribe(() => {
+                this.content = this.resolvedContent;
+                this.disabled = !this.isOverflown;
+            });
+    }
 
     /**
      * Sets the initial tooltip content and wires the streams that toggle the tooltip's `disabled` state:
-     * window resize and content mutations re-evaluate overflow, and keyboard focus opens the tooltip
+     * container resizes and content mutations re-evaluate overflow, and keyboard focus opens the tooltip
      * while other focus origins hide it.
      */
     ngAfterViewInit() {
@@ -254,43 +221,129 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
             ];
         }
 
-        this.resizeSubscription = this.resizeStream
-            .pipe(debounceTime(this.debounceInterval))
+        this.resizeObserver
+            .observe(this.parent)
+            .pipe(debounceTime(this.debounceInterval), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => (this.disabled = !this.isOverflown));
 
-        this.contentObserverSubscription = this.contentObserver
+        this.contentObserver
             .observe(this.parent)
-            .pipe(throttleTime(this.debounceInterval))
+            .pipe(throttleTime(this.debounceInterval), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.disabled = !this.isOverflown;
                 this.content = this.resolvedContent;
             });
 
-        this.focusMonitorSubscription = this.focusMonitor
+        this.focusMonitor
             .monitor(this.elementRef)
-            .subscribe((origin) => (origin === 'keyboard' ? this.handleElementEnter() : this.hideTooltip()));
-    }
-
-    /** Unsubscribes from the resize, content-observer and focus-monitor streams and stops focus monitoring. */
-    ngOnDestroy() {
-        super.ngOnDestroy();
-
-        this.resizeSubscription.unsubscribe();
-        this.contentObserverSubscription.unsubscribe();
-        this.focusMonitorSubscription.unsubscribe();
-        this.focusMonitor.stopMonitoring(this.elementRef);
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((origin) => {
+                if (origin === 'keyboard') {
+                    this.handleElementEnter();
+                    // `handleElementEnter()` only re-enables the tooltip. Without an explicit `show()` a
+                    // keyboard user gets nothing: the trigger is locked to hover, so the base class binds no
+                    // focus listener that would open it.
+                    this.show();
+                } else {
+                    // `disabled = true` hides an open tooltip through the base setter.
+                    this.hideTooltip();
+                }
+            });
     }
 
     /** Enables the tooltip only when the content is overflown. Bound to `mouseenter` and keyboard focus.
      * @docs-private */
-    handleElementEnter() {
+    protected handleElementEnter() {
         this.content = this.resolvedContent;
         this.disabled = !this.isOverflown;
     }
 
     /** Always disables (hides) the tooltip. Bound to `mouseleave` and non-keyboard focus changes.
      * @docs-private */
-    hideTooltip() {
+    protected hideTooltip() {
         this.disabled = true;
+    }
+
+    /**
+     * Whether a single measured text element is clipped by the parent container. Both the single- and the
+     * multi-element host go through this method, so a filter-bar pipe or a two-line list option gets the same
+     * sub-pixel and ellipsis awareness as a plain text host.
+     * @docs-private */
+    private isElementOverflown(element: HTMLElement | undefined): boolean {
+        if (!element) {
+            return false;
+        }
+
+        const { offsetWidth, offsetHeight } = this.parent;
+        const isVerticalOverflown = offsetHeight < element.scrollHeight;
+
+        /** For special cases where the difference is a fraction of a pixel */
+        if (!isVerticalOverflown && (element.scrollWidth === 0 || offsetWidth === element.scrollWidth)) {
+            if (this.hasOnlyText) {
+                return this.isTextWiderThanContainer(element);
+            }
+
+            return this.isWidthOverflown(
+                this.parent.getBoundingClientRect().width,
+                element.getBoundingClientRect().width,
+                element
+            );
+        }
+
+        return offsetWidth < element.scrollWidth || isVerticalOverflown;
+    }
+
+    /**
+     * Compares the container against the width the text occupies when nothing clips it: a probe span
+     * carrying the same text is appended to the container, both are measured, and the probe is removed
+     * again. `finally` guarantees the probe never outlives the measurement — a throw between the append and
+     * the read (e.g. a layout call on a detached tree) would otherwise strand it in the consumer's DOM.
+     *
+     * The container is measured while the probe is attached, as it has been since the sub-pixel path was
+     * introduced: a shrink-to-fit container stretched by the probe must not be reported as clipping it.
+     * @docs-private */
+    private isTextWiderThanContainer(element: HTMLElement): boolean {
+        const wrapper = this.renderer.createElement('span');
+
+        wrapper.innerText = element.innerText;
+        this.parent.appendChild(wrapper);
+
+        try {
+            return this.isWidthOverflown(
+                this.parent.getBoundingClientRect().width,
+                wrapper.getBoundingClientRect().width,
+                element
+            );
+        } finally {
+            wrapper.remove();
+        }
+    }
+
+    /**
+     * Compares measured widths, treating only *visible* clipping as overflow. With `text-overflow: ellipsis`
+     * any positive difference counts (even a sub-pixel overflow shows `…`). With `text-overflow: clip` the
+     * widths are rounded to whole CSS pixels first — mirroring the integer `offsetWidth`/`scrollWidth` path —
+     * so an imperceptible sub-pixel clip is not treated as truncation.
+     * @docs-private */
+    private isWidthOverflown(parentWidth: number, childWidth: number, element: HTMLElement): boolean {
+        return this.hasEllipsis(element) ? parentWidth < childWidth : Math.round(parentWidth) < Math.round(childWidth);
+    }
+
+    /**
+     * Whether the measured text truncates with an ellipsis on either the text element or its wrapping
+     * container. Only then is a sub-pixel overflow actually visible (the trailing glyph is replaced by `…`);
+     * with the default `text-overflow: clip` a sub-pixel clip is imperceptible, so it must not be reported as
+     * truncation. Both elements are checked because `text-overflow` is not inherited and consumers place it
+     * differently: `KbqOption`/`KbqDropdownItem` style the measured text element, whereas `KbqTreeOption`
+     * styles the parent container that wraps it.
+     * @docs-private */
+    private hasEllipsis(element: HTMLElement): boolean {
+        return this.elementHasEllipsis(element) || this.elementHasEllipsis(this.parent);
+    }
+
+    /** Whether the element's computed `text-overflow` renders an ellipsis.
+     * @docs-private */
+    private elementHasEllipsis(element: HTMLElement): boolean {
+        return this.window.getComputedStyle(element).textOverflow.includes('ellipsis');
     }
 }
