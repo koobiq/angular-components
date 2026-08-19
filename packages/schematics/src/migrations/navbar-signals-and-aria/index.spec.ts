@@ -112,6 +112,62 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
+    describe('shadowed receivers', () => {
+        it('leaves a block-scoped local of another type alone', async () => {
+            const { name, ts } = firstProject();
+            const source = [
+                "import { KbqVerticalNavbar } from '@koobiq/components/navbar';",
+                '',
+                'export class Host {',
+                '    run(flag: boolean) {',
+                '        if (flag) {',
+                '            const nav: KbqVerticalNavbar = this.get();',
+                '            console.log(nav.expanded);',
+                '        }',
+                '        {',
+                '            const nav = { expanded: false };',
+                '            console.log(nav.expanded);',
+                '        }',
+                '    }',
+                '}',
+                ''
+            ].join('\n');
+
+            appTree.overwrite(ts, source);
+
+            const tree = await run(name);
+            const migrated = tree.read(ts)!.toString();
+
+            expect(migrated).toContain('console.log(nav.expanded());');
+            // The second block declares a plain object under the same name — it must stay a property read.
+            expect(migrated).toContain('const nav = { expanded: false };\n            console.log(nav.expanded);');
+        });
+
+        it('leaves a nested function parameter of another type alone', async () => {
+            const { name, ts } = firstProject();
+            const source = [
+                "import { KbqVerticalNavbar } from '@koobiq/components/navbar';",
+                '',
+                'export function outer(nav: KbqVerticalNavbar) {',
+                '    function inner(nav: { expanded: boolean }) {',
+                '        return nav.expanded;',
+                '    }',
+                '',
+                '    return [nav.expanded, inner({ expanded: false })];',
+                '}',
+                ''
+            ].join('\n');
+
+            appTree.overwrite(ts, source);
+
+            const tree = await run(name);
+            const migrated = tree.read(ts)!.toString();
+
+            expect(migrated).toContain('return nav.expanded;');
+            expect(migrated).toContain('return [nav.expanded(), inner({ expanded: false })];');
+        });
+    });
+
     describe('KbqNavbarItem (auto-fixed)', () => {
         it('rewrites isCollapsed and collapsable reads into calls', async () => {
             const { name, ts } = firstProject();

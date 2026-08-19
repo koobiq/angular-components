@@ -33,14 +33,18 @@ interface Edit {
     text: string;
 }
 
-/** A receiver whose static type is a navbar class, valid within `[start, end]` of the source. */
+/** A declaration reachable as `text` within `[start, end]` of the source. */
 interface Receiver {
     /** Source text of the receiver expression, e.g. `navbar` or `this.navbar`. */
     text: string;
     start: number;
     end: number;
-    /** The navbar class the receiver was annotated with. */
-    typeName: string;
+    /**
+     * The navbar class the receiver was annotated with, or `undefined` for a declaration of some other type.
+     * Those are collected too: an inner declaration shadows an outer one, so the migration has to see it to
+     * know that the name no longer refers to the navbar at that point.
+     */
+    typeName: string | undefined;
 }
 
 function escapeRegExp(value: string): string {
@@ -99,29 +103,52 @@ const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
     ts.SyntaxKind.ReadonlyKeyword
 ]);
 
+/** Nodes that confine a `let`/`const` declared inside them. */
+const isBlockScopeContainer = (node: ts.Node): boolean =>
+    ts.isBlock(node) ||
+    ts.isSourceFile(node) ||
+    ts.isModuleBlock(node) ||
+    ts.isCaseBlock(node) ||
+    ts.isForStatement(node) ||
+    ts.isForInStatement(node) ||
+    ts.isForOfStatement(node);
+
+/**
+ * Scope a local is visible in: a `let`/`const` is confined to its nearest block, a `var` to the whole function.
+ *
+ * Giving a block-scoped local the whole function would let an access elsewhere in that function match it even
+ * where the name refers to a different, shadowing declaration — and be rewritten as if it were the navbar one.
+ */
+function variableScope(node: ts.VariableDeclaration, sourceFile: ts.SourceFile): ts.Node {
+    const blockScoped = !!(node.parent.flags & ts.NodeFlags.BlockScoped);
+
+    return findAncestor(node, blockScoped ? isBlockScopeContainer : isFunctionLike) ?? sourceFile;
+}
+
 /**
  * Collects the receivers whose static type is one of the navbar classes, by explicit annotation only (no
  * cross-package type resolution): method/function params, class fields (incl. `@ViewChild(KbqVerticalNavbar) x:
  * KbqVerticalNavbar` and constructor parameter-properties) and typed locals.
+ *
+ * Params and locals of any other type are collected as well, with no `typeName`. They never trigger a rewrite
+ * themselves; they exist so that a nested declaration reusing a navbar receiver's name is seen as shadowing it.
  */
 function collectReceivers(sourceFile: ts.SourceFile): Receiver[] {
     const receivers: Receiver[] = [];
-    const add = (text: string, scope: ts.Node, typeName: string) =>
+    const add = (text: string, scope: ts.Node, typeName: string | undefined) =>
         receivers.push({ text, start: scope.getStart(sourceFile), end: scope.getEnd(), typeName });
 
     const visit = (node: ts.Node): void => {
         if (ts.isParameter(node) && ts.isIdentifier(node.name)) {
             const typeName = navbarTypeName(node.type);
 
-            if (typeName) {
-                add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile, typeName);
+            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile, typeName);
 
-                // A constructor parameter-property is also a class field, reachable as `this.<name>`.
-                if (node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
-                    const owner = findAncestor(node, ts.isClassDeclaration);
+            // A constructor parameter-property is also a class field, reachable as `this.<name>`.
+            if (typeName && node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
+                const owner = findAncestor(node, ts.isClassDeclaration);
 
-                    if (owner) add(`this.${node.name.text}`, owner, typeName);
-                }
+                if (owner) add(`this.${node.name.text}`, owner, typeName);
             }
         } else if (ts.isPropertyDeclaration(node) && ts.isIdentifier(node.name)) {
             const typeName = navbarTypeName(node.type);
@@ -129,9 +156,7 @@ function collectReceivers(sourceFile: ts.SourceFile): Receiver[] {
 
             if (typeName && owner) add(`this.${node.name.text}`, owner, typeName);
         } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
-            const typeName = navbarTypeName(node.type);
-
-            if (typeName) add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile, typeName);
+            add(node.name.text, variableScope(node, sourceFile), navbarTypeName(node.type));
         }
 
         node.forEachChild(visit);
@@ -142,7 +167,12 @@ function collectReceivers(sourceFile: ts.SourceFile): Receiver[] {
     return receivers;
 }
 
-/** The receiver a property access belongs to, if the access sits inside that receiver's scope. */
+/**
+ * The declaration a property access resolves to, if the access sits inside that declaration's scope.
+ *
+ * The innermost enclosing scope wins: a nested param or local shadows an outer one of the same name, and only
+ * the declaration actually in effect at the access site decides whether this is a navbar receiver at all.
+ */
 function receiverOf(
     node: ts.PropertyAccessExpression,
     sourceFile: ts.SourceFile,
@@ -152,8 +182,30 @@ function receiverOf(
     const start = node.getStart(sourceFile);
     const end = node.getEnd();
 
-    return receivers.find((r) => r.text === receiverText && start >= r.start && end <= r.end);
+    let innermost: Receiver | undefined;
+
+    for (const receiver of receivers) {
+        if (receiver.text !== receiverText || start < receiver.start || end > receiver.end) continue;
+
+        if (!innermost || receiver.start > innermost.start) innermost = receiver;
+    }
+
+    return innermost;
 }
+
+/** The navbar receiver a property access resolves to, ignoring declarations of any other type. */
+const navbarReceiverOf = (
+    node: ts.PropertyAccessExpression,
+    sourceFile: ts.SourceFile,
+    receivers: Receiver[]
+): Receiver | undefined => {
+    const receiver = receiverOf(node, sourceFile, receivers);
+
+    return receiver?.typeName ? receiver : undefined;
+};
+
+/** Whether any collected declaration is actually a navbar receiver. */
+const hasNavbarReceiver = (receivers: Receiver[]): boolean => receivers.some(({ typeName }) => !!typeName);
 
 /** The signal/model method a member access is immediately followed by, if any (`x.expanded.set`). */
 function followedByMethod(node: ts.PropertyAccessExpression): string | undefined {
@@ -247,11 +299,11 @@ function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): E
 
     const visit = (node: ts.Node): void => {
         if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
-            const receiver = receiverOf(node, sourceFile, receivers);
+            const receiver = navbarReceiverOf(node, sourceFile, receivers);
 
             if (receiver?.typeName === RECTANGLE_TYPE) {
                 classifyOrientationAccess(node, sourceFile, edits);
-            } else if (receiver) {
+            } else if (receiver?.typeName) {
                 const receiverType = receiverTypeOf(receiver.typeName);
 
                 if (receiverType?.signalMembers.includes(node.name.text)) {
@@ -273,7 +325,7 @@ function migrateTsExpressions(content: string, fileName: string): string {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const receivers = collectReceivers(sourceFile);
 
-    if (receivers.length === 0) return content;
+    if (!hasNavbarReceiver(receivers)) return content;
 
     const edits = collectAccessEdits(sourceFile, receivers);
 
@@ -286,14 +338,14 @@ function collectManualMembers(content: string, fileName: string): Set<string> {
     const receivers = collectReceivers(sourceFile);
     const found = new Set<string>();
 
-    if (receivers.length === 0) return found;
+    if (!hasNavbarReceiver(receivers)) return found;
 
     const visit = (node: ts.Node): void => {
         if (
             ts.isPropertyAccessExpression(node) &&
             ts.isIdentifier(node.name) &&
             MANUAL_MEMBERS.has(node.name.text) &&
-            receiverOf(node, sourceFile, receivers)
+            navbarReceiverOf(node, sourceFile, receivers)
         ) {
             found.add(node.name.text);
         }
