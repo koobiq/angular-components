@@ -32,12 +32,13 @@
         <kbq-list-selection
             class="layout-padding-horizontal-xxs layout-padding-vertical-xxs"
             multiple="checkbox"
+            aria-label="Назначить пользователей"
             [(ngModel)]="selected"
             (selectionChange)="onSelectionChange($event)"
         >
             @for (user of filteredUsers | async; track user) {
                 <kbq-list-option [showCheckbox]="false" [value]="user">
-                    <kbq-pseudo-checkbox [state]="getCheckboxState(user)" />
+                    <kbq-pseudo-checkbox aria-hidden="true" [state]="getCheckboxState(user)" />
                     <kbq-username [userInfo]="user" />
                 </kbq-list-option>
             }

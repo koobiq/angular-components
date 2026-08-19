@@ -1,25 +1,38 @@
 @use '../core/styles/common/tokens';
 
+/// Emits the five themed colors of a list option for a single visual state.
+///
+/// Every color falls back to the matching `default`-state token: a state that only redefines the
+/// background then keeps the base text/icon/caption colors instead of resolving to an undefined
+/// `var()` — which, for inherited properties such as `color`, silently degrades to `inherit`.
 @mixin _kbq-list-item($state-name) {
-    --kbq-option-background: var(--kbq-list-#{$state-name}-container-background);
+    --kbq-option-background: var(--kbq-list-#{$state-name}-container-background, transparent);
 
-    background: var(--kbq-list-#{$state-name}-container-background);
+    background: var(--kbq-list-#{$state-name}-container-background, transparent);
 
     .kbq-list-text {
-        color: var(--kbq-list-#{$state-name}-text-color);
+        color: var(--kbq-list-#{$state-name}-text-color, var(--kbq-list-default-text-color));
     }
 
     .kbq-icon.kbq-empty {
-        color: var(--kbq-list-#{$state-name}-icon-color);
+        color: var(--kbq-list-#{$state-name}-icon-color, var(--kbq-list-default-icon-color));
     }
 
     .kbq-option-action .kbq-icon.kbq-empty {
-        color: var(--kbq-list-#{$state-name}-icon-button-color);
+        color: var(--kbq-list-#{$state-name}-icon-button-color, var(--kbq-list-default-icon-button-color));
     }
 
     .kbq-list-option-caption {
-        color: var(--kbq-list-#{$state-name}-caption-color);
+        color: var(--kbq-list-#{$state-name}-caption-color, var(--kbq-list-default-caption-color));
     }
+}
+
+/// Emits the background-only `:active` treatment. The active states deliberately reuse the colors of
+/// the state they sit on top of (default / selected), so only the background token is redefined.
+@mixin _kbq-list-item-active($state-name) {
+    --kbq-option-background: var(--kbq-list-#{$state-name}-container-background);
+
+    background: var(--kbq-list-#{$state-name}-container-background);
 }
 
 @mixin kbq-list-theme() {
@@ -34,10 +47,7 @@
 
         &.kbq-active:not(.kbq-disabled),
         &:active:not(.kbq-disabled) {
-            // the active state defines only a background token; the mixin would emit undefined text/icon/caption color vars
-            --kbq-option-background: var(--kbq-list-states-active-container-background);
-
-            background: var(--kbq-list-states-active-container-background);
+            @include _kbq-list-item-active(states-active);
         }
 
         &.kbq-selected:not(.kbq-disabled) {
@@ -50,9 +60,7 @@
 
             &.kbq-active,
             &:active {
-                --kbq-option-background: var(--kbq-list-states-selected-active-container-background);
-
-                background: var(--kbq-list-states-selected-active-container-background);
+                @include _kbq-list-item-active(states-selected-active);
             }
         }
 
@@ -78,9 +86,7 @@
 
             &.kbq-active,
             &:active {
-                --kbq-option-background: var(--kbq-list-multiple-states-selected-active-container-background);
-
-                background: var(--kbq-list-multiple-states-selected-active-container-background);
+                @include _kbq-list-item-active(multiple-states-selected-active);
             }
         }
 
