@@ -147,6 +147,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     relativeToPointer: boolean;
     protected renderer: Renderer2;
     protected scrollStrategy: () => ScrollStrategy;
+    setOverlayPanelClass(panelClass: string | string[]): void;
     show(delay?: number): void;
     showForElement(element: HTMLElement): void;
     showForMouseEvent(event: MouseEvent): void;

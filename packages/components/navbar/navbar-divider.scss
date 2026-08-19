@@ -13,7 +13,7 @@
 .kbq-navbar-divider.kbq-horizontal {
     width: 1px;
 
-    height: 12px;
+    height: var(--kbq-size-m);
 
     margin-left: var(--kbq-size-m);
     margin-right: var(--kbq-size-m);

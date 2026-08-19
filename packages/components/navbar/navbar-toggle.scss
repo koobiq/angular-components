@@ -3,7 +3,7 @@
 
     top: var(--kbq-size-3xl);
     right: calc(-1 * var(--kbq-size-l));
-    z-index: 1001;
+    z-index: var(--kbq-navbar-toggle-z-index);
 
     display: flex;
     justify-content: center;
@@ -19,8 +19,8 @@
         justify-content: center;
         align-items: center;
 
-        width: 28px;
-        height: 28px;
+        width: var(--kbq-navbar-toggle-size-circle);
+        height: var(--kbq-navbar-toggle-size-circle);
 
         border-radius: 50%;
     }

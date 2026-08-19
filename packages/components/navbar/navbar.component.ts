@@ -1,7 +1,8 @@
-﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
+    afterNextRender,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -14,7 +15,9 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Input,
+    input,
+    model,
+    NgZone,
     OnDestroy,
     QueryList,
     ViewEncapsulation
@@ -24,11 +27,12 @@ import {
     FocusKeyManager,
     isHorizontalMovement,
     isVerticalMovement,
+    KBQ_WINDOW,
     LEFT_ARROW,
     RIGHT_ARROW,
     TAB
 } from '@koobiq/components/core';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
+import { fromEvent, merge, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import {
     KbqNavbarFocusableItem,
@@ -37,57 +41,66 @@ import {
     KbqNavbarRectangleElement
 } from './navbar-item.component';
 
-export type KbqNavbarContainerPositionType = 'left' | 'right';
-
 @Directive()
 export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+    /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    /** @docs-private */
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    /** @docs-private */
     protected readonly focusMonitor = inject(FocusMonitor);
+    /** @docs-private */
+    protected readonly destroyRef = inject(DestroyRef);
 
+    /** @docs-private */
     @ContentChildren(forwardRef(() => KbqNavbarFocusableItem), { descendants: true })
     focusableItems: QueryList<KbqNavbarFocusableItem>;
 
+    /** @docs-private */
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get tabIndex(): any {
-        return this._tabIndex;
-    }
+    /**
+     * Tab index of the navbar host. The navbar owns the single tab stop of the whole widget and moves focus
+     * between its items with the arrow keys.
+     */
+    readonly tabIndex = model<number>(0);
 
-    set tabIndex(value: any) {
-        this._tabIndex = value;
-    }
-
-    private _tabIndex = 0;
+    /**
+     * Accessible name of the navigation landmark. Set it whenever a page renders more than one navbar, so
+     * assistive technology can tell them apart.
+     */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
     private lastFocusOrigin: FocusOrigin = null;
 
+    private cachedOptionFocusChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
+    private cachedOptionBlurChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
+
+    /** Focus events of every focusable item, merged once per change of the item set. @docs-private */
     get optionFocusChanges(): Observable<KbqNavbarFocusableItemEvent> {
-        return merge(...this.focusableItems.map((item) => item.onFocus));
+        return (this.cachedOptionFocusChanges ??= merge(...this.focusableItems.map((item) => item.onFocus)));
     }
 
+    /** Blur events of every focusable item, merged once per change of the item set. @docs-private */
     get optionBlurChanges(): Observable<KbqNavbarFocusableItemEvent> {
-        return merge(...this.focusableItems.map((option) => option.onBlur));
+        return (this.cachedOptionBlurChanges ??= merge(...this.focusableItems.map((option) => option.onBlur)));
     }
 
-    private readonly destroyRef = inject(DestroyRef);
-
-    private optionFocusSubscription: Subscription | null;
-    private optionBlurSubscription: Subscription | null;
-
+    /** @docs-private */
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
 
         this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.tabIndex = -1;
+            this.tabIndex.set(-1);
 
-            setTimeout(() => {
-                this.tabIndex = 0;
+            // Restored on a macrotask so the browser has moved focus out of the navbar first. Bound to the
+            // component's lifetime: without it the callback can run against a destroyed view.
+            const timeoutId = setTimeout(() => {
+                this.tabIndex.set(0);
                 this.changeDetectorRef.markForCheck();
             });
+
+            this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
         });
 
         this.focusableItems.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -98,17 +111,40 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
         });
     }
 
+    /**
+     * Monitored with `checkChildren`, because the navbar is one composite widget: the host owns the tab stop
+     * but hands focus straight to an item, and without it that hand-off reads as the navbar being blurred.
+     * The origin would reset to `null` on the very first item, leaving every later arrow key with no keyboard
+     * origin to pass on — the key manager would move its active item while nothing moved in the DOM.
+     * @docs-private
+     */
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef).subscribe((focusOrigin) => {
-            this.lastFocusOrigin = focusOrigin;
-            this.keyManager.setFocusOrigin(focusOrigin);
-        });
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((focusOrigin) => {
+                // A child losing focus to another child reports `null` in between; keep the origin the arrow
+                // keys travel on, and let a real blur of the whole navbar be handled by `blur()`.
+                if (focusOrigin === null) return;
+
+                this.lastFocusOrigin = focusOrigin;
+                this.keyManager.setFocusOrigin(focusOrigin);
+            });
     }
 
+    /** @docs-private */
     ngOnDestroy() {
+        this.dropSubscriptions();
+
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
+    /** Host element of the navbar. @docs-private */
+    getNativeElement(): HTMLElement {
+        return this.elementRef.nativeElement;
+    }
+
+    /** @docs-private */
     focus(): void {
         if (this.focusableItems.length === 0) {
             return;
@@ -123,6 +159,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
         this.keyManager.setFirstItemActive();
     }
 
+    /** @docs-private */
     blur() {
         if (!this.hasFocusedItem()) {
             this.keyManager.setActiveItem(-1);
@@ -131,22 +168,26 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
         this.changeDetectorRef.markForCheck();
     }
 
+    /** @docs-private */
     protected resetOptions() {
         this.dropSubscriptions();
         this.listenToOptionsFocus();
     }
 
+    /** @docs-private */
     protected dropSubscriptions() {
-        if (this.optionFocusSubscription) {
-            this.optionFocusSubscription.unsubscribe();
-            this.optionFocusSubscription = null;
-        }
+        this.optionFocusSubscription?.unsubscribe();
+        this.optionFocusSubscription = null;
 
-        if (this.optionBlurSubscription) {
-            this.optionBlurSubscription.unsubscribe();
-            this.optionBlurSubscription = null;
-        }
+        this.optionBlurSubscription?.unsubscribe();
+        this.optionBlurSubscription = null;
+
+        this.cachedOptionFocusChanges = null;
+        this.cachedOptionBlurChanges = null;
     }
+
+    private optionFocusSubscription: Subscription | null = null;
+    private optionBlurSubscription: Subscription | null = null;
 
     private listenToOptionsFocus(): void {
         this.optionFocusSubscription = this.optionFocusChanges.subscribe((event) => {
@@ -161,7 +202,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     }
 
     private updateTabIndex(): void {
-        this.tabIndex = this.focusableItems.length === 0 ? -1 : 0;
+        this.tabIndex.set(this.focusableItems.length === 0 ? -1 : 0);
     }
 
     private isValidIndex(index: number): boolean {
@@ -197,29 +238,32 @@ export class KbqNavbarContainer {}
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-navbar',
-        '[attr.tabindex]': 'tabIndex',
+        role: 'navigation',
+        '[attr.aria-label]': 'ariaLabel()',
+        '[attr.tabindex]': 'tabIndex()',
         '(focus)': 'focus()',
         '(blur)': 'blur()',
-        '(keydown)': 'onKeyDown($event)',
-        '(window:resize)': 'resizeStream.next($event)'
+        '(keydown)': 'onKeyDown($event)'
     }
 })
-export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
-    protected readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly changeDetectorRef: ChangeDetectorRef;
-    protected readonly focusMonitor: FocusMonitor;
+export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit {
     private readonly platform = inject(Platform);
+    private readonly ngZone = inject(NgZone);
+    private readonly window = inject(KBQ_WINDOW);
 
-    readonly rectangleElements = contentChildren(
+    /** @docs-private */
+    readonly rectangleElements = contentChildren<KbqNavbarRectangleElement>(
         forwardRef(() => KbqNavbarRectangleElement),
         { descendants: true }
     );
 
-    readonly navbarItems = contentChildren(
+    /** @docs-private */
+    readonly navbarItems = contentChildren<KbqNavbarItem>(
         forwardRef(() => KbqNavbarItem),
         { descendants: true }
     );
 
+    /** Raw `resize` events of the window, fed from outside the Angular zone. @docs-private */
     readonly resizeStream = new Subject<Event>();
 
     private readonly resizeDebounceInterval: number = 100;
@@ -234,51 +278,67 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
 
     private get collapsableItems(): KbqNavbarItem[] {
         return this.navbarItems()
-            .filter((item) => item.icon() && item.title() && item.collapsable)
+            .filter((item) => item.icon() && item.title() && item.collapsable())
             .reverse();
     }
 
-    private resizeSubscription: Subscription;
-
     constructor() {
-        const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-        const changeDetectorRef = inject(ChangeDetectorRef);
-        const focusMonitor = inject(FocusMonitor);
-
         super();
-        this.elementRef = elementRef;
-        this.changeDetectorRef = changeDetectorRef;
-        this.focusMonitor = focusMonitor;
 
-        this.resizeSubscription = this.resizeStream
+        this.destroyRef.onDestroy(() => this.resizeStream.complete());
+
+        // Raw resize events must not enter the zone: a single drag fires hundreds of them, and only the
+        // debounced recompute at the end of the burst is worth a change detection pass.
+        if (this.platform.isBrowser) {
+            this.ngZone.runOutsideAngular(() => {
+                fromEvent(this.window, 'resize')
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe((event) => this.resizeStream.next(event));
+            });
+        }
+
+        this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval), takeUntilDestroyed())
-            .subscribe(this.updateExpandedStateForItems);
+            .subscribe(() => this.ngZone.run(this.updateExpandedStateForItems));
 
-        effect(() => this.setItemsState(this.rectangleElements()));
+        effect(() => this.rectangleElements().forEach((item) => (item.orientation = 'horizontal')));
+
+        // Note: this wait is required for loading and rendering fonts for icons;
+        // unfortunately we cannot control font rendering. Bound to the component's lifetime, unlike a bare
+        // `setTimeout`, so it can never run against a destroyed view.
+        afterNextRender(() => this.updateExpandedStateForItems());
     }
 
+    /** @docs-private */
     ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
         this.keyManager.withVerticalOrientation(false).withHorizontalOrientation('ltr');
     }
 
-    ngAfterViewInit(): void {
-        super.ngAfterViewInit();
+    /**
+     * Recomputes which collapsable items fit into the current navbar width.
+     *
+     * Every measurement is taken up front, in one read pass, and only then is anything written: collapsing an
+     * item invalidates layout, so a measurement taken afterwards forces a synchronous reflow for each of the
+     * remaining items. The per-item title widths the decision below needs were captured at view init and are
+     * read from that cache, not from the DOM.
+     * @docs-private */
+    updateExpandedStateForItems = () => {
+        const availableWidth = this.width;
+        const collapseDelta = this.totalItemsWidth - availableWidth;
 
-        if (!this.platform.isBrowser) return;
-        // Note: this wait is required for loading and rendering fonts for icons;
-        // unfortunately we cannot control font rendering
-        setTimeout(this.updateExpandedStateForItems);
-    }
+        const needCollapse = collapseDelta > 0;
 
-    ngOnDestroy() {
-        this.resizeSubscription.unsubscribe();
+        if (needCollapse) {
+            this.collapseItems(collapseDelta);
+        } else {
+            this.expandItems(collapseDelta);
+        }
+    };
 
-        super.ngOnDestroy();
-    }
-
-    onKeyDown(event: KeyboardEvent) {
+    /** @docs-private */
+    protected onKeyDown(event: KeyboardEvent) {
         const keyCode = event.keyCode;
 
         if (!this.eventFromInput(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) {
@@ -297,18 +357,6 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
             this.keyManager.onKeydown(event);
         }
     }
-
-    updateExpandedStateForItems = () => {
-        const collapseDelta = this.totalItemsWidth - this.width;
-
-        const needCollapse = collapseDelta > 0;
-
-        if (needCollapse) {
-            this.collapseItems(collapseDelta);
-        } else {
-            this.expandItems(collapseDelta);
-        }
-    };
 
     private eventFromInput(event: KeyboardEvent): boolean {
         return !!(event.target as HTMLElement).attributes.getNamedItem('kbqinput');
@@ -329,7 +377,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     private collapseItems(collapseDelta: number) {
         let delta = collapseDelta;
 
-        const unCollapsedItems = this.collapsableItems.filter((item) => !item.collapsed);
+        const unCollapsedItems = this.collapsableItems.filter((item) => !item.isCollapsed());
 
         for (const item of unCollapsedItems) {
             item.collapsed = true;
@@ -345,7 +393,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         let delta = collapseDelta;
 
         this.collapsableItems
-            .filter((item) => item.collapsed)
+            .filter((item) => item.isCollapsed())
             .forEach((item) => {
                 if (delta + item.getTitleWidth() < 0) {
                     item.collapsed = false;
@@ -353,8 +401,4 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
                 }
             });
     }
-
-    private setItemsState = (rectangleElements: Readonly<KbqNavbarRectangleElement[]>) => {
-        Promise.resolve().then(() => rectangleElements.forEach((item) => (item.horizontal = true)));
-    };
 }
