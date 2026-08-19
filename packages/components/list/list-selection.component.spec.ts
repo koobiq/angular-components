@@ -378,6 +378,9 @@ describe('KbqListSelection without forms', () => {
             expect(event.defaultPrevented).toBe(true);
         });
 
+        // Dispatched on the host rather than driving `keyManager` directly, so the event travels the
+        // same path a real keypress does — through the `(keydown)` binding and `onKeyDown`, which is
+        // where type-ahead is wired into the key manager.
         it('should be able to jump focus down to an item by typing', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
             const starredOption = listOptions[1].componentInstance as KbqListOption;
@@ -385,7 +388,7 @@ describe('KbqListSelection without forms', () => {
 
             expect(manager.activeItemIndex).toBe(-1);
 
-            manager.onKeydown(createKeyboardEvent('keydown', S, undefined, 's'));
+            dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', S, undefined, 's');
             fixture.detectChanges();
             tick(250);
             fixture.detectChanges();
@@ -393,7 +396,7 @@ describe('KbqListSelection without forms', () => {
             expect(manager.activeItemIndex).toBe(1);
             expect(manager.activeItem).toBe(starredOption);
 
-            manager.onKeydown(createKeyboardEvent('keydown', D, undefined, 'd'));
+            dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', D, undefined, 'd');
             fixture.detectChanges();
             tick(250);
             fixture.detectChanges();

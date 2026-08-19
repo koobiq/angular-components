@@ -581,6 +581,11 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             this.keyManager.setPreviousPageItemActive();
         } else if (keyCode === PAGE_DOWN) {
             this.keyManager.setNextPageItemActive();
+        } else {
+            // Everything the list does not navigate on itself goes to the key manager, which is what
+            // drives type-ahead. Arrow keys never reach it — the branches above own them — so the
+            // manager's own orientation config cannot double-handle them.
+            this.keyManager.onKeydown(event);
         }
 
         if (this.keyManager.activeItem && this.isNavigationKey(event)) {
