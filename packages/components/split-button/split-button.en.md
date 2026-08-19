@@ -36,6 +36,14 @@ Menu positioning is configured the same way as in the [Dropdown](/en/components/
 
 <!-- example(split-button-menu-width) -->
 
+### Accessibility
+
+- **Grouping.** The host is announced as a `role="group"`: it ties the two actions together while each button stays a separate tab stop. When a page holds several split buttons, name the group — `<kbq-split-button aria-label="Save document">`.
+- **Menu trigger.** The trigger is an icon-only button, so it carries no text and no accessible name of its own. Set one explicitly: `<button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="menu">`.
+- **Open state.** The trigger carries `aria-expanded`, so assistive technology announces whether the menu is currently open.
+- **Keyboard.** `Tab` reaches the primary button and then the trigger, `Enter` and `Space` activate the focused one. On the trigger `ArrowDown` also opens the menu, and `Escape` closes it and returns focus to the trigger — the same model as in [Dropdown](/en/components/dropdown).
+- **Disabled state.** A disabled button leaves the tab order and is announced as disabled: through the native `disabled` attribute on a `<button>` host, and through `aria-disabled` on hosts without native support, such as `<a>`.
+
 ### Recommendations
 
 A split button is often confused with the more common [button menu](/en/components/dropdown), which consists of a single element that opens a dropdown list of commands. Use a split button only in exceptional cases:

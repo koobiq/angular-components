@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -15,8 +15,12 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButton, KbqSplitButtonModule } from '@koobiq/components/split-button';
+import { axe } from 'jest-axe';
 
 describe('KbqSplitButton', () => {
+    const getButtons = (fixture: ComponentFixture<unknown>): KbqButton[] =>
+        fixture.debugElement.queryAll(By.directive(KbqButton)).map((debugEl) => debugEl.injector.get(KbqButton));
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
@@ -32,7 +36,9 @@ describe('KbqSplitButton', () => {
                 TestAppSecondDisabled,
                 TestAppDropdown,
                 TestAppDropdownAutoWidth,
-                TestAppUnboundColor
+                TestAppUnboundColor,
+                TestAppOwnButtonSettings,
+                TestAppDynamicButtons
             ]
         }).compileComponents();
     });
@@ -51,7 +57,7 @@ describe('KbqSplitButton', () => {
             expect(nativeElement.classList.contains('kbq-split-button')).toBe(true);
         });
 
-        it('should throw when no kbq-button children are provided', () => {
+        it('should throw in dev mode when no kbq-button children are provided', () => {
             const errorFixture = TestBed.createComponent(TestAppNoButtons);
 
             expect(() => errorFixture.detectChanges()).toThrow('kbq-split-button must contain at least one button');
@@ -225,6 +231,19 @@ describe('KbqSplitButton', () => {
             });
         });
 
+        // Own fixture: the input has to carry its value into the very first pass, where the content
+        // query that holds the buttons is not resolved yet.
+        it('should propagate disabled to nested buttons that were not projected yet', () => {
+            const initiallyDisabled = TestBed.createComponent(TestAppInputs);
+
+            initiallyDisabled.componentInstance.disabled = true;
+            initiallyDisabled.detectChanges();
+
+            getButtons(initiallyDisabled).forEach((button) => {
+                expect(button.disabled).toBe(true);
+            });
+        });
+
         it('should propagate disabled=false to all nested buttons', () => {
             component.disabled = true;
             fixture.detectChanges();
@@ -238,14 +257,10 @@ describe('KbqSplitButton', () => {
         });
 
         it('should apply kbq-split-button_first-disabled when first button is disabled', () => {
+            component.firstDisabled = true;
             fixture.detectChanges();
-            // TestApp already has first button disabled
-            const testFixture = TestBed.createComponent(TestApp);
 
-            testFixture.detectChanges();
-            const testHost = testFixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
-
-            expect(testHost.classList.contains('kbq-split-button_first-disabled')).toBe(true);
+            expect(hostEl.classList.contains('kbq-split-button_first-disabled')).toBe(true);
         });
 
         it('should not apply kbq-split-button_first-disabled when first button is enabled', () => {
@@ -314,6 +329,121 @@ describe('KbqSplitButton', () => {
         });
     });
 
+    describe('settings owned by a nested button', () => {
+        it('should keep a button disabled through its own input when the split button is re-enabled', () => {
+            const fixture = TestBed.createComponent(TestAppOwnButtonSettings);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            fixture.componentInstance.disabled = false;
+            fixture.detectChanges();
+
+            const [first, second] = getButtons(fixture);
+
+            expect(first.disabled).toBe(true);
+            expect(second.disabled).toBe(false);
+        });
+
+        it('should not overwrite a style set through the button own input', () => {
+            const fixture = TestBed.createComponent(TestAppOwnButtonSettings);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.style = KbqButtonStyles.Outline;
+            fixture.detectChanges();
+
+            const [first, second] = getButtons(fixture);
+
+            expect(first.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Transparent}`);
+            expect(second.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Outline}`);
+        });
+
+        it('should not overwrite a color set through the button own input', () => {
+            const fixture = TestBed.createComponent(TestAppOwnButtonSettings);
+
+            fixture.detectChanges();
+
+            const [first, second] = getButtons(fixture);
+
+            expect(first.color).toBe(KbqComponentColors.Theme);
+            expect(second.color).toBe(KbqComponentColors.ContrastFade);
+        });
+    });
+
+    describe('dynamic buttons', () => {
+        it('should reassign the position classes when a button is added', () => {
+            const fixture = TestBed.createComponent(TestAppDynamicButtons);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.showSecond = true;
+            fixture.detectChanges();
+
+            const [first, second] = fixture.debugElement.queryAll(By.directive(KbqButton));
+            const hostEl = fixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
+
+            expect(first.nativeElement.classList.contains('kbq-split-button_first')).toBe(true);
+            expect(first.nativeElement.classList.contains('kbq-split-button_second')).toBe(false);
+            expect(second.nativeElement.classList.contains('kbq-split-button_second')).toBe(true);
+            expect(hostEl.classList.contains('kbq-split-button_styles-for-nested')).toBe(true);
+        });
+
+        it('should reassign the position classes when a button is removed', () => {
+            const fixture = TestBed.createComponent(TestAppDynamicButtons);
+
+            fixture.componentInstance.showSecond = true;
+            fixture.detectChanges();
+
+            fixture.componentInstance.showSecond = false;
+            fixture.detectChanges();
+
+            const [first] = fixture.debugElement.queryAll(By.directive(KbqButton));
+            const hostEl = fixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
+
+            expect(first.nativeElement.classList.contains('kbq-split-button_first')).toBe(true);
+            expect(first.nativeElement.classList.contains('kbq-split-button_second')).toBe(true);
+            expect(hostEl.classList.contains('kbq-split-button_styles-for-nested')).toBe(false);
+        });
+
+        it('should propagate the split button style to a button added later', () => {
+            const fixture = TestBed.createComponent(TestAppDynamicButtons);
+
+            fixture.componentInstance.style = KbqButtonStyles.Outline;
+            fixture.detectChanges();
+
+            fixture.componentInstance.showSecond = true;
+            fixture.detectChanges();
+
+            getButtons(fixture).forEach((button) => {
+                expect(button.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Outline}`);
+            });
+        });
+
+        it('should stop reacting to button changes once the split button is destroyed', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestAppDynamicButtons);
+
+            fixture.componentInstance.showSecond = true;
+            fixture.detectChanges();
+
+            const first = fixture.debugElement.query(By.directive(KbqButton)).nativeElement as HTMLElement;
+
+            fixture.componentInstance.showSecond = false;
+            fixture.detectChanges();
+
+            // Sentinel: a class write that survives the teardown can only come from work the split
+            // button scheduled for itself and never cancelled.
+            first.classList.remove('kbq-split-button_first');
+            fixture.destroy();
+
+            flush();
+
+            expect(first.classList.contains('kbq-split-button_first')).toBe(false);
+        }));
+    });
+
     describe('dropdown integration', () => {
         it('should set xPosition to "before" on the dropdown', () => {
             const fixture = TestBed.createComponent(TestAppDropdown);
@@ -360,6 +490,59 @@ describe('KbqSplitButton', () => {
             expect(openPanelWithMockedWidths(false).style.minWidth).toBe('200px');
         });
     });
+
+    describe('a11y', () => {
+        it('should expose the host as a group', () => {
+            const fixture = TestBed.createComponent(TestAppEnabled);
+
+            fixture.detectChanges();
+
+            const hostEl = fixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
+
+            expect(hostEl.getAttribute('role')).toBe('group');
+        });
+
+        it('should name the icon-only menu trigger with its aria-label', () => {
+            const fixture = TestBed.createComponent(TestAppDropdown);
+
+            fixture.detectChanges();
+
+            const triggerEl = fixture.debugElement.query(By.directive(KbqDropdownTrigger)).nativeElement;
+
+            expect(triggerEl.getAttribute('aria-label')).toBe('More options');
+        });
+
+        it('should reflect the open state of the menu on the trigger', () => {
+            const fixture = TestBed.createComponent(TestAppDropdown);
+
+            fixture.detectChanges();
+
+            const triggerDebugEl = fixture.debugElement.query(By.directive(KbqDropdownTrigger));
+
+            expect(triggerDebugEl.nativeElement.getAttribute('aria-expanded')).toBe('false');
+
+            triggerDebugEl.injector.get(KbqDropdownTrigger).open();
+            fixture.detectChanges();
+
+            expect(triggerDebugEl.nativeElement.getAttribute('aria-expanded')).toBe('true');
+        });
+
+        it('should have no violations with a closed menu', async () => {
+            const fixture = TestBed.createComponent(TestAppDropdown);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('should have no violations when a nested button is disabled', async () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+    });
 });
 
 @Component({
@@ -367,10 +550,10 @@ describe('KbqSplitButton', () => {
     imports: [KbqSplitButtonModule, KbqButtonModule, KbqIconModule],
     template: `
         <kbq-split-button>
-            <button kbq-button [disabled]="true">
+            <button kbq-button aria-label="Add" [disabled]="true">
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
-            <button kbq-button>
+            <button kbq-button aria-label="More options">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
@@ -423,6 +606,41 @@ class TestAppUnboundColor {
 }
 
 @Component({
+    selector: 'test-app-own-button-settings',
+    imports: [KbqSplitButtonModule, KbqButtonModule],
+    template: `
+        <kbq-split-button [kbqStyle]="style" [disabled]="disabled">
+            <button kbq-button [disabled]="true" [kbqStyle]="buttonStyle" [color]="buttonColor">First</button>
+            <button kbq-button>Second</button>
+        </kbq-split-button>
+    `
+})
+class TestAppOwnButtonSettings {
+    readonly buttonStyle = KbqButtonStyles.Transparent;
+    readonly buttonColor = KbqComponentColors.Theme;
+
+    style: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    disabled: boolean = false;
+}
+
+@Component({
+    selector: 'test-app-dynamic-buttons',
+    imports: [KbqSplitButtonModule, KbqButtonModule],
+    template: `
+        <kbq-split-button [kbqStyle]="style">
+            <button kbq-button>First</button>
+            @if (showSecond) {
+                <button kbq-button>Second</button>
+            }
+        </kbq-split-button>
+    `
+})
+class TestAppDynamicButtons {
+    style: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    showSecond: boolean = false;
+}
+
+@Component({
     selector: 'test-app-single',
     imports: [KbqSplitButtonModule, KbqButtonModule],
     template: `
@@ -458,7 +676,7 @@ class TestAppNoButtons {}
     template: `
         <kbq-split-button>
             <button kbq-button>Action</button>
-            <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
@@ -475,7 +693,7 @@ class TestAppDropdown {}
     template: `
         <kbq-split-button [panelAutoWidth]="panelAutoWidth">
             <button kbq-button>Action</button>
-            <button kbq-button [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>

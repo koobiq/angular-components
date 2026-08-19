@@ -63,7 +63,7 @@
                         color: var(--kbq-icon-contrast);
                     }
 
-                    &:before {
+                    &::before {
                         background: var(--kbq-line-contrast-fade);
                     }
                 }
@@ -96,18 +96,18 @@
             }
 
             &.kbq-theme.kbq-button_transparent {
-                & .kbq-split-button_second:before {
+                & .kbq-split-button_second::before {
                     background: var(--kbq-states-line-disabled);
                 }
             }
 
-            & .kbq-split-button_second:before {
+            & .kbq-split-button_second::before {
                 background: var(--kbq-states-line-disabled);
             }
         }
 
         &.kbq-split-button_first-disabled.kbq-split-button_second-disabled {
-            & .kbq-split-button_second:before {
+            & .kbq-split-button_second::before {
                 background: var(--kbq-line-contrast-fade);
             }
         }
