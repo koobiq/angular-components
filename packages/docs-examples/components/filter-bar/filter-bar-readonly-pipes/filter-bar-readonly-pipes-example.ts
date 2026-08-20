@@ -41,7 +41,7 @@ const createSearchPipe = (): KbqPipe => ({
 
         <br />
 
-        <kbq-dl [minWidth]="590">
+        <kbq-dl [verticalBreakpoint]="590">
             <kbq-dt>Пользователь</kbq-dt>
             <kbq-dd><span kbq-link pseudo (click)="setUser('Пользователь', 'rturov')">rturov</span></kbq-dd>
 

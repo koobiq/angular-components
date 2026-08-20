@@ -1,7 +1,8 @@
-@use './dl-theme' as *;
+@use './dl-theme' as theme;
 
 .kbq-dl {
     display: grid;
+    position: relative;
     column-gap: var(--kbq-description-list-size-horizontal-content-gap-horizontal);
     row-gap: var(--kbq-description-list-size-horizontal-gap-vertical);
 
@@ -31,8 +32,90 @@
         grid-column: 2 / span 3;
     }
 
+    // Before the first resize, keep the term column at least as wide as its configured minimum so the separator
+    // rests on the real column border and dragging starts from a width that already satisfies the minimum.
+    &.kbq-dl_resizable:not(.kbq-dl_resized):not(.kbq-dl_vertical) {
+        grid-template-columns:
+            minmax(var(--kbq-description-list-column-min-width), 1fr)
+            repeat(3, minmax(0, 1fr));
+    }
+
+    &.kbq-dl_resized:not(.kbq-dl_vertical) {
+        grid-template-columns:
+            var(--kbq-description-list-column-width)
+            repeat(3, minmax(0, 1fr));
+    }
+
+    .kbq-dl__resize-track {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        grid-column: 1 / 2;
+        width: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .kbq-dl__resize-handle {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: calc(
+            (
+                    var(--kbq-description-list-size-horizontal-content-gap-horizontal) +
+                        var(--kbq-description-list-resizer-hit-area-width)
+                ) /
+                -2
+        );
+        width: var(--kbq-description-list-resizer-hit-area-width);
+        pointer-events: auto;
+        touch-action: none;
+
+        // The resize line, centered inside the hit area. Hidden until the list is hovered or the separator is focused.
+        &::after {
+            position: absolute;
+            inset-block: 0;
+            inset-inline: 0;
+            width: var(--kbq-description-list-resizer-line-width);
+            margin-inline: auto;
+            background-color: var(--kbq-description-list-resizer-color);
+            content: '';
+            opacity: 0;
+            transition:
+                opacity var(--kbq-description-list-resizer-transition-duration) ease-in-out,
+                background-color var(--kbq-description-list-resizer-transition-duration) ease-in-out;
+        }
+
+        &:hover::after {
+            background-color: var(--kbq-description-list-resizer-state-hover-color);
+        }
+
+        &:focus-visible::after,
+        &:active::after {
+            background-color: var(--kbq-description-list-resizer-state-active-color);
+        }
+
+        // Keep the separator visible while it is focused or being dragged, even without a pointer hover.
+        &:focus-visible::after,
+        &:active::after {
+            opacity: 1;
+        }
+    }
+
+    // Reveal the separator on hover of the list.
+    &:hover .kbq-dl__resize-handle::after {
+        opacity: 1;
+    }
+
     &.kbq-dl_wide {
         grid-template-columns: repeat(2, 1fr);
+
+        &.kbq-dl_resizable:not(.kbq-dl_resized):not(.kbq-dl_vertical) {
+            grid-template-columns: minmax(var(--kbq-description-list-column-min-width), 1fr) minmax(0, 1fr);
+        }
+
+        &.kbq-dl_resized:not(.kbq-dl_vertical) {
+            grid-template-columns: var(--kbq-description-list-column-width) minmax(0, 1fr);
+        }
 
         .kbq-dt {
             grid-column: 1;
@@ -59,5 +142,5 @@
     }
 }
 
-@include kbq-dl-theme();
-@include kbq-dl-typography();
+@include theme.kbq-dl-theme();
+@include theme.kbq-dl-typography();

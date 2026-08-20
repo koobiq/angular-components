@@ -21,7 +21,8 @@ export const esLALocaleData = {
         nextMonth: 'Mes siguiente',
         clear: 'Borrar',
         showPassword: 'Mostrar la contraseña',
-        hidePassword: 'Ocultar la contraseña'
+        hidePassword: 'Ocultar la contraseña',
+        resizeColumns: 'Redimensionar columnas'
     } satisfies KbqA11yLocaleConfiguration,
     select: {
         hiddenItemsText: '+{{ number }}',

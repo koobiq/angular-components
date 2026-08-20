@@ -70,7 +70,7 @@ export class KbqResizable {
     selector: '[kbqResizer]',
     host: {
         class: 'kbq-resizer',
-        '[style.cursor]': 'cursor()'
+        '[style.cursor]': 'resolvedCursor()'
     },
     exportAs: 'kbqResizer'
 })
@@ -95,6 +95,11 @@ export class KbqResizer {
     readonly direction = input.required<KbqResizerDirection>({ alias: 'kbqResizer' });
 
     /**
+     * Overrides the cursor that is otherwise derived from the resizing direction.
+     */
+    readonly cursor = input<string | null>(null);
+
+    /**
      * Emits the new size of the element after resizing.
      */
     readonly sizeChange = output<KbqResizerSizeChangeEvent>();
@@ -102,7 +107,11 @@ export class KbqResizer {
     /**
      * @docs-private
      */
-    protected readonly cursor = computed(() => {
+    protected readonly resolvedCursor = computed(() => {
+        const cursor = this.cursor();
+
+        if (cursor) return cursor;
+
         const [x, y] = this.direction();
 
         if (x === 0 && y === 0) return 'default';
