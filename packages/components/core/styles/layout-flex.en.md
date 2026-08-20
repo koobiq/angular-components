@@ -1,3 +1,5 @@
+Layout flex provides Koobiq CSS classes for arranging, aligning, and ordering elements in flex containers.
+
 <!-- example(layout-flex-overview) -->
 
 ### Alignment

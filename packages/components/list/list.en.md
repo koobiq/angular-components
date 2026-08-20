@@ -1,3 +1,5 @@
+List supports groups, single or multiple selection, keyboard navigation, and virtual scrolling.
+
 #### With default parameters (autoselect="true", no-unselect="true")
 
 <!-- example(list-overview) -->

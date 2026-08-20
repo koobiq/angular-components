@@ -36,6 +36,7 @@ export const DOCS_TRANSLATIONS = {
     // component viewer wrapper + tabs
     improvementSuggestions: { ru: 'Предложения по улучшению', en: 'Suggestions for improvement' },
     overviewTab: { ru: 'Обзор', en: 'Overview' },
+    apiTab: { ru: 'API', en: 'API' },
     examplesTab: { ru: 'Примеры', en: 'Examples' },
     viewSourceOnGitHub: { ru: 'Исходный код', en: 'Source code' },
 

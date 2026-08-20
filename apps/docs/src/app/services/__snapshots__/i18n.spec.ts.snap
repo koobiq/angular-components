@@ -2,6 +2,10 @@
 
 exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across the docs components 1`] = `
 {
+  "apiTab": {
+    "en": "API",
+    "ru": "API",
+  },
   "copied": {
     "en": "Copied",
     "ru": "Скопировано",

@@ -37,6 +37,7 @@
 /en/components/button-toggle/api
 /en/components/checkbox/overview
 /en/components/checkbox/api
+/en/components/checkbox/examples
 /en/components/clamped-list/overview
 /en/components/clamped-list/api
 /en/components/clamped-text/overview
@@ -230,6 +231,7 @@
 /ru/components/button-toggle/api
 /ru/components/checkbox/overview
 /ru/components/checkbox/api
+/ru/components/checkbox/examples
 /ru/components/clamped-list/overview
 /ru/components/clamped-list/api
 /ru/components/clamped-text/overview

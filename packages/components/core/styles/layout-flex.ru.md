@@ -1,3 +1,5 @@
+Layout flex — набор CSS-классов Koobiq для компоновки, выравнивания и упорядочивания элементов во flex-контейнерах.
+
 <!-- example(layout-flex-overview) -->
 
 ### Alignment

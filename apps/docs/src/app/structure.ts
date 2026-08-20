@@ -92,6 +92,21 @@ export enum DocsStructureItemId {
     Validation = 'validation'
 }
 
+export type DocsLocalizedSeoValue<T> = Partial<Record<DocsLocale, T>>;
+
+export type DocsSeoMeta = {
+    title?: DocsLocalizedSeoValue<string>;
+    description?: DocsLocalizedSeoValue<string>;
+    image?: string;
+    imageAlt?: DocsLocalizedSeoValue<string>;
+    keywords?: DocsLocalizedSeoValue<readonly string[]>;
+    noIndex?: boolean;
+};
+
+export type DocsItemSeoMeta = DocsSeoMeta & {
+    tabs?: Partial<Record<DocsStructureItemTab | DocsStructureTokensTab, DocsSeoMeta>>;
+};
+
 export type DocsStructureItem = {
     id: DocsStructureItemId;
     name: Record<DocsLocale, string>;
@@ -100,6 +115,8 @@ export type DocsStructureItem = {
     isGuide?: boolean;
     apiId?: string;
     svgPreview?: string;
+    /** Optional per-page SEO overrides. Missing values are derived from the item and its Markdown. */
+    seo?: DocsItemSeoMeta;
     /**
      * Path to the directory containing the item's source in this repository,
      * relative to the repo root (e.g. `packages/components/accordion`).
