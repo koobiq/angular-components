@@ -31,9 +31,9 @@ export abstract class KbqPopUp implements OnDestroy {
     readonly hovered = new BehaviorSubject<boolean>(false);
 
     trigger: KbqPopUpTrigger<unknown>;
-    header: string | TemplateRef<any>;
-    content: string | TemplateRef<any>;
-    context: { $implicit: any } | null;
+    header: string | TemplateRef<unknown>;
+    content: string | TemplateRef<unknown>;
+    context: { $implicit: unknown } | null;
 
     classMap = {};
 
@@ -62,6 +62,10 @@ export abstract class KbqPopUp implements OnDestroy {
 
         this.onHideSubject.complete();
         this.hovered.complete();
+        // Completed here rather than left dangling: the trigger subscribes to it once per show and keeps that
+        // subscription for its own lifetime, so a trigger that outlives many pop-ups would otherwise accumulate
+        // one live subscriber per show.
+        this.visibleChange.complete();
     }
 
     isTemplateRef(value: any): boolean {
@@ -100,6 +104,12 @@ export abstract class KbqPopUp implements OnDestroy {
     hide(delay: number): void {
         if (this.showTimeoutId) {
             clearTimeout(this.showTimeoutId);
+        }
+
+        // Repeated `hide()` calls must not stack timers: without this the earliest pending timeout still
+        // fires, hiding the pop-up before the delay of the call that actually replaced it has elapsed.
+        if (this.hideTimeoutId) {
+            clearTimeout(this.hideTimeoutId);
         }
 
         this.hideTimeoutId = setTimeout(() => {
@@ -153,12 +163,14 @@ export abstract class KbqPopUp implements OnDestroy {
         this.closeOnInteraction = false;
     }
 
+    /**
+     * Only the transition into `visible` is observable here: `hide()` emits `onHideSubject` synchronously and
+     * `KbqPopUpTrigger` detaches the overlay in the same call stack, so the view is destroyed before the
+     * `* => hidden` transition can start. Making the fade-out actually play belongs to the migration off the
+     * deprecated `@angular/animations` API, together with the `prefers-reduced-motion` gate.
+     */
     animationDone({ toState }: AnimationEvent): void {
-        if (toState === PopUpVisibility.Hidden && !this.isVisible()) {
-            this.onHideSubject.next();
-        }
-
-        if (toState === PopUpVisibility.Visible || toState === PopUpVisibility.Hidden) {
+        if (toState === PopUpVisibility.Visible) {
             this.closeOnInteraction = true;
         }
     }

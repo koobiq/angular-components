@@ -1,4 +1,5 @@
 .kbq-tooltip {
+    /* Product constant, not a size token: the documentation states the tooltip never grows past 300px. */
     --kbq-tooltip-size-max-width: 300px;
     --kbq-tooltip-size-border-radius: var(--kbq-size-s);
     --kbq-tooltip-size-padding-horizontal: var(--kbq-size-m);
@@ -20,6 +21,4 @@
     --kbq-tooltip-error-fade-off-background: var(--kbq-background-error);
     --kbq-tooltip-error-fade-off-text: var(--kbq-foreground-white);
     --kbq-tooltip-error-fade-off-shadow: none;
-
-    --kbq-tooltip-borderless-shadow: 0 2px 8px var(--kbq-shadow-key), 0 3px 8px var(--kbq-shadow-ambient);
 }

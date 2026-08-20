@@ -1,7 +1,7 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Point } from '@angular/cdk/drag-drop';
-import { Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -10,6 +10,7 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
+    Injectable,
     InjectionToken,
     Input,
     OnChanges,
@@ -30,9 +31,11 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+    ESCAPE,
     KBQ_PARENT_POPUP,
     KBQ_SIBLING_POPUP,
     KbqComponentColors,
+    KbqEnumValues,
     KbqParentPopup,
     KbqPopUp,
     KbqPopUpPlacementValues,
@@ -54,15 +57,65 @@ export enum TooltipModifier {
     Extended = 'extended'
 }
 
+/**
+ * @deprecated Replaced by {@link KbqTooltipDelayTracker}, which owns the shared timestamp behind a service
+ * instead of a mutable `useValue` object. The tooltip no longer reads this token; providing it has no effect.
+ */
 export const KBQ_TOOLTIP_OPEN_TIME = new InjectionToken<{ value: number }>('kbq-tooltip-open-time');
 
-/** @docs-private */
+/**
+ * @deprecated Replaced by {@link KbqTooltipDelayTracker}. Providing it has no effect.
+ * @docs-private
+ */
 export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER = {
     provide: KBQ_TOOLTIP_OPEN_TIME,
     useValue: { value: 0 }
 };
 
+/** Default length of the window during which a following tooltip is shown without its enter delay. */
 export const MIN_TIME_FOR_DELAY = 2000;
+
+/**
+ * Length in milliseconds of the window during which a tooltip shown right after another one appears
+ * instantly. Defaults to {@link MIN_TIME_FOR_DELAY}.
+ */
+export const KBQ_TOOLTIP_INSTANT_SHOW_WINDOW = new InjectionToken<number>('kbq-tooltip-instant-show-window', {
+    providedIn: 'root',
+    factory: () => MIN_TIME_FOR_DELAY
+});
+
+/**
+ * Remembers when a tooltip was last shown, so that moving between neighbouring triggers does not replay the
+ * enter delay for every one of them: the first tooltip waits `kbqEnterDelay`, the ones following it within
+ * {@link KBQ_TOOLTIP_INSTANT_SHOW_WINDOW} appear instantly.
+ *
+ * Application-wide by design — the behavior is part of the component's documented delay rules.
+ */
+@Injectable({ providedIn: 'root' })
+export class KbqTooltipDelayTracker {
+    private readonly instantShowWindow = inject(KBQ_TOOLTIP_INSTANT_SHOW_WINDOW);
+
+    /** Timestamp of the last shown tooltip, or `null` while no tooltip has been shown recently. */
+    private lastShownAt: number | null = null;
+
+    /** Whether the tooltip that is about to be shown should skip its enter delay. */
+    shouldSkipEnterDelay(): boolean {
+        return this.lastShownAt !== null && Date.now() - this.lastShownAt < this.instantShowWindow;
+    }
+
+    /** Records that a tooltip has just been shown. */
+    markShown(): void {
+        this.lastShownAt = Date.now();
+    }
+
+    /** Forgets the last shown tooltip, so the next one appears with its full enter delay. */
+    reset(): void {
+        this.lastShownAt = null;
+    }
+}
+
+/** Source of the unique ids that link a tooltip to the `aria-describedby` of its trigger. */
+let nextTooltipUniqueId = 0;
 
 @Component({
     selector: 'kbq-tooltip-component',
@@ -71,15 +124,17 @@ export const MIN_TIME_FOR_DELAY = 2000;
     ],
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
-    providers: [KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     animations: [kbqTooltipAnimations.tooltipState]
 })
 export class KbqTooltipComponent extends KbqPopUp {
-    private openTime = inject(KBQ_TOOLTIP_OPEN_TIME);
+    private readonly delayTracker = inject(KbqTooltipDelayTracker);
 
     prefix = 'kbq-tooltip';
+
+    /** Id rendered on the tooltip element; the trigger points its `aria-describedby` at it. */
+    id: string = `kbq-tooltip-${nextTooltipUniqueId++}`;
 
     @ViewChild('tooltip') elementRef: ElementRef;
 
@@ -88,21 +143,24 @@ export class KbqTooltipComponent extends KbqPopUp {
             return;
         }
 
-        super.show(Date.now() - this.openTime.value < MIN_TIME_FOR_DELAY ? 0 : delay);
+        super.show(this.delayTracker.shouldSkipEnterDelay() ? 0 : delay);
 
-        if (this.offset !== null) {
-            applyPopupMargins(
-                this.renderer,
-                this.elementRef.nativeElement,
-                this.prefix,
-                `${this.offset!.toString()}px`
-            );
-        }
+        this.applyOffset();
 
-        this.openTime.value = Date.now();
+        this.delayTracker.markShown();
     }
 
-    updateClassMap(placement: string, customClass: string, { modifier }) {
+    /**
+     * Applies `offset` as the gap between the tooltip and its trigger. Called both on show and whenever the
+     * trigger pushes new data, so that changing `kbqTooltipOffset` on an open tooltip actually moves it.
+     */
+    applyOffset(): void {
+        if (this.offset === null) return;
+
+        applyPopupMargins(this.renderer, this.elementRef.nativeElement, this.prefix, `${this.offset}px`);
+    }
+
+    updateClassMap(placement: string, customClass: string, { modifier }: { modifier: KbqEnumValues<TooltipModifier> }) {
         const classMap = {
             [`${this.prefix}_${modifier}`]: true
         };
@@ -130,6 +188,23 @@ const INTERACTIVE_TRIGGERS = [
  * element. Both are bound by `KbqPopUpTrigger.initListeners` whenever the matching show trigger is bound.
  */
 const RELEASE_TRIGGERS = ['mouseleave', 'blur'];
+
+/**
+ * Focus origins a focus-triggered tooltip opens for. Everything but `keyboard` is excluded on purpose: a
+ * pointer user gets the tooltip from the hover trigger, and showing it again on the focus a click leaves
+ * behind makes it linger after the pointer has moved on. `program` cannot be admitted either, because CDK
+ * reports it whenever it fails to attribute a focus — including the focus that follows a click outside its
+ * detection window — so admitting it would re-open exactly the case above. Focus the application moves on
+ * purpose still opens the tooltip: the repo convention is `focusVia(element, 'keyboard')`, which reports
+ * `keyboard`.
+ */
+const FOCUS_ORIGINS_THAT_SHOW: FocusOrigin[] = ['keyboard'];
+
+/** Base panel class of the tooltip overlay. */
+const TOOLTIP_PANEL_CLASS = 'kbq-tooltip-panel';
+
+/** Panel class that makes the tooltip pane transparent to pointer events. */
+const IGNORE_POINTER_EVENTS_PANEL_CLASS = 'cdk-overlay-pane_ignore-pointer-events';
 
 export const KBQ_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy', {
     providedIn: 'root',
@@ -183,6 +258,9 @@ export class KbqTooltipTrigger
         alias: 'kbqTooltipScrollStrategy'
     });
 
+    /** Id of the tooltip element this trigger points its `aria-describedby` at while the tooltip is open. */
+    private readonly tooltipId = `kbq-tooltip-${nextTooltipUniqueId++}`;
+
     /** @docs-private */
     protected get scrollStrategy(): () => ScrollStrategy {
         return this.scrollStrategyOverride() ?? this.injectedScrollStrategy;
@@ -212,11 +290,15 @@ export class KbqTooltipTrigger
     /**
      * Determines whether pointer events should be ignored on tooltips.
      *
-     * When set to `true`, tooltip elements will not receive pointer events,
-     * allowing interactions to pass through to underlying elements.
-     * Defaults to `true`.
+     * When set to `true`, the tooltip pane does not receive pointer events, so clicks and hovers pass through
+     * to whatever is underneath it. Defaults to `false`, which keeps the tooltip hoverable: a user who needs
+     * more time to read it — or who reads at high magnification, where the pointer often ends up over the
+     * tooltip itself — can move the pointer onto it without it disappearing (WCAG 1.4.13 "Content on Hover").
+     *
+     * Set it to `true` for tooltips that float over other click targets, such as the overflow hints of a
+     * scrolling option list.
      */
-    readonly ignoreTooltipPointerEvents = input<boolean>(true);
+    readonly ignoreTooltipPointerEvents = input<boolean>(false);
 
     /**
      * Whether the tooltip takes part in the "only one tooltip is visible at a time" group: showing it
@@ -292,11 +374,11 @@ export class KbqTooltipTrigger
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltip')
-    get content(): string | TemplateRef<any> {
+    get content(): string | TemplateRef<unknown> {
         return this._content;
     }
 
-    set content(content: string | TemplateRef<any>) {
+    set content(content: string | TemplateRef<unknown>) {
         this._content = content;
 
         this.updateData();
@@ -311,12 +393,20 @@ export class KbqTooltipTrigger
     }
 
     set disabled(value) {
-        this._disabled = coerceBooleanProperty(value);
+        this.explicitlyDisabled = coerceBooleanProperty(value);
+        this._disabled = this.explicitlyDisabled;
 
         if (this._disabled) {
             this.hide();
         }
     }
+
+    /**
+     * Value the consumer assigned to `kbqTooltipDisabled`, or `undefined` while the input was never set. It
+     * makes the input win over the state `forDisabledComponent` derives, instead of the two fighting over
+     * `_disabled` in whichever order they happen to run.
+     */
+    private explicitlyDisabled: boolean | undefined;
 
     /** Input (`kbqEnterDelay`) — delay in milliseconds before the tooltip is shown. Defaults to `400`. */
     // TODO: Skipped for migration because:
@@ -371,28 +461,33 @@ export class KbqTooltipTrigger
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipContext')
-    get context() {
+    get context(): unknown {
         return this._context;
     }
 
-    set context(ctx) {
+    set context(ctx: unknown) {
         this._context = ctx;
         this.updateData();
     }
 
     /** Backing field for `context`. */
-    private _context: any = null;
+    private _context: unknown = null;
 
-    /** Input (`kbqTooltipColor`) with the tooltip color theme; the getter returns the `kbq-`-prefixed CSS class. */
+    /** Input (`kbqTooltipColor`) with the tooltip color theme. Defaults to `KbqComponentColors.Contrast`. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input('kbqTooltipColor')
-    get color(): string {
-        return `kbq-${this._color}`;
+    get color(): KbqComponentColors | string {
+        return this._color;
     }
 
     set color(value: KbqComponentColors | string) {
         this._color = value || KbqComponentColors.Contrast;
+    }
+
+    /** CSS class the current `color` maps to. */
+    protected get colorClass(): string {
+        return `kbq-${this._color}`;
     }
 
     /** Backing field for `color`; defaults to `KbqComponentColors.Contrast`. */
@@ -408,7 +503,7 @@ export class KbqTooltipTrigger
     @Input({ alias: 'kbqTooltipOffset', transform: numberAttribute }) offset: number | null = null;
 
     /** Output (`kbqPlacementChange`) that emits the new placement whenever the tooltip repositions. */
-    @Output('kbqPlacementChange') readonly placementChange = new EventEmitter();
+    @Output('kbqPlacementChange') readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
 
     /** Output (`kbqVisibleChange`) that emits when the tooltip's visibility changes. */
     @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
@@ -423,7 +518,7 @@ export class KbqTooltipTrigger
 
     /** @docs-private */
     protected overlayConfig: OverlayConfig = {
-        panelClass: ['kbq-tooltip-panel']
+        panelClass: [TOOLTIP_PANEL_CLASS]
     };
 
     /**
@@ -435,7 +530,7 @@ export class KbqTooltipTrigger
     // TODO: Skipped for migration because:
     //  Class of this input is manually instantiated. This is discouraged and prevents
     //  migration.
-    @Input('kbqTooltipModifier') modifier: TooltipModifier | `${TooltipModifier}` = TooltipModifier.Default;
+    @Input('kbqTooltipModifier') modifier: KbqEnumValues<TooltipModifier> = TooltipModifier.Default;
 
     /**
      * Header text or template, rendered above the tooltip content. Only meaningful with
@@ -444,12 +539,12 @@ export class KbqTooltipTrigger
     // TODO: Skipped for migration because:
     //  Class of this input is manually instantiated. This is discouraged and prevents
     //  migration.
-    @Input('kbqTooltipHeader') header: string | TemplateRef<any>;
+    @Input('kbqTooltipHeader') header: string | TemplateRef<unknown>;
 
     /**
      * The old `KbqWarningTooltipTrigger` / `KbqExtendedTooltipTrigger` subclasses had
      * setters on their content/header inputs that pushed updates into the open tooltip.
-     * Now that `modifier` and `header` are plain `@Input` fields on this base class,
+     * Now that `modifier`, `header`, `arrow` and `offset` are plain `@Input` fields on this base class,
      * we need to mirror that reactivity manually — without it, changing the inputs
      * while a tooltip is open silently leaves the overlay showing stale data until
      * the next show/hide cycle.
@@ -461,7 +556,11 @@ export class KbqTooltipTrigger
             this.updateClassMap();
         }
 
-        if (changes.header && !changes.header.firstChange) {
+        if (
+            (changes.header && !changes.header.firstChange) ||
+            (changes.arrow && !changes.arrow.firstChange) ||
+            (changes.offset && !changes.offset.firstChange)
+        ) {
             this.updateData();
         }
     }
@@ -497,11 +596,18 @@ export class KbqTooltipTrigger
     private mutedBySiblingPopup = false;
 
     /**
+     * Origin of the last focus event on the host, cached from the `FocusMonitor` stream so the focus trigger
+     * can tell a keyboard focus from the one a click leaves behind.
+     */
+    protected lastFocusOrigin: FocusOrigin = null;
+
+    /**
      * Sets up an effect that mirrors a `forDisabledComponent`'s disabled signal: when that component is disabled it
      * makes the host focusable (so the tooltip can still be triggered) and enables the tooltip, otherwise disables it.
      *
-     * Also joins the "only one tooltip is visible at a time" group and mutes the tooltip while a pop-up on the
-     * same element is open. All of this wiring lives here rather than in `ngAfterViewInit`/`ngOnDestroy` because
+     * Also joins the "only one tooltip is visible at a time" group, mutes the tooltip while a pop-up on the
+     * same element is open, tracks the focus origin and keeps the trigger's `aria-describedby` in sync with the
+     * open tooltip. All of this wiring lives here rather than in `ngAfterViewInit`/`ngOnDestroy` because
      * several subclasses override those hooks: `KbqTitleDirective` and `KbqEllipsisCenterDirective` skip
      * `super.ngAfterViewInit()`, and `KbqPasswordToggle` skips `super` in both hooks entirely. `destroyRef`
      * additionally covers a trigger destroyed while its tooltip is still visible — that path disposes the
@@ -524,46 +630,62 @@ export class KbqTooltipTrigger
                 this.hideAsInactive();
             });
 
+        // CDK dispatches the focus origin from a capture-phase listener on the document, so it is already
+        // recorded by the time the trigger's own `focus` listener runs.
+        this.focusMonitor
+            .monitor(this.elementRef.nativeElement)
+            .pipe(takeUntilDestroyed())
+            .subscribe((origin) => (this.lastFocusOrigin = origin));
+
         this.visibleChange.pipe(takeUntilDestroyed()).subscribe((visible) => {
             if (visible) {
+                this.describeTrigger();
+
                 if (this.participatesInSingleInstance) {
                     this.tooltipRegistry.setVisible(this);
                 }
             } else {
+                this.undescribeTrigger();
                 this.tooltipRegistry.clearVisible(this);
             }
         });
 
-        this.destroyRef.onDestroy(() => this.tooltipRegistry.clearVisible(this));
+        this.destroyRef.onDestroy(() => {
+            this.undescribeTrigger();
+            this.tooltipRegistry.clearVisible(this);
+        });
 
         effect(() => {
-            if (!this.forDisabledComponent()) return;
+            const forDisabledComponent = this.forDisabledComponent();
 
-            const disabled = this.forDisabledComponent()!.disabledSignal();
+            if (!forDisabledComponent) return;
+
+            const disabled = forDisabledComponent.disabledSignal();
+            const nativeElement = this.getNativeElement();
 
             if (disabled) {
-                this.renderer.setAttribute(this.getNativeElement(), 'tabindex', '0');
-                this.renderer.setStyle(this.getNativeElement(), 'outline-color', 'var(--kbq-states-line-focus-theme)');
+                // The wrapped control drops out of the tab order once it is disabled, so the wrapper takes its
+                // place — otherwise the explanation for why the control is unavailable is keyboard-unreachable.
+                this.renderer.setAttribute(nativeElement, 'tabindex', '0');
+                this.renderer.setAttribute(nativeElement, 'role', 'group');
+                this.renderer.addClass(nativeElement, 'kbq-tooltip-trigger_for-disabled');
             } else {
-                this.renderer.setAttribute(this.getNativeElement(), 'tabindex', '-1');
+                this.renderer.setAttribute(nativeElement, 'tabindex', '-1');
+                this.renderer.removeAttribute(nativeElement, 'role');
+                this.renderer.removeClass(nativeElement, 'kbq-tooltip-trigger_for-disabled');
             }
 
-            this.disabled = !disabled;
+            // An explicit `kbqTooltipDisabled` binding wins: the wrapper only derives the state when the
+            // consumer left the input alone.
+            if (this.explicitlyDisabled === undefined) {
+                this._disabled = !disabled;
+            }
         });
     }
 
-    /**
-     * Hides the tooltip when a parent pop-up closes, starts focus monitoring on the host, and—when
-     * `ignoreTooltipPointerEvents` is set—adds the panel class that makes the tooltip ignore pointer events.
-     */
+    /** Hides the tooltip when a parent pop-up closes. */
     ngAfterViewInit(): void {
         this.parentPopup?.closedStream.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.hide());
-
-        this.focusMonitor.monitor(this.elementRef.nativeElement);
-
-        if (this.ignoreTooltipPointerEvents() && Array.isArray(this.overlayConfig.panelClass)) {
-            this.overlayConfig.panelClass.push('cdk-overlay-pane_ignore-pointer-events');
-        }
     }
 
     /** Stops focus monitoring on the host element and runs the base-class teardown. */
@@ -583,6 +705,13 @@ export class KbqTooltipTrigger
             return;
         }
 
+        // Checked before the overlay exists: `KbqTooltipComponent.show` bails on empty content, but by then
+        // the trigger has already attached the pane, leaving an empty, invisible overlay latched open — and
+        // `KbqPopUpTrigger.show` returns early for as long as it is there, so the tooltip never recovers.
+        if (!this.content) {
+            return;
+        }
+
         // `isAttached` is checked directly, not just the `mutedBySiblingPopup` latch: `openedChange` can lag
         // it by a real delay — e.g. select/tree-select only emit it once their open CSS animation finishes,
         // and a sibling's own `hide()` can cancel a still-pending `show()` outright so it never emits at all
@@ -594,7 +723,7 @@ export class KbqTooltipTrigger
             return;
         }
 
-        if (this.triggerName === 'focus' && this.focusMonitor['_lastFocusOrigin'] !== 'keyboard') {
+        if (this.triggerName === 'focus' && !FOCUS_ORIGINS_THAT_SHOW.includes(this.lastFocusOrigin)) {
             return;
         }
 
@@ -637,8 +766,13 @@ export class KbqTooltipTrigger
         this.ngZone.run(() => this.instance?.hide(0));
     }
 
-    /** method allows to show the tooltip relative to the given mouse event.
-     * @docs-private */
+    /**
+     * Shows the tooltip next to the cursor position of the given mouse event, anchoring it to the event's
+     * `currentTarget` instead of the directive's own host element.
+     *
+     * Use it when the trigger cannot be declared in the template — for instance for a tooltip shared by the
+     * cells of a virtualized table. The directive still has to be created in an injection context.
+     */
     showForMouseEvent(event: MouseEvent) {
         if (!(event.currentTarget instanceof HTMLElement)) return;
 
@@ -652,15 +786,23 @@ export class KbqTooltipTrigger
     }
 
     /**
-     * method allows to show the tooltip relative to the element
-     * Use this approach when it is not possible to define a trigger in the template.
+     * Shows the tooltip anchored to the given element instead of the directive's own host element.
      *
-     * For example:
-     * const tooltip = new KbqTooltipTrigger();
+     * Use it when the trigger cannot be declared in the template. The directive still has to be created in an
+     * injection context:
+     *
+     * ```ts
+     * const tooltip = runInInjectionContext(injector, () => new KbqTooltipTrigger());
      * tooltip.showForElement(element);
-     * @docs-private */
+     * ```
+     *
+     * Does nothing while the tooltip is disabled or has no content — there is no overlay to anchor then.
+     */
     showForElement(element: HTMLElement) {
         this.show();
+
+        if (!this.strategy) return;
+
         this.strategy.setOrigin(element);
     }
 
@@ -680,12 +822,18 @@ export class KbqTooltipTrigger
             return;
         }
 
+        this.instance.id = this.tooltipId;
         this.instance.content = this.content;
         this.instance.header = this.header;
-        this.instance.context = this.context && { $implicit: this.context };
+        // `!= null` rather than a truthy check: `0`, `''` and `false` are legitimate template contexts, and
+        // dropping them left the template rendering the previous context instead.
+        this.instance.context = this.context != null ? { $implicit: this.context } : null;
         this.instance.arrow = this.arrow;
         this.instance.offset = this.offset;
         this.instance.detectChanges();
+        // The margins live on the rendered tooltip element, so re-applying them is the only way a changed
+        // `kbqTooltipOffset` reaches an already open tooltip.
+        this.instance.applyOffset();
         this.updatePosition(true);
     }
 
@@ -708,10 +856,97 @@ export class KbqTooltipTrigger
             return;
         }
 
-        this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], `${this.customClass} ${this.color}`, {
+        this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], `${this.customClass} ${this.colorClass}`, {
             modifier: this.modifier
         });
         this.instance.markForCheck();
+    }
+
+    /**
+     * Subscribes the overlay's keydown stream once, when the overlay is first created, so that `Escape`
+     * dismisses the tooltip.
+     *
+     * The inherited `keydownHandler` is a host binding on the trigger and therefore only fires while the
+     * trigger itself has focus, which a hover-opened tooltip never has. CDK routes `keydownEvents()` to the
+     * top-most attached overlay regardless of where focus is, which is exactly the missing case.
+     * @docs-private
+     */
+    createOverlay(): OverlayRef {
+        if (this.overlayRef) {
+            return this.overlayRef;
+        }
+
+        // Rebuilt here rather than pushed into `overlayConfig` from a lifecycle hook: five subclasses skip
+        // `super.ngAfterViewInit()`, and appending to the array made the class impossible to take back off.
+        this.overlayConfig = { ...this.overlayConfig, panelClass: this.getPanelClasses() };
+
+        const overlayRef = super.createOverlay();
+
+        overlayRef
+            .keydownEvents()
+            .pipe(
+                filter(({ keyCode }) => keyCode === ESCAPE),
+                // An imperatively driven tooltip (`manual`/`none`) is pinned on purpose — the validation hints
+                // of datepicker, timepicker and inline-edit must survive an unrelated Escape.
+                filter(() => this.isOpen && this.hasInteractiveTrigger),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => this.ngZone.run(() => this.hideAsInactive()));
+
+        return overlayRef;
+    }
+
+    /** Panel classes of the tooltip overlay, including the pointer-events opt-out while it is enabled. */
+    private getPanelClasses(): string[] {
+        const configured = this.overlayConfig.panelClass;
+        const classes = (Array.isArray(configured) ? configured : configured ? [configured] : []).filter(
+            (name) => name !== IGNORE_POINTER_EVENTS_PANEL_CLASS
+        );
+
+        return this.ignoreTooltipPointerEvents() ? [...classes, IGNORE_POINTER_EVENTS_PANEL_CLASS] : classes;
+    }
+
+    /**
+     * Points the trigger's `aria-describedby` at the open tooltip, so assistive technology announces the hint
+     * together with the control it explains.
+     *
+     * Written through the renderer rather than a host binding because `showForMouseEvent` re-anchors the
+     * trigger to a foreign element, which a host binding would never reach. Existing ids are preserved.
+     */
+    private describeTrigger(): void {
+        if (this.describesHostText) return;
+
+        const nativeElement = this.getNativeElement();
+        const ids = this.getDescribedByIds(nativeElement);
+
+        if (ids.includes(this.tooltipId)) return;
+
+        this.renderer.setAttribute(nativeElement, 'aria-describedby', [...ids, this.tooltipId].join(' '));
+    }
+
+    /** Removes this tooltip's id from the trigger's `aria-describedby`, keeping any other ids in place. */
+    private undescribeTrigger(): void {
+        const nativeElement = this.getNativeElement();
+        const ids = this.getDescribedByIds(nativeElement).filter((id) => id !== this.tooltipId);
+
+        if (ids.length) {
+            this.renderer.setAttribute(nativeElement, 'aria-describedby', ids.join(' '));
+        } else {
+            this.renderer.removeAttribute(nativeElement, 'aria-describedby');
+        }
+    }
+
+    /** Ids currently listed in the element's `aria-describedby`. */
+    private getDescribedByIds(element: HTMLElement): string[] {
+        return (element.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+    }
+
+    /**
+     * Whether the tooltip only repeats the text the host already shows — which is what `kbq-title` does.
+     * Describing those would make assistive technology read the same label twice.
+     */
+    private get describesHostText(): boolean {
+        return typeof this.content === 'string' && this.content.trim() === this.getNativeElement().textContent?.trim();
     }
 
     /** @docs-private */
@@ -728,8 +963,6 @@ export class KbqTooltipTrigger
 
         const triggerRects = this.getNativeElement().getBoundingClientRect();
         const point: Point = { x: 0, y: 0 };
-
-        this.placementPriority = null;
 
         if (this.placement === PopUpPlacements.Top) {
             point.x = this.mouseEvent!.x;

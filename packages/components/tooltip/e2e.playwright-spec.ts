@@ -35,5 +35,29 @@ test.describe('KbqTooltipModule', () => {
             await expect(tooltipWithoutArrow).toBeVisible();
             await expect(tooltipWithoutArrow).toHaveCSS('margin-top', '4px');
         });
+
+        test('should dismiss a hover-opened tooltip with Escape', async ({ page }) => {
+            await page.goto('/E2eTooltipArrowOffset');
+
+            await page.getByTestId('tooltipWithArrow').hover();
+
+            const tooltip = page.locator('.kbq-tooltip');
+
+            await expect(tooltip).toBeVisible();
+
+            // The pointer never leaves the trigger and the trigger is not focusable, so the only thing that
+            // can route the key to the tooltip is the overlay-level handler.
+            await page.keyboard.press('Escape');
+
+            await expect(tooltip).toBeHidden();
+        });
+
+        test('should let the pointer reach the tooltip', async ({ page }) => {
+            await page.goto('/E2eTooltipArrowOffset');
+
+            await page.getByTestId('tooltipWithArrow').hover();
+
+            await expect(page.locator('.kbq-tooltip-panel')).toHaveCSS('pointer-events', 'auto');
+        });
     });
 });

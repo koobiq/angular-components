@@ -11,7 +11,6 @@ import { AfterViewInit } from '@angular/core';
 import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
@@ -3739,7 +3738,6 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
-    // (undocumented)
     animationDone(input: AnimationEvent_2): void;
     // (undocumented)
     animationStart(): void;
@@ -3752,10 +3750,10 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     protected closeOnInteraction: boolean;
     // (undocumented)
-    content: string | TemplateRef<any>;
+    content: string | TemplateRef<unknown>;
     // (undocumented)
     context: {
-        $implicit: any;
+        $implicit: unknown;
     } | null;
     // (undocumented)
     defaultPaddings: boolean;
@@ -3768,7 +3766,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     handleBodyInteraction(): void;
     // (undocumented)
-    header: string | TemplateRef<any>;
+    header: string | TemplateRef<unknown>;
     hide(delay: number): void;
     readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
@@ -3822,8 +3820,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     abstract closingActions(): Observable<any>;
     protected closingActionsSubscription: Subscription;
     container: HTMLElement;
-    abstract content: string | TemplateRef<any>;
-    protected _content: string | TemplateRef<any>;
+    abstract content: string | TemplateRef<unknown>;
+    protected _content: string | TemplateRef<unknown>;
     createOverlay(): OverlayRef;
     abstract customClass: string;
     protected _customClass: string;
@@ -3837,7 +3835,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected externalNativeElement: HTMLElement;
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
-    getMouseLeaveListener(): (delay?: number) => void;
+    getMouseLeaveListener(): () => void;
     getNativeElement(): HTMLElement;
     abstract getOverlayHandleComponentType(): Type<T>;
     protected getPrioritizedPositions(): ConnectionPositionPair[];
@@ -3865,12 +3863,11 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected abstract overlayConfig: OverlayConfig;
     overlayRef: OverlayRef | null;
     protected placement: KbqPopUpPlacementValues;
-    abstract placementChange: EventEmitter<string>;
+    abstract placementChange: EventEmitter<KbqPopUpPlacementValues>;
     protected placementPriority: string | string[] | null;
     protected portal: ComponentPortal<T>;
     protected preventClose: boolean;
     resetOrigin(): void;
-    protected readonly scheduler: AsyncScheduler | undefined;
     protected readonly scrollable: CdkScrollable | null;
     protected readonly scrollDispatcher: ScrollDispatcher;
     protected abstract scrollStrategy: () => ScrollStrategy;
