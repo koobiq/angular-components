@@ -31,7 +31,9 @@ from three ordered tables in `data.ts`:
   `kbqTooltipModifier="warning" [kbqTooltip]`, `kbqFormFieldWithoutBorders` →
   `noBorders`, the deprecated `KbqCodeBlock` input attributes
   (`[canLoad]` / `canLoad=` → `canDownload`, `[codeFiles]` / `codeFiles=` →
-  `files`), and template-ref exportAs renames
+  `files`), the `KbqFilterBarSearch` inputs that survived the tag rename
+  (`emitValueByEnter` → `isEmitValueByEnterEnabled`, `onSearchTimeout` →
+  `emitValueTimeout`), and template-ref exportAs renames
   (`="kbqWarningTooltip"` → `="kbqTooltip"`).
 - **`scssReplacements`** — CSS class selectors renamed at the component level.
 
@@ -49,6 +51,8 @@ without auto-fixing:
 | `scrollableCodeContent` (code-block)              | Use the `scrollTo()` method instead                                                                   |
 | `.canLoad` / `.codeFiles` (code-block, TS access) | Template bindings are auto-migrated; update programmatic access to `.canDownload` / `.files` manually |
 | `required` (KbqFilter)                            | Use `cleanable = false` and `removable = false` (best-effort match — verify it is a KbqFilter config) |
+| `[initialValue]` (filter-search)                  | Seed the bound `[formControl]` / `[(ngModel)]` — the component has no value input                     |
+| `(onSearch)` (filter-search)                      | Read the query from the bound control instead                                                         |
 
 ## Running it manually
 

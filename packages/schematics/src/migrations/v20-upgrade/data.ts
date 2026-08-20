@@ -224,6 +224,19 @@ export const templateReplacements: Replacement[] = [
     // ─── Attribute renames ────────────────────────────────────────────────
     { from: '\\bkbqFormFieldWithoutBorders\\b', to: 'noBorders' },
 
+    // ─── KbqFilterBarSearch inputs → KbqSearchExpandable inputs ───────────
+    // The selector rewrite above only renames the tag: without these the inputs
+    // of the removed KbqFilterBarSearch survive as attributes the new component
+    // does not have. Scoped to the attribute forms (`[x]` binding, `x="…"`
+    // static, bare attribute) so the identifiers elsewhere are never touched.
+    // The bare form matters because `emitValueByEnter` was a boolean attribute; its lookahead keeps
+    // it off TypeScript declarations, since template replacements also run over inline templates.
+    { from: '\\[emitValueByEnter\\]', to: '[isEmitValueByEnterEnabled]' },
+    { from: '\\bemitValueByEnter="', to: 'isEmitValueByEnterEnabled="' },
+    { from: '\\bemitValueByEnter(?!\\s*=)(\\s|>|/)', to: 'isEmitValueByEnterEnabled$1' },
+    { from: '\\[onSearchTimeout\\]', to: '[emitValueTimeout]' },
+    { from: '\\bonSearchTimeout="', to: 'emitValueTimeout="' },
+
     // ─── KbqCodeBlock deprecated input renames ────────────────────────────
     // Scoped strictly to the attribute form (`[x]` binding or `x="…"` static)
     // so the common words `canDownload` / `files` elsewhere are never touched.
@@ -312,6 +325,19 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'KbqCodeBlock.canLoad → canDownload and .codeFiles → files. Template bindings are auto-migrated; ' +
             'update any programmatic (TypeScript) access manually.'
+    },
+    {
+        pattern: '\\[initialValue\\]|\\binitialValue="',
+        message:
+            'KbqFilterBarSearch.initialValue has no counterpart in kbq-search-expandable: the component ' +
+            'is a form control with no separate value input. Seed the bound [formControl] / [(ngModel)] ' +
+            'with the value instead. Manual migration required.'
+    },
+    {
+        pattern: '\\(onSearch\\)',
+        message:
+            'KbqFilterBarSearch.onSearch was removed. kbq-search-expandable reports the query through its ' +
+            'form binding — read the bound control (valueChanges) instead. Manual migration required.'
     },
     {
         pattern: '\\brequired:\\s*(true|false)',

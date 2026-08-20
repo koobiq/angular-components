@@ -103,6 +103,98 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).not.toContain('kbq-filter-search');
     });
 
+    it('rewrites the KbqFilterBarSearch input bindings onto their kbq-search-expandable names', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            html,
+            '<kbq-filter-search [emitValueByEnter]="true" [onSearchTimeout]="300"></kbq-filter-search>\n'
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(html);
+
+        expect(updated).toContain('[isEmitValueByEnterEnabled]="true"');
+        expect(updated).toContain('[emitValueTimeout]="300"');
+        expect(updated).not.toContain('emitValueByEnter');
+        expect(updated).not.toContain('onSearchTimeout');
+    });
+
+    it('rewrites the static and bare attribute forms of the KbqFilterBarSearch inputs', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+
+        appTree.overwrite(html, '<kbq-filter-search emitValueByEnter onSearchTimeout="300"></kbq-filter-search>\n');
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(html);
+
+        expect(updated).toContain('<kbq-search-expandable isEmitValueByEnterEnabled emitValueTimeout="300">');
+    });
+
+    it('rewrites the bare attribute in an inline template without touching a TypeScript declaration', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            'export class App {\n' +
+                '    template = `<kbq-filter-search emitValueByEnter></kbq-filter-search>`;\n' +
+                '    emitValueByEnter = false;\n' +
+                '}\n'
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        expect(updated).toContain('<kbq-search-expandable isEmitValueByEnterEnabled>');
+        expect(updated).toContain('emitValueByEnter = false;');
+    });
+
+    it('warns about initialValue and (onSearch), which have no counterpart, without auto-fixing them', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+        const original =
+            '<kbq-filter-search [initialValue]="seed" (onSearch)="onSearch($event)"></kbq-filter-search>\n';
+
+        appTree.overwrite(html, original);
+
+        const messages: string[] = [];
+
+        runner.logger.subscribe((entry) => {
+            if (entry.message) messages.push(entry.message);
+        });
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(html);
+
+        expect(updated).toContain('[initialValue]="seed"');
+        expect(updated).toContain('(onSearch)="onSearch($event)"');
+        expect(messages.some((m) => m.includes('initialValue'))).toBe(true);
+        expect(messages.some((m) => m.includes('onSearch'))).toBe(true);
+    });
+
     it('rewrites kbqFormFieldWithoutBorders → noBorders', async () => {
         const [first] = projects.keys();
         const { html } = paths(projects.get(first)!);

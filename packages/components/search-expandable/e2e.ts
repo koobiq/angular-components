@@ -7,9 +7,13 @@ import { KbqSearchExpandableModule } from './search-expandable.module';
     imports: [KbqSearchExpandableModule, FormsModule],
     template: `
         <div data-testid="e2eScreenshotTarget" style="width: 400px">
-            <kbq-search-expandable [(ngModel)]="search" />
+            <kbq-search-expandable data-testid="e2eSearchExpandableCollapsed" [(ngModel)]="search" />
             <br />
-            <kbq-search-expandable [isOpened]="true" [(ngModel)]="searchOpened" />
+            <kbq-search-expandable
+                data-testid="e2eSearchExpandableExpanded"
+                [isOpened]="true"
+                [(ngModel)]="searchOpened"
+            />
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

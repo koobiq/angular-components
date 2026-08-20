@@ -1,5 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
+    AfterViewChecked,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -15,16 +16,15 @@ import {
     OnDestroy,
     output,
     Provider,
-    QueryList,
     viewChild,
-    ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqDeepPartial,
+    kbqInjectA11yLocaleConfiguration,
     kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     KbqSearchExpandableLocaleConfiguration,
@@ -33,11 +33,12 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, filter } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, distinctUntilChanged, filter, Subject, Subscription, timer } from 'rxjs';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 /** default configuration of search-expandable */
-export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION = ruRULocaleData.searchExpandable;
+export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: KbqSearchExpandableLocaleConfiguration =
+    ruRULocaleData.searchExpandable;
 
 /** Injection Token for providing configuration of search-expandable */
 export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION = new InjectionToken<KbqSearchExpandableLocaleConfiguration>(
@@ -67,7 +68,7 @@ export const defaultEmitValueTimeout = 200;
         ReactiveFormsModule
     ],
     templateUrl: './search-expandable.html',
-    styleUrls: ['./search-expandable.scss'],
+    styleUrls: ['./search-expandable.scss', './search-expandable-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -75,7 +76,7 @@ export const defaultEmitValueTimeout = 200;
         '[class.kbq-search-expandable_opened]': 'isOpened'
     }
 })
-export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, OnDestroy {
+export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */
@@ -86,10 +87,11 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly nativeElement: HTMLElement = inject(ElementRef).nativeElement;
-
-    @ViewChildren(KbqInput) private input: QueryList<KbqInput>;
-    @ViewChildren(KbqButton) private button: QueryList<KbqButton>;
-    private readonly tooltip = viewChild(KbqTooltipTrigger);
+    /**
+     * Accessible names of the icon-only controls this component renders itself.
+     * @docs-private
+     */
+    protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     /** Strings currently rendered by the component. */
     get configuration(): KbqSearchExpandableLocaleConfiguration {
@@ -101,6 +103,23 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         KBQ_SEARCH_EXPANDABLE_CONFIGURATION
     );
 
+    private readonly input = viewChild(KbqInput);
+    private readonly button = viewChild(KbqButton);
+    private readonly tooltip = viewChild(KbqTooltipTrigger);
+
+    /** @docs-private */
+
+    /**
+     * Control backing the expanded input. Owning it — rather than binding the consumer's own control to
+     * the input — keeps every write to the consumer's model going through the debounced pipeline below,
+     * and keeps a programmatic write from being echoed back as a user edit.
+     * @docs-private
+     */
+    protected readonly control = new FormControl<string>(defaultValue, { nonNullable: true });
+
+    /** Icon of the collapsed button and of the expanded field's prefix. */
+    protected readonly searchIconName = 'kbq-magnifying-glass_16';
+
     /** Current value in input. */
     value = new BehaviorSubject(defaultValue);
 
@@ -109,12 +128,22 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** Suppress the automatic input focus once — set when the component auto-opens from a model value. */
     private suppressInputFocus = false;
 
+    /** Whether the expanded input was rendered on the previous change detection pass. */
+    private inputRendered = false;
+    /** Whether the collapsed button was rendered on the previous change detection pass. */
+    private buttonRendered = false;
+
+    /** Cancels a pending debounced emission once the value has been emitted (or reset) through another path. */
+    private readonly cancelPendingEmit = new Subject<void>();
+
+    private focusMonitorSubscription: Subscription | null = null;
+
     /** state of component. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input({ transform: booleanAttribute }) isOpened = false;
     /** Emit event by enter or not. Default is false */
-    readonly isEmitValueByEnterEnabled = input(false);
+    readonly isEmitValueByEnterEnabled = input(false, { transform: booleanAttribute });
     /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
     readonly emitValueTimeout = input(defaultEmitValueTimeout, { transform: numberAttribute });
 
@@ -144,8 +173,9 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         this._placeholder = value;
     }
 
-    private _placeholder: string | null;
+    private _placeholder: string | null = null;
 
+    /** Whether the component is disabled. Also set by the bound control through `setDisabledState`. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
@@ -156,15 +186,20 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     set disabled(value: boolean) {
         this._disabled = value;
 
+        // `emitEvent: false`: `disable()`/`enable()` re-emit the current value, which would restart the
+        // debounce and emit a value the user never typed.
         if (this._disabled) {
+            this.control.disable({ emitEvent: false });
             this.stopFocusMonitor();
         } else {
+            this.control.enable({ emitEvent: false });
             this.runFocusMonitor();
         }
     }
 
     private _disabled: boolean = false;
 
+    /** Tab index of the collapsed button and of the expanded input. Always `-1` while disabled. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
@@ -183,7 +218,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     /** localized data
      * @docs-private */
-    get localeData() {
+    get localeData(): KbqSearchExpandableLocaleConfiguration {
         return this.configuration;
     }
 
@@ -196,60 +231,81 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
         this.ngControl.valueAccessor = this;
 
-        this.ngControl.valueChanges?.pipe(takeUntilDestroyed()).subscribe((value) => this.value.next(value));
+        // `value` predates the internal control and stays part of the public API: writes into it must
+        // still reach the field, and reads must still observe the current value. Both directions are
+        // guarded on the current value, so the pair cannot loop.
+        this.value.pipe(distinctUntilChanged(), takeUntilDestroyed()).subscribe((value) => {
+            if (this.control.value !== value) {
+                this.control.setValue(value);
+            }
+        });
 
-        this.value
+        this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.syncValueSubject(value));
+
+        this.control.valueChanges
             .pipe(
-                distinctUntilChanged(),
                 filter(() => !this.isEmitValueByEnterEnabled()),
-                debounceTime(this.emitValueTimeout()),
+                // No `distinctUntilChanged()` here: it remembers what the *field* last held, which a
+                // programmatic write (`emitEvent: false`) and a close silently invalidate — retyping the
+                // value the model was just reset from would then be swallowed forever. `emitValue` guards
+                // on the last value actually handed to the consumer, which every path keeps in sync.
+                //
+                // `switchMap` over a `timer` rather than `debounceTime`: the timeout is read per value, so
+                // `[emitValueTimeout]` keeps working after Angular has set the inputs, and `takeUntil` lets
+                // an explicit emission (Enter, close) drop a pending one that would otherwise land
+                // afterwards and overwrite the value that was just emitted.
+                switchMap((value) =>
+                    timer(this.emitValueTimeout()).pipe(
+                        map(() => value),
+                        takeUntil(this.cancelPendingEmit)
+                    )
+                ),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(this.emitValue);
+            .subscribe((value) => this.emitValue(value));
     }
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();
 
-        this.button.changes
-            .pipe(
-                filter((queryList) => queryList.length),
-                map((queryList) => queryList.first),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((button: KbqButton) => {
-                const tooltip = this.tooltip();
-
-                if (tooltip) {
-                    tooltip.disabled = true;
-                }
-
-                this.focusMonitor.focusVia(button.elementRef.nativeElement, this.lastFocusOrigin);
-
-                if (tooltip) {
-                    tooltip.disabled = false;
-                }
-            });
-
-        this.input.changes
-            .pipe(
-                filter((queryList) => queryList.length),
-                map((queryList) => queryList.first),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((input: KbqInput) => {
-                if (this.suppressInputFocus) {
-                    this.suppressInputFocus = false;
-                } else {
-                    input.focus();
-                }
-            });
-
+        // The first render is a page load rather than an expand or a collapse, so it only seeds what
+        // the focus handoffs below compare against.
+        this.inputRendered = !!this.input();
+        this.buttonRendered = !!this.button();
         // When the component starts opened (e.g. a seeded formControl value), the input is present on
-        // first render and `input.changes` never fires to consume the flag — clear it so later
-        // user-initiated opens focus the input as usual.
-        if (this.input.length) {
-            this.suppressInputFocus = false;
+        // first render and no expand follows to consume the flag — clear it so later user-initiated
+        // opens focus the input as usual.
+        this.suppressInputFocus = false;
+    }
+
+    /**
+     * Focus handoffs: the input takes focus when the field expands, the collapsed button takes it back
+     * when the field closes.
+     *
+     * This runs from `ngAfterViewChecked` rather than from an `effect()` on the queries, because view
+     * effects are flushed *before* view queries are refreshed within a change detection pass — an
+     * effect would always move focus one pass late.
+     * @docs-private
+     */
+    ngAfterViewChecked(): void {
+        const inputControl = this.input();
+        const toggleButton = this.button();
+        const inputWasRendered = this.inputRendered;
+        const buttonWasRendered = this.buttonRendered;
+
+        this.inputRendered = !!inputControl;
+        this.buttonRendered = !!toggleButton;
+
+        if (toggleButton && !buttonWasRendered) {
+            this.restoreFocusToButton(toggleButton);
+        }
+
+        if (inputControl && !inputWasRendered) {
+            if (this.suppressInputFocus) {
+                this.suppressInputFocus = false;
+            } else {
+                inputControl.focus();
+            }
         }
     }
 
@@ -258,7 +314,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     }
 
     /** @docs-private */
-    onChange: (value: string) => void;
+    onChange: (value: string) => void = () => {};
 
     /** @docs-private */
     onTouch: () => void = () => {};
@@ -275,7 +331,19 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     /** Implemented as part of ControlValueAccessor. */
     writeValue(value: string): void {
-        this.value.next(value || defaultValue);
+        const nextValue = value || defaultValue;
+
+        // The model supersedes whatever the user was typing: without this, an emission scheduled by the
+        // keystrokes that preceded the write lands afterwards and puts the replaced query back.
+        this.cancelPendingEmit.next();
+        // The consumer's model is the source of truth on this path: recording it keeps `emitValue` from
+        // re-emitting a value the model already holds, and lets it emit a value the user retypes after
+        // the model was changed from the outside.
+        this.lastEmittedValue = nextValue;
+        // `emitEvent: false` keeps a programmatic write out of the debounced pipeline — feeding it back
+        // through `onChange` would mark the consumer's control dirty and double-fire its `valueChanges`.
+        this.control.setValue(nextValue, { emitEvent: false });
+        this.syncValueSubject(nextValue);
 
         // Expand automatically when the model already holds a value, without stealing focus —
         // unless focus is already inside the component (e.g. on the collapsed toggle button
@@ -299,6 +367,18 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         this.setOpened(!this.isOpened);
     }
 
+    /**
+     * Emits the typed value straight away when `isEmitValueByEnterEnabled` is set — the only path that
+     * emits in that mode, since the debounced pipeline is filtered out.
+     * @docs-private
+     */
+    protected onEnter(): void {
+        if (!this.isEmitValueByEnterEnabled()) return;
+
+        this.cancelPendingEmit.next();
+        this.emitValue(this.control.value);
+    }
+
     private setOpened(open: boolean): void {
         if (this.disabled || this.isOpened === open) return;
 
@@ -307,7 +387,13 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         if (!open) {
             // Never let a stale suppress-flag survive a close.
             this.suppressInputFocus = false;
-            this.value.next(defaultValue);
+            // An emission scheduled by the keystrokes that preceded the close would put the discarded
+            // query back into the bound control right after the reset.
+            this.cancelPendingEmit.next();
+            // `emitEvent: false`: the reset reaches the consumer through the forced emit below, so
+            // routing it through the debounce as well would only schedule a redundant no-op emission.
+            this.control.setValue(defaultValue, { emitEvent: false });
+            this.syncValueSubject(defaultValue);
             // Force the emit — closing must always synchronize the bound control to the reset
             // value, rather than relying on the debounce to eventually settle (it can be raced
             // by a value pushed just before close, silently leaving the control at a stale value).
@@ -322,6 +408,27 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         this.changeDetectorRef.markForCheck();
     }
 
+    /** Moves focus back onto the collapsed button, keeping its tooltip from opening on the way. */
+    private restoreFocusToButton(button: KbqButton): void {
+        const tooltip = this.tooltip();
+
+        if (tooltip) {
+            tooltip.disabled = true;
+        }
+
+        this.focusMonitor.focusVia(button.elementRef.nativeElement, this.lastFocusOrigin);
+
+        if (tooltip) {
+            tooltip.disabled = false;
+        }
+    }
+
+    private syncValueSubject(value: string): void {
+        if (this.value.value !== value) {
+            this.value.next(value);
+        }
+    }
+
     private emitValue = (value: string, forced = false): void => {
         if (value !== this.lastEmittedValue || forced) {
             this.onChange(value);
@@ -330,10 +437,19 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     };
 
     private runFocusMonitor() {
-        this.focusMonitor.monitor(this.nativeElement, true).subscribe((origin) => (this.lastFocusOrigin = origin));
+        // `FocusMonitor.monitor()` hands back the same subject for an already-monitored element, so a
+        // second subscription would double every notification; a disabled component is not monitored.
+        if (this.disabled || this.focusMonitorSubscription) return;
+
+        this.focusMonitorSubscription = this.focusMonitor
+            .monitor(this.nativeElement, true)
+            .subscribe((origin) => (this.lastFocusOrigin = origin));
     }
 
     private stopFocusMonitor() {
+        this.focusMonitorSubscription?.unsubscribe();
+        this.focusMonitorSubscription = null;
+
         this.focusMonitor.stopMonitoring(this.nativeElement);
     }
 }

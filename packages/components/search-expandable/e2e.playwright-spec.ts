@@ -14,5 +14,27 @@ test.describe('KbqSearchExpandableModule', () => {
             await e2eEnableDarkTheme(page);
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
+
+        test('expands on click, accepts typing and collapses on escape', async ({ page }) => {
+            await page.goto('/E2eSearchExpandableStates');
+
+            const component = page.getByTestId('e2eSearchExpandableCollapsed');
+            const toggleButton = component.locator('.kbq-search-expandable__button');
+
+            await toggleButton.click();
+
+            const input = component.locator('input');
+
+            await expect(input).toBeFocused();
+
+            await input.fill('query');
+
+            await expect(input).toHaveValue('query');
+
+            await input.press('Escape');
+
+            await expect(component.locator('input')).toHaveCount(0);
+            await expect(toggleButton).toBeFocused();
+        });
     });
 });

@@ -4,16 +4,19 @@
 
 ```ts
 
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { FormControl } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqSearchExpandableLocaleConfiguration } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -28,23 +31,21 @@ export const defaultValue = "";
 export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION: InjectionToken<KbqSearchExpandableLocaleConfiguration>;
 
 // @public
-export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: {
-    tooltip: string;
-    placeholder: string;
-};
+export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION: KbqSearchExpandableLocaleConfiguration;
 
 // @public (undocumented)
-export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, OnDestroy {
+export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
     constructor();
+    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get configuration(): KbqSearchExpandableLocaleConfiguration;
+    protected readonly control: FormControl<string>;
     protected readonly destroyRef: DestroyRef;
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly emitValueTimeout: i0.InputSignalWithTransform<number, unknown>;
     protected readonly focusMonitor: FocusMonitor;
-    readonly isEmitValueByEnterEnabled: i0.InputSignal<boolean>;
+    readonly isEmitValueByEnterEnabled: i0.InputSignalWithTransform<boolean, unknown>;
     isOpened: boolean;
     readonly isOpenedChange: i0.OutputEmitterRef<boolean>;
     // (undocumented)
@@ -57,19 +58,21 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     static ngAcceptInputType_isOpened: unknown;
     // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
+    ngAfterViewChecked(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     protected readonly ngControl: NgControl | null;
     // (undocumented)
     ngOnDestroy(): void;
     onChange: (value: string) => void;
+    protected onEnter(): void;
     onTouch: () => void;
     get placeholder(): string;
     set placeholder(value: string | null);
     registerOnChange(fn: (value: string) => void): void;
     registerOnTouched(fn: () => void): void;
+    protected readonly searchIconName = "kbq-magnifying-glass_16";
     setDisabledState(isDisabled: boolean): void;
-    // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)

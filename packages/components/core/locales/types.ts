@@ -11,7 +11,10 @@ import { KbqDeepPartial } from '../utils';
  * `button-name`). None of these strings are ever displayed.
  */
 export type KbqA11yLocaleConfiguration = {
-    /** Close button of a modal, popover, sidepanel, content panel or notification center. */
+    /**
+     * Close button of a modal, popover, sidepanel, content panel or notification center, and of the
+     * expandable search, whose button collapses the field back to its icon.
+     */
     close: string;
     /** Confirm button of an inline edit. */
     save: string;
