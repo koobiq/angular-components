@@ -6,6 +6,7 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef } from '@angular/core';
@@ -16,7 +17,6 @@ import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FocusKeyManager } from '@koobiq/components/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
-import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/platform';
 import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/drag-drop';
@@ -47,22 +47,22 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     // @deprecated
     addClassModificatorForIcons(): void;
     addHostClassName(): void;
-    readonly avatar: i0.Signal<KbqTagAvatar | undefined>;
+    readonly avatar: _angular_core.Signal<KbqTagAvatar | undefined>;
     blur(): void;
     cancelEditing(reason: string): void;
     // (undocumented)
     changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    readonly contentChildren: i0.Signal<readonly KbqIcon[]>;
+    readonly contentChildren: _angular_core.Signal<readonly KbqIcon[]>;
     deselect(): void;
-    readonly destroyed: i0.OutputEmitterRef<KbqTagEvent>;
+    readonly destroyed: _angular_core.OutputEmitterRef<KbqTagEvent>;
     get disabled(): boolean;
     set disabled(value: boolean);
     protected get draggable(): boolean;
     get editable(): boolean;
     set editable(value: boolean);
-    readonly editChange: i0.OutputEmitterRef<KbqTagEditChange>;
-    protected readonly editing: i0.WritableSignal<boolean>;
+    readonly editChange: _angular_core.OutputEmitterRef<KbqTagEditChange>;
+    protected readonly editing: _angular_core.WritableSignal<boolean>;
     readonly elementRef: ElementRef<HTMLElement>;
     focus(): void;
     handleClick(event: MouseEvent): void;
@@ -86,18 +86,18 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     ngOnDestroy(): void;
     readonly onBlur: Subject<KbqTagEvent>;
     readonly onFocus: Subject<KbqTagFocusEvent>;
-    readonly preventEditSubmit: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly preventEditSubmit: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get removable(): boolean;
     set removable(value: boolean);
     remove(): void;
-    readonly removed: i0.OutputEmitterRef<KbqTagEvent>;
-    readonly removeIcon: i0.Signal<any>;
+    readonly removed: _angular_core.OutputEmitterRef<KbqTagEvent>;
+    readonly removeIcon: _angular_core.Signal<any>;
     select(): void;
     get selectable(): boolean;
     set selectable(value: boolean);
     get selected(): boolean;
     set selected(value: boolean);
-    readonly selectionChange: i0.OutputEmitterRef<KbqTagSelectionChange>;
+    readonly selectionChange: _angular_core.OutputEmitterRef<KbqTagSelectionChange>;
     selectViaInteraction(): void;
     setSelectedState(selected: boolean, options?: Partial<{
         isUserInput: boolean;
@@ -109,21 +109,21 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     set tabindex(value: any);
     readonly textElement: ElementRef<HTMLSpanElement>;
     toggleSelected(isUserInput?: boolean): boolean;
-    readonly trailingIcon: i0.Signal<KbqTagTrailingIcon | undefined>;
+    readonly trailingIcon: _angular_core.Signal<KbqTagTrailingIcon | undefined>;
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTag, "kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]", ["kbqTag"], { "editable": { "alias": "editable"; "required": false; }; "preventEditSubmit": { "alias": "preventEditSubmit"; "required": false; "isSignal": true; }; "selected": { "alias": "selected"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "editChange": "editChange"; "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["editInputElementRef", "contentChildren", "avatar", "trailingIcon", "removeIcon"], ["[kbqTagPrefix]", "[kbqTagEditInput]", "*", "[kbqTagEditSubmit]", "[kbqTagRemove]", "[kbqTagSuffix]"], true, [{ directive: typeof i2.CdkDrag; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTag, "kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]", ["kbqTag"], { "editable": { "alias": "editable"; "required": false; }; "preventEditSubmit": { "alias": "preventEditSubmit"; "required": false; "isSignal": true; }; "selected": { "alias": "selected"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "editChange": "editChange"; "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["editInputElementRef", "contentChildren", "avatar", "trailingIcon", "removeIcon"], ["[kbqTagPrefix]", "[kbqTagEditInput]", "*", "[kbqTagEditSubmit]", "[kbqTagRemove]", "[kbqTagSuffix]"], true, [{ directive: typeof i2.CdkDrag; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTag, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTag, never>;
 }
 
 // @public
 export class KbqTagAvatar {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagAvatar, "kbq-tag-avatar, [kbqTagAvatar]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagAvatar, "kbq-tag-avatar, [kbqTagAvatar]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagAvatar, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagAvatar, never>;
 }
 
 // @public
@@ -145,18 +145,18 @@ export class KbqTagEditInput {
     protected handleClick(event: MouseEvent): void;
     protected handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagEditInput, "[kbqTagEditInput]", ["kbqTagEditInput"], {}, {}, never, never, true, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagEditInput, "[kbqTagEditInput]", ["kbqTagEditInput"], {}, {}, never, never, true, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagEditInput, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagEditInput, never>;
 }
 
 // @public
 export class KbqTagEditSubmit {
     protected readonly tag: KbqTag;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagEditSubmit, "[kbqTagEditSubmit]", ["kbqTagEditSubmit"], {}, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagEditSubmit, "[kbqTagEditSubmit]", ["kbqTagEditSubmit"], {}, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagEditSubmit, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagEditSubmit, never>;
 }
 
 // @public
@@ -176,13 +176,13 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     constructor();
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
-    readonly addOnPaste: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly addOnPaste: _angular_core.InputSignalWithTransform<boolean, unknown>;
     autocompleteTrigger?: KbqAutocompleteTrigger | null | undefined;
-    readonly autofilled: i0.Signal<boolean>;
+    readonly autofilled: _angular_core.Signal<boolean>;
     blur(event: FocusEvent): void;
     get disabled(): boolean;
     set disabled(value: boolean);
-    readonly distinct: i0.InputSignal<boolean>;
+    readonly distinct: _angular_core.InputSignal<boolean>;
     emitTagEnd(): void;
     get empty(): boolean;
     focus(): void;
@@ -200,14 +200,14 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     placeholder: string;
     set separatorKeyCodes(value: number[]);
     get separators(): KbqTagSeparator[];
-    readonly tagEnd: i0.OutputEmitterRef<KbqTagInputEvent>;
+    readonly tagEnd: _angular_core.OutputEmitterRef<KbqTagInputEvent>;
     set tagList(value: KbqTagList);
     // @deprecated (undocumented)
     triggerValidation(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, true, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagInput, "input[kbqTagInputFor]", ["kbqTagInput", "kbqTagInputFor"], { "separatorKeyCodes": { "alias": "kbqTagInputSeparatorKeyCodes"; "required": false; }; "distinct": { "alias": "distinct"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "tagList": { "alias": "kbqTagInputFor"; "required": false; }; "addOnBlur": { "alias": "kbqTagInputAddOnBlur"; "required": false; }; "addOnPaste": { "alias": "kbqTagInputAddOnPaste"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "tagEnd": "kbqTagInputTokenEnd"; }, never, never, true, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagInput, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagInput, never>;
 }
 
 // @public
@@ -219,11 +219,11 @@ export interface KbqTagInputEvent {
 // @public (undocumented)
 export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
     constructor();
-    readonly autofilled: i0.Signal<boolean>;
+    readonly autofilled: _angular_core.Signal<boolean>;
     blur(): void;
     get canShowCleaner(): boolean;
-    readonly change: i0.OutputEmitterRef<KbqTagListChange>;
-    readonly cleaner: i0.Signal<KbqCleaner | undefined>;
+    readonly change: _angular_core.OutputEmitterRef<KbqTagListChange>;
+    readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
     readonly controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -232,8 +232,8 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     // (undocumented)
     get draggable(): boolean;
     set draggable(value: boolean);
-    readonly dropped: i0.OutputEmitterRef<KbqTagListDroppedEvent>;
-    readonly editable: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly dropped: _angular_core.OutputEmitterRef<KbqTagListDroppedEvent>;
+    readonly editable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
     get empty(): boolean;
@@ -281,7 +281,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     removeSelected(): void;
     get required(): boolean;
     set required(value: boolean);
-    readonly selectable: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly selectable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selected(): KbqTag[];
     setDisabledState(isDisabled: boolean): void;
     get shouldLabelFloat(): boolean;
@@ -303,12 +303,12 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     userTabIndex: number | null;
     get value(): any;
     set value(value: any);
-    readonly valueChange: i0.OutputEmitterRef<any>;
+    readonly valueChange: _angular_core.OutputEmitterRef<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "editable": { "alias": "editable"; "required": false; "isSignal": true; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i2.CdkDropList; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "editable": { "alias": "editable"; "required": false; "isSignal": true; }; "removable": { "alias": "removable"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i2.CdkDropList; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagList, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagList, never>;
 }
 
 // @public
@@ -328,22 +328,25 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
 // @public
 export class KbqTagPrefix {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagPrefix, "[kbqTagPrefix]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagPrefix, "[kbqTagPrefix]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagPrefix, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagPrefix, never>;
 }
 
 // @public
 export class KbqTagRemove {
+    protected readonly accessibleName: _angular_core.Signal<string>;
+    readonly ariaLabel: _angular_core.InputSignal<string | undefined>;
     focus(event: FocusEvent): void;
     handleClick(event: Event): void;
+    protected handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     protected parentTag: KbqTag;
     readonly tabIndex: i0.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, { "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagRemove, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagRemove, never>;
 }
 
 // @public
@@ -381,27 +384,27 @@ export type KbqTagSeparatorContext = 'input' | 'paste';
 // @public (undocumented)
 export class KbqTagsModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagsModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagsModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTagsModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTagsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTagsModule, never, [typeof i1$1.PlatformModule, typeof KbqTagEditSubmit, typeof KbqTagEditInput, typeof KbqTagPrefix, typeof KbqTagSuffix, typeof KbqTagList, typeof KbqTag, typeof KbqTagInput, typeof KbqTagTrailingIcon, typeof KbqTagAvatar, typeof KbqTagRemove], [typeof KbqTagList, typeof KbqTag, typeof KbqTagInput, typeof KbqTagTrailingIcon, typeof KbqTagAvatar, typeof KbqTagRemove, typeof KbqTagEditSubmit, typeof KbqTagEditInput, typeof KbqTagPrefix, typeof KbqTagSuffix]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTagsModule, never, [typeof i1$1.PlatformModule, typeof KbqTagEditSubmit, typeof KbqTagEditInput, typeof KbqTagPrefix, typeof KbqTagSuffix, typeof KbqTagList, typeof KbqTag, typeof KbqTagInput, typeof KbqTagTrailingIcon, typeof KbqTagAvatar, typeof KbqTagRemove], [typeof KbqTagList, typeof KbqTag, typeof KbqTagInput, typeof KbqTagTrailingIcon, typeof KbqTagAvatar, typeof KbqTagRemove, typeof KbqTagEditSubmit, typeof KbqTagEditInput, typeof KbqTagPrefix, typeof KbqTagSuffix]>;
 }
 
 // @public
 export class KbqTagSuffix {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagSuffix, "[kbqTagSuffix]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagSuffix, "[kbqTagSuffix]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagSuffix, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagSuffix, never>;
 }
 
 // @public
 export class KbqTagTrailingIcon {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagTrailingIcon, "kbq-tag-trailing-icon, [kbqTagTrailingIcon]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTagTrailingIcon, "kbq-tag-trailing-icon, [kbqTagTrailingIcon]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagTrailingIcon, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagTrailingIcon, never>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -28,9 +28,9 @@
                                 [class.kbq-select__multiline-match-list]="multiline()"
                             >
                                 @if (!customTagTemplateRef()) {
-                                    @for (option of triggerValues; track option) {
+                                    @for (option of triggerValues; track option.value) {
                                         <kbq-tag
-                                            [color]="colorForState"
+                                            [color]="colorForState()"
                                             [disabled]="option.disabled || disabled"
                                             [selectable]="false"
                                         >
@@ -45,7 +45,7 @@
                                         </kbq-tag>
                                     }
                                 } @else {
-                                    @for (option of triggerValues; track option) {
+                                    @for (option of triggerValues; track option.value) {
                                         <ng-container
                                             [ngTemplateOutlet]="customTagTemplateRef()"
                                             [ngTemplateOutletContext]="{ $implicit: option, select: this }"
@@ -61,9 +61,9 @@
                         @if (!multiline()) {
                             <div
                                 class="kbq-select__match-hidden-text"
-                                [style.display]="hiddenItems > 0 ? 'block' : 'none'"
+                                [style.display]="hiddenItems() > 0 ? 'block' : 'none'"
                             >
-                                {{ hiddenItemsTextFormatter(hiddenItemsText, hiddenItems) }}
+                                {{ hiddenItemsLabel() }}
                             </div>
                         }
                     </div>
@@ -77,7 +77,7 @@
             }
 
             <div class="kbq-select__arrow-wrapper">
-                <i kbq-icon="kbq-chevron-down-s_16" class="kbq-select__arrow" [color]="colorForState"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" class="kbq-select__arrow" [color]="colorForState()"></i>
             </div>
         </div>
     }
@@ -87,7 +87,7 @@
     cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
     [cdkConnectedOverlayBackdropClass]="backdropClass()"
-    [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
+    [cdkConnectedOverlayHasBackdrop]="hasBackdrop()"
     [cdkConnectedOverlayMinWidth]="overlayMinWidth"
     [cdkConnectedOverlayOpen]="panelOpen"
     [cdkConnectedOverlayOrigin]="overlayOrigin || fallbackOverlayOrigin"
@@ -102,11 +102,11 @@
     <div
         #panel
         cdkMonitorSubtreeFocus
-        [class]="getPanelClasses()"
+        [attr.id]="panelId"
+        [class]="panelClasses()"
         [style.--kbq-select-panel-size-max-height]="panelMaxHeightToken()"
         [style.font-size.px]="triggerFontSize"
         [style.max-width.px]="panelMaxWidth()"
-        [style.transformOrigin]="transformOrigin"
         (keydown)="panelKeydownHandler($event)"
     >
         @if (search() && shouldShowSearch()) {

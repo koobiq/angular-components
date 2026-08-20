@@ -566,8 +566,10 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     getItemHeight(): number;
     // (undocumented)
     getSelectedValues(): any[];
+    handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     highlightSelectedOption(): void;
+    initializeForEmbedding(selectionModel: SelectionModel<any>): void;
     inSelect: boolean;
     // (undocumented)
     get isEmpty(): boolean;
@@ -595,7 +597,6 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     onChange: (value: any) => void;
     // (undocumented)
     readonly onCopy: EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>;
-    // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
     readonly onSelectAll: i0.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption>>;
@@ -606,6 +607,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     get optionFocusChanges(): Observable<KbqTreeOptionEvent>;
     // (undocumented)
     optionShouldHoldFocusOnBlur: boolean;
+    ownsKeyboard: boolean;
     // (undocumented)
     registerOnChange(fn: (value: any) => void): void;
     // (undocumented)

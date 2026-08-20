@@ -61,6 +61,7 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     kbqErrorStateMatcherProvider,
+    ruRULocaleData,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -77,6 +78,7 @@ import {
     defaultCompareValues,
     defaultCompareViewValues
 } from '@koobiq/components/tree';
+import { axe } from 'jest-axe';
 import { Observable, Subject, map, of, timer } from 'rxjs';
 import { KbqTreeSelect, KbqTreeSelectChange, kbqTreeSelectOptionsProvider } from './tree-select.component';
 import { KbqTreeSelectModule } from './tree-select.module';
@@ -1689,6 +1691,34 @@ class ChildSelection {
 class LocalizedTreeSelect extends BasicTreeSelect {}
 
 @Component({
+    selector: 'tree-select-with-custom-hidden-items-text',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field style="width: 300px;">
+            <kbq-tree-select [multiple]="true" [formControl]="control" [hiddenItemsText]="hiddenItemsText">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <i kbq-icon="kbq-chevron-down-s_16" kbqTreeNodeToggle></i>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class TreeSelectWithCustomHiddenItemsText extends BasicTreeSelect {
+    readonly hiddenItemsText = 'и ещё {{ number }}';
+}
+
+@Component({
     selector: 'ng-if-tree-select',
     imports: [
         KbqTreeModule,
@@ -1896,6 +1926,131 @@ describe('KbqTreeSelect', () => {
         });
 
         describe('accessibility', () => {
+            describe('aria', () => {
+                let fixture: ComponentFixture<BasicTreeSelect>;
+                let select: HTMLElement;
+
+                beforeEach(fakeAsync(() => {
+                    fixture = TestBed.createComponent(BasicTreeSelect);
+                    fixture.detectChanges();
+                    select = fixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
+
+                    tick(100);
+                    fixture.detectChanges();
+                }));
+
+                it('should render the id the form-field label points at', () => {
+                    const { id } = fixture.componentInstance.select();
+
+                    expect(id).toBeTruthy();
+                    expect(select.getAttribute('id')).toBe(id);
+                });
+
+                it('should expose combobox semantics while closed', () => {
+                    expect(select.getAttribute('role')).toBe('combobox');
+                    expect(select.getAttribute('aria-expanded')).toBe('false');
+                    expect(select.hasAttribute('aria-controls')).toBe(false);
+                    expect(select.hasAttribute('aria-activedescendant')).toBe(false);
+                });
+
+                // `KbqDropdownTrigger` made the same call for the same reason: the panel carries no
+                // `role="tree"` yet, so announcing a popup would point at semantics that do not exist.
+                it('should not announce a popup the panel does not implement', () => {
+                    expect(select.hasAttribute('aria-haspopup')).toBe(false);
+                });
+
+                it('should point aria-controls at the panel while it is open', fakeAsync(() => {
+                    fixture.componentInstance.select().open();
+                    fixture.detectChanges();
+                    flush();
+                    fixture.detectChanges();
+
+                    const panelId = select.getAttribute('aria-controls');
+
+                    expect(select.getAttribute('aria-expanded')).toBe('true');
+                    expect(panelId).toBeTruthy();
+                    expect(overlayContainerElement.querySelector(`#${panelId}`)).toBeTruthy();
+
+                    flush();
+                }));
+
+                it('should track the active option with aria-activedescendant', fakeAsync(() => {
+                    fixture.componentInstance.select().open();
+                    fixture.detectChanges();
+                    flush();
+
+                    dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+                    tick(10);
+                    fixture.detectChanges();
+
+                    const activeItemId = fixture.componentInstance.select().tree()!.keyManager.activeItem!.id;
+
+                    expect(activeItemId).toBeTruthy();
+                    expect(select.getAttribute('aria-activedescendant')).toBe(activeItemId);
+                    expect(overlayContainerElement.querySelector(`#${activeItemId}`)).toBeTruthy();
+
+                    flush();
+                }));
+
+                it('should expose the required state', () => {
+                    expect(select.getAttribute('aria-required')).toBe('false');
+
+                    fixture.componentInstance.select().required = true;
+                    fixture.detectChanges();
+
+                    expect(select.getAttribute('aria-required')).toBe('true');
+                });
+
+                it('should expose the invalid state', () => {
+                    expect(select.getAttribute('aria-invalid')).toBe('false');
+
+                    const { control } = fixture.componentInstance;
+
+                    control.setValidators(Validators.required);
+                    control.updateValueAndValidity();
+                    control.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(select.getAttribute('aria-invalid')).toBe('true');
+                });
+
+                it('should expose the disabled state only while disabled', () => {
+                    expect(select.hasAttribute('aria-disabled')).toBe(false);
+
+                    fixture.componentInstance.control.disable();
+                    fixture.detectChanges();
+
+                    expect(select.getAttribute('aria-disabled')).toBe('true');
+                });
+
+                it('should close on TAB without swallowing the key', fakeAsync(() => {
+                    fixture.componentInstance.select().open();
+                    fixture.detectChanges();
+                    flush();
+
+                    const event = dispatchKeyboardEvent(select, 'keydown', TAB);
+
+                    fixture.detectChanges();
+                    flush();
+
+                    expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                    // Swallowing the key trapped the focus inside an open select.
+                    expect(event.defaultPrevented).toBe(false);
+                }));
+
+                it('should have no axe violations when named', async () => {
+                    select.setAttribute('aria-label', 'Food');
+                    fixture.detectChanges();
+                    document.body.appendChild(fixture.nativeElement);
+
+                    try {
+                        expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                    } finally {
+                        document.body.removeChild(fixture.nativeElement);
+                    }
+                });
+            });
+
             describe('for select', () => {
                 let fixture: ComponentFixture<BasicTreeSelect>;
                 let select: HTMLElement;
@@ -5006,8 +5161,86 @@ describe('KbqTreeSelect', () => {
         }));
     });
 
+    describe('tree embedding', () => {
+        beforeEach(() => configureKbqTreeSelectTestingModule([BasicTreeSelect]));
+
+        it('should subscribe to the tree option list exactly once', fakeAsync(() => {
+            const fixture = TestBed.createComponent(BasicTreeSelect);
+
+            fixture.detectChanges();
+            flush();
+
+            const tree = fixture.componentInstance.select().tree()!;
+
+            // The tree used to be re-initialized by calling `ngAfterContentInit()` a second time, and
+            // neither query list is ever re-created — so every options change was handled twice.
+            expect((tree.unorderedOptions.changes as Subject<unknown>).observers.length).toBe(1);
+        }));
+
+        it('should leave the tree to handle the keyboard only when it is not embedded', fakeAsync(() => {
+            const fixture = TestBed.createComponent(BasicTreeSelect);
+
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.select().tree()!.ownsKeyboard).toBe(false);
+        }));
+    });
+
+    describe('trigger tags', () => {
+        let fixture: ComponentFixture<MultiSelect>;
+
+        beforeEach(() => configureKbqTreeSelectTestingModule([MultiSelect]));
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(MultiSelect);
+            fixture.detectChanges();
+
+            fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+            fixture.detectChanges();
+            flush();
+
+            overlayContainerElement.querySelectorAll<HTMLElement>('kbq-tree-option')[0].click();
+            fixture.detectChanges();
+            flush();
+        }));
+
+        const getRemoveButton = (): HTMLElement =>
+            fixture.debugElement.query(By.css('.kbq-select__trigger .kbq-tag-remove')).nativeElement;
+
+        it('should name the tag remove button and put it in the tab order', () => {
+            const removeButton = getRemoveButton();
+
+            expect(removeButton.getAttribute('role')).toBe('button');
+            expect(removeButton.getAttribute('tabindex')).toBe('0');
+            expect(removeButton.getAttribute('aria-label')).toBeTruthy();
+        });
+
+        it('should deselect the option when the tag remove button is clicked', fakeAsync(() => {
+            expect(fixture.componentInstance.control.value.length).toBe(1);
+
+            getRemoveButton().click();
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.control.value.length).toBe(0);
+        }));
+
+        it('should deselect the option from the keyboard', fakeAsync(() => {
+            expect(fixture.componentInstance.control.value.length).toBe(1);
+
+            dispatchEvent(getRemoveButton(), createKeyboardEvent('keydown', ENTER, undefined, 'Enter'));
+            fixture.detectChanges();
+            flush();
+
+            expect(fixture.componentInstance.control.value.length).toBe(0);
+        }));
+    });
+
     describe('with localization', () => {
-        beforeEach(() => configureKbqTreeSelectTestingModule([LocalizedTreeSelect]));
+        beforeEach(() =>
+            configureKbqTreeSelectTestingModule([LocalizedTreeSelect, TreeSelectWithCustomHiddenItemsText])
+        );
 
         let fixture: ComponentFixture<LocalizedTreeSelect>;
         let localeService: KbqLocaleService;
@@ -5041,7 +5274,7 @@ describe('KbqTreeSelect', () => {
 
             expect(
                 fixture.debugElement.query(By.css('.kbq-select__match-hidden-text')).nativeElement.textContent
-            ).toContain(fixture.componentInstance.select().hiddenItems.toString());
+            ).toContain(fixture.componentInstance.select().hiddenItems().toString());
         }));
 
         it('should change show more text according to locale', fakeAsync(() => {
@@ -5051,9 +5284,40 @@ describe('KbqTreeSelect', () => {
             tick(1);
             flush();
 
-            expect(fixture.componentInstance.select().hiddenItemsText).toEqual(
-                localeService.getParams('select').hiddenItemsText
-            );
+            const { hiddenItemsText } = localeService.getParams('select');
+
+            expect(
+                fixture.debugElement.query(By.css('.kbq-select__match-hidden-text')).nativeElement.textContent.trim()
+            ).toBe(hiddenItemsText.replace('{{ number }}', `${fixture.componentInstance.select().hiddenItems()}`));
+        }));
+
+        it('should keep a user-set hiddenItemsText across a locale change', fakeAsync(() => {
+            const customFixture = TestBed.createComponent(TreeSelectWithCustomHiddenItemsText);
+
+            customFixture.detectChanges();
+            hideItems(customFixture);
+
+            localeService.setLocale('en-US');
+            customFixture.detectChanges();
+            tick(1);
+            flush();
+
+            expect(
+                customFixture.debugElement.query(By.css('.kbq-select__match-hidden-text')).nativeElement.textContent
+            ).toContain('и ещё');
+        }));
+
+        it('should not throw for a locale registered without a select section', fakeAsync(() => {
+            const localeWithoutSelect: Partial<typeof ruRULocaleData> = { ...ruRULocaleData };
+
+            delete localeWithoutSelect.select;
+            localeService.addLocale('without-select', localeWithoutSelect);
+
+            expect(() => {
+                localeService.setLocale('without-select');
+                fixture.detectChanges();
+                flush();
+            }).not.toThrow();
         }));
     });
 
