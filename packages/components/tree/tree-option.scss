@@ -44,8 +44,8 @@
 
         @include common.kbq-truncate-line();
 
-        padding-top: var(--kbq-list-size-text-padding-vertical, 0);
-        padding-bottom: var(--kbq-list-size-text-padding-vertical, 0);
+        padding-top: var(--kbq-tree-size-text-padding-vertical);
+        padding-bottom: var(--kbq-tree-size-text-padding-vertical);
     }
 
     // Two-line options only: align leading content to the center of the FIRST line.

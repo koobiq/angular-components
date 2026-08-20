@@ -15,7 +15,8 @@ export const ptBRLocaleData = {
         showPassword: 'Mostrar a senha',
         hidePassword: 'Ocultar a senha',
         resizeColumns: 'Redimensionar colunas',
-        toastRegion: 'Notificações'
+        toastRegion: 'Notificações',
+        optionActions: 'Ações'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

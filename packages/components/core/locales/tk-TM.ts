@@ -15,7 +15,8 @@ export const tkTMLocaleData = {
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle',
         resizeColumns: 'Sütünleriň giňligini üýtget',
-        toastRegion: 'Bildirişler'
+        toastRegion: 'Bildirişler',
+        optionActions: 'Hereketler'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

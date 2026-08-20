@@ -2,20 +2,21 @@
 import {
     AfterContentChecked,
     ChangeDetectorRef,
-    ContentChildren,
     DestroyRef,
     Directive,
     ElementRef,
+    EmbeddedViewRef,
     Input,
     IterableChangeRecord,
     IterableDiffer,
     IterableDiffers,
     OnDestroy,
     OnInit,
-    QueryList,
+    Signal,
     TrackByFunction,
     ViewChild,
     ViewContainerRef,
+    contentChildren,
     inject,
     input
 } from '@angular/core';
@@ -32,6 +33,14 @@ import {
     getTreeNoValidDataSourceError
 } from './tree-errors';
 
+/**
+ * Rendering core of the tree.
+ *
+ * Originally forked from `@angular/cdk/tree` and maintained independently since: the node/outlet
+ * contract, the option-based selection model and the filtering pipeline have all diverged, so
+ * `@angular/cdk/tree` is deliberately not a dependency of this package and upstream fixes have to be
+ * ported by hand.
+ */
 @Directive()
 export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
     protected differs = inject(IterableDiffers);
@@ -48,6 +57,9 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
      * to `ngFor` `trackBy` function. Optimize node operations by identifying a node based on its data
      * relative to the function to know if a node should be added/removed/moved.
      * Accepts a function that takes two parameters, `index` and `item`.
+     *
+     * Views are reused for nodes the function reports as unchanged, which a data source that rebuilds
+     * its node objects on every emission — a flattener among them — otherwise cannot get.
      */
     readonly trackBy = input<TrackByFunction<T>>(undefined!);
 
@@ -55,13 +67,15 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     @ViewChild(KbqTreeNodeOutlet, { static: true }) nodeOutlet: KbqTreeNodeOutlet;
 
     /** The tree node template for the tree */
-    @ContentChildren(KbqTreeNodeDef) nodeDefs: QueryList<KbqTreeNodeDef<T>>;
+    readonly nodeDefs: Signal<readonly KbqTreeNodeDef<T>[]> = contentChildren(KbqTreeNodeDef);
 
-    // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
-    //     Remove the MAX_VALUE in viewChange
     /**
      * Stream containing the latest information on what rows are being displayed on screen.
      * Can be used by the data source to as a heuristic of what data should be provided.
+     *
+     * The tree renders every expanded node eagerly, so the window is the whole data set; a data source
+     * cannot use it to page or virtualize. Windowing would have to emit a real range from a scroll
+     * listener here first.
      */
     viewChange = new BehaviorSubject<{ start: number; end: number }>({ start: 0, end: Number.MAX_VALUE });
 
@@ -77,34 +91,45 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     /** Level of nodes */
     private levels: Map<T, number> = new Map<T, number>();
 
+    /** Most recently constructed node of this tree, see `registerNode`. */
+    private recentNode: KbqTreeNode<T> | null = null;
+
+    /** Node rendered for a given outlet context, so a reused view can be handed its new data. */
+    private readonly nodesByContext = new WeakMap<KbqTreeNodeOutletContext<T>, KbqTreeNode<T>>();
+
     /**
      * Provides a stream containing the latest data array to render. Influenced by the tree's
      * stream of view window (what dataNodes are currently on screen).
      * Data source can be an observable of data array, or a data array to render.
      */
     // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    //  The setter switches the data subscription, which an `input()` cannot express on its own.
     @Input()
-    get dataSource(): DataSource<T> | Observable<T[]> | T[] {
+    get dataSource(): DataSource<T> | Observable<T[]> | T[] | null {
         return this._dataSource;
     }
 
-    set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
+    set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[] | null) {
         if (this._dataSource !== dataSource) {
             this.switchDataSource(dataSource);
         }
     }
 
-    private _dataSource: DataSource<T> | Observable<T[]> | T[];
+    private _dataSource: DataSource<T> | Observable<T[]> | T[] | null;
 
     protected readonly destroyRef = inject(DestroyRef);
 
+    /** Whether `ngOnInit` has run, i.e. every initial input binding has been applied. */
+    private initialized = false;
+
     ngOnInit() {
-        this.dataDiffer = this.differs.find([]).create(this.trackBy());
+        this.dataDiffer = this.createDataDiffer();
 
         if (!this.treeControl) {
             throw getTreeControlMissingError();
         }
+
+        this.initialized = true;
     }
 
     ngOnDestroy() {
@@ -121,7 +146,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
     }
 
     ngAfterContentChecked() {
-        const defaultNodeDefs = this.nodeDefs.filter((def) => !def.when);
+        const defaultNodeDefs = this.nodeDefs().filter((def) => !def.when);
 
         if (defaultNodeDefs.length > 1) {
             throw getTreeMultipleDefaultNodeDefsError();
@@ -129,7 +154,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
         this.defaultNodeDef = defaultNodeDefs[0];
 
-        if (this.dataSource && this.nodeDefs && !this.dataSubscription) {
+        if (this.dataSource && this.nodeDefs().length && !this.dataSubscription) {
             this.observeRenderChanges();
         }
     }
@@ -141,10 +166,27 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         viewContainer: ViewContainerRef = this.nodeOutlet.viewContainer,
         parentData?: T
     ) {
+        if (this.applyNodeChanges(data, dataDiffer, viewContainer, parentData)) {
+            this.changeDetectorRef.detectChanges();
+        }
+    }
+
+    /**
+     * Applies the data changes to the view container without running change detection, and reports
+     * whether anything moved. Split out of `renderNodeChanges` so a subclass can update the state its
+     * own template reads before the single change-detection pass, instead of running a second one.
+     * @docs-private
+     */
+    protected applyNodeChanges(
+        data: T[] | ReadonlyArray<T>,
+        dataDiffer: IterableDiffer<T>,
+        viewContainer: ViewContainerRef,
+        parentData?: T
+    ): boolean {
         const changes = dataDiffer.diff(data);
 
         if (!changes) {
-            return;
+            return false;
         }
 
         changes.forEachOperation(
@@ -162,7 +204,37 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
             }
         );
 
-        this.changeDetectorRef.detectChanges();
+        // A node kept its identity but is a different object — what a data source that rebuilds its
+        // nodes on every emission produces, a flattener among them. The view is reused, so the object
+        // it and its `KbqTreeNode` still hold is gone from `dataNodes`, and every lookup keyed on the
+        // node reference (`getDescendants`, `isExpanded`, the selection) would miss it.
+        changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
+            this.refreshNodeData(viewContainer, record.currentIndex!, record.item);
+        });
+
+        return true;
+    }
+
+    private refreshNodeData(viewContainer: ViewContainerRef, index: number, nodeData: T): void {
+        const view = viewContainer.get(index) as EmbeddedViewRef<KbqTreeNodeOutletContext<T>> | null;
+
+        if (!view) {
+            return;
+        }
+
+        const { context } = view;
+        const previousData = context.$implicit;
+
+        context.$implicit = nodeData;
+
+        this.levels.delete(previousData);
+        this.levels.set(nodeData, context.level);
+
+        const node = this.nodesByContext.get(context);
+
+        if (node) {
+            node.data = nodeData;
+        }
     }
 
     /**
@@ -172,11 +244,13 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
      * definition.
      */
     getNodeDef(data: T, i: number): KbqTreeNodeDef<T> {
-        if (this.nodeDefs.length === 1) {
-            return this.nodeDefs.first;
+        const nodeDefs = this.nodeDefs();
+
+        if (nodeDefs.length === 1) {
+            return nodeDefs[0];
         }
 
-        const nodeDef = this.nodeDefs.find((def) => def.when && def.when(i, data)) || this.defaultNodeDef;
+        const nodeDef = nodeDefs.find((def) => def.when && def.when(i, data)) || this.defaultNodeDef;
 
         if (!nodeDef) {
             throw getTreeMissingMatchingNodeDefError();
@@ -214,12 +288,22 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
         container.createEmbeddedView(node.template, context, index);
 
-        // Set the data to just created `KbqTreeNode`.
-        // The `KbqTreeNode` created from `createEmbeddedView` will be saved in static variable
-        //     `mostRecentTreeNode`. We get it from static variable and pass the node data to it.
-        if (KbqTreeNode.mostRecentTreeNode) {
-            KbqTreeNode.mostRecentTreeNode.data = nodeData;
+        // The `KbqTreeNode` instantiated by `createEmbeddedView` registers itself here on construction,
+        // which is the only handle onto it — the embedded view exposes its context, not its directives.
+        // It is remembered against that context so a later re-render can reach it again.
+        if (this.recentNode) {
+            this.recentNode.data = nodeData;
+            this.nodesByContext.set(context, this.recentNode);
+            this.recentNode = null;
         }
+    }
+
+    /**
+     * Called by a `KbqTreeNode` while it is being constructed, so `insertNode` can hand it its data.
+     * @docs-private
+     */
+    registerNode(node: KbqTreeNode<T>): void {
+        this.recentNode = node;
     }
 
     /** Set up a subscription for the data provided by the data source. */
@@ -250,7 +334,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
      * render change subscription if one exists. If the data source is null, interpret this by
      * clearing the node outlet. Otherwise start listening for new data.
      */
-    private switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
+    private switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[] | null) {
         if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
             (this.dataSource as DataSource<T>).disconnect(this);
         }
@@ -267,9 +351,23 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
         this._dataSource = dataSource;
 
-        if (this.nodeDefs) {
+        // The differ remembers the nodes of the previous source. Left in place, the first diff against
+        // the new source is computed as a delta from data that is no longer rendered, so views are
+        // reused for unrelated nodes or dropped entirely.
+        this.dataDiffer = this.createDataDiffer();
+
+        // Not before `ngOnInit`: inputs are set one by one, and a template binding `dataSource` ahead of
+        // `treeControl` would have this subscribe — and render — while `treeControl` is still undefined.
+        // The first emission would then throw inside the node directives and take the subscription down
+        // with it, leaving the tree permanently empty. The initial render is picked up by
+        // `ngAfterContentChecked`; a later source swap is observed here right away.
+        if (this.initialized && this.nodeDefs().length) {
             this.observeRenderChanges();
         }
+    }
+
+    private createDataDiffer(): IterableDiffer<T> {
+        return this.differs.find([]).create(this.trackBy());
     }
 }
 
@@ -282,8 +380,11 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     tree = inject<KbqTreeBase<T>>(KbqTreeBase);
 
     /**
-     * The most recently created `KbqTreeNode`. We save it in static variable so we can retrieve it
-     * in `KbqTree` and set the data to it.
+     * The most recently created `KbqTreeNode`, across every tree on the page.
+     *
+     * @deprecated Kept for backwards compatibility only — the tree hands a node its data through
+     * `KbqTreeBase.registerNode`, which is scoped to the tree that owns the node. Will be removed in
+     * version 20.
      */
     static mostRecentTreeNode: KbqTreeNode<any> | null = null;
 
@@ -311,6 +412,8 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
 
     constructor() {
         KbqTreeNode.mostRecentTreeNode = this;
+
+        this.tree.registerNode(this);
     }
 
     ngOnDestroy() {

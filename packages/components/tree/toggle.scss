@@ -1,7 +1,7 @@
 @use '../core/styles/common/tokens' as *;
 
-@use './tree-theme' as *;
-
+// The tree theme is emitted once, from `tree-selection.scss`. Every rule in it is scoped to
+// `.kbq-tree-selection` or `.kbq-tree-option`, and a toggle only ever renders inside one of those.
 .kbq-tree-node-toggle {
     display: flex;
     align-items: center;
@@ -10,7 +10,6 @@
 
     height: 100%;
 
-    // FIXME: default token doesn't exist
     padding-left: var(--kbq-tree-size-toggle-padding);
     padding-right: var(--kbq-tree-size-toggle-padding);
 
@@ -34,6 +33,3 @@
         }
     }
 }
-
-@include kbq-tree-theme();
-@include kbq-tree-typography();

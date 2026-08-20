@@ -21,6 +21,7 @@ import {
     OnDestroy,
     Output,
     output,
+    Provider,
     QueryList,
     signal,
     viewChild,
@@ -43,6 +44,7 @@ import {
     isSelectAll,
     isVerticalMovement,
     KBQ_SELECT_LOCALE_CONFIGURATION,
+    kbqGetElementHeight,
     kbqInjectLocaleConfiguration,
     KbqMultipleInput,
     KbqPseudoCheckbox,
@@ -70,11 +72,14 @@ import { KbqTreeBase } from './tree-base';
 import { getKbqTreeSelectionOwnedMultipleError } from './tree-errors';
 import { KBQ_TREE_OPTION_PARENT_COMPONENT, KbqTreeOption, KbqTreeOptionEvent } from './tree-option.component';
 
-export const KBQ_SELECTION_TREE_VALUE_ACCESSOR: any = {
+export const KBQ_SELECTION_TREE_VALUE_ACCESSOR: Provider = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqTreeSelection),
     multi: true
 };
+
+/** How long the key manager collects keystrokes before matching them against the option labels. */
+const typeAheadDebounce = 200;
 
 export class KbqTreeSelectAllEvent<T> {
     constructor(
@@ -114,11 +119,6 @@ export class KbqTreeSelectionChange<T> {
     ) {}
 }
 
-interface SelectionModelOption {
-    id: number | string;
-    value: string;
-}
-
 @Component({
     selector: 'kbq-tree-selection',
     imports: [
@@ -136,16 +136,14 @@ interface SelectionModelOption {
                  covers all four. -->
             @let selectAllCheckboxState = selectAllState;
 
+            <!-- role and aria-checked come from the option's own host bindings: a host binding runs
+                 after the parent template's, so an override here would be the one that loses. -->
             <kbq-tree-option
                 class="kbq-tree-option_select-all"
                 kbqTreeNodePadding
                 [selectAllRow]="true"
                 [selectable]="false"
                 [class.kbq-selected]="selectAllCheckboxState === 'checked'"
-                [attr.role]="'checkbox'"
-                [attr.aria-checked]="
-                    selectAllCheckboxState === 'indeterminate' ? 'mixed' : selectAllCheckboxState === 'checked'
-                "
                 (click)="toggleSelectAll()"
             >
                 <kbq-pseudo-checkbox [state]="selectAllCheckboxState" />
@@ -164,8 +162,16 @@ interface SelectionModelOption {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tree-selection',
+        role: 'tree',
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
+        '[attr.aria-disabled]': 'disabled || null',
+        '[attr.aria-multiselectable]': 'multiple || null',
+        '[attr.aria-label]': 'ariaLabel() || null',
+        '[attr.aria-labelledby]': 'ariaLabelledby() || null',
+        // The container keeps the single tab stop and the options stay at `tabindex="-1"`, so the
+        // active option has to be advertised rather than actually focused.
+        '[attr.aria-activedescendant]': 'keyManager?.activeItem?.id',
         '(blur)': 'blur()',
         '(focus)': 'focus($event)',
         '(keydown)': 'onKeyDown($event)',
@@ -194,6 +200,15 @@ export class KbqTreeSelection
     renderedOptions = new QueryList<KbqTreeOption>();
 
     keyManager: FocusKeyManager<KbqTreeOption>;
+
+    /**
+     * Accessible name of the tree. Set it whenever the tree has no visible label of its own; a tree
+     * embedded in a `kbq-tree-select` is labelled by the select instead.
+     */
+    readonly ariaLabel = input<string>(undefined!, { alias: 'aria-label' });
+
+    /** Id of the element that labels the tree, for when the label is rendered next to it. */
+    readonly ariaLabelledby = input<string>(undefined!, { alias: 'aria-labelledby' });
 
     /**
      * Model backing the selection.
@@ -230,10 +245,24 @@ export class KbqTreeSelection
 
     readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption>>();
 
+    // Not an `output()`: `KbqTreeSelect` pipes this stream with rxjs, which an `OutputEmitterRef`
+    // cannot feed without wrapping every call site in `outputToObservable`.
     @Output() readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>();
 
-    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption>>();
+    /** Emits after "select all" ran, with the options it could act on. */
+    readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption>>();
 
+    /** @deprecated Use `selectAllChange` instead. Will be removed in version 20. */
+    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption>>({ alias: 'onSelectAll' });
+
+    /**
+     * Emits when the active option is copied with Ctrl/Cmd + C. Subscribing replaces the built-in
+     * clipboard handler, so the event has to stay an `EventEmitter`: the decision is made by reading
+     * `observed`, which `OutputEmitterRef` does not have.
+     */
+    @Output() readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+
+    /** @deprecated Use `copyChange` instead. Will be removed in version 20. */
     @Output() readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
 
     private sortedNodes: KbqTreeOption[] = [];
@@ -328,6 +357,29 @@ export class KbqTreeSelection
     /** `null` while the consumer has not set the input, i.e. while the value is derived from the mode. */
     private _noUnselectLast: boolean | null = null;
 
+    /**
+     * Whether typing printable characters moves the focus to the next option whose label starts with
+     * them. On by default.
+     *
+     * Turn it off wherever the tree shares its keystrokes with a text field: an embedder such as
+     * `KbqTreeSelect` routes everything the user types — the search query included — into this key
+     * manager, and type-ahead would move the active option out from under the query.
+     */
+    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`, so it cannot be a
+    // signal input.
+    @Input({ transform: booleanAttribute })
+    get typeAhead(): boolean {
+        return this._typeAhead;
+    }
+
+    set typeAhead(value: boolean) {
+        this._typeAhead = value;
+
+        this.applyTypeAhead();
+    }
+
+    private _typeAhead = true;
+
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
 
@@ -384,7 +436,7 @@ export class KbqTreeSelection
      * is on screen. Without a filter the whole data set qualifies, collapsed branches included.
      */
     // `any`, not `unknown`: `treeControl`/`selectionModel` are themselves `any`-typed data-node generics
-    // pre-dating this feature (`KbqTreeBase<any>`, `SelectionModel<SelectionModelOption>`), so `unknown`
+    // pre-dating this feature (`KbqTreeBase<any>`, `SelectionModel<any>`), so `unknown`
     // here would only relocate the unsafety into a cast at every call site, not remove it.
     private get selectAllTargets(): any[] {
         // `treeControl` is an `@Input`, so it is still unset on the change-detection pass that sets it:
@@ -477,6 +529,9 @@ export class KbqTreeSelection
     private optionBlurSubscription: Subscription | null;
 
     private selectionModelSubscription: Subscription | null = null;
+
+    /** Pending restore of the tab index after the key manager tabbed out, see `allowFocusEscape`. */
+    private restoreTabIndexTimeout: ReturnType<typeof setTimeout> | undefined;
 
     /** Whether a value report is already queued for the end of the current tick. */
     private pendingValueReport = false;
@@ -620,14 +675,22 @@ export class KbqTreeSelection
 
     ngAfterContentInit(): void {
         if (this.platform.isBrowser) {
-            this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
+            this.unorderedOptions.changes
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(this.updateRenderedOptions);
         }
 
         this.keyManager = new FocusKeyManager<KbqTreeOption>(this.renderedOptions)
             .withVerticalOrientation(true)
             .withHorizontalOrientation(null);
 
+        this.applyTypeAhead();
+
         this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            // `aria-activedescendant` is bound to the active option, and nothing else in this view
+            // changes when the key manager moves.
+            this.changeDetectorRef.markForCheck();
+
             if (this.keyManager.activeItem) {
                 this.emitNavigationEvent(this.keyManager.activeItem);
 
@@ -688,6 +751,10 @@ export class KbqTreeSelection
     ngOnDestroy(): void {
         super.ngOnDestroy();
 
+        clearTimeout(this.restoreTabIndexTimeout);
+
+        this.dropSubscriptions();
+
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
@@ -707,8 +774,20 @@ export class KbqTreeSelection
         this.keyManager.setFocusOrigin('program');
     }
 
+    /** @docs-private */
     highlightSelectedOption(): void {
-        this.renderedOptions.find((item) => item.data === this.selectionModel.selected[0])?.focus();
+        // The selection can hold nodes that are not rendered — collapsed branches, or references left
+        // over from a data replacement. Falling back keeps `focus()` from ending with nothing focused
+        // at all, since it already took the branch that skips `setFirstItemActive`.
+        const target =
+            this.renderedOptions.find((item) => item.data === this.selectionModel.selected[0]) ??
+            this.keyManager.activeItem;
+
+        if (target) {
+            target.focus();
+        } else {
+            this.keyManager.setFirstItemActive();
+        }
     }
 
     blur() {
@@ -764,8 +843,14 @@ export class KbqTreeSelection
             }
 
             return;
-        } else if (keyCode === RIGHT_ARROW && this.keyManager.activeItem?.isExpandable) {
-            this.treeControl.expand(this.keyManager.activeItem.data as KbqTreeOption);
+        } else if (keyCode === RIGHT_ARROW && this.keyManager.activeItem) {
+            const activeItem = this.keyManager.activeItem;
+
+            if (activeItem.isExpandable && !activeItem.isExpanded) {
+                this.treeControl.expand(activeItem.data as KbqTreeOption);
+            } else if (activeItem.isExpandable) {
+                this.setActiveFirstChildOption(activeItem);
+            }
 
             return;
         } else if (keyCode === DOWN_ARROW) {
@@ -784,6 +869,13 @@ export class KbqTreeSelection
             this.keyManager.setPreviousPageItemActive();
         } else if (keyCode === PAGE_DOWN) {
             this.keyManager.setNextPageItemActive();
+        } else {
+            // Whatever is left is either a printable character, which the key manager turns into a
+            // type-ahead query, or a key nothing here reacts to. Every key handled above returns or is
+            // matched before this point, so the manager only ever sees the leftovers.
+            this.keyManager.onKeydown(event);
+
+            return;
         }
 
         if (this.keyManager.activeItem && isVerticalMovement(event)) {
@@ -796,6 +888,7 @@ export class KbqTreeSelection
         }
     }
 
+    /** @docs-private */
     updateScrollSize(): void {
         if (!this.renderedOptions.first) {
             return;
@@ -804,6 +897,7 @@ export class KbqTreeSelection
         this.keyManager.withScrollSize(Math.floor(this.getHeight() / this.renderedOptions.first.getHeight()));
     }
 
+    /** @docs-private */
     setSelectedOptionsByKey(option: KbqTreeOption, shiftKey: boolean, ctrlKey: boolean): void {
         if (shiftKey && this.multiple) {
             this.selectActiveOptions();
@@ -821,6 +915,7 @@ export class KbqTreeSelection
         }
     }
 
+    /** @docs-private */
     setSelectedOptionsByClick(option: KbqTreeOption, shiftKey: boolean, ctrlKey: boolean): void {
         if (option.disabled || !option.selectable()) {
             return;
@@ -849,7 +944,8 @@ export class KbqTreeSelection
         this.emitChangeEvent(option);
     }
 
-    selectActiveOptions(): void {
+    /** @docs-private */
+    protected selectActiveOptions(): void {
         const options = this.renderedOptions.toArray();
 
         let fromIndex = this.keyManager.previousActiveItemIndex;
@@ -881,11 +977,13 @@ export class KbqTreeSelection
             });
     }
 
-    setFocusedOption(option: KbqTreeOption): void {
+    /** @docs-private */
+    protected setFocusedOption(option: KbqTreeOption): void {
         this.keyManager.setActiveItem(option);
     }
 
-    toggleFocusedOption(): void {
+    /** @docs-private */
+    protected toggleFocusedOption(): void {
         const focusedOption = this.keyManager.activeItem;
 
         // The row is not selectable, so nothing below would act on it. Handling it here covers both focus
@@ -904,24 +1002,30 @@ export class KbqTreeSelection
         }
     }
 
+    /** @docs-private */
     renderNodeChanges(
         data: KbqTreeOption[],
         dataDiffer: IterableDiffer<KbqTreeOption> = this.dataDiffer,
         viewContainer: ViewContainerRef = this.nodeOutlet.viewContainer,
         parentData?: KbqTreeOption
     ): void {
-        super.renderNodeChanges(data, dataDiffer, viewContainer, parentData);
+        // Not `super.renderNodeChanges`: that would run change detection over this very view before
+        // `sortedNodes` is refreshed, so the "select all" row — which is rendered off `isEmpty` — would
+        // need a second pass to catch up. One pass, after the state its template reads is current.
+        this.applyNodeChanges(data, dataDiffer, viewContainer, parentData);
 
         this.sortedNodes = this.getSortedNodes(viewContainer);
 
-        this.nodeOutlet.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
     }
 
-    emitNavigationEvent(option: KbqTreeOption): void {
+    /** @docs-private */
+    protected emitNavigationEvent(option: KbqTreeOption): void {
         this.navigationChange.emit(new KbqTreeNavigationChange(this, option));
     }
 
-    emitChangeEvent(option: KbqTreeOption): void {
+    /** @docs-private */
+    protected emitChangeEvent(option: KbqTreeOption): void {
         this.selectionChange.emit(new KbqTreeSelectionChange(this, option, [option]));
     }
 
@@ -971,7 +1075,10 @@ export class KbqTreeSelection
             this.selectionChange.emit(new KbqTreeSelectionChange(this, changedOptions[0], changedOptions));
         }
 
-        this.onSelectAll.emit(new KbqTreeSelectAllEvent(this, selectableOptions));
+        const selectAllEvent = new KbqTreeSelectAllEvent(this, selectableOptions);
+
+        this.selectAllChange.emit(selectAllEvent);
+        this.onSelectAll.emit(selectAllEvent);
     }
 
     copyActiveOption(event: KeyboardEvent): void {
@@ -981,8 +1088,11 @@ export class KbqTreeSelection
 
         option.preventBlur = true;
 
-        if (this.onCopy.observed) {
-            this.onCopy.emit(new KbqTreeCopyEvent(this, this.keyManager.activeItem as KbqTreeOption, event));
+        if (this.copyChange.observed || this.onCopy.observed) {
+            const copyEvent = new KbqTreeCopyEvent(this, this.keyManager.activeItem as KbqTreeOption, event);
+
+            this.copyChange.emit(copyEvent);
+            this.onCopy.emit(copyEvent);
         } else {
             this.onCopyDefaultHandler();
 
@@ -1014,8 +1124,7 @@ export class KbqTreeSelection
     /** `View -> model callback called when select has been touched` */
     onTouched = () => {};
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    registerOnTouched(fn: () => {}): void {
+    registerOnTouched(fn: () => void): void {
         this.onTouched = fn;
     }
 
@@ -1027,6 +1136,7 @@ export class KbqTreeSelection
         this.changeDetectorRef.markForCheck();
     }
 
+    /** @docs-private */
     setOptionsFromValues(values: any[]): void {
         this.selectionModel.clear();
 
@@ -1077,13 +1187,15 @@ export class KbqTreeSelection
         this.selectionModel.setSelection(...reconciled);
     }
 
+    /** @docs-private */
     getSelectedValues(): any[] {
         const selectedValues = this.selectionModel.selected.map((selected) => this.treeControl.getValue(selected));
 
         return this.multiple ? selectedValues : selectedValues[0];
     }
 
-    getItemHeight(): number {
+    /** @docs-private */
+    protected getItemHeight(): number {
         return this.renderedOptions.first ? this.renderedOptions.first.getHeight() : 0;
     }
 
@@ -1136,8 +1248,39 @@ export class KbqTreeSelection
         }
     }
 
+    /**
+     * Moves focus to the first child of an already-expanded option — ArrowRight on an expanded node.
+     *
+     * The mirror of `setActiveParentOption`: the first rendered option after the active one is its
+     * first child whenever its level is greater, so nothing has to be re-derived from `treeControl`.
+     * A disabled child cannot take focus, so the walk continues while the options stay inside the
+     * subtree, and stops as soon as the level falls back to the active option's own.
+     */
+    /** `-1` is the key manager's way of keeping the letter stream running but never matching on it. */
+    private applyTypeAhead(): void {
+        this.keyManager?.withTypeAhead(typeAheadDebounce, this._typeAhead ? 0 : -1);
+    }
+
+    private setActiveFirstChildOption(activeOption: KbqTreeOption): void {
+        const options = this.renderedOptions.toArray();
+
+        for (let index = this.keyManager.activeItemIndex + 1; index < options.length; index++) {
+            const option = options[index];
+
+            if (option.level <= activeOption.level) {
+                return;
+            }
+
+            if (!option.disabled) {
+                this.keyManager.setActiveItem(index);
+
+                return;
+            }
+        }
+    }
+
     private getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
     private updateTabIndex(): void {
@@ -1186,7 +1329,9 @@ export class KbqTreeSelection
         if (this._tabIndex !== -1) {
             this._tabIndex = -1;
 
-            setTimeout(() => {
+            clearTimeout(this.restoreTabIndexTimeout);
+
+            this.restoreTabIndexTimeout = setTimeout(() => {
                 this._tabIndex = this.userTabIndex || 0;
                 this.changeDetectorRef.markForCheck();
             });

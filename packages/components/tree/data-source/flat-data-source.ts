@@ -46,6 +46,7 @@ export class KbqTreeFlattener<T, F> {
         public getChildren: (node: T) => Observable<T[]> | T[] | undefined | null
     ) {}
 
+    /** @docs-private */
     flattenNode(node: T, level: number, resultNodes: F[], parent: F | null): F[] {
         const flatNode = this.transformFunction(node, level, parent);
 
@@ -68,6 +69,7 @@ export class KbqTreeFlattener<T, F> {
         return resultNodes;
     }
 
+    /** @docs-private */
     flattenChildren(children: T[], level: number, resultNodes: F[], parent: F | null): void {
         children.forEach((child) => {
             this.flattenNode(child, level + 1, resultNodes, parent);
@@ -126,7 +128,7 @@ enum KbqTreeDataSourceChangeTypes {
  * Data source for flat tree.
  * The data source need to handle expansion/collapsion of the tree node and change the data feed
  * to `KbqTree`.
- * The nested tree nodes of type `T` are flattened through `MсTreeFlattener`, and converted
+ * The nested tree nodes of type `T` are flattened through `KbqTreeFlattener`, and converted
  * to type `F` for `KbqTree` to consume.
  */
 export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {

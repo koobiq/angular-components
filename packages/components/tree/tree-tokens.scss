@@ -4,8 +4,9 @@
     --kbq-tree-size-container-padding-right: var(--kbq-size-s);
     --kbq-tree-size-container-padding-vertical: var(--kbq-size-xxs);
     --kbq-tree-size-container-content-gap-horizontal: var(--kbq-size-s);
-    --kbq-tree-size-container-content-gap-vertical: 0px;
     --kbq-tree-size-container-focus-outline-width: var(--kbq-size-3xs);
+    /* Sized so the toggle box comes out at the 24px the padding directive reserves for it. */
+    --kbq-tree-size-toggle-padding: var(--kbq-size-xxs);
     --kbq-tree-size-text-padding-vertical: var(--kbq-size-3xs);
     --kbq-tree-option-border-radius: var(--kbq-size-border-radius);
     /* THEME TOKENS */

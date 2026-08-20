@@ -43,6 +43,8 @@ export type KbqA11yLocaleConfiguration = {
     resizeColumns: string;
     /** Region holding the stack of toast notifications. */
     toastRegion: string;
+    /** Trailing action button of a list or tree option. */
+    optionActions: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */

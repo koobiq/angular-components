@@ -1750,6 +1750,10 @@ export class KbqTreeSelect
         // delegates, so the tree must not also act on the same event from its own host listener.
         tree.ownsKeyboard = false;
 
+        // `panelKeydownHandler` forwards every unhandled key to the tree's key manager, and the search
+        // field sits inside the panel — so its query would otherwise drive the tree's type-ahead.
+        tree.typeAhead = !this.search();
+
         tree.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             const treeValue = this.tree()!;
 
