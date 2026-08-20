@@ -75,6 +75,19 @@ export type KbqSelectLocaleConfiguration = {
     selectAll: string;
 };
 
+/**
+ * Locale configuration for the `[kbqPopoverConfirm]` variant of `KbqPopoverModule`.
+ *
+ * Unlike {@link KbqA11yLocaleConfiguration} these strings are displayed: they are the default question and
+ * the default confirm-button caption of a confirmation popover.
+ */
+export type KbqPopoverConfirmLocaleConfiguration = {
+    /** Question rendered in the body of the confirmation popover. */
+    confirmText: string;
+    /** Caption of the button that confirms the action. */
+    confirmButtonText: string;
+};
+
 /** Locale configuration for `KbqAppSwitcherModule`: the strings rendered by the app-switcher popup. */
 export type KbqAppSwitcherLocaleConfiguration = {
     /** Placeholder and accessible name of the search field. */
@@ -361,6 +374,7 @@ export interface KbqLocaleStringsData {
     appSwitcher: KbqAppSwitcherLocaleConfiguration;
     timeRange: KbqTimeRangeLocaleConfiguration;
     notificationCenter: KbqNotificationCenterLocaleConfiguration;
+    popoverConfirm: KbqPopoverConfirmLocaleConfiguration;
 }
 
 /** The number and size formatting rules of a locale — the shape of `ruRUFormattersData` and its siblings. */

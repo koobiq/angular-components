@@ -20,9 +20,11 @@ The height of the popover depends on its content. The recommended maximum height
 
 #### Configuring padding
 
-To flexibly control popover padding based on its content, reset the default values using `[defaultPaddings]="false"`. Then apply inner padding (padding) directly in the template of the content area:
+To flexibly control popover padding based on its content, reset the default values using `[kbqPopoverDefaultPaddings]="false"`. Then apply inner padding (padding) directly in the template of the content area:
 
 <!-- example(popover-paddings) -->
+
+The default padding also keeps the focus outline of the first field in the content area from being clipped by the panel, which hides its overflow. After resetting it, reserve that space in your own padding.
 
 #### Hiding the arrow
 
@@ -62,6 +64,8 @@ The popover can be configured to close when the page scrolls; which behavior to 
 
 <!-- example(popover-scroll) -->
 
+The behavior is controlled by `kbqPopoverCloseOnScroll`, which has three states. Left unbound, the popover survives a scroll but still closes once it has scrolled out of a container marked with the `kbq-hide-nested-popup` class. Set to `true`, it closes on any scroll. Set to `false`, it never closes on a scroll — not even in such a container.
+
 ### Usage examples
 
 The popover can be used without a header and footer — these are optional elements.
@@ -82,6 +86,38 @@ The close button can be placed in the header or in the top right corner when the
 
 <!-- example(popover-close) -->
 
+#### Confirming an action
+
+`[kbqPopoverConfirm]` is a ready-made variant of the popover that asks the user to confirm an action. It has neither a header nor a footer: the panel holds the question and a single confirming button, emits `confirm` when that button is pressed, and closes itself.
+
+```html
+<button kbq-button kbqPopoverConfirm (confirm)="deleteReport()">Delete</button>
+```
+
+Both strings are optional and can be set per trigger:
+
+```html
+<button
+    kbq-button
+    kbqPopoverConfirm
+    kbqPopoverConfirmText="Delete the report?"
+    kbqPopoverConfirmButtonText="Delete"
+    (confirm)="deleteReport()"
+>
+    Delete
+</button>
+```
+
+Left unbound, the question and the button caption come from the `popoverConfirm` section of the active locale, so an application that switched its locale gets the translated wording without configuring anything. To override the wording for a whole application — or for any part of it — provide `KBQ_POPOVER_CONFIRM_TEXT` and `KBQ_POPOVER_CONFIRM_BUTTON_TEXT`: an input beats the provider, and the provider beats the locale.
+
+### Opening and closing
+
+By default the popover opens on a click and on `Enter`/`Space`, and closes on a click outside it, on `Esc`, or through the close button. Other triggers are selected with `kbqTrigger`: `hover`, `focus`, `manual`, or a comma-separated combination of them.
+
+`kbqEnterDelay` and `kbqLeaveDelay` set the delays before opening and closing, in milliseconds. Both default to `0`, with one exception: a popover whose trigger includes `hover` closes after 500 ms unless `kbqLeaveDelay` is bound explicitly, which keeps the panel reachable while the pointer travels towards it. Bind `kbqLeaveDelay="0"` to opt out.
+
+`kbqTrigger`, `kbqEnterDelay` and `kbqLeaveDelay` are shared with the [tooltip](/en/components/tooltip) directive, so binding them on an element that carries both reconfigures both.
+
 ### Layering
 
 By default, the popover appears above the horizontal [Navbar](/en/components/navbar) and [Topbar](/en/components/topbar), and above adjacent elements in other cases.
@@ -89,6 +125,12 @@ By default, the popover appears above the horizontal [Navbar](/en/components/nav
 To prevent the popover from overlapping a required element during scrolling and instead have it hidden beneath it, adjust its position using a custom z-index or offset parameters.
 
 <!-- example(popover-scrolling-and-layering) -->
+
+### Accessibility
+
+The panel is exposed as a dialog and is labelled by its header. A popover without a header has nothing to take its name from, so give it one with `kbqPopoverAriaLabel`.
+
+Opening the popover by click, by keyboard or programmatically moves focus into the panel and keeps it there while it is open; every closing path returns focus to the trigger. A popover opened by hover or focus does not take focus, because it is dismissed by the pointer leaving it.
 
 ### Recommendations
 

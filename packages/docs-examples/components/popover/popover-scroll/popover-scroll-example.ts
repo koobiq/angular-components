@@ -44,7 +44,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
                 #kbqClosePopover="kbqPopover"
                 kbq-button
                 kbqPopover
-                [closeOnScroll]="true"
+                [kbqPopoverCloseOnScroll]="true"
                 [kbqPopoverClass]="'popover-scroll-example'"
                 [kbqPopoverContent]="customContent"
                 [kbqPopoverFooter]="customFooter"

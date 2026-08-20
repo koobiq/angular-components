@@ -143,6 +143,10 @@ export const esLALocaleData = {
         sitesHeader: 'Otros sitios',
         clearSearch: 'Borrar la búsqueda'
     },
+    popoverConfirm: {
+        confirmText: '¿Está seguro de que desea continuar?',
+        confirmButtonText: 'Sí'
+    },
     timeRange: {
         title: {
             for: 'para',

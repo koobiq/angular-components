@@ -28,7 +28,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
                 navigating away from the current view.
             </p>
 
-            <button kbq-button kbqPopover [kbqPopoverContent]="popoverContent" [hideIfNotInViewPort]="false">
+            <button kbq-button kbqPopover [kbqPopoverContent]="popoverContent" [kbqPopoverHideIfNotInViewPort]="false">
                 Open popover
             </button>
 
