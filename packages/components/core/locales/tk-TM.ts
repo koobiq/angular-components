@@ -6,6 +6,7 @@ export const tkTMLocaleData = {
         save: 'Ýazdyr',
         cancel: 'Ýatyr',
         removeAll: 'Ählisini aýyr',
+        remove: 'Aýyr',
         expandBreadcrumbs: 'Gizlenen elementleri görkez',
         previousMonth: 'Öňki aý',
         currentDate: 'Şu günki sene',

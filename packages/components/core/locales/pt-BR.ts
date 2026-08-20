@@ -6,6 +6,7 @@ export const ptBRLocaleData = {
         save: 'Salvar',
         cancel: 'Cancelar',
         removeAll: 'Remover tudo',
+        remove: 'Remover',
         expandBreadcrumbs: 'Mostrar itens ocultos',
         previousMonth: 'Mês anterior',
         currentDate: 'Data atual',

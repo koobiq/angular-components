@@ -218,7 +218,6 @@ export class KbqTreeSelectChange {
         '(blur)': 'onBlur()'
     },
     animations: [
-        kbqSelectAnimations.transformPanel,
         kbqSelectAnimations.fadeInContent
     ],
     exportAs: 'kbqTreeSelect'

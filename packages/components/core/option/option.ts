@@ -149,6 +149,9 @@ export class KbqVirtualOption extends KbqOptionBase {
     encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'getTabIndex()',
+        '[attr.role]': 'role()',
+        '[attr.aria-selected]': 'selected',
+        '[attr.aria-disabled]': 'disabled',
         class: 'kbq-option',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-option-multiple]': 'multiple',
@@ -174,6 +177,15 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input() value: any;
+
+    /**
+     * ARIA role of the option.
+     *
+     * Defaults to `option`, which is what a `listbox` (the select and autocomplete panels) requires of its
+     * children. Exposed as an input so a row built on top of an option — a "select all" master checkbox, for
+     * example — can announce itself as something else without fighting the host binding.
+     */
+    readonly role = input<string>('option');
 
     readonly selectable = input<boolean, unknown>(true, { transform: booleanAttribute });
 

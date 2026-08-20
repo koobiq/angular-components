@@ -337,8 +337,9 @@ export class KbqTagRemove {
     handleClick(event: Event): void;
     // (undocumented)
     protected parentTag: KbqTag;
+    readonly tabIndex: i0.InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, {}, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagRemove, "[kbqTagRemove]", never, { "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof KbqTagSuffix; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagRemove, never>;
 }
