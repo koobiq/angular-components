@@ -1,297 +1,772 @@
 import { AnimationEvent } from '@angular/animations';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkScrollable, Overlay, OverlayContainer, OverlayRef, ScrollDispatcher } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
     ApplicationRef,
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     NgZone,
     TemplateRef,
-    inject as inject_1,
+    ValueProvider,
+    inject,
     viewChild
 } from '@angular/core';
-import { TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { axe } from 'jest-axe';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { KbqToastContainerComponent } from './toast-container.component';
+import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
-import { KbqToastService } from './toast.service';
-import { KbqToastData } from './toast.type';
+import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
+import {
+    KbqToastConfig,
+    KbqToastData,
+    KbqToastPosition,
+    KbqToastStyle,
+    defaultToastConfig,
+    kbqToastConfigurationProvider
+} from './toast.type';
 
-const MOCK_TOAST_DATA: KbqToastData = {
-    style: 'warning',
+/** Mirrors `CHECK_INTERVAL` in the service: the countdown is driven by a heartbeat of that period. */
+const CHECK_INTERVAL = 500;
+
+/** Mirrors `EXIT_ANIMATION_FALLBACK`: how long the overlay waits for the last exit animation. */
+const EXIT_ANIMATION_FALLBACK = 500;
+
+/** A fresh object per call — the service and the component must never write into the caller's data. */
+const createToastData = (overrides: KbqToastData = {}): KbqToastData => ({
+    style: KbqToastStyle.Warning,
     title: 'Warning',
     content: 'Message Content',
-    closeButton: true
-};
-
-describe('ToastService', () => {
-    let toastService: KbqToastService;
-    let overlayContainer: OverlayContainer;
-    let overlayContainerElement: HTMLElement;
-    let fixture;
-    let testComponent;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                KbqToastModule,
-                NoopAnimationsModule,
-                KbqToastButtonWrapperComponent
-            ]
-        }).compileComponents();
-    });
-
-    beforeEach(inject([KbqToastService, OverlayContainer], (ts: KbqToastService, oc: OverlayContainer) => {
-        toastService = ts;
-        overlayContainer = oc;
-        overlayContainerElement = oc.getContainerElement();
-    }));
-
-    afterEach(() => {
-        overlayContainer.ngOnDestroy();
-    });
-
-    describe('should bring no break change', () => {
-        beforeEach(() => {
-            fixture = TestBed.createComponent(KbqToastButtonWrapperComponent);
-            testComponent = fixture.componentInstance;
-        });
-
-        afterEach(fakeAsync(() => {
-            // wait all openModals to be closed to clean up the ModalManager as it is globally static
-            overlayContainer.ngOnDestroy();
-            fixture.detectChanges();
-            tick(1000);
-        }));
-
-        it('should create one sticky toast', () => {
-            toastService.show({ style: 'success', title: 'Success', content: 'Message Content' }, 0);
-            expect(toastService.toasts.length).toBe(1);
-        });
-
-        it('should create one sticky warning toast', () => {
-            toastService.show(MOCK_TOAST_DATA, 0);
-            expect(toastService.toasts[0].instance.data.style).toBe('warning');
-        });
-
-        it('should create one sticky warning toast with default icon', () => {
-            const toast = toastService.show({ style: 'warning', title: 'Warning', icon: true }, 0);
-
-            fixture.detectChanges();
-
-            const toastIcon: HTMLElement = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
-
-            expect(toastIcon.classList).toContain('kbq-triangle-exclamation_16');
-        });
-
-        it('should create one sticky warning toast with custom icon', () => {
-            const toast = toastService.show({ style: 'error', title: 'Error', icon: true, iconClass: 'kbq-custom' }, 0);
-
-            fixture.detectChanges();
-
-            const toastIcon: HTMLElement = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
-
-            expect(toastIcon.classList).toContain('kbq-custom');
-        });
-
-        it('should container only title', () => {
-            toastService.show({ style: 'success', title: 'Success' }, 0);
-            expect(toastService.toasts[0].instance.data.title).toBe('Success');
-            expect(toastService.toasts[0].instance.data.content).toBe(undefined);
-        });
-
-        it('should delete toast', () => {
-            toastService.show(MOCK_TOAST_DATA, 0);
-            const openToast = toastService.toasts[0].instance;
-
-            expect(toastService.toasts.length).toBe(1);
-            fixture.detectChanges();
-
-            toastService.hide(openToast.id);
-            fixture.detectChanges();
-            expect(toastService.toasts.length).toBe(0);
-        });
-
-        it('should delete one toast by click', fakeAsync(() => {
-            const hideSpyFn = jest.spyOn(toastService, 'hide');
-            const toast = toastService.show(MOCK_TOAST_DATA, 0);
-
-            fixture.detectChanges();
-            tick(600);
-            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
-
-            const button = toast.ref.location.nativeElement.querySelector(
-                '[kbq-toast-close-button]'
-            ) as HTMLButtonElement;
-
-            button.click();
-
-            fixture.detectChanges();
-            tick(600);
-
-            expect(hideSpyFn).toHaveBeenCalledTimes(1);
-            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(0);
-        }));
-
-        it('should create one toast directly through service', fakeAsync(() => {
-            const showSpyFn = jest.spyOn(toastService, 'show');
-
-            toastService.show(MOCK_TOAST_DATA, 600);
-
-            fixture.detectChanges();
-            tick(600);
-            fixture.detectChanges();
-
-            expect(showSpyFn).toHaveBeenCalledTimes(1);
-            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
-        }));
-
-        it('should create one toast by click', fakeAsync(() => {
-            const showSpyFn = jest.spyOn(testComponent, 'show');
-            const btn = fixture.nativeElement.querySelector('button');
-
-            fixture.detectChanges();
-            expect(showSpyFn).not.toHaveBeenCalled();
-
-            btn.click();
-            fixture.detectChanges();
-
-            expect(showSpyFn).toHaveBeenCalledTimes(1);
-            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
-        }));
-    });
+    closeButton: true,
+    ...overrides
 });
 
-describe('Standalone ToastService', () => {
-    let service: KbqToastService;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, KbqToastButtonWrapperComponent]
-        }).compileComponents();
-    });
-
-    it('should disappear after 3 seconds', fakeAsync(() => {
-        const destroy$ = new Subject<void>();
-
-        service = TestBed.inject(KbqToastService);
-        service.timer = service.timer.pipe(takeUntil(destroy$));
-
-        service.show(MOCK_TOAST_DATA, 3000);
-        expect(service.toasts.length).toEqual(1);
-        tick(3100);
-        destroy$.next();
-        tick();
-
-        expect(service.toasts.length).toEqual(0);
-        flush();
-        discardPeriodicTasks();
-    }));
-
-    it('should call timer outsideAngular', fakeAsync(() => {
-        const destroy$ = new Subject<void>();
-
-        service = TestBed.inject(KbqToastService);
-        service.timer.subscribe(() => expect(NgZone.isInAngularZone()).toBeFalsy());
-        service.timer = service.timer.pipe(takeUntil(destroy$));
-
-        service.show(MOCK_TOAST_DATA, 3000);
-        tick(3100);
-        destroy$.next();
-
-        flush();
-        discardPeriodicTasks();
-    }));
+const exitAnimationEvent = (): AnimationEvent => ({
+    fromState: 'visible',
+    toState: 'void',
+    totalTime: 0,
+    phaseName: 'done',
+    element: document.createElement('div'),
+    triggerName: 'state',
+    disabled: false
 });
 
 @Component({
-    selector: 'kbq-toast-test-button',
+    selector: 'toast-test-button',
     imports: [KbqToastModule],
     template: `
         <button (click)="show()">Show</button>
     `
 })
-class KbqToastButtonWrapperComponent {
-    toastService = inject_1(KbqToastService);
+class ToastButtonWrapper {
+    readonly toastService = inject(KbqToastService);
 
     show(): void {
-        this.toastService.show({ style: 'warning', title: 'Warning', content: 'Message Content' }, 0);
+        this.toastService.show(createToastData(), 0);
     }
 }
 
 @Component({
-    selector: 'kbq-toast-template-wrapper',
+    selector: 'toast-template-wrapper',
     imports: [KbqToastModule],
     template: `
-        <ng-template #tpl>tpl</ng-template>
+        <ng-template #tpl><div>tpl</div></ng-template>
     `
 })
-class KbqToastTemplateWrapperComponent {
+class ToastTemplateWrapper {
     readonly template = viewChild.required<TemplateRef<unknown>>('tpl');
 }
 
-describe('ToastService regression: multiple containers / cleanup', () => {
+/** Substituted through `KBQ_TOAST_FACTORY`: the service must create this instead of `KbqToastComponent`. */
+@Component({
+    selector: 'custom-toast',
+    template: 'custom',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class CustomToast extends KbqToastComponent {}
+
+/** Not a `KbqToastComponent`, so it carries no numeric `id` for the service to key its stack by. */
+@Component({
+    selector: 'idless-toast',
+    template: 'idless',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IdlessToast {}
+
+describe('KbqToastService', () => {
     let service: KbqToastService;
+    let appRef: ApplicationRef;
+    let focusMonitor: FocusMonitor;
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
 
+    /** Renders everything the service has created — the container lives in an overlay, not in a fixture. */
+    const render = () => appRef.tick();
+
+    const showRendered = (data: KbqToastData = createToastData(), duration = 0) => {
+        const toast = service.show(data, duration);
+
+        render();
+
+        return toast;
+    };
+
+    const hostOf = (toast: { ref: { location: ElementRef } }): HTMLElement => toast.ref.location.nativeElement;
+
+    const closeButtonOf = (toast: { ref: { location: ElementRef } }): HTMLButtonElement =>
+        hostOf(toast).querySelector<HTMLButtonElement>('[kbq-toast-close-button]')!;
+
+    const containers = () => overlayContainerElement.querySelectorAll('kbq-toast-container');
+
+    /** Releases everything the service scheduled, so that no fake timer survives the spec. */
+    const settle = () => {
+        service.ngOnDestroy();
+        flush();
+    };
+
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, KbqToastTemplateWrapperComponent]
-        }).compileComponents();
+            imports: [KbqToastModule, NoopAnimationsModule, ToastButtonWrapper, ToastTemplateWrapper]
+        });
 
         service = TestBed.inject(KbqToastService);
+        appRef = TestBed.inject(ApplicationRef);
+        focusMonitor = TestBed.inject(FocusMonitor);
         overlayContainer = TestBed.inject(OverlayContainer);
         overlayContainerElement = overlayContainer.getContainerElement();
     });
 
     afterEach(() => {
+        service.ngOnDestroy();
         overlayContainer.ngOnDestroy();
     });
 
-    it('disposes overlay on service destroy so re-bootstrap does not leak a second container', () => {
-        service.show(MOCK_TOAST_DATA, 0);
-        expect(overlayContainerElement.querySelectorAll('.kbq-toast-overlay').length).toBe(1);
+    describe('rendering', () => {
+        it('renders a toast inside the overlay', () => {
+            showRendered();
 
-        service.ngOnDestroy();
-        expect(overlayContainerElement.querySelectorAll('.kbq-toast-overlay').length).toBe(0);
+            expect(service.toasts.length).toBe(1);
+            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
+            expect(overlayContainerElement.querySelectorAll('.kbq-toast-overlay').length).toBe(1);
+        });
+
+        it('carries the style as a host class', () => {
+            const toast = showRendered(createToastData({ style: KbqToastStyle.Warning }));
+
+            expect(hostOf(toast).classList).toContain('kbq-toast_warning');
+        });
+
+        it('falls back to the contrast style when none is given', () => {
+            const toast = showRendered(createToastData({ style: undefined }));
+
+            expect(hostOf(toast).classList).toContain('kbq-toast_contrast');
+        });
+
+        it('renders the default icon of the style', () => {
+            const toast = showRendered(createToastData({ style: KbqToastStyle.Warning, icon: true }));
+
+            expect(hostOf(toast).querySelector('.kbq-toast__icon')!.classList).toContain('kbq-triangle-exclamation_16');
+        });
+
+        it('renders a custom icon class next to the default glyph', () => {
+            const toast = showRendered(
+                createToastData({ style: KbqToastStyle.Error, icon: true, iconClass: 'kbq-custom' })
+            );
+
+            expect(hostOf(toast).querySelector('.kbq-toast__icon')!.classList).toContain('kbq-custom');
+        });
+
+        it('renders only the title when nothing else is given', () => {
+            const toast = showRendered(createToastData({ content: undefined, caption: undefined, title: 'Success' }));
+
+            expect(hostOf(toast).querySelector('.kbq-toast__title')!.textContent).toContain('Success');
+            expect(hostOf(toast).querySelector('.kbq-toast__content')).toBeNull();
+        });
+
+        it('leaves the caller-owned data untouched', () => {
+            const data = Object.freeze(createToastData({ style: undefined, icon: undefined, closeButton: undefined }));
+
+            expect(() => showRendered(data)).not.toThrow();
+            expect(data.style).toBeUndefined();
+            expect(Object.prototype.hasOwnProperty.call(data, 'iconClass')).toBe(false);
+        });
+
+        it('shows a toast from a click', () => {
+            const fixture = TestBed.createComponent(ToastButtonWrapper);
+
+            fixture.detectChanges();
+            fixture.nativeElement.querySelector('button').click();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
+        });
     });
 
-    it('hideTemplate removes by returned id (regression: off-by-one)', () => {
-        const fixture = TestBed.createComponent(KbqToastTemplateWrapperComponent);
+    describe('stack order', () => {
+        const hosts = () => Array.from(overlayContainerElement.querySelectorAll('kbq-toast'));
 
-        fixture.detectChanges();
+        it('appends a new toast below the ones already on screen', () => {
+            const first = showRendered();
+            const second = showRendered();
 
-        const { id } = service.showTemplate(MOCK_TOAST_DATA, fixture.componentInstance.template(), 0);
+            expect(hosts()[0]).toBe(hostOf(first));
+            expect(hosts()[1]).toBe(hostOf(second));
+        });
 
-        expect(service.templates.length).toBe(1);
+        it('puts a new toast above the ones already on screen when `onTop` is set', () => {
+            const first = showRendered();
+            const second = service.show(createToastData(), 0, true);
 
-        service.hideTemplate(id);
-        expect(service.templates.length).toBe(0);
+            render();
+
+            expect(hosts()[0]).toBe(hostOf(second));
+            expect(hosts()[1]).toBe(hostOf(first));
+        });
     });
 
-    it('keeps container alive while templates are visible after the last toast is hidden', () => {
-        const fixture = TestBed.createComponent(KbqToastTemplateWrapperComponent);
+    describe('dismissal', () => {
+        it('removes a toast by id', () => {
+            const toast = showRendered();
 
-        fixture.detectChanges();
+            service.hide(toast.id);
 
-        const toast = service.show(MOCK_TOAST_DATA, 0);
+            expect(service.toasts.length).toBe(0);
+        });
 
-        service.showTemplate(MOCK_TOAST_DATA, fixture.componentInstance.template(), 0);
+        it('removes a toast through the close button', fakeAsync(() => {
+            const toast = showRendered();
 
-        service.hide(toast.id);
+            closeButtonOf(toast).click();
+            // The toast leaves the service synchronously; taking its element out of the DOM is the
+            // animation engine's job and lands on the next flush.
+            flush();
+            render();
 
-        expect(service.templates.length).toBe(1);
-        expect(overlayContainerElement.querySelectorAll('kbq-toast-container').length).toBe(1);
+            expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(0);
+
+            settle();
+        }));
+
+        it('removes a toast on Escape', () => {
+            const toast = showRendered();
+
+            dispatchKeyboardEvent(hostOf(toast), 'keydown', ESCAPE, undefined, 'Escape');
+
+            expect(service.toasts.length).toBe(0);
+        });
+
+        it('keeps a sticky toast well past the default duration', fakeAsync(() => {
+            showRendered(createToastData(), 0);
+
+            tick(10000);
+
+            expect(service.toasts.length).toBe(1);
+            settle();
+        }));
+
+        it('removes a toast once its duration has run out', fakeAsync(() => {
+            showRendered(createToastData(), 3000);
+
+            tick(3000 + CHECK_INTERVAL);
+
+            expect(service.toasts.length).toBe(0);
+            settle();
+        }));
+
+        it('keeps a long-lived survivor for its own duration after a short toast expires', fakeAsync(() => {
+            showRendered(createToastData(), 1000);
+            showRendered(createToastData(), 30000);
+
+            tick(1000 + CHECK_INTERVAL);
+            expect(service.toasts.length).toBe(1);
+
+            // Far past the 2000 ms delay the survivor used to be pinned to.
+            tick(5000);
+            expect(service.toasts.length).toBe(1);
+
+            settle();
+        }));
+
+        it('gives a survivor of a manual close at least the configured delay', fakeAsync(() => {
+            const first = showRendered(createToastData(), 5000);
+
+            showRendered(createToastData(), 500);
+
+            service.hide(first.id);
+
+            tick(500 + CHECK_INTERVAL);
+            expect(service.toasts.length).toBe(1);
+
+            tick(defaultToastConfig.delay);
+            expect(service.toasts.length).toBe(0);
+
+            settle();
+        }));
+    });
+
+    describe('pause', () => {
+        it('pauses the whole stack while one toast is hovered', fakeAsync(() => {
+            const hovered = showRendered(createToastData(), 3000);
+
+            showRendered(createToastData(), 3000);
+
+            dispatchMouseEvent(hostOf(hovered), 'mouseenter');
+            tick(10000);
+
+            expect(service.toasts.length).toBe(2);
+            settle();
+        }));
+
+        it('resumes the countdown once the pointer leaves', fakeAsync(() => {
+            const toast = showRendered(createToastData(), 3000);
+
+            dispatchMouseEvent(hostOf(toast), 'mouseenter');
+            tick(5000);
+            dispatchMouseEvent(hostOf(toast), 'mouseleave');
+            tick(3000 + CHECK_INTERVAL);
+
+            expect(service.toasts.length).toBe(0);
+            settle();
+        }));
+
+        it('keeps the pause when a sibling is dismissed', fakeAsync(() => {
+            const hovered = showRendered(createToastData(), 3000);
+            const sibling = showRendered(createToastData(), 3000);
+
+            dispatchMouseEvent(hostOf(hovered), 'mouseenter');
+            service.hide(sibling.id);
+            tick(10000);
+
+            expect(service.toasts.length).toBe(1);
+            settle();
+        }));
+
+        it('pauses the stack while a toast holds the focus', fakeAsync(() => {
+            const toast = showRendered(createToastData(), 3000);
+
+            focusMonitor.focusVia(closeButtonOf(toast), 'keyboard');
+            tick(10000);
+
+            expect(service.toasts.length).toBe(1);
+            settle();
+        }));
+    });
+
+    describe('read state', () => {
+        let read: KbqToastData[];
+        let subscription: Subscription;
+
+        beforeEach(() => {
+            read = [];
+            subscription = service.read.subscribe((data) => {
+                if (data) {
+                    read.push(data);
+                }
+            });
+        });
+
+        afterEach(() => subscription.unsubscribe());
+
+        it('reports a toast as read when it is closed', () => {
+            const data = createToastData();
+            const toast = showRendered(data);
+
+            closeButtonOf(toast).click();
+
+            expect(read).toEqual([data]);
+        });
+
+        it('reports a toast as read exactly once across repeated hover cycles and a close', fakeAsync(() => {
+            const toast = showRendered();
+            const host = hostOf(toast);
+
+            for (let cycle = 0; cycle < 3; cycle++) {
+                dispatchMouseEvent(host, 'mouseenter');
+                tick(600);
+                dispatchMouseEvent(host, 'mouseleave');
+            }
+
+            closeButtonOf(toast).click();
+
+            expect(read.length).toBe(1);
+            settle();
+        }));
+    });
+
+    describe('focus', () => {
+        it('hands the focus to a surviving toast instead of dropping it on the body', fakeAsync(() => {
+            const survivor = showRendered();
+            const closing = showRendered();
+
+            focusMonitor.focusVia(closeButtonOf(closing), 'keyboard');
+            tick();
+
+            service.hide(closing.id);
+            tick();
+
+            expect(hostOf(survivor).contains(document.activeElement)).toBe(true);
+            settle();
+        }));
+
+        it('hands the focus back to the trigger when the last toast closes', fakeAsync(() => {
+            const trigger = document.createElement('button');
+
+            document.body.appendChild(trigger);
+            trigger.focus();
+
+            const toast = showRendered();
+
+            focusMonitor.focusVia(closeButtonOf(toast), 'keyboard');
+            tick();
+
+            service.hide(toast.id);
+            tick();
+
+            expect(document.activeElement).toBe(trigger);
+
+            trigger.remove();
+            settle();
+        }));
+    });
+
+    describe('templates', () => {
+        let template: TemplateRef<unknown>;
+
+        beforeEach(() => {
+            const fixture = TestBed.createComponent(ToastTemplateWrapper);
+
+            fixture.detectChanges();
+            template = fixture.componentInstance.template();
+        });
+
+        it('passes the toast data as the template context', () => {
+            const data = createToastData();
+            const { ref } = service.showTemplate(data, template, 0);
+
+            expect(ref.context.$implicit).toBe(data);
+        });
+
+        it('removes a template by the returned id', () => {
+            const { id } = service.showTemplate(createToastData(), template, 0);
+
+            expect(service.templates.length).toBe(1);
+
+            service.hideTemplate(id);
+
+            expect(service.templates.length).toBe(0);
+        });
+
+        it('keeps a template with a zero duration on screen', fakeAsync(() => {
+            service.showTemplate(createToastData(), template, 0);
+
+            tick(10000);
+
+            expect(service.templates.length).toBe(1);
+            settle();
+        }));
+
+        it('removes a template once its duration has run out', fakeAsync(() => {
+            service.showTemplate(createToastData(), template, 1000);
+
+            tick(1000 + CHECK_INTERVAL);
+
+            expect(service.templates.length).toBe(0);
+            settle();
+        }));
+
+        it('omits destroyed views from `templates`', () => {
+            const { ref } = service.showTemplate(createToastData(), template, 0);
+
+            ref.destroy();
+
+            expect(service.templates.length).toBe(0);
+        });
+
+        it('keeps the container alive while templates are visible', () => {
+            const toast = showRendered();
+
+            service.showTemplate(createToastData(), template, 0);
+            service.hide(toast.id);
+
+            expect(containers().length).toBe(1);
+        });
+    });
+
+    describe('overlay lifecycle', () => {
+        it('keeps the overlay attached until the exit animation reports done', fakeAsync(() => {
+            const toast = showRendered();
+
+            service.hide(toast.id);
+            expect(containers().length).toBe(1);
+
+            service.animation.next(exitAnimationEvent());
+            // The overlay is detached synchronously; removing the host element is the animation engine's
+            // job and lands on the next flush.
+            flush();
+            render();
+
+            expect(containers().length).toBe(0);
+
+            flush();
+        }));
+
+        it('detaches the overlay through the fallback when nothing animates', fakeAsync(() => {
+            const fixture = TestBed.createComponent(ToastTemplateWrapper);
+
+            fixture.detectChanges();
+
+            const { id } = service.showTemplate(createToastData(), fixture.componentInstance.template(), 0);
+
+            service.hideTemplate(id);
+            expect(containers().length).toBe(1);
+
+            tick(EXIT_ANIMATION_FALLBACK);
+            expect(containers().length).toBe(0);
+        }));
+
+        it('does not accumulate containers across show and hide cycles', fakeAsync(() => {
+            for (let cycle = 0; cycle < 3; cycle++) {
+                const toast = showRendered();
+
+                service.hide(toast.id);
+                tick(EXIT_ANIMATION_FALLBACK);
+            }
+
+            showRendered();
+
+            expect(containers().length).toBe(1);
+            settle();
+        }));
+
+        it('disposes the overlay on destroy, so a re-bootstrap does not leak a second container', () => {
+            showRendered();
+            expect(overlayContainerElement.querySelectorAll('.kbq-toast-overlay').length).toBe(1);
+
+            service.ngOnDestroy();
+
+            expect(overlayContainerElement.querySelectorAll('.kbq-toast-overlay').length).toBe(0);
+        });
+    });
+
+    describe('heartbeat', () => {
+        it('ticks outside the Angular zone', fakeAsync(() => {
+            let ticks = 0;
+            let ticksInsideAngular = 0;
+            const subscription = service.timer.subscribe(() => {
+                ticks++;
+
+                if (NgZone.isInAngularZone()) {
+                    ticksInsideAngular++;
+                }
+            });
+
+            showRendered();
+            tick(CHECK_INTERVAL * 3);
+
+            expect(ticks).toBeGreaterThan(0);
+            expect(ticksInsideAngular).toBe(0);
+
+            subscription.unsubscribe();
+            settle();
+        }));
+
+        it('does not tick while the stack is empty', fakeAsync(() => {
+            let ticks = 0;
+            const subscription = service.timer.subscribe(() => ticks++);
+
+            tick(CHECK_INTERVAL * 4);
+            expect(ticks).toBe(0);
+
+            showRendered();
+            tick(CHECK_INTERVAL);
+            expect(ticks).toBe(1);
+
+            subscription.unsubscribe();
+            settle();
+        }));
+
+        it('leaves no periodic task behind after destroy', fakeAsync(() => {
+            let ticks = 0;
+            const subscription = service.timer.subscribe(() => ticks++);
+
+            showRendered();
+            tick(CHECK_INTERVAL);
+
+            const before = ticks;
+
+            service.ngOnDestroy();
+            tick(CHECK_INTERVAL * 4);
+
+            expect(ticks).toBe(before);
+            subscription.unsubscribe();
+        }));
+    });
+
+    describe('accessibility', () => {
+        it('announces an error as an alert', () => {
+            const toast = showRendered(createToastData({ style: KbqToastStyle.Error }));
+
+            expect(hostOf(toast).getAttribute('role')).toBe('alert');
+            expect(hostOf(toast).getAttribute('aria-atomic')).toBe('true');
+        });
+
+        it('announces a warning as an alert', () => {
+            const toast = showRendered(createToastData({ style: KbqToastStyle.Warning }));
+
+            expect(hostOf(toast).getAttribute('role')).toBe('alert');
+        });
+
+        it('announces a neutral message as a status', () => {
+            const toast = showRendered(createToastData({ style: KbqToastStyle.Contrast }));
+
+            expect(hostOf(toast).getAttribute('role')).toBe('status');
+        });
+
+        it('marks a template toast as a status', () => {
+            const fixture = TestBed.createComponent(ToastTemplateWrapper);
+
+            fixture.detectChanges();
+            service.showTemplate(createToastData(), fixture.componentInstance.template(), 0);
+            render();
+
+            expect(overlayContainerElement.querySelector('[role="status"]')).toBeTruthy();
+        });
+
+        it('renders the close button as a named native button', () => {
+            const toast = showRendered();
+            const closeButton = closeButtonOf(toast);
+
+            expect(closeButton.tagName).toBe('BUTTON');
+            expect(closeButton.getAttribute('type')).toBe('button');
+            expect(closeButton.getAttribute('aria-label')).toBeTruthy();
+        });
+
+        it('hides the decorative status icon from assistive tech', () => {
+            const toast = showRendered(createToastData({ icon: true }));
+
+            expect(hostOf(toast).querySelector('.kbq-toast__icon')!.getAttribute('aria-hidden')).toBe('true');
+        });
+
+        it('exposes the stack as a labelled region', () => {
+            showRendered();
+
+            const container = containers()[0];
+
+            expect(container.getAttribute('role')).toBe('region');
+            expect(container.getAttribute('aria-label')).toBeTruthy();
+        });
+
+        it('has no axe violations', async () => {
+            showRendered(createToastData({ caption: 'Caption' }));
+
+            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+        });
     });
 });
 
-describe('ToastService in a Shadow DOM overlay container', () => {
+describe('KbqToastService configuration', () => {
+    const configure = (config: Partial<KbqToastConfig> = {}): KbqToastService => {
+        TestBed.configureTestingModule({
+            imports: [KbqToastModule, NoopAnimationsModule],
+            providers: [kbqToastConfigurationProvider(config)]
+        });
+
+        return TestBed.inject(KbqToastService);
+    };
+
+    const containers = () =>
+        TestBed.inject(OverlayContainer).getContainerElement().querySelectorAll('kbq-toast-container');
+
+    afterEach(() => TestBed.inject(OverlayContainer).ngOnDestroy());
+
+    Object.values(KbqToastPosition).forEach((position) => {
+        it(`anchors the stack at ${position}`, () => {
+            const service = configure({ position });
+
+            service.show(createToastData(), 0);
+
+            expect(containers()[0].classList).toContain(`kbq-toast-container-${position}`);
+            service.ngOnDestroy();
+        });
+    });
+
+    it('drains the stack instead of stranding it when the position moves underneath', () => {
+        const provider = kbqToastConfigurationProvider({ position: KbqToastPosition.TOP_RIGHT }) as ValueProvider;
+
+        TestBed.configureTestingModule({
+            imports: [KbqToastModule, NoopAnimationsModule],
+            providers: [provider]
+        });
+
+        const service = TestBed.inject(KbqToastService);
+        const stale = service.show(createToastData(), 0);
+
+        // A provided configuration is a plain object, so a consumer can move the stack while it is live.
+        (provider.useValue as KbqToastConfig).position = KbqToastPosition.BOTTOM_LEFT;
+
+        service.show(createToastData(), 0);
+
+        expect(stale.ref.hostView.destroyed).toBe(true);
+        expect(service.toasts.length).toBe(1);
+        expect(containers().length).toBe(1);
+        expect(containers()[0].classList).toContain('kbq-toast-container-bottom-left');
+
+        service.ngOnDestroy();
+    });
+
+    it('freezes the shared default configuration', () => {
+        expect(Object.isFrozen(defaultToastConfig)).toBe(true);
+        expect(Object.isFrozen(defaultToastConfig.indent)).toBe(true);
+    });
+
+    it('gives every provider its own indent object', () => {
+        const first = kbqToastConfigurationProvider({}) as ValueProvider;
+        const second = kbqToastConfigurationProvider({}) as ValueProvider;
+
+        expect(first.useValue.indent).not.toBe(second.useValue.indent);
+        expect(first.useValue.indent).not.toBe(defaultToastConfig.indent);
+        expect(first.useValue.indent).toEqual(defaultToastConfig.indent);
+    });
+});
+
+describe('KbqToastService factory', () => {
+    const configureWithFactory = (componentType: unknown): KbqToastService => {
+        TestBed.configureTestingModule({
+            imports: [KbqToastModule, NoopAnimationsModule],
+            providers: [{ provide: KBQ_TOAST_FACTORY, useValue: componentType }]
+        });
+
+        return TestBed.inject(KbqToastService);
+    };
+
+    afterEach(() => TestBed.inject(OverlayContainer).ngOnDestroy());
+
+    it('creates the component provided through KBQ_TOAST_FACTORY', () => {
+        const service = configureWithFactory(CustomToast);
+
+        service.show(createToastData(), 0);
+
+        expect(service.toasts[0].instance).toBeInstanceOf(CustomToast);
+        service.ngOnDestroy();
+    });
+
+    it('rejects a factory component that carries no numeric id', () => {
+        const service = configureWithFactory(IdlessToast);
+
+        expect(() => service.show(createToastData(), 0)).toThrow(/KBQ_TOAST_FACTORY/);
+        service.ngOnDestroy();
+    });
+});
+
+describe('KbqToastService in a Shadow DOM overlay container', () => {
     // Integration smoke test: drives the real `KbqShadowDomOverlayContainer` via `kbqShadowDomOverlayProvider`
     // against a host that owns an open shadow root (emulating a Module Federation micro-frontend). The container's
     // own resolution branches are covered in core/overlay/shadow-dom-overlay-container.spec.ts.
@@ -308,19 +783,20 @@ describe('ToastService in a Shadow DOM overlay container', () => {
         TestBed.configureTestingModule({
             imports: [KbqToastModule, NoopAnimationsModule],
             providers: kbqShadowDomOverlayProvider(shadowHost)
-        }).compileComponents();
+        });
 
         service = TestBed.inject(KbqToastService);
         overlayContainer = TestBed.inject(OverlayContainer);
     });
 
     afterEach(() => {
+        service.ngOnDestroy();
         overlayContainer.ngOnDestroy();
         shadowHost.remove();
     });
 
     it('renders the toast inside the shadow root, not in the light DOM', () => {
-        service.show(MOCK_TOAST_DATA, 0);
+        service.show(createToastData(), 0);
 
         // The overlay container itself now lives in the shadow tree...
         expect(overlayContainer.getContainerElement().getRootNode()).toBe(shadowRoot);
@@ -347,8 +823,8 @@ class ToastTooltipWrapper {
 })
 class ToastOverlayContent {}
 
-describe('ToastService: global scroll notifications', () => {
-    // `KbqTooltipTrigger` default enter delay (400ms) plus a buffer for the deferred show.
+describe('KbqToastService: global scroll notifications', () => {
+    // `KbqPopUpTrigger` default enter delay (400ms) plus a buffer for the deferred show.
     const tooltipEnterDelay = 410;
 
     let service: KbqToastService;
@@ -371,7 +847,7 @@ describe('ToastService: global scroll notifications', () => {
 
     /** Renders the toast container and the toast itself — the container registers as a scrollable in `ngOnInit`. */
     const renderToast = () => {
-        const { id } = service.show(MOCK_TOAST_DATA, 0);
+        const { id } = service.show(createToastData(), 0);
 
         TestBed.inject(ApplicationRef).tick();
 
@@ -381,7 +857,7 @@ describe('ToastService: global scroll notifications', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqToastModule, NoopAnimationsModule, ToastTooltipWrapper]
-        }).compileComponents();
+        });
 
         service = TestBed.inject(KbqToastService);
         overlayContainer = TestBed.inject(OverlayContainer);
@@ -392,6 +868,7 @@ describe('ToastService: global scroll notifications', () => {
 
     afterEach(() => {
         scrollSubscription.unsubscribe();
+        service.ngOnDestroy();
         overlayContainer.ngOnDestroy();
     });
 
@@ -439,8 +916,8 @@ describe('ToastService: global scroll notifications', () => {
 
         expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeTruthy();
 
+        service.ngOnDestroy();
         flush();
-        discardPeriodicTasks();
     }));
 
     it('keeps the container registered as a scrollable, so a real scroll still reaches the dispatcher', () => {
@@ -451,7 +928,7 @@ describe('ToastService: global scroll notifications', () => {
         expect(scrolled).toHaveBeenCalled();
     });
 
-    it('dispatches a scroll event on the container element when `dispatchScrollEvent` is called explicitly', () => {
+    it('still dispatches on the container when the deprecated `dispatchScrollEvent` is called explicitly', () => {
         const fixture = TestBed.createComponent(KbqToastContainerComponent);
         const onScroll = jest.fn();
 
@@ -467,16 +944,16 @@ describe('ToastService: global scroll notifications', () => {
     });
 });
 
-describe('ToastService: stack reflow reaches open overlays', () => {
-    let resized: Subject<void>;
+describe('KbqToastService: stack reflow', () => {
+    let resized: Subject<ResizeObserverEntry[]>;
     let service: KbqToastService;
     let overlayContainer: OverlayContainer;
 
     beforeEach(() => {
-        resized = new Subject<void>();
+        resized = new Subject<ResizeObserverEntry[]>();
 
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, KbqToastTemplateWrapperComponent],
+            imports: [KbqToastModule, NoopAnimationsModule, ToastTemplateWrapper],
             // jsdom performs no layout, so the real observer would never fire.
             providers: [{ provide: SharedResizeObserver, useValue: { observe: () => resized } }]
         });
@@ -486,16 +963,17 @@ describe('ToastService: stack reflow reaches open overlays', () => {
     });
 
     afterEach(() => {
+        service.ngOnDestroy();
         overlayContainer.ngOnDestroy();
     });
 
     /** The container registers itself in `ngOnInit`, which needs a change-detection pass to run. */
     const showToast = () => {
-        service.show(MOCK_TOAST_DATA, 0);
+        service.show(createToastData(), 0);
         TestBed.inject(ApplicationRef).tick();
     };
 
-    /** `reposition()` uses a throttle of 0, so the dispatcher delivers synchronously. */
+    /** `reposition()` and `scrolled(0)` both deliver synchronously, so no flushing is needed. */
     const collectScrolls = () => {
         const sources: (CdkScrollable | void)[] = [];
 
@@ -506,18 +984,18 @@ describe('ToastService: stack reflow reaches open overlays', () => {
         return sources;
     };
 
-    it('should report a reflow of the stack through the scroll dispatcher', () => {
+    it('reports a reflow of the stack through the scroll dispatcher', () => {
         showToast();
 
         const sources = collectScrolls();
 
-        resized.next();
+        resized.next([]);
 
         expect(sources.length).toBe(1);
         expect((sources[0] as CdkScrollable).getElementRef().nativeElement.classList).toContain('kbq-toast-container');
     });
 
-    it('should reposition an overlay that repositions on scroll', () => {
+    it('repositions an overlay anchored inside a toast', () => {
         showToast();
 
         const overlay = TestBed.inject(Overlay);
@@ -530,19 +1008,19 @@ describe('ToastService: stack reflow reaches open overlays', () => {
         });
 
         // The strategy only subscribes once the overlay is actually attached.
-        overlayRef.attach(new ComponentPortal(KbqToastButtonWrapperComponent));
+        overlayRef.attach(new ComponentPortal(ToastOverlayContent));
 
         const updatePosition = jest.spyOn(overlayRef, 'updatePosition');
 
-        resized.next();
+        resized.next([]);
 
         expect(updatePosition).toHaveBeenCalled();
 
         overlayRef.dispose();
     });
 
-    it('should report a reflow caused by a template toast, which is removed without an animation', () => {
-        const fixture = TestBed.createComponent(KbqToastTemplateWrapperComponent);
+    it('reports a reflow caused by a template toast, which is removed without an animation', () => {
+        const fixture = TestBed.createComponent(ToastTemplateWrapper);
 
         fixture.detectChanges();
 
@@ -559,12 +1037,12 @@ describe('ToastService: stack reflow reaches open overlays', () => {
         // A template toast carries no `@state` binding, so its removal fires no animation event —
         // watching the container's box is what makes this case report at all.
         service.hideTemplate(id);
-        resized.next();
+        resized.next([]);
 
         expect(sources.length).toBe(1);
     });
 
-    it('should still report real scroll events on the container', () => {
+    it('still reports real scroll events on the container', () => {
         showToast();
 
         const container = overlayContainer.getContainerElement().querySelector('kbq-toast-container')!;

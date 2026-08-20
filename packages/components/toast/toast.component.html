@@ -1,43 +1,15 @@
-@if (data.icon) {
-    <div class="kbq-toast__icon-container layout-row layout-align-start-start">
-        @if (data.icon === true) {
-            @switch (data.style) {
-                @case ('contrast') {
-                    <i
-                        kbq-icon="kbq-circle-info_16"
-                        class="kbq-toast__icon"
-                        [color]="$any(data.style)"
-                        [class]="data.iconClass"
-                    ></i>
-                }
-                @case ('success') {
-                    <i
-                        kbq-icon="kbq-circle-check_16"
-                        class="kbq-toast__icon"
-                        [color]="$any(data.style)"
-                        [class]="data.iconClass"
-                    ></i>
-                }
-                @case ('warning') {
-                    <i
-                        kbq-icon="kbq-triangle-exclamation_16"
-                        class="kbq-toast__icon"
-                        [color]="$any(data.style)"
-                        [class]="data.iconClass"
-                    ></i>
-                }
-                @case ('error') {
-                    <i
-                        kbq-icon="kbq-triangle-exclamation_16"
-                        class="kbq-toast__icon"
-                        [color]="$any(data.style)"
-                        [class]="data.iconClass"
-                    ></i>
-                }
-            }
-        }
-        @if (isTemplateRef(data.icon)) {
-            <ng-container [ngTemplateOutlet]="$any(data.icon)" [ngTemplateOutletContext]="{ $implicit }" />
+@if (icon) {
+    <div class="kbq-toast__icon-container">
+        @if (iconTemplate) {
+            <ng-container [ngTemplateOutlet]="iconTemplate" [ngTemplateOutletContext]="{ $implicit }" />
+        } @else if (defaultIcon) {
+            <i
+                class="kbq-toast__icon"
+                aria-hidden="true"
+                [kbq-icon]="defaultIcon"
+                [color]="style"
+                [class]="data.iconClass"
+            ></i>
         }
     </div>
 }
@@ -47,11 +19,11 @@
         <div
             kbq-title
             class="kbq-toast__title"
-            [class.kbq-toast__title_only-text]="!isTemplateRef(data.title)"
+            [class.kbq-toast__title_only-text]="!titleTemplate"
             [class.kbq-toast__title_with-content]="data.caption || data.content"
         >
-            @if (isTemplateRef(data.title)) {
-                <ng-container [ngTemplateOutlet]="$any(data.title)" [ngTemplateOutletContext]="{ $implicit }" />
+            @if (titleTemplate) {
+                <ng-container [ngTemplateOutlet]="titleTemplate" [ngTemplateOutletContext]="{ $implicit }" />
             } @else {
                 <p>{{ data.title }}</p>
             }
@@ -62,11 +34,11 @@
         <div
             kbq-title
             [class.kbq-toast__text]="data.title"
-            [class.kbq-toast__text_only-text]="!isTemplateRef(data.caption)"
+            [class.kbq-toast__text_only-text]="!captionTemplate"
             [class.kbq-toast__title]="!data.title"
         >
-            @if (isTemplateRef(data.caption)) {
-                <ng-container [ngTemplateOutlet]="$any(data.caption)" [ngTemplateOutletContext]="{ $implicit }" />
+            @if (captionTemplate) {
+                <ng-container [ngTemplateOutlet]="captionTemplate" [ngTemplateOutletContext]="{ $implicit }" />
             }
             <!-- prettier-ignore -->
             @else {{{ data.caption }}}
@@ -74,9 +46,9 @@
     }
 
     @if (data.content) {
-        <div class="kbq-toast__content" [class.kbq-toast__content_only-text]="!isTemplateRef(data.content)">
-            @if (isTemplateRef(data.content)) {
-                <ng-container [ngTemplateOutlet]="$any(data.content)" [ngTemplateOutletContext]="{ $implicit }" />
+        <div class="kbq-toast__content" [class.kbq-toast__content_only-text]="!contentTemplate">
+            @if (contentTemplate) {
+                <ng-container [ngTemplateOutlet]="contentTemplate" [ngTemplateOutletContext]="{ $implicit }" />
             }
             <!-- prettier-ignore -->
             @else {{{ data.content }}}
@@ -85,8 +57,8 @@
 
     @if (data.actions) {
         <div class="kbq-toast__actions">
-            @if (isTemplateRef(data.actions)) {
-                <ng-container [ngTemplateOutlet]="$any(data.actions)" [ngTemplateOutletContext]="{ $implicit }" />
+            @if (actionsTemplate) {
+                <ng-container [ngTemplateOutlet]="actionsTemplate" [ngTemplateOutletContext]="{ $implicit }" />
             } @else {
                 {{ data.actions }}
             }
@@ -94,13 +66,18 @@
     }
 </div>
 
-@if (data.closeButton) {
+@if (closeButton) {
     <div>
-        @if (data.closeButton === true) {
-            <i kbq-icon-button="kbq-xmark-s_16" kbq-toast-close-button (click)="close()"></i>
-        }
-        @if (isTemplateRef(data.closeButton)) {
-            <ng-container [ngTemplateOutlet]="$any(data.closeButton)" [ngTemplateOutletContext]="{ $implicit }" />
+        @if (closeButtonTemplate) {
+            <ng-container [ngTemplateOutlet]="closeButtonTemplate" [ngTemplateOutletContext]="{ $implicit }" />
+        } @else {
+            <button
+                type="button"
+                kbq-icon-button="kbq-xmark-s_16"
+                kbq-toast-close-button
+                [attr.aria-label]="a11yLocaleConfiguration().close"
+                (click)="close()"
+            ></button>
         }
     </div>
 }

@@ -48,6 +48,8 @@ The option to hide a toast using the icon button in the corner is available by d
 
 Sometimes it is useful to make a toast without a close × icon button. For example, when you need to show the progress of a background operation. In this case, a "Cancel" button with text should be placed in the action panel to allow interrupting the operation.
 
+The default close button is a native `<button>` whose accessible name comes from the locale, so it is reachable with <span class="docs-hot-key-button">Tab</span> and activated with <span class="docs-hot-key-button">Enter</span> or <span class="docs-hot-key-button">Space</span>. A template passed through `closeButton` replaces it entirely — keep it a real button and give it an accessible name.
+
 #### Actions
 
 Do not use toasts [to confirm commands](/en/components/modal/overview#simple-dialog-without-a-header).
@@ -83,15 +85,23 @@ At the designer's request, some toast messages may be recorded in the Notificati
 
 #### Tab sequence
 
+The sequence follows the reading order of the toast: the message first, its actions next, and the close button last.
+
 1. Inline link inside the toast text
-2. Close button
-3. Action 1
-4. Action 2
+2. Action 1
+3. Action 2
+4. Close button
 5. Inline link inside the next toast text
 6. …
 7. "Skip to content" link (optional)
 8. First element in the [Main menu](/en/components/navbar)
 9. …
+
+#### Screen readers
+
+A toast announces itself the moment it appears: the **error** and **warning** styles are inserted with `role="alert"` and interrupt the current announcement, the other styles use `role="status"` and wait for a pause. Both carry `aria-atomic="true"`, so the message is read as a whole. A toast shown through `showTemplate` gets `role="status"` on the first element of the template unless that element already declares a role of its own.
+
+Auto-dismissal is paused by hovering and by focus only. A screen reader user reading with a virtual cursor moves neither, so a toast that carries an action or reports an error should be shown with `duration: 0` and closed explicitly.
 
 ### Design and animation
 
@@ -124,6 +134,8 @@ The toast appears from the left horizontally. As it slides in, the new element b
 ##### Disappearance
 
 The toast slides horizontally to the right beyond the screen edge. The toast window height does not change. As it slides, the element becomes transparent. Messages below it smoothly rise to fill the freed space in the stack.
+
+Both animations are skipped when the operating system asks for reduced motion (`prefers-reduced-motion: reduce`); the toast then appears and disappears instantly.
 
 ### Module Federation and Shadow DOM
 

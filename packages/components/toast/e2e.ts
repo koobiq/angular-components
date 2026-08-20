@@ -1,12 +1,13 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
-import { KBQ_TOAST_FACTORY } from './toast.service';
-import { KbqToastStyle } from './toast.type';
+import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
+import { KBQ_TOAST_STACK, KbqToastStyle } from './toast.type';
 
 @Component({
     selector: 'e2e-toast-states',
@@ -46,7 +47,10 @@ import { KbqToastStyle } from './toast.type';
         {
             provide: KBQ_TOAST_FACTORY,
             useFactory: () => KbqToastComponent
-        }
+        },
+        // This fixture drives the containers directly instead of going through `show()`, so the stack every
+        // toast resolves has to be wired by hand — `KbqToastService` normally provides itself for its own stack.
+        { provide: KBQ_TOAST_STACK, useExisting: KbqToastService }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -144,6 +148,37 @@ export class E2eToastStates implements AfterViewInit {
             },
             this.toastFactory,
             false
+        );
+    }
+}
+
+/**
+ * Drives the real `KbqToastService`, so that the overlay, the stack position, auto-dismissal, the hover pause and
+ * the close button are exercised in a browser instead of being bypassed by `E2eToastStates`.
+ */
+@Component({
+    selector: 'e2e-toast-interaction',
+    imports: [KbqButtonModule],
+    template: `
+        <button kbq-button data-testid="e2eShowToast" (click)="show(2000)">Show</button>
+        <button kbq-button data-testid="e2eShowStickyToast" (click)="show(0)">Show sticky</button>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eToastInteraction'
+    }
+})
+export class E2eToastInteraction {
+    private readonly toastService = inject(KbqToastService);
+
+    show(duration: number): void {
+        this.toastService.show(
+            {
+                style: KbqToastStyle.Error,
+                title: 'Toast title',
+                caption: 'Toast caption'
+            },
+            duration
         );
     }
 }

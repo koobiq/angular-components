@@ -14,7 +14,16 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
     ],
     template: `
         <ng-template #toastAction let-toast>
-            <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Обновить</a>
+            <a
+                kbq-link
+                pseudo
+                role="button"
+                (click)="toast.close()"
+                (keydown.enter)="toast.close()"
+                (keydown.space)="$event.preventDefault(); toast.close()"
+            >
+                Обновить
+            </a>
         </ng-template>
 
         <div class="demo-block">

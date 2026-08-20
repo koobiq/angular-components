@@ -3,8 +3,9 @@
     --kbq-toast-stack-size-margin-top: var(--kbq-size-m);
     // @deprecated use --kbq-toast-stack-size-margin-horizontal
     --kbq-toast-stack-size-margin-right: var(--kbq-size-m);
-    --kbq-toast-stack-size-margin-vertical: var(--kbq-size-m);
-    --kbq-toast-stack-size-margin-horizontal: var(--kbq-size-m);
+    // The deprecated pair is chained in, so that overriding it keeps having the documented effect.
+    --kbq-toast-stack-size-margin-vertical: var(--kbq-toast-stack-size-margin-top);
+    --kbq-toast-stack-size-margin-horizontal: var(--kbq-toast-stack-size-margin-right);
     --kbq-toast-stack-size-gap: var(--kbq-size-s);
     --kbq-toast-size-container-width: 360px;
     --kbq-toast-size-container-border-radius: var(--kbq-size-s);
@@ -16,8 +17,18 @@
     --kbq-toast-size-icon-width: var(--kbq-size-l);
     --kbq-toast-size-icon-height: var(--kbq-size-l);
     --kbq-toast-size-icon-margin-right: var(--kbq-size-s);
-    --kbq-toast-size-icon-border-radius: 50%;
-    --kbq-toast-size-close-button-margin-top: var(--kbq-size-m);
+    // The icon box repeats the corner of the toast it sits in, so it follows the container radius by default.
+    --kbq-toast-size-icon-border-radius: var(--kbq-toast-size-container-border-radius);
+    --kbq-toast-size-close-button-padding: var(--kbq-size-xxs);
+    --kbq-toast-size-close-button-icon-size: 16px;
+    --kbq-toast-size-close-button-height: calc(
+        var(--kbq-toast-size-close-button-icon-size) + var(--kbq-toast-size-close-button-padding) * 2
+    );
+    // Centers the close button on the first line of the title instead of on the padding box.
+    --kbq-toast-size-close-button-margin-top: calc(
+        var(--kbq-toast-size-content-padding-top) -
+            (var(--kbq-toast-size-close-button-height) - var(--kbq-typography-text-normal-line-height)) / 2
+    );
     --kbq-toast-size-close-button-margin-right: var(--kbq-size-xxs);
     --kbq-toast-size-button-stack-padding-top: var(--kbq-size-s);
     --kbq-toast-size-button-stack-content-gap-horizontal: var(--kbq-size-m);
