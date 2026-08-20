@@ -249,6 +249,7 @@ export const tkTMLocaleData = {
         noNotifications: 'Duýduryş ýok',
         failedToLoadNotifications: 'Duýduryşlary ýükläp bilmedi',
         repeat: 'Gaýtalama',
-        loadingMore: 'Duýduryşlar ýüklenýär'
+        loadingMore: 'Duýduryşlar ýüklenýär',
+        unread: 'Okalmadyk'
     }
 } satisfies KbqLocaleStringsData;

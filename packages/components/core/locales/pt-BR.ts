@@ -248,6 +248,7 @@ export const ptBRLocaleData = {
         noNotifications: 'Sem notificações',
         failedToLoadNotifications: 'Falha ao carregar notificações',
         repeat: 'Repetir',
-        loadingMore: 'Carregando mais notificações'
+        loadingMore: 'Carregando mais notificações',
+        unread: 'Não lida'
     }
 } satisfies KbqLocaleStringsData;

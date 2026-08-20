@@ -100,7 +100,15 @@ import {
     E2eVerticalNavbarBrandFirstExpand,
     E2eVerticalNavbarStates
 } from '../components/navbar/e2e';
-import { E2eNotificationCenterStates } from '../components/notification-center/e2e';
+import {
+    E2eNotificationCenterEmpty,
+    E2eNotificationCenterError,
+    E2eNotificationCenterLoading,
+    E2eNotificationCenterLoadMore,
+    E2eNotificationCenterLoadMoreError,
+    E2eNotificationCenterStates,
+    E2eNotificationCenterTrigger
+} from '../components/notification-center/e2e';
 import {
     E2eOverflowItemsAdditionalTargets,
     E2eOverflowItemsDynamic,
@@ -320,6 +328,12 @@ const components = [
     E2eTitleOverflow,
     E2eToastInteraction,
     E2eNotificationCenterStates,
+    E2eNotificationCenterEmpty,
+    E2eNotificationCenterLoading,
+    E2eNotificationCenterError,
+    E2eNotificationCenterLoadMore,
+    E2eNotificationCenterLoadMoreError,
+    E2eNotificationCenterTrigger,
     E2ePopoverStates,
     E2ePopoverPositioning,
     E2ePopoverWithTooltip,

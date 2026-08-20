@@ -1,19 +1,24 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-notification-center-theme() {
-    .kbq-notification-center,
-    .kbq-notification-center-sub-header {
-        background: var(--kbq-background-card);
+    .kbq-notification-center {
+        background: var(--kbq-notification-center-container-background);
 
+        // Only the docked panel is bordered; in popover mode the shadow separates it instead. The
+        // sub-header is deliberately left out - it never carries the popover modifier and has no borders.
         &:not(.kbq-notification-center_popover) {
-            border-right-color: var(--kbq-line-contrast-less);
-            border-left-color: var(--kbq-line-contrast-less);
+            border-right-color: var(--kbq-notification-center-container-border-color);
+            border-left-color: var(--kbq-notification-center-container-border-color);
         }
+    }
+
+    .kbq-notification-center-sub-header {
+        background: var(--kbq-notification-center-container-background);
     }
 
     .kbq-notification-center-error-container,
     .kbq-notification-center-load-more-error {
-        color: var(--kbq-foreground-error);
+        color: var(--kbq-notification-center-error-text-color);
     }
 }
 

@@ -260,6 +260,7 @@ export const ruRULocaleData = {
         noNotifications: 'Нет уведомлений',
         failedToLoadNotifications: 'Не удалось загрузить уведомления',
         repeat: 'Повторить',
-        loadingMore: 'Загрузка уведомлений'
+        loadingMore: 'Загрузка уведомлений',
+        unread: 'Не прочитано'
     }
 } satisfies KbqLocaleStringsData;

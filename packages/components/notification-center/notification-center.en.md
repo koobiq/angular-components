@@ -6,7 +6,9 @@ The notification list opens from the main menu. The menu shows an unread message
 
 New notifications appear in the list and are grouped by date, with the newest at the top. Each item has a title and timestamp; optionally it may include a caption and actions. A delete button appears on hover or focus. Messages can be cleared per day or all at once.
 
-Unread messages are marked with a blue dot. On hover or interaction with an item (link, button, delete), the message is automatically marked as read.
+The `date` of a notification is any value the configured `DateAdapter` parses without an explicit format — ISO 8601, RFC 2822 or SQL for the Luxon adapter. It drives both the date group and the ordering. A value the adapter cannot parse is shown verbatim as its own group heading and sorted last, instead of breaking the list.
+
+Unread messages are marked with a blue dot and by an "Unread" label for screen readers. Dwelling on an item — with the pointer or with keyboard focus — or interacting with it (link, button, delete) marks the message as read.
 
 ### Empty state
 
@@ -28,7 +30,7 @@ The list can load notifications page by page as the user scrolls to the bottom. 
 
 ### Deletion
 
-Notifications can be removed one by one, by date group, or all at once. Subscribe to `KbqNotificationCenterService.onDelete` to react to a removal — for example, to delete the items on the server. The event fires for all three cases and carries `type` (`'item'`, `'group'` or `'all'`) and `items` — the notifications that were removed.
+Notifications can be removed one by one, by date group, or all at once. Subscribe to `KbqNotificationCenterService.onDelete` to react to a removal — for example, to delete the items on the server. The event fires for all three cases and carries `type` (`'item'`, `'group'` or `'all'`) and `items` — the notifications that were removed. Removing a notification that is not in the list is a no-op and emits nothing, so a stale reference cannot trigger a phantom deletion on the server.
 
 ### Dropdown window
 

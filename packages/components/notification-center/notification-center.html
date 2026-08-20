@@ -1,168 +1,183 @@
-<div class="kbq-notification-center-header">
-    <div class="kbq-notification-center-title">
-        <div class="kbq-notification-center-title__text">{{ localeData.notifications }}</div>
-        <button
-            #notificationSwitcher
-            kbq-button
-            class="kbq-notification-center-title__button"
-            data-testid="kbq-notification-center-silent-mode-toggle"
-            [kbqDropdownTriggerFor]="notificationSwitcherDropdown"
-            [kbqTooltip]="service.silentMode.value ? localeData.doNotDisturb : localeData.showPopUpNotifications"
-            [kbqTooltipArrow]="false"
-            [kbqPlacement]="'right'"
-            [kbqTooltipOffset]="4"
-            [kbqStyle]="'transparent'"
-            [color]="'contrast'"
-        >
-            <i kbq-icon="{{ service.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
-        </button>
-    </div>
-    <div class="kbq-notification-center-toolbar">
-        @if (!service.isEmpty) {
+<!-- `display: contents` keeps the trap out of the panel's flex layout while still scoping the focus trap
+to everything the panel renders. -->
+<div class="kbq-notification-center__trap" [cdkTrapFocus]="isTrapFocus">
+    <div class="kbq-notification-center-header">
+        <div class="kbq-notification-center-title">
+            <div class="kbq-notification-center-title__text" [id]="titleId">{{ localeData.notifications }}</div>
+            <button
+                #notificationSwitcher
+                kbq-button
+                class="kbq-notification-center-title__button"
+                data-testid="kbq-notification-center-silent-mode-toggle"
+                [kbqDropdownTriggerFor]="notificationSwitcherDropdown"
+                [attr.aria-label]="
+                    service.silentMode.value ? localeData.doNotDisturb : localeData.showPopUpNotifications
+                "
+                [kbqTooltip]="service.silentMode.value ? localeData.doNotDisturb : localeData.showPopUpNotifications"
+                [kbqTooltipArrow]="false"
+                [kbqPlacement]="'right'"
+                [kbqTooltipOffset]="4"
+                [kbqStyle]="'transparent'"
+                [color]="'contrast'"
+            >
+                <i kbq-icon="{{ service.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
+            </button>
+        </div>
+        <div class="kbq-notification-center-toolbar">
+            @if (!service.isEmpty) {
+                <button
+                    kbq-button
+                    class="kbq-notification-center-toolbar__button"
+                    data-testid="kbq-notification-center-remove-all-button"
+                    [attr.aria-label]="a11yLocaleConfiguration().removeAll"
+                    [kbqStyle]="'transparent'"
+                    [color]="'contrast'"
+                    [kbqTooltip]="localeData.removeAll"
+                    [kbqPlacement]="'bottom'"
+                    [kbqTooltipArrow]="false"
+                    (click)="removeAll()"
+                >
+                    <i kbq-icon="kbq-trash_16"></i>
+                </button>
+
+                <kbq-divider [vertical]="true" />
+            }
+
             <button
                 kbq-button
                 class="kbq-notification-center-toolbar__button"
-                data-testid="kbq-notification-center-remove-all-button"
-                [attr.aria-label]="a11yLocaleConfiguration().removeAll"
+                data-testid="kbq-notification-center-close-button"
+                [attr.aria-label]="a11yLocaleConfiguration().close"
                 [kbqStyle]="'transparent'"
                 [color]="'contrast'"
-                [kbqTooltip]="localeData.removeAll"
-                [kbqPlacement]="'bottom'"
-                [kbqTooltipArrow]="false"
-                (click)="service.removeAll()"
+                (click)="hide(0)"
             >
-                <i kbq-icon="kbq-trash_16"></i>
-            </button>
-
-            <kbq-divider [vertical]="true" />
-        }
-
-        <button
-            kbq-button
-            class="kbq-notification-center-toolbar__button"
-            data-testid="kbq-notification-center-close-button"
-            [attr.aria-label]="a11yLocaleConfiguration().close"
-            [kbqStyle]="'transparent'"
-            [color]="'contrast'"
-            (click)="hide(0)"
-        >
-            <i kbq-icon="kbq-xmark_16"></i>
-        </button>
-    </div>
-</div>
-
-<div
-    #notificationCenterContainer="kbqOverflowShadowContainer"
-    kbqScrollbarViewport
-    kbqOverflowShadowContainer
-    class="kbq-notification-center-container"
-    data-testid="kbq-notification-center-container"
-    [kbqOverflowShadowBottom]="notificationCenterContainer"
-    [shadow]="'var(--kbq-shadow-overflow-normal-bottom)'"
-    (scroll)="onContainerScroll()"
->
-    @if (!service.errorMode.value) {
-        @if (!service.loadingMode.value) {
-            @for (group of service.groupedItems | async; track group) {
-                <div
-                    class="kbq-notification-center-sub-header"
-                    data-testid="kbq-notification-center-group"
-                    [kbqOverflowShadowTop]="$first ? notificationCenterContainer : undefined"
-                >
-                    <div class="kbq-notification-center-sub-header__date">{{ group.title }}</div>
-
-                    <button
-                        kbq-button
-                        class="kbq-notification-center-sub-header__button"
-                        data-testid="kbq-notification-center-remove-group-button"
-                        [attr.aria-label]="localeData.remove"
-                        [kbqStyle]="'transparent'"
-                        [color]="'contrast'"
-                        [kbqTooltip]="localeData.remove"
-                        [kbqPlacement]="'right'"
-                        [kbqTooltipArrow]="false"
-                        (click)="service.removeGroup(group)"
-                    >
-                        <i kbq-icon="kbq-trash_16"></i>
-                    </button>
-                </div>
-
-                @for (item of group.items; track item) {
-                    <kbq-notification-item [data]="item" />
-                }
-            } @empty {
-                @if (!service.loadingMore.value) {
-                    <div class="kbq-notification-center-empty-container" data-testid="kbq-notification-center-empty">
-                        <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
-                        {{ localeData.noNotifications }}
-                    </div>
-                }
-            }
-
-            @if (service.loadingMore.value) {
-                <div
-                    class="kbq-notification-center-load-more"
-                    data-testid="kbq-notification-center-load-more"
-                    role="status"
-                    [attr.aria-label]="localeData.loadingMore"
-                >
-                    <kbq-progress-spinner [mode]="'indeterminate'" [size]="'compact'" />
-                </div>
-            }
-
-            @if (service.loadMoreErrorMode.value) {
-                <div
-                    class="kbq-notification-center-load-more-error"
-                    data-testid="kbq-notification-center-load-more-error"
-                    role="alert"
-                >
-                    {{ localeData.failedToLoadNotifications }}
-                    <button
-                        kbq-button
-                        data-testid="kbq-notification-center-load-more-retry-button"
-                        [kbqStyle]="'transparent'"
-                        [color]="'theme'"
-                        (click)="retryLoadMore()"
-                    >
-                        {{ localeData.repeat }}
-                    </button>
-                </div>
-            }
-        } @else {
-            <kbq-loader-overlay data-testid="kbq-notification-center-loader" [transparent]="true" />
-        }
-    } @else {
-        <div class="kbq-notification-center-error-container" data-testid="kbq-notification-center-error">
-            <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'error'" [fade]="true"></i>
-            {{ localeData.failedToLoadNotifications }}
-            <button
-                kbq-button
-                data-testid="kbq-notification-center-reload-button"
-                [kbqStyle]="'transparent'"
-                [color]="'theme'"
-                (click)="service.onReload.emit()"
-            >
-                {{ localeData.repeat }}
+                <i kbq-icon="kbq-xmark_16"></i>
             </button>
         </div>
-    }
-</div>
+    </div>
 
-<kbq-dropdown #notificationSwitcherDropdown="kbqDropdown">
-    <button
-        kbq-dropdown-item
-        data-testid="kbq-notification-center-show-notifications-button"
-        (click)="service.setSilentMode(false)"
+    <!-- One persistent live region for the whole panel: a region inserted together with its text is
+    not reliably announced, so only the text below ever changes. -->
+    <div class="cdk-visually-hidden" data-testid="kbq-notification-center-status" role="status" aria-live="polite">
+        {{ statusMessage }}
+    </div>
+
+    <div
+        #notificationCenterContainer="kbqOverflowShadowContainer"
+        kbqScrollbarViewport
+        kbqOverflowShadowContainer
+        class="kbq-notification-center-container"
+        data-testid="kbq-notification-center-container"
+        [kbqOverflowShadowBottom]="notificationCenterContainer"
+        [shadow]="'var(--kbq-shadow-overflow-normal-bottom)'"
     >
-        <i kbq-icon="{{ !service.silentMode.value ? 'kbq-circle-xs_16' : '' }}" [style.min-width.px]="16"></i>
-        {{ localeData.showPopUpNotifications }}
-    </button>
-    <button
-        kbq-dropdown-item
-        data-testid="kbq-notification-center-do-not-disturb-button"
-        (click)="service.setSilentMode(true)"
-    >
-        <i kbq-icon="{{ service.silentMode.value ? 'kbq-circle-xs_16' : '' }}" [style.min-width.px]="16"></i>
-        {{ localeData.doNotDisturb }}
-    </button>
-</kbq-dropdown>
+        @if (!service.errorMode.value) {
+            @if (!service.loadingMode.value) {
+                @for (group of service.groupedItems | async; track group.id) {
+                    <div
+                        class="kbq-notification-center-sub-header"
+                        data-testid="kbq-notification-center-group"
+                        [kbqOverflowShadowTop]="$first ? notificationCenterContainer : undefined"
+                    >
+                        <div class="kbq-notification-center-sub-header__date">{{ group.title }}</div>
+
+                        <button
+                            kbq-button
+                            class="kbq-notification-center-sub-header__button"
+                            data-testid="kbq-notification-center-remove-group-button"
+                            [attr.aria-label]="localeData.remove"
+                            [kbqStyle]="'transparent'"
+                            [color]="'contrast'"
+                            [kbqTooltip]="localeData.remove"
+                            [kbqPlacement]="'right'"
+                            [kbqTooltipArrow]="false"
+                            (click)="removeGroup(group)"
+                        >
+                            <i kbq-icon="kbq-trash_16"></i>
+                        </button>
+                    </div>
+
+                    @for (item of group.items; track item.id) {
+                        <kbq-notification-item [data]="item" />
+                    }
+                } @empty {
+                    @if (!service.loadingMore.value && !service.loadMoreErrorMode.value) {
+                        <div
+                            class="kbq-notification-center-empty-container"
+                            data-testid="kbq-notification-center-empty"
+                        >
+                            <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast-fade'"></i>
+                            {{ localeData.noNotifications }}
+                        </div>
+                    }
+                }
+
+                @if (service.loadingMore.value) {
+                    <div class="kbq-notification-center-load-more" data-testid="kbq-notification-center-load-more">
+                        <kbq-progress-spinner [mode]="'indeterminate'" [size]="'compact'" />
+                    </div>
+                } @else if (service.loadMoreErrorMode.value) {
+                    <div
+                        class="kbq-notification-center-load-more-error"
+                        data-testid="kbq-notification-center-load-more-error"
+                    >
+                        {{ localeData.failedToLoadNotifications }}
+                        <button
+                            kbq-button
+                            data-testid="kbq-notification-center-load-more-retry-button"
+                            [kbqStyle]="'transparent'"
+                            [color]="'theme'"
+                            (click)="retryLoadMore()"
+                        >
+                            {{ localeData.repeat }}
+                        </button>
+                    </div>
+                }
+            } @else {
+                <kbq-loader-overlay data-testid="kbq-notification-center-loader" [transparent]="true" />
+            }
+        } @else {
+            <div class="kbq-notification-center-error-container" data-testid="kbq-notification-center-error">
+                <i kbq-icon-item="kbq-bell_16" [big]="true" [color]="'error'" [fade]="true"></i>
+                {{ localeData.failedToLoadNotifications }}
+                <button
+                    kbq-button
+                    data-testid="kbq-notification-center-reload-button"
+                    [kbqStyle]="'transparent'"
+                    [color]="'theme'"
+                    (click)="service.onReload.next()"
+                >
+                    {{ localeData.repeat }}
+                </button>
+            </div>
+        }
+    </div>
+
+    <kbq-dropdown #notificationSwitcherDropdown="kbqDropdown">
+        <button
+            kbq-dropdown-item
+            data-testid="kbq-notification-center-show-notifications-button"
+            (click)="service.setSilentMode(false)"
+        >
+            <i
+                class="kbq-notification-center-switcher__mark"
+                kbq-icon="kbq-circle-xs_16"
+                [class.kbq-notification-center-switcher__mark_hidden]="service.silentMode.value"
+            ></i>
+            {{ localeData.showPopUpNotifications }}
+        </button>
+        <button
+            kbq-dropdown-item
+            data-testid="kbq-notification-center-do-not-disturb-button"
+            (click)="service.setSilentMode(true)"
+        >
+            <i
+                class="kbq-notification-center-switcher__mark"
+                kbq-icon="kbq-circle-xs_16"
+                [class.kbq-notification-center-switcher__mark_hidden]="!service.silentMode.value"
+            ></i>
+            {{ localeData.doNotDisturb }}
+        </button>
+    </kbq-dropdown>
+</div>
