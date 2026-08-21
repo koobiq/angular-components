@@ -1,3 +1,5 @@
+List отображает списки с группами, одиночным или множественным выбором, клавиатурной навигацией и виртуальной прокруткой.
+
 #### With default parameters (autoselect="true", no-unselect="true")
 
 <!-- example(list-overview) -->

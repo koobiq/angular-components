@@ -2,17 +2,20 @@
  * Script that will be used to transform
  * multiple markdown files into the equivalent HTML output.
  */
+import { generateSeoDescriptions } from './generate-seo-descriptions';
 import { docTask } from './utils';
+
+const overviewSources = [
+    'packages/components/**/!(README|examples*).md',
+    'packages/components-experimental/**/!(README|examples*).md',
+    'docs/guides/**/*.md',
+    'docs/data-grid/**/*.md'
+];
 
 const docsContent = async () => {
     for (const task of [
         docTask('docs-content-overviews', {
-            source: [
-                'packages/components/**/!(README|examples*).md',
-                'packages/components-experimental/**/!(README|examples*).md',
-                'docs/guides/**/*.md',
-                'docs/data-grid/**/*.md'
-            ],
+            source: overviewSources,
             dest: 'dist/docs-content/overviews'
         }),
 
@@ -26,6 +29,8 @@ const docsContent = async () => {
     ]) {
         await task();
     }
+
+    await generateSeoDescriptions(overviewSources);
 };
 
 docsContent();
