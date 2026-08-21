@@ -134,8 +134,8 @@ export class E2eScrollbarTrack {}
 
         <kbq-scrollbar class="e2e-scrollbar" data-testid="e2eScrollbarModeTarget" [kbqScrollbarMode]="mode()">
             <p>content</p>
-            <!-- Plain, unmonitored content — the viewport's own subtree focus monitoring covers it
-                 without needing a per-element cdkMonitorElementFocus opt-in. -->
+            <!-- A focusable descendant used to drive keyboard scrolling (Tab in, then ArrowDown): focus
+                 alone must not reveal the track, only the resulting scroll does. -->
             <button type="button" data-testid="e2eScrollbarModeFocusable">focusable</button>
         </kbq-scrollbar>
     `,

@@ -4,12 +4,12 @@
 
 Режим задаётся входным параметром `kbqScrollbarMode`:
 
-| Режим    | Описание                                                                                         |
-| -------- | ------------------------------------------------------------------------------------------------ |
-| `hover`  | Скроллбар появляется при наведении указателя или клавиатурном фокусе. Используется по умолчанию. |
-| `always` | Скроллбар отображается постоянно, если содержимое выходит за границы области.                    |
-| `native` | Отображается системный скроллбар браузера.                                                       |
-| `hidden` | Скроллбар скрыт, но содержимое можно прокручивать.                                               |
+| Режим    | Описание                                                                               |
+| -------- | -------------------------------------------------------------------------------------- |
+| `hover`  | Скроллбар появляется при наведении указателя или прокрутке. Используется по умолчанию. |
+| `always` | Скроллбар отображается постоянно, если содержимое выходит за границы области.          |
+| `native` | Отображается системный скроллбар браузера.                                             |
+| `hidden` | Скроллбар скрыт, но содержимое можно прокручивать.                                     |
 
 Режим по умолчанию для приложения или отдельной области DI можно изменить с помощью `kbqScrollbarOptionsProvider`.
 
@@ -36,6 +36,32 @@
 В методах с параметром `behavior` можно выбрать нативное поведение прокрутки `auto` или `smooth`.
 
 <!-- example(scrollbar-scroll-to) -->
+
+## Индикаторы прокрутки
+
+Вызовите `flashScrollIndicators`, чтобы кратко показать скроллбар и подсказать, что содержимое можно прокручивать:
+
+```ts
+import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
+
+@Component({
+    imports: [KbqScrollbar],
+    template: `
+        <kbq-scrollbar>...</kbq-scrollbar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class FlashScrollIndicatorsExample {
+    private readonly scrollbar = viewChild.required(KbqScrollbar);
+
+    constructor() {
+        afterNextRender(() => {
+            this.scrollbar().flashScrollIndicators();
+        });
+    }
+}
+```
 
 ## Браузерный скроллбар
 

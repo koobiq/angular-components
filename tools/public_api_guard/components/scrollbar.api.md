@@ -7,7 +7,6 @@
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/scrolling';
-import * as i2 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Provider } from '@angular/core';
@@ -85,7 +84,7 @@ export class KbqScrollbarViewport {
     scrollToElement(target: HTMLElement | string, options?: KbqScrollbarScrollToElementOptions): void;
     scrollToTop(behavior?: ScrollBehavior): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarViewport, "[kbqScrollbarViewport]", never, { "mode": { "alias": "kbqScrollbarMode"; "required": false; "isSignal": true; }; "hideDelay": { "alias": "kbqScrollbarHideDelay"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }, { directive: typeof i2.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarViewport, "[kbqScrollbarViewport]", never, { "mode": { "alias": "kbqScrollbarMode"; "required": false; "isSignal": true; }; "hideDelay": { "alias": "kbqScrollbarHideDelay"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbarViewport, never>;
 }

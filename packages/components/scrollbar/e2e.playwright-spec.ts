@@ -248,36 +248,19 @@ test.describe('KbqScrollbar', () => {
             await expect(track).toHaveCSS('opacity', '1');
         });
 
-        test('hover mode: clicking a focusable descendant with the mouse does not keep the track visible after the pointer leaves', async ({
-            page
-        }) => {
-            // Regression test: the track used to stay visible relying on `:focus-within`, which also
-            // matches DOM focus left behind by a mouse click (e.g. a dropdown item), not just keyboard
-            // navigation. Fixed by keying off `.cdk-keyboard-focused` instead.
+        test('hover mode: focusing a descendant does not reveal the track', async ({ page }) => {
+            // Focus never reveals the hover track — only pointer hover and scrolling do. This guards that a
+            // mouse click on a focusable descendant (which leaves DOM focus behind) doesn't keep the track
+            // visible once the pointer leaves.
             await setMode(page, 'hover');
             const track = getTrack(page);
 
             // `force: true`: the horizontal thumb overlaps the button (the shared fixture content
-            // overflows both axes), which is irrelevant here — only the resulting focus origin matters.
+            // overflows both axes), which is irrelevant here — only the resulting focus matters.
             await page.getByTestId('e2eScrollbarModeFocusable').click({ force: true });
             await page.mouse.move(0, 0);
 
             await expect(track).toHaveCSS('opacity', '0');
-        });
-
-        test('hover mode: keyboard-focusing a plain descendant keeps the track visible', async ({ page }) => {
-            // The button isn't individually wired up to `FocusMonitor` — `KbqScrollbarViewport` monitors
-            // its whole subtree, so this works for any projected content, not just components that opt in.
-            await setMode(page, 'hover');
-            const track = getTrack(page);
-
-            // `Locator.focus()` is program-origin, not keyboard-origin — real Tab navigation is required
-            // so `FocusMonitor` classifies the resulting focus as `cdk-keyboard-focused`. Nothing between
-            // the last mode button and the target is tabbable, so a single Tab reaches it.
-            await page.getByTestId('mode-hidden').focus();
-            await page.keyboard.press('Tab');
-
-            await expect(track).toHaveCSS('opacity', '1');
         });
 
         test('hover mode: keyboard-scrolling via a focused descendant shows the track', async ({ page }) => {

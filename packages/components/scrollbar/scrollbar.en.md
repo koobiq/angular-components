@@ -4,12 +4,12 @@
 
 The `kbqScrollbarMode` input controls how the scrollbar is displayed:
 
-| Mode     | Description                                                                       |
-| -------- | --------------------------------------------------------------------------------- |
-| `hover`  | Shows the scrollbar on pointer hover or keyboard focus. This is the default mode. |
-| `always` | Always shows the scrollbar when the content overflows its container.              |
-| `native` | Shows the browser's native scrollbar.                                             |
-| `hidden` | Hides the scrollbar while keeping the content scrollable.                         |
+| Mode     | Description                                                               |
+| -------- | ------------------------------------------------------------------------- |
+| `hover`  | Shows the scrollbar on pointer hover or scroll. This is the default mode. |
+| `always` | Always shows the scrollbar when the content overflows its container.      |
+| `native` | Shows the browser's native scrollbar.                                     |
+| `hidden` | Hides the scrollbar while keeping the content scrollable.                 |
 
 Use `kbqScrollbarOptionsProvider` to change the default mode for the application or a specific dependency injection scope.
 
@@ -36,6 +36,32 @@ Access the component through its `kbqScrollbar` export and use its public method
 Methods that accept a `behavior` parameter support the native `auto` and `smooth` scrolling behaviors.
 
 <!-- example(scrollbar-scroll-to) -->
+
+## Scroll indicators
+
+Call `flashScrollIndicators` to briefly reveal the scrollbar and hint that the content is scrollable:
+
+```ts
+import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
+
+@Component({
+    imports: [KbqScrollbar],
+    template: `
+        <kbq-scrollbar>...</kbq-scrollbar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class FlashScrollIndicatorsExample {
+    private readonly scrollbar = viewChild.required(KbqScrollbar);
+
+    constructor() {
+        afterNextRender(() => {
+            this.scrollbar().flashScrollIndicators();
+        });
+    }
+}
+```
 
 ## Browser scrollbar
 

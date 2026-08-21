@@ -1,4 +1,4 @@
-import { _IdGenerator, CdkMonitorFocus } from '@angular/cdk/a11y';
+import { _IdGenerator } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
@@ -130,7 +130,7 @@ function getElementOffset(ancestor: HTMLElement, element: HTMLElement): { offset
 
 /**
  * How the scrollbar is presented:
- * - `hover` — track appears on pointer hover or keyboard focus (default);
+ * - `hover` — track appears on pointer hover or while scrolling (default);
  * - `always` — track is always visible while the content overflows;
  * - `native` — the browser's native scrollbar is used;
  * - `hidden` — no scrollbar is shown, but the content stays scrollable.
@@ -250,16 +250,11 @@ type ScrollPosition = [number, number];
     host: {
         class: 'kbq-scrollbar-viewport',
         '[class.kbq-scrollbar-viewport_native-scrollbar-hidden]': 'mode() !== "native"',
-        // Monitors the whole subtree (not just this element) so `cdk-keyboard-focused` lands on the
-        // viewport itself whenever ANY descendant is keyboard-focused — projected content doesn't have
-        // to opt in individually with its own `cdkMonitorElementFocus`. Drives the hover-mode track's
-        // visibility in scrollbar-viewport.scss.
-        '[attr.cdkMonitorSubtreeFocus]': 'true',
         // A stable id for the thumb's `aria-controls` to point at, preserving one a consumer already
         // set rather than clobbering it.
         '[attr.id]': 'id'
     },
-    hostDirectives: [CdkScrollable, CdkMonitorFocus]
+    hostDirectives: [CdkScrollable]
 })
 export class KbqScrollbarViewport {
     private readonly styleLoader = inject(_CdkPrivateStyleLoader);
