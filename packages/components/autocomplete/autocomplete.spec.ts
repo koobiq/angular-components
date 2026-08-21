@@ -911,6 +911,59 @@ describe('KbqAutocomplete', () => {
             expect(panel.getScrollTop()).toEqual(0);
         });
 
+        // Autocomplete keeps DOM focus on the input, so it must scroll the active option into view by
+        // setting `scrollTop` explicitly rather than leaning on the native scroll-into-view side effect of
+        // `HTMLElement.focus()`, which Safari does not perform for an option that immediately loses focus
+        // back to the input. jsdom reports zero geometry, so the option/panel sizes are stubbed to drive
+        // the calculation. Each case would fail against the old `focus()`-only implementation.
+        describe('scrolling the active option into view', () => {
+            const stub = (
+                element: HTMLElement,
+                property: 'offsetTop' | 'offsetHeight' | 'clientHeight',
+                value: number
+            ) => Object.defineProperty(element, property, { configurable: true, value });
+
+            let activeOptionElement: HTMLElement;
+            let panelContent: HTMLElement;
+
+            beforeEach(() => {
+                trigger.handleKeydown(DOWN_ARROW_EVENT);
+                fixture.detectChanges();
+
+                activeOptionElement = trigger.activeOption!.getHostElement();
+                panelContent = panel.panel().nativeElement;
+
+                stub(activeOptionElement, 'offsetHeight', 32);
+                stub(panelContent, 'clientHeight', 256);
+            });
+
+            it('scrolls down so an option below the viewport aligns with the viewport bottom', () => {
+                stub(activeOptionElement, 'offsetTop', 388);
+
+                trigger.scrollActiveOptionIntoView();
+
+                // 388 + 32 > 0 + 256, so scroll until the option bottom meets the viewport bottom.
+                expect(panel.getScrollTop()).toBe(164);
+            });
+
+            it('scrolls up to reveal an option sitting above the current scroll position', () => {
+                panel.setScrollTop(200);
+                stub(activeOptionElement, 'offsetTop', 100);
+
+                trigger.scrollActiveOptionIntoView();
+
+                expect(panel.getScrollTop()).toBe(100);
+            });
+
+            it('leaves the scroll position untouched when the option is already fully visible', () => {
+                stub(activeOptionElement, 'offsetTop', 64);
+
+                trigger.scrollActiveOptionIntoView();
+
+                expect(panel.getScrollTop()).toBe(0);
+            });
+        });
+
         it('should close the panel when pressing escape', fakeAsync(() => {
             const trigger = fixture.componentInstance.trigger();
 
