@@ -2,14 +2,15 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { TableDisableHoverExample } from 'packages/docs-examples/components/table';
+import { TableDisableHoverExample, TableStickyHeaderExample } from 'packages/docs-examples/components/table';
 
 @Component({
     selector: 'dev-examples',
-    imports: [TableDisableHoverExample],
+    imports: [TableDisableHoverExample, TableStickyHeaderExample],
     template: `
         <table-disable-hover-example />
         <hr />
+        <table-sticky-header-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
