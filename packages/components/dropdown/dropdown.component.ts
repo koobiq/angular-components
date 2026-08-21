@@ -275,7 +275,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      * pointer moves from a trigger toward its open submenu, sibling items it crosses over on the way
      * don't prematurely close the submenu.
      */
-    readonly safeTriangle = input(this.defaultOptions.safeTriangle ?? false, { transform: booleanAttribute });
+    readonly safeTriangle = input(this.defaultOptions.safeTriangle ?? true, { transform: booleanAttribute });
 
     /**
      * `panelMinWidth` rendered as a CSS length for the `--kbq-dropdown-size-container-width-min`
@@ -365,10 +365,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /**
-     * Starts tracking the pointer against `triangle` (see `getSafeTriangleVertices`). While the
-     * pointer stays inside the triangle, the submenu it protects is kept open; `onExit` runs once the
-     * pointer either leaves the triangle or, failing that protection, lands inside `panelRect` (the
-     * submenu itself, which needs no further tracking). Replaces any triangle already being tracked.
+     * pointer stays inside the triangle, the submenu it protects is kept open; tracking stops once the
+     * pointer lands inside `panelRect` (the submenu itself). If the pointer leaves the triangle before
+     * reaching the panel, `onExit` runs once. Replaces any triangle already being tracked.
      * @docs-private
      */
     activateSafeTriangle(triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void {
