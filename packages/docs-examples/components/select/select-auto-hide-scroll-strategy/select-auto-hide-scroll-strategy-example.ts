@@ -14,6 +14,7 @@ import {
     KbqAutoHideScrollStrategy,
     kbqAutoHideScrollStrategyFactory
 } from '@koobiq/components/core';
+import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -21,9 +22,9 @@ import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
  */
 @Component({
     selector: 'select-auto-hide-scroll-strategy-example',
-    imports: [CdkScrollableModule, KbqSelectModule],
+    imports: [CdkScrollableModule, KbqSelectModule, KbqNativeScrollbar],
     template: `
-        <div class="example-select-auto-hide-scroll-strategy__container kbq-scrollbar" cdkScrollable>
+        <div class="example-select-auto-hide-scroll-strategy__container" kbqNativeScrollbar cdkScrollable>
             <div class="example-select-auto-hide-scroll-strategy__spacer">Scroll down</div>
 
             <kbq-form-field>

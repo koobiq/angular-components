@@ -14,7 +14,8 @@ import { EmbeddedViewRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
-import * as i2 from '@angular/cdk/portal';
+import * as i2$1 from '@angular/cdk/portal';
+import * as i2 from '@koobiq/components/scrollbar';
 import * as i3 from '@koobiq/components/button';
 import * as i4 from '@koobiq/components/icon';
 import * as i5 from '@koobiq/components/title';
@@ -54,7 +55,7 @@ export class KbqSidepanelActions {
 export class KbqSidepanelBody {
     constructor();
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, true, [{ directive: typeof _koobiq_components_core.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }, { directive: typeof i2.KbqScrollbarViewport; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelBody, never>;
 }
@@ -160,7 +161,7 @@ export class KbqSidepanelModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqSidepanelModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions], [typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidepanelModule, never, [typeof i1.OverlayModule, typeof i2$1.PortalModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.A11yModule, typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions], [typeof KbqSidepanelContainerComponent, typeof KbqSidepanelClose, typeof KbqSidepanelHeader, typeof KbqSidepanelBody, typeof KbqSidepanelFooter, typeof KbqSidepanelActions]>;
 }
 
 // @public (undocumented)

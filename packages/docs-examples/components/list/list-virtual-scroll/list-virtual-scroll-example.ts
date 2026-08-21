@@ -3,18 +3,25 @@ import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 
 /**
  * @title List with virtual-scroll
  */
 @Component({
     selector: 'list-virtual-scroll-example',
-    imports: [KbqListModule, FormsModule, ScrollingModule, JsonPipe],
+    imports: [KbqListModule, FormsModule, ScrollingModule, JsonPipe, KbqScrollbarViewport],
     template: `
         <div>Selected: {{ selected | json }}</div>
         <br />
         <kbq-list-selection style="height: 200px" multiple [(ngModel)]="selected">
-            <cdk-virtual-scroll-viewport style="height: 100%" itemSize="32" minBufferPx="300" maxBufferPx="300">
+            <cdk-virtual-scroll-viewport
+                kbqScrollbarViewport
+                style="height: 100%"
+                itemSize="32"
+                minBufferPx="300"
+                maxBufferPx="300"
+            >
                 <kbq-list-option *cdkVirtualFor="let option of options" [value]="option">
                     {{ option.label }}
                 </kbq-list-option>

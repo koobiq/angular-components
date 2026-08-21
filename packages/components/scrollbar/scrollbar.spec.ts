@@ -1,8 +1,11 @@
+import { Dir } from '@angular/cdk/bidi';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchMouseEvent, KbqOverflowShadowContainer } from '@koobiq/components/core';
+import { Subject } from 'rxjs';
 import {
     KbqNativeScrollbar,
     KbqScrollbar,
@@ -43,6 +46,21 @@ const setMetrics = (el: HTMLElement, metrics: ElementMetrics): void => {
 /** `CdkScrollable` lives on `<kbq-scrollbar>`'s own element injector (via `KbqScrollbarViewport`'s hostDirectives), not the test host root. */
 const getScrollable = (fixture: ComponentFixture<unknown>): CdkScrollable =>
     fixture.debugElement.query(By.directive(KbqScrollbar)).injector.get(CdkScrollable);
+
+/**
+ * Drives `KbqScrollbarTrack`'s geometry pipe under test. It reads the viewport box on each
+ * `SharedResizeObserver` emission, but the real observer never fires against jsdom's no-op
+ * `ResizeObserver`, so swap in a controllable stream and call `triggerResize()` after setting the
+ * viewport metrics to apply the geometry.
+ */
+const createResizeTrigger = (): { provider: Provider; triggerResize: () => void } => {
+    const resizes = new Subject<ResizeObserverEntry[]>();
+
+    return {
+        provider: { provide: SharedResizeObserver, useValue: { observe: () => resizes } },
+        triggerResize: () => resizes.next([])
+    };
+};
 
 const setRect = (el: HTMLElement, rect: Partial<DOMRect>): void => {
     jest.spyOn(el, 'getBoundingClientRect').mockReturnValue({
@@ -354,16 +372,89 @@ describe(KbqScrollbar.name, () => {
         }));
 
         it('mirrors the viewport clientHeight into block-size/margin-block-end, one pixel short', fakeAsync(() => {
-            const fixture = createComponent(TestScrollbarTrackVisibility);
+            const { provider, triggerResize } = createResizeTrigger();
+            const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
             const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
 
             setMetrics(getViewportEl(fixture), { clientHeight: 50 });
 
-            tick(300);
+            triggerResize();
             fixture.detectChanges();
 
             expect(trackEl.style.blockSize).toBe('49px');
             expect(trackEl.style.marginBlockEnd).toBe('-49px');
+
+            discardPeriodicTasks();
+        }));
+
+        it('lifts the track over the viewport start padding on both axes so it spans the padding box, flush and without shifting content', fakeAsync(() => {
+            const { provider, triggerResize } = createResizeTrigger();
+            const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
+            const viewportEl = getViewportEl(fixture);
+            const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
+
+            setMetrics(viewportEl, { clientHeight: 50, clientWidth: 30 });
+            const realGetComputedStyle = window.getComputedStyle.bind(window);
+
+            jest.spyOn(window, 'getComputedStyle').mockImplementation((el) =>
+                el === viewportEl
+                    ? ({ paddingBlockStart: '8px', paddingInlineStart: '6px' } as CSSStyleDeclaration)
+                    : realGetComputedStyle(el)
+            );
+
+            triggerResize();
+            fixture.detectChanges();
+
+            // Block axis: `margin-block-start`/`inset-block-start` lift the track by the 8px block-start
+            // padding; `margin-block-end` both cancels the 49px block-size and compensates that lift
+            // (8 - 49 = -41), so the net layout contribution stays zero and content is not shifted.
+            expect(trackEl.style.blockSize).toBe('49px');
+            expect(trackEl.style.marginBlockStart).toBe('-8px');
+            expect(trackEl.style.insetBlockStart).toBe('-8px');
+            expect(trackEl.style.marginBlockEnd).toBe('-41px');
+
+            // Inline axis: the exact mirror with the 6px inline-start padding (6 - 29 = -23).
+            expect(trackEl.style.minInlineSize).toBe('29px');
+            expect(trackEl.style.maxInlineSize).toBe('29px');
+            expect(trackEl.style.marginInlineStart).toBe('-6px');
+            expect(trackEl.style.insetInlineStart).toBe('-6px');
+            expect(trackEl.style.marginInlineEnd).toBe('-23px');
+
+            discardPeriodicTasks();
+        }));
+
+        it('toggles kbq-scrollbar-track_revealed while scrolling and clears it after scrolling stops', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarTrackVisibility);
+            const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
+
+            expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
+
+            getViewportEl(fixture).dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
+            expect(trackEl.classList).toContain('kbq-scrollbar-track_revealed');
+
+            // Cleared hideDelay (1000ms default) after the last scroll event.
+            tick(1000);
+            fixture.detectChanges();
+            expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
+
+            discardPeriodicTasks();
+        }));
+
+        it('flashScrollIndicators() reveals the track and clears it after hideDelay, without any scroll', fakeAsync(() => {
+            const fixture = createComponent(TestScrollbarTrackVisibility);
+            const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
+            const scrollbar: KbqScrollbar = fixture.debugElement.query(By.directive(KbqScrollbar)).componentInstance;
+
+            expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
+
+            scrollbar.flashScrollIndicators();
+            fixture.detectChanges();
+            expect(trackEl.classList).toContain('kbq-scrollbar-track_revealed');
+
+            tick(1000);
+            fixture.detectChanges();
+            expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
 
             discardPeriodicTasks();
         }));
@@ -505,7 +596,7 @@ describe(KbqScrollbar.name, () => {
         it('negates the horizontal offset in RTL when clicking the track', fakeAsync(() => {
             @Component({
                 selector: 'test-scrollbar-thumb-rtl',
-                imports: [KbqScrollbarViewport],
+                imports: [Dir, KbqScrollbarViewport],
                 template: `
                     <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
                 `
@@ -514,12 +605,6 @@ describe(KbqScrollbar.name, () => {
 
             const fixture = createComponent(TestScrollbarThumbRtl);
             const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
-
-            // jsdom's `.matches()` doesn't support `:scope` combined with a descendant combinator
-            // (confirmed: `el.matches('[dir="rtl"] :scope')` returns false even with a real dir="rtl"
-            // ancestor, while `el.closest('[dir="rtl"]')` correctly finds it) — so the `dir="rtl"`
-            // wrapper above only documents intent; the RTL branch itself has to be forced here.
-            jest.spyOn(thumb, 'matches').mockReturnValue(true);
 
             setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
             setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });

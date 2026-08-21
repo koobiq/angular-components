@@ -110,3 +110,41 @@ export class E2eModalFullCustom {
         });
     }
 }
+
+@Component({
+    selector: 'e2e-modal-scrollbar',
+    template: `
+        <button data-testid="e2eOpenModal" (click)="open()">Open modal</button>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 400px;
+            height: 400px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eModalScrollbar'
+    }
+})
+export class E2eModalScrollbar {
+    private readonly modal = inject(KbqModalService);
+
+    // A long wrapping paragraph so the fixed-height body overflows and scrolls.
+    protected readonly content = Array.from({ length: 40 }, (_, i) => `Scrollable modal line ${i}`).join(' ');
+
+    protected open(): void {
+        this.modal.create({
+            kbqWidth: '360px',
+            kbqBodyStyle: { height: '200px' },
+            kbqTitle: 'Scrollable modal',
+            kbqContent: this.content,
+            kbqOkText: 'Ok',
+            kbqCancelText: 'Cancel'
+        });
+    }
+}

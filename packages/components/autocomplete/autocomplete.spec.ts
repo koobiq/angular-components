@@ -1076,7 +1076,11 @@ describe('KbqAutocomplete', () => {
             const fixture = createComponent(SimpleAutocomplete, [
                 {
                     provide: ScrollDispatcher,
-                    useValue: { scrolled: () => scrolledSubject.asObservable() }
+                    useValue: {
+                        scrolled: () => scrolledSubject.asObservable(),
+                        register: () => {},
+                        deregister: () => {}
+                    }
                 }
             ]);
 

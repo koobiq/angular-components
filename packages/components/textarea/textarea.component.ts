@@ -25,6 +25,7 @@ import {
     KBQ_WINDOW
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { asapScheduler, observeOn, Subject } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
@@ -35,7 +36,7 @@ let nextUniqueId = 0;
     selector: 'textarea[kbqTextarea]',
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }],
     host: {
-        class: 'kbq-textarea kbq-scrollbar',
+        class: 'kbq-textarea',
         '[class.kbq-textarea-resizable]': '!canGrow',
         '[class.kbq-textarea_max-row-limit-reached]': 'maxRowLimitReached',
         '[attr.id]': 'id',
@@ -47,6 +48,7 @@ let nextUniqueId = 0;
         '(focus)': 'focusChanged(true)',
         '(input)': 'dirtyCheckNativeValue()'
     },
+    hostDirectives: [KbqNativeScrollbar],
     exportAs: 'kbqTextarea'
 })
 export class KbqTextarea

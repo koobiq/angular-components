@@ -259,7 +259,9 @@ describe('KbqTimezoneSelect', () => {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable(),
-                        getAncestorScrollContainers: () => []
+                        getAncestorScrollContainers: () => [],
+                        register: () => {},
+                        deregister: () => {}
                     })
                 }
             ]
@@ -928,7 +930,11 @@ describe('KbqTimezoneSelect', () => {
         it('should display tooltip when option text wraps beyond the visible rows count', fakeAsync(() => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            // Not `flush()`: the panel now hosts `kbqScrollbarViewport`, whose track drives a
+            // self-rescheduling `requestAnimationFrame` loop that `flush()` can never drain (it hits the
+            // 20-task limit). `tick` advances a fixed span and `discardPeriodicTasks()` clears the still
+            // -pending scrollbar tasks at the end.
+            tick(500);
 
             const optionInstances = fixture.componentInstance.options();
             const tooltipContentEl = optionInstances[2].tooltipContent().nativeElement;
@@ -944,7 +950,7 @@ describe('KbqTimezoneSelect', () => {
 
             dispatchMouseEvent(optionEls[2], 'mouseenter');
             fixture.detectChanges();
-            flush();
+            tick(500);
             discardPeriodicTasks();
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');

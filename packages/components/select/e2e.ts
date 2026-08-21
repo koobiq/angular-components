@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/f
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { EMPTY } from 'rxjs';
 import { KbqSelect } from './select.component';
@@ -753,3 +754,80 @@ export class E2eVirtualScrollSelectPanelMaxHeight {
     }
 })
 export class E2eSelectSelectAllStates {}
+
+@Component({
+    selector: 'e2e-select-scrollbar',
+    imports: [
+        KbqSelectModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select data-testid="e2eSelect" [value]="'Option 0'">
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+
+            width: 350px;
+            height: 500px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectScrollbar'
+    }
+})
+export class E2eSelectScrollbar {
+    protected readonly options = Array.from({ length: 40 }).map((_, i) => `Option ${i}`);
+}
+
+@Component({
+    selector: 'e2e-virtual-scroll-select-scrollbar',
+    imports: [KbqSelectModule, ScrollingModule, KbqScrollbarViewport],
+    template: `
+        <kbq-form-field>
+            <kbq-select data-testid="e2eSelect" [(value)]="selected" (openedChange)="openedChange($event)">
+                <cdk-virtual-scroll-viewport kbqScrollbarViewport itemSize="32" minBufferPx="300" maxBufferPx="300">
+                    <kbq-option *cdkVirtualFor="let option of options" [value]="option">{{ option }}</kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+
+            width: 350px;
+            height: 500px;
+            padding: 8px;
+        }
+
+        .kbq-form-field {
+            width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eVirtualScrollSelectScrollbar'
+    }
+})
+export class E2eVirtualScrollSelectScrollbar {
+    protected readonly options = Array.from({ length: 10000 }).map((_, i) => `Option ${i}`);
+    protected readonly viewport = viewChild.required(CdkVirtualScrollViewport);
+
+    protected selected = this.options[0];
+
+    protected openedChange(isOpened: boolean): void {
+        if (!isOpened) return;
+        this.viewport().scrollToIndex(this.options.indexOf(this.selected));
+    }
+}

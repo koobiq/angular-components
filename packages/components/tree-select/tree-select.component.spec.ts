@@ -1866,7 +1866,9 @@ describe('KbqTreeSelect', () => {
                 {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
-                        scrolled: () => scrolledSubject.asObservable()
+                        scrolled: () => scrolledSubject.asObservable(),
+                        register: () => {},
+                        deregister: () => {}
                     })
                 },
                 ...providers

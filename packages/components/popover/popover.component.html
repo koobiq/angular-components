@@ -32,7 +32,8 @@
             <div
                 #popoverContent="kbqOverflowShadowContainer"
                 kbqOverflowShadowContainer
-                class="kbq-popover__content kbq-scrollbar"
+                kbqScrollbarViewport
+                class="kbq-popover__content"
                 [class.kbq-popover__content_default-paddings]="defaultPaddings"
                 [debounce]="15"
                 (cdkObserveContent)="popoverContent.checkOverflow()"

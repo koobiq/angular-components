@@ -84,6 +84,121 @@ async function panelScrollTop(page: Page): Promise<number> {
 }
 
 test.describe('KbqSelectModule', () => {
+    test.describe('E2eSelectScrollbar', () => {
+        const getSelect = (page: Page) => page.getByTestId('e2eSelect');
+        const getContent = (page: Page) => page.locator('.kbq-select__content');
+        const getTrack = (page: Page) => getContent(page).locator('kbq-scrollbar-track');
+        const getVerticalThumb = (page: Page) =>
+            getContent(page).locator('.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eSelectScrollbar');
+            await getSelect(page).click();
+            await expect(getContent(page)).toBeVisible();
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            // The panel opens on the first (already-visible) option with no scroll, so the open-flash is
+            // the only thing that reveals the track here — no hover, no scroll.
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            // ...and it fades back out again after the hide delay.
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getContent(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            // Wait out the open-flash so hover is tested in isolation.
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('clicking the scrollbar thumb keeps the panel open', async ({ page }) => {
+            await getContent(page).hover();
+            await getVerticalThumb(page).click();
+
+            await expect(getContent(page)).toBeVisible();
+        });
+
+        test('renders the custom scrollbar', async ({ page }) => {
+            const track = getTrack(page);
+
+            // Hover keeps the hover track revealed (opacity 1) deterministically for the screenshot.
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(getContent(page)).toHaveScreenshot('07-light.png');
+        });
+    });
+
+    test.describe('E2eVirtualScrollSelectScrollbar', () => {
+        const getSelect = (page: Page) => page.getByTestId('e2eSelect');
+        // The consumer puts kbqScrollbarViewport on the cdk-virtual-scroll-viewport, so the custom track
+        // that matters lives inside that viewport — not inside the outer .kbq-select__content viewport.
+        const getViewport = (page: Page) => page.locator('.cdk-overlay-pane .cdk-virtual-scroll-viewport');
+        const getTrack = (page: Page) => getViewport(page).locator('kbq-scrollbar-track');
+        const getVerticalThumb = (page: Page) =>
+            getViewport(page).locator('.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eVirtualScrollSelectScrollbar');
+            await getSelect(page).click();
+            await expect(getViewport(page)).toBeVisible();
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            // The selected option (index 0) is already visible, so scrollToIndex(0) does not scroll — the
+            // open-flash is the only thing that reveals the projected virtual-scroll viewport's track.
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            // ...and it fades back out again after the hide delay.
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getViewport(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            // Wait out the open-flash so hover is tested in isolation.
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await getViewport(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('thumb tracks the virtual viewport scroll position', async ({ page }) => {
+            await getViewport(page).hover();
+
+            const thumb = getVerticalThumb(page);
+
+            await expect(thumb).toBeVisible();
+            const before = await box(thumb);
+
+            // Scroll the virtual viewport far down through the 10k-item list.
+            await page.evaluate(() => {
+                document.querySelector<HTMLElement>('.cdk-overlay-pane .cdk-virtual-scroll-viewport')!.scrollTop = 4000;
+            });
+
+            await expect.poll(async () => (await box(thumb)).y).toBeGreaterThan(before.y);
+        });
+
+        test('clicking the scrollbar thumb keeps the panel open', async ({ page }) => {
+            await getViewport(page).hover();
+            await getVerticalThumb(page).click();
+
+            await expect(getViewport(page)).toBeVisible();
+        });
+    });
+
     test.describe('E2eSelectStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSelectStates');
         const getSelect = (locator: Locator) => locator.getByTestId('e2eSelect');

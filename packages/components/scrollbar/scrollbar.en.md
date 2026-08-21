@@ -4,10 +4,12 @@
 
 The `kbqScrollbarMode` input controls how the scrollbar is displayed:
 
-- `hover` — shows the scrollbar on pointer hover or keyboard focus. This is the default mode.
-- `always` — always shows the scrollbar when the content overflows its container.
-- `native` — shows the browser's native scrollbar.
-- `hidden` — hides the scrollbar while keeping the content scrollable.
+| Mode     | Description                                                                       |
+| -------- | --------------------------------------------------------------------------------- |
+| `hover`  | Shows the scrollbar on pointer hover or keyboard focus. This is the default mode. |
+| `always` | Always shows the scrollbar when the content overflows its container.              |
+| `native` | Shows the browser's native scrollbar.                                             |
+| `hidden` | Hides the scrollbar while keeping the content scrollable.                         |
 
 Use `kbqScrollbarOptionsProvider` to change the default mode for the application or a specific dependency injection scope.
 
@@ -23,18 +25,52 @@ Apply the `kbqScrollbarViewport` directive to `cdk-virtual-scroll-viewport` to a
 
 Access the component through its `kbqScrollbar` export and use its public methods:
 
-- `scrollTo` — scrolls to specified coordinates;
-- `scrollToTop` and `scrollToBottom` — scroll to the start or end of the vertical axis;
-- `scrollStart` and `scrollEnd` — scroll to the logical start or end of the horizontal axis, respecting RTL;
-- `scrollToElement` — scrolls to an element or CSS selector with optional offsets;
-- `scrollIntoView` — centers an element within the viewport.
+| Method                             | Description                                                                |
+| ---------------------------------- | -------------------------------------------------------------------------- |
+| `scrollTo`                         | Scrolls to specified coordinates.                                          |
+| `scrollToTop` and `scrollToBottom` | Scroll to the start or end of the vertical axis.                           |
+| `scrollStart` and `scrollEnd`      | Scroll to the logical start or end of the horizontal axis, respecting RTL. |
+| `scrollToElement`                  | Scrolls to an element or CSS selector with optional offsets.               |
+| `scrollIntoView`                   | Centers an element within the viewport.                                    |
 
-Methods that accept a `behavior` parameter support the native `auto` and `smooth` scrolling behaviors. Scroll events are available through `scrollChanges`.
+Methods that accept a `behavior` parameter support the native `auto` and `smooth` scrolling behaviors.
 
 <!-- example(scrollbar-scroll-to) -->
 
 ## Browser scrollbar
 
-Use `kbqNativeScrollbar` to customize only the native scrollbar. Add `kbqNativeScrollbarDescendants` to apply the customization to descendant elements.
+Use `kbqNativeScrollbar` to customize an element's browser-rendered scrollbar without replacing native scrolling. Add `kbqNativeScrollbarDescendants` to apply the same customization to the native scrollbars of all its descendant elements.
 
 <!-- example(native-scrollbar) -->
+
+## Scroll events
+
+Subscribe to `scrollChanges` to track the viewport's native scroll events:
+
+```ts
+import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, inject, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
+
+@Component({
+    imports: [KbqScrollbar],
+    template: `
+        <kbq-scrollbar>...</kbq-scrollbar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ScrollEventsExample {
+    private readonly scrollbar = viewChild.required(KbqScrollbar);
+    private readonly destroyRef = inject(DestroyRef);
+
+    constructor() {
+        afterNextRender(() => {
+            this.scrollbar()
+                .scrollChanges.pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => {
+                    // Handle the scroll event.
+                });
+        });
+    }
+}
+```

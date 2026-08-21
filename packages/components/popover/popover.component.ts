@@ -1,3 +1,4 @@
+import { AnimationEvent } from '@angular/animations';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkObserveContent } from '@angular/cdk/observers';
@@ -47,11 +48,13 @@ import {
     POSITION_TO_CSS_MAP,
     PopUpSizes,
     PopUpTriggers,
+    PopUpVisibility,
     applyPopupMargins,
     kbqInjectA11yLocaleConfiguration,
     kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { NEVER, merge } from 'rxjs';
 import { kbqPopoverAnimations } from './popover-animations';
 
@@ -64,6 +67,7 @@ export const defaultOffsetYWithArrow = 8;
         CdkObserveContent,
         KbqButtonModule,
         KbqIconModule,
+        KbqScrollbarViewport,
         CdkTrapFocus,
         KbqOverflowShadowContainer,
         KbqOverflowShadowTop,
@@ -98,6 +102,9 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
     readonly overflowContainer = viewChild(KbqOverflowShadowContainer);
 
+    /** The scrollable content's custom scrollbar viewport, flashed once the open animation finishes. */
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+
     ngAfterViewInit() {
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
             if (this.offset !== null && state && this.elementRef) {
@@ -127,6 +134,16 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         this.hide(0);
 
         this.trigger.focus();
+    }
+
+    override animationDone(event: AnimationEvent): void {
+        super.animationDone(event);
+
+        // Once the panel has finished opening, briefly reveal the scrollbar to hint the content is
+        // scrollable — the popover may open with no scroll, so its hover track would otherwise stay hidden.
+        if (event.toState === PopUpVisibility.Visible) {
+            this.scrollbarViewport()?.flashScrollIndicators();
+        }
     }
 
     protected readonly componentColors = KbqComponentColors;

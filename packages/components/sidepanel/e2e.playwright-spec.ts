@@ -92,4 +92,53 @@ test.describe('KbqSidepanel', () => {
             await expect.poll(() => e2eHasOverflowShadow(page.locator('.kbq-sidepanel-footer'))).toBeTruthy();
         });
     });
+
+    test.describe('E2eSidepanelScrollbar', () => {
+        const getBody = (page: Page) => page.locator('.kbq-sidepanel-body');
+        const getTrack = (page: Page) => getBody(page).locator('kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.setViewportSize({ width: 640, height: 300 });
+            await page.goto('/E2eSidepanelStateAndStyle');
+            await page.getByTestId('e2eSidepanelMedium').click();
+            await getBody(page).waitFor({ state: 'visible' });
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            // The sidepanel opens scrolled to the top with no interaction, so the open-flash is the only
+            // thing that reveals the track here — no hover, no scroll.
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            // ...and it fades back out again after the hide delay.
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getBody(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            // Wait out the open-flash so hover is tested in isolation.
+            await expect(track).toHaveCSS('opacity', '0');
+
+            // `force: true` skips the actionability "stable" wait: the track's own scroll-position
+            // `requestAnimationFrame` loop repaints every frame, which webkit intermittently reports as the
+            // body never settling. The reveal only needs the pointer over the viewport, so force is safe here.
+            await getBody(page).hover({ force: true });
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('renders the custom scrollbar', async ({ page }) => {
+            const track = getTrack(page);
+
+            // Hover keeps the hover track revealed (opacity 1) deterministically for the screenshot; `force`
+            // skips the actionability "stable" wait that webkit flakes on under the track's rAF repaints. Only
+            // the light theme is captured — the scrollbar's own suite covers dark, so it's redundant here.
+            await getBody(page).hover({ force: true });
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(getBody(page)).toHaveScreenshot('05-light.png');
+        });
+    });
 });

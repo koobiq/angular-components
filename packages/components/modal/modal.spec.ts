@@ -1,7 +1,15 @@
 ﻿import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, EventEmitter, inject, Injectable, Injector, NgModule, Provider, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, inject as testingInject, tick } from '@angular/core/testing';
+import {
+    ComponentFixture,
+    discardPeriodicTasks,
+    fakeAsync,
+    flush,
+    TestBed,
+    inject as testingInject,
+    tick
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -78,6 +86,22 @@ describe('KbqModal', () => {
             expect(spy).toHaveBeenCalledTimes(2);
             expect(modalService.openModals.indexOf(modalRef)).toBeGreaterThan(-1);
             expect(modalService.openModals.length).toBe(1);
+        }));
+
+        it('renders the custom scrollbar on the body', fakeAsync(() => {
+            modalService.create({ kbqContent: 'Test content' });
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            const body = overlayContainerElement.querySelector('.kbq-modal-body')!;
+
+            // `KbqScrollbarViewport` applies these host classes, so their presence proves the custom
+            // scrollbar replaced the deprecated `.kbq-scrollbar` native styling.
+            expect(body.classList).toContain('kbq-scrollbar-viewport');
+            expect(body.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
+
+            discardPeriodicTasks();
         }));
 
         it('should fire onClick events', fakeAsync(() => {
@@ -392,7 +416,11 @@ describe('KbqModal', () => {
             const secondModal = modalService.create();
 
             fixture.detectChanges();
-            flush();
+            // Not `flush()`: the modal body now hosts `kbqScrollbarViewport`, whose track drives a
+            // self-rescheduling `requestAnimationFrame` loop that `flush()` can never drain (it hits the
+            // 20-task limit). `tick` advances a fixed span covering the modal's own open/close timers, and
+            // `discardPeriodicTasks()` clears the still-pending scrollbar tasks so the test ends cleanly.
+            tick(ANIMATION_DURATION);
             fixture.detectChanges();
 
             expect(document.querySelectorAll('.kbq-modal-mask').length).toEqual(1);
@@ -400,10 +428,12 @@ describe('KbqModal', () => {
             secondModal.close();
 
             fixture.detectChanges();
-            flush();
+            tick(ANIMATION_DURATION);
             fixture.detectChanges();
 
             expect(document.querySelectorAll('.kbq-modal-mask').length).toEqual(1);
+
+            discardPeriodicTasks();
         }));
 
         it('should process kbqPreventFocusRestoring flag set to true', fakeAsync(() => {
@@ -516,7 +546,10 @@ describe('KbqModal', () => {
 
                 modalRef.close();
                 fixture.detectChanges();
-                flush();
+                // Not `flush()`: the open modal's `kbqScrollbarViewport` track drives a self-rescheduling
+                // `requestAnimationFrame` loop that `flush()` can never drain. `tick` advances the modal's
+                // finite close timers instead; the leftover scrollbar tasks are cleared at the end.
+                tick(ANIMATION_DURATION);
 
                 expect(document.activeElement).toBe(buttonElement);
                 expect(document.activeElement?.classList).toContain(`cdk-${origin}-focused`);
@@ -536,6 +569,8 @@ describe('KbqModal', () => {
             dispatchKeyboardEvent(document, 'keydown', TAB);
             buttonElement.focus();
             testFocusRestoreFor('keyboard');
+
+            discardPeriodicTasks();
         }));
     });
 
