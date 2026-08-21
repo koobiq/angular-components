@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KbqRelativeShortDatePipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
@@ -9,9 +9,6 @@ import { DateTime } from 'luxon';
  */
 @Component({
     selector: 'table-sticky-header-example',
-    providers: [
-        { provide: DateFormatter, deps: [DateAdapter] }
-    ],
     imports: [KbqTableModule, KbqLuxonDateModule, KbqRelativeShortDatePipe],
     template: `
         <div style="max-height: 240px; overflow: auto">
@@ -35,6 +32,9 @@ import { DateTime } from 'luxon';
             </table>
         </div>
     `,
+    providers: [
+        { provide: DateFormatter, deps: [DateAdapter] }
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableStickyHeaderExample {
