@@ -6,20 +6,20 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
- * @title Dropdown safe triangle
+ * @title Dropdown safe area
  */
 @Component({
-    selector: 'dropdown-safe-triangle-example',
+    selector: 'dropdown-safe-area-example',
     imports: [KbqDropdownModule, KbqToggleModule, KbqButtonModule, KbqIconModule, KbqDividerModule],
     template: `
-        <kbq-toggle [checked]="safeTriangle()" (change)="safeTriangle.set($event.checked)">Safe Area</kbq-toggle>
+        <kbq-toggle [checked]="safeArea()" (change)="safeArea.set($event.checked)">Safe Area</kbq-toggle>
 
         <button kbq-button [kbqDropdownTriggerFor]="appDropdown">
             File
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
 
-        <kbq-dropdown #appDropdown="kbqDropdown" [safeTriangle]="safeTriangle()">
+        <kbq-dropdown #appDropdown="kbqDropdown" [safeArea]="safeArea()">
             <button kbq-dropdown-item>New</button>
             <button kbq-dropdown-item>Open</button>
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">Share</button>
@@ -44,11 +44,11 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         class: 'layout-column layout-align-center-center layout-gap-s'
     }
 })
-export class DropdownSafeTriangleExample {
+export class DropdownSafeAreaExample {
     /**
      * Enabled by default so the effect is visible immediately — move the pointer diagonally from
      * "Share" toward its submenu, crossing "Save" on the way, and the submenu stays open. Toggle off
-     * to compare against the default (no safe triangle) behavior.
+     * to compare against the default (no safe area) behavior.
      */
-    readonly safeTriangle = signal(true);
+    readonly safeArea = signal(true);
 }

@@ -375,18 +375,18 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     }
 
     /**
-     * Starts safe-triangle protection when the pointer leaves a trigger whose submenu is open, so a
+     * Starts safe-area protection when the pointer leaves a trigger whose submenu is open, so a
      * sibling item crossed on the way to the submenu doesn't prematurely close it.
      */
     handleMouseLeave(event: MouseEvent): void {
-        if (!this.isNested() || !this._opened || !this.isBrowser || !this.parent.safeTriangle() || !this.overlayRef) {
+        if (!this.isNested() || !this._opened || !this.isBrowser || !this.parent.safeArea() || !this.overlayRef) {
             return;
         }
 
         const panelRect = this.overlayRef.overlayElement.getBoundingClientRect();
         const triangle = getSafeTriangleVertices({ x: event.clientX, y: event.clientY }, panelRect);
 
-        this.parent.activateSafeTriangle(this.dropdownItemInstance, triangle, panelRect, () => this.close());
+        this.parent.activateSafeArea(this.dropdownItemInstance, triangle, panelRect, () => this.close());
     }
 
     /** Handles key presses on the trigger. */
@@ -447,7 +447,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.lastDestroyReason = reason;
 
         if (this.isNested()) {
-            this.parent.deactivateSafeTriangle();
+            this.parent.deactivateSafeArea();
         }
 
         this.dropdown.resetActiveItem();
@@ -693,12 +693,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             ? this.parent.hovered().pipe(
                   filter((active) => active !== this.dropdownItemInstance),
                   filter(() => this._opened),
-                  // While a safe triangle protects this dropdown, closing is driven by the triangle
+                  // While a safe area protects this dropdown, closing is driven by the safe area
                   // itself instead: either it resolves on its own (see `handleMouseLeave()`), or a
                   // forced switch to a different nested trigger closes this one via `onExit` — always
                   // before the new trigger opens, so the two don't race over animation state shared by
-                  // triggers pointing at the same dropdown (see `KbqDropdown.activateSafeTriangle()`).
-                  filter(() => !this.parent.isSafeTriangleActive())
+                  // triggers pointing at the same dropdown (see `KbqDropdown.activateSafeArea()`).
+                  filter(() => !this.parent.isSafeAreaActive())
               )
             : observableOf();
 
@@ -721,27 +721,26 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.hoverSubscription = merge(
             this.parent.hovered().pipe(
                 filter((active) => active === this.dropdownItemInstance && !active.disabled),
-                // While a *different* trigger's safe triangle is active, opening is deferred to
-                // `onNestedTriangleSwitch()` below, which only fires once that trigger has actually
-                // closed. Hovering the trigger that owns the active triangle (coming back to it) still
-                // passes through immediately — `open()` is a no-op there, but it lets the triangle be
+                // While a *different* trigger's safe area is active, opening is deferred to
+                // `onSwitchTarget()` below, which only fires once that trigger has actually closed.
+                // Hovering the trigger that owns the active safe area (coming back to it) still
+                // passes through immediately — `open()` is a no-op there, but it lets the safe area be
                 // cancelled below.
                 filter(
                     () =>
-                        !this.parent.isSafeTriangleActive() ||
-                        this.parent.isSafeTriangleOwner(this.dropdownItemInstance)
+                        !this.parent.isSafeAreaActive() || this.parent.isSafeAreaOwner(this.dropdownItemInstance)
                 )
             ),
-            this.parent.onNestedTriangleSwitch().pipe(filter((active) => active === this.dropdownItemInstance))
+            this.parent.onSwitchTarget().pipe(filter((active) => active === this.dropdownItemInstance))
         )
             // Since we might have multiple competing triggers for the same dropdown (e.g. a nested dropdown
             // with different data and triggers), we have to delay it by a tick to ensure that
             // it won't be closed immediately after it is opened.
             .pipe(delay(0, asapScheduler))
             .subscribe(() => {
-                // Coming back to this trigger cancels any safe-triangle protection left over from a
+                // Coming back to this trigger cancels any safe-area protection left over from a
                 // previous `mouseleave`.
-                this.parent.deactivateSafeTriangle();
+                this.parent.deactivateSafeArea();
 
                 this.openedBy = 'mouse';
 

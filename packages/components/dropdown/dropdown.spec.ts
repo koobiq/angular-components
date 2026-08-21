@@ -1405,14 +1405,14 @@ describe('KbqDropdown', () => {
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
         }));
 
-        describe('safe triangle', () => {
+        describe('safe area', () => {
             /**
-             * Opens the level-one nested dropdown with `safeTriangle` enabled and mocks its overlay
+             * Opens the level-one nested dropdown with `safeArea` enabled and mocks its overlay
              * pane's rect to a fixed, predictable box (jsdom otherwise reports an all-zero rect).
              */
-            const openLevelOneWithSafeTriangle = (): HTMLElement => {
+            const openLevelOneWithSafeArea = (): HTMLElement => {
                 compileTestComponent();
-                instance.safeTriangleEnabled = true;
+                instance.safeAreaEnabled = true;
                 fixture.detectChanges();
 
                 instance.rootTriggerEl().nativeElement.click();
@@ -1466,7 +1466,7 @@ describe('KbqDropdown', () => {
             }));
 
             it('should keep the submenu open while a sibling crossed en route is hovered', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeTriangle();
+                const levelOneTrigger = openLevelOneWithSafeArea();
                 const items = Array.from(overlay.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
 
                 // Leaves roughly level with the panel's top, heading toward it.
@@ -1489,8 +1489,8 @@ describe('KbqDropdown', () => {
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
             }));
 
-            it('should close once the pointer leaves the safe triangle', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeTriangle();
+            it('should close once the pointer leaves the safe area', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeArea();
 
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
                 fixture.detectChanges();
@@ -1504,7 +1504,7 @@ describe('KbqDropdown', () => {
             }));
 
             it('should keep the submenu open and stop tracking once the pointer reaches the panel', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeTriangle();
+                const levelOneTrigger = openLevelOneWithSafeArea();
                 const items = Array.from(overlay.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
 
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
@@ -1526,7 +1526,7 @@ describe('KbqDropdown', () => {
             }));
 
             it('should not switch to another nested trigger before the grace period elapses', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeTriangle();
+                const levelOneTrigger = openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1546,7 +1546,7 @@ describe('KbqDropdown', () => {
             }));
 
             it('should switch to another nested trigger once the grace period elapses without the pointer reaching the panel', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeTriangle();
+                const levelOneTrigger = openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1565,7 +1565,7 @@ describe('KbqDropdown', () => {
             }));
 
             it('should not switch to another nested trigger if the pointer reaches the panel within the grace period', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeTriangle();
+                const levelOneTrigger = openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1588,8 +1588,8 @@ describe('KbqDropdown', () => {
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
             }));
 
-            it('should switch to another nested trigger immediately when it lies outside the safe triangle', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeTriangle();
+            it('should switch to another nested trigger immediately when it lies outside the safe area', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1612,8 +1612,8 @@ describe('KbqDropdown', () => {
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
             }));
 
-            it('should not switch to a disabled nested trigger hovered outside the safe triangle', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeTriangle();
+            it('should not switch to a disabled nested trigger hovered outside the safe area', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1639,8 +1639,8 @@ describe('KbqDropdown', () => {
                 expect(instance.lazyTrigger().opened).toBe(false);
             }));
 
-            it('should not switch to a disabled nested trigger grazed inside the safe triangle', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeTriangle();
+            it('should not switch to a disabled nested trigger grazed inside the safe area', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -2357,18 +2357,18 @@ describe('KbqDropdown default overrides', () => {
     });
 });
 
-describe('KbqDropdown safe triangle default override', () => {
-    it('should honor a `safeTriangle: true` default without setting the input explicitly', () => {
+describe('KbqDropdown safe area default override', () => {
+    it('should honor a `safeArea: true` default without setting the input explicitly', () => {
         TestBed.configureTestingModule({
             imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown],
-            providers: [{ provide: KBQ_DROPDOWN_DEFAULT_OPTIONS, useValue: { safeTriangle: true } }]
+            providers: [{ provide: KBQ_DROPDOWN_DEFAULT_OPTIONS, useValue: { safeArea: true } }]
         }).compileComponents();
 
         const fixture = TestBed.createComponent(SimpleDropdown);
 
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.dropdown().safeTriangle()).toBe(true);
+        expect(fixture.componentInstance.dropdown().safeArea()).toBe(true);
     });
 });
 
@@ -2557,7 +2557,7 @@ class CustomDropdown {
         <kbq-dropdown
             #root="kbqDropdown"
             [hasBackdrop]="true"
-            [safeTriangle]="safeTriangleEnabled"
+            [safeArea]="safeAreaEnabled"
             (closed)="rootCloseCallback($event)"
         >
             <button
@@ -2626,7 +2626,7 @@ class NestedDropdown {
     readonly lazyTrigger = viewChild.required<KbqDropdownTrigger>('lazyTrigger');
     showLazy = false;
 
-    safeTriangleEnabled = false;
+    safeAreaEnabled = false;
 }
 
 @Component({

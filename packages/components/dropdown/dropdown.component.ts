@@ -64,7 +64,7 @@ import {
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;
 
 /**
- * Grace period before switching to a different nested trigger hovered while a safe triangle is
+ * Grace period before switching to a different nested trigger hovered while a safe area is
  * protecting the currently open submenu. Without it, sweeping the pointer down a long list of
  * nested triggers on the way to the submenu would flicker each row's submenu open and closed.
  */
@@ -278,11 +278,11 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     );
 
     /**
-     * Whether nested dropdowns opened from this dropdown's items use a "safe triangle": while the
+     * Whether nested dropdowns opened from this dropdown's items use a "safe area": while the
      * pointer moves from a trigger toward its open submenu, sibling items it crosses over on the way
      * don't prematurely close the submenu.
      */
-    readonly safeTriangle = input(this.defaultOptions.safeTriangle ?? true, { transform: booleanAttribute });
+    readonly safeArea = input(this.defaultOptions.safeArea ?? true, { transform: booleanAttribute });
 
     /**
      * `panelMinWidth` rendered as a CSS length for the `--kbq-dropdown-size-container-width-min`
@@ -323,30 +323,27 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     /** Subscription to tab events on the dropdown panel */
     private tabSubscription = Subscription.EMPTY;
 
-    /** Cleans up the safe-triangle `mousemove` listener. `null` when no triangle is being tracked. */
-    private safeTriangleCleanup: (() => void) | null = null;
+    /** Cleans up the safe-area `mousemove` listener. `null` when no safe area is being tracked. */
+    private safeAreaCleanup: (() => void) | null = null;
 
-    /** The nested trigger currently protected by the active safe triangle, if any. */
-    private safeTriangleOwner: KbqDropdownItem | null = null;
+    /** The nested trigger currently protected by the active safe area, if any. */
+    private safeAreaOwner: KbqDropdownItem | null = null;
 
     /**
-     * The most recently hovered item, tracked independently of the safe triangle so that leaving the
-     * triangle straight onto a sibling's nested trigger can switch to it immediately instead of
-     * waiting for a `mouseenter` that already happened.
+     * The most recently hovered item, tracked independently of the safe area so that leaving it
+     * straight onto a sibling's nested trigger can switch to it immediately instead of waiting for a
+     * `mouseenter` that already happened.
      */
     private currentHovered: KbqDropdownItem | null = null;
 
-    /** Emits when the tracked safe triangle resolves because the pointer reached the protected panel. */
-    private readonly safeTriangleResolved = new Subject<void>();
+    /** Emits when the pointer reaches the panel the active safe area protects. */
+    private readonly panelReached = new Subject<void>();
 
-    /**
-     * Emits the nested trigger that should open once a forced switch has closed the trigger the
-     * active safe triangle was protecting.
-     */
-    private readonly nestedTriangleSwitch = new Subject<KbqDropdownItem>();
+    /** Emits the sibling trigger that should open once a forced switch has closed the current one. */
+    private readonly switchTarget = new Subject<KbqDropdownItem>();
 
-    /** Watches for a forced nested-trigger switch while a safe triangle is active. */
-    private nestedTriangleSwitchSubscription = Subscription.EMPTY;
+    /** Watches for a forced switch to a sibling trigger while a safe area is active. */
+    private switchTargetSubscription = Subscription.EMPTY;
 
     ngOnInit() {
         this.setPositionClasses();
@@ -383,9 +380,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         this.directDescendantItems.destroy();
         this.tabSubscription.unsubscribe();
         this.closed.complete();
-        this.deactivateSafeTriangle();
-        this.safeTriangleResolved.complete();
-        this.nestedTriangleSwitch.complete();
+        this.deactivateSafeArea();
+        this.panelReached.complete();
+        this.switchTarget.complete();
     }
 
     /** Stream that emits whenever the hovered dropdown item changes. */
@@ -399,34 +396,24 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     }
 
     /**
-     * Starts tracking the pointer against `triangle` (see `getSafeTriangleVertices`), protecting
-     * `owner`'s submenu. While the pointer stays inside the triangle, the submenu is kept open;
-     * `onExit` runs once the pointer either leaves the triangle or, failing that protection, lands
-     * inside `panelRect` (the submenu itself, which needs no further tracking). Replaces any triangle
-     * already being tracked.
-     *
-     * Also arms a grace-period switch: if a *different* nested trigger is hovered while this triangle
-     * is active and the pointer never reaches the panel in time, `owner` is closed via `onExit` and
-     * `onNestedSwitch()` emits the newly hovered trigger — always in that order, so triggers that
-     * share a dropdown don't race over its animation state (closing after opening would otherwise
-     * revert the just-opened panel back to its closed animation state).
-     *
-     * If the pointer instead leaves the triangle straight onto a different nested trigger (i.e. that
-     * trigger sits outside the protected area), the switch happens immediately, without waiting for
-     * the grace period — the triangle offered it no protection, so there is nothing to graze.
+     * Tracks the pointer against `triangle` to protect `owner`'s open submenu, closing it via
+     * `onExit` if the pointer leaves the triangle without first reaching `panelRect`. Meanwhile, if a
+     * different nested trigger is hovered, `switchTarget()` emits it — immediately if it's outside
+     * the triangle, otherwise after a grace period (see `NESTED_HOVER_SWITCH_DELAY`). Replaces any
+     * safe area already being tracked.
      * @docs-private
      */
-    activateSafeTriangle(owner: KbqDropdownItem, triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void {
-        this.deactivateSafeTriangle();
-        this.safeTriangleOwner = owner;
+    activateSafeArea(owner: KbqDropdownItem, triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void {
+        this.deactivateSafeArea();
+        this.safeAreaOwner = owner;
 
-        this.safeTriangleCleanup = this.ngZone.runOutsideAngular(() => {
+        this.safeAreaCleanup = this.ngZone.runOutsideAngular(() => {
             const listener = (event: MouseEvent) => {
                 const point: KbqPoint = { x: event.clientX, y: event.clientY };
 
                 if (isPointInRect(point, panelRect)) {
-                    this.safeTriangleResolved.next();
-                    this.deactivateSafeTriangle();
+                    this.panelReached.next();
+                    this.deactivateSafeArea();
 
                     return;
                 }
@@ -437,13 +424,13 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
                             ? this.currentHovered
                             : null;
 
-                    this.deactivateSafeTriangle();
+                    this.deactivateSafeArea();
 
                     this.ngZone.run(() => {
                         onExit();
 
                         if (switchTo) {
-                            this.nestedTriangleSwitch.next(switchTo);
+                            this.switchTarget.next(switchTo);
                         }
                     });
                 }
@@ -454,67 +441,67 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
             return () => this.document.removeEventListener('mousemove', listener, passiveEventListenerOptions);
         });
 
-        this.nestedTriangleSwitchSubscription = this.hovered()
+        this.switchTargetSubscription = this.hovered()
             .pipe(
                 filter((active) => active.isNested && active !== owner && !active.disabled),
                 switchMap((active) =>
                     timer(NESTED_HOVER_SWITCH_DELAY).pipe(
                         map(() => active),
-                        takeUntil(this.safeTriangleResolved)
+                        takeUntil(this.panelReached)
                     )
                 )
             )
             .subscribe((active) => {
-                this.deactivateSafeTriangle();
+                this.deactivateSafeArea();
                 onExit();
-                this.nestedTriangleSwitch.next(active);
+                this.switchTarget.next(active);
             });
     }
 
     /**
-     * Stops tracking the current safe triangle, if any.
+     * Stops tracking the current safe area, if any.
      * @docs-private
      */
-    deactivateSafeTriangle(): void {
-        this.safeTriangleCleanup?.();
-        this.safeTriangleCleanup = null;
-        this.safeTriangleOwner = null;
-        this.nestedTriangleSwitchSubscription.unsubscribe();
-        this.nestedTriangleSwitchSubscription = Subscription.EMPTY;
+    deactivateSafeArea(): void {
+        this.safeAreaCleanup?.();
+        this.safeAreaCleanup = null;
+        this.safeAreaOwner = null;
+        this.switchTargetSubscription.unsubscribe();
+        this.switchTargetSubscription = Subscription.EMPTY;
     }
 
     /**
-     * Whether a safe triangle is currently being tracked.
+     * Whether a safe area is currently being tracked.
      * @docs-private
      */
-    isSafeTriangleActive(): boolean {
-        return this.safeTriangleCleanup !== null;
+    isSafeAreaActive(): boolean {
+        return this.safeAreaCleanup !== null;
     }
 
     /**
-     * Whether `item` is the nested trigger currently protected by an active safe triangle.
+     * Whether `item` is the nested trigger currently protected by an active safe area.
      * @docs-private
      */
-    isSafeTriangleOwner(item: KbqDropdownItem): boolean {
-        return this.safeTriangleOwner === item;
+    isSafeAreaOwner(item: KbqDropdownItem): boolean {
+        return this.safeAreaOwner === item;
     }
 
     /**
-     * Stream that emits when the tracked safe triangle resolves because the pointer reached the
-     * protected panel (as opposed to leaving the triangle, which closes the panel instead).
+     * Stream that emits when the pointer reaches the panel the active safe area protects (as opposed
+     * to leaving the safe area, which closes the panel instead).
      * @docs-private
      */
-    onSafeTriangleResolved(): Observable<void> {
-        return this.safeTriangleResolved.asObservable();
+    onPanelReached(): Observable<void> {
+        return this.panelReached.asObservable();
     }
 
     /**
-     * Stream that emits the nested trigger that should open once a forced safe-triangle switch has
+     * Stream that emits the sibling trigger that should open once a forced safe-area switch has
      * closed the trigger it was protecting.
      * @docs-private
      */
-    onNestedTriangleSwitch(): Observable<KbqDropdownItem> {
-        return this.nestedTriangleSwitch.asObservable();
+    onSwitchTarget(): Observable<KbqDropdownItem> {
+        return this.switchTarget.asObservable();
     }
 
     /** Handle a keyboard event from the dropdown, delegating to the appropriate action. */

@@ -7,7 +7,7 @@ import { DropdownNestedExample } from './dropdown-nested/dropdown-nested-example
 import { DropdownOpenByArrowDownExample } from './dropdown-open-by-arrow-down/dropdown-open-by-arrow-down-example';
 import { DropdownOverviewExample } from './dropdown-overview/dropdown-overview-example';
 import { DropdownRecursiveTemplateExample } from './dropdown-recursive-template/dropdown-recursive-template-example';
-import { DropdownSafeTriangleExample } from './dropdown-safe-triangle/dropdown-safe-triangle-example';
+import { DropdownSafeAreaExample } from './dropdown-safe-area/dropdown-safe-area-example';
 import { DropdownWithFilterExample } from './dropdown-with-filter/dropdown-with-filter-example';
 import { DropdownWithFooterExample } from './dropdown-with-footer/dropdown-with-footer-example';
 import { DropdownXPositionExample } from './dropdown-x-position/dropdown-x-position-example';
@@ -21,7 +21,7 @@ export {
     DropdownOpenByArrowDownExample,
     DropdownOverviewExample,
     DropdownRecursiveTemplateExample,
-    DropdownSafeTriangleExample,
+    DropdownSafeAreaExample,
     DropdownWithFilterExample,
     DropdownWithFooterExample,
     DropdownXPositionExample
@@ -37,7 +37,7 @@ const EXAMPLES = [
     DropdownLazyloadDataExample,
     DropdownOpenByArrowDownExample,
     DropdownRecursiveTemplateExample,
-    DropdownSafeTriangleExample,
+    DropdownSafeAreaExample,
     DropdownWithFilterExample,
     DropdownXPositionExample
 ];

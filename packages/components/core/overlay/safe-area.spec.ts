@@ -1,4 +1,4 @@
-import { KbqTriangle, getSafeTriangleVertices, isPointInRect, isPointInTriangle } from './safe-triangle';
+import { KbqTriangle, getSafeTriangleVertices, isPointInRect, isPointInTriangle } from './safe-area';
 
 const rect = (left: number, top: number, right: number, bottom: number): DOMRect =>
     ({ left, top, right, bottom, width: right - left, height: bottom - top, x: left, y: top }) as DOMRect;

@@ -16,7 +16,7 @@ import {
     DropdownOpenByArrowDownExample,
     DropdownOverviewExample,
     DropdownRecursiveTemplateExample,
-    DropdownSafeTriangleExample,
+    DropdownSafeAreaExample,
     DropdownWithFilterExample,
     DropdownWithFooterExample,
     DropdownXPositionExample
@@ -34,7 +34,7 @@ import { DevThemeToggle } from '../theme-toggle';
         DropdownLazyloadDataExample,
         DropdownOpenByArrowDownExample,
         DropdownRecursiveTemplateExample,
-        DropdownSafeTriangleExample,
+        DropdownSafeAreaExample,
         DropdownWithFilterExample,
         DropdownWithFooterExample,
         DropdownXPositionExample
@@ -49,7 +49,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <dropdown-nested-example />
         <hr />
 
-        <dropdown-safe-triangle-example />
+        <dropdown-safe-area-example />
         <hr />
 
         <dropdown-disabled-example />

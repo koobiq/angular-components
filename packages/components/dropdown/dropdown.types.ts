@@ -80,11 +80,11 @@ export interface KbqDropdownDefaultOptions {
     hasBackdrop: boolean;
 
     /**
-     * Whether nested dropdowns opened from this dropdown's items use a "safe triangle": while the
+     * Whether nested dropdowns opened from this dropdown's items use a "safe area": while the
      * pointer moves from a trigger toward its open submenu, sibling items it crosses over on the way
      * don't prematurely close the submenu.
      */
-    safeTriangle?: boolean;
+    safeArea?: boolean;
 
     /**
      * Width of the panel. If set to `auto`, the panel will match the trigger width.
@@ -126,7 +126,7 @@ export function KBQ_DROPDOWN_DEFAULT_OPTIONS_FACTORY(): KbqDropdownDefaultOption
         yPosition: 'below',
         backdropClass: 'cdk-overlay-transparent-backdrop',
         hasBackdrop: false,
-        safeTriangle: true,
+        safeArea: true,
         // Reproduces the pre-existing CSS-driven sizing: grow with content, never narrower than the
         // trigger or `--kbq-dropdown-size-container-width-min`, capped by the token.
         panelWidth: null,
