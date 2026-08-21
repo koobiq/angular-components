@@ -25,6 +25,7 @@ import { KbqPanelWidth } from '@koobiq/components/core';
 import { KbqPanelWidthOrigin } from '@koobiq/components/core';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
+import { KbqTriangle } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -71,6 +72,7 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 // @public (undocumented)
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, OnDestroy {
+    activateSafeArea(owner: KbqDropdownItem, triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void;
     animationDone: Subject<AnimationEvent_2>;
     backdropClass: string;
     classList: {
@@ -79,6 +81,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     // (undocumented)
     close(): void;
     readonly closed: EventEmitter<void | "click" | "keydown" | "tab">;
+    deactivateSafeArea(): void;
     direction: Direction;
     focusFirstItem(origin?: FocusOrigin): void;
     handleKeydown(event: KeyboardEvent): void;
@@ -87,6 +90,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     readonly hasSearch: i0.Signal<boolean>;
     hovered(): Observable<KbqDropdownItem>;
     isAnimating: boolean;
+    isSafeAreaActive(): boolean;
+    isSafeAreaOwner(item: KbqDropdownItem): boolean;
     items: QueryList<KbqDropdownItem>;
     lazyContent: KbqDropdownContent;
     // (undocumented)
@@ -100,6 +105,8 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     onAnimationDone(event: AnimationEvent_2): void;
     // (undocumented)
     onAnimationStart(event: AnimationEvent_2): void;
+    onPanelReached(): Observable<void>;
+    onSwitchTarget(): Observable<KbqDropdownItem>;
     get overlapTriggerX(): boolean;
     set overlapTriggerX(value: boolean);
     get overlapTriggerY(): boolean;
@@ -113,6 +120,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
     resetAnimation(): void;
+    readonly safeArea: i0.InputSignalWithTransform<boolean, unknown>;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     startAnimation(): void;
     templateRef: TemplateRef<any>;
@@ -123,7 +131,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     get yPosition(): KbqDropdownPositionY;
     set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
@@ -158,6 +166,7 @@ export interface KbqDropdownDefaultOptions {
     panelMaxWidth?: KbqPanelMaxWidth;
     panelMinWidth?: KbqPanelMinWidth;
     panelWidth?: KbqPanelWidth;
+    safeArea?: boolean;
     xPosition: KbqDropdownPositionX;
     yPosition: KbqDropdownPositionY;
 }
@@ -289,6 +298,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     handleClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
     handleMousedown(event: MouseEvent): void;
+    handleMouseLeave(event: MouseEvent): void;
     get isAttached(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
@@ -320,6 +330,9 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownTrigger, never>;
 }
+
+// @public
+export const NESTED_HOVER_SWITCH_DELAY = 50;
 
 // @public (undocumented)
 export const NESTED_PANEL_LEFT_PADDING = 8;
