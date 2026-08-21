@@ -7,6 +7,9 @@ test.describe('KbqTableModule', () => {
 
         test('states', async ({ page }) => {
             await page.goto('/E2eTableStates');
+            await getComponent(page)
+                .getByTestId('e2eTableStickyHeader')
+                .evaluate((el) => (el.scrollTop = 60));
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');

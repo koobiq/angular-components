@@ -2059,6 +2059,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-multiple-accept-validation-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-multiple-add-strategy": {
+    "packagePath": "components/file-upload/file-upload-multiple-add-strategy",
+    "title": "File-upload multiple add strategy",
+    "componentName": "FileUploadMultipleAddStrategyExample",
+    "files": [
+      "file-upload-multiple-add-strategy-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "file-upload-multiple-add-strategy-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-add-strategy-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-multiple-compact-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-compact-overview",
     "title": "File-upload multiple compact",
@@ -5640,6 +5653,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "table-overview-example.ts",
     "importPath": "components/table"
   },
+  "table-sticky-header": {
+    "packagePath": "components/table/table-sticky-header",
+    "title": "Table with sticky header",
+    "componentName": "TableStickyHeaderExample",
+    "files": [
+      "table-sticky-header-example.ts",
+      "table-sticky-header-example.html"
+    ],
+    "localImportFiles": [],
+    "selector": "table-sticky-header-example",
+    "additionalComponents": [],
+    "primaryFile": "table-sticky-header-example.ts",
+    "importPath": "components/table"
+  },
   "table-with-borders": {
     "packagePath": "components/table/table-with-borders",
     "title": "Table with borders",
@@ -7969,6 +7996,8 @@ return import('@koobiq/docs-examples/components/file-upload');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-accept-validation':
 return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-add-strategy':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-compact-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-custom-text-overview':
@@ -8506,6 +8535,8 @@ return import('@koobiq/docs-examples/components/table');
   case 'table-full-width':
 return import('@koobiq/docs-examples/components/table');
   case 'table-overview':
+return import('@koobiq/docs-examples/components/table');
+  case 'table-sticky-header':
 return import('@koobiq/docs-examples/components/table');
   case 'table-with-borders':
 return import('@koobiq/docs-examples/components/table');
