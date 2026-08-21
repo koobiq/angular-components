@@ -287,6 +287,15 @@ export class KbqScrollbarViewport {
     // Fires each `flashScrollIndicators()` call; the track reveals itself on it just like on a scroll event.
     private readonly flashSubject = new Subject<void>();
 
+    /**
+     * Emits each time {@link KbqScrollbarViewport.flashScrollIndicators} is called, so the track can reveal
+     * itself. A read-only view over `flashSubject`, so consumers can't cast it back to a writable Subject.
+     */
+    readonly flashes = this.flashSubject.asObservable();
+
+    /** Emits on every native `scroll` event of the viewport. Emits outside Angular's zone — see `CdkScrollable.elementScrolled`. */
+    readonly scrollChanges = this.scrollable.elementScrolled();
+
     constructor() {
         this.styleLoader.load(ScrollbarStyleLoader);
 
@@ -314,16 +323,6 @@ export class KbqScrollbarViewport {
     /** The viewport's native scrollable element — the host this directive is applied to. */
     getNativeElement(): HTMLElement {
         return this.scrollable.getElementRef().nativeElement;
-    }
-
-    /** Emits on every native `scroll` event of the viewport. Emits outside Angular's zone — see `CdkScrollable.elementScrolled`. */
-    get scrollChanges(): Observable<Event> {
-        return this.scrollable.elementScrolled();
-    }
-
-    /** Emits each time {@link KbqScrollbarViewport.flashScrollIndicators} is called, so the track can reveal itself. */
-    get flashes(): Observable<void> {
-        return this.flashSubject;
     }
 
     /**
@@ -776,6 +775,9 @@ export class KbqScrollbar {
         transform: numberAttribute
     });
 
+    /** Emits on every native `scroll` event of the viewport. Emits outside Angular's zone — see `CdkScrollable.elementScrolled`. */
+    readonly scrollChanges = this.viewport.scrollChanges;
+
     /** The scrollbar's native scrollable element. */
     getNativeElement(): HTMLElement {
         return this.viewport.getNativeElement();
@@ -819,10 +821,5 @@ export class KbqScrollbar {
     /** Briefly reveals the scrollbar track — see {@link KbqScrollbarViewport.flashScrollIndicators}. */
     flashScrollIndicators(): void {
         this.viewport.flashScrollIndicators();
-    }
-
-    /** Emits on every native `scroll` event of the viewport. Emits outside Angular's zone — see `CdkScrollable.elementScrolled`. */
-    get scrollChanges(): Observable<Event> {
-        return this.viewport.scrollChanges;
     }
 }
