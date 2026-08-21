@@ -30,7 +30,7 @@ export class KbqScrollbar {
     getNativeElement(): HTMLElement;
     readonly hideDelay: i0.InputSignalWithTransform<number, unknown>;
     readonly mode: i0.InputSignal<KbqScrollbarMode>;
-    get scrollChanges(): Observable<Event>;
+    readonly scrollChanges: Observable<Event>;
     scrollEnd(behavior?: ScrollBehavior): void;
     scrollIntoView(target: HTMLElement, behavior?: ScrollBehavior): void;
     scrollStart(behavior?: ScrollBehavior): void;
@@ -69,13 +69,13 @@ export type KbqScrollbarScrollToOptions = ExtendedScrollToOptions;
 // @public
 export class KbqScrollbarViewport {
     constructor();
-    get flashes(): Observable<void>;
+    readonly flashes: Observable<void>;
     flashScrollIndicators(): void;
     getNativeElement(): HTMLElement;
     readonly hideDelay: i0.InputSignalWithTransform<number, unknown>;
     protected readonly id: string;
     readonly mode: i0.InputSignal<KbqScrollbarMode>;
-    get scrollChanges(): Observable<Event>;
+    readonly scrollChanges: Observable<Event>;
     scrollEnd(behavior?: ScrollBehavior): void;
     scrollIntoView(target: HTMLElement, behavior?: ScrollBehavior): void;
     scrollStart(behavior?: ScrollBehavior): void;
