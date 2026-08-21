@@ -1,6 +1,5 @@
 import { readFile, writeFile } from 'fs/promises';
 import { basename, join } from 'path';
-import { format, resolveConfig } from 'prettier';
 import { extractSeoDescription } from './seo-description';
 import { src } from './utils';
 
@@ -46,10 +45,5 @@ export const generateSeoDescriptions = async (sourcePatterns: string | string[])
         ''
     ].join('\n');
 
-    const prettierConfig = await resolveConfig(GENERATED_FILE);
-
-    await writeFile(
-        join(process.cwd(), GENERATED_FILE),
-        await format(output, { ...prettierConfig, filepath: GENERATED_FILE })
-    );
+    await writeFile(join(process.cwd(), GENERATED_FILE), output);
 };

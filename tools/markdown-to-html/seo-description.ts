@@ -11,11 +11,11 @@ const inlineTokenText = (token: Token): string => {
 const normalizeDescription = (description: string): string => {
     return description
         .replace(/&nbsp;|\u00a0/g, ' ')
-        .replace(/&amp;/g, '&')
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/&quot;/g, '"')
         .replace(/&#(?:39|x27);/gi, "'")
+        .replace(/&amp;/g, '&')
         .replace(/[`*_~]/g, '')
         .replace(/[<>]/g, '')
         .replace(/\s+/g, ' ')
