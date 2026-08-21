@@ -726,10 +726,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
                 // Hovering the trigger that owns the active safe area (coming back to it) still
                 // passes through immediately — `open()` is a no-op there, but it lets the safe area be
                 // cancelled below.
-                filter(
-                    () =>
-                        !this.parent.isSafeAreaActive() || this.parent.isSafeAreaOwner(this.dropdownItemInstance)
-                )
+                filter(() => !this.parent.isSafeAreaActive() || this.parent.isSafeAreaOwner(this.dropdownItemInstance))
             ),
             this.parent.onSwitchTarget().pipe(filter((active) => active === this.dropdownItemInstance))
         )
