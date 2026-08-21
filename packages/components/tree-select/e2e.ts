@@ -759,3 +759,52 @@ export class E2eTreeSelectPanelMaxHeight extends BaseTreeSelectStates {}
     }
 })
 export class E2eMultiTreeSelectSelectAllStates extends BaseTreeSelectStates {}
+
+/** Flat list of many leaf nodes so the panel overflows and the custom scrollbar renders a thumb. */
+const SCROLLBAR_TREE_DATA = Array.from({ length: 40 }).reduce<Record<string, string>>((acc, _, i) => {
+    acc[`Item ${i}`] = 'ts';
+
+    return acc;
+}, {});
+
+@Component({
+    selector: 'e2e-tree-select-scrollbar',
+    imports: [
+        FormsModule,
+        KbqIconModule,
+        KbqInputModule,
+        KbqTreeModule,
+        KbqTreeSelectModule
+    ],
+    template: `
+        <kbq-form-field style="width: 250px;">
+            <kbq-tree-select data-testid="e2eTreeSelect" placeholder="Placeholder">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+
+            width: 320px;
+            height: 500px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTreeSelectScrollbar'
+    }
+})
+export class E2eTreeSelectScrollbar extends BaseTreeSelectStates {
+    constructor() {
+        super();
+
+        this.dataSource.data = buildFileTree(SCROLLBAR_TREE_DATA, 0);
+    }
+}

@@ -106,6 +106,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     onAnimationStart(event: AnimationEvent_2): void;
     onPanelReached(): Observable<void>;
     onSwitchTarget(): Observable<KbqDropdownItem>;
+    protected onPanelClick(event: MouseEvent): void;
     get overlapTriggerX(): boolean;
     set overlapTriggerX(value: boolean);
     get overlapTriggerY(): boolean;

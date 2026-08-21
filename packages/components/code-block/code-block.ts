@@ -45,6 +45,7 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { debounceTime, filter, fromEvent, map, merge, take } from 'rxjs';
@@ -113,6 +114,7 @@ export class KbqCodeBlockTabLinkContent {}
         CdkScrollableModule,
         KbqToolTipModule,
         KbqIconModule,
+        KbqNativeScrollbar,
         NgTemplateOutlet,
         KbqOverflowShadowContainer,
         KbqOverflowShadowTop

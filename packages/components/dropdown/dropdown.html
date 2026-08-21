@@ -1,5 +1,6 @@
 <ng-template>
     <div
+        kbqScrollbarViewport
         tabindex="-1"
         class="kbq-dropdown__panel"
         [class.kbq-dropdown__panel_nested]="parent"
@@ -9,7 +10,7 @@
         [@transformDropdown]="panelAnimationState"
         (@transformDropdown.done)="onAnimationDone($event)"
         (@transformDropdown.start)="onAnimationStart($event)"
-        (click)="close()"
+        (click)="onPanelClick($event)"
         (keydown)="handleKeydown($event)"
     >
         <div class="kbq-dropdown__content">

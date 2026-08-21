@@ -22,6 +22,7 @@ import {
 } from '@koobiq/components/core';
 import { kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSelect } from '@koobiq/components/select';
 
 @Directive({
@@ -54,7 +55,8 @@ export const kbqTimezoneLocaleConfigurationProvider = (
         CdkOverlayOrigin,
         CdkConnectedOverlay,
         CdkMonitorFocus,
-        KbqIconModule
+        KbqIconModule,
+        KbqScrollbarViewport
     ],
     templateUrl: 'timezone-select.component.html',
     styleUrls: [

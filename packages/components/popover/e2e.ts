@@ -213,3 +213,40 @@ export class E2ePopoverPositioning {}
     }
 })
 export class E2ePopoverWithTooltip {}
+
+@Component({
+    selector: 'e2e-popover-scrollbar',
+    imports: [KbqPopoverModule, KbqButton, KbqButtonCssStyler],
+    template: `
+        <button
+            data-testid="e2ePopoverTrigger"
+            kbq-button
+            kbqPopover
+            kbqPopoverSize="small"
+            kbqPopoverPlacement="bottom"
+            kbqTrigger="click"
+            [kbqPopoverContent]="content"
+        >
+            Open
+        </button>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            width: 400px;
+            height: 400px;
+            padding-top: 40px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2ePopoverScrollbar'
+    }
+})
+export class E2ePopoverScrollbar {
+    // A long wrapping paragraph so the small popover's content exceeds the container's max-height and scrolls.
+    protected readonly content = Array.from({ length: 80 }, (_, i) => `Scrollable popover line ${i}`).join(' ');
+}

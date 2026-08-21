@@ -141,4 +141,60 @@ test.describe('KbqDropdownModule', () => {
             await expect(page.locator('.kbq-tooltip')).toBeVisible();
         });
     });
+
+    test.describe('E2eDropdownScrollbar', () => {
+        const getTrigger = (page: Page) => page.getByTestId('e2eDropdownScrollbarTrigger');
+        const getPanel = (page: Page) => page.locator('.kbq-dropdown__panel');
+        const getTrack = (page: Page) => getPanel(page).locator('kbq-scrollbar-track');
+        const getVerticalThumb = (page: Page) =>
+            getPanel(page).locator('.kbq-scrollbar-track__bar_vertical .kbq-scrollbar-track__thumb');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eDropdownScrollbar');
+            // Cap the viewport height so the overlay panel (bounded by the viewport) stays short — the
+            // screenshot captures the whole panel, and the default 720px viewport makes it needlessly tall.
+            await page.setViewportSize({ width: page.viewportSize()!.width, height: 500 });
+            await getTrigger(page).click();
+            await expect(getPanel(page)).toBeVisible();
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            // The panel opens without scrolling, so the open-flash is the only thing that reveals the
+            // track here — no hover, no scroll.
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            // ...and it fades back out again after the hide delay.
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getPanel(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            // Wait out the open-flash so hover is tested in isolation.
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await getPanel(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('clicking the scrollbar thumb does not close the dropdown', async ({ page }) => {
+            await getPanel(page).hover();
+            await getVerticalThumb(page).click();
+
+            await expect(getPanel(page)).toBeVisible();
+        });
+
+        test('renders the custom scrollbar', async ({ page }) => {
+            const track = getTrack(page);
+
+            // Hover keeps the hover track revealed (opacity 1) deterministically for the screenshot.
+            await getPanel(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(getPanel(page)).toHaveScreenshot('02-light.png');
+        });
+    });
 });
