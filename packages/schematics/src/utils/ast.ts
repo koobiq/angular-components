@@ -82,3 +82,42 @@ export function getSimpleAttributeName(attrName: string): string {
 export function getSimpleAttributeValue(attrValue: string): string {
     return attrValue.replace(/[{}']/g, '');
 }
+
+export type TokenLookup = (token: string) => string | null | undefined;
+
+/**
+ * Splits a whitespace-separated token list (an HTML `class` attribute value, or a bare
+ * `'custom-icons word-wrap_16'`-style string), replacing only tokens for which `lookup` returns a
+ * value. A `''`/`null` result drops the token; `undefined` leaves it untouched. Tokens are
+ * rejoined with single spaces. Returns `undefined` if no token was touched.
+ */
+export function replaceTokenList(value: string, lookup: TokenLookup): string | undefined {
+    const tokens = value.split(/\s+/).filter(Boolean);
+    let changed = false;
+
+    const result = tokens
+        .map((token) => {
+            const replacement = lookup(token);
+
+            if (replacement === undefined) {
+                return token;
+            }
+
+            changed = true;
+
+            return replacement;
+        })
+        .filter((token) => !!token);
+
+    return changed ? result.join(' ') : undefined;
+}
+
+/**
+ * If `simpleAttrName` (already stripped of `[`/`]` binding brackets via `getSimpleAttributeName`)
+ * is a `class.<token>` binding, returns `<token>`; otherwise `undefined`.
+ */
+export function getClassBindingToken(simpleAttrName: string): string | undefined {
+    const match = /^class\.(.+)$/.exec(simpleAttrName);
+
+    return match ? match[1] : undefined;
+}
