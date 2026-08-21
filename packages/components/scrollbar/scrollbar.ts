@@ -11,6 +11,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     createComponent,
+    DestroyRef,
     Directive,
     effect,
     EnvironmentInjector,
@@ -264,6 +265,7 @@ export class KbqScrollbarViewport {
     private readonly injector = inject(Injector);
     private readonly idGenerator = inject(_IdGenerator);
     private readonly options = inject(KBQ_SCROLLBAR_OPTIONS);
+    private readonly destroyRef = inject(DestroyRef);
 
     /** Stable id on the viewport element, used as the `aria-controls` target for the scrollbar thumb. */
     protected readonly id = this.getNativeElement().id || this.idGenerator.getId('kbq-scrollbar-viewport-');
@@ -305,8 +307,7 @@ export class KbqScrollbarViewport {
             const showTrack = mode !== 'native' && mode !== 'hidden';
 
             if (!showTrack) {
-                this.trackRef?.destroy();
-                this.trackRef = null;
+                this.destroyTrack();
 
                 return;
             }
@@ -318,11 +319,11 @@ export class KbqScrollbarViewport {
             this.trackRef.setInput('mode', mode);
             this.trackRef.setInput('hideDelay', hideDelay);
         });
-    }
 
-    /** The viewport's native scrollable element — the host this directive is applied to. */
-    getNativeElement(): HTMLElement {
-        return this.scrollable.getElementRef().nativeElement;
+        // The track view is attached to `ApplicationRef` (see `createTrack`), so destroying the host that
+        // owns this viewport does not tear it down — `ApplicationRef` keeps change-detecting the orphaned
+        // view and throws `NG0911` once the surrounding view is gone. Tear it down explicitly on destroy.
+        this.destroyRef.onDestroy(() => this.destroyTrack());
     }
 
     /**
@@ -414,6 +415,22 @@ export class KbqScrollbarViewport {
         );
 
         return track;
+    }
+
+    /** Detaches the track view from `ApplicationRef` and destroys it. Safe to call when no track exists. */
+    private destroyTrack(): void {
+        if (!this.trackRef) {
+            return;
+        }
+
+        this.appRef.detachView(this.trackRef.hostView);
+        this.trackRef.destroy();
+        this.trackRef = null;
+    }
+
+    /** The viewport's native scrollable element — the host this directive is applied to. */
+    getNativeElement(): HTMLElement {
+        return this.scrollable.getElementRef().nativeElement;
     }
 }
 
@@ -735,7 +752,6 @@ class KbqScrollbarTrack {
         setStyle('marginBlockStart', -paddingBlockStart);
         setStyle('marginBlockEnd', paddingBlockStart - (blockSize - 1));
         setStyle('insetBlockStart', -paddingBlockStart);
-
         setStyle('minInlineSize', inlineSize - 1);
         setStyle('maxInlineSize', inlineSize - 1);
         setStyle('marginInlineStart', -paddingInlineStart);
