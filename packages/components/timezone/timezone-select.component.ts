@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_OPTION_PARENT_COMPONENT, kbqSiblingPopupProvider, ruRULocaleData } from '@koobiq/components/core';
 import { kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSelect } from '@koobiq/components/select';
 
 @Directive({
@@ -28,7 +29,8 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
         CdkOverlayOrigin,
         CdkConnectedOverlay,
         CdkMonitorFocus,
-        KbqIconModule
+        KbqIconModule,
+        KbqScrollbarViewport
     ],
     templateUrl: 'timezone-select.component.html',
     styleUrls: [

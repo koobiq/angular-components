@@ -1,7 +1,9 @@
 import { Component, Directive, effect, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectA11yLocaleConfiguration, KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqModalComponent } from './modal.component';
 
@@ -51,16 +53,21 @@ export class KbqModalTitle {
 @Directive({
     selector: `[kbq-modal-body], kbq-modal-body, [kbqModalBody]`,
     host: {
-        class: 'kbq-modal-body kbq-scrollbar'
+        class: 'kbq-modal-body'
     },
-    hostDirectives: [KbqOverflowShadowContainer]
+    hostDirectives: [KbqOverflowShadowContainer, KbqScrollbarViewport]
 })
 export class KbqModalBody {
     private readonly modal = inject(KbqModalComponent);
     private readonly overflowContainer = inject(KbqOverflowShadowContainer);
+    private readonly scrollbarViewport = inject(KbqScrollbarViewport);
 
     constructor() {
         effect(() => this.modal.bodyOverflow.set(this.overflowContainer.overflow()));
+
+        // Briefly reveal the scrollbar once the modal has opened to hint the body is scrollable — it may
+        // open with no scroll, so its hover track would otherwise stay hidden until the pointer enters.
+        this.modal.afterOpen.pipe(takeUntilDestroyed()).subscribe(() => this.scrollbarViewport.flashScrollIndicators());
     }
 }
 

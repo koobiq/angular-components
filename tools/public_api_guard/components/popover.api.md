@@ -6,6 +6,7 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
@@ -67,6 +68,8 @@ export const kbqPopoverAnimations: {
 // @public (undocumented)
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+    // (undocumented)
+    animationDone(event: AnimationEvent_2): void;
     // (undocumented)
     readonly cdkTrapFocus: i0.Signal<CdkTrapFocus>;
     // (undocumented)

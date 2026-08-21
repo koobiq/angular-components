@@ -165,6 +165,21 @@ describe('KbqPopover', () => {
             expect(content.nativeElement.textContent).toEqual(expectedValue);
         }));
 
+        it('renders the custom scrollbar on the content', fakeAsync(() => {
+            const triggerElement = componentInstance.test5().nativeElement;
+
+            dispatchMouseEvent(triggerElement, 'mouseenter');
+            tick();
+            fixture.detectChanges();
+
+            const content = debugElement.query(By.css('.kbq-popover__content'));
+
+            // `KbqScrollbarViewport` applies these host classes, so their presence proves the custom
+            // scrollbar replaced the deprecated `.kbq-scrollbar` native styling.
+            expect(content.nativeElement.classList).toContain('kbq-scrollbar-viewport');
+            expect(content.nativeElement.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
+        }));
+
         it('Can set kbqPopoverFooter', fakeAsync(() => {
             const expectedValue = '_TEST6';
             const triggerElement = componentInstance.test6().nativeElement;

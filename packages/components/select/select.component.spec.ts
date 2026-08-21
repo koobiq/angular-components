@@ -2351,7 +2351,9 @@ describe('KbqSelect', () => {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable(),
-                        getAncestorScrollContainers: () => []
+                        getAncestorScrollContainers: () => [],
+                        register: () => {},
+                        deregister: () => {}
                     })
                 }
             ]

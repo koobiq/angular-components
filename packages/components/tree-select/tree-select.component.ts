@@ -95,6 +95,7 @@ import {
     kbqCleanerFactoryProvider
 } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTag, KbqTagRemove } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
@@ -177,6 +178,7 @@ export class KbqTreeSelectChange {
         CdkConnectedOverlay,
         CdkMonitorFocus,
         KbqTag,
+        KbqScrollbarViewport,
         NgTemplateOutlet
     ],
     templateUrl: 'tree-select.html',
@@ -331,6 +333,9 @@ export class KbqTreeSelect
 
     /** Reference to the overlay panel element. */
     readonly panel = viewChild<ElementRef>('panel');
+
+    /** The options container's custom scrollbar viewport, flashed when the panel opens. */
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
@@ -833,6 +838,10 @@ export class KbqTreeSelect
                             search.focus();
                         }
                     });
+
+                    // Briefly reveal the scrollbar to hint that the list is scrollable — the panel may open
+                    // on an already-visible option with no scroll, so the hover track would otherwise stay hidden.
+                    this.scrollbarViewport()?.flashScrollIndicators();
 
                     this.openedChange.emit(true);
                 } else {

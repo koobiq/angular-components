@@ -17,6 +17,7 @@ import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
+import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { auditTime, map } from 'rxjs/operators';
@@ -46,6 +47,7 @@ type ExampleAction = {
         KbqBadgeModule,
         KbqDropdownModule,
         KbqOverflowItemsModule,
+        KbqNativeScrollbar,
         KbqFormattersModule
     ],
     template: `
@@ -105,7 +107,7 @@ type ExampleAction = {
                 </div>
             </div>
         </kbq-top-bar>
-        <div class="overflow-content-example kbq-scrollbar" cdkScrollable>
+        <div kbqNativeScrollbar class="overflow-content-example" cdkScrollable>
             <div style="height: 600px">
                 <kbq-dl>
                     <kbq-dt>Description</kbq-dt>

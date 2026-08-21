@@ -85,6 +85,24 @@ test.describe('KbqScrollbar', () => {
 
             await page.mouse.up();
         });
+
+        test('reveals the track while scrolling and hides it again after scrolling stops', async ({ page }) => {
+            const scrollbar = getScrollbar(page);
+            const track = getComponent(page).locator('kbq-scrollbar-track');
+
+            // Keep the pointer away so `:hover` doesn't reveal the track on its own.
+            await page.mouse.move(0, 0);
+            await expect(track).toHaveCSS('opacity', '0');
+
+            // Scrolling reveals it — matches native/overlayscrollbars.
+            await scrollbar.evaluate((el) => {
+                el.scrollTop = 100;
+            });
+            await expect(track).toHaveCSS('opacity', '1');
+
+            // ...and it fades out again a short while after scrolling stops.
+            await expect(track).toHaveCSS('opacity', '0');
+        });
     });
 
     test.describe('E2eScrollbarTrack', () => {
@@ -230,36 +248,19 @@ test.describe('KbqScrollbar', () => {
             await expect(track).toHaveCSS('opacity', '1');
         });
 
-        test('hover mode: clicking a focusable descendant with the mouse does not keep the track visible after the pointer leaves', async ({
-            page
-        }) => {
-            // Regression test: the track used to stay visible relying on `:focus-within`, which also
-            // matches DOM focus left behind by a mouse click (e.g. a dropdown item), not just keyboard
-            // navigation. Fixed by keying off `.cdk-keyboard-focused` instead.
+        test('hover mode: focusing a descendant does not reveal the track', async ({ page }) => {
+            // Focus never reveals the hover track — only pointer hover and scrolling do. This guards that a
+            // mouse click on a focusable descendant (which leaves DOM focus behind) doesn't keep the track
+            // visible once the pointer leaves.
             await setMode(page, 'hover');
             const track = getTrack(page);
 
             // `force: true`: the horizontal thumb overlaps the button (the shared fixture content
-            // overflows both axes), which is irrelevant here — only the resulting focus origin matters.
+            // overflows both axes), which is irrelevant here — only the resulting focus matters.
             await page.getByTestId('e2eScrollbarModeFocusable').click({ force: true });
             await page.mouse.move(0, 0);
 
             await expect(track).toHaveCSS('opacity', '0');
-        });
-
-        test('hover mode: keyboard-focusing a plain descendant keeps the track visible', async ({ page }) => {
-            // The button isn't individually wired up to `FocusMonitor` — `KbqScrollbarViewport` monitors
-            // its whole subtree, so this works for any projected content, not just components that opt in.
-            await setMode(page, 'hover');
-            const track = getTrack(page);
-
-            // `Locator.focus()` is program-origin, not keyboard-origin — real Tab navigation is required
-            // so `FocusMonitor` classifies the resulting focus as `cdk-keyboard-focused`. Nothing between
-            // the last mode button and the target is tabbable, so a single Tab reaches it.
-            await page.getByTestId('mode-hidden').focus();
-            await page.keyboard.press('Tab');
-
-            await expect(track).toHaveCSS('opacity', '1');
         });
 
         test('hover mode: keyboard-scrolling via a focused descendant shows the track', async ({ page }) => {
@@ -460,6 +461,52 @@ test.describe('KbqScrollbar', () => {
             expect((await nativeScrollbarStyle(viewport)).scrollbarWidth).toBe('14px');
             await expect(viewport.locator('kbq-scrollbar-track')).not.toBeAttached();
             await expect(viewport).not.toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+        });
+    });
+
+    test.describe('E2eScrollbarPadding', () => {
+        const getViewport = (page: Page) => page.getByTestId('e2eScrollbarPaddingTarget');
+        const getVerticalBar = (page: Page) => getViewport(page).locator('.kbq-scrollbar-track__bar_vertical');
+
+        test('the track spans the scrollport flush at every scroll position when the viewport is padded', async ({
+            page
+        }) => {
+            await page.goto('/E2eScrollbarPadding');
+
+            const viewport = getViewport(page);
+            const bar = getVerticalBar(page);
+
+            await expect(bar).toBeVisible();
+
+            const assertFlush = async () => {
+                const vpBox = (await viewport.boundingBox())!;
+                const barBox = (await bar.boundingBox())!;
+
+                // The bar must actually span the scrollport's height, not collapse — a track sized with
+                // unitless (invalid) lengths would still be attached but zero-sized, silently passing the
+                // edge checks below while rendering nothing.
+                expect(barBox.height).toBeGreaterThanOrEqual(vpBox.height - 2);
+
+                // box-sizing: border-box with no border, so the viewport's bounding box is its padding box
+                // (the scrollport). The vertical bar must span it flush on both axes, rather than being
+                // pushed off the edges by the padding:
+                // - block axis: top aligned to the top edge, no overhang past the bottom edge;
+                // - inline axis: the bar's end (right) edge aligned to the scrollport's end edge.
+                // (all within 1px — the track is intentionally sized one pixel short.)
+                expect(Math.abs(barBox.y - vpBox.y)).toBeLessThanOrEqual(1);
+                expect(barBox.y + barBox.height).toBeLessThanOrEqual(vpBox.y + vpBox.height + 1);
+                expect(Math.abs(vpBox.x + vpBox.width - (barBox.x + barBox.width))).toBeLessThanOrEqual(1);
+            };
+
+            // At the initial position (scroll top) — where the block-start padding still pushed the track
+            // down after the first, incomplete fix.
+            await assertFlush();
+
+            // And still flush once scrolled to the bottom.
+            await viewport.evaluate((el) => {
+                el.scrollTop = el.scrollHeight;
+            });
+            await assertFlush();
         });
     });
 });

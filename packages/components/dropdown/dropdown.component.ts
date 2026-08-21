@@ -25,7 +25,8 @@ import {
     contentChild,
     inject,
     input,
-    numberAttribute
+    numberAttribute,
+    viewChild
 } from '@angular/core';
 import {
     ESCAPE,
@@ -38,6 +39,7 @@ import {
     RIGHT_ARROW
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
 import { startWith, switchMap, take } from 'rxjs/operators';
 import { kbqDropdownAnimations } from './dropdown-animations';
@@ -67,7 +69,7 @@ export class KbqDropdownFooter {}
 
 @Component({
     selector: 'kbq-dropdown',
-    imports: [],
+    imports: [KbqScrollbarViewport],
     templateUrl: 'dropdown.html',
     /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['dropdown.scss', 'dropdown-tokens.scss'],
@@ -274,6 +276,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     /** @docs-private */
     @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;
 
+    /** The panel's custom scrollbar viewport, flashed when the panel finishes opening. */
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
+
     /**
      * List of the items inside of a dropdown.
      */
@@ -457,6 +462,12 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     /** Callback that is invoked when the panel animation completes. */
     onAnimationDone(event: AnimationEvent) {
+        // On open, briefly reveal the scrollbar to hint that the content is scrollable — the panel may
+        // open without scrolling, so the hover track would otherwise stay hidden.
+        if (event.toState === 'enter') {
+            this.scrollbarViewport()?.flashScrollIndicators();
+        }
+
         this.animationDone.next(event);
         this.isAnimating = false;
     }
@@ -479,6 +490,20 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         const focusOrigin = this.keyManager.getFocusOrigin() === 'keyboard' ? 'keydown' : 'click';
 
         this.closed.emit(focusOrigin);
+    }
+
+    /**
+     * Closes the dropdown on a panel click. The panel is the custom scrollbar's viewport, so its
+     * track and thumb are real DOM children whose clicks bubble here — interacting with the scrollbar
+     * must not close the dropdown, unlike a click on an item.
+     * @docs-private
+     */
+    protected onPanelClick(event: MouseEvent): void {
+        if ((event.target as HTMLElement).closest('.kbq-scrollbar-track')) {
+            return;
+        }
+
+        this.close();
     }
 
     /**

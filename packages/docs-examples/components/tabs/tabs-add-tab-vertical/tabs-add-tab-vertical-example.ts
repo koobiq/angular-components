@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
@@ -57,9 +58,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     `,
     styleUrls: ['./tabs-add-tab-vertical-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'kbq-scrollbar'
-    }
+    hostDirectives: [KbqNativeScrollbar]
 })
 export class TabsAddTabVerticalExample {
     private readonly tabLinks = viewChildren(KbqTabLink);

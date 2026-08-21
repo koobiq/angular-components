@@ -18,7 +18,7 @@ import {
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -481,13 +481,19 @@ describe('KbqDropdown', () => {
         dispatchMouseEvent(triggerEl, 'touchstart');
         triggerEl.click();
         fixture.detectChanges();
-        flush();
+        // Not `flush()`: the panel now hosts `kbqScrollbarViewport`, whose track drives a self-rescheduling
+        // `requestAnimationFrame` loop that `flush()` can never drain (it hits the 20-task limit). `tick`
+        // advances a fixed span instead — enough for the dropdown's own open timers — and
+        // `discardPeriodicTasks()` clears the still-pending scrollbar tasks so the test ends cleanly.
+        tick(500);
 
         const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
 
         expect(focusSpyFn).not.toHaveBeenCalled();
         expect(document.activeElement).toBe(overlayContainerElement.querySelector(PANEL_SELECTOR));
         expect(items.some((item) => item.classList.contains('cdk-focused'))).toBe(false);
+
+        discardPeriodicTasks();
     }));
 
     it('should focus the first item when opening by keyboard', fakeAsync(() => {
@@ -515,7 +521,7 @@ describe('KbqDropdown', () => {
             imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown]
         });
         TestBed.overrideProvider(ScrollDispatcher, {
-            useFactory: () => ({ scrolled: () => scrolledSubject })
+            useFactory: () => ({ scrolled: () => scrolledSubject, register: () => {}, deregister: () => {} })
         });
         TestBed.overrideProvider(KBQ_DROPDOWN_SCROLL_STRATEGY, {
             deps: [Overlay],

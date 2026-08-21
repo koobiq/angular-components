@@ -4,20 +4,15 @@
 
 ```ts
 
-import { ElementRef } from '@angular/core';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/scrolling';
-import * as i2 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Provider } from '@angular/core';
 
 // @public
 export const KBQ_SCROLLBAR_OPTIONS: InjectionToken<KbqScrollbarOptions>;
-
-// @public
-export const KBQ_SCROLLBAR_VIEWPORT: InjectionToken<ElementRef<HTMLElement>>;
 
 // @public
 export class KbqNativeScrollbar {
@@ -31,9 +26,11 @@ export class KbqNativeScrollbar {
 
 // @public
 export class KbqScrollbar {
+    flashScrollIndicators(): void;
     getNativeElement(): HTMLElement;
+    readonly hideDelay: i0.InputSignalWithTransform<number, unknown>;
     readonly mode: i0.InputSignal<KbqScrollbarMode>;
-    get scrollChanges(): Observable<Event>;
+    readonly scrollChanges: Observable<Event>;
     scrollEnd(behavior?: ScrollBehavior): void;
     scrollIntoView(target: HTMLElement, behavior?: ScrollBehavior): void;
     scrollStart(behavior?: ScrollBehavior): void;
@@ -42,7 +39,7 @@ export class KbqScrollbar {
     scrollToElement(target: HTMLElement | string, options?: KbqScrollbarScrollToElementOptions): void;
     scrollToTop(behavior?: ScrollBehavior): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqScrollbar, "kbq-scrollbar", ["kbqScrollbar"], { "mode": { "alias": "kbqScrollbarMode"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof KbqScrollbarViewport; inputs: { "kbqScrollbarMode": "kbqScrollbarMode"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqScrollbar, "kbq-scrollbar", ["kbqScrollbar"], { "mode": { "alias": "kbqScrollbarMode"; "required": false; "isSignal": true; }; "hideDelay": { "alias": "kbqScrollbarHideDelay"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof KbqScrollbarViewport; inputs: { "kbqScrollbarMode": "kbqScrollbarMode"; "kbqScrollbarHideDelay": "kbqScrollbarHideDelay"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbar, never>;
 }
@@ -53,6 +50,7 @@ export type KbqScrollbarMode = 'always' | 'hidden' | 'hover' | 'native';
 // @public
 export type KbqScrollbarOptions = {
     mode: KbqScrollbarMode;
+    hideDelay: number;
 };
 
 // @public
@@ -71,10 +69,13 @@ export type KbqScrollbarScrollToOptions = ExtendedScrollToOptions;
 // @public
 export class KbqScrollbarViewport {
     constructor();
+    readonly flashes: Observable<void>;
+    flashScrollIndicators(): void;
     getNativeElement(): HTMLElement;
+    readonly hideDelay: i0.InputSignalWithTransform<number, unknown>;
     protected readonly id: string;
     readonly mode: i0.InputSignal<KbqScrollbarMode>;
-    get scrollChanges(): Observable<Event>;
+    readonly scrollChanges: Observable<Event>;
     scrollEnd(behavior?: ScrollBehavior): void;
     scrollIntoView(target: HTMLElement, behavior?: ScrollBehavior): void;
     scrollStart(behavior?: ScrollBehavior): void;
@@ -83,7 +84,7 @@ export class KbqScrollbarViewport {
     scrollToElement(target: HTMLElement | string, options?: KbqScrollbarScrollToElementOptions): void;
     scrollToTop(behavior?: ScrollBehavior): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarViewport, "[kbqScrollbarViewport]", never, { "mode": { "alias": "kbqScrollbarMode"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }, { directive: typeof i2.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqScrollbarViewport, "[kbqScrollbarViewport]", never, { "mode": { "alias": "kbqScrollbarMode"; "required": false; "isSignal": true; }; "hideDelay": { "alias": "kbqScrollbarHideDelay"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbarViewport, never>;
 }

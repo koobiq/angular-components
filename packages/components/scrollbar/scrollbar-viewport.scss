@@ -13,13 +13,14 @@
     opacity: 0;
 }
 
-// `:focus-within` also matches DOM focus a mouse click leaves behind on a descendant (e.g. a dropdown
-// item) after the pointer leaves, keeping the track visible indefinitely. `cdk-keyboard-focused` is
-// scoped to keyboard-originated focus (`KbqScrollbarViewport` monitors its subtree via
-// `cdkMonitorSubtreeFocus`), so the track stays hidden for mouse focus but visible while, e.g., arrow
-// keys scroll the content.
+// The hover track is revealed while:
+// - the pointer is over the viewport (`:hover`);
+// - the track is transiently revealed (`kbq-scrollbar-track_revealed`, toggled by KbqScrollbarTrack on a
+//   scroll or `flashScrollIndicators()` and auto-cleared shortly after) — matches native/overlayscrollbars,
+//   and covers reveal on wheel/keyboard scrolling, the programmatic scroll-into-view when a dropdown opens
+//   by mouse, and an explicit flash.
 .kbq-scrollbar-viewport:hover > .kbq-scrollbar-track_hover,
-.kbq-scrollbar-viewport.cdk-keyboard-focused > .kbq-scrollbar-track_hover {
+.kbq-scrollbar-track_hover.kbq-scrollbar-track_revealed {
     transition: opacity var(--kbq-scrollbar-transition-duration) ease;
     opacity: 1;
 }

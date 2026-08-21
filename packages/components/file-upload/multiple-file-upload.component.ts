@@ -35,6 +35,7 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { BehaviorSubject, of } from 'rxjs';
 import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService } from './dropzone';
 import {
@@ -70,6 +71,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
         KbqListModule,
         KbqDataSizePipe,
         KbqProgressSpinnerModule,
+        KbqNativeScrollbar,
         KbqEllipsisCenterDirective,
         KbqFileLoader,
         KbqFileUploadEmptyState

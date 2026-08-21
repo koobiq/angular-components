@@ -8,11 +8,6 @@
     // negative `margin-inline-end`/`margin-block-end` already cancels its layout contribution, so
     // pinning shrink to 0 is layout-neutral (and ignored entirely in a block container).
     flex-shrink: 0;
-    inset-block-start: 0;
-    inset-inline-start: 0;
-    min-inline-size: calc(100% - 1px);
-    max-inline-size: calc(100% - 1px);
-    margin-inline-end: calc(-100% + 1px);
     pointer-events: none;
     overflow: hidden;
     // Lets a consumer theme one scrollbar instance without a class hook to target — the track may be

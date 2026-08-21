@@ -22,6 +22,7 @@ import {
     output,
     viewChild
 } from '@angular/core';
+import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { kbqTabsAnimations } from './tabs-animations';
@@ -52,7 +53,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
  */
 @Component({
     selector: 'kbq-tab-body',
-    imports: [CdkScrollable, forwardRef(() => KbqTabBodyPortal)],
+    imports: [CdkScrollable, KbqNativeScrollbar, forwardRef(() => KbqTabBodyPortal)],
     templateUrl: './tab-body.html',
     styleUrl: './tab-body.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -41,6 +41,7 @@ import {
     KbqOverflowShadowTop
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -67,6 +68,7 @@ type AnimationState = 'enter' | 'leave' | null;
         KbqIconModule,
         CssUnitPipe,
         NgTemplateOutlet,
+        KbqScrollbarViewport,
         KbqOverflowShadowContainer,
         KbqOverflowShadowTop,
         KbqOverflowShadowBottom,
@@ -275,6 +277,8 @@ export class KbqModalComponent<T = any, R = any>
 
     readonly modalContainer = viewChild.required<ElementRef>('modalContainer');
     readonly bodyContainer = viewChild.required('bodyContainer', { read: ViewContainerRef });
+    /** The built-in body's custom scrollbar viewport, flashed once the open animation finishes. */
+    private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
     // Only aim to focus the ok button that needs to be auto focused
     readonly autoFocusedButtons = viewChildren('autoFocusedButton', { read: ElementRef });
 
@@ -617,6 +621,9 @@ export class KbqModalComponent<T = any, R = any>
                 // Emit open/close event after animations over
                 .then(() => {
                     if (visible) {
+                        // Briefly reveal the scrollbar to hint the body is scrollable — a modal may open with
+                        // no scroll, so its hover track would otherwise stay hidden until the pointer enters.
+                        this.scrollbarViewport()?.flashScrollIndicators();
                         this.kbqAfterOpen.emit();
                     } else {
                         this.kbqAfterClose.emit(closeResult);

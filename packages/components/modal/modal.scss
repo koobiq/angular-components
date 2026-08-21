@@ -127,10 +127,6 @@
         var(--kbq-modal-size-content-padding-bottom) var(--kbq-modal-size-content-padding-horizontal);
 
     overflow-wrap: break-word;
-
-    & > * {
-        position: relative;
-    }
 }
 
 .kbq-modal-footer,

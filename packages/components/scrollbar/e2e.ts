@@ -134,8 +134,8 @@ export class E2eScrollbarTrack {}
 
         <kbq-scrollbar class="e2e-scrollbar" data-testid="e2eScrollbarModeTarget" [kbqScrollbarMode]="mode()">
             <p>content</p>
-            <!-- Plain, unmonitored content — the viewport's own subtree focus monitoring covers it
-                 without needing a per-element cdkMonitorElementFocus opt-in. -->
+            <!-- A focusable descendant used to drive keyboard scrolling (Tab in, then ArrowDown): focus
+                 alone must not reveal the track, only the resulting scroll does. -->
             <button type="button" data-testid="e2eScrollbarModeFocusable">focusable</button>
         </kbq-scrollbar>
     `,
@@ -403,3 +403,48 @@ export class E2eScrollbarNested {}
     }
 })
 export class E2eNativeScrollbar {}
+
+@Component({
+    selector: 'e2e-scrollbar-padding',
+    imports: [KbqScrollbarViewport],
+    template: `
+        <div
+            kbqScrollbarViewport
+            kbqScrollbarMode="always"
+            class="e2e-scrollbar"
+            data-testid="e2eScrollbarPaddingTarget"
+        >
+            <div class="e2e-content"></div>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-scrollbar {
+            --kbq-scrollbar-track-background: cyan;
+            --kbq-scrollbar-thumb-default-background: orange;
+
+            box-sizing: border-box;
+            width: 200px;
+            height: 200px;
+            /* Padding on the scroll container itself — reproduces the dropdown panels, where the track
+               must still align to the scrollport edges instead of overhanging by the padding. */
+            padding: 16px;
+            overflow: auto;
+            background-color: var(--kbq-background-bg-secondary);
+        }
+
+        .e2e-content {
+            width: 100%;
+            height: 800px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarPadding'
+    }
+})
+export class E2eScrollbarPadding {}

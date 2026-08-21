@@ -89,6 +89,50 @@ test.describe('KbqPopoverModule', () => {
         });
     });
 
+    test.describe('E2ePopoverScrollbar', () => {
+        const getContent = (page: Page) => page.locator('.kbq-popover__content');
+        const getTrack = (page: Page) => getContent(page).locator('kbq-scrollbar-track');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2ePopoverScrollbar');
+            await page.getByTestId('e2ePopoverTrigger').click();
+            await expect(getContent(page)).toBeVisible();
+        });
+
+        test('flashes the track on open, then fades it', async ({ page }) => {
+            // The popover opens scrolled to the top with no interaction, so the open-flash is the only thing
+            // that reveals the track here — no hover, no scroll.
+            const track = getTrack(page);
+
+            await expect(track).toHaveCSS('opacity', '1');
+            // ...and it fades back out again after the hide delay.
+            await expect(track).toHaveCSS('opacity', '0');
+        });
+
+        test('hides the native scrollbar and reveals the custom track on hover', async ({ page }) => {
+            await expect(getContent(page)).toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
+
+            const track = getTrack(page);
+
+            await expect(track).toBeAttached();
+            // Wait out the open-flash so hover is tested in isolation.
+            await expect(track).toHaveCSS('opacity', '0');
+
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+        });
+
+        test('renders the custom scrollbar', async ({ page }) => {
+            const track = getTrack(page);
+
+            // Hover keeps the hover track revealed (opacity 1) deterministically for the screenshot. Only the
+            // light theme is captured — the scrollbar's own suite covers dark, so it's redundant here.
+            await getContent(page).hover();
+            await expect(track).toHaveCSS('opacity', '1');
+            await expect(getContent(page)).toHaveScreenshot('02-light.png');
+        });
+    });
+
     test.describe('overflow shadow', () => {
         test('should show footer shadow on init when content overflows', async ({ page }) => {
             await page.goto('/E2ePopoverStates');

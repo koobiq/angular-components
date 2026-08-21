@@ -23,7 +23,7 @@
         }
     } @else {
         <div class="kbq-file-upload__wrapper">
-            <kbq-list class="kbq-file-upload__list kbq-scrollbar" role="list">
+            <kbq-list kbqNativeScrollbar class="kbq-file-upload__list" role="list">
                 @for (file of files; track file) {
                     <kbq-list-item
                         role="listitem"
