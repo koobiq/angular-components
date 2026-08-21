@@ -54,7 +54,8 @@ import {
     KbqDropdownPanel,
     KbqDropdownPositionX,
     KbqDropdownPositionY,
-    KbqDropdownTrigger
+    KbqDropdownTrigger,
+    NESTED_HOVER_SWITCH_DELAY
 } from './index';
 
 const PANEL_SELECTOR = '.kbq-dropdown__panel';
@@ -1524,7 +1525,7 @@ describe('KbqDropdown', () => {
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
             }));
 
-            it('should switch immediately when hovering another nested trigger while a triangle is active', fakeAsync(() => {
+            it('should not switch to another nested trigger before the grace period elapses', fakeAsync(() => {
                 const levelOneTrigger = openLevelOneWithSafeTriangle();
 
                 instance.showLazy = true;
@@ -1533,17 +1534,133 @@ describe('KbqDropdown', () => {
                 const lazyTrigger = overlay.querySelector('#lazy-trigger')! as HTMLElement;
 
                 // Leaves heading toward level-one's submenu, arming its triangle, but lands directly
-                // on another nested trigger — a real intent change, not a graze — so it must not get
-                // stuck waiting for the triangle to resolve.
+                // on another nested trigger while still well short of the grace period.
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
                 dispatchMouseEvent(lazyTrigger, 'mouseenter');
                 fixture.detectChanges();
-                tick(500);
+                tick(NESTED_HOVER_SWITCH_DELAY - 10);
+                fixture.detectChanges();
+
+                expect(instance.levelOneTrigger().opened).toBe(true);
+                expect(instance.lazyTrigger().opened).toBe(false);
+            }));
+
+            it('should switch to another nested trigger once the grace period elapses without the pointer reaching the panel', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeTriangle();
+
+                instance.showLazy = true;
+                fixture.detectChanges();
+
+                const lazyTrigger = overlay.querySelector('#lazy-trigger')! as HTMLElement;
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                dispatchMouseEvent(lazyTrigger, 'mouseenter');
+                fixture.detectChanges();
+                tick(NESTED_HOVER_SWITCH_DELAY);
                 fixture.detectChanges();
 
                 expect(instance.levelOneTrigger().opened).toBe(false);
                 expect(instance.lazyTrigger().opened).toBe(true);
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+            }));
+
+            it('should not switch to another nested trigger if the pointer reaches the panel within the grace period', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeTriangle();
+
+                instance.showLazy = true;
+                fixture.detectChanges();
+
+                const lazyTrigger = overlay.querySelector('#lazy-trigger')! as HTMLElement;
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                dispatchMouseEvent(lazyTrigger, 'mouseenter');
+                fixture.detectChanges();
+
+                // The pointer actually reaches the protected panel before the grace period elapses —
+                // the hover on the other trigger was just a graze, so the switch must not happen.
+                dispatchMouseEvent(document, 'mousemove', 400, 150);
+                fixture.detectChanges();
+                tick(500);
+                fixture.detectChanges();
+
+                expect(instance.levelOneTrigger().opened).toBe(true);
+                expect(instance.lazyTrigger().opened).toBe(false);
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+            }));
+
+            it('should switch to another nested trigger immediately when it lies outside the safe triangle', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeTriangle();
+
+                instance.showLazy = true;
+                fixture.detectChanges();
+
+                const lazyTrigger = overlay.querySelector('#lazy-trigger')! as HTMLElement;
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                dispatchMouseEvent(lazyTrigger, 'mouseenter');
+                fixture.detectChanges();
+
+                // The pointer lands on the other trigger well outside the triangle — a real intent
+                // change, not a graze — so the switch must not wait for the grace period.
+                dispatchMouseEvent(document, 'mousemove', 150, 400);
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+
+                expect(instance.levelOneTrigger().opened).toBe(false);
+                expect(instance.lazyTrigger().opened).toBe(true);
+                expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+            }));
+
+            it('should not switch to a disabled nested trigger hovered outside the safe triangle', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeTriangle();
+
+                instance.showLazy = true;
+                fixture.detectChanges();
+
+                const lazyTriggerItem = fixture.debugElement
+                    .queryAll(By.directive(KbqDropdownItem))
+                    .find((item) => item.nativeElement.id === 'lazy-trigger')!;
+
+                lazyTriggerItem.componentInstance.disabled = true;
+                fixture.detectChanges();
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                // Invoke the handler directly since the fake events are flaky on disabled elements.
+                lazyTriggerItem.componentInstance.handleMouseEnter();
+                fixture.detectChanges();
+
+                dispatchMouseEvent(document, 'mousemove', 150, 400);
+                fixture.detectChanges();
+                tick(500);
+                fixture.detectChanges();
+
+                expect(instance.levelOneTrigger().opened).toBe(false);
+                expect(instance.lazyTrigger().opened).toBe(false);
+            }));
+
+            it('should not switch to a disabled nested trigger grazed inside the safe triangle', fakeAsync(() => {
+                const levelOneTrigger = openLevelOneWithSafeTriangle();
+
+                instance.showLazy = true;
+                fixture.detectChanges();
+
+                const lazyTriggerItem = fixture.debugElement
+                    .queryAll(By.directive(KbqDropdownItem))
+                    .find((item) => item.nativeElement.id === 'lazy-trigger')!;
+
+                lazyTriggerItem.componentInstance.disabled = true;
+                fixture.detectChanges();
+
+                dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
+                // Invoke the handler directly since the fake events are flaky on disabled elements.
+                lazyTriggerItem.componentInstance.handleMouseEnter();
+                fixture.detectChanges();
+                tick(NESTED_HOVER_SWITCH_DELAY);
+                fixture.detectChanges();
+
+                expect(instance.levelOneTrigger().opened).toBe(true);
+                expect(instance.lazyTrigger().opened).toBe(false);
             }));
         });
 

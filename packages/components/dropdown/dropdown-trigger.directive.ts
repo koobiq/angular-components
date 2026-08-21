@@ -386,7 +386,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         const panelRect = this.overlayRef.overlayElement.getBoundingClientRect();
         const triangle = getSafeTriangleVertices({ x: event.clientX, y: event.clientY }, panelRect);
 
-        this.parent.activateSafeTriangle(triangle, panelRect, () => this.close());
+        this.parent.activateSafeTriangle(this.dropdownItemInstance, triangle, panelRect, () => this.close());
     }
 
     /** Handles key presses on the trigger. */
@@ -693,11 +693,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             ? this.parent.hovered().pipe(
                   filter((active) => active !== this.dropdownItemInstance),
                   filter(() => this._opened),
-                  // A protected safe triangle only guards against closing while the pointer grazes a
-                  // plain sibling row en route to the submenu (it handles closing itself once the
-                  // pointer actually leaves it — see `handleMouseLeave()`). Hovering another *nested*
-                  // trigger is a real intent change and should switch immediately.
-                  filter((active) => active.isNested || !this.parent.isSafeTriangleActive())
+                  // While a safe triangle protects this dropdown, closing is driven by the triangle
+                  // itself instead: either it resolves on its own (see `handleMouseLeave()`), or a
+                  // forced switch to a different nested trigger closes this one via `onExit` — always
+                  // before the new trigger opens, so the two don't race over animation state shared by
+                  // triggers pointing at the same dropdown (see `KbqDropdown.activateSafeTriangle()`).
+                  filter(() => !this.parent.isSafeTriangleActive())
               )
             : observableOf();
 
@@ -717,15 +718,26 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             return;
         }
 
-        this.hoverSubscription = this.parent
-            .hovered()
+        this.hoverSubscription = merge(
+            this.parent.hovered().pipe(
+                filter((active) => active === this.dropdownItemInstance && !active.disabled),
+                // While a *different* trigger's safe triangle is active, opening is deferred to
+                // `onNestedTriangleSwitch()` below, which only fires once that trigger has actually
+                // closed. Hovering the trigger that owns the active triangle (coming back to it) still
+                // passes through immediately — `open()` is a no-op there, but it lets the triangle be
+                // cancelled below.
+                filter(
+                    () =>
+                        !this.parent.isSafeTriangleActive() ||
+                        this.parent.isSafeTriangleOwner(this.dropdownItemInstance)
+                )
+            ),
+            this.parent.onNestedTriangleSwitch().pipe(filter((active) => active === this.dropdownItemInstance))
+        )
             // Since we might have multiple competing triggers for the same dropdown (e.g. a nested dropdown
             // with different data and triggers), we have to delay it by a tick to ensure that
             // it won't be closed immediately after it is opened.
-            .pipe(
-                filter((active) => active === this.dropdownItemInstance && !active.disabled),
-                delay(0, asapScheduler)
-            )
+            .pipe(delay(0, asapScheduler))
             .subscribe(() => {
                 // Coming back to this trigger cancels any safe-triangle protection left over from a
                 // previous `mouseleave`.
