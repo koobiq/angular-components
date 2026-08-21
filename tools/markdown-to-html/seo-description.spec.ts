@@ -13,6 +13,10 @@ describe(extractSeoDescription.name, () => {
         expect(extractSeoDescription('### Section')).toBeNull();
     });
 
+    it('decodes each HTML entity only once', () => {
+        expect(extractSeoDescription('&amp;quot; &amp;lt; &quot; &lt;')).toBe('&quot; &lt; "');
+    });
+
     it('truncates long descriptions without splitting a word', () => {
         const description = extractSeoDescription('word '.repeat(60));
 
