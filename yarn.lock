@@ -7270,12 +7270,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/merge2@npm:^0.3.30":
-  version: 0.3.30
-  resolution: "@types/merge2@npm:0.3.30"
+"@types/merge2@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "@types/merge2@npm:1.4.4"
   dependencies:
     "@types/node": "npm:*"
-  checksum: 10c0/fb7c5485b1d84aade6c5b9ff78640e4ff67735b2a6cae5b8b3f6fd17ee85ad2f3c1925b2e181dd77b5867e5719262c48e4b6ccfdf7e3574417cfdaf772aa36a6
+  checksum: 10c0/9837318931cb735c9701a32cf16d7e098a18f83255c5a7f53a396c4df708668c429e534685614bb85fab6a512f5ade68af34301d28f0cf2603352ab4794bed5f
   languageName: node
   linkType: hard
 
@@ -13711,7 +13711,7 @@ __metadata:
     "@types/jest-axe": "npm:^3.5.9"
     "@types/license-checker": "npm:^25.0.6"
     "@types/luxon": "npm:^3.7.2"
-    "@types/merge2": "npm:^0.3.30"
+    "@types/merge2": "npm:^1.4.4"
     "@types/node": "npm:^24.10.4"
     "@types/nunjucks": "npm:^3.2.1"
     "@types/semver": "npm:^7.7.1"
