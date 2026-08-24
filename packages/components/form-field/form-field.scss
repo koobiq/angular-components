@@ -115,26 +115,14 @@
     &.cdk-focused,
     &.kbq-focused {
         z-index: 3;
-
-        .kbq-input {
-            &:-webkit-autofill,
-            &:-webkit-autofill:hover,
-            &:-webkit-autofill:focus {
-                min-height: calc(
-                    var(--kbq-form-field-size-height) - var(--kbq-form-field-size-border-width) *
-                        2 - var(--kbq-form-field-size-focus-outline-width) * 2
-                );
-
-                --kbq-input-size-padding-vertical: calc(
-                    var(--kbq-size-xs) - var(--kbq-form-field-size-border-width) - var(
-                            --kbq-form-field-size-focus-outline-width
-                        )
-                );
-
-                margin: var(--kbq-form-field-size-border-width) 0;
-            }
-        }
     }
+
+    // No autofill geometry here on purpose. DS-4950 shrank the autofilled control by twice the
+    // focus-outline width and handed the pixels back as margin, because the control's own autofill
+    // background was painting over the 1px ring the container draws as an inset shadow. It has
+    // nothing left to paint over: the control is transparent — the browser's background is
+    // suppressed, not replaced — and the tint lives on the container, under a shadow that is drawn
+    // above it. Reinstating any of it would only move the text on focus.
 
     // The state theme resolves the border and the background through tokens, so overriding the tokens beats
     // the more specific state selectors without `!important`.

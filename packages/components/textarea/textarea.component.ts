@@ -22,7 +22,8 @@ import {
     CanUpdateErrorState,
     ErrorStateMatcher,
     KBQ_PARENT_ANIMATION_COMPONENT,
-    KBQ_WINDOW
+    KBQ_WINDOW,
+    kbqInjectAutofilled
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { asapScheduler, observeOn, Subject } from 'rxjs';
@@ -96,6 +97,12 @@ export class KbqTextarea
      * @docs-private
      */
     focused: boolean = false;
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     * @docs-private
+     */
+    readonly autofilled = kbqInjectAutofilled();
 
     /**
      * Implemented as part of KbqFormFieldControl.

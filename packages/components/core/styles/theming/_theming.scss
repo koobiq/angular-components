@@ -49,6 +49,25 @@
         background: var(--kbq-background-bg);
         color: var(--kbq-foreground-contrast);
     }
+
+    // Which palette the browser paints *its own* surfaces with — scrollbars, native controls, the
+    // autofill highlight, spellcheck. A theme is a class, and a class tells the browser nothing, so
+    // without this every one of those renders from the light palette however dark the application
+    // looks. Autofill is where it shows most: refocusing a filled field reopens the browser's own
+    // popup, and in that state it paints the highlight and the text itself, over author styles that
+    // normally hide it — a light block with black text in the middle of a dark form.
+
+    // Both declarations at the same specificity on purpose. `color-scheme` inherits, so the nearest
+    // ancestor carrying either class decides, and a light subtree inside a dark application gets the
+    // light palette. Weighting one over the other — or scoping this to a component — inverts exactly
+    // that case.
+    .kbq-light {
+        color-scheme: light;
+    }
+
+    .kbq-dark {
+        color-scheme: dark;
+    }
 }
 
 // @deprecated @TODO: unused. Will be removed in next major release
