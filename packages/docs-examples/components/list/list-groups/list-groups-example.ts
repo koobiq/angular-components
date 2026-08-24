@@ -8,7 +8,7 @@ import { KbqListModule } from '@koobiq/components/list';
     selector: 'list-groups-example',
     imports: [KbqListModule],
     template: `
-        <kbq-list-selection>
+        <kbq-list-selection aria-label="Security controls">
             @for (category of securityCategories; track category) {
                 <kbq-optgroup [disabled]="category.disabled" [label]="category.categoryName">
                     @for (securityItem of category.securityItems; track securityItem.id) {
