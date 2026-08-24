@@ -1,6 +1,7 @@
 import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import docsearch, { DocSearchInstance, DocSearchProps } from '@docsearch/js';
+import type { DocSearchAskAiModalTranslations } from '@docsearch/react';
 import { KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
@@ -29,7 +30,11 @@ type DeepRequired<T> = T extends AnyFunction
         }
       : T;
 
-const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> = {
+type DocSearchTranslations = Omit<NonNullable<DocSearchProps['translations']>, 'modal'> & {
+    modal?: DocSearchAskAiModalTranslations;
+};
+
+const TRANSLATION_RU: DeepRequired<DocSearchTranslations> = {
     button: {
         buttonText: 'Поиск',
         buttonAriaLabel: 'Поиск'
@@ -84,6 +89,14 @@ const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> 
             closeKeyAriaLabel: 'Клавиша Escape',
             poweredByText: 'Работает на'
         },
+        facets: {
+            defaultValueLabel: 'Все',
+            facetMenuTriggerAriaLabel: 'выбрано',
+            clearAllLabel: 'Очистить все',
+            facetsAriaLabel: 'Фильтры поиска',
+            selectedFacetsAriaLabel: 'Выбранные фильтры поиска',
+            clearFacetAriaLabel: 'Очистить фильтр:'
+        },
         noResultsScreen: {
             noResultsText: 'Нет результатов для',
             suggestedQueryText: 'Попробуйте поискать',
@@ -92,11 +105,17 @@ const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> 
         },
         resultsScreen: {
             askAiPlaceholder: 'Спросить ИИ-ассистента:',
-            noResultsAskAiPlaceholder: 'Спросить ИИ-ассистента вместо этого:'
+            noResultsAskAiPlaceholder: 'Спросить ИИ-ассистента вместо этого:',
+            resultsSectionTitle: 'Результаты поиска',
+            askAiResultsTitle: 'ИИ-ассистент',
+            resultBadgeLabelText: 'Категория',
+            recentConversationTimestampFallback: 'Некоторое время назад'
         },
         askAiScreen: {
             disclaimerText: 'Ответы ИИ-ассистента могут быть неточными. Проверяйте важную информацию.',
-            relatedSourcesText: 'Источники',
+            relatedSourcesText: 'Источник',
+            relatedSourcesTextPlural: 'Источники',
+            suggestedPromptsTitleText: 'Возможные вопросы',
             thinkingText: 'Думаю…',
             copyButtonText: 'Копировать',
             copyButtonCopiedText: 'Скопировано',
@@ -104,17 +123,31 @@ const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> 
             likeButtonTitle: 'Полезный ответ',
             dislikeButtonTitle: 'Бесполезный ответ',
             thanksForFeedbackText: 'Спасибо за отзыв!',
+            feedbackPanelTitle: 'Что было не так? (необязательно)',
+            feedbackDetailsPlaceholder: 'Добавьте подробности…',
+            feedbackDisclaimerText: 'Не указывайте персональные данные.',
+            feedbackSubmitButtonText: 'Отправить',
+            feedbackCloseButtonTitle: 'Закрыть',
+            feedbackTagIncorrect: 'Неверный или неполный ответ',
+            feedbackTagNotWhatIAsked: 'Ответ не на мой вопрос',
+            feedbackTagSlowOrBuggy: 'Медленная работа или ошибка',
+            feedbackTagStyleOrTone: 'Стиль или тон ответа',
+            feedbackTagSafetyOrLegal: 'Безопасность или юридические риски',
+            feedbackTagOther: 'Другое',
             preToolCallText: 'Ищу',
             duringToolCallText: 'Ищу',
             afterToolCallText: 'Найдено по запросу',
+            savedMemoryToolResultText: 'Сохранено в память',
+            memoryToolResultText: 'Использована память',
             stoppedStreamingText: 'Генерация ответа остановлена',
             errorTitleText: 'Не удалось получить ответ',
+            threadDepthExceededMessage: 'Диалог завершён для сохранения точности ответов.',
             startNewConversationButtonText: 'Начать новый диалог'
         }
     }
 };
 
-const TRANSLATIONS: Record<DocsLocale, DocSearchProps['translations']> = {
+const TRANSLATIONS: Record<DocsLocale, DocSearchTranslations> = {
     [DocsLocale.Ru]: TRANSLATION_RU,
     [DocsLocale.En]: {}
 };
@@ -175,8 +208,7 @@ export class DocsDocsearchDirective extends DocsLocaleState {
                     transformItems: this.transformItems,
                     translations: TRANSLATIONS[locale],
                     askAi: {
-                        assistantId: 'f6ddad78-2e0d-4f11-8cf0-d7e34c354d0e',
-                        agentStudio: true
+                        agentId: 'f6ddad78-2e0d-4f11-8cf0-d7e34c354d0e'
                     }
                 });
             });
