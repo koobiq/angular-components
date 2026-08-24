@@ -95,6 +95,12 @@
             <kbq-navbar-title>Проекты</kbq-navbar-title>
         </kbq-navbar-item>
 
+        <kbq-navbar-item>
+            <button kbq-button [color]="'contrast'">
+                <span>Новая задача</span>
+            </button>
+        </kbq-navbar-item>
+
         <kbq-navbar-item
             #horizontalNavbarOneMoreDropdownTrigger="kbqDropdownTrigger"
             [class.kbq-active]="horizontalNavbarOneMoreDropdownTrigger.opened"
@@ -102,12 +108,6 @@
             [kbqDropdownTriggerFor]="horizontalNavbarOneMore"
         >
             <kbq-navbar-title>Еще</kbq-navbar-title>
-        </kbq-navbar-item>
-
-        <kbq-navbar-item>
-            <button kbq-button [color]="'contrast'">
-                <span>Новая задача</span>
-            </button>
         </kbq-navbar-item>
     </kbq-navbar-container>
 

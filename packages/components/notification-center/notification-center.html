@@ -26,6 +26,9 @@
                 [attr.aria-label]="a11yLocaleConfiguration().removeAll"
                 [kbqStyle]="'transparent'"
                 [color]="'contrast'"
+                [kbqTooltip]="localeData.removeAll"
+                [kbqPlacement]="'bottom'"
+                [kbqTooltipArrow]="false"
                 (click)="service.removeAll()"
             >
                 <i kbq-icon="kbq-trash_16"></i>

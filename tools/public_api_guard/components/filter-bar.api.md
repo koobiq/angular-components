@@ -73,7 +73,6 @@ export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<{
         change: string;
         resetChanges: string;
         remove: string;
-        name: string;
         error: string;
         errorHint: string;
         saveButton: string;
@@ -126,7 +125,6 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
         change: string;
         resetChanges: string;
         remove: string;
-        name: string;
         error: string;
         errorHint: string;
         saveButton: string;
@@ -262,7 +260,6 @@ export class KbqFilterBar implements KbqFilterBarHost {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -392,7 +389,6 @@ class KbqFilterRefresher {
             change: string;
             resetChanges: string;
             remove: string;
-            name: string;
             error: string;
             errorHint: string;
             saveButton: string;
@@ -479,7 +475,6 @@ export class KbqFilters implements OnInit {
         change: string;
         resetChanges: string;
         remove: string;
-        name: string;
         error: string;
         errorHint: string;
         saveButton: string;
@@ -557,7 +552,6 @@ export class KbqFilterSavePopover implements AfterViewInit {
         change: string;
         resetChanges: string;
         remove: string;
-        name: string;
         error: string;
         errorHint: string;
         saveButton: string;

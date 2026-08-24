@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/cor
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFormattersModule, dispatchFakeEvent } from '@koobiq/components/core';
+import { KbqFormattersModule, dispatchFakeEvent, ruRULocaleData } from '@koobiq/components/core';
 import {
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
@@ -12,6 +12,7 @@ import {
     KbqNotificationItem
 } from '@koobiq/components/notification-center';
 import { KbqToastService } from '@koobiq/components/toast';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 
@@ -443,6 +444,24 @@ describe('KbqNotificationCenter', () => {
                 tick(scrollAuditTime);
 
                 expect(scrollSpy).not.toHaveBeenCalled();
+            }));
+        });
+
+        describe('remove all button', () => {
+            const getService = () =>
+                (componentInstance.trigger() as unknown as { service: KbqNotificationCenterService }).service;
+
+            it('carries a tooltip with the localized "remove all" text', fakeAsync(() => {
+                getService().items = [{ title: 'a', date: new Date().toISOString() }];
+
+                componentInstance.trigger().show();
+                fixture.detectChanges();
+
+                const button = debugElement.query(By.css('[data-testid="kbq-notification-center-remove-all-button"]'));
+
+                expect(button.injector.get(KbqTooltipTrigger).content).toBe(
+                    ruRULocaleData.notificationCenter.removeAll
+                );
             }));
         });
 

@@ -70,6 +70,11 @@
             "version": "20.3.0-0",
             "description": "Rewrites `@koobiq/components/scrollbar` imports to `@koobiq/components/scrollbar/deprecated`. `@koobiq/components/scrollbar` now resolves to a new, dependency-free scrollbar directive; the previous `overlayscrollbars`-based component/directive (`options`/`events`/`defer`/`scrollbarInstance`, the `kbq-scrollbar` element selector) moved to `@koobiq/components/scrollbar/deprecated` unchanged and will be removed in a future major version.",
             "factory": "./migrations/scrollbar-deprecated-path/index"
+        },
+        "filter-bar-rename-action": {
+            "version": "20.3.0-0",
+            "description": "Cleans up after the filter-bar rename rework. Removes the `name` key from filter-bar locale configuration literals — the save/rename popover no longer renders a caption above its name field, because its header now carries it — matching a literal by the sibling keys of the `filters` section rather than by type. Warns about the behaviour change no call site can point at: a NewName save now inherits the filter's own `saved` / `changed` flags instead of forcing saved: true / changed: false, so renaming a dirty filter keeps it dirty and a host must persist the name only; `filters.change` was reworded to \"Переименовать\" / \"Rename\"; `filters.saveAsNew` became a field caption; and KbqFilterSavePopover.popoverHeader no longer depends on the mode.",
+            "factory": "./migrations/filter-bar-rename-action/index"
         }
     }
 }

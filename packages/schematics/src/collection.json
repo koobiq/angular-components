@@ -5,7 +5,9 @@
             "description": "Adds @koobiq/components library to the project and installs dependencies",
             "factory": "./ng-add/index",
             "schema": "./ng-add/schema.json",
-            "aliases": ["install"]
+            "aliases": [
+                "install"
+            ]
         },
         "new-icons-pack": {
             "description": "Updates prefixes and names of changed/removed icons",
@@ -106,6 +108,11 @@
             "description": "Rewrites @koobiq/components/scrollbar imports to @koobiq/components/scrollbar/deprecated — the overlayscrollbars-based implementation moved there when the dependency-free implementation was promoted to @koobiq/components/scrollbar",
             "factory": "./migrations/scrollbar-deprecated-path/index",
             "schema": "./migrations/scrollbar-deprecated-path/schema.json"
+        },
+        "filter-bar-rename-action": {
+            "description": "Removes the `name` key from filter-bar locale configurations and reports the rename rework: renaming a filter no longer marks it saved, so it stops persisting the pending pipe edits",
+            "factory": "./migrations/filter-bar-rename-action/index",
+            "schema": "./migrations/filter-bar-rename-action/schema.json"
         }
     }
 }
