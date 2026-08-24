@@ -482,7 +482,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     get showCheckbox(): any;
     set showCheckbox(value: any);
-    textElement: ElementRef;
+    // (undocumented)
+    get textElement(): ElementRef;
     // (undocumented)
     toggle(): void;
     // (undocumented)
