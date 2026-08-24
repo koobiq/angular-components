@@ -109,7 +109,7 @@
         "eslint-plugin-file-progress": "^3.0.2",
         "eslint-plugin-prettier": "^5.5.6",
         "eslint-plugin-promise": "^7.3.0",
-        "eslint-plugin-rxjs-x": "^1.0.4",
+        "eslint-plugin-rxjs-x": "^1.0.5",
         "express": "^4.22.2",
         "fast-check": "^4.9.0",
         "glob": "^13.0.6",
