@@ -28,7 +28,12 @@
 <ng-template #content>
     @if (isListMode) {
         <div class="kbq-date-list">
-            <kbq-list-selection #listSelection [autoSelect]="false" [ngModel]="data.value?.name">
+            <kbq-list-selection
+                #listSelection
+                [autoSelect]="false"
+                [attr.aria-label]="data.name"
+                [ngModel]="data.value?.name"
+            >
                 <kbq-list-option (click)="showPeriod()" (keydown.enter)="showPeriod()">
                     {{ localeData.datePipe?.customPeriod }}
                     <!-- prevents [kbq-icon] from matching icon slot in kbq-list-option, keeping chevron after label text -->

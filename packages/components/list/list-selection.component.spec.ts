@@ -19,9 +19,10 @@ import {
     A,
     C,
     createKeyboardEvent,
-    createMouseEvent,
+    D,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
+    dispatchMouseEvent,
     DOWN_ARROW,
     END,
     ENTER,
@@ -29,13 +30,17 @@ import {
     HOME,
     KbqOptionActionComponent,
     KbqOptionModule,
+    LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
+    RIGHT_ARROW,
+    S,
     SPACE,
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { axe } from 'jest-axe';
 import {
     KbqListCopyEvent,
     KbqListModule,
@@ -206,14 +211,11 @@ describe('KbqListSelection without forms', () => {
         });
 
         it('should not allow selection of disabled items', () => {
-            const testListItem = listOptions[0].injector.get<KbqListOption>(KbqListOption);
             const selectList = selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
 
             expect(selectList.selected.length).toBe(0);
 
-            const event = createMouseEvent('click');
-
-            testListItem.handleClick(event);
+            dispatchMouseEvent(listOptions[0].nativeElement, 'click');
             fixture.detectChanges();
 
             expect(selectList.selected.length).toBe(0);
@@ -250,6 +252,21 @@ describe('KbqListSelection without forms', () => {
 
             expect(selectList.selected.length).toBe(1);
             expect(ENTER_EVENT.defaultPrevented).toBe(true);
+        });
+
+        it('should not toggle a disabled option with SPACE or ENTER', () => {
+            const list: KbqListSelection = selectionList.componentInstance;
+
+            // listOptions[0] is `disabled="true"`. Arrow navigation skips it, but it can still end up
+            // active programmatically — e.g. when an index is restored after the list changed.
+            list.keyManager.updateActiveItem(0);
+
+            list.onKeyDown(createKeyboardEvent('keydown', SPACE));
+            list.onKeyDown(createKeyboardEvent('keydown', ENTER));
+            fixture.detectChanges();
+
+            expect(listOptions[0].componentInstance.selected).toBe(false);
+            expect(list.selectionModel.selected.length).toBe(0);
         });
 
         it('should restore focus to the previous option if active option is destroyed', fakeAsync(() => {
@@ -289,33 +306,39 @@ describe('KbqListSelection without forms', () => {
             expect(manager.activeItemIndex).toEqual(1);
         });
 
-        it('should focus and toggle the next item when pressing SHIFT + UP_ARROW', fakeAsync(() => {
-            const manager = selectionList.componentInstance.keyManager;
-            const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
+        it.each([
+            { direction: 'UP_ARROW', keyCode: UP_ARROW, anchorIndex: 3, firstIndex: 2, secondIndex: 1 },
+            { direction: 'DOWN_ARROW', keyCode: DOWN_ARROW, anchorIndex: 1, firstIndex: 2, secondIndex: 3 }
+        ])(
+            'should focus and toggle the next item when pressing SHIFT + $direction',
+            fakeAsync(({ keyCode, anchorIndex, firstIndex, secondIndex }) => {
+                const manager = selectionList.componentInstance.keyManager;
+                const keyEvent = createKeyboardEvent('keydown', keyCode);
 
-            Object.defineProperty(upKeyEvent, 'shiftKey', { get: () => true });
+                Object.defineProperty(keyEvent, 'shiftKey', { get: () => true });
 
-            listOptions[3].componentInstance.selected = true;
+                listOptions[anchorIndex].componentInstance.selected = true;
 
-            manager.setActiveItem(3);
-            expect(manager.activeItemIndex).toBe(3);
+                manager.setActiveItem(anchorIndex);
+                expect(manager.activeItemIndex).toBe(anchorIndex);
 
-            expect(listOptions[1].componentInstance.selected).toBe(false);
-            expect(listOptions[2].componentInstance.selected).toBe(false);
+                expect(listOptions[firstIndex].componentInstance.selected).toBe(false);
+                expect(listOptions[secondIndex].componentInstance.selected).toBe(false);
 
-            selectionList.componentInstance.onKeyDown(upKeyEvent);
-            fixture.detectChanges();
+                selectionList.componentInstance.onKeyDown(keyEvent);
+                fixture.detectChanges();
 
-            expect(listOptions[1].componentInstance.selected).toBe(false);
-            expect(listOptions[2].componentInstance.selected).toBe(true);
+                expect(listOptions[firstIndex].componentInstance.selected).toBe(true);
+                expect(listOptions[secondIndex].componentInstance.selected).toBe(false);
 
-            selectionList.componentInstance.onKeyDown(upKeyEvent);
-            fixture.detectChanges();
-            tick();
+                selectionList.componentInstance.onKeyDown(keyEvent);
+                fixture.detectChanges();
+                tick();
 
-            expect(listOptions[1].componentInstance.selected).toBe(true);
-            expect(listOptions[2].componentInstance.selected).toBe(true);
-        }));
+                expect(listOptions[firstIndex].componentInstance.selected).toBe(true);
+                expect(listOptions[secondIndex].componentInstance.selected).toBe(true);
+            })
+        );
 
         it('should focus next item when press DOWN ARROW', () => {
             const manager = selectionList.componentInstance.keyManager;
@@ -328,34 +351,6 @@ describe('KbqListSelection without forms', () => {
 
             expect(manager.activeItemIndex).toEqual(3);
         });
-
-        it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', fakeAsync(() => {
-            const manager = selectionList.componentInstance.keyManager;
-            const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
-
-            Object.defineProperty(downKeyEvent, 'shiftKey', { get: () => true });
-
-            listOptions[1].componentInstance.selected = true;
-
-            manager.setActiveItem(1);
-            expect(manager.activeItemIndex).toBe(1);
-
-            expect(listOptions[2].componentInstance.selected).toBe(false);
-            expect(listOptions[3].componentInstance.selected).toBe(false);
-
-            selectionList.componentInstance.onKeyDown(downKeyEvent);
-            fixture.detectChanges();
-
-            expect(listOptions[2].componentInstance.selected).toBe(true);
-            expect(listOptions[3].componentInstance.selected).toBe(false);
-
-            selectionList.componentInstance.onKeyDown(downKeyEvent);
-            fixture.detectChanges();
-            tick();
-
-            expect(listOptions[2].componentInstance.selected).toBe(true);
-            expect(listOptions[3].componentInstance.selected).toBe(true);
-        }));
 
         it('should be able to focus the first item when pressing HOME', () => {
             const manager = selectionList.componentInstance.keyManager;
@@ -383,6 +378,9 @@ describe('KbqListSelection without forms', () => {
             expect(event.defaultPrevented).toBe(true);
         });
 
+        // Dispatched on the host rather than driving `keyManager` directly, so the event travels the
+        // same path a real keypress does — through the `(keydown)` binding and `onKeyDown`, which is
+        // where type-ahead is wired into the key manager.
         it('should be able to jump focus down to an item by typing', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
             const starredOption = listOptions[1].componentInstance as KbqListOption;
@@ -390,7 +388,7 @@ describe('KbqListSelection without forms', () => {
 
             expect(manager.activeItemIndex).toBe(-1);
 
-            manager.onKeydown(createKeyboardEvent('keydown', 83, undefined, 's'));
+            dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', S, undefined, 's');
             fixture.detectChanges();
             tick(250);
             fixture.detectChanges();
@@ -398,7 +396,7 @@ describe('KbqListSelection without forms', () => {
             expect(manager.activeItemIndex).toBe(1);
             expect(manager.activeItem).toBe(starredOption);
 
-            manager.onKeydown(createKeyboardEvent('keydown', 68, undefined, 'd'));
+            dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', D, undefined, 'd');
             fixture.detectChanges();
             tick(250);
             fixture.detectChanges();
@@ -820,17 +818,31 @@ describe('KbqListSelection without forms', () => {
         });
 
         it('should not allow selection on disabled selection-list', () => {
-            const testListItem = listOption[2].injector.get<KbqListOption>(KbqListOption);
             const selectList = selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
 
             expect(selectList.selected.length).toBe(0);
 
-            const event = createMouseEvent('click');
-
-            testListItem.handleClick(event);
+            dispatchMouseEvent(listOption[2].nativeElement, 'click');
             fixture.detectChanges();
 
             expect(selectList.selected.length).toBe(0);
+        });
+
+        it('should not select the active option with SPACE or ENTER while the list is disabled', () => {
+            const list: KbqListSelection = selectionList.componentInstance;
+
+            list.keyManager.updateActiveItem(2);
+
+            list.onKeyDown(createKeyboardEvent('keydown', SPACE));
+            list.onKeyDown(createKeyboardEvent('keydown', ENTER));
+            fixture.detectChanges();
+
+            expect(list.selectionModel.selected.length).toBe(0);
+        });
+
+        it('should expose the disabled state through aria-disabled', () => {
+            expect(selectionList.nativeElement.getAttribute('aria-disabled')).toBe('true');
+            expect(listOption[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
         });
     });
 });
@@ -990,6 +1002,45 @@ describe('KbqListSelection with forms', () => {
             fixture.detectChanges();
 
             expect(listOptions.every((option) => option.disabled)).toBe(true);
+        });
+
+        it('should disable the list itself when the control is disabled', () => {
+            const selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
+            const list: KbqListSelection = selectionList.componentInstance;
+
+            expect(list.disabled).toBe(false);
+            expect(list.tabIndex).toBe(0);
+
+            fixture.componentInstance.formControl.disable();
+            fixture.detectChanges();
+
+            expect(list.disabled).toBe(true);
+            expect(list.tabIndex).toBe(-1);
+            expect(selectionList.nativeElement.getAttribute('aria-disabled')).toBe('true');
+        });
+
+        // The list disables its options through the `KbqListOption.disabled` getter, so re-enabling
+        // the control must not resurrect an option that was disabled by its own input.
+        it('should not clobber per-option disabled inputs when the control toggles', () => {
+            const optionFixture = TestBed.createComponent(SelectionListWithFormControlAndDisabledOption);
+
+            optionFixture.detectChanges();
+
+            const options = optionFixture.debugElement
+                .queryAll(By.directive(KbqListOption))
+                .map((optionDebugEl) => optionDebugEl.componentInstance as KbqListOption);
+
+            expect(options.map((option) => option.disabled)).toEqual([false, true]);
+
+            optionFixture.componentInstance.formControl.disable();
+            optionFixture.detectChanges();
+
+            expect(options.map((option) => option.disabled)).toEqual([true, true]);
+
+            optionFixture.componentInstance.formControl.enable();
+            optionFixture.detectChanges();
+
+            expect(options.map((option) => option.disabled)).toEqual([false, true]);
         });
 
         it('should be able to set the value through the form control', fakeAsync(() => {
@@ -1268,6 +1319,290 @@ describe('KbqListSelection onCopy event', () => {
     }));
 });
 
+describe('KbqListSelection range selection', () => {
+    let fixture: ComponentFixture<SelectionListWithListOptions>;
+    let list: KbqListSelection;
+    let listOptions: DebugElement[];
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
+
+        fixture = TestBed.createComponent(SelectionListWithListOptions);
+        fixture.detectChanges();
+
+        list = fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
+        listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption));
+    });
+
+    // A real mouse click focuses the option first, which routes through `listenToOptionsFocus` ->
+    // `keyManager.updateActiveItem`, not `setActiveItem` — so `activeItemIndex` becomes a real index
+    // while `previousActiveItemIndex` stays -1 (only `setActiveItem` touches it). That asymmetric
+    // fromIndex=-1/toIndex=valid state is exactly what the `isValidIndex` guards in
+    // `selectActiveOptions` exist for.
+    it('should not throw on shift + click before any keyboard navigation', () => {
+        list.keyManager.updateActiveItem(2);
+
+        expect(list.keyManager.previousActiveItemIndex).toBe(-1);
+        expect(list.keyManager.activeItemIndex).toBe(2);
+
+        expect(() => list.setSelectedOptionsByClick(listOptions[2].componentInstance, true, false)).not.toThrow();
+        expect(list.selectionModel.selected.length).toBe(0);
+    });
+
+    it('should extend the range from the anchor once the keyboard has moved', fakeAsync(() => {
+        list.keyManager.setActiveItem(1);
+        listOptions[1].componentInstance.selected = true;
+        list.keyManager.setActiveItem(3);
+        fixture.detectChanges();
+
+        list.setSelectedOptionsByClick(listOptions[3].componentInstance, true, false);
+        fixture.detectChanges();
+        tick();
+
+        expect(listOptions[1].componentInstance.selected).toBe(true);
+        expect(listOptions[2].componentInstance.selected).toBe(true);
+        expect(listOptions[3].componentInstance.selected).toBe(true);
+    }));
+});
+
+describe('KbqListSelection horizontal', () => {
+    let fixture: ComponentFixture<SelectionListHorizontal>;
+    let selectionList: DebugElement;
+    let listOptions: DebugElement[];
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
+
+        fixture = TestBed.createComponent(SelectionListHorizontal);
+        fixture.detectChanges();
+
+        selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
+        listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption));
+    });
+
+    it('should announce and lay out the list as a horizontal listbox', () => {
+        expect(selectionList.nativeElement.getAttribute('aria-orientation')).toBe('horizontal');
+        expect(selectionList.nativeElement.classList).toContain('kbq-list-selection_horizontal');
+    });
+
+    it('should move the active option with LEFT and RIGHT arrows', () => {
+        const manager = selectionList.componentInstance.keyManager;
+
+        manager.setActiveItem(0);
+
+        dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', RIGHT_ARROW);
+        fixture.detectChanges();
+
+        expect(manager.activeItemIndex).toBe(1);
+
+        dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', LEFT_ARROW);
+        fixture.detectChanges();
+
+        expect(manager.activeItemIndex).toBe(0);
+    });
+
+    it('should follow the selection while navigating horizontally', () => {
+        selectionList.componentInstance.keyManager.setActiveItem(0);
+
+        dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', RIGHT_ARROW);
+        fixture.detectChanges();
+
+        expect(listOptions[0].componentInstance.selected).toBe(false);
+        expect(listOptions[1].componentInstance.selected).toBe(true);
+    });
+
+    it('should not compute a scroll size in horizontal mode', () => {
+        const withScrollSize = jest.spyOn(selectionList.componentInstance.keyManager, 'withScrollSize');
+
+        selectionList.componentInstance.updateScrollSize();
+
+        expect(withScrollSize).not.toHaveBeenCalled();
+    });
+});
+
+describe('KbqListSelection layout measurement', () => {
+    let fixture: ComponentFixture<SelectionListWithListOptions>;
+    let list: KbqListSelection;
+    let listElement: HTMLElement;
+
+    const clientRects = (...heights: number[]) => heights.map((height) => ({ height })) as unknown as DOMRectList;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
+
+        fixture = TestBed.createComponent(SelectionListWithListOptions);
+        fixture.detectChanges();
+
+        const selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
+
+        list = selectionList.componentInstance;
+        listElement = selectionList.nativeElement;
+    });
+
+    it('should report zero height when the element is not laid out', () => {
+        jest.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects());
+        expect(list.getHeight()).toBe(0);
+
+        jest.spyOn(listElement, 'getClientRects').mockReturnValue(undefined as unknown as DOMRectList);
+        expect(list.getHeight()).toBe(0);
+    });
+
+    it('should report the measured height when the element is laid out', () => {
+        jest.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects(120));
+
+        expect(list.getHeight()).toBe(120);
+    });
+
+    // jsdom never lays elements out, so `getClientRects()` is empty and the option height is 0.
+    it('should skip updateScrollSize when the option height is unknown', () => {
+        const withScrollSize = jest.spyOn(list.keyManager, 'withScrollSize');
+
+        expect(list.options.first.getHeight()).toBe(0);
+        expect(() => list.updateScrollSize()).not.toThrow();
+        expect(withScrollSize).not.toHaveBeenCalled();
+    });
+
+    it('should derive the scroll size from the rendered heights', () => {
+        const withScrollSize = jest.spyOn(list.keyManager, 'withScrollSize');
+
+        jest.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects(100));
+        jest.spyOn(list.options.first.getHostElement(), 'getClientRects').mockReturnValue(clientRects(30));
+
+        list.updateScrollSize();
+
+        expect(withScrollSize).toHaveBeenCalledWith(3);
+    });
+
+    // Mirrors `RESIZE_AUDIT_TIME` in list-selection.component.ts, not exported since it's an
+    // implementation detail of the resize listener, not public API.
+    const RESIZE_AUDIT_TIME = 100;
+
+    it('should recompute the scroll size on window resize, debounced', fakeAsync(() => {
+        const updateScrollSizeSpy = jest.spyOn(list, 'updateScrollSize');
+
+        window.dispatchEvent(new Event('resize'));
+        window.dispatchEvent(new Event('resize'));
+
+        expect(updateScrollSizeSpy).not.toHaveBeenCalled();
+
+        tick(RESIZE_AUDIT_TIME);
+
+        expect(updateScrollSizeSpy).toHaveBeenCalledTimes(1);
+    }));
+});
+
+describe('KbqListSelection accessibility', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [KbqListModule] }).compileComponents();
+    });
+
+    it('should expose a single-selection list as a non-multiselectable listbox', () => {
+        const fixture = TestBed.createComponent(SelectionListForA11y);
+
+        fixture.detectChanges();
+
+        const list = fixture.debugElement.query(By.directive(KbqListSelection)).nativeElement;
+
+        expect(list.getAttribute('role')).toBe('listbox');
+        expect(list.getAttribute('aria-multiselectable')).toBe('false');
+        expect(list.getAttribute('aria-orientation')).toBeNull();
+    });
+
+    it('should mark a multiple-selection list as multiselectable', () => {
+        const fixture = TestBed.createComponent(SelectionListMultipleForA11y);
+
+        fixture.detectChanges();
+
+        const list = fixture.debugElement.query(By.directive(KbqListSelection)).nativeElement;
+
+        expect(list.getAttribute('aria-multiselectable')).toBe('true');
+    });
+
+    it('should give every option a role and an explicit aria-selected', () => {
+        const fixture = TestBed.createComponent(SelectionListForA11y);
+
+        fixture.detectChanges();
+
+        const options = fixture.debugElement.queryAll(By.directive(KbqListOption));
+
+        expect(options.map(({ nativeElement }) => nativeElement.getAttribute('role'))).toEqual([
+            'option',
+            'option',
+            'option'
+        ]);
+        expect(options.map(({ nativeElement }) => nativeElement.getAttribute('aria-selected'))).toEqual([
+            'false',
+            'false',
+            'false'
+        ]);
+
+        options[1].componentInstance.toggle();
+        fixture.detectChanges();
+
+        expect(options.map(({ nativeElement }) => nativeElement.getAttribute('aria-selected'))).toEqual([
+            'false',
+            'true',
+            'false'
+        ]);
+    });
+
+    it('should mark disabled options with aria-disabled instead of the inert disabled attribute', () => {
+        const fixture = TestBed.createComponent(SelectionListForA11y);
+
+        fixture.detectChanges();
+
+        const options = fixture.debugElement.queryAll(By.directive(KbqListOption));
+
+        expect(options[2].nativeElement.getAttribute('aria-disabled')).toBe('true');
+        expect(options[2].nativeElement.hasAttribute('disabled')).toBe(false);
+        expect(options[0].nativeElement.getAttribute('aria-disabled')).toBeNull();
+    });
+
+    it('should keep the pseudo-checkbox out of the accessibility tree', () => {
+        const fixture = TestBed.createComponent(SelectionListMultipleForA11y);
+
+        fixture.detectChanges();
+
+        const pseudoCheckbox = fixture.debugElement.query(By.css('kbq-pseudo-checkbox')).nativeElement;
+
+        expect(pseudoCheckbox.getAttribute('aria-hidden')).toBe('true');
+    });
+
+    describe('axe', () => {
+        it('should have no violations for a single-selection list', async () => {
+            const fixture = TestBed.createComponent(SelectionListForA11y);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('should have no violations for a multiple-selection list', async () => {
+            const fixture = TestBed.createComponent(SelectionListMultipleForA11y);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('should have no violations for a grouped list', async () => {
+            const fixture = TestBed.createComponent(SelectionListGroupedForA11y);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+
+        it('should have no violations for a disabled list', async () => {
+            const fixture = TestBed.createComponent(SelectionListDisabledForA11y);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
+    });
+});
+
 @Component({
     imports: [
         KbqListModule,
@@ -1292,8 +1627,9 @@ class SelectionListWithCustomComparator {
         { id: 3, label: 'Three' }
     ];
 
-    // Use same object reference so getOptionByValue (===) finds the match after initializeSelection
-    formControl = new UntypedFormControl([this.options[1]]);
+    // A distinct object that only `compareWith` can match against `options[1]` — a reference (`===`)
+    // lookup inside the list would silently select nothing.
+    formControl = new UntypedFormControl([{ id: 2, label: 'Two' }]);
 
     compareWith = jest.fn((o1: any, o2: any) => o1 && o2 && o1.id === o2.id);
 }
@@ -1534,7 +1870,6 @@ class SelectionListWithPreselectedFormControlOnPush {
 
 @Component({
     imports: [KbqListModule],
-    standalone: true,
     template: `
         <kbq-list-selection>
             @for (opt of opts; track opt) {
@@ -1574,3 +1909,91 @@ class SelectionListWithOnCopyHandler {
         this.copyEvent = event;
     }
 }
+
+@Component({
+    imports: [
+        KbqListModule
+    ],
+    template: `
+        <kbq-list-selection [horizontal]="true">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListHorizontal {}
+
+@Component({
+    imports: [
+        KbqListModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-list-selection multiple="checkbox" [formControl]="formControl">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [disabled]="true" [value]="'opt2'">Option 2</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListWithFormControlAndDisabledOption {
+    formControl = new UntypedFormControl();
+}
+
+// `role="listbox"` needs an accessible name, hence the `aria-label` on every a11y fixture.
+@Component({
+    imports: [
+        KbqListModule
+    ],
+    template: `
+        <kbq-list-selection aria-label="Mailboxes">
+            <kbq-list-option [value]="'inbox'">Inbox</kbq-list-option>
+            <kbq-list-option [value]="'starred'">Starred</kbq-list-option>
+            <kbq-list-option [disabled]="true" [value]="'drafts'">Drafts</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListForA11y {}
+
+@Component({
+    imports: [
+        KbqListModule
+    ],
+    template: `
+        <kbq-list-selection aria-label="Mailboxes" multiple="checkbox">
+            <kbq-list-option [value]="'inbox'">Inbox</kbq-list-option>
+            <kbq-list-option [value]="'starred'">Starred</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListMultipleForA11y {}
+
+@Component({
+    imports: [
+        KbqListModule,
+        KbqOptionModule
+    ],
+    template: `
+        <kbq-list-selection aria-label="Security controls" multiple="checkbox">
+            <kbq-optgroup label="Network">
+                <kbq-list-option [value]="'firewall'">Firewall</kbq-list-option>
+                <kbq-list-option [value]="'vpn'">VPN</kbq-list-option>
+            </kbq-optgroup>
+            <kbq-list-option [value]="'rbac'">RBAC</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListGroupedForA11y {}
+
+@Component({
+    imports: [
+        KbqListModule
+    ],
+    template: `
+        <kbq-list-selection aria-label="Mailboxes" [disabled]="true">
+            <kbq-list-option [value]="'inbox'">Inbox</kbq-list-option>
+            <kbq-list-option [value]="'starred'">Starred</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListDisabledForA11y {}

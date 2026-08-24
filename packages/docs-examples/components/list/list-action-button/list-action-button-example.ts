@@ -13,7 +13,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'list-action-button-example',
     imports: [KbqListModule, FormsModule, KbqDropdownModule, KbqToolTipModule, KbqBadgeModule],
     template: `
-        <kbq-list-selection style="width: 400px" [autoSelect]="false" [(ngModel)]="selected">
+        <kbq-list-selection style="width: 400px" aria-label="Elements" [autoSelect]="false" [(ngModel)]="selected">
             <kbq-list-option [value]="'An element with a very very very long name'">
                 <div>Element with a very very very very very very long name</div>
 

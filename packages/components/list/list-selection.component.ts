@@ -1,6 +1,6 @@
-﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Platform } from '@angular/cdk/platform';
 import {
@@ -27,6 +27,7 @@ import {
     OnInit,
     Output,
     output,
+    Provider,
     QueryList,
     ViewChild,
     viewChild,
@@ -47,6 +48,7 @@ import {
     isVerticalMovement,
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
+    KBQ_WINDOW,
     KbqActionContainer,
     kbqFocusOptionActionOnTab,
     KbqOptgroup,
@@ -65,22 +67,26 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { startWith, take } from 'rxjs/operators';
+import { fromEvent, merge, Observable, Subject } from 'rxjs';
+import { auditTime, startWith, switchMap, take } from 'rxjs/operators';
 
-export interface KbqOptionEvent {
-    option: KbqListOption;
+/** How long consecutive `window.resize` ticks are collapsed before the scroll size is recalculated. */
+const RESIZE_AUDIT_TIME = 100;
+
+export interface KbqOptionEvent<T = any> {
+    option: KbqListOption<T>;
 }
-export const KBQ_SELECTION_LIST_VALUE_ACCESSOR: any = {
+
+export const KBQ_SELECTION_LIST_VALUE_ACCESSOR: Provider = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqListSelection),
     multi: true
 };
 
-export class KbqListSelectionChange {
+export class KbqListSelectionChange<T = any> {
     constructor(
-        public source: KbqListSelection,
-        public option: KbqListOption
+        public source: KbqListSelection<T>,
+        public option: KbqListOption<T>
     ) {}
 }
 
@@ -118,32 +124,45 @@ export class KbqListCopyEvent<T> {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-list-selection',
+        role: 'listbox',
+        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-list-selection_horizontal]': 'horizontal()',
+        '[attr.aria-multiselectable]': 'multiple',
+        '[attr.aria-orientation]': 'horizontal() ? "horizontal" : null',
+        '[attr.aria-disabled]': 'disabled || null',
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled || null',
         '(keydown)': 'onKeyDown($event)',
         '(focus)': 'focus()',
-        '(blur)': 'blur()',
-        '(window:resize)': 'updateScrollSize()'
+        '(blur)': 'blur()'
     },
     exportAs: 'kbqListSelection',
     preserveWhitespaces: false
 })
-export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class KbqListSelection<T = any> implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
     private clipboard = inject(Clipboard, { optional: true });
     protected readonly focusMonitor = inject(FocusMonitor);
 
-    keyManager: FocusKeyManager<KbqListOption>;
+    keyManager: FocusKeyManager<KbqListOption<T>>;
 
-    @ContentChildren(forwardRef(() => KbqListOption), { descendants: true }) options: QueryList<KbqListOption>;
+    @ContentChildren(forwardRef(() => KbqListOption), { descendants: true }) options: QueryList<KbqListOption<T>>;
 
-    readonly onSelectAll = output<KbqListSelectAllEvent<KbqListOption>>();
+    readonly onSelectAll = output<KbqListSelectAllEvent<KbqListOption<T>>>();
 
-    @Output() readonly onCopy = new EventEmitter<KbqListCopyEvent<KbqListOption>>();
+    /**
+     * Kept as a decorator `@Output()`/`EventEmitter` on purpose: `copyActiveOption` branches on
+     * `onCopy.observed` to decide between the consumer handler and the built-in clipboard copy.
+     * `output()` exposes no subscriber introspection, so migrating it would silently run both
+     * paths for every existing `(onCopy)` consumer. Mirrors `KbqTreeSelection.onCopy`.
+     */
+    @Output() readonly onCopy = new EventEmitter<KbqListCopyEvent<KbqListOption<T>>>();
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Whether clicking an option clears the rest of the selection.
+     * Stays an accessor input: the constructor turns it off for `multiple="checkbox"`, which a
+     * signal `input()` cannot do (inputs are read-only from inside the component).
+     */
     @Input()
     get autoSelect(): boolean {
         return this._autoSelect;
@@ -155,8 +174,10 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     private _autoSelect: boolean = true;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Whether the last selected option can be deselected.
+     * Stays an accessor input for the same reason as {@link autoSelect}.
+     */
     @Input()
     get noUnselectLast(): boolean {
         return this._noUnselectLast;
@@ -179,22 +200,28 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     readonly horizontal = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Tab index of the list.
+     * Stays an accessor input: the getter is derived from {@link disabled} and the setter also
+     * records the user-provided value, which the roving focus logic restores after `tabOut`.
+     */
     @Input()
-    get tabIndex(): any {
+    get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
     }
 
-    set tabIndex(value: any) {
+    set tabIndex(value: number) {
         this.userTabIndex = value;
         this._tabIndex = value;
     }
 
     private _tabIndex = 0;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Whether the list is disabled.
+     * Stays an accessor input: `setDisabledState` writes it from the `ControlValueAccessor`, which a
+     * signal `input()` cannot do.
+     */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -213,7 +240,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
      * options should appear as selected. The first argument is the value of an options. The second
      * one is a value from the selected value. A boolean must be returned.
      */
-    readonly compareWith = input<(o1: any, o2: any) => boolean>((a1, a2) => a1 === a2);
+    readonly compareWith = input<(o1: T, o2: T) => boolean>((a1, a2) => a1 === a2);
 
     userTabIndex: number | null = null;
 
@@ -222,26 +249,24 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     }
 
     // Emits a change event whenever the selected state of an option changes.
-    readonly selectionChange = output<KbqListSelectionChange>();
+    readonly selectionChange = output<KbqListSelectionChange<T>>();
 
-    selectionModel: SelectionModel<KbqListOption>;
+    selectionModel: SelectionModel<KbqListOption<T>>;
 
-    get optionFocusChanges(): Observable<KbqOptionEvent> {
+    get optionFocusChanges(): Observable<KbqOptionEvent<T>> {
         return merge(...this.options.map((option) => option.onFocus));
     }
 
-    get optionBlurChanges(): Observable<KbqOptionEvent> {
+    get optionBlurChanges(): Observable<KbqOptionEvent<T>> {
         return merge(...this.options.map((option) => option.onBlur));
     }
 
-    _value: string[] | null;
+    _value: T[] | null;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly platform = inject(Platform);
-
-    private optionFocusSubscription: Subscription | null;
-
-    private optionBlurSubscription: Subscription | null;
+    private readonly ngZone = inject(NgZone);
+    private readonly window = inject(KBQ_WINDOW);
 
     constructor() {
         const multiple = inject(new HostAttributeToken('multiple'), { optional: true });
@@ -257,11 +282,11 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
             this.noUnselectLast = false;
         }
 
-        this.selectionModel = new SelectionModel<KbqListOption>(this.multiple);
+        this.selectionModel = new SelectionModel<KbqListOption<T>>(this.multiple);
     }
 
     ngAfterContentInit(): void {
-        this.keyManager = new FocusKeyManager<KbqListOption>(this.options)
+        this.keyManager = new FocusKeyManager<KbqListOption<T>>(this.options)
             .withTypeAhead()
             .withVerticalOrientation(!this.horizontal())
             .withHorizontalOrientation(this.horizontal() ? 'ltr' : null);
@@ -289,9 +314,9 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
             }
         });
 
-        this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.resetOptions();
+        this.listenToOptionsFocus();
 
+        this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.updateTabIndex();
             this.initializeSelection();
         });
@@ -299,6 +324,15 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         if (!this.platform.isBrowser) return;
 
         this.updateScrollSize();
+
+        // `updateScrollSize` only feeds the key manager's page size — nothing rendered depends on it,
+        // so the listener stays outside the zone and never schedules change detection. `auditTime`
+        // collapses a resize drag into one pair of forced layout reads per interval.
+        this.ngZone.runOutsideAngular(() => {
+            fromEvent(this.window, 'resize')
+                .pipe(auditTime(RESIZE_AUDIT_TIME), takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.updateScrollSize());
+        });
     }
 
     ngAfterViewInit(): void {
@@ -321,7 +355,8 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         }
     }
 
-    blur() {
+    /** Clears the active key-manager item (unless an option is still focused) and marks the list as touched. */
+    blur(): void {
         if (!this.hasFocusedOption()) {
             this.keyManager.setActiveItem(-1);
         }
@@ -330,13 +365,15 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         this.changeDetectorRef.markForCheck();
     }
 
-    selectAll() {
+    /** Selects every non-disabled option and reports the new value to the `ControlValueAccessor`. */
+    selectAll(): void {
         this.options.forEach((option) => option.setSelected(true));
 
         this.reportValueChange();
     }
 
-    deselectAll() {
+    /** Deselects every option and reports the new value to the `ControlValueAccessor`. */
+    deselectAll(): void {
         this.options.forEach((option) => option.setSelected(false));
 
         this.reportValueChange();
@@ -347,10 +384,18 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
             return;
         }
 
-        this.keyManager.withScrollSize(Math.floor(this.getHeight() / this.options.first.getHeight()));
+        const optionHeight = this.options.first.getHeight();
+
+        // `getHeight()` is 0 whenever the option is not laid out (SSR, jsdom, `display: none`);
+        // dividing by it would hand the key manager a `NaN` page size.
+        if (!optionHeight) {
+            return;
+        }
+
+        this.keyManager.withScrollSize(Math.floor(this.getHeight() / optionHeight));
     }
 
-    setSelectedOptionsByClick(option: KbqListOption, shiftKey: boolean, ctrlKey: boolean): void {
+    setSelectedOptionsByClick(option: KbqListOption<T>, shiftKey: boolean, ctrlKey: boolean): void {
         if (shiftKey && this.multiple) {
             this.selectActiveOptions();
         } else if (ctrlKey) {
@@ -370,7 +415,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         this.reportValueChange();
     }
 
-    setSelectedOptionsByKey(option: KbqListOption, shiftKey: boolean, ctrlKey: boolean): void {
+    setSelectedOptionsByKey(option: KbqListOption<T>, shiftKey: boolean, ctrlKey: boolean): void {
         if (shiftKey && this.multiple) {
             this.selectActiveOptions();
         } else if (ctrlKey) {
@@ -392,11 +437,14 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         const options = this.options.toArray();
         let fromIndex = this.keyManager.previousActiveItemIndex;
         let toIndex = (this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex);
-        const selectedOptionState = options[fromIndex].selected;
 
-        if (toIndex === fromIndex) {
+        // `previousActiveItemIndex` stays -1 until the key manager has moved at least once, so a
+        // shift + click before any keyboard navigation has no anchor to extend the range from.
+        if (toIndex === fromIndex || !this.isValidIndex(fromIndex) || !this.isValidIndex(toIndex)) {
             return;
         }
+
+        const selectedOptionState = options[fromIndex].selected;
 
         if (fromIndex > toIndex) {
             [fromIndex, toIndex] = [toIndex, fromIndex];
@@ -415,16 +463,18 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     }
 
     // Implemented as part of ControlValueAccessor.
-    writeValue(values: string[]): void {
-        this._value = values;
+    writeValue(values: T[] | T | null): void {
+        // A form control may push a bare value instead of an array; normalize it here so that
+        // `_value` always matches its declared type and stays safe to iterate over.
+        this._value = values == null ? null : Array.isArray(values) ? values : [values];
 
         if (this.options) {
-            this.setOptionsFromValues(Array.isArray(values) ? values : [values]);
+            this.setOptionsFromValues(this._value ?? []);
         }
     }
 
     // Implemented as part of ControlValueAccessor.
-    registerOnChange(fn: (value: any) => void): void {
+    registerOnChange(fn: (value: T[]) => void): void {
         this.onChange = fn;
     }
 
@@ -435,12 +485,14 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     // Implemented as a part of ControlValueAccessor.
     setDisabledState(isDisabled: boolean): void {
-        if (this.options) {
-            this.options.forEach((option) => (option.disabled = isDisabled));
-        }
+        // `KbqListOption.disabled` reads the list through its getter, so disabling the list cascades
+        // to every option without overwriting their own `disabled` inputs.
+        this.disabled = isDisabled;
+        this.changeDetectorRef.markForCheck();
     }
 
-    getSelectedOptionValues(): string[] {
+    /** Values of the currently selected options. */
+    getSelectedOptionValues(): T[] {
         return this.options.filter((option) => option.selected).map((option) => option.value);
     }
 
@@ -449,9 +501,9 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         const focusedIndex = this.keyManager.activeItemIndex;
 
         if (focusedIndex != null && this.isValidIndex(focusedIndex)) {
-            const focusedOption: KbqListOption = this.options.toArray()[focusedIndex];
+            const focusedOption: KbqListOption<T> = this.options.toArray()[focusedIndex];
 
-            if (focusedOption && this.canDeselectLast(focusedOption)) {
+            if (focusedOption && !focusedOption.disabled && this.canDeselectLast(focusedOption)) {
                 focusedOption.toggle();
 
                 // Emit a change event because the focused option changed its state through user interaction.
@@ -461,20 +513,24 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         }
     }
 
-    canDeselectLast(listOption: KbqListOption): boolean {
+    /** Whether `listOption` is allowed to be deselected, given {@link noUnselectLast}. */
+    canDeselectLast(listOption: KbqListOption<T>): boolean {
         return !(this.noUnselectLast && this.selectionModel.selected.length === 1 && listOption.selected);
     }
 
-    /** @docs-private */
+    /**
+     * Rendered height of the element, or 0 when it is not laid out (SSR, jsdom, `display: none`).
+     * @docs-private
+     */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()?.[0]?.height ?? 0;
     }
 
     // View to model callback that should be called if the list or its options lost focus.
     onTouched: () => void = () => {};
 
     // Removes an option from the selection list and updates the active item.
-    removeOptionFromList(option: KbqListOption) {
+    removeOptionFromList(option: KbqListOption<T>): void {
         if (!option.hasFocus) {
             return;
         }
@@ -513,9 +569,9 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
             this.keyManager.tabOut.next();
 
             return;
-        } else if (keyCode === DOWN_ARROW) {
+        } else if (this.horizontal() ? keyCode === RIGHT_ARROW : keyCode === DOWN_ARROW) {
             this.keyManager.setNextItemActive();
-        } else if (keyCode === UP_ARROW) {
+        } else if (this.horizontal() ? keyCode === LEFT_ARROW : keyCode === UP_ARROW) {
             this.keyManager.setPreviousItemActive();
         } else if (keyCode === HOME) {
             this.keyManager.setFirstItemActive();
@@ -525,11 +581,16 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
             this.keyManager.setPreviousPageItemActive();
         } else if (keyCode === PAGE_DOWN) {
             this.keyManager.setNextPageItemActive();
+        } else {
+            // Everything the list does not navigate on itself goes to the key manager, which is what
+            // drives type-ahead. Arrow keys never reach it — the branches above own them — so the
+            // manager's own orientation config cannot double-handle them.
+            this.keyManager.onKeydown(event);
         }
 
-        if (this.keyManager.activeItem && isVerticalMovement(event)) {
+        if (this.keyManager.activeItem && this.isNavigationKey(event)) {
             this.setSelectedOptionsByKey(
-                this.keyManager.activeItem as KbqListOption,
+                this.keyManager.activeItem,
                 hasModifierKey(event, 'shiftKey'),
                 // ctrlKey is for Windows, metaKey is for MacOS
                 hasModifierKey(event, 'ctrlKey', 'metaKey')
@@ -537,8 +598,17 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         }
     }
 
+    /** Whether the key just handled moved the active option, taking the list orientation into account. */
+    private isNavigationKey(event: KeyboardEvent): boolean {
+        if (this.horizontal() && [LEFT_ARROW, RIGHT_ARROW].includes(event.keyCode)) {
+            return true;
+        }
+
+        return isVerticalMovement(event);
+    }
+
     // Reports a value change to the ControlValueAccessor
-    reportValueChange() {
+    reportValueChange(): void {
         if (this.options) {
             const value = this.getSelectedOptionValues();
 
@@ -548,8 +618,8 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     }
 
     // Emits a change event if the selected state of an option changed.
-    emitChangeEvent(option: KbqListOption) {
-        this.selectionChange.emit(new KbqListSelectionChange(this, option));
+    emitChangeEvent(option: KbqListOption<T>): void {
+        this.selectionChange.emit(new KbqListSelectionChange<T>(this, option));
     }
 
     private initializeSelection(): void {
@@ -557,7 +627,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         // has changed after it was checked" errors from Angular.
         Promise.resolve().then(() => {
             if (this._value) {
-                this.setOptionsFromValues(Array.isArray(this._value) ? this._value : [this._value]);
+                this.setOptionsFromValues(this._value);
             }
         });
     }
@@ -568,56 +638,54 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     }
 
     private onCopyDefaultHandler(): void {
-        this.clipboard?.copy(this.keyManager.activeItem!.value);
+        this.clipboard?.copy(String(this.keyManager.activeItem!.value));
     }
 
-    private resetOptions() {
-        this.dropSubscriptions();
-        this.listenToOptionsFocus();
-    }
-
-    private dropSubscriptions() {
-        if (this.optionFocusSubscription) {
-            this.optionFocusSubscription.unsubscribe();
-            this.optionFocusSubscription = null;
-        }
-
-        if (this.optionBlurSubscription) {
-            this.optionBlurSubscription.unsubscribe();
-            this.optionBlurSubscription = null;
-        }
-    }
-
+    /**
+     * Re-points the focus/blur streams at the current options every time the query list changes.
+     * `switchMap` tears down the previous `merge` for us, so no manual subscription bookkeeping.
+     */
     private listenToOptionsFocus(): void {
-        this.optionFocusSubscription = this.optionFocusChanges.subscribe((event) => {
-            const index: number = this.options.toArray().indexOf(event.option);
+        this.options.changes
+            .pipe(
+                startWith(null),
+                switchMap(() => this.optionFocusChanges),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((event) => {
+                const index: number = this.options.toArray().indexOf(event.option);
 
-            if (this.isValidIndex(index)) {
-                this.keyManager.updateActiveItem(index);
-            }
-        });
+                if (this.isValidIndex(index)) {
+                    this.keyManager.updateActiveItem(index);
+                }
+            });
 
-        this.optionBlurSubscription = this.optionBlurChanges.subscribe(() => this.blur());
+        this.options.changes
+            .pipe(
+                startWith(null),
+                switchMap(() => this.optionBlurChanges),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => this.blur());
     }
 
     /** Checks whether any of the options is focused. */
-    private hasFocusedOption() {
+    private hasFocusedOption(): boolean {
         return this.options.some((option) => option.hasFocus);
     }
 
     // Returns the option with the specified value.
-    private getOptionByValue(value: string): KbqListOption | undefined {
-        return this.options.find((option) => option.value === value);
+    private getOptionByValue(value: T): KbqListOption<T> | undefined {
+        const compareWith = this.compareWith();
+
+        return this.options.find((option) => compareWith(option.value, value));
     }
 
     // Sets the selected options based on the specified values.
-    private setOptionsFromValues(values: string[]) {
+    private setOptionsFromValues(values: T[]): void {
         this.options.forEach((option) => option.setSelected(false));
 
-        values
-            .map((value) => this.getOptionByValue(value))
-            .filter(Boolean)
-            .forEach((option) => option!.setSelected(true));
+        values.forEach((value) => this.getOptionByValue(value)?.setSelected(true));
     }
 
     /**
@@ -630,23 +698,23 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     }
 
     // Returns the index of the specified list option.
-    private getOptionIndex(option: KbqListOption): number {
+    private getOptionIndex(option: KbqListOption<T>): number {
         return this.options.toArray().indexOf(option);
     }
 
     // View to model callback that should be called whenever the selected options change.
-    private onChange: (value: any) => void = (_: any) => {};
+    private onChange: (value: T[]) => void = () => {};
 
     /**
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
      * which toggles the selection of all non-disabled options.
      */
     @Input()
-    get selectAllHandler() {
+    get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection<T>) => void {
         return this._selectAllHandler;
     }
 
-    set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection) => void) {
+    set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection<T>) => void) {
         if (typeof fn !== 'function') {
             throw Error('`selectAllHandler` must be a function.');
         }
@@ -654,12 +722,12 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         this._selectAllHandler = fn;
     }
 
-    private _selectAllHandler(event: KeyboardEvent, list: KbqListSelection): void {
+    private _selectAllHandler(event: KeyboardEvent, list: KbqListSelection<T>): void {
         event.preventDefault();
 
         const options = list.options.toArray();
 
-        toggleSelectAll<KbqListOption>(
+        toggleSelectAll<KbqListOption<T>>(
             {
                 items: options,
                 isSelectable: (option) => !option.disabled,
@@ -679,7 +747,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
         );
     }
 
-    private copyActiveOption(event: KeyboardEvent) {
+    private copyActiveOption(event: KeyboardEvent): void {
         if (!this.keyManager.activeItem) return;
 
         const option = this.keyManager.activeItem;
@@ -698,6 +766,12 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     }
 }
 
+/**
+ * Marker directive for the secondary line of a `kbq-list-option`.
+ *
+ * Purely a styling hook: it adds the `kbq-list-option-caption` class the list theme keys its
+ * muted caption typography and per-state colors off.
+ */
 @Directive({
     selector: '[kbq-list-option-caption]',
     host: {
@@ -726,13 +800,15 @@ export class KbqListOptionCaption {}
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-list-option',
+        role: 'option',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-list-option_multiple]': 'listSelection.multiple',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-action-button-focused]': 'actionButton()?.active',
+        '[attr.aria-selected]': 'selected',
+        '[attr.aria-disabled]': 'disabled || null',
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled || null',
         '(focusin)': 'focus()',
         '(blur)': 'blur()',
         '(click)': 'handleClick($event)',
@@ -741,18 +817,18 @@ export class KbqListOptionCaption {}
     exportAs: 'kbqListOption',
     preserveWhitespaces: false
 })
-export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
+export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetector = inject(ChangeDetectorRef);
     private ngZone = inject(NgZone);
-    listSelection = inject(KbqListSelection);
+    listSelection: KbqListSelection<T> = inject(KbqListSelection);
     readonly group = inject(KbqOptgroup, { optional: true });
     hasFocus: boolean = false;
     preventBlur: boolean = false;
 
-    readonly onFocus = new Subject<KbqOptionEvent>();
+    readonly onFocus = new Subject<KbqOptionEvent<T>>();
 
-    readonly onBlur = new Subject<KbqOptionEvent>();
+    readonly onBlur = new Subject<KbqOptionEvent<T>>();
 
     readonly actionButton = contentChild(KbqOptionActionComponent);
 
@@ -765,6 +841,12 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
 
     readonly text = viewChild.required<ElementRef>('text');
+
+    /**
+     * Not a duplicate of {@link text}: this is the `KbqTitleTextRef` property that `title.directive.ts`
+     * reads through `KBQ_TITLE_TEXT_REF`. The interface is a plain `ElementRef`, so it cannot become a
+     * signal query without breaking that contract — same class of constraint as #DS-5079.
+     */
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
     // Whether the label should appear before or after the checkbox. Defaults to 'after'
@@ -776,24 +858,28 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
      */
     private inputsInitialized = false;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Value of the option, reported through the list's `ControlValueAccessor`.
+     * Stays an accessor input: the setter drops the selection when the value is replaced.
+     */
     @Input()
-    get value(): any {
+    get value(): T {
         return this._value;
     }
-    set value(newValue: any) {
+    set value(newValue: T) {
         if (this.selected && newValue !== this.value && this.inputsInitialized) {
             this.selected = false;
         }
 
         this._value = newValue;
     }
-    private _value: any;
+    private _value: T;
 
-    /** Whether list is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Whether the option is disabled.
+     * Stays an accessor input: the getter also reports the disabled state inherited from the list
+     * and the option group, which a signal `input()` cannot express.
+     */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         const listSelectionDisabled = this.listSelection && this.listSelection.disabled;
@@ -811,21 +897,25 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     private _disabled = false;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Whether the option renders a pseudo-checkbox.
+     * Stays an accessor input: when unset the getter falls back to the list's own mode.
+     */
     @Input()
-    get showCheckbox() {
+    get showCheckbox(): boolean {
         return this._showCheckbox !== undefined ? this._showCheckbox : this.listSelection.showCheckbox;
     }
 
-    set showCheckbox(value: any) {
+    set showCheckbox(value: BooleanInput) {
         this._showCheckbox = coerceBooleanProperty(value);
     }
 
-    private _showCheckbox: boolean;
+    private _showCheckbox: boolean | undefined;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * Whether the option is selected.
+     * Stays an accessor input: the state lives in the list's `SelectionModel`, not on the option.
+     */
     @Input({ transform: booleanAttribute })
     get selected(): boolean {
         return this.listSelection.selectionModel?.isSelected(this) || false;
@@ -839,18 +929,18 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     private _selected = false;
 
-    get tabIndex(): any {
+    get tabIndex(): number | null {
         return this.disabled ? null : -1;
     }
 
-    get externalPseudoCheckbox(): boolean {
+    protected get externalPseudoCheckbox(): boolean {
         return !!this.pseudoCheckbox();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         const list = this.listSelection;
 
-        if (list._value && list._value.some((value) => list.compareWith()(value, this._value))) {
+        if (list._value && list._value.some((value) => list.compareWith()(this._value, value))) {
             this.setSelected(true);
         }
 
@@ -881,17 +971,19 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         this.listSelection.removeOptionFromList(this);
     }
 
+    /** Toggles the selected state of this option. */
     toggle(): void {
         this.selected = !this.selected;
     }
 
-    getLabel() {
+    getLabel(): string {
         const text = this.text();
 
-        return text ? text.nativeElement.textContent : '';
+        return text ? (text.nativeElement.textContent ?? '') : '';
     }
 
-    setSelected(selected: boolean) {
+    /** Sets the selected state directly on the list's `SelectionModel`, bypassing the `selected` input setter. */
+    setSelected(selected: boolean): void {
         if (this._selected === selected || !this.listSelection.selectionModel) {
             return;
         }
@@ -907,13 +999,16 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         this.changeDetector.markForCheck();
     }
 
-    /** @docs-private */
+    /**
+     * Rendered height of the element, or 0 when it is not laid out (SSR, jsdom, `display: none`).
+     * @docs-private
+     */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects()?.[0]?.height ?? 0;
     }
 
     /** Handles click events on the list option. */
-    handleClick($event: MouseEvent): void {
+    protected handleClick($event: MouseEvent): void {
         if (this.disabled) {
             return;
         }
@@ -926,11 +1021,13 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         );
     }
 
-    onKeydown($event) {
+    /** Handles keydown events on the list option. */
+    protected onKeydown($event: KeyboardEvent): void {
         kbqFocusOptionActionOnTab($event, this.actionButton());
     }
 
-    focus() {
+    /** Moves DOM focus to this option, unless it is disabled or already focused. */
+    focus(): void {
         if (this.disabled || this.hasFocus || this.actionButton()?.hasFocus) {
             return;
         }
@@ -946,6 +1043,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
         });
     }
 
+    /** Marks this option as blurred once the zone stabilizes, unless {@link preventBlur} is set. */
     blur(): void {
         if (this.preventBlur) {
             return;
@@ -971,6 +1069,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
             });
     }
 
+    /** The option's host DOM element. */
     getHostElement(): HTMLElement {
         return this.elementRef.nativeElement;
     }

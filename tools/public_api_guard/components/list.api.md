@@ -6,6 +6,7 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import { BooleanInput } from '@angular/cdk/coercion';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -27,14 +28,15 @@ import { MultipleMode } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 
 // @public (undocumented)
-export const KBQ_SELECTION_LIST_VALUE_ACCESSOR: any;
+export const KBQ_SELECTION_LIST_VALUE_ACCESSOR: Provider;
 
-// @public (undocumented)
+// @public
 export class KbqList {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqList, "kbq-list", never, {}, {}, never, ["*"], true, never>;
@@ -53,14 +55,14 @@ export class KbqListCopyEvent<T> {
     source: KbqListSelection;
 }
 
-// @public (undocumented)
+// @public
 export class KbqListItem implements AfterContentInit {
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
-    handleBlur(): void;
+    protected handleBlur(): void;
     // (undocumented)
-    handleFocus(): void;
+    protected handleFocus(): void;
     // (undocumented)
     lines: QueryList<KbqLine>;
     // (undocumented)
@@ -82,10 +84,9 @@ export class KbqListModule {
 }
 
 // @public
-export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
+export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     // (undocumented)
     readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
-    // (undocumented)
     blur(): void;
     // (undocumented)
     readonly checkboxPosition: i0.InputSignal<"before" | "after">;
@@ -94,21 +95,19 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // (undocumented)
     dropdownTrigger?: KbqDropdownTrigger;
     // (undocumented)
-    get externalPseudoCheckbox(): boolean;
-    // (undocumented)
+    protected get externalPseudoCheckbox(): boolean;
     focus(): void;
     getHeight(): number;
-    // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
-    getLabel(): any;
+    getLabel(): string;
     // (undocumented)
     readonly group: KbqOptgroup | null;
-    handleClick($event: MouseEvent): void;
+    protected handleClick($event: MouseEvent): void;
     // (undocumented)
     hasFocus: boolean;
     // (undocumented)
-    listSelection: KbqListSelection;
+    listSelection: KbqListSelection<T>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -118,43 +117,36 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
-    readonly onBlur: Subject<KbqOptionEvent>;
+    readonly onBlur: Subject<KbqOptionEvent<T>>;
     // (undocumented)
-    readonly onFocus: Subject<KbqOptionEvent>;
-    // (undocumented)
-    onKeydown($event: any): void;
+    readonly onFocus: Subject<KbqOptionEvent<T>>;
+    protected onKeydown($event: KeyboardEvent): void;
     // (undocumented)
     preventBlur: boolean;
     // (undocumented)
     readonly pseudoCheckbox: i0.Signal<KbqPseudoCheckbox | undefined>;
-    // (undocumented)
     get selected(): boolean;
     set selected(value: boolean);
-    // (undocumented)
     setSelected(selected: boolean): void;
+    get showCheckbox(): boolean;
+    set showCheckbox(value: BooleanInput);
     // (undocumented)
-    get showCheckbox(): any;
-    set showCheckbox(value: any);
-    // (undocumented)
-    get tabIndex(): any;
+    get tabIndex(): number | null;
     // (undocumented)
     readonly text: i0.Signal<ElementRef<any>>;
-    // (undocumented)
     textElement: ElementRef;
-    // (undocumented)
     toggle(): void;
     // (undocumented)
     tooltipTrigger?: KbqTooltipTrigger;
+    get value(): T;
+    set value(newValue: T);
     // (undocumented)
-    get value(): any;
-    set value(newValue: any);
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, never>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOption, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOption<any>, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqListOptionCaption {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqListOptionCaption, "[kbq-list-option-caption]", never, {}, {}, never, never, true, never>;
@@ -172,34 +164,28 @@ export class KbqListSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class KbqListSelection<T = any> implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     constructor();
-    // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
-    // (undocumented)
     blur(): void;
-    // (undocumented)
-    canDeselectLast(listOption: KbqListOption): boolean;
-    readonly compareWith: i0.InputSignal<(o1: any, o2: any) => boolean>;
-    // (undocumented)
+    canDeselectLast(listOption: KbqListOption<T>): boolean;
+    readonly compareWith: i0.InputSignal<(o1: T, o2: T) => boolean>;
     deselectAll(): void;
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    emitChangeEvent(option: KbqListOption): void;
+    emitChangeEvent(option: KbqListOption<T>): void;
     // (undocumented)
     focus(): void;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     getHeight(): number;
-    // (undocumented)
-    getSelectedOptionValues(): string[];
+    getSelectedOptionValues(): T[];
     // (undocumented)
     readonly horizontal: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    keyManager: FocusKeyManager<KbqListOption>;
+    keyManager: FocusKeyManager<KbqListOption<T>>;
     // (undocumented)
     get multiple(): boolean;
     // (undocumented)
@@ -212,52 +198,48 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
     get noUnselectLast(): boolean;
     set noUnselectLast(value: boolean);
-    // (undocumented)
-    readonly onCopy: EventEmitter<KbqListCopyEvent<KbqListOption>>;
+    readonly onCopy: EventEmitter<KbqListCopyEvent<KbqListOption<T>>>;
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    readonly onSelectAll: i0.OutputEmitterRef<KbqListSelectAllEvent<KbqListOption>>;
+    readonly onSelectAll: i0.OutputEmitterRef<KbqListSelectAllEvent<KbqListOption<T>>>;
     // (undocumented)
     onTouched: () => void;
     // (undocumented)
-    get optionBlurChanges(): Observable<KbqOptionEvent>;
+    get optionBlurChanges(): Observable<KbqOptionEvent<T>>;
     // (undocumented)
-    get optionFocusChanges(): Observable<KbqOptionEvent>;
+    get optionFocusChanges(): Observable<KbqOptionEvent<T>>;
     // (undocumented)
-    options: QueryList<KbqListOption>;
+    options: QueryList<KbqListOption<T>>;
     // (undocumented)
-    registerOnChange(fn: (value: any) => void): void;
+    registerOnChange(fn: (value: T[]) => void): void;
     // (undocumented)
     registerOnTouched(fn: () => void): void;
     // (undocumented)
-    removeOptionFromList(option: KbqListOption): void;
+    removeOptionFromList(option: KbqListOption<T>): void;
     // (undocumented)
     reportValueChange(): void;
     // (undocumented)
     selectActiveOptions(): void;
-    // (undocumented)
     selectAll(): void;
-    get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection) => void;
-    set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection) => void);
+    get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection<T>) => void;
+    set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection<T>) => void);
     readonly selectAllToggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    readonly selectionChange: i0.OutputEmitterRef<KbqListSelectionChange>;
+    readonly selectionChange: i0.OutputEmitterRef<KbqListSelectionChange<T>>;
     // (undocumented)
-    selectionModel: SelectionModel<KbqListOption>;
+    selectionModel: SelectionModel<KbqListOption<T>>;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
-    setSelectedOptionsByClick(option: KbqListOption, shiftKey: boolean, ctrlKey: boolean): void;
+    setSelectedOptionsByClick(option: KbqListOption<T>, shiftKey: boolean, ctrlKey: boolean): void;
     // (undocumented)
-    setSelectedOptionsByKey(option: KbqListOption, shiftKey: boolean, ctrlKey: boolean): void;
+    setSelectedOptionsByKey(option: KbqListOption<T>, shiftKey: boolean, ctrlKey: boolean): void;
     // (undocumented)
     get showCheckbox(): boolean;
-    // (undocumented)
-    get tabIndex(): any;
-    set tabIndex(value: any);
+    get tabIndex(): number;
+    set tabIndex(value: number);
     // (undocumented)
     toggleFocusedOption(): void;
     // (undocumented)
@@ -267,28 +249,28 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     // (undocumented)
     userTabIndex: number | null;
     // (undocumented)
-    _value: string[] | null;
+    _value: T[] | null;
     // (undocumented)
-    writeValue(values: string[]): void;
+    writeValue(values: T[] | T | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqListSelection, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqListSelection<any>, never>;
 }
 
 // @public (undocumented)
-export class KbqListSelectionChange {
-    constructor(source: KbqListSelection, option: KbqListOption);
+export class KbqListSelectionChange<T = any> {
+    constructor(source: KbqListSelection<T>, option: KbqListOption<T>);
     // (undocumented)
-    option: KbqListOption;
+    option: KbqListOption<T>;
     // (undocumented)
-    source: KbqListSelection;
+    source: KbqListSelection<T>;
 }
 
 // @public (undocumented)
-export interface KbqOptionEvent {
+export interface KbqOptionEvent<T = any> {
     // (undocumented)
-    option: KbqListOption;
+    option: KbqListOption<T>;
 }
 
 // (No @packageDocumentation comment for this package)

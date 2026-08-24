@@ -1,7 +1,8 @@
 @if (externalPseudoCheckbox) {
     <ng-content select="kbq-pseudo-checkbox" />
 } @else if (showCheckbox) {
-    <kbq-pseudo-checkbox [disabled]="disabled" [state]="selected ? 'checked' : 'unchecked'" />
+    <!-- Decorative: assistive technology reads the selected state from the option's own aria-selected. -->
+    <kbq-pseudo-checkbox aria-hidden="true" [disabled]="disabled" [state]="selected ? 'checked' : 'unchecked'" />
 }
 
 <ng-content select="[kbq-icon]" />

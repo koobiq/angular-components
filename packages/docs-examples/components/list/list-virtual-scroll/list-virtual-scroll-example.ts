@@ -13,7 +13,7 @@ import { KbqListModule } from '@koobiq/components/list';
     template: `
         <div>Selected: {{ selected | json }}</div>
         <br />
-        <kbq-list-selection style="height: 200px" multiple [(ngModel)]="selected">
+        <kbq-list-selection style="height: 200px" multiple aria-label="Items" [(ngModel)]="selected">
             <cdk-virtual-scroll-viewport style="height: 100%" itemSize="32" minBufferPx="300" maxBufferPx="300">
                 <kbq-list-option *cdkVirtualFor="let option of options" [value]="option">
                     {{ option.label }}

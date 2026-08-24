@@ -1,6 +1,7 @@
 import { Component, viewChildren } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqListItem, KbqListModule } from './index';
 
 describe('KbqList', () => {
@@ -14,18 +15,17 @@ describe('KbqList', () => {
         const fixture = TestBed.createComponent(TestListWithOneAnchorItem);
 
         fixture.detectChanges();
-        const listItem = fixture.debugElement.query(By.directive(KbqListItem));
         const listItemEl = fixture.debugElement.query(By.css('.kbq-list-item'));
 
-        expect(listItemEl.nativeElement.classList).not.toContain('kbq-list-item-focus');
+        expect(listItemEl.nativeElement.classList).not.toContain('kbq-focused');
 
-        listItem.componentInstance.handleFocus();
+        dispatchFakeEvent(listItemEl.nativeElement, 'focus');
         fixture.detectChanges();
         expect(listItemEl.nativeElement.classList).toContain('kbq-focused');
 
-        listItem.componentInstance.handleBlur();
+        dispatchFakeEvent(listItemEl.nativeElement, 'blur');
         fixture.detectChanges();
-        expect(listItemEl.nativeElement.classList).not.toContain('kbq-list-item-focus');
+        expect(listItemEl.nativeElement.classList).not.toContain('kbq-focused');
     });
 
     it('should not apply any additional class to a list without lines', () => {
@@ -46,7 +46,10 @@ describe('KbqList', () => {
         expect(listItems[0].nativeElement.classList.contains('test-class')).toBe(true);
     });
 
-    it('should add aria roles properly', () => {
+    // `kbq-list` is a plain container, not a listbox: consumers decide the semantics themselves
+    // (`kbq-file-upload` renders it with `role="list"`). The selectable variant that does carry
+    // listbox semantics is `kbq-list-selection` — see list-selection.component.spec.ts.
+    it('should not set any implicit aria role', () => {
         const fixture = TestBed.createComponent(TestListWithMultipleItems);
 
         fixture.detectChanges();
