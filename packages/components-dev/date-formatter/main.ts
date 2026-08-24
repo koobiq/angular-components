@@ -10,14 +10,14 @@ import {
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
-    KbqLocaleService
+    kbqLocaleServiceProvider
 } from '@koobiq/components/core';
 import { DevApp } from './module';
 
 bootstrapApplication(DevApp, {
     providers: [
         provideAnimations(),
-        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+        kbqLocaleServiceProvider(),
         { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
         {
             provide: DateAdapter,

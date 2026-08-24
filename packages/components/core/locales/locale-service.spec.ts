@@ -1,4 +1,6 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { enUSLocaleData } from './en-US';
 import { esLALocaleData } from './es-LA';
 import { enUSFormattersData, ruRUFormattersData } from './formatters';
@@ -7,8 +9,12 @@ import {
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_DATA,
     KBQ_LOCALE_ID,
+    KBQ_LOCALE_SERVICE,
+    kbqInjectLocaleService,
+    kbqLocaleIDProvider,
     KbqLocaleService,
     kbqLocaleServiceLangAttrNameProvider,
+    kbqLocaleServiceProvider,
     normalizeNumber,
     numberByParts
 } from './locale-service';
@@ -229,6 +235,111 @@ describe('KbqLocaleService', () => {
             expect(service.locales['de-DE']).toBe(service.data());
             expect(service.data().a11y).toBe(ruRULocaleData.a11y);
             expect(service.data().sizeUnits).toBe(ruRUFormattersData.sizeUnits);
+        });
+    });
+});
+
+describe('locale service providers', () => {
+    @Component({
+        selector: 'locale-reader',
+        template: '{{ localeService.localeId() }}',
+        changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class LocaleReader {
+        readonly localeService = kbqInjectLocaleService();
+    }
+
+    @Component({
+        selector: 'scoped-locale',
+        imports: [LocaleReader],
+        template: '<locale-reader />',
+        providers: [kbqLocaleIDProvider('es-LA'), kbqLocaleServiceProvider()],
+        changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class ScopedLocale {}
+
+    @Component({
+        selector: 'locale-app',
+        imports: [LocaleReader, ScopedLocale],
+        template: `
+            <locale-reader />
+            <scoped-locale />
+        `,
+        changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class LocaleApp {}
+
+    describe('kbqLocaleServiceProvider', () => {
+        it('should resolve the token and the class to one instance', () => {
+            TestBed.configureTestingModule({ providers: [kbqLocaleServiceProvider()] });
+
+            expect(TestBed.inject(KBQ_LOCALE_SERVICE)).toBe(TestBed.inject(KbqLocaleService));
+        });
+
+        // What `{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }` gets wrong: the components read
+        // the token, so a `setLocale()` on the instance `inject(KbqLocaleService)` hands out moves nothing.
+        it('should let a setLocale on either reference reach the other', () => {
+            TestBed.configureTestingModule({ providers: [kbqLocaleServiceProvider()] });
+
+            TestBed.inject(KbqLocaleService).setLocale('en-US');
+
+            expect(TestBed.inject(KBQ_LOCALE_SERVICE).localeId()).toBe('en-US');
+        });
+    });
+
+    describe('kbqLocaleIDProvider', () => {
+        it('should activate the locale it names', () => {
+            TestBed.configureTestingModule({
+                providers: [kbqLocaleIDProvider('en-US'), kbqLocaleServiceProvider()]
+            });
+
+            const service = TestBed.inject(KBQ_LOCALE_SERVICE);
+
+            expect(service.localeId()).toBe('en-US');
+            expect(service.getParams('a11y')).toBe(enUSLocaleData.a11y);
+        });
+
+        // The id is read by the service constructor out of the injector that created it, so this only works
+        // because `kbqLocaleServiceProvider()` provides the service itself next to the token: aliasing the
+        // ambient instance instead would hand the subtree a service built with the application's id.
+        it('should scope the locale to the component it is provided on', () => {
+            TestBed.configureTestingModule({
+                providers: [kbqLocaleIDProvider('en-US'), kbqLocaleServiceProvider()]
+            });
+
+            const fixture = TestBed.createComponent(LocaleApp);
+
+            fixture.detectChanges();
+
+            const [ambient, scoped] = fixture.debugElement
+                .queryAll(By.directive(LocaleReader))
+                .map(({ componentInstance }) => componentInstance as LocaleReader);
+
+            expect(ambient.localeService.localeId()).toBe('en-US');
+            expect(scoped.localeService.localeId()).toBe('es-LA');
+            expect(fixture.nativeElement.textContent).toContain('es-LA');
+        });
+    });
+
+    describe('kbqInjectLocaleService', () => {
+        it('should return the service provided under the token', () => {
+            TestBed.configureTestingModule({ providers: [kbqLocaleServiceProvider()] });
+
+            const service = TestBed.runInInjectionContext(() => kbqInjectLocaleService());
+
+            expect(service).toBe(TestBed.inject(KBQ_LOCALE_SERVICE));
+        });
+
+        it('should return null when nothing is provided and the caller opts out', () => {
+            TestBed.configureTestingModule({});
+
+            expect(TestBed.runInInjectionContext(() => kbqInjectLocaleService({ optional: true }))).toBeNull();
+        });
+
+        it('should throw when nothing is provided and the caller does not opt out', () => {
+            TestBed.configureTestingModule({});
+
+            expect(() => TestBed.runInInjectionContext(() => kbqInjectLocaleService())).toThrow();
         });
     });
 });

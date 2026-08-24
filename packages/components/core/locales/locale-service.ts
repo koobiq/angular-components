@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { computed, inject, Injectable, InjectionToken, Provider, Signal, signal } from '@angular/core';
+import { computed, inject, Injectable, InjectionToken, InjectOptions, Provider, Signal, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { kbqDeepMerge } from '../utils';
 import { enUSLocaleData } from './en-US';
@@ -232,6 +232,53 @@ export class KbqLocaleService {
     private register(id: KbqLocaleIdLike): KbqLocaleData {
         return (this.locales[id] ??= resolveLocaleData(id, undefined));
     }
+}
+
+/**
+ * Utility provider for the locale to activate.
+ *
+ * Belongs in the same `providers` array as {@link kbqLocaleServiceProvider}: the id is read once, by the
+ * `KbqLocaleService` constructor, out of the injector that created the service. Use `setLocale()` to change
+ * the locale afterwards.
+ *
+ * @see KBQ_LOCALE_ID
+ */
+export const kbqLocaleIDProvider = (localeId: KbqLocaleIdLike): Provider => ({
+    provide: KBQ_LOCALE_ID,
+    useValue: localeId
+});
+
+/**
+ * Utility provider for the locale service. `KBQ_LOCALE_SERVICE` has no factory, so nothing is localized
+ * until an application provides it.
+ *
+ * Provides the service next to the token rather than aliasing the class through `useClass`, which builds a
+ * *second* instance: the one the components read then has nothing to do with the one `inject(KbqLocaleService)`
+ * hands out, and `setLocale()` called on the latter moves nothing that is rendered.
+ *
+ * On a component it scopes the locale to that subtree — put {@link kbqLocaleIDProvider} in the same array to
+ * pick the locale of that scope.
+ *
+ * @see KBQ_LOCALE_SERVICE
+ */
+export const kbqLocaleServiceProvider = (): Provider => [
+    KbqLocaleService,
+    { provide: KBQ_LOCALE_SERVICE, useExisting: KbqLocaleService }
+];
+
+/**
+ * Reads the locale service the application provided.
+ *
+ * Resolves `KBQ_LOCALE_SERVICE`, not the class: the token is what the components read, and an application
+ * is free to provide something else under it. Pass `{ optional: true }` for code that has to keep working
+ * without a locale service — which is how every component of this library reads it.
+ *
+ * @see KBQ_LOCALE_SERVICE
+ */
+export function kbqInjectLocaleService(options?: InjectOptions & { optional?: false }): KbqLocaleService;
+export function kbqInjectLocaleService(options: InjectOptions): KbqLocaleService | null;
+export function kbqInjectLocaleService(options?: InjectOptions): KbqLocaleService | null {
+    return inject(KBQ_LOCALE_SERVICE, options ?? {});
 }
 
 // todo code below need refactor or delete in DS-3603

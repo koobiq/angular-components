@@ -37,6 +37,7 @@ import { FormatterDurationTemplate } from '@koobiq/date-formatter';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InjectOptions } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -2928,7 +2929,6 @@ export type KbqFilterBarLocaleConfiguration = {
         change: string;
         resetChanges: string;
         remove: string;
-        name: string;
         error: string;
         errorHint: string;
         saveButton: string;
@@ -3110,6 +3110,14 @@ export const kbqInjectAutofilled: () => Signal<boolean>;
 export function kbqInjectLocaleConfiguration<K extends KbqLocaleSection>(section: K, token: InjectionToken<KbqLocaleData[K]>): Signal<KbqLocaleData[K]>;
 
 // @public
+export function kbqInjectLocaleService(options?: InjectOptions & {
+    optional?: false;
+}): KbqLocaleService;
+
+// @public (undocumented)
+export function kbqInjectLocaleService(options: InjectOptions): KbqLocaleService | null;
+
+// @public
 export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
 
 // @public
@@ -3167,6 +3175,9 @@ export type KbqLocaleId = 'en-US' | 'es-LA' | 'pt-BR' | 'ru-RU' | 'tk-TM';
 export type KbqLocaleIdLike = KbqLocaleId | (string & {});
 
 // @public
+export const kbqLocaleIDProvider: (localeId: KbqLocaleIdLike) => Provider;
+
+// @public
 export type KbqLocaleItem = {
     id: KbqLocaleIdLike;
     name: string;
@@ -3213,6 +3224,9 @@ export class KbqLocaleServiceModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqLocaleServiceModule, never, never, never>;
 }
+
+// @public
+export const kbqLocaleServiceProvider: () => Provider;
 
 // @public
 export interface KbqLocaleStringsData {
@@ -3319,6 +3333,7 @@ export class KbqNormalizeWhitespace {
 export type KbqNotificationCenterLocaleConfiguration = {
     notifications: string;
     remove: string;
+    removeAll: string;
     doNotDisturb: string;
     showPopUpNotifications: string;
     noNotifications: string;

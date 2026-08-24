@@ -4,9 +4,8 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, TitleStrategy } from '@angular/router';
 import {
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
     kbqLocaleServiceLangAttrNameProvider,
+    kbqLocaleServiceProvider,
     kbqThemeProvider
 } from '@koobiq/components/core';
 import { kbqIconsResolverProvider } from '@koobiq/components/icon';
@@ -17,7 +16,7 @@ import { DocsTitleStrategy } from './services/title-strategy';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const appConfig: ApplicationConfig = {
     providers: [
-        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+        kbqLocaleServiceProvider(),
         kbqLocaleServiceLangAttrNameProvider('examples-lang'),
         // keeps the pre-existing localStorage key so users who already picked a theme don't lose it
         kbqThemeProvider({ storageKey: 'docs_theme' }),

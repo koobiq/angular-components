@@ -15,41 +15,49 @@ The library ships five locales: `en-US`, `es-LA`, `pt-BR`, `ru-RU` and `tk-TM`.
 token, which has no factory. Nothing is localized until you provide it:
 
 ```ts
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { kbqLocaleServiceProvider } from '@koobiq/components/core';
 
 bootstrapApplication(AppComponent, {
-    providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
+    providers: [kbqLocaleServiceProvider()]
 });
 ```
 
 Without that provider every component falls back to its own built-in `ru-RU` defaults, and switching the
 locale at runtime does nothing.
 
+Use the helper rather than `{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }`: `useClass` builds a
+**second** instance, independent of the `providedIn: 'root'` one, so a `setLocale()` called on the instance
+`inject(KbqLocaleService)` hands out moves nothing that is rendered. `kbqLocaleServiceProvider()` provides the
+service next to the token, and both references resolve to one instance.
+
 There are three ways to control which locale is active:
 
 - **`KBQ_DEFAULT_LOCALE_ID`** is the fallback, `ru-RU`. It is a plain exported constant, not an injection
   token — it cannot be provided, only read.
-- **`KBQ_LOCALE_ID`** fixes the locale once, when `KbqLocaleService` is constructed. It must sit in the
-  **same `providers` array** as the service itself, because the service reads the token from the injector
-  that created it.
+- **`KBQ_LOCALE_ID`**, written as `kbqLocaleIDProvider(id)`, fixes the locale once, when `KbqLocaleService` is
+  constructed. It must sit in the **same `providers` array** as the service itself, because the service reads
+  the token from the injector that created it.
 - **`setLocale(id)`** changes the locale at runtime.
 
 ```ts
-providers: [
-    { provide: KBQ_LOCALE_ID, useValue: 'en-US' },
-    { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
-];
+providers: [kbqLocaleIDProvider('en-US'), kbqLocaleServiceProvider()];
 ```
+
+The same pair on a component's `providers` scopes the locale to that component's subtree, while the rest of
+the application keeps the locale it was given.
 
 Reading the active locale:
 
 ```ts
-readonly localeService = inject(KBQ_LOCALE_SERVICE);
+readonly localeService = kbqInjectLocaleService();
 
 readonly currentLocale = this.localeService.localeId;   // Signal<KbqLocaleIdLike>
 readonly localeData = this.localeService.data;          // Signal<KbqLocaleData>
 readonly available = this.localeService.items;          // Signal<KbqLocaleItem[]>, for a locale picker
 ```
+
+`kbqInjectLocaleService()` resolves `KBQ_LOCALE_SERVICE`, never the class. Pass `{ optional: true }` for code
+that has to keep working in an application that provided no locale service.
 
 `changes` (a `BehaviorSubject`), `id` and `current` still work and stay in sync. Prefer the signals in new
 code: a signal read from a template registers on the reading view, so a runtime `setLocale()` reaches
@@ -112,11 +120,8 @@ The section name is checked against `KbqLocaleSection`, and the return type foll
 
 ### Dates and numbers
 
-Date adapters and the number pipes follow the same service, but they need their own providers. Note that
-`KbqLocaleServiceModule` — pulled in by the date adapter modules — registers `KBQ_LOCALE_SERVICE` with
-`useClass`, which builds a **second instance**, independent of the `providedIn: 'root'` one. If you switch
-the locale on one and read it on the other, nothing happens. Always inject the `KBQ_LOCALE_SERVICE` token,
-never the `KbqLocaleService` class.
+Date adapters and the number pipes follow the same service, but they need their own providers.
+`KbqLocaleServiceModule` — pulled in by the date adapter modules — provides it for you.
 
 To scope a locale to a subtree that contains dates, provide the adapter and formatter in that same
 `providers` array — `imports: [KbqLuxonDateModule]` puts them in the environment injector, where they

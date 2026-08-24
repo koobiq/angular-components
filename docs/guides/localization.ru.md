@@ -15,40 +15,49 @@
 `KBQ_LOCALE_SERVICE`, у которого нет фабрики. Пока вы не предоставите его, локализация не работает:
 
 ```ts
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { kbqLocaleServiceProvider } from '@koobiq/components/core';
 
 bootstrapApplication(AppComponent, {
-    providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
+    providers: [kbqLocaleServiceProvider()]
 });
 ```
 
 Без этого провайдера каждый компонент использует собственные значения по умолчанию (`ru-RU`), а смена
 локали во время работы приложения ничего не меняет.
 
+Используйте эту функцию, а не `{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }`: `useClass` создаёт
+**второй** экземпляр, независимый от `providedIn: 'root'`, поэтому `setLocale()`, вызванный на экземпляре из
+`inject(KbqLocaleService)`, не двигает ничего отрисованного. `kbqLocaleServiceProvider()` объявляет сервис
+рядом с токеном, и обе ссылки указывают на один экземпляр.
+
 Управлять активной локалью можно тремя способами:
 
 - **`KBQ_DEFAULT_LOCALE_ID`** — значение по умолчанию, `ru-RU`. Это обычная экспортируемая константа, а не
   injection token: её нельзя предоставить, только прочитать.
-- **`KBQ_LOCALE_ID`** фиксирует локаль один раз, в момент создания `KbqLocaleService`. Токен должен лежать
-  в **том же массиве `providers`**, что и сам сервис, потому что сервис читает его из создавшего инжектора.
+- **`KBQ_LOCALE_ID`**, в виде `kbqLocaleIDProvider(id)`, фиксирует локаль один раз, в момент создания
+  `KbqLocaleService`. Провайдер должен лежать в **том же массиве `providers`**, что и сам сервис, потому что
+  сервис читает токен из создавшего инжектора.
 - **`setLocale(id)`** меняет локаль во время работы приложения.
 
 ```ts
-providers: [
-    { provide: KBQ_LOCALE_ID, useValue: 'en-US' },
-    { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
-];
+providers: [kbqLocaleIDProvider('en-US'), kbqLocaleServiceProvider()];
 ```
+
+Та же пара в `providers` компонента ограничивает локаль его поддеревом, а остальное приложение сохраняет
+свою локаль.
 
 Чтение активной локали:
 
 ```ts
-readonly localeService = inject(KBQ_LOCALE_SERVICE);
+readonly localeService = kbqInjectLocaleService();
 
 readonly currentLocale = this.localeService.localeId;   // Signal<KbqLocaleIdLike>
 readonly localeData = this.localeService.data;          // Signal<KbqLocaleData>
 readonly available = this.localeService.items;          // Signal<KbqLocaleItem[]>, для выбора локали
 ```
+
+`kbqInjectLocaleService()` читает токен `KBQ_LOCALE_SERVICE`, а не класс. Передайте `{ optional: true }` в коде,
+который должен работать и в приложении без сервиса локали.
 
 `changes` (`BehaviorSubject`), `id` и `current` продолжают работать и синхронизированы с сигналами. В новом
 коде используйте сигналы: чтение сигнала в шаблоне регистрируется на читающем представлении, поэтому
@@ -113,11 +122,8 @@ const select = localeService.params('select'); // Signal<KbqSelectLocaleConfigur
 
 ### Даты и числа
 
-Адаптеры дат и числовые пайпы используют тот же сервис, но им нужны собственные провайдеры. Учтите, что
-`KbqLocaleServiceModule` — его подключают модули адаптеров дат — регистрирует `KBQ_LOCALE_SERVICE` через
-`useClass`, а значит создаёт **второй экземпляр**, независимый от `providedIn: 'root'`. Если менять локаль
-на одном, а читать с другого, ничего не произойдёт. Всегда инжектируйте токен `KBQ_LOCALE_SERVICE`,
-а не класс `KbqLocaleService`.
+Адаптеры дат и числовые пайпы используют тот же сервис, но им нужны собственные провайдеры.
+`KbqLocaleServiceModule` — его подключают модули адаптеров дат — объявляет сервис за вас.
 
 Чтобы ограничить локаль поддеревом, в котором есть даты, объявите адаптер и форматтер в том же массиве
 `providers`: `imports: [KbqLuxonDateModule]` помещает их в environment injector, где они получат корневой

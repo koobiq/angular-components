@@ -37,7 +37,7 @@ import { Subject } from 'rxjs';
 export const KBQ_VERTICAL_NAVBAR_CONFIGURATION: InjectionToken<KbqNavbarLocaleConfiguration>;
 
 // @public
-export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqVerticalNavbarConfiguration;
+export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqNavbarLocaleConfiguration;
 
 // @public (undocumented)
 export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
