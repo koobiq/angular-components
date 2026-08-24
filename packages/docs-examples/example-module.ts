@@ -5658,8 +5658,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Table with sticky header",
     "componentName": "TableStickyHeaderExample",
     "files": [
-      "table-sticky-header-example.ts",
-      "table-sticky-header-example.html"
+      "table-sticky-header-example.ts"
     ],
     "localImportFiles": [],
     "selector": "table-sticky-header-example",
