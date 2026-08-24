@@ -238,7 +238,7 @@ export function createIconTemplateTransform(
                         continue;
                     }
 
-                    const cleanValue = getSimpleAttributeValue(attr.value);
+                    const cleanValue = getSimpleAttributeValue(attr.value).replace(/"/g, '');
                     const resolved = resolveValueToken(cleanValue);
 
                     if (resolved) {
