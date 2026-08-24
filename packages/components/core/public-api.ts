@@ -17,6 +17,7 @@ export * from './overlay/auto-hide-scroll-strategy';
 export * from './overlay/overlay-position-map';
 export * from './overlay/panel-height';
 export * from './overlay/panel-width';
+export * from './overlay/safe-area';
 export * from './overlay/shadow-dom-overlay-container';
 export * from './pop-up/index';
 export * from './select/index';

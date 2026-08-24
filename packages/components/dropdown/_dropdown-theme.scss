@@ -27,6 +27,14 @@
             @include _kbq-dropdown-item-state(states-hover);
         }
 
+        // While a safe area protects an open submenu, sibling items passed on the way to it keep
+        // their default background instead of flashing the hover state.
+        .kbq-dropdown__panel_safe-area-active {
+            &.cdk-focused:not(.kbq-dropdown-item_highlighted, .kbq-selected, .kbq-disabled) {
+                @include _kbq-dropdown-item-state(default);
+            }
+        }
+
         &:active:not(.kbq-disabled),
         &.kbq-active:not(.kbq-disabled) {
             // the active state defines only a background token; the mixin would emit undefined text/icon color vars
