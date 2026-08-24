@@ -5,6 +5,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
@@ -15,6 +16,7 @@ import {
     KbqToastService,
     KbqToastStyle
 } from '@koobiq/components/toast';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ToastExamplesModule } from '../../docs-examples/components/toast';
 
 @Component({
@@ -90,8 +92,10 @@ export class DevToastComponent extends KbqToastComponent {
         KbqProgressBarModule,
         KbqDropdownModule,
         KbqModalModule,
+        KbqPopoverModule,
         KbqSidepanelModule,
         KbqScrollbar,
+        KbqToolTipModule,
         DevToastComponent,
         DevDocsExamples
     ],
