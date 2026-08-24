@@ -18,13 +18,15 @@ import { KbqButton } from '@koobiq/components/button';
     host: {
         class: 'kbq-table',
         '[class.kbq-table_bordered]': 'border()',
-        '[class.kbq-table_disable-hover]': 'disableHover()'
+        '[class.kbq-table_disable-hover]': 'disableHover()',
+        '[class.kbq-table_sticky-header]': 'stickyHeader()'
     },
     exportAs: 'kbqTable'
 })
 export class KbqTable {
     readonly border = input(false, { transform: booleanAttribute });
     readonly disableHover = input(false, { transform: booleanAttribute });
+    readonly stickyHeader = input(false, { transform: booleanAttribute });
 }
 
 @Directive({

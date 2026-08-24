@@ -37,6 +37,14 @@
     }
 }
 
+.kbq-table.kbq-table_sticky-header {
+    & > thead > tr > th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+}
+
 .kbq-table.kbq-table_bordered {
     & > tbody > tr {
         & th,

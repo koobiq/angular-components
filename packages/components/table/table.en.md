@@ -19,3 +19,9 @@ Borders are also useful in tables with complex structures — for example, when 
 Use `disableHover` to remove the background color change on row hover. This is useful when rows are not interactive and the hover highlight would be misleading.
 
 <!-- example(table-disable-hover) -->
+
+### Sticky header
+
+If a table has a lot of rows, use `stickyHeader` to keep the column names visible while you scroll down. This way you always see what each column means, even after scrolling.
+
+<!-- example(table-sticky-header) -->
