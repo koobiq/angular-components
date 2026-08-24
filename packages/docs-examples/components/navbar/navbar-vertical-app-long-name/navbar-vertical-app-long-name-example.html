@@ -23,15 +23,15 @@
             <kbq-navbar-item>
                 <button
                     kbq-button
-                    [class.kbq-button-icon]="!verticalNavbar.expanded"
+                    [class.kbq-button-icon]="!verticalNavbar.expanded()"
                     [color]="colors.Contrast"
                     [kbqPlacement]="popUpPlacements.Right"
                     [kbqStyle]="'filled'"
                     [kbqTooltip]="'Новая задача'"
-                    [kbqTooltipDisabled]="verticalNavbar.expanded"
+                    [kbqTooltipDisabled]="verticalNavbar.expanded()"
                 >
                     <i kbq-icon="kbq-plus_16" [color]="'empty'"></i>
-                    @if (verticalNavbar.expanded) {
+                    @if (verticalNavbar.expanded()) {
                         <span>Новая задача</span>
                     }
                 </button>

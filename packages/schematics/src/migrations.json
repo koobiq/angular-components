@@ -75,6 +75,11 @@
             "version": "20.3.0-0",
             "description": "Cleans up after the filter-bar rename rework. Removes the `name` key from filter-bar locale configuration literals — the save/rename popover no longer renders a caption above its name field, because its header now carries it — matching a literal by the sibling keys of the `filters` section rather than by type. Warns about the behaviour change no call site can point at: a NewName save now inherits the filter's own `saved` / `changed` flags instead of forcing saved: true / changed: false, so renaming a dirty filter keeps it dirty and a host must persist the name only; `filters.change` was reworded to \"Переименовать\" / \"Rename\"; `filters.saveAsNew` became a field caption; and KbqFilterSavePopover.popoverHeader no longer depends on the mode.",
             "factory": "./migrations/filter-bar-rename-action/index"
+        },
+        "navbar-signals-and-aria": {
+            "version": "20.3.0-0",
+            "description": "Migrates consumers of the navbar review. Rewrites programmatic and template-reference reads of the now-signal members (KbqVerticalNavbar.expanded/configuration/openOver, KbqFocusableComponent.tabIndex, KbqNavbarItem.isCollapsed/collapsable/collapsedText, KbqNavbarBrand.collapsed/collapsedText) to calls, writes of the model-backed expanded/tabIndex to .set(), and the removed KbqNavbarRectangleElement.horizontal/vertical booleans to isHorizontal()/isVertical() and orientation. Warns - without auto-fixing - on the removed KbqNavbarItem.disabled/KbqNavbarBrand.disabled tooltip-suppression getters, on the tooltip members no longer inherited now that item and brand compose a KbqTooltipTrigger instead of extending one, on the removed hovered Subjects and KbqNavbarContainerPositionType, and on stylesheets matching the disabled content attribute that a navbar item no longer renders. Notes the changes no call site can point at: Ctrl+/ scoped to a single navbar, role=navigation/button/separator plus aria-label and aria-disabled, and the navbar leaving the CDK overlay z-index layer for its own tokens.",
+            "factory": "./migrations/navbar-signals-and-aria/index"
         }
     }
 }

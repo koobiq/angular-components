@@ -200,16 +200,16 @@
             <kbq-navbar-item>
                 <button
                     kbq-button
-                    [class.kbq-button-icon]="!verticalNavbar.expanded"
+                    [class.kbq-button-icon]="!verticalNavbar.expanded()"
                     [color]="'contrast'"
                     [kbqPlacement]="popUpPlacements.Right"
                     [kbqStyle]="'filled'"
                     [kbqTooltip]="'Новый инцидент'"
                     [kbqTooltipArrow]="false"
-                    [kbqTooltipDisabled]="verticalNavbar.expanded"
+                    [kbqTooltipDisabled]="verticalNavbar.expanded()"
                 >
                     <i kbq-icon="kbq-circle-info_16" color="contrast"></i>
-                    @if (verticalNavbar.expanded) {
+                    @if (verticalNavbar.expanded()) {
                         <span>Новый инцидент</span>
                     }
                 </button>

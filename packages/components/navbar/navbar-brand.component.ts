@@ -1,4 +1,3 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
@@ -6,15 +5,18 @@ import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     afterNextRender,
+    booleanAttribute,
     ChangeDetectorRef,
     Component,
     computed,
     contentChild,
+    DestroyRef,
+    effect,
     inject,
     Injector,
-    Input,
     input,
-    signal
+    signal,
+    Signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { kbqInjectNativeElement, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
@@ -37,11 +39,34 @@ const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
     host: {
         class: 'kbq-navbar-brand',
         [`[class.${LONG_TITLE_CLASS}]`]: 'longTitleEnabled()',
-        '[class.kbq-navbar-brand_link]': 'isLink'
+        '[class.kbq-navbar-brand_link]': 'isLink',
+        '[attr.aria-label]': 'resolvedAriaLabel'
     },
+    // Composition, not inheritance: the brand owns a tooltip, it is not one. Only the tooltip inputs that make
+    // sense on a brand are re-exposed.
+    hostDirectives: [
+        {
+            directive: KbqTooltipTrigger,
+            inputs: [
+                'kbqTooltip',
+                'kbqTooltipClass',
+                'kbqTooltipColor',
+                'kbqTooltipOffset',
+                'kbqTrigger',
+                'kbqPlacement',
+                'kbqEnterDelay',
+                'kbqLeaveDelay',
+                'kbqVisible'
+            ],
+            outputs: [
+                'kbqVisibleChange',
+                'kbqPlacementChange'
+            ]
+        }
+    ],
     exportAs: 'kbqNavbarBrand'
 })
-export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentInit {
+export class KbqNavbarBrand implements AfterContentInit {
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
     /** @docs-private */
@@ -50,12 +75,15 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     protected readonly rectangleElement = inject(KbqNavbarRectangleElement);
     /** @docs-private */
     protected readonly navbarFocusableItem = inject(KbqNavbarFocusableItem);
+    /** @docs-private */
+    readonly tooltip = inject(KbqTooltipTrigger, { self: true });
 
     private readonly isBrowser = inject(Platform).isBrowser;
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly contentObserver = inject(ContentObserver);
     private readonly document = inject(DOCUMENT);
     private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly debounceInterval = 100;
 
@@ -78,21 +106,20 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
     protected readonly longTitleEnabled = computed(() => this.longTitle() ?? this.autoLongTitle());
 
     /** text that will be displayed in the tooltip. By default, the text is taken from kbq-navbar-title. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get collapsedText(): string {
-        return this._collapsedText;
-    }
+    readonly collapsedText = input<string>('');
 
-    set collapsedText(value: string) {
-        this._collapsedText = value;
+    /**
+     * Explicitly enables or disables the brand's tooltip.
+     *
+     * Left unset, the tooltip is enabled exactly when the title cannot be read from the brand itself — the
+     * navbar is collapsed, or the title is clipped.
+     */
+    readonly tooltipDisabled = input<boolean | undefined, unknown>(undefined, {
+        alias: 'kbqTooltipDisabled',
+        transform: (value: unknown) => (value === undefined ? undefined : booleanAttribute(value))
+    });
 
-        this.updateTooltip();
-    }
-
-    private _collapsedText: string;
-
+    /** Whether the brand is rendered as a native link. */
     get isLink(): boolean {
         return this.nativeElement.tagName === 'A';
     }
@@ -113,77 +140,76 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
 
     /** @docs-private */
     get titleText(): string | null {
-        return this.collapsedText || this.title()?.text || null;
+        return this.collapsedText() || this.title()?.text || null;
     }
 
-    /** @docs-private */
-    get disabled(): boolean {
-        if (this._disabled !== undefined) {
-            return this._disabled;
-        }
+    /** Whether the brand is rendered in its collapsed (logo-only) form. @docs-private */
+    readonly collapsed: Signal<boolean> = this.rectangleElement.collapsedState;
 
-        return !this.collapsed && !this.hasCroppedText;
+    /** Accessible name of the brand. Needed when the brand renders nothing but a logo. */
+    readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    /**
+     * A collapsed brand shows nothing but its logo, and a tooltip is a transient overlay — never an accessible
+     * name. The name is therefore published on the element itself, unless the consumer named it already.
+     */
+    protected get resolvedAriaLabel(): string | null {
+        return this.ariaLabel() ?? (this.collapsed() ? this.titleText : null);
     }
-
-    set disabled(value) {
-        this._disabled = coerceBooleanProperty(value);
-    }
-
-    /** @docs-private */
-    get collapsed(): boolean {
-        return this._collapsed ?? this.rectangleElement.collapsed;
-    }
-
-    set collapsed(value: boolean) {
-        if (this._collapsed !== value) {
-            this._collapsed = value;
-
-            this.updateTooltip();
-        }
-    }
-
-    private _collapsed = false;
 
     constructor() {
-        super();
-
         this.rectangleElement.state.pipe(takeUntilDestroyed()).subscribe(() => {
-            this.collapsed = this.rectangleElement.collapsed;
+            this.updateTooltip();
 
-            this.changeDetectorRef.detectChanges();
+            this.changeDetectorRef.markForCheck();
         });
 
-        this._trigger = `${PopUpTriggers.Hover}`;
+        this.tooltip.arrow = false;
+        this.tooltip.offset = 0;
 
-        this.navbarFocusableItem.setTooltip(this);
+        // A brand tooltip stands in for a title that cannot be read from the element itself, so it opens on
+        // hover only; keyboard focus surfaces it through `KbqNavbarFocusableItem.focus()`.
+        this.tooltip.trigger = `${PopUpTriggers.Hover}`;
 
-        this.arrow = false;
-        this.offset = 0;
+        this.navbarFocusableItem.setTooltip(this.tooltip);
 
-        this.navbarFocusableItem.disabled = !this.isLink;
+        effect(() => {
+            // Re-read the reactive inputs the tooltip content depends on.
+            this.collapsedText();
+            this.tooltipDisabled();
+            this.collapsed();
 
-        afterNextRender(() => {
-            // Deferred a microtask: the ambient `KbqNavbar` flips this item's rectangle element to
-            // horizontal via its own `Promise.resolve().then()` (see `KbqNavbar.setItemsState`), which
-            // runs after this callback. Without the extra hop, the first measurement below can run while
-            // the rectangle element still reports its default vertical/expanded state.
-            Promise.resolve().then(() => this.observeLongTitle());
+            this.updateTooltip();
         });
+
+        afterNextRender(() => this.observeLongTitle());
     }
 
+    /** @docs-private */
     ngAfterContentInit(): void {
+        // A brand that is neither a link nor a wrapper around something interactive is decorative, and only
+        // then is it kept out of the roving focus order. Deciding this here and not in the constructor is what
+        // makes the projected content visible at all; deciding it from `isLink` alone used to disable every
+        // `<div kbq-navbar-brand>`, however interactive its content was.
+        if (!this.navbarFocusableItem.disabled) {
+            this.navbarFocusableItem.disabled = !this.isLink && !this.navbarFocusableItem.nestedElement;
+        }
+
         this.updateTooltip();
     }
 
     private updateTooltip(): void {
-        if (this.collapsed) {
-            this.content = `${this.titleText || ''}`;
-        } else if (!this.collapsed && this.hasCroppedText) {
-            this.content = this.croppedText;
+        if (this.collapsed()) {
+            this.tooltip.content = `${this.titleText || ''}`;
+        } else if (this.hasCroppedText) {
+            this.tooltip.content = this.croppedText;
         }
 
-        if (this.rectangleElement.vertical) {
-            this.placement = PopUpPlacements.Right;
+        // A fully visible title needs no tooltip; a collapsed or clipped one is the only way to read it.
+        this.tooltip.disabled = this.tooltipDisabled() ?? (!this.collapsed() && !this.hasCroppedText);
+
+        if (this.rectangleElement.isVertical()) {
+            this.tooltip.tooltipPlacement = PopUpPlacements.Right;
         }
 
         this.changeDetectorRef.markForCheck();

@@ -130,6 +130,96 @@ test.describe('KbqNavbarModule', () => {
         });
     });
 
+    /**
+     * The states above are all static. Dropdowns, the toggle and roving keyboard navigation are wired into the
+     * fixtures but were never opened or pressed, so nothing covered what the user actually sees while using
+     * the navbar.
+     */
+    test.describe('E2eNavbarInteractions', () => {
+        const getScreenshotTarget = (page: Page) =>
+            page.getByTestId('e2eNavbarInteractions').getByTestId('e2eScreenshotTarget');
+
+        test('should open a dropdown from a navbar item', async ({ page }) => {
+            await page.goto('/E2eNavbarInteractions');
+
+            const trigger = page.getByTestId('horizontal-dropdown-trigger');
+
+            await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+            await trigger.click();
+
+            await expect(page.locator('.kbq-dropdown__panel')).toBeVisible();
+            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+            await expect(page).toHaveScreenshot('04-dropdown-open-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(page).toHaveScreenshot('04-dropdown-open-dark.png');
+        });
+
+        test('the toggle should expand and collapse the vertical navbar', async ({ page }) => {
+            await page.goto('/E2eNavbarInteractions');
+
+            const navbar = page.getByTestId('vertical');
+            const toggle = page.getByTestId('vertical-toggle');
+            const container = navbar.locator('.kbq-vertical-navbar__container');
+
+            // The toggle is `display: none` until the navbar is hovered.
+            await navbar.hover();
+
+            await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+            await expect(container).toHaveClass(/kbq-collapsed/);
+            await expect(getScreenshotTarget(page)).toHaveScreenshot('05-collapsed-light.png');
+
+            await toggle.click();
+
+            await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+            await expect(container).toHaveClass(/kbq-expanded/);
+            await expect(getScreenshotTarget(page)).toHaveScreenshot('05-expanded-light.png');
+
+            await toggle.click();
+
+            await expect(container).toHaveClass(/kbq-collapsed/);
+        });
+
+        test('arrow keys should move the roving focus between items', async ({ page }) => {
+            await page.goto('/E2eNavbarInteractions');
+
+            // A scripted `.focus()` carries no keyboard origin, and the navbar only moves real DOM focus onto
+            // an item — and shows its `cdk-keyboard-focused` class — for a focus event CDK attributes to the
+            // keyboard. A real Tab press is what the roving-tabindex container actually reacts to.
+            await page.keyboard.press('Tab');
+
+            await expect(page.getByTestId('horizontal-dropdown-trigger')).toHaveClass(/cdk-keyboard-focused/);
+
+            await page.keyboard.press('ArrowRight');
+
+            await expect(page.getByTestId('horizontal-first')).toHaveClass(/cdk-keyboard-focused/);
+
+            await expect(getScreenshotTarget(page)).toHaveScreenshot('06-focused-light.png');
+        });
+
+        /**
+         * A collapsed item shows nothing but its icon. The tooltip is what lets a sighted keyboard user read
+         * the title; the accessible name is published separately, as `aria-label`.
+         */
+        test('keyboard focus on a collapsed item should surface its title', async ({ page }) => {
+            await page.goto('/E2eNavbarInteractions');
+
+            const item = page.getByTestId('vertical-first');
+
+            await expect(item).toHaveAttribute('aria-label', 'Tasks');
+
+            // Same keyboard-origin requirement as the roving-focus test above: a real Tab press, not
+            // `.focus()`. The first Tab lands on the horizontal navbar before it in the DOM; the second
+            // reaches the vertical one.
+            await page.keyboard.press('Tab');
+            await page.keyboard.press('Tab');
+
+            await expect(page.locator('.kbq-tooltip')).toContainText('Tasks');
+            await expect(page).toHaveScreenshot('07-collapsed-tooltip-light.png');
+        });
+    });
+
     test.describe('E2eVerticalNavbarBrandFirstExpand', () => {
         type BrandFrame = { expanded: boolean; compact: boolean; fontSize: string };
 
