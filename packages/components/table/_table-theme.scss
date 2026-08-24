@@ -28,6 +28,10 @@
             }
         }
 
+        &.kbq-table_sticky-header > thead > tr > th {
+            background-color: var(--kbq-background-bg);
+        }
+
         &.kbq-table_bordered {
             & > tbody > tr {
                 & th,

@@ -158,6 +158,28 @@ import { KbqTableModule } from '@koobiq/components/table';
                 </tbody>
             </table>
         </div>
+
+        <!-- sticky header -->
+        <div data-testid="e2eTableStickyHeader" style="max-height: 120px; overflow: auto">
+            <table kbq-table stickyHeader>
+                <thead>
+                    <tr>
+                        @for (th of [0, 1, 2, 3]; track $index) {
+                            <th>Sticky</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (tr of [0, 1, 2, 3, 4, 5]; track $index) {
+                        <tr>
+                            @for (td of [0, 1, 2, 3]; track $index) {
+                                <td>Cell</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     `,
     styles: `
         :host {
