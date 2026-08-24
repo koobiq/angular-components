@@ -1025,6 +1025,9 @@ export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
 // @public
+export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): KbqTriangle;
+
+// @public
 export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudoCheckboxState;
 
 // @public (undocumented)
@@ -1114,6 +1117,12 @@ export function isNumberKey(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
 export function isNumpadKey(input: KeyboardEvent): boolean;
+
+// @public
+export function isPointInRect(point: KbqPoint, rect: DOMRect): boolean;
+
+// @public
+export function isPointInTriangle(point: KbqPoint, triangle: KbqTriangle): boolean;
 
 // @public (undocumented)
 export function isRightBracket(event: KeyboardEvent): boolean;
@@ -3375,6 +3384,9 @@ export interface KbqParentPopup {
     closedStream: Observable<boolean>;
 }
 
+// @public
+export type KbqPoint = Pick<DOMPointReadOnly, 'x' | 'y'>;
+
 // @public (undocumented)
 export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
@@ -4039,6 +4051,16 @@ export interface KbqTitleTextRef {
 // @public
 export interface KbqToggleSelectAllOptions {
     allowDeselect?: boolean;
+}
+
+// @public
+export interface KbqTriangle {
+    // (undocumented)
+    a: KbqPoint;
+    // (undocumented)
+    b: KbqPoint;
+    // (undocumented)
+    c: KbqPoint;
 }
 
 // @public (undocumented)
