@@ -82,7 +82,7 @@ describe(KbqDlComponent.name, () => {
 
         expect(getResizeHandle(fixture)).toBeNull();
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.detectChanges();
 
         expect(getResizeHandle(fixture)).not.toBeNull();
@@ -96,11 +96,11 @@ describe(KbqDlComponent.name, () => {
     it('should constrain the resize track to the configured widths once a width is set', () => {
         const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
-        fixture.componentRef.setInput('columnMinWidth', 120);
-        fixture.componentRef.setInput('remainingColumnMinWidth', 200);
-        fixture.componentRef.setInput('columnWidth', 300);
+        fixture.componentRef.setInput('dtMinWidth', 120);
+        fixture.componentRef.setInput('ddMinWidth', 200);
+        fixture.componentRef.setInput('dtWidth', 300);
         Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
         fixture.detectChanges();
 
@@ -111,12 +111,12 @@ describe(KbqDlComponent.name, () => {
         expect(resizeTrack.style.maxWidth).toBe('400px');
     });
 
-    it('should expose the column min width as a CSS variable so the resting grid honors it', () => {
+    it('should expose the dt min width as a CSS variable so the resting grid honors it', () => {
         const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
-        fixture.componentRef.setInput('columnMinWidth', 200);
+        fixture.componentRef.setInput('dtMinWidth', 200);
         fixture.detectChanges();
 
         expect(getDlElement(fixture).style.getPropertyValue('--kbq-description-list-column-min-width')).toBe('200px');
@@ -125,11 +125,11 @@ describe(KbqDlComponent.name, () => {
     it('should not constrain the resting track before a width is set, so the separator stays on the column border', () => {
         const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
         // A min width wider than the natural column must not inflate the resting track into the second column.
-        fixture.componentRef.setInput('columnMinWidth', 200);
-        fixture.componentRef.setInput('remainingColumnMinWidth', 200);
+        fixture.componentRef.setInput('dtMinWidth', 200);
+        fixture.componentRef.setInput('ddMinWidth', 200);
         Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
         fixture.detectChanges();
 
@@ -143,9 +143,9 @@ describe(KbqDlComponent.name, () => {
     it('should resize the first column with keyboard and expose separator semantics', () => {
         const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
-        fixture.componentRef.setInput('columnMinWidth', 96);
+        fixture.componentRef.setInput('dtMinWidth', 96);
         fixture.detectChanges();
 
         const resizeHandle = getResizeHandle(fixture)!;
@@ -154,7 +154,7 @@ describe(KbqDlComponent.name, () => {
         fixture.detectChanges();
 
         // The configured min width (96) is also the max here (host width is 0 in jsdom), so it clamps to 96.
-        expect(fixture.componentInstance.columnWidth()).toBe(96);
+        expect(fixture.componentInstance.dtWidth()).toBe(96);
         expect(resizeHandle.getAttribute('role')).toBe('separator');
         expect(resizeHandle.getAttribute('aria-orientation')).toBe('vertical');
         expect(getDlElement(fixture).classList).toContain('kbq-dl_resized');
@@ -163,10 +163,10 @@ describe(KbqDlComponent.name, () => {
     it('should collapse to the minimum width on double click, then reset on the next one', () => {
         const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
-        fixture.componentRef.setInput('columnMinWidth', 120);
-        fixture.componentRef.setInput('columnWidth', 200);
+        fixture.componentRef.setInput('dtMinWidth', 120);
+        fixture.componentRef.setInput('dtWidth', 200);
         Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
         fixture.detectChanges();
 
@@ -175,20 +175,20 @@ describe(KbqDlComponent.name, () => {
         resizeHandle.dispatchEvent(new MouseEvent('dblclick'));
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.columnWidth()).toBe(120);
+        expect(fixture.componentInstance.dtWidth()).toBe(120);
         expect(getDlElement(fixture).classList).toContain('kbq-dl_resized');
 
         resizeHandle.dispatchEvent(new MouseEvent('dblclick'));
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.columnWidth()).toBeNull();
+        expect(fixture.componentInstance.dtWidth()).toBeNull();
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_resized');
     });
 
-    it('should update the shared column width on pointer drag', () => {
+    it('should update the shared dt width on pointer drag', () => {
         const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
         fixture.detectChanges();
 
@@ -207,7 +207,7 @@ describe(KbqDlComponent.name, () => {
         document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 200 }));
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.columnWidth()).toBe(200);
+        expect(fixture.componentInstance.dtWidth()).toBe(200);
     });
 
     it('should reverse horizontal resize direction in RTL', () => {
@@ -215,7 +215,7 @@ describe(KbqDlComponent.name, () => {
             { provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }
         ]);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
         fixture.detectChanges();
 
@@ -227,17 +227,158 @@ describe(KbqDlComponent.name, () => {
         getResizeHandle(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.columnWidth()).toBe(208);
+        expect(fixture.componentInstance.dtWidth()).toBe(208);
     });
 
-    it('should apply the col-resize cursor to the separator', () => {
+    it('should apply the col-resize cursor to the separator at rest', () => {
         const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
         fixture.detectChanges();
 
         expect(getResizeHandle(fixture)!.style.cursor).toBe('col-resize');
+    });
+
+    it('should advertise the grow-only direction with an e-resize cursor at the minimum width', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 100);
+        fixture.componentRef.setInput('ddMinWidth', 100);
+        fixture.detectChanges();
+
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+
+        getResizeHandle(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.dtWidth()).toBe(100);
+        expect(getResizeHandle(fixture)!.style.cursor).toBe('e-resize');
+    });
+
+    it('should advertise the shrink-only direction with a w-resize cursor at the maximum width', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 100);
+        fixture.componentRef.setInput('ddMinWidth', 100);
+        fixture.detectChanges();
+
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+
+        getResizeHandle(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.dtWidth()).toBe(500);
+        expect(getResizeHandle(fixture)!.style.cursor).toBe('w-resize');
+    });
+
+    it('should keep the col-resize cursor while the width is between the bounds', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 100);
+        fixture.componentRef.setInput('ddMinWidth', 100);
+        fixture.detectChanges();
+
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+        Object.defineProperty(getResizeHandle(fixture)!.parentElement, 'clientWidth', {
+            configurable: true,
+            value: 300
+        });
+
+        getResizeHandle(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+        fixture.detectChanges();
+
+        expect(getResizeHandle(fixture)!.style.cursor).toBe('col-resize');
+    });
+
+    it('should fall back to the default cursor when there is no room to resize', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 100);
+        fixture.componentRef.setInput('ddMinWidth', 600);
+        fixture.detectChanges();
+
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+
+        getResizeHandle(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+        fixture.detectChanges();
+
+        expect(getResizeHandle(fixture)!.style.cursor).toBe('default');
+    });
+
+    it('should mirror the grow-only cursor to w-resize at the minimum width in RTL', () => {
+        const fixture = createComponent(KbqDlComponent, [
+            { provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }
+        ]);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 100);
+        fixture.componentRef.setInput('ddMinWidth', 100);
+        fixture.detectChanges();
+
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+
+        getResizeHandle(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+        fixture.detectChanges();
+
+        expect(getResizeHandle(fixture)!.style.cursor).toBe('w-resize');
+    });
+
+    it('should mirror the shrink-only cursor to e-resize at the maximum width in RTL', () => {
+        const fixture = createComponent(KbqDlComponent, [
+            { provide: Directionality, useValue: { value: 'rtl', change: EMPTY } }
+        ]);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 100);
+        fixture.componentRef.setInput('ddMinWidth', 100);
+        fixture.detectChanges();
+
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+
+        getResizeHandle(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
+        fixture.detectChanges();
+
+        expect(getResizeHandle(fixture)!.style.cursor).toBe('e-resize');
+    });
+
+    it('should switch the cursor to grow-only when a pointer drag collapses the column to its minimum', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.componentRef.setInput('dtMinWidth', 100);
+        fixture.componentRef.setInput('ddMinWidth', 100);
+        fixture.detectChanges();
+
+        const resizeTrack = getDlElement(fixture).querySelector<HTMLElement>('.kbq-dl__resize-track')!;
+        const resizeHandle = getResizeHandle(fixture)!;
+
+        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+        // The resizer captures the base size via `getResizableSize()`; force its border-box branch to report 120.
+        resizeTrack.style.boxSizing = 'border-box';
+        Object.defineProperty(resizeTrack, 'getBoundingClientRect', {
+            configurable: true,
+            value: () => ({ width: 120, height: 0 }) as DOMRect
+        });
+
+        // Drag left past the minimum: the width clamps to 100 and the cursor must advertise the grow-only direction.
+        resizeHandle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 120 }));
+        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 50 }));
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.dtWidth()).toBe(100);
+        expect(resizeHandle.style.cursor).toBe('e-resize');
     });
 
     it('should fall back to the localized separator name for the aria-label', () => {
@@ -245,7 +386,7 @@ describe(KbqDlComponent.name, () => {
             kbqA11yLocaleConfigurationProvider({ ...enUSLocaleData.a11y, resizeColumns: 'Resize the columns' })
         ]);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
         fixture.detectChanges();
 
@@ -257,7 +398,7 @@ describe(KbqDlComponent.name, () => {
             kbqA11yLocaleConfigurationProvider({ ...enUSLocaleData.a11y, resizeColumns: 'Localized default' })
         ]);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
         fixture.componentRef.setInput('resizerAriaLabel', 'Custom label');
         fixture.detectChanges();
@@ -265,12 +406,12 @@ describe(KbqDlComponent.name, () => {
         expect(getResizeHandle(fixture)!.getAttribute('aria-label')).toBe('Custom label');
     });
 
-    it('should clamp a negative column min width to zero', () => {
+    it('should clamp a negative dt min width to zero', () => {
         const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
-        fixture.componentRef.setInput('columnMinWidth', -50);
+        fixture.componentRef.setInput('dtMinWidth', -50);
         fixture.detectChanges();
 
         expect(getResizeHandle(fixture)!.getAttribute('aria-valuemin')).toBe('0');
@@ -297,7 +438,7 @@ describe(KbqDlComponent.name, () => {
     it('should keep the horizontal layout when the host is wider than verticalBreakpoint', fakeAsync(() => {
         const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('columnResizable', true);
+        fixture.componentRef.setInput('resizable', true);
         Object.defineProperty(getDlElement(fixture), 'getClientRects', {
             configurable: true,
             value: () => [{ width: 800 } as DOMRect]

@@ -4,7 +4,7 @@
 
 ### Resizable
 
-Enabled with the `columnResizable` flag. A separator appears on the column border: drag it with the mouse or the keyboard (arrows, `Home`/`End`); a double-click collapses the first column to its minimum, a second one restores the default layout. Control the width via `[(columnWidth)]`, and set the bounds with `columnMinWidth` and `remainingColumnMinWidth`.
+The `resizable` flag enables changing the width of columns in horizontal mode. The separator is shown on hover, while dragging, or when the list has keyboard focus. Arrow keys change the width, and `Home` and `End` set the minimum and maximum. Double-click collapses `kbq-dt` to its minimum, and a second double-click restores the default layout.
 
 <!-- example(dl-resizable) -->
 

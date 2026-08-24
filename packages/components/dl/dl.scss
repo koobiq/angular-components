@@ -71,39 +71,48 @@
         touch-action: none;
 
         // The resize line, centered inside the hit area. Hidden until the list is hovered or the separator is focused.
+        // Inset vertically by the focus-outline width so the line and its 2px focus frame stay within the list bounds
+        // instead of the outline spilling past the top and bottom edges.
         &::after {
             position: absolute;
-            inset-block: 0;
+            inset-block: var(--kbq-description-list-resizer-focus-outline-width);
             inset-inline: 0;
             width: var(--kbq-description-list-resizer-line-width);
             margin-inline: auto;
             background-color: var(--kbq-description-list-resizer-color);
             content: '';
             opacity: 0;
-            transition:
-                opacity var(--kbq-description-list-resizer-transition-duration) ease-in-out,
-                background-color var(--kbq-description-list-resizer-transition-duration) ease-in-out;
         }
 
         &:hover::after {
             background-color: var(--kbq-description-list-resizer-state-hover-color);
         }
 
-        &:focus-visible::after,
-        &:active::after {
-            background-color: var(--kbq-description-list-resizer-state-active-color);
-        }
-
-        // Keep the separator visible while it is focused or being dragged, even without a pointer hover.
-        &:focus-visible::after,
+        // Keep the separator visible while it is focused (keyboard) or being dragged.
+        &.cdk-keyboard-focused::after,
         &:active::after {
             opacity: 1;
         }
+
+        // Tint and thicken the line only while dragging; keyboard focus keeps the line at its default color and
+        // width and is marked solely by the outline frame below.
+        &:active::after {
+            width: var(--kbq-description-list-resizer-active-line-width);
+            background-color: var(--kbq-description-list-resizer-state-active-color);
+        }
+
+        &.cdk-keyboard-focused {
+            outline: var(--kbq-description-list-resizer-focus-outline-width) solid
+                var(--kbq-description-list-resizer-focus-outline-color);
+            outline-offset: calc(-1 * var(--kbq-description-list-resizer-focus-outline-width));
+        }
     }
 
-    // Reveal the separator on hover of the list.
-    &:hover .kbq-dl__resize-handle::after {
-        opacity: 1;
+    @media (hover: hover) and (pointer: fine) {
+        // Reveal the separator on hover of the list.
+        &:hover .kbq-dl__resize-handle::after {
+            opacity: 1;
+        }
     }
 
     &.kbq-dl_wide {

@@ -1,3 +1,4 @@
+import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
@@ -49,7 +50,7 @@ export class KbqDdComponent {}
 
 @Component({
     selector: 'kbq-dl',
-    imports: [KbqResizable, KbqResizer],
+    imports: [KbqResizable, KbqResizer, CdkMonitorFocus],
     template: `
         <ng-content />
 
@@ -58,24 +59,25 @@ export class KbqDdComponent {}
                 #resizeTrack
                 class="kbq-dl__resize-track"
                 kbqResizable
-                [style.max-width.px]="columnWidth() !== null ? maxColumnWidth : null"
-                [style.min-width.px]="columnWidth() !== null ? normalizedColumnMinWidth() : null"
-                [style.width.px]="columnWidth()"
+                [style.max-width.px]="dtWidth() !== null ? maxDtWidth : null"
+                [style.min-width.px]="dtWidth() !== null ? normalizedDtMinWidth() : null"
+                [style.width.px]="dtWidth()"
             >
                 <div
                     class="kbq-dl__resize-handle"
                     role="separator"
                     aria-orientation="vertical"
                     tabindex="0"
-                    cursor="col-resize"
+                    cdkMonitorElementFocus
+                    [cursor]="resizeCursor()"
                     [attr.aria-label]="resolvedResizerAriaLabel()"
-                    [attr.aria-valuemax]="maxColumnWidth"
-                    [attr.aria-valuemin]="normalizedColumnMinWidth()"
-                    [attr.aria-valuenow]="currentColumnWidth"
+                    [attr.aria-valuemax]="maxDtWidth"
+                    [attr.aria-valuemin]="normalizedDtMinWidth()"
+                    [attr.aria-valuenow]="currentDtWidth"
                     [kbqResizer]="resizeDirection()"
                     (dblclick)="handleResizeDblClick($event)"
                     (keydown)="handleResizeKeydown($event)"
-                    (sizeChange)="handleColumnResize($event)"
+                    (sizeChange)="handleDtResize($event)"
                 ></div>
             </div>
         }
@@ -88,13 +90,13 @@ export class KbqDdComponent {}
         '[class.kbq-dl_vertical]': 'isVertical()',
         '[class.kbq-dl_wide]': 'wide()',
         '[class.kbq-dl_resizable]': 'resizerVisible()',
-        '[class.kbq-dl_resized]': 'columnWidth() !== null',
+        '[class.kbq-dl_resized]': 'dtWidth() !== null',
         '[class.kbq-dl_vertical-align-center]': "verticalAlign() === 'center'",
         '[class.kbq-dl_vertical-align-end]': "verticalAlign() === 'end'",
         '[class.kbq-dl_horizontal-align-center]': "horizontalAlign() === 'center'",
         '[class.kbq-dl_horizontal-align-end]': "horizontalAlign() === 'end'",
-        '[style.--kbq-description-list-column-width.px]': 'columnWidth()',
-        '[style.--kbq-description-list-column-min-width.px]': 'normalizedColumnMinWidth()'
+        '[style.--kbq-description-list-column-width.px]': 'dtWidth()',
+        '[style.--kbq-description-list-column-min-width.px]': 'normalizedDtMinWidth()'
     }
 })
 export class KbqDlComponent {
@@ -111,17 +113,17 @@ export class KbqDlComponent {
     /** Whether the list uses the wide two-column layout. */
     readonly wide = input(false);
 
-    /** Whether the columns can be resized by dragging the separator between them. */
-    readonly columnResizable = input(false, { transform: booleanAttribute });
+    /** Whether the `kbq-dt` area can be resized by dragging the separator. */
+    readonly resizable = input(false, { transform: booleanAttribute });
 
-    /** Current width of the first (resizable) column in pixels; `null` restores the default column ratio. */
-    readonly columnWidth = model<number | null>(null);
+    /** Width of the `kbq-dt` area in pixels; `null` restores the default column ratio. */
+    readonly dtWidth = model<number | null>(null);
 
-    /** Minimum width of the first (resizable) column in pixels; defaults to the term width measured after render. */
-    readonly columnMinWidth = input<number | undefined>(undefined);
+    /** Minimum width of the `kbq-dt` area in pixels; defaults to the rendered term width. */
+    readonly dtMinWidth = input<number | undefined>(undefined);
 
-    /** Minimum width retained for the remaining column in pixels; defaults to the term width measured after render. */
-    readonly remainingColumnMinWidth = input<number | undefined>(undefined);
+    /** Minimum width retained for the `kbq-dd` area in pixels; defaults to the rendered term width. */
+    readonly ddMinWidth = input<number | undefined>(undefined);
 
     /** Accessible name of the column resize separator; falls back to the localized default when omitted. */
     readonly resizerAriaLabel = input<string | undefined>(undefined);
@@ -138,6 +140,14 @@ export class KbqDlComponent {
     /** @docs-private */
     protected readonly resizeDirection = signal<KbqResizerDirection>([1, 0]);
 
+    /**
+     * @docs-private
+     * Cursor shown over the separator: it advertises not just that the column is resizable but the
+     * direction still available — grow-only at the minimum width, shrink-only at the maximum, `default` when there is
+     * no room to move the border at all.
+     */
+    protected readonly resizeCursor = signal<string>('col-resize');
+
     /** Auto-detected vertical layout, re-evaluated from the host width on resize while `vertical` is not set. */
     private readonly autoVertical = signal<boolean | null>(null);
 
@@ -145,38 +155,33 @@ export class KbqDlComponent {
     protected readonly isVertical = computed(() => this.vertical() ?? this.autoVertical() ?? false);
 
     /** @docs-private Whether the column resize separator is currently rendered. */
-    protected readonly resizerVisible = computed(() => this.columnResizable() && !this.isVertical());
+    protected readonly resizerVisible = computed(() => this.resizable() && !this.isVertical());
 
-    /** Term column width measured after the first render; the default minimum for both columns when unset. */
-    private readonly measuredColumnWidth = signal(0);
+    /** Rendered term width used as the default minimum for both areas. */
+    private readonly measuredDtWidth = signal(0);
 
-    /** Effective minimum width of the first column: the input, or the measured term width when not provided. */
-    private readonly resolvedColumnMinWidth = computed(() => this.columnMinWidth() ?? this.measuredColumnWidth());
+    /** Effective minimum width of the `kbq-dt` area. */
+    private readonly resolvedDtMinWidth = computed(() => this.dtMinWidth() ?? this.measuredDtWidth());
 
-    /** Effective minimum width of the remaining column: the input, or the measured term width when not provided. */
-    private readonly resolvedRemainingColumnMinWidth = computed(
-        () => this.remainingColumnMinWidth() ?? this.measuredColumnWidth()
-    );
+    /** Effective minimum width of the `kbq-dd` area. */
+    private readonly resolvedDdMinWidth = computed(() => this.ddMinWidth() ?? this.measuredDtWidth());
 
-    /** @docs-private Term column minimum width, clamped to a non-negative value. */
-    protected readonly normalizedColumnMinWidth = computed(() => Math.max(0, this.resolvedColumnMinWidth()));
+    /** @docs-private Minimum `kbq-dt` width, clamped to a non-negative value. */
+    protected readonly normalizedDtMinWidth = computed(() => Math.max(0, this.resolvedDtMinWidth()));
 
-    protected get maxColumnWidth(): number {
-        if (!this.platform.isBrowser) return this.normalizedColumnMinWidth();
+    protected get maxDtWidth(): number {
+        if (!this.platform.isBrowser) return this.normalizedDtMinWidth();
 
         const hostWidth = this.nativeElement.clientWidth;
         const columnGap = parseFloat(this.window.getComputedStyle(this.nativeElement).columnGap) || 0;
 
-        return Math.max(
-            this.normalizedColumnMinWidth(),
-            hostWidth - columnGap - Math.max(0, this.resolvedRemainingColumnMinWidth())
-        );
+        return Math.max(this.normalizedDtMinWidth(), hostWidth - columnGap - Math.max(0, this.resolvedDdMinWidth()));
     }
 
-    protected get currentColumnWidth(): number {
-        if (!this.platform.isBrowser) return this.normalizedColumnMinWidth();
+    protected get currentDtWidth(): number {
+        if (!this.platform.isBrowser) return this.normalizedDtMinWidth();
 
-        return Math.round(this.resizeTrack()?.nativeElement.clientWidth || this.normalizedColumnMinWidth());
+        return Math.round(this.resizeTrack()?.nativeElement.clientWidth || this.normalizedDtMinWidth());
     }
 
     private readonly resizeDebounceInterval: number = 100;
@@ -206,7 +211,7 @@ export class KbqDlComponent {
 
         // `afterNextRender` runs in the browser only, so no explicit platform guard is needed here.
         afterNextRender(() => {
-            this.measureColumnWidth();
+            this.measureDtWidth();
 
             this.resizeObserver
                 .observe(this.nativeElement)
@@ -216,36 +221,36 @@ export class KbqDlComponent {
     }
 
     /** Captures the rendered width of the term column, used as the default minimum when no widths are provided. */
-    private measureColumnWidth(): void {
+    private measureDtWidth(): void {
         const term = this.terms()[0]?.nativeElement;
 
-        if (term) this.measuredColumnWidth.set(Math.round(term.getBoundingClientRect().width));
+        if (term) this.measuredDtWidth.set(Math.round(term.getBoundingClientRect().width));
     }
 
     /** @docs-private */
-    protected handleColumnResize({ width }: KbqResizerSizeChangeEvent): void {
-        this.setColumnWidth(width);
+    protected handleDtResize({ width }: KbqResizerSizeChangeEvent): void {
+        this.setDtWidth(width);
     }
 
     /** @docs-private */
     protected handleResizeKeydown(event: KeyboardEvent): void {
         let width: number | null = null;
 
-        if (event.key === 'Home') width = this.normalizedColumnMinWidth();
-        if (event.key === 'End') width = this.maxColumnWidth;
+        if (event.key === 'Home') width = this.normalizedDtMinWidth();
+        if (event.key === 'End') width = this.maxDtWidth;
 
         if (event.key === 'ArrowLeft') {
-            width = this.currentColumnWidth - this.resizeDirection()[0] * this.keyboardResizeStep;
+            width = this.currentDtWidth - this.resizeDirection()[0] * this.keyboardResizeStep;
         }
 
         if (event.key === 'ArrowRight') {
-            width = this.currentColumnWidth + this.resizeDirection()[0] * this.keyboardResizeStep;
+            width = this.currentDtWidth + this.resizeDirection()[0] * this.keyboardResizeStep;
         }
 
         if (width === null) return;
 
         event.preventDefault();
-        this.setColumnWidth(width);
+        this.setDtWidth(width);
     }
 
     /** @docs-private */
@@ -253,10 +258,10 @@ export class KbqDlComponent {
         event.preventDefault();
 
         // First double-click collapses the first column to its minimum width; a second one restores the default ratio.
-        if (this.columnWidth() === this.normalizedColumnMinWidth()) {
-            this.columnWidth.set(null);
+        if (this.dtWidth() === this.normalizedDtMinWidth()) {
+            this.dtWidth.set(null);
         } else {
-            this.setColumnWidth(this.normalizedColumnMinWidth());
+            this.setDtWidth(this.normalizedDtMinWidth());
         }
     }
 
@@ -271,20 +276,45 @@ export class KbqDlComponent {
             this.autoVertical.set(width <= breakpoint);
         }
 
-        if (this.columnWidth() !== null && !this.isVertical()) this.setColumnWidth(this.columnWidth()!);
+        if (this.dtWidth() !== null && !this.isVertical()) this.setDtWidth(this.dtWidth()!);
 
-        // Signal writes above already schedule change detection, but `maxColumnWidth` and `currentColumnWidth` read
+        this.updateResizeCursor();
+
+        // Signal writes above already schedule change detection, but `maxDtWidth` and `currentDtWidth` read
         // live layout geometry rather than signals: a resize changes their values without touching any signal, so the
         // OnPush view must be told to re-check for the `aria-valuemax`/`aria-valuenow`/track-size bindings to refresh.
         this.changeDetectorRef.markForCheck();
     }
 
-    private setColumnWidth(width: number): void {
+    private setDtWidth(width: number): void {
         if (!Number.isFinite(width)) return;
 
-        const constrainedWidth = Math.min(this.maxColumnWidth, Math.max(this.normalizedColumnMinWidth(), width));
+        const constrainedWidth = Math.min(this.maxDtWidth, Math.max(this.normalizedDtMinWidth(), width));
 
-        if (constrainedWidth !== this.columnWidth()) this.columnWidth.set(constrainedWidth);
+        this.updateResizeCursor(constrainedWidth);
+
+        if (constrainedWidth !== this.dtWidth()) this.dtWidth.set(constrainedWidth);
+    }
+
+    /** Refreshes the separator cursor to reflect the direction the border can still move from the given width. */
+    private updateResizeCursor(width: number = this.currentDtWidth): void {
+        if (!this.platform.isBrowser) return;
+
+        const min = this.normalizedDtMinWidth();
+        const max = this.maxDtWidth;
+
+        // No room to move the border in either direction.
+        if (max <= min) return this.resizeCursor.set('default');
+
+        // `resizeDirection` is `[1, 0]` in LTR and `[-1, 0]` in RTL, so growing the column moves the pointer east in
+        // LTR and west in RTL; the cursor mirrors accordingly.
+        const growCursor = this.resizeDirection()[0] > 0 ? 'e-resize' : 'w-resize';
+        const shrinkCursor = this.resizeDirection()[0] > 0 ? 'w-resize' : 'e-resize';
+
+        if (width <= min) return this.resizeCursor.set(growCursor);
+        if (width >= max) return this.resizeCursor.set(shrinkCursor);
+
+        this.resizeCursor.set('col-resize');
     }
 
     private updateResizeDirection(direction: Direction | undefined): void {

@@ -22,6 +22,27 @@ test.describe('KbqDlModule', () => {
 
         const resizedClass = /(?:^|\s)kbq-dl_resized(?:\s|$)/;
 
+        test('should reveal the separator line on hover and keyboard focus', async ({ page }) => {
+            await page.goto('/E2eDlResizable');
+
+            const block = getComponent(page);
+            const list = getList(block);
+            const separator = getSeparator(block);
+            const getLineOpacity = () => separator.evaluate((element) => getComputedStyle(element, '::after').opacity);
+
+            expect(await getLineOpacity()).toBe('0');
+
+            await list.hover({ position: { x: 1, y: 1 } });
+            expect(await getLineOpacity()).toBe('1');
+
+            await page.mouse.move(0, 0);
+            expect(await getLineOpacity()).toBe('0');
+
+            await page.keyboard.press('Tab');
+            await expect(separator).toBeFocused();
+            expect(await getLineOpacity()).toBe('1');
+        });
+
         test('should widen the first column when the separator is dragged to the right', async ({ page }) => {
             await page.goto('/E2eDlResizable');
 
@@ -38,6 +59,7 @@ test.describe('KbqDlModule', () => {
             const dragOffset = 60;
 
             await page.mouse.down();
+            expect(await separator.evaluate((element) => getComputedStyle(element, '::after').width)).toBe('3px');
             await page.mouse.move(startX + dragOffset, startY, { steps: 5 });
             await page.mouse.up();
 
@@ -78,7 +100,7 @@ test.describe('KbqDlModule', () => {
             expect((await term.boundingBox())!.width).toBeGreaterThanOrEqual(startWidth);
         });
 
-        test('should default the column minimums to the measured term width when they are not set', async ({
+        test('should default the dt and dd minimums to the measured term width when they are not set', async ({
             page
         }) => {
             await page.goto('/E2eDlResizable');
@@ -87,7 +109,7 @@ test.describe('KbqDlModule', () => {
             const separator = getSeparator(block);
             const termWidth = Math.round((await getFirstTerm(block).boundingBox())!.width);
 
-            // With no `columnMinWidth`/`remainingColumnMinWidth`, the resizer falls back to the measured term width.
+            // With no `dtMinWidth`/`ddMinWidth`, the resizer falls back to the measured term width.
             const ariaValueMin = Number(await separator.getAttribute('aria-valuemin'));
 
             expect(ariaValueMin).toBeGreaterThan(0);

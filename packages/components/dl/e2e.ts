@@ -118,7 +118,7 @@ export class E2eDlStates {}
     imports: [KbqDlModule],
     template: `
         <div data-testid="e2eDlResizableConfigured">
-            <kbq-dl columnResizable [columnMinWidth]="120" [remainingColumnMinWidth]="160">
+            <kbq-dl resizable [dtMinWidth]="120" [ddMinWidth]="160">
                 <kbq-dt>Incident type</kbq-dt>
                 <kbq-dd>Malware infection</kbq-dd>
                 <kbq-dt>Identifier</kbq-dt>
@@ -129,7 +129,7 @@ export class E2eDlStates {}
         </div>
 
         <div data-testid="e2eDlResizableAuto">
-            <kbq-dl columnResizable>
+            <kbq-dl resizable>
                 <kbq-dt>Incident type</kbq-dt>
                 <kbq-dd>Malware infection</kbq-dd>
                 <kbq-dt>Identifier</kbq-dt>
