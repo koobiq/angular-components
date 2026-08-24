@@ -1,6 +1,7 @@
 import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import docsearch, { DocSearchInstance, DocSearchProps } from '@docsearch/js';
+import type { DocSearchAskAiModalTranslations } from '@docsearch/react';
 import { KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
@@ -29,12 +30,11 @@ type DeepRequired<T> = T extends AnyFunction
         }
       : T;
 
-type DocSearchTranslations = NonNullable<DocSearchProps['translations']>;
+type DocSearchTranslations = Omit<NonNullable<DocSearchProps['translations']>, 'modal'> & {
+    modal?: DocSearchAskAiModalTranslations;
+};
 
-// The generic constraint validates all declared translations while preserving Ask AI fields omitted from v5 types.
-const defineTranslations = <T extends DeepRequired<DocSearchTranslations>>(translations: T): T => translations;
-
-const TRANSLATION_RU = defineTranslations({
+const TRANSLATION_RU: DeepRequired<DocSearchTranslations> = {
     button: {
         buttonText: 'Поиск',
         buttonAriaLabel: 'Поиск'
@@ -49,6 +49,7 @@ const TRANSLATION_RU = defineTranslations({
             placeholderTextAskAi: 'Задайте вопрос ИИ-ассистенту',
             placeholderTextAskAiStreaming: 'Получаем ответ…',
             enterKeyHint: 'Enter',
+            enterKeyHintAskAi: 'Enter',
             searchInputLabel: 'Поиск',
             backToKeywordSearchButtonText: 'Вернуться к поиску',
             backToKeywordSearchButtonAriaLabel: 'Вернуться к поиску',
@@ -112,7 +113,7 @@ const TRANSLATION_RU = defineTranslations({
         },
         askAiScreen: {
             disclaimerText: 'Ответы ИИ-ассистента могут быть неточными. Проверяйте важную информацию.',
-            relatedSourcesText: 'Источники',
+            relatedSourcesText: 'Источник',
             relatedSourcesTextPlural: 'Источники',
             suggestedPromptsTitleText: 'Возможные вопросы',
             thinkingText: 'Думаю…',
@@ -122,6 +123,17 @@ const TRANSLATION_RU = defineTranslations({
             likeButtonTitle: 'Полезный ответ',
             dislikeButtonTitle: 'Бесполезный ответ',
             thanksForFeedbackText: 'Спасибо за отзыв!',
+            feedbackPanelTitle: 'Что было не так? (необязательно)',
+            feedbackDetailsPlaceholder: 'Добавьте подробности…',
+            feedbackDisclaimerText: 'Не указывайте персональные данные.',
+            feedbackSubmitButtonText: 'Отправить',
+            feedbackCloseButtonTitle: 'Закрыть',
+            feedbackTagIncorrect: 'Неверный или неполный ответ',
+            feedbackTagNotWhatIAsked: 'Ответ не на мой вопрос',
+            feedbackTagSlowOrBuggy: 'Медленная работа или ошибка',
+            feedbackTagStyleOrTone: 'Стиль или тон ответа',
+            feedbackTagSafetyOrLegal: 'Безопасность или юридические риски',
+            feedbackTagOther: 'Другое',
             preToolCallText: 'Ищу',
             duringToolCallText: 'Ищу',
             afterToolCallText: 'Найдено по запросу',
@@ -133,7 +145,7 @@ const TRANSLATION_RU = defineTranslations({
             startNewConversationButtonText: 'Начать новый диалог'
         }
     }
-});
+};
 
 const TRANSLATIONS: Record<DocsLocale, DocSearchTranslations> = {
     [DocsLocale.Ru]: TRANSLATION_RU,

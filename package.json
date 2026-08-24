@@ -64,6 +64,7 @@
         "@commitlint/cli": "^21.2.2",
         "@commitlint/config-conventional": "^21.2.2",
         "@cspell/dict-ru_ru": "^2.3.2",
+        "@docsearch/react": "^5.0.3",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.7.2",
         "@eslint/js": "^9.39.5",
         "@koobiq/design-tokens": "^3.19.0",
