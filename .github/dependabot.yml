@@ -51,6 +51,11 @@ updates:
         update-types: ['version-update:semver-major']
       - dependency-name: 'zone.js'
         update-types: ['version-update:semver-major']
+      # AG Grid packages must stay on the same major and be upgraded together deliberately.
+      - dependency-name: 'ag-grid-*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@koobiq/ag-grid-angular-theme'
+        update-types: ['version-update:semver-major']
       # Ignores any major and minor updates, because @angular-devkit/architect@0.x.x has a non-standard angular semantic
       # version number
       - dependency-name: '@angular-devkit/architect'
