@@ -29,7 +29,12 @@ type DeepRequired<T> = T extends AnyFunction
         }
       : T;
 
-const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> = {
+type DocSearchTranslations = NonNullable<DocSearchProps['translations']>;
+
+// The generic constraint validates all declared translations while preserving Ask AI fields omitted from v5 types.
+const defineTranslations = <T extends DeepRequired<DocSearchTranslations>>(translations: T): T => translations;
+
+const TRANSLATION_RU = defineTranslations({
     button: {
         buttonText: 'Поиск',
         buttonAriaLabel: 'Поиск'
@@ -44,7 +49,6 @@ const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> 
             placeholderTextAskAi: 'Задайте вопрос ИИ-ассистенту',
             placeholderTextAskAiStreaming: 'Получаем ответ…',
             enterKeyHint: 'Enter',
-            enterKeyHintAskAi: 'Enter',
             searchInputLabel: 'Поиск',
             backToKeywordSearchButtonText: 'Вернуться к поиску',
             backToKeywordSearchButtonAriaLabel: 'Вернуться к поиску',
@@ -84,6 +88,14 @@ const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> 
             closeKeyAriaLabel: 'Клавиша Escape',
             poweredByText: 'Работает на'
         },
+        facets: {
+            defaultValueLabel: 'Все',
+            facetMenuTriggerAriaLabel: 'выбрано',
+            clearAllLabel: 'Очистить все',
+            facetsAriaLabel: 'Фильтры поиска',
+            selectedFacetsAriaLabel: 'Выбранные фильтры поиска',
+            clearFacetAriaLabel: 'Очистить фильтр:'
+        },
         noResultsScreen: {
             noResultsText: 'Нет результатов для',
             suggestedQueryText: 'Попробуйте поискать',
@@ -92,11 +104,17 @@ const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> 
         },
         resultsScreen: {
             askAiPlaceholder: 'Спросить ИИ-ассистента:',
-            noResultsAskAiPlaceholder: 'Спросить ИИ-ассистента вместо этого:'
+            noResultsAskAiPlaceholder: 'Спросить ИИ-ассистента вместо этого:',
+            resultsSectionTitle: 'Результаты поиска',
+            askAiResultsTitle: 'ИИ-ассистент',
+            resultBadgeLabelText: 'Категория',
+            recentConversationTimestampFallback: 'Некоторое время назад'
         },
         askAiScreen: {
             disclaimerText: 'Ответы ИИ-ассистента могут быть неточными. Проверяйте важную информацию.',
             relatedSourcesText: 'Источники',
+            relatedSourcesTextPlural: 'Источники',
+            suggestedPromptsTitleText: 'Возможные вопросы',
             thinkingText: 'Думаю…',
             copyButtonText: 'Копировать',
             copyButtonCopiedText: 'Скопировано',
@@ -107,14 +125,17 @@ const TRANSLATION_RU: DeepRequired<NonNullable<DocSearchProps['translations']>> 
             preToolCallText: 'Ищу',
             duringToolCallText: 'Ищу',
             afterToolCallText: 'Найдено по запросу',
+            savedMemoryToolResultText: 'Сохранено в память',
+            memoryToolResultText: 'Использована память',
             stoppedStreamingText: 'Генерация ответа остановлена',
             errorTitleText: 'Не удалось получить ответ',
+            threadDepthExceededMessage: 'Диалог завершён для сохранения точности ответов.',
             startNewConversationButtonText: 'Начать новый диалог'
         }
     }
-};
+});
 
-const TRANSLATIONS: Record<DocsLocale, DocSearchProps['translations']> = {
+const TRANSLATIONS: Record<DocsLocale, DocSearchTranslations> = {
     [DocsLocale.Ru]: TRANSLATION_RU,
     [DocsLocale.En]: {}
 };
@@ -175,8 +196,7 @@ export class DocsDocsearchDirective extends DocsLocaleState {
                     transformItems: this.transformItems,
                     translations: TRANSLATIONS[locale],
                     askAi: {
-                        assistantId: 'f6ddad78-2e0d-4f11-8cf0-d7e34c354d0e',
-                        agentStudio: true
+                        agentId: 'f6ddad78-2e0d-4f11-8cf0-d7e34c354d0e'
                     }
                 });
             });
