@@ -70,6 +70,9 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
  */
 export const NESTED_HOVER_SWITCH_DELAY = 50;
 
+/** Class applied to the panel while its safe area is protecting an open submenu, see `activateSafeArea`. */
+const SAFE_AREA_ACTIVE_CLASS = 'kbq-dropdown__panel_safe-area-active';
+
 @Directive({
     selector: '[kbqDropdownStaticContent]'
 })
@@ -406,6 +409,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     activateSafeArea(owner: KbqDropdownItem, triangle: KbqTriangle, panelRect: DOMRect, onExit: () => void): void {
         this.deactivateSafeArea();
         this.safeAreaOwner = owner;
+        this.classList = { ...this.classList, [SAFE_AREA_ACTIVE_CLASS]: true };
 
         this.safeAreaCleanup = this.ngZone.runOutsideAngular(() => {
             const listener = (event: MouseEvent) => {
@@ -468,6 +472,14 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         this.safeAreaOwner = null;
         this.switchTargetSubscription.unsubscribe();
         this.switchTargetSubscription = Subscription.EMPTY;
+
+        if (this.classList[SAFE_AREA_ACTIVE_CLASS]) {
+            // The mousemove listener that can reach this runs outside the Angular zone, so re-enter it
+            // to make sure the `classList` update is picked up by change detection.
+            this.ngZone.run(() => {
+                this.classList = { ...this.classList, [SAFE_AREA_ACTIVE_CLASS]: false };
+            });
+        }
     }
 
     /**
