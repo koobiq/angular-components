@@ -183,7 +183,7 @@ describe(KbqDlComponent.name, () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance.dtWidth()).toBeNull();
-        expect(resizeHandle.style.cursor).toBe('ew-resize');
+        expect(resizeHandle.style.cursor).toBe('col-resize');
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_resized');
     });
 
@@ -232,14 +232,14 @@ describe(KbqDlComponent.name, () => {
         expect(fixture.componentInstance.dtWidth()).toBe(208);
     });
 
-    it('should apply the ew-resize cursor to the separator at rest', () => {
+    it('should apply the col-resize cursor to the separator at rest', () => {
         const fixture = createComponent(KbqDlComponent);
 
         fixture.componentRef.setInput('resizable', true);
         fixture.componentRef.setInput('vertical', false);
         fixture.detectChanges();
 
-        expect(getResizeHandle(fixture)!.style.cursor).toBe('ew-resize');
+        expect(getResizeHandle(fixture)!.style.cursor).toBe('col-resize');
     });
 
     it('should advertise the grow-only direction with an e-resize cursor at the minimum width', () => {
@@ -278,7 +278,7 @@ describe(KbqDlComponent.name, () => {
         expect(getResizeHandle(fixture)!.style.cursor).toBe('w-resize');
     });
 
-    it('should keep the ew-resize cursor while the width is between the bounds', () => {
+    it('should keep the col-resize cursor while the width is between the bounds', () => {
         const fixture = createComponent(KbqDlComponent);
 
         fixture.componentRef.setInput('resizable', true);
@@ -296,7 +296,7 @@ describe(KbqDlComponent.name, () => {
         getResizeHandle(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
         fixture.detectChanges();
 
-        expect(getResizeHandle(fixture)!.style.cursor).toBe('ew-resize');
+        expect(getResizeHandle(fixture)!.style.cursor).toBe('col-resize');
     });
 
     it('should fall back to the default cursor when there is no room to resize', () => {
