@@ -10,6 +10,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     contentChild,
     ContentChildren,
     DestroyRef,
@@ -22,6 +23,7 @@ import {
     OnDestroy,
     output,
     QueryList,
+    signal,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -261,6 +263,14 @@ export class KbqTagList
     }
 
     /**
+     * Implemented as part of KbqFormFieldControl. Forwarded from the registered `kbqTagInput`, which
+     * is the element the browser actually autofills — the tag list itself is not an input.
+     *
+     * @docs-private
+     */
+    readonly autofilled = computed(() => this.registeredInput()?.autofilled?.() ?? false);
+
+    /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
@@ -411,6 +421,12 @@ export class KbqTagList
     /** The tag input to add more tags */
     private tagInput: KbqTagTextControl;
 
+    /**
+     * The same control as `tagInput`, kept in a signal so `autofilled` can track it reactively —
+     * `registerInput()` runs after the first read.
+     */
+    private readonly registeredInput = signal<KbqTagTextControl | undefined>(undefined);
+
     /** True when the next `tags.changes` emission is triggered by a UI action, not programmatic update. */
     private pendingUIChange = false;
 
@@ -544,6 +560,7 @@ export class KbqTagList
      */
     registerInput(inputElement: KbqTagTextControl): void {
         this.tagInput = inputElement;
+        this.registeredInput.set(inputElement);
 
         // todo need rethink about it (#DS-3740)
         if (this.ngControl && inputElement.ngControl?.statusChanges) {

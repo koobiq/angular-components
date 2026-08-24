@@ -8,6 +8,7 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_forms from '@angular/forms';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
@@ -51,10 +52,10 @@ import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -212,18 +213,15 @@ export interface CanColor {
     color: KbqComponentColors | ThemePalette | string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
-//
-// @public
-export type CanColorCtor = Constructor<CanColor> & AbstractConstructor<CanColor>;
-
 // @public (undocumented)
 export interface CanDisable {
     // (undocumented)
     disabled: boolean;
 }
 
+// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
+//
 // @public
 export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
 
@@ -310,7 +308,7 @@ export { dispatchEvent_2 as dispatchEvent }
 export function dispatchFakeEvent(node: Node | Window, type: string, canBubble?: boolean): Event;
 
 // @public
-export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, target?: Element): KeyboardEvent;
+export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, target?: Element, key?: string): KeyboardEvent;
 
 // @public
 export function dispatchMouseEvent(node: Node, type: string, x?: number, y?: number, event?: MouseEvent): MouseEvent;
@@ -441,6 +439,19 @@ export const enUSFormattersData: {
 
 // @public (undocumented)
 export const enUSLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -569,6 +580,7 @@ export const enUSLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -692,6 +704,19 @@ export const esLAFormattersData: {
 
 // @public (undocumented)
 export const esLALocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -819,6 +844,7 @@ export const esLALocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -1111,6 +1137,9 @@ export const J = 74;
 export const K = 75;
 
 // @public
+export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
+
+// @public
 export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
 
 // @public
@@ -1181,6 +1210,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     power: number;
                 };
             };
+        };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1310,6 +1352,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1408,6 +1451,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
+        };
         select: {
             hiddenItemsText: string;
             selectAll: string;
@@ -1535,6 +1591,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1629,6 +1686,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
+        };
         select: {
             hiddenItemsText: string;
             selectAll: string;
@@ -1756,6 +1826,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -1855,6 +1926,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
+        };
         select: {
             hiddenItemsText: string;
             selectAll: string;
@@ -1983,6 +2067,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -2078,6 +2163,19 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 };
             };
         };
+        a11y: {
+            close: string;
+            save: string;
+            cancel: string;
+            removeAll: string;
+            expandBreadcrumbs: string;
+            previousMonth: string;
+            currentDate: string;
+            nextMonth: string;
+            clear: string;
+            showPassword: string;
+            hidePassword: string;
+        };
         select: {
             hiddenItemsText: string;
             selectAll: string;
@@ -2206,6 +2304,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
             searchEmptyResult: string;
             sitesHeader: string;
+            clearSearch: string;
         };
         timeRange: {
             title: {
@@ -2274,6 +2373,9 @@ export const KBQ_DEFAULT_LOCALE_ID = "ru-RU";
 export const KBQ_DEFAULT_PRECISION_SEPARATOR = ".";
 
 // @public
+export const KBQ_DEFAULT_THEMES: KbqThemeConfig[];
+
+// @public @deprecated
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
 // @public (undocumented)
@@ -2342,11 +2444,35 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsConfig>;
 // @public (undocumented)
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig;
 
+// @public
+export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeSettings<KbqThemeConfig>>;
+
+// @public
+export const KBQ_THEME_STORE: InjectionToken<KbqThemeStore>;
+
 // @public (undocumented)
 export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
 // @public
 export const KBQ_WINDOW: InjectionToken<Window>;
+
+// @public
+export type KbqA11yLocaleConfiguration = {
+    close: string;
+    save: string;
+    cancel: string;
+    removeAll: string;
+    expandBreadcrumbs: string;
+    previousMonth: string;
+    currentDate: string;
+    nextMonth: string;
+    clear: string;
+    showPassword: string;
+    hidePassword: string;
+};
+
+// @public
+export const kbqA11yLocaleConfigurationProvider: (configuration: KbqA11yLocaleConfiguration) => Provider;
 
 // @public (undocumented)
 export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]> implements PipeTransform {
@@ -2467,6 +2593,14 @@ export enum KbqAnimationDurations {
     // (undocumented)
     Rapid = "100ms"
 }
+
+// @public
+export type KbqAppSwitcherConfiguration = {
+    searchPlaceholder: string;
+    searchEmptyResult: string;
+    sitesHeader: string;
+    clearSearch: string;
+};
 
 // @public
 export class KbqAutoHideScrollStrategy implements ScrollStrategy {
@@ -2648,8 +2782,8 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
 // @public
 export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 
-// @public (undocumented)
-export const KbqDefaultThemes: KbqTheme[];
+// @public @deprecated (undocumented)
+export const KbqDefaultThemes: KbqThemeConfig[];
 
 // @public
 export class KbqDurationLongPipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [
@@ -2786,11 +2920,26 @@ export class KbqFormElement implements AfterContentInit {
 }
 
 // @public
+export interface KbqFormFieldControlRef<T = unknown> {
+    readonly controlType?: string;
+    readonly disabled: boolean;
+    readonly empty: boolean;
+    readonly errorState: boolean;
+    readonly focused: boolean;
+    readonly id: string;
+    readonly ngControl: NgControl | null;
+    placeholder: string;
+    readonly required: boolean;
+    readonly stateChanges: Observable<void>;
+    value: T | null;
+}
+
+// @public @deprecated
 export interface KbqFormFieldRef {
     // (undocumented)
     canCleanerClearByEsc: boolean;
     // (undocumented)
-    control: any;
+    readonly control: Signal<KbqFormFieldControlRef>;
     // (undocumented)
     focus(): void;
     inOverlay: ModelSignal<boolean>;
@@ -2853,6 +3002,12 @@ export class KbqHover {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHover, never>;
 }
+
+// @public
+export function kbqInjectA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration>;
+
+// @public
+export const kbqInjectAutofilled: () => Signal<boolean>;
 
 // @public
 export const kbqInjectNativeElement: <T extends Element = HTMLElement>() => T;
@@ -3654,7 +3809,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    get ngControl(): any;
+    get ngControl(): _angular_forms.NgControl | null;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -3662,7 +3817,7 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     // (undocumented)
     setPlaceholder(value: string): void;
     // (undocumented)
-    value(): any;
+    value(): unknown;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearch, "[kbqSelectSearch]", ["kbqSelectSearch"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -3737,20 +3892,115 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqTableNumberPipe>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export interface KbqTheme {
-    // (undocumented)
     className: string;
     // (undocumented)
-    name: string;
+    colorScheme?: KbqThemeColorScheme;
     // (undocumented)
-    selected: boolean;
+    name: string;
+    // @deprecated (undocumented)
+    selected?: boolean;
 }
+
+// @public
+export type KbqThemeColorScheme = 'light' | 'dark';
+
+// @public
+export interface KbqThemeConfig {
+    className: string;
+    // (undocumented)
+    colorScheme: KbqThemeColorScheme;
+    // (undocumented)
+    name: string;
+}
+
+// @public
+export class KbqThemeCookieStore implements KbqThemeStore {
+    // (undocumented)
+    getMode(): KbqThemeMode | null;
+    // (undocumented)
+    getStaticTheme(): string | null;
+    // (undocumented)
+    setMode(mode: KbqThemeMode): void;
+    // (undocumented)
+    setStaticTheme(name: string | null): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeCookieStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeCookieStore>;
+}
+
+// @public
+export class KbqThemeLocalStorageStore implements KbqThemeStore {
+    // (undocumented)
+    getMode(): KbqThemeMode | null;
+    // (undocumented)
+    getStaticTheme(): string | null;
+    // (undocumented)
+    setMode(mode: KbqThemeMode): void;
+    // (undocumented)
+    setStaticTheme(name: string | null): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeLocalStorageStore, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeLocalStorageStore>;
+}
+
+// @public
+export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
+
+// @public
+export enum KbqThemeNames {
+    Dark = "dark",
+    // @deprecated (undocumented)
+    Default = "light",
+    Light = "light"
+}
+
+// @public
+export const kbqThemeProvider: <T extends KbqThemeConfig = KbqThemeConfig>(config: Partial<KbqThemeSettings<T>>) => Provider;
 
 // @public
 export enum KbqThemeSelector {
     Dark = "kbq-dark",
-    Default = "kbq-light"
+    // @deprecated (undocumented)
+    Default = "kbq-light",
+    Light = "kbq-light"
+}
+
+// @public
+export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
+    constructor();
+    readonly colorScheme: i0.Signal<KbqThemeColorScheme>;
+    readonly currentTheme: i0.Signal<T | null>;
+    readonly mode: i0.Signal<KbqThemeMode>;
+    selectTheme(name: string | null): void;
+    setMode(mode: KbqThemeMode): void;
+    setThemes(items: T[]): void;
+    readonly staticTheme: i0.Signal<string | null>;
+    readonly themes: i0.Signal<T[]>;
+    toggle(): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqThemeService<any>, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqThemeService<any>>;
+}
+
+// @public
+export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
+    mode: KbqThemeMode;
+    storageKey: string;
+    theme: string | null;
+    themes: T[];
+}
+
+// @public
+export interface KbqThemeStore {
+    getMode(): KbqThemeMode | null;
+    getStaticTheme(): string | null;
+    setMode(mode: KbqThemeMode): void;
+    setStaticTheme(name: string | null): void;
 }
 
 // @public
@@ -3914,11 +4164,6 @@ export const MAC_WK_CMD_RIGHT = 93;
 
 // @public (undocumented)
 export const META = 91;
-
-// Warning: (ae-forgotten-export) The symbol "HasElementRef" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function mixinColor<T extends AbstractConstructor<HasElementRef>>(base: T, defaultColor?: KbqComponentColors | ThemePalette): CanColorCtor & T;
 
 // @public
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
@@ -4201,6 +4446,19 @@ export const ptBRFormattersData: {
 
 // @public (undocumented)
 export const ptBRLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -4328,6 +4586,7 @@ export const ptBRLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -4637,6 +4896,19 @@ export const ruRUFormattersData: {
 
 // @public (undocumented)
 export const ruRULocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -4765,6 +5037,7 @@ export const ruRULocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {
@@ -4917,31 +5190,20 @@ export enum ThemePalette {
     Warning = "warning"
 }
 
-// @public (undocumented)
-export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDestroy {
+// @public @deprecated (undocumented)
+export class ThemeService<T extends KbqTheme = KbqTheme> implements OnDestroy {
     constructor();
-    // (undocumented)
-    current: BehaviorSubject<T>;
-    // (undocumented)
-    protected readonly document: Document;
-    // (undocumented)
-    getTheme(): T;
+    // @deprecated (undocumented)
+    readonly current: BehaviorSubject<T | null>;
+    // @deprecated (undocumented)
+    getTheme(): T | null;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    protected renderer: Renderer2;
-    // (undocumented)
-    protected readonly rendererFactory: RendererFactory2;
-    // (undocumented)
+    // @deprecated (undocumented)
     setTheme(value: T | number): void;
-    // (undocumented)
-    setThemes(items: T[]): void;
-    // (undocumented)
-    protected subscription: Subscription;
-    // (undocumented)
-    themes: T[];
-    // (undocumented)
-    protected update: (input: T[]) => void;
+    // @deprecated (undocumented)
+    get themes(): T[];
+    set themes(items: T[]);
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ThemeService<any>, never>;
     // (undocumented)
@@ -4995,6 +5257,19 @@ export const tkTMFormattersData: {
 
 // @public (undocumented)
 export const tkTMLocaleData: {
+    a11y: {
+        close: string;
+        save: string;
+        cancel: string;
+        removeAll: string;
+        expandBreadcrumbs: string;
+        previousMonth: string;
+        currentDate: string;
+        nextMonth: string;
+        clear: string;
+        showPassword: string;
+        hidePassword: string;
+    };
     select: {
         hiddenItemsText: string;
         selectAll: string;
@@ -5123,6 +5398,7 @@ export const tkTMLocaleData: {
         searchPlaceholder: string;
         searchEmptyResult: string;
         sitesHeader: string;
+        clearSearch: string;
     };
     timeRange: {
         title: {

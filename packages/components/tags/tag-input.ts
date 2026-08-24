@@ -14,7 +14,16 @@ import {
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
-import { COMMA, ENTER, hasModifierKey, KbqFieldSizingContent, SEMICOLON, SPACE, TAB } from '@koobiq/components/core';
+import {
+    COMMA,
+    ENTER,
+    hasModifierKey,
+    KbqFieldSizingContent,
+    kbqInjectAutofilled,
+    SEMICOLON,
+    SPACE,
+    TAB
+} from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { KbqTagList } from './tag-list.component';
 import { KbqTagTextControl } from './tag-text-control';
@@ -132,6 +141,9 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      * @docs-private
      */
     focused: boolean = false;
+
+    /** Whether the control's value was filled in by the browser. */
+    readonly autofilled = kbqInjectAutofilled();
 
     /**
      * The list of key codes that will trigger a tagEnd event.

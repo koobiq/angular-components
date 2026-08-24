@@ -113,6 +113,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 
         '[class.kbq-form-field_invalid]': 'invalid',
         '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-form-field_autofilled]': 'autofilled',
         '[class.kbq-form-field_no-borders]': 'noBorders()',
         '[class.kbq-form-field_in-overlay]': 'inOverlay()',
         '[class.kbq-form-field_horizontal]': 'horizontal()',
@@ -342,6 +343,19 @@ export class KbqFormField
         return this.control()?.disabled;
     }
 
+    /**
+     * Whether the form field control's value was filled in by the browser. Controls that cannot be
+     * autofilled do not implement `autofilled`, and report `false` here.
+     *
+     * Reflected as `kbq-form-field_autofilled` for application code to key on. The autofill styling
+     * does not use it: CSS matches `:autofill` directly, in the same style pass the browser fills
+     * the field, where this arrives a frame or two later. Keeping the paint on one source also means
+     * a class left behind by a detached or re-attached control cannot tint a field the browser no
+     * longer considers autofilled.
+     */
+    get autofilled(): boolean {
+        return !!this.control()?.autofilled?.();
+    }
     ngAfterContentInit(): void {
         this.validateControlChild();
 

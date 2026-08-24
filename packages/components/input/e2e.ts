@@ -5,7 +5,9 @@ import { PasswordRules } from '@koobiq/components/form-field';
 import { KbqInputModule } from './input.module';
 
 type InputStates = {
-    state: ('default' | 'focused' | 'disabled' | 'placeholder' | 'invalid' | 'autofill' | 'error' | 'ellipsis')[];
+    // No 'autofill': no row ever emitted it and no spec asserted it, so it advertised coverage that
+    // did not exist. Autofill is covered for real by E2eFormFieldAutofill (#DS-4096).
+    state: ('default' | 'focused' | 'disabled' | 'placeholder' | 'invalid' | 'error' | 'ellipsis')[];
     inputNumberHasSeparator?: boolean;
 };
 

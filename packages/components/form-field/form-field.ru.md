@@ -109,6 +109,32 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-fiel
 })
 ```
 
+### Автозаполнение
+
+Чтобы изменить подсветку или отключить её, переопределите токен на поле:
+
+```css
+.my-form-field {
+    /* выглядеть точно как обычное заполненное поле */
+    --kbq-form-field-states-autofill-background: transparent;
+}
+```
+
+Состояние также отслеживается в TypeScript. `KbqInput`, `KbqInputPassword`, `KbqTextarea` и `KbqTagInput` (проброшенный
+через `KbqTagList`) оборачивают `AutofillMonitor` из CDK вокруг собственного элемента и отдают результат сигналом
+`autofilled`, а `<kbq-form-field>` отражает его классом `kbq-form-field_autofilled`:
+
+```ts
+@ViewChild(KbqInput) input: KbqInput;
+
+// ...
+
+const filledByBrowser = this.input.autofilled();
+```
+
+Сигнал — это хук для кода приложения, а не механизм стилизации: он приходит на кадр-два позже отрисовки, тогда как CSS
+срабатывает в том же проходе стилей.
+
 ### Поле для ввода пароля
 
 `<kbq-password-toggle>` - это компонент, который добавляет кнопку _"Показать пароль"_ для **заполненного** поля

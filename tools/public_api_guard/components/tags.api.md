@@ -35,6 +35,7 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
@@ -177,6 +178,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     set addOnBlur(value: boolean);
     readonly addOnPaste: i0.InputSignalWithTransform<boolean, unknown>;
     autocompleteTrigger?: KbqAutocompleteTrigger | null | undefined;
+    readonly autofilled: i0.Signal<boolean>;
     blur(event: FocusEvent): void;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -215,6 +217,7 @@ export interface KbqTagInputEvent {
 // @public (undocumented)
 export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
     constructor();
+    readonly autofilled: i0.Signal<boolean>;
     blur(): void;
     get canShowCleaner(): boolean;
     readonly change: i0.OutputEmitterRef<KbqTagListChange>;

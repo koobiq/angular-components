@@ -102,6 +102,29 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-fiel
 })
 ```
 
+### Autofill
+
+To change the tint or switch it off, override the token on the field:
+
+```css
+.my-form-field {
+    /* look exactly like a normally filled field */
+    --kbq-form-field-states-autofill-background: transparent;
+}
+```
+
+The state is also tracked in TypeScript. `KbqInput`, `KbqInputPassword`, `KbqTextarea` and `KbqTagInput` (forwarded by `KbqTagList`) each wrap the CDK's `AutofillMonitor` around their own element and expose the result as an `autofilled` signal, which `<kbq-form-field>` reflects as the `kbq-form-field_autofilled` class:
+
+```ts
+@ViewChild(KbqInput) input: KbqInput;
+
+// ...
+
+const filledByBrowser = this.input.autofilled();
+```
+
+The signal is a hook for application code, not the mechanism behind the styling: it arrives a frame or two after the browser paints, where the CSS matches in the same style pass.
+
 ### Password input field
 
 `<kbq-password-toggle>` is a component that adds a _"Show password"_ button for **filled** `<input kbqInputPassword />` fields inside the `<kbq-form-field>` component.

@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
+export * from './autofill';
 export * from './checkable';
 export * from './checkbox';
 export * from './clipboard';
