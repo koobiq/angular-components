@@ -106,6 +106,10 @@
                 var(--kbq-description-list-resizer-focus-outline-color);
             outline-offset: calc(-1 * var(--kbq-description-list-resizer-focus-outline-width));
         }
+
+        &.cdk-keyboard-focused:active {
+            outline: none;
+        }
     }
 
     @media (hover: hover) and (pointer: fine) {

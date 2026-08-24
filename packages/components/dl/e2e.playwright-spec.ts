@@ -43,6 +43,24 @@ test.describe('KbqDlModule', () => {
             expect(await getLineOpacity()).toBe('1');
         });
 
+        test('should hide the keyboard focus outline while dragging with the pointer', async ({ page }) => {
+            await page.goto('/E2eDlResizable');
+
+            const separator = getSeparator(getComponent(page));
+            const getOutlineStyle = () => separator.evaluate((element) => getComputedStyle(element).outlineStyle);
+
+            await page.keyboard.press('Tab');
+            await expect(separator).toBeFocused();
+            expect(await getOutlineStyle()).toBe('solid');
+
+            await separator.hover();
+            await page.mouse.down();
+            expect(await getOutlineStyle()).toBe('none');
+
+            await page.mouse.up();
+            expect(await getOutlineStyle()).toBe('solid');
+        });
+
         test('should widen the first column when the separator is dragged to the right', async ({ page }) => {
             await page.goto('/E2eDlResizable');
 

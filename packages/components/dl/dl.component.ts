@@ -146,7 +146,7 @@ export class KbqDlComponent {
      * direction still available — grow-only at the minimum width, shrink-only at the maximum, `default` when there is
      * no room to move the border at all.
      */
-    protected readonly resizeCursor = signal<string>('col-resize');
+    protected readonly resizeCursor = signal<string>('ew-resize');
 
     /** Auto-detected vertical layout, re-evaluated from the host width on resize while `vertical` is not set. */
     private readonly autoVertical = signal<boolean | null>(null);
@@ -260,6 +260,7 @@ export class KbqDlComponent {
         // First double-click collapses the first column to its minimum width; a second one restores the default ratio.
         if (this.dtWidth() === this.normalizedDtMinWidth()) {
             this.dtWidth.set(null);
+            this.resizeCursor.set('ew-resize');
         } else {
             this.setDtWidth(this.normalizedDtMinWidth());
         }
@@ -314,7 +315,7 @@ export class KbqDlComponent {
         if (width <= min) return this.resizeCursor.set(growCursor);
         if (width >= max) return this.resizeCursor.set(shrinkCursor);
 
-        this.resizeCursor.set('col-resize');
+        this.resizeCursor.set('ew-resize');
     }
 
     private updateResizeDirection(direction: Direction | undefined): void {
