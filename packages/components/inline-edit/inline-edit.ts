@@ -31,6 +31,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
     KBQ_CONNECTED_OVERLAY_ORIGIN,
+    KBQ_WINDOW,
     KbqAnimationCurves,
     KbqAnimationDurations,
     KbqComponentColors,
@@ -42,7 +43,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -56,7 +57,25 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
     ])
 ]);
 
+/**
+ * The validation tooltip is anchored to an element inside the edit-mode overlay — an overlay inside another
+ * overlay. Its default `close()` scroll strategy would close it the moment either overlay's origin scrolls
+ * (including the programmatic scroll `save()` uses to bring an invalid control into view), so it's overridden
+ * to `reposition()` here, scoped to just this tooltip instance.
+ */
+const KBQ_INLINE_EDIT_VALIDATION_TOOLTIP_SCROLL_STRATEGY = {
+    provide: KBQ_TOOLTIP_SCROLL_STRATEGY,
+    deps: [Overlay],
+    useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.reposition()
+};
+
 const baseClass = 'kbq-inline-edit';
+
+/**
+ * Fallback delay before showing the validation tooltip if `scrollend` never fires — e.g. the browser doesn't
+ * support it, or nothing needed to scroll.
+ */
+const VALIDATION_TOOLTIP_SCROLL_TIMEOUT = 800;
 
 export type KbqInlineEditMode = 'view' | 'edit';
 
@@ -133,7 +152,10 @@ export class KbqInlineEditMenu {
     ],
     templateUrl: './inline-edit.html',
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
-    providers: [{ provide: KBQ_CONNECTED_OVERLAY_ORIGIN, useExisting: forwardRef(() => KbqInlineEdit) }],
+    providers: [
+        { provide: KBQ_CONNECTED_OVERLAY_ORIGIN, useExisting: forwardRef(() => KbqInlineEdit) },
+        KBQ_INLINE_EDIT_VALIDATION_TOOLTIP_SCROLL_STRATEGY
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -159,6 +181,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
     private readonly overlay = inject(Overlay);
     private readonly document = inject(DOCUMENT);
+    private readonly window = inject(KBQ_WINDOW);
     private readonly resizeObserver = inject(SharedResizeObserver);
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -332,7 +355,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
         const formFieldRefList = this.formFieldRefList();
 
-        merge(formFieldRefList.map((ref) => ref.control().stateChanges))
+        merge(...formFieldRefList.map((ref) => ref.control().stateChanges))
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
                 if (!this.isInvalid()) {
@@ -371,12 +394,51 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
             $event?.stopPropagation();
 
             if (this.showTooltipOnError() && this.validationTooltip()) {
-                this.tooltipTrigger()?.show();
+                this.showValidationTooltip();
             }
         } else {
             this.toggleMode();
             this.saved.emit();
         }
+    }
+
+    /**
+     * Shows the validation tooltip, scrolling the invalid control into view first if it isn't fully visible.
+     *
+     * `scrollIntoView({ behavior: 'smooth' })` finishes asynchronously — for a long scroll distance it can take
+     * a while — so showing the tooltip right away would anchor its overlay to a stale, pre-scroll position.
+     * `scrollend` reports when the scroll actually completes;
+     * the timeout is a fallback for browsers without `scrollend` support and cases where nothing ends up scrolling.
+     */
+    private showValidationTooltip(): void {
+        const rect = this.overlayOrigin.getBoundingClientRect();
+        const isFullyVisible =
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= this.window.innerHeight &&
+            rect.right <= this.window.innerWidth;
+
+        if (isFullyVisible) {
+            this.tooltipTrigger()?.show();
+
+            return;
+        }
+
+        let shown = false;
+
+        const showTooltip = (): void => {
+            if (shown) return;
+
+            shown = true;
+            this.window.removeEventListener('scrollend', showTooltip);
+            this.tooltipTrigger()?.updatePosition();
+            this.tooltipTrigger()?.show();
+        };
+
+        this.window.addEventListener('scrollend', showTooltip, { once: true });
+        setTimeout(showTooltip, VALIDATION_TOOLTIP_SCROLL_TIMEOUT);
+
+        this.overlayOrigin.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
     }
 
     /** @docs-private */
