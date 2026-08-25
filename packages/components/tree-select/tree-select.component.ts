@@ -78,6 +78,7 @@ import {
     defaultOffsetY,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
+    getOptionScrollPosition,
     hasModifierKey,
     isInput,
     isSelectAll,
@@ -330,6 +331,9 @@ export class KbqTreeSelect
 
     /** Reference to the overlay panel element. */
     readonly panel = viewChild<ElementRef>('panel');
+
+    /** Reference to the scrollable options container inside the panel. */
+    readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
 
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 
@@ -1626,9 +1630,41 @@ export class KbqTreeSelect
         }
     }
 
-    /** Scrolls the active option into view. */
+    /**
+     * Scrolls the active option into the panel's viewport.
+     *
+     * Without a search field the tree option itself takes DOM focus (roving focus), and the browser scrolls
+     * it into view natively in every browser. With a search field focus is returned to the input
+     * (ActiveDescendant), so the native scroll-into-view of `HTMLElement.focus()` is unreliable — Safari does
+     * not scroll an option that immediately loses focus back to the input — and the panel is scrolled
+     * manually via `getOptionScrollPosition`.
+     */
     private scrollActiveOptionIntoView() {
-        this.tree()!.keyManager.activeItem?.focus();
+        const activeOption = this.tree()!.keyManager.activeItem;
+
+        if (!this.search() || !activeOption) {
+            activeOption?.focus();
+
+            return;
+        }
+
+        // The panel view children only resolve once the overlay is attached.
+        if (!this.panel()) {
+            return;
+        }
+
+        const container = this.optionsContainer().nativeElement;
+        const optionRect = activeOption.getHostElement().getBoundingClientRect();
+        // Measured from the live rect rather than `offsetTop` so the search field sitting above the scroller
+        // does not throw the offset off.
+        const optionOffset = optionRect.top - container.getBoundingClientRect().top + container.scrollTop;
+
+        container.scrollTop = getOptionScrollPosition(
+            optionOffset,
+            optionRect.height,
+            container.scrollTop,
+            container.offsetHeight
+        );
     }
 
     private subscribeOnSearchChanges() {

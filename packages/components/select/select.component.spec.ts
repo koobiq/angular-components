@@ -4240,6 +4240,80 @@ describe('KbqSelect', () => {
             expect(optionsTexts).toEqual(['Kaluga', 'Luga']);
         }));
 
+        // A search field keeps DOM focus in the input (ActiveDescendant), so the select scrolls the active
+        // option in manually via `scrollTop` instead of leaning on the native scroll-into-view side effect
+        // of `HTMLElement.focus()`, which Safari does not perform for an option that immediately loses focus
+        // back to the input. jsdom reports zero geometry, so the option/container rects are stubbed to drive
+        // the calculation. Each case would fail against the old `focus()`-only implementation.
+        describe('scrolling the active option into view', () => {
+            let select: KbqSelect;
+            let container: HTMLElement;
+            let searchInput: HTMLInputElement;
+
+            const stubRect = (element: HTMLElement, top: number, height: number) =>
+                Object.defineProperty(element, 'getBoundingClientRect', {
+                    configurable: true,
+                    value: () => ({ top, bottom: top + height, height }) as DOMRect
+                });
+
+            const activeOptionElement = () => (select as any).keyManager.activeItem.getHostElement();
+
+            beforeEach(fakeAsync(() => {
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+
+                select = fixture.componentInstance.select();
+                // The exact node the component scrolls, so the geometry stubs below reach it.
+                container = (select as any).optionsContainer().nativeElement;
+                searchInput = fixture.debugElement.query(By.css('input')).nativeElement;
+
+                Object.defineProperty(container, 'offsetHeight', { configurable: true, value: 256 });
+                stubRect(container, 0, 256);
+
+                (select as any).keyManager.setActiveItem(3);
+                fixture.detectChanges();
+            }));
+
+            it('scrolls down so an option below the viewport aligns with the viewport bottom', () => {
+                container.scrollTop = 0;
+                stubRect(activeOptionElement(), 400, 32);
+
+                (select as any).scrollActiveOptionIntoView();
+
+                // offset 400; 400 + 32 > 0 + 256, so scroll until the option bottom meets the viewport bottom.
+                expect(container.scrollTop).toBe(176);
+            });
+
+            it('scrolls up to reveal an option sitting above the current scroll position', () => {
+                container.scrollTop = 300;
+                // A scrolled-past option renders above the container top, i.e. a negative rect top.
+                stubRect(activeOptionElement(), -100, 32);
+
+                (select as any).scrollActiveOptionIntoView();
+
+                expect(container.scrollTop).toBe(200);
+            });
+
+            it('leaves the scroll position untouched when the option is already fully visible', () => {
+                container.scrollTop = 0;
+                stubRect(activeOptionElement(), 64, 32);
+
+                (select as any).scrollActiveOptionIntoView();
+
+                expect(container.scrollTop).toBe(0);
+            });
+
+            it('keeps DOM focus in the search input while scrolling', () => {
+                searchInput.focus();
+                stubRect(activeOptionElement(), 400, 32);
+
+                (select as any).scrollActiveOptionIntoView();
+
+                expect(document.activeElement).toBe(searchInput);
+            });
+        });
+
         it('should clear search by esc', () => {
             trigger.click();
             fixture.detectChanges();

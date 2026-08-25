@@ -917,11 +917,8 @@ describe('KbqAutocomplete', () => {
         // back to the input. jsdom reports zero geometry, so the option/panel sizes are stubbed to drive
         // the calculation. Each case would fail against the old `focus()`-only implementation.
         describe('scrolling the active option into view', () => {
-            const stub = (
-                element: HTMLElement,
-                property: 'offsetTop' | 'offsetHeight' | 'clientHeight',
-                value: number
-            ) => Object.defineProperty(element, property, { configurable: true, value });
+            const stub = (element: HTMLElement, property: 'offsetTop' | 'offsetHeight', value: number) =>
+                Object.defineProperty(element, property, { configurable: true, value });
 
             let activeOptionElement: HTMLElement;
             let panelContent: HTMLElement;
@@ -934,7 +931,7 @@ describe('KbqAutocomplete', () => {
                 panelContent = panel.panel().nativeElement;
 
                 stub(activeOptionElement, 'offsetHeight', 32);
-                stub(panelContent, 'clientHeight', 256);
+                stub(panelContent, 'offsetHeight', 256);
             });
 
             it('scrolls down so an option below the viewport aligns with the viewport bottom', () => {

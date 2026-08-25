@@ -95,6 +95,7 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
+    getOptionScrollPosition,
     getSelectAllState,
     isInput,
     isSelectAll,
@@ -2225,9 +2226,57 @@ export class KbqSelect
         }
     }
 
-    /** Scrolls the active option into view. */
+    /**
+     * Scrolls the active option into the panel's viewport.
+     *
+     * Without a search field the option itself takes DOM focus (roving focus), and the browser scrolls it
+     * into view natively in every browser. With a search field focus stays in the input (ActiveDescendant),
+     * so the native scroll-into-view of `HTMLElement.focus()` is unreliable — Safari does not scroll an
+     * option that immediately loses focus back to the input — and the panel is scrolled manually via
+     * `getOptionScrollPosition`, branching on `withVirtualScroll` for the right scroller.
+     */
     private scrollActiveOptionIntoView(): void {
-        this.keyManager.activeItem?.focus();
+        const activeOption = this.keyManager.activeItem;
+
+        if (!this.search() || !activeOption) {
+            activeOption?.focus();
+
+            return;
+        }
+
+        const optionRect = activeOption.getHostElement().getBoundingClientRect();
+        const viewport = this.virtualScrollViewport();
+
+        if (this.withVirtualScroll && viewport) {
+            // The virtual viewport transforms its content and `navigableOptions` only holds the rendered
+            // window, so the option's offset is measured from its live rect rather than an index.
+            const currentOffset = viewport.measureScrollOffset('top');
+            const optionOffset =
+                optionRect.top - viewport.elementRef.nativeElement.getBoundingClientRect().top + currentOffset;
+
+            viewport.scrollToOffset(
+                getOptionScrollPosition(optionOffset, optionRect.height, currentOffset, viewport.getViewportSize())
+            );
+
+            return;
+        }
+
+        // The panel view children only resolve once the overlay is attached.
+        if (!this.panel()) {
+            return;
+        }
+
+        const container = this.optionsContainer().nativeElement;
+        // Measured from the live rect rather than `offsetTop` so a search field sitting above the scroller
+        // does not throw the offset off.
+        const optionOffset = optionRect.top - container.getBoundingClientRect().top + container.scrollTop;
+
+        container.scrollTop = getOptionScrollPosition(
+            optionOffset,
+            optionRect.height,
+            container.scrollTop,
+            container.offsetHeight
+        );
     }
 
     /** Comparison function to specify which option is displayed. Defaults to object equality. */

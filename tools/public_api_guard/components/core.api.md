@@ -255,7 +255,7 @@ export const CONTEXT_MENU = 93;
 export const CONTROL = 17;
 
 // @public
-export function countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<KbqOption>, optionGroups: QueryList<KbqOptgroup>): number;
+export function countGroupLabelsBeforeOption(optionIndex: number, options: readonly KbqOption[], optionGroups: readonly KbqOptgroup[]): number;
 
 // @public
 export function createFakeEvent(type: string, canBubble?: boolean, cancelable?: boolean): Event;
@@ -1023,7 +1023,7 @@ export function getKbqSelectNonFunctionValueError(): Error;
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
 // @public
-export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
+export function getOptionScrollPosition(optionOffset: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
 // @public
 export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): KbqTriangle;

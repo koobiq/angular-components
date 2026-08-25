@@ -13,7 +13,6 @@ import {
     input,
     OnDestroy,
     Output,
-    QueryList,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -415,17 +414,14 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
  */
 export function countGroupLabelsBeforeOption(
     optionIndex: number,
-    options: QueryList<KbqOption>,
-    optionGroups: QueryList<KbqOptgroup>
+    options: readonly KbqOption[],
+    optionGroups: readonly KbqOptgroup[]
 ): number {
     if (optionGroups.length) {
-        const optionsArray = options.toArray();
-        const groups = optionGroups.toArray();
-
         let groupCounter = 0;
 
         for (let i = 0; i < optionIndex + 1; i++) {
-            if (optionsArray[i].group && optionsArray[i].group === groups[groupCounter]) {
+            if (options[i].group && options[i].group === optionGroups[groupCounter]) {
                 groupCounter++;
             }
         }
@@ -438,20 +434,18 @@ export function countGroupLabelsBeforeOption(
 
 /**
  * Determines the position to which to scroll a panel in order for an option to be into view.
- * @param optionIndex Index of the option to be scrolled into the view.
+ * @param optionOffset Offset of the option from the top of the panel.
  * @param optionHeight Height of the options.
  * @param currentScrollPosition Current scroll position of the panel.
  * @param panelHeight Height of the panel.
  * @docs-private
  */
 export function getOptionScrollPosition(
-    optionIndex: number,
+    optionOffset: number,
     optionHeight: number,
     currentScrollPosition: number,
     panelHeight: number
 ): number {
-    const optionOffset = optionIndex * optionHeight;
-
     if (optionOffset < currentScrollPosition) {
         return optionOffset;
     }

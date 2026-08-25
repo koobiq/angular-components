@@ -28,7 +28,7 @@ import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 
-// @public
+// @public @deprecated
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 // @public
@@ -187,7 +187,6 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     registerOnChange(fn: (value: any) => {}): void;
     // (undocumented)
     registerOnTouched(fn: () => {}): void;
-    // (undocumented)
     scrollActiveOptionIntoView(): void;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;

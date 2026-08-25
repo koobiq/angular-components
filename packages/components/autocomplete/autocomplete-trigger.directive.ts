@@ -45,7 +45,9 @@ import {
     KeyboardNavigationHandler,
     TAB,
     UP_ARROW,
+    countGroupLabelsBeforeOption,
     defaultOffsetY,
+    getOptionScrollPosition,
     kbqGetPanelWidthOrigin,
     kbqResolvePanelWidth,
     kbqSiblingPopupProvider
@@ -57,40 +59,13 @@ import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import { KbqAutocomplete } from './autocomplete.component';
 
 /**
- * The following style constants are necessary to save here in order
- * to properly calculate the scrollTop of the panel. Because we are not
- * actually focusing the active item, scroll must be handled manually.
- */
-
-/** The total height of the autocomplete panel. */
-export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
-
-/**
- * Returns the `scrollTop` that brings the active option fully into the panel's viewport. Autocomplete
- * keeps DOM focus on the trigger input, so it cannot rely on the native scroll-into-view side effect of
- * `HTMLElement.focus()` — Safari does not scroll a programmatically focused option that immediately
- * loses focus back to the input — and computes the scroll position explicitly instead.
+ * The total height of the autocomplete panel.
  *
- * Unlike core's `getOptionScrollPosition`, this takes the option's real `offsetTop` rather than deriving
- * it from `index * optionHeight`, so it stays correct when the panel mixes in dividers, group labels, or
- * options of uneven height.
+ * @deprecated Unused. The panel height is now measured at runtime via `offsetHeight` when scrolling the
+ * active option into view, so this constant no longer drives anything. Kept temporarily to avoid a
+ * breaking change and will be removed in a future release.
  */
-function getOptionScrollPosition(
-    optionOffset: number,
-    optionHeight: number,
-    currentScrollPosition: number,
-    panelHeight: number
-): number {
-    if (optionOffset < currentScrollPosition) {
-        return optionOffset;
-    }
-
-    if (optionOffset + optionHeight > currentScrollPosition + panelHeight) {
-        return Math.max(0, optionOffset - panelHeight + optionHeight);
-    }
-
-    return currentScrollPosition;
-}
+export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 /**
  * Injection token that determines the scroll handling while the autocomplete panel is open. The root default
@@ -490,24 +465,43 @@ export class KbqAutocompleteTrigger
         }
     }
 
+    /**
+     * Scrolls the active option into the panel's viewport, mirroring `MatAutocompleteTrigger._scrollToOption`.
+     * Autocomplete keeps DOM focus on the trigger input, so it cannot lean on the native scroll-into-view
+     * side effect of `HTMLElement.focus()` — Safari does not scroll a programmatically focused option that
+     * immediately loses focus back to the input — and sets the panel's `scrollTop` explicitly instead.
+     */
     scrollActiveOptionIntoView(): void {
         const autocomplete = this.autocomplete();
-        const activeOption = autocomplete.keyManager.activeItem;
+        const index = autocomplete.keyManager.activeItemIndex || 0;
+        const labelCount = countGroupLabelsBeforeOption(
+            index,
+            autocomplete.options.toArray(),
+            autocomplete.optionGroups()
+        );
 
-        if (!activeOption) {
+        if (index === 0 && labelCount === 1) {
+            // A lone group label sits above the first option: scroll to the very top so the label stays
+            // visible instead of stopping at the option.
+            autocomplete.setScrollTop(0);
+
             return;
         }
 
-        const optionElement = activeOption.getHostElement();
+        const option = autocomplete.options.toArray()[index];
 
-        autocomplete.setScrollTop(
-            getOptionScrollPosition(
-                optionElement.offsetTop,
-                optionElement.offsetHeight,
-                autocomplete.getScrollTop(),
-                autocomplete.panel().nativeElement.clientHeight
-            )
-        );
+        if (option) {
+            const element = option.getHostElement();
+
+            autocomplete.setScrollTop(
+                getOptionScrollPosition(
+                    element.offsetTop,
+                    element.offsetHeight,
+                    autocomplete.getScrollTop(),
+                    autocomplete.panel().nativeElement.offsetHeight
+                )
+            );
+        }
     }
 
     /** Stream of clicks outside of the autocomplete panel. */
