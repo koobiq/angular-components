@@ -1,11 +1,11 @@
 import { Path } from '@angular-devkit/core';
 import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as path from 'path';
-import ts from 'typescript';
 
 import { migrateTemplateWithTransform } from '../../utils/angular-parsing';
 import {
     buildIconTokenMap,
+    buildIconTokenPatterns,
     createIconTemplateTransform,
     IconMigrationData,
     migrateIconsInTsFiles,
@@ -47,6 +47,9 @@ export default function deprecatedIcons(options: Schema): Rule {
         // `class="pt-icons"` -> `class=""`), a stylesheet selector renames the scope class itself
         // (e.g. `.pt-icons` -> `.kbq`) rather than removing it.
         const styleTokenMap = new Map(tokenMap).set(migrationData.scope.from, migrationData.scope.to);
+        // Precompiled once and reused across every .ts/style file below, instead of rebuilding
+        // every regex per file.
+        const stylePatterns = buildIconTokenPatterns(styleTokenMap, migrationData.scope.from);
 
         const onFound = (filePath: string, found: TokenReplacement[]) => {
             const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
@@ -91,18 +94,14 @@ export default function deprecatedIcons(options: Schema): Rule {
         );
 
         // Update inline html & bare string literals in components
-        const sourceFiles = tsPaths.map((filePath) =>
-            ts.createSourceFile(filePath, tree.readText(filePath), ts.ScriptTarget.Latest, true)
-        );
-
         await migrateIconsInTsFiles(
             tree,
-            sourceFiles,
+            tsPaths,
             context,
             migrationData,
             tokenMap,
             { fix, onFound, warn },
-            styleTokenMap
+            stylePatterns
         );
 
         // Update styles
@@ -113,12 +112,7 @@ export default function deprecatedIcons(options: Schema): Rule {
                 continue;
             }
 
-            const { content, changed, found } = replaceKnownIconTokens(
-                initialContent,
-                styleTokenMap,
-                fix,
-                migrationData.scope.from
-            );
+            const { content, changed, found } = replaceKnownIconTokens(initialContent, stylePatterns, fix);
 
             if (found.length && !fix) {
                 onFound(filePath, found);

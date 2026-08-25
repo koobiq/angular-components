@@ -445,9 +445,8 @@ function getComponentMetadataObjects(sourceFile: ts.SourceFile): ts.ObjectLitera
  */
 function collectHostAndStylesEdits(
     sourceFile: ts.SourceFile,
-    data: IconMigrationData,
     tokenMap: Map<string, string | null>,
-    styleTokenMap: Map<string, string | null>
+    stylePatterns: IconTokenPattern[]
 ): { edits: PendingEdit[]; found: TokenReplacement[]; claimedRanges: Array<{ start: number; end: number }> } {
     const edits: PendingEdit[] = [];
     const found: TokenReplacement[] = [];
@@ -549,7 +548,7 @@ function collectHostAndStylesEdits(
                         content,
                         changed,
                         found: styleFound
-                    } = replaceKnownIconTokens(sourceFile.text.slice(start, end), styleTokenMap, true, data.scope.from);
+                    } = replaceKnownIconTokens(sourceFile.text.slice(start, end), stylePatterns, true);
 
                     if (changed) {
                         edits.push({ start, end, replacement: content });
@@ -575,17 +574,19 @@ function collectHostAndStylesEdits(
  * the file's original offsets regardless of call order, so this only needs to avoid *overlapping*
  * edits, not sequence them.
  *
- * `sourceFile.fileName` must be a path `tree.readText`/`tree.beginUpdate` can resolve directly
- * (i.e. built from the file's own tree path, not a real filesystem path) — these migrations run
- * against the schematic `Tree`, not the on-disk project.
+ * `filePaths` entries must be paths `tree.readText`/`tree.beginUpdate` can resolve directly (i.e.
+ * the file's own tree path, not a real filesystem path) — these migrations run against the
+ * schematic `Tree`, not the on-disk project. Each file's `ts.SourceFile` is created here, one at a
+ * time, rather than by the caller up front, so the whole tree's ASTs are never held in memory at
+ * once.
  *
- * `styleTokenMap` (defaults to `tokenMap`) is used for the CSS text inside an inline `styles`
- * array — pass a separate map when a bare scope word should be *renamed* there even though it's
- * *dropped* from HTML class lists (see `deprecated-icons/index.ts`).
+ * `stylePatterns` (built via `buildIconTokenPatterns`) is used for the CSS text inside an inline
+ * `styles` array — pass patterns built from a separate map when a bare scope word should be
+ * *renamed* there even though it's *dropped* from HTML class lists (see `deprecated-icons/index.ts`).
  */
 export async function migrateIconsInTsFiles(
     tree: Tree,
-    sourceFiles: ts.SourceFile[],
+    filePaths: string[],
     context: SchematicContext,
     data: IconMigrationData,
     tokenMap: Map<string, string | null>,
@@ -594,11 +595,11 @@ export async function migrateIconsInTsFiles(
         onFound: (fileName: string, found: TokenReplacement[]) => void;
         warn: (message: string) => void;
     },
-    styleTokenMap: Map<string, string | null> = tokenMap
+    stylePatterns: IconTokenPattern[]
 ): Promise<void> {
-    for (const sourceFile of sourceFiles) {
-        const relativePath = sourceFile.fileName;
+    for (const relativePath of filePaths) {
         const content = tree.readText(relativePath);
+        const sourceFile = ts.createSourceFile(relativePath, content, ts.ScriptTarget.Latest, true);
         const templateRanges = collectInlineTemplateRanges(sourceFile);
 
         const edits: PendingEdit[] = [];
@@ -623,7 +624,7 @@ export async function migrateIconsInTsFiles(
             }
         }
 
-        const hostAndStyles = collectHostAndStylesEdits(sourceFile, data, tokenMap, styleTokenMap);
+        const hostAndStyles = collectHostAndStylesEdits(sourceFile, tokenMap, stylePatterns);
 
         if (opts.fix) {
             edits.push(...hostAndStyles.edits);
@@ -676,32 +677,57 @@ export async function migrateIconsInTsFiles(
     }
 }
 
+export interface IconTokenPattern {
+    token: string;
+    replacement: string | null;
+    pattern: RegExp;
+}
+
 /**
- * Word/selector-boundary-safe regex replace over raw style-file text, built only from
- * `tokenMap`'s keys (never a blanket scope-prefix regex). Each token is boundary-wrapped so
- * neither side is a word/hyphen character — e.g. `.pt-icons {}` and `@extend .pt-icons;` match
- * (preceded by `.`, a non-word/non-hyphen char), but `.my-widget-pt-icons-preview` and
- * `mc-word-wrap_16-suffix` do not. When `fix` is false, only collects `found` without mutating.
+ * Precompiles the word/selector-boundary-safe regex for every `tokenMap` entry once, so a run over
+ * many style/markdown files (and inline `styles` arrays) can reuse the same `IconTokenPattern[]`
+ * instead of rebuilding every regex — there can be 1000+ tokens — on every single file.
  */
-export function replaceKnownIconTokens(
-    content: string,
+export function buildIconTokenPatterns(
     tokenMap: Map<string, string | null>,
-    fix: boolean,
     /** The bare, unprefixed scope word (`data.scope.from`), if present in `tokenMap`. Unlike every
      *  other token — which is a specific, hyphenated `scope-suffix` string — this one is short and
      *  generic enough (e.g. `mc`) to collide with unrelated identifiers (`$mc: red;`,
      *  `@import 'mc'`, `font-family: mc;`). Matched only when immediately preceded by `.`, so it
      *  still catches a real class selector (`.mc {}`) without touching those. */
     bareScopeWord?: string
+): IconTokenPattern[] {
+    return Array.from(tokenMap, ([token, replacement]) => ({
+        token,
+        replacement,
+        pattern:
+            token === bareScopeWord
+                ? new RegExp(`(?<=\\.)${escapeRegExp(token)}(?![\\w-])`, 'g')
+                : new RegExp(`(?<![\\w-])${escapeRegExp(token)}(?![\\w-])`, 'g')
+    }));
+}
+
+/**
+ * Word/selector-boundary-safe regex replace over raw style-file text, using patterns precompiled
+ * by `buildIconTokenPatterns` — e.g. `.pt-icons {}` and `@extend .pt-icons;` match (preceded by
+ * `.`, a non-word/non-hyphen char), but `.my-widget-pt-icons-preview` and `mc-word-wrap_16-suffix`
+ * do not. When `fix` is false, only collects `found` without mutating.
+ *
+ * Each pattern's `lastIndex` is reset before use: a global regex's `String.replace` resets it
+ * internally, but `RegExp.test` does not — reusing the same pattern object (the whole point of
+ * precompiling once) across multiple, unrelated `content` strings would otherwise carry a match
+ * position from one file into the next and silently miss real matches in the next file.
+ */
+export function replaceKnownIconTokens(
+    content: string,
+    patterns: IconTokenPattern[],
+    fix: boolean
 ): { content: string; changed: boolean; found: TokenReplacement[] } {
     const found: TokenReplacement[] = [];
     let result = content;
 
-    for (const [token, replacement] of tokenMap) {
-        const pattern =
-            token === bareScopeWord
-                ? new RegExp(`(?<=\\.)${escapeRegExp(token)}(?![\\w-])`, 'g')
-                : new RegExp(`(?<![\\w-])${escapeRegExp(token)}(?![\\w-])`, 'g');
+    for (const { token, replacement, pattern } of patterns) {
+        pattern.lastIndex = 0;
 
         if (fix) {
             const next = result.replace(pattern, replacement ?? '');

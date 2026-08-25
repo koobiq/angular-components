@@ -2,11 +2,11 @@ import { Path } from '@angular-devkit/core';
 import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import fs from 'fs';
 import * as path from 'path';
-import ts from 'typescript';
 
 import { migrateTemplateWithTransform } from '../../utils/angular-parsing';
 import {
     buildIconTokenMap,
+    buildIconTokenPatterns,
     createIconTemplateTransform,
     IconMigrationData,
     migrateIconsInTsFiles,
@@ -137,6 +137,12 @@ export default function newIconsPack(options: Schema): Rule {
         const styleAndMarkdownTokenMap = updatePrefix
             ? tokenMap
             : new Map([...tokenMap].filter(([token]) => token !== resolvedScope.from));
+        // Precompiled once and reused across every relevant file below, instead of rebuilding
+        // ~1000+ regexes per file. Inline `styles` arrays inside `.ts` files use the unfiltered
+        // `tokenMap` (matching `migrateIconsInTsFiles`'s pre-existing behavior); real `.scss`/`.md`
+        // files use `styleAndMarkdownTokenMap`, which additionally respects `updatePrefix`.
+        const tsInlineStylePatterns = buildIconTokenPatterns(tokenMap, resolvedScope.from);
+        const stylePatterns = buildIconTokenPatterns(styleAndMarkdownTokenMap, resolvedScope.from);
 
         const onFound = (filePath: string, found: TokenReplacement[]) => {
             const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
@@ -180,18 +186,14 @@ export default function newIconsPack(options: Schema): Rule {
             createIconTemplateTransform(migrationData, tokenMap, { fix, onFound, warn })
         );
 
-        const sourceFiles = tsPaths.map((filePath) =>
-            ts.createSourceFile(filePath, tree.readText(filePath), ts.ScriptTarget.Latest, true)
-        );
-
         await migrateIconsInTsFiles(
             tree,
-            sourceFiles,
+            tsPaths,
             context,
             migrationData,
             tokenMap,
             { fix, onFound, warn },
-            tokenMap
+            tsInlineStylePatterns
         );
 
         // Markdown docs have no AST here, so — like styles — they're matched with the same
@@ -203,12 +205,7 @@ export default function newIconsPack(options: Schema): Rule {
                 continue;
             }
 
-            const { content, changed, found } = replaceKnownIconTokens(
-                initialContent,
-                styleAndMarkdownTokenMap,
-                fix,
-                resolvedScope.from
-            );
+            const { content, changed, found } = replaceKnownIconTokens(initialContent, stylePatterns, fix);
 
             if (found.length && !fix) {
                 onFound(filePath, found);
@@ -238,12 +235,7 @@ export default function newIconsPack(options: Schema): Rule {
                 return;
             }
 
-            const { content, changed, found } = replaceKnownIconTokens(
-                initialContent,
-                styleAndMarkdownTokenMap,
-                fix,
-                resolvedScope.from
-            );
+            const { content, changed, found } = replaceKnownIconTokens(initialContent, stylePatterns, fix);
 
             if (found.length && !fix) {
                 onFound(filePath, found);
