@@ -16,7 +16,7 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    input,
+    input, NgZone,
     numberAttribute,
     output,
     signal,
@@ -44,7 +44,7 @@ import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { merge, skip } from 'rxjs';
+import { merge, skip, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
@@ -184,6 +184,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     private readonly window = inject(KBQ_WINDOW);
     private readonly resizeObserver = inject(SharedResizeObserver);
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly ngZone = inject(NgZone);
 
     /**
      * Whether to show save/cancel action buttons in edit mode.
@@ -425,18 +426,36 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
         }
 
         let shown = false;
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
+        let detachSubscription: Subscription | null = null;
+
+        const cleanup = (): void => {
+            this.window.removeEventListener('scrollend', showTooltip);
+            if (timeoutId !== null) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
+            }
+            detachSubscription?.unsubscribe();
+            detachSubscription = null;
+        };
 
         const showTooltip = (): void => {
             if (shown) return;
 
             shown = true;
-            this.window.removeEventListener('scrollend', showTooltip);
+            cleanup();
             this.tooltipTrigger()?.updatePosition();
             this.tooltipTrigger()?.show();
         };
 
-        this.window.addEventListener('scrollend', showTooltip, { once: true });
-        setTimeout(showTooltip, VALIDATION_TOOLTIP_SCROLL_TIMEOUT);
+        detachSubscription = this.overlayDir()
+            .overlayRef.detachments()
+            .subscribe(() => cleanup());
+
+        this.ngZone.runOutsideAngular(() => {
+            this.window.addEventListener('scrollend', showTooltip, { once: true });
+        });
+        timeoutId = setTimeout(showTooltip, VALIDATION_TOOLTIP_SCROLL_TIMEOUT);
 
         this.overlayOrigin.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
     }

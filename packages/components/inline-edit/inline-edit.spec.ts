@@ -850,8 +850,8 @@ describe('KbqInlineEdit', () => {
 
             clickSave();
 
-            // `show()` reveals the tooltip after `kbqEnterDelay` (400ms by default).
-            tick(400);
+            // `show()` reveals the tooltip after `kbqEnterDelay` (400ms by default) plus a small buffer for the deferred show.
+            tick(tooltipTrigger.enterDelay + 10);
             expect(tooltipTrigger.isOpen).toBe(true);
 
             const hideSpy = jest.spyOn(tooltipTrigger, 'hide');
