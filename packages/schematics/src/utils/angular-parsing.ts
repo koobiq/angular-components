@@ -11,6 +11,43 @@ import {
     TransformTemplateAttributesResult
 } from './typescript';
 
+export type TemplateTransformFn = (template: string, fileName: string) => Promise<TransformTemplateAttributesResult>;
+
+/**
+ * Update separate html file
+ * @param tree
+ * @param filePaths
+ * @param context
+ * @param transform
+ */
+export async function migrateTemplateWithTransform(
+    tree: Tree,
+    filePaths: string[],
+    context: SchematicContext,
+    transform: TemplateTransformFn
+) {
+    for (const templatePath of filePaths) {
+        const parsedFilePath = `.${templatePath}`;
+
+        const template = tree.read(parsedFilePath)?.toString();
+
+        if (!template) {
+            context.logger.error(`Cannot read "${parsedFilePath}" because it does not exist.`);
+            continue;
+        }
+
+        const { fileContent, changed, errors } = await transform(template, parsedFilePath);
+
+        if (changed) {
+            tree.overwrite(templatePath, fileContent);
+        }
+
+        if (errors.length > 0) {
+            context.logger.error(errors.map(({ error }) => error.toString()).join('\n'));
+        }
+    }
+}
+
 /**
  * Update separate html file
  * @param tree
@@ -24,33 +61,9 @@ export async function migrateTemplate(
     context: SchematicContext,
     migrationData: MigrationData
 ) {
-    for (const templatePath of filePaths) {
-        const parsedFilePath = `.${templatePath}`;
-        let res: Promise<TransformTemplateAttributesResult> = Promise.resolve({
-            fileContent: '',
-            changed: false,
-            errors: []
-        });
-
-        const template = tree.read(parsedFilePath)?.toString();
-
-        if (!template) {
-            context.logger.error(`Cannot read "${parsedFilePath}" because it does not exist.`);
-            continue;
-        }
-
-        res = transformTemplateAttributes(template, parsedFilePath, migrationData);
-
-        const { fileContent, changed, errors } = await res;
-
-        if (changed) {
-            tree.overwrite(templatePath, fileContent);
-        }
-
-        if (errors.length > 0) {
-            context.logger.error(errors.map(({ error }) => error.toString()).join('\n'));
-        }
-    }
+    return migrateTemplateWithTransform(tree, filePaths, context, (template, fileName) =>
+        transformTemplateAttributes(template, fileName, migrationData)
+    );
 }
 
 /**
@@ -59,14 +72,14 @@ export async function migrateTemplate(
  * @param sourceFiles
  * @param basePath
  * @param context
- * @param migrationData
+ * @param transform
  */
-export async function migrateTs(
+export async function migrateTsWithTransform(
     tree: Tree,
     sourceFiles: ts.SourceFile[],
     basePath: string,
     context: SchematicContext,
-    migrationData: MigrationData
+    transform: TemplateTransformFn
 ) {
     // run and track changed components
     const analysis = new Map<string, AnalyzedFile>();
@@ -89,11 +102,7 @@ export async function migrateTs(
             const template = content.slice(start, end);
             const length = (end ?? content.length) - start;
 
-            const { fileContent, changed, errors } = await transformTemplateAttributes(
-                template,
-                relativePath,
-                migrationData
-            );
+            const { fileContent, changed, errors } = await transform(template, relativePath);
 
             if (changed) {
                 update.remove(start, length);
@@ -107,6 +116,26 @@ export async function migrateTs(
 
         tree.commitUpdate(update);
     }
+}
+
+/**
+ * Update typescript file if classes with @Component decorator and `template` property exists
+ * @param tree
+ * @param sourceFiles
+ * @param basePath
+ * @param context
+ * @param migrationData
+ */
+export async function migrateTs(
+    tree: Tree,
+    sourceFiles: ts.SourceFile[],
+    basePath: string,
+    context: SchematicContext,
+    migrationData: MigrationData
+) {
+    return migrateTsWithTransform(tree, sourceFiles, basePath, context, (template, fileName) =>
+        transformTemplateAttributes(template, fileName, migrationData)
+    );
 }
 
 /**
@@ -162,7 +191,7 @@ export function analyzeDecorators(
 /**
  * Migrates attribute values in an Angular template based on predefined cases.
  */
-async function transformTemplateAttributes(
+export async function transformTemplateAttributes(
     template: string,
     fileName: string,
     migrationData: MigrationData

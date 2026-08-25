@@ -1,4 +1,4 @@
-const { access, copyFile, mkdir } = require('fs/promises');
+const { access, copyFile, mkdir, readdir } = require('fs/promises');
 const { resolve, join } = require('path');
 const { getMigrations } = require('../src/utils/migrations');
 const { statSync } = require('fs');
@@ -87,11 +87,14 @@ const init = async () => {
         join(schematicsPath, 'migrations', 'new-icons-pack', 'replacement.json')
     );
 
-    await copyFileWrapper(resolvePath('../dist/utils/package-config.js'), join(utilsPath, 'package-config.js'));
-    await copyFileWrapper(resolvePath('../dist/utils/messages.js'), join(utilsPath, 'messages.js'));
-    await copyFileWrapper(resolvePath('../dist/utils/typescript.js'), join(utilsPath, 'typescript.js'));
-    await copyFileWrapper(resolvePath('../dist/utils/ast.js'), join(utilsPath, 'ast.js'));
-    await copyFileWrapper(resolvePath('../dist/utils/angular-parsing.js'), join(utilsPath, 'angular-parsing.js'));
+    // Copy every compiled util chunk rather than a hand-maintained list, so a new util module
+    // (given a stable rollup input name under `utils/`) is shipped automatically.
+    const distUtilsPath = resolvePath('../dist/utils');
+    const utilFiles = statSync(distUtilsPath, { throwIfNoEntry: false }) ? await readdir(distUtilsPath) : [];
+
+    for (const file of utilFiles) {
+        await copyFileWrapper(join(distUtilsPath, file), join(utilsPath, file));
+    }
 
     if (failures.length > 0) {
         throw new Error([`${failures.length} file(s) missing from the package:`, ...failures].join('\n  '));

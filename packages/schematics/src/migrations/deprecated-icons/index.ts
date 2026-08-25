@@ -2,12 +2,30 @@ import { Path } from '@angular-devkit/core';
 import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as path from 'path';
 
+import { migrateTemplateWithTransform } from '../../utils/angular-parsing';
+import {
+    buildIconTokenMap,
+    buildIconTokenPatterns,
+    createIconTemplateTransform,
+    IconMigrationData,
+    migrateIconsInTsFiles,
+    replaceKnownIconTokens,
+    TokenReplacement
+} from '../../utils/icon-migration';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { iconClassReplacements, iconsMapping } from './data';
+import { iconsMapping, scope } from './data';
 import { Schema } from './schema';
 
 const iconsFontImportRule = "@use '@koobiq/icons/fonts/kbq-icons';";
+
+const migrationData: IconMigrationData = {
+    valueAttrs: ['kbq-icon', 'kbq-icon-item', 'kbq-icon-button'],
+    scope,
+    scopeClassInList: 'remove',
+    icons: iconsMapping.map(({ replace, replaceWith }) => ({ from: replace, to: replaceWith })),
+    rescopeUnknownValues: true
+};
 
 export default function deprecatedIcons(options: Schema): Rule {
     let targetDir: Tree | DirEntry;
@@ -24,54 +42,86 @@ export default function deprecatedIcons(options: Schema): Rule {
         }
 
         const { logger } = context;
-        const handleDeprecatedIcons = (newContent: string | undefined, filePath: Path) => {
-            if (fix) {
-                iconsMapping.forEach(({ replace, replaceWith }) => {
-                    newContent = newContent!.replace(new RegExp(`kbq-${replace}`, 'g'), `kbq-${replaceWith}`);
-                });
-            } else {
-                const foundIcons = iconsMapping.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
+        const tokenMap = buildIconTokenMap(migrationData);
+        // Unlike a `class` list (where the bare scope token is simply dropped, e.g.
+        // `class="pt-icons"` -> `class=""`), a stylesheet selector renames the scope class itself
+        // (e.g. `.pt-icons` -> `.kbq`) rather than removing it.
+        const styleTokenMap = new Map(tokenMap).set(migrationData.scope.from, migrationData.scope.to);
+        // Precompiled once and reused across every .ts/style file below, instead of rebuilding
+        // every regex per file.
+        const stylePatterns = buildIconTokenPatterns(styleTokenMap, migrationData.scope.from);
 
-                if (foundIcons.length) {
-                    const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
+        const onFound = (filePath: string, found: TokenReplacement[]) => {
+            const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
 
-                    logMessage(logger, [
-                        `Please pay attention! Found deprecated icons in file: `,
-                        parsedFilePath,
-                        foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')
-                    ]);
-                }
-            }
-
-            return newContent;
+            logMessage(logger, [
+                `Please pay attention! Found deprecated icons in file: `,
+                parsedFilePath,
+                found.map(({ from, to }) => `\t${from} -> \t${to}`).join('\n')
+            ]);
         };
+        const warn = (message: string) => logger.warn(message);
 
-        // Update styles, templates & components
-        targetDir.visit((filePath: Path, entry) => {
-            let initialContent: string | undefined;
+        const templatePaths: string[] = [];
+        const tsPaths: string[] = [];
+        const stylePaths: string[] = [];
 
-            // if project property not provided, skip files in node_modules & dist
-            if (filePath.includes('node_modules') || filePath.includes('dist')) {
+        // if project property not provided, skip files in node_modules & dist
+        targetDir.visit((filePath: Path) => {
+            if (filePath.includes('node_modules') || filePath.includes('/dist/')) {
                 return;
             }
 
-            if (filePath.endsWith('.html') || filePath.endsWith('.ts') || filePath.endsWith(stylesExt)) {
-                initialContent = entry?.content.toString();
-                let newContent = initialContent;
-
-                if (newContent) {
-                    iconClassReplacements.forEach(({ replace, replaceWith }) => {
-                        newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
-                    });
-
-                    newContent = handleDeprecatedIcons(newContent, filePath);
-
-                    if (initialContent !== newContent) {
-                        tree.overwrite(filePath, newContent || '');
-                    }
-                }
+            if (filePath.endsWith('.html')) {
+                templatePaths.push(filePath);
+            } else if (
+                filePath.endsWith('.ts') &&
+                !filePath.endsWith('.d.ts') &&
+                !filePath.endsWith('.ngtypecheck.ts')
+            ) {
+                tsPaths.push(filePath);
+            } else if (filePath.endsWith(stylesExt)) {
+                stylePaths.push(filePath);
             }
         });
+
+        // Update external html
+        await migrateTemplateWithTransform(
+            tree,
+            templatePaths,
+            context,
+            createIconTemplateTransform(migrationData, tokenMap, { fix, onFound, warn })
+        );
+
+        // Update inline html & bare string literals in components
+        await migrateIconsInTsFiles(
+            tree,
+            tsPaths,
+            context,
+            migrationData,
+            tokenMap,
+            { fix, onFound, warn },
+            stylePatterns
+        );
+
+        // Update styles
+        for (const filePath of stylePaths) {
+            const initialContent = tree.read(filePath)?.toString();
+
+            if (!initialContent) {
+                continue;
+            }
+
+            const { content, changed, found } = replaceKnownIconTokens(initialContent, stylePatterns, fix);
+
+            if (found.length && !fix) {
+                onFound(filePath, found);
+            }
+
+            if (changed) {
+                tree.overwrite(filePath, content);
+            }
+        }
 
         // check if icon styles from new scope should be included in styles file
         targetDir.visit((filePath: Path, entry) => {

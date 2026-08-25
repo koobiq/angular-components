@@ -4,6 +4,10 @@ export interface ReplaceData {
     comment?: string;
 }
 
+/**
+ * @deprecated Unused by this migration. Kept only so external code importing this array doesn't
+ * break. Use `scope` below instead.
+ */
 export const iconClassReplacements: ReplaceData[] = [
     { replace: 'kbq-icon="pt-icons-', replaceWith: 'kbq-icon="kbq-' },
     { replace: 'pt-icons-', replaceWith: 'kbq-' },
@@ -13,6 +17,9 @@ export const iconClassReplacements: ReplaceData[] = [
     { replace: "'pt-icons ", replaceWith: "'" },
     { replace: '\\.pt-icons', replaceWith: '.kbq' }
 ];
+
+/** Old scope prefix and its replacement, used to build the migration's icon token map. */
+export const scope = { from: 'pt-icons', to: 'kbq' };
 
 export const iconsMapping: ReplaceData[] = [
     {
