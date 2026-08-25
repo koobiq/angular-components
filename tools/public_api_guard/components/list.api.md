@@ -95,7 +95,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     readonly checkboxPosition: i0.InputSignal<"before" | "after">;
     get disabled(): boolean;
     set disabled(value: boolean);
-    protected get draggable(): boolean;
+    get draggable(): boolean;
+    set draggable(value: boolean);
     // (undocumented)
     dropdownTrigger?: KbqDropdownTrigger;
     // (undocumented)
@@ -114,6 +115,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     listSelection: KbqListSelection<T>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_draggable: unknown;
     // (undocumented)
     static ngAcceptInputType_selected: unknown;
     // (undocumented)
@@ -146,7 +149,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     get value(): T;
     set value(newValue: T);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListOption<any>, never>;
 }

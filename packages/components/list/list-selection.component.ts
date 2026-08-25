@@ -1042,7 +1042,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     private moveActiveOptionByKey(event: KeyboardEvent): void {
         const option = this.keyManager.activeItem;
 
-        if (!option || option.disabled) {
+        if (!option || !option.draggable) {
             return;
         }
 
@@ -1109,7 +1109,9 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
      */
     private announceMove(option: KbqListOption, container: KbqListSelection): void {
         const { value } = option;
-        const label = option.getLabel();
+        // Trimmed because the label goes into a sentence: an option whose content is spread over several
+        // lines carries the template's own indentation, which would be read out before the comma.
+        const label = option.getLabel().trim();
 
         // Tracked on the list the move is awaited on, so that a move into a connected list does not
         // cancel one still pending here. A move that is never applied leaves its subscription pending,
@@ -1349,10 +1351,25 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     private _disabled = false;
 
-    /** Whether this option can be dragged. Driven by the list — options have no `draggable` input. */
-    protected get draggable(): boolean {
-        return this.listSelection.draggable && !this.disabled;
+    /**
+     * Whether the option can be reordered by dragging or with `Alt` + arrow keys. Set it to `false` to
+     * pin a single option while the rest of the list stays draggable. Unrelated to `disabled`: the
+     * option keeps taking focus and selection.
+     *
+     * Stays an accessor input: the getter reports the resolved state, which the option can only narrow —
+     * the list gates its whole drop list, so an option cannot opt back in on its own.
+     */
+    @Input({ transform: booleanAttribute })
+    get draggable(): boolean {
+        return this._draggable && this.listSelection.draggable && !this.disabled;
     }
+
+    set draggable(value: boolean) {
+        this._draggable = value;
+        this.syncDraggableState();
+    }
+
+    private _draggable = true;
 
     /**
      * Whether the option renders a pseudo-checkbox.

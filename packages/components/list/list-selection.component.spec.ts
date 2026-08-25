@@ -1731,6 +1731,34 @@ describe('KbqListSelection drag and drop', () => {
             expect(getDrags(fixture).map((drag) => drag.disabled)).toEqual([false, true, false, false]);
         });
 
+        it('should not drag an option that opts out while the rest stay draggable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.nonDraggableItem.set(fixture.componentInstance.items()[1]);
+            fixture.detectChanges();
+
+            expect(getDrags(fixture).map((drag) => drag.disabled)).toEqual([false, true, false, false]);
+        });
+
+        it('should keep an option that opts out of dragging selectable', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+
+            fixture.componentInstance.nonDraggableItem.set(fixture.componentInstance.items()[1]);
+            fixture.detectChanges();
+
+            const option = getOptions(fixture)[1];
+
+            // The whole point of the input: pinning an option must not disable it.
+            expect(getDrags(fixture)[1].disabled).toBe(true);
+            expect(option.disabled).toBe(false);
+
+            list.setSelectedOptionsByClick(option, false, false);
+            fixture.detectChanges();
+
+            expect(list.selectionModel.selected).toEqual([option]);
+        });
+
         it('should delay a touch drag so that the list stays scrollable', () => {
             const fixture = setup(SelectionListWithDragAndDrop);
 
@@ -1963,6 +1991,28 @@ describe('KbqListSelection drag and drop', () => {
 
             expect(fixture.componentInstance.dropped).toBeNull();
             expect(getLabels(fixture)).toEqual(['Item 0', 'Item 1', 'Item 2', 'Item 3']);
+        });
+
+        it('should ignore ALT + arrow on an option that opts out', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+
+            fixture.componentInstance.nonDraggableItem.set(fixture.componentInstance.items()[1]);
+            fixture.detectChanges();
+
+            const list = fixture.componentInstance.list();
+
+            list.keyManager.setActiveItem(1);
+            altKeydown(list, DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dropped).toBeNull();
+            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 1', 'Item 2', 'Item 3']);
+            // Nothing is advertised either, so the shortcut is not announced as available.
+            expect(
+                (fixture.nativeElement as HTMLElement)
+                    .querySelectorAll('kbq-list-option')[1]
+                    .getAttribute('aria-keyshortcuts')
+            ).toBeNull();
         });
 
         it('should reorder without changing the selection', () => {
@@ -2574,7 +2624,13 @@ class SelectionListDisabledForA11y {}
             (dropped)="handleDropped($event)"
         >
             @for (item of items(); track item) {
-                <kbq-list-option [disabled]="item === disabledItem()" [value]="item">{{ item }}</kbq-list-option>
+                <kbq-list-option
+                    [disabled]="item === disabledItem()"
+                    [draggable]="item !== nonDraggableItem()"
+                    [value]="item"
+                >
+                    {{ item }}
+                </kbq-list-option>
             }
         </kbq-list-selection>
     `,
@@ -2587,6 +2643,7 @@ class SelectionListWithDragAndDrop {
     readonly draggable = signal(true);
     readonly disabled = signal(false);
     readonly disabledItem = signal<string | null>(null);
+    readonly nonDraggableItem = signal<string | null>(null);
     /** Lets a test assert what happens when the consumer ignores the event. */
     applyMove = true;
     dropped: KbqListSelectionDroppedEvent | null = null;

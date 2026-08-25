@@ -26,6 +26,10 @@
 
 Set the `draggable` property on `kbq-list-selection` to let the user reorder options.
 
+A single option can opt out with `draggable="false"` on `kbq-list-option`. It cannot be picked up by
+either the pointer or the keyboard, but — unlike a disabled option — it still takes focus and can be
+selected. The rest of the list keeps moving around it, so its own index can still shift.
+
 The list does not open a gap while an option is being dragged: the surrounding options stay put, the
 dragged one keeps its place as a faded row, and a line marks the position the option would land in.
 No line is shown while the pointer is over the place the option already occupies — dropping it there
