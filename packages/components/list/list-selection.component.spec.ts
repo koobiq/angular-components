@@ -1614,22 +1614,10 @@ describe('KbqListSelection drag and drop', () => {
     const getDrags = (fixture: ComponentFixture<unknown>) =>
         fixture.debugElement.queryAll(By.directive(KbqListOption)).map((option) => option.injector.get(CdkDrag));
 
-    /** CDK keeps a single live region on `<body>` — the list has none of its own. */
-    const liveRegionText = () => document.body.querySelector('.cdk-live-announcer-element')!.textContent!.trim();
-
     const getLabels = (fixture: ComponentFixture<unknown>) =>
         Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('kbq-list-option .kbq-list-text')).map(
             (element) => element.textContent!.trim()
         );
-
-    const altKeydown = (list: KbqListSelection, keyCode: number) => {
-        const event = createKeyboardEvent('keydown', keyCode);
-
-        Object.defineProperty(event, 'altKey', { get: () => true });
-        list.onKeyDown(event);
-
-        return event;
-    };
 
     const getOptions = (fixture: ComponentFixture<unknown>): KbqListOption[] =>
         fixture.debugElement.queryAll(By.directive(KbqListOption)).map((option) => option.componentInstance);
@@ -1942,181 +1930,36 @@ describe('KbqListSelection drag and drop', () => {
         });
     });
 
-    describe('keyboard reordering', () => {
-        it('should move the active option down on ALT + DOWN_ARROW', () => {
-            const fixture = setup(SelectionListWithDragAndDrop);
+    describe('after a move has been applied', () => {
+        /** Drags the first option past the last midpoint and drops it there. */
+        const dragToEnd = (fixture: ComponentFixture<SelectionListWithDragAndDrop>) => {
             const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[0];
 
-            list.keyManager.setActiveItem(0);
-            altKeydown(list, DOWN_ARROW);
-            fixture.detectChanges();
+            stubVerticalLayout(fixture);
+            list.onOptionDragMoved(option, { x: 50, y: 95 });
+            emitCdkDrop(fixture, option);
 
-            expect(getLabels(fixture)).toEqual(['Item 1', 'Item 0', 'Item 2', 'Item 3']);
-        });
-
-        it('should move the active option up on ALT + UP_ARROW', () => {
-            const fixture = setup(SelectionListWithDragAndDrop);
-            const list = fixture.componentInstance.list();
-
-            list.keyManager.setActiveItem(2);
-            altKeydown(list, UP_ARROW);
-            fixture.detectChanges();
-
-            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 2', 'Item 1', 'Item 3']);
-        });
-
-        it('should not move past the edges of the list', () => {
-            const fixture = setup(SelectionListWithDragAndDrop);
-            const list = fixture.componentInstance.list();
-
-            list.keyManager.setActiveItem(0);
-            altKeydown(list, UP_ARROW);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.dropped).toBeNull();
-            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 1', 'Item 2', 'Item 3']);
-        });
-
-        it('should ignore ALT + arrow while not draggable', () => {
-            const fixture = setup(SelectionListWithDragAndDrop);
-
-            fixture.componentInstance.draggable.set(false);
-            fixture.detectChanges();
-
-            const list = fixture.componentInstance.list();
-
-            list.keyManager.setActiveItem(0);
-            altKeydown(list, DOWN_ARROW);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.dropped).toBeNull();
-            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 1', 'Item 2', 'Item 3']);
-        });
-
-        it('should ignore ALT + arrow on an option that opts out', () => {
-            const fixture = setup(SelectionListWithDragAndDrop);
-
-            fixture.componentInstance.nonDraggableItem.set(fixture.componentInstance.items()[1]);
-            fixture.detectChanges();
-
-            const list = fixture.componentInstance.list();
-
-            list.keyManager.setActiveItem(1);
-            altKeydown(list, DOWN_ARROW);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.dropped).toBeNull();
-            expect(getLabels(fixture)).toEqual(['Item 0', 'Item 1', 'Item 2', 'Item 3']);
-            // Nothing is advertised either, so the shortcut is not announced as available.
-            expect(
-                (fixture.nativeElement as HTMLElement)
-                    .querySelectorAll('kbq-list-option')[1]
-                    .getAttribute('aria-keyshortcuts')
-            ).toBeNull();
-        });
+            return list;
+        };
 
         it('should reorder without changing the selection', () => {
             const fixture = setup(SelectionListWithDragAndDrop);
-            const list = fixture.componentInstance.list();
+            const list = dragToEnd(fixture);
 
-            list.keyManager.setActiveItem(0);
-            altKeydown(list, DOWN_ARROW);
-            fixture.detectChanges();
-
+            expect(getLabels(fixture)).toEqual(['Item 1', 'Item 2', 'Item 3', 'Item 0']);
             expect(list.selectionModel.selected).toEqual([]);
         });
 
-        it('should announce the new position once the move has been applied', fakeAsync(() => {
+        it('should keep the shift-range anchor in sync', fakeAsync(() => {
             const fixture = setup(SelectionListWithDragAndDrop);
-            const list = fixture.componentInstance.list();
 
-            list.keyManager.setActiveItem(0);
-            altKeydown(list, DOWN_ARROW);
-            fixture.detectChanges();
-            flush();
-
-            expect(liveRegionText()).toBe('Item 0, позиция 2 из 4');
-        }));
-
-        it('should not announce a move the consumer has not applied', fakeAsync(() => {
-            const fixture = setup(SelectionListWithDragAndDrop);
-            const list = fixture.componentInstance.list();
-
-            fixture.componentInstance.applyMove = false;
-            list.keyManager.setActiveItem(0);
-            altKeydown(list, DOWN_ARROW);
-            fixture.detectChanges();
-            flush();
-
-            expect(liveRegionText()).toBe('');
-        }));
-
-        it('should move the active option into the connected list on ALT + RIGHT_ARROW', () => {
-            const fixture = setup(ConnectedSelectionLists);
-            const [source, target] = fixture.debugElement
-                .queryAll(By.directive(KbqListSelection))
-                .map((list) => list.componentInstance as KbqListSelection);
-
-            source.keyManager.setActiveItem(0);
-            altKeydown(source, RIGHT_ARROW);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.dropped!.previousContainer).toBe(source);
-            expect(fixture.componentInstance.dropped!.container).toBe(target);
-            expect(fixture.componentInstance.leftItems()).toEqual(['left 1']);
-            expect(fixture.componentInstance.rightItems()).toEqual(['right 0', 'left 0']);
-        });
-
-        it('should move the active option into the connected list on ALT + LEFT_ARROW', () => {
-            const fixture = setup(ConnectedSelectionLists);
-            const [target, source] = fixture.debugElement
-                .queryAll(By.directive(KbqListSelection))
-                .map((list) => list.componentInstance as KbqListSelection);
-
-            source.keyManager.setActiveItem(0);
-            altKeydown(source, LEFT_ARROW);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.dropped!.previousContainer).toBe(source);
-            expect(fixture.componentInstance.dropped!.container).toBe(target);
-            expect(fixture.componentInstance.rightItems()).toEqual([]);
-            expect(fixture.componentInstance.leftItems()).toEqual(['left 0', 'left 1', 'right 0']);
-        });
-
-        it('should ignore ALT + RIGHT_ARROW without a connected list', () => {
-            const fixture = setup(SelectionListWithDragAndDrop);
-            const list = fixture.componentInstance.list();
-
-            list.keyManager.setActiveItem(0);
-            altKeydown(list, RIGHT_ARROW);
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.dropped).toBeNull();
-        });
-
-        it('should not reach a list connected by id', () => {
-            const fixture = setup(IdConnectedSelectionLists);
-            const source = fixture.debugElement.queryAll(By.directive(KbqListSelection))[0]
-                .componentInstance as KbqListSelection;
-
-            source.keyManager.setActiveItem(0);
-            altKeydown(source, RIGHT_ARROW);
-            fixture.detectChanges();
-
-            // An id cannot be resolved back to a list instance, so the transfer has no target.
-            expect(fixture.componentInstance.dropped).toBeNull();
-            expect(fixture.componentInstance.sourceItems()).toEqual(['source 0', 'source 1']);
-        });
-
-        it('should keep the shift-range anchor in sync after a reorder', fakeAsync(() => {
-            const fixture = setup(SelectionListWithDragAndDrop);
-            const list = fixture.componentInstance.list();
-
-            // Anchor the range on the first option, then move it down: the anchor must follow the option,
+            // Anchor the range on the first option, then move it: the anchor must follow the option,
             // otherwise the range below spans the wrong items.
+            const list = fixture.componentInstance.list();
+
             list.keyManager.setActiveItem(0);
-            altKeydown(list, DOWN_ARROW);
-            fixture.detectChanges();
+            dragToEnd(fixture);
             flush();
 
             expect(list.keyManager.previousActiveItemIndex).toBe(list.keyManager.activeItemIndex);
@@ -2139,41 +1982,6 @@ describe('KbqListSelection drag and drop', () => {
             document.body.appendChild(fixture.nativeElement);
 
             expect(await axe(fixture.nativeElement)).toHaveNoViolations();
-        });
-
-        it('has no axe violations once the live region carries an announcement', async () => {
-            const fixture = setup(SelectionListWithDragAndDrop);
-            const list = fixture.componentInstance.list();
-
-            fixtureElement = fixture.nativeElement;
-            document.body.appendChild(fixture.nativeElement);
-
-            list.keyManager.setActiveItem(0);
-            altKeydown(list, DOWN_ARROW);
-            fixture.detectChanges();
-            // `LiveAnnouncer` fills its region 100ms after the move has been applied.
-            await new Promise((resolve) => setTimeout(resolve, 150));
-            fixture.detectChanges();
-
-            expect(liveRegionText()).not.toBe('');
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
-        });
-
-        const getShortcuts = (fixture: ComponentFixture<unknown>) =>
-            (fixture.nativeElement as HTMLElement).querySelector('kbq-list-option')!.getAttribute('aria-keyshortcuts');
-
-        it('advertises the reordering shortcuts on a draggable option', () => {
-            expect(getShortcuts(setup(SelectionListWithDragAndDrop))).toBe('Alt+ArrowUp Alt+ArrowDown');
-        });
-
-        it('advertises the transfer shortcuts once a connected list can be reached', () => {
-            expect(getShortcuts(setup(ConnectedSelectionLists))).toBe(
-                'Alt+ArrowUp Alt+ArrowDown Alt+ArrowLeft Alt+ArrowRight'
-            );
-        });
-
-        it('advertises no shortcuts while the list is not draggable', () => {
-            expect(getShortcuts(setup(SelectionListWithListOptions))).toBeNull();
         });
     });
 

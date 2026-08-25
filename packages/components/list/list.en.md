@@ -54,18 +54,11 @@ by `dropped` count only the rendered options, or are relative to the group rathe
 applying the move to the backing array silently affects the wrong item. Both combinations log a warning
 in development mode.
 
-#### Keyboard
+Reordering is pointer-only: there is no keyboard equivalent, so it is out of reach for anyone who
+cannot drag.
 
-Dragging always has a keyboard equivalent, so the feature stays usable without a pointer.
-
-| <div style="min-width: 270px;">Key</div>                                                                                               | Action                                         |
-| -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| <span class="docs-hot-key-button">Alt</span> + <span class="docs-hot-key-button">↑</span> / <span class="docs-hot-key-button">↓</span> | Move the focused option one position.          |
-| <span class="docs-hot-key-button">Alt</span> + <span class="docs-hot-key-button">←</span> / <span class="docs-hot-key-button">→</span> | Move the focused option into a connected list. |
-
-The new position is announced through a live region. Lists connected by `id` rather than by a
-component reference cannot be reached with the keyboard, and they show no drop indicator — an `id`
-cannot be resolved back to the list instance that would have to draw it.
+Lists connected by `id` rather than by a component reference show no drop indicator — an `id` cannot
+be resolved back to the list instance that would have to draw it.
 
 ### Accessibility
 

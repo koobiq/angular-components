@@ -35,11 +35,6 @@ export type KbqA11yLocaleConfiguration = {
     hidePassword: string;
     /** Separator that resizes the columns of a description list. */
     resizeColumns: string;
-    /**
-     * Announced after an option of a draggable `kbq-list-selection` has been reordered.
-     * Supports the `{{ label }}`, `{{ index }}` and `{{ total }}` placeholders.
-     */
-    listOptionMoved: string;
 };
 
 /** Locale configuration for `KbqCodeBlockModule`. */

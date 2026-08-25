@@ -174,7 +174,6 @@ export class KbqListSelectAllEvent<T> {
 // @public (undocumented)
 export class KbqListSelection<T = any> implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     constructor();
-    get ariaKeyShortcuts(): string;
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
     blur(): void;
@@ -195,7 +194,6 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     focus(): void;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
-    focusOptionByValue(value: T): boolean;
     getHeight(): number;
     getSelectedOptionValues(): T[];
     // (undocumented)
@@ -294,7 +292,7 @@ export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<KbqListSelection>, '
     option: KbqListOption;
     container: KbqListSelection;
     previousContainer: KbqListSelection;
-    event: MouseEvent | TouchEvent | KeyboardEvent;
+    event: MouseEvent | TouchEvent;
 };
 
 // @public (undocumented)

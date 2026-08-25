@@ -13,8 +13,7 @@ export const enUSLocaleData = {
         clear: 'Clear',
         showPassword: 'Show password',
         hidePassword: 'Hide password',
-        resizeColumns: 'Resize columns',
-        listOptionMoved: '{{ label }}, position {{ index }} of {{ total }}'
+        resizeColumns: 'Resize columns'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },
     datepicker: {

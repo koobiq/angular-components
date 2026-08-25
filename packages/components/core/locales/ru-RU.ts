@@ -13,8 +13,7 @@ export const ruRULocaleData = {
         clear: 'Очистить',
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',
-        resizeColumns: 'Изменить ширину колонок',
-        listOptionMoved: '{{ label }}, позиция {{ index }} из {{ total }}'
+        resizeColumns: 'Изменить ширину колонок'
     },
     select: { hiddenItemsText: '+{{ number }}', selectAll: 'Выбрать все' },
     datepicker: {

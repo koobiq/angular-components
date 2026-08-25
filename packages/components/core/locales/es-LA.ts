@@ -13,8 +13,7 @@ export const esLALocaleData = {
         clear: 'Borrar',
         showPassword: 'Mostrar la contraseña',
         hidePassword: 'Ocultar la contraseña',
-        resizeColumns: 'Redimensionar columnas',
-        listOptionMoved: '{{ label }}, posición {{ index }} de {{ total }}'
+        resizeColumns: 'Redimensionar columnas'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

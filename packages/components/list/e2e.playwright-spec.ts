@@ -297,27 +297,5 @@ test.describe('KbqListModule', () => {
             expect(await getLabels(page, 'e2eSourceList')).toEqual(['source-2', 'source-3']);
             expect(await getLabels(page, 'e2eTargetList')).toContain('source-1');
         });
-
-        test('reorders with the keyboard alone', async ({ page }) => {
-            await page.keyboard.press('Tab');
-            await expect(page.getByTestId('source-1')).toHaveClass(/kbq-focused/);
-
-            await page.keyboard.press('Alt+ArrowDown');
-
-            expect(await getLabels(page, 'e2eSourceList')).toEqual(['source-2', 'source-1', 'source-3']);
-            // Focus has to follow the option it moved, otherwise the next keypress acts on a different row.
-            await expect(page.getByTestId('source-1')).toBeFocused();
-            // CDK keeps a single live region on `<body>`: a listbox may only contain options.
-            await expect(page.locator('.cdk-live-announcer-element')).toHaveText(/source-1.*2.*3/);
-        });
-
-        test('transfers to the connected list with the keyboard alone', async ({ page }) => {
-            await page.keyboard.press('Tab');
-            await page.keyboard.press('Alt+ArrowRight');
-
-            expect(await getLabels(page, 'e2eSourceList')).toEqual(['source-2', 'source-3']);
-            expect(await getLabels(page, 'e2eTargetList')).toEqual(['target-1', 'source-1']);
-            await expect(page.getByTestId('source-1')).toBeFocused();
-        });
     });
 });
