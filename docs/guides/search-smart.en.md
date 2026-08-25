@@ -24,7 +24,7 @@ Tokens wrapped in double quotes are a single unbreakable phrase. This lets a que
 <div class="kbq-callout__header">What a diacritic is</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-A diacritic is a mark added above, below, or through a letter. It indicates pronunciation — for example, the accent in `é`, the umlaut in `ü`, or the cedilla in `ç`. Such a mark can be separated from its base letter with Unicode `NFKD` normalization (`é` → `e` plus a separate floating accent), then stripped.
+A diacritic is a mark added above, below, or through a letter. It indicates pronunciation — for example, the accent in `é`, the umlaut in `ü`, or the cedilla in `ç`. Such a mark can be separated from its base letter with Unicode normalization (`é` → `e` plus a separate floating accent), then stripped.
 
 </div>
 </div>
@@ -55,6 +55,7 @@ options.filter(createSearchPredicate(query)).sort(rankByRelevance(tokens));
 
 ### What's intentionally out of scope
 
+/* cspell:disable-next-line */
 Typo tolerance isn't part of these principles — for example, edit-distance matching where `developr` finds `developer`. It's a separate and much larger problem. If a product genuinely needs it, reach for a dedicated fuzzy-search library rather than extending this matching logic.
 
 ### Examples by component
