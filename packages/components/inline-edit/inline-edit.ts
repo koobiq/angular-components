@@ -16,7 +16,8 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    input, NgZone,
+    input,
+    NgZone,
     numberAttribute,
     output,
     signal,
@@ -431,10 +432,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
 
         const cleanup = (): void => {
             this.window.removeEventListener('scrollend', showTooltip);
+
             if (timeoutId !== null) {
                 clearTimeout(timeoutId);
                 timeoutId = null;
             }
+
             detachSubscription?.unsubscribe();
             detachSubscription = null;
         };
