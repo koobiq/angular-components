@@ -5,10 +5,8 @@ export interface ReplaceData {
 }
 
 /**
- * @deprecated Unused since the migration moved to AST-based matching (see
- * `packages/schematics/src/utils/icon-migration.ts`) — these were whole-file regex fragments that
- * matched icon-related text anywhere in a file, not just in icon contexts. Kept only so any
- * external code importing this array doesn't break. Use `scope` below instead.
+ * @deprecated Unused by this migration. Kept only so external code importing this array doesn't
+ * break. Use `scope` below instead.
  */
 export const iconClassReplacements: ReplaceData[] = [
     { replace: 'kbq-icon="pt-icons-', replaceWith: 'kbq-icon="kbq-' },

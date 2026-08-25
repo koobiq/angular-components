@@ -57,6 +57,7 @@ export default function deprecatedIcons(options: Schema): Rule {
                 found.map(({ from, to }) => `\t${from} -> \t${to}`).join('\n')
             ]);
         };
+        const warn = (message: string) => logger.warn(message);
 
         const templatePaths: string[] = [];
         const tsPaths: string[] = [];
@@ -64,7 +65,7 @@ export default function deprecatedIcons(options: Schema): Rule {
 
         // if project property not provided, skip files in node_modules & dist
         targetDir.visit((filePath: Path) => {
-            if (filePath.includes('node_modules') || filePath.includes('dist')) {
+            if (filePath.includes('node_modules') || filePath.includes('/dist/')) {
                 return;
             }
 
@@ -86,7 +87,7 @@ export default function deprecatedIcons(options: Schema): Rule {
             tree,
             templatePaths,
             context,
-            createIconTemplateTransform(migrationData, tokenMap, { fix, onFound })
+            createIconTemplateTransform(migrationData, tokenMap, { fix, onFound, warn })
         );
 
         // Update inline html & bare string literals in components
@@ -94,7 +95,15 @@ export default function deprecatedIcons(options: Schema): Rule {
             ts.createSourceFile(filePath, tree.readText(filePath), ts.ScriptTarget.Latest, true)
         );
 
-        await migrateIconsInTsFiles(tree, sourceFiles, context, migrationData, tokenMap, { fix, onFound });
+        await migrateIconsInTsFiles(
+            tree,
+            sourceFiles,
+            context,
+            migrationData,
+            tokenMap,
+            { fix, onFound, warn },
+            styleTokenMap
+        );
 
         // Update styles
         for (const filePath of stylePaths) {
@@ -104,7 +113,12 @@ export default function deprecatedIcons(options: Schema): Rule {
                 continue;
             }
 
-            const { content, changed, found } = replaceKnownIconTokens(initialContent, styleTokenMap, fix);
+            const { content, changed, found } = replaceKnownIconTokens(
+                initialContent,
+                styleTokenMap,
+                fix,
+                migrationData.scope.from
+            );
 
             if (found.length && !fix) {
                 onFound(filePath, found);

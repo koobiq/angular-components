@@ -25,7 +25,15 @@ function readJsonFile<T>(filePath: string): T {
     return JSON.parse(fileContents) as T;
 }
 
-const BARE_SCOPE_WORD = /^[\w-]+$/;
+// A bare word: no leading/trailing hyphen, no empty hyphen-separated segment (rejects e.g. `mc-`,
+// which is otherwise the most natural — and wrong, per the new engine's key-building — way to
+// write a "prefix" pair).
+const BARE_SCOPE_WORD = /^\w+(-\w+)*$/;
+
+/** `newIconsPackData`/`migration.json` always author their `replace`/`replaceWith` pair under
+ *  this literal scope — independent of whatever scope the user is migrating *to* via
+ *  `customIconReplacementPath` — so it's always the first prefix stripped. */
+const CANONICAL_ICON_DATA_SCOPE = 'kbq';
 
 /** Strips a known scope prefix (e.g. `mc-`/`kbq-`) from a token, if present. */
 function stripScopePrefix(value: string, prefixes: string[]): string {
@@ -38,20 +46,35 @@ function stripScopePrefix(value: string, prefixes: string[]): string {
     return value;
 }
 
+function isBareScopePair(entry: ReplaceData): boolean {
+    return (
+        typeof entry?.replace === 'string' &&
+        typeof entry?.replaceWith === 'string' &&
+        BARE_SCOPE_WORD.test(entry.replace) &&
+        BARE_SCOPE_WORD.test(entry.replaceWith)
+    );
+}
+
 /**
- * `customIconReplacementPath` historically accepted whole-file regex fragments (e.g.
- * `kbq-icon="mc-`), which only made sense for the old blind-text-replace engine. The new engine
- * only needs a bare scope-word pair (e.g. `{ "replace": "mc", "replaceWith": "kbq" }`). Detects
- * legacy-shaped entries and warns instead of silently misapplying them.
+ * Resolves the scope pair from a `customIconReplacementPath` file: a bare scope-word pair (e.g.
+ * `{ "replace": "mc", "replaceWith": "kbq" }`). A legacy-shaped or malformed entry is detected and
+ * warned about instead of silently misapplied — or crashed on.
  */
 function resolveScope(
     entries: ReplaceData[],
     fallback: { from: string; to: string },
     logger: { warn(message: string): void }
 ): { from: string; to: string } {
-    const valid = entries.find(
-        ({ replace, replaceWith }) => BARE_SCOPE_WORD.test(replace) && BARE_SCOPE_WORD.test(replaceWith)
-    );
+    if (!Array.isArray(entries)) {
+        logger.warn(
+            'customIconReplacementPath must contain a JSON array of { "replace", "replaceWith" } entries. ' +
+                'Falling back to the default scope.'
+        );
+
+        return fallback;
+    }
+
+    const valid = entries.find(isBareScopePair);
 
     if (!valid) {
         if (entries.length) {
@@ -91,18 +114,29 @@ export default function newIconsPack(options: Schema): Rule {
             valueAttrs: ['kbq-icon', 'kbq-icon-item', 'kbq-icon-button'],
             scope: resolvedScope,
             scopeClassInList: 'rename',
+            // `replace`/`replaceWith` are always authored under `CANONICAL_ICON_DATA_SCOPE`
+            // ('kbq-'), regardless of the scope this run is migrating *to* — falls back to
+            // stripping the target scope for a custom data file that doesn't follow that
+            // convention.
             icons: resolvedData.map(({ replace, replaceWith }) => ({
-                from: stripScopePrefix(replace, [resolvedScope.from, resolvedScope.to]),
-                to: stripScopePrefix(replaceWith, [resolvedScope.to])
+                from: stripScopePrefix(replace, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to, resolvedScope.from]),
+                to: stripScopePrefix(replaceWith, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to])
             })),
             // Only the attribute-value path (`kbq-icon="mc-<anything>"`) rescopes suffixes that
             // aren't a known icon name; class lists/bindings/strings/styles stay exact-token-only.
-            // This runs unconditionally in templates/TS — `updatePrefix` only gates the (separate,
-            // unscoped-by-nature) styles pass below.
+            // This runs unconditionally in templates/TS — `updatePrefix` only gates the bare
+            // scope-word rename in the (separate, unscoped-by-nature) styles/markdown pass below.
             rescopeUnknownValues: true
         };
 
         const tokenMap = buildIconTokenMap(migrationData);
+        // Icon-name renames (e.g. `mc-add-to-list_16` / `kbq-add-to-list_16` -> the current
+        // `kbq-file-plus-o_16`) apply to styles/markdown regardless of `updatePrefix` — only the
+        // *bare* scope-word rename (`mc` -> `kbq`, which touches `$mc`/`@import 'mc'` as much as a
+        // real `.mc {}` selector) is gated by it, matching the option's historical scope.
+        const styleAndMarkdownTokenMap = updatePrefix
+            ? tokenMap
+            : new Map([...tokenMap].filter(([token]) => token !== resolvedScope.from));
 
         const onFound = (filePath: string, found: TokenReplacement[]) => {
             const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
@@ -113,6 +147,7 @@ export default function newIconsPack(options: Schema): Rule {
                 found.map(({ from, to }) => `\t${from} -> \t${to}`).join('\n')
             ]);
         };
+        const warn = (message: string) => logger.warn(message);
 
         const templatePaths: string[] = [];
         const tsPaths: string[] = [];
@@ -121,7 +156,7 @@ export default function newIconsPack(options: Schema): Rule {
         // Update templates & components
         targetDir.visit((filePath: Path) => {
             // if project property not provided, skip files in node_modules & dist
-            if (filePath.includes('node_modules') || filePath.includes('dist')) {
+            if (filePath.includes('node_modules') || filePath.includes('/dist/')) {
                 return;
             }
 
@@ -142,14 +177,22 @@ export default function newIconsPack(options: Schema): Rule {
             tree,
             templatePaths,
             context,
-            createIconTemplateTransform(migrationData, tokenMap, { fix, onFound })
+            createIconTemplateTransform(migrationData, tokenMap, { fix, onFound, warn })
         );
 
         const sourceFiles = tsPaths.map((filePath) =>
             ts.createSourceFile(filePath, tree.readText(filePath), ts.ScriptTarget.Latest, true)
         );
 
-        await migrateIconsInTsFiles(tree, sourceFiles, context, migrationData, tokenMap, { fix, onFound });
+        await migrateIconsInTsFiles(
+            tree,
+            sourceFiles,
+            context,
+            migrationData,
+            tokenMap,
+            { fix, onFound, warn },
+            tokenMap
+        );
 
         // Markdown docs have no AST here, so — like styles — they're matched with the same
         // word/selector-boundary-safe, known-token-only regex rather than an unscoped replace.
@@ -160,7 +203,12 @@ export default function newIconsPack(options: Schema): Rule {
                 continue;
             }
 
-            const { content, changed, found } = replaceKnownIconTokens(initialContent, tokenMap, fix);
+            const { content, changed, found } = replaceKnownIconTokens(
+                initialContent,
+                styleAndMarkdownTokenMap,
+                fix,
+                resolvedScope.from
+            );
 
             if (found.length && !fix) {
                 onFound(filePath, found);
@@ -171,34 +219,39 @@ export default function newIconsPack(options: Schema): Rule {
             }
         }
 
-        // update styles
-        if (updatePrefix) {
-            targetDir.visit((filePath: Path) => {
-                // if project property not provided, styles in node_modules are still updated
-                if (filePath.includes('node_modules')) {
-                    return;
-                }
+        // update styles — icon-name renames always apply; `updatePrefix` only adds the bare
+        // scope-word rename (see `styleAndMarkdownTokenMap` above).
+        targetDir.visit((filePath: Path) => {
+            // if project property not provided, styles in node_modules are still skipped, same as
+            // every other file type above
+            if (filePath.includes('node_modules')) {
+                return;
+            }
 
-                if (!filePath.endsWith(stylesExt)) {
-                    return;
-                }
+            if (!filePath.endsWith(stylesExt)) {
+                return;
+            }
 
-                const initialContent = tree.read(filePath)?.toString();
+            const initialContent = tree.read(filePath)?.toString();
 
-                if (!initialContent) {
-                    return;
-                }
+            if (!initialContent) {
+                return;
+            }
 
-                const { content, changed, found } = replaceKnownIconTokens(initialContent, tokenMap, fix);
+            const { content, changed, found } = replaceKnownIconTokens(
+                initialContent,
+                styleAndMarkdownTokenMap,
+                fix,
+                resolvedScope.from
+            );
 
-                if (found.length && !fix) {
-                    onFound(filePath, found);
-                }
+            if (found.length && !fix) {
+                onFound(filePath, found);
+            }
 
-                if (changed) {
-                    tree.overwrite(filePath, content);
-                }
-            });
-        }
+            if (changed) {
+                tree.overwrite(filePath, content);
+            }
+        });
     };
 }

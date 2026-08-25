@@ -320,22 +320,32 @@ class TestApp {
             expect(tree.read(p.styles)?.toString()).toBe(original);
         });
 
-        // Known limitation: without a real CSS/SCSS parser, a standalone "pt-icons" word is
-        // indistinguishable from a selector once it's not glued to other word/hyphen characters —
-        // so it also matches inside comments. See new-icons-pack/README.md.
-        it('renames the bare scope word even inside a comment (documented limitation)', async () => {
+        it('leaves the bare scope word untouched inside a comment', async () => {
             const p = projectPaths(currentProject, appTree);
+            const original = '// pt-icons: legacy, to be removed\n';
 
-            appTree.overwrite(p.styles, '// pt-icons: legacy, to be removed\n');
+            appTree.overwrite(p.styles, original);
 
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
 
-            expect(tree.read(p.styles)?.toString()).toBe('// kbq: legacy, to be removed\n');
+            expect(tree.read(p.styles)?.toString()).toBe(original);
+        });
+
+        it('leaves an unrelated SCSS variable/import/property value untouched', async () => {
+            const p = projectPaths(currentProject, appTree);
+            const original = '$pt-icons: red;\n@import "pt-icons";\n.a { font-family: pt-icons; }\n';
+
+            appTree.overwrite(p.styles, original);
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+
+            expect(tree.read(p.styles)?.toString()).toBe(original);
         });
 
         it('honors a custom `stylesExt` option', async () => {
             const p = projectPaths(currentProject, appTree);
             const lessPath = p.styles.replace(/\.scss$/, '.less');
+            const originalScss = appTree.read(p.styles)!.toString();
 
             appTree.create(lessPath, '.pt-icons { }');
 
@@ -347,11 +357,80 @@ class TestApp {
 
             expect(tree.read(lessPath)?.toString()).toBe('.kbq { }');
             // The default .scss file is untouched since it wasn't targeted by this run.
-            expect(tree.read(p.styles)?.toString()).not.toContain(DEPRECATED_SCOPE + ':');
+            expect(tree.read(p.styles)?.toString()).toBe(originalScss);
         });
     });
 
     describe('dynamic bindings', () => {
+        let currentProject: workspaces.ProjectDefinition;
+        let currentProjectKey: string;
+        let messages: string[];
+
+        beforeEach(async () => {
+            runner = new SchematicTestRunner('schematics', collectionPath);
+            appTree = await createTestApp(runner, { style: 'scss' });
+
+            const workspace = await getWorkspace(appTree);
+
+            projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
+            currentProjectKey = projects.keys().next().value!;
+            currentProject = projects.get(currentProjectKey)!;
+            messages = [];
+            runner.logger.subscribe(({ message }) => messages.push(message));
+        });
+
+        it('warns and leaves a bound, non-literal icon attribute value untouched', async () => {
+            const p = projectPaths(currentProject, appTree);
+            const html = '<i [kbq-icon]="iconVar"></i>';
+
+            appTree.overwrite(p.html, html);
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+
+            expect(tree.read(p.html)?.toString()).toBe(html);
+            expect(messages.some((message) => message.includes('change value on your own'))).toBe(true);
+        });
+
+        it('warns and leaves a concatenation expression untouched, instead of corrupting it', async () => {
+            const { replace } = firstIcon;
+            const p = projectPaths(currentProject, appTree);
+            const html = `<i [kbq-icon]="'${DEPRECATED_SCOPE}-' + name + '${replace}'"></i>`;
+
+            appTree.overwrite(p.html, html);
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+
+            expect(tree.read(p.html)?.toString()).toBe(html);
+            expect(messages.some((message) => message.includes('change value on your own'))).toBe(true);
+        });
+
+        it('warns and leaves an interpolated value untouched, instead of corrupting it', async () => {
+            const p = projectPaths(currentProject, appTree);
+            const html = `<i kbq-icon="${DEPRECATED_SCOPE}-{{ name }}"></i>`;
+
+            appTree.overwrite(p.html, html);
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+
+            expect(tree.read(p.html)?.toString()).toBe(html);
+            expect(messages.some((message) => message.includes('change value on your own'))).toBe(true);
+        });
+
+        it('migrates a quoted string literal bound to an icon attribute, preserving its quotes', async () => {
+            const { replace, replaceWith } = firstIcon;
+            const p = projectPaths(currentProject, appTree);
+            const html = `<i [kbq-icon]="'${DEPRECATED_SCOPE}-${replace}'"></i>`;
+
+            appTree.overwrite(p.html, html);
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+
+            expect(tree.read(p.html)?.toString()).toBe(`<i [kbq-icon]="'kbq-${replaceWith}'"></i>`);
+            expect(messages.some((message) => message.includes('change value on your own'))).toBe(false);
+        });
+    });
+
+    describe('ICU expansions', () => {
         let currentProject: workspaces.ProjectDefinition;
         let currentProjectKey: string;
 
@@ -366,19 +445,99 @@ class TestApp {
             currentProject = projects.get(currentProjectKey)!;
         });
 
-        it('warns and leaves a bound, non-literal icon attribute value untouched', async () => {
-            const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+        it('migrates an icon used inside an ICU expansion case', async () => {
+            const { replace, replaceWith } = firstIcon;
             const p = projectPaths(currentProject, appTree);
-            const html = '<i [kbq-icon]="iconVar"></i>';
+            const html = `<span>{count, plural, =1 {<i kbq-icon="${DEPRECATED_SCOPE}-${replace}"></i>} other {none}}</span>`;
 
             appTree.overwrite(p.html, html);
 
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
 
-            expect(tree.read(p.html)?.toString()).toBe(html);
-            expect(warnSpy).toHaveBeenCalled();
+            expect(tree.read(p.html)?.toString()).toBe(
+                `<span>{count, plural, =1 {<i kbq-icon="kbq-${replaceWith}"></i>} other {none}}</span>`
+            );
+        });
+    });
 
-            warnSpy.mockRestore();
+    describe('inline host & styles', () => {
+        let currentProject: workspaces.ProjectDefinition;
+        let currentProjectKey: string;
+
+        beforeEach(async () => {
+            runner = new SchematicTestRunner('schematics', collectionPath);
+            appTree = await createTestApp(runner, { style: 'scss' });
+
+            const workspace = await getWorkspace(appTree);
+
+            projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
+            currentProjectKey = projects.keys().next().value!;
+            currentProject = projects.get(currentProjectKey)!;
+        });
+
+        it('migrates the host class string and renames a `[class.<icon-name>]` host binding', async () => {
+            const { replace, replaceWith } = firstIcon;
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(
+                p.ts,
+                `
+@Component({
+    selector: 'test-app',
+    template: '',
+    host: { class: '${DEPRECATED_SCOPE}', '[class.${DEPRECATED_SCOPE}-${replace}]': 'true' }
+})
+class TestApp {}`
+            );
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+            const ts = tree.read(p.ts)?.toString() || '';
+
+            expect(ts).toContain("class: ''");
+            expect(ts).toContain(`class.kbq-${replaceWith}`);
+        });
+
+        it('drops a bare-scope `[class.X]` host binding, since it has nothing to rename to', async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(
+                p.ts,
+                `
+@Component({
+    selector: 'test-app',
+    template: '',
+    host: { class: '${DEPRECATED_SCOPE}', '[class.${DEPRECATED_SCOPE}]': 'true' }
+})
+class TestApp {}`
+            );
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+            const ts = tree.read(p.ts)?.toString() || '';
+
+            expect(ts).toContain("class: ''");
+            expect(ts).not.toContain(`class.${DEPRECATED_SCOPE}`);
+        });
+
+        it('migrates a selector inside an inline `styles` array, boundary-safe', async () => {
+            const { replace, replaceWith } = firstIcon;
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(
+                p.ts,
+                `
+@Component({
+    selector: 'test-app',
+    template: '',
+    styles: ['.${DEPRECATED_SCOPE}-${replace} { width: 16px; } .my-widget-${DEPRECATED_SCOPE}-preview { color: red; }']
+})
+class TestApp {}`
+            );
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+            const ts = tree.read(p.ts)?.toString() || '';
+
+            expect(ts).toContain(`.kbq-${replaceWith} { width: 16px; }`);
+            expect(ts).toContain(`.my-widget-${DEPRECATED_SCOPE}-preview { color: red; }`);
         });
     });
 });

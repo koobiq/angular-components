@@ -26,6 +26,7 @@ const projectPaths = (project: workspaces.ProjectDefinition, tree: Tree | UnitTe
 
     return {
         html: tree.exists(`${root}/app.html`) ? `${root}/app.html` : `${root}/app.component.html`,
+        ts: tree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts`,
         styles: `/${project.root}/src/styles.scss`
     };
 };
@@ -161,7 +162,7 @@ describe(SCHEMATIC_NAME, () => {
             expect(tree.read(p.html)!.toString()).toBe(original);
         });
 
-        it('leaves an unrelated string literal untouched', async () => {
+        it('leaves an unrelated string literal untouched, in an HTML comment', async () => {
             const p = projectPaths(currentProject, appTree);
             const original = `${appTree.read(p.html)!.toString()}\n<!-- 'mc-legacy-mode' -->\n`;
 
@@ -174,6 +175,21 @@ describe(SCHEMATIC_NAME, () => {
             );
 
             expect(tree.read(p.html)!.toString()).toBe(original);
+        });
+
+        it('leaves an unrelated bare TS string literal untouched', async () => {
+            const p = projectPaths(currentProject, appTree);
+            const original = `${appTree.read(p.ts)!.toString()}\nexport const mode = 'mc-legacy-mode';\n`;
+
+            appTree.overwrite(p.ts, original);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: currentProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            expect(tree.read(p.ts)!.toString()).toBe(original);
         });
 
         it('leaves an unrelated CSS class untouched in styles', async () => {
@@ -190,11 +206,92 @@ describe(SCHEMATIC_NAME, () => {
 
             expect(tree.read(p.styles)!.toString()).toBe(original);
         });
+
+        it('leaves an unrelated SCSS variable/import/property value untouched', async () => {
+            const p = projectPaths(currentProject, appTree);
+            const original = '$mc: red;\n@import "mc";\n.a { font-family: mc; }\n';
+
+            appTree.overwrite(p.styles, original);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: currentProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            expect(tree.read(p.styles)!.toString()).toBe(original);
+        });
+
+        it('leaves an unrelated Markdown file untouched', async () => {
+            const mdPath = `/${currentProject.root}/README.md`;
+            const original = 'The mc compiler is unrelated; some projects use mc as an abbreviation.\n';
+
+            appTree.create(mdPath, original);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: currentProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            expect(tree.read(mdPath)!.toString()).toBe(original);
+        });
+    });
+
+    describe('already-migrated scope (regression)', () => {
+        it('still renames an icon whose prefix was already swapped to "kbq-" by an earlier run', async () => {
+            const [firstProjectKey] = projects.keys();
+            const p = projectPaths(projects.get(firstProjectKey)!, appTree);
+
+            appTree.overwrite(
+                p.html,
+                `<i kbq-icon="kbq-${firstIcon.replace}"></i>\n` +
+                    `<i class="kbq kbq-icon kbq-${firstIcon.replace}"></i>`
+            );
+            appTree.overwrite(p.styles, `.kbq-${firstIcon.replace} { width: 16px; }`);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: firstProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            const html = tree.read(p.html)!.toString();
+
+            expect(html).toContain(`kbq-icon="kbq-${firstIcon.replaceWith}"`);
+            expect(html).toContain(`class="kbq kbq-icon kbq-${firstIcon.replaceWith}"`);
+            expect(tree.read(p.styles)!.toString()).toBe(`.kbq-${firstIcon.replaceWith} { width: 16px; }`);
+        });
+
+        it('does not report an icon that is already fully migrated as a no-op change', async () => {
+            const [firstProjectKey] = projects.keys();
+            const p = projectPaths(projects.get(firstProjectKey)!, appTree);
+            const html = `<i kbq-icon="kbq-${firstIcon.replaceWith}"></i>`;
+            const messages: string[] = [];
+
+            appTree.overwrite(p.html, html);
+            runner.logger.subscribe(({ message }) => messages.push(message));
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: firstProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(html);
+            expect(messages.join('\n')).not.toContain(firstIcon.replaceWith);
+        });
     });
 
     describe('dynamic bindings', () => {
+        let messages: string[];
+
+        beforeEach(() => {
+            messages = [];
+            runner.logger.subscribe(({ message }) => messages.push(message));
+        });
+
         it('warns and leaves a bound, non-literal icon attribute value untouched', async () => {
-            const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
             const [firstProjectKey] = projects.keys();
             const p = projectPaths(projects.get(firstProjectKey)!, appTree);
             const html = '<i [kbq-icon]="iconVar"></i>';
@@ -208,9 +305,58 @@ describe(SCHEMATIC_NAME, () => {
             );
 
             expect(tree.read(p.html)!.toString()).toBe(html);
-            expect(warnSpy).toHaveBeenCalled();
+            expect(messages.some((message) => message.includes('change value on your own'))).toBe(true);
+        });
 
-            warnSpy.mockRestore();
+        it('warns and leaves a concatenation expression untouched, instead of corrupting it', async () => {
+            const [firstProjectKey] = projects.keys();
+            const p = projectPaths(projects.get(firstProjectKey)!, appTree);
+            const html = `<i [kbq-icon]="'mc-' + name + '${firstIcon.replace}'"></i>`;
+
+            appTree.overwrite(p.html, html);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: firstProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(html);
+            expect(messages.some((message) => message.includes('change value on your own'))).toBe(true);
+        });
+
+        it('warns and leaves an interpolated value untouched, instead of corrupting it', async () => {
+            const [firstProjectKey] = projects.keys();
+            const p = projectPaths(projects.get(firstProjectKey)!, appTree);
+            const html = `<i kbq-icon="mc-{{ name }}"></i>`;
+
+            appTree.overwrite(p.html, html);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: firstProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(html);
+            expect(messages.some((message) => message.includes('change value on your own'))).toBe(true);
+        });
+
+        it('migrates a quoted string literal bound to an icon attribute, preserving its quotes', async () => {
+            const [firstProjectKey] = projects.keys();
+            const p = projectPaths(projects.get(firstProjectKey)!, appTree);
+            const html = `<i [kbq-icon]="'mc-${firstIcon.replace}'"></i>`;
+
+            appTree.overwrite(p.html, html);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: firstProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(`<i [kbq-icon]="'kbq-${firstIcon.replaceWith}'"></i>`);
+            expect(messages.some((message) => message.includes('change value on your own'))).toBe(false);
         });
     });
 
@@ -237,9 +383,9 @@ describe(SCHEMATIC_NAME, () => {
             expect(tree.read(p.styles)!.toString()).toBe(`.kbq-${firstIcon.replaceWith} { width: 16px; }`);
         });
 
-        it('leaves styles untouched when `updatePrefix` is false', async () => {
+        it('leaves an unrelated bare "mc" selector/variable untouched when `updatePrefix` is false', async () => {
             const p = projectPaths(currentProject, appTree);
-            const original = `.mc-${firstIcon.replace} { width: 16px; }`;
+            const original = '.mc { width: 16px; }\n$mc: red;\n';
 
             appTree.overwrite(p.styles, original);
 
@@ -250,6 +396,20 @@ describe(SCHEMATIC_NAME, () => {
             );
 
             expect(tree.read(p.styles)!.toString()).toBe(original);
+        });
+
+        it('still renames a deprecated icon class selector when `updatePrefix` is false', async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(p.styles, `.mc-${firstIcon.replace} { width: 16px; }`);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: currentProjectKey, updatePrefix: false },
+                appTree
+            );
+
+            expect(tree.read(p.styles)!.toString()).toBe(`.kbq-${firstIcon.replaceWith} { width: 16px; }`);
         });
     });
 
@@ -338,6 +498,102 @@ describe(SCHEMATIC_NAME, () => {
             // Falls back to the default 'mc' -> 'kbq' scope, so the default mapping still applies.
             expect(tree.read(p.html)!.toString()).toContain(`kbq-icon="kbq-${firstIcon.replaceWith}"`);
             expect(messages.some((message) => message.includes('legacy fragment format'))).toBe(true);
+        });
+
+        it('warns and falls back for a malformed custom icon replacement file, instead of crashing', async () => {
+            const customIconReplacementPath = path.join(tmpDir, 'malformed-replacement.json');
+            const messages: string[] = [];
+
+            fs.writeFileSync(customIconReplacementPath, JSON.stringify([{ replaceWith: 'kbq' }]));
+
+            const p = projectPaths(projects.get(currentProjectKey)!, appTree);
+
+            appTree.overwrite(p.html, `<i kbq-icon="mc-${firstIcon.replace}"></i>`);
+
+            runner.logger.subscribe(({ message }) => messages.push(message));
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: currentProjectKey, updatePrefix: true, customIconReplacementPath },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toContain(`kbq-icon="kbq-${firstIcon.replaceWith}"`);
+        });
+    });
+
+    describe('inline host & styles', () => {
+        let currentProject: workspaces.ProjectDefinition;
+        let currentProjectKey: string;
+
+        beforeEach(() => {
+            currentProjectKey = projects.keys().next().value!;
+            currentProject = projects.get(currentProjectKey)!;
+        });
+
+        it('migrates the host class string of an inline @Component decorator', async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(
+                p.ts,
+                `
+@Component({
+    selector: 'test-app',
+    template: '',
+    host: { class: 'mc mc-${firstIcon.replace}' }
+})
+class TestApp {}`
+            );
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: currentProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            expect(tree.read(p.ts)?.toString()).toContain(`class: 'kbq kbq-${firstIcon.replaceWith}'`);
+        });
+
+        it('migrates a selector inside an inline `styles` array, boundary-safe', async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(
+                p.ts,
+                `
+@Component({
+    selector: 'test-app',
+    template: '',
+    styles: ['.mc-${firstIcon.replace} { width: 16px; } .my-widget-mc-preview { color: red; }']
+})
+class TestApp {}`
+            );
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: currentProjectKey, updatePrefix: true },
+                appTree
+            );
+            const ts = tree.read(p.ts)?.toString() || '';
+
+            expect(ts).toContain(`.kbq-${firstIcon.replaceWith} { width: 16px; }`);
+            expect(ts).toContain('.my-widget-mc-preview { color: red; }');
+        });
+
+        it('migrates an icon used inside an ICU expansion case', async () => {
+            const p = projectPaths(currentProject, appTree);
+            const html = `<span>{count, plural, =1 {<i kbq-icon="mc-${firstIcon.replace}"></i>} other {none}}</span>`;
+
+            appTree.overwrite(p.html, html);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: currentProjectKey, updatePrefix: true },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(
+                `<span>{count, plural, =1 {<i kbq-icon="kbq-${firstIcon.replaceWith}"></i>} other {none}}</span>`
+            );
         });
     });
 });
