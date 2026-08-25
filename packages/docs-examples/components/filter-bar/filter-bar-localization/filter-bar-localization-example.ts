@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, Provider } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Provider } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
     DateFormatter,
-    KBQ_LOCALE_ID,
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleService
+    kbqInjectLocaleService,
+    kbqLocaleIDProvider,
+    kbqLocaleServiceProvider
 } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -131,15 +131,16 @@ export class LocalizationDemoBar {
     template: `
         <localization-demo-bar />
     `,
-    providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }, ...scopedDateProviders],
+    providers: [kbqLocaleServiceProvider(), ...scopedDateProviders],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocalizationDefaultLocale {}
 
 /**
- * `KBQ_LOCALE_ID` sets the locale once, when the service is constructed. Both tokens have to sit in the
- * same `providers` array: `KbqLocaleService` reads `KBQ_LOCALE_ID` from the injector that created it, so
- * providing the id without the service leaves the application-wide service — and its locale — in charge.
+ * `kbqLocaleIDProvider` sets the locale once, when the service is constructed. Both providers have to sit
+ * in the same `providers` array: `KbqLocaleService` reads `KBQ_LOCALE_ID` from the injector that created
+ * it, so providing the id without the service leaves the application-wide service — and its locale — in
+ * charge.
  */
 @Component({
     selector: 'localization-static-locale',
@@ -147,11 +148,7 @@ export class LocalizationDefaultLocale {}
     template: `
         <localization-demo-bar />
     `,
-    providers: [
-        { provide: KBQ_LOCALE_ID, useValue: 'en-US' },
-        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
-        ...scopedDateProviders
-    ],
+    providers: [kbqLocaleIDProvider('en-US'), kbqLocaleServiceProvider(), ...scopedDateProviders],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocalizationStaticLocale {}
@@ -173,11 +170,11 @@ export class LocalizationStaticLocale {}
             <localization-demo-bar />
         </div>
     `,
-    providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }, ...scopedDateProviders],
+    providers: [kbqLocaleServiceProvider(), ...scopedDateProviders],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocalizationRuntimeLocale {
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE);
+    protected readonly localeService = kbqInjectLocaleService();
 }
 
 /**

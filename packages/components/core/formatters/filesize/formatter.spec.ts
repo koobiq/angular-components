@@ -207,6 +207,13 @@ describe('Filesize formatter', () => {
                 );
                 expect(localeService.id).not.toEqual(selectedLocale);
             });
+
+            it('should fall back to the active config for a locale that was never registered', () => {
+                // The 4th parameter takes any string, and an id nobody registered has no entry to read at all.
+                expect(localeService.locales['en-GB']).toBeUndefined();
+
+                expect(() => pipe.transform(1500, 1, KbqMeasurementSystem.SI, 'en-GB')).not.toThrow();
+            });
         });
 
         describe('with localeService is not provided', () => {

@@ -36,8 +36,8 @@ import {
     ENTER,
     ESCAPE,
     FocusKeyManager,
-    KBQ_LOCALE_SERVICE,
-    KbqAppSwitcherConfiguration,
+    KbqAppSwitcherLocaleConfiguration,
+    KbqDeepPartial,
     KbqOptionModule,
     KbqPopUp,
     KbqPopUpPlacementValues,
@@ -53,6 +53,8 @@ import {
     TAB,
     UP_ARROW,
     applyPopupMargins,
+    kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -205,13 +207,22 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 /** default configuration of app-switcher */
 /** @docs-private */
-export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherConfiguration = ruRULocaleData.appSwitcher;
+export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherLocaleConfiguration = ruRULocaleData.appSwitcher;
 
-/** Injection Token for providing configuration of app-switcher */
+/** Injection Token for providing the default configuration of app-switcher */
 /** @docs-private */
-export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken<KbqAppSwitcherConfiguration>(
-    'KbqAppSwitcherConfiguration'
+export const KBQ_APP_SWITCHER_CONFIGURATION = new InjectionToken<KbqAppSwitcherLocaleConfiguration>(
+    'KbqAppSwitcherConfiguration',
+    { factory: () => KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION }
 );
+
+/**
+ * Utility provider for `KBQ_APP_SWITCHER_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * keep following the active locale.
+ */
+export const kbqAppSwitcherLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqAppSwitcherLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('appSwitcher', configuration);
 
 /**
  * Providers used by the app-switcher. `KbqAppSwitcherModule` applies them for `NgModule` consumers;
@@ -263,18 +274,16 @@ export function kbqAppSwitcherProvider(): Provider[] {
     preserveWhitespaces: false
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
-    /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
-    /** Configuration provided through `KBQ_APP_SWITCHER_CONFIGURATION`, overriding the locale strings. */
-    readonly externalConfiguration = inject(KBQ_APP_SWITCHER_CONFIGURATION, { optional: true });
-
     /** Strings currently rendered by the popup. */
-    configuration: KbqAppSwitcherConfiguration = KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
+    get configuration(): KbqAppSwitcherLocaleConfiguration {
+        return this._configuration();
+    }
+
+    private readonly _configuration = kbqInjectLocaleConfiguration('appSwitcher', KBQ_APP_SWITCHER_CONFIGURATION);
 
     /** localized data
      * @docs-private */
-    get localeData(): KbqAppSwitcherConfiguration {
+    get localeData(): KbqAppSwitcherLocaleConfiguration {
         return this.configuration;
     }
 
@@ -331,12 +340,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
 
     constructor() {
         super();
-
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
     }
 
     ngAfterViewInit() {
@@ -607,19 +610,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
         return sites
             .map((site) => ({ ...site, apps: site.apps.filter(matches) }))
             .filter((site) => site.apps.length > 0);
-    }
-
-    private updateLocaleParams = () => {
-        this.configuration =
-            this.externalConfiguration ||
-            (this.localeService?.getParams('appSwitcher') as KbqAppSwitcherConfiguration) ||
-            KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
-
-        this.changeDetectorRef.markForCheck();
-    };
-
-    private initDefaultParams() {
-        this.configuration = this.externalConfiguration || KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION;
     }
 }
 

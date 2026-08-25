@@ -3,12 +3,15 @@ import {
     AfterContentInit,
     Directive,
     DoCheck,
+    effect,
     ElementRef,
     forwardRef,
     inject,
+    InjectionToken,
     Input,
     OnDestroy,
     output,
+    Provider,
     Renderer2
 } from '@angular/core';
 import {
@@ -36,13 +39,16 @@ import {
     isHorizontalMovement,
     isLetterKey,
     isVerticalMovement,
-    KBQ_LOCALE_SERVICE,
+    KbqDeepPartial,
     KbqErrorStateTracker,
-    KbqLocaleService,
+    kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
+    KbqTimepickerLocaleConfiguration,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
+    ruRULocaleData,
     SPACE,
     TAB,
     UP_ARROW,
@@ -51,7 +57,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { noop, Subject, Subscription } from 'rxjs';
+import { noop, Subject } from 'rxjs';
 
 import {
     AM_PM_FORMAT_REGEXP,
@@ -81,6 +87,25 @@ export const KBQ_TIMEPICKER_VALIDATORS: any = {
     useExisting: forwardRef(() => KbqTimepicker),
     multi: true
 };
+
+/** Default configuration of the timepicker.
+ * @docs-private */
+export const KBQ_TIMEPICKER_DEFAULT_CONFIGURATION: KbqTimepickerLocaleConfiguration = ruRULocaleData.timepicker;
+
+/** Injection token for providing the default configuration of the timepicker.
+ * @docs-private */
+export const KBQ_TIMEPICKER_CONFIGURATION = new InjectionToken<KbqTimepickerLocaleConfiguration>(
+    'KbqTimepickerConfiguration',
+    { factory: () => KBQ_TIMEPICKER_DEFAULT_CONFIGURATION }
+);
+
+/**
+ * Utility provider for `KBQ_TIMEPICKER_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * keep following the active locale.
+ */
+export const kbqTimepickerLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqTimepickerLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('timepicker', configuration);
 
 let uniqueComponentIdSuffix: number = 0;
 
@@ -120,7 +145,7 @@ export class KbqTimepicker<D>
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private renderer = inject(Renderer2);
     private dateAdapter = inject<DateAdapter<any>>(DateAdapter, { optional: true })!;
-    private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
+    private readonly configuration = kbqInjectLocaleConfiguration('timepicker', KBQ_TIMEPICKER_CONFIGURATION);
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
@@ -367,7 +392,7 @@ export class KbqTimepicker<D>
     /** Localized placeholder */
     get timeFormatPlaceholder(): string {
         return (
-            this.localeService?.getParams('timepicker')?.placeholder[TimeFormatToLocaleKeys[this.format]] ||
+            this.configuration().placeholder[TimeFormatToLocaleKeys[this.format]] ||
             TIMEFORMAT_PLACEHOLDERS[this.format]
         );
     }
@@ -395,13 +420,9 @@ export class KbqTimepicker<D>
     private onChange: (value: any) => void;
     private onTouched: () => void;
 
-    private localeSubscription = Subscription.EMPTY;
-
     private errorStateTracker: KbqErrorStateTracker;
 
     constructor() {
-        const dateAdapter = this.dateAdapter;
-
         if (!this.dateAdapter) {
             throw Error(
                 `KbqTimepicker: No provider found for DateAdapter. You must import one of the existing ` +
@@ -425,7 +446,18 @@ export class KbqTimepicker<D>
             this.stateChanges
         );
 
-        this.localeSubscription = dateAdapter.localeChanges.subscribe(this.updateLocaleParams);
+        effect(() => {
+            // Read before the guard: an early return that skipped it would leave the effect with nothing
+            // to track, and the next locale change would never reach the input.
+            const placeholder = this.timeFormatPlaceholder;
+
+            if (!this.defaultPlaceholder) return;
+
+            // Assigned through the private field so that the setter does not mark it as consumer-provided.
+            this._placeholder = placeholder;
+            // Re-assigning the value re-runs it through the date adapter, which formats on the new locale.
+            this.value = this._value;
+        });
     }
 
     ngDoCheck() {
@@ -443,7 +475,6 @@ export class KbqTimepicker<D>
 
     ngOnDestroy(): void {
         this.stateChanges.complete();
-        this.localeSubscription.unsubscribe();
     }
 
     getSize(): number {
@@ -1018,13 +1049,4 @@ export class KbqTimepicker<D>
     }
 
     private validatorOnChange = () => {};
-
-    private updateLocaleParams = () => {
-        if (!this.defaultPlaceholder) return;
-
-        // update via private property instead of setter to save it as default placeholder
-        this._placeholder = this.timeFormatPlaceholder;
-        // update value so view value will be also updated
-        this.value = this._value;
-    };
 }

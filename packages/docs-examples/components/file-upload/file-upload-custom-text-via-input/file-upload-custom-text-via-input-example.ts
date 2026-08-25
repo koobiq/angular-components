@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
     KBQ_LOCALE_SERVICE,
-    KbqBaseFileUploadLocaleConfig,
-    KbqMultipleFileUploadLocaleConfig
+    KbqBaseFileUploadLocaleConfiguration,
+    KbqMultipleFileUploadLocaleConfiguration
 } from '@koobiq/components/core';
 import { KbqMultipleFileUploadComponent, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -14,7 +14,7 @@ const localeData = {
         single: {
             captionText: 'Drop file here or {{ browseLink }}',
             browseLink: 'secure upload'
-        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
+        } satisfies Partial<KbqBaseFileUploadLocaleConfiguration>,
 
         multiple: {
             captionText: 'Drop reports here or {{ browseLink }}',
@@ -22,14 +22,14 @@ const localeData = {
             captionTextForCompactSize: 'Attach logs or {{ browseLink }}',
             browseLink: 'secure upload',
             title: 'Submit security files'
-        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfiguration>
     },
 
     'es-LA': {
         single: {
             captionText: 'Arrastra archivo aquí o {{ browseLink }}',
             browseLink: 'subida segura'
-        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
+        } satisfies Partial<KbqBaseFileUploadLocaleConfiguration>,
 
         multiple: {
             captionText: 'Arrastra reportes aquí o {{ browseLink }}',
@@ -37,14 +37,14 @@ const localeData = {
             captionTextForCompactSize: 'Adjunta logs o {{ browseLink }}',
             browseLink: 'subida segura',
             title: 'Enviar archivos de seguridad'
-        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfiguration>
     },
 
     'pt-BR': {
         single: {
             captionText: 'Arraste arquivo aqui ou {{ browseLink }}',
             browseLink: 'upload seguro'
-        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
+        } satisfies Partial<KbqBaseFileUploadLocaleConfiguration>,
 
         multiple: {
             captionText: 'Arraste relatórios aqui ou {{ browseLink }}',
@@ -52,14 +52,14 @@ const localeData = {
             captionTextForCompactSize: 'Anexe logs ou {{ browseLink }}',
             browseLink: 'upload seguro',
             title: 'Enviar arquivos de segurança'
-        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfiguration>
     },
 
     'ru-RU': {
         single: {
             captionText: 'Перетащите файл сюда или {{ browseLink }}',
             browseLink: 'безопасная загрузка'
-        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
+        } satisfies Partial<KbqBaseFileUploadLocaleConfiguration>,
 
         multiple: {
             captionText: 'Перетащите отчёты сюда или {{ browseLink }}',
@@ -67,14 +67,14 @@ const localeData = {
             captionTextForCompactSize: 'Прикрепите логи или {{ browseLink }}',
             browseLink: 'безопасная загрузка',
             title: 'Загрузка файлов безопасности'
-        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfiguration>
     },
 
     'tk-TM': {
         single: {
             captionText: 'Faýly şu ýere taşlaň ýa-da {{ browseLink }}',
             browseLink: 'howpsuz ýükleme'
-        } satisfies Partial<KbqBaseFileUploadLocaleConfig>,
+        } satisfies Partial<KbqBaseFileUploadLocaleConfiguration>,
 
         multiple: {
             captionText: 'Hasabatlary şu ýere taşlaň ýa-da {{ browseLink }}',
@@ -82,7 +82,7 @@ const localeData = {
             captionTextForCompactSize: 'Loglary goşuň ýa-da {{ browseLink }}',
             browseLink: 'howpsuz ýükleme',
             title: 'Howpsuzlyk faýllaryny iber'
-        } satisfies Partial<KbqMultipleFileUploadLocaleConfig>
+        } satisfies Partial<KbqMultipleFileUploadLocaleConfiguration>
     }
 };
 

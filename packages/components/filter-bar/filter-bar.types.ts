@@ -1,5 +1,10 @@
 import { InjectionToken, ModelSignal, OutputEmitterRef, Provider, Signal, TemplateRef, Type } from '@angular/core';
-import { KbqPanelMaxHeight, ruRULocaleData } from '@koobiq/components/core';
+import {
+    KbqDeepPartial,
+    kbqLocaleConfigurationOverrideProvider,
+    KbqPanelMaxHeight,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import { BehaviorSubject } from 'rxjs';
 import { KbqFilterBar } from './filter-bar';
 import type { KbqBasePipe } from './pipes/base-pipe';
@@ -25,7 +30,17 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION = ruRULocaleData.filterBar;
 export type KbqFilterBarConfiguration = typeof KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
 
 /** Injection Token for providing configuration of filter-bar */
-export const KBQ_FILTER_BAR_CONFIGURATION = new InjectionToken<KbqFilterBarConfiguration>('KbqFilterBarConfiguration');
+export const KBQ_FILTER_BAR_CONFIGURATION = new InjectionToken<KbqFilterBarConfiguration>('KbqFilterBarConfiguration', {
+    factory: () => KBQ_FILTER_BAR_DEFAULT_CONFIGURATION
+});
+
+/**
+ * Utility provider for `KBQ_FILTER_BAR_CONFIGURATION`. Only the strings you pass are overridden; the rest
+ * keep following the active locale.
+ */
+export const kbqFilterBarLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqFilterBarConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('filterBar', configuration);
 
 /**
  * Contract a pipe (or filter-bar sub-component) depends on instead of the concrete `KbqFilterBar`.
@@ -34,8 +49,11 @@ export const KBQ_FILTER_BAR_CONFIGURATION = new InjectionToken<KbqFilterBarConfi
  * they are expected to slim down once the state model moves to signals.
  */
 export interface KbqFilterBarHost {
-    /** Localized strings and configuration for the filter-bar and its pipes. */
-    configuration: KbqFilterBarConfiguration;
+    /**
+     * Localized strings and configuration for the filter-bar and its pipes. Read-only: the bar derives it
+     * from the active locale, so an override is registered with `kbqFilterBarLocaleConfigurationProvider`.
+     */
+    readonly configuration: KbqFilterBarConfiguration;
 
     /** Currently selected filter. A two-way-bindable `model()`: read via `filter()`, write via `filter.set()`. */
     readonly filter: ModelSignal<KbqFilter | null>;

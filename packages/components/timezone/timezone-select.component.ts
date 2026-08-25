@@ -1,16 +1,25 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import {
-    AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     contentChild,
     Directive,
+    effect,
     inject,
+    InjectionToken,
+    Provider,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_OPTION_PARENT_COMPONENT, kbqSiblingPopupProvider, ruRULocaleData } from '@koobiq/components/core';
+import {
+    KBQ_OPTION_PARENT_COMPONENT,
+    KbqDeepPartial,
+    kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
+    kbqSiblingPopupProvider,
+    KbqTimezoneLocaleConfiguration,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import { kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
@@ -20,7 +29,24 @@ import { KbqSelect } from '@koobiq/components/select';
 })
 export class KbqTimezoneSelectTrigger {}
 
-const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
+/** default configuration of timezone
+ * @docs-private */
+export const KBQ_TIMEZONE_DEFAULT_CONFIGURATION: KbqTimezoneLocaleConfiguration = ruRULocaleData.timezone;
+
+/** Injection Token for providing the default configuration of timezone
+ * @docs-private */
+export const KBQ_TIMEZONE_CONFIGURATION = new InjectionToken<KbqTimezoneLocaleConfiguration>(
+    'KbqTimezoneConfiguration',
+    { factory: () => KBQ_TIMEZONE_DEFAULT_CONFIGURATION }
+);
+
+/**
+ * Utility provider for `KBQ_TIMEZONE_CONFIGURATION`. Only the strings you pass are overridden; the rest keep
+ * following the active locale.
+ */
+export const kbqTimezoneLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqTimezoneLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('timezone', configuration);
 
 @Component({
     selector: 'kbq-timezone-select',
@@ -62,26 +88,31 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
     encapsulation: ViewEncapsulation.None,
     exportAs: 'kbqTimezoneSelect'
 })
-export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
+export class KbqTimezoneSelect extends KbqSelect {
     readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
-    ngAfterContentInit() {
-        super.ngAfterContentInit();
-
-        this.localeService?.changes
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(this.updateLocaleParamsForSearch);
-
-        this.updateLocaleParamsForSearch();
+    /** Strings currently rendered by the select. */
+    get configuration(): KbqTimezoneLocaleConfiguration {
+        return this._configuration();
     }
 
-    private updateLocaleParamsForSearch = () => {
-        const placeholder = this.localeService?.getParams('timezone').searchPlaceholder || defaultSearchPlaceholder;
+    private readonly _configuration = kbqInjectLocaleConfiguration('timezone', KBQ_TIMEZONE_CONFIGURATION);
 
-        const search = this.search();
+    constructor() {
+        super();
 
-        if (search && !search.hasPlaceholder()) {
-            search.setPlaceholder(placeholder);
-        }
-    };
+        // The projected search takes its placeholder as a plain property rather than through a template
+        // binding, so the string has to be pushed into it. An effect applies it as soon as the query
+        // resolves, without waiting for a lifecycle hook of this component.
+        effect(() => {
+            const placeholder = this._configuration().searchPlaceholder;
+            const search = this.search();
+
+            // A placeholder supplied by the consumer wins and is never overwritten - which also means the
+            // locale one is applied only once, exactly as the previous subscription did.
+            if (search && !search.hasPlaceholder()) {
+                search.setPlaceholder(placeholder);
+            }
+        });
+    }
 }

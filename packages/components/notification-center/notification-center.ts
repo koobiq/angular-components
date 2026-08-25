@@ -12,6 +12,7 @@ import {
     InjectionToken,
     Input,
     Output,
+    Provider,
     TemplateRef,
     Type,
     ViewEncapsulation,
@@ -25,7 +26,8 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
-    KBQ_LOCALE_SERVICE,
+    KbqDeepPartial,
+    KbqNotificationCenterLocaleConfiguration,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
@@ -40,6 +42,8 @@ import {
     PopUpTriggers,
     applyPopupMargins,
     kbqInjectA11yLocaleConfiguration,
+    kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -79,7 +83,18 @@ const SCROLLED_TO_BOTTOM_TOLERANCE = 2;
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION = ruRULocaleData.notificationCenter;
 
 /** Injection Token for providing configuration of notification-center */
-export const KBQ_NOTIFICATION_CENTER_CONFIGURATION = new InjectionToken('KbqNotificationCenterConfiguration');
+export const KBQ_NOTIFICATION_CENTER_CONFIGURATION = new InjectionToken<KbqNotificationCenterLocaleConfiguration>(
+    'KbqNotificationCenterConfiguration',
+    { factory: () => KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION }
+);
+
+/**
+ * Utility provider for `KBQ_NOTIFICATION_CENTER_CONFIGURATION`. Only the strings you pass are overridden; the
+ * rest keep following the active locale.
+ */
+export const kbqNotificationCenterLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqNotificationCenterLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('notificationCenter', configuration);
 
 /** @docs-private */
 export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -137,19 +152,29 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    /** @docs-private */
     protected readonly dateAdapter = inject(DateAdapter);
     /** @docs-private */
     protected readonly service = inject(KbqNotificationCenterService);
-
-    readonly externalConfiguration = inject(KBQ_NOTIFICATION_CENTER_CONFIGURATION, { optional: true });
 
     /** Accessible names for the icon-only toolbar buttons.
      * @docs-private */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
-    configuration;
+    /**
+     * Localized strings of the notification center.
+     *
+     * Read through a signal so that a runtime `setLocale()` reaches `KbqNotificationItemComponent`, which
+     * renders these strings from its own `OnPush` view: a `markForCheck()` here would mark this component
+     * only, never the already-rendered items.
+     */
+    get configuration(): KbqNotificationCenterLocaleConfiguration {
+        return this._configuration();
+    }
+
+    private readonly _configuration = kbqInjectLocaleConfiguration(
+        'notificationCenter',
+        KBQ_NOTIFICATION_CENTER_CONFIGURATION
+    );
 
     /** @docs-private */
     protected popoverMode: boolean;
@@ -193,12 +218,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
     constructor() {
         super();
-
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
-
-        if (!this.localeService) {
-            this.initDefaultParams();
-        }
     }
 
     ngAfterViewInit() {
@@ -341,16 +360,6 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     escapeHandler() {
         this.hide(0);
-    }
-
-    private updateLocaleParams = () => {
-        this.configuration = this.externalConfiguration || this.localeService?.getParams('notificationCenter');
-
-        this.changeDetectorRef.markForCheck();
-    };
-
-    private initDefaultParams() {
-        this.configuration = KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION;
     }
 }
 

@@ -7,11 +7,10 @@ import {
     contentChildren,
     effect,
     forwardRef,
-    inject,
     InjectionToken,
     input,
     model,
-    signal,
+    Provider,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -19,7 +18,10 @@ import {
     DOWN_ARROW,
     isHorizontalMovement,
     isVerticalMovement,
-    KBQ_LOCALE_SERVICE,
+    KbqDeepPartial,
+    kbqInjectLocaleConfiguration,
+    kbqLocaleConfigurationOverrideProvider,
+    KbqNavbarLocaleConfiguration,
     ruRULocaleData,
     TAB,
     UP_ARROW
@@ -29,23 +31,26 @@ import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navb
 import { KbqFocusableComponent } from './navbar.component';
 
 /** Localizable strings of the vertical navbar. */
-export interface KbqVerticalNavbarConfiguration {
-    /** Labels of the expand/collapse toggle, used for its tooltip and its accessible name. */
-    toggle: {
-        expand: string;
-        collapse: string;
-    };
-}
+export type KbqVerticalNavbarConfiguration = KbqNavbarLocaleConfiguration;
 
 /** default configuration of navbar */
 /** @docs-private */
-export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqVerticalNavbarConfiguration = ruRULocaleData.navbar;
+export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqNavbarLocaleConfiguration = ruRULocaleData.navbar;
 
 /** Injection Token for providing configuration of navbar */
 /** @docs-private */
-export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqVerticalNavbarConfiguration>(
-    'KbqVerticalNavbarConfiguration'
+export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqNavbarLocaleConfiguration>(
+    'KbqVerticalNavbarConfiguration',
+    { factory: () => KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION }
 );
+
+/**
+ * Utility provider for `KBQ_VERTICAL_NAVBAR_CONFIGURATION`. Only the strings you pass are overridden; the
+ * rest keep following the active locale.
+ */
+export const kbqVerticalNavbarLocaleConfigurationProvider = (
+    configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>
+): Provider => kbqLocaleConfigurationOverrideProvider('navbar', configuration);
 
 @Component({
     selector: 'kbq-vertical-navbar',
@@ -85,24 +90,15 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = new InjectionToken<KbqVerticalN
     exportAs: 'KbqVerticalNavbar'
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
-    /** @docs-private */
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
-    /** Configuration provided through `KBQ_VERTICAL_NAVBAR_CONFIGURATION`, when any. @docs-private */
-    readonly externalConfiguration = inject(KBQ_VERTICAL_NAVBAR_CONFIGURATION, { optional: true });
-
     /**
-     * Localizable strings of the navbar.
+     * Localized strings of the navbar.
      *
-     * A signal so that a locale change reaches the `OnPush` descendants that render these strings — a plain
-     * field would leave them showing the previous locale until something else marked them dirty.
-     *
-     * Seeded here rather than from the locale subscription alone: the locale service is optional, and without
-     * it an externally provided configuration would never be applied at all.
+     * A signal, so that a locale change reaches the `OnPush` descendants that render these strings — a plain
+     * field would leave them showing the previous locale until something else marked them dirty. It also keeps
+     * the value observable from outside: `KbqNavbarToggle` reads it in an `effect` to refresh its tooltip,
+     * which a `markForCheck()` here could never have reached in that separate `OnPush` view.
      */
-    readonly configuration = signal<KbqVerticalNavbarConfiguration>(
-        this.externalConfiguration || KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION
-    );
+    readonly configuration = kbqInjectLocaleConfiguration('navbar', KBQ_VERTICAL_NAVBAR_CONFIGURATION);
 
     /** @docs-private */
     readonly rectangleElements = contentChildren<KbqNavbarRectangleElement>(
@@ -146,8 +142,6 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
             this.refreshButtonIcons();
         });
-
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
     }
 
     /** @docs-private */
@@ -204,10 +198,4 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
         this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
     }
-
-    private updateLocaleParams = () => {
-        const fromLocale = this.localeService?.getParams('navbar') as KbqVerticalNavbarConfiguration | undefined;
-
-        this.configuration.set(this.externalConfiguration || fromLocale || KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION);
-    };
 }

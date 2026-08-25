@@ -8,20 +8,21 @@ import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqClampedTextLocaleConfig } from '@koobiq/components/core';
+import { KbqClampedTextLocaleConfiguration } from '@koobiq/components/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
-export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION: InjectionToken<KbqClampedTextLocaleConfig>;
+export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION: InjectionToken<KbqClampedTextLocaleConfiguration>;
 
 // @public (undocumented)
 export interface KbqClamped {
     hasToggle: Signal<boolean>;
     isCollapsed: Signal<boolean | undefined>;
-    localeConfiguration: Signal<KbqClampedTextLocaleConfig>;
+    localeConfiguration: Signal<KbqClampedTextLocaleConfiguration>;
     toggle(event: Event): void;
 }
 
@@ -33,7 +34,7 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly hiddenThreshold: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly isCollapsed: _angular_core.ModelSignal<boolean>;
     readonly items: _angular_core.InputSignal<T[]>;
-    readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfig>;
+    readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfiguration>;
     readonly showMoreCountText: _angular_core.Signal<string>;
     toggle(event: Event): void;
     readonly visibleItems: _angular_core.Signal<T[]>;
@@ -66,7 +67,7 @@ export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
     readonly isCollapsedChange: _angular_core.OutputEmitterRef<boolean>;
     protected readonly isToggleCollapsed: _angular_core.WritableSignal<boolean | undefined>;
     protected readonly lineClamp: _angular_core.WritableSignal<number | null>;
-    readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfig>;
+    readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqClampedTextLocaleConfiguration>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -85,7 +86,7 @@ export class KbqClampedText implements KbqClamped, OnInit, AfterViewInit {
 export const kbqClampedTextDefaultMaxRows = 5;
 
 // @public
-export const kbqClampedTextLocaleConfigurationProvider: (configuration: KbqClampedTextLocaleConfig) => Provider;
+export const kbqClampedTextLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqClampedTextLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqClampedTextModule {
@@ -98,7 +99,10 @@ export class KbqClampedTextModule {
 }
 
 // @public
-export function kbqInjectKbqClampedLocaleConfiguration(): Signal<KbqClampedTextLocaleConfig>;
+export function kbqInjectClampedTextLocaleConfiguration(): Signal<KbqClampedTextLocaleConfiguration>;
+
+// @public @deprecated (undocumented)
+export const kbqInjectKbqClampedLocaleConfiguration: typeof kbqInjectClampedTextLocaleConfiguration;
 
 // (No @packageDocumentation comment for this package)
 

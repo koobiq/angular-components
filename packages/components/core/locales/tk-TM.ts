@@ -1,13 +1,4 @@
-import {
-    KbqA11yLocaleConfiguration,
-    KbqActionsPanelLocaleConfiguration,
-    KbqAppSwitcherConfiguration,
-    KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration,
-    KbqFileUploadLocaleConfig,
-    KbqSelectLocaleConfiguration,
-    KbqTimeRangeLocaleConfig
-} from './types';
+import { KbqLocaleStringsData } from './types';
 
 export const tkTMLocaleData = {
     a11y: {
@@ -22,11 +13,11 @@ export const tkTMLocaleData = {
         clear: 'Arassala',
         showPassword: 'Paroly görkez',
         hidePassword: 'Paroly gizle'
-    } satisfies KbqA11yLocaleConfiguration,
+    },
     select: {
         hiddenItemsText: '+{{ number }}',
         selectAll: 'Ählisini saýla'
-    } satisfies KbqSelectLocaleConfiguration,
+    },
     datepicker: {
         placeholder: 'gg.aa.ýý.',
         dateInput: 'gg.aa.ýý.'
@@ -57,7 +48,7 @@ export const tkTMLocaleData = {
             browseLinkFolderMixed: 'bukja',
             title: 'Faýl ýükläň'
         }
-    } satisfies KbqFileUploadLocaleConfig,
+    },
     codeBlock: {
         softWrapOnTooltip: 'Sözler boýunça geçirmäni işjeňleşdirmek',
         softWrapOffTooltip: 'Sözler boýunça geçirmäni öçürmek',
@@ -67,13 +58,13 @@ export const tkTMLocaleData = {
         viewAllText: 'Hemmesini görkezmek',
         viewLessText: 'Ýygyrmak',
         openExternalSystemTooltip: 'Daşarky ulgamda açmak'
-    } satisfies KbqCodeBlockLocaleConfiguration,
+    },
     timezone: {
         searchPlaceholder: 'Şäher ýa-da sagat guşagy'
     },
     actionsPanel: {
         closeTooltip: 'Saýlawy ýatyr'
-    } satisfies KbqActionsPanelLocaleConfiguration,
+    },
     filterBar: {
         reset: {
             buttonName: 'Täzeden düz'
@@ -129,7 +120,7 @@ export const tkTMLocaleData = {
         closeText: 'Ýap',
         showMoreText: 'Ýene {exceededItemCount} görkeziň',
         moreText: 'has köp'
-    } satisfies KbqClampedTextLocaleConfig,
+    },
     navbarIc: {
         toggle: {
             pinButton: 'Rugsat giňeldildi',
@@ -151,7 +142,7 @@ export const tkTMLocaleData = {
         searchEmptyResult: 'Hiç zat tapylmady',
         sitesHeader: 'Beýleki saýtlar',
         clearSearch: 'Gözlegi arassala'
-    } satisfies KbqAppSwitcherConfiguration,
+    },
     timeRange: {
         title: {
             for: 'soňky',
@@ -240,7 +231,7 @@ export const tkTMLocaleData = {
                 MONTHS_FRACTION: `{months} aý`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig,
+    },
     notificationCenter: {
         notifications: 'Duýduryşlar',
         remove: 'Aýyr',
@@ -252,4 +243,4 @@ export const tkTMLocaleData = {
         repeat: 'Gaýtalama',
         loadingMore: 'Duýduryşlar ýüklenýär'
     }
-};
+} satisfies KbqLocaleStringsData;

@@ -4,7 +4,14 @@ import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/cor
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFormattersModule, dispatchFakeEvent, ruRULocaleData } from '@koobiq/components/core';
+import {
+    KBQ_LOCALE_SERVICE,
+    KbqFormattersModule,
+    KbqLocaleService,
+    dispatchFakeEvent,
+    enUSLocaleData,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import {
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
@@ -764,6 +771,53 @@ describe('KbqNotificationCenter', () => {
             expect(pane.style.right).toBe('');
             expect(pane.style.left).toBe('50px');
         }));
+    });
+
+    describe('locale', () => {
+        let localeFixture: ComponentFixture<KbqNotificationCenterSimple>;
+        let localeService: KbqLocaleService;
+
+        beforeEach(() => {
+            testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
+            localeFixture = createComponent(KbqNotificationCenterSimple, [
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
+            ]);
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+            // The component resolves the service from the token, so the test must drive that very instance.
+            localeService = TestBed.inject(KBQ_LOCALE_SERVICE);
+        });
+
+        afterEach(() => {
+            overlayContainer?.ngOnDestroy();
+        });
+
+        // Rendered by KbqNotificationItemComponent, not by the center itself.
+        const getItemRemoveButtonLabel = () =>
+            overlayContainer
+                .getContainerElement()
+                .querySelector('[data-testid="kbq-notification-item-remove-button"]')
+                ?.getAttribute('aria-label');
+
+        it('relabels the remove button of already rendered items when the locale changes at runtime', () => {
+            const trigger = localeFixture.componentInstance.trigger();
+            const service = (trigger as unknown as { service: KbqNotificationCenterService }).service;
+            const item: KbqNotificationItem = { title: 'a', date: new Date().toISOString() };
+
+            service.items = [item];
+
+            trigger.show();
+            localeFixture.detectChanges();
+
+            expect(getItemRemoveButtonLabel()).toBe(ruRULocaleData.notificationCenter.remove);
+
+            localeService.setLocale('en-US');
+            localeFixture.detectChanges();
+
+            // The item is a separate OnPush component reading the center's locale data from its own
+            // template: marking the center for check leaves the already rendered item untouched.
+            expect(getItemRemoveButtonLabel()).toBe(enUSLocaleData.notificationCenter.remove);
+        });
     });
 });
 

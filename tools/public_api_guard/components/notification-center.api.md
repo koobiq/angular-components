@@ -15,6 +15,8 @@ import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
+import { KbqDeepPartial } from '@koobiq/components/core';
+import { KbqNotificationCenterLocaleConfiguration } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
@@ -26,6 +28,7 @@ import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { Provider } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
@@ -33,7 +36,7 @@ import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 
 // @public
-export const KBQ_NOTIFICATION_CENTER_CONFIGURATION: InjectionToken<unknown>;
+export const KBQ_NOTIFICATION_CENTER_CONFIGURATION: InjectionToken<KbqNotificationCenterLocaleConfiguration>;
 
 // @public
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION: {
@@ -68,15 +71,11 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     constructor();
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    configuration: any;
+    get configuration(): KbqNotificationCenterLocaleConfiguration;
     protected readonly dateAdapter: DateAdapter<any>;
     escapeHandler(): void;
-    // (undocumented)
-    readonly externalConfiguration: unknown;
     isTrapFocus: boolean;
-    get localeData(): any;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
+    get localeData(): KbqNotificationCenterLocaleConfiguration;
     // (undocumented)
     ngAfterViewInit(): void;
     protected onContainerScroll(): void;
@@ -98,6 +97,9 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNotificationCenterComponent, never>;
 }
+
+// @public
+export const kbqNotificationCenterLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqNotificationCenterLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqNotificationCenterModule {

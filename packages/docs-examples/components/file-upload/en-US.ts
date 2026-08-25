@@ -1,6 +1,6 @@
-import { KbqMultipleFileUploadLocaleConfig } from '@koobiq/components/core';
+import { KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
 
-export const enUSLocaleData: KbqMultipleFileUploadLocaleConfig = {
+export const enUSFileUploadLocaleData: KbqMultipleFileUploadLocaleConfiguration = {
     captionText: 'Drag here or {{ browseLink }}',
     captionTextOnlyFolder: 'Drag here or {{ browseLinkFolder }}',
     captionTextWithFolder: 'Drag here or {{ browseLink }} or {{ browseLinkFolderMixed }}',

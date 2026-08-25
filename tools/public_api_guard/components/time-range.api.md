@@ -17,10 +17,12 @@ import { FormGroup } from '@angular/forms';
 import { FormGroupDirective } from '@angular/forms';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimepicker } from '@koobiq/components/timepicker';
-import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
+import { KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
+import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -45,7 +47,7 @@ export const KBQ_CUSTOM_TIME_RANGE_TYPES: InjectionToken<KbqCustomTimeRangeType[
 export const KBQ_DEFAULT_TIME_RANGE_TYPES: InjectionToken<KbqTimeRangeType[]>;
 
 // @public
-export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION: InjectionToken<KbqTimeRangeLocaleConfig>;
+export const KBQ_TIME_RANGE_LOCALE_CONFIGURATION: InjectionToken<KbqTimeRangeLocaleConfiguration>;
 
 // @public (undocumented)
 export type KbqCustomTimeRangeType = {
@@ -79,7 +81,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     readonly arrow: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly availableTimeRangeTypes: _angular_core.InputSignal<KbqTimeRangeType[]>;
     readonly defaultRangeValue: _angular_core.InputSignal<KbqRangeValue<T> | undefined>;
-    protected readonly localeConfiguration: WritableSignal<KbqTimeRangeLocaleConfig>;
+    protected readonly localeConfiguration: _angular_core.Signal<KbqTimeRangeLocaleConfiguration>;
     readonly maxDate: _angular_core.InputSignal<T | undefined>;
     readonly minDate: _angular_core.InputSignal<T | undefined>;
     readonly ngControl: NgControl | null;
@@ -134,7 +136,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     protected readonly form: FormGroup<FormValue<T>>;
     protected readonly isRangeVisible: _angular_core.Signal<boolean>;
     // (undocumented)
-    readonly localeConfiguration: _angular_core.InputSignal<KbqTimeRangeLocaleConfig>;
+    readonly localeConfiguration: _angular_core.InputSignal<_koobiq_components_core.KbqTimeRangeLocaleConfiguration>;
     readonly maxDate: _angular_core.InputSignal<T | null>;
     readonly minDate: _angular_core.InputSignal<T | null>;
     // (undocumented)
@@ -161,7 +163,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 }
 
 // @public
-export const kbqTimeRangeLocaleConfigurationProvider: (configuration: KbqTimeRangeLocaleConfig) => Provider;
+export const kbqTimeRangeLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqTimeRangeLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqTimeRangeModule {
@@ -191,7 +193,7 @@ export class KbqTimeRangeTitle {
     // (undocumented)
     protected readonly injector: Injector;
     // (undocumented)
-    readonly localeConfiguration: _angular_core.InputSignal<KbqTimeRangeLocaleConfig>;
+    readonly localeConfiguration: _angular_core.InputSignal<_koobiq_components_core.KbqTimeRangeLocaleConfiguration>;
     // (undocumented)
     readonly timeRange: _angular_core.InputSignal<KbqTimeRangeRange | null>;
     // (undocumented)

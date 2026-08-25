@@ -14,7 +14,8 @@ import { FocusKeyManager } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { KbqAppSwitcherConfiguration } from '@koobiq/components/core';
+import { KbqAppSwitcherLocaleConfiguration } from '@koobiq/components/core';
+import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqDropdown } from '@koobiq/components/dropdown';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqInput } from '@koobiq/components/input';
@@ -22,7 +23,6 @@ import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpPlacementValues } from '@koobiq/components/core';
 import { KbqPopUpSizeValues } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
-import * as _koobiq_components_core from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
@@ -39,10 +39,10 @@ import { Type } from '@angular/core';
 export function defaultGroupBy(app: KbqAppSwitcherApp, groups: Record<string, KbqAppSwitcherApp>, untyped: KbqAppSwitcherApp[]): void;
 
 // @public
-export const KBQ_APP_SWITCHER_CONFIGURATION: InjectionToken<KbqAppSwitcherConfiguration>;
+export const KBQ_APP_SWITCHER_CONFIGURATION: InjectionToken<KbqAppSwitcherLocaleConfiguration>;
 
 // @public
-export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherConfiguration;
+export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION: KbqAppSwitcherLocaleConfiguration;
 
 // @public
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
@@ -89,17 +89,15 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     protected activeApp: KbqAppSwitcherApp | undefined;
     protected activeSite: KbqAppSwitcherSite | undefined;
     protected allItems: QueryList<KbqDropdownItem>;
-    configuration: KbqAppSwitcherConfiguration;
+    get configuration(): KbqAppSwitcherLocaleConfiguration;
     escapeHandler(): void;
-    readonly externalConfiguration: KbqAppSwitcherConfiguration | null;
     filteredSites: KbqAppSwitcherSite[];
     protected focusinHandler(event: FocusEvent): void;
     protected focusoutHandler(event: FocusEvent): void;
     readonly input: i0.Signal<KbqInput | undefined>;
     protected keydownHandler(event: KeyboardEvent): void;
     protected keyManager: FocusKeyManager<KbqDropdownItem>;
-    get localeData(): KbqAppSwitcherConfiguration;
-    protected readonly localeService: _koobiq_components_core.KbqLocaleService | null;
+    get localeData(): KbqAppSwitcherLocaleConfiguration;
     protected readonly nestedAliasClass = "kbq-app-switcher-site_nested";
     // (undocumented)
     ngAfterViewInit(): void;
@@ -162,6 +160,9 @@ export class KbqAppSwitcherListItem extends KbqDropdownItem {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAppSwitcherListItem, never>;
 }
+
+// @public
+export const kbqAppSwitcherLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqAppSwitcherLocaleConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqAppSwitcherModule {

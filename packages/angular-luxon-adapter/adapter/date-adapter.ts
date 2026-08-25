@@ -1,5 +1,6 @@
 import { getLocaleFirstDayOfWeek } from '@angular/common';
 import { Injectable, InjectionToken, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_DATE_LOCALE, KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { LuxonDateAdapter as BaseLuxonDateAdapter, LuxonDateAdapterOptions } from '@koobiq/luxon-date-adapter';
 import { Info } from 'luxon';
@@ -43,7 +44,7 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
 
         this.setLocale(this.localeService?.id || dateLocale);
 
-        this.localeService?.changes.subscribe(this.setLocale);
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.setLocale);
     }
 
     setLocale = (locale: string): void => {

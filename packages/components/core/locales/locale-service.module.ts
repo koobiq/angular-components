@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from './locale-service';
+import { kbqLocaleServiceProvider } from './locale-service';
 
 @NgModule({
-    providers: [
-        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
-    ]
+    providers: [kbqLocaleServiceProvider()]
 })
 export class KbqLocaleServiceModule {}

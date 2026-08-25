@@ -40,9 +40,10 @@ export class KbqDataSizePipe implements PipeTransform {
         unitSystemName: KbqMeasurementSystemType = this.config.defaultUnitSystem,
         locale: string = this.localeService?.id || KBQ_DEFAULT_LOCALE_ID
     ): string {
-        const resolvedUnitSystems: Record<KbqMeasurementSystem, KbqUnitSystem> = this.localeService
-            ? this.localeService.locales[locale].sizeUnits.unitSystems
-            : this.config.unitSystems;
+        // A locale id that was never registered has no entry at all — guard the lookup, not just the
+        // service, the way the number pipes already do.
+        const resolvedUnitSystems: Record<KbqMeasurementSystem, KbqUnitSystem> =
+            this.localeService?.locales[locale]?.sizeUnits.unitSystems ?? this.config.unitSystems;
 
         const { value, unit } = getFormattedSizeParts(source, resolvedUnitSystems[unitSystemName]);
 
@@ -52,6 +53,7 @@ export class KbqDataSizePipe implements PipeTransform {
     }
 
     private updateLocaleParams = () => {
-        this.config = this.externalConfig || this.localeService?.getParams('sizeUnits');
+        this.config =
+            this.externalConfig ?? this.localeService?.getParams('sizeUnits') ?? KBQ_SIZE_UNITS_DEFAULT_CONFIG;
     };
 }

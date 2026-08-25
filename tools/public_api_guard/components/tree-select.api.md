@@ -119,7 +119,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     hiddenItems: number;
     // (undocumented)
-    hiddenItemsText: string;
+    get hiddenItemsText(): string;
+    set hiddenItemsText(value: string);
     // (undocumented)
     hiddenItemsTextFormatter(hiddenItemsText: string, hiddenItems: number): string;
     // (undocumented)

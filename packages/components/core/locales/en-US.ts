@@ -1,13 +1,4 @@
-import {
-    KbqA11yLocaleConfiguration,
-    KbqActionsPanelLocaleConfiguration,
-    KbqAppSwitcherConfiguration,
-    KbqClampedTextLocaleConfig,
-    KbqCodeBlockLocaleConfiguration,
-    KbqFileUploadLocaleConfig,
-    KbqSelectLocaleConfiguration,
-    KbqTimeRangeLocaleConfig
-} from './types';
+import { KbqLocaleStringsData } from './types';
 
 export const enUSLocaleData = {
     a11y: {
@@ -22,8 +13,8 @@ export const enUSLocaleData = {
         clear: 'Clear',
         showPassword: 'Show password',
         hidePassword: 'Hide password'
-    } satisfies KbqA11yLocaleConfiguration,
-    select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' } satisfies KbqSelectLocaleConfiguration,
+    },
+    select: { hiddenItemsText: '+{{ number }}', selectAll: 'Select all' },
     datepicker: {
         placeholder: 'yyyy-mm-dd',
         dateInput: 'yyyy-MM-dd'
@@ -54,7 +45,7 @@ export const enUSLocaleData = {
             browseLinkFolderMixed: 'folder',
             title: 'Drag here'
         }
-    } satisfies KbqFileUploadLocaleConfig,
+    },
     codeBlock: {
         softWrapOnTooltip: 'Enable word wrap',
         softWrapOffTooltip: 'Disable word wrap',
@@ -64,13 +55,13 @@ export const enUSLocaleData = {
         viewAllText: 'Show all',
         viewLessText: 'Show less',
         openExternalSystemTooltip: 'Open in the external system'
-    } satisfies KbqCodeBlockLocaleConfiguration,
+    },
     timezone: {
         searchPlaceholder: 'City or time zone'
     },
     actionsPanel: {
         closeTooltip: 'Deselect'
-    } satisfies KbqActionsPanelLocaleConfiguration,
+    },
     filterBar: {
         reset: {
             buttonName: 'Reset'
@@ -126,7 +117,7 @@ export const enUSLocaleData = {
         closeText: 'Collapse',
         showMoreText: 'Show {exceededItemCount} more',
         moreText: 'more'
-    } satisfies KbqClampedTextLocaleConfig,
+    },
     navbarIc: {
         toggle: {
             pinButton: 'Leave expanded',
@@ -148,7 +139,7 @@ export const enUSLocaleData = {
         searchEmptyResult: 'Nothing found',
         sitesHeader: 'Other sites',
         clearSearch: 'Clear search'
-    } satisfies KbqAppSwitcherConfiguration,
+    },
     timeRange: {
         title: {
             for: 'for',
@@ -237,7 +228,7 @@ export const enUSLocaleData = {
                 MONTHS_FRACTION: `{months} months`
             }
         }
-    } satisfies KbqTimeRangeLocaleConfig,
+    },
     notificationCenter: {
         notifications: 'Notifications',
         remove: 'Remove',
@@ -249,4 +240,4 @@ export const enUSLocaleData = {
         repeat: 'Repeat',
         loadingMore: 'Loading more notifications'
     }
-};
+} satisfies KbqLocaleStringsData;
