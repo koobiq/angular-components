@@ -43,7 +43,7 @@ test.describe('KbqDlModule', () => {
             expect(await getLineOpacity()).toBe('1');
         });
 
-        test('should hide the keyboard focus outline while dragging with the pointer', async ({ page }) => {
+        test('should remove the keyboard focus outline when pointer dragging starts', async ({ page }) => {
             await page.goto('/E2eDlResizable');
 
             const separator = getSeparator(getComponent(page));
@@ -58,7 +58,7 @@ test.describe('KbqDlModule', () => {
             expect(await getOutlineStyle()).toBe('none');
 
             await page.mouse.up();
-            expect(await getOutlineStyle()).toBe('solid');
+            expect(await getOutlineStyle()).toBe('none');
         });
 
         test('should keep the resize cursor outside the handle and restore it after drag', async ({ page }) => {
