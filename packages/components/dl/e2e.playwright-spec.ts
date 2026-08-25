@@ -61,6 +61,38 @@ test.describe('KbqDlModule', () => {
             expect(await getOutlineStyle()).toBe('solid');
         });
 
+        test('should keep the resize cursor outside the handle and restore it after drag', async ({ page }) => {
+            await page.goto('/E2eDlResizable');
+
+            const separator = getSeparator(getComponent(page));
+            const getDocumentCursor = () => page.locator('body').evaluate((element) => element.style.cursor);
+
+            await separator.hover();
+            const box = (await separator.boundingBox())!;
+            const startX = box.x + box.width / 2;
+            const startY = box.y + box.height / 2;
+
+            await page.mouse.down();
+            await expect.poll(getDocumentCursor).toBe('col-resize');
+
+            // Move well past the handle after the dt column stops at its minimum.
+            await page.mouse.move(1, startY);
+            await expect(separator).toHaveAttribute('aria-valuenow', '120');
+            await expect.poll(getDocumentCursor).toBe('e-resize');
+
+            await page.mouse.move(20, startY);
+            await expect(separator).toHaveAttribute('aria-valuenow', '120');
+            await expect.poll(getDocumentCursor).toBe('e-resize');
+
+            // The same gesture can return to the available range.
+            await page.mouse.move(startX + 50, startY);
+            await expect.poll(async () => Number(await separator.getAttribute('aria-valuenow'))).toBeGreaterThan(120);
+            await expect.poll(getDocumentCursor).toBe('col-resize');
+
+            await page.mouse.up();
+            await expect.poll(getDocumentCursor).toBe('');
+        });
+
         test('should widen the first column when the separator is dragged to the right', async ({ page }) => {
             await page.goto('/E2eDlResizable');
 

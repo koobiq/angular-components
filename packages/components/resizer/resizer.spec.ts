@@ -33,6 +33,20 @@ const getResizableElement = ({ debugElement }: ComponentFixture<unknown>): HTMLE
     return debugElement.query(By.directive(KbqResizable)).nativeElement;
 };
 
+const createPointerEvent = (
+    type: string,
+    { isPrimary = true, pointerId = 1, ...init }: MouseEventInit & { isPrimary?: boolean; pointerId?: number } = {}
+): PointerEvent => {
+    const event = new MouseEvent(type, init);
+
+    Object.defineProperties(event, {
+        isPrimary: { value: isPrimary },
+        pointerId: { value: pointerId }
+    });
+
+    return event as PointerEvent;
+};
+
 /** jsdom computes no layout, so the box model the directive branches on has to be supplied. */
 const windowStub = (boxSizing: 'content-box' | 'border-box'): Provider => ({
     provide: KBQ_WINDOW,
@@ -110,6 +124,142 @@ describe(KbqResizer.name, () => {
         expect(getResizerElement(fixture).style.cursor).toBe('ns-resize');
     });
 
+    it('should apply the current resize cursor to the document during drag and restore the previous cursor', () => {
+        const fixture = createComponent(TestResizer);
+
+        fixture.componentInstance.cursor.set('col-resize');
+        fixture.detectChanges();
+        document.body.style.setProperty('cursor', 'wait', 'important');
+
+        getResizerElement(fixture).dispatchEvent(createPointerEvent('pointerdown'));
+
+        expect(document.body.style.cursor).toBe('col-resize');
+        expect(document.body.style.getPropertyPriority('cursor')).toBe('important');
+
+        fixture.componentInstance.cursor.set('e-resize');
+        fixture.detectChanges();
+
+        expect(document.body.style.cursor).toBe('e-resize');
+
+        document.dispatchEvent(createPointerEvent('pointerup'));
+
+        expect(document.body.style.cursor).toBe('wait');
+        expect(document.body.style.getPropertyPriority('cursor')).toBe('important');
+
+        document.body.style.removeProperty('cursor');
+    });
+
+    it('should restore the document cursor when the pointer is cancelled', () => {
+        const fixture = createComponent(TestResizer);
+
+        fixture.componentInstance.cursor.set('col-resize');
+        fixture.detectChanges();
+
+        getResizerElement(fixture).dispatchEvent(createPointerEvent('pointerdown'));
+
+        expect(document.body.style.cursor).toBe('col-resize');
+
+        document.dispatchEvent(createPointerEvent('pointercancel'));
+
+        expect(document.body.style.cursor).toBe('');
+    });
+
+    it('should restore the document cursor when pointer capture is lost', () => {
+        const fixture = createComponent(TestResizer);
+        const resizer = getResizerElement(fixture);
+
+        fixture.componentInstance.cursor.set('col-resize');
+        fixture.detectChanges();
+
+        resizer.dispatchEvent(createPointerEvent('pointerdown', { pointerId: 7 }));
+        resizer.dispatchEvent(createPointerEvent('lostpointercapture', { pointerId: 7 }));
+
+        expect(document.body.style.cursor).toBe('');
+    });
+
+    it('should restore the document cursor when destroyed during drag', () => {
+        const fixture = createComponent(TestResizer);
+
+        fixture.componentInstance.cursor.set('col-resize');
+        fixture.detectChanges();
+
+        getResizerElement(fixture).dispatchEvent(createPointerEvent('pointerdown'));
+
+        expect(document.body.style.cursor).toBe('col-resize');
+
+        fixture.destroy();
+
+        expect(document.body.style.cursor).toBe('');
+    });
+
+    it('should ignore secondary buttons and non-primary pointers', () => {
+        const fixture = createComponent(TestResizer);
+        const resizer = getResizerElement(fixture);
+
+        resizer.dispatchEvent(createPointerEvent('pointerdown', { button: 2 }));
+        resizer.dispatchEvent(createPointerEvent('pointerdown', { isPrimary: false, pointerId: 2 }));
+        document.dispatchEvent(createPointerEvent('pointermove', { buttons: 1, clientX: 30 }));
+
+        expect(fixture.componentInstance.sizeChange).not.toHaveBeenCalled();
+        expect(document.body.style.cursor).toBe('');
+    });
+
+    it('should not start dragging when both resize directions are disabled', () => {
+        const fixture = createComponent(TestResizer);
+        const resizer = getResizerElement(fixture);
+
+        fixture.componentInstance.direction.set([0, 0]);
+        fixture.detectChanges();
+
+        resizer.dispatchEvent(createPointerEvent('pointerdown'));
+        document.dispatchEvent(createPointerEvent('pointermove', { buttons: 1, clientX: 30 }));
+
+        expect(fixture.componentInstance.sizeChange).not.toHaveBeenCalled();
+        expect(document.body.style.cursor).toBe('');
+    });
+
+    it('should ignore events from another pointer while dragging', () => {
+        const fixture = createComponent(TestResizer);
+        const resizer = getResizerElement(fixture);
+
+        resizer.dispatchEvent(createPointerEvent('pointerdown', { pointerId: 7 }));
+        document.dispatchEvent(createPointerEvent('pointermove', { buttons: 1, clientX: 30, pointerId: 8 }));
+        document.dispatchEvent(createPointerEvent('pointerup', { pointerId: 8 }));
+
+        expect(fixture.componentInstance.sizeChange).not.toHaveBeenCalled();
+        expect(document.body.style.cursor).toBe('ew-resize');
+
+        document.dispatchEvent(createPointerEvent('pointermove', { buttons: 1, clientX: 30, pointerId: 7 }));
+        document.dispatchEvent(createPointerEvent('pointerup', { pointerId: 7 }));
+
+        expect(fixture.componentInstance.sizeChange).toHaveBeenCalledTimes(1);
+        expect(document.body.style.cursor).toBe('');
+    });
+
+    it('should capture only the active pointer and release it when the drag finishes', () => {
+        const fixture = createComponent(TestResizer);
+        const resizer = getResizerElement(fixture);
+        const setPointerCapture = jest.fn();
+        const releasePointerCapture = jest.fn();
+
+        Object.defineProperties(resizer, {
+            hasPointerCapture: { value: () => true },
+            releasePointerCapture: { value: releasePointerCapture },
+            setPointerCapture: { value: setPointerCapture }
+        });
+
+        resizer.dispatchEvent(createPointerEvent('pointerdown', { pointerId: 7 }));
+        resizer.dispatchEvent(createPointerEvent('pointerdown', { pointerId: 8 }));
+
+        expect(setPointerCapture).toHaveBeenCalledTimes(1);
+        expect(setPointerCapture).toHaveBeenCalledWith(7);
+
+        document.dispatchEvent(createPointerEvent('pointerup', { pointerId: 7 }));
+
+        expect(releasePointerCapture).toHaveBeenCalledWith(7);
+        expect(document.body.style.cursor).toBe('');
+    });
+
     it('should emit sizeChange event when resizing', async () => {
         const fixture = createComponent(TestResizer);
 
@@ -142,6 +292,7 @@ describe(KbqResizer.name, () => {
         document.dispatchEvent(new MouseEvent('pointermove', { buttons: 0 }));
 
         expect(fixture.componentInstance.sizeChange).toHaveBeenCalledTimes(0);
+        expect(document.body.style.cursor).toBe('');
     });
 
     it.each<{ boxSizing: 'content-box' | 'border-box'; width: number; height: number }>([

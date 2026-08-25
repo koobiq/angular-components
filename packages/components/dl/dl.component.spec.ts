@@ -354,34 +354,84 @@ describe(KbqDlComponent.name, () => {
         expect(getResizeHandle(fixture)!.style.cursor).toBe('e-resize');
     });
 
-    it('should switch the cursor to grow-only when a pointer drag collapses the column to its minimum', () => {
-        const fixture = createComponent(KbqDlComponent);
+    it.each<{
+        boundary: string;
+        boundaryCursor: string;
+        boundaryPointerX: number;
+        boundaryWidth: number;
+        beyondPointerX: number;
+        returnPointerX: number;
+        returnWidth: number;
+    }>([
+        {
+            boundary: 'minimum',
+            boundaryCursor: 'e-resize',
+            boundaryPointerX: 0,
+            boundaryWidth: 100,
+            beyondPointerX: -100,
+            returnPointerX: 200,
+            returnWidth: 200
+        },
+        {
+            boundary: 'maximum',
+            boundaryCursor: 'w-resize',
+            boundaryPointerX: 600,
+            boundaryWidth: 500,
+            beyondPointerX: 700,
+            returnPointerX: 400,
+            returnWidth: 400
+        }
+    ])(
+        'should keep the $boundaryCursor cursor through the $boundary boundary and restore it after drag',
+        ({ boundaryCursor, boundaryPointerX, boundaryWidth, beyondPointerX, returnPointerX, returnWidth }) => {
+            const fixture = createComponent(KbqDlComponent);
 
-        fixture.componentRef.setInput('resizable', true);
-        fixture.componentRef.setInput('vertical', false);
-        fixture.componentRef.setInput('dtMinWidth', 100);
-        fixture.componentRef.setInput('ddMinWidth', 100);
-        fixture.detectChanges();
+            fixture.componentRef.setInput('resizable', true);
+            fixture.componentRef.setInput('vertical', false);
+            fixture.componentRef.setInput('dtMinWidth', 100);
+            fixture.componentRef.setInput('ddMinWidth', 100);
+            fixture.detectChanges();
 
-        const resizeTrack = getDlElement(fixture).querySelector<HTMLElement>('.kbq-dl__resize-track')!;
-        const resizeHandle = getResizeHandle(fixture)!;
+            const resizeTrack = getDlElement(fixture).querySelector<HTMLElement>('.kbq-dl__resize-track')!;
+            const resizeHandle = getResizeHandle(fixture)!;
 
-        Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
-        // The resizer captures the base size via `getResizableSize()`; force its border-box branch to report 120.
-        resizeTrack.style.boxSizing = 'border-box';
-        Object.defineProperty(resizeTrack, 'getBoundingClientRect', {
-            configurable: true,
-            value: () => ({ width: 120, height: 0 }) as DOMRect
-        });
+            Object.defineProperty(getDlElement(fixture), 'clientWidth', { configurable: true, value: 600 });
+            // The resizer captures the base size via `getResizableSize()`; force its border-box branch to report 300.
+            resizeTrack.style.boxSizing = 'border-box';
+            Object.defineProperty(resizeTrack, 'getBoundingClientRect', {
+                configurable: true,
+                value: () => ({ width: 300, height: 0 }) as DOMRect
+            });
 
-        // Drag left past the minimum: the width clamps to 100 and the cursor must advertise the grow-only direction.
-        resizeHandle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 120 }));
-        document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 50 }));
-        fixture.detectChanges();
+            resizeHandle.dispatchEvent(new MouseEvent('pointerdown', { clientX: 300 }));
+            expect(document.body.style.cursor).toBe('col-resize');
 
-        expect(fixture.componentInstance.dtWidth()).toBe(100);
-        expect(resizeHandle.style.cursor).toBe('e-resize');
-    });
+            document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: boundaryPointerX }));
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dtWidth()).toBe(boundaryWidth);
+            expect(resizeHandle.style.cursor).toBe(boundaryCursor);
+            expect(document.body.style.cursor).toBe(boundaryCursor);
+
+            // Moving past the stationary handle keeps the resize cursor and the clamped width.
+            document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: beyondPointerX }));
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dtWidth()).toBe(boundaryWidth);
+            expect(document.body.style.cursor).toBe(boundaryCursor);
+
+            // Moving back into the available range resumes resizing without starting a new gesture.
+            document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: returnPointerX }));
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dtWidth()).toBe(returnWidth);
+            expect(document.body.style.cursor).toBe('col-resize');
+
+            document.dispatchEvent(new MouseEvent('pointerup'));
+
+            expect(document.body.style.cursor).toBe('');
+        }
+    );
 
     it('should fall back to the localized separator name for the aria-label', () => {
         const fixture = createComponent(KbqDlComponent, [
