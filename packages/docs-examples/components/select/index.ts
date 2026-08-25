@@ -21,6 +21,7 @@ import { SelectPagingExample } from './select-paging/select-paging-example';
 import { SelectPreselectedValuesExample } from './select-preselected-values/select-preselected-values-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
 import { SelectScrollingAndLayeringExample } from './select-scrolling-and-layering/select-scrolling-and-layering-example';
+import { SelectSearchSmartExample } from './select-search-smart/select-search-smart-example';
 import { SelectSearchExample } from './select-search/select-search-example';
 import { SelectSelectAllLabelExample } from './select-select-all-label/select-select-all-label-example';
 import { SelectSelectAllExample } from './select-select-all/select-select-all-example';
@@ -57,6 +58,7 @@ export {
     SelectPrioritizedSelectedExample,
     SelectScrollingAndLayeringExample,
     SelectSearchExample,
+    SelectSearchSmartExample,
     SelectSelectAllExample,
     SelectSelectAllLabelExample,
     SelectTwoLineOptionExample,
@@ -95,6 +97,7 @@ const EXAMPLES = [
     SelectPrioritizedSelectedExample,
     SelectWithPanelMinWidthExample,
     SelectScrollingAndLayeringExample,
+    SelectSearchSmartExample,
     SelectLoadingExample,
     SelectLoadingErrorExample,
     SelectNoVariantsExample,

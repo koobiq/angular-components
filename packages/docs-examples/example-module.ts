@@ -2645,6 +2645,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-search-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-smart-search": {
+    "packagePath": "components/filter-bar/filter-bar-smart-search",
+    "title": "Filter-bar smart search",
+    "componentName": "FilterBarSmartSearchExample",
+    "files": [
+      "filter-bar-smart-search-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-smart-search-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-smart-search-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-uniq-pipes": {
     "packagePath": "components/filter-bar/filter-bar-uniq-pipes",
     "title": "filter bar",
@@ -5214,6 +5227,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-scrolling-and-layering-example.ts",
     "importPath": "components/select"
   },
+  "select-search-smart": {
+    "packagePath": "components/select/select-search-smart",
+    "title": "Select smart search",
+    "componentName": "SelectSearchSmartExample",
+    "files": [
+      "select-search-smart-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "select-search-smart-example",
+    "additionalComponents": [],
+    "primaryFile": "select-search-smart-example.ts",
+    "importPath": "components/select"
+  },
   "select-search": {
     "packagePath": "components/select/select-search",
     "title": "Select search",
@@ -6515,6 +6541,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "timezone-search-overview-example.ts",
     "importPath": "components/timezone"
   },
+  "timezone-search-smart": {
+    "packagePath": "components/timezone/timezone-search-smart",
+    "title": "Timezone smart search",
+    "componentName": "TimezoneSearchSmartExample",
+    "files": [
+      "timezone-search-smart-example.ts"
+    ],
+    "localImportFiles": [
+      "../timezone-data.ts"
+    ],
+    "selector": "timezone-search-smart-example",
+    "additionalComponents": [],
+    "primaryFile": "timezone-search-smart-example.ts",
+    "importPath": "components/timezone"
+  },
   "timezone-trigger-overview": {
     "packagePath": "components/timezone/timezone-trigger-overview",
     "title": "Timezone trigger",
@@ -7244,6 +7285,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-select-search-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-search-overview-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-search-smart": {
+    "packagePath": "components/tree-select/tree-select-search-smart",
+    "title": "Tree-select smart search",
+    "componentName": "TreeSelectSearchSmartExample",
+    "files": [
+      "tree-select-search-smart-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-select-search-smart-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-search-smart-example.ts",
     "importPath": "components/tree-select"
   },
   "tree-select-select-all-label": {
@@ -8149,6 +8203,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search':
 return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-smart-search':
+return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'flag-aspect-ratio':
@@ -8535,6 +8591,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-scrolling-and-layering':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-search-smart':
+return import('@koobiq/docs-examples/components/select');
   case 'select-search':
 return import('@koobiq/docs-examples/components/select');
   case 'select-select-all-label':
@@ -8731,6 +8789,8 @@ return import('@koobiq/docs-examples/components/timepicker');
 return import('@koobiq/docs-examples/components/timezone');
   case 'timezone-search-overview':
 return import('@koobiq/docs-examples/components/timezone');
+  case 'timezone-search-smart':
+return import('@koobiq/docs-examples/components/timezone');
   case 'timezone-trigger-overview':
 return import('@koobiq/docs-examples/components/timezone');
   case 'title-custom-content':
@@ -8840,6 +8900,8 @@ return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-overview':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-search-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-search-smart':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-select-all-label':
 return import('@koobiq/docs-examples/components/tree-select');

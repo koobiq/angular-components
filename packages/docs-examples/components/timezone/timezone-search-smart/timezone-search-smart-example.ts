@@ -1,0 +1,110 @@
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { KbqOptionModule, createSearchPredicate, tokenizeSearchQuery } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectModule } from '@koobiq/components/select';
+import {
+    KbqTimezoneGroup,
+    KbqTimezoneModule,
+    KbqTimezoneZone,
+    getZonesGroupedByCountry,
+    offsetFormatter
+} from '@koobiq/components/timezone';
+import { Observable, merge, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { timezones } from '../timezone-data';
+
+/**
+ * @title Timezone smart search
+ */
+@Component({
+    selector: 'timezone-search-smart-example',
+    imports: [
+        KbqTimezoneModule,
+        KbqIconModule,
+        KbqSelectModule,
+        KbqInputModule,
+        ReactiveFormsModule,
+        AsyncPipe,
+        KbqOptionModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select [(value)]="selected">
+                <kbq-form-field noBorders kbqSelectSearch>
+                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+                    <input
+                        autocomplete="off"
+                        kbqInput
+                        type="text"
+                        [formControl]="searchControl"
+                        [placeholder]="'Город или часовой пояс'"
+                    />
+                    <kbq-cleaner />
+                </kbq-form-field>
+
+                <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+                @for (group of filteredOptions$ | async; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option [highlightText]="searchTokens" [timezone]="timezone" />
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TimezoneSearchSmartExample implements OnInit {
+    filteredOptions$: Observable<KbqTimezoneGroup[]>;
+    searchControl: FormControl = new FormControl();
+    selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    priorityCountry: string;
+
+    private readonly data: KbqTimezoneZone[];
+
+    constructor() {
+        this.data = timezones.map(({ associatedZones, ...zone }) => ({
+            ...zone,
+            cities: Array.isArray(associatedZones)
+                ? associatedZones
+                      .map(({ city }) => city)
+                      .sort()
+                      .join(', ')
+                : ''
+        }));
+
+        this.priorityCountry = this.data.find(
+            (item: KbqTimezoneZone) => item.id === Intl.DateTimeFormat().resolvedOptions().timeZone
+        )?.countryCode as string;
+    }
+
+    ngOnInit(): void {
+        this.filteredOptions$ = merge(
+            of(getZonesGroupedByCountry(this.data, 'Другие страны')),
+            this.searchControl.valueChanges.pipe(
+                distinctUntilChanged(),
+                debounceTime(500),
+                map(() => this.getFilteredData())
+            )
+        );
+    }
+
+    protected get searchTokens(): string[] {
+        return tokenizeSearchQuery(this.searchControl.value ?? '');
+    }
+
+    private getFilteredData(): KbqTimezoneGroup[] {
+        const predicate = createSearchPredicate(this.searchControl.value ?? '');
+
+        const options = this.data.filter((timezone: KbqTimezoneZone) =>
+            predicate([offsetFormatter(timezone.offset), timezone.city, timezone.cities])
+        );
+
+        return getZonesGroupedByCountry(options, 'Другие страны', this.priorityCountry);
+    }
+}

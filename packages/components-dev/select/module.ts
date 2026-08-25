@@ -123,6 +123,9 @@ import { DEV_OPTIONS } from './mock';
         <hr />
 
         <select-footer-example />
+        <hr />
+
+        <select-search-smart-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
