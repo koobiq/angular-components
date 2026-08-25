@@ -119,7 +119,7 @@ After making changes to the package's public API, you must update the API snapsh
 yarn run check-api                 # Verify public API hasn't changed unexpectedly
 yarn run approve-api               # Approve API changes (updates tools/public_api_guard/**/*.api.md files)
 yarn run check-public-api-any      # Verify public API hasn't contained `any` type
-yarn run approve-public-api-any    # Approve public API `any` type changes (updates tools/public_api_guard/**/*.public-any.md files)
+yarn run approve-public-api-any    # Approve public API `any` type changes (updates tools/check-public-api-any/baseline.json)
 ```
 
 ## Best Practices
