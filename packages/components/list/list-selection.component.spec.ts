@@ -1873,6 +1873,22 @@ describe('KbqListSelection drag and drop', () => {
             expect(getIndicatorOffset(fixture)).toBe('80px');
         });
 
+        it('should mark the option while the pointer is over no list that would take it', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[1];
+
+            stubVerticalLayout(fixture);
+            // `stubVerticalLayout` puts the list at 0..1000 vertically and 0..100 horizontally.
+            list.onOptionDragMoved(option, { x: 500, y: 50 });
+
+            expect(option.getHostElement().classList).toContain('kbq-list-option_drop-forbidden');
+
+            list.onOptionDragMoved(option, { x: 50, y: 50 });
+
+            expect(option.getHostElement().classList).not.toContain('kbq-list-option_drop-forbidden');
+        });
+
         it('should not mark the gap the option already occupies', () => {
             const fixture = setup(SelectionListWithDragAndDrop);
             const list = fixture.componentInstance.list();

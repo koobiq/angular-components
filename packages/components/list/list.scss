@@ -91,6 +91,19 @@ body:has(.kbq-list-option.cdk-drag-preview) {
     .kbq-list-option_draggable .cdk-drag-handle {
         cursor: grabbing;
     }
+
+    // What is being dragged into is the list, not the row under the pointer, so a row that lights up on
+    // hover promises a reaction it will not deliver. Taking the options out of hit testing drops `:hover`
+    // and `:active` in one go, and keeps a stray click off the action button mid-drag.
+    .kbq-list-option {
+        pointer-events: none;
+    }
+
+    // Nothing under the pointer would take the option, so stop promising a drop. Nested rather than
+    // written as a sibling: it has to outrank `grabbing` above on specificity, not on source order.
+    &:has(.kbq-list-option_drop-forbidden) {
+        cursor: no-drop;
+    }
 }
 
 // Option-only: `.kbq-selected` never lands on `.kbq-list-item`, and only options host an action container.

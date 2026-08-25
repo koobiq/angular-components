@@ -102,6 +102,10 @@ dragged one keeps its place as a faded row, and a line marks the position the op
 No line is shown while the pointer is over the place the option already occupies — dropping it there
 would change nothing.
 
+Nothing else reacts while the drag lasts. The options stop responding to hover, because what takes the
+drop is the list rather than the row under the pointer, and the cursor turns to `no-drop` whenever the
+pointer leaves every list that would accept the option.
+
 The list never changes the data itself — it reports the move through the `dropped` event and you
 apply it, usually with `moveItemInArray` from `@angular/cdk/drag-drop`. Track the options by their
 identity (`track item.id`): with a positional key such as `track $index` the option at a given

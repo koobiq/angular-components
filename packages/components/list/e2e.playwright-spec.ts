@@ -242,6 +242,50 @@ test.describe('KbqListModule', () => {
             expect(await cursorUnderPointer()).toBe('grab');
         });
 
+        test('stops the options from reacting to hover while one is being dragged', async ({ page }) => {
+            const backgroundOf = (testId: string) =>
+                page.getByTestId(testId).evaluate((option) => getComputedStyle(option).backgroundColor);
+
+            await page.getByTestId('source-2').hover();
+            const hovered = await backgroundOf('source-2');
+
+            await page.mouse.move(0, 0);
+            const atRest = await backgroundOf('source-2');
+
+            // Without this the assertion below would also pass on a list that never highlights at all.
+            expect(hovered).not.toBe(atRest);
+
+            await pressAndMoveOnto(page, 'source-1', 'source-2');
+
+            expect(await backgroundOf('source-2')).toBe(atRest);
+
+            await page.mouse.up();
+        });
+
+        test('turns the cursor to no-drop away from any list that would take the option', async ({ page }) => {
+            const bodyCursor = () => page.evaluate(() => getComputedStyle(document.body).cursor);
+
+            await pressAndMoveOnto(page, 'source-1', 'source-3');
+
+            expect(await bodyCursor()).toBe('grabbing');
+
+            // The lists sit at the top left of the page, so the bottom right corner is outside both.
+            const viewport = page.viewportSize()!;
+
+            await page.mouse.move(viewport.width - 1, viewport.height - 1, { steps: 5 });
+
+            expect(await bodyCursor()).toBe('no-drop');
+
+            // Back over the list — a plain move, the button is still down from the drag above.
+            const target = (await page.getByTestId('source-3').boundingBox())!;
+
+            await page.mouse.move(target.x + target.width / 2, target.y + target.height / 2, { steps: 5 });
+
+            expect(await bodyCursor()).toBe('grabbing');
+
+            await page.mouse.up();
+        });
+
         test('marks the drop target with the insertion indicator', async ({ page }) => {
             const indicator = page.getByTestId('e2eSourceList').locator('.kbq-list-selection__drop-indicator');
 

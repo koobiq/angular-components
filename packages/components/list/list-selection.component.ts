@@ -78,6 +78,12 @@ import { auditTime, startWith, switchMap, take } from 'rxjs/operators';
 /** How long consecutive `window.resize` ticks are collapsed before the scroll size is recalculated. */
 const RESIZE_AUDIT_TIME = 100;
 
+/**
+ * Marks the dragged option while the pointer is over no list that would take it. Styling reads it from the
+ * body, which is what resolves the cursor once the options are out of hit testing.
+ */
+const DROP_FORBIDDEN_CLASS = 'kbq-list-option_drop-forbidden';
+
 export interface KbqOptionEvent<T = any> {
     option: KbqListOption<T>;
 }
@@ -900,6 +906,10 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         }
 
         hovered?.showDropIndicator(option, pointer);
+
+        // Toggled on the element rather than through a signal: `moved` arrives outside the Angular zone,
+        // and the cursor may not lag a frame behind the pointer.
+        option.getHostElement().classList.toggle(DROP_FORBIDDEN_CLASS, !hovered);
     }
 
     /**
@@ -913,6 +923,8 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         for (const list of lists) {
             list.clearDropIndicator();
         }
+
+        option.getHostElement().classList.remove(DROP_FORBIDDEN_CLASS);
     }
 
     private clearDropIndicator(): void {
