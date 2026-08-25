@@ -55,10 +55,10 @@ unselected unless the target's own value already contains it.
 
 <!-- example(list-draggable-connected) -->
 
-Dragging is not supported inside `kbq-optgroup` or `cdk-virtual-scroll-viewport`: the indices reported
-by `dropped` count only the rendered options, or are relative to the group rather than to the list, so
-applying the move to the backing array silently affects the wrong item. Both combinations log a warning
-in development mode.
+Options are numbered across the whole list, so a `kbq-optgroup` can be reordered through and an option
+dragged past its boundary changes group. Dragging is not supported inside `cdk-virtual-scroll-viewport`,
+though: the indices reported by `dropped` count only the rendered options, so applying the move to the
+backing array silently affects the wrong item. That combination logs a warning in development mode.
 
 Reordering is pointer-only: there is no keyboard equivalent, so it is out of reach for anyone who
 cannot drag.

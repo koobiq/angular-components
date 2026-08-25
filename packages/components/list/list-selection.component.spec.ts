@@ -1,6 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -42,6 +43,7 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
 import {
@@ -1990,9 +1992,20 @@ describe('KbqListSelection drag and drop', () => {
 
             expect(await axe(fixture.nativeElement)).toHaveNoViolations();
         });
+
+        it('has no axe violations once the list is split by a group and a divider', async () => {
+            // Characterises the shape the docs recommend — a group, a decorative divider and an option
+            // that cannot be dragged — so that a later change to any of their roles is caught here.
+            const fixture = setup(SelectionListWithSections);
+
+            fixtureElement = fixture.nativeElement;
+            document.body.appendChild(fixture.nativeElement);
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        });
     });
 
-    describe('unsupported containers', () => {
+    describe('virtual scroll', () => {
         let warn: jest.SpyInstance;
 
         beforeEach(() => {
@@ -2001,8 +2014,8 @@ describe('KbqListSelection drag and drop', () => {
 
         afterEach(() => warn.mockRestore());
 
-        it('should warn about an optgroup once the list becomes draggable', () => {
-            const fixture = setup(SelectionListInOptgroup);
+        it('should warn once the list becomes draggable', () => {
+            const fixture = setup(SelectionListInVirtualScroll);
 
             expect(warn).not.toHaveBeenCalled();
 
@@ -2010,11 +2023,11 @@ describe('KbqListSelection drag and drop', () => {
             fixture.componentInstance.draggable.set(true);
             fixture.detectChanges();
 
-            expect(warn).toHaveBeenCalledWith(expect.stringContaining('kbq-optgroup'));
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('cdk-virtual-scroll-viewport'));
         });
 
-        it('should warn about an optgroup only once', () => {
-            const fixture = setup(SelectionListInOptgroup);
+        it('should warn only once', () => {
+            const fixture = setup(SelectionListInVirtualScroll);
 
             fixture.componentInstance.draggable.set(true);
             fixture.detectChanges();
@@ -2024,6 +2037,15 @@ describe('KbqListSelection drag and drop', () => {
             fixture.detectChanges();
 
             expect(warn).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not warn about a draggable list whose options sit in a group', () => {
+            const fixture = setup(SelectionListInOptgroup);
+
+            fixture.componentInstance.draggable.set(true);
+            fixture.detectChanges();
+
+            expect(warn).not.toHaveBeenCalled();
         });
 
         it('should not warn about a plain draggable list', () => {
@@ -2572,6 +2594,38 @@ class IdConnectedSelectionLists {
     readonly sourceItems = signal(['source 0', 'source 1']);
 
     dropped: KbqListSelectionDroppedEvent | null = null;
+}
+
+@Component({
+    imports: [KbqListModule, KbqOptionModule, KbqDividerModule],
+    template: `
+        <kbq-list-selection aria-label="Items" multiple="checkbox" [draggable]="true">
+            <kbq-list-option [value]="'loose'">Loose</kbq-list-option>
+            <kbq-optgroup label="Group">
+                <kbq-list-option [value]="'grouped'">Grouped</kbq-list-option>
+            </kbq-optgroup>
+            <kbq-divider aria-hidden="true" />
+            <kbq-list-option [draggable]="false" [value]="'pinned'">Pinned</kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithSections {}
+
+@Component({
+    imports: [KbqListModule, ScrollingModule],
+    template: `
+        <kbq-list-selection style="height: 64px" [draggable]="draggable()">
+            <cdk-virtual-scroll-viewport style="height: 100%" itemSize="32">
+                <kbq-list-option *cdkVirtualFor="let item of items" [value]="item">{{ item }}</kbq-list-option>
+            </cdk-virtual-scroll-viewport>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListInVirtualScroll {
+    readonly draggable = signal(false);
+    readonly items = Array.from({ length: 20 }, (_, index) => `Item ${index}`);
 }
 
 @Component({

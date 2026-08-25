@@ -378,4 +378,66 @@ test.describe('KbqListModule', () => {
             expect(await cursorOf(page.getByTestId('handle-1'))).toBe('pointer');
         });
     });
+
+    test.describe('E2eListDragGrouped', () => {
+        const getLabels = (page: Page) =>
+            page.getByTestId('e2eGroupedList').locator('kbq-list-option .kbq-list-text').allInnerTexts();
+
+        /** Rows 3 to 5 sit inside the group, rows 6 and 7 below the divider. */
+        const dragOnto = async (page: Page, from: string, to: string) => {
+            const fromBox = (await page.getByTestId(from).boundingBox())!;
+            const toBox = (await page.getByTestId(to).boundingBox())!;
+            const startX = fromBox.x + fromBox.width / 2;
+            const startY = fromBox.y + fromBox.height / 2;
+            const endX = toBox.x + toBox.width / 2;
+            const endY = toBox.y + toBox.height * 0.75;
+
+            await page.mouse.move(startX, startY);
+            await page.mouse.down();
+
+            for (let step = 1; step <= 10; step++) {
+                await page.mouse.move(startX + ((endX - startX) * step) / 10, startY + ((endY - startY) * step) / 10, {
+                    steps: 2
+                });
+            }
+
+            await page.mouse.up();
+            await expect(page.locator('.cdk-drag-preview')).toHaveCount(0);
+        };
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eListDragGrouped');
+        });
+
+        test('numbers options across the group, not within it', async ({ page }) => {
+            // Past the midpoint of the second option inside the group, so row-1 lands between row-4 and row-5.
+            await dragOnto(page, 'row-1', 'row-4');
+
+            expect(await getLabels(page)).toEqual(['row-2', 'row-3', 'row-4', 'row-1', 'row-5', 'row-6', 'row-7']);
+        });
+
+        test('moves an option out of the group', async ({ page }) => {
+            await dragOnto(page, 'row-3', 'row-6');
+
+            expect(await getLabels(page)).toEqual(['row-1', 'row-2', 'row-4', 'row-5', 'row-6', 'row-3', 'row-7']);
+        });
+
+        test('does not pick up an option that opts out', async ({ page }) => {
+            const box = (await page.getByTestId('row-7').boundingBox())!;
+            const targetBox = (await page.getByTestId('row-1').boundingBox())!;
+
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            await page.mouse.down();
+
+            for (let step = 1; step <= 10; step++) {
+                await page.mouse.move(box.x + box.width / 2, box.y + ((targetBox.y - box.y) * step) / 10, { steps: 2 });
+            }
+
+            await expect(page.locator('.cdk-drag-preview')).toHaveCount(0);
+
+            await page.mouse.up();
+
+            expect(await getLabels(page)).toEqual(['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6', 'row-7']);
+        });
+    });
 });

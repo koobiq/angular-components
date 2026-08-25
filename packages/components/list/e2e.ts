@@ -1,8 +1,9 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOptionModule } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
@@ -381,6 +382,58 @@ export class E2eListDragAndDrop {
 })
 export class E2eListDragHandle {
     protected readonly items = signal(['handle-1', 'handle-2', 'handle-3']);
+
+    protected dropped({ previousIndex, currentIndex }: KbqListSelectionDroppedEvent): void {
+        const items = [...this.items()];
+
+        moveItemInArray(items, previousIndex, currentIndex);
+        this.items.set(items);
+    }
+}
+
+/**
+ * A draggable list split into sections by a group and a divider, with one option that cannot be moved.
+ * The backing array stays flat: the sections are slices of it, so the indices `dropped` reports address
+ * it directly.
+ */
+@Component({
+    selector: 'e2e-list-drag-grouped',
+    imports: [KbqListModule, KbqDividerModule],
+    template: `
+        <kbq-list-selection
+            style="width: 240px"
+            data-testid="e2eGroupedList"
+            [draggable]="true"
+            (dropped)="dropped($event)"
+        >
+            @for (item of beforeGroup(); track item) {
+                <kbq-list-option [attr.data-testid]="item" [value]="item">{{ item }}</kbq-list-option>
+            }
+            <kbq-optgroup label="GROUP HEADER">
+                @for (item of grouped(); track item) {
+                    <kbq-list-option [attr.data-testid]="item" [value]="item">{{ item }}</kbq-list-option>
+                }
+            </kbq-optgroup>
+            <kbq-divider aria-hidden="true" />
+            @for (item of afterDivider(); track item) {
+                <kbq-list-option [attr.data-testid]="item" [draggable]="item !== pinned()" [value]="item">
+                    {{ item }}
+                </kbq-list-option>
+            }
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eListDragGrouped'
+    }
+})
+export class E2eListDragGrouped {
+    protected readonly items = signal(['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6', 'row-7']);
+    protected readonly pinned = signal('row-7');
+
+    protected readonly beforeGroup = computed(() => this.items().slice(0, 2));
+    protected readonly grouped = computed(() => this.items().slice(2, 5));
+    protected readonly afterDivider = computed(() => this.items().slice(5));
 
     protected dropped({ previousIndex, currentIndex }: KbqListSelectionDroppedEvent): void {
         const items = [...this.items()];

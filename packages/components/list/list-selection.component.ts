@@ -837,10 +837,9 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     }
 
     /**
-     * Both containers break the index space `dropped` reports: `CdkDropList` numbers only the options
-     * it has rendered, and an option inside a group is numbered within that group. Either way the
-     * indices do not address the consumer's backing array and the move silently lands on the wrong
-     * item, so warn instead of letting it pass unnoticed.
+     * `CdkDropList` numbers only the options it has rendered, so inside a virtual scroll the indices
+     * `dropped` reports do not address the consumer's backing array and the move silently lands on the
+     * wrong item. Warn instead of letting it pass unnoticed.
      */
     private warnOnUnsupportedDragContainer(): void {
         // Runs on every `draggable`/`disabled` change as well as on init, so it has to tolerate being
@@ -850,7 +849,6 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         }
 
         const insideVirtualScroll = !!this.elementRef.nativeElement.querySelector('cdk-virtual-scroll-viewport');
-        const insideOptgroup = !!this.options?.some((option) => !!option.group);
 
         if (insideVirtualScroll) {
             // eslint-disable-next-line no-console
@@ -860,15 +858,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             );
         }
 
-        if (insideOptgroup) {
-            // eslint-disable-next-line no-console
-            console.warn(
-                'KbqListSelection: `draggable` is not supported inside `kbq-optgroup`. The indices reported ' +
-                    'by `dropped` are relative to the group, not to the list.'
-            );
-        }
-
-        this.hasWarnedOnDragContainer = insideVirtualScroll || insideOptgroup;
+        this.hasWarnedOnDragContainer = insideVirtualScroll;
     }
 
     /** Keeps the underlying CDK directives in sync with the resolved `draggable` state. */
