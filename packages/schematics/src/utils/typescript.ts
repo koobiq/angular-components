@@ -50,6 +50,20 @@ export function forEachClass(sourceFile: ts.SourceFile, callback: (node: ts.Clas
     });
 }
 
+/** Walks every string literal (`'...'`/`"..."` or a template literal with no substitutions) in a source file. */
+export function forEachStringLiteral(
+    sourceFile: ts.SourceFile,
+    callback: (node: ts.StringLiteral | ts.NoSubstitutionTemplateLiteral) => void
+) {
+    sourceFile.forEachChild(function walk(node) {
+        if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) {
+            callback(node);
+        }
+
+        node.forEachChild(walk);
+    });
+}
+
 /**
  * Interior `[start, end)` ranges of inline `@Component({ template: '…' })` string literals.
  *

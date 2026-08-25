@@ -4,6 +4,11 @@ export interface ReplaceData {
     comment?: string;
 }
 
+/**
+ * @deprecated Unused by this migration. Kept only so external code importing this array doesn't
+ * break, and so a `customIconReplacementPath` file still written in this shape can be detected and
+ * warned about (see `resolveScope` in `./index.ts`). Use `scope` below instead.
+ */
 export const iconReplacements: ReplaceData[] = [
     { replace: 'kbq-icon="mc-', replaceWith: 'kbq-icon="kbq-' },
     { replace: 'kbq-icon-item="mc-', replaceWith: 'kbq-icon-item="kbq-' },
@@ -16,6 +21,9 @@ export const iconReplacements: ReplaceData[] = [
     { replace: "'mc-", replaceWith: "'kbq-" },
     { replace: `\\.mc;`, replaceWith: `.kbq;` }
 ];
+
+/** Old scope prefix and its replacement, used to build the migration's icon token map. */
+export const scope = { from: 'mc', to: 'kbq' };
 
 export const newIconsPackData: ReplaceData[] = [
     {
