@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ListActionButtonExample } from './list-action-button/list-action-button-example';
 import { ListDraggableConnectedExample } from './list-draggable-connected/list-draggable-connected-example';
+import { ListDraggableHandleExample } from './list-draggable-handle/list-draggable-handle-example';
 import { ListDraggableExample } from './list-draggable/list-draggable-example';
 import { ListGroupsExample } from './list-groups/list-groups-example';
 import { ListIntermediateStateExample } from './list-intermediate-state/list-intermediate-state-example';
@@ -13,6 +14,7 @@ export {
     ListActionButtonExample,
     ListDraggableConnectedExample,
     ListDraggableExample,
+    ListDraggableHandleExample,
     ListGroupsExample,
     ListIntermediateStateExample,
     ListMultipleCheckboxExample,
@@ -30,6 +32,7 @@ const EXAMPLES = [
     ListIntermediateStateExample,
     ListVirtualScrollExample,
     ListDraggableExample,
+    ListDraggableHandleExample,
     ListDraggableConnectedExample
 ];
 

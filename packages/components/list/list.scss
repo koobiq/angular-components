@@ -87,7 +87,8 @@
 body:has(.kbq-list-option.cdk-drag-preview) {
     cursor: grabbing;
 
-    .kbq-list-option_draggable {
+    .kbq-list-option_draggable,
+    .kbq-list-option_draggable .cdk-drag-handle {
         cursor: grabbing;
     }
 }
@@ -97,8 +98,16 @@ body:has(.kbq-list-option.cdk-drag-preview) {
     @include _kbq-list-option-selected-border-radius();
     @include action-container.kbq-option-action-visibility('.kbq-list-selection.cdk-keyboard-focused');
 
+    // A projected handle narrows what starts a drag, so the row stops advertising the grab and the
+    // handle takes it over.
     &.kbq-list-option_draggable {
-        cursor: grab;
+        &:not(:has(.cdk-drag-handle)) {
+            cursor: grab;
+        }
+
+        .cdk-drag-handle {
+            cursor: grab;
+        }
     }
 
     // The row the drag started from keeps its slot. `cdk-drag-anchor` is the clone CDK leaves behind

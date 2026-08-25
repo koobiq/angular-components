@@ -2,7 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import { CDK_DRAG_HANDLE, CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
@@ -13,6 +13,7 @@ import {
     Component,
     ContentChild,
     contentChild,
+    contentChildren,
     ContentChildren,
     DestroyRef,
     Directive,
@@ -1158,6 +1159,12 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     @ContentChild(KbqDropdownTrigger) dropdownTrigger?: KbqDropdownTrigger;
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
 
+    /**
+     * Drag handles the consumer has projected into the option. Nothing else reads them — `CdkDrag`
+     * collects its own through DI — they only tell the option whether the whole row starts a drag.
+     */
+    private readonly dragHandles = contentChildren(CDK_DRAG_HANDLE, { descendants: true });
+
     readonly text = viewChild.required<ElementRef>('text');
 
     /**
@@ -1278,8 +1285,12 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     constructor() {
         this.syncDraggableState();
 
-        // The whole row is the drag handle, so a touch drag has to lose to a scroll gesture.
-        this.drag.dragStartDelay = { touch: 300, mouse: 0 };
+        // Without a projected handle the whole row starts the drag, so a touch has to lose to a scroll
+        // gesture first. A handle is unambiguous and may start immediately. `CdkDrag` re-reads the delay
+        // on every `beforeStarted`, so assigning it whenever the query settles is enough.
+        effect(() => {
+            this.drag.dragStartDelay = this.dragHandles().length ? 0 : { touch: 300, mouse: 0 };
+        });
 
         // Assigned lazily: referencing `this` while the host directive is still being constructed
         // would capture a half-initialized option.

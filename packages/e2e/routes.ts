@@ -69,6 +69,7 @@ import { E2eInputStateAndStyle } from '../components/input/e2e';
 import { E2eLinkStates, E2eLinkWithCaption } from '../components/link/e2e';
 import {
     E2eListDragAndDrop,
+    E2eListDragHandle,
     E2eListOptionActionVisibility,
     E2eListSelectionState,
     E2eListStates
@@ -227,6 +228,7 @@ const components = [
     E2eListSelectionState,
     E2eListOptionActionVisibility,
     E2eListDragAndDrop,
+    E2eListDragHandle,
     E2eLoaderOverlayStates,
     E2eLoaderOverlayCard,
     E2eAutocompleteStates,

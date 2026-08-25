@@ -1624,6 +1624,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dl-overview-example.ts",
     "importPath": "components/dl"
   },
+  "dl-resizable": {
+    "packagePath": "components/dl/dl-resizable",
+    "title": "Description list resizable example",
+    "componentName": "DlResizableExample",
+    "files": [
+      "dl-resizable-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dl-resizable-example",
+    "additionalComponents": [],
+    "primaryFile": "dl-resizable-example.ts",
+    "importPath": "components/dl"
+  },
   "dl-small": {
     "packagePath": "components/dl/dl-small",
     "title": "Description list small",
@@ -1758,6 +1771,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dropdown-recursive-template-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-recursive-template-example.ts",
+    "importPath": "components/dropdown"
+  },
+  "dropdown-safe-area": {
+    "packagePath": "components/dropdown/dropdown-safe-area",
+    "title": "Dropdown safe area",
+    "componentName": "DropdownSafeAreaExample",
+    "files": [
+      "dropdown-safe-area-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dropdown-safe-area-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-safe-area-example.ts",
     "importPath": "components/dropdown"
   },
   "dropdown-with-filter": {
@@ -2096,7 +2122,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "../en-US.ts",
       "../es-LA.ts",
       "../pt-BR.ts",
-      "../ru-RU.ts"
+      "../ru-RU.ts",
+      "../tk-TM.ts"
     ],
     "selector": "file-upload-multiple-custom-text-overview-example",
     "additionalComponents": [],
@@ -3682,6 +3709,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "list-draggable-connected-example",
     "additionalComponents": [],
     "primaryFile": "list-draggable-connected-example.ts",
+    "importPath": "components/list"
+  },
+  "list-draggable-handle": {
+    "packagePath": "components/list/list-draggable-handle",
+    "title": "Draggable list with a handle",
+    "componentName": "ListDraggableHandleExample",
+    "files": [
+      "list-draggable-handle-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "list-draggable-handle-example",
+    "additionalComponents": [],
+    "primaryFile": "list-draggable-handle-example.ts",
     "importPath": "components/list"
   },
   "list-draggable": {
@@ -7955,6 +7995,8 @@ return import('@koobiq/docs-examples/components/divider');
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-overview':
 return import('@koobiq/docs-examples/components/dl');
+  case 'dl-resizable':
+return import('@koobiq/docs-examples/components/dl');
   case 'dl-small':
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-vertical-overview':
@@ -7974,6 +8016,8 @@ return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-overview':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-recursive-template':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-safe-area':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-with-filter':
 return import('@koobiq/docs-examples/components/dropdown');
@@ -8266,6 +8310,8 @@ return import('@koobiq/docs-examples/components/link');
   case 'list-action-button':
 return import('@koobiq/docs-examples/components/list');
   case 'list-draggable-connected':
+return import('@koobiq/docs-examples/components/list');
+  case 'list-draggable-handle':
 return import('@koobiq/docs-examples/components/list');
   case 'list-draggable':
 return import('@koobiq/docs-examples/components/list');

@@ -317,4 +317,65 @@ test.describe('KbqListModule', () => {
             expect(await getLabels(page, 'e2eTargetList')).toContain('source-1');
         });
     });
+
+    test.describe('E2eListDragHandle', () => {
+        const getLabels = (page: Page) =>
+            page.getByTestId('e2eHandleList').locator('kbq-list-option .kbq-list-text').allInnerTexts();
+
+        const handleOf = (page: Page, option: string) => page.getByTestId(option).locator('.cdk-drag-handle');
+
+        /**
+         * Same stepped move as the suite above, but aimed at arbitrary elements so that the row and its
+         * handle can be pressed separately.
+         */
+        const pressAndMoveFrom = async (page: Page, from: Locator, to: Locator) => {
+            const fromBox = (await from.boundingBox())!;
+            const toBox = (await to.boundingBox())!;
+            const startX = fromBox.x + fromBox.width / 2;
+            const startY = fromBox.y + fromBox.height / 2;
+            const endX = toBox.x + toBox.width / 2;
+            const endY = toBox.y + toBox.height * 0.75;
+
+            await page.mouse.move(startX, startY);
+            await page.mouse.down();
+
+            for (let step = 1; step <= 10; step++) {
+                await page.mouse.move(startX + ((endX - startX) * step) / 10, startY + ((endY - startY) * step) / 10, {
+                    steps: 2
+                });
+            }
+        };
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eListDragHandle');
+        });
+
+        test('starts a drag from the handle', async ({ page }) => {
+            await pressAndMoveFrom(page, handleOf(page, 'handle-1'), page.getByTestId('handle-3'));
+            await expect(page.locator('.cdk-drag-preview')).toHaveCount(1);
+
+            await page.mouse.up();
+            await expect(page.locator('.cdk-drag-preview')).toHaveCount(0);
+
+            expect(await getLabels(page)).toEqual(['handle-2', 'handle-3', 'handle-1']);
+        });
+
+        test('ignores a drag started from the rest of the row', async ({ page }) => {
+            // The row's own centre is the label: the handle has taken the drag away from it.
+            await pressAndMoveFrom(page, page.getByTestId('handle-1'), page.getByTestId('handle-3'));
+
+            await expect(page.locator('.cdk-drag-preview')).toHaveCount(0);
+
+            await page.mouse.up();
+
+            expect(await getLabels(page)).toEqual(['handle-1', 'handle-2', 'handle-3']);
+        });
+
+        test('advertises the grab on the handle rather than on the row', async ({ page }) => {
+            const cursorOf = (locator: Locator) => locator.evaluate((element) => getComputedStyle(element).cursor);
+
+            expect(await cursorOf(handleOf(page, 'handle-1'))).toBe('grab');
+            expect(await cursorOf(page.getByTestId('handle-1'))).toBe('pointer');
+        });
+    });
 });

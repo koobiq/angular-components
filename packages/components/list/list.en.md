@@ -43,6 +43,12 @@ changes.
 
 <!-- example(list-draggable) -->
 
+An option can also be picked up by one area of the row instead of the whole of it: project an element
+carrying `cdkDragHandle` into it, and only that element starts a drag and advertises the grab cursor.
+The directive is re-exported from `KbqListModule`, so nothing else has to be imported.
+
+<!-- example(list-draggable-handle) -->
+
 Options can also be moved into another list. Pass the other `kbq-list-selection` through `connectedTo`
 on both lists, and apply the move with `transferArrayItem`. An option arrives in the target list
 unselected unless the target's own value already contains it.

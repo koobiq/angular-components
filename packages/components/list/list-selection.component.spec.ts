@@ -1753,6 +1753,13 @@ describe('KbqListSelection drag and drop', () => {
             expect(getDrags(fixture)[0].dragStartDelay).toEqual({ touch: 300, mouse: 0 });
         });
 
+        it('should not delay a touch drag once an option carries a handle', () => {
+            // A handle leaves nothing to disambiguate, so the delay the row needs would be pure lag.
+            const fixture = setup(SelectionListWithDragHandle);
+
+            expect(getDrags(fixture)[0].dragStartDelay).toBe(0);
+        });
+
         it('should connect the drop list to the lists passed to connectedTo', () => {
             const fixture = setup(ConnectedSelectionLists);
             const [first, second] = fixture.debugElement
@@ -2421,6 +2428,20 @@ class SelectionListGroupedForA11y {}
     `
 })
 class SelectionListDisabledForA11y {}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection [draggable]="true">
+            <kbq-list-option [value]="'pinned'">
+                <span cdkDragHandle>handle</span>
+                Option
+            </kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithDragHandle {}
 
 @Component({
     imports: [KbqListModule],

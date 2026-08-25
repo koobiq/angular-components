@@ -39,6 +39,9 @@ const devItems = (prefix: string, offset: number, length: number): DevItem[] =>
         <list-draggable-example />
         <br />
         <br />
+        <list-draggable-handle-example />
+        <br />
+        <br />
         <list-draggable-connected-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

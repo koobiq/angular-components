@@ -354,3 +354,38 @@ export class E2eListDragAndDrop {
         target.set(to);
     }
 }
+
+/** A list whose options are picked up by a projected handle rather than by the whole row. */
+@Component({
+    selector: 'e2e-list-drag-handle',
+    imports: [KbqListModule, KbqIconModule],
+    template: `
+        <kbq-list-selection
+            style="width: 200px"
+            data-testid="e2eHandleList"
+            [draggable]="true"
+            (dropped)="dropped($event)"
+        >
+            @for (item of items(); track item) {
+                <kbq-list-option [attr.data-testid]="item" [value]="item">
+                    <i kbq-icon="kbq-grip-vertical-s_16" cdkDragHandle></i>
+                    {{ item }}
+                </kbq-list-option>
+            }
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eListDragHandle'
+    }
+})
+export class E2eListDragHandle {
+    protected readonly items = signal(['handle-1', 'handle-2', 'handle-3']);
+
+    protected dropped({ previousIndex, currentIndex }: KbqListSelectionDroppedEvent): void {
+        const items = [...this.items()];
+
+        moveItemInArray(items, previousIndex, currentIndex);
+        this.items.set(items);
+    }
+}
