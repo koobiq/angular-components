@@ -23,6 +23,10 @@ The menu width is configured exactly as on the [select](/en/components/select), 
 
 <!-- example(timezone-search-overview) -->
 
+The baseline example above matches the whole query as one string: the words have to appear in the same order as in the text. In the example below, matching each word of the query independently is used. See the [Smart search](/en/main/search-smart) guide.
+
+<!-- example(timezone-search-smart) -->
+
 ### Custom trigger
 
 `kbq-timezone-select-trigger` is a directive that allows you to define a custom display for the selected value.

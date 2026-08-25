@@ -63,6 +63,10 @@ Search can be by first character or full match, depending on the specific task a
 
 <!-- example(select-search) -->
 
+For more advanced matching, use `createSearchPredicate` from `@koobiq/components/core` instead of a substring search. See the [Smart search](/en/main/search-smart) guide.
+
+<!-- example(select-search-smart) -->
+
 ##### Select all
 
 In multiple selection mode all the values can be selected at once. The feature is off by default — turn it on with the `selectAll` attribute, and a master checkbox appears above the list.

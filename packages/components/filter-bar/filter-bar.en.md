@@ -110,6 +110,10 @@ Text search allows you to search for information based on any data, even if ther
 
 <!-- example(filter-bar-search) -->
 
+The search pipe's value is just a string handed back through `filterChange`. Filter your own data with this string using `createSearchPredicate` from `@koobiq/components/core`. Filter-bar's own pipe matching (for `Select`/`MultiSelect` pipe options) is unchanged. See the [Smart search](/en/main/search-smart) guide.
+
+<!-- example(filter-bar-smart-search) -->
+
 ### Saving filters
 
 The user can quickly get search results by selecting a saved filter, without re-configuring the parameters. It is also possible to create a new set of filters and use them in the future.
