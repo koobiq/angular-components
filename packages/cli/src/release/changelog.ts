@@ -18,6 +18,9 @@ const enum CommitNote {
     BreakingChange = 'BREAKING CHANGE'
 }
 
+/** Internal key under which doc-related commits are grouped, regardless of their package. */
+const DOCS_SECTION_KEY = 'documentation';
+
 /** Interface that describes a package in the changelog. */
 interface IChangelogPackage {
     commits: any[];
@@ -232,9 +235,12 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                         }
                     }
 
-                    const packageName = commit.package || config.changelogScope;
-
                     const type = getTypeOfCommitGroupDescription(group.title || '');
+
+                    // A commit is doc-related if it's grouped under the Documentation type, or its
+                    // scope is exactly "docs" (a multi-value scope like "docs,select" doesn't count).
+                    const isDocsCommit = type === 'docs' || commit.scope === 'docs';
+                    const packageName = isDocsCommit ? DOCS_SECTION_KEY : commit.package || config.changelogScope;
 
                     if (!packageGroups[packageName]) {
                         packageGroups[packageName] = { commits: [], breakingChanges: [], deprecations: [] };
@@ -269,7 +275,14 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                 });
             });
 
-            const sortedPackageGroupNames = Object.keys(packageGroups).sort(preferredOrderComparator(packageNames));
+            const sortedPackageGroupNames = Object.keys(packageGroups)
+                .filter((pkgName) => pkgName !== DOCS_SECTION_KEY)
+                .sort(preferredOrderComparator(packageNames));
+
+            // Render the Documentation section last, after all package sections.
+            if (packageGroups[DOCS_SECTION_KEY]) {
+                sortedPackageGroupNames.push(DOCS_SECTION_KEY);
+            }
 
             context.linkReferences = !config.withoutReferences;
             context.packageGroups = sortedPackageGroupNames.map((pkgName) => {
