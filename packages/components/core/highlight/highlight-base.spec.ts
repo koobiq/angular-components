@@ -163,4 +163,29 @@ describe('highlight', () => {
             expect(highlight('arr[0]', '[0]', mark)).toBe('arr[[0]]');
         });
     });
+
+    describe('multiple keywords (array)', () => {
+        it('should highlight every keyword independently', () => {
+            expect(highlight('10.125.123.0/24 - all', ['10.125', 'all'], mark)).toBe('[10.125].123.0/24 - [all]');
+        });
+
+        it('should highlight keywords regardless of the order given', () => {
+            expect(highlight('10.125.123.0/24 - all', ['all', '10.125'], mark)).toBe('[10.125].123.0/24 - [all]');
+        });
+
+        it('should not let a shorter keyword shadow a longer one it is a prefix of', () => {
+            // "All" is matched whole (not split into "Al" + "l") — the trailing "a" in "iance" is
+            // a separate, correct match of the "a" keyword.
+            expect(highlight('all Alliance', ['a', 'all'], mark)).toBe('[all] [All]i[a]nce');
+        });
+
+        it('should ignore non-string entries in the array', () => {
+            expect(highlight('10 all', ['10', null, undefined, 123, 'all'], mark)).toBe('[10] [all]');
+        });
+
+        it('should fall back to escaping when the array has no usable keywords', () => {
+            expect(highlight('Tom & Jerry', [], mark)).toBe('Tom &amp; Jerry');
+            expect(highlight('Tom & Jerry', [null, undefined, ''], mark)).toBe('Tom &amp; Jerry');
+        });
+    });
 });

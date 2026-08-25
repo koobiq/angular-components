@@ -1,5 +1,11 @@
 import { KbqTimezoneGroup, KbqTimezoneZone } from './timezone.models';
-import { getZonesGroupedByCountry, offsetFormatter, parseOffset, timezonesSortComparator } from './timezone.utils';
+import {
+    filterCitiesBySearchString,
+    getZonesGroupedByCountry,
+    offsetFormatter,
+    parseOffset,
+    timezonesSortComparator
+} from './timezone.utils';
 
 const firstTimezone: KbqTimezoneZone = {
     id: 'Europe/city3',
@@ -73,6 +79,37 @@ describe('KbqTimezone utils', () => {
             ];
 
             expect(getZonesGroupedByCountry(source)).toEqual(result);
+        });
+    });
+
+    describe('filterCitiesBySearchString', () => {
+        const cities = 'Kaliningrad, Kazan, Kirov, Moscow';
+
+        it('should keep only cities matching a single pattern', () => {
+            // A leading space survives because the source list is split on "," alone —
+            // pre-existing behavior of the `, `-joined `cities` format, unrelated to this test.
+            expect(filterCitiesBySearchString(cities, 'kazan')).toBe(' Kazan');
+        });
+
+        it('should keep a city matching any of several patterns', () => {
+            expect(filterCitiesBySearchString(cities, ['kazan', 'moscow'])).toBe(' Kazan, Moscow');
+        });
+
+        it('should return all cities unchanged when the pattern is empty', () => {
+            expect(filterCitiesBySearchString(cities, '')).toBe(cities);
+            expect(filterCitiesBySearchString(cities)).toBe(cities);
+        });
+
+        it('should return all cities unchanged when the pattern looks like a bare UTC offset', () => {
+            expect(filterCitiesBySearchString(cities, '+3')).toBe(cities);
+        });
+
+        it('should ignore UTC-offset-like patterns but still apply the rest', () => {
+            expect(filterCitiesBySearchString(cities, ['+3', 'kazan'])).toBe(' Kazan');
+        });
+
+        it('should treat regex special characters in the pattern literally', () => {
+            expect(filterCitiesBySearchString('Foo (Bar), Baz', '(Bar)')).toBe('Foo (Bar)');
         });
     });
 });

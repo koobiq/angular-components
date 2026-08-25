@@ -268,6 +268,9 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
 export function createMouseEvent(type: string, x?: number, y?: number, button?: number): MouseEvent;
 
 // @public
+export function createSearchPredicate(query: string): (value: string | readonly string[]) => boolean;
+
+// @public
 export function createTouchEvent(type: string, pageX?: number, pageY?: number): UIEvent;
 
 // @public (undocumented)
@@ -4560,6 +4563,9 @@ export const NINE = 57;
 // @public
 export function normalizeNumber(value: string | null | undefined, customConfig: Pick<KbqNumberInputLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): string;
 
+// @public
+export function normalizeSearchValue(value: string): string;
+
 // @public (undocumented)
 export const NUM_CENTER = 12;
 
@@ -5817,6 +5823,9 @@ export const tkTMLocaleData: {
 
 // @public
 export function toggleSelectAll<T>(adapter: KbqSelectAllAdapter<T>, options?: KbqToggleSelectAllOptions): T[];
+
+// @public
+export function tokenizeSearchQuery(query: string): string[];
 
 // @public (undocumented)
 export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];

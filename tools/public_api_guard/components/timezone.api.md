@@ -27,7 +27,7 @@ import { PipeTransform } from '@angular/core';
 import { Provider } from '@angular/core';
 
 // @public
-export function filterCitiesBySearchString(cities: string, searchPattern?: string): string;
+export function filterCitiesBySearchString(cities: string, searchPattern?: string | readonly string[]): string;
 
 // @public
 export function getZonesGroupedByCountry(data: KbqTimezoneZone[], otherCountriesLabel?: string, priorityCountry?: string): KbqTimezoneGroup[];
@@ -67,7 +67,7 @@ export class KbqTimezoneModule {
 // @public (undocumented)
 export class KbqTimezoneOption extends KbqOption {
     // (undocumented)
-    readonly highlightText: i0.InputSignal<string>;
+    readonly highlightText: i0.InputSignal<string | readonly string[]>;
     // (undocumented)
     get timezone(): KbqTimezoneZone;
     set timezone(zone: KbqTimezoneZone);

@@ -42,7 +42,7 @@ export class KbqTimezoneOption extends KbqOption {
     readonly tooltipContentWrapper = viewChild.required<ElementRef<HTMLElement>>('tooltipContentWrapper');
     readonly tooltipContent = viewChild.required<ElementRef<HTMLElement>>('tooltipContent');
 
-    readonly highlightText = input<string>(undefined!);
+    readonly highlightText = input<string | readonly string[]>(undefined!);
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
