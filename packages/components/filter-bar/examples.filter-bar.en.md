@@ -5,3 +5,7 @@
 #### Example of multiple pipes with the same type
 
 <!-- example(filter-bar-uniq-pipes) -->
+
+#### Smart search
+
+<!-- example(filter-bar-smart-search) -->

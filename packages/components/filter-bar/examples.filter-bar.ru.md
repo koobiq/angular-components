@@ -5,3 +5,7 @@
 #### Пример множества пайпов с одинаковым типом
 
 <!-- example(filter-bar-uniq-pipes) -->
+
+#### Умный поиск
+
+<!-- example(filter-bar-smart-search) -->

@@ -1235,7 +1235,7 @@ const structure: DocsStructure = makeStructure({
                     isGuide: true,
                     hasApi: false,
                     hasExamples: false,
-                    isNew: expiresAt('2026-09-2025')
+                    isNew: expiresAt('2026-09-25')
                 }
             ]
         }

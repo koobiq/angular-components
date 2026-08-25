@@ -66,7 +66,7 @@ export class FilterBarSmartSearchExample {
         { name: '10.125.11.0/24 - guest', description: 'Guest network with limited access' },
         { name: '172.16.0.0/16 - office', description: 'Main office network' },
         { name: '192.168.1.0/24 - lab', description: 'Testing laboratory' },
-        { name: 'Café Wi-Fi guest network', description: 'Guest cafe wireless network' },
+        { name: 'Café Wi-Fi guest network', description: 'Guest cafe wireless network' }
     ];
 
     readonly activeFilter = signal<KbqFilter>(this.getDefaultFilter());
