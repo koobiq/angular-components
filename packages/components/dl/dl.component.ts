@@ -1,4 +1,4 @@
-import { CdkMonitorFocus } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
@@ -64,6 +64,7 @@ export class KbqDdComponent {}
                 [style.width.px]="dtWidth()"
             >
                 <div
+                    #resizeHandle
                     class="kbq-dl__resize-handle"
                     role="separator"
                     aria-orientation="vertical"
@@ -77,6 +78,7 @@ export class KbqDdComponent {}
                     [kbqResizer]="resizeDirection()"
                     (dblclick)="handleResizeDblClick($event)"
                     (keydown)="handleResizeKeydown($event)"
+                    (resizeStart)="handleResizeStart()"
                     (sizeChange)="handleDtResize($event)"
                 ></div>
             </div>
@@ -95,8 +97,8 @@ export class KbqDdComponent {}
         '[class.kbq-dl_vertical-align-end]': "verticalAlign() === 'end'",
         '[class.kbq-dl_horizontal-align-center]': "horizontalAlign() === 'center'",
         '[class.kbq-dl_horizontal-align-end]': "horizontalAlign() === 'end'",
-        '[style.--kbq-description-list-column-width.px]': 'dtWidth()',
-        '[style.--kbq-description-list-column-min-width.px]': 'normalizedDtMinWidth()'
+        '[style.--kbq-description-list-dt-width.px]': 'dtWidth()',
+        '[style.--kbq-description-list-dt-min-width.px]': 'normalizedDtMinWidth()'
     }
 })
 export class KbqDlComponent {
@@ -194,8 +196,10 @@ export class KbqDlComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly directionality = inject(Directionality, { optional: true });
+    private readonly focusMonitor = inject(FocusMonitor);
     private readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
     private readonly resizeTrack = viewChild<ElementRef<HTMLElement>>('resizeTrack');
+    private readonly resizeHandle = viewChild<ElementRef<HTMLElement>>('resizeHandle');
     private readonly terms = contentChildren(KbqDtComponent, { read: ElementRef });
 
     /** @docs-private Resolved accessible name of the resize separator. */
@@ -230,6 +234,17 @@ export class KbqDlComponent {
     /** @docs-private */
     protected handleDtResize({ width }: KbqResizerSizeChangeEvent): void {
         this.setDtWidth(width);
+    }
+
+    /**
+     * @docs-private
+     * Demotes the separator's focus origin to the pointer when a mouse drag starts, so the keyboard-focus frame
+     * hides for the whole drag and does not linger afterwards. Keyboard focus keeps the frame as usual.
+     */
+    protected handleResizeStart(): void {
+        const handle = this.resizeHandle()?.nativeElement;
+
+        if (handle) this.focusMonitor.focusVia(handle, 'mouse');
     }
 
     /** @docs-private */

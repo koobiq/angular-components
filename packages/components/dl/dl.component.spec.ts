@@ -1,3 +1,4 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Injectable, Provider, Type } from '@angular/core';
@@ -119,7 +120,7 @@ describe(KbqDlComponent.name, () => {
         fixture.componentRef.setInput('dtMinWidth', 200);
         fixture.detectChanges();
 
-        expect(getDlElement(fixture).style.getPropertyValue('--kbq-description-list-column-min-width')).toBe('200px');
+        expect(getDlElement(fixture).style.getPropertyValue('--kbq-description-list-dt-min-width')).toBe('200px');
     });
 
     it('should not constrain the resting track before a width is set, so the separator stays on the column border', () => {
@@ -210,6 +211,29 @@ describe(KbqDlComponent.name, () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance.dtWidth()).toBe(200);
+    });
+
+    it('should demote the separator focus to the pointer origin when a mouse drag starts', () => {
+        const fixture = createComponent(KbqDlComponent);
+
+        fixture.componentRef.setInput('resizable', true);
+        fixture.componentRef.setInput('vertical', false);
+        fixture.detectChanges();
+
+        const focusMonitor = TestBed.inject(FocusMonitor);
+        const resizeHandle = getResizeHandle(fixture)!;
+
+        // Keyboard focus keeps the frame.
+        focusMonitor.focusVia(resizeHandle, 'keyboard');
+        fixture.detectChanges();
+        expect(resizeHandle.classList).toContain('cdk-keyboard-focused');
+
+        // Grabbing the separator with the mouse demotes the origin, so the frame does not linger after the drag.
+        resizeHandle.dispatchEvent(new MouseEvent('pointerdown'));
+        fixture.detectChanges();
+
+        expect(resizeHandle.classList).not.toContain('cdk-keyboard-focused');
+        expect(resizeHandle.classList).toContain('cdk-mouse-focused');
     });
 
     it('should reverse horizontal resize direction in RTL', () => {

@@ -36,13 +36,13 @@
     // rests on the real column border and dragging starts from a width that already satisfies the minimum.
     &.kbq-dl_resizable:not(.kbq-dl_resized):not(.kbq-dl_vertical) {
         grid-template-columns:
-            minmax(var(--kbq-description-list-column-min-width), 1fr)
+            minmax(var(--kbq-description-list-dt-min-width), 1fr)
             repeat(3, minmax(0, 1fr));
     }
 
     &.kbq-dl_resized:not(.kbq-dl_vertical) {
         grid-template-columns:
-            var(--kbq-description-list-column-width)
+            var(--kbq-description-list-dt-width)
             repeat(3, minmax(0, 1fr));
     }
 
@@ -69,6 +69,9 @@
         width: var(--kbq-description-list-resizer-hit-area-width);
         pointer-events: auto;
         touch-action: none;
+        // Suppress the native focus ring: the frame is drawn solely by `.cdk-keyboard-focused` below, so a pointer
+        // resize (which demotes the focus origin to mouse) leaves no `:focus-visible` outline lingering.
+        outline: none;
 
         // The resize line, centered inside the hit area. Hidden until the list is hovered or the separator is focused.
         // Inset vertically by the focus-outline width so the line and its 2px focus frame stay within the list bounds
@@ -101,14 +104,12 @@
             background-color: var(--kbq-description-list-resizer-state-active-color);
         }
 
+        // Only keyboard focus shows the frame; a pointer drag demotes the focus origin to mouse (see
+        // `handleResizeStart`), so the frame stays hidden throughout the drag and does not linger after it.
         &.cdk-keyboard-focused {
             outline: var(--kbq-description-list-resizer-focus-outline-width) solid
                 var(--kbq-description-list-resizer-focus-outline-color);
             outline-offset: calc(-1 * var(--kbq-description-list-resizer-focus-outline-width));
-        }
-
-        &.cdk-keyboard-focused:active {
-            outline: none;
         }
     }
 
@@ -123,11 +124,11 @@
         grid-template-columns: repeat(2, 1fr);
 
         &.kbq-dl_resizable:not(.kbq-dl_resized):not(.kbq-dl_vertical) {
-            grid-template-columns: minmax(var(--kbq-description-list-column-min-width), 1fr) minmax(0, 1fr);
+            grid-template-columns: minmax(var(--kbq-description-list-dt-min-width), 1fr) minmax(0, 1fr);
         }
 
         &.kbq-dl_resized:not(.kbq-dl_vertical) {
-            grid-template-columns: var(--kbq-description-list-column-width) minmax(0, 1fr);
+            grid-template-columns: var(--kbq-description-list-dt-width) minmax(0, 1fr);
         }
 
         .kbq-dt {

@@ -110,6 +110,11 @@ export class KbqResizer {
     readonly cursor = input<string | null>(null);
 
     /**
+     * Emits the element size when a pointer drag begins, after the directive has committed to the resize.
+     */
+    readonly resizeStart = output<KbqResizerSizeChangeEvent>();
+
+    /**
      * Emits the new size of the element after resizing.
      */
     readonly sizeChange = output<KbqResizerSizeChangeEvent>();
@@ -189,6 +194,7 @@ export class KbqResizer {
         this.element.setPointerCapture?.(this.activePointerId);
         this.dragging.set(true);
         this.applyDocumentCursor(this.resolvedCursor());
+        this.resizeStart.emit({ width, height });
     }
 
     /**

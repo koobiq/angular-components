@@ -65,7 +65,12 @@ const windowStub = (boxSizing: 'content-box' | 'border-box'): Provider => ({
     standalone: true,
     template: `
         <div kbqResizable>
-            <div [kbqResizer]="direction()" [cursor]="cursor()" (sizeChange)="sizeChange($event)"></div>
+            <div
+                [kbqResizer]="direction()"
+                [cursor]="cursor()"
+                (resizeStart)="resizeStart($event)"
+                (sizeChange)="sizeChange($event)"
+            ></div>
         </div>
     `
 })
@@ -76,6 +81,7 @@ export class TestResizer {
     readonly direction = signal<KbqResizerDirection>([1, 0]);
     readonly cursor = signal<string | null>(null);
 
+    readonly resizeStart = jest.fn();
     readonly sizeChange = jest.fn();
 }
 
@@ -258,6 +264,25 @@ describe(KbqResizer.name, () => {
 
         expect(releasePointerCapture).toHaveBeenCalledWith(7);
         expect(document.body.style.cursor).toBe('');
+    });
+
+    it('should emit resizeStart with the element size when a drag begins', () => {
+        const fixture = createComponent(TestResizer, [windowStub('content-box')]);
+
+        getResizerElement(fixture).dispatchEvent(createPointerEvent('pointerdown'));
+
+        expect(fixture.componentInstance.resizeStart).toHaveBeenCalledTimes(1);
+        expect(fixture.componentInstance.resizeStart).toHaveBeenCalledWith(CONTENT_BOX);
+    });
+
+    it('should NOT emit resizeStart for pointerdowns that do not start a drag', () => {
+        const fixture = createComponent(TestResizer);
+        const resizer = getResizerElement(fixture);
+
+        resizer.dispatchEvent(createPointerEvent('pointerdown', { button: 2 }));
+        resizer.dispatchEvent(createPointerEvent('pointerdown', { isPrimary: false, pointerId: 2 }));
+
+        expect(fixture.componentInstance.resizeStart).not.toHaveBeenCalled();
     });
 
     it('should emit sizeChange event when resizing', async () => {

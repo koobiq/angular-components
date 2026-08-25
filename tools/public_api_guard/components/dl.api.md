@@ -32,6 +32,7 @@ export class KbqDlComponent {
     protected handleDtResize(input: KbqResizerSizeChangeEvent): void;
     protected handleResizeDblClick(event: MouseEvent): void;
     protected handleResizeKeydown(event: KeyboardEvent): void;
+    protected handleResizeStart(): void;
     readonly horizontalAlign: _angular_core.InputSignal<KbqDlAlign>;
     protected readonly isVertical: _angular_core.Signal<boolean>;
     // (undocumented)
