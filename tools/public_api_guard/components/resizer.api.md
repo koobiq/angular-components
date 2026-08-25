@@ -18,11 +18,13 @@ export class KbqResizable {
 // @public
 export class KbqResizer {
     constructor();
-    protected readonly cursor: i0.Signal<"default" | "ns-resize" | "ew-resize" | "nwse-resize" | "nesw-resize">;
+    readonly cursor: i0.InputSignal<string | null>;
     readonly direction: i0.InputSignal<KbqResizerDirection>;
+    readonly resizeStart: i0.OutputEmitterRef<KbqResizerSizeChangeEvent>;
+    protected readonly resolvedCursor: i0.Signal<string>;
     readonly sizeChange: i0.OutputEmitterRef<KbqResizerSizeChangeEvent>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqResizer, "[kbqResizer]", ["kbqResizer"], { "direction": { "alias": "kbqResizer"; "required": true; "isSignal": true; }; }, { "sizeChange": "sizeChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqResizer, "[kbqResizer]", ["kbqResizer"], { "direction": { "alias": "kbqResizer"; "required": true; "isSignal": true; }; "cursor": { "alias": "cursor"; "required": false; "isSignal": true; }; }, { "resizeStart": "resizeStart"; "sizeChange": "sizeChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqResizer, never>;
 }

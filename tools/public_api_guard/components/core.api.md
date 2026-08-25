@@ -452,6 +452,7 @@ export const enUSLocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;
@@ -717,6 +718,7 @@ export const esLALocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;
@@ -1233,6 +1235,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1473,6 +1476,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1708,6 +1712,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1948,6 +1953,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2185,6 +2191,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             clear: string;
             showPassword: string;
             hidePassword: string;
+            resizeColumns: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2488,6 +2495,7 @@ export type KbqA11yLocaleConfiguration = {
     clear: string;
     showPassword: string;
     hidePassword: string;
+    resizeColumns: string;
 };
 
 // @public
@@ -4748,6 +4756,7 @@ export const ptBRLocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5198,6 +5207,7 @@ export const ruRULocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5559,6 +5569,7 @@ export const tkTMLocaleData: {
         clear: string;
         showPassword: string;
         hidePassword: string;
+        resizeColumns: string;
     };
     select: {
         hiddenItemsText: string;

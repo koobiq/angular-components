@@ -12,7 +12,8 @@ export const ptBRLocaleData = {
         nextMonth: 'Próximo mês',
         clear: 'Apagar',
         showPassword: 'Mostrar a senha',
-        hidePassword: 'Ocultar a senha'
+        hidePassword: 'Ocultar a senha',
+        resizeColumns: 'Redimensionar colunas'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
