@@ -2,12 +2,6 @@
 
 <!-- example(dl-overview) -->
 
-### Resizable
-
-The `resizable` flag enables changing the width of columns in horizontal mode. The separator is shown on hover, while dragging, or when the list has keyboard focus. Arrow keys change the width, and `Home` and `End` set the minimum and maximum. Double-click collapses `kbq-dt` to its minimum, and a second double-click restores the default layout.
-
-<!-- example(dl-resizable) -->
-
 ### Small (adaptive)
 
 <!-- example(dl-small) -->
@@ -19,3 +13,11 @@ The `resizable` flag enables changing the width of columns in horizontal mode. T
 ### Vertical
 
 <!-- example(dl-vertical-overview) -->
+
+### Resizable
+
+The `resizable` flag allows changing column widths by dragging the separator.
+
+Minimum column widths are set with `dtMinWidth` and `ddMinWidth`. Two-way binding with `[(dtWidth)]` is used to set and preserve the width programmatically and synchronize it across lists.
+
+<!-- example(dl-resizable) -->
