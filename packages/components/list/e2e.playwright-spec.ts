@@ -223,6 +223,25 @@ test.describe('KbqListModule', () => {
             await page.mouse.up();
         });
 
+        test('swaps the grab cursor for grabbing while the option is being dragged', async ({ page }) => {
+            // Read it off the option the pointer ends over, not off the body: CDK hides the preview from
+            // hit testing, so the cursor the user sees is the one resolved from whatever lies under it.
+            // `source-3` is never cloned during the drag, unlike the option being dragged.
+            const cursorUnderPointer = () =>
+                page.getByTestId('source-3').evaluate((option) => getComputedStyle(option).cursor);
+
+            expect(await cursorUnderPointer()).toBe('grab');
+
+            await pressAndMoveOnto(page, 'source-1', 'source-3');
+
+            expect(await cursorUnderPointer()).toBe('grabbing');
+
+            await page.mouse.up();
+            await expect(page.locator('.cdk-drag-preview')).toHaveCount(0);
+
+            expect(await cursorUnderPointer()).toBe('grab');
+        });
+
         test('marks the drop target with the insertion indicator', async ({ page }) => {
             const indicator = page.getByTestId('e2eSourceList').locator('.kbq-list-selection__drop-indicator');
 

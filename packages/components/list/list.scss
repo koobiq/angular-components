@@ -78,10 +78,18 @@
     }
 }
 
-// We should apply `cursor: grabbing` to the body, not to the dragged element itself.
-// Reason: https://github.com/angular/components/blob/18.2.14/src/cdk/drag-drop/resets.scss#L14-L15
-body:has(.kbq-list-selection.cdk-drop-list-dragging) {
+// `cursor: grabbing` goes on the body rather than on the dragged element, which CDK hides from hit
+// testing anyway: https://github.com/angular/components/blob/18.2.14/src/cdk/drag-drop/resets.scss#L14-L15
+// The body alone is not enough, though: the cursor is resolved from whatever sits under the pointer, and
+// during a drag that is another option, whose own `grab` outranks anything the body sets.
+// Keyed on the preview because it is in the DOM for as long as the drag lasts, and unlike
+// `cdk-drop-list-dragging` it is not an Angular host binding waiting on change detection.
+body:has(.kbq-list-option.cdk-drag-preview) {
     cursor: grabbing;
+
+    .kbq-list-option_draggable {
+        cursor: grabbing;
+    }
 }
 
 // Option-only: `.kbq-selected` never lands on `.kbq-list-item`, and only options host an action container.
