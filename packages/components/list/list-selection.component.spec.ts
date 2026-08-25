@@ -1831,20 +1831,39 @@ describe('KbqListSelection drag and drop', () => {
         it('should sit on the gap the pointer is closest to', () => {
             const fixture = setup(SelectionListWithDragAndDrop);
             const list = fixture.componentInstance.list();
-            const option = getOptions(fixture)[0];
+            // The second option, so that neither end of the list is the place it already occupies.
+            const option = getOptions(fixture)[1];
 
             stubVerticalLayout(fixture);
             // Above every midpoint: the option would land before the first one.
             list.onOptionDragMoved(option, { x: 50, y: 5 });
             fixture.detectChanges();
 
-            expect(getIndicatorOffset(fixture)).toBe('20px');
+            expect(getIndicatorOffset(fixture)).toBe('0px');
 
             // Past the last midpoint: the option would land at the very end.
             list.onOptionDragMoved(option, { x: 50, y: 95 });
             fixture.detectChanges();
 
             expect(getIndicatorOffset(fixture)).toBe('80px');
+        });
+
+        it('should not mark the gap the option already occupies', () => {
+            const fixture = setup(SelectionListWithDragAndDrop);
+            const list = fixture.componentInstance.list();
+            const option = getOptions(fixture)[1];
+
+            stubVerticalLayout(fixture);
+            list.onOptionDragMoved(option, { x: 50, y: 95 });
+            fixture.detectChanges();
+
+            expect(getIndicator(fixture)).not.toBeNull();
+
+            // Back over its own row: dropping here would put the option where it already is.
+            list.onOptionDragMoved(option, { x: 50, y: 25 });
+            fixture.detectChanges();
+
+            expect(getIndicator(fixture)).toBeNull();
         });
 
         it('should disappear once the option has been dropped', () => {

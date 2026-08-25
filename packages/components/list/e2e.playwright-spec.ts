@@ -126,15 +126,16 @@ test.describe('KbqListModule', () => {
          * CDK only starts a drag past its 5px threshold, hence the stepped move rather than a single
          * jump. The pointer stops past the target's midpoint rather than on it: the midpoint is exactly
          * the boundary between the gap above the target and the gap below it, so aiming at the centre
-         * would leave the resulting position ambiguous.
+         * would leave the resulting position ambiguous. `at` picks the side — below the midpoint by
+         * default, above it for a drop that has to land before the target.
          */
-        const pressAndMoveOnto = async (page: Page, from: string, to: string) => {
+        const pressAndMoveOnto = async (page: Page, from: string, to: string, at = 0.75) => {
             const sourceBox = (await page.getByTestId(from).boundingBox())!;
             const targetBox = (await page.getByTestId(to).boundingBox())!;
             const startX = sourceBox.x + sourceBox.width / 2;
             const startY = sourceBox.y + sourceBox.height / 2;
             const endX = targetBox.x + targetBox.width / 2;
-            const endY = targetBox.y + targetBox.height * 0.75;
+            const endY = targetBox.y + targetBox.height * at;
 
             await page.mouse.move(startX, startY);
             await page.mouse.down();
@@ -239,6 +240,19 @@ test.describe('KbqListModule', () => {
 
             await page.mouse.up();
             await expect(indicator).toHaveCount(0);
+        });
+
+        test('shows no indicator over the place the option already occupies', async ({ page }) => {
+            // Above the midpoint of the option below it, which is the gap `source-1` is already in.
+            await pressAndMoveOnto(page, 'source-1', 'source-2', 0.25);
+
+            // Without this the assertion below would also pass on a drag that never started.
+            await expect(page.locator('.cdk-drag-preview')).toHaveCount(1);
+            await expect(page.getByTestId('e2eSourceList').locator('.kbq-list-selection__drop-indicator')).toHaveCount(
+                0
+            );
+
+            await page.mouse.up();
         });
 
         test('keeps the dragged option in place, faded, instead of removing it', async ({ page }) => {

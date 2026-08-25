@@ -28,6 +28,8 @@ Set the `draggable` property on `kbq-list-selection` to let the user reorder opt
 
 The list does not open a gap while an option is being dragged: the surrounding options stay put, the
 dragged one keeps its place as a faded row, and a line marks the position the option would land in.
+No line is shown while the pointer is over the place the option already occupies — dropping it there
+would change nothing.
 
 The list never changes the data itself — it reports the move through the `dropped` event and you
 apply it, usually with `moveItemInArray` from `@angular/cdk/drag-drop`. Track the options by their

@@ -864,8 +864,9 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
                 const { option }: KbqListOptionDragData = item.data;
                 const target: KbqListSelection = container.data;
                 // Sorting is disabled, so CDK reports the untouched starting index. The gap the indicator
-                // marked is the real target; without one the pointer was outside every list we know, which
-                // resolves to a move that changes nothing.
+                // marked is the real target; without one the pointer was either outside every list we know
+                // or over the place the option already occupies, and both resolve to a move that changes
+                // nothing.
                 const currentIndex = target.dropIndex ?? previousIndex;
 
                 this.clearDropIndicators(option);
@@ -1006,6 +1007,15 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
         const position = horizontal ? pointer.x : pointer.y;
         const index = rects.filter((rect) => position >= midpointOf(rect)).length;
+
+        // The dragged option is not among `rects`, so the gaps above and below it collapse into the one
+        // carrying its own index — the place it already occupies. Marking it would promise a move that
+        // changes nothing, so the indicator stays hidden and the drop falls back to `previousIndex`.
+        if (index === this.getOptionIndex(dragged)) {
+            this.clearDropIndicator();
+
+            return;
+        }
 
         const container = this.elementRef.nativeElement.getBoundingClientRect();
         const scrolled = horizontal
