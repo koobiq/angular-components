@@ -19,6 +19,7 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ConnectionPositionPair } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter as DateAdapter_2 } from '@koobiq/date-adapter';
@@ -1165,6 +1166,9 @@ export const KBQ_CONNECTED_OVERLAY_BELOW_CLASS = "kbq-connected-overlay_below";
 
 // @public
 export const KBQ_CONNECTED_OVERLAY_ORIGIN: InjectionToken<KbqConnectedOverlayOriginProvider>;
+
+// @public
+export const KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS = "kbq-connected-overlay_overlap";
 
 // @public (undocumented)
 export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER: <T>(token: InjectionToken<T>, factory: (overlay: Overlay) => () => ScrollStrategy) => {
@@ -2434,7 +2438,13 @@ export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponen
 export const KBQ_OVERFLOW_SHADOW_SOURCE: InjectionToken<KbqOverflowShadowSource>;
 
 // @public
+export const KBQ_PANEL_DEFAULT_MAX_HEIGHT = 256;
+
+// @public
 export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
+
+// @public
+export const KBQ_PANEL_MIN_MAX_HEIGHT = 72;
 
 // @public (undocumented)
 export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
@@ -2564,6 +2574,7 @@ export abstract class KbqAbstractSelect {
     protected overlayMinWidth: string | number;
     protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
+    protected reevaluateOverlaySide(): void;
     // (undocumented)
     protected resetOverlay(): void;
     // (undocumented)
@@ -2573,6 +2584,7 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected triggerRect: DOMRect;
     protected updateOverlayWidth(panelWidth: KbqPanelWidth, panelMinWidth: KbqPanelMinWidth, origin: KbqPanelWidthOrigin): void;
+    protected withOverlapPosition(positions: ConnectedPosition[], offsetY: number | null): ConnectedPosition[] | null;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAbstractSelect, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -3631,6 +3643,16 @@ export class KbqOverflowShadowTop {
 }
 
 // @public
+export type KbqPanelAnchor = 'above' | 'below' | 'overlap';
+
+// @public
+export interface KbqPanelAnchorOptions {
+    anchored?: boolean;
+    firstRowOffset: number | null;
+    naturalListHeight: number;
+}
+
+// @public
 export type KbqPanelMaxHeight = number | null;
 
 // @public
@@ -3638,6 +3660,23 @@ export type KbqPanelMaxWidth = number | null;
 
 // @public
 export type KbqPanelMinWidth = number | null;
+
+// @public
+export interface KbqPanelSideSpace {
+    // (undocumented)
+    above: number;
+    // (undocumented)
+    below: number;
+}
+
+// @public
+export interface KbqPanelSpaceContext {
+    chromeHeight: number;
+    triggerBottom: number;
+    triggerTop: number;
+    viewportHeight: number;
+    viewportMargin: number;
+}
 
 // @public
 export type KbqPanelWidth = 'auto' | number | (string & {}) | null | '';
@@ -3991,6 +4030,9 @@ export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPip
 }
 
 // @public
+export function kbqResolveAvailablePanelMaxHeight(context: KbqPanelSpaceContext, side?: 'above' | 'below', minHeight?: number, defaultMaxHeight?: number): number | null;
+
+// @public
 export interface KbqResolvedPanelWidth {
     // (undocumented)
     minWidth: number | string;
@@ -3999,13 +4041,22 @@ export interface KbqResolvedPanelWidth {
 }
 
 // @public
+export function kbqResolveOverlapPanelSpace(context: KbqPanelSpaceContext, firstRowOffset: number): number | null;
+
+// @public
 export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null;
+
+// @public
+export function kbqResolvePanelSideSpace(context: KbqPanelSpaceContext): KbqPanelSideSpace | null;
 
 // @public
 export function kbqResolvePanelWidth(panelWidth: KbqPanelWidth | undefined, panelMinWidth: KbqPanelMinWidth | undefined, triggerWidth: number): KbqResolvedPanelWidth;
 
 // @public
 export const kbqResolveTimezoneOffset: (timezone: KbqTimezoneLike, timestamp: number) => number | null;
+
+// @public
+export function kbqResolveTriggerFirstRowOffset(measurements: KbqTriggerFirstRowMeasurements): number | null;
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
@@ -4149,6 +4200,9 @@ export type KbqShadowDomOverlayHost = HTMLElement | ElementRef<HTMLElement> | ((
 
 // @public
 export const kbqShadowDomOverlayProvider: (host?: KbqShadowDomOverlayHost) => Provider[];
+
+// @public
+export function kbqShouldAnchorPanelToFirstRow(context: KbqPanelSpaceContext, input: KbqPanelAnchorOptions): boolean;
 
 // @public
 export interface KbqSiblingPopup {
@@ -4362,6 +4416,16 @@ export interface KbqTriangle {
     b: KbqPoint;
     // (undocumented)
     c: KbqPoint;
+}
+
+// @public
+export interface KbqTriggerFirstRowMeasurements {
+    firstRowBottom: number;
+    listBottom: number;
+    listScrollTop: number;
+    listTop: number;
+    originBottom: number;
+    originTop: number;
 }
 
 // @public (undocumented)

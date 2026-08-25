@@ -112,6 +112,11 @@
             margin-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
 
             gap: var(--kbq-size-xxs);
+
+            // Opt-in cap, driven by `multilineMaxRows`. The `none` fallback is what keeps it opt-in: with no
+            // inline value the trigger keeps growing with every tag, as it always has.
+            max-height: var(--kbq-select-size-multiline-max-height, none);
+            overflow-y: auto;
         }
     }
 

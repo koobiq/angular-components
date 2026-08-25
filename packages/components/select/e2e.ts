@@ -271,6 +271,56 @@ export class E2eSelectPositioning {
     readonly heightBelow = signal(0);
 }
 
+/**
+ * Multiline select in a field narrow enough that its tags wrap onto many rows. Selecting everything grows the
+ * trigger past what a viewport can host beside a full-height panel, which is what used to push the panel off
+ * the screen. `multilineMaxRows` defaults to null here, so the trigger keeps growing as it does out of the box.
+ */
+@Component({
+    selector: 'e2e-multiline-select-overflow',
+    imports: [KbqSelectModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field [attr.data-testid]="'e2eFormField'" [style.width.px]="fieldWidth()">
+            <kbq-select
+                data-testid="e2eSelect"
+                placeholder="Food"
+                [formControl]="control"
+                [multiline]="true"
+                [multiple]="true"
+                [multilineMaxRows]="multilineMaxRows()"
+            >
+                @for (food of foods; track food.value) {
+                    <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
+                    <kbq-option [attr.data-testid]="'e2eOption-' + food.value" [value]="food.value">
+                        {{ food.viewValue }}
+                    </kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eMultilineSelectOverflow'
+    }
+})
+export class E2eMultilineSelectOverflow {
+    /** Ten of these in a 180px field wrap onto ten rows, which makes the trigger roughly 280px tall. */
+    readonly foods = Array.from({ length: 10 }, (_, index) => ({
+        value: `opt-${index}`,
+        viewValue: `Option ${index}`
+    }));
+
+    readonly control = new UntypedFormControl(this.foods.map(({ value }) => value));
+    readonly fieldWidth = signal(180);
+    readonly multilineMaxRows = signal<number | null>(null);
+}
+
 @Component({
     selector: 'e2e-multi-select-positioning',
     imports: [KbqSelectModule, ReactiveFormsModule, KbqTagsModule, KbqIconModule],

@@ -23,8 +23,10 @@
                     <div class="kbq-select__match-container">
                         @if (multiSelection) {
                             <div
+                                #multilineMatchList
                                 [class.kbq-select__match-list]="!multiline()"
                                 [class.kbq-select__multiline-match-list]="multiline()"
+                                [style.--kbq-select-size-multiline-max-height]="multilineMaxHeightToken()"
                             >
                                 @if (!customTagTemplateRef()) {
                                     @for (option of triggerValues; track option) {

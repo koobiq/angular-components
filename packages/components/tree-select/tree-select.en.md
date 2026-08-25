@@ -10,6 +10,14 @@
 
 <!-- example(tree-select-with-multiline-matcher) -->
 
+By default the trigger grows with every selected option, so a long selection can make it several rows tall.
+Set `multilineMaxRows` to stop it after a given number of tag rows and let the rest scroll inside the field —
+which also keeps the dropdown next to the trigger instead of far below the last row.
+
+When the panel fits neither below nor above such a trigger, and the trigger has grown taller than the panel
+itself, the panel is anchored below the trigger's first row and drawn over the rest of it — where a single-row
+select would have put it. The first row, the chevron and the cleaner stay visible and clickable.
+
 ### Multiple with child selection
 
 <!-- example(tree-select-child-selection-overview) -->

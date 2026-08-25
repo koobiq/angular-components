@@ -1,5 +1,5 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher, ViewportRuler } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
@@ -971,6 +971,44 @@ class MultiSelect {
     `
 })
 class EmptySelect {}
+
+@Component({
+    selector: 'multiline-tree-select',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select
+                multiple
+                [multiline]="multiline"
+                [multilineMaxRows]="multilineMaxRows"
+                [formControl]="control"
+            >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class MultilineTreeSelect {
+    multiline = true;
+    multilineMaxRows: number | null = null;
+    control = new UntypedFormControl(['rootNode_1']);
+
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+    dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+    constructor() {
+        this.dataSource.data = buildFileTree(TREE_DATA, 0);
+    }
+}
 
 @Component({
     selector: 'select-early-sibling-access',
@@ -5546,5 +5584,97 @@ describe('KbqTreeSelect', () => {
 
             expect(option.classList).toContain('kbq-focused');
         }));
+    });
+
+    describe('overlay position lock', () => {
+        let fixture: ComponentFixture<MultiSelect>;
+
+        const getPositionStrategy = () =>
+            fixture.componentInstance.select().overlayDir.overlayRef.getConfig()
+                .positionStrategy as FlexibleConnectedPositionStrategy;
+
+        const changeSelection = (value: string[]) => {
+            fixture.componentInstance.control.setValue(value);
+            fixture.detectChanges();
+            tick();
+            flush();
+        };
+
+        beforeEach(fakeAsync(() => {
+            configureKbqTreeSelectTestingModule([MultiSelect]);
+            fixture = TestBed.createComponent(MultiSelect);
+            fixture.detectChanges();
+
+            fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+            fixture.detectChanges();
+            flush();
+        }));
+
+        it('should never write the offsetX input of the overlay directive', fakeAsync(() => {
+            changeSelection(['rootNode_1', 'Applications']);
+
+            // The directive maps `offsetX` into every position literal it rebuilds, and CDK drops the locked
+            // position on each rebuild — the panel would then re-resolve its side on every selection.
+            expect(fixture.componentInstance.select().overlayDir.offsetX).toBeUndefined();
+        }));
+
+        it('should apply the horizontal correction on the position strategy instead', fakeAsync(() => {
+            const spy = jest.spyOn(getPositionStrategy(), 'withDefaultOffsetX');
+
+            changeSelection(['rootNode_1']);
+
+            expect(spy).toHaveBeenCalled();
+        }));
+
+        it('should keep the side it opened on while the selection changes', fakeAsync(() => {
+            const spy = jest.spyOn(getPositionStrategy(), 'reapplyLastPosition');
+
+            changeSelection(['rootNode_1', 'Applications']);
+
+            // A tree-select repositions on every selection change and every node expansion, in every mode and
+            // not only in multiline, so losing the lock re-resolved its side right across the board.
+            expect(spy).toHaveBeenCalled();
+        }));
+    });
+
+    describe('multilineMaxRows', () => {
+        let fixture: ComponentFixture<MultilineTreeSelect>;
+
+        /**
+         * Reads the token off the tag list. JSDOM computes no layout, so the inline custom property is the
+         * observable contract here — the height itself is asserted in Playwright.
+         */
+        const readToken = (): string =>
+            (
+                fixture.debugElement.query(By.css('.kbq-select__multiline-match-list, .kbq-select__match-list'))
+                    .nativeElement as HTMLElement
+            ).style.getPropertyValue('--kbq-select-size-multiline-max-height');
+
+        beforeEach(fakeAsync(() => {
+            configureKbqTreeSelectTestingModule([MultilineTreeSelect]);
+            fixture = TestBed.createComponent(MultilineTreeSelect);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        }));
+
+        it('should leave the trigger unbounded by default', () => {
+            expect(readToken()).toBe('');
+        });
+
+        it('should cap the tag list at the requested number of rows', () => {
+            fixture.componentInstance.multilineMaxRows = 3;
+            fixture.detectChanges();
+
+            expect(readToken()).toBe('calc(3 * var(--kbq-size-xxl) + 2 * var(--kbq-size-xxs))');
+        });
+
+        it('should ignore the cap when the trigger is not multiline', () => {
+            fixture.componentInstance.multiline = false;
+            fixture.componentInstance.multilineMaxRows = 3;
+            fixture.detectChanges();
+
+            expect(readToken()).toBe('');
+        });
     });
 });
