@@ -4,8 +4,10 @@ import {
     DateAdapter,
     DateFormatter,
     KBQ_LOCALE_SERVICE,
+    KbqDateTimezoneService,
     KbqFormattersModule,
-    KbqLocaleService
+    KbqLocaleService,
+    KbqTimezoneLike
 } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 
@@ -23,6 +25,9 @@ export class DevApp {
     // The token, not the class: `KbqLuxonDateModule` provides it with `useClass`, so the `providedIn: 'root'`
     // instance is a different object from the one the pipes and `DateFormatter` subscribe to.
     protected readonly localeService: KbqLocaleService = inject(KBQ_LOCALE_SERVICE);
+    protected readonly timezoneService = inject(KbqDateTimezoneService);
+
+    protected readonly timezones: KbqTimezoneLike[] = ['system', 'utc', 'Asia/Tokyo', 'America/New_York'];
 
     obj: any = {
         absolute: {
@@ -137,6 +142,14 @@ export class DevApp {
     /** Switches between the two locales so the difference between the pipe families is visible. */
     toggleLocale() {
         this.localeService.setLocale(this.localeService.id === 'ru-RU' ? 'en-US' : 'ru-RU');
+    }
+
+    /** Cycles through a few time zones, which the pipe families react to the same way they do to a locale. */
+    toggleTimezone() {
+        const current = this.timezoneService.timezone();
+        const next = (this.timezones.indexOf(current) + 1) % this.timezones.length;
+
+        this.timezoneService.setTimezone(this.timezones[next]);
     }
 
     populateDuration() {

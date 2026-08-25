@@ -1,9 +1,18 @@
 import { getLocaleFirstDayOfWeek } from '@angular/common';
 import { Injectable, InjectionToken, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_DATE_LOCALE, KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import {
+    KBQ_DATE_LOCALE,
+    KBQ_DEFAULT_LOCALE_ID,
+    KBQ_LOCALE_SERVICE,
+    KbqDateTimezoneService,
+    KbqLocaleService,
+    KbqTimezoneLike,
+    kbqResolveTimezoneOffset
+} from '@koobiq/components/core';
+import { DateUnit } from '@koobiq/date-adapter';
 import { LuxonDateAdapter as BaseLuxonDateAdapter, LuxonDateAdapterOptions } from '@koobiq/luxon-date-adapter';
-import { Info } from 'luxon';
+import { DateTime, FixedOffsetZone, Info, Zone } from 'luxon';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 /** Configurable options for {@see LuxonDateAdapter}. */
@@ -27,6 +36,12 @@ export function KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): KbqLuxonDateAdapterOpt
 export class LuxonDateAdapter extends BaseLuxonDateAdapter {
     protected readonly options?: LuxonDateAdapterOptions;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
+    private readonly timezoneService = inject(KbqDateTimezoneService);
+
+    /** Time zone {@link resolvedZone} was built from, so an unchanged zone is not resolved twice. */
+    private appliedTimezone: KbqTimezoneLike | null = null;
+    private resolvedZone: Zone | string | undefined;
+
     /** A stream that emits when the locale changes. */
     get localeChanges(): Observable<any> {
         return this._localeChanges;
@@ -68,4 +83,118 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
 
         this._localeChanges.next(locale);
     };
+
+    override today(): DateTime {
+        this.syncTimezone();
+
+        return super.today();
+    }
+
+    override format(date: DateTime, displayFormat: string): string {
+        this.syncTimezone();
+
+        return super.format(date, displayFormat);
+    }
+
+    override startOf(date: DateTime, unit: DateUnit): DateTime {
+        this.syncTimezone();
+
+        return super.startOf(date, unit);
+    }
+
+    override deserialize(value: any): DateTime | null {
+        const zone = this.syncTimezone();
+        const date = super.deserialize(value);
+
+        // The base implementation hands a `DateTime` input back in its own zone (it only sets the locale),
+        // so a date the application built elsewhere would keep that zone, and `format()` — which does
+        // reconfigure — would then disagree with `getHours()` and `daysFromToday()`, which do not.
+        return date && zone ? date.setZone(zone) : date;
+    }
+
+    override parse(value: any, parseFormat?: string): DateTime | null {
+        // A value parsed against a display format is user input: it names wall-clock components in the
+        // active zone. Everything else (ISO, millis, Date) names an instant and must not be shifted.
+        if (parseFormat && typeof value === 'string') {
+            return this.keepingLocalTime(() => super.parse(value, parseFormat));
+        }
+
+        this.syncTimezone();
+
+        return super.parse(value, parseFormat);
+    }
+
+    // `createDateTime()` is left to the base class: it builds on this method and sets the time components
+    // on the result, which by then is already in the active zone.
+    override createDate(year: number, month?: number, day?: number): DateTime {
+        return this.keepingLocalTime(() => super.createDate(year, month, day));
+    }
+
+    /**
+     * Brings `dateTimeOptions.zone` — the field the base class reconfigures every date it creates, parses
+     * and formats with — up to date with {@link KbqDateTimezoneService}.
+     *
+     * Called from every entry point rather than from an `effect()`: a pipe reading the same signal must
+     * not have to rely on the order effects happen to flush in to see the new zone.
+     */
+    private syncTimezone(): Zone | string | undefined {
+        // The base constructor builds locale data through `createDate()` before the fields of this class
+        // exist, so the very first calls run without a service and are left in whatever the base set up.
+        if (!this.timezoneService) return this.dateTimeOptions?.zone;
+
+        const timezone = this.timezoneService.timezone();
+
+        if (timezone !== this.appliedTimezone) {
+            this.appliedTimezone = timezone;
+            this.resolvedZone = this.toLuxonZone(timezone);
+        }
+
+        // Assigned on every call, not only when the zone changes: `setLocale()` replaces the whole
+        // `dateTimeOptions` object, which would otherwise silently drop the zone applied before it.
+        this.dateTimeOptions.zone = this.resolvedZone;
+
+        return this.resolvedZone;
+    }
+
+    private toLuxonZone(timezone: KbqTimezoneLike): Zone | string | undefined {
+        // `useUtc` predates this token, and stays in charge for as long as no zone is configured.
+        const hostZone = this.options?.useUtc ? 'UTC' : undefined;
+
+        if (timezone === 'system') return hostZone;
+
+        if (typeof timezone === 'number') return FixedOffsetZone.instance(timezone);
+
+        // Luxon resolves IANA names and most fixed specifiers itself, which keeps DST handling with luxon.
+        const zone = Info.normalizeZone(timezone);
+
+        if (zone.isValid) return zone;
+
+        // What luxon rejects (GMT+05:30 and the like) still resolves through the core parser, as a fixed zone.
+        const offset = kbqResolveTimezoneOffset(timezone, Date.now());
+
+        return offset === null ? hostZone : FixedOffsetZone.instance(offset);
+    }
+
+    /**
+     * Builds a date with the active zone switched off, then moves the result into it keeping the
+     * wall-clock components.
+     *
+     * Calendar components name a wall-clock date: `createDate(2026, 2, 5)` is "5 March", and rendering it
+     * in another zone must not turn it into 4 March, which is what converting the instant does.
+     */
+    private keepingLocalTime<T extends DateTime | null>(build: () => T): T {
+        const zone = this.syncTimezone();
+
+        if (!zone) return build();
+
+        this.dateTimeOptions.zone = undefined;
+
+        try {
+            const date = build();
+
+            return (date ? date.setZone(zone, { keepLocalTime: true }) : date) as T;
+        } finally {
+            this.dateTimeOptions.zone = zone;
+        }
+    }
 }

@@ -22,6 +22,8 @@ import {
     KbqAbsoluteLongDateTimePipe,
     KbqAbsoluteShortDatePipe,
     KbqAbsoluteShortDateTimePipe,
+    kbqDateTimezoneProvider,
+    KbqDateTimezoneService,
     KbqDurationLongPipe,
     KbqDurationShortestPipe,
     KbqDurationShortPipe,
@@ -3198,5 +3200,115 @@ describe('Date formatter (imports and providing)', () => {
 
             expect(fixture.nativeElement.textContent.trim()).not.toBe(rendered);
         });
+    });
+});
+
+describe('Date pipes with KBQ_DATE_TIMEZONE', () => {
+    /** 15:30 in Kolkata, 10:00 in UTC. */
+    const instant = '2026-03-05T10:00:00Z';
+
+    @Component({
+        selector: 'timezone-pipe-host',
+        imports: [KbqAbsoluteShortDateTimePipe, AbsoluteShortDateTimeFormatterPipe],
+        template: `
+            <span class="impure">{{ value | kbqAbsoluteShortDateTime }}</span>
+            <span class="pure">{{ value | absoluteShortDateTime }}</span>
+        `,
+        changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class HostComponent {
+        readonly value = instant;
+    }
+
+    let fixture: ComponentFixture<HostComponent>;
+
+    const textOf = (selector: string): string => fixture.nativeElement.querySelector(selector).textContent.trim();
+
+    beforeEach(() => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            imports: [HostComponent, KbqFormattersModule, KbqLuxonDateModule],
+            providers: [
+                { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
+                { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+                kbqDateTimezoneProvider('Asia/Kolkata')
+            ]
+        });
+
+        fixture = TestBed.createComponent(HostComponent);
+        fixture.detectChanges();
+    });
+
+    it('renders dates in the configured time zone', () => {
+        expect(textOf('.impure')).toContain('15:30');
+        expect(textOf('.pure')).toContain('15:30');
+    });
+
+    it('re-renders the impure pipe when the time zone changes at runtime', () => {
+        TestBed.inject(KbqDateTimezoneService).setTimezone('utc');
+        fixture.detectChanges();
+
+        expect(textOf('.impure')).toContain('10:00');
+    });
+
+    it('leaves the pure pipe in the zone it first rendered in', () => {
+        TestBed.inject(KbqDateTimezoneService).setTimezone('utc');
+        fixture.detectChanges();
+
+        expect(textOf('.pure')).toContain('15:30');
+    });
+});
+
+describe('Date pipes with a component-scoped KBQ_DATE_TIMEZONE', () => {
+    const instant = '2026-03-05T10:00:00Z';
+
+    @Component({
+        selector: 'scoped-timezone-host',
+        imports: [KbqAbsoluteShortDateTimePipe],
+        template: '{{ value | kbqAbsoluteShortDateTime }}',
+        providers: [
+            KbqDateTimezoneService,
+            kbqDateTimezoneProvider('utc'),
+            { provide: DateAdapter, useClass: LuxonDateAdapter },
+            DateFormatter
+        ],
+        changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class ScopedComponent {
+        readonly value = instant;
+    }
+
+    @Component({
+        selector: 'timezone-app-host',
+        imports: [KbqAbsoluteShortDateTimePipe, ScopedComponent],
+        template: `
+            <span class="application">{{ value | kbqAbsoluteShortDateTime }}</span>
+            <scoped-timezone-host />
+        `,
+        changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class HostComponent {
+        readonly value = instant;
+    }
+
+    it('renders the scoped subtree in its own zone', () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            imports: [HostComponent, KbqFormattersModule, KbqLuxonDateModule],
+            providers: [
+                { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
+                { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+                kbqDateTimezoneProvider('Asia/Kolkata')
+            ]
+        });
+
+        const fixture = TestBed.createComponent(HostComponent);
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('.application').textContent).toContain('15:30');
+        expect(fixture.nativeElement.querySelector('scoped-timezone-host').textContent).toContain('10:00');
     });
 });
