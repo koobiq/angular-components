@@ -333,7 +333,7 @@ export class KbqTreeSelect
     readonly panel = viewChild<ElementRef>('panel');
 
     /** Reference to the scrollable options container inside the panel. */
-    readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
+    readonly optionsContainer = viewChild.required<ElementRef<HTMLElement>>('optionsContainer');
 
     @ViewChild(CdkConnectedOverlay, { static: false }) overlayDir: CdkConnectedOverlay;
 

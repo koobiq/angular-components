@@ -171,7 +171,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly openedStream: Observable<void>;
     // (undocumented)
     options: QueryList<KbqTreeOption>;
-    readonly optionsContainer: _angular_core.Signal<ElementRef<any>>;
+    readonly optionsContainer: _angular_core.Signal<ElementRef<HTMLElement>>;
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange>;
     // (undocumented)
     overlayDir: CdkConnectedOverlay;

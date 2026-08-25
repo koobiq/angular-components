@@ -420,7 +420,9 @@ export function countGroupLabelsBeforeOption(
     if (optionGroups.length) {
         let groupCounter = 0;
 
-        for (let i = 0; i < optionIndex + 1; i++) {
+        // A stale key-manager index can outrun the option list while options/groups update, so the loop
+        // is bounded by the array length as well to keep `options[i]` in range.
+        for (let i = 0; i <= optionIndex && i < options.length; i++) {
             if (options[i].group && options[i].group === optionGroups[groupCounter]) {
                 groupCounter++;
             }

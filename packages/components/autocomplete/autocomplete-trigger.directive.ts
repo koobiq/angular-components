@@ -473,12 +473,15 @@ export class KbqAutocompleteTrigger
      */
     scrollActiveOptionIntoView(): void {
         const autocomplete = this.autocomplete();
-        const index = autocomplete.keyManager.activeItemIndex || 0;
-        const labelCount = countGroupLabelsBeforeOption(
-            index,
-            autocomplete.options.toArray(),
-            autocomplete.optionGroups()
-        );
+        const index = autocomplete.keyManager.activeItemIndex ?? -1;
+
+        // No active option (index -1, or updated away while open) — nothing to scroll to.
+        if (index < 0) {
+            return;
+        }
+
+        const options = autocomplete.options.toArray();
+        const labelCount = countGroupLabelsBeforeOption(index, options, autocomplete.optionGroups());
 
         if (index === 0 && labelCount === 1) {
             // A lone group label sits above the first option: scroll to the very top so the label stays
@@ -488,7 +491,7 @@ export class KbqAutocompleteTrigger
             return;
         }
 
-        const option = autocomplete.options.toArray()[index];
+        const option = options[index];
 
         if (option) {
             const element = option.getHostElement();

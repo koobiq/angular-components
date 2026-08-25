@@ -197,7 +197,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     openPanel(): void;
     readonly optionGroups: _angular_core.Signal<readonly KbqOptgroup[]>;
     options: QueryList<KbqOption>;
-    readonly optionsContainer: _angular_core.Signal<ElementRef<any>>;
+    readonly optionsContainer: _angular_core.Signal<ElementRef<HTMLElement>>;
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange>;
     overlayDir: CdkConnectedOverlay;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;

@@ -383,7 +383,7 @@ export class KbqSelect
     readonly panel = viewChild<ElementRef>('panel');
 
     /** Reference to the container element that holds the options. */
-    readonly optionsContainer = viewChild.required<ElementRef>('optionsContainer');
+    readonly optionsContainer = viewChild.required<ElementRef<HTMLElement>>('optionsContainer');
 
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
     readonly selectAllOption = viewChild(KbqOption);
