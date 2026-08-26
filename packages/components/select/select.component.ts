@@ -243,9 +243,8 @@ export const minimumTimeToDisplayLoading = 300;
         'aria-haspopup': 'listbox',
         '[attr.aria-expanded]': 'panelOpen',
         '[attr.aria-controls]': 'panelOpen ? panelId : null',
-        '[attr.aria-activedescendant]': 'activeDescendantId',
         '[attr.aria-labelledby]': 'ariaLabelledby',
-        '[attr.aria-label]': 'ariaLabel()',
+        '[attr.aria-label]': 'resolvedAriaLabel',
         '[attr.aria-invalid]': 'errorState',
         '[attr.aria-required]': 'required',
         '[attr.aria-disabled]': 'disabled',
@@ -313,6 +312,15 @@ export class KbqSelect
     controlType = 'select';
 
     hiddenItems: number = 0;
+
+    /**
+     * How many of the rendered tags stay on the trigger's single line.
+     *
+     * `null` while the answer is unknown — the trigger has not been measured yet, or the measurement found
+     * no tag on the first line at all, which a laid-out trigger never does and so means there was no layout
+     * to measure. Both cases leave every tag treated as visible.
+     */
+    private visibleTriggerItems: number | null = null;
 
     /** The last measured value for the trigger's client bounding rect. */
     protected triggerRect: DOMRect;
@@ -516,6 +524,10 @@ export class KbqSelect
     /**
      * Function used to sort the values in a select in multiple mode.
      * Follows the same logic as `Array.prototype.sort`.
+     *
+     * Without one the values are emitted in panel order — the order the options are declared in, not the
+     * order they were picked in. A value whose option is not rendered (a `KbqVirtualOption` under virtual
+     * scroll or `showPreselectedValues`) has no place in that order and sorts after everything that has.
      */
     readonly sortComparator = input<(a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number>(
         undefined!
@@ -1043,6 +1055,19 @@ export class KbqSelect
         return this.triggerValuesLimit() > 0 ? selectedOptions.slice(0, this.triggerValuesLimit()) : selectedOptions;
     }
 
+    /**
+     * Whether the tag at `index` is one the trigger actually shows.
+     *
+     * The trigger renders every selected value and clips the overflow with `overflow: hidden`, so a tag
+     * that wrapped past the single line is still in the DOM. Its remove control has to leave the tab order
+     * with it, or focus lands on something the user cannot see — and the browser scrolls the clipped list
+     * to reveal it, shifting the row that is on screen.
+     * @docs-private
+     */
+    protected isTriggerValueVisible(index: number): boolean {
+        return this.visibleTriggerItems === null || index < this.visibleTriggerItems;
+    }
+
     /** Whether no option is currently selected. */
     get empty(): boolean {
         return !!this.selectionModel?.isEmpty();
@@ -1125,15 +1150,6 @@ export class KbqSelect
     protected readonly panelId = `${this.uid}-panel`;
 
     /**
-     * Option the keyboard navigation currently points at. The trigger keeps DOM focus in the panel
-     * (or in its search field), so the active option is exposed through `aria-activedescendant`.
-     * @docs-private
-     */
-    protected get activeDescendantId(): string | null {
-        return this.panelOpen ? (this.keyManager?.activeItem?.id ?? null) : null;
-    }
-
-    /**
      * Id of the `kbq-form-field` label naming this select, when it has one.
      *
      * A `<label for>` does not associate with a custom element, so the relationship is expressed the
@@ -1142,6 +1158,32 @@ export class KbqSelect
      */
     protected get ariaLabelledby(): string | null {
         return this.parentFormField?.labelId() ?? null;
+    }
+
+    /**
+     * Accessible name put on the trigger and on the option list.
+     *
+     * Both a `combobox` and a `listbox` are required to have one, and neither takes its name from its
+     * contents — the placeholder is rendered as a plain `<span>`, so it names nothing. Falling back to it
+     * keeps the ordinary label-less select named. A form-field label still wins: it names the select
+     * through `aria-labelledby`, which takes precedence over `aria-label`.
+     * @docs-private
+     */
+    protected get resolvedAriaLabel(): string | null {
+        return this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder || null);
+    }
+
+    /**
+     * Whether the option list is currently showing something other than options — the loading, error or
+     * empty state, or an empty search result.
+     *
+     * The same container is both the `listbox` and the projection target for those states, and a `listbox`
+     * is required to own `option` children. `aria-busy` says the list is still being filled in rather than
+     * malformed, and keeps it from being announced as an option list with nothing in it.
+     * @docs-private
+     */
+    protected get isOptionsListBusy(): boolean {
+        return this.noOptions && !this.showSelectAll;
     }
 
     /** Subject that emits when the component visibility changes. */
@@ -1707,6 +1749,7 @@ export class KbqSelect
         );
 
         this.hiddenItems = (this.selected as ArrayLike<KbqOptionBase>).length - visibleItems;
+        this.visibleTriggerItems = visibleItems || null;
         this._changeDetectorRef.detectChanges();
 
         if (this.hiddenItems) {
@@ -1726,7 +1769,9 @@ export class KbqSelect
             const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
 
             if (itemsCounterShowed && totalItemsWidth < matcherWidth) {
+                // Everything fits once the counter goes away, so nothing is clipped after all.
                 this.hiddenItems = 0;
+                this.visibleTriggerItems = null;
                 this._changeDetectorRef.detectChanges();
             }
 
@@ -1813,7 +1858,7 @@ export class KbqSelect
                     }
                 });
         } else {
-            this.selectionModel.toggle(option);
+            this.toggleOption(option);
         }
     }
 
@@ -1821,7 +1866,7 @@ export class KbqSelect
      * Flips the selected state of a single option through the option itself.
      *
      * Toggling the selection model directly would not do: only the option's own selection change reaches
-     * `onSelect`, which is what writes the value back to the form control — the range branch above relies on
+     * `onSelect`, which is what writes the value back to the form control — every branch above relies on
      * the same path.
      */
     private toggleOption(option: KbqOption): void {
@@ -2319,7 +2364,7 @@ export class KbqSelect
 
                 if (sortComparator) return sortComparator(a, b, options);
 
-                // Panel order, as documented. A selected value with no rendered option — a
+                // Panel order — see `sortComparator`. A selected value with no rendered option — a
                 // `KbqVirtualOption` under virtual scroll or `showPreselectedValues` — is not in
                 // `options` at all, and sorts after everything that is.
                 const indexA = options.indexOf(a as KbqOption);

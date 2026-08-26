@@ -76,6 +76,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { axe } from 'jest-axe';
 import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
 import { KbqOptionTooltip } from './select-option.directive';
 import {
     KbqSelect,
@@ -2457,6 +2458,25 @@ class SelectWithAriaLabel {
     readonly select = viewChild.required(KbqSelect);
 }
 
+/** Named by neither a form-field label nor an `aria-label` — the ordinary placeholder-only select. */
+@Component({
+    selector: 'select-with-placeholder-only',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select placeholder="Country">
+                <kbq-option [value]="'ru'">Russia</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithPlaceholderOnly {
+    readonly select = viewChild.required(KbqSelect);
+}
+
 /** Multiple select left on the built-in tag rendering, i.e. with the built-in remove control. */
 @Component({
     selector: 'multi-select-with-default-tags',
@@ -2521,9 +2541,10 @@ class MultiSelectWithNumericValues {
     ],
     template: `
         <kbq-form-field>
-            <kbq-select [formControl]="control">
+            <kbq-select placeholder="Food" [formControl]="control">
+                <!-- The search field is a control of its own, and the fixture is run through axe. -->
                 <kbq-form-field kbqSelectSearch>
-                    <input kbqInput type="text" [formControl]="searchControl" />
+                    <input kbqInput aria-label="Search" type="text" [formControl]="searchControl" />
                 </kbq-form-field>
 
                 @switch (state) {
@@ -3633,6 +3654,41 @@ describe('KbqSelect', () => {
                 expect(options[2].classList).not.toContain('kbq-selected');
                 expect(fixture.componentInstance.select().selected).toBeUndefined();
                 expect(fixture.componentInstance.control.value).toBeFalsy();
+            }));
+
+            // Regression: the single-selection branch toggled `selectionModel` directly, which marks the
+            // option selected before `onSelect` reads the previous state. The "did the selection change?"
+            // guard was then false, so the trigger showed the new value while the form control kept the old
+            // one and nothing was emitted.
+            it('should propagate a value replaced by shift + click', fakeAsync(() => {
+                const selectionChangeSpy = jest.fn();
+                const subscription = fixture.componentInstance.select().selectionChange.subscribe(selectionChangeSpy);
+
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+
+                (overlayContainerElement.querySelectorAll('kbq-option')[0] as HTMLElement).click();
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toBe('steak-0');
+
+                trigger.click();
+                fixture.detectChanges();
+                flush();
+
+                const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+                options[1].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+                fixture.detectChanges();
+                flush();
+
+                expect(fixture.componentInstance.control.value).toBe('pizza-1');
+                expect(fixture.componentInstance.select().selected).toBe(fixture.componentInstance.options().at(1)!);
+                expect(selectionChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ value: 'pizza-1' }));
+
+                subscription.unsubscribe();
             }));
 
             it('should not select options inside a disabled group', fakeAsync(() => {
@@ -8868,33 +8924,22 @@ describe('KbqSelect', () => {
                 expect(host.getAttribute('aria-disabled')).toBe('true');
             }));
 
-            it('should point aria-activedescendant at the option the key manager is on', fakeAsync(() => {
-                expect(host.getAttribute('aria-activedescendant')).toBeNull();
-
+            // The active option is not tracked from the trigger through `aria-activedescendant`: opening
+            // the panel moves DOM focus onto that option, so it announces itself. An
+            // `aria-activedescendant` on the trigger would be inert anyway — the attribute is only
+            // honoured on the element that holds focus.
+            it('should move focus onto the option the key manager is on', fakeAsync(() => {
                 trigger.click();
                 fixture.detectChanges();
                 flush();
+                fixture.detectChanges();
 
                 const select = fixture.componentInstance.select();
 
                 select.keyManager.setActiveItem(1);
                 fixture.detectChanges();
 
-                expect(host.getAttribute('aria-activedescendant')).toBe(select.options.toArray()[1].id);
-            }));
-
-            it('should drop aria-activedescendant once the panel closes', fakeAsync(() => {
-                trigger.click();
-                fixture.detectChanges();
-                flush();
-                fixture.detectChanges();
-
-                expect(host.getAttribute('aria-activedescendant')).not.toBeNull();
-
-                fixture.componentInstance.select().close();
-                fixture.detectChanges();
-                flush();
-
+                expect(document.activeElement).toBe(select.options.toArray()[1].getHostElement());
                 expect(host.getAttribute('aria-activedescendant')).toBeNull();
             }));
         });
@@ -9055,28 +9100,123 @@ describe('KbqSelect', () => {
                 expect(host.getAttribute('aria-labelledby')).toBeNull();
                 expect(host.getAttribute('aria-label')).toBe('Pick a food');
             }));
+
+            // A `combobox` takes its name from the author, never from its contents, so the placeholder
+            // rendered inside the trigger names nothing on its own.
+            it('should fall back to the placeholder when nothing else names the select', fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithPlaceholderOnly]);
+
+                const fixture = TestBed.createComponent(SelectWithPlaceholderOnly);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().open();
+                fixture.detectChanges();
+                flush();
+
+                expect(getSelectElement(fixture).getAttribute('aria-label')).toBe('Country');
+                expect(getListbox().getAttribute('aria-label')).toBe('Country');
+
+                flush();
+            }));
+
+            // The label already names the select through `aria-labelledby`, which wins over `aria-label`.
+            it('should not fall back to the placeholder next to a form-field label', fakeAsync(() => {
+                configureKbqSelectTestingModule([SelectWithLabel]);
+
+                const fixture = TestBed.createComponent(SelectWithLabel);
+
+                fixture.detectChanges();
+                fixture.componentInstance.select().placeholder = 'Pick one';
+                fixture.detectChanges();
+                flush();
+
+                expect(getSelectElement(fixture).getAttribute('aria-label')).toBeNull();
+            }));
         });
 
         describe('axe', () => {
-            let fixture: ComponentFixture<SelectWithAriaLabel>;
+            describe('named by an aria-label', () => {
+                let fixture: ComponentFixture<SelectWithAriaLabel>;
 
-            beforeEach(() => {
-                configureKbqSelectTestingModule([SelectWithAriaLabel]);
-                fixture = TestBed.createComponent(SelectWithAriaLabel);
-                fixture.detectChanges();
+                beforeEach(() => {
+                    configureKbqSelectTestingModule([SelectWithAriaLabel]);
+                    fixture = TestBed.createComponent(SelectWithAriaLabel);
+                    fixture.detectChanges();
+                });
+
+                it('should have no violations while closed', async () => {
+                    expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                });
+
+                it('should have no violations while the panel is open', async () => {
+                    fixture.componentInstance.select().open();
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+
+                    expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                });
             });
 
-            it('should have no violations while closed', async () => {
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            // The plain `<kbq-form-field><kbq-select placeholder="…">` — no label, no `aria-label`. Both
+            // the trigger (`combobox`) and the option list (`listbox`) are required to have a name.
+            describe('named by its placeholder', () => {
+                let fixture: ComponentFixture<SelectWithPlaceholderOnly>;
+
+                beforeEach(() => {
+                    configureKbqSelectTestingModule([SelectWithPlaceholderOnly]);
+                    fixture = TestBed.createComponent(SelectWithPlaceholderOnly);
+                    fixture.detectChanges();
+                });
+
+                it('should have no violations while closed', async () => {
+                    expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                });
+
+                it('should have no violations while the panel is open', async () => {
+                    fixture.componentInstance.select().open();
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+
+                    expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                });
             });
 
-            it('should have no violations while the panel is open', async () => {
-                fixture.componentInstance.select().open();
-                fixture.detectChanges();
-                await fixture.whenStable();
-                fixture.detectChanges();
+            // The option list is the projection target for the loading, error and empty states as well,
+            // and a `listbox` owning no options at all is a malformed one unless it reports that it is
+            // still being filled in.
+            describe('showing something other than options', () => {
+                const openWith = async (state: SelectWithStates['state']) => {
+                    const fixture = TestBed.createComponent(SelectWithStates);
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                    fixture.componentInstance.state = state;
+                    fixture.detectChanges();
+                    // Not `open()`: it waits before showing a panel with no options, and the panel itself
+                    // is what is under test here.
+                    fixture.componentInstance.select().openPanel();
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+
+                    return axe(overlayContainerElement);
+                };
+
+                beforeEach(() => {
+                    configureKbqSelectTestingModule([SelectWithStates]);
+                });
+
+                it('should have no violations while loading', async () => {
+                    expect(await openWith('loading')).toHaveNoViolations();
+                });
+
+                it('should have no violations while showing an error', async () => {
+                    expect(await openWith('error')).toHaveNoViolations();
+                });
+
+                it('should have no violations while showing the empty state', async () => {
+                    expect(await openWith('no-options')).toHaveNoViolations();
+                });
             });
         });
     });
@@ -9148,6 +9288,70 @@ describe('KbqSelect', () => {
         }));
     });
 
+    // The trigger renders every selected value and clips the overflow with `overflow: hidden`, so a tag
+    // the "+N" counter stands for is still in the DOM. Leaving its remove control in the tab order sends
+    // focus to something the user cannot see, and scrolls the clipped row to reveal it.
+    describe('remove controls of the tags the trigger clips away', () => {
+        let fixture: ComponentFixture<MultiSelectWithDefaultTags>;
+        let testInstance: MultiSelectWithDefaultTags;
+        let trigger: HTMLElement;
+        let measure: jest.SpyInstance;
+
+        const getTabIndexes = (): (string | null)[] =>
+            Array.from(trigger.querySelectorAll<HTMLElement>('.kbq-tag-remove'), (control) =>
+                control.getAttribute('tabindex')
+            );
+
+        const selectAllThree = () => {
+            testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
+            fixture.detectChanges();
+            // `tick`, not `flush`: the measurement runs behind `debounceTime(0)`, which rxjs schedules through
+            // `setInterval`, and Angular's `flush()` deliberately leaves periodic timers alone.
+            tick(1);
+            fixture.detectChanges();
+        };
+
+        beforeEach(fakeAsync(() => {
+            // Every box measures zero under JSDOM, so the trigger geometry has to be dictated: two of the
+            // three tags fit on the single line the trigger has room for.
+            measure = jest.spyOn(KbqSelectHiddenItemsMeasurer.prototype, 'measure').mockReturnValue({
+                totalItemsWidth: 300,
+                totalVisibleItemsWidth: 200,
+                visibleItems: 2
+            });
+
+            configureKbqSelectTestingModule([MultiSelectWithDefaultTags]);
+            fixture = TestBed.createComponent(MultiSelectWithDefaultTags);
+            testInstance = fixture.componentInstance;
+            fixture.detectChanges();
+            trigger = getSelectTriggerDebugElement(fixture).nativeElement;
+            flush();
+        }));
+
+        afterEach(fakeAsync(() => {
+            measure.mockRestore();
+            flush();
+        }));
+
+        it('should leave the tab order to the tags that fit', fakeAsync(() => {
+            selectAllThree();
+
+            expect(testInstance.select().hiddenItems).toBe(1);
+            expect(getTabIndexes()).toEqual(['0', '0', '-1']);
+        }));
+
+        // A laid-out trigger always keeps at least one tag on its first line, so a measurement of zero
+        // means there was no layout to measure — a detached or hidden trigger. Every control then stays
+        // reachable rather than none of them.
+        it('should keep every tab stop when the trigger cannot be measured', fakeAsync(() => {
+            measure.mockReturnValue({ totalItemsWidth: 0, totalVisibleItemsWidth: 0, visibleItems: 0 });
+
+            selectAllThree();
+
+            expect(getTabIndexes()).toEqual(['0', '0', '0']);
+        }));
+    });
+
     describe('loading, error and empty states', () => {
         let fixture: ComponentFixture<SelectWithStates>;
         let testInstance: SelectWithStates;
@@ -9212,6 +9416,34 @@ describe('KbqSelect', () => {
             expect(overlayContainerElement.querySelector('.kbq-select-no-options')!.textContent).toContain(
                 'Nothing to choose from'
             );
+
+            flush();
+        }));
+
+        // A `listbox` is required to own `option` children, and this container is the projection target
+        // for the states too — `aria-busy` is what tells assistive technology it is still filling up
+        // rather than holding a list of options with nothing in it.
+        it('should mark the option list busy while it holds no options', fakeAsync(() => {
+            testInstance.state = 'loading';
+            fixture.detectChanges();
+            testInstance.select().openPanel();
+            fixture.detectChanges();
+            flush();
+
+            const listbox = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
+
+            expect(listbox.getAttribute('role')).toBe('listbox');
+            expect(listbox.getAttribute('aria-busy')).toBe('true');
+
+            flush();
+        }));
+
+        it('should drop aria-busy once the options render', fakeAsync(() => {
+            open();
+
+            const listbox = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
+
+            expect(listbox.getAttribute('aria-busy')).toBeNull();
 
             flush();
         }));

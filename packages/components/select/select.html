@@ -48,7 +48,7 @@
                                                     kbqTagRemove
                                                     role="button"
                                                     [attr.aria-label]="removeItemAriaLabel(option)"
-                                                    [tabIndex]="0"
+                                                    [tabIndex]="isTriggerValueVisible($index) ? 0 : -1"
                                                     (click)="onRemoveMatcherItem(option, $event)"
                                                     (keydown.enter)="onRemoveMatcherItem(option, $event)"
                                                     (keydown.space)="onRemoveMatcherItem(option, $event)"
@@ -133,7 +133,8 @@
             [id]="panelId"
             [attr.aria-multiselectable]="multiSelection"
             [attr.aria-labelledby]="ariaLabelledby"
-            [attr.aria-label]="ariaLabel()"
+            [attr.aria-label]="resolvedAriaLabel"
+            [attr.aria-busy]="isOptionsListBusy || null"
             [@fadeInContent]="'showing'"
             (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >

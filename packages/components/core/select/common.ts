@@ -71,9 +71,9 @@ export class KbqSelectSearch implements AfterContentInit {
     protected formField = inject<KbqFormFieldRef>(KBQ_FORM_FIELD_REF, { optional: true })!;
 
     /**
-     * Captured here rather than built where it is used: the subscription below is created in a
-     * microtask that can land after the directive is gone, and `takeUntilDestroyed` refuses to
-     * register a teardown on an already-destroyed view.
+     * Captured here rather than built where it is used: `takeUntilDestroyed()` reads the current
+     * `DestroyRef` from the injection context, and the subscription below is created in a microtask,
+     * which has none. Field initialization runs in the constructor's context, where it does.
      */
     private readonly takeUntilDestroyed = takeUntilDestroyed<any>();
 

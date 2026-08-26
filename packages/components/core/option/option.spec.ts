@@ -16,13 +16,20 @@ class OptionWithDisable {
 @Component({
     imports: [KbqOptionModule],
     template: `
-        <kbq-option [role]="role" [disabled]="disabled" [showCheckbox]="true">Steak</kbq-option>
+        <kbq-option [disabled]="disabled" [showCheckbox]="true">Steak</kbq-option>
     `
 })
-class OptionWithRole {
-    role = 'option';
+class OptionWithCheckbox {
     disabled = false;
 }
+
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-option [attr.role]="'checkbox'">Steak</kbq-option>
+    `
+})
+class OptionWithOwnRole {}
 
 @Component({
     imports: [KbqOptionModule],
@@ -37,7 +44,7 @@ class OptgroupWithLabel {}
 describe('KbqOption component', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqOptionModule, OptionWithDisable, OptionWithRole, OptgroupWithLabel]
+            imports: [KbqOptionModule, OptionWithDisable, OptionWithCheckbox, OptionWithOwnRole, OptgroupWithLabel]
         }).compileComponents();
     });
 
@@ -70,25 +77,20 @@ describe('KbqOption component', () => {
             expect(option.getAttribute('aria-disabled')).toBe('true');
         });
 
-        // A row built on top of an option — a "select all" master checkbox, for one — has to be able to
-        // announce itself as something else, which a fixed host binding would not allow.
-        it('should let the consumer override the role', () => {
-            const fixture = TestBed.createComponent(OptionWithRole);
+        // The default is an attribute rather than a host binding precisely so it stays a default: a host
+        // binding runs after the declaring view's attribute bindings and would overwrite this silently.
+        it('should keep a role the consumer set on the element', () => {
+            const fixture = TestBed.createComponent(OptionWithOwnRole);
 
             fixture.detectChanges();
 
             const option: HTMLElement = fixture.debugElement.query(By.directive(KbqOption)).nativeElement;
 
-            expect(option.getAttribute('role')).toBe('option');
-
-            fixture.componentInstance.role = 'checkbox';
-            fixture.detectChanges();
-
             expect(option.getAttribute('role')).toBe('checkbox');
         });
 
         it('should hide the decorative pseudo-checkbox', () => {
-            const fixture = TestBed.createComponent(OptionWithRole);
+            const fixture = TestBed.createComponent(OptionWithCheckbox);
 
             fixture.detectChanges();
 

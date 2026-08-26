@@ -20,6 +20,8 @@ When a value is selected once, the reset control is hidden. Its display can be e
 
 #### Multiple selection
 
+Whichever order the values are picked in, the form control receives them in panel order — the order the options are declared in. Pass a `sortComparator` to order them differently.
+
 <!-- example(select-multiple) -->
 
 #### Multiple selection (multiline)
@@ -230,7 +232,7 @@ To prevent the menu from overlapping a required element during scrolling and ins
 
 ### Accessibility
 
-The select is announced as a `combobox` that owns a `listbox`. `aria-expanded` follows the panel, `aria-controls` points at the option list while it is open, and `aria-activedescendant` names the option the arrow keys are on — so a screen reader reports the current option without focus ever leaving the trigger or the search field.
+The select is announced as a `combobox` that owns a `listbox`. `aria-expanded` follows the panel and `aria-controls` points at the option list while it is open. Opening the panel moves DOM focus into it: onto the option the arrow keys are on, which is how that option announces itself, or onto the search field when one is projected.
 
 The select is a custom element, so a `<label for>` cannot name it. Inside a `kbq-form-field` the label does it through `aria-labelledby`, which the select wires up on its own:
 
@@ -247,9 +249,13 @@ Without a form-field label, name the select with `aria-label` — it names both 
 <kbq-select aria-label="Country">…</kbq-select>
 ```
 
+With neither, the `placeholder` becomes the name — a placeholder is rendered as ordinary text, which names nothing on its own.
+
 Every option is an `option` carrying `aria-selected` and `aria-disabled`; `kbq-optgroup` is a `group` named by its own heading. The "select all" row stays an option too and reports the batch state on `aria-checked`, including `mixed` for a partial selection. The pseudo-checkbox next to an option is decorative and hidden from assistive technology — the selected state is already on the option itself.
 
-In multiple selection mode every tag has its own remove control: a `button` with its own place in the tab order, operable with `Enter` and `Space`. Its name is built from the a11y locale (`remove`) and the value's own text, so it is announced as "Remove Country", not just "Remove". A custom `#kbqSelectTagContent` template replaces that markup wholesale — reproduce the control if you keep tag removal.
+While the panel shows something other than options — the loading, error or empty state, or an empty search result — the option list is marked `aria-busy`, so it is not announced as a list of options with nothing in it.
+
+In multiple selection mode every tag has its own remove control: a `button` operable with `Enter` and `Space`. Its name is built from the a11y locale (`remove`) and the value's own text, so it is announced as "Remove Country", not just "Remove". Only the tags the trigger actually shows take a place in the tab order — the ones the "+N" counter stands for are clipped out of sight, and a tab stop there would move focus to something invisible. A custom `#kbqSelectTagContent` template replaces that markup wholesale — reproduce the control if you keep tag removal.
 
 When the operating system asks for reduced motion, the panel opens and closes without the fade animation.
 
