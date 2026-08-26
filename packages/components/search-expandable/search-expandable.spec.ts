@@ -1,7 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -25,10 +25,14 @@ const typeIntoInput = (fixture: ComponentFixture<unknown>, debugElement: DebugEl
     fixture.detectChanges();
 };
 
-const pressEnter = (debugElement: DebugElement): void => {
-    debugElement
-        .query(By.css('input'))
-        .nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+const pressEnter = (debugElement: DebugElement): KeyboardEvent => {
+    // `cancelable`, as a real key event is: without it `preventDefault()` is a no-op and the returned event
+    // could never report a prevented default.
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+
+    debugElement.query(By.css('input')).nativeElement.dispatchEvent(event);
+
+    return event;
 };
 
 describe('KbqSearchExpandable', () => {
@@ -49,7 +53,9 @@ describe('KbqSearchExpandable', () => {
                 TestSearchExpandableWithConfiguration,
                 TestSearchExpandableWithEmitByEnter,
                 TestSearchExpandableWithEmitValueTimeout,
-                TestSearchExpandableWithDisabledFormControl
+                TestSearchExpandableWithDisabledFormControl,
+                TestSearchExpandableWithValidatedFormControl,
+                TestSearchExpandablePair
             ]
         }).compileComponents();
     });
@@ -354,6 +360,37 @@ describe('KbqSearchExpandable', () => {
         }));
     });
 
+    describe('validation', () => {
+        let local: ComponentFixture<TestSearchExpandableWithValidatedFormControl>;
+        let formField: HTMLElement;
+        let inputElement: HTMLInputElement;
+
+        beforeEach(() => {
+            local = TestBed.createComponent(TestSearchExpandableWithValidatedFormControl);
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            formField = debug.query(By.css('.kbq-search-expandable__search')).nativeElement;
+            inputElement = debug.query(By.css('input')).nativeElement;
+        });
+
+        it('should keep the field valid while the bound control is untouched', () => {
+            expect(local.componentInstance.searchControl.invalid).toBe(true);
+            expect(formField.classList.contains('kbq-form-field_invalid')).toBe(false);
+            expect(inputElement.getAttribute('aria-invalid')).toBe('false');
+        });
+
+        it('should mark the field invalid once the bound control reports an error', () => {
+            inputElement.dispatchEvent(new Event('blur'));
+            local.detectChanges();
+
+            expect(local.componentInstance.searchControl.touched).toBe(true);
+            expect(formField.classList.contains('kbq-form-field_invalid')).toBe(true);
+            expect(inputElement.getAttribute('aria-invalid')).toBe('true');
+        });
+    });
+
     describe('auto-open when model has value', () => {
         it('should open when ngModel has an initial value', fakeAsync(() => {
             const local = TestBed.createComponent(TestSearchExpandable);
@@ -643,6 +680,35 @@ describe('KbqSearchExpandable', () => {
 
             flush();
         }));
+
+        it('should prevent the default action of the enter it handles', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
+
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            typeIntoInput(local, debug, 'typed');
+
+            expect(pressEnter(debug).defaultPrevented).toBe(true);
+
+            flush();
+        }));
+
+        it('should leave the default action of enter alone when it does not emit', fakeAsync(() => {
+            const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+
+            local.componentInstance.openedState = true;
+            local.detectChanges();
+
+            const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
+
+            typeIntoInput(local, debug, 'typed');
+
+            expect(pressEnter(debug).defaultPrevented).toBe(false);
+
+            flush();
+        }));
     });
 
     describe('value accessor', () => {
@@ -783,6 +849,14 @@ describe('KbqSearchExpandable', () => {
 
             expect(await axe(fixture.nativeElement)).toHaveNoViolations();
         });
+
+        it('should have no axe violations when two instances are expanded on the same page', async () => {
+            const local = TestBed.createComponent(TestSearchExpandablePair);
+
+            local.detectChanges();
+
+            expect(await axe(local.nativeElement)).toHaveNoViolations();
+        });
     });
 
     describe('escape key', () => {
@@ -913,4 +987,28 @@ class TestSearchExpandableWithEmitValueTimeout {
 })
 class TestSearchExpandableWithDisabledFormControl {
     readonly searchControl = new FormControl<string>({ value: '', disabled: true });
+}
+
+@Component({
+    selector: 'test-app-search-expandable-with-validated-form-control',
+    imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    template: `
+        <kbq-search-expandable [isOpened]="true" [formControl]="searchControl" />
+    `
+})
+class TestSearchExpandableWithValidatedFormControl {
+    readonly searchControl = new FormControl<string>('', Validators.required);
+}
+
+@Component({
+    selector: 'test-app-search-expandable-pair',
+    imports: [KbqSearchExpandableModule, FormsModule],
+    template: `
+        <kbq-search-expandable [isOpened]="true" [(ngModel)]="first" />
+        <kbq-search-expandable [isOpened]="true" [(ngModel)]="second" />
+    `
+})
+class TestSearchExpandablePair {
+    first: string;
+    second: string;
 }

@@ -167,6 +167,56 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('emitValueByEnter = false;');
     });
 
+    it('leaves a TypeScript read of emitValueByEnter alone while still rewriting the inline template', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            'export class App {\n' +
+                '    emitValueByEnter = false;\n' +
+                '    other = true;\n' +
+                '    readonly enabled = this.emitValueByEnter && this.other;\n' +
+                '    template = `<kbq-filter-search emitValueByEnter></kbq-filter-search>`;\n' +
+                '}\n'
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(ts);
+
+        expect(updated).toContain('readonly enabled = this.emitValueByEnter && this.other;');
+        expect(updated).toContain('<kbq-search-expandable isEmitValueByEnterEnabled>');
+    });
+
+    it('rewrites the KbqFilterBarSearch tooltip input without touching tooltip attributes elsewhere', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            html,
+            '<kbq-filter-search [tooltip]="hint"></kbq-filter-search>\n' +
+                '<kbq-filter-search tooltip="Search"></kbq-filter-search>\n' +
+                '<span [tooltip]="hint">untouched</span>\n'
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        const updated = result.readText(html);
+
+        expect(updated).toContain('<kbq-search-expandable [tooltipText]="hint">');
+        expect(updated).toContain('<kbq-search-expandable tooltipText="Search">');
+        expect(updated).toContain('<span [tooltip]="hint">untouched</span>');
+    });
+
     it('warns about initialValue and (onSearch), which have no counterpart, without auto-fixing them', async () => {
         const [first] = projects.keys();
         const { html } = paths(projects.get(first)!);
@@ -193,6 +243,68 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('(onSearch)="onSearch($event)"');
         expect(messages.some((m) => m.includes('initialValue'))).toBe(true);
         expect(messages.some((m) => m.includes('onSearch'))).toBe(true);
+    });
+
+    it('warns about kbq-filter-search used as an attribute, which has no element-only counterpart', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+        const original = '<div kbq-filter-search></div>\n';
+
+        appTree.overwrite(html, original);
+
+        const messages: string[] = [];
+
+        runner.logger.subscribe((entry) => {
+            if (entry.message) messages.push(entry.message);
+        });
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(html)).toBe(original);
+        expect(messages.some((m) => m.includes('element-only'))).toBe(true);
+    });
+
+    it('does not raise the attribute warning for the element form it rewrites', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+
+        appTree.overwrite(html, '<kbq-filter-search></kbq-filter-search>\n');
+
+        const messages: string[] = [];
+
+        runner.logger.subscribe((entry) => {
+            if (entry.message) messages.push(entry.message);
+        });
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(html)).toContain('<kbq-search-expandable>');
+        expect(messages.some((m) => m.includes('element-only'))).toBe(false);
+    });
+
+    it('warns that the emit timeout default changed from 0 to 200', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+
+        appTree.overwrite(html, '<kbq-filter-search></kbq-filter-search>\n');
+
+        const messages: string[] = [];
+
+        runner.logger.subscribe((entry) => {
+            if (entry.message) messages.push(entry.message);
+        });
+
+        await runner.runSchematic(SCHEMATIC_NAME, { project: first, fix: true } satisfies Schema, appTree);
+
+        expect(messages.some((m) => m.includes('defaults to 200'))).toBe(true);
     });
 
     it('rewrites kbqFormFieldWithoutBorders → noBorders', async () => {

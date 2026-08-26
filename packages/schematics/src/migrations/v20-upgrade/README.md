@@ -33,7 +33,7 @@ from three ordered tables in `data.ts`:
   (`[canLoad]` / `canLoad=` → `canDownload`, `[codeFiles]` / `codeFiles=` →
   `files`), the `KbqFilterBarSearch` inputs that survived the tag rename
   (`emitValueByEnter` → `isEmitValueByEnterEnabled`, `onSearchTimeout` →
-  `emitValueTimeout`), and template-ref exportAs renames
+  `emitValueTimeout`, `tooltip` → `tooltipText`), and template-ref exportAs renames
   (`="kbqWarningTooltip"` → `="kbqTooltip"`).
 - **`scssReplacements`** — CSS class selectors renamed at the component level.
 
@@ -42,17 +42,19 @@ from three ordered tables in `data.ts`:
 Some changes require code restructuring and are surfaced as console warnings
 without auto-fixing:
 
-| Pattern                                           | Manual migration                                                                                      |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `(onSaveAsNew)`                                   | Listen to `(onSave)` and branch on `$event.status === 'newFilter'`                                    |
-| `[customValidation]`                              | Use `FormControl` validators (e.g. `FileValidators.isCorrectExtension`)                               |
-| `[errors]` (file-upload)                          | Use `FormControl.errors`                                                                              |
-| `[apps]` (app-switcher)                           | Wrap in single-site `[sites]="[{ id, name, apps }]"` and read with `KbqAppSwitcherSite`               |
-| `scrollableCodeContent` (code-block)              | Use the `scrollTo()` method instead                                                                   |
-| `.canLoad` / `.codeFiles` (code-block, TS access) | Template bindings are auto-migrated; update programmatic access to `.canDownload` / `.files` manually |
-| `required` (KbqFilter)                            | Use `cleanable = false` and `removable = false` (best-effort match — verify it is a KbqFilter config) |
-| `[initialValue]` (filter-search)                  | Seed the bound `[formControl]` / `[(ngModel)]` — the component has no value input                     |
-| `(onSearch)` (filter-search)                      | Read the query from the bound control instead                                                         |
+| Pattern                                           | Manual migration                                                                                       |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `(onSaveAsNew)`                                   | Listen to `(onSave)` and branch on `$event.status === 'newFilter'`                                     |
+| `[customValidation]`                              | Use `FormControl` validators (e.g. `FileValidators.isCorrectExtension`)                                |
+| `[errors]` (file-upload)                          | Use `FormControl.errors`                                                                               |
+| `[apps]` (app-switcher)                           | Wrap in single-site `[sites]="[{ id, name, apps }]"` and read with `KbqAppSwitcherSite`                |
+| `scrollableCodeContent` (code-block)              | Use the `scrollTo()` method instead                                                                    |
+| `.canLoad` / `.codeFiles` (code-block, TS access) | Template bindings are auto-migrated; update programmatic access to `.canDownload` / `.files` manually  |
+| `required` (KbqFilter)                            | Use `cleanable = false` and `removable = false` (best-effort match — verify it is a KbqFilter config)  |
+| `[initialValue]` (filter-search)                  | Seed the bound `[formControl]` / `[(ngModel)]` — the component has no value input                      |
+| `(onSearch)` (filter-search)                      | Read the query from the bound control instead                                                          |
+| `kbq-filter-search` as an attribute               | `kbq-search-expandable` is element-only — replace the host element by hand                             |
+| `<kbq-filter-search>` timeout default             | `onSearchTimeout` defaulted to `0`, `emitValueTimeout` to `200` — add `[emitValueTimeout]="0"` to keep |
 
 ## Running it manually
 

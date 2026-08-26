@@ -20,9 +20,19 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormControl, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
+import {
+    AbstractControl,
+    ControlValueAccessor,
+    FormControl,
+    FormGroupDirective,
+    FormsModule,
+    NgControl,
+    NgForm,
+    ReactiveFormsModule
+} from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
+    ErrorStateMatcher,
     KbqDeepPartial,
     kbqInjectA11yLocaleConfiguration,
     kbqInjectLocaleConfiguration,
@@ -56,6 +66,22 @@ export const kbqSearchExpandableLocaleConfigurationProvider = (
 
 export const defaultValue = '';
 export const defaultEmitValueTimeout = 200;
+
+/**
+ * Resolves the error state of the rendered field against the control the consumer bound, not against
+ * the component's own validator-free control the input is wired to. Delegates to the ambient matcher so
+ * a consumer-provided `ErrorStateMatcher` keeps deciding *when* the errors are shown.
+ */
+class BoundControlErrorStateMatcher implements ErrorStateMatcher {
+    constructor(
+        private readonly matcher: ErrorStateMatcher,
+        private readonly boundControl: () => AbstractControl | null
+    ) {}
+
+    isErrorState(_control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return this.matcher.isErrorState(this.boundControl(), form);
+    }
+}
 
 @Component({
     selector: 'kbq-search-expandable',
@@ -116,6 +142,16 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
      * @docs-private
      */
     protected readonly control = new FormControl<string>(defaultValue, { nonNullable: true });
+
+    /**
+     * Keeps the field's invalid state — and the `aria-invalid` derived from it — following the bound
+     * control, which is the only one the consumer's validators run on.
+     * @docs-private
+     */
+    protected readonly errorStateMatcher: ErrorStateMatcher = new BoundControlErrorStateMatcher(
+        inject(ErrorStateMatcher),
+        () => this.ngControl?.control ?? null
+    );
 
     /** Icon of the collapsed button and of the expanded field's prefix. */
     protected readonly searchIconName = 'kbq-magnifying-glass_16';
@@ -372,8 +408,12 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
      * emits in that mode, since the debounced pipeline is filtered out.
      * @docs-private
      */
-    protected onEnter(): void {
+    protected onEnter(event: Event): void {
         if (!this.isEmitValueByEnterEnabled()) return;
+
+        // Angular calls `preventDefault()` only for a handler that returns literal `false`, so without this
+        // an Enter inside a native `<form>` would submit it on top of the emission it has just made.
+        event.preventDefault();
 
         this.cancelPendingEmit.next();
         this.emitValue(this.control.value);

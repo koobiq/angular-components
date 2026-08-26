@@ -15,7 +15,7 @@
         <i [kbq-icon]="searchIconName"></i>
     </button>
 } @else {
-    <kbq-form-field class="kbq-search-expandable__search" role="search">
+    <kbq-form-field class="kbq-search-expandable__search">
         <i kbqPrefix [kbq-icon]="searchIconName"></i>
 
         <input
@@ -26,9 +26,10 @@
             [tabIndex]="tabIndex"
             [placeholder]="placeholder"
             [formControl]="control"
+            [errorStateMatcher]="errorStateMatcher"
             (blur)="onTouch()"
             (keyup.escape)="toggle()"
-            (keydown.enter)="onEnter()"
+            (keydown.enter)="onEnter($event)"
         />
 
         <button

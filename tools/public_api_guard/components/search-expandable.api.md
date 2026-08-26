@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FormControl } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -44,6 +45,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly emitValueTimeout: i0.InputSignalWithTransform<number, unknown>;
+    protected readonly errorStateMatcher: ErrorStateMatcher;
     protected readonly focusMonitor: FocusMonitor;
     readonly isEmitValueByEnterEnabled: i0.InputSignalWithTransform<boolean, unknown>;
     isOpened: boolean;
@@ -65,7 +67,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     // (undocumented)
     ngOnDestroy(): void;
     onChange: (value: string) => void;
-    protected onEnter(): void;
+    protected onEnter(event: Event): void;
     onTouch: () => void;
     get placeholder(): string;
     set placeholder(value: string | null);
