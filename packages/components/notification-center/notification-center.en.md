@@ -6,6 +6,8 @@ The notification list opens from the main menu. The menu shows an unread message
 
 New notifications appear in the list and are grouped by date, with the newest at the top. Each item has a title and timestamp; optionally it may include a caption and actions. A delete button appears on hover or focus. Messages can be cleared per day or all at once.
 
+The date adapter and the formatter have to be provided at the application root — `importProvidersFrom(KbqLuxonDateModule, KbqFormattersModule)` at bootstrap, or the Moment equivalent. `KbqNotificationCenterService` is `providedIn: 'root'` and reads both, so an adapter provided on a feature module or on a component does not reach it.
+
 The `date` of a notification is any value the configured `DateAdapter` parses without an explicit format — ISO 8601, RFC 2822 or SQL for the Luxon adapter. It drives both the date group and the ordering. A value the adapter cannot parse is shown verbatim as its own group heading and sorted last, instead of breaking the list.
 
 Unread messages are marked with a blue dot and by an "Unread" label for screen readers. Dwelling on an item — with the pointer or with keyboard focus — or interacting with it (link, button, delete) marks the message as read.

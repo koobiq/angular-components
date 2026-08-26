@@ -62,5 +62,16 @@ export const warnPatterns: WarnPattern[] = [
             'KbqNotificationCenterService.changes is an Observable<void> now — it is a ping, and the value handed ' +
             'to a subscriber is always undefined. Read the state you need from the service itself (items, ' +
             'silentMode, loadingMode, errorMode, loadingMore, loadMoreErrorMode, hasMore).'
+    },
+    {
+        pattern: '\\bKbqNotificationCenterModule\\b|@koobiq/components/notification-center',
+        message:
+            'DateAdapter and DateFormatter have to reach the ROOT injector now. KbqNotificationCenterModule used ' +
+            'to list KbqNotificationCenterService in its own providers, so the service was built in whichever ' +
+            'injector imported the module and picked up a date adapter provided there. The module no longer ' +
+            'provides it — the `providedIn: "root"` instance is the only one — so an adapter provided on a ' +
+            'feature module or a component no longer reaches it, and the first injection of the service throws ' +
+            'NG0201 "No provider found for DateAdapter". Provide the adapter at bootstrap: ' +
+            'importProvidersFrom(KbqLuxonDateModule, KbqFormattersModule), or the Moment equivalent.'
     }
 ];

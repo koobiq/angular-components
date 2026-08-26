@@ -136,6 +136,22 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.slice(afterFirst).join('\n')).not.toContain('Observable<void>');
     });
 
+    it('reports the date adapter that now has to reach the root injector', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqNotificationCenterModule } from '@koobiq/components/notification-center';\n" +
+                'export class FeatureModule { readonly imported = KbqNotificationCenterModule; }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('have to reach the ROOT injector');
+    });
+
     it('leaves a file that never names the notification center alone', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
