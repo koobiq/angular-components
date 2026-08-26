@@ -102,16 +102,28 @@ export class E2eTitleOverflow implements AfterViewInit {
     readonly subPixelEllipsis = viewChild.required<ElementRef<HTMLElement>>('subPixelEllipsis');
 
     /**
-     * Sizes both sub-pixel hosts to 0.4 px less than their own text, which is the only reliable way to build
-     * that case: it does not depend on the font metrics of the machine running the test. Both then report
-     * equal integer `offsetWidth`/`scrollWidth`, so the directive takes its sub-pixel branch — where `clip`
-     * must stay silent and `ellipsis` must show the tooltip.
+     * Narrows both sub-pixel hosts until they clip their own text without the integer
+     * `offsetWidth`/`scrollWidth` pair noticing, which is what puts the directive on its sub-pixel branch —
+     * where `clip` must stay silent and `ellipsis` must show the tooltip.
+     *
+     * Searched rather than computed with a fixed offset: how far the box can be narrowed before the two
+     * integers part company depends on where the text width falls between them, so any single offset builds
+     * a plain overflow case instead for some share of font metrics, and the two tests would then silently
+     * assert the wrong branch.
      */
     ngAfterViewInit(): void {
         [this.subPixelClip(), this.subPixelEllipsis()].forEach(({ nativeElement }) => {
             const textWidth = nativeElement.getBoundingClientRect().width;
 
-            nativeElement.style.width = `${textWidth - 0.4}px`;
+            for (const shave of [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]) {
+                nativeElement.style.width = `${textWidth - shave}px`;
+
+                if (nativeElement.offsetWidth === nativeElement.scrollWidth) return;
+            }
+
+            throw new Error(
+                `Sub-pixel fixture: no width under ${textWidth}px both clips the text and keeps offsetWidth equal to scrollWidth.`
+            );
         });
     }
 }

@@ -17,6 +17,9 @@ test.describe('KbqTitleDirective', () => {
     test('should not show the tooltip when the text fits', async ({ page }) => {
         await page.getByTestId('titleFits').hover();
 
+        // Longer than the tooltip enterDelay (400ms), so a tooltip that should not open has had time to appear.
+        // Without the wait the assertion resolves on its first poll, while the tooltip is still absent anyway.
+        await page.waitForTimeout(800);
         await expect(tooltip(page)).toBeHidden();
     });
 
@@ -35,6 +38,8 @@ test.describe('KbqTitleDirective', () => {
     test('should ignore a sub-pixel clip that text-overflow: clip makes invisible', async ({ page }) => {
         await page.getByTestId('titleSubPixelClip').hover();
 
+        // Longer than the tooltip enterDelay (400ms), so a tooltip that should not open has had time to appear.
+        await page.waitForTimeout(800);
         await expect(tooltip(page)).toBeHidden();
     });
 
@@ -45,14 +50,19 @@ test.describe('KbqTitleDirective', () => {
     });
 
     test('should open the tooltip on keyboard focus and hide it on blur', async ({ page }) => {
-        await page.locator('body').press('Tab');
+        // Pressed on whatever holds focus rather than through `locator('body').press()`, which focuses the
+        // body first: that would send every Tab from the same starting point instead of advancing.
+        await page.keyboard.press('Tab');
 
         await expect(page.getByTestId('titleKeyboard')).toBeFocused();
         await expect(tooltip(page)).toBeVisible();
         await expect(tooltip(page)).toContainText('A very long button label');
 
-        await page.locator('body').press('Tab');
+        await page.keyboard.press('Tab');
 
+        // Asserted rather than assumed: the button is the only focusable element in the fixture, so this is
+        // what makes the tooltip assertion below about a blur and not about where Tab happened to land.
+        await expect(page.getByTestId('titleKeyboard')).not.toBeFocused();
         await expect(tooltip(page)).toBeHidden();
     });
 });
