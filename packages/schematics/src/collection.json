@@ -143,6 +143,11 @@
             "description": "Reports the KbqSplitButton members whose type changed in the split-button review. disabled reports boolean | undefined instead of boolean: the backing field has no initializer, so a control with no [disabled] binding always returned undefined behind a non-nullable type, and the call sites that assigned it to a boolean or compared it against false were quietly wrong. The protected buttons content query moved from QueryList<KbqButton> to a signal query, so a subclass reading buttons.changes or buttons.length has to read buttons() instead. Warn-only: narrowing boolean | undefined back to boolean is a decision the call site owns. Notes the silent part too — an empty <kbq-split-button> no longer throws outside dev mode.",
             "factory": "./migrations/split-button-optional-disabled/index",
             "schema": "./migrations/split-button-optional-disabled/schema.json"
+        },
+        "popover-leave-delay": {
+            "description": "Reports the popover call sites whose meaning changed in the popover review. A dead this.leaveDelay ?? 500 — the base initialises the field to 0, and 0 ?? 500 is 0 — made hover mode close the panel before the pointer could cross the gap to it. The delay is derived from the trigger now, and kbqLeaveDelay is a write-only input that records having been bound, so a programmatic leaveDelay assignment no longer sticks: the next write to trigger overwrites it. Also reports the now-readonly onConfirm and placementChange emitting KbqPopUpPlacementValues instead of string. Warn-only. Notes the parts with no call site: the confirm popover takes its defaults from the locale instead of hardcoded Russian, the untorn-down global ScrollDispatcher subscription is bounded, and the trigger can be imported standalone.",
+            "factory": "./migrations/popover-leave-delay/index",
+            "schema": "./migrations/popover-leave-delay/schema.json"
         }
     }
 }
