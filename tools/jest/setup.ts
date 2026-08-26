@@ -66,6 +66,6 @@ if (!globalThis.structuredClone) {
     globalThis.structuredClone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
 }
 
-if (typeof Element !== 'undefined' && !Element.prototype.scrollIntoView) {
+if (!Element.prototype.scrollIntoView) {
     Element.prototype.scrollIntoView = jest.fn();
 }

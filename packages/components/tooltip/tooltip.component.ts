@@ -170,8 +170,23 @@ export class KbqTooltipTrigger
     /** Registry holding the single tooltip that is currently visible. */
     private readonly tooltipRegistry = inject(KbqTooltipRegistry);
 
+    private readonly injectedScrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
+
+    /**
+     * Per-instance override for the scroll strategy, taking precedence over `KBQ_TOOLTIP_SCROLL_STRATEGY`
+     * when set. An `@Input` rather than a DI override so it applies to this tooltip instance only, without
+     * leaking into other `kbqTooltip`s nested inside the same host (DI overrides are visible to every
+     * descendant in the element-injector tree, not just the element they're declared on).
+     * @docs-private
+     */
+    readonly scrollStrategyOverride = input<(() => ScrollStrategy) | undefined>(undefined, {
+        alias: 'kbqTooltipScrollStrategy'
+    });
+
     /** @docs-private */
-    protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
+    protected get scrollStrategy(): () => ScrollStrategy {
+        return this.scrollStrategyOverride() ?? this.injectedScrollStrategy;
+    }
     /** @docs-private */
     protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
     /**

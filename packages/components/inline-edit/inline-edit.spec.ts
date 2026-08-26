@@ -22,6 +22,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
 import { KbqInlineEdit } from './inline-edit';
 import { KbqInlineEditModule } from './module';
@@ -860,10 +861,24 @@ describe('KbqInlineEdit', () => {
             componentInstance.control.updateValueAndValidity();
             fixture.detectChanges();
 
+            tick();
             expect(hideSpy).toHaveBeenCalled();
+            expect(tooltipTrigger.isOpen).toBe(false);
         }));
 
         it('should show the tooltip immediately when the control is already fully visible', () => {
+            const onscreenRect: DOMRect = {
+                top: 10,
+                left: 10,
+                bottom: 50,
+                right: 110,
+                width: 100,
+                height: 40,
+                x: 10,
+                y: 10,
+                toJSON: () => ({})
+            };
+
             const fixture = setup(TestWithDynamicValidationTooltip);
             const { componentInstance } = fixture;
 
@@ -871,6 +886,9 @@ describe('KbqInlineEdit', () => {
 
             const inlineEditDebugElement = openEditAndInvalidate(fixture);
             const inlineEdit = inlineEditDebugElement.componentInstance as any;
+
+            jest.spyOn(inlineEdit.overlayOrigin, 'getBoundingClientRect').mockReturnValue(onscreenRect);
+
             const scrollIntoViewSpy = jest.spyOn(inlineEdit.overlayOrigin, 'scrollIntoView');
             const showSpy = jest.spyOn(inlineEdit.tooltipTrigger(), 'show');
 
@@ -930,7 +948,8 @@ describe('KbqInlineEdit', () => {
                 expect(updatePositionSpy).toHaveBeenCalled();
                 expect(showSpy).toHaveBeenCalled();
 
-                // Flush the now-irrelevant fallback timer (a no-op, guarded by the `shown` flag).
+                // Flush the tooltip's own `kbqEnterDelay` timer (default 400ms) scheduled by `show()` —
+                // the scrollend above already settled the scroll-into-view request, so nothing else is pending.
                 tick(800);
             }));
 
@@ -959,7 +978,25 @@ describe('KbqInlineEdit', () => {
             const tooltipTrigger = (inlineEditDebugElement.componentInstance as any).tooltipTrigger();
 
             expect(tooltipTrigger.scrollStrategy()).toBeInstanceOf(RepositionScrollStrategy);
-            expect(tooltipTrigger.scrollStrategy()).not.toBeInstanceOf(CloseScrollStrategy);
+        });
+
+        it('should not leak the reposition scroll strategy into a tooltip projected into edit mode', () => {
+            // The reposition override is passed to the validation tooltip's own `[kbqTooltipScrollStrategy]`
+            // input, not provided via DI on the component — so it must not affect other `kbqTooltip`s declared
+            // on content projected into `[kbqInlineEditEditMode]`, which should keep the library default.
+            const fixture = setup(TestWithDynamicValidationTooltip);
+            const { debugElement } = fixture;
+            const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+
+            const projectedTooltipTrigger = fixture.debugElement
+                .query(By.css('[data-testid="projected-tooltip"]'))
+                .injector.get(KbqTooltipTrigger) as any;
+
+            expect(projectedTooltipTrigger.scrollStrategy()).toBeInstanceOf(CloseScrollStrategy);
+            expect(projectedTooltipTrigger.scrollStrategy()).not.toBeInstanceOf(RepositionScrollStrategy);
         });
     });
 });
@@ -1418,12 +1455,13 @@ export class TestWithMultiSelect {
 
 @Component({
     selector: 'name',
-    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInlineEditModule, KbqTextareaModule],
+    imports: [ReactiveFormsModule, KbqFormFieldModule, KbqInlineEditModule, KbqTextareaModule, KbqTooltipTrigger],
     template: `
         <kbq-inline-edit showActions [validationTooltip]="validationTooltip()" (saved)="update()">
             <div kbqInlineEditViewMode>{{ control.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
                 <textarea kbqTextarea [formControl]="control"></textarea>
+                <span data-testid="projected-tooltip" kbqTooltip="Extra info">Extra</span>
             </kbq-form-field>
         </kbq-inline-edit>
     `
