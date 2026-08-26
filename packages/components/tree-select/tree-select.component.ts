@@ -1642,14 +1642,16 @@ export class KbqTreeSelect
     private scrollActiveOptionIntoView() {
         const activeOption = this.tree()!.keyManager.activeItem;
 
-        if (!this.search() || !activeOption) {
+        // No search field: the option takes DOM focus (roving focus) and scrolls into view natively.
+        if (!this.search()) {
             activeOption?.focus();
 
             return;
         }
 
-        // The panel view children only resolve once the overlay is attached.
-        if (!this.panel()) {
+        // Search field keeps focus in the input (ActiveDescendant); scroll manually once there is a target
+        // and the panel view children have resolved (they only exist once the overlay is attached).
+        if (!activeOption || !this.panel()) {
             return;
         }
 

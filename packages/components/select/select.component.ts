@@ -2238,9 +2238,15 @@ export class KbqSelect
     private scrollActiveOptionIntoView(): void {
         const activeOption = this.keyManager.activeItem;
 
-        if (!this.search() || !activeOption) {
+        // No search field: the option takes DOM focus (roving focus) and scrolls into view natively.
+        if (!this.search()) {
             activeOption?.focus();
 
+            return;
+        }
+
+        // Search field keeps focus in the input (ActiveDescendant); scroll manually once there is a target.
+        if (!activeOption) {
             return;
         }
 
