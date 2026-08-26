@@ -652,6 +652,7 @@ export class KbqTooltipTrigger
 
         this.destroyRef.onDestroy(() => {
             this.undescribeTrigger();
+            this.stopListeningForEscape();
             this.tooltipRegistry.clearVisible(this);
         });
 
@@ -776,11 +777,24 @@ export class KbqTooltipTrigger
     showForMouseEvent(event: MouseEvent) {
         if (!(event.currentTarget instanceof HTMLElement)) return;
 
+        // The same guard `show()` carries, repeated because this path reaches `super.show()` directly and
+        // would otherwise latch an empty pane open — with it attached, `KbqPopUpTrigger.show` returns early
+        // and the tooltip never recovers, while the pane keeps swallowing the document keydown listener.
+        if (!this.content) return;
+
         this.triggerName = 'mouseenter';
         this.mouseEvent = event;
+        this.undescribeTrigger();
         this.setExternalNativeElement(event.currentTarget);
 
         super.show();
+
+        // Re-anchoring an open tooltip has to move the description itself: the `visibleChange(true)` edge that
+        // normally drives it is swallowed by `distinctUntilChanged` while the pop-up stays attached. A tooltip
+        // that is not open yet is left to that edge, which describes the element anchored by then.
+        if (this.isOpen) {
+            this.describeTrigger();
+        }
 
         this.applyRelativeToPointer();
     }
@@ -863,12 +877,11 @@ export class KbqTooltipTrigger
     }
 
     /**
-     * Subscribes the overlay's keydown stream once, when the overlay is first created, so that `Escape`
-     * dismisses the tooltip.
+     * Arms the `Escape` listener for as long as the tooltip overlay is attached, so that `Escape` dismisses
+     * the tooltip.
      *
      * The inherited `keydownHandler` is a host binding on the trigger and therefore only fires while the
-     * trigger itself has focus, which a hover-opened tooltip never has. CDK routes `keydownEvents()` to the
-     * top-most attached overlay regardless of where focus is, which is exactly the missing case.
+     * trigger itself has focus, which a hover-opened tooltip never has.
      * @docs-private
      */
     createOverlay(): OverlayRef {
@@ -883,17 +896,46 @@ export class KbqTooltipTrigger
         const overlayRef = super.createOverlay();
 
         overlayRef
-            .keydownEvents()
-            .pipe(
-                filter(({ keyCode }) => keyCode === ESCAPE),
-                // An imperatively driven tooltip (`manual`/`none`) is pinned on purpose — the validation hints
-                // of datepicker, timepicker and inline-edit must survive an unrelated Escape.
-                filter(() => this.isOpen && this.hasInteractiveTrigger),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(() => this.ngZone.run(() => this.hideAsInactive()));
+            .attachments()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.listenForEscape());
+        overlayRef
+            .detachments()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.stopListeningForEscape());
 
         return overlayRef;
+    }
+
+    /** Teardown of the document-level `Escape` listener, or `null` while the overlay is detached. */
+    private unbindEscapeListener: (() => void) | null = null;
+
+    /**
+     * Binds a document-level `Escape` listener, outside the zone and at most once per attach.
+     *
+     * Deliberately not `overlayRef.keydownEvents()`: CDK hands each key to the last attached overlay that has
+     * subscribers and stops there, without re-dispatching. A tooltip is by construction the last overlay
+     * attached, so subscribing would make it swallow `Escape` for the modal, sidepanel, dropdown or inline
+     * edit underneath it — including for the imperative tooltips that drop the key instead of acting on it.
+     */
+    private listenForEscape(): void {
+        if (this.unbindEscapeListener) return;
+
+        this.ngZone.runOutsideAngular(() => {
+            this.unbindEscapeListener = this.renderer.listen('document', 'keydown', (event: KeyboardEvent) => {
+                // An imperatively driven tooltip (`manual`/`none`) is pinned on purpose — the validation hints
+                // of datepicker, timepicker and inline-edit must survive an unrelated Escape.
+                if (event.keyCode !== ESCAPE || !this.isOpen || !this.hasInteractiveTrigger) return;
+
+                this.hideAsInactive();
+            });
+        });
+    }
+
+    /** Removes the document-level `Escape` listener. */
+    private stopListeningForEscape(): void {
+        this.unbindEscapeListener?.();
+        this.unbindEscapeListener = null;
     }
 
     /** Panel classes of the tooltip overlay, including the pointer-events opt-out while it is enabled. */
@@ -903,7 +945,13 @@ export class KbqTooltipTrigger
             (name) => name !== IGNORE_POINTER_EVENTS_PANEL_CLASS
         );
 
-        return this.ignoreTooltipPointerEvents() ? [...classes, IGNORE_POINTER_EVENTS_PANEL_CLASS] : classes;
+        // A tooltip without an interactive trigger opts out regardless of the input: hovering its pane
+        // neither keeps it open nor closes it, so the hoverability the default protects does not exist here,
+        // and a pointer-capturing pane only blocks what it floats over. The validation hints of datepicker,
+        // timepicker and inline-edit sit above their own field for `validationTooltipHideDelay` (3s).
+        const ignorePointerEvents = this.ignoreTooltipPointerEvents() || !this.hasInteractiveTrigger;
+
+        return ignorePointerEvents ? [...classes, IGNORE_POINTER_EVENTS_PANEL_CLASS] : classes;
     }
 
     /**
@@ -919,14 +967,23 @@ export class KbqTooltipTrigger
         const nativeElement = this.getNativeElement();
         const ids = this.getDescribedByIds(nativeElement);
 
+        // Recorded rather than resolved again on the way out: `showForMouseEvent` re-anchors the trigger to
+        // another element, and un-describing the current one would leave the id dangling on the previous.
+        this.describedElement = nativeElement;
+
         if (ids.includes(this.tooltipId)) return;
 
         this.renderer.setAttribute(nativeElement, 'aria-describedby', [...ids, this.tooltipId].join(' '));
     }
 
-    /** Removes this tooltip's id from the trigger's `aria-describedby`, keeping any other ids in place. */
+    /** Removes this tooltip's id from the described element's `aria-describedby`, keeping any other ids. */
     private undescribeTrigger(): void {
-        const nativeElement = this.getNativeElement();
+        const nativeElement = this.describedElement;
+
+        if (!nativeElement) return;
+
+        this.describedElement = null;
+
         const ids = this.getDescribedByIds(nativeElement).filter((id) => id !== this.tooltipId);
 
         if (ids.length) {
@@ -935,6 +992,9 @@ export class KbqTooltipTrigger
             this.renderer.removeAttribute(nativeElement, 'aria-describedby');
         }
     }
+
+    /** Element whose `aria-describedby` points at this tooltip, or `null` while nothing is described. */
+    private describedElement: HTMLElement | null = null;
 
     /** Ids currently listed in the element's `aria-describedby`. */
     private getDescribedByIds(element: HTMLElement): string[] {

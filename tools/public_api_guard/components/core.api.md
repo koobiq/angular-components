@@ -3735,7 +3735,6 @@ export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqDe
 
 // @public (undocumented)
 export abstract class KbqPopUp implements OnDestroy {
-    // (undocumented)
     protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
     animationDone(input: AnimationEvent_2): void;

@@ -71,6 +71,12 @@ pointer and clicks pass through to whatever is underneath it. Use it for tooltip
 targets — for example the overflow hints of a scrolling option list, where a pointer-capturing tooltip would
 swallow the click that selects the neighboring option.
 
+Before v20 the tooltip ignored pointer events by default, so this reverses on upgrade: markup that relied on
+clicks passing through now has to ask for it. The built-in overflow hints (`kbq-title`, `kbqEllipsisCenter`,
+the option and timezone-option hints) already opt out on their own, and so does any tooltip whose `kbqTrigger`
+is `manual` or `none` — hovering such a pane neither keeps it open nor closes it, so there is nothing for a
+pointer-capturing pane to protect.
+
 ### Only One Tooltip at a Time
 
 At most one tooltip is on screen: showing a new one closes the previously opened tooltip. The rule applies to tooltips opened by `hover`, `focus`, `click` or `keydown` — including the `kbq-title` and `kbqEllipsisCenter` hints.
@@ -123,8 +129,8 @@ below lists the canonical name of each one.
 | `kbqRelativeToPointer`       | `boolean`                                     | `false`          | Positions the tooltip at the cursor. Only for `top`/`bottom`, and not combined with placement priority.                                        |
 | `kbqTrigger`                 | `string`                                      | `'hover, focus'` | Comma-separated trigger events: `hover`, `focus`, `click`, `keydown`, `manual`.                                                                |
 | `kbqEnterDelay`              | `number`                                      | `400`            | Delay in milliseconds before showing. See [Delay](#delay).                                                                                     |
-| `kbqLeaveDelay`              | `number`                                      | `0`              | Delay in milliseconds before hiding. Only takes effect together with `hideWithTimeout`.                                                        |
-| `hideWithTimeout`            | `boolean`                                     | `false`          | Hides after `kbqLeaveDelay` instead of immediately, and keeps the tooltip open while it is hovered.                                            |
+| `kbqLeaveDelay`              | `number`                                      | `0`              | Delay in milliseconds before hiding. Applies to every hide — on `mouseleave`, on `blur` and on `hideWithTimeout`.                              |
+| `hideWithTimeout`            | `boolean`                                     | `false`          | Additionally keeps the tooltip open while the pointer is over it, and lets a return to the trigger cancel the pending hide.                    |
 | `ignoreTooltipPointerEvents` | `boolean`                                     | `false`          | Makes the tooltip transparent to pointer events. See [Moving the Cursor onto the Tooltip](#moving-the-cursor-onto-the-tooltip).                |
 | `forDisabledComponent`       | `{ disabledSignal: WritableSignal<boolean> }` | —                | Mirrors the disabled state of a wrapped control: the wrapper becomes focusable and the tooltip is enabled only while that control is disabled. |
 

@@ -56,9 +56,14 @@ export abstract class KbqPopUp implements OnDestroy {
     private showTimeoutId: any;
     private hideTimeoutId: any;
 
+    /** Handler bound on the pop-up element to hide it on `mouseleave`, or `null` while none is bound. */
+    private hideOnMouseLeave: (() => void) | null = null;
+
     ngOnDestroy() {
         clearTimeout(this.showTimeoutId);
         clearTimeout(this.hideTimeoutId);
+
+        this.removeEventListenerForHide();
 
         this.onHideSubject.complete();
         this.hovered.complete();
@@ -73,6 +78,15 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     show(delay: number): void {
+        // Symmetrical to the clearing `hide()` does: `KbqPopUpTrigger.show()` re-enters this method on every
+        // re-hover while the pop-up stays attached, and without this each re-entry queues another show task.
+        // The extra tasks outlive the very teardown meant to cancel them — the first one to fire resets
+        // `showTimeoutId`, so `hide()` and `ngOnDestroy` then clear nothing and the rest run against a
+        // destroyed component.
+        if (this.showTimeoutId) {
+            clearTimeout(this.showTimeoutId);
+        }
+
         if (this.hideTimeoutId) {
             clearTimeout(this.hideTimeoutId);
         }
@@ -181,8 +195,22 @@ export abstract class KbqPopUp implements OnDestroy {
         }
     }
 
+    /** Binds the `mouseleave` hide listener on the pop-up element, at most once per instance. */
     protected addEventListenerForHide() {
-        this.elementRef.nativeElement.addEventListener('mouseleave', () => this.hide(0));
+        if (this.hideOnMouseLeave) return;
+
+        this.hideOnMouseLeave = () => this.hide(0);
+
+        this.elementRef.nativeElement.addEventListener('mouseleave', this.hideOnMouseLeave);
+    }
+
+    /** Unbinds the `mouseleave` hide listener bound by {@link addEventListenerForHide}. */
+    private removeEventListenerForHide() {
+        if (!this.hideOnMouseLeave) return;
+
+        this.elementRef.nativeElement.removeEventListener('mouseleave', this.hideOnMouseLeave);
+
+        this.hideOnMouseLeave = null;
     }
 
     protected setStickPosition() {
