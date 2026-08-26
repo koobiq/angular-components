@@ -4017,11 +4017,11 @@ export class KbqRangeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D
 
 // @public
 export class KbqReadStateDirective {
-    endDwell(): void;
+    endDwell(channel?: 'pointer' | 'focus', event?: FocusEvent): void;
     // (undocumented)
     readonly read: BehaviorSubject<boolean>;
-    startDwell(): void;
-    timestamp: number | undefined;
+    startDwell(channel?: 'pointer' | 'focus'): void;
+    get timestamp(): number | undefined;
     timeToRead: number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqReadStateDirective, never, never, {}, {}, never, never, true, never>;

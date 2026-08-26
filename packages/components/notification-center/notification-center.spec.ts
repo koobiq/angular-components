@@ -1,7 +1,7 @@
-import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { CdkTrapFocus, InputModalityDetector } from '@angular/cdk/a11y';
 import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { CdkScrollable } from '@angular/cdk/scrolling';
+import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -258,6 +258,37 @@ describe('KbqNotificationCenter', () => {
     describe('accessibility', () => {
         beforeEach(() => setUpDefaultFixture());
 
+        const silentModeToggle = () => queryPanel('[data-testid="kbq-notification-center-silent-mode-toggle"]')!;
+
+        /**
+         * Reports the modality of the event it dispatches. The detector is created lazily, and in a test
+         * nothing has injected it before the panel is built — so its document listeners have to exist
+         * before the event, or every open looks programmatic.
+         */
+        const useModality = (event: Event) => {
+            TestBed.inject(InputModalityDetector);
+            document.dispatchEvent(event);
+        };
+
+        // Not `fakeAsync`: a keyboard-origin focus opens the switcher's own tooltip, whose delay tracker
+        // keeps rescheduling, and `flush()` gives up on it. The focus class lands synchronously anyway.
+        it('paints a focus ring on the silent-mode toggle when the panel is opened from the keyboard', () => {
+            useModality(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+            openCenter();
+
+            expect(silentModeToggle().classList).toContain('cdk-keyboard-focused');
+        });
+
+        it('leaves the silent-mode toggle without a focus ring when the panel is opened by mouse', fakeAsync(() => {
+            // Both `buttons` and `detail` are set: CDK calls a mousedown with either at zero the fake one a screen
+            // reader emits and attributes it to the keyboard instead.
+            useModality(new MouseEvent('mousedown', { bubbles: true, buttons: 1, detail: 1 }));
+            openCenter();
+            flush();
+
+            expect(silentModeToggle().classList).not.toContain('cdk-keyboard-focused');
+        }));
+
         it('names the panel with its own title', fakeAsync(() => {
             openCenter();
             flush();
@@ -298,7 +329,7 @@ describe('KbqNotificationCenter', () => {
             });
         }));
 
-        it('leaves the delete buttons in the tab order', fakeAsync(() => {
+        it('renders both delete buttons enabled', fakeAsync(() => {
             getService().items = [createItem('a')];
 
             openCenter();
@@ -310,16 +341,14 @@ describe('KbqNotificationCenter', () => {
                 'kbq-notification-item-remove-button'
             ];
 
-            // The buttons used to be `display: none` until hovered, which took them out of the tab
-            // order; they are hidden with `opacity` now precisely so the keyboard can still reach them.
+            // Whether they are in the tab order is a question about the stylesheet, which Jest never
+            // applies (jest-preset-angular drops `styleUrls` outright) — that is pinned by the
+            // Playwright test "the delete buttons are reachable with the keyboard".
             deleteButtonTestIds.forEach((testId) => {
                 const button = queryPanel(`[data-testid="${testId}"]`)!;
 
                 expect(button).not.toBeNull();
-
-                button.focus();
-
-                expect(document.activeElement).toBe(button);
+                expect(button.hasAttribute('disabled')).toBe(false);
             });
         }));
 
@@ -429,6 +458,33 @@ describe('KbqNotificationCenter', () => {
             expect(getPanel()!.contains(document.activeElement)).toBe(true);
         }));
 
+        it('moves focus to a delete button next to the removed one, never to the topmost group', fakeAsync(() => {
+            getService().items = [
+                createItem('a', '2025-10-03T12:00:00.000Z'),
+                createItem('b', '2025-10-02T12:00:00.000Z'),
+                createItem('c', '2025-10-01T12:00:00.000Z')
+            ];
+
+            openCenter();
+            flush();
+            fixture.detectChanges();
+
+            const itemButtons = queryAllInPanel('[data-testid="kbq-notification-item-remove-button"]');
+            const firstGroupButton = queryPanel('[data-testid="kbq-notification-center-remove-group-button"]')!;
+            const lastItemButton = itemButtons[itemButtons.length - 1];
+
+            lastItemButton.focus();
+            lastItemButton.click();
+            fixture.detectChanges();
+            flush();
+
+            // Focus used to go wherever `querySelector` answered first — always the topmost day group's
+            // "delete this day" button, a destructive control the user never aimed at and one that sits
+            // behind its own sticky header.
+            expect(document.activeElement).not.toBe(firstGroupButton);
+            expect(document.activeElement).toBe(itemButtons[itemButtons.length - 2]);
+        }));
+
         it('announces the panel status through a single persistent live region', fakeAsync(() => {
             const service = getService();
 
@@ -448,6 +504,43 @@ describe('KbqNotificationCenter', () => {
 
             // The region is never re-created, so the announcement is not lost.
             expect(queryPanel('[data-testid="kbq-notification-center-status"]')).toBe(status);
+        }));
+
+        it('announces loading, not emptiness, while the full-screen loader replaces the list', fakeAsync(() => {
+            const service = getService();
+
+            openCenter();
+            flush();
+            fixture.detectChanges();
+
+            const status = queryPanel('[data-testid="kbq-notification-center-status"]')!;
+
+            service.setLoadingMode(true);
+            fixture.detectChanges();
+
+            // The list is empty by definition while the first page loads, and the region used to read
+            // "no notifications" over the spinning loader.
+            expect(queryPanel('[data-testid="kbq-notification-center-loader"]')).not.toBeNull();
+            expect(status.textContent!.trim()).toBe(ruRULocaleData.notificationCenter.loadingMore);
+        }));
+
+        it('announces the bottom row the template actually renders when both flags are set', fakeAsync(() => {
+            const service = getService();
+
+            openCenter();
+            flush();
+            fixture.detectChanges();
+
+            const status = queryPanel('[data-testid="kbq-notification-center-status"]')!;
+
+            service.setLoadingMore(true);
+            service.setLoadMoreErrorMode(true);
+            fixture.detectChanges();
+
+            // The template shows the spinner in this state; the region used to branch on the error
+            // first and announce a failure that is nowhere on screen.
+            expect(queryPanel('[data-testid="kbq-notification-center-load-more"]')).not.toBeNull();
+            expect(status.textContent!.trim()).toBe(ruRULocaleData.notificationCenter.loadingMore);
         }));
 
         it('has no axe violations with notifications', async () => {
@@ -721,6 +814,9 @@ describe('KbqNotificationCenter', () => {
 
             setGeometry({ scrollHeight: 400, clientHeight: 500, scrollTop: 0 });
             service.setHasMore(false);
+            // `flush()` alone will not do: rxjs schedules the audit window with `setInterval`, and
+            // Angular deliberately leaves periodic timers out of `flush()`.
+            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
             flush();
 
             expect(emitSpy).not.toHaveBeenCalled();
@@ -965,6 +1061,9 @@ describe('KbqNotificationCenter', () => {
 
             // The replayed BehaviorSubject value must not be treated as a fresh appearance: the panel
             // always opens scrolled to the top.
+            // `flush()` alone will not do: rxjs schedules the audit window with `setInterval`, and
+            // Angular deliberately leaves periodic timers out of `flush()`.
+            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
             flush();
 
             expect(scrollSpy).not.toHaveBeenCalled();
@@ -996,6 +1095,8 @@ describe('KbqNotificationCenter', () => {
                 .querySelector<HTMLElement>('[data-testid="kbq-notification-center-container"]')!;
 
             dispatchFakeEvent(panel, 'scroll');
+            // ScrollDispatcher rate-limits with setInterval, which flush() leaves alone.
+            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
             flush();
 
             expect(outerFixture.componentInstance.trigger().isOpen).toBe(true);
@@ -1034,14 +1135,22 @@ describe('KbqNotificationCenter', () => {
             openOuterCenter();
             flush();
 
-            const outerElement = outerFixture.componentInstance.outer().nativeElement;
+            const scrollDispatcher = TestBed.inject(ScrollDispatcher);
+            // Destroying the fixture also unregisters its own CdkScrollable, so a scroll dispatched on
+            // that element would reach nobody. Keeping a subscriber holds the dispatcher's document
+            // listener open, and scrolling the document itself really does reach every subscription the
+            // destroyed trigger left behind.
+            const keepDispatcherArmed = scrollDispatcher.scrolled(0).subscribe();
 
             outerFixture.destroy();
 
             expect(() => {
-                dispatchFakeEvent(outerElement, 'scroll');
+                dispatchFakeEvent(document, 'scroll');
+                tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
                 flush();
             }).not.toThrow();
+
+            keepDispatcherArmed.unsubscribe();
         }));
     });
 
@@ -1091,6 +1200,34 @@ describe('KbqNotificationCenter', () => {
             expect(service.isEmpty).toBe(true);
         });
 
+        it('stays silent when the removed group holds nothing that is in the list', () => {
+            const service = getService();
+
+            service.items = [createItem('a')];
+
+            const emitSpy = jest.spyOn(service.onDelete, 'next');
+
+            // A group reference kept from an earlier groupedItems emission, after the list was
+            // replaced: nothing is removed locally, so nothing may be replayed against a backend.
+            service.removeGroup({ id: 'stale', title: 'stale', items: [createItem('b')] });
+
+            expect(emitSpy).not.toHaveBeenCalled();
+            expect(service.items).toHaveLength(1);
+        });
+
+        it('reports only the group items that were still in the list', () => {
+            const service = getService();
+            const present = createItem('a');
+
+            service.items = [present];
+
+            const emitSpy = jest.spyOn(service.onDelete, 'next');
+
+            service.removeGroup({ id: 'group', title: 'group', items: [present, createItem('gone')] });
+
+            expect(emitSpy).toHaveBeenCalledWith({ type: 'group', items: [present] });
+        });
+
         it('emits an "all" event with a snapshot of all items on removeAll()', () => {
             const service = getService();
             const items = [createItem('a'), createItem('b')];
@@ -1103,6 +1240,15 @@ describe('KbqNotificationCenter', () => {
 
             expect(emitSpy).toHaveBeenCalledWith({ type: 'all', items });
             expect(service.isEmpty).toBe(true);
+        });
+
+        it('stays silent when removeAll() runs on an already empty list', () => {
+            const service = getService();
+            const emitSpy = jest.spyOn(service.onDelete, 'next');
+
+            service.removeAll();
+
+            expect(emitSpy).not.toHaveBeenCalled();
         });
     });
 
@@ -1138,6 +1284,49 @@ describe('KbqNotificationCenter', () => {
 
             expect(service.items).toHaveLength(1);
             expect(showSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('adds a pushed notification whose id is already taken, under a generated one', () => {
+            const service = getService();
+            const toastService = TestBed.inject(KbqToastService);
+            const showSpy = jest.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
+            const date = new Date().toISOString();
+
+            service.items = [{ id: 'n1', title: 'a', date }];
+
+            // A backend repeating an id across pages used to have its notification dropped in silence:
+            // no toast, nothing added, and no way for the caller to tell.
+            service.push({ id: 'n1', title: 'b', date });
+
+            expect(service.items).toHaveLength(2);
+            expect(showSpy).toHaveBeenCalledTimes(1);
+            expect(new Set(service.items.map((item) => item.id)).size).toBe(2);
+        });
+
+        it('re-keys ids that collide inside one assignment', () => {
+            const service = getService();
+            const date = new Date().toISOString();
+
+            service.items = [
+                { id: 'n1', title: 'a', date },
+                { id: 'n1', title: 'b', date }
+            ];
+
+            expect(new Set(service.items.map((item) => item.id)).size).toBe(2);
+        });
+
+        it('keeps the ids of the notifications it is handed back', () => {
+            const service = getService();
+
+            service.items = [createItem('a'), createItem('b')];
+
+            const ids = service.items.map((item) => item.id);
+
+            // Re-assigning the same notifications must not re-key them: the ids are the list's track
+            // keys, and re-keying would throw every rendered row away.
+            service.items = [...service.items];
+
+            expect(service.items.map((item) => item.id)).toEqual(ids);
         });
 
         it('marks an item read when its toast is read', () => {
@@ -1526,6 +1715,30 @@ describe('KbqNotificationCenter', () => {
             expect(pane.style.left).toBe('unset');
         }));
 
+        it('should re-apply stick position when the panel list is scrolled', fakeAsync(() => {
+            const stickFixture = createStickComponent(NotificationCenterWithStick);
+
+            stickFixture.componentInstance.trigger().show();
+            stickFixture.detectChanges();
+            tick();
+
+            const pane = getOverlayPane();
+            const list = overlayContainer
+                .getContainerElement()
+                .querySelector<HTMLElement>('[data-testid="kbq-notification-center-container"]')!;
+
+            // The list is a registered CdkScrollable, so scrolling it reaches the reposition scroll
+            // strategy through the root ScrollDispatcher, which wipes the manual stick styles.
+            pane.style.right = '';
+            pane.style.left = '50px';
+
+            dispatchFakeEvent(list, 'scroll');
+            tick(20);
+
+            expect(pane.style.right).toMatch(/^0(px)?$/);
+            expect(pane.style.left).toBe('unset');
+        }));
+
         it('should recalculate stick position against the container on window resize', fakeAsync(() => {
             const stickFixture = createStickComponent(NotificationCenterWithStickContainer);
 
@@ -1622,6 +1835,62 @@ describe('KbqNotificationCenter', () => {
             // The item is a separate OnPush component reading the center's locale data from its own
             // template: marking the center for check leaves the already rendered item untouched.
             expect(getItemRemoveButtonLabel()).toBe(enUSLocaleData.notificationCenter.remove);
+        });
+
+        describe('day headings', () => {
+            // Every heading is produced by DateFormatter, which re-localizes at runtime.
+            const cyrillic = /[а-яё]/i;
+
+            const readTitles = (service: KbqNotificationCenterService): string[] => {
+                let titles: string[] = [];
+
+                service.groupedItems.subscribe((groups) => (titles = groups.map((group) => group.title))).unsubscribe();
+
+                return titles;
+            };
+
+            it('renders every heading in the active locale, groups built before the change included', () => {
+                const service = TestBed.inject(KbqNotificationCenterService);
+
+                service.setSilentMode(true);
+                service.items = [createItem('a', '2026-07-04T12:00:00.000Z')];
+
+                const russianTitle = readTitles(service)[0];
+
+                expect(russianTitle).toMatch(cyrillic);
+
+                localeService.setLocale('en-US');
+
+                // The heading used to be cached with the item and invalidated only by a changed raw
+                // `date`, so this group stayed Russian while the new day rendered in English — one
+                // list, two languages.
+                service.push(createItem('b', '2026-07-05T12:00:00.000Z'));
+
+                const titles = readTitles(service);
+
+                expect(titles).toHaveLength(2);
+                expect(titles).not.toContain(russianTitle);
+                expect(titles.some((title) => cyrillic.test(title))).toBe(false);
+            });
+
+            it('re-emits the grouped items when the locale changes', () => {
+                const service = TestBed.inject(KbqNotificationCenterService);
+                const emissions: string[][] = [];
+
+                service.items = [createItem('a', '2026-07-04T12:00:00.000Z')];
+
+                const subscription = service.groupedItems.subscribe((groups) =>
+                    emissions.push(groups.map((group) => group.title))
+                );
+
+                localeService.setLocale('en-US');
+                subscription.unsubscribe();
+
+                // A rendered panel holds one `| async` subscription: without a re-emission the
+                // headings would only catch up on the next change to the list.
+                expect(emissions).toHaveLength(2);
+                expect(emissions[1]).not.toEqual(emissions[0]);
+            });
         });
     });
 });

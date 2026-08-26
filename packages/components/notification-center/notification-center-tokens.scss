@@ -15,12 +15,19 @@
     --kbq-notification-center-size-item-time-padding-left: calc(var(--kbq-size-xl) + var(--kbq-size-3xs));
     // Matches the height of a single notification row, so the spinner does not shift the list.
     --kbq-notification-center-size-load-more-padding-vertical: calc(var(--kbq-size-xxl) + var(--kbq-size-3xs));
-    // Width reserved for the silent-mode check mark, so both dropdown labels stay aligned.
-    --kbq-notification-center-size-switcher-mark-width: var(--kbq-size-l);
 
     /* THEME TOKENS */
     --kbq-notification-center-container-background: var(--kbq-background-card);
     --kbq-notification-center-container-border-color: var(--kbq-line-contrast-less);
     --kbq-notification-center-container-shadow: var(--kbq-shadow-popup);
     --kbq-notification-center-error-text-color: var(--kbq-foreground-error);
+}
+
+// The silent-mode dropdown is rendered as a template portal in the CDK overlay container, a sibling of
+// the panel's own pane rather than a descendant of it, so it inherits nothing declared on
+// `.kbq-notification-center`. The panel names this class through the dropdown's `class` input, which
+// puts it on the dropdown panel the marks are rendered in.
+.kbq-notification-center-switcher {
+    // Width reserved for the silent-mode check mark, so both dropdown labels stay aligned.
+    --kbq-notification-center-size-switcher-mark-width: var(--kbq-size-l);
 }

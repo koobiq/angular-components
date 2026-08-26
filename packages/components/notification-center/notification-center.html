@@ -154,7 +154,9 @@ to everything the panel renders. -->
         }
     </div>
 
-    <kbq-dropdown #notificationSwitcherDropdown="kbqDropdown">
+    <!-- `class` is KbqDropdown's own input: it moves the class onto the panel rendered in the overlay,
+    which is where the check-mark width token has to be declared to reach the marks. -->
+    <kbq-dropdown #notificationSwitcherDropdown="kbqDropdown" class="kbq-notification-center-switcher">
         <button
             kbq-dropdown-item
             data-testid="kbq-notification-center-show-notifications-button"

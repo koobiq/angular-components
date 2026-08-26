@@ -2,13 +2,15 @@ import {
     CdkTrapFocus,
     ConfigurableFocusTrapFactory,
     FOCUS_TRAP_INERT_STRATEGY,
+    FocusMonitor,
     FocusTrapFactory,
+    InputModalityDetector,
     _IdGenerator
 } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { AsyncPipe } from '@angular/common';
+import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
+import { AsyncPipe, DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -100,6 +102,12 @@ const POPOVER_HEIGHT_PROPERTY = '--kbq-notification-center-popover-height';
 /** Delete buttons of the day groups and of the individual notifications. */
 const REMOVE_BUTTON_SELECTOR = '.kbq-notification-center-sub-header__button, .kbq-notification-item__remove-button';
 
+/**
+ * Rate-limit window (ms) the reposition scroll strategy runs on. The panel re-applies its
+ * stick-to-window styles on the same window, so the two stay in step.
+ */
+const SCROLL_REPOSITION_THROTTLE = 20;
+
 /** @docs-private */
 export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
     'kbq-notification-center-scroll-strategy',
@@ -111,7 +119,7 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY = new InjectionToken<() => 
 
 /** @docs-private */
 export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {
-    return () => overlay.scrollStrategies.reposition({ scrollThrottle: 20 });
+    return () => overlay.scrollStrategies.reposition({ scrollThrottle: SCROLL_REPOSITION_THROTTLE });
 }
 
 /** @docs-private */
@@ -166,6 +174,10 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     private readonly injector = inject(Injector);
     private readonly ngZone = inject(NgZone);
     private readonly idGenerator = inject(_IdGenerator);
+    private readonly scrollDispatcher = inject(ScrollDispatcher);
+    private readonly document = inject(DOCUMENT);
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly inputModalityDetector = inject(InputModalityDetector);
 
     /** Accessible names for the icon-only toolbar buttons.
      * @docs-private */
@@ -220,12 +232,19 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * @docs-private
      */
     protected get statusMessage(): string {
-        if (this.service.errorMode.value || this.service.loadMoreErrorMode.value) {
+        // Branch in the template's own order, or the region announces a state that is not on screen:
+        // the full-screen error wins over everything, then the full-screen loader, then the bottom
+        // spinner, then the bottom error row, and only an otherwise idle empty list reads as empty.
+        if (this.service.errorMode.value) {
             return this.localeData.failedToLoadNotifications;
         }
 
-        if (this.service.loadingMore.value) {
+        if (this.service.loadingMode.value || this.service.loadingMore.value) {
             return this.localeData.loadingMore;
+        }
+
+        if (this.service.loadMoreErrorMode.value) {
+            return this.localeData.failedToLoadNotifications;
         }
 
         return this.service.isEmpty ? this.localeData.noNotifications : '';
@@ -286,15 +305,41 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             this.setStickPosition();
         });
 
+        // The reposition scroll strategy rewrites the pane's top/left/bottom/right on every scroll the
+        // application makes — including the panel's own list, which is a registered `CdkScrollable` —
+        // wiping the manual styles `setStickPosition()` writes. This subscription is created after the
+        // strategy has been enabled (`OverlayRef.attach()` runs before the panel's first change
+        // detection), so on the same audit window it re-applies them behind the strategy.
+        // The panel is also rendered on its own, without a trigger, so the guard covers more than the
+        // absent `stickToWindow`.
+        this.scrollDispatcher
+            .scrolled(SCROLL_REPOSITION_THROTTLE)
+            .pipe(
+                filter(() => !!this.trigger?.stickToWindow),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => this.setStickPosition());
+
         this.service.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.changeDetectorRef.markForCheck();
 
             this.scheduleScrolledToBottomCheck();
         });
 
-        // Restores the focus ring: the panel is opened from the keyboard, and a plain `focus()` would
-        // land without one.
-        this.switcher().focusViaKeyboard();
+        // Focused with the modality the user actually opened the panel with, so a keyboard-driven open
+        // keeps its focus ring while a click does not. Not `KbqButton.focusViaKeyboard()`, which hardcodes
+        // `'keyboard'` and paints the ring on the toggle for a mouse user, and not FocusMonitor's own last
+        // origin, which reports `program` for a click landing outside its detection window (same rule as
+        // `KbqBasePipe.currentFocusOrigin`).
+        const switcher = this.switcher();
+
+        // Mirrors `focusViaKeyboard()`'s own early return, which this no longer goes through.
+        if (!switcher.disabled) {
+            this.focusMonitor.focusVia(
+                switcher.getHostElement(),
+                this.inputModalityDetector.mostRecentModality ?? 'program'
+            );
+        }
 
         this.subscribeToScrolledToBottom();
         this.subscribeToRevealLoadMoreRow();
@@ -326,9 +371,22 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * and the rest of the panel become unreachable.
      */
     restoreFocusAfterRemove(): void {
+        // Read before the removal renders, while the activated button is still in the DOM: its place in
+        // document order is what decides where focus goes next. Asking for the first match afterwards
+        // would always answer with the first day group's "delete this day" button, wherever the user
+        // actually was — a destructive control they never aimed at, hidden behind that group's own
+        // sticky header.
+        const removedIndex = this.getRemoveButtons().indexOf(this.document.activeElement as HTMLElement);
+
         afterNextRender(
             () => {
-                const survivor = this.elementRef.nativeElement.querySelector<HTMLElement>(REMOVE_BUTTON_SELECTOR);
+                const survivors = this.getRemoveButtons();
+                // The button that took the removed one's place, or the last one before it. A removal
+                // that did not start from a delete button — or that took the last one with it — falls
+                // back to the list container, which keeps the panel operable without parking focus on
+                // an arbitrary destructive control.
+                const survivor =
+                    removedIndex < 0 ? undefined : survivors[removedIndex] || survivors[survivors.length - 1];
 
                 if (survivor) {
                     survivor.focus();
@@ -338,6 +396,11 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             },
             { injector: this.injector }
         );
+    }
+
+    /** Delete buttons of the day groups and of the individual notifications, in document order. */
+    private getRemoveButtons(): HTMLElement[] {
+        return Array.from(this.elementRef.nativeElement.querySelectorAll<HTMLElement>(REMOVE_BUTTON_SELECTOR));
     }
 
     /** Retries loading the next page from the bottom error row.
