@@ -7,7 +7,7 @@ import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
 import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
-import { KBQ_TOAST_STACK, KbqToastStyle } from './toast.type';
+import { KbqToastStyle } from './toast.type';
 
 @Component({
     selector: 'e2e-toast-states',
@@ -47,10 +47,7 @@ import { KBQ_TOAST_STACK, KbqToastStyle } from './toast.type';
         {
             provide: KBQ_TOAST_FACTORY,
             useFactory: () => KbqToastComponent
-        },
-        // This fixture drives the containers directly instead of going through `show()`, so the stack every
-        // toast resolves has to be wired by hand — `KbqToastService` normally provides itself for its own stack.
-        { provide: KBQ_TOAST_STACK, useExisting: KbqToastService }
+        }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

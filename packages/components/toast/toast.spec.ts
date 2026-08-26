@@ -49,12 +49,13 @@ const createToastData = (overrides: KbqToastData = {}): KbqToastData => ({
     ...overrides
 });
 
-const exitAnimationEvent = (): AnimationEvent => ({
+/** The overlay waits for the exit of the toast that emptied the stack, so the element has to be that toast's. */
+const exitAnimationEvent = (element: HTMLElement): AnimationEvent => ({
     fromState: 'visible',
     toState: 'void',
     totalTime: 0,
     phaseName: 'done',
-    element: document.createElement('div'),
+    element,
     triggerName: 'state',
     disabled: false
 });
@@ -100,6 +101,19 @@ class CustomToast extends KbqToastComponent {}
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class IdlessToast {}
+
+const DETACH_PROBE_TAG = 'toast-detach-probe';
+
+let detachProbeCount = 0;
+
+/** Counts detaches of the subtree it is planted in — jsdom runs the reaction synchronously. */
+class DetachProbe extends HTMLElement {
+    disconnectedCallback(): void {
+        detachProbeCount++;
+    }
+}
+
+customElements.define(DETACH_PROBE_TAG, DetachProbe);
 
 describe('KbqToastService', () => {
     let service: KbqToastService;
@@ -435,6 +449,26 @@ describe('KbqToastService', () => {
             trigger.remove();
             settle();
         }));
+
+        it('leaves the focus where the browser put it when a toast is dismissed with the mouse', fakeAsync(() => {
+            const survivor = showRendered(createToastData(), 3000);
+            const closing = showRendered(createToastData(), 3000);
+
+            // Pressing a button with the mouse focuses it, so a plain click reports a focused toast.
+            focusMonitor.focusVia(closeButtonOf(closing), 'mouse');
+            tick();
+
+            service.hide(closing.id);
+            tick();
+
+            expect(hostOf(survivor).contains(document.activeElement)).toBe(false);
+
+            // Handing the focus to the survivor would report it as focused and pause the stack for good.
+            tick(3000 + CHECK_INTERVAL);
+            expect(service.toasts.length).toBe(0);
+
+            settle();
+        }));
     });
 
     describe('templates', () => {
@@ -490,6 +524,26 @@ describe('KbqToastService', () => {
             expect(service.templates.length).toBe(0);
         });
 
+        it('stops the heartbeat and releases the overlay when a view is destroyed from outside', fakeAsync(() => {
+            let ticks = 0;
+            const subscription = service.timer.subscribe(() => ticks++);
+            const { ref } = service.showTemplate(createToastData(), template, 0);
+
+            // A sticky record is never touched by the countdown, so only a purge can drop it.
+            ref.destroy();
+            tick(CHECK_INTERVAL);
+
+            const afterPurge = ticks;
+
+            tick(EXIT_ANIMATION_FALLBACK + CHECK_INTERVAL * 4);
+
+            expect(ticks).toBe(afterPurge);
+            expect(containers().length).toBe(0);
+
+            subscription.unsubscribe();
+            settle();
+        }));
+
         it('keeps the container alive while templates are visible', () => {
             const toast = showRendered();
 
@@ -501,13 +555,37 @@ describe('KbqToastService', () => {
     });
 
     describe('overlay lifecycle', () => {
+        it('does not take the overlay out of the DOM to put it back on top of itself', fakeAsync(() => {
+            // A foreign overlay, so that the stacking step engages at all: with the toast overlay alone in
+            // the container there is nothing for it to be moved past.
+            const foreign = document.createElement('div');
+
+            overlayContainerElement.appendChild(foreign);
+            showRendered();
+
+            // Planted inside the overlay because a custom element reports its own detach synchronously,
+            // which is exactly what re-inserting the wrapper above it does to every live toast: the live
+            // region is announced again and the entrance animations restart.
+            detachProbeCount = 0;
+            overlayContainerElement
+                .querySelector('.kbq-toast-overlay')!
+                .appendChild(document.createElement(DETACH_PROBE_TAG));
+
+            showRendered();
+
+            expect(detachProbeCount).toBe(0);
+
+            foreign.remove();
+            settle();
+        }));
+
         it('keeps the overlay attached until the exit animation reports done', fakeAsync(() => {
             const toast = showRendered();
 
             service.hide(toast.id);
             expect(containers().length).toBe(1);
 
-            service.animation.next(exitAnimationEvent());
+            service.animation.next(exitAnimationEvent(hostOf(toast)));
             // The overlay is detached synchronously; removing the host element is the animation engine's
             // job and lands on the next flush.
             flush();
@@ -516,6 +594,26 @@ describe('KbqToastService', () => {
             expect(containers().length).toBe(0);
 
             flush();
+        }));
+
+        it('waits for the exit of the toast that emptied the stack, not for one dismissed earlier', fakeAsync(() => {
+            const first = showRendered();
+            const second = showRendered();
+            const detach = jest.spyOn(OverlayRef.prototype, 'detach');
+
+            // `first` starts leaving while `second` is still on screen, so its `done` lands after the
+            // stack is already empty — and `second` is only halfway through its own slide-out.
+            service.hide(first.id);
+            service.hide(second.id);
+
+            service.animation.next(exitAnimationEvent(hostOf(first)));
+            expect(detach).not.toHaveBeenCalled();
+
+            service.animation.next(exitAnimationEvent(hostOf(second)));
+            expect(detach).toHaveBeenCalled();
+
+            detach.mockRestore();
+            settle();
         }));
 
         it('detaches the overlay through the fallback when nothing animates', fakeAsync(() => {
@@ -708,12 +806,16 @@ describe('KbqToastService configuration', () => {
 
         const service = TestBed.inject(KbqToastService);
         const stale = service.show(createToastData(), 0);
+        const hide = jest.spyOn(service, 'hide');
 
         // A provided configuration is a plain object, so a consumer can move the stack while it is live.
         (provider.useValue as KbqToastConfig).position = KbqToastPosition.BOTTOM_LEFT;
 
         service.show(createToastData(), 0);
 
+        // Disposing the overlay destroys the stale view either way; only the drain reports it as hidden,
+        // which is what releases its focus and pause state along with it.
+        expect(hide).toHaveBeenCalledWith(stale.id);
         expect(stale.ref.hostView.destroyed).toBe(true);
         expect(service.toasts.length).toBe(1);
         expect(containers().length).toBe(1);
@@ -763,6 +865,51 @@ describe('KbqToastService factory', () => {
 
         expect(() => service.show(createToastData(), 0)).toThrow(/KBQ_TOAST_FACTORY/);
         service.ngOnDestroy();
+    });
+
+    it('leaves nothing rendered behind a rejected factory component', () => {
+        const service = configureWithFactory(IdlessToast);
+        const overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+
+        // The component is created before the guard can read its id, so a retry must not stack another one.
+        expect(() => service.show(createToastData(), 0)).toThrow();
+        expect(() => service.show(createToastData(), 0)).toThrow();
+
+        expect(overlayContainerElement.querySelectorAll('idless-toast').length).toBe(0);
+        service.ngOnDestroy();
+    });
+});
+
+@Component({
+    selector: 'toast-container-host',
+    imports: [KbqToastModule],
+    template: `
+        <kbq-toast-container />
+    `
+})
+class ToastContainerHost {
+    readonly container = viewChild.required(KbqToastContainerComponent);
+}
+
+describe('KbqToastContainerComponent hosted by a consumer', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [KbqToastModule, NoopAnimationsModule, ToastContainerHost]
+        });
+    });
+
+    it('creates a toast without a stack wired up by hand', () => {
+        const fixture = TestBed.createComponent(ToastContainerHost);
+
+        fixture.detectChanges();
+
+        expect(() =>
+            fixture.componentInstance.container().createToast(createToastData(), KbqToastComponent, false)
+        ).not.toThrow();
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelectorAll('kbq-toast').length).toBe(1);
     });
 });
 

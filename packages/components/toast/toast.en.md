@@ -101,7 +101,7 @@ The sequence follows the reading order of the toast: the message first, its acti
 
 A toast announces itself the moment it appears: the **error** and **warning** styles are inserted with `role="alert"` and interrupt the current announcement, the other styles use `role="status"` and wait for a pause. Both carry `aria-atomic="true"`, so the message is read as a whole. A toast shown through `showTemplate` gets `role="status"` on the first element of the template unless that element already declares a role of its own.
 
-Auto-dismissal is paused by hovering and by focus only. A screen reader user reading with a virtual cursor moves neither, so a toast that carries an action or reports an error should be shown with `duration: 0` and closed explicitly.
+Auto-dismissal is paused by hovering and by focus only, and only for a toast shown through `show`: a template toast shown through `showTemplate` carries no such listeners and keeps counting down under the pointer. A screen reader user reading with a virtual cursor moves neither, so a toast that carries an action or reports an error should be shown with `duration: 0` and closed explicitly.
 
 ### Design and animation
 

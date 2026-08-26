@@ -115,6 +115,11 @@
             "version": "20.3.0-0",
             "description": "Reports the tooltip review changes a consumer has to act on. The headline is silent: ignoreTooltipPointerEvents defaults to false instead of true, so every pane is hoverable (WCAG 1.4.13) and also captures clicks meant for whatever it floats over — markup that never mentioned the input compiles unchanged and behaves differently, so the migration reports the absence of the input rather than its presence. Also reports the removed KbqPopUpTrigger.scheduler, the delay argument getMouseLeaveListener() no longer takes, placementChange emitting KbqPopUpPlacementValues instead of string, and the any that left content/header/context/modifier. Warn-only: the markup whose behaviour changed is the markup that says nothing about the input, and a narrowed type is fixed by giving the call site the right type.",
             "factory": "./migrations/tooltip-pointer-events-and-types/index"
+        },
+        "toast-stack-and-defaults": {
+            "version": "20.3.0-0",
+            "description": "Reports the breaking parts of the toast review. KbqToastComponent resolves its stack through the new KBQ_TOAST_STACK token instead of KbqToastService, so `service` is gone together with `elementRef`, `ttl`, `delay`, `isTemplateRef()`, `themePalette` and `toastStyle`, and everything the template renders became protected; KbqToastService.animation was narrowed from BehaviorSubject<AnimationEvent | null> to Subject<AnimationEvent>, so `.getValue()` / `.value` no longer exist; showTemplate() and `templates` return EmbeddedViewRef<KbqToastTemplateContext>. Nothing is rewritten — a subclass has to be rewired by hand. Also notes the changes no call site can point at: the data passed to show() is no longer written to (the `style` and `icon` defaults are resolved inside the toast, so anything rendering the same object needs its own), hover and focus pause the shared countdown while a showTemplate() toast is not paused, every toast is a role=\"alert\"/\"status\" live region inside a labelled role=\"region\" stack named by the new `toastRegion` a11y locale key, and focus is handed on only for a keyboard dismissal.",
+            "factory": "./migrations/toast-stack-and-defaults/index"
         }
     }
 }

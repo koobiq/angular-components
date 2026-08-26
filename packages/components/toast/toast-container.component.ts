@@ -12,18 +12,23 @@ import {
     ViewContainerRef,
     ViewEncapsulation,
     ViewRef,
+    forwardRef,
     inject,
     viewChild
 } from '@angular/core';
 import { kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
 import { Observable, map, merge } from 'rxjs';
 import { KbqToastService } from './toast.service';
-import { KbqToastData, KbqToastTemplateContext } from './toast.type';
+import { KBQ_TOAST_STACK, KbqToastData, KbqToastTemplateContext } from './toast.type';
 
 @Component({
     selector: 'kbq-toast-container',
     template: '<ng-container #container />',
     styleUrls: ['./toast-container.component.scss'],
+    // A container written into a consumer's template has no stack above it — `KbqToastService` provides
+    // itself only for the container it creates — so `createToast()` would leave the toast without one.
+    // `forwardRef` because the service imports this file back.
+    providers: [{ provide: KBQ_TOAST_STACK, useExisting: forwardRef(() => KbqToastService) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

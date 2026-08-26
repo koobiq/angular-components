@@ -673,6 +673,42 @@ describe('KbqNotificationCenter', () => {
                 expect(item.read).toBe(true);
             });
         });
+
+        describe('status icon', () => {
+            const getService = () =>
+                (componentInstance.trigger() as unknown as { service: KbqNotificationCenterService }).service;
+
+            const push = (overrides: Partial<KbqNotificationItem>) => {
+                const item: KbqNotificationItem = { title: 'a', date: new Date().toISOString(), ...overrides };
+
+                jest.spyOn(TestBed.inject(KbqToastService), 'show').mockReturnValue({ id: 1, ref: {} as any });
+
+                getService().push(item);
+
+                componentInstance.trigger().show();
+                fixture.detectChanges();
+            };
+
+            const itemElement = (): HTMLElement =>
+                overlayContainer.getContainerElement().querySelector<HTMLElement>('kbq-notification-item')!;
+
+            // `KbqToastService` no longer writes the `style` and `icon` defaults into the item it is handed,
+            // so the row resolves them itself. Without that, an item pushed with neither renders no glyph.
+            it('falls back to the contrast glyph for an item pushed without a style or an icon', () => {
+                push({});
+
+                expect(itemElement().classList).toContain('kbq-notification-item_contrast');
+                expect(itemElement().querySelector('.kbq-notification-item__icon')!.classList).toContain(
+                    'kbq-circle-info_16'
+                );
+            });
+
+            it('renders no glyph for an item pushed with `icon: false`', () => {
+                push({ icon: false });
+
+                expect(itemElement().querySelector('.kbq-notification-item__icon-container')).toBeNull();
+            });
+        });
     });
 
     describe('stickToWindow', () => {

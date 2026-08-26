@@ -5,6 +5,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, KbqReadStateDirective, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { filter } from 'rxjs/operators';
 import { KbqNotificationCenterComponent } from './notification-center';
@@ -28,7 +29,7 @@ let id = 0;
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-notification-item',
-        '[class]': 'style',
+        '[class]': 'styleClass',
         'data-testid': 'kbq-notification-item'
     },
     hostDirectives: [KbqReadStateDirective]
@@ -48,10 +49,19 @@ export class KbqNotificationItemComponent {
 
     $implicit;
 
-    get style() {
-        return {
-            [`kbq-notification-item_${this.data.style}`]: !!this.data.style
-        };
+    // `KbqToastService` used to write these defaults into the item handed to `push()`; it now leaves the
+    // caller's object untouched, so the row resolves them itself instead of rendering an unstyled,
+    // icon-less notification.
+    protected get style(): string | KbqToastStyle {
+        return this.data.style || KbqToastStyle.Contrast;
+    }
+
+    protected get icon(): boolean | TemplateRef<unknown> {
+        return this.data.icon ?? true;
+    }
+
+    protected get styleClass(): string {
+        return `kbq-notification-item_${this.style}`;
     }
 
     // TODO: Skipped for migration because:

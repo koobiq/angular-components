@@ -172,6 +172,14 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         const id = componentRef.instance.id;
 
         if (typeof id !== 'number') {
+            // The component is already rendered by now, and it never reaches the stack, so nothing else
+            // would ever tear it down: every retry would strand one more element inside the overlay.
+            // Detaching the view drops it from the container but leaves its host element connected, so
+            // the element has to be taken out by hand as well.
+            container.remove(componentRef.hostView);
+            (componentRef.location.nativeElement as HTMLElement).remove();
+            this.detachOverlay();
+
             throw new Error('KBQ_TOAST_FACTORY must provide a component extending KbqToastComponent: `id` is missing.');
         }
 
@@ -215,13 +223,16 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         this.setHovered(id, false);
         this.setFocused(id, null);
 
-        if (focusOrigin !== undefined) {
+        // Only a keyboard or a programmatic focus is handed on. A mouse press on the close button focuses it
+        // as a side effect of the click, and moving that focus into the next toast would report the survivor
+        // as focused — pausing the whole stack until something blurs it, which a pointer leaving never does.
+        if (focusOrigin === 'keyboard' || focusOrigin === 'program') {
             this.restoreFocus(record.previouslyFocused, focusOrigin);
         }
 
         this.renewLifetimes();
         this.syncStackSize();
-        this.detachOverlay();
+        this.detachOverlay(record.componentRef.location.nativeElement);
     }
 
     hideTemplate(id: number) {
@@ -311,7 +322,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         return null;
     }
 
-    private detachOverlay() {
+    private detachOverlay(removedElement?: HTMLElement) {
         if (this.toasts.length !== 0 || this.templates.length !== 0) {
             return;
         }
@@ -322,7 +333,12 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
         this.detachSubscription = this.animation
             .pipe(
-                filter(({ toState, phaseName }) => toState === 'void' && phaseName === 'done'),
+                // The whole stack shares one animation stream, so the exit of a toast dismissed earlier must
+                // not detach the overlay while the one that emptied it is still sliding out.
+                filter(
+                    ({ element, toState, phaseName }) =>
+                        element === removedElement && toState === 'void' && phaseName === 'done'
+                ),
                 take(1)
             )
             .subscribe(() => this.detachNow());
@@ -355,7 +371,46 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         this.stackSize.next(this.toasts.length + this.templates.length);
     }
 
+    /**
+     * Drops the records whose view was destroyed from outside the service — by a consumer holding the ref,
+     * or by whatever owns the surrounding view. Nothing else deletes them: a record with a `ttl` of `0` is
+     * skipped by the countdown forever, so the stack would keep reporting a size and the heartbeat would
+     * keep running with nothing on screen.
+     */
+    private purgeDestroyed(): void {
+        let purged = false;
+
+        for (const [id, { componentRef }] of Object.entries(this.toastsDict)) {
+            if (!componentRef.hostView.destroyed) {
+                continue;
+            }
+
+            delete this.toastsDict[+id];
+            this.setHovered(+id, false);
+            this.setFocused(+id, null);
+            purged = true;
+        }
+
+        for (const [id, { viewRef }] of Object.entries(this.templatesDict)) {
+            if (!viewRef.destroyed) {
+                continue;
+            }
+
+            delete this.templatesDict[+id];
+            purged = true;
+        }
+
+        if (!purged) {
+            return;
+        }
+
+        this.syncStackSize();
+        this.detachOverlay();
+    }
+
     private processToasts = () => {
+        this.purgeDestroyed();
+
         for (const [id, record] of Object.entries(this.toastsDict)) {
             if (record.ttl <= 0) {
                 continue;
@@ -426,9 +481,14 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     private toTop(overlayRef: OverlayRef) {
         const overlays = this.overlayContainer.getContainerElement().childNodes;
+        const last = overlays[overlays.length - 1];
 
-        if (overlays.length > 1) {
-            overlays[overlays.length - 1].after(overlayRef.hostElement);
+        // The identity check matters: `x.after(x)` is not a no-op. `after()` resolves no viable next
+        // sibling for a node that is already last and falls through to `insertBefore(x, null)`, whose
+        // insert steps take `x` out of its parent first — a real detach and re-attach of the wrapper
+        // holding every live toast, on every `show()`.
+        if (overlays.length > 1 && last !== overlayRef.hostElement) {
+            last.after(overlayRef.hostElement);
         }
     }
 
