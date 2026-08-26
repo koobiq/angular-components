@@ -259,6 +259,9 @@ describe('KbqTimezoneSelect', () => {
                     provide: ScrollDispatcher,
                     useFactory: () => ({
                         scrolled: () => scrolledSubject.asObservable(),
+                        // Mirrors the CDK: everything the real one filters out is a scroll container that is
+                        // not an ancestor of the origin, and the stub registers none.
+                        ancestorScrolled: () => scrolledSubject.asObservable(),
                         getAncestorScrollContainers: () => []
                     })
                 }

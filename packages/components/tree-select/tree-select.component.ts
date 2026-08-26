@@ -352,7 +352,7 @@ export class KbqTreeSelect
      * what `fitPanelToViewport` subtracts before deciding how tall the list may be.
      * @docs-private
      */
-    protected readonly optionsContainer = viewChild<ElementRef>('optionsContainer');
+    protected readonly optionsContainer = viewChild<ElementRef<HTMLElement>>('optionsContainer');
 
     /**
      * Row container of a multi-selection trigger. Absent for a single value, an empty trigger and a custom

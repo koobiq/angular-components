@@ -36,7 +36,7 @@
     "scrollbar": 1,
     "scrollbar-deprecated": 2,
     "search-expandable": 1,
-    "select": 30,
+    "select": 31,
     "sidepanel": 17,
     "skeleton": 1,
     "table": 3,
@@ -52,6 +52,6 @@
     "tooltip": 8,
     "top-bar": 1,
     "tree": 44,
-    "tree-select": 25,
+    "tree-select": 26,
     "username": 5
 }
