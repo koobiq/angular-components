@@ -39,13 +39,15 @@ describe(DocsLocaleService.name, () => {
         const service = createService();
 
         expect(service.getLocaleFromURL('/en/components/button')).toBe('en');
+        expect(service.getLocaleFromURL('/en?utm=review')).toBe('en');
+        expect(service.getLocaleFromURL('/ru#section')).toBe('ru');
         expect(service.getLocaleFromURL('/404')).toBeNull();
     });
 
-    it('synchronizes locale state with Router navigation', () => {
+    it('synchronizes locale state with Router navigation containing URL extras', () => {
         const service = createService('/en/components/button');
 
-        expect(service.syncLocaleFromURL('/ru/components/button')).toBe(true);
+        expect(service.syncLocaleFromURL('/ru?utm=review#section')).toBe(true);
         expect(service.locale).toBe(DocsLocale.Ru);
         expect(service.syncLocaleFromURL('/404')).toBe(false);
         expect(service.locale).toBe(DocsLocale.Ru);
@@ -65,6 +67,17 @@ describe(DocsLocaleService.name, () => {
         expect(router.navigate).toHaveBeenCalledWith(['/', 'en', 'icons'], {
             queryParams: { s: 'arrow' },
             fragment: 'top'
+        });
+    });
+
+    it('switches locale on the locale root preserving query params and fragment', () => {
+        const service = createService('/ru?utm=review#section');
+
+        service.setLocale(DocsLocale.En);
+
+        expect(router.navigate).toHaveBeenCalledWith(['/', 'en'], {
+            queryParams: { utm: 'review' },
+            fragment: 'section'
         });
     });
 

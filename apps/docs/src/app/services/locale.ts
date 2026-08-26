@@ -71,7 +71,7 @@ export class DocsLocaleService {
 
     /** Extracts the locale from the given URL if it is present and supported */
     getLocaleFromURL(url: string): DocsLocale | null {
-        const locale = url.split('/')[1];
+        const locale = this.router.parseUrl(url).root.children[PRIMARY_OUTLET]?.segments[0]?.path;
 
         return locale && this.isSupportedLocale(locale) ? locale : null;
     }
