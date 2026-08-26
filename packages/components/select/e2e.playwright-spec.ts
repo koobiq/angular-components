@@ -597,26 +597,46 @@ test.describe('KbqSelectModule', () => {
             await page.setViewportSize({ width: 1280, height: 640 });
             await page.goto('/E2eMultilineSelectOverflow');
 
+            // Ten tags on ten rows, so the capped trigger has to be shorter and the rest has to scroll.
             const uncapped = await box(page.locator('.kbq-select__trigger'));
+            const rowHeight = await box(page.locator('kbq-tag').first());
 
-            await page.evaluate(() => {
-                document
-                    .querySelector<HTMLElement>('.kbq-select__multiline-match-list')!
-                    .style.setProperty(
-                        '--kbq-select-size-multiline-max-height',
-                        'calc(3 * var(--kbq-size-xxl) + 2 * var(--kbq-size-xxs))'
-                    );
-            });
+            // Driven through the input, so the whole chain is under test: the input, the `calc()` the component
+            // derives from it, and the stylesheet rule that reads it back.
+            await page.goto('/E2eMultilineSelectOverflow?multilineMaxRows=3');
 
             const capped = await box(page.locator('.kbq-select__trigger'));
-            const overflows = await page.evaluate(() => {
-                const list = document.querySelector<HTMLElement>('.kbq-select__multiline-match-list')!;
-
-                return list.scrollHeight > list.clientHeight;
-            });
+            const list = page.locator('.kbq-select__multiline-match-list');
+            const measured = await list.evaluate((element) => ({
+                overflows: element.scrollHeight > element.clientHeight,
+                height: element.clientHeight,
+                // The region scrolls, so it has to be reachable by keyboard.
+                tabindex: element.getAttribute('tabindex')
+            }));
 
             expect(capped.height).toBeLessThan(uncapped.height);
-            expect(overflows).toBe(true);
+            expect(measured.overflows).toBe(true);
+            expect(measured.tabindex).toBe('0');
+            // Three rows of tags plus the two gaps between them — the row count the input asked for, not just
+            // "shorter than before".
+            expect(measured.height).toBeCloseTo(3 * rowHeight.height + 2 * 4, 0);
+        });
+
+        test('should leave the tag list unbounded and non-scrolling without multilineMaxRows', async ({ page }) => {
+            await page.setViewportSize({ width: 1280, height: 640 });
+            await page.goto('/E2eMultilineSelectOverflow');
+
+            const measured = await page.locator('.kbq-select__multiline-match-list').evaluate((element) => ({
+                overflowY: getComputedStyle(element).overflowY,
+                maxHeight: getComputedStyle(element).maxHeight,
+                tabindex: element.getAttribute('tabindex')
+            }));
+
+            // The cap is opt-in: with no `multilineMaxRows` the list must not become a scroll container, and
+            // must not put an unreachable scrollable region in the tab order.
+            expect(measured.overflowY).toBe('visible');
+            expect(measured.maxHeight).toBe('none');
+            expect(measured.tabindex).toBeNull();
         });
     });
 

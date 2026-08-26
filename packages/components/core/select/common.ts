@@ -317,8 +317,21 @@ export abstract class KbqAbstractSelect {
      * Nothing may go back to assigning `overlayDir.offsetX`: the directive maps its value into every position
      * literal, and a mapped `0` is not `== null`, so it would permanently shadow the default set here.
      */
-    private applyOverlayOffsetX(offsetX: number): void {
+    protected applyOverlayOffsetX(offsetX: number): void {
         this.getPositionStrategy().withDefaultOffsetX(Math.round(offsetX));
+    }
+
+    /**
+     * Zeroes the horizontal correction so that it cannot outlive the open it was measured for.
+     *
+     * The strategy is created once per directive and neither `detach()` nor a strategy rebuild clears its
+     * default offset, so without this the next open's first — and unlocked — `apply()` fit-tests every
+     * candidate position at the previous open's offset and can settle on the wrong side.
+     */
+    protected resetOverlayOffsetX(): void {
+        if (!this.overlayDir?.overlayRef) return;
+
+        this.applyOverlayOffsetX(0);
     }
 
     private getPositionStrategy(): FlexibleConnectedPositionStrategy {

@@ -24,8 +24,11 @@
                         @if (multiSelection) {
                             <div
                                 #multilineMatchList
+                                [attr.tabindex]="multilineMaxHeightToken() ? 0 : null"
+                                [class.kbq-scrollbar]="!!multilineMaxHeightToken()"
                                 [class.kbq-select__match-list]="!multiline()"
                                 [class.kbq-select__multiline-match-list]="multiline()"
+                                [class.kbq-select__multiline-match-list_capped]="!!multilineMaxHeightToken()"
                                 [style.--kbq-select-size-multiline-max-height]="multilineMaxHeightToken()"
                             >
                                 @if (!customTagTemplateRef()) {

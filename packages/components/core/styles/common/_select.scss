@@ -113,10 +113,13 @@
 
             gap: var(--kbq-size-xxs);
 
-            // Opt-in cap, driven by `multilineMaxRows`. The `none` fallback is what keeps it opt-in: with no
-            // inline value the trigger keeps growing with every tag, as it always has.
-            max-height: var(--kbq-select-size-multiline-max-height, none);
-            overflow-y: auto;
+            // Opt-in cap, driven by `multilineMaxRows`. Both declarations sit behind the modifier the
+            // component adds alongside the inline value: with no cap in force the trigger keeps growing with
+            // every tag, and stays a plain non-scrolling box, as it always has.
+            &.kbq-select__multiline-match-list_capped {
+                max-height: var(--kbq-select-size-multiline-max-height, none);
+                overflow-y: auto;
+            }
         }
     }
 

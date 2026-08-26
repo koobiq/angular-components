@@ -2564,6 +2564,7 @@ export class KbqAbsoluteShortDateTimePipe<D> extends BaseLocaleAwareFormatterPip
 
 // @public
 export abstract class KbqAbstractSelect {
+    protected applyOverlayOffsetX(offsetX: number): void;
     // (undocumented)
     protected calculateOverlayOffsetX(baseOffsetX: number): number[];
     // (undocumented)
@@ -2577,6 +2578,7 @@ export abstract class KbqAbstractSelect {
     protected reevaluateOverlaySide(): void;
     // (undocumented)
     protected resetOverlay(): void;
+    protected resetOverlayOffsetX(): void;
     // (undocumented)
     protected resolveSearchMinOptionsThreshold(value?: 'auto' | number): number | undefined;
     // (undocumented)
