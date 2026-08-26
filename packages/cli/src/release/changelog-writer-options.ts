@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import fs from 'fs';
 import type { IReleaseTaskConfig } from './base-release-task';
 
 /**
@@ -75,7 +75,7 @@ export function createChangelogWriterOptions(
     config: IReleaseTaskConfig,
     logSkippedDuplicate: (commit: any) => void = () => {}
 ) {
-    const existingChangelogContent = readFileSync(changelogPath, 'utf8');
+    const existingChangelogContent = fs.readFileSync(changelogPath, 'utf8');
     const commitSortFunction = compareCommitsBy(['type', 'scope', 'subject']);
 
     return {
