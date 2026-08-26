@@ -36,6 +36,11 @@
     }
 }
 
+// Positioning context for the drop indicator, which is the list's own last child.
+.kbq-list-selection {
+    position: relative;
+}
+
 .kbq-list-item,
 .kbq-list-option {
     @include vendor-prefixes.user-select(none);
@@ -73,11 +78,145 @@
     }
 }
 
+// `cursor: grabbing` goes on the body rather than on the dragged element, which CDK hides from hit
+// testing anyway: https://github.com/angular/components/blob/18.2.14/src/cdk/drag-drop/resets.scss#L14-L15
+// The body alone is not enough, though: the cursor is resolved from whatever sits under the pointer, and
+// during a drag that is another option, whose own `grab` outranks anything the body sets.
+// Keyed on the preview because it is in the DOM for as long as the drag lasts, and unlike
+// `cdk-drop-list-dragging` it is not an Angular host binding waiting on change detection. The class
+// comes from `CdkDrag.previewClass`, so the hook holds whichever shape `dragPreview` gives the preview.
+body:has(.kbq-list-drag-preview) {
+    cursor: grabbing;
+
+    // Qualified with both classes so it outranks the `kbq-list-option_grab-cursor` rule below: that one
+    // adds a `:not(:has())`, which counts as a class, and a row that advertises the grab would otherwise
+    // keep advertising it mid-drag.
+    .kbq-list-option.kbq-list-option_draggable,
+    .kbq-list-option_draggable .cdk-drag-handle {
+        cursor: grabbing;
+    }
+
+    // What is being dragged into is the list, not the row under the pointer, so a row that lights up on
+    // hover promises a reaction it will not deliver. Taking the options out of hit testing drops `:hover`
+    // and `:active` in one go, and keeps a stray click off the action button mid-drag.
+    .kbq-list-option {
+        pointer-events: none;
+    }
+
+    // A group header is the one thing left inside a list that still resolves a cursor of its own: it is
+    // not an option, so nothing takes it out of hit testing, and `.kbq-optgroup-label` sets `default`.
+    // The pointer crossing a header is still over the list, so it must not read as leaving it — over a
+    // `kbq-divider`, which sets no cursor at all, it already does not. `inherit` rather than `grabbing`
+    // so the header also follows the body into `no-drop` below.
+    .kbq-optgroup-label {
+        cursor: inherit;
+    }
+
+    // Nothing under the pointer would take the option, so stop promising a drop. Nested rather than
+    // written as a sibling: it has to outrank `grabbing` above on specificity, not on source order.
+    &:has(.kbq-list-option_drop-forbidden) {
+        cursor: no-drop;
+    }
+}
+
 // Option-only: `.kbq-selected` never lands on `.kbq-list-item`, and only options host an action container.
 .kbq-list-option {
     @include _kbq-list-option-selected-border-radius();
     @include action-container.kbq-option-action-visibility('.kbq-list-selection.cdk-keyboard-focused');
+
+    // A projected handle is the one thing that always advertises the grab: it exists to say where the
+    // row can be picked up.
+    &.kbq-list-option_draggable .cdk-drag-handle {
+        cursor: grab;
+    }
+
+    // The row itself only advertises it when the list asks, through `dragCursor="grab"` — being
+    // draggable is not on its own a reason to stop looking like the selectable row it also is. Matched
+    // on as many classes as the rule this replaces, so the drag-time `grabbing` above keeps outranking
+    // it by its one element, and nothing else in the cascade shifts.
+    &.kbq-list-option_grab-cursor:not(:has(.cdk-drag-handle)) {
+        cursor: grab;
+    }
+
+    // The row the drag started from keeps its slot. `cdk-drag-anchor` is the clone CDK leaves behind
+    // once the option has been dragged into a connected list.
+    &.cdk-drag-placeholder,
+    &.cdk-drag-anchor {
+        opacity: var(--kbq-opacity-disabled);
+    }
+
+    // Hidden while the placeholder sits in a list the option was not dragged from, so that list keeps
+    // its layout. Toggled from `KbqListSelection` on `cdkDropListEntered`.
+    &.kbq-list-option_foreign-placeholder {
+        display: none;
+    }
+
+    // No `.cdk-drag-animating` transition on purpose. CDK animates the preview onto the placeholder,
+    // which — with sorting disabled — never leaves the slot the drag started from, so the preview
+    // would fly back to the origin and read as a rejected drop. With no transition declared the
+    // duration is 0 and CDK disposes of the preview without animating it anywhere.
+}
+
+// Marks the gap the dragged option would land in. Sorting is disabled, so the list never opens a gap
+// of its own and this line is the only feedback about the target position.
+.kbq-list-selection__drop-indicator {
+    position: absolute;
+    background: var(--kbq-list-states-dragged-indicator-color);
+    pointer-events: none;
+}
+
+.kbq-list-selection:not(.kbq-list-selection_horizontal) .kbq-list-selection__drop-indicator {
+    left: 0;
+    right: 0;
+    // The line straddles the gap instead of sitting below it, so it reads as "between these two rows".
+    top: calc(var(--kbq-list-drop-indicator-offset, 0px) - var(--kbq-list-size-dragged-indicator-thickness) / 2);
+    block-size: var(--kbq-list-size-dragged-indicator-thickness);
+}
+
+.kbq-list-selection_horizontal .kbq-list-selection__drop-indicator {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--kbq-list-drop-indicator-offset, 0px) - var(--kbq-list-size-dragged-indicator-thickness) / 2);
+    inline-size: var(--kbq-list-size-dragged-indicator-thickness);
 }
 
 @include theme.kbq-list-theme();
 @include theme.kbq-list-typography();
+
+// Declared after the theme so it outranks the default state, whose background is `transparent`
+// because an option normally sits on the surface of its list. The dragged clone has no such surface.
+// Selected states carry a higher specificity and deliberately keep their own background.
+.kbq-list-option.cdk-drag-preview {
+    background: var(--kbq-list-states-dragged-container-background);
+    box-shadow: var(--kbq-list-states-dragged-container-shadow);
+}
+
+// The default preview: a plate of the option's text rather than a clone of the row. It is inserted into
+// `<body>`, so it inherits nothing from the list and carries its own tokens — the same reason the clone
+// is listed in `list-tokens.scss`. No width: CDK pins the preview `position: fixed`, which already
+// shrinks the box to its content, so only the maximum is worth stating. No `transition` either, for the
+// same reason as the clone above — a zero duration lets CDK drop the preview instead of flying it back.
+.kbq-list-drag-preview_text {
+    // The cap is on the plate, not on the text inside it, and the page default here is `content-box`.
+    box-sizing: border-box;
+    max-inline-size: var(--kbq-list-size-drag-preview-max-width);
+    border-radius: var(--kbq-size-border-radius);
+    padding: var(--kbq-list-size-container-padding-vertical) var(--kbq-list-size-container-padding-right)
+        var(--kbq-list-size-container-padding-vertical) var(--kbq-list-size-container-padding-left);
+    background: var(--kbq-list-states-drag-preview-background);
+    box-shadow: var(--kbq-list-states-dragged-container-shadow);
+    color: var(--kbq-list-default-text-color);
+
+    // Clamped line by line, not on the plate: a long label must not push the caption out of the box.
+    .kbq-list-drag-preview__label,
+    .kbq-list-drag-preview__caption {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kbq-list-drag-preview__caption {
+        color: var(--kbq-list-default-caption-color);
+        padding-top: var(--kbq-list-size-container-content-gap-vertical);
+    }
+}

@@ -1,4 +1,39 @@
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+// Type-only: `core/formatters` imports the locale data back, and a value import here would close the cycle.
+
+/**
+ * Text the library exposes to assistive tech only: accessible names for the icon-only buttons it
+ * renders itself, and live-region announcements.
+ *
+ * An icon carries no text, so without one of these a button has no accessible name at all (AXE
+ * `button-name`). None of these strings are ever displayed.
+ */
+export type KbqA11yLocaleConfiguration = {
+    /** Close button of a modal, popover, sidepanel, content panel or notification center. */
+    close: string;
+    /** Confirm button of an inline edit. */
+    save: string;
+    /** Discard button of an inline edit. */
+    cancel: string;
+    /** Button removing every notification at once. */
+    removeAll: string;
+    /** Breadcrumbs button revealing the items hidden by overflow. */
+    expandBreadcrumbs: string;
+    /** Calendar button switching to the previous month. */
+    previousMonth: string;
+    /** Calendar button switching back to the current date. */
+    currentDate: string;
+    /** Calendar button switching to the next month. */
+    nextMonth: string;
+    /** Form field button that clears the control value. */
+    clear: string;
+    /** Password form field button that reveals the password. */
+    showPassword: string;
+    /** Password form field button that masks the password. */
+    hidePassword: string;
+    /** Separator that resizes the columns of a description list. */
+    resizeColumns: string;
+};
 
 /** Locale configuration for `KbqCodeBlockModule`. */
 export type KbqCodeBlockLocaleConfiguration = {
