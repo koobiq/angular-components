@@ -181,16 +181,15 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
 
         if (timezone === 'system') return hostZone;
 
-        if (typeof timezone === 'number') {
-            return Number.isFinite(timezone) ? FixedOffsetZone.instance(timezone) : hostZone;
+        // Luxon resolves IANA names and most fixed specifiers itself, which keeps DST handling with luxon.
+        if (typeof timezone === 'string') {
+            const zone = Info.normalizeZone(timezone);
+
+            if (zone.isValid) return zone;
         }
 
-        // Luxon resolves IANA names and most fixed specifiers itself, which keeps DST handling with luxon.
-        const zone = Info.normalizeZone(timezone);
-
-        if (zone.isValid) return zone;
-
-        // What luxon rejects (GMT+05:30 and the like) still resolves through the core parser, as a fixed zone.
+        // A numeric offset, and the specifiers luxon rejects (GMT+05:30 and the like), go through the core
+        // parser, which bounds and rounds them, and come back as a fixed zone.
         const offset = kbqResolveTimezoneOffset(timezone, Date.now());
 
         return offset === null ? hostZone : FixedOffsetZone.instance(offset);

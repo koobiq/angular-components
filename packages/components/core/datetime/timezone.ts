@@ -26,6 +26,7 @@ const SECONDS_PER_MINUTE = 60;
 
 /** The largest offset any zone has ever had; anything beyond it is a typo, not a zone. */
 const MAX_OFFSET_HOURS = 14;
+const MAX_OFFSET_MINUTES = MAX_OFFSET_HOURS * MINUTES_PER_HOUR;
 
 /** `UTC`/`GMT` with no offset — a valid input on its own, and what `Intl` reports for zero-offset zones. */
 const UTC_ALIAS_PATTERN = /^(?:utc|gmt)$/i;
@@ -101,7 +102,11 @@ const getOffsetFormatter = (timeZone: string): Intl.DateTimeFormat | null => {
 export const kbqResolveTimezoneOffset = (timezone: KbqTimezoneLike, timestamp: number): number | null => {
     if (timezone === 'system') return null;
 
-    if (typeof timezone === 'number') return Number.isFinite(timezone) ? timezone : null;
+    // Bounded and rounded like the string form: a numeric offset comes from the same unvalidated places,
+    // and neither date library reads a fractional minute or a 99-hour offset as anything sensible.
+    if (typeof timezone === 'number') {
+        return Number.isFinite(timezone) && Math.abs(timezone) <= MAX_OFFSET_MINUTES ? Math.round(timezone) : null;
+    }
 
     const fixedOffset = parseFixedOffset(timezone);
 

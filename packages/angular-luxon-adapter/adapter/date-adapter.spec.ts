@@ -214,6 +214,14 @@ describe('LuxonDateAdapter with KBQ_DATE_TIMEZONE override', () => {
         expect(formatInstant(adapter)).toBe(DateTime.fromISO(instant).toFormat(dateTimeFormat));
     });
 
+    it('should fall back to the host time zone when the offset is out of range', () => {
+        expect(formatInstant(createAdapter(99 * 60))).toBe(DateTime.fromISO(instant).toFormat(dateTimeFormat));
+    });
+
+    it('should round a fractional offset to whole minutes', () => {
+        expect(formatInstant(createAdapter(330.4))).toBe('2026-03-05 15:30');
+    });
+
     it('should leave the useUtc option in charge while no zone is configured', () => {
         expect(formatInstant(createAdapter('system', { useUtc: true }))).toBe('2026-03-05 10:00');
     });

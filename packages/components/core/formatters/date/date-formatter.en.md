@@ -112,7 +112,7 @@ The token accepts:
 | `'utc'`                    |                                      |                                    |
 | `'system'`                 |                                      | The default — the zone of the host |
 
-An unknown zone name does not break rendering: dates stay in the host zone and a warning is logged in development mode.
+An unknown zone name does not break rendering: dates stay in the host zone and a warning is logged in development mode. The same applies to an offset outside `±14:00`, the widest any zone has ever used; a fractional offset is rounded to whole minutes.
 
 #### Changing the zone at runtime
 

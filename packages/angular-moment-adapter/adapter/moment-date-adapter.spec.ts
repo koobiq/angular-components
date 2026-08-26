@@ -237,6 +237,14 @@ describe('MomentDateAdapter with KBQ_DATE_TIMEZONE override', () => {
         expect(adapter.isValid(adapter.deserialize('not a date')!)).toBe(false);
     });
 
+    it('should fall back to the host time zone when the offset is out of range', () => {
+        expect(formatInstant(createAdapter(99 * 60))).toBe(moment(instant).format(dateTimeFormat));
+    });
+
+    it('should round a fractional offset to whole minutes', () => {
+        expect(formatInstant(createAdapter(330.4))).toBe('2026-03-05 15:30');
+    });
+
     it('should leave the useUtc option in charge while no zone is configured', () => {
         expect(formatInstant(createAdapter('system', { useUtc: true }))).toBe('2026-03-05 10:00');
     });
